@@ -24,6 +24,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -74,6 +75,7 @@ func newEvent(cmd *cobra.Command) Event {
 	now := time.Now()
 	cmdPath := cmd.CommandPath()
 	command := strings.ReplaceAll(cmdPath, " ", "-")
+
 	ctxValue, found := valueFromContext(cmd.Context())
 	var duration time.Duration
 	if found {
@@ -88,11 +90,18 @@ func newEvent(cmd *cobra.Command) Event {
 	})
 
 	var properties = map[string]interface{}{
-		"command":  command,
-		"flags":    setFlags,
-		"duration": duration.Milliseconds(),
-		"result":   "SUCCESS",
+		"command":    command,
+		"duration":   duration.Milliseconds(),
+		"version":    version.Version,
+		"git-commit": version.GitCommit,
+		"flags":      setFlags,
+		"result":     "SUCCESS",
 	}
+
+	if cmd.CalledAs() != "" && cmd.CalledAs() != cmd.Name() {
+		properties["alias"] = cmd.CalledAs()
+	}
+
 	var event = Event{
 		Timestamp:  now.Format(time.RFC3339Nano),
 		Source:     config.ToolName,

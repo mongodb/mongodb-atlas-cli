@@ -18,9 +18,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/pkg/browser"
@@ -29,6 +31,8 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
+//go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth RegisterFlow
+
 const accountURI = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
 const govAccountURI = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
 
@@ -36,8 +40,9 @@ type registerSurvey struct {
 	confirm func(message string, defaultResponse bool) (response bool, err error)
 }
 
-type RegisterOpts struct {
-	login          LoginOpts
+type registerOpts struct {
+	cli.DefaultSetterOpts
+	login          *LoginOpts
 	registerSurvey *registerSurvey
 }
 
@@ -52,7 +57,16 @@ var defaultRegisterSurvey = registerSurvey{
 	},
 }
 
-func (opts *RegisterOpts) registerAndAuthenticate(ctx context.Context) error {
+func NewRegisterFlow(l *LoginOpts) RegisterFlow {
+	return &registerOpts{login: l}
+}
+
+type RegisterFlow interface {
+	Run(ctx context.Context) error
+	PreRun(outWriter io.Writer) error
+}
+
+func (opts *registerOpts) registerAndAuthenticate(ctx context.Context) error {
 	// TODO:CLOUDP-121210 - Replace with new request and remove URI override.
 	for {
 		code, _, err := opts.login.flow.RequestCode(ctx)
@@ -91,7 +105,7 @@ func (opts *RegisterOpts) registerAndAuthenticate(ctx context.Context) error {
 	}
 }
 
-func (opts *RegisterOpts) shouldRetryRegister(err error) (retry bool, errSurvey error) {
+func (opts *registerOpts) shouldRetryRegister(err error) (retry bool, errSurvey error) {
 	var target *atlas.ErrorResponse
 	tokenExpired := err == auth.ErrTimeout || (errors.As(err, &target) && target.ErrorCode == authExpiredError)
 	if !tokenExpired {
@@ -101,8 +115,8 @@ func (opts *RegisterOpts) shouldRetryRegister(err error) (retry bool, errSurvey 
 	return opts.registerSurvey.confirm("Your one-time verification code is expired. Would you like to generate a new one?", true)
 }
 
-func (opts *RegisterOpts) Run(ctx context.Context) error {
-	_, _ = fmt.Fprintf(opts.login.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
+func (opts *registerOpts) Run(ctx context.Context) error {
+	_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
 
 	if err := opts.registerAndAuthenticate(ctx); err != nil {
 		return err
@@ -113,7 +127,7 @@ func (opts *RegisterOpts) Run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	_, _ = fmt.Fprintf(opts.login.OutWriter, "Successfully logged in as %s.\n", s)
+	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
 	if opts.login.SkipConfig {
 		return opts.login.config.Save()
 	}
@@ -121,8 +135,27 @@ func (opts *RegisterOpts) Run(ctx context.Context) error {
 	return nil
 }
 
+func (opts *registerOpts) PreRun(outWriter io.Writer) error {
+	opts.OutWriter = outWriter
+	opts.login.OutWriter = outWriter
+	opts.login.config = config.Default()
+	if config.OpsManagerURL() != "" {
+		opts.login.OpsManagerURL = config.OpsManagerURL()
+	}
+	return opts.login.initFlow()
+}
+
+func (opts *registerOpts) registerPreRun() error {
+	if hasUserProgrammaticKeys() {
+		return fmt.Errorf(`you have already set the programmatic keys for this profile. 
+
+Run '%s auth register --profile <profileName>' to use your username and password with a new profile`, config.BinName())
+	}
+	return nil
+}
+
 func RegisterBuilder() *cobra.Command {
-	opts := &RegisterOpts{registerSurvey: &defaultRegisterSurvey}
+	opts := &registerOpts{registerSurvey: &defaultRegisterSurvey, login: &LoginOpts{}}
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",
@@ -131,18 +164,10 @@ func RegisterBuilder() *cobra.Command {
   $ %s auth register
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if hasUserProgrammaticKeys() {
-				return fmt.Errorf(`you have already set the programmatic keys for this profile. 
-
-Run '%s auth register --profile <profileName>' to use your username and password with a new profile`, config.BinName())
+			if err := opts.registerPreRun(); err != nil {
+				return err
 			}
-
-			opts.login.OutWriter = cmd.OutOrStdout()
-			opts.login.config = config.Default()
-			if config.OpsManagerURL() != "" {
-				opts.login.OpsManagerURL = config.OpsManagerURL()
-			}
-			return opts.login.initFlow()
+			return opts.PreRun(cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

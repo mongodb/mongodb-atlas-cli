@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,10 +18,16 @@
 package setup
 
 import (
+	"bytes"
+	"context"
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"github.com/stretchr/testify/require"
 )
 
 func TestBuilder(t *testing.T) {
@@ -31,4 +37,27 @@ func TestBuilder(t *testing.T) {
 		0,
 		[]string{flag.Region, flag.ClusterName, flag.Provider, flag.AccessListIP, flag.Username, flag.Password, flag.SkipMongosh, flag.SkipSampleData},
 	)
+}
+
+func Test_registerOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
+	defer ctrl.Finish()
+	ctx := context.TODO()
+	buf := new(bytes.Buffer)
+
+	opts := &Opts{
+		register: mockRegFlow,
+		login:    &auth.LoginOpts{},
+	}
+
+	opts.login.OutWriter = buf
+
+	mockRegFlow.
+		EXPECT().
+		Run(ctx).
+		Return(nil).
+		Times(1)
+
+	require.NoError(t, opts.Run(ctx))
 }

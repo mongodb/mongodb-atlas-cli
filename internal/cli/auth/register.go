@@ -34,7 +34,7 @@ import (
 //go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth RegisterFlow
 
 const (
-	accountURI = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
+	accountURI    = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
 	govAccountURI = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
 )
 

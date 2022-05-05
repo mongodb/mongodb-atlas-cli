@@ -44,7 +44,7 @@ func TestAlerts(t *testing.T) {
 			alertsEntity,
 			"list",
 			"--status",
-			"CLOSED",
+			closed,
 			"-o=json",
 		)
 

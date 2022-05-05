@@ -74,6 +74,15 @@ func TrackCommand(cmd *cobra.Command) {
 	track(cmd)
 }
 
+func profile() string { // either "default" or base64 hash
+	if config.Name() == config.DefaultProfile {
+		return config.DefaultProfile
+	}
+
+	h := sha256.Sum256([]byte(config.Name()))
+	return base64.StdEncoding.EncodeToString(h[:])
+}
+
 func newEvent(cmd *cobra.Command) Event {
 	now := time.Now()
 	cmdPath := cmd.CommandPath()
@@ -92,12 +101,6 @@ func newEvent(cmd *cobra.Command) Event {
 		setFlags = append(setFlags, f.Name)
 	})
 
-	profile := config.Name()
-	if profile != config.DefaultProfile { // hashing to avoid PII
-		h := sha256.Sum256([]byte(profile))
-		profile = base64.StdEncoding.EncodeToString(h[:])
-	}
-
 	var properties = map[string]interface{}{
 		"command":    command,
 		"duration":   duration.Milliseconds(),
@@ -106,7 +109,7 @@ func newEvent(cmd *cobra.Command) Event {
 		"os":         runtime.GOOS,
 		"arch":       runtime.GOARCH,
 		"flags":      setFlags,
-		"profile":    profile, // either "default" or base64 hash
+		"profile":    profile(),
 		"result":     "SUCCESS",
 	}
 

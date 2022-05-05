@@ -58,7 +58,10 @@ var defaultRegisterSurvey = registerSurvey{
 }
 
 func NewRegisterFlow(l *LoginOpts) RegisterFlow {
-	return &registerOpts{login: l}
+	return &registerOpts{
+		registerSurvey: &defaultRegisterSurvey,
+		login:          l,
+	}
 }
 
 type RegisterFlow interface {
@@ -155,7 +158,10 @@ Run '%s auth register --profile <profileName>' to use your username and password
 }
 
 func RegisterBuilder() *cobra.Command {
-	opts := &registerOpts{registerSurvey: &defaultRegisterSurvey, login: &LoginOpts{}}
+	opts := &registerOpts{
+		registerSurvey: &defaultRegisterSurvey,
+		login:          &LoginOpts{},
+	}
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",

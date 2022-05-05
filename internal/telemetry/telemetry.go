@@ -20,6 +20,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
@@ -94,6 +95,8 @@ func newEvent(cmd *cobra.Command) Event {
 		"duration":   duration.Milliseconds(),
 		"version":    version.Version,
 		"git-commit": version.GitCommit,
+		"os":         runtime.GOOS,
+		"arch":       runtime.GOARCH,
 		"flags":      setFlags,
 		"result":     "SUCCESS",
 	}

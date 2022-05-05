@@ -141,6 +141,15 @@ func withAuthMethod() eventOpt {
 	}
 }
 
+func withService() eventOpt {
+	return func(event Event) {
+		event.Properties["service"] = config.Service()
+		if config.OpsManagerURL() != "" {
+			event.Properties["ops_manager_url"] = config.OpsManagerURL()
+		}
+	}
+}
+
 func withProjectID(cmd *cobra.Command) eventOpt {
 	return func(event Event) {
 		fromFlag, _ := cmd.Flags().GetString(flag.ProjectID)
@@ -152,15 +161,6 @@ func withProjectID(cmd *cobra.Command) eventOpt {
 
 		if config.ProjectID() != "" {
 			event.Properties["project_id"] = config.ProjectID()
-		}
-	}
-}
-
-func withService() func(Event) {
-	return func(event Event) {
-		event.Properties["service"] = config.Service()
-		if config.OpsManagerURL() != "" {
-			event.Properties["ops_manager_url"] = config.OpsManagerURL()
 		}
 	}
 }

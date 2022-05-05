@@ -117,6 +117,14 @@ func Credentials() error {
 	)
 }
 
+func Token() error {
+	if t, err := config.Token(); t != nil {
+		return err
+	}
+
+	return ErrMissingCredentials
+}
+
 func FlagInSlice(value, flag string, validValues []string) error {
 	if search.StringInSlice(validValues, value) {
 		return nil

@@ -24,9 +24,11 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli/auth"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -75,4 +77,44 @@ func Test_registerOpts_Run(t *testing.T) {
 		Times(1)
 
 	require.NoError(t, opts.Run(ctx))
+}
+
+func Test_registerOpts_RunWithAPIKeys(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
+	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
+	defer ctrl.Finish()
+	ctx := context.TODO()
+	buf := new(bytes.Buffer)
+
+	opts := &Opts{
+		register:   mockRegFlow,
+		login:      &auth.LoginOpts{},
+		quickstart: mockQuickstartFlow,
+	}
+
+	config.SetPublicAPIKey("publicKey")
+	config.SetPrivateAPIKey("privateKey")
+
+	opts.OutWriter = buf
+	opts.login.OutWriter = buf
+
+	mockQuickstartFlow.
+		EXPECT().
+		Run().
+		Return(nil).
+		Times(1)
+
+	mockQuickstartFlow.
+		EXPECT().
+		PreRun(ctx, buf).
+		Return(nil).
+		Times(1)
+
+	require.NoError(t, opts.PreRun())
+	require.NoError(t, opts.Run(ctx))
+	assert.Equal(t, `
+You are already authenticated with an API key (Public key: publicKey). Run "atlas auth login --profile <profile_name>" to use your username and password on a new profile.
+
+`, buf.String())
 }

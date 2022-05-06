@@ -37,13 +37,12 @@ import (
 )
 
 const (
-	cacheFilename   = "telemetry"
-	dirPermissions  = 0700
-	filePermissions = 0600
+	cacheFilename           = "telemetry"
+	dirPermissions          = 0700
+	filePermissions         = 0600
+	defaultMaxCacheFileSize = 100_000_000 // 100MB
 )
 
-var fs = afero.NewOsFs()
-var maxCacheFileSize int64 = 100_000_000 // 100MB
 var contextKey = telemetryContextKey{}
 
 type Event struct {
@@ -65,18 +64,53 @@ func NewContext() context.Context {
 	})
 }
 
+type tracker struct {
+	fs               afero.Fs
+	maxCacheFileSize int64
+	cacheDir         string
+}
+
+func newTracker() (*tracker, error) {
+	cacheDir, err := os.UserCacheDir()
+	if err != nil {
+		return nil, err
+	}
+
+	cacheDir = filepath.Join(cacheDir, config.ToolName)
+
+	return &tracker{
+		fs:               afero.NewOsFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+	}, nil
+}
+
 func TrackCommand(cmd *cobra.Command) {
 	if !config.TelemetryEnabled() {
 		return
 	}
-	track(cmd, nil)
+	t, err := newTracker()
+	if err != nil {
+		logError(err)
+		return
+	}
+	if err = t.track(cmd, nil); err != nil {
+		logError(err)
+	}
 }
 
-func TrackCommandError(cmd *cobra.Command, err error) {
+func TrackCommandError(cmd *cobra.Command, e error) {
 	if !config.TelemetryEnabled() {
 		return
 	}
-	track(cmd, err)
+	t, err := newTracker()
+	if err != nil {
+		logError(err)
+		return
+	}
+	if err = t.track(cmd, e); err != nil {
+		logError(err)
+	}
 }
 
 type eventOpt func(Event)
@@ -183,7 +217,7 @@ func withOrgID(cmd *cobra.Command) eventOpt {
 			return
 		}
 
-		if config.ProjectID() != "" {
+		if config.OrgID() != "" {
 			event.Properties["org_id"] = config.OrgID()
 		}
 	}
@@ -202,9 +236,9 @@ func withTerminal() eventOpt {
 	}
 }
 
-func withInstaller() eventOpt {
+func withInstaller(fs afero.Fs) eventOpt {
 	return func(event Event) {
-		c, err := homebrew.NewChecker(afero.NewOsFs())
+		c, err := homebrew.NewChecker(fs)
 		if err != nil {
 			logError(err)
 			return
@@ -239,8 +273,8 @@ func newEvent(opts ...eventOpt) Event {
 	return event
 }
 
-func track(cmd *cobra.Command, e error) {
-	options := []eventOpt{withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(cmd), withOrgID(cmd), withTerminal(), withInstaller()}
+func (t *tracker) track(cmd *cobra.Command, e error) error {
+	options := []eventOpt{withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(cmd), withOrgID(cmd), withTerminal(), withInstaller(t.fs)}
 
 	if e != nil {
 		options = append(options, withError(e))
@@ -248,50 +282,40 @@ func track(cmd *cobra.Command, e error) {
 
 	event := newEvent(options...)
 
-	cacheDir, err := os.UserCacheDir()
-	if err != nil {
-		logError(err)
-		return
-	}
-	cacheDir = filepath.Join(cacheDir, config.ToolName)
-	err = save(event, cacheDir)
-	if err != nil {
-		logError(err)
-		return
-	}
+	return t.save(event)
 }
 
-func openCacheFile(cacheDir string) (afero.File, error) {
-	exists, err := afero.DirExists(fs, cacheDir)
+func (t *tracker) openCacheFile() (afero.File, error) {
+	exists, err := afero.DirExists(t.fs, t.cacheDir)
 	if err != nil {
 		return nil, err
 	}
 	if !exists {
-		if mkdirError := fs.MkdirAll(cacheDir, dirPermissions); mkdirError != nil {
+		if mkdirError := t.fs.MkdirAll(t.cacheDir, dirPermissions); mkdirError != nil {
 			return nil, mkdirError
 		}
 	}
-	filename := filepath.Join(cacheDir, cacheFilename)
-	exists, err = afero.Exists(fs, filename)
+	filename := filepath.Join(t.cacheDir, cacheFilename)
+	exists, err = afero.Exists(t.fs, filename)
 	if err != nil {
 		return nil, err
 	}
 	if exists {
-		info, statError := fs.Stat(filename)
+		info, statError := t.fs.Stat(filename)
 		if statError != nil {
 			return nil, statError
 		}
 		size := info.Size()
-		if size > maxCacheFileSize {
+		if size > t.maxCacheFileSize {
 			return nil, errors.New("telemetry cache file too large")
 		}
 	}
-	file, err := fs.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, filePermissions)
+	file, err := t.fs.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, filePermissions)
 	return file, err
 }
 
-func save(event Event, cacheDir string) error {
-	file, err := openCacheFile(cacheDir)
+func (t *tracker) save(event Event) error {
+	file, err := t.openCacheFile()
 	if err != nil {
 		return err
 	}

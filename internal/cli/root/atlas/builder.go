@@ -95,7 +95,7 @@ func Builder(profile *string) *cobra.Command {
 			}
 
 			if shouldCheckCredentials(cmd) {
-				err := cli.RefreshAndValidateToken(cmd.Context())
+				err := cli.RefreshToken(cmd.Context())
 				if err != nil {
 					return err
 				}

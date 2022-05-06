@@ -180,7 +180,7 @@ func withError(err error) eventOpt {
 	return func(event Event) {
 		event.Properties["result"] = "ERROR"
 
-		errorMessage := strings.Split(err.Error(), "\n")[0] //only first line
+		errorMessage := strings.Split(err.Error(), "\n")[0] // only first line
 
 		event.Properties["error"] = errorMessage
 	}

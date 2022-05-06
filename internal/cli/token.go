@@ -16,19 +16,13 @@ package cli
 
 import (
 	"context"
-
-	"github.com/mongodb/mongocli/internal/validate"
 )
 
-// RefreshAndValidateToken a token from the current configuration.
-func RefreshAndValidateToken(ctx context.Context) error {
+// RefreshToken a token from the current configuration.
+func RefreshToken(ctx context.Context) error {
 	opts := &RefresherOpts{}
 	if err := opts.InitFlow(); err != nil {
 		return err
 	}
-
-	if err := opts.RefreshAccessToken(ctx); err != nil {
-		return err
-	}
-	return validate.Token()
+	return opts.RefreshAccessToken(ctx)
 }

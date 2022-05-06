@@ -18,11 +18,14 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/mongodb/mongocli/internal/validate"
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/version"
@@ -118,6 +121,28 @@ func newEvent(cmd *cobra.Command) Event {
 func track(cmd *cobra.Command) {
 	event := newEvent(cmd)
 
+	// TODO: If no profile, then just save to cache and return
+	// Else send each event in the cache (in batches?) and delete the cache, then send this event
+	fmt.Printf("*** config.Name: %s\n", config.Name())
+	err := validate.Credentials()
+	if err != nil {
+		// Either there is no profile, or the profile has an invalid token, or it has neither token nor API keys.
+		// Effectively, no profile is in effect to make any endpoint calls, so cache the event...
+		// TODO: Will this ever be reached? Without credentials the command will fail...
+		fmt.Println("*** No credentials - caching event...")
+		cache(event)
+		return
+	}
+
+	err = send(event)
+	if err != nil {
+		logError(err)
+		// TODO: If we cannot send an event, then it must be cached...
+		return
+	}
+}
+
+func cache(event Event) {
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {
 		logError(err)
@@ -129,6 +154,13 @@ func track(cmd *cobra.Command) {
 		logError(err)
 		return
 	}
+}
+
+func send(event Event) error {
+	// TODO: Find url to send the event to (Atlas or AtlasGov)
+	// If not Atlas, then simply return (ie.don't even send to AtlasGov)
+	fmt.Printf("*** Sending event to Atlas telemetry endpoint: %+v\n", event)
+	return nil
 }
 
 func openCacheFile(cacheDir string) (afero.File, error) {

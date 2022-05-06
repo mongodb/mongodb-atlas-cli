@@ -114,7 +114,9 @@ func Test_registerOpts_RunWithAPIKeys(t *testing.T) {
 	require.NoError(t, opts.PreRun())
 	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `
-You are already authenticated with an API key (Public key: publicKey). Run "atlas auth login --profile <profile_name>" to use your username and password on a new profile.
+You are already authenticated with an API key (Public key: publicKey).
+
+Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.
 
 `, buf.String())
 }

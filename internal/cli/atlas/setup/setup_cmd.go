@@ -27,6 +27,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const WithProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
+
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
@@ -62,9 +64,11 @@ func (opts *Opts) PreRun() error {
 		opts.skipRegister = true
 		msg := fmt.Sprintf(auth.AlreadyAuthenticatedMsg, config.PublicAPIKey())
 		_, _ = fmt.Fprintf(opts.OutWriter, `
-%s %s
+%s
 
-`, msg, auth.LoginWithProfileMsg)
+%s
+
+`, msg, WithProfileMsg)
 	}
 
 	return nil

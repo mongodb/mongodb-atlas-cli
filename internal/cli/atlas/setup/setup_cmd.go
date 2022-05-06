@@ -27,7 +27,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const WithProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
+const (
+	WithProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
+	SetupWithProfileForNewAccountMsg = `Run "atlas auth setup --profile <profile_name>" to create a new account on a new profile.`
+)
 
 type Opts struct {
 	cli.GlobalOpts
@@ -57,7 +60,7 @@ func (opts *Opts) Run(ctx context.Context) error {
 	return opts.quickstart.Run()
 }
 
-func (opts *Opts) PreRun() error {
+func (opts *Opts) PreRun(ctx context.Context) error {
 	opts.skipRegister = false
 
 	if config.PublicAPIKey() != "" && config.PrivateAPIKey() != "" {
@@ -69,6 +72,25 @@ func (opts *Opts) PreRun() error {
 %s
 
 `, msg, WithProfileMsg)
+	}
+
+	if account, err := auth.AccountWithAccessToken(); err == nil {
+		opts.skipRegister = true
+		msg := fmt.Sprintf(auth.AlreadyAuthenticatedEmailMsg, account)
+
+		if err := cli.RefreshAndValidateToken(ctx); err != nil {
+			return fmt.Errorf(`%s
+
+%s
+%s
+`, msg, auth.LoginMsg, SetupWithProfileForNewAccountMsg)
+		} else {
+			_, _ = fmt.Fprintf(opts.OutWriter, `%s Atlas CLI will use this email for creating your cluster.
+
+%s
+
+`, msg, SetupWithProfileForNewAccountMsg)
+		}
 	}
 
 	return nil
@@ -102,7 +124,7 @@ func Builder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			// setup pre run
-			if err := opts.PreRun(); err != nil {
+			if err := opts.PreRun(cmd.Context()); err != nil {
 				return err
 			}
 
@@ -112,7 +134,6 @@ func Builder() *cobra.Command {
 					return err
 				}
 			}
-
 			return opts.PreRunE(
 				opts.InitOutput(opts.OutWriter, ""),
 			)

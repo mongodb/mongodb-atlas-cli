@@ -47,9 +47,13 @@ type LoginConfig interface {
 }
 
 const (
-	authExpiredError        = "DEVICE_AUTHORIZATION_EXPIRED"
-	AlreadyAuthenticatedMsg = "You are already authenticated with an API key (Public key: %s)."
+	authExpiredError                 = "DEVICE_AUTHORIZATION_EXPIRED"
+	AlreadyAuthenticatedMsg          = "You are already authenticated with an API key (Public key: %s)."
+	AlreadyAuthenticatedEmailMsg     = "You are already authenticated with an email (%s)."
+	LoginMsg                         = `Run "atlas auth login" to refresh your session and continue.`
 	LoginWithProfileMsg     = `Run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile.`
+	LoginWithProfileForNewAccountMsg = `Run "atlas auth login --profile <profile_name>" to use another username and password on a new profile.`
+	LogoutToLoginAccountMsg          = `Run "atlas auth logout" to login again with another account on the same profile.`
 )
 
 var errTimedOut = errors.New("authentication timed out")
@@ -199,6 +203,16 @@ func (opts *LoginOpts) PreRun(writer io.Writer) error {
 		return fmt.Errorf(`%s
 
 %s`, msg, LoginWithProfileMsg)
+	}
+
+	if account, err := AccountWithAccessToken(); err == nil {
+		msg := fmt.Sprintf(AlreadyAuthenticatedEmailMsg, account)
+		return fmt.Errorf(`%s
+
+%s
+
+%s
+`, msg, LoginWithProfileForNewAccountMsg, LogoutToLoginAccountMsg)
 	}
 
 	opts.OutWriter = writer

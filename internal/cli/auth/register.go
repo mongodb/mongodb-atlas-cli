@@ -35,9 +35,10 @@ import (
 //go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth RegisterFlow
 
 const (
-	accountURI     = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
-	govAccountURI  = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
-	WithProfileMsg = `Run "atlas auth register --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
+	WithProfileMsg                      = `Run "atlas auth register --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
+	accountURI                          = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
+	govAccountURI                       = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
+	RegisterWithProfileForNewAccountMsg = `Run "atlas auth register --profile <profile_name>" to create a new account on a new profile.`
 )
 
 type registerSurvey struct {
@@ -186,6 +187,14 @@ func (opts *registerOpts) registerPreRun() error {
 		return fmt.Errorf(`%s
 
 %s`, msg, WithProfileMsg)
+	}
+
+	if account, err := AccountWithAccessToken(); err == nil {
+		msg := fmt.Sprintf(AlreadyAuthenticatedEmailMsg, account)
+		return fmt.Errorf(`%s
+
+%s
+`, msg, RegisterWithProfileForNewAccountMsg)
 	}
 	return nil
 }

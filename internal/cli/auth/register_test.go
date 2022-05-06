@@ -34,15 +34,17 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-func registerSurveyMock(outWriter io.Writer, responses []bool) *registerSurvey {
-	nbOfCalls := 0
-	return &registerSurvey{
-		confirm: func(message string, defaultResponse bool) (bool, error) {
-			nbOfCalls++
-			_, _ = fmt.Fprintf(outWriter, "? "+message+" (Y/n)\n")
-			return responses[nbOfCalls-1], nil
-		},
-	}
+type confirmPromptMock struct {
+	message   string
+	nbOfCalls int
+	responses []bool
+	outWriter io.Writer
+}
+
+func (c *confirmPromptMock) confirm() (bool, error) {
+	c.nbOfCalls++
+	_, _ = fmt.Fprintf(c.outWriter, "? "+c.message+" (Y/n)\n")
+	return c.responses[c.nbOfCalls-1], nil
 }
 
 func TestRegisterBuilder(t *testing.T) {
@@ -71,8 +73,8 @@ func Test_registerOpts_Run(t *testing.T) {
 	}
 
 	opts := &registerOpts{
-		login:          loginOpts,
-		registerSurvey: nil,
+		login:                loginOpts,
+		regenerateCodePrompt: nil,
 	}
 
 	opts.OutWriter = buf
@@ -148,8 +150,8 @@ func Test_registerOpts_registerAndAuthenticate(t *testing.T) {
 	}
 
 	opts := &registerOpts{
-		login:          loginOpts,
-		registerSurvey: nil,
+		login:                loginOpts,
+		regenerateCodePrompt: nil,
 	}
 
 	opts.login.OutWriter = buf
@@ -201,6 +203,12 @@ func Test_registerOpts_registerAndAuthenticate_pollTimeout(t *testing.T) {
 	defer ctrl.Finish()
 	buf := new(bytes.Buffer)
 	ctx := context.TODO()
+	regenerateCodePromptMock := &confirmPromptMock{
+		message:   "Your one-time verification code is expired. Would you like to generate a new one?",
+		nbOfCalls: 0,
+		responses: []bool{true, false},
+		outWriter: buf,
+	}
 
 	loginOpts := &LoginOpts{
 		flow:       mockFlow,
@@ -210,8 +218,8 @@ func Test_registerOpts_registerAndAuthenticate_pollTimeout(t *testing.T) {
 	}
 
 	opts := &registerOpts{
-		login:          loginOpts,
-		registerSurvey: registerSurveyMock(buf, []bool{true, false}),
+		login:                loginOpts,
+		regenerateCodePrompt: regenerateCodePromptMock,
 	}
 
 	opts.login.OutWriter = buf
@@ -271,8 +279,8 @@ func Test_registerOpts_RegisterPreRun(t *testing.T) {
 	buf := new(bytes.Buffer)
 
 	opts := &registerOpts{
-		login:          loginOpts,
-		registerSurvey: nil,
+		login:                loginOpts,
+		regenerateCodePrompt: nil,
 	}
 
 	opts.OutWriter = buf

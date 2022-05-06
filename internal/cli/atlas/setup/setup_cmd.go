@@ -16,14 +16,18 @@ package setup
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongocli/internal/cli/auth"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
+
+const WithProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
 
 type Opts struct {
 	cli.GlobalOpts
@@ -34,11 +38,16 @@ type Opts struct {
 	register auth.RegisterFlow
 	// login
 	login *auth.LoginOpts
+	// control
+	skipRegister bool
+	skipLogin    bool
 }
 
 func (opts *Opts) Run(ctx context.Context) error {
-	if err := opts.register.Run(ctx); err != nil {
-		return err
+	if !opts.skipRegister {
+		if err := opts.register.Run(ctx); err != nil {
+			return err
+		}
 	}
 
 	if err := opts.quickstart.PreRun(ctx, opts.OutWriter); err != nil {
@@ -48,16 +57,31 @@ func (opts *Opts) Run(ctx context.Context) error {
 	return opts.quickstart.Run()
 }
 
+func (opts *Opts) PreRun() error {
+	opts.skipRegister = false
+
+	if config.PublicAPIKey() != "" && config.PrivateAPIKey() != "" {
+		opts.skipRegister = true
+		msg := fmt.Sprintf(auth.AlreadyAuthenticatedMsg, config.PublicAPIKey())
+		_, _ = fmt.Fprintf(opts.OutWriter, `
+%s
+
+%s
+
+`, msg, WithProfileMsg)
+	}
+
+	return nil
+}
+
 // Builder
 // atlas setup
 //	[--clusterName clusterName]
 //	[--provider provider]
 //	[--region regionName]
-//	[--projectId projectId]
 //	[--username username]
 //	[--password password]
 //	[--skipMongosh skipMongosh]
-//	[--default]
 func Builder() *cobra.Command {
 	loginOpts := &auth.LoginOpts{}
 	qsOpts := &quickstart.Opts{}
@@ -77,12 +101,15 @@ func Builder() *cobra.Command {
 		Hidden: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			// Run registration generic pre run
-			if err := opts.register.PreRun(opts.OutWriter); err != nil {
+			// setup pre run
+			if err := opts.PreRun(); err != nil {
 				return err
 			}
 
-			// TODO: Next pr to treat customers already authenticated.
+			// registration pre run if applicable
+			if err := opts.register.PreRun(opts.OutWriter); err != nil && !opts.skipRegister {
+				return err
+			}
 
 			return opts.PreRunE(
 				opts.InitOutput(opts.OutWriter, ""),

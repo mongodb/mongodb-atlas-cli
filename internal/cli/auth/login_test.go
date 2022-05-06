@@ -20,6 +20,7 @@ package auth
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -132,4 +133,22 @@ Or go to http://localhost
 Your code will expire after 5 minutes.
 Successfully logged in as test@10gen.com.
 `, buf.String())
+}
+
+func Test_registerOpts_LoginPreRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	opts := &LoginOpts{
+		flow:       mocks.NewMockAuthenticator(ctrl),
+		config:     mocks.NewMockLoginConfig(ctrl),
+		NoBrowser:  true,
+		SkipConfig: true,
+	}
+	defer ctrl.Finish()
+	buf := new(bytes.Buffer)
+
+	opts.OutWriter = buf
+
+	config.SetPublicAPIKey("public")
+	config.SetPrivateAPIKey("private")
+	require.ErrorContains(t, opts.PreRun(buf), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), LoginWithProfileMsg)
 }

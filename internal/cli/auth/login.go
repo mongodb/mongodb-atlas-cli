@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"time"
 
@@ -45,7 +46,11 @@ type LoginConfig interface {
 	AccessTokenSubject() (string, error)
 }
 
-const authExpiredError = "DEVICE_AUTHORIZATION_EXPIRED"
+const (
+	authExpiredError        = "DEVICE_AUTHORIZATION_EXPIRED"
+	AlreadyAuthenticatedMsg = "You are already authenticated with an API key (Public key: %s)."
+	LoginWithProfileMsg     = `Run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile.`
+)
 
 var errTimedOut = errors.New("authentication timed out")
 
@@ -188,6 +193,22 @@ func hasUserProgrammaticKeys() bool {
 	return config.PublicAPIKey() != "" && config.PrivateAPIKey() != ""
 }
 
+func (opts *LoginOpts) PreRun(writer io.Writer) error {
+	if hasUserProgrammaticKeys() {
+		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
+		return fmt.Errorf(`%s
+
+%s`, msg, LoginWithProfileMsg)
+	}
+
+	opts.OutWriter = writer
+	opts.config = config.Default()
+	if config.OpsManagerURL() != "" {
+		opts.OpsManagerURL = config.OpsManagerURL()
+	}
+	return opts.initFlow()
+}
+
 func LoginBuilder() *cobra.Command {
 	opts := &LoginOpts{}
 	cmd := &cobra.Command{
@@ -197,18 +218,7 @@ func LoginBuilder() *cobra.Command {
   $ %s auth login
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if hasUserProgrammaticKeys() {
-				return fmt.Errorf(`you have already set the programmatic keys for this profile. 
-
-Run '%s auth login --profile <profile_name>' to use your username and password with a new profile`, config.BinName())
-			}
-
-			opts.OutWriter = cmd.OutOrStdout()
-			opts.config = config.Default()
-			if config.OpsManagerURL() != "" {
-				opts.OpsManagerURL = config.OpsManagerURL()
-			}
-			return opts.initFlow()
+			return opts.PreRun(cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

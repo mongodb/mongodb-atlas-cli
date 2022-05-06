@@ -25,6 +25,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -256,4 +257,28 @@ Or go to https://account.mongodb.com/account/register?fromURI=https://account.mo
 Your code will expire after 5 minutes.
 ? Your one-time verification code is expired. Would you like to generate a new one? (Y/n)
 `, buf.String())
+}
+
+func Test_registerOpts_RegisterPreRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	loginOpts := &LoginOpts{
+		flow:       mocks.NewMockAuthenticator(ctrl),
+		config:     mocks.NewMockLoginConfig(ctrl),
+		NoBrowser:  true,
+		SkipConfig: true,
+	}
+	defer ctrl.Finish()
+	buf := new(bytes.Buffer)
+
+	opts := &registerOpts{
+		login:          loginOpts,
+		registerSurvey: nil,
+	}
+
+	opts.OutWriter = buf
+	opts.login.OutWriter = buf
+
+	config.SetPublicAPIKey("public")
+	config.SetPrivateAPIKey("private")
+	require.ErrorContains(t, opts.registerPreRun(), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), WithProfileMsg)
 }

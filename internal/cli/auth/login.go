@@ -18,7 +18,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/mongodb/mongocli/internal/validate"
 	"os"
 	"time"
 
@@ -28,13 +27,14 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/oauth"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator,LoginConfig
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator,LoginConfig,LoginFlow
 
 type Authenticator interface {
 	RequestCode(context.Context) (*auth.DeviceCode, *atlas.Response, error)
@@ -47,13 +47,12 @@ type LoginConfig interface {
 }
 
 const (
-	authExpiredError                 = "DEVICE_AUTHORIZATION_EXPIRED"
-	AlreadyAuthenticatedMsg          = "You are already authenticated with an API key (Public key: %s)."
-	AlreadyAuthenticatedEmailMsg     = "You are already authenticated with an email (%s)."
-	LoginMsg                         = `Run "atlas auth login" to refresh your session and continue.`
-	LoginWithProfileMsg              = `Run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile.`
-	LoginWithProfileForNewAccountMsg = `Run "atlas auth login --profile <profile_name>" to use another username and password on a new profile.`
-	LogoutToLoginAccountMsg          = `Run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile.`
+	authExpiredError             = "DEVICE_AUTHORIZATION_EXPIRED"
+	AlreadyAuthenticatedMsg      = "You are already authenticated with an API key (Public key: %s)."
+	AlreadyAuthenticatedEmailMsg = "You are already authenticated with an email (%s)."
+	LoginMsg                     = `Run "atlas auth login" to refresh your session and continue.`
+	LoginWithProfileMsg          = `Run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile.`
+	LogoutToLoginAccountMsg      = `Run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile.`
 )
 
 var errTimedOut = errors.New("authentication timed out")

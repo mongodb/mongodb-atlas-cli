@@ -41,9 +41,10 @@ func TestBuilder(t *testing.T) {
 	)
 }
 
-func Test_registerOpts_Run(t *testing.T) {
+func Test_setupOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
+	mockLoginFlow := mocks.NewMockLoginFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
 	defer ctrl.Finish()
 	ctx := context.TODO()
@@ -52,7 +53,9 @@ func Test_registerOpts_Run(t *testing.T) {
 	opts := &Opts{
 		register:   mockRegFlow,
 		login:      &auth.LoginOpts{},
+		loginFlow:  mockLoginFlow,
 		quickstart: mockQuickstartFlow,
+		skipLogin:  true,
 	}
 
 	opts.OutWriter = buf
@@ -111,7 +114,7 @@ func Test_registerOpts_RunWithAPIKeys(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	require.NoError(t, opts.PreRun())
+	require.NoError(t, opts.PreRun(ctx))
 	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `
 You are already authenticated with an API key (Public key: publicKey).

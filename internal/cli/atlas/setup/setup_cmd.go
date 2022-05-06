@@ -17,7 +17,6 @@ package setup
 import (
 	"context"
 	"fmt"
-	"github.com/mongodb/mongocli/internal/validate"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas/quickstart"
@@ -25,11 +24,12 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
 const (
-	WithProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
+	withProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
 )
 
 type Opts struct {
@@ -40,7 +40,8 @@ type Opts struct {
 	// register
 	register auth.RegisterFlow
 	// login
-	login *auth.LoginOpts
+	login     *auth.LoginOpts
+	loginFlow auth.LoginFlow
 	// control
 	skipRegister bool
 	skipLogin    bool
@@ -54,7 +55,7 @@ func (opts *Opts) Run(ctx context.Context) error {
 	}
 
 	if !opts.skipLogin {
-		if err := opts.login.Run(ctx); err != nil {
+		if err := opts.loginFlow.Run(ctx); err != nil {
 			return err
 		}
 	}
@@ -78,7 +79,7 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 
 %s
 
-`, msg, WithProfileMsg)
+`, msg, withProfileMsg)
 	}
 
 	if account, err := auth.AccountWithAccessToken(); err == nil {
@@ -90,15 +91,15 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 
 %s
 %s
-`, msg, auth.LoginMsg, WithProfileMsg)
-		} else {
-			opts.skipLogin = false
-			_, _ = fmt.Fprintf(opts.OutWriter, `%s
+`, msg, auth.LoginMsg, withProfileMsg)
+		}
+
+		opts.skipLogin = false
+		_, _ = fmt.Fprintf(opts.OutWriter, `%s
 
 %s
 
-`, msg, WithProfileMsg)
-		}
+`, msg, withProfileMsg)
 	}
 
 	return nil
@@ -144,7 +145,7 @@ func Builder() *cobra.Command {
 			}
 
 			if !opts.skipLogin {
-				if err := opts.login.PreRun(); err != nil {
+				if err := opts.loginFlow.PreRun(); err != nil {
 					return err
 				}
 			}

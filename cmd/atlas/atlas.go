@@ -131,7 +131,8 @@ func mongoCLIConfigFilePath() (configPath string, err error) {
 
 func main() {
 	cobra.EnableCommandSorting = false
-	cobra.OnInitialize(createConfigFromMongoCLIConfig, initConfig)
+	createConfigFromMongoCLIConfig()
+	initConfig()
 
 	Execute()
 }

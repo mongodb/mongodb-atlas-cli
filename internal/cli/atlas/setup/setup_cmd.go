@@ -107,8 +107,10 @@ func Builder() *cobra.Command {
 			}
 
 			// registration pre run if applicable
-			if err := opts.register.PreRun(opts.OutWriter); err != nil && !opts.skipRegister {
-				return err
+			if !opts.skipRegister {
+				if err := opts.register.PreRun(opts.OutWriter); err != nil {
+					return err
+				}
 			}
 
 			return opts.PreRunE(

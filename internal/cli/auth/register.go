@@ -16,7 +16,6 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -29,7 +28,6 @@ import (
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth RegisterFlow
@@ -40,37 +38,47 @@ const (
 	WithProfileMsg = `Run "atlas auth register --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
 )
 
-type registerSurvey struct {
-	confirm func(message string, defaultResponse bool) (response bool, err error)
+type userSurvey interface {
+	confirm() (response bool, err error)
+}
+
+type confirmPrompt struct {
+	message         string
+	defaultResponse bool
+}
+
+func (c *confirmPrompt) confirm() (response bool, err error) {
+	p := &survey.Confirm{
+		Message: c.message,
+		Default: c.defaultResponse,
+	}
+	err = survey.AskOne(p, &response)
+	return response, err
 }
 
 type registerOpts struct {
 	cli.DefaultSetterOpts
-	login          *LoginOpts
-	registerSurvey *registerSurvey
+	login                *LoginOpts
+	regenerateCodePrompt userSurvey
 }
 
-var defaultRegisterSurvey = registerSurvey{
-	confirm: func(message string, defaultResponse bool) (response bool, err error) {
-		p := &survey.Confirm{
-			Message: message,
-			Default: defaultResponse,
-		}
-		err = survey.AskOne(p, &response)
-		return response, err
-	},
-}
-
-func NewRegisterFlow(l *LoginOpts) RegisterFlow {
+func newRegisterOpts(l *LoginOpts) *registerOpts {
 	return &registerOpts{
-		registerSurvey: &defaultRegisterSurvey,
-		login:          l,
+		regenerateCodePrompt: &confirmPrompt{
+			message:         "Your one-time verification code is expired. Would you like to generate a new one?",
+			defaultResponse: true,
+		},
+		login: l,
 	}
 }
 
 type RegisterFlow interface {
 	Run(ctx context.Context) error
 	PreRun(outWriter io.Writer) error
+}
+
+func NewRegisterFlow(l *LoginOpts) RegisterFlow {
+	return newRegisterOpts(l)
 }
 
 func (opts *registerOpts) registerAndAuthenticate(ctx context.Context) error {
@@ -113,13 +121,11 @@ func (opts *registerOpts) registerAndAuthenticate(ctx context.Context) error {
 }
 
 func (opts *registerOpts) shouldRetryRegister(err error) (retry bool, errSurvey error) {
-	var target *atlas.ErrorResponse
-	tokenExpired := err == auth.ErrTimeout || (errors.As(err, &target) && target.ErrorCode == authExpiredError)
-	if !tokenExpired {
+	if err == nil || !auth.IsTimeoutErr(err) {
 		return false, nil
 	}
 
-	return opts.registerSurvey.confirm("Your one-time verification code is expired. Would you like to generate a new one?", true)
+	return opts.regenerateCodePrompt.confirm()
 }
 
 func (opts *registerOpts) setUpProfile(ctx context.Context) error {
@@ -191,10 +197,7 @@ func (opts *registerOpts) registerPreRun() error {
 }
 
 func RegisterBuilder() *cobra.Command {
-	opts := &registerOpts{
-		registerSurvey: &defaultRegisterSurvey,
-		login:          &LoginOpts{},
-	}
+	opts := newRegisterOpts(&LoginOpts{})
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",

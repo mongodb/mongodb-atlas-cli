@@ -47,7 +47,6 @@ type LoginConfig interface {
 }
 
 const (
-	authExpiredError             = "DEVICE_AUTHORIZATION_EXPIRED"
 	AlreadyAuthenticatedMsg      = "you are already authenticated with an API key (Public key: %s)"
 	AlreadyAuthenticatedEmailMsg = "you are already authenticated with an email (%s)"
 	LoginMsg                     = `run "atlas auth login" to refresh your session and continue`

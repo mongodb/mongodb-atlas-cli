@@ -70,7 +70,8 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 		_, _ = fmt.Fprintf(opts.OutWriter, `
 %s
 
-%s`, msg, withProfileMsg)
+%s
+`, msg, withProfileMsg)
 	}
 
 	if account, err := auth.AccountWithAccessToken(); err == nil {
@@ -87,7 +88,8 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 		opts.skipLogin = false
 		_, _ = fmt.Fprintf(opts.OutWriter, `%s
 
-%s`, msg, withProfileMsg)
+%s
+`, msg, withProfileMsg)
 	}
 
 	return nil

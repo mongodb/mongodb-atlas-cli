@@ -117,5 +117,6 @@ func Test_registerOpts_RunWithAPIKeys(t *testing.T) {
 	assert.Equal(t, `
 you are already authenticated with an API key (Public key: publicKey)
 
-run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`, buf.String())
+run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile
+`, buf.String())
 }

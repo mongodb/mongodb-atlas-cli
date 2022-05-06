@@ -41,7 +41,6 @@ type Opts struct {
 	register auth.RegisterFlow
 	// login
 	login     *auth.LoginOpts
-	loginFlow auth.LoginFlow
 	// control
 	skipRegister bool
 	skipLogin    bool
@@ -50,12 +49,6 @@ type Opts struct {
 func (opts *Opts) Run(ctx context.Context) error {
 	if !opts.skipRegister {
 		if err := opts.register.Run(ctx); err != nil {
-			return err
-		}
-	}
-
-	if !opts.skipLogin {
-		if err := opts.loginFlow.Run(ctx); err != nil {
 			return err
 		}
 	}
@@ -144,11 +137,8 @@ func Builder() *cobra.Command {
 				}
 			}
 
-			if !opts.skipLogin {
-				if err := opts.loginFlow.PreRun(); err != nil {
-					return err
-				}
-			}
+			//TODO: CLOUDP-122137 Run login if already authenticated
+
 			return opts.PreRunE(
 				opts.InitOutput(opts.OutWriter, ""),
 			)

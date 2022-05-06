@@ -20,8 +20,8 @@ import (
 	"github.com/mongodb/mongocli/internal/validate"
 )
 
-// RefreshAndValidate a token from the current configuration.
-func RefreshAndValidate(ctx context.Context) error {
+// RefreshAndValidateToken a token from the current configuration.
+func RefreshAndValidateToken(ctx context.Context) error {
 	opts := &RefresherOpts{}
 	if err := opts.InitFlow(); err != nil {
 		return err

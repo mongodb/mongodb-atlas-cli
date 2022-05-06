@@ -22,10 +22,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/spf13/cobra"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/afero"
+	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )
 

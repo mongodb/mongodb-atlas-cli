@@ -20,11 +20,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/spf13/cobra"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/version"
+	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )
 

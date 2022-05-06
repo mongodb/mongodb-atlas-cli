@@ -17,6 +17,7 @@ package setup
 import (
 	"context"
 	"fmt"
+	"github.com/mongodb/mongocli/internal/validate"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas/quickstart"
@@ -29,7 +30,6 @@ import (
 
 const (
 	WithProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
-	SetupWithProfileForNewAccountMsg = `Run "atlas auth setup --profile <profile_name>" to create a new account on a new profile.`
 )
 
 type Opts struct {
@@ -53,6 +53,12 @@ func (opts *Opts) Run(ctx context.Context) error {
 		}
 	}
 
+	if !opts.skipLogin {
+		if err := opts.login.Run(ctx); err != nil {
+			return err
+		}
+	}
+
 	if err := opts.quickstart.PreRun(ctx, opts.OutWriter); err != nil {
 		return err
 	}
@@ -62,6 +68,7 @@ func (opts *Opts) Run(ctx context.Context) error {
 
 func (opts *Opts) PreRun(ctx context.Context) error {
 	opts.skipRegister = false
+	opts.skipLogin = true
 
 	if config.PublicAPIKey() != "" && config.PrivateAPIKey() != "" {
 		opts.skipRegister = true
@@ -77,19 +84,20 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 	if account, err := auth.AccountWithAccessToken(); err == nil {
 		opts.skipRegister = true
 		msg := fmt.Sprintf(auth.AlreadyAuthenticatedEmailMsg, account)
-
-		if err := cli.RefreshAndValidateToken(ctx); err != nil {
+		// token exists but it is not refreshed
+		if err := cli.RefreshToken(ctx); err != nil || validate.Token() != nil {
 			return fmt.Errorf(`%s
 
 %s
 %s
-`, msg, auth.LoginMsg, SetupWithProfileForNewAccountMsg)
+`, msg, auth.LoginMsg, WithProfileMsg)
 		} else {
-			_, _ = fmt.Fprintf(opts.OutWriter, `%s Atlas CLI will use this email for creating your cluster.
+			opts.skipLogin = false
+			_, _ = fmt.Fprintf(opts.OutWriter, `%s
 
 %s
 
-`, msg, SetupWithProfileForNewAccountMsg)
+`, msg, WithProfileMsg)
 		}
 	}
 
@@ -131,6 +139,12 @@ func Builder() *cobra.Command {
 			// registration pre run if applicable
 			if !opts.skipRegister {
 				if err := opts.register.PreRun(opts.OutWriter); err != nil {
+					return err
+				}
+			}
+
+			if !opts.skipLogin {
+				if err := opts.login.PreRun(); err != nil {
 					return err
 				}
 			}

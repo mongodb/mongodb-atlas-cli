@@ -18,7 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
+	"github.com/mongodb/mongocli/internal/validate"
 	"os"
 	"time"
 
@@ -51,9 +51,9 @@ const (
 	AlreadyAuthenticatedMsg          = "You are already authenticated with an API key (Public key: %s)."
 	AlreadyAuthenticatedEmailMsg     = "You are already authenticated with an email (%s)."
 	LoginMsg                         = `Run "atlas auth login" to refresh your session and continue.`
-	LoginWithProfileMsg     = `Run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile.`
+	LoginWithProfileMsg              = `Run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile.`
 	LoginWithProfileForNewAccountMsg = `Run "atlas auth login --profile <profile_name>" to use another username and password on a new profile.`
-	LogoutToLoginAccountMsg          = `Run "atlas auth logout" to login again with another account on the same profile.`
+	LogoutToLoginAccountMsg          = `Run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile.`
 )
 
 var errTimedOut = errors.New("authentication timed out")
@@ -68,6 +68,11 @@ type LoginOpts struct {
 	SkipConfig     bool
 	config         LoginConfig
 	flow           Authenticator
+}
+
+type LoginFlow interface {
+	Run(ctx context.Context) error
+	PreRun() error
 }
 
 func (opts *LoginOpts) initFlow() error {
@@ -197,7 +202,7 @@ func hasUserProgrammaticKeys() bool {
 	return config.PublicAPIKey() != "" && config.PrivateAPIKey() != ""
 }
 
-func (opts *LoginOpts) PreRun(writer io.Writer) error {
+func (opts *LoginOpts) loginPreRun(ctx context.Context) error {
 	if hasUserProgrammaticKeys() {
 		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
 		return fmt.Errorf(`%s
@@ -206,16 +211,18 @@ func (opts *LoginOpts) PreRun(writer io.Writer) error {
 	}
 
 	if account, err := AccountWithAccessToken(); err == nil {
-		msg := fmt.Sprintf(AlreadyAuthenticatedEmailMsg, account)
-		return fmt.Errorf(`%s
+		if err := cli.RefreshToken(ctx); err == nil && validate.Token() == nil {
+			msg := fmt.Sprintf(AlreadyAuthenticatedEmailMsg, account)
+			return fmt.Errorf(`%s
 
 %s
-
-%s
-`, msg, LoginWithProfileForNewAccountMsg, LogoutToLoginAccountMsg)
+`, msg, LogoutToLoginAccountMsg)
+		}
 	}
+	return nil
+}
 
-	opts.OutWriter = writer
+func (opts *LoginOpts) PreRun() error {
 	opts.config = config.Default()
 	if config.OpsManagerURL() != "" {
 		opts.OpsManagerURL = config.OpsManagerURL()
@@ -232,7 +239,11 @@ func LoginBuilder() *cobra.Command {
   $ %s auth login
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRun(cmd.OutOrStdout())
+			opts.OutWriter = cmd.OutOrStdout()
+			if err := opts.loginPreRun(cmd.Context()); err != nil {
+				return err
+			}
+			return opts.PreRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

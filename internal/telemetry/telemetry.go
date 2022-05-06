@@ -29,6 +29,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/homebrew"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -194,6 +195,19 @@ func withTerminal() eventOpt {
 	}
 }
 
+func withInstaller() eventOpt {
+	return func(event Event) {
+		c, err := homebrew.NewChecker(afero.NewOsFs())
+		if err != nil {
+			logError(err)
+			return
+		}
+		if c.IsHomebrew() {
+			event.Properties["installer"] = "brew"
+		}
+	}
+}
+
 func newEvent(opts ...eventOpt) Event {
 	var event = Event{
 		Timestamp: time.Now(),
@@ -212,7 +226,7 @@ func newEvent(opts ...eventOpt) Event {
 }
 
 func track(cmd *cobra.Command) {
-	event := newEvent(withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(cmd), withOrgID(cmd), withTerminal())
+	event := newEvent(withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(cmd), withOrgID(cmd), withTerminal(), withInstaller())
 
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {

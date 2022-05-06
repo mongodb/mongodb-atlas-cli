@@ -24,10 +24,13 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
-const WithProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
+const (
+	withProfileMsg = `run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`
+)
 
 type Opts struct {
 	cli.GlobalOpts
@@ -57,8 +60,9 @@ func (opts *Opts) Run(ctx context.Context) error {
 	return opts.quickstart.Run()
 }
 
-func (opts *Opts) PreRun() error {
+func (opts *Opts) PreRun(ctx context.Context) error {
 	opts.skipRegister = false
+	opts.skipLogin = true
 
 	if config.PublicAPIKey() != "" && config.PrivateAPIKey() != "" {
 		opts.skipRegister = true
@@ -67,8 +71,25 @@ func (opts *Opts) PreRun() error {
 %s
 
 %s
+`, msg, withProfileMsg)
+	}
 
-`, msg, WithProfileMsg)
+	if account, err := auth.AccountWithAccessToken(); err == nil {
+		opts.skipRegister = true
+		msg := fmt.Sprintf(auth.AlreadyAuthenticatedEmailMsg, account)
+		// token exists but it is not refreshed
+		if err := cli.RefreshToken(ctx); err != nil || validate.Token() != nil {
+			return fmt.Errorf(`%s
+
+%s
+%s`, msg, auth.LoginMsg, withProfileMsg)
+		}
+
+		opts.skipLogin = false
+		_, _ = fmt.Fprintf(opts.OutWriter, `%s
+
+%s
+`, msg, withProfileMsg)
 	}
 
 	return nil
@@ -102,7 +123,7 @@ func Builder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			// setup pre run
-			if err := opts.PreRun(); err != nil {
+			if err := opts.PreRun(cmd.Context()); err != nil {
 				return err
 			}
 
@@ -112,6 +133,8 @@ func Builder() *cobra.Command {
 					return err
 				}
 			}
+
+			//TODO: CLOUDP-122137 Run login if already authenticated
 
 			return opts.PreRunE(
 				opts.InitOutput(opts.OutWriter, ""),

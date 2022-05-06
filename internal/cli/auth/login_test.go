@@ -135,7 +135,7 @@ Successfully logged in as test@10gen.com.
 `, buf.String())
 }
 
-func Test_registerOpts_LoginPreRun(t *testing.T) {
+func Test_registerOpts_LoginPreRun_APIKeys(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	opts := &LoginOpts{
 		flow:       mocks.NewMockAuthenticator(ctrl),
@@ -144,11 +144,12 @@ func Test_registerOpts_LoginPreRun(t *testing.T) {
 		SkipConfig: true,
 	}
 	defer ctrl.Finish()
+	ctx := context.TODO()
 	buf := new(bytes.Buffer)
 
 	opts.OutWriter = buf
 
 	config.SetPublicAPIKey("public")
 	config.SetPrivateAPIKey("private")
-	require.ErrorContains(t, opts.PreRun(buf), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), LoginWithProfileMsg)
+	require.ErrorContains(t, opts.loginPreRun(ctx), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), LoginWithProfileMsg)
 }

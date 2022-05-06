@@ -35,7 +35,7 @@ import (
 const (
 	accountURI     = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
 	govAccountURI  = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
-	WithProfileMsg = `Run "atlas auth register --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
+	WithProfileMsg = `run "atlas auth register --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`
 )
 
 type userSurvey interface {
@@ -189,6 +189,13 @@ func (opts *registerOpts) PreRun(outWriter io.Writer) error {
 func (opts *registerOpts) registerPreRun() error {
 	if hasUserProgrammaticKeys() {
 		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
+		return fmt.Errorf(`%s
+
+%s`, msg, WithProfileMsg)
+	}
+
+	if account, err := AccountWithAccessToken(); err == nil {
+		msg := fmt.Sprintf(AlreadyAuthenticatedEmailMsg, account)
 		return fmt.Errorf(`%s
 
 %s`, msg, WithProfileMsg)

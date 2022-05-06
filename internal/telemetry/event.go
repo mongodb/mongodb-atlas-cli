@@ -179,7 +179,10 @@ func withInstaller(fs afero.Fs) eventOpt {
 func withError(err error) eventOpt {
 	return func(event Event) {
 		event.Properties["result"] = "ERROR"
-		event.Properties["error"] = err.Error()
+
+		errorMessage := strings.Split(err.Error(), "\n")[0] //only first line
+
+		event.Properties["error"] = errorMessage
 	}
 }
 

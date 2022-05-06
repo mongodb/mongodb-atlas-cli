@@ -38,7 +38,7 @@ func Execute() {
 	ctx := telemetry.NewContext()
 	rootCmd := atlas.Builder(&profile)
 	if err := rootCmd.ExecuteContext(ctx); err != nil {
-		telemetry.TrackCommandError(rootCmd, err)
+		telemetry.TrackCommand(rootCmd, err)
 		os.Exit(1)
 	}
 }

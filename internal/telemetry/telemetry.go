@@ -36,21 +36,7 @@ func NewContext() context.Context {
 	})
 }
 
-func TrackCommand(cmd *cobra.Command) {
-	if !config.TelemetryEnabled() {
-		return
-	}
-	t, err := newTracker()
-	if err != nil {
-		logError(err)
-		return
-	}
-	if err = t.track(cmd, nil); err != nil {
-		logError(err)
-	}
-}
-
-func TrackCommandError(cmd *cobra.Command, e error) {
+func TrackCommand(cmd *cobra.Command, e error) {
 	if !config.TelemetryEnabled() {
 		return
 	}

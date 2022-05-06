@@ -37,7 +37,7 @@ import (
 const (
 	accountURI     = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
 	govAccountURI  = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
-	WithProfileMsg = `Run "atlas auth register --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
+	WithProfileMsg = `run "atlas auth register --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`
 )
 
 type registerSurvey struct {
@@ -192,8 +192,7 @@ func (opts *registerOpts) registerPreRun() error {
 		msg := fmt.Sprintf(AlreadyAuthenticatedEmailMsg, account)
 		return fmt.Errorf(`%s
 
-%s
-`, msg, WithProfileMsg)
+%s`, msg, WithProfileMsg)
 	}
 	return nil
 }

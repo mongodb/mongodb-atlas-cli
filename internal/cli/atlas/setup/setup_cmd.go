@@ -29,7 +29,7 @@ import (
 )
 
 const (
-	withProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
+	withProfileMsg = `run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`
 )
 
 type Opts struct {
@@ -40,7 +40,7 @@ type Opts struct {
 	// register
 	register auth.RegisterFlow
 	// login
-	login     *auth.LoginOpts
+	login *auth.LoginOpts
 	// control
 	skipRegister bool
 	skipLogin    bool
@@ -70,9 +70,7 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 		_, _ = fmt.Fprintf(opts.OutWriter, `
 %s
 
-%s
-
-`, msg, withProfileMsg)
+%s`, msg, withProfileMsg)
 	}
 
 	if account, err := auth.AccountWithAccessToken(); err == nil {
@@ -83,16 +81,13 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 			return fmt.Errorf(`%s
 
 %s
-%s
-`, msg, auth.LoginMsg, withProfileMsg)
+%s`, msg, auth.LoginMsg, withProfileMsg)
 		}
 
 		opts.skipLogin = false
 		_, _ = fmt.Fprintf(opts.OutWriter, `%s
 
-%s
-
-`, msg, withProfileMsg)
+%s`, msg, withProfileMsg)
 	}
 
 	return nil

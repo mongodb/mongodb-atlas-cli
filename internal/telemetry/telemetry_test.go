@@ -15,6 +15,7 @@
 package telemetry
 
 import (
+	"errors"
 	"os"
 	"path"
 	"path/filepath"
@@ -40,7 +41,34 @@ func TestTelemetry_Track(t *testing.T) {
 	}
 	_ = cmd.ExecuteContext(NewContext())
 
-	track(&cmd)
+	track(&cmd, nil)
+	// Verify that the file exists
+	a := assert.New(t)
+	cacheDir, err := os.UserCacheDir()
+	a.NoError(err)
+	cacheDir = filepath.Join(cacheDir, config.ToolName)
+	filename := filepath.Join(cacheDir, cacheFilename)
+	info, statError := fs.Stat(filename)
+	a.NoError(statError)
+	// Verify the file name
+	a.Equal(info.Name(), cacheFilename)
+	// Verify that the file contains some data
+	var minExpectedSize int64 = 10
+	a.True(info.Size() > minExpectedSize)
+}
+
+func TestTelemetry_TrackError(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+	fs = afero.NewMemMapFs()
+	cmd := cobra.Command{
+		Use: "test-command",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return errors.New("test")
+		},
+	}
+	err := cmd.ExecuteContext(NewContext())
+
+	track(&cmd, err)
 	// Verify that the file exists
 	a := assert.New(t)
 	cacheDir, err := os.UserCacheDir()

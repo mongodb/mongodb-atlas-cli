@@ -69,7 +69,14 @@ func TrackCommand(cmd *cobra.Command) {
 	if !config.TelemetryEnabled() {
 		return
 	}
-	track(cmd)
+	track(cmd, nil)
+}
+
+func TrackCommandError(cmd *cobra.Command, err error) {
+	if !config.TelemetryEnabled() {
+		return
+	}
+	track(cmd, err)
 }
 
 type eventOpt func(Event)
@@ -208,6 +215,13 @@ func withInstaller() eventOpt {
 	}
 }
 
+func withError(err error) eventOpt {
+	return func(event Event) {
+		event.Properties["result"] = "ERROR"
+		event.Properties["error"] = err.Error()
+	}
+}
+
 func newEvent(opts ...eventOpt) Event {
 	var event = Event{
 		Timestamp: time.Now(),
@@ -225,8 +239,14 @@ func newEvent(opts ...eventOpt) Event {
 	return event
 }
 
-func track(cmd *cobra.Command) {
-	event := newEvent(withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(cmd), withOrgID(cmd), withTerminal(), withInstaller())
+func track(cmd *cobra.Command, e error) {
+	options := []eventOpt{withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(cmd), withOrgID(cmd), withTerminal(), withInstaller()}
+
+	if e != nil {
+		options = append(options, withError(e))
+	}
+
+	event := newEvent(options...)
 
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {

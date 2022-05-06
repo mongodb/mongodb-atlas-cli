@@ -21,6 +21,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/mongodb/mongocli/internal/config"
 	"io"
 	"testing"
 

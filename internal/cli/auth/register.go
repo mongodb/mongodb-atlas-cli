@@ -185,7 +185,7 @@ func (opts *registerOpts) registerPreRun() error {
 		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
 		return fmt.Errorf(`%s
 
-%s`, msg, LoginWithProfileMsg)
+%s`, msg, WithProfileMsg)
 	}
 	return nil
 }

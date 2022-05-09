@@ -84,7 +84,7 @@ func (t *tracker) track(cmd *cobra.Command, e error) error {
 		// TODO: If we cannot send an event, then it must be cached...
 	}
 
-	//return nil
+	// return nil
 	fmt.Println("*** Sending events not yet implemented - caching event...")
 	return t.save(event)
 }

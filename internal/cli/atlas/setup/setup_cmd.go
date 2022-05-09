@@ -29,7 +29,7 @@ import (
 )
 
 const (
-	withProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
+	withProfileMsg = `run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`
 )
 
 type Opts struct {
@@ -40,8 +40,7 @@ type Opts struct {
 	// register
 	register auth.RegisterFlow
 	// login
-	login     *auth.LoginOpts
-	loginFlow auth.LoginFlow
+	login *auth.LoginOpts
 	// control
 	skipRegister bool
 	skipLogin    bool
@@ -50,12 +49,6 @@ type Opts struct {
 func (opts *Opts) Run(ctx context.Context) error {
 	if !opts.skipRegister {
 		if err := opts.register.Run(ctx); err != nil {
-			return err
-		}
-	}
-
-	if !opts.skipLogin {
-		if err := opts.loginFlow.Run(ctx); err != nil {
 			return err
 		}
 	}
@@ -78,7 +71,6 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 %s
 
 %s
-
 `, msg, withProfileMsg)
 	}
 
@@ -90,15 +82,13 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 			return fmt.Errorf(`%s
 
 %s
-%s
-`, msg, auth.LoginMsg, withProfileMsg)
+%s`, msg, auth.LoginMsg, withProfileMsg)
 		}
 
 		opts.skipLogin = false
 		_, _ = fmt.Fprintf(opts.OutWriter, `%s
 
 %s
-
 `, msg, withProfileMsg)
 	}
 
@@ -144,11 +134,8 @@ func Builder() *cobra.Command {
 				}
 			}
 
-			if !opts.skipLogin {
-				if err := opts.loginFlow.PreRun(); err != nil {
-					return err
-				}
-			}
+			//TODO: CLOUDP-122137 Run login if already authenticated
+
 			return opts.PreRunE(
 				opts.InitOutput(opts.OutWriter, ""),
 			)

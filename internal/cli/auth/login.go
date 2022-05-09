@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"time"
 
@@ -34,7 +35,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator,LoginConfig,LoginFlow
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator,LoginConfig
 
 type Authenticator interface {
 	RequestCode(context.Context) (*auth.DeviceCode, *atlas.Response, error)
@@ -47,12 +48,11 @@ type LoginConfig interface {
 }
 
 const (
-	authExpiredError             = "DEVICE_AUTHORIZATION_EXPIRED"
-	AlreadyAuthenticatedMsg      = "You are already authenticated with an API key (Public key: %s)."
-	AlreadyAuthenticatedEmailMsg = "You are already authenticated with an email (%s)."
-	LoginMsg                     = `Run "atlas auth login" to refresh your session and continue.`
-	LoginWithProfileMsg          = `Run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile.`
-	LogoutToLoginAccountMsg      = `Run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile.`
+	AlreadyAuthenticatedMsg      = "you are already authenticated with an API key (Public key: %s)"
+	AlreadyAuthenticatedEmailMsg = "you are already authenticated with an email (%s)"
+	LoginMsg                     = `run "atlas auth login" to refresh your session and continue`
+	LoginWithProfileMsg          = `run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile`
+	LogoutToLoginAccountMsg      = `run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile`
 )
 
 var errTimedOut = errors.New("authentication timed out")
@@ -201,7 +201,7 @@ func hasUserProgrammaticKeys() bool {
 	return config.PublicAPIKey() != "" && config.PrivateAPIKey() != ""
 }
 
-func (opts *LoginOpts) loginPreRun(ctx context.Context) error {
+func (opts *LoginOpts) PreRun(writer io.Writer) error {
 	if hasUserProgrammaticKeys() {
 		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
 		return fmt.Errorf(`%s
@@ -214,8 +214,7 @@ func (opts *LoginOpts) loginPreRun(ctx context.Context) error {
 			msg := fmt.Sprintf(AlreadyAuthenticatedEmailMsg, account)
 			return fmt.Errorf(`%s
 
-%s
-`, msg, LogoutToLoginAccountMsg)
+%s`, msg, LogoutToLoginAccountMsg)
 		}
 	}
 	return nil

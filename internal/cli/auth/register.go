@@ -129,27 +129,23 @@ func (opts *registerOpts) shouldRetryRegister(err error) (retry bool, errSurvey 
 }
 
 func (opts *registerOpts) setUpProfile(ctx context.Context) error {
-	opts.login.SetOAuthUpAccess()
-	s, err := opts.login.config.AccessTokenSubject()
-	if err != nil {
-		return err
-	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
-	if opts.login.SkipConfig {
-		return opts.login.config.Save()
-	}
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
 
-	if err := opts.AskOrg(); err != nil {
-		return err
+	if opts.OrgID == "" || opts.login.UpdateProfile {
+		if err := opts.AskOrg(); err != nil {
+			return err
+		}
+		opts.SetUpOrg()
 	}
-	opts.SetUpOrg()
-	if err := opts.AskProject(); err != nil {
-		return err
+
+	if opts.ProjectID == "" || opts.login.UpdateProfile {
+		if err := opts.AskProject(); err != nil {
+			return err
+		}
+		opts.SetUpProject()
 	}
-	opts.SetUpProject()
 
 	opts.SetUpMongoSHPath()
 	opts.SetUpTelemetryEnabled()
@@ -171,6 +167,16 @@ func (opts *registerOpts) Run(ctx context.Context) error {
 
 	if err := opts.registerAndAuthenticate(ctx); err != nil {
 		return err
+	}
+
+	opts.login.SetOAuthUpAccess()
+	s, err := opts.login.config.AccessTokenSubject()
+	if err != nil {
+		return err
+	}
+	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
+	if opts.login.SkipConfig {
+		return opts.login.config.Save()
 	}
 
 	return opts.setUpProfile(ctx)
@@ -227,6 +233,7 @@ func RegisterBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.login.IsGov, "gov", false, "Register to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.login.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	cmd.Flags().BoolVar(&opts.login.SkipConfig, "skipConfig", false, "Skip profile configuration.")
+	cmd.Flags().BoolVar(&opts.login.UpdateProfile, "updateProfile", false, "Update profile's organization ID and project ID.")
 
 	return cmd
 }

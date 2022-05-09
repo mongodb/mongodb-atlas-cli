@@ -48,6 +48,10 @@ Options
      - 
      - false
      - Skip profile configuration.
+   * - --updateProfile
+     - 
+     - false
+     - Update profile's organization ID and project ID.
 
 Inherited Options
 -----------------

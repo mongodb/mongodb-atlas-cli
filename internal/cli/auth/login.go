@@ -64,6 +64,7 @@ type LoginOpts struct {
 	isCloudManager bool
 	NoBrowser      bool
 	SkipConfig     bool
+	UpdateProfile  bool
 	config         LoginConfig
 	flow           Authenticator
 }
@@ -108,6 +109,7 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 	if err := opts.oauthFlow(ctx); err != nil {
 		return err
 	}
+
 	opts.SetOAuthUpAccess()
 	s, err := opts.config.AccessTokenSubject()
 	if err != nil {
@@ -117,19 +119,31 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 	if opts.SkipConfig {
 		return opts.config.Save()
 	}
+
+	return opts.setUpProfile(ctx)
+}
+
+func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
+
 	_, _ = fmt.Fprint(opts.OutWriter, "Press Enter to continue your profile configuration")
 	_, _ = fmt.Scanln()
-	if err := opts.AskOrg(); err != nil {
-		return err
+
+	if opts.OrgID == "" || opts.UpdateProfile {
+		if err := opts.AskOrg(); err != nil {
+			return err
+		}
+		opts.SetUpOrg()
 	}
-	opts.SetUpOrg()
-	if err := opts.AskProject(); err != nil {
-		return err
+
+	if opts.ProjectID == "" || opts.UpdateProfile {
+		if err := opts.AskProject(); err != nil {
+			return err
+		}
+		opts.SetUpProject()
 	}
-	opts.SetUpProject()
 
 	if err := survey.Ask(opts.DefaultQuestions(), opts); err != nil {
 		return err
@@ -254,6 +268,7 @@ func LoginBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
+	cmd.Flags().BoolVar(&opts.UpdateProfile, "updateProfile", false, "Update profile's organization ID and project ID.")
 	return cmd
 }
 

@@ -93,7 +93,6 @@ func Test_registerOpts_RunWithAPIKeys(t *testing.T) {
 		quickstart: mockQuickstartFlow,
 	}
 
-	config.ToolName = config.AtlasCLI
 	config.SetPublicAPIKey("publicKey")
 	config.SetPrivateAPIKey("privateKey")
 

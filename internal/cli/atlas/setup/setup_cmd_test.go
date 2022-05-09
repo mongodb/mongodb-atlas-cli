@@ -44,7 +44,6 @@ func TestBuilder(t *testing.T) {
 func Test_setupOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
-	mockLoginFlow := mocks.NewMockLoginFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
 	defer ctrl.Finish()
 	ctx := context.TODO()
@@ -53,7 +52,6 @@ func Test_setupOpts_Run(t *testing.T) {
 	opts := &Opts{
 		register:   mockRegFlow,
 		login:      &auth.LoginOpts{},
-		loginFlow:  mockLoginFlow,
 		quickstart: mockQuickstartFlow,
 		skipLogin:  true,
 	}

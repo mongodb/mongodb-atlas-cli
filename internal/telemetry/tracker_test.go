@@ -48,7 +48,9 @@ func TestTelemetry_Track(t *testing.T) {
 	}
 	_ = cmd.ExecuteContext(NewContext())
 
-	err = tracker.track(&cmd, nil)
+	err = tracker.track(TrackOptions{
+		Cmd: &cmd,
+	})
 	a.NoError(err)
 	// Verify that the file exists
 	filename := filepath.Join(cacheDir, cacheFilename)
@@ -61,7 +63,7 @@ func TestTelemetry_Track(t *testing.T) {
 	a.True(info.Size() > minExpectedSize)
 }
 
-func TestTelemetry_TrackError(t *testing.T) {
+func TestTelemetry_TrackWithError(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	a := assert.New(t)
@@ -80,9 +82,12 @@ func TestTelemetry_TrackError(t *testing.T) {
 			return errors.New("test")
 		},
 	}
-	err = cmd.ExecuteContext(NewContext())
+	errCmd := cmd.ExecuteContext(NewContext())
 
-	err = tracker.track(&cmd, err)
+	err = tracker.track(TrackOptions{
+		Cmd: &cmd,
+		Err: errCmd,
+	})
 	a.NoError(err)
 
 	// Verify that the file exists

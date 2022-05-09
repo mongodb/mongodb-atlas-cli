@@ -22,7 +22,6 @@ import (
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/afero"
-	"github.com/spf13/cobra"
 )
 
 const (
@@ -53,11 +52,11 @@ func newTracker() (*tracker, error) {
 	}, nil
 }
 
-func (t *tracker) track(cmd *cobra.Command, e error) error {
-	options := []eventOpt{withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(cmd), withOrgID(cmd), withTerminal(), withInstaller(t.fs)}
+func (t *tracker) track(data TrackOptions) error {
+	options := []eventOpt{withCommandPath(data.Cmd), withDuration(data.Cmd), withFlags(data.Cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(data.Cmd), withOrgID(data.Cmd), withTerminal(), withInstaller(t.fs), withExtraProps(data.extraProps)}
 
-	if e != nil {
-		options = append(options, withError(e))
+	if data.Err != nil {
+		options = append(options, withError(data.Err))
 	}
 
 	event := newEvent(options...)

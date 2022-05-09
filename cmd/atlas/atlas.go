@@ -37,8 +37,11 @@ var (
 func Execute() {
 	ctx := telemetry.NewContext()
 	rootCmd := atlas.Builder(&profile)
-	if err := rootCmd.ExecuteContext(ctx); err != nil {
-		telemetry.TrackCommand(rootCmd, err)
+	if cmd, err := rootCmd.ExecuteContextC(ctx); err != nil {
+		telemetry.TrackCommand(telemetry.TrackOptions{
+			Cmd: cmd,
+			Err: err,
+		})
 		os.Exit(1)
 	}
 }
@@ -131,8 +134,7 @@ func mongoCLIConfigFilePath() (configPath string, err error) {
 
 func main() {
 	cobra.EnableCommandSorting = false
-	createConfigFromMongoCLIConfig()
-	initConfig()
+	cobra.OnInitialize(createConfigFromMongoCLIConfig, initConfig)
 
 	Execute()
 }

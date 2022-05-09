@@ -112,7 +112,7 @@ func TestTelemetry_withVersion(t *testing.T) {
 
 	a := assert.New(t)
 	a.Equal(e.Properties["version"], "vTest")
-	a.Equal(e.Properties["git-commit"], "sha-test")
+	a.Equal(e.Properties["git_commit"], "sha-test")
 }
 
 func TestTelemetry_withOS(t *testing.T) {
@@ -299,4 +299,13 @@ func TestTelemetry_withError(t *testing.T) {
 	a := assert.New(t)
 	a.Equal("ERROR", e.Properties["result"])
 	a.Equal("test", e.Properties["error"])
+}
+
+func TestTelemetry_withExtraProps(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
+	e := newEvent(withExtraProps(map[string]interface{}{"a": true}))
+
+	a := assert.New(t)
+	a.Equal(true, e.Properties["a"])
 }

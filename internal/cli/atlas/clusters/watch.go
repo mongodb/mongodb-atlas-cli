@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -25,6 +26,8 @@ import (
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
+
+const exampleWatch = "$ %s cluster watch clusterNameSample"
 
 type WatchOpts struct {
 	cli.GlobalOpts
@@ -67,7 +70,7 @@ func WatchBuilder() *cobra.Command {
 Once the cluster reaches the expected state, the command prints "Cluster available."
 If you run the command in the terminal, it blocks the terminal session until the resource state changes to IDLE.
 You can interrupt the command's polling at any time with CTRL-C.`,
-		Example: `$ mongocli atlas cluster watch clusterNameSample`,
+		Example: fmt.Sprintf(exampleWatch, exampleCmd),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":            "clusterName",

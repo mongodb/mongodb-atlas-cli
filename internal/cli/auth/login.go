@@ -18,7 +18,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"os"
 	"time"
 
@@ -183,13 +182,12 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 		}
 	}
 
-	accessToken, _, err := opts.flow.PollToken(ctx, code)
-	var target *atlas.ErrorResponse
-	tokenExpired := err == auth.ErrTimeout || (errors.As(err, &target) && target.ErrorCode == authExpiredError)
-	if tokenExpired {
-		return errTimedOut
-	}
-	if err != nil {
+	var accessToken *auth.Token
+	if accessToken, _, err = opts.flow.PollToken(ctx, code); err != nil {
+		if auth.IsTimeoutErr(err) {
+			return errTimedOut
+		}
+
 		return err
 	}
 	opts.AccessToken = accessToken.AccessToken
@@ -201,7 +199,7 @@ func hasUserProgrammaticKeys() bool {
 	return config.PublicAPIKey() != "" && config.PrivateAPIKey() != ""
 }
 
-func (opts *LoginOpts) PreRun(writer io.Writer) error {
+func (opts *LoginOpts) loginPreRun(ctx context.Context) error {
 	if hasUserProgrammaticKeys() {
 		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
 		return fmt.Errorf(`%s

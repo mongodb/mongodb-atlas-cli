@@ -16,6 +16,7 @@ package quickstart
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -63,6 +64,8 @@ Creating your cluster... [It's safe to 'Ctrl + C']
 const quickstartTemplateIPNotFound = `
 We could not find your public IP address. To add your IP address run:
   mongocli atlas accesslist create`
+
+const freeClusterAlreadyExists = `this project already has another free cluster`
 
 const (
 	replicaSet          = "REPLICASET"
@@ -159,10 +162,14 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	fmt.Printf(`We are deploying %s...`, opts.ClusterName)
 	if err := opts.createCluster(); err != nil {
+		if strings.Contains(strings.ToLower(err.Error()), freeClusterAlreadyExists) {
+			return errors.New(freeClusterAlreadyExists)
+		}
 		return err
 	}
+
+	fmt.Printf(`We are deploying %s...`, opts.ClusterName)
 
 	fmt.Printf(quickstartTemplateStoreWarning, opts.DBUsername, opts.DBUserPassword)
 	opts.setupCloseHandler()

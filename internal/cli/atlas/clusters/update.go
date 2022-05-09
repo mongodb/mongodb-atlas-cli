@@ -33,13 +33,13 @@ import (
 const (
 	exampleUpdate = `
   Update tier for a cluster
-  $ %s cluster update <clusterName> --projectId <projectId> --tier M50
+  $ %[1]s cluster update <clusterName> --projectId <projectId> --tier M50
 
   Update disk size for a cluster
-  $ %s cluster update <clusterName> --projectId <projectId> --diskSizeGB 20
+  $ %[1]s cluster update <clusterName> --projectId <projectId> --diskSizeGB 20
 
   Update MongoDB version for a cluster
-  $ %s cluster update <clusterName> --projectId <projectId> --mdbVersion 4.2
+  $ %[1]s cluster update <clusterName> --projectId <projectId> --mdbVersion 4.2
 `
 	updateTmpl = "Updating cluster '{{.Name}}'.\n"
 )
@@ -131,7 +131,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "update [clusterName]",
 		Short:   "Update a MongoDB cluster.",
-		Example: fmt.Sprintf(exampleUpdate, exampleCmd, exampleCmd, exampleCmd),
+		Example: fmt.Sprintf(exampleUpdate, exampleCmd),
 		Args:    require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 0 {

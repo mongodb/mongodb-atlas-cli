@@ -89,7 +89,7 @@ func withFlags(cmd *cobra.Command) eventOpt {
 func withVersion() eventOpt {
 	return func(event Event) {
 		event.Properties["version"] = version.Version
-		event.Properties["git-commit"] = version.GitCommit
+		event.Properties["git_commit"] = version.GitCommit
 	}
 }
 
@@ -183,6 +183,14 @@ func withError(err error) eventOpt {
 		errorMessage := strings.Split(err.Error(), "\n")[0] // only first line
 
 		event.Properties["error"] = errorMessage
+	}
+}
+
+func withExtraProps(props map[string]interface{}) eventOpt {
+	return func(event Event) {
+		for k, v := range props {
+			event.Properties[k] = v
+		}
 	}
 }
 

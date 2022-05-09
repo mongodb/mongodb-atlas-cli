@@ -124,7 +124,9 @@ func Builder(profile *string) *cobra.Command {
 			if check, isHb := notifier.shouldCheck(); check {
 				_ = notifier.notifyIfApplicable(isHb)
 			}
-			telemetry.TrackCommand(cmd, nil)
+			telemetry.TrackCommand(telemetry.TrackOptions{
+				Cmd: cmd,
+			}, args...)
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())

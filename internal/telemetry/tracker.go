@@ -17,8 +17,11 @@ package telemetry
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/mongodb/mongocli/internal/validate"
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/afero"
@@ -62,6 +65,27 @@ func (t *tracker) track(cmd *cobra.Command, e error) error {
 
 	event := newEvent(options...)
 
+	// TODO: If no profile, then just save to cache and return
+	// TODO: Else send each event in the cache (in batches?), delete the cache, and send this event
+
+	fmt.Printf("*** config.Name: %s\n", config.Name())
+	err := validate.Credentials()
+	if err != nil {
+		// Either there is no profile, or the profile has an invalid token, or it has neither token nor API keys.
+		// Effectively, no profile is in effect to make any endpoint calls, so cache the event...
+		// TODO: Will this ever be reached? Without credentials the command will fail...
+		fmt.Println("*** No credentials - caching event...")
+		return t.save(event)
+	}
+
+	err = t.send(event)
+	if err != nil {
+		logError(err)
+		// TODO: If we cannot send an event, then it must be cached...
+	}
+
+	//return nil
+	fmt.Println("*** Sending events not yet implemented - caching event...")
 	return t.save(event)
 }
 
@@ -106,4 +130,11 @@ func (t *tracker) save(event Event) error {
 	}
 	_, err = file.Write(data)
 	return err
+}
+
+func (t *tracker) send(event Event) error {
+	// TODO: Find url to send the event to (Atlas or AtlasGov)
+	// If not Atlas, then simply return (ie.don't even send to AtlasGov)
+	fmt.Printf("*** (TODO) Sending event to Atlas telemetry endpoint: %+v\n", event)
+	return nil
 }

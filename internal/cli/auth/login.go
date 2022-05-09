@@ -226,14 +226,22 @@ func (opts *LoginOpts) PreRun() error {
 	return opts.initFlow()
 }
 
+func Tool() string {
+	if config.ToolName == config.MongoCLI {
+		return "Ops Manager or Cloud Manager"
+	}
+	return "Atlas"
+}
+
 func LoginBuilder() *cobra.Command {
 	opts := &LoginOpts{}
+
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
-		Example: fmt.Sprintf(`  To start the interactive login with the MongoDB Atlas account:
+		Example: fmt.Sprintf(`  To start the interactive login with the MongoDB %s account:
   $ %s auth login
-`, config.BinName()),
+`, Tool(), config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			if err := opts.loginPreRun(cmd.Context()); err != nil {

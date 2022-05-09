@@ -74,7 +74,7 @@ Examples
 
 .. code-block::
 
-   To start the interactive login with the MongoDB Atlas account:
+   To start the interactive login with the MongoDB Ops Manager or Cloud Manager account:
    $ mongocli auth login
 
 

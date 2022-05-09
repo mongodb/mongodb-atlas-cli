@@ -18,7 +18,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"io"
 	"os"
 	"os/signal"
@@ -36,6 +35,7 @@ import (
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../../../mocks/mock_quick_start.go -package=mocks github.com/mongodb/mongocli/internal/cli/atlas/quickstart Flow
@@ -164,12 +164,7 @@ func (opts *Opts) Run() error {
 	}
 
 	if err := opts.createCluster(); err != nil {
-		var target *atlas.ErrorResponse
-		if errors.As(err, &target) && target.ErrorCode == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" {
-			return fmt.Errorf("%w",
-				ErrFreeClusterAlreadyExists)
-		}
-		return err
+		return opts.clusterError(err)
 	}
 
 	fmt.Printf(`We are deploying %s...`, opts.ClusterName)
@@ -208,6 +203,15 @@ func (opts *Opts) Run() error {
 	}
 
 	return nil
+}
+
+func (opts *Opts) clusterError(err error) error {
+	var target *atlas.ErrorResponse
+	if errors.As(err, &target) && target.ErrorCode == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" {
+		return fmt.Errorf("%w",
+			ErrFreeClusterAlreadyExists)
+	}
+	return err
 }
 
 func (opts *Opts) loadSampleData() error {

@@ -34,7 +34,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator,LoginConfig
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator,LoginConfig,LoginFlow
 
 type Authenticator interface {
 	RequestCode(context.Context) (*auth.DeviceCode, *atlas.Response, error)
@@ -71,6 +71,10 @@ type LoginOpts struct {
 type LoginFlow interface {
 	Run(ctx context.Context) error
 	PreRun() error
+}
+
+func NewLoginFlow(opts *LoginOpts) LoginFlow {
+	return opts
 }
 
 func (opts *LoginOpts) initFlow() error {

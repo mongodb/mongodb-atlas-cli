@@ -40,7 +40,7 @@ type Opts struct {
 	// register
 	register auth.RegisterFlow
 	// login
-	login *auth.LoginOpts
+	login auth.LoginFlow
 	// control
 	skipRegister bool
 	skipLogin    bool
@@ -114,7 +114,7 @@ func Builder() *cobra.Command {
 	qsOpts := &quickstart.Opts{}
 	opts := &Opts{
 		register:   auth.NewRegisterFlow(loginOpts),
-		login:      loginOpts,
+		login:      auth.NewLoginFlow(loginOpts),
 		quickstart: qsOpts,
 	}
 
@@ -141,7 +141,7 @@ func Builder() *cobra.Command {
 			}
 
 			if !opts.skipLogin {
-				opts.login.OutWriter = opts.OutWriter
+				loginOpts.OutWriter = opts.OutWriter
 				if err := opts.login.PreRun(); err != nil {
 					return err
 				}

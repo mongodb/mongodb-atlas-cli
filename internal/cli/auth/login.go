@@ -231,7 +231,7 @@ func LoginBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
-		Example: fmt.Sprintf(`  To start the interactive setup:
+		Example: fmt.Sprintf(`  To start the interactive login with the MongoDB Atlas account:
   $ %s auth login
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

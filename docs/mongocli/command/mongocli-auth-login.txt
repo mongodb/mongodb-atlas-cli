@@ -74,7 +74,7 @@ Examples
 
 .. code-block::
 
-   To start the interactive setup:
+   To start the interactive login with the MongoDB Atlas account:
    $ mongocli auth login
 
 

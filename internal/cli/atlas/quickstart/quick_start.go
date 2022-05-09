@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"io"
 	"os"
 	"os/signal"
@@ -65,7 +66,7 @@ const quickstartTemplateIPNotFound = `
 We could not find your public IP address. To add your IP address run:
   mongocli atlas accesslist create`
 
-const freeClusterAlreadyExists = `this project already has another free cluster`
+var ErrFreeClusterAlreadyExists = errors.New("this project already has another free cluster")
 
 const (
 	replicaSet          = "REPLICASET"
@@ -163,8 +164,10 @@ func (opts *Opts) Run() error {
 	}
 
 	if err := opts.createCluster(); err != nil {
-		if strings.Contains(strings.ToLower(err.Error()), freeClusterAlreadyExists) {
-			return errors.New(freeClusterAlreadyExists)
+		var target *atlas.ErrorResponse
+		if errors.As(err, &target) && target.ErrorCode == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" {
+			return fmt.Errorf("%w",
+				ErrFreeClusterAlreadyExists)
 		}
 		return err
 	}

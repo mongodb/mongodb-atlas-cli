@@ -16,40 +16,13 @@ package telemetry
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"os"
-	"path/filepath"
-	"runtime"
-	"strings"
 	"time"
 
-	"github.com/mongodb/mongocli/internal/validate"
-
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/version"
-	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 )
 
-const (
-	cacheFilename   = "telemetry"
-	dirPermissions  = 0700
-	filePermissions = 0600
-)
-
-var fs = afero.NewOsFs()
-var maxCacheFileSize int64 = 100_000_000 // 100MB
 var contextKey = telemetryContextKey{}
-
-type Event struct {
-	Timestamp  string                 `json:"timestamp"`
-	Source     string                 `json:"source"`
-	Name       string                 `json:"name"`
-	Properties map[string]interface{} `json:"properties"`
-}
 
 type telemetryContextKey struct{}
 
@@ -63,147 +36,18 @@ func NewContext() context.Context {
 	})
 }
 
-func valueFromContext(ctx context.Context) (telemetryContextValue, bool) {
-	value, ok := ctx.Value(contextKey).(telemetryContextValue)
-	return value, ok
-}
-
-func TrackCommand(cmd *cobra.Command) {
+func TrackCommand(cmd *cobra.Command, e error) {
 	if !config.TelemetryEnabled() {
 		return
 	}
-	track(cmd)
-}
-
-func newEvent(cmd *cobra.Command) Event {
-	now := time.Now()
-	cmdPath := cmd.CommandPath()
-	command := strings.ReplaceAll(cmdPath, " ", "-")
-
-	ctxValue, found := valueFromContext(cmd.Context())
-	var duration time.Duration
-	if found {
-		duration = now.Sub(ctxValue.startTime)
-	} else {
-		logError(errors.New("telemetry context not found"))
-	}
-
-	setFlags := make([]string, 0, cmd.Flags().NFlag())
-	cmd.Flags().Visit(func(f *pflag.Flag) {
-		setFlags = append(setFlags, f.Name)
-	})
-
-	var properties = map[string]interface{}{
-		"command":    command,
-		"duration":   duration.Milliseconds(),
-		"version":    version.Version,
-		"git-commit": version.GitCommit,
-		"os":         runtime.GOOS,
-		"arch":       runtime.GOARCH,
-		"flags":      setFlags,
-		"result":     "SUCCESS",
-	}
-
-	if cmd.CalledAs() != "" && cmd.CalledAs() != cmd.Name() {
-		properties["alias"] = cmd.CalledAs()
-	}
-
-	var event = Event{
-		Timestamp:  now.Format(time.RFC3339Nano),
-		Source:     config.ToolName,
-		Name:       config.ToolName + "-event",
-		Properties: properties,
-	}
-
-	return event
-}
-
-func track(cmd *cobra.Command) {
-	event := newEvent(cmd)
-
-	// TODO: If no profile, then just save to cache and return
-	// Else send each event in the cache (in batches?) and delete the cache, then send this event
-	fmt.Printf("*** config.Name: %s\n", config.Name())
-	err := validate.Credentials()
-	if err != nil {
-		// Either there is no profile, or the profile has an invalid token, or it has neither token nor API keys.
-		// Effectively, no profile is in effect to make any endpoint calls, so cache the event...
-		// TODO: Will this ever be reached? Without credentials the command will fail...
-		fmt.Println("*** No credentials - caching event...")
-		cache(event)
-		return
-	}
-
-	err = send(event)
-	if err != nil {
-		logError(err)
-		// TODO: If we cannot send an event, then it must be cached...
-		return
-	}
-}
-
-func cache(event Event) {
-	cacheDir, err := os.UserCacheDir()
+	t, err := newTracker()
 	if err != nil {
 		logError(err)
 		return
 	}
-	cacheDir = filepath.Join(cacheDir, config.ToolName)
-	err = save(event, cacheDir)
-	if err != nil {
+	if err = t.track(cmd, e); err != nil {
 		logError(err)
-		return
 	}
-}
-
-func send(event Event) error {
-	// TODO: Find url to send the event to (Atlas or AtlasGov)
-	// If not Atlas, then simply return (ie.don't even send to AtlasGov)
-	fmt.Printf("*** Sending event to Atlas telemetry endpoint: %+v\n", event)
-	return nil
-}
-
-func openCacheFile(cacheDir string) (afero.File, error) {
-	exists, err := afero.DirExists(fs, cacheDir)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		if mkdirError := fs.MkdirAll(cacheDir, dirPermissions); mkdirError != nil {
-			return nil, mkdirError
-		}
-	}
-	filename := filepath.Join(cacheDir, cacheFilename)
-	exists, err = afero.Exists(fs, filename)
-	if err != nil {
-		return nil, err
-	}
-	if exists {
-		info, statError := fs.Stat(filename)
-		if statError != nil {
-			return nil, statError
-		}
-		size := info.Size()
-		if size > maxCacheFileSize {
-			return nil, errors.New("telemetry cache file too large")
-		}
-	}
-	file, err := fs.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, filePermissions)
-	return file, err
-}
-
-func save(event Event, cacheDir string) error {
-	file, err := openCacheFile(cacheDir)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	data, err := json.Marshal(event)
-	if err != nil {
-		return err
-	}
-	_, err = file.Write(data)
-	return err
 }
 
 func logError(err error) {

@@ -137,6 +137,7 @@ func (opts *DefaultSetterOpts) orgs() (oMap map[string]string, oSlice []string, 
 
 // AskProject will try to construct a select based on fetched projects.
 // If it fails or there are no projects to show we fallback to ask for project by ID.
+// If only one project, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskProject() error {
 	pMap, pSlice, err := opts.projects()
 	if err != nil {
@@ -166,17 +167,23 @@ func (opts *DefaultSetterOpts) AskProject() error {
 		return nil
 	}
 
-	p := prompt.NewProjectSelect(pSlice)
-	var projectID string
-	if err := survey.AskOne(p, &projectID); err != nil {
-		return err
+	if len(pSlice) == 1 {
+		opts.ProjectID = pMap[pSlice[0]]
+	} else {
+		p := prompt.NewProjectSelect(pSlice)
+		var projectID string
+		if err := survey.AskOne(p, &projectID); err != nil {
+			return err
+		}
+		opts.ProjectID = pMap[projectID]
 	}
-	opts.ProjectID = pMap[projectID]
+
 	return nil
 }
 
 // AskOrg will try to construct a select based on fetched organizations.
 // If it fails or there are no organizations to show we fallback to ask for org by ID.
+// If only one organization, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskOrg() error {
 	oMap, oSlice, err := opts.orgs()
 	if err != nil {
@@ -205,12 +212,18 @@ func (opts *DefaultSetterOpts) AskOrg() error {
 		_, _ = fmt.Fprint(opts.OutWriter, "Skipping default organization setting\n")
 		return nil
 	}
-	p := prompt.NewOrgSelect(oSlice)
-	var orgID string
-	if err := survey.AskOne(p, &orgID); err != nil {
-		return err
+
+	if len(oSlice) == 1 {
+		opts.OrgID = oMap[oSlice[0]]
+	} else {
+		p := prompt.NewOrgSelect(oSlice)
+		var orgID string
+		if err := survey.AskOne(p, &orgID); err != nil {
+			return err
+		}
+		opts.OrgID = oMap[orgID]
 	}
-	opts.OrgID = oMap[orgID]
+
 	return nil
 }
 

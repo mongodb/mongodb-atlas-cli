@@ -74,7 +74,7 @@ Examples
 
 .. code-block::
 
-   To start the interactive login with the MongoDB Ops Manager or Cloud Manager account:
+   To start the interactive login for your MongoDB Cloud Manager account:
    $ mongocli auth login
 
 

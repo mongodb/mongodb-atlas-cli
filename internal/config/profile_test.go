@@ -98,6 +98,14 @@ func TestConfig_IsTrue(t *testing.T) {
 			want:  true,
 		},
 		{
+			input: "t",
+			want:  true,
+		},
+		{
+			input: "T",
+			want:  true,
+		},
+		{
 			input: "TRUE",
 			want:  true,
 		},
@@ -122,11 +130,27 @@ func TestConfig_IsTrue(t *testing.T) {
 			want:  true,
 		},
 		{
+			input: "1",
+			want:  true,
+		},
+		{
 			input: "false",
 			want:  false,
 		},
 		{
+			input: "f",
+			want:  false,
+		},
+		{
 			input: "unknown",
+			want:  false,
+		},
+		{
+			input: "0",
+			want:  false,
+		},
+		{
+			input: "",
 			want:  false,
 		},
 	}

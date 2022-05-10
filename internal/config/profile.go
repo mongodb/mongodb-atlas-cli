@@ -146,7 +146,7 @@ func GlobalProperties() []string {
 }
 
 func IsTrue(s string) bool {
-	return search.StringInSlice([]string{"true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES"}, s)
+	return search.StringInSlice([]string{"t", "T", "true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES", "1"}, s)
 }
 
 func Default() *Profile {
@@ -457,7 +457,7 @@ func (p *Profile) IsTelemetryEnabledSet() bool {
 // TelemetryEnabled get the configured telemetry enabled value.
 func TelemetryEnabled() bool { return Default().TelemetryEnabled() }
 func (p *Profile) TelemetryEnabled() bool {
-	if ToolName != AtlasCLI || !isTelemetryFeatureFlagSet() {
+	if !isTelemetryFeatureFlagSet() {
 		return false
 	}
 	return p.GetBool(telemetryEnabled)
@@ -466,15 +466,19 @@ func (p *Profile) TelemetryEnabled() bool {
 // SetTelemetryEnabled sets the telemetry enabled value.
 func SetTelemetryEnabled(v bool) { Default().SetTelemetryEnabled(v) }
 func (p *Profile) SetTelemetryEnabled(v bool) {
-	if ToolName != AtlasCLI || !isTelemetryFeatureFlagSet() {
+	if !isTelemetryFeatureFlagSet() {
 		return
 	}
 	SetGlobal(telemetryEnabled, v)
 }
 
+func boolEnv(key string) bool {
+	value, ok := os.LookupEnv(key)
+	return ok && IsTrue(value)
+}
+
 func isTelemetryFeatureFlagSet() bool {
-	_, featureFlagSet := os.LookupEnv("MONGODB_ATLAS_TELEMETRY_FEATURE_FLAG")
-	return featureFlagSet
+	return ToolName == AtlasCLI && !boolEnv("DO_NOT_TRACK") && boolEnv(AtlasCLIEnvPrefix+"_TELEMETRY_FEATURE_FLAG")
 }
 
 // Output get configured output format.

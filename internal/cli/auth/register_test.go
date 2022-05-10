@@ -66,10 +66,9 @@ func Test_registerOpts_Run(t *testing.T) {
 	ctx := context.TODO()
 
 	loginOpts := &LoginOpts{
-		flow:       mockFlow,
-		config:     mockConfig,
-		NoBrowser:  true,
-		SkipConfig: true,
+		flow:      mockFlow,
+		config:    mockConfig,
+		NoBrowser: true,
 	}
 
 	opts := &registerOpts{
@@ -115,10 +114,19 @@ func Test_registerOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
 	mockConfig.EXPECT().Save().Return(nil).Times(1)
-	expectedOrgs := &atlas.Organizations{}
-	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(0)
-	expectedProjects := &atlas.Projects{}
-	mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(0)
+	expectedOrgs := &atlas.Organizations{
+		TotalCount: 1,
+		Results: []*atlas.Organization{
+			{ID: "o1", Name: "Org1"},
+		},
+	}
+	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
+	expectedProjects := &atlas.Projects{TotalCount: 1,
+		Results: []*atlas.Project{
+			{ID: "p1", Name: "Project1"},
+		},
+	}
+	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
 
 	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.
@@ -143,10 +151,9 @@ func Test_registerOpts_registerAndAuthenticate(t *testing.T) {
 	ctx := context.TODO()
 
 	loginOpts := &LoginOpts{
-		flow:       mockFlow,
-		config:     mockConfig,
-		NoBrowser:  true,
-		SkipConfig: true,
+		flow:      mockFlow,
+		config:    mockConfig,
+		NoBrowser: true,
 	}
 
 	opts := &registerOpts{
@@ -211,10 +218,9 @@ func Test_registerOpts_registerAndAuthenticate_pollTimeout(t *testing.T) {
 	}
 
 	loginOpts := &LoginOpts{
-		flow:       mockFlow,
-		config:     mockConfig,
-		NoBrowser:  true,
-		SkipConfig: true,
+		flow:      mockFlow,
+		config:    mockConfig,
+		NoBrowser: true,
 	}
 
 	opts := &registerOpts{
@@ -270,10 +276,9 @@ Your code will expire after 5 minutes.
 func Test_registerOpts_RegisterPreRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	loginOpts := &LoginOpts{
-		flow:       mocks.NewMockAuthenticator(ctrl),
-		config:     mocks.NewMockLoginConfig(ctrl),
-		NoBrowser:  true,
-		SkipConfig: true,
+		flow:      mocks.NewMockAuthenticator(ctrl),
+		config:    mocks.NewMockLoginConfig(ctrl),
+		NoBrowser: true,
 	}
 	defer ctrl.Finish()
 	buf := new(bytes.Buffer)

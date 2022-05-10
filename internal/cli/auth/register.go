@@ -186,7 +186,7 @@ func (opts *registerOpts) PreRun(outWriter io.Writer) error {
 	return opts.login.initFlow()
 }
 
-func (opts *registerOpts) registerPreRun() error {
+func registerPreRun() error {
 	if hasUserProgrammaticKeys() {
 		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
 		return fmt.Errorf(`%s
@@ -213,7 +213,7 @@ func RegisterBuilder() *cobra.Command {
   $ %s auth register
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.registerPreRun(); err != nil {
+			if err := registerPreRun(); err != nil {
 				return err
 			}
 			return opts.PreRun(cmd.OutOrStdout())

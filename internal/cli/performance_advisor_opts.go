@@ -43,7 +43,7 @@ func (opts *PerformanceAdvisorOpts) validateProcessName() error {
 // Atlas: processName is required
 //
 // OM/CM: hostId is required.
-func (opts *PerformanceAdvisorOpts) MarkRequiredFlagsByService(cmd *cobra.Command) func() error {
+func (*PerformanceAdvisorOpts) MarkRequiredFlagsByService(cmd *cobra.Command) func() error {
 	return func() error {
 		if config.IsCloud() {
 			return cmd.MarkFlagRequired(flag.ProcessName)

@@ -49,7 +49,6 @@ type LoginConfig interface {
 const (
 	AlreadyAuthenticatedMsg      = "you are already authenticated with an API key (Public key: %s)"
 	AlreadyAuthenticatedEmailMsg = "you are already authenticated with an email (%s)"
-	LoginMsg                     = `run "atlas auth login" to refresh your session and continue`
 	LoginWithProfileMsg          = `run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile`
 	LogoutToLoginAccountMsg      = `run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile`
 )
@@ -203,7 +202,7 @@ func hasUserProgrammaticKeys() bool {
 	return config.PublicAPIKey() != "" && config.PrivateAPIKey() != ""
 }
 
-func (opts *LoginOpts) loginPreRun(ctx context.Context) error {
+func loginPreRun(ctx context.Context) error {
 	if hasUserProgrammaticKeys() {
 		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
 		return fmt.Errorf(`%s
@@ -248,7 +247,7 @@ func LoginBuilder() *cobra.Command {
 `, Tool(), config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			if err := opts.loginPreRun(cmd.Context()); err != nil {
+			if err := loginPreRun(cmd.Context()); err != nil {
 				return err
 			}
 			return opts.PreRun()

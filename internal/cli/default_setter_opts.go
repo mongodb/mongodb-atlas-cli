@@ -252,7 +252,7 @@ func (opts *DefaultSetterOpts) SetUpMongoSHPath() {
 	config.SetMongoShellPath(defaultPath)
 }
 
-func (opts *DefaultSetterOpts) SetUpTelemetryEnabled() {
+func (*DefaultSetterOpts) SetUpTelemetryEnabled() {
 	// Telemetry is enabled by default
 	telemetryEnabled := true
 	if config.IsTelemetryEnabledSet() {
@@ -294,7 +294,7 @@ func omProjects(projects []*opsmngr.Project) (pMap map[string]string, pSlice []s
 	return pMap, pSlice
 }
 
-func (opts *DefaultSetterOpts) DefaultQuestions() []*survey.Question {
+func (*DefaultSetterOpts) DefaultQuestions() []*survey.Question {
 	q := []*survey.Question{
 		{
 			Name: "output",

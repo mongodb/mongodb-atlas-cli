@@ -46,12 +46,14 @@ func Execute() {
 	}
 }
 
-// initConfig reads in config file and ENV variables if set.
-func initConfig() {
+// loadConfig reads in config file and ENV variables if set.
+func loadConfig() {
 	if err := config.LoadAtlasCLIConfig(); err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
+}
 
+func initProfile() {
 	if profile != "" {
 		config.SetName(profile)
 	} else if profile = config.GetString(flag.Profile); profile != "" {
@@ -134,7 +136,11 @@ func mongoCLIConfigFilePath() (configPath string, err error) {
 
 func main() {
 	cobra.EnableCommandSorting = false
-	cobra.OnInitialize(createConfigFromMongoCLIConfig, initConfig)
+
+	createConfigFromMongoCLIConfig()
+	loadConfig()
+
+	cobra.OnInitialize(initProfile)
 
 	Execute()
 }

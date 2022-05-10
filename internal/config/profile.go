@@ -457,16 +457,13 @@ func (p *Profile) IsTelemetryEnabledSet() bool {
 // TelemetryEnabled get the configured telemetry enabled value.
 func TelemetryEnabled() bool { return Default().TelemetryEnabled() }
 func (p *Profile) TelemetryEnabled() bool {
-	if !isTelemetryFeatureFlagSet() {
-		return false
-	}
-	return p.GetBool(telemetryEnabled)
+	return isTelemetryFeatureAllowed() && p.GetBool(telemetryEnabled)
 }
 
 // SetTelemetryEnabled sets the telemetry enabled value.
 func SetTelemetryEnabled(v bool) { Default().SetTelemetryEnabled(v) }
 func (p *Profile) SetTelemetryEnabled(v bool) {
-	if !isTelemetryFeatureFlagSet() {
+	if !isTelemetryFeatureAllowed() {
 		return
 	}
 	SetGlobal(telemetryEnabled, v)
@@ -477,7 +474,7 @@ func boolEnv(key string) bool {
 	return ok && IsTrue(value)
 }
 
-func isTelemetryFeatureFlagSet() bool {
+func isTelemetryFeatureAllowed() bool {
 	return ToolName == AtlasCLI && !boolEnv("DO_NOT_TRACK") && boolEnv(AtlasCLIEnvPrefix+"_TELEMETRY_FEATURE_FLAG")
 }
 

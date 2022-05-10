@@ -135,21 +135,9 @@ Successfully logged in as test@10gen.com.
 `, buf.String())
 }
 
-func Test_registerOpts_LoginPreRun_APIKeys(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	opts := &LoginOpts{
-		flow:       mocks.NewMockAuthenticator(ctrl),
-		config:     mocks.NewMockLoginConfig(ctrl),
-		NoBrowser:  true,
-		SkipConfig: true,
-	}
-	defer ctrl.Finish()
+func TestLoginPreRun(t *testing.T) {
 	ctx := context.TODO()
-	buf := new(bytes.Buffer)
-
-	opts.OutWriter = buf
-
 	config.SetPublicAPIKey("public")
 	config.SetPrivateAPIKey("private")
-	require.ErrorContains(t, opts.loginPreRun(ctx), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), LoginWithProfileMsg)
+	require.ErrorContains(t, loginPreRun(ctx), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), LoginWithProfileMsg)
 }

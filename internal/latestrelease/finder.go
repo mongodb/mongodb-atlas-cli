@@ -78,7 +78,24 @@ func isValidTagForTool(tag, tool string) bool {
 	return strings.Contains(tag, tool)
 }
 
-func (f *finder) find() (*ReleaseInformation, error) {
+func (f *finder) loadOrGet() (*ReleaseInformation, *semver.Version, error) {
+	if newestRelease, err := f.load(); newestRelease != nil && err == nil {
+		ver, err := semver.NewVersion(newestRelease.Version)
+		if err == nil {
+			return newestRelease, ver, nil
+		}
+	}
+
+	newestRelease, err := f.latest()
+	if err != nil || newestRelease == nil {
+		return nil, nil, err
+	}
+
+	ver, err := semver.NewVersion(newestRelease.Version)
+	return newestRelease, ver, err
+}
+
+func (f *finder) latest() (*ReleaseInformation, error) {
 	release, err := f.describer.LatestWithCriteria(minPageSize, isValidTagForTool, f.tool)
 	if err != nil || release == nil {
 		return nil, err
@@ -92,23 +109,6 @@ func (f *finder) find() (*ReleaseInformation, error) {
 	_ = f.save(latestFoundRelease)
 
 	return latestFoundRelease, nil
-}
-
-func (f *finder) loadOrGet() (*ReleaseInformation, *semver.Version, error) {
-	if newestRelease, err := f.load(); newestRelease != nil && err == nil {
-		ver, err := semver.NewVersion(newestRelease.Version)
-		if err == nil {
-			return newestRelease, ver, nil
-		}
-	}
-
-	newestRelease, err := f.find()
-	if err != nil || newestRelease == nil {
-		return nil, nil, err
-	}
-
-	ver, err := semver.NewVersion(newestRelease.Version)
-	return newestRelease, ver, err
 }
 
 func (f *finder) Find() (releaseInfo *ReleaseInformation, err error) {

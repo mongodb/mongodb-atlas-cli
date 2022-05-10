@@ -267,26 +267,8 @@ Your code will expire after 5 minutes.
 `, buf.String())
 }
 
-func Test_registerOpts_RegisterPreRun(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	loginOpts := &LoginOpts{
-		flow:       mocks.NewMockAuthenticator(ctrl),
-		config:     mocks.NewMockLoginConfig(ctrl),
-		NoBrowser:  true,
-		SkipConfig: true,
-	}
-	defer ctrl.Finish()
-	buf := new(bytes.Buffer)
-
-	opts := &registerOpts{
-		login:                loginOpts,
-		regenerateCodePrompt: nil,
-	}
-
-	opts.OutWriter = buf
-	opts.login.OutWriter = buf
-
+func TestRegisterPreRun(t *testing.T) {
 	config.SetPublicAPIKey("public")
 	config.SetPrivateAPIKey("private")
-	require.ErrorContains(t, opts.registerPreRun(), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), WithProfileMsg)
+	require.ErrorContains(t, registerPreRun(), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), WithProfileMsg)
 }

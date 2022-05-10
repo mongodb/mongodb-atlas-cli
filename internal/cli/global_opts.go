@@ -52,7 +52,7 @@ type cmdOpt func() error
 
 // PreRunE is a function to call before running the command,
 // this will call any additional function pass as a callback.
-func (opts *GlobalOpts) PreRunE(cbs ...cmdOpt) error {
+func (*GlobalOpts) PreRunE(cbs ...cmdOpt) error {
 	for _, f := range cbs {
 		if err := f(); err != nil {
 			return err

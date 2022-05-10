@@ -17,8 +17,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/spf13/cobra"
 )
 

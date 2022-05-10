@@ -15,9 +15,9 @@
 package livemigrations
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/atlas/livemigrations/link"
-	"github.com/mongodb/mongocli/internal/cli/atlas/livemigrations/validation"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/livemigrations/link"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/livemigrations/validation"
 	"github.com/spf13/cobra"
 )
 

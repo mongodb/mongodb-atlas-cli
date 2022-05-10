@@ -20,10 +20,10 @@ package logs
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 )
 
 func TestJobsDeleteOpts_Run(t *testing.T) {

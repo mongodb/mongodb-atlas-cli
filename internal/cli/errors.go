@@ -17,7 +17,7 @@ package cli
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 )
 
 const requiredF = `required flag(s) "%s" not set`

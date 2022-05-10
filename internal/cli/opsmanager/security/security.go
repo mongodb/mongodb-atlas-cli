@@ -15,7 +15,7 @@
 package security
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/spf13/cobra"
 )
 

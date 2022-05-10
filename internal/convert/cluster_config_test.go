@@ -21,7 +21,7 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"github.com/mongodb/mongocli/internal/test/fixture"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
 	"github.com/openlyinc/pointy"
 	"go.mongodb.org/ops-manager/opsmngr"
 )

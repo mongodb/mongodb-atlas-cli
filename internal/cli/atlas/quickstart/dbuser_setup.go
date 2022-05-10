@@ -18,11 +18,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/convert"
-	"github.com/mongodb/mongocli/internal/randgen"
+	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
+	"github.com/mongodb/mongodb-atlas-cli/internal/randgen"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

@@ -21,10 +21,10 @@ import (
 	"os"
 	"path"
 
-	"github.com/mongodb/mongocli/internal/cli/root/atlas"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/root/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/spf13/cobra"
 )
 

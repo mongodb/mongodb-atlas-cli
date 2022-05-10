@@ -17,12 +17,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_sync.go -package=mocks github.com/mongodb/mongocli/internal/store SyncsLister,SyncsDescriber,SyncsCreator,SyncsUpdater,SyncsDeleter
+//go:generate mockgen -destination=../mocks/mock_backup_sync.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store SyncsLister,SyncsDescriber,SyncsCreator,SyncsUpdater,SyncsDeleter
 
 type SyncsLister interface {
 	ListSyncs(*atlas.ListOptions) (*opsmngr.BackupStores, error)

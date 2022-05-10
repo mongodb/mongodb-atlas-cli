@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongocli/internal/decryption/keyproviders"
+	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/keyproviders"
 )
 
 func Test_validateMAC(t *testing.T) {

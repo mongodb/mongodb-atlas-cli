@@ -16,6 +16,7 @@ package quickstart
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -34,6 +35,7 @@ import (
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../../../mocks/mock_quick_start.go -package=mocks github.com/mongodb/mongocli/internal/cli/atlas/quickstart Flow
@@ -63,6 +65,8 @@ Creating your cluster... [It's safe to 'Ctrl + C']
 const quickstartTemplateIPNotFound = `
 We could not find your public IP address. To add your IP address run:
   mongocli atlas accesslist create`
+
+var ErrFreeClusterAlreadyExists = errors.New("this project already has another free cluster")
 
 const (
 	replicaSet          = "REPLICASET"
@@ -151,18 +155,12 @@ func (opts *Opts) Run() error {
 		opts.replaceWithDefaultSettings(values)
 	}
 
-	if err := opts.createDatabaseUser(); err != nil {
-		return err
-	}
-
-	if err := opts.createAccessList(); err != nil {
+	// Create db user, access list and cluster
+	if err := opts.createResources(); err != nil {
 		return err
 	}
 
 	fmt.Printf(`We are deploying %s...`, opts.ClusterName)
-	if err := opts.createCluster(); err != nil {
-		return err
-	}
 
 	fmt.Printf(quickstartTemplateStoreWarning, opts.DBUsername, opts.DBUserPassword)
 	opts.setupCloseHandler()
@@ -197,6 +195,24 @@ func (opts *Opts) Run() error {
 		return mongosh.Run(config.MongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
 	}
 
+	return nil
+}
+
+func (opts *Opts) createResources() error {
+	if err := opts.createDatabaseUser(); err != nil {
+		return err
+	}
+
+	if err := opts.createAccessList(); err != nil {
+		return err
+	}
+
+	if err := opts.createCluster(); err != nil {
+		var target *atlas.ErrorResponse
+		if errors.As(err, &target) && target.ErrorCode == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" {
+			return ErrFreeClusterAlreadyExists
+		}
+	}
 	return nil
 }
 

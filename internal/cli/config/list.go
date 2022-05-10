@@ -15,6 +15,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -35,21 +37,23 @@ func (opts *listOpts) Run() error {
 }
 
 func ListBuilder() *cobra.Command {
-	opts := &listOpts{}
-	opts.Template = listTemplate
+	o := &listOpts{}
+	o.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "List available profiles.",
+		Short:   "Return a list of available profiles by name.",
+		Long:    "If you did not specify a name for your profile, it displays as the default profile.",
+		Example: fmt.Sprintf("  $ %s config ls", config.BinName()),
 		PreRun: func(cmd *cobra.Command, args []string) {
-			opts.OutWriter = cmd.OutOrStdout()
+			o.OutWriter = cmd.OutOrStdout()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return o.Run()
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().StringVarP(&o.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

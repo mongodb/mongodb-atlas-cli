@@ -22,7 +22,27 @@ Syntax
 
 .. code-block::
 
-   atlas config set <property> <value> [options]
+   atlas config set <propertyName> <value> [options]
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - propertyName
+     - string
+     - true
+     - Property to set in the profile.
+   * - value
+     - string
+     - true
+     - Value for the property to set in the profile.
 
 Options
 -------
@@ -55,4 +75,17 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+
+   Set Ops Manager Base URL in the profile myProfile:
+   $ atlas config set ops_manager_url http://localhost:30700/ -P myProfile
+   Set Organization ID in the default profile:
+   $ atlas config set org_id 5dd5aaef7a3e5a6c5bd12de4
+   Set path for the MongoDB Shell in the default profile:
+   $ atlas config set mongosh_path /usr/local/bin/mongosh
 

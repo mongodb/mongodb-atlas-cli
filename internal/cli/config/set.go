@@ -63,7 +63,7 @@ func (opts *SetOpts) Run() error {
 func SetBuilder() *cobra.Command {
 	const argsN = 2
 	cmd := &cobra.Command{
-		Use:   "set <property> <value>",
+		Use:   "set <propertyName> <value>",
 		Short: "Configure specific properties of a profile.",
 		Long: fmt.Sprintf(`Configure specific properties of the profile.
 Available properties include: %v.`, config.Properties()),
@@ -75,6 +75,19 @@ Available properties include: %v.`, config.Properties()),
 				return fmt.Errorf("invalid property: %q", args[0])
 			}
 			return nil
+		},
+		Example: fmt.Sprintf(`
+  Set Ops Manager Base URL in the profile myProfile:
+  $ %[1]s config set ops_manager_url http://localhost:30700/ -P myProfile
+  Set Organization ID in the default profile:
+  $ %[1]s config set org_id 5dd5aaef7a3e5a6c5bd12de4
+  Set path for the MongoDB Shell in the default profile:
+  $ %[1]s config set mongosh_path /usr/local/bin/mongosh`, config.BinName()),
+		Annotations: map[string]string{
+			"args":             "propertyName,value",
+			"requiredArgs":     "propertyName,value",
+			"propertyNameDesc": "Property to set in the profile.",
+			"valueDesc":        "Value for the property to set in the profile.",
 		},
 		ValidArgs: config.Properties(),
 		RunE: func(cmd *cobra.Command, args []string) error {

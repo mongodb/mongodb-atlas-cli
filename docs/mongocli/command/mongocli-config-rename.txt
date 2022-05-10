@@ -19,7 +19,27 @@ Syntax
 
 .. code-block::
 
-   mongocli config rename <oldName> <newName> [options]
+   mongocli config rename <oldProfileName> <newProfileName> [options]
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - oldProfileName
+     - string
+     - true
+     - Name of the profile to rename.
+   * - newProfileName
+     - string
+     - true
+     - New name of the profile.
 
 Options
 -------
@@ -52,4 +72,12 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+   Rename a profile called myProfile to testProfile:
+   $ mongocli config rename myProfile testProfile
 

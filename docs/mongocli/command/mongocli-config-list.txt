@@ -12,7 +12,9 @@ mongocli config list
    :depth: 1
    :class: singlecol
 
-List available profiles.
+Return a list of available profiles by name.
+
+If you did not specify a name for your profile, it displays as the default profile.
 
 Syntax
 ------
@@ -56,4 +58,11 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+   $ mongocli config ls
 

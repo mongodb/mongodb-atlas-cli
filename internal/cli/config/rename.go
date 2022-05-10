@@ -52,22 +52,30 @@ func (opts *RenameOpts) Run() error {
 		return err
 	}
 
-	fmt.Printf("The profile %v was renamed to %v.\n", opts.oldName, opts.newName)
+	fmt.Printf("The profile %s was renamed to %s.\n", opts.oldName, opts.newName)
 	return nil
 }
 
 func RenameBuilder() *cobra.Command {
 	const argsN = 2
-	opts := &RenameOpts{}
+	o := &RenameOpts{}
 	cmd := &cobra.Command{
-		Use:     "rename <oldName> <newName>",
+		Use:     "rename <oldProfileName> <newProfileName>",
 		Aliases: []string{"mv"},
 		Short:   "Rename a profile.",
-		Args:    require.ExactArgs(argsN),
+		Example: fmt.Sprintf(`  Rename a profile called myProfile to testProfile:
+  $ %s config rename myProfile testProfile`, config.BinName()),
+		Annotations: map[string]string{
+			"args":               "oldProfileName,newProfileName",
+			"requiredArgs":       "oldProfileName,newProfileName",
+			"oldProfileNameDesc": "Name of the profile to rename.",
+			"newProfileNameDesc": "New name of the profile.",
+		},
+		Args: require.ExactArgs(argsN),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.oldName = args[0]
-			opts.newName = args[1]
-			return opts.Run()
+			o.oldName = args[0]
+			o.newName = args[1]
+			return o.Run()
 		},
 	}
 

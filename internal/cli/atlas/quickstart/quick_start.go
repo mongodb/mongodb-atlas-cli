@@ -155,16 +155,9 @@ func (opts *Opts) Run() error {
 		opts.replaceWithDefaultSettings(values)
 	}
 
-	if err := opts.createDatabaseUser(); err != nil {
+	// Create db user, access list and cluster
+	if err := opts.createResources(); err != nil {
 		return err
-	}
-
-	if err := opts.createAccessList(); err != nil {
-		return err
-	}
-
-	if err := opts.createCluster(); err != nil {
-		return opts.clusterError(err)
 	}
 
 	fmt.Printf(`We are deploying %s...`, opts.ClusterName)
@@ -205,13 +198,22 @@ func (opts *Opts) Run() error {
 	return nil
 }
 
-func (opts *Opts) clusterError(err error) error {
-	var target *atlas.ErrorResponse
-	if errors.As(err, &target) && target.ErrorCode == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" {
-		return fmt.Errorf("%w",
-			ErrFreeClusterAlreadyExists)
+func (opts *Opts) createResources() error {
+	if err := opts.createDatabaseUser(); err != nil {
+		return err
 	}
-	return err
+
+	if err := opts.createAccessList(); err != nil {
+		return err
+	}
+
+	if err := opts.createCluster(); err != nil {
+		var target *atlas.ErrorResponse
+		if errors.As(err, &target) && target.ErrorCode == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" {
+			return ErrFreeClusterAlreadyExists
+		}
+	}
+	return nil
 }
 
 func (opts *Opts) loadSampleData() error {

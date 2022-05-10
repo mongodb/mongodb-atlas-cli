@@ -19,7 +19,7 @@ package hosts
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
 func TestBuilder(t *testing.T) {

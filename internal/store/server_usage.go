@@ -18,11 +18,11 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_server_usage.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectServerTypeGetter,ProjectServerTypeUpdater,OrganizationServerTypeGetter,OrganizationServerTypeUpdater,ProjectHostAssignmentLister,OrganizationHostAssignmentLister,SnapshotGenerator,ServerUsageReportDownloader
+//go:generate mockgen -destination=../mocks/mock_server_usage.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectServerTypeGetter,ProjectServerTypeUpdater,OrganizationServerTypeGetter,OrganizationServerTypeUpdater,ProjectHostAssignmentLister,OrganizationHostAssignmentLister,SnapshotGenerator,ServerUsageReportDownloader
 
 type ProjectServerTypeGetter interface {
 	ProjectServerType(string) (*opsmngr.ServerType, error)

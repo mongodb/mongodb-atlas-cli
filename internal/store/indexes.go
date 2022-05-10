@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_indexes.go -package=mocks github.com/mongodb/mongocli/internal/store IndexCreator
+//go:generate mockgen -destination=../mocks/mock_indexes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store IndexCreator
 
 type IndexCreator interface {
 	CreateIndex(string, string, *atlas.IndexConfiguration) error

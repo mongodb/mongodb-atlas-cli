@@ -17,12 +17,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration_orgs_connection.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationsConnector,OrganizationsDescriber
+//go:generate mockgen -destination=../mocks/mock_live_migration_orgs_connection.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationsConnector,OrganizationsDescriber
 
 type OrganizationsConnector interface {
 	ConnectOrganizations(string, *atlas.LinkToken) (*opsmngr.ConnectionStatus, error)

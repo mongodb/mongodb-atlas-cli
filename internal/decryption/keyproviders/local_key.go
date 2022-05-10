@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mongodb/mongocli/internal/decryption/aes"
+	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/aes"
 )
 
 // LocalKeyIdentifier config for the localKey used to encrypt the Log Encryption Key (LEK).

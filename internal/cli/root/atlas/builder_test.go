@@ -23,11 +23,11 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/google/go-github/v42/github"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/latestrelease"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/mongodb/mongocli/internal/test"
-	"github.com/mongodb/mongocli/internal/version"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/latestrelease"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/version"
 	"github.com/spf13/afero"
 )
 

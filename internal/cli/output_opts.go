@@ -22,10 +22,10 @@ import (
 	"strings"
 
 	"github.com/mattn/go-isatty"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/jsonpathwriter"
-	"github.com/mongodb/mongocli/internal/jsonwriter"
-	"github.com/mongodb/mongocli/internal/templatewriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonpathwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/templatewriter"
 )
 
 const (

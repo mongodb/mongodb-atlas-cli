@@ -19,7 +19,7 @@ package versionmanifest
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
 func TestVersionManifestBuilder(t *testing.T) {

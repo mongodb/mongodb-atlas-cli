@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_snapshot_schedule.go -package=mocks github.com/mongodb/mongocli/internal/store SnapshotScheduleDescriber,SnapshotScheduleUpdater
+//go:generate mockgen -destination=../mocks/mock_backup_snapshot_schedule.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store SnapshotScheduleDescriber,SnapshotScheduleUpdater
 
 type SnapshotScheduleDescriber interface {
 	GetSnapshotSchedule(string, string) (*opsmngr.SnapshotSchedule, error)

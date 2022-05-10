@@ -14,7 +14,7 @@ builds:
       binary: bin/mongocli
       main: ./cmd/mongocli/mongocli.go
       ldflags:
-        - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}} -X github.com/mongodb/mongocli/internal/version.GitCommit={{.FullCommit}}
+        - -s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version={{.Version}} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit={{.FullCommit}}
     id: macos
     goos: [darwin]
     goarch: [amd64,arm64]

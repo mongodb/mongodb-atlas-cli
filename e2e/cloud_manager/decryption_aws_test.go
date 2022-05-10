@@ -20,8 +20,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/mongodb/mongocli/e2e"
-	"github.com/mongodb/mongocli/e2e/decryption"
+	"github.com/mongodb/mongodb-atlas-cli/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/e2e/decryption"
 	"github.com/stretchr/testify/require"
 	exec "golang.org/x/sys/execabs"
 )

@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_process_databases.go -package=mocks github.com/mongodb/mongocli/internal/store ProcessDatabaseLister
+//go:generate mockgen -destination=../mocks/mock_process_databases.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessDatabaseLister
 
 type ProcessDatabaseLister interface {
 	ProcessDatabases(string, string, int, *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error)

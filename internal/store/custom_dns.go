@@ -14,12 +14,12 @@
 
 package store
 
-//go:generate mockgen -destination=../mocks/mock_custom_dns.go -package=mocks github.com/mongodb/mongocli/internal/store CustomDNSEnabler,CustomDNSDisabler,CustomDNSDescriber
+//go:generate mockgen -destination=../mocks/mock_custom_dns.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store CustomDNSEnabler,CustomDNSDisabler,CustomDNSDescriber
 
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

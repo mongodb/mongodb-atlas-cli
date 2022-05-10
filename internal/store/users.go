@@ -17,12 +17,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator,UserDescriber,UserDeleter,UserLister,TeamUserLister
+//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store UserCreator,UserDescriber,UserDeleter,UserLister,TeamUserLister
 
 type UserCreator interface {
 	CreateUser(*UserRequest) (interface{}, error)

@@ -21,7 +21,7 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 

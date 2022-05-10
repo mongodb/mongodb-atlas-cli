@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongocli/internal/store IntegrationCreator,IntegrationLister,IntegrationDeleter,IntegrationDescriber
+//go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store IntegrationCreator,IntegrationLister,IntegrationDeleter,IntegrationDescriber
 
 type IntegrationCreator interface {
 	CreateIntegration(string, string, *atlas.ThirdPartyIntegration) (*atlas.ThirdPartyIntegrations, error)

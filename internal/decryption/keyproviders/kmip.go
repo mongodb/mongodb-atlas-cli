@@ -20,9 +20,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mongodb/mongocli/internal/decryption/aes"
-	"github.com/mongodb/mongocli/internal/decryption/kmip"
-	"github.com/mongodb/mongocli/internal/decryption/pem"
+	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/aes"
+	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/kmip"
+	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/pem"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

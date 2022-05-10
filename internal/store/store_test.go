@@ -21,7 +21,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasauth "go.mongodb.org/atlas/auth"
 )
 

@@ -40,7 +40,7 @@ type Opts struct {
 	// register
 	register auth.RegisterFlow
 	// login
-	login *auth.LoginOpts
+	login auth.LoginFlow
 	// control
 	skipRegister bool
 	skipLogin    bool
@@ -49,6 +49,15 @@ type Opts struct {
 func (opts *Opts) Run(ctx context.Context) error {
 	if !opts.skipRegister {
 		if err := opts.register.Run(ctx); err != nil {
+			return err
+		}
+	} else if !opts.skipLogin {
+		_, _ = fmt.Fprintf(opts.OutWriter, `What will happen next:
+1. Login and verify your MongoDB Atlas account in your browser.
+2. Return to the terminal to create your first free MongoDB database in Atlas.
+`)
+
+		if err := opts.login.Run(ctx); err != nil {
 			return err
 		}
 	}
@@ -79,13 +88,10 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 		msg := fmt.Sprintf(auth.AlreadyAuthenticatedEmailMsg, account)
 		// token exists but it is not refreshed
 		if err := cli.RefreshToken(ctx); err != nil || validate.Token() != nil {
-			return fmt.Errorf(`%s
-
-%s
-%s`, msg, auth.LoginMsg, withProfileMsg)
+			opts.skipLogin = false
+			return nil
 		}
 
-		opts.skipLogin = false
 		_, _ = fmt.Fprintf(opts.OutWriter, `%s
 
 %s
@@ -108,7 +114,7 @@ func Builder() *cobra.Command {
 	qsOpts := &quickstart.Opts{}
 	opts := &Opts{
 		register:   auth.NewRegisterFlow(loginOpts),
-		login:      loginOpts,
+		login:      auth.NewLoginFlow(loginOpts),
 		quickstart: qsOpts,
 	}
 
@@ -134,7 +140,12 @@ func Builder() *cobra.Command {
 				}
 			}
 
-			//TODO: CLOUDP-122137 Run login if already authenticated
+			if !opts.skipLogin {
+				loginOpts.OutWriter = opts.OutWriter
+				if err := opts.login.PreRun(); err != nil {
+					return err
+				}
+			}
 
 			return opts.PreRunE(
 				opts.InitOutput(opts.OutWriter, ""),

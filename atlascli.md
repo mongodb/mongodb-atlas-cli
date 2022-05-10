@@ -8,7 +8,7 @@ The MongoDB Atlas CLI is a modern command line interface that enables you to man
 
 ### Pre-built Binaries
 
-Download the appropriate version for your platform from [Atlas CLI releases](https://github.com/mongodb/mongocli/releases).
+Download the appropriate version for your platform from [Atlas CLI releases](https://github.com/mongodb/mongodb-atlas-cli/releases).
 After you download the library, you can run it from anywhere and don't need to install it into a global location.
 This works well for shared hosts and other systems where you don't have a privileged account.
 
@@ -20,7 +20,7 @@ You can place this binary somewhere in your `PATH` for ease of use.
 #### Fetch Source
 
 ```bash
-git clone https://github.com/mongodb/mongocli.git
+git clone https://github.com/mongodb/mongodb-atlas-cli.git
 cd mongocli
 ```
 

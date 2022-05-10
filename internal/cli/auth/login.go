@@ -228,7 +228,7 @@ func (opts *LoginOpts) PreRun() error {
 
 func Tool() string {
 	if config.ToolName == config.MongoCLI {
-		return "Cloud Manager"
+		return "Atlas or Cloud Manager"
 	}
 	return "Atlas"
 }

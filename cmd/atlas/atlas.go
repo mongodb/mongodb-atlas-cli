@@ -15,7 +15,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"log"
@@ -35,9 +34,14 @@ var (
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute(ctx context.Context) {
+func Execute() {
+	ctx := telemetry.NewContext()
 	rootCmd := atlas.Builder(&profile)
-	if err := rootCmd.ExecuteContext(ctx); err != nil {
+	if cmd, err := rootCmd.ExecuteContextC(ctx); err != nil {
+		telemetry.TrackCommand(telemetry.TrackOptions{
+			Cmd: cmd,
+			Err: err,
+		})
 		os.Exit(1)
 	}
 }
@@ -132,5 +136,5 @@ func main() {
 	cobra.EnableCommandSorting = false
 	cobra.OnInitialize(createConfigFromMongoCLIConfig, initConfig)
 
-	Execute(telemetry.NewContext())
+	Execute()
 }

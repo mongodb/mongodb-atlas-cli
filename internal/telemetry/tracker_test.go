@@ -15,24 +15,32 @@
 package telemetry
 
 import (
+	"errors"
 	"os"
 	"path"
 	"path/filepath"
 	"testing"
 	"time"
 
-	"github.com/spf13/cobra"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/afero"
+	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )
 
-const cacheDir = "/path/to/mock/dir"
-
 func TestTelemetry_Track(t *testing.T) {
 	config.ToolName = config.AtlasCLI
-	fs = afero.NewMemMapFs()
+
+	a := assert.New(t)
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
+	a.NoError(err)
+
+	tracker := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+	}
+
 	cmd := cobra.Command{
 		Use: "test-command",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -40,14 +48,51 @@ func TestTelemetry_Track(t *testing.T) {
 	}
 	_ = cmd.ExecuteContext(NewContext())
 
-	track(&cmd)
-	// Verify that the file exists
-	a := assert.New(t)
-	cacheDir, err := os.UserCacheDir()
+	err = tracker.track(TrackOptions{
+		Cmd: &cmd,
+	})
 	a.NoError(err)
-	cacheDir = filepath.Join(cacheDir, config.ToolName)
+	// Verify that the file exists
 	filename := filepath.Join(cacheDir, cacheFilename)
-	info, statError := fs.Stat(filename)
+	info, statError := tracker.fs.Stat(filename)
+	a.NoError(statError)
+	// Verify the file name
+	a.Equal(info.Name(), cacheFilename)
+	// Verify that the file contains some data
+	var minExpectedSize int64 = 10
+	a.True(info.Size() > minExpectedSize)
+}
+
+func TestTelemetry_TrackWithError(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
+	a := assert.New(t)
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
+	a.NoError(err)
+
+	tracker := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+	}
+
+	cmd := cobra.Command{
+		Use: "test-command",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return errors.New("test")
+		},
+	}
+	errCmd := cmd.ExecuteContext(NewContext())
+
+	err = tracker.track(TrackOptions{
+		Cmd: &cmd,
+		Err: errCmd,
+	})
+	a.NoError(err)
+
+	// Verify that the file exists
+	filename := filepath.Join(cacheDir, cacheFilename)
+	info, statError := tracker.fs.Stat(filename)
 	a.NoError(statError)
 	// Verify the file name
 	a.Equal(info.Name(), cacheFilename)
@@ -58,7 +103,17 @@ func TestTelemetry_Track(t *testing.T) {
 
 func TestTelemetry_Save(t *testing.T) {
 	config.ToolName = config.AtlasCLI
-	fs = afero.NewMemMapFs()
+
+	a := assert.New(t)
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
+	a.NoError(err)
+
+	tracker := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+	}
+
 	var properties = map[string]interface{}{
 		"command": "mock-command",
 	}
@@ -68,11 +123,10 @@ func TestTelemetry_Save(t *testing.T) {
 		Name:       config.ToolName + "-event",
 		Properties: properties,
 	}
-	a := assert.New(t)
-	a.NoError(save(event, cacheDir))
+	a.NoError(tracker.save(event))
 	// Verify that the file exists
 	filename := path.Join(cacheDir, cacheFilename)
-	info, statError := fs.Stat(filename)
+	info, statError := tracker.fs.Stat(filename)
 	a.NoError(statError)
 	// Verify the file name
 	a.Equal(info.Name(), cacheFilename)
@@ -83,7 +137,17 @@ func TestTelemetry_Save(t *testing.T) {
 
 func TestTelemetry_Save_MaxCacheFileSize(t *testing.T) {
 	config.ToolName = config.AtlasCLI
-	fs = afero.NewMemMapFs()
+
+	a := assert.New(t)
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
+	a.NoError(err)
+
+	tracker := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: 10, // 10 bytes
+		cacheDir:         cacheDir,
+	}
+
 	var properties = map[string]interface{}{
 		"command": "mock-command",
 	}
@@ -93,23 +157,31 @@ func TestTelemetry_Save_MaxCacheFileSize(t *testing.T) {
 		Name:       config.ToolName + "-event",
 		Properties: properties,
 	}
-	maxCacheFileSize = 10 // 10 bytes
-	a := assert.New(t)
+
 	// First save will work as the cache file will be new
-	a.NoError(save(event, cacheDir))
+	a.NoError(tracker.save(event))
 	// Second save should fail as the file will be larger than 10 bytes
-	a.Error(save(event, cacheDir))
+	a.Error(tracker.save(event))
 }
 
 func TestTelemetry_OpenCacheFile(t *testing.T) {
 	config.ToolName = config.AtlasCLI
-	fs = afero.NewMemMapFs()
+
 	a := assert.New(t)
-	_, err := openCacheFile(cacheDir)
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
+	a.NoError(err)
+
+	tracker := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: 10, // 10 bytes
+		cacheDir:         cacheDir,
+	}
+
+	_, err = tracker.openCacheFile()
 	a.NoError(err)
 	// Verify that the file exists
 	filename := path.Join(cacheDir, cacheFilename)
-	info, statError := fs.Stat(filename)
+	info, statError := tracker.fs.Stat(filename)
 	a.NoError(statError)
 	// Verify the file name
 	a.Equal(info.Name(), cacheFilename)

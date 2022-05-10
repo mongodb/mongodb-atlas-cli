@@ -35,6 +35,13 @@ func (opts *whoOpts) Run() error {
 	return nil
 }
 
+func AccountWithAccessToken() (string, error) {
+	if config.AccessToken() == "" {
+		return "", errors.New("not logged in")
+	}
+	return config.AccessTokenSubject()
+}
+
 func WhoAmIBuilder() *cobra.Command {
 	opts := &whoOpts{}
 
@@ -48,14 +55,10 @@ func WhoAmIBuilder() *cobra.Command {
 			opts.OutWriter = cmd.OutOrStdout()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if config.AccessToken() == "" {
-				return errors.New("not logged in")
-			}
-			s, err := config.AccessTokenSubject()
-			if err != nil {
+			var err error
+			if opts.account, err = AccountWithAccessToken(); err != nil {
 				return err
 			}
-			opts.account = s
 
 			return opts.Run()
 		},

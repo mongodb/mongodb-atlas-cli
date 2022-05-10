@@ -41,7 +41,7 @@ func TestBuilder(t *testing.T) {
 	)
 }
 
-func Test_registerOpts_Run(t *testing.T) {
+func Test_setupOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
@@ -53,6 +53,7 @@ func Test_registerOpts_Run(t *testing.T) {
 		register:   mockRegFlow,
 		login:      &auth.LoginOpts{},
 		quickstart: mockQuickstartFlow,
+		skipLogin:  true,
 	}
 
 	opts.OutWriter = buf
@@ -111,12 +112,11 @@ func Test_registerOpts_RunWithAPIKeys(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	require.NoError(t, opts.PreRun())
+	require.NoError(t, opts.PreRun(ctx))
 	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `
-You are already authenticated with an API key (Public key: publicKey).
+you are already authenticated with an API key (Public key: publicKey)
 
-Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.
-
+run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile
 `, buf.String())
 }

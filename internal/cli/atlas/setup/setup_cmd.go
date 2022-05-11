@@ -159,7 +159,6 @@ func Builder() *cobra.Command {
 	// Register and login related
 	cmd.Flags().BoolVar(&loginOpts.IsGov, "gov", false, "Register to Atlas for Government.")
 	cmd.Flags().BoolVar(&loginOpts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&loginOpts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 	// Quickstart related
 	cmd.Flags().StringVar(&qsOpts.ClusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&qsOpts.Tier, flag.Tier, quickstart.DefaultAtlasTier, usage.Tier)

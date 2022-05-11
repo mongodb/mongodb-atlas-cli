@@ -115,10 +115,19 @@ func Test_registerOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
 	mockConfig.EXPECT().Save().Return(nil).Times(1)
-	expectedOrgs := &atlas.Organizations{}
-	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(0)
-	expectedProjects := &atlas.Projects{}
-	mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(0)
+	expectedOrgs := &atlas.Organizations{
+		TotalCount: 1,
+		Results: []*atlas.Organization{
+			{ID: "o1", Name: "Org1"},
+		},
+	}
+	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
+	expectedProjects := &atlas.Projects{TotalCount: 1,
+		Results: []*atlas.Project{
+			{ID: "p1", Name: "Project1"},
+		},
+	}
+	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
 
 	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.

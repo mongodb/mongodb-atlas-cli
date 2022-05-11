@@ -21,7 +21,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -123,34 +122,37 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
+
 	_, _ = fmt.Fprint(opts.OutWriter, "Press Enter to continue your profile configuration")
 	_, _ = fmt.Scanln()
-	if err := opts.AskOrg(); err != nil {
-		return err
-	}
-	opts.SetUpOrg()
-	if err := opts.AskProject(); err != nil {
-		return err
-	}
-	opts.SetUpProject()
 
-	if err := survey.Ask(opts.DefaultQuestions(), opts); err != nil {
+	if err := opts.setUpProfile(); err != nil {
 		return err
 	}
-	opts.SetUpOutput()
-	opts.SetUpMongoSHPath()
-	opts.SetUpTelemetryEnabled()
-	if err := opts.config.Save(); err != nil {
-		return err
-	}
+
 	_, _ = fmt.Fprint(opts.OutWriter, "\nYour profile is now configured.\n")
 	if config.Name() != config.DefaultProfile {
 		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
-
 	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.BinName())
 
 	return nil
+}
+
+func (opts *LoginOpts) setUpProfile() error {
+	if err := opts.AskOrgIfCurrentNotAvailable(config.OrgID()); err != nil {
+		return err
+	}
+	opts.SetUpOrg()
+
+	if err := opts.AskProjectIfCurrentNotAvailable(config.ProjectID()); err != nil {
+		return err
+	}
+	opts.SetUpProject()
+
+	opts.SetUpMongoSHPath()
+	opts.SetUpTelemetryEnabled()
+	return opts.config.Save()
 }
 
 func (opts *LoginOpts) printAuthInstructions(code *auth.DeviceCode) {
@@ -265,6 +267,7 @@ func LoginBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
+	_ = cmd.Flags().MarkDeprecated("skipConfig", "if profile is configured, login flow skips by default the config step.")
 	return cmd
 }
 

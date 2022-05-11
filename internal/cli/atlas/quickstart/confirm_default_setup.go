@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 )
 
 func (opts *Opts) askConfirmDefaultQuestion(values *quickstart) error {
@@ -61,7 +61,7 @@ Allow connections from (IP Address):	%s%s`,
 	)
 
 	q := newClusterDefaultConfirm()
-	if err := survey.AskOne(q, &opts.Confirm); err != nil {
+	if err := telemetry.TrackAskOne(q, &opts.Confirm); err != nil {
 		return err
 	}
 

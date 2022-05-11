@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
@@ -51,7 +52,7 @@ func (c *confirmPrompt) confirm() (response bool, err error) {
 		Message: c.message,
 		Default: c.defaultResponse,
 	}
-	err = survey.AskOne(p, &response)
+	err = telemetry.TrackAskOne(p, &response)
 	return response, err
 }
 

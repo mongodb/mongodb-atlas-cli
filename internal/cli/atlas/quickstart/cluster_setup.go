@@ -22,6 +22,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -69,7 +70,7 @@ func (opts *Opts) askClusterRegion() error {
 		return err
 	}
 	regionQ := newRegionQuestions(regions)
-	return survey.AskOne(regionQ, &opts.Region, survey.WithValidator(survey.Required))
+	return telemetry.TrackAskOne(regionQ, &opts.Region, survey.WithValidator(survey.Required))
 }
 
 func newRegionQuestions(defaultRegions []string) survey.Prompt {

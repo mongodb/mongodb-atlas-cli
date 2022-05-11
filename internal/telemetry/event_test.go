@@ -27,7 +27,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTelemetry_withCommandPath(t *testing.T) {
+func TestWithCommandPath(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 	testCmd := &cobra.Command{
 		Use: "test",
@@ -43,7 +43,7 @@ func TestTelemetry_withCommandPath(t *testing.T) {
 	a.Equal("root-test", e.Properties["command"])
 }
 
-func TestTelemetry_withProfileDefault(t *testing.T) {
+func TestWithProfileDefault(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withProfile())
@@ -52,7 +52,7 @@ func TestTelemetry_withProfileDefault(t *testing.T) {
 	a.Equal(config.DefaultProfile, e.Properties["profile"])
 }
 
-func TestTelemetry_withProfileCustom(t *testing.T) {
+func TestWithProfileCustom(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	const profile = "test"
@@ -65,7 +65,7 @@ func TestTelemetry_withProfileCustom(t *testing.T) {
 	a.NotEqual(e.Properties["profile"], profile) // should be a base64
 }
 
-func TestTelemetry_withDuration(t *testing.T) {
+func TestWithDuration(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -82,7 +82,7 @@ func TestTelemetry_withDuration(t *testing.T) {
 	a.GreaterOrEqual(e.Properties["duration"], int64(10))
 }
 
-func TestTelemetry_withFlags(t *testing.T) {
+func TestWithFlags(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -102,7 +102,7 @@ func TestTelemetry_withFlags(t *testing.T) {
 	a.Equal(e.Properties["flags"], []string{"test"})
 }
 
-func TestTelemetry_withVersion(t *testing.T) {
+func TestWithVersion(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	version.Version = "vTest"
@@ -115,7 +115,7 @@ func TestTelemetry_withVersion(t *testing.T) {
 	a.Equal(e.Properties["git_commit"], "sha-test")
 }
 
-func TestTelemetry_withOS(t *testing.T) {
+func TestWithOS(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withOS())
@@ -125,7 +125,7 @@ func TestTelemetry_withOS(t *testing.T) {
 	a.Equal(e.Properties["arch"], runtime.GOARCH)
 }
 
-func TestTelemetry_withAuthMethod_apiKey(t *testing.T) {
+func TestWithAuthMethod_apiKey(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	config.SetPublicAPIKey("test-public")
@@ -137,7 +137,7 @@ func TestTelemetry_withAuthMethod_apiKey(t *testing.T) {
 	a.Equal(e.Properties["auth_method"], "api_key")
 }
 
-func TestTelemetry_withAuthMethod_oauth(t *testing.T) {
+func TestWithAuthMethod_oauth(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	config.SetPublicAPIKey("")
@@ -149,7 +149,7 @@ func TestTelemetry_withAuthMethod_oauth(t *testing.T) {
 	a.Equal(e.Properties["auth_method"], "oauth")
 }
 
-func TestTelemetry_withService(t *testing.T) {
+func TestWithService(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	const url = "http://host.test"
@@ -163,7 +163,7 @@ func TestTelemetry_withService(t *testing.T) {
 	a.Equal(url, e.Properties["ops_manager_url"])
 }
 
-func TestTelemetry_withProjectID_Flag(t *testing.T) {
+func TestWithProjectID_Flag(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -185,7 +185,7 @@ func TestTelemetry_withProjectID_Flag(t *testing.T) {
 	a.Equal(projectID, e.Properties["project_id"])
 }
 
-func TestTelemetry_withProjectID_Config(t *testing.T) {
+func TestWithProjectID_Config(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -207,7 +207,7 @@ func TestTelemetry_withProjectID_Config(t *testing.T) {
 	a.Equal(projectID, e.Properties["project_id"])
 }
 
-func TestTelemetry_withProjectID_NoFlagOrConfig(t *testing.T) {
+func TestWithProjectID_NoFlagOrConfig(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -227,7 +227,7 @@ func TestTelemetry_withProjectID_NoFlagOrConfig(t *testing.T) {
 	a.Equal(false, ok)
 }
 
-func TestTelemetry_withOrgID_Flag(t *testing.T) {
+func TestWithOrgID_Flag(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -249,7 +249,7 @@ func TestTelemetry_withOrgID_Flag(t *testing.T) {
 	a.Equal(orgID, e.Properties["org_id"])
 }
 
-func TestTelemetry_withOrgID_Config(t *testing.T) {
+func TestWithOrgID_Config(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -271,7 +271,7 @@ func TestTelemetry_withOrgID_Config(t *testing.T) {
 	a.Equal(orgID, e.Properties["org_id"])
 }
 
-func TestTelemetry_withOrgID_NoFlagOrConfig(t *testing.T) {
+func TestWithOrgID_NoFlagOrConfig(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -291,7 +291,7 @@ func TestTelemetry_withOrgID_NoFlagOrConfig(t *testing.T) {
 	a.Equal(false, ok)
 }
 
-func TestTelemetry_withError(t *testing.T) {
+func TestWithError(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withError(errors.New("test")))
@@ -301,11 +301,46 @@ func TestTelemetry_withError(t *testing.T) {
 	a.Equal("test", e.Properties["error"])
 }
 
-func TestTelemetry_withExtraProps(t *testing.T) {
+func TestWithExtraProps(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withExtraProps(map[string]interface{}{"a": true}))
 
 	a := assert.New(t)
 	a.Equal(true, e.Properties["a"])
+}
+
+func TestWithPrompt(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
+	q := "random question"
+	k := "select"
+
+	e := newEvent(withPrompt(q, k))
+
+	a := assert.New(t)
+	a.Equal(q, e.Properties["prompt"])
+	a.Equal(k, e.Properties["prompt_kind"])
+}
+
+func TestWithDefault(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
+	q := true
+
+	e := newEvent(withDefault(q))
+
+	a := assert.New(t)
+	a.Equal(q, e.Properties["default"])
+}
+
+func TestWithEmpty(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
+	q := true
+
+	e := newEvent(withEmpty(q))
+
+	a := assert.New(t)
+	a.Equal(q, e.Properties["empty"])
 }

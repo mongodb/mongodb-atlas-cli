@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/pkg/browser"
 )
 
@@ -33,7 +33,7 @@ func (opts *Opts) askMongoShellQuestion() error {
 `)
 
 	q := newMongoShellQuestionAccessDeployment(opts.ClusterName)
-	if err := survey.AskOne(q, &opts.runMongoShell); err != nil || !opts.runMongoShell {
+	if err := telemetry.TrackAskOne(q, &opts.runMongoShell); err != nil || !opts.runMongoShell {
 		return err
 	}
 
@@ -41,7 +41,7 @@ func (opts *Opts) askMongoShellQuestion() error {
 		return nil
 	}
 	_, _ = fmt.Fprint(os.Stderr, "No MongoDB shell version configured.\n")
-	if err := survey.AskOne(newIsMongoShellInstalledQuestion(), &opts.mongoShellInstalled); err != nil {
+	if err := telemetry.TrackAskOne(newIsMongoShellInstalledQuestion(), &opts.mongoShellInstalled); err != nil {
 		return err
 	}
 
@@ -56,7 +56,7 @@ func (opts *Opts) askMongoShellQuestion() error {
 
 func openInstallInstructions() error {
 	var openURL bool
-	if err := survey.AskOne(newMongoShellQuestionOpenBrowser(), &openURL); !openURL || err != nil {
+	if err := telemetry.TrackAskOne(newMongoShellQuestionOpenBrowser(), &openURL); !openURL || err != nil {
 		return err
 	}
 
@@ -66,7 +66,7 @@ func openInstallInstructions() error {
 func askMongoShellPathQuestion() error {
 	var wantToProvidePath bool
 	q := newMongoShellPathQuestion()
-	if err := survey.AskOne(q, &wantToProvidePath); !wantToProvidePath || err != nil {
+	if err := telemetry.TrackAskOne(q, &wantToProvidePath); !wantToProvidePath || err != nil {
 		return err
 	}
 

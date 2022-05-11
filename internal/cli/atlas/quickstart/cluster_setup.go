@@ -53,7 +53,7 @@ func (opts *Opts) askClusterOptions() error {
 `)
 	}
 
-	if err := survey.Ask(qs, opts); err != nil {
+	if err := telemetry.TrackAsk(qs, opts); err != nil {
 		return err
 	}
 

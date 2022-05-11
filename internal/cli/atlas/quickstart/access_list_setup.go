@@ -19,7 +19,7 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

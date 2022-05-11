@@ -15,10 +15,11 @@
 package config
 
 import (
+	"fmt"
 	"os"
 
-	"github.com/mongodb/mongocli/internal/cli/require"
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 	exec "golang.org/x/sys/execabs"
 )
@@ -26,7 +27,7 @@ import (
 type editOpts struct {
 }
 
-func (opts *editOpts) Run() error {
+func (*editOpts) Run() error {
 	editor := defaultEditor
 	if v := os.Getenv("VISUAL"); v != "" {
 		editor = v
@@ -47,10 +48,10 @@ func EditBuilder() *cobra.Command {
 		Use:   "edit",
 		Short: "Opens the the config with the default text editor.",
 		Long:  `Will use the default editor to open the config file. You can use EDITOR or VISUAL envs to change the default.`,
-		Example: `
+		Example: fmt.Sprintf(`
   To open the config
-  $ mongocli config edit
-`,
+  $ %s config edit
+`, config.BinName()),
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opt.Run()

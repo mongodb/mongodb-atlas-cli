@@ -44,10 +44,6 @@ Options
      - 
      - false
      - Don't try to open a browser session.
-   * - --skipConfig
-     - 
-     - false
-     - Skip profile configuration.
 
 Inherited Options
 -----------------
@@ -70,7 +66,7 @@ Examples
 
 .. code-block::
 
-   To start the interactive setup:
+   To start the interactive login for your MongoDB Atlas account:
    $ atlas auth login
 
 

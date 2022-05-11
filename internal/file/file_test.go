@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/file"
+	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/spf13/afero"
 	"gopkg.in/yaml.v2"
 )

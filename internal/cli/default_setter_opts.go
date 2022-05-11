@@ -21,16 +21,16 @@ import (
 	"io"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/mongosh"
-	"github.com/mongodb/mongocli/internal/prompt"
-	"github.com/mongodb/mongocli/internal/store"
-	"github.com/mongodb/mongocli/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
+	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_default_opts.go -package=mocks github.com/mongodb/mongocli/internal/cli ProjectOrgsLister
+//go:generate mockgen -destination=../mocks/mock_default_opts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli ProjectOrgsLister
 
 type ProjectOrgsLister interface {
 	Projects(*atlas.ListOptions) (interface{}, error)
@@ -139,6 +139,14 @@ func (opts *DefaultSetterOpts) orgs() (oMap map[string]string, oSlice []string, 
 // If it fails or there are no projects to show we fallback to ask for project by ID.
 // If only one project, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskProject() error {
+	return opts.AskProjectIfCurrentNotAvailable("")
+}
+
+// AskProjectIfCurrentNotAvailable checks if the currentProjectID is still available for current account.
+// If it's not, it will try to construct a select based on fetched projects.
+// If it fails or there are no projects to show we fallback to ask for project by ID.
+// If only one project, select it by default without prompting the user.
+func (opts *DefaultSetterOpts) AskProjectIfCurrentNotAvailable(currentProjectID string) error {
 	pMap, pSlice, err := opts.projects()
 	if err != nil {
 		var target *atlas.ErrorResponse
@@ -146,6 +154,10 @@ func (opts *DefaultSetterOpts) AskProject() error {
 		case errors.Is(err, errNoResults):
 			_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any project")
 		case errors.Is(err, errTooManyResults):
+			if currentProjectID != "" {
+				opts.ProjectID = currentProjectID
+				return nil
+			}
 			_, _ = fmt.Fprintf(opts.OutWriter, "You have access to more than %d projects\n", resultsLimit)
 		case errors.As(err, &target):
 			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your projects: %s\n", target.Detail)
@@ -167,6 +179,15 @@ func (opts *DefaultSetterOpts) AskProject() error {
 		return nil
 	}
 
+	if currentProjectID != "" {
+		for _, pID := range pMap {
+			if pID == currentProjectID {
+				opts.ProjectID = currentProjectID
+				return nil
+			}
+		}
+	}
+
 	if len(pSlice) == 1 {
 		opts.ProjectID = pMap[pSlice[0]]
 	} else {
@@ -185,6 +206,14 @@ func (opts *DefaultSetterOpts) AskProject() error {
 // If it fails or there are no organizations to show we fallback to ask for org by ID.
 // If only one organization, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskOrg() error {
+	return opts.AskOrgIfCurrentNotAvailable("")
+}
+
+// AskOrgIfCurrentNotAvailable checks if the currentOrgID is still available for current account.
+// If it's not, it will try to construct a select based on fetched organizations.
+// If it fails or there are no organizations to show we fallback to ask for org by ID.
+// If only one organization, select it by default without prompting the user.
+func (opts *DefaultSetterOpts) AskOrgIfCurrentNotAvailable(currentOrgID string) error {
 	oMap, oSlice, err := opts.orgs()
 	if err != nil {
 		var target *atlas.ErrorResponse
@@ -192,6 +221,10 @@ func (opts *DefaultSetterOpts) AskOrg() error {
 		case errors.Is(err, errNoResults):
 			_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any organization")
 		case errors.Is(err, errTooManyResults):
+			if currentOrgID != "" {
+				opts.OrgID = currentOrgID
+				return nil
+			}
 			_, _ = fmt.Fprintf(opts.OutWriter, "You have access to more than %d organizations\n", resultsLimit)
 		case errors.As(err, &target):
 			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", target.Detail)
@@ -211,6 +244,15 @@ func (opts *DefaultSetterOpts) AskOrg() error {
 		}
 		_, _ = fmt.Fprint(opts.OutWriter, "Skipping default organization setting\n")
 		return nil
+	}
+
+	if currentOrgID != "" {
+		for _, oID := range oMap {
+			if oID == currentOrgID {
+				opts.OrgID = currentOrgID
+				return nil
+			}
+		}
 	}
 
 	if len(oSlice) == 1 {
@@ -252,7 +294,7 @@ func (opts *DefaultSetterOpts) SetUpMongoSHPath() {
 	config.SetMongoShellPath(defaultPath)
 }
 
-func (opts *DefaultSetterOpts) SetUpTelemetryEnabled() {
+func (*DefaultSetterOpts) SetUpTelemetryEnabled() {
 	// Telemetry is enabled by default
 	telemetryEnabled := true
 	if config.IsTelemetryEnabledSet() {
@@ -294,7 +336,7 @@ func omProjects(projects []*opsmngr.Project) (pMap map[string]string, pSlice []s
 	return pMap, pSlice
 }
 
-func (opts *DefaultSetterOpts) DefaultQuestions() []*survey.Question {
+func (*DefaultSetterOpts) DefaultQuestions() []*survey.Question {
 	q := []*survey.Question{
 		{
 			Name: "output",

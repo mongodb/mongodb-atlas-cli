@@ -19,12 +19,12 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/require"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/prompt"
-	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -119,29 +119,21 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "config",
 		Short: "Configure a profile to store access settings for your MongoDB deployment.",
-		Long: `Configure settings in a user profile.
+		Long: `You can define the settings that the MongoDB CLI uses to interact with MongoDB services.
 All settings are optional. You can specify settings individually by running: 
 $ mongocli config set --help 
-
 You can also use environment variables (MCLI_*) when running the tool.
 To find out more, see the documentation: https://docs.mongodb.com/mongocli/stable/configure/environment-variables/.`,
 		Example: `
-  To configure the tool to work with Atlas
+  Configure a profile to interact with Atlas:
   $ mongocli config
-
-  To configure the tool to work with Atlas for Government
+  Configure a profile to interact with Atlas for Government:
   $ mongocli config --service cloudgov
-  $ mongocli config --service gov
   
-  To configure the tool to work with Cloud Manager
+  Configure a profile to interact with Cloud Manager:
   $ mongocli config --service cloud-manager
-  $ mongocli config --service cloudmanager
-  $ mongocli config --service cm
-
-  To configure the tool to work with Ops Manager
+  Configure a profile to interact with Ops Manager:
   $ mongocli config --service ops-manager
-  $ mongocli config --service opsmanager
-  $ mongocli config --service om
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opt.OutWriter = cmd.OutOrStdout()

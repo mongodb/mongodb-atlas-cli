@@ -15,15 +15,15 @@
 package iam
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/iam/globalaccesslists"
-	"github.com/mongodb/mongocli/internal/cli/iam/globalapikeys"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations"
-	"github.com/mongodb/mongocli/internal/cli/iam/projects"
-	"github.com/mongodb/mongocli/internal/cli/iam/teams"
-	"github.com/mongodb/mongocli/internal/cli/iam/users"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/globalaccesslists"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/globalapikeys"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/users"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 )
 

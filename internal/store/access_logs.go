@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_access_logs.go -package=mocks github.com/mongodb/mongocli/internal/store AccessLogsListerByClusterName,AccessLogsListerByHostname,AccessLogsLister
+//go:generate mockgen -destination=../mocks/mock_access_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AccessLogsListerByClusterName,AccessLogsListerByHostname,AccessLogsLister
 
 type AccessLogsListerByClusterName interface {
 	AccessLogsByClusterName(string, string, *atlas.AccessLogOptions) (*atlas.AccessLogSettings, error)

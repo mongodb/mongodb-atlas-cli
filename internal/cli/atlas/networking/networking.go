@@ -15,8 +15,8 @@
 package networking
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/atlas/networking/containers"
-	"github.com/mongodb/mongocli/internal/cli/atlas/networking/peering"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/networking/containers"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/networking/peering"
 	"github.com/spf13/cobra"
 )
 

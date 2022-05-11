@@ -20,9 +20,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mongodb/mongocli/internal/decryption/aes"
-	"github.com/mongodb/mongocli/internal/decryption/kmip"
-	"github.com/mongodb/mongocli/internal/decryption/pem"
+	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/aes"
+	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/kmip"
+	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/pem"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -67,8 +67,11 @@ var (
 
 func (ki *KMIPKeyIdentifier) ValidateCredentials() error {
 	if ki.ServerCAFileName == "" || ki.ClientCertificateFileName == "" {
-		fmt.Fprintf(os.Stderr, `No credentials found for resource: KMIP uniqueKeyID="%v" serverNames="%v" serverPort="%v" keyWrapMethod="%v"
+		_, err := fmt.Fprintf(os.Stderr, `No credentials found for resource: KMIP uniqueKeyID="%v" serverNames="%v" serverPort="%v" keyWrapMethod="%v"
 `, ki.UniqueKeyID, strings.Join(ki.ServerNames, "; "), ki.ServerPort, ki.KeyWrapMethod)
+		if err != nil {
+			return err
+		}
 	}
 
 	if err := ki.validateServerCA(); err != nil {
@@ -88,7 +91,7 @@ func (ki *KMIPKeyIdentifier) DecryptKey(encryptedKey []byte) ([]byte, error) {
 		return nil, ErrKMIPServerNamesMissing
 	}
 
-	kmipEncryptedKey, err := ki.decodeEncryptedKey(encryptedKey)
+	kmipEncryptedKey, err := decodeEncryptedKey(encryptedKey)
 	if err != nil {
 		return nil, err
 	}
@@ -216,7 +219,7 @@ func (ki *KMIPKeyIdentifier) decryptWithKeyWrapMethodGet(kmipClient *kmip.Client
 	return decryptedLEK, nil
 }
 
-func (ki *KMIPKeyIdentifier) decodeEncryptedKey(encryptedKey []byte) (*KMIPEncryptedKey, error) {
+func decodeEncryptedKey(encryptedKey []byte) (*KMIPEncryptedKey, error) {
 	var kmipEncryptedKey KMIPEncryptedKey
 	if err := bson.Unmarshal(encryptedKey, &kmipEncryptedKey); err != nil {
 		return nil, err

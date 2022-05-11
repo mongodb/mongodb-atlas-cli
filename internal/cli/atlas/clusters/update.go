@@ -16,17 +16,32 @@ package clusters
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/require"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/file"
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/store"
-	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/file"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+)
+
+const (
+	exampleUpdate = `
+  Update tier for a cluster
+  $ %[1]s cluster update <clusterName> --projectId <projectId> --tier M50
+
+  Update disk size for a cluster
+  $ %[1]s cluster update <clusterName> --projectId <projectId> --diskSizeGB 20
+
+  Update MongoDB version for a cluster
+  $ %[1]s cluster update <clusterName> --projectId <projectId> --mdbVersion 4.2
+`
+	updateTmpl = "Updating cluster '{{.Name}}'.\n"
 )
 
 type UpdateOpts struct {
@@ -48,8 +63,6 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 		return err
 	}
 }
-
-var updateTmpl = "Updating cluster '{{.Name}}'.\n"
 
 func (opts *UpdateOpts) Run() error {
 	cluster, err := opts.cluster()
@@ -116,18 +129,10 @@ func UpdateBuilder() *cobra.Command {
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "update [clusterName]",
-		Short: "Update a MongoDB cluster.",
-		Example: `
-  Update tier for a cluster
-  $ mongocli atlas cluster update <clusterName> --projectId <projectId> --tier M50
-
-  Update disk size for a cluster
-  $ mongocli atlas cluster update <clusterName> --projectId <projectId> --diskSizeGB 20
-
-  Update MongoDB version for a cluster
-  $ mongocli atlas cluster update <clusterName> --projectId <projectId> --mdbVersion 4.2`,
-		Args: require.MaximumNArgs(1),
+		Use:     "update [clusterName]",
+		Short:   "Update a MongoDB cluster.",
+		Example: fmt.Sprintf(exampleUpdate, exampleCmd),
+		Args:    require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 0 {
 				opts.name = args[0]

@@ -21,7 +21,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/mongodb/mongocli/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlas "go.mongodb.org/atlas/mongodbatlas"

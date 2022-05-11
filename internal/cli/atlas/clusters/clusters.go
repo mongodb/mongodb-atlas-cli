@@ -15,18 +15,26 @@
 package clusters
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/availableregions"
-	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/connectionstring"
-	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/indexes"
-	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/onlinearchive"
-	"github.com/mongodb/mongocli/internal/cli/atlas/search"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/availableregions"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/connectionstring"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/indexes"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/onlinearchive"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
+var (
+	exampleCmd = "mongocli atlas"
+)
+
 func Builder() *cobra.Command {
 	const use = "clusters"
+	if config.ToolName == config.AtlasCLI {
+		exampleCmd = "atlas"
+	}
 	cmd := &cobra.Command{
 		Use:        use,
 		Aliases:    cli.GenerateAliases(use),

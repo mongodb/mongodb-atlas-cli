@@ -25,9 +25,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/auth"
@@ -115,10 +115,19 @@ func Test_registerOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
 	mockConfig.EXPECT().Save().Return(nil).Times(1)
-	expectedOrgs := &atlas.Organizations{}
-	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(0)
-	expectedProjects := &atlas.Projects{}
-	mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(0)
+	expectedOrgs := &atlas.Organizations{
+		TotalCount: 1,
+		Results: []*atlas.Organization{
+			{ID: "o1", Name: "Org1"},
+		},
+	}
+	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
+	expectedProjects := &atlas.Projects{TotalCount: 1,
+		Results: []*atlas.Project{
+			{ID: "p1", Name: "Project1"},
+		},
+	}
+	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
 
 	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.
@@ -267,26 +276,8 @@ Your code will expire after 5 minutes.
 `, buf.String())
 }
 
-func Test_registerOpts_RegisterPreRun(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	loginOpts := &LoginOpts{
-		flow:       mocks.NewMockAuthenticator(ctrl),
-		config:     mocks.NewMockLoginConfig(ctrl),
-		NoBrowser:  true,
-		SkipConfig: true,
-	}
-	defer ctrl.Finish()
-	buf := new(bytes.Buffer)
-
-	opts := &registerOpts{
-		login:                loginOpts,
-		regenerateCodePrompt: nil,
-	}
-
-	opts.OutWriter = buf
-	opts.login.OutWriter = buf
-
+func TestRegisterPreRun(t *testing.T) {
 	config.SetPublicAPIKey("public")
 	config.SetPrivateAPIKey("private")
-	require.ErrorContains(t, opts.registerPreRun(), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), WithProfileMsg)
+	require.ErrorContains(t, registerPreRun(), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), WithProfileMsg)
 }

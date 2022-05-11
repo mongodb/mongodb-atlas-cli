@@ -25,8 +25,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongocli/e2e"
-	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongodb-atlas-cli/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/openlyinc/pointy"
 	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"

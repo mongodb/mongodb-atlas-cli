@@ -18,13 +18,13 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/atlas/quickstart"
-	"github.com/mongodb/mongocli/internal/cli/auth"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/mongodb/mongocli/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -40,7 +40,7 @@ type Opts struct {
 	// register
 	register auth.RegisterFlow
 	// login
-	login *auth.LoginOpts
+	login auth.LoginFlow
 	// control
 	skipRegister bool
 	skipLogin    bool
@@ -49,6 +49,15 @@ type Opts struct {
 func (opts *Opts) Run(ctx context.Context) error {
 	if !opts.skipRegister {
 		if err := opts.register.Run(ctx); err != nil {
+			return err
+		}
+	} else if !opts.skipLogin {
+		_, _ = fmt.Fprintf(opts.OutWriter, `What will happen next:
+1. Login and verify your MongoDB Atlas account in your browser.
+2. Return to the terminal to create your first free MongoDB database in Atlas.
+`)
+
+		if err := opts.login.Run(ctx); err != nil {
 			return err
 		}
 	}
@@ -79,13 +88,10 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 		msg := fmt.Sprintf(auth.AlreadyAuthenticatedEmailMsg, account)
 		// token exists but it is not refreshed
 		if err := cli.RefreshToken(ctx); err != nil || validate.Token() != nil {
-			return fmt.Errorf(`%s
-
-%s
-%s`, msg, auth.LoginMsg, withProfileMsg)
+			opts.skipLogin = false
+			return nil
 		}
 
-		opts.skipLogin = false
 		_, _ = fmt.Fprintf(opts.OutWriter, `%s
 
 %s
@@ -108,7 +114,7 @@ func Builder() *cobra.Command {
 	qsOpts := &quickstart.Opts{}
 	opts := &Opts{
 		register:   auth.NewRegisterFlow(loginOpts),
-		login:      loginOpts,
+		login:      auth.NewLoginFlow(loginOpts),
 		quickstart: qsOpts,
 	}
 
@@ -134,7 +140,12 @@ func Builder() *cobra.Command {
 				}
 			}
 
-			//TODO: CLOUDP-122137 Run login if already authenticated
+			if !opts.skipLogin {
+				loginOpts.OutWriter = opts.OutWriter
+				if err := opts.login.PreRun(); err != nil {
+					return err
+				}
+			}
 
 			return opts.PreRunE(
 				opts.InitOutput(opts.OutWriter, ""),
@@ -148,7 +159,6 @@ func Builder() *cobra.Command {
 	// Register and login related
 	cmd.Flags().BoolVar(&loginOpts.IsGov, "gov", false, "Register to Atlas for Government.")
 	cmd.Flags().BoolVar(&loginOpts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&loginOpts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 	// Quickstart related
 	cmd.Flags().StringVar(&qsOpts.ClusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&qsOpts.Tier, flag.Tier, quickstart.DefaultAtlasTier, usage.Tier)

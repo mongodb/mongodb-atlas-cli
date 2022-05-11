@@ -22,9 +22,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/mongodb/mongocli/internal/store"
-
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/spf13/afero"
 )
 
@@ -65,7 +64,7 @@ func (t *tracker) track(data TrackOptions) error {
 	}
 
 	event := newEvent(options...)
-	err := t.send(data.Cmd.Context(), &[]Event{event})
+	err := send(data.Cmd.Context(), &[]Event{event})
 	if err != nil {
 		// Could not send the event, so log the error and cache the event
 		logError(err)
@@ -118,12 +117,12 @@ func (t *tracker) save(event Event) error {
 	return err
 }
 
-func (t *tracker) send(ctx context.Context, events *[]Event) error {
+func send(ctx context.Context, events *[]Event) error {
 	if config.Service() != config.CloudService {
 		// Only send events to Atlas - not to AtlasGov or OpsManager or CloudManager
 		return nil
 	}
-	s, err := store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+	s, err := store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry())
 	if err != nil {
 		return err
 	}

@@ -21,16 +21,15 @@ import (
 	"os"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/require"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth RegisterFlow
+//go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth RegisterFlow
 
 const (
 	accountURI     = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
@@ -128,44 +127,6 @@ func (opts *registerOpts) shouldRetryRegister(err error) (retry bool, errSurvey 
 	return opts.regenerateCodePrompt.confirm()
 }
 
-func (opts *registerOpts) setUpProfile(ctx context.Context) error {
-	opts.login.SetOAuthUpAccess()
-	s, err := opts.login.config.AccessTokenSubject()
-	if err != nil {
-		return err
-	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
-	if opts.login.SkipConfig {
-		return opts.login.config.Save()
-	}
-	if err := opts.InitStore(ctx); err != nil {
-		return err
-	}
-
-	if err := opts.AskOrg(); err != nil {
-		return err
-	}
-	opts.SetUpOrg()
-	if err := opts.AskProject(); err != nil {
-		return err
-	}
-	opts.SetUpProject()
-
-	opts.SetUpMongoSHPath()
-	opts.SetUpTelemetryEnabled()
-	if err := opts.login.config.Save(); err != nil {
-		return err
-	}
-	_, _ = fmt.Fprint(opts.OutWriter, "\nYour profile is now configured.\n")
-	if config.Name() != config.DefaultProfile {
-		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
-	}
-
-	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.BinName())
-
-	return nil
-}
-
 func (opts *registerOpts) Run(ctx context.Context) error {
 	_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
 
@@ -173,7 +134,14 @@ func (opts *registerOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.setUpProfile(ctx)
+	opts.login.SetOAuthUpAccess()
+	s, err := opts.login.config.AccessTokenSubject()
+	if err != nil {
+		return err
+	}
+	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
+
+	return opts.login.setUpProfile()
 }
 
 func (opts *registerOpts) PreRun(outWriter io.Writer) error {
@@ -186,7 +154,7 @@ func (opts *registerOpts) PreRun(outWriter io.Writer) error {
 	return opts.login.initFlow()
 }
 
-func (opts *registerOpts) registerPreRun() error {
+func registerPreRun() error {
 	if hasUserProgrammaticKeys() {
 		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
 		return fmt.Errorf(`%s
@@ -213,9 +181,14 @@ func RegisterBuilder() *cobra.Command {
   $ %s auth register
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.registerPreRun(); err != nil {
+			if err := registerPreRun(); err != nil {
 				return err
 			}
+
+			if err := opts.InitStore(cmd.Context()); err != nil {
+				return err
+			}
+
 			return opts.PreRun(cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -226,7 +199,6 @@ func RegisterBuilder() *cobra.Command {
 
 	cmd.Flags().BoolVar(&opts.login.IsGov, "gov", false, "Register to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.login.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&opts.login.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 
 	return cmd
 }

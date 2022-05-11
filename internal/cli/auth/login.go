@@ -21,20 +21,19 @@ import (
 	"os"
 	"time"
 
-	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/require"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/oauth"
-	"github.com/mongodb/mongocli/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/oauth"
+	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator,LoginConfig
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth Authenticator,LoginConfig,LoginFlow
 
 type Authenticator interface {
 	RequestCode(context.Context) (*auth.DeviceCode, *atlas.Response, error)
@@ -49,7 +48,6 @@ type LoginConfig interface {
 const (
 	AlreadyAuthenticatedMsg      = "you are already authenticated with an API key (Public key: %s)"
 	AlreadyAuthenticatedEmailMsg = "you are already authenticated with an email (%s)"
-	LoginMsg                     = `run "atlas auth login" to refresh your session and continue`
 	LoginWithProfileMsg          = `run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile`
 	LogoutToLoginAccountMsg      = `run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile`
 )
@@ -71,6 +69,10 @@ type LoginOpts struct {
 type LoginFlow interface {
 	Run(ctx context.Context) error
 	PreRun() error
+}
+
+func NewLoginFlow(opts *LoginOpts) LoginFlow {
+	return opts
 }
 
 func (opts *LoginOpts) initFlow() error {
@@ -120,34 +122,37 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
+
 	_, _ = fmt.Fprint(opts.OutWriter, "Press Enter to continue your profile configuration")
 	_, _ = fmt.Scanln()
-	if err := opts.AskOrg(); err != nil {
-		return err
-	}
-	opts.SetUpOrg()
-	if err := opts.AskProject(); err != nil {
-		return err
-	}
-	opts.SetUpProject()
 
-	if err := survey.Ask(opts.DefaultQuestions(), opts); err != nil {
+	if err := opts.setUpProfile(); err != nil {
 		return err
 	}
-	opts.SetUpOutput()
-	opts.SetUpMongoSHPath()
-	opts.SetUpTelemetryEnabled()
-	if err := opts.config.Save(); err != nil {
-		return err
-	}
+
 	_, _ = fmt.Fprint(opts.OutWriter, "\nYour profile is now configured.\n")
 	if config.Name() != config.DefaultProfile {
 		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
-
 	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.BinName())
 
 	return nil
+}
+
+func (opts *LoginOpts) setUpProfile() error {
+	if err := opts.AskOrgIfCurrentNotAvailable(config.OrgID()); err != nil {
+		return err
+	}
+	opts.SetUpOrg()
+
+	if err := opts.AskProjectIfCurrentNotAvailable(config.ProjectID()); err != nil {
+		return err
+	}
+	opts.SetUpProject()
+
+	opts.SetUpMongoSHPath()
+	opts.SetUpTelemetryEnabled()
+	return opts.config.Save()
 }
 
 func (opts *LoginOpts) printAuthInstructions(code *auth.DeviceCode) {
@@ -187,9 +192,9 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 		if auth.IsTimeoutErr(err) {
 			return errTimedOut
 		}
+
 		return err
 	}
-
 	opts.AccessToken = accessToken.AccessToken
 	opts.RefreshToken = accessToken.RefreshToken
 	return nil
@@ -199,7 +204,7 @@ func hasUserProgrammaticKeys() bool {
 	return config.PublicAPIKey() != "" && config.PrivateAPIKey() != ""
 }
 
-func (opts *LoginOpts) loginPreRun(ctx context.Context) error {
+func loginPreRun(ctx context.Context) error {
 	if hasUserProgrammaticKeys() {
 		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
 		return fmt.Errorf(`%s
@@ -226,17 +231,25 @@ func (opts *LoginOpts) PreRun() error {
 	return opts.initFlow()
 }
 
+func Tool() string {
+	if config.ToolName == config.MongoCLI {
+		return "Atlas or Cloud Manager"
+	}
+	return "Atlas"
+}
+
 func LoginBuilder() *cobra.Command {
 	opts := &LoginOpts{}
+
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
-		Example: fmt.Sprintf(`  To start the interactive setup:
+		Example: fmt.Sprintf(`  To start the interactive login for your MongoDB %s account:
   $ %s auth login
-`, config.BinName()),
+`, Tool(), config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			if err := opts.loginPreRun(cmd.Context()); err != nil {
+			if err := loginPreRun(cmd.Context()); err != nil {
 				return err
 			}
 			return opts.PreRun()
@@ -254,6 +267,7 @@ func LoginBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
+	_ = cmd.Flags().MarkDeprecated("skipConfig", "if profile is configured, login flow skips by default the config step.")
 	return cmd
 }
 

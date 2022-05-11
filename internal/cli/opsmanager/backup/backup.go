@@ -15,9 +15,9 @@
 package backup
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/config"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/snapshots"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/backup/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/backup/snapshots"
 	"github.com/spf13/cobra"
 )
 

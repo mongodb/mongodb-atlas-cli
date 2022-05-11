@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package store
 
@@ -21,7 +20,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasauth "go.mongodb.org/atlas/auth"
 )
 
@@ -31,7 +30,7 @@ type auth struct {
 	token    string
 }
 
-func (a auth) Token() (*atlasauth.Token, error) {
+func (auth) Token() (*atlasauth.Token, error) {
 	return nil, nil
 }
 
@@ -87,15 +86,15 @@ type testConfig struct {
 	auth
 }
 
-func (c testConfig) OpsManagerCACertificate() string {
+func (testConfig) OpsManagerCACertificate() string {
 	return ""
 }
 
-func (c testConfig) OpsManagerSkipVerify() string {
+func (testConfig) OpsManagerSkipVerify() string {
 	return "false"
 }
 
-func (c testConfig) Service() string {
+func (testConfig) Service() string {
 	return config.CloudService
 }
 

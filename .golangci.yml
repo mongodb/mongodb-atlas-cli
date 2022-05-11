@@ -23,6 +23,7 @@ linters-settings:
     # see https://github.com/mgechev/revive#available-rules for details.
     ignore-generated-header: true
     severity: warning
+    max-open-files: 2048
     rules:
       - name: blank-imports
       - name: context-as-argument
@@ -51,6 +52,14 @@ linters-settings:
       - name: unused-parameter
       - name: unreachable-code
       - name: redefines-builtin-id
+      - name: early-return
+      - name: unused-receiver
+      - name: constant-logical-expr
+      - name: confusing-naming
+      - name: unnecessary-stmt
+      - name: imports-blacklist
+        arguments:
+          - "github.com/pkg/errors"
 linters:
   disable-all: true
   enable:
@@ -133,6 +142,7 @@ linters:
   # - wsl: Whitespace Linter - Forces you to use empty lines! [fast: true, auto-fix: false]
 
 run:
+#  go: '1.17'
   tests: true
   timeout: 5m
   build-tags:

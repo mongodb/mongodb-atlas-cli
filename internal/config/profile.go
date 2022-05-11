@@ -224,7 +224,7 @@ func (p *Profile) Set(name string, value interface{}) {
 }
 
 func SetGlobal(name string, value interface{}) { viper.Set(name, value) }
-func (p *Profile) SetGlobal(name string, value interface{}) {
+func (*Profile) SetGlobal(name string, value interface{}) {
 	SetGlobal(name, value)
 }
 
@@ -432,7 +432,7 @@ func (p *Profile) MongoShellPath() string {
 
 // SetMongoShellPath sets the global MongoDB Shell path.
 func SetMongoShellPath(v string) { Default().SetMongoShellPath(v) }
-func (p *Profile) SetMongoShellPath(v string) {
+func (*Profile) SetMongoShellPath(v string) {
 	SetGlobal(mongoShellPath, v)
 }
 
@@ -444,13 +444,13 @@ func (p *Profile) SkipUpdateCheck() bool {
 
 // SetSkipUpdateCheck sets the global skip update check.
 func SetSkipUpdateCheck(v bool) { Default().SetSkipUpdateCheck(v) }
-func (p *Profile) SetSkipUpdateCheck(v bool) {
+func (*Profile) SetSkipUpdateCheck(v bool) {
 	SetGlobal(skipUpdateCheck, v)
 }
 
 // IsTelemetryEnabledSet return true if telemetry_enabled has been set.
 func IsTelemetryEnabledSet() bool { return Default().IsTelemetryEnabledSet() }
-func (p *Profile) IsTelemetryEnabledSet() bool {
+func (*Profile) IsTelemetryEnabledSet() bool {
 	return viper.IsSet(telemetryEnabled)
 }
 
@@ -462,7 +462,8 @@ func (p *Profile) TelemetryEnabled() bool {
 
 // SetTelemetryEnabled sets the telemetry enabled value.
 func SetTelemetryEnabled(v bool) { Default().SetTelemetryEnabled(v) }
-func (p *Profile) SetTelemetryEnabled(v bool) {
+
+func (*Profile) SetTelemetryEnabled(v bool) {
 	if !isTelemetryFeatureAllowed() {
 		return
 	}

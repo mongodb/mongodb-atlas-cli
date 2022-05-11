@@ -268,6 +268,14 @@ func (s *Store) setOpsManagerClient(client *http.Client) error {
 	return nil
 }
 
+func (s *Store) GetAtlasClient() (client *atlas.Client, err error) {
+	client, ok := s.client.(*atlas.Client)
+	if !ok {
+		err = errors.New("unable to cast client to expected type")
+	}
+	return client, err
+}
+
 // TransportConfigGetter interface for Ops Manager custom network settings.
 type TransportConfigGetter interface {
 	OpsManagerCACertificate() string

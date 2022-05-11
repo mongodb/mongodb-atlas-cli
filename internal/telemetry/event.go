@@ -36,7 +36,6 @@ import (
 type Event struct {
 	Timestamp  time.Time              `json:"timestamp"`
 	Source     string                 `json:"source"`
-	Name       string                 `json:"name"`
 	Properties map[string]interface{} `json:"properties"`
 }
 
@@ -198,7 +197,6 @@ func newEvent(opts ...eventOpt) Event {
 	var event = Event{
 		Timestamp: time.Now(),
 		Source:    config.ToolName,
-		Name:      config.ToolName + "-event",
 		Properties: map[string]interface{}{
 			"result": "SUCCESS",
 		},

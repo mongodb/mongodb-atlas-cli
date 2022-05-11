@@ -120,7 +120,6 @@ func TestTelemetry_Save(t *testing.T) {
 	var event = Event{
 		Timestamp:  time.Now(),
 		Source:     config.ToolName,
-		Name:       config.ToolName + "-event",
 		Properties: properties,
 	}
 	a.NoError(tracker.save(event))
@@ -154,7 +153,6 @@ func TestTelemetry_Save_MaxCacheFileSize(t *testing.T) {
 	var event = Event{
 		Timestamp:  time.Now(),
 		Source:     config.ToolName,
-		Name:       config.ToolName + "-event",
 		Properties: properties,
 	}
 

@@ -52,7 +52,7 @@ func newTracker() (*tracker, error) {
 	}, nil
 }
 
-func (t *tracker) track(data TrackOptions) error {
+func (t *tracker) trackCommand(data TrackOptions) error {
 	options := []eventOpt{withCommandPath(data.Cmd), withDuration(data.Cmd), withFlags(data.Cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(data.Cmd), withOrgID(data.Cmd), withTerminal(), withInstaller(t.fs), withExtraProps(data.extraProps)}
 
 	if data.Err != nil {

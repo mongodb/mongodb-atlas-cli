@@ -28,7 +28,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTelemetry_Track(t *testing.T) {
+func TestTrackCommand(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	a := assert.New(t)
@@ -48,7 +48,7 @@ func TestTelemetry_Track(t *testing.T) {
 	}
 	_ = cmd.ExecuteContext(NewContext())
 
-	err = tracker.track(TrackOptions{
+	err = tracker.trackCommand(TrackOptions{
 		Cmd: &cmd,
 	})
 	a.NoError(err)
@@ -63,7 +63,7 @@ func TestTelemetry_Track(t *testing.T) {
 	a.True(info.Size() > minExpectedSize)
 }
 
-func TestTelemetry_TrackWithError(t *testing.T) {
+func TestTrackCommandWithError(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	a := assert.New(t)
@@ -84,7 +84,7 @@ func TestTelemetry_TrackWithError(t *testing.T) {
 	}
 	errCmd := cmd.ExecuteContext(NewContext())
 
-	err = tracker.track(TrackOptions{
+	err = tracker.trackCommand(TrackOptions{
 		Cmd: &cmd,
 		Err: errCmd,
 	})
@@ -101,7 +101,7 @@ func TestTelemetry_TrackWithError(t *testing.T) {
 	a.True(info.Size() > minExpectedSize)
 }
 
-func TestTelemetry_Save(t *testing.T) {
+func TestSave(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	a := assert.New(t)
@@ -135,7 +135,7 @@ func TestTelemetry_Save(t *testing.T) {
 	a.True(info.Size() > minExpectedSize)
 }
 
-func TestTelemetry_Save_MaxCacheFileSize(t *testing.T) {
+func TestSaveOverMaxCacheFileSize(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	a := assert.New(t)
@@ -164,7 +164,7 @@ func TestTelemetry_Save_MaxCacheFileSize(t *testing.T) {
 	a.Error(tracker.save(event))
 }
 
-func TestTelemetry_OpenCacheFile(t *testing.T) {
+func TestOpenCacheFile(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	a := assert.New(t)

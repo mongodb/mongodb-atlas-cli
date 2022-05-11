@@ -124,13 +124,12 @@ func Test_loginOpts_Run(t *testing.T) {
 	mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(0)
 	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `
-First, copy your one-time code: 1234-5678
+To verify your account, copy your one-time code:
+1234-5678
 
-Next, sign in with your browser and enter the code.
+Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-Or go to http://localhost
-
-Your code will expire after 5 minutes.
+Go to http://localhost.
 Successfully logged in as test@10gen.com.
 `, buf.String())
 }

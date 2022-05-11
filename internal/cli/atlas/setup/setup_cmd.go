@@ -48,6 +48,11 @@ type Opts struct {
 
 func (opts *Opts) Run(ctx context.Context) error {
 	if !opts.skipRegister {
+		_, _ = fmt.Fprintf(opts.OutWriter, `This command will help you
+1. Create and verify your MongoDB Atlas account in your browser.
+2. Return to the terminal to create your first free MongoDB database in Atlas.
+
+`)
 		if err := opts.register.Run(ctx); err != nil {
 			return err
 		}

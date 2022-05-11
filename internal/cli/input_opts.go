@@ -18,7 +18,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/mattn/go-isatty"
+	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 )
 
 type InputOpts struct {
@@ -45,28 +45,10 @@ func (opts *InputOpts) ConfigReader() io.Reader {
 
 // IsTerminalInput returns true is the current file descriptor is TTY kind of terminal.
 func (opts *InputOpts) IsTerminalInput() bool {
-	return IsTerminalInput(opts.InReader)
-}
-
-// IsTerminalInput returns true is the current file descriptor is TTY kind of terminal.
-func IsTerminalInput(r io.Reader) bool {
-	if f, isFile := r.(*os.File); isFile {
-		return isatty.IsTerminal(f.Fd()) || IsCygwinTerminalInput(r)
-	}
-
-	return false
+	return terminal.IsTerminalInput(opts.InReader)
 }
 
 // IsCygwinTerminalInput returns true is the current file descriptor is cygwin.
 func (opts *InputOpts) IsCygwinTerminalInput() bool {
-	return IsCygwinTerminalInput(opts.InReader)
-}
-
-// IsCygwinTerminal returns true is the current file descriptor is cygwin.
-func IsCygwinTerminalInput(r io.Reader) bool {
-	if f, isFile := r.(*os.File); isFile {
-		return isatty.IsCygwinTerminal(f.Fd())
-	}
-
-	return false
+	return terminal.IsCygwinTerminalInput(opts.InReader)
 }

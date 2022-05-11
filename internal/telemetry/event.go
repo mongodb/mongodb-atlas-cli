@@ -23,10 +23,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
+	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/internal/version"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -152,13 +152,13 @@ func withOrgID(cmd *cobra.Command) eventOpt {
 
 func withTerminal() eventOpt {
 	return func(event Event) {
-		if cli.IsTerminal(os.Stdout) {
-			event.Properties["terminal"] = "tty"
-			return
+		if terminal.IsCygwinTerminal(os.Stdout) {
+			event.Properties["terminal"] = "cygwin"
 		}
 
-		if cli.IsCygwinTerminal(os.Stdout) {
-			event.Properties["terminal"] = "cygwin"
+		if terminal.IsTerminal(os.Stdout) {
+			event.Properties["terminal"] = "tty"
+			return
 		}
 	}
 }

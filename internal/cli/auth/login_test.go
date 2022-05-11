@@ -80,6 +80,8 @@ func Test_loginOpts_Run(t *testing.T) {
 		flow:      mockFlow,
 		config:    mockConfig,
 		NoBrowser: true,
+		// todo: do not test using SkipConfig flag (deprecated)
+		SkipConfig: true,
 	}
 	opts.OutWriter = buf
 	opts.Store = mockStore
@@ -123,13 +125,13 @@ func Test_loginOpts_Run(t *testing.T) {
 			{ID: "o1", Name: "Org1"},
 		},
 	}
-	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
+	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(0)
 	expectedProjects := &atlas.Projects{TotalCount: 1,
 		Results: []*atlas.Project{
 			{ID: "p1", Name: "Project1"},
 		},
 	}
-	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
+	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(0)
 	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `
 First, copy your one-time code: 1234-5678
@@ -140,18 +142,16 @@ Or go to http://localhost
 
 Your code will expire after 5 minutes.
 Successfully logged in as test@10gen.com.
-Press Enter to continue your profile configuration
-Your profile is now configured.
-You can use [mongocli config set] to change these settings at a later time.
 `, buf.String())
 }
 
 func Test_registerOpts_LoginPreRun_APIKeys(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	opts := &LoginOpts{
-		flow:      mocks.NewMockAuthenticator(ctrl),
-		config:    mocks.NewMockLoginConfig(ctrl),
-		NoBrowser: true,
+		flow:       mocks.NewMockAuthenticator(ctrl),
+		config:     mocks.NewMockLoginConfig(ctrl),
+		NoBrowser:  true,
+		SkipConfig: true,
 	}
 	defer ctrl.Finish()
 	ctx := context.TODO()

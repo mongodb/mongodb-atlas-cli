@@ -62,6 +62,7 @@ type LoginOpts struct {
 	IsGov          bool
 	isCloudManager bool
 	NoBrowser      bool
+	SkipConfig     bool
 	config         LoginConfig
 	flow           Authenticator
 }
@@ -116,6 +117,12 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 		return err
 	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
+	if opts.SkipConfig {
+		return opts.config.Save()
+	}
+	if err := opts.InitStore(ctx); err != nil {
+		return err
+	}
 
 	_, _ = fmt.Fprint(opts.OutWriter, "Press Enter to continue your profile configuration")
 	_, _ = fmt.Scanln()
@@ -243,9 +250,6 @@ func LoginBuilder() *cobra.Command {
 `, Tool(), config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			if err := opts.InitStore(cmd.Context()); err != nil {
-				return err
-			}
 			if err := opts.loginPreRun(cmd.Context()); err != nil {
 				return err
 			}
@@ -263,6 +267,8 @@ func LoginBuilder() *cobra.Command {
 
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
+	_ = cmd.Flags().MarkDeprecated("skipConfig", "if profile is configured, login flow skips by default the config step.")
 	return cmd
 }
 

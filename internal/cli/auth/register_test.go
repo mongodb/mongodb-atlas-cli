@@ -66,9 +66,10 @@ func Test_registerOpts_Run(t *testing.T) {
 	ctx := context.TODO()
 
 	loginOpts := &LoginOpts{
-		flow:      mockFlow,
-		config:    mockConfig,
-		NoBrowser: true,
+		flow:       mockFlow,
+		config:     mockConfig,
+		NoBrowser:  true,
+		SkipConfig: true,
 	}
 
 	opts := &registerOpts{
@@ -151,9 +152,10 @@ func Test_registerOpts_registerAndAuthenticate(t *testing.T) {
 	ctx := context.TODO()
 
 	loginOpts := &LoginOpts{
-		flow:      mockFlow,
-		config:    mockConfig,
-		NoBrowser: true,
+		flow:       mockFlow,
+		config:     mockConfig,
+		NoBrowser:  true,
+		SkipConfig: true,
 	}
 
 	opts := &registerOpts{
@@ -218,9 +220,10 @@ func Test_registerOpts_registerAndAuthenticate_pollTimeout(t *testing.T) {
 	}
 
 	loginOpts := &LoginOpts{
-		flow:      mockFlow,
-		config:    mockConfig,
-		NoBrowser: true,
+		flow:       mockFlow,
+		config:     mockConfig,
+		NoBrowser:  true,
+		SkipConfig: true,
 	}
 
 	opts := &registerOpts{
@@ -276,9 +279,10 @@ Your code will expire after 5 minutes.
 func Test_registerOpts_RegisterPreRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	loginOpts := &LoginOpts{
-		flow:      mocks.NewMockAuthenticator(ctrl),
-		config:    mocks.NewMockLoginConfig(ctrl),
-		NoBrowser: true,
+		flow:       mocks.NewMockAuthenticator(ctrl),
+		config:     mocks.NewMockLoginConfig(ctrl),
+		NoBrowser:  true,
+		SkipConfig: true,
 	}
 	defer ctrl.Finish()
 	buf := new(bytes.Buffer)

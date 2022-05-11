@@ -89,6 +89,9 @@ func trackSurvey(p survey.Prompt, response interface{}, e error) {
 		r := *response.(*string)
 
 		options = append(options, withPrompt(v.Message, "select"), withDefault(r == v.Default), withEmpty(r == ""))
+	default:
+		logError(errors.New("unknown survey prompt"))
+		return
 	}
 
 	event := newEvent(options...)

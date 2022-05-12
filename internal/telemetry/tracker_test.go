@@ -22,6 +22,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -188,4 +189,35 @@ func TestOpenCacheFile(t *testing.T) {
 	// Verify that the file is empty
 	var expectedSize int64 // The nil value is zero
 	a.Equal(info.Size(), expectedSize)
+}
+
+func TestTrackSurvey(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
+	a := assert.New(t)
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
+	a.NoError(err)
+
+	tracker := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+	}
+
+	response := true
+	err = tracker.trackSurvey(
+		&survey.Confirm{Message: "test"},
+		&response,
+		nil,
+	)
+	a.NoError(err)
+	// Verify that the file exists
+	filename := filepath.Join(cacheDir, cacheFilename)
+	info, statError := tracker.fs.Stat(filename)
+	a.NoError(statError)
+	// Verify the file name
+	a.Equal(info.Name(), cacheFilename)
+	// Verify that the file contains some data
+	var minExpectedSize int64 = 10
+	a.True(info.Size() > minExpectedSize)
 }

@@ -20,6 +20,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
 )
@@ -105,4 +106,51 @@ func (t *tracker) save(event Event) error {
 	}
 	_, err = file.Write(data)
 	return err
+}
+
+func castBool(i interface{}) bool {
+	c, ok := i.(*bool)
+
+	var ret bool
+	if ok && i != nil {
+		ret = *c
+	}
+
+	return ret
+}
+
+func castString(i interface{}) string {
+	c, ok := i.(*string)
+
+	var ret string
+	if ok && i != nil {
+		ret = *c
+	}
+
+	return ret
+}
+
+func (t *tracker) trackSurvey(p survey.Prompt, response interface{}, e error) error {
+	options := []eventOpt{}
+
+	if e != nil {
+		options = append(options, withError(e))
+	}
+
+	switch v := p.(type) {
+	case *survey.Confirm:
+		options = append(options, withPrompt(v.Message, "confirm"), withDefault(castBool(response) == v.Default))
+	case *survey.Input:
+		options = append(options, withPrompt(v.Message, "input"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""))
+	case *survey.Password:
+		options = append(options, withPrompt(v.Message, "input"), withEmpty(castString(response) == ""))
+	case *survey.Select:
+		options = append(options, withPrompt(v.Message, "select"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""))
+	default:
+		return errors.New("unknown survey prompt")
+	}
+
+	event := newEvent(options...)
+
+	return t.save(event)
 }

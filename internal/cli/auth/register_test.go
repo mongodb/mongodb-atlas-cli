@@ -137,7 +137,7 @@ To verify your account, copy your one-time code:
 
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-To continue, go to http://localhost.
+To continue, go to https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect
 Successfully logged in as test@10gen.com.
 `, buf.String())
 }

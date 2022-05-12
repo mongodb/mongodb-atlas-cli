@@ -60,14 +60,14 @@ func (opts *registerOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	opts.login.SetOAuthUpAccess()
+	opts.login.SetUpOAuthAccess()
 	s, err := opts.login.config.AccessTokenSubject()
 	if err != nil {
 		return err
 	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
 
-	return opts.login.setUpProfile()
+	return opts.login.setUpProfile(ctx)
 }
 
 type registerAuthenticator struct {
@@ -139,10 +139,6 @@ func RegisterBuilder() *cobra.Command {
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := registerPreRun(); err != nil {
-				return err
-			}
-
-			if err := opts.InitStore(cmd.Context()); err != nil {
 				return err
 			}
 

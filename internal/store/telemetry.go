@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 )
 
-const urlPath = "api/private/v1.0/telemetry/eventsx"
+const urlPath = "api/private/v1.0/telemetry/events"
 
 func SendEvents(ctx context.Context, body interface{}) error {
 	if config.Service() != config.CloudService {

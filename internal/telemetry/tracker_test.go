@@ -22,6 +22,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -29,16 +32,18 @@ import (
 )
 
 func TestTelemetry_Track(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockEventsSender(ctrl)
+	defer ctrl.Finish()
+
 	config.ToolName = config.AtlasCLI
 
 	a := assert.New(t)
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
-	a.NoError(err)
 
 	tracker := &tracker{
 		fs:               afero.NewMemMapFs(),
 		maxCacheFileSize: defaultMaxCacheFileSize,
-		cacheDir:         cacheDir,
+		store:            mockStore,
 	}
 
 	cmd := cobra.Command{
@@ -48,22 +53,23 @@ func TestTelemetry_Track(t *testing.T) {
 	}
 	_ = cmd.ExecuteContext(NewContext())
 
-	err = tracker.track(TrackOptions{
+	mockStore.
+		EXPECT().
+		SendEvents(gomock.Any()).
+		Return(nil).
+		Times(1)
+
+	err := tracker.track(TrackOptions{
 		Cmd: &cmd,
 	})
 	a.NoError(err)
-	// Verify that the file exists
-	filename := filepath.Join(cacheDir, cacheFilename)
-	info, statError := tracker.fs.Stat(filename)
-	a.NoError(statError)
-	// Verify the file name
-	a.Equal(info.Name(), cacheFilename)
-	// Verify that the file contains some data
-	var minExpectedSize int64 = 10
-	a.True(info.Size() > minExpectedSize)
 }
 
 func TestTelemetry_TrackWithError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockEventsSender(ctrl)
+	defer ctrl.Finish()
+
 	config.ToolName = config.AtlasCLI
 
 	a := assert.New(t)
@@ -74,6 +80,7 @@ func TestTelemetry_TrackWithError(t *testing.T) {
 		fs:               afero.NewMemMapFs(),
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		cacheDir:         cacheDir,
+		store:            mockStore,
 	}
 
 	cmd := cobra.Command{
@@ -83,6 +90,12 @@ func TestTelemetry_TrackWithError(t *testing.T) {
 		},
 	}
 	errCmd := cmd.ExecuteContext(NewContext())
+
+	mockStore.
+		EXPECT().
+		SendEvents(gomock.Any()).
+		Return(errors.New("test")).
+		Times(1)
 
 	err = tracker.track(TrackOptions{
 		Cmd: &cmd,

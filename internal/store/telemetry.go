@@ -15,31 +15,31 @@
 package store
 
 import (
-	"context"
 	"net/http"
+
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 )
 
+//go:generate mockgen -destination=../mocks/mock_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store EventsSender
+
 const urlPath = "api/private/v1.0/telemetry/events"
 
-func SendEvents(ctx context.Context, body interface{}) error {
-	if config.Service() != config.CloudService {
-		// Only send events to Atlas - not to AtlasGov or OpsManager or CloudManager
+type EventsSender interface {
+	SendEvents(body interface{}) error
+}
+
+func (s *Store) SendEvents(body interface{}) error {
+	switch s.service {
+	case config.CloudService:
+		request, err := s.client.(*atlas.Client).NewRequest(s.ctx, http.MethodPost, urlPath, body)
+		if err != nil {
+			return err
+		}
+		_, err = s.client.(*atlas.Client).Do(s.ctx, request, nil)
+		return err
+	default:
 		return nil
 	}
-	s, err := New(AuthenticatedPreset(config.Default()), WithContext(ctx), Telemetry())
-	if err != nil {
-		return err
-	}
-	client, err := s.GetAtlasClient()
-	if err != nil {
-		return err
-	}
-	request, err := client.NewRequest(ctx, http.MethodPost, urlPath, body)
-	if err != nil {
-		return err
-	}
-	_, err = client.Do(ctx, request, nil)
-	return err
 }

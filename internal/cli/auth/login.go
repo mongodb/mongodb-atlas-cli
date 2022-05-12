@@ -186,9 +186,8 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 	}
 
 	var openBrowser bool
-	msg := fmt.Sprintf("Open default browser automatically?")
 	p := &survey.Confirm{
-		Message: msg,
+		Message: "Open default browser?",
 		Default: true,
 	}
 

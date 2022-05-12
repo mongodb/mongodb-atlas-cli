@@ -137,7 +137,7 @@ To verify your account, copy your one-time code:
 
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-Go to http://localhost.
+To continue, go to http://localhost.
 Successfully logged in as test@10gen.com.
 `, buf.String())
 }
@@ -199,7 +199,7 @@ To verify your account, copy your one-time code:
 
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-Go to http://localhost.
+To continue, go to http://localhost.
 Successfully logged in as test@10gen.com.
 `, buf.String())
 }
@@ -255,22 +255,20 @@ func Test_registerOpts_registerAndAuthenticate_pollTimeout(t *testing.T) {
 	err := opts.registerAndAuthenticate(ctx)
 	assert.Equal(t, err, auth.ErrTimeout)
 	assert.Equal(t, `
-First, copy your one-time code: 1234-5678
+To verify your account, copy your one-time code:
+1234-5678
 
-Next, sign in with your browser and enter the code.
+Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-Or go to https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect
-
-Your code will expire after 5 minutes.
+To continue, go to https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect
 ? Your one-time verification code is expired. Would you like to generate a new one? (Y/n)
 
-First, copy your one-time code: 1234-5678
+To verify your account, copy your one-time code:
+1234-5678
 
-Next, sign in with your browser and enter the code.
+Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-Or go to https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect
-
-Your code will expire after 5 minutes.
+To continue, go to https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect
 ? Your one-time verification code is expired. Would you like to generate a new one? (Y/n)
 `, buf.String())
 }

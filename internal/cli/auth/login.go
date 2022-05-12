@@ -214,17 +214,6 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 		return
 	}
 
-	var openBrowser bool
-	p := &survey.Confirm{
-		Message: "Open default browser?",
-		Default: true,
-	}
-
-	// TODO: CLOUDP-118532 - Use telemetry
-	if err := survey.AskOne(p, &openBrowser); err != nil || !openBrowser {
-		return
-	}
-
 	if errBrowser := browser.OpenURL(uri); errBrowser != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
 	}

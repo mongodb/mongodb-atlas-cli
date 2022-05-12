@@ -118,8 +118,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
 
 	require.NoError(t, opts.Run(ctx))
-	assert.Equal(t, `Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.
-
+	assert.Equal(t, `
 To verify your account, copy your one-time code:
 1234-5678
 

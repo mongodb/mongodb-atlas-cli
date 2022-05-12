@@ -197,7 +197,7 @@ func RegisterBuilder() *cobra.Command {
 		Args: require.NoArgs,
 	}
 
-	cmd.Flags().BoolVar(&opts.login.IsGov, "gov", false, "Register to Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.login.IsGov, "gov", false, "Register with Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.login.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 
 	return cmd

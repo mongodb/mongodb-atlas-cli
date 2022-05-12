@@ -35,7 +35,7 @@ Options
    * - --gov
      - 
      - false
-     - Register to Atlas for Government.
+     - Register with Atlas for Government.
    * - -h, --help
      - 
      - false

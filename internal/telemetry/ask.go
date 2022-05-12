@@ -38,6 +38,28 @@ func TrackAskOne(p survey.Prompt, response interface{}, opts ...survey.AskOpt) e
 	return err
 }
 
+func castBool(i interface{}) bool {
+	c, ok := i.(*bool)
+
+	var ret bool
+	if ok && i != nil {
+		ret = *c
+	}
+
+	return ret
+}
+
+func castString(i interface{}) string {
+	c, ok := i.(*string)
+
+	var ret string
+	if ok && i != nil {
+		ret = *c
+	}
+
+	return ret
+}
+
 func trackSurvey(p survey.Prompt, response interface{}, e error) {
 	if !config.TelemetryEnabled() {
 		return
@@ -57,21 +79,13 @@ func trackSurvey(p survey.Prompt, response interface{}, e error) {
 
 	switch v := p.(type) {
 	case *survey.Confirm:
-		r := *response.(*bool)
-
-		options = append(options, withPrompt(v.Message, "confirm"), withDefault(r == v.Default))
+		options = append(options, withPrompt(v.Message, "confirm"), withDefault(castBool(response) == v.Default))
 	case *survey.Input:
-		r := *response.(*string)
-
-		options = append(options, withPrompt(v.Message, "input"), withDefault(r == v.Default), withEmpty(r == ""))
+		options = append(options, withPrompt(v.Message, "input"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""))
 	case *survey.Password:
-		r := *response.(*string)
-
-		options = append(options, withPrompt(v.Message, "input"), withEmpty(r == ""))
+		options = append(options, withPrompt(v.Message, "input"), withEmpty(castString(response) == ""))
 	case *survey.Select:
-		r := *response.(*string)
-
-		options = append(options, withPrompt(v.Message, "select"), withDefault(r == v.Default), withEmpty(r == ""))
+		options = append(options, withPrompt(v.Message, "select"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""))
 	default:
 		logError(errors.New("unknown survey prompt"))
 		return

@@ -216,13 +216,12 @@ func Test_loginOpts_oauthFlow(t *testing.T) {
 		assert.Equal(t, opts.AccessToken, expectedToken.AccessToken)
 		assert.Equal(t, opts.RefreshToken, expectedToken.RefreshToken)
 		assert.Equal(t, `
-First, copy your one-time code: 1234-5678
+To verify your account, copy your one-time code:
+1234-5678
 
-Next, sign in with your browser and enter the code.
+Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-Or go to http://localhost
-
-Your code will expire after 5 minutes.
+To continue, go to http://localhost
 `, buf.String())
 	})
 
@@ -273,22 +272,20 @@ Your code will expire after 5 minutes.
 		err := opts.oauthFlow(ctx)
 		assert.Equal(t, err, auth.ErrTimeout)
 		assert.Equal(t, `
-First, copy your one-time code: 1234-5678
+To verify your account, copy your one-time code:
+1234-5678
 
-Next, sign in with your browser and enter the code.
+Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-Or go to http://localhost
-
-Your code will expire after 5 minutes.
+To continue, go to http://localhost
 ? Your one-time verification code is expired. Would you like to generate a new one? (Y/n)
 
-First, copy your one-time code: 1234-5678
+To verify your account, copy your one-time code:
+1234-5678
 
-Next, sign in with your browser and enter the code.
+Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-Or go to http://localhost
-
-Your code will expire after 5 minutes.
+To continue, go to http://localhost
 ? Your one-time verification code is expired. Would you like to generate a new one? (Y/n)
 `, buf.String())
 	})

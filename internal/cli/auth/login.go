@@ -196,9 +196,10 @@ To verify your account, copy your one-time code:
 	_, _ = fmt.Fprintf(opts.OutWriter, `
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after %.0f minutes.
 
-`,
+To continue, go to `,
 		codeDuration.Minutes(),
 	)
+	opts.printlnWithColor(color.New(color.FgBlue, color.Bold), code.VerificationURI)
 }
 
 func (opts *LoginOpts) printlnWithColor(c *color.Color, text string) {
@@ -209,9 +210,6 @@ func (opts *LoginOpts) printlnWithColor(c *color.Color, text string) {
 }
 
 func (opts *LoginOpts) handleBrowser(uri string) {
-	_, _ = fmt.Fprint(opts.OutWriter, "To continue, go to ")
-	opts.printlnWithColor(color.New(color.FgBlue, color.Bold), uri)
-
 	if opts.NoBrowser {
 		return
 	}
@@ -222,6 +220,7 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 		Default: true,
 	}
 
+	// TODO: CLOUDP-118532 - Use telemetry
 	if err := survey.AskOne(p, &openBrowser); err != nil || !openBrowser {
 		return
 	}

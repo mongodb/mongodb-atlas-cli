@@ -162,13 +162,10 @@ func (opts *LoginOpts) printAuthInstructions(code *auth.DeviceCode) {
 To verify your account, copy your one-time code:
 `)
 
-	codeView := color.New(color.FgYellow, color.Bold)
-	_, err := codeView.Fprintf(opts.OutWriter, "%s-%s", code.UserCode[0:len(code.UserCode)/2], code.UserCode[len(code.UserCode)/2:])
-	if err != nil {
-		_, _ = fmt.Fprintf(opts.OutWriter, "%s-%s", code.UserCode[0:len(code.UserCode)/2], code.UserCode[len(code.UserCode)/2:])
-	}
-	_, _ = fmt.Fprintf(opts.OutWriter, `
+	userCode := fmt.Sprintf("%s-%s", code.UserCode[0:len(code.UserCode)/2], code.UserCode[len(code.UserCode)/2:])
+	opts.printlnWithColor(color.New(color.FgYellow, color.Bold), userCode)
 
+	_, _ = fmt.Fprintf(opts.OutWriter, `
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after %.0f minutes.
 
 `,
@@ -176,10 +173,16 @@ Paste the code in the browser when prompted to activate your Atlas CLI. Your cod
 	)
 }
 
+func (opts *LoginOpts) printlnWithColor(c *color.Color, text string) {
+	_, err := c.Fprintln(opts.OutWriter, text)
+	if err != nil {
+		_, _ = fmt.Fprintln(opts.OutWriter, text)
+	}
+}
+
 func (opts *LoginOpts) handleBrowser(uri string) {
-	printBlue := color.New(color.FgBlue, color.Bold).FprintlnFunc()
 	_, _ = fmt.Fprint(opts.OutWriter, "To continue, go to ")
-	printBlue(opts.OutWriter, uri)
+	opts.printlnWithColor(color.New(color.FgBlue, color.Bold), uri)
 
 	if opts.NoBrowser {
 		return

@@ -51,7 +51,7 @@ func Test_setupOpts_Run(t *testing.T) {
 
 	opts := &Opts{
 		register:   mockRegFlow,
-		login:      &auth.LoginOpts{},
+		login:      auth.NewLoginOpts(),
 		quickstart: mockQuickstartFlow,
 		skipLogin:  true,
 	}
@@ -89,7 +89,7 @@ func Test_registerOpts_RunWithAPIKeys(t *testing.T) {
 
 	opts := &Opts{
 		register:   mockRegFlow,
-		login:      &auth.LoginOpts{},
+		login:      auth.NewLoginOpts(),
 		quickstart: mockQuickstartFlow,
 	}
 

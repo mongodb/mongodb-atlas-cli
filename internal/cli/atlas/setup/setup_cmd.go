@@ -110,7 +110,7 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 //	[--password password]
 //	[--skipMongosh skipMongosh]
 func Builder() *cobra.Command {
-	loginOpts := &auth.LoginOpts{}
+	loginOpts := auth.NewLoginOpts()
 	qsOpts := &quickstart.Opts{}
 	opts := &Opts{
 		register:   auth.NewRegisterFlow(loginOpts),

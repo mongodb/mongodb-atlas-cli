@@ -33,11 +33,12 @@ type EventsSender interface {
 func (s *Store) SendEvents(body interface{}) error {
 	switch s.service {
 	case config.CloudService:
-		request, err := s.client.(*atlas.Client).NewRequest(s.ctx, http.MethodPost, urlPath, body)
+		client := s.client.(*atlas.Client)
+		request, err := client.NewRequest(s.ctx, http.MethodPost, urlPath, body)
 		if err != nil {
 			return err
 		}
-		_, err = s.client.(*atlas.Client).Do(s.ctx, request, nil)
+		_, err = client.Do(s.ctx, request, nil)
 		return err
 	default:
 		return nil

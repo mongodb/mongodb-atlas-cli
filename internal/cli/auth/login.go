@@ -88,6 +88,8 @@ func (c *confirmPrompt) confirm() (response bool, err error) {
 		Message: c.message,
 		Default: c.defaultResponse,
 	}
+	// todo: CLOUDP-118532 make sure the survey confirm is tracked
+	//       and use the survey stub created for telemetry project
 	err = survey.AskOne(p, &response)
 	return response, err
 }
@@ -218,7 +220,7 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 		}
 
 		accessToken, _, err := opts.flow.PollToken(ctx, code)
-		if retry, errRetry := opts.shouldRetryRegister(err); errRetry != nil {
+		if retry, errRetry := opts.shouldRetryAuthenticate(err); errRetry != nil {
 			return errRetry
 		} else if retry {
 			continue
@@ -234,7 +236,7 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 	}
 }
 
-func (opts *LoginOpts) shouldRetryRegister(err error) (retry bool, errSurvey error) {
+func (opts *LoginOpts) shouldRetryAuthenticate(err error) (retry bool, errSurvey error) {
 	if err == nil || !auth.IsTimeoutErr(err) {
 		return false, nil
 	}

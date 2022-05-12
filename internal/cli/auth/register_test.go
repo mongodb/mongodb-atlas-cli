@@ -21,7 +21,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -33,19 +32,6 @@ import (
 	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
-
-type confirmPromptMock struct {
-	message   string
-	nbOfCalls int
-	responses []bool
-	outWriter io.Writer
-}
-
-func (c *confirmPromptMock) confirm() (bool, error) {
-	c.nbOfCalls++
-	_, _ = fmt.Fprintf(c.outWriter, "? "+c.message+" (Y/n)\n")
-	return c.responses[c.nbOfCalls-1], nil
-}
 
 func TestRegisterBuilder(t *testing.T) {
 	test.CmdValidator(
@@ -59,22 +45,24 @@ func TestRegisterBuilder(t *testing.T) {
 func Test_registerOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockAuthenticator(ctrl)
+	mockRegisterFlow := &registerAuthenticator{
+		authenticator: mockFlow,
+		isGov:         false,
+	}
 	mockConfig := mocks.NewMockLoginConfig(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 	defer ctrl.Finish()
 	buf := new(bytes.Buffer)
 	ctx := context.TODO()
-
 	loginOpts := &LoginOpts{
-		flow:       mockFlow,
+		flow:       mockRegisterFlow,
 		config:     mockConfig,
 		NoBrowser:  true,
 		SkipConfig: true,
 	}
 
 	opts := &registerOpts{
-		login:                loginOpts,
-		regenerateCodePrompt: nil,
+		login: loginOpts,
 	}
 
 	opts.OutWriter = buf
@@ -139,136 +127,6 @@ Paste the code in the browser when prompted to activate your Atlas CLI. Your cod
 
 To continue, go to https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect
 Successfully logged in as test@10gen.com.
-`, buf.String())
-}
-
-func Test_registerOpts_registerAndAuthenticate(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockFlow := mocks.NewMockAuthenticator(ctrl)
-	mockConfig := mocks.NewMockLoginConfig(ctrl)
-	defer ctrl.Finish()
-	buf := new(bytes.Buffer)
-	ctx := context.TODO()
-
-	loginOpts := &LoginOpts{
-		flow:       mockFlow,
-		config:     mockConfig,
-		NoBrowser:  true,
-		SkipConfig: true,
-	}
-
-	opts := &registerOpts{
-		login:                loginOpts,
-		regenerateCodePrompt: nil,
-	}
-
-	opts.login.OutWriter = buf
-
-	expectedCode := &auth.DeviceCode{
-		UserCode:        "12345678",
-		VerificationURI: "http://localhost",
-		DeviceCode:      "123",
-		ExpiresIn:       300,
-		Interval:        10,
-	}
-
-	mockFlow.
-		EXPECT().
-		RequestCode(ctx).
-		Return(expectedCode, nil, nil).
-		Times(1)
-
-	expectedToken := &auth.Token{
-		AccessToken:  "asdf",
-		RefreshToken: "querty",
-		Scope:        "openid",
-		IDToken:      "1",
-		TokenType:    "Bearer",
-		ExpiresIn:    3600,
-	}
-	mockFlow.
-		EXPECT().
-		PollToken(ctx, expectedCode).
-		Return(expectedToken, nil, nil).
-		Times(1)
-
-	require.NoError(t, opts.registerAndAuthenticate(ctx))
-	assert.Equal(t, `
-To verify your account, copy your one-time code:
-1234-5678
-
-Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
-
-To continue, go to https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect
-`, buf.String())
-}
-
-func Test_registerOpts_registerAndAuthenticate_pollTimeout(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockFlow := mocks.NewMockAuthenticator(ctrl)
-	mockConfig := mocks.NewMockLoginConfig(ctrl)
-	defer ctrl.Finish()
-	buf := new(bytes.Buffer)
-	ctx := context.TODO()
-	regenerateCodePromptMock := &confirmPromptMock{
-		message:   "Your one-time verification code is expired. Would you like to generate a new one?",
-		nbOfCalls: 0,
-		responses: []bool{true, false},
-		outWriter: buf,
-	}
-
-	loginOpts := &LoginOpts{
-		flow:       mockFlow,
-		config:     mockConfig,
-		NoBrowser:  true,
-		SkipConfig: true,
-	}
-
-	opts := &registerOpts{
-		login:                loginOpts,
-		regenerateCodePrompt: regenerateCodePromptMock,
-	}
-
-	opts.login.OutWriter = buf
-
-	expectedCode := &auth.DeviceCode{
-		UserCode:        "12345678",
-		VerificationURI: "http://localhost",
-		DeviceCode:      "123",
-		ExpiresIn:       300,
-		Interval:        10,
-	}
-
-	mockFlow.
-		EXPECT().
-		RequestCode(ctx).
-		Return(expectedCode, nil, nil).
-		Times(2)
-
-	mockFlow.
-		EXPECT().
-		PollToken(ctx, expectedCode).
-		Return(nil, nil, auth.ErrTimeout).
-		Times(2)
-
-	err := opts.registerAndAuthenticate(ctx)
-	assert.Equal(t, err, auth.ErrTimeout)
-	assert.Equal(t, `
-To verify your account, copy your one-time code:
-1234-5678
-
-Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
-
-To continue, go to https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect
-? Your one-time verification code is expired. Would you like to generate a new one? (Y/n)
-
-To verify your account, copy your one-time code:
-1234-5678
-
-Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
-
-To continue, go to https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect
-? Your one-time verification code is expired. Would you like to generate a new one? (Y/n)
 `, buf.String())
 }
 

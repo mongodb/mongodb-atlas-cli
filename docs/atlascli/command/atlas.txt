@@ -76,6 +76,7 @@ Related Commands
 * :ref:`atlas-quickstart` - Create and access an Atlas Cluster.
 * :ref:`atlas-security` - Manage security configuration for your project.
 * :ref:`atlas-serverless` - Manage serverless instances for your project.
+* :ref:`atlas-setup` - Register, authenticate, create, and access an Atlas cluster.
 * :ref:`atlas-teams` - Teams operations.
 * :ref:`atlas-users` - Users operations.
 
@@ -111,6 +112,7 @@ Related Commands
    quickstart </command/atlas-quickstart>
    security </command/atlas-security>
    serverless </command/atlas-serverless>
+   setup </command/atlas-setup>
    teams </command/atlas-teams>
    users </command/atlas-users>
 

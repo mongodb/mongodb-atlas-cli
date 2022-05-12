@@ -16,7 +16,6 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -54,18 +53,46 @@ const (
 	LogoutToLoginAccountMsg      = `run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile`
 )
 
-var errTimedOut = errors.New("authentication timed out")
-
 type LoginOpts struct {
 	cli.DefaultSetterOpts
-	AccessToken    string
-	RefreshToken   string
-	IsGov          bool
-	isCloudManager bool
-	NoBrowser      bool
-	SkipConfig     bool
-	config         LoginConfig
-	flow           Authenticator
+	AccessToken          string
+	RefreshToken         string
+	IsGov                bool
+	isCloudManager       bool
+	NoBrowser            bool
+	SkipConfig           bool
+	config               LoginConfig
+	flow                 Authenticator
+	regenerateCodePrompt userSurvey
+}
+
+func NewLoginOpts() *LoginOpts {
+	return &LoginOpts{
+		regenerateCodePrompt: &confirmPrompt{
+			message:         "Your one-time verification code is expired. Would you like to generate a new one?",
+			defaultResponse: true,
+		},
+	}
+}
+
+type userSurvey interface {
+	confirm() (response bool, err error)
+}
+
+type confirmPrompt struct {
+	message         string
+	defaultResponse bool
+}
+
+func (c *confirmPrompt) confirm() (response bool, err error) {
+	p := &survey.Confirm{
+		Message: c.message,
+		Default: c.defaultResponse,
+	}
+	// todo: CLOUDP-118532 make sure the survey confirm is tracked
+	//       and use the survey stub created for telemetry project
+	err = survey.AskOne(p, &response)
+	return response, err
 }
 
 type LoginFlow interface {
@@ -124,6 +151,7 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
+
 	_, _ = fmt.Fprint(opts.OutWriter, "Press Enter to continue your profile configuration")
 	_, _ = fmt.Scanln()
 
@@ -204,25 +232,42 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 }
 
 func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
-	code, _, err := opts.flow.RequestCode(ctx)
-	if err != nil {
-		return err
-	}
-
-	opts.printAuthInstructions(code)
-	opts.handleBrowser(code.VerificationURI)
-
-	var accessToken *auth.Token
-	if accessToken, _, err = opts.flow.PollToken(ctx, code); err != nil {
-		if auth.IsTimeoutErr(err) {
-			return errTimedOut
+	askedToOpenBrowser := false
+	for {
+		code, _, err := opts.flow.RequestCode(ctx)
+		if err != nil {
+			return err
 		}
 
-		return err
+		opts.printAuthInstructions(code)
+		if !askedToOpenBrowser {
+			opts.handleBrowser(code.VerificationURI)
+			askedToOpenBrowser = true
+		}
+
+		accessToken, _, err := opts.flow.PollToken(ctx, code)
+		if retry, errRetry := opts.shouldRetryAuthenticate(err); errRetry != nil {
+			return errRetry
+		} else if retry {
+			continue
+		}
+
+		if err != nil {
+			return err
+		}
+
+		opts.AccessToken = accessToken.AccessToken
+		opts.RefreshToken = accessToken.RefreshToken
+		return nil
 	}
-	opts.AccessToken = accessToken.AccessToken
-	opts.RefreshToken = accessToken.RefreshToken
-	return nil
+}
+
+func (opts *LoginOpts) shouldRetryAuthenticate(err error) (retry bool, errSurvey error) {
+	if err == nil || !auth.IsTimeoutErr(err) {
+		return false, nil
+	}
+
+	return opts.regenerateCodePrompt.confirm()
 }
 
 func hasUserProgrammaticKeys() bool {
@@ -264,7 +309,7 @@ func Tool() string {
 }
 
 func LoginBuilder() *cobra.Command {
-	opts := &LoginOpts{}
+	opts := NewLoginOpts()
 
 	cmd := &cobra.Command{
 		Use:   "login",
@@ -292,7 +337,7 @@ func LoginBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
-	_ = cmd.Flags().MarkDeprecated("skipConfig", "if profile is configured, login flow skips by default the config step.")
+	_ = cmd.Flags().MarkDeprecated("skipConfig", "if profile is configured, the login flow will skip the config step by default.")
 	return cmd
 }
 

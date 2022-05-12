@@ -51,6 +51,7 @@ Related Commands
 
 * :ref:`atlas-auth-login` - Authenticate with MongoDB Atlas.
 * :ref:`atlas-auth-logout` - Log out of the CLI.
+* :ref:`atlas-auth-register` - Register with MongoDB Atlas.
 * :ref:`atlas-auth-whoami` - Verifies and displays information about your authentication state.
 
 
@@ -59,5 +60,6 @@ Related Commands
 
    login </command/atlas-auth-login>
    logout </command/atlas-auth-logout>
+   register </command/atlas-auth-register>
    whoami </command/atlas-auth-whoami>
 

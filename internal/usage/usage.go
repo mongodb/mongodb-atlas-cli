@@ -262,7 +262,7 @@ const (
 	Network                                  = "Unique identifier of the Network Peering connection in the Atlas project."
 	APIRegion                                = "Indicates which API URL to use, either US or EU. The integration service will use US by default."
 	SkipMongosh                              = "Indicates whether to skip accessing your deployment with MongoDB Shell."
-	SkipSampleData                           = "Indicates whether to skip loading sample data into your Atlas Cluster."
+	SkipSampleData                           = "Indicates whether to skip loading sample data into your Atlas cluster."
 	ContainerRegion                          = "Atlas region where the container resides."
 	ContainerRegions                         = "List of Atlas regions where the container resides."
 	ProjectOwnerID                           = "Unique 24-hexadecimal digit string that identifies the Atlas user account to be granted the Project Owner role on the specified project."

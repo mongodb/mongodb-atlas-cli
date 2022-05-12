@@ -21,6 +21,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -32,6 +33,19 @@ import (
 	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
+
+type confirmPromptMock struct {
+	message   string
+	nbOfCalls int
+	responses []bool
+	outWriter io.Writer
+}
+
+func (c *confirmPromptMock) confirm() (bool, error) {
+	c.nbOfCalls++
+	_, _ = fmt.Fprintf(c.outWriter, "? "+c.message+" (Y/n)\n")
+	return c.responses[c.nbOfCalls-1], nil
+}
 
 func TestBuilder(t *testing.T) {
 	test.CmdValidator(
@@ -80,7 +94,7 @@ func Test_loginOpts_Run(t *testing.T) {
 		flow:      mockFlow,
 		config:    mockConfig,
 		NoBrowser: true,
-		// todo: do not test using SkipConfig flag (deprecated)
+		// todo: CLOUDP-122551 do not test using SkipConfig flag (deprecated)
 		SkipConfig: true,
 	}
 	opts.OutWriter = buf
@@ -149,4 +163,133 @@ func TestLoginPreRun(t *testing.T) {
 	config.SetPublicAPIKey("public")
 	config.SetPrivateAPIKey("private")
 	require.ErrorContains(t, loginPreRun(ctx), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), LoginWithProfileMsg)
+}
+
+func Test_loginOpts_oauthFlow(t *testing.T) {
+	t.Run("updates accessToken and refreshToken after code is verified", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockFlow := mocks.NewMockAuthenticator(ctrl)
+		mockConfig := mocks.NewMockLoginConfig(ctrl)
+		defer ctrl.Finish()
+		buf := new(bytes.Buffer)
+		ctx := context.TODO()
+
+		opts := &LoginOpts{
+			flow:                 mockFlow,
+			config:               mockConfig,
+			NoBrowser:            true,
+			SkipConfig:           true,
+			regenerateCodePrompt: nil,
+		}
+
+		opts.OutWriter = buf
+
+		expectedCode := &auth.DeviceCode{
+			UserCode:        "12345678",
+			VerificationURI: "http://localhost",
+			DeviceCode:      "123",
+			ExpiresIn:       300,
+			Interval:        10,
+		}
+
+		mockFlow.
+			EXPECT().
+			RequestCode(ctx).
+			Return(expectedCode, nil, nil).
+			Times(1)
+
+		expectedToken := &auth.Token{
+			AccessToken:  "asdf",
+			RefreshToken: "querty",
+			Scope:        "openid",
+			IDToken:      "1",
+			TokenType:    "Bearer",
+			ExpiresIn:    3600,
+		}
+		mockFlow.
+			EXPECT().
+			PollToken(ctx, expectedCode).
+			Return(expectedToken, nil, nil).
+			Times(1)
+
+		require.NoError(t, opts.oauthFlow(ctx))
+		assert.Equal(t, opts.AccessToken, expectedToken.AccessToken)
+		assert.Equal(t, opts.RefreshToken, expectedToken.RefreshToken)
+		assert.Equal(t, `
+First, copy your one-time code: 1234-5678
+
+Next, sign in with your browser and enter the code.
+
+Or go to http://localhost
+
+Your code will expire after 5 minutes.
+`, buf.String())
+	})
+
+	t.Run("returns ErrTimeout is user choses not to regenerate device code", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockFlow := mocks.NewMockAuthenticator(ctrl)
+		mockConfig := mocks.NewMockLoginConfig(ctrl)
+		defer ctrl.Finish()
+		buf := new(bytes.Buffer)
+		ctx := context.TODO()
+		regenerateCodePromptMock := &confirmPromptMock{
+			message:   "Your one-time verification code is expired. Would you like to generate a new one?",
+			nbOfCalls: 0,
+			responses: []bool{true, false},
+			outWriter: buf,
+		}
+
+		opts := &LoginOpts{
+			flow:                 mockFlow,
+			config:               mockConfig,
+			NoBrowser:            true,
+			SkipConfig:           true,
+			regenerateCodePrompt: regenerateCodePromptMock,
+		}
+
+		opts.OutWriter = buf
+
+		expectedCode := &auth.DeviceCode{
+			UserCode:        "12345678",
+			VerificationURI: "http://localhost",
+			DeviceCode:      "123",
+			ExpiresIn:       300,
+			Interval:        10,
+		}
+
+		mockFlow.
+			EXPECT().
+			RequestCode(ctx).
+			Return(expectedCode, nil, nil).
+			Times(2)
+
+		mockFlow.
+			EXPECT().
+			PollToken(ctx, expectedCode).
+			Return(nil, nil, auth.ErrTimeout).
+			Times(2)
+
+		err := opts.oauthFlow(ctx)
+		assert.Equal(t, err, auth.ErrTimeout)
+		assert.Equal(t, `
+First, copy your one-time code: 1234-5678
+
+Next, sign in with your browser and enter the code.
+
+Or go to http://localhost
+
+Your code will expire after 5 minutes.
+? Your one-time verification code is expired. Would you like to generate a new one? (Y/n)
+
+First, copy your one-time code: 1234-5678
+
+Next, sign in with your browser and enter the code.
+
+Or go to http://localhost
+
+Your code will expire after 5 minutes.
+? Your one-time verification code is expired. Would you like to generate a new one? (Y/n)
+`, buf.String())
+	})
 }

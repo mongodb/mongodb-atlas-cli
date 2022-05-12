@@ -19,12 +19,12 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth RegisterFlow
@@ -35,36 +35,13 @@ const (
 	WithProfileMsg = `run "atlas auth register --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`
 )
 
-type userSurvey interface {
-	confirm() (response bool, err error)
-}
-
-type confirmPrompt struct {
-	message         string
-	defaultResponse bool
-}
-
-func (c *confirmPrompt) confirm() (response bool, err error) {
-	p := &survey.Confirm{
-		Message: c.message,
-		Default: c.defaultResponse,
-	}
-	err = survey.AskOne(p, &response)
-	return response, err
-}
-
 type registerOpts struct {
 	cli.DefaultSetterOpts
-	login                *LoginOpts
-	regenerateCodePrompt userSurvey
+	login *LoginOpts
 }
 
 func newRegisterOpts(l *LoginOpts) *registerOpts {
 	return &registerOpts{
-		regenerateCodePrompt: &confirmPrompt{
-			message:         "Your one-time verification code is expired. Would you like to generate a new one?",
-			defaultResponse: true,
-		},
 		login: l,
 	}
 }
@@ -78,52 +55,10 @@ func NewRegisterFlow(l *LoginOpts) RegisterFlow {
 	return newRegisterOpts(l)
 }
 
-func (opts *registerOpts) registerAndAuthenticate(ctx context.Context) error {
-	// TODO:CLOUDP-121210 - Replace with new request and remove URI override.
-	for {
-		code, _, err := opts.login.flow.RequestCode(ctx)
-		if err != nil {
-			return err
-		}
-
-		if opts.login.IsGov {
-			code.VerificationURI = govAccountURI
-		} else {
-			code.VerificationURI = accountURI
-		}
-
-		opts.login.printAuthInstructions(code)
-		opts.login.handleBrowser(code.VerificationURI)
-
-		accessToken, _, err := opts.login.flow.PollToken(ctx, code)
-		if retry, errRetry := opts.shouldRetryRegister(err); errRetry != nil {
-			return errRetry
-		} else if retry {
-			continue
-		}
-
-		if err != nil {
-			return err
-		}
-
-		opts.login.AccessToken = accessToken.AccessToken
-		opts.login.RefreshToken = accessToken.RefreshToken
-		return nil
-	}
-}
-
-func (opts *registerOpts) shouldRetryRegister(err error) (retry bool, errSurvey error) {
-	if err == nil || !auth.IsTimeoutErr(err) {
-		return false, nil
-	}
-
-	return opts.regenerateCodePrompt.confirm()
-}
-
 func (opts *registerOpts) Run(ctx context.Context) error {
 	_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
 
-	if err := opts.registerAndAuthenticate(ctx); err != nil {
+	if err := opts.login.oauthFlow(ctx); err != nil {
 		return err
 	}
 
@@ -137,6 +72,28 @@ func (opts *registerOpts) Run(ctx context.Context) error {
 	return opts.login.setUpProfile()
 }
 
+type registerAuthenticator struct {
+	isGov         bool
+	authenticator Authenticator
+}
+
+func (ra *registerAuthenticator) RequestCode(ctx context.Context) (*auth.DeviceCode, *atlas.Response, error) {
+	// TODO:CLOUDP-121210 - Replace with new request and remove URI override.
+	code, response, err := ra.authenticator.RequestCode(ctx)
+
+	if ra.isGov {
+		code.VerificationURI = govAccountURI
+	} else {
+		code.VerificationURI = accountURI
+	}
+
+	return code, response, err
+}
+
+func (ra *registerAuthenticator) PollToken(ctx context.Context, code *auth.DeviceCode) (*auth.Token, *atlas.Response, error) {
+	return ra.authenticator.PollToken(ctx, code)
+}
+
 func (opts *registerOpts) PreRun(outWriter io.Writer) error {
 	opts.OutWriter = outWriter
 	opts.login.OutWriter = outWriter
@@ -144,7 +101,16 @@ func (opts *registerOpts) PreRun(outWriter io.Writer) error {
 	if config.OpsManagerURL() != "" {
 		opts.login.OpsManagerURL = config.OpsManagerURL()
 	}
-	return opts.login.initFlow()
+
+	if err := opts.login.initFlow(); err != nil {
+		return err
+	}
+	opts.login.flow = &registerAuthenticator{
+		authenticator: opts.login.flow,
+		isGov:         opts.login.IsGov,
+	}
+
+	return nil
 }
 
 func registerPreRun() error {

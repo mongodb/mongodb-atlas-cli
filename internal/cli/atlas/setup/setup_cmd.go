@@ -115,7 +115,7 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 //	[--password password]
 //	[--skipMongosh skipMongosh]
 func Builder() *cobra.Command {
-	loginOpts := &auth.LoginOpts{}
+	loginOpts := auth.NewLoginOpts()
 	qsOpts := &quickstart.Opts{}
 	opts := &Opts{
 		register:   auth.NewRegisterFlow(loginOpts),
@@ -125,12 +125,12 @@ func Builder() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use: "setup",
-		Example: `Override default cluster settings like name, provider or database username by using the command options
+		Example: `Override default cluster settings like name, provider, or database username by using the command options
   $ atlas setup --clusterName Test --provider GCP --username dbuserTest
 `,
-		Short:  "Register, authenticate, create and access an Atlas Cluster.",
+		Short:  "Register, authenticate, create, and access an Atlas cluster.",
 		Long:   "This command takes you through registration, login, default profile creation, creating your first free tier cluster and connecting to it using MongoDB Shell.",
-		Hidden: true,
+		Hidden: false,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			// setup pre run
@@ -162,7 +162,7 @@ func Builder() *cobra.Command {
 	}
 
 	// Register and login related
-	cmd.Flags().BoolVar(&loginOpts.IsGov, "gov", false, "Register to Atlas for Government.")
+	cmd.Flags().BoolVar(&loginOpts.IsGov, "gov", false, "Register with Atlas for Government.")
 	cmd.Flags().BoolVar(&loginOpts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	// Quickstart related
 	cmd.Flags().StringVar(&qsOpts.ClusterName, flag.ClusterName, "", usage.ClusterName)

@@ -80,7 +80,7 @@ func Test_loginOpts_Run(t *testing.T) {
 		flow:      mockFlow,
 		config:    mockConfig,
 		NoBrowser: true,
-		// todo: do not test using SkipConfig flag (deprecated)
+		// todo: CLOUDP-122551 do not test using SkipConfig flag (deprecated)
 		SkipConfig: true,
 	}
 	opts.OutWriter = buf

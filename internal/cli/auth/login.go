@@ -267,7 +267,7 @@ func LoginBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
-	_ = cmd.Flags().MarkDeprecated("skipConfig", "if profile is configured, login flow skips by default the config step.")
+	_ = cmd.Flags().MarkDeprecated("skipConfig", "if profile is configured, the login flow will skip the config step by default.")
 	return cmd
 }
 

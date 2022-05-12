@@ -135,7 +135,7 @@ func RegisterBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",
-		Hidden: true,
+		Hidden: false,
 		Example: fmt.Sprintf(`  To start the interactive setup:
   $ %s auth register
 `, config.BinName()),
@@ -156,7 +156,7 @@ func RegisterBuilder() *cobra.Command {
 		Args: require.NoArgs,
 	}
 
-	cmd.Flags().BoolVar(&opts.login.IsGov, "gov", false, "Register to Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.login.IsGov, "gov", false, "Register with Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.login.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 
 	return cmd

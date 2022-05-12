@@ -19,11 +19,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -36,24 +34,6 @@ const (
 	govAccountURI  = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
 	WithProfileMsg = `run "atlas auth register --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`
 )
-
-type userSurvey interface {
-	confirm() (response bool, err error)
-}
-
-type confirmPrompt struct {
-	message         string
-	defaultResponse bool
-}
-
-func (c *confirmPrompt) confirm() (response bool, err error) {
-	p := &survey.Confirm{
-		Message: c.message,
-		Default: c.defaultResponse,
-	}
-	err = telemetry.TrackAskOne(p, &response)
-	return response, err
-}
 
 type registerOpts struct {
 	cli.DefaultSetterOpts

@@ -16,33 +16,16 @@ package telemetry
 
 import (
 	"errors"
-	"reflect"
+	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 )
 
-func readAnswer(response interface{}, name string) (interface{}, error) { // based on https://pkg.go.dev/github.com/AlecAivazis/survey/v2/core#WriteAnswer
-	v, ok := response.(map[string]interface{})
-	if ok {
-		return v[name], nil
-	}
-
-	target := reflect.ValueOf(response)
-	if target.Kind() != reflect.Ptr {
-		return nil, errors.New("invalid response: expected a map[string]interface{} or a pointer to struct")
-	}
-	elem := target.Elem()
-	if elem.Kind() != reflect.Struct {
-		return nil, errors.New("invalid response: expected a map[string]interface{} or a pointer to struct")
-	}
-
-	return elem.FieldByName(name).Interface(), nil
-}
-
 func TrackAsk(qs []*survey.Question, response interface{}, opts ...survey.AskOpt) error {
 	err := survey.Ask(qs, response, opts...)
 	for _, q := range qs {
+		fmt.Printf("super testing here... %v %v\n", q.Name, response)
 		answer, _ := readAnswer(response, q.Name)
 		trackSurvey(q.Prompt, answer, err)
 	}

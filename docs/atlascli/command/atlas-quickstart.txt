@@ -77,7 +77,7 @@ Options
    * - --skipSampleData
      - 
      - false
-     - Indicates whether to skip loading sample data into your Atlas Cluster.
+     - Indicates whether to skip loading sample data into your Atlas cluster.
    * - --tier
      - string
      - false

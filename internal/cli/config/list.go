@@ -15,14 +15,11 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -36,16 +33,6 @@ type listOpts struct {
 }
 
 func (opts *listOpts) Run() error {
-	p := prompt.NewConfirm("Are you sure?")
-	r := false
-
-	err := telemetry.TrackAskOne(p, &r)
-	if err != nil {
-		return err
-	}
-	if !r {
-		return errors.New("you did not confirm")
-	}
 	return opts.Print(config.List())
 }
 

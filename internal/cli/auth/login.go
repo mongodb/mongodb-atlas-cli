@@ -110,7 +110,7 @@ func (opts *LoginOpts) initFlow() error {
 	return err
 }
 
-func (opts *LoginOpts) SetOAuthUpAccess() {
+func (opts *LoginOpts) SetUpOAuthAccess() {
 	switch {
 	case opts.IsGov:
 		opts.Service = config.CloudGovService
@@ -139,7 +139,7 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 	if err := opts.oauthFlow(ctx); err != nil {
 		return err
 	}
-	opts.SetOAuthUpAccess()
+	opts.SetUpOAuthAccess()
 	s, err := opts.config.AccessTokenSubject()
 	if err != nil {
 		return err
@@ -148,14 +148,11 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 	if opts.SkipConfig {
 		return opts.config.Save()
 	}
-	if err := opts.InitStore(ctx); err != nil {
-		return err
-	}
 
 	_, _ = fmt.Fprint(opts.OutWriter, "Press Enter to continue your profile configuration")
 	_, _ = fmt.Scanln()
 
-	if err := opts.setUpProfile(); err != nil {
+	if err := opts.setUpProfile(ctx); err != nil {
 		return err
 	}
 
@@ -168,7 +165,11 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 	return nil
 }
 
-func (opts *LoginOpts) setUpProfile() error {
+func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
+	if err := opts.InitStore(ctx); err != nil {
+		return err
+	}
+
 	if err := opts.AskOrgIfCurrentNotAvailable(config.OrgID()); err != nil {
 		return err
 	}

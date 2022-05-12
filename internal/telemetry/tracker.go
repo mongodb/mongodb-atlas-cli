@@ -15,10 +15,8 @@
 package telemetry
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
-	"net/http"
 	"os"
 	"path/filepath"
 
@@ -32,7 +30,6 @@ const (
 	dirPermissions          = 0700
 	filePermissions         = 0600
 	defaultMaxCacheFileSize = 100_000_000 // 100MB
-	urlPath                 = "api/private/v1.0/telemetry/events"
 )
 
 type tracker struct {
@@ -64,7 +61,7 @@ func (t *tracker) track(data TrackOptions) error {
 	}
 
 	event := newEvent(options...)
-	err := send(data.Cmd.Context(), &[]Event{event})
+	err := store.SendEvents(data.Cmd.Context(), &[]Event{event})
 	if err != nil {
 		// Could not send the event, so log the error and cache the event
 		logError(err)
@@ -114,26 +111,5 @@ func (t *tracker) save(event Event) error {
 		return err
 	}
 	_, err = file.Write(data)
-	return err
-}
-
-func send(ctx context.Context, events *[]Event) error {
-	if config.Service() != config.CloudService {
-		// Only send events to Atlas - not to AtlasGov or OpsManager or CloudManager
-		return nil
-	}
-	s, err := store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry())
-	if err != nil {
-		return err
-	}
-	client, err := s.GetAtlasClient()
-	if err != nil {
-		return err
-	}
-	request, err := client.NewRequest(ctx, http.MethodPost, urlPath, &events)
-	if err != nil {
-		return err
-	}
-	_, err = client.Do(ctx, request, nil)
 	return err
 }

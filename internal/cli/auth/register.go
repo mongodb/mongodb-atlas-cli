@@ -176,7 +176,7 @@ func RegisterBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",
-		Hidden: true,
+		Hidden: false,
 		Example: fmt.Sprintf(`  To start the interactive setup:
   $ %s auth register
 `, config.BinName()),

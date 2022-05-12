@@ -125,7 +125,7 @@ func Builder() *cobra.Command {
 `,
 		Short:  "Register, authenticate, create and access an Atlas Cluster.",
 		Long:   "This command takes you through registration, login, default profile creation, creating your first free tier cluster and connecting to it using MongoDB Shell.",
-		Hidden: true,
+		Hidden: false,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			// setup pre run

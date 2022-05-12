@@ -177,7 +177,7 @@ Paste the code in the browser when prompted to activate your Atlas CLI. Your cod
 }
 
 func (opts *LoginOpts) handleBrowser(uri string) {
-	printBlue := color.New(color.FgYellow, color.Bold).FprintlnFunc()
+	printBlue := color.New(color.FgBlue, color.Bold).FprintlnFunc()
 	_, _ = fmt.Fprint(opts.OutWriter, "To continue, go to ")
 	printBlue(opts.OutWriter, uri)
 

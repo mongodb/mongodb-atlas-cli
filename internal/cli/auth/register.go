@@ -131,7 +131,7 @@ func registerPreRun() error {
 }
 
 func RegisterBuilder() *cobra.Command {
-	opts := newRegisterOpts(NewLoginOpts())
+	opts := newRegisterOpts(&LoginOpts{})
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",

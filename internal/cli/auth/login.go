@@ -21,6 +21,7 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/fatih/color"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -186,23 +187,51 @@ func (opts *LoginOpts) setUpProfile() error {
 func (opts *LoginOpts) printAuthInstructions(code *auth.DeviceCode) {
 	codeDuration := time.Duration(code.ExpiresIn) * time.Second
 	_, _ = fmt.Fprintf(opts.OutWriter, `
-First, copy your one-time code: %s-%s
+To verify your account, copy your one-time code:
+`)
 
-Next, sign in with your browser and enter the code.
+	userCode := fmt.Sprintf("%s-%s", code.UserCode[0:len(code.UserCode)/2], code.UserCode[len(code.UserCode)/2:])
+	opts.printlnWithColor(color.New(color.FgYellow, color.Bold), userCode)
 
-Or go to %s
+	_, _ = fmt.Fprintf(opts.OutWriter, `
+Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after %.0f minutes.
 
-Your code will expire after %.0f minutes.
-`,
-		code.UserCode[0:len(code.UserCode)/2],
-		code.UserCode[len(code.UserCode)/2:],
-		code.VerificationURI,
+To continue, go to `,
 		codeDuration.Minutes(),
 	)
+	opts.printlnWithColor(color.New(color.FgBlue, color.Bold), code.VerificationURI)
+}
+
+func (opts *LoginOpts) printlnWithColor(c *color.Color, text string) {
+	_, err := c.Fprintln(opts.OutWriter, text)
+	if err != nil {
+		_, _ = fmt.Fprintln(opts.OutWriter, text)
+	}
+}
+
+func (opts *LoginOpts) handleBrowser(uri string) {
+	if opts.NoBrowser {
+		return
+	}
+
+	var openBrowser bool
+	p := &survey.Confirm{
+		Message: "Open default browser?",
+		Default: true,
+	}
+
+	// TODO: CLOUDP-118532 - Use telemetry
+	if err := survey.AskOne(p, &openBrowser); err != nil || !openBrowser {
+		return
+	}
+
+	if errBrowser := browser.OpenURL(uri); errBrowser != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
+	}
 }
 
 func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
-	browserOpened := false
+	askedToOpenBrowser := false
 	for {
 		code, _, err := opts.flow.RequestCode(ctx)
 		if err != nil {
@@ -210,13 +239,9 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 		}
 
 		opts.printAuthInstructions(code)
-
-		if !opts.NoBrowser && !browserOpened {
-			if errBrowser := browser.OpenURL(code.VerificationURI); errBrowser != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
-			} else {
-				browserOpened = true
-			}
+		if !askedToOpenBrowser {
+			opts.handleBrowser(code.VerificationURI)
+			askedToOpenBrowser = true
 		}
 
 		accessToken, _, err := opts.flow.PollToken(ctx, code)

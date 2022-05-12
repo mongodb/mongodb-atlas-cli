@@ -100,6 +100,20 @@ func TestReadAnswer(t *testing.T) {
 			name:     "f",
 			expected: 2,
 		},
+		{
+			input: &struct {
+				Test  string
+				Test2 int
+				Test3 interface {
+					String()
+				}
+			}{
+				Test:  "value",
+				Test2: 2,
+			},
+			name:     "test",
+			expected: "value",
+		},
 	}
 
 	for _, testCase := range testCases {

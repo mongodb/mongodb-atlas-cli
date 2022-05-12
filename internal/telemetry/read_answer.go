@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strings"
 )
 
 var (
@@ -44,7 +45,7 @@ func listFields(target reflect.Value) []fieldValue {
 }
 
 func findAnswerInStruct(target reflect.Value, name string) (interface{}, error) { // based on https://pkg.go.dev/github.com/AlecAivazis/survey/v2/core#WriteAnswer
-	if target.Kind() == reflect.Ptr || target.Kind() == reflect.Interface {
+	if target.Kind() == reflect.Ptr {
 		target = target.Elem()
 	}
 	if target.Kind() != reflect.Struct {
@@ -56,13 +57,13 @@ func findAnswerInStruct(target reflect.Value, name string) (interface{}, error) 
 		top := toVisit[0]
 		toVisit = toVisit[1:]
 
-		if top.field.Name == name || top.field.Tag.Get("survey") == name {
+		if strings.EqualFold(top.field.Name, name) || top.field.Tag.Get("survey") == name {
 			return top.value.Interface(), nil
 		}
 
 		fieldType := top.field.Type
 		value := top.value
-		if fieldType.Kind() == reflect.Ptr || fieldType.Kind() == reflect.Interface {
+		if fieldType.Kind() == reflect.Ptr {
 			fieldType = fieldType.Elem()
 			value = value.Elem()
 		}

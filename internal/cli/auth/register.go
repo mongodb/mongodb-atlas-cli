@@ -18,13 +18,11 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"os"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 )
@@ -95,12 +93,7 @@ func (opts *registerOpts) registerAndAuthenticate(ctx context.Context) error {
 		}
 
 		opts.login.printAuthInstructions(code)
-
-		if !opts.login.NoBrowser {
-			if errBrowser := browser.OpenURL(code.VerificationURI); errBrowser != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
-			}
-		}
+		opts.login.handleBrowser(code.VerificationURI)
 
 		accessToken, _, err := opts.login.flow.PollToken(ctx, code)
 		if retry, errRetry := opts.shouldRetryRegister(err); errRetry != nil {

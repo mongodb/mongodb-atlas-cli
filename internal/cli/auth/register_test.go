@@ -132,13 +132,12 @@ func Test_registerOpts_Run(t *testing.T) {
 	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.
 
-First, copy your one-time code: 1234-5678
+To verify your account, copy your one-time code:
+1234-5678
 
-Next, sign in with your browser and enter the code.
+Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-Or go to https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect
-
-Your code will expire after 5 minutes.
+Go to http://localhost.
 Successfully logged in as test@10gen.com.
 `, buf.String())
 }
@@ -195,13 +194,13 @@ func Test_registerOpts_registerAndAuthenticate(t *testing.T) {
 
 	require.NoError(t, opts.registerAndAuthenticate(ctx))
 	assert.Equal(t, `
-First, copy your one-time code: 1234-5678
+To verify your account, copy your one-time code:
+1234-5678
 
-Next, sign in with your browser and enter the code.
+Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-Or go to https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect
-
-Your code will expire after 5 minutes.
+Go to http://localhost.
+Successfully logged in as test@10gen.com.
 `, buf.String())
 }
 

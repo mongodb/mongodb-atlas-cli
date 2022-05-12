@@ -56,8 +56,6 @@ func NewRegisterFlow(l *LoginOpts) RegisterFlow {
 }
 
 func (opts *registerOpts) Run(ctx context.Context) error {
-	_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
-
 	if err := opts.login.oauthFlow(ctx); err != nil {
 		return err
 	}
@@ -151,6 +149,8 @@ func RegisterBuilder() *cobra.Command {
 			return opts.PreRun(cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
+
 			return opts.Run(cmd.Context())
 		},
 		Args: require.NoArgs,

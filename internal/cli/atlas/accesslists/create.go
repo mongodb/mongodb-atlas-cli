@@ -34,6 +34,9 @@ const (
 	ipAddress        = "ipAddress"
 	awsSecurityGroup = "awsSecurityGroup"
 	createTemplate   = "Created new IP access list.\n"
+	example          = `Create IP address access list with the current IP address. Entry is not needed in this case.
+  $ %s accessList create --currentIP
+		`
 )
 
 type CreateOpts struct {
@@ -139,9 +142,7 @@ func CreateBuilder() *cobra.Command {
 			"args":      "entry",
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to create.",
 		},
-		Example: `  Create IP address access list with the current IP address. Entry is not needed in this case.
-  $ mongocli atlas accessList create --currentIP
-		`,
+		Example: fmt.Sprintf(example, exampleCmd),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

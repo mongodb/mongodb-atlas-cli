@@ -109,22 +109,32 @@ func (t *tracker) save(event Event) error {
 }
 
 func castBool(i interface{}) bool {
-	c, ok := i.(*bool)
+	b, ok := i.(bool)
+	if ok {
+		return b
+	}
+
+	p, ok := i.(*bool)
 
 	var ret bool
 	if ok && i != nil {
-		ret = *c
+		ret = *p
 	}
 
 	return ret
 }
 
 func castString(i interface{}) string {
-	c, ok := i.(*string)
+	s, ok := i.(string)
+	if ok {
+		return s
+	}
+
+	p, ok := i.(*string)
 
 	var ret string
 	if ok && i != nil {
-		ret = *c
+		ret = *p
 	}
 
 	return ret

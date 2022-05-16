@@ -56,20 +56,18 @@ func NewRegisterFlow(l *LoginOpts) RegisterFlow {
 }
 
 func (opts *registerOpts) Run(ctx context.Context) error {
-	_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
-
 	if err := opts.login.oauthFlow(ctx); err != nil {
 		return err
 	}
 
-	opts.login.SetOAuthUpAccess()
+	opts.login.SetUpOAuthAccess()
 	s, err := opts.login.config.AccessTokenSubject()
 	if err != nil {
 		return err
 	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
 
-	return opts.login.setUpProfile()
+	return opts.login.setUpProfile(ctx)
 }
 
 type registerAuthenticator struct {
@@ -131,7 +129,7 @@ func registerPreRun() error {
 }
 
 func RegisterBuilder() *cobra.Command {
-	opts := newRegisterOpts(NewLoginOpts())
+	opts := newRegisterOpts(&LoginOpts{})
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",
@@ -144,13 +142,11 @@ func RegisterBuilder() *cobra.Command {
 				return err
 			}
 
-			if err := opts.InitStore(cmd.Context()); err != nil {
-				return err
-			}
-
 			return opts.PreRun(cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
+
 			return opts.Run(cmd.Context())
 		},
 		Args: require.NoArgs,

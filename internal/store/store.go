@@ -35,6 +35,7 @@ import (
 const (
 	yes                       = "yes"
 	responseHeaderTimeout     = 1 * time.Minute
+	telemetryTimeout          = 1 * time.Second
 	tlsHandshakeTimeout       = 5 * time.Second
 	timeout                   = 5 * time.Second
 	keepAlive                 = 30 * time.Second
@@ -53,6 +54,7 @@ type Store struct {
 	baseURL       string
 	caCertificate string
 	skipVerify    bool
+	telemetry     bool
 	username      string
 	password      string
 	accessToken   *atlasauth.Token
@@ -85,6 +87,18 @@ var skipVerifyTransport = &http.Transport{
 	IdleConnTimeout:       idleConnTimeout,
 	ExpectContinueTimeout: expectContinueTimeout,
 	TLSClientConfig:       &tls.Config{InsecureSkipVerify: true}, //nolint:gosec // this is optional for some users,
+}
+
+var telemetryTransport = &http.Transport{
+	DialContext: (&net.Dialer{
+		Timeout:   telemetryTimeout,
+		KeepAlive: keepAlive,
+	}).DialContext,
+	MaxIdleConns:          maxIdleConns,
+	MaxIdleConnsPerHost:   maxIdleConnsPerHost,
+	Proxy:                 http.ProxyFromEnvironment,
+	IdleConnTimeout:       idleConnTimeout,
+	ExpectContinueTimeout: expectContinueTimeout,
 }
 
 func customCATransport(ca []byte) *http.Transport {
@@ -148,6 +162,8 @@ func (s *Store) transport() (*http.Transport, error) {
 			return nil, err
 		}
 		return customCATransport(dat), nil
+	case s.telemetry:
+		return telemetryTransport, nil
 	case s.skipVerify:
 		return skipVerifyTransport, nil
 	default:
@@ -203,6 +219,13 @@ func WithCACertificate(caCertificate string) Option {
 func SkipVerify() Option {
 	return func(s *Store) error {
 		s.skipVerify = true
+		return nil
+	}
+}
+
+func Telemetry() Option {
+	return func(s *Store) error {
+		s.telemetry = true
 		return nil
 	}
 }

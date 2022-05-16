@@ -55,6 +55,19 @@ const (
 	X509TypeCustomer = "CUSTOMER"
 	none             = "NONE"
 	createTemplate   = "Database user '{{.Username}}' successfully created.\n"
+	example          = `  
+  Create an Atlas admin user
+  $ %[1]s dbuser create atlasAdmin --username <username>  --projectId <projectId>
+
+  Create user with read/write access to any database
+  $ %[1]s dbuser create readWriteAnyDatabase --username <username> --projectId <projectId>
+
+  Create user with multiple roles 
+  $ %[1]s dbuser create --username <username> --role clusterMonitor,backup --projectId <projectId>
+
+  Create user with multiple scopes 
+  $ %[1]s dbuser create --username <username> --role clusterMonitor --scope clusterName:CLUSTER,DataLakeName:DATA_LAKE --projectId <projectId>
+`
 )
 
 var (
@@ -169,21 +182,9 @@ func (opts *CreateOpts) validate() error {
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: "Create a database user for your project.",
-		Example: `  
-  Create an Atlas admin user
-  $ mongocli atlas dbuser create atlasAdmin --username <username>  --projectId <projectId>
-
-  Create user with read/write access to any database
-  $ mongocli atlas dbuser create readWriteAnyDatabase --username <username> --projectId <projectId>
-
-  Create user with multiple roles 
-  $ mongocli atlas dbuser create --username <username> --role clusterMonitor,backup --projectId <projectId>
-
-  Create user with multiple scopes 
-  $ mongocli atlas dbuser create --username <username> --role clusterMonitor --scope clusterName:CLUSTER,DataLakeName:DATA_LAKE --projectId <projectId>
-`,
+		Use:       "create",
+		Short:     "Create a database user for your project.",
+		Example:   fmt.Sprintf(example, exampleCmd),
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

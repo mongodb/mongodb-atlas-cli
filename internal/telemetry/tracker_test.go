@@ -23,23 +23,27 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTrackCommand(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockEventsSender(ctrl)
+	defer ctrl.Finish()
+
 	config.ToolName = config.AtlasCLI
 
 	a := assert.New(t)
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
-	a.NoError(err)
 
 	tracker := &tracker{
 		fs:               afero.NewMemMapFs(),
 		maxCacheFileSize: defaultMaxCacheFileSize,
-		cacheDir:         cacheDir,
+		store:            mockStore,
 	}
 
 	cmd := cobra.Command{
@@ -49,22 +53,23 @@ func TestTrackCommand(t *testing.T) {
 	}
 	_ = cmd.ExecuteContext(NewContext())
 
-	err = tracker.trackCommand(TrackOptions{
+	mockStore.
+		EXPECT().
+		SendEvents(gomock.Any()).
+		Return(nil).
+		Times(1)
+
+	err := tracker.trackCommand(TrackOptions{
 		Cmd: &cmd,
 	})
 	a.NoError(err)
-	// Verify that the file exists
-	filename := filepath.Join(cacheDir, cacheFilename)
-	info, statError := tracker.fs.Stat(filename)
-	a.NoError(statError)
-	// Verify the file name
-	a.Equal(info.Name(), cacheFilename)
-	// Verify that the file contains some data
-	var minExpectedSize int64 = 10
-	a.True(info.Size() > minExpectedSize)
 }
 
 func TestTrackCommandWithError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockEventsSender(ctrl)
+	defer ctrl.Finish()
+
 	config.ToolName = config.AtlasCLI
 
 	a := assert.New(t)
@@ -75,6 +80,7 @@ func TestTrackCommandWithError(t *testing.T) {
 		fs:               afero.NewMemMapFs(),
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		cacheDir:         cacheDir,
+		store:            mockStore,
 	}
 
 	cmd := cobra.Command{
@@ -84,6 +90,12 @@ func TestTrackCommandWithError(t *testing.T) {
 		},
 	}
 	errCmd := cmd.ExecuteContext(NewContext())
+
+	mockStore.
+		EXPECT().
+		SendEvents(gomock.Any()).
+		Return(errors.New("test")).
+		Times(1)
 
 	err = tracker.trackCommand(TrackOptions{
 		Cmd: &cmd,
@@ -121,7 +133,6 @@ func TestSave(t *testing.T) {
 	var event = Event{
 		Timestamp:  time.Now(),
 		Source:     config.ToolName,
-		Name:       config.ToolName + "-event",
 		Properties: properties,
 	}
 	a.NoError(tracker.save(event))
@@ -155,7 +166,6 @@ func TestSaveOverMaxCacheFileSize(t *testing.T) {
 	var event = Event{
 		Timestamp:  time.Now(),
 		Source:     config.ToolName,
-		Name:       config.ToolName + "-event",
 		Properties: properties,
 	}
 

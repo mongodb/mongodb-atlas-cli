@@ -31,7 +31,7 @@ func TrackCommand(opt TrackOptions, args ...string) {
 	if !config.TelemetryEnabled() {
 		return
 	}
-	t, err := newTracker()
+	t, err := newTracker(opt.Cmd.Context())
 	if err != nil {
 		logError(err)
 		return

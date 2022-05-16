@@ -48,6 +48,12 @@ type Opts struct {
 
 func (opts *Opts) Run(ctx context.Context) error {
 	if !opts.skipRegister {
+		_, _ = fmt.Fprintf(opts.OutWriter, `
+This command will help you
+1. Create and verify your MongoDB Atlas account in your browser.
+2. Return to the terminal to create your first free MongoDB database in Atlas.
+
+`)
 		if err := opts.register.Run(ctx); err != nil {
 			return err
 		}
@@ -170,6 +176,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().BoolVar(&qsOpts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
 	cmd.Flags().BoolVar(&qsOpts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
 	cmd.Flags().BoolVar(&qsOpts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().BoolVar(&qsOpts.CurrentIP, flag.CurrentIP, false, usage.CurrentIPSimplified)
 
 	return cmd
 }

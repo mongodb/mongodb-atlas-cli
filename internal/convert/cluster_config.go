@@ -15,7 +15,6 @@
 package convert
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 
@@ -75,7 +74,7 @@ func (c *ClusterConfig) PatchAutomationConfig(out *opsmngr.AutomationConfig) err
 		return c.patchSharding(out)
 	}
 
-	return errors.New("invalid config")
+	return ErrInvalidConfig
 }
 
 func (c *ClusterConfig) patchSharding(out *opsmngr.AutomationConfig) error {

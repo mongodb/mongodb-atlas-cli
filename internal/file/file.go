@@ -16,6 +16,7 @@ package file
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"path/filepath"
 
@@ -34,6 +35,8 @@ const (
 
 var supportedExts = []string{jsonName, yamlName, ymlName}
 
+var ErrUnsupportedFileType = errors.New("unsupported file type")
+
 // configType gets the config type from a given file path.
 func configType(filename string, supported []string) (string, error) {
 	ext := filepath.Ext(filename)
@@ -42,21 +45,23 @@ func configType(filename string, supported []string) (string, error) {
 		return "", fmt.Errorf("filename: %s requires valid extension", filename)
 	}
 
-	configType := ext[1:]
-	if !search.StringInSlice(supported, configType) {
-		return "", fmt.Errorf("unsupported file type: %s", configType)
+	t := ext[1:]
+	if !search.StringInSlice(supported, t) {
+		return "", fmt.Errorf("%w: %s", ErrUnsupportedFileType, t)
 	}
-	return configType, nil
+	return t, nil
 }
+
+var ErrFileNotFound = errors.New("file not found")
 
 // Load loads a given filename into the out interface.
 // The file should be a valid json or yaml format.
 func Load(fs afero.Fs, filename string, out interface{}) error {
 	if exists, err := afero.Exists(fs, filename); !exists || err != nil {
-		return fmt.Errorf("file not found: %s", filename)
+		return fmt.Errorf("%w: %s", ErrFileNotFound, filename)
 	}
 
-	configType, err := configType(filename, supportedExts)
+	t, err := configType(filename, supportedExts)
 	if err != nil {
 		return err
 	}
@@ -66,7 +71,7 @@ func Load(fs afero.Fs, filename string, out interface{}) error {
 		return err
 	}
 
-	switch configType {
+	switch t {
 	case yamlName, ymlName:
 		if err := yaml.Unmarshal(file, out); err != nil {
 			return err

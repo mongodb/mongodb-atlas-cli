@@ -176,6 +176,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().BoolVar(&qsOpts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
 	cmd.Flags().BoolVar(&qsOpts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
 	cmd.Flags().BoolVar(&qsOpts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().BoolVar(&qsOpts.CurrentIP, flag.CurrentIP, false, usage.CurrentIPSimplified)
 
 	return cmd
 }

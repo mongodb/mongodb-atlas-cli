@@ -320,7 +320,7 @@ func TestWithPrompt(t *testing.T) {
 
 	a := assert.New(t)
 	a.Equal(q, e.Properties["prompt"])
-	a.Equal(k, e.Properties["prompt_kind"])
+	a.Equal(k, e.Properties["prompt_type"])
 }
 
 func TestWithDefault(t *testing.T) {

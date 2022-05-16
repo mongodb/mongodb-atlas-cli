@@ -143,7 +143,7 @@ func (t *tracker) trackSurvey(p survey.Prompt, response interface{}, e error) er
 	case *survey.Input:
 		options = append(options, withPrompt(v.Message, "input"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""))
 	case *survey.Password:
-		options = append(options, withPrompt(v.Message, "input"), withEmpty(castString(response) == ""))
+		options = append(options, withPrompt(v.Message, "password"), withEmpty(castString(response) == ""))
 	case *survey.Select:
 		options = append(options, withPrompt(v.Message, "select"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""))
 	default:

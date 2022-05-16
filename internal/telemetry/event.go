@@ -57,7 +57,7 @@ func withProfile() eventOpt { // either "default" or base64 hash
 func withPrompt(p, k string) eventOpt {
 	return func(event Event) {
 		event.Properties["prompt"] = p
-		event.Properties["prompt_kind"] = k
+		event.Properties["prompt_type"] = k
 	}
 }
 

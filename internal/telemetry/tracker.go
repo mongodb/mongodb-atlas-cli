@@ -15,12 +15,14 @@
 package telemetry
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"os"
 	"path/filepath"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/spf13/afero"
 )
 
@@ -35,9 +37,10 @@ type tracker struct {
 	fs               afero.Fs
 	maxCacheFileSize int64
 	cacheDir         string
+	store            store.EventsSender
 }
 
-func newTracker() (*tracker, error) {
+func newTracker(ctx context.Context) (*tracker, error) {
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {
 		return nil, err
@@ -45,10 +48,16 @@ func newTracker() (*tracker, error) {
 
 	cacheDir = filepath.Join(cacheDir, config.ToolName)
 
+	telemetryStore, err := store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry())
+	if err != nil {
+		return nil, err
+	}
+
 	return &tracker{
 		fs:               afero.NewOsFs(),
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		cacheDir:         cacheDir,
+		store:            telemetryStore,
 	}, nil
 }
 
@@ -60,8 +69,14 @@ func (t *tracker) track(data TrackOptions) error {
 	}
 
 	event := newEvent(options...)
+	err := t.store.SendEvents(&[]Event{event})
+	if err != nil {
+		// Could not send the event, so log the error and cache the event
+		logError(err)
+		return t.save(event)
+	}
 
-	return t.save(event)
+	return nil
 }
 
 func (t *tracker) openCacheFile() (afero.File, error) {

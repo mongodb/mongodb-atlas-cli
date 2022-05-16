@@ -105,3 +105,18 @@ func GenerateAliases(use string, extra ...string) []string {
 	aliases = append(aliases, extra...)
 	return aliases
 }
+
+var exampleBin string
+
+// ExampleAtlasEntryPoint returns the entry point for an atlas command while taking into account
+// if the bin is atlas or mongocli.
+func ExampleAtlasEntryPoint() string {
+	if exampleBin != "" {
+		return exampleBin
+	}
+	exampleBin = config.BinName()
+	if exampleBin == config.MongoCLI {
+		exampleBin += " atlas"
+	}
+	return exampleBin
+}

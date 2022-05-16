@@ -34,7 +34,7 @@ Arguments
      - Description
    * - clusterName
      - string
-     - false
+     - true
      - Name of the Atlas cluster for which you want to retrieve restore jobs.
 
 Options
@@ -84,4 +84,12 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ The following example etrieve the Continuous Backup restore jobs for the cluster Cluster0:
+   $ mongocli atlas backup restore list Cluster0
 

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package backup
 
@@ -21,7 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -46,4 +47,18 @@ func TestRestoresListOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestRestoresListBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		RestoresListBuilder(),
+		0,
+		[]string{
+			flag.Page,
+			flag.Limit,
+			flag.ProjectID,
+			flag.Output,
+		},
+	)
 }

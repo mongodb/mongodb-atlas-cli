@@ -77,6 +77,9 @@ func withCommandPath(cmd *cobra.Command) eventOpt {
 	return func(event Event) {
 		cmdPath := cmd.CommandPath()
 		event.Properties["command"] = strings.ReplaceAll(cmdPath, " ", "-")
+		if cmd.CalledAs() != "" {
+			event.Properties["alias"] = cmd.CalledAs()
+		}
 	}
 }
 

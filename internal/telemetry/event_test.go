@@ -43,6 +43,25 @@ func TestWithCommandPath(t *testing.T) {
 	a.Equal("root-test", e.Properties["command"])
 }
 
+func TestWithCommandPathAndAlias(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+	rootCmd := &cobra.Command{
+		Use: "root",
+	}
+	rootCmd.AddCommand(&cobra.Command{
+		Use:     "test",
+		Aliases: []string{"t"},
+	})
+	rootCmd.SetArgs([]string{"t"})
+	calledCmd, _ := rootCmd.ExecuteContextC(NewContext())
+
+	e := newEvent(withCommandPath(calledCmd))
+
+	a := assert.New(t)
+	a.Equal("root-test", e.Properties["command"])
+	a.Equal("t", e.Properties["alias"])
+}
+
 func TestWithProfileDefault(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 

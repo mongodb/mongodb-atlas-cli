@@ -35,7 +35,7 @@ import (
 const (
 	yes                       = "yes"
 	responseHeaderTimeout     = 1 * time.Minute
-	telemetryTimeout          = 200 * time.Millisecond
+	telemetryTimeout          = 1 * time.Second
 	tlsHandshakeTimeout       = 5 * time.Second
 	timeout                   = 5 * time.Second
 	keepAlive                 = 30 * time.Second

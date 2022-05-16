@@ -90,6 +90,6 @@ Examples
 
 .. code-block::
 
- The following example etrieve the Continuous Backup restore jobs for the cluster Cluster0:
+ The following example retrieve the Continuous Backup restore jobs for the cluster Cluster0:
    $ atlas backup restore list Cluster0
 

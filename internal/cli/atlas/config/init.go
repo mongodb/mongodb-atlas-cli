@@ -18,12 +18,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -54,7 +54,7 @@ Enter [?] on any option to get help.
 `, atlas)
 
 	q := prompt.AccessQuestions(false)
-	if err := survey.Ask(q, opts); err != nil {
+	if err := telemetry.TrackAsk(q, opts); err != nil {
 		return err
 	}
 	opts.SetUpAccess()
@@ -72,14 +72,14 @@ Enter [?] on any option to get help.
 		}
 	} else {
 		q := prompt.TenantQuestions()
-		if err := survey.Ask(q, opts); err != nil {
+		if err := telemetry.TrackAsk(q, opts); err != nil {
 			return err
 		}
 	}
 	opts.SetUpProject()
 	opts.SetUpOrg()
 
-	if err := survey.Ask(opts.DefaultQuestions(), opts); err != nil {
+	if err := telemetry.TrackAsk(opts.DefaultQuestions(), opts); err != nil {
 		return err
 	}
 	opts.SetUpOutput()

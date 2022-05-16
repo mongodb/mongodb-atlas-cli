@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
@@ -168,12 +169,12 @@ func (opts *DefaultSetterOpts) AskProjectIfCurrentNotAvailable(currentProjectID 
 			Message: "Do you want to enter the Project ID manually?",
 		}
 		manually := true
-		if err2 := survey.AskOne(p, &manually); err2 != nil {
+		if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
 			return err2
 		}
 		if manually {
 			p := prompt.NewProjectIDInput()
-			return survey.AskOne(p, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
+			return telemetry.TrackAskOne(p, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
 		}
 		_, _ = fmt.Fprint(opts.OutWriter, "Skipping default project setting\n")
 		return nil
@@ -193,7 +194,7 @@ func (opts *DefaultSetterOpts) AskProjectIfCurrentNotAvailable(currentProjectID 
 	} else {
 		p := prompt.NewProjectSelect(pSlice)
 		var projectID string
-		if err := survey.AskOne(p, &projectID); err != nil {
+		if err := telemetry.TrackAskOne(p, &projectID); err != nil {
 			return err
 		}
 		opts.ProjectID = pMap[projectID]
@@ -235,12 +236,12 @@ func (opts *DefaultSetterOpts) AskOrgIfCurrentNotAvailable(currentOrgID string) 
 			Message: "Do you want to enter the Org ID manually?",
 		}
 		manually := true
-		if err2 := survey.AskOne(p, &manually); err2 != nil {
+		if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
 			return err2
 		}
 		if manually {
 			p := prompt.NewOrgIDInput()
-			return survey.AskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
+			return telemetry.TrackAskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
 		}
 		_, _ = fmt.Fprint(opts.OutWriter, "Skipping default organization setting\n")
 		return nil
@@ -260,7 +261,7 @@ func (opts *DefaultSetterOpts) AskOrgIfCurrentNotAvailable(currentOrgID string) 
 	} else {
 		p := prompt.NewOrgSelect(oSlice)
 		var orgID string
-		if err := survey.AskOne(p, &orgID); err != nil {
+		if err := telemetry.TrackAskOne(p, &orgID); err != nil {
 			return err
 		}
 		opts.OrgID = oMap[orgID]

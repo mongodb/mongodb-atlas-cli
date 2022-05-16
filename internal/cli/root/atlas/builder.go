@@ -58,6 +58,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/mongodb/mongodb-atlas-cli/internal/version"
@@ -247,7 +248,7 @@ func formattedVersion() string {
 }
 
 func (n *Notifier) shouldCheck() (shouldCheck, isHb bool) {
-	shouldCheck = !config.SkipUpdateCheck() && cli.IsTerminal(n.writer)
+	shouldCheck = !config.SkipUpdateCheck() && terminal.IsTerminal(n.writer)
 	isHb = false
 
 	if !shouldCheck {

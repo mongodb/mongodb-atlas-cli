@@ -21,11 +21,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mattn/go-isatty"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonpathwriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/templatewriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 )
 
 const (
@@ -75,30 +75,12 @@ func (opts *OutputOpts) ConfigWriter() io.Writer {
 
 // IsTerminal returns true is the current file descriptor is TTY kind of terminal.
 func (opts *OutputOpts) IsTerminal() bool {
-	return IsTerminal(opts.OutWriter)
-}
-
-// IsTerminal returns true is the current file descriptor is TTY kind of terminal.
-func IsTerminal(w io.Writer) bool {
-	if f, isFile := w.(*os.File); isFile {
-		return isatty.IsTerminal(f.Fd()) || IsCygwinTerminal(w)
-	}
-
-	return false
+	return terminal.IsTerminal(opts.OutWriter)
 }
 
 // IsCygwinTerminal returns true is the current file descriptor is cygwin.
 func (opts *OutputOpts) IsCygwinTerminal() bool {
-	return IsCygwinTerminal(opts.OutWriter)
-}
-
-// IsCygwinTerminal returns true is the current file descriptor is cygwin.
-func IsCygwinTerminal(w io.Writer) bool {
-	if f, isFile := w.(*os.File); isFile {
-		return isatty.IsCygwinTerminal(f.Fd())
-	}
-
-	return false
+	return terminal.IsCygwinTerminal(opts.OutWriter)
 }
 
 // Print will evaluate the defined format and try to parse it accordingly outputting to the set writer.

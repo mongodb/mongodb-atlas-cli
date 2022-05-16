@@ -32,6 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
@@ -275,7 +276,7 @@ func (opts *Opts) askSampleDataQuestion() error {
 
 	q := newSampleDataQuestion(opts.ClusterName)
 	var addSampleData bool
-	if err := survey.AskOne(q, &addSampleData); err != nil {
+	if err := telemetry.TrackAskOne(q, &addSampleData); err != nil {
 		return err
 	}
 	opts.SkipSampleData = !addSampleData
@@ -286,7 +287,7 @@ func (opts *Opts) askSampleDataQuestion() error {
 func askMongoShellAndSetConfig() error {
 	var mongoShellPath string
 	q := newMongoShellPathInput()
-	if err := survey.AskOne(q, &mongoShellPath, survey.WithValidator(validate.Path)); err != nil {
+	if err := telemetry.TrackAskOne(q, &mongoShellPath, survey.WithValidator(validate.Path)); err != nil {
 		return err
 	}
 

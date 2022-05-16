@@ -21,6 +21,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/spf13/afero"
@@ -61,7 +62,7 @@ func newTracker(ctx context.Context) (*tracker, error) {
 	}, nil
 }
 
-func (t *tracker) track(data TrackOptions) error {
+func (t *tracker) trackCommand(data TrackOptions) error {
 	options := []eventOpt{withCommandPath(data.Cmd), withDuration(data.Cmd), withFlags(data.Cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(data.Cmd), withOrgID(data.Cmd), withTerminal(), withInstaller(t.fs), withExtraProps(data.extraProps)}
 
 	if data.Err != nil {
@@ -120,4 +121,61 @@ func (t *tracker) save(event Event) error {
 	}
 	_, err = file.Write(data)
 	return err
+}
+
+func castBool(i interface{}) bool {
+	b, ok := i.(bool)
+	if ok {
+		return b
+	}
+
+	p, ok := i.(*bool)
+
+	var ret bool
+	if ok && i != nil {
+		ret = *p
+	}
+
+	return ret
+}
+
+func castString(i interface{}) string {
+	s, ok := i.(string)
+	if ok {
+		return s
+	}
+
+	p, ok := i.(*string)
+
+	var ret string
+	if ok && i != nil {
+		ret = *p
+	}
+
+	return ret
+}
+
+func (t *tracker) trackSurvey(p survey.Prompt, response interface{}, e error) error {
+	options := []eventOpt{}
+
+	if e != nil {
+		options = append(options, withError(e))
+	}
+
+	switch v := p.(type) {
+	case *survey.Confirm:
+		options = append(options, withPrompt(v.Message, "confirm"), withDefault(castBool(response) == v.Default))
+	case *survey.Input:
+		options = append(options, withPrompt(v.Message, "input"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""))
+	case *survey.Password:
+		options = append(options, withPrompt(v.Message, "password"), withEmpty(castString(response) == ""))
+	case *survey.Select:
+		options = append(options, withPrompt(v.Message, "select"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""))
+	default:
+		return errors.New("unknown survey prompt")
+	}
+
+	event := newEvent(options...)
+
+	return t.save(event)
 }

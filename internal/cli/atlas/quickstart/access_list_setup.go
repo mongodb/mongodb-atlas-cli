@@ -20,6 +20,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -45,7 +46,7 @@ func (opts *Opts) askAccessListOptions() error {
 	if publicIP != "" {
 		message = fmt.Sprintf(" [Press Enter to use your public IP address '%s']", publicIP)
 	}
-	err := survey.AskOne(
+	err := telemetry.TrackAskOne(
 		newAccessListQuestion(publicIP, message),
 		&opts.IPAddressesResponse,
 		survey.WithValidator(survey.Required),

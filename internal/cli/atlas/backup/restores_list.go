@@ -16,6 +16,7 @@ package backup
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -66,8 +67,11 @@ func RestoresListBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":            "clusterName",
+			"requiredArgs":    "clusterName",
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve restore jobs.",
 		},
+		Example: fmt.Sprintf(`The following example retrieves the continuous backup restore jobs for the cluster Cluster0:
+  $ %s backup restore list Cluster0`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

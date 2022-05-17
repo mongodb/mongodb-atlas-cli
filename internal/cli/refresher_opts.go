@@ -65,3 +65,12 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 	config.SetRefreshToken(t.RefreshToken)
 	return config.Save()
 }
+
+// RefreshToken a token from the current configuration.
+func RefreshToken(ctx context.Context) error {
+	opts := &RefresherOpts{}
+	if err := opts.InitFlow(); err != nil {
+		return err
+	}
+	return opts.RefreshAccessToken(ctx)
+}

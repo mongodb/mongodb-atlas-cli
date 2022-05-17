@@ -12,17 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+//go:build unit
+
+package backup
 
 import (
-	"context"
+	"testing"
+
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
-// RefreshToken a token from the current configuration.
-func RefreshToken(ctx context.Context) error {
-	opts := &RefresherOpts{}
-	if err := opts.InitFlow(); err != nil {
-		return err
-	}
-	return opts.RefreshAccessToken(ctx)
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		2,
+		[]string{},
+	)
+}
+
+func TestRestoresBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		RestoresBuilder(),
+		2,
+		[]string{},
+	)
 }

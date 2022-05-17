@@ -34,7 +34,7 @@ Arguments
      - Description
    * - deliveryType
      - string
-     - false
+     - true
      - Type of restore job to create. Accepted values include: automated, download, pointInTime.
 
 Options
@@ -50,7 +50,7 @@ Options
      - Description
    * - --clusterName
      - string
-     - false
+     - true
      - Name of the cluster.
    * - -h, --help
      - 
@@ -104,4 +104,28 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ The following example creates an automated restore:
+   $ mongocli atlas backup restore start automated \
+          --clusterName myDemo \
+          --snapshotId 5e7e00128f8ce03996a47179 \
+          --targetClusterName myDemo2 \
+          --targetProjectId 1a2345b67c8e9a12f3456de7
+
+ The following example creates a point-in-time restore:
+   $ mongocli atlas backup restore start pointInTime \
+          --clusterName myDemo \
+          --pointInTimeUTCMillis 1588523147 \
+          --targetClusterName myDemo2 \
+          --targetProjectId 1a2345b67c8e9a12f3456de7
+   
+ The following example creates a download restore:
+   $ mongocli atlas backup restore start download \
+          --clusterName myDemo \
+          --snapshotId 5e7e00128f8ce03996a47179
 

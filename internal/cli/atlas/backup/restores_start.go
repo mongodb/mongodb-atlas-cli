@@ -16,7 +16,6 @@ package backup
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -110,14 +109,6 @@ func (opts *RestoresStartOpts) isDownloadRestore() bool {
 	return opts.method == downloadRestore
 }
 
-func (opts *RestoresStartOpts) validateParams() error {
-	if opts.clusterName == "" {
-		return errors.New("needs clusterName")
-	}
-
-	return nil
-}
-
 func markRequiredAutomatedRestoreFlags(cmd *cobra.Command) error {
 	if err := cmd.MarkFlagRequired(flag.TargetProjectID); err != nil {
 		return err
@@ -127,7 +118,7 @@ func markRequiredAutomatedRestoreFlags(cmd *cobra.Command) error {
 		return err
 	}
 
-	if err := cmd.MarkFlagRequired(flag.TargetClusterID); err != nil {
+	if err := cmd.MarkFlagRequired(flag.TargetClusterName); err != nil {
 		return err
 	}
 
@@ -139,11 +130,7 @@ func markRequiredPointInTimeRestoreFlags(cmd *cobra.Command) error {
 		return err
 	}
 
-	if err := cmd.MarkFlagRequired(flag.TargetClusterID); err != nil {
-		return err
-	}
-
-	return cmd.MarkFlagRequired(flag.ClusterName)
+	return cmd.MarkFlagRequired(flag.TargetClusterName)
 }
 
 // mongocli atlas backup(s) restore(s) job(s) start <automated|download|pointInTime>.
@@ -156,8 +143,27 @@ func RestoresStartBuilder() *cobra.Command {
 		ValidArgs: []string{automatedRestore, downloadRestore, pointInTimeRestore},
 		Annotations: map[string]string{
 			"args":             "deliveryType",
+			"requiredArgs":     "deliveryType",
 			"deliveryTypeDesc": "Type of restore job to create. Accepted values include: automated, download, pointInTime.",
 		},
+		Example: fmt.Sprintf(`The following example creates an automated restore:
+  $ %[1]s backup restore start automated \
+         --clusterName myDemo \
+         --snapshotId 5e7e00128f8ce03996a47179 \
+         --targetClusterName myDemo2 \
+         --targetProjectId 1a2345b67c8e9a12f3456de7
+
+The following example creates a point-in-time restore:
+  $ %[1]s backup restore start pointInTime \
+         --clusterName myDemo \
+         --pointInTimeUTCMillis 1588523147 \
+         --targetClusterName myDemo2 \
+         --targetProjectId 1a2345b67c8e9a12f3456de7
+  
+The following example creates a download restore:
+  $ %[1]s backup restore start download \
+         --clusterName myDemo \
+         --snapshotId 5e7e00128f8ce03996a47179`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.isAutomatedRestore() {
 				if err := markRequiredAutomatedRestoreFlags(cmd); err != nil {
@@ -186,10 +192,6 @@ func RestoresStartBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.method = args[0]
 
-			if e := opts.validateParams(); e != nil {
-				return e
-			}
-
 			return opts.Run()
 		},
 	}
@@ -207,6 +209,8 @@ func RestoresStartBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
 	return cmd
 }

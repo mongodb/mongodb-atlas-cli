@@ -23,9 +23,11 @@ import (
 	"github.com/PaesslerAG/jsonpath"
 )
 
+var ErrEmptyPath = errors.New("empty jsonpath")
+
 func Print(w io.Writer, path string, obj interface{}) error {
 	if path == "" {
-		return errors.New("empty jsonpath")
+		return ErrEmptyPath
 	}
 
 	jsonString, err := json.Marshal(obj)

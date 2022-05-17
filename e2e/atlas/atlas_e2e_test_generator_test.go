@@ -17,7 +17,6 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -204,7 +203,7 @@ func (g *atlasE2ETestGenerator) getProcesses() ([]*mongodbatlas.Process, error) 
 	}
 
 	if len(processes) == 0 {
-		return nil, fmt.Errorf("got=%#v\nwant=%#v", 0, "len(processes) > 0")
+		g.t.Fatalf("got=%#v\nwant=%#v", 0, "len(processes) > 0")
 	}
 
 	return processes, nil

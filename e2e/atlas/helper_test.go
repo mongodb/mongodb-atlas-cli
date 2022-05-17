@@ -164,6 +164,8 @@ func deleteClusterForProject(projectID, clusterName string) error {
 	return nil
 }
 
+var errNoRegions = errors.New("no regions available")
+
 func newAvailableRegion(projectID, tier, provider string) (string, error) {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
@@ -195,7 +197,7 @@ func newAvailableRegion(projectID, tier, provider string) (string, error) {
 	}
 
 	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
-		return "", errors.New("no regions available")
+		return "", errNoRegions
 	}
 
 	return cloudProviders.Results[0].InstanceSizes[0].AvailableRegions[0].Name, nil

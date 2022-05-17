@@ -54,6 +54,11 @@ const (
 	securityEntity    = "security"
 )
 
+var (
+	ErrNoServers = errors.New("no server available")
+	ErrNoHosts   = errors.New("no hosts available")
+)
+
 // automationServerHostname tries to list available server running the automation agent
 // and returns the first available hostname for deployments.
 func automationServerHostname(cliPath string) (string, error) {
@@ -69,7 +74,7 @@ func automationServerHostname(cliPath string) (string, error) {
 		return "", err
 	}
 	if servers.TotalCount == 0 {
-		return "", errors.New("no server available")
+		return "", ErrNoServers
 	}
 	sort.Sort(byLastConf(*servers))
 	return servers.Results[0].Hostname, nil
@@ -98,7 +103,7 @@ func hostIDs(cliPath string) ([]string, error) {
 		return nil, err
 	}
 	if servers.TotalCount == 0 {
-		return nil, errors.New("no hosts available")
+		return nil, ErrNoHosts
 	}
 	result := make([]string, len(servers.Results))
 	for i, h := range servers.Results {

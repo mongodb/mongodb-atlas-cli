@@ -36,9 +36,11 @@ var filesKmip embed.FS
 
 const kmipTestsInputDir = "decryption/kmip"
 
+var errEmptyText = errors.New("unexpected empty value")
+
 func decodeAndWriteToPath(encodedText, filepath string) error {
 	if encodedText == "" {
-		return errors.New("unexpected empty value")
+		return errEmptyText
 	}
 
 	decoded, err := base64.StdEncoding.DecodeString(encodedText)

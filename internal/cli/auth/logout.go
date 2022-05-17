@@ -16,7 +16,6 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 
@@ -80,7 +79,7 @@ func LogoutBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if config.RefreshToken() == "" {
-				return errors.New("not logged in")
+				return ErrUnauthenticated
 			}
 			s, err := config.AccessTokenSubject()
 			if err != nil {

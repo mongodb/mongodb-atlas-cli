@@ -15,6 +15,7 @@
 package decryption
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/klauspost/compress/zstd"
@@ -27,6 +28,8 @@ const (
 	CompressionModeZstd CompressionMode = "zstd"
 )
 
+var ErrUnsupportedCompression = errors.New("unsupported compression mode")
+
 func decompress(compressionMode CompressionMode, src []byte) ([]byte, error) {
 	switch compressionMode {
 	case CompressionModeNone:
@@ -38,6 +41,6 @@ func decompress(compressionMode CompressionMode, src []byte) ([]byte, error) {
 		}
 		return decoder.DecodeAll(src, nil)
 	default:
-		return nil, fmt.Errorf(`compression mode "%s" is not supported`, compressionMode)
+		return nil, fmt.Errorf(`%w: %s`, ErrUnsupportedCompression, compressionMode)
 	}
 }

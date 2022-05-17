@@ -17,6 +17,7 @@ package aes
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"errors"
 	"fmt"
 )
 
@@ -27,10 +28,12 @@ type GCMInput struct {
 	Tag []byte
 }
 
+var ErrAESGCMecrypt = errors.New("aes-gcm decrypt error")
+
 func (input *GCMInput) Decrypt(cipherText []byte) (decrypted []byte, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = fmt.Errorf("aes-gcm decrypt error: %v", r)
+			err = fmt.Errorf("%w: %v", ErrAESGCMecrypt, r)
 			decrypted = nil
 		}
 	}()

@@ -172,7 +172,7 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a database user for your project.",
-		Example: fmt.Sprintf(`Create an Atlas admin user:
+		Example: fmt.Sprintf(`  Create an Atlas admin user:
   $ %[1]s dbuser create atlasAdmin --username <username>  --projectId <projectId>
 
   Create user with read/write access to any database:

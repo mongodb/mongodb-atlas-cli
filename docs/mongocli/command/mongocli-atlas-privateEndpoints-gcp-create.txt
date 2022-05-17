@@ -70,5 +70,5 @@ Examples
 
 .. code-block::
 
- $ mongocli atlas privateEndpoints gcp create --region CENTRAL_US
+   $ mongocli atlas privateEndpoints gcp create --region CENTRAL_US
 

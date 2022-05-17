@@ -73,7 +73,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 			"requiredArgs":          "privateEndpointId",
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
-		Example: fmt.Sprintf(`$ %s privateEndpoint gcp watch vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  $ %s privateEndpoint gcp watch vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

@@ -98,7 +98,7 @@ Examples
 
 .. code-block::
 
- Update roles for a user:
+   Update roles for a user:
    $ mongocli atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>
 
  Update scopes for a user:

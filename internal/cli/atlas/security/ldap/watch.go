@@ -69,7 +69,7 @@ func WatchBuilder() *cobra.Command {
 Once the LDAP configuration reaches the expected status, the command prints "LDAP Configuration request completed."
 If you run the command in the terminal, it blocks the terminal session until the resource status succeeds or fails.
 You can interrupt the command's polling at any time with CTRL-C.`,
-		Example: fmt.Sprintf(`$ %s security ldap status watch requestIdSample`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  $ %s security ldap status watch requestIdSample`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

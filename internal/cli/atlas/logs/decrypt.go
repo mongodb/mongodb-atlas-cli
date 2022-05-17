@@ -98,12 +98,12 @@ func DecryptBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "decrypt",
 		Short: "Decrypts an audit log file with the provided AWS, GCP or Azure key management services.",
-		Example: `Decrypt using AWS credentials:
-$ atlas logs decrypt --file /path/to/logFile.json --awsAccessKey <accessKey> --awsSecretAccessKey <secretKey> --awsSessionToken <sessionToken>
-GCP credentials:
-$ atlas logs decrypt --file /path/to/logFile.json --gcpServiceAccountKey <serviceAccountKey>
-or Azure credentials:
-$ atlas logs decrypt --file /path/to/logFile.json --azureClientId <clientId> --azureTenantId <tenantId> --azureSecret <secret>
+		Example: `  Decrypt using AWS credentials:
+  $ atlas logs decrypt --file /path/to/logFile.json --awsAccessKey <accessKey> --awsSecretAccessKey <secretKey> --awsSessionToken <sessionToken>
+  GCP credentials:
+  $ atlas logs decrypt --file /path/to/logFile.json --gcpServiceAccountKey <serviceAccountKey>
+  Azure credentials:
+  $ atlas logs decrypt --file /path/to/logFile.json --azureClientId <clientId> --azureTenantId <tenantId> --azureSecret <secret>
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initDefaultOut)

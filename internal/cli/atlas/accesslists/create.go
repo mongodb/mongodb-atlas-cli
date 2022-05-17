@@ -139,7 +139,7 @@ func CreateBuilder() *cobra.Command {
 			"args":      "entry",
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to create.",
 		},
-		Example: fmt.Sprintf(`Create IP address access list with the current IP address. Entry is not needed in this case.
+		Example: fmt.Sprintf(`  Create IP address access list with the current IP address. Entry is not needed in this case.
   $ %s accessList create --currentIP`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

@@ -62,7 +62,7 @@ func DeleteBuilder() *cobra.Command {
 			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",
 		},
 		Example: fmt.Sprintf(
-			`$ %s privateEndpoints gcp interfaces delete endpoint-1 \
+			`  $ %s privateEndpoints gcp interfaces delete endpoint-1 \
   --endpointServiceId 61eaca605af86411903de1dd`,
 			cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -189,7 +189,7 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create one cluster in the specified project.",
 		Long: `To get started quickly, specify a name for your cluster, a cloud provider, and a region to deploy a three-member replica set with the latest MongoDB server version.
 For full control of your deployment, or to create multi-cloud clusters, provide a JSON configuration file with the --file flag.`,
-		Example: fmt.Sprintf(`Deploy a three-member replica set in AWS:
+		Example: fmt.Sprintf(`  Deploy a three-member replica set in AWS:
   $ %[1]s cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 5.0 --diskSizeGB 10
 
   Deploy a three-member replica set in AZURE:

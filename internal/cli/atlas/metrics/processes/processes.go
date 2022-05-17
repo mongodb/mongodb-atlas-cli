@@ -72,8 +72,7 @@ func Builder() *cobra.Command {
 			"requiredArgs":      "hostname:port",
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 		},
-		Example: fmt.Sprintf(`
-  $ %s metrics process atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  $ %s metrics process atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -98,7 +98,6 @@ Examples
 
 .. code-block::
 
-
    Update tier for a cluster:
    $ mongocli atlas cluster update <clusterName> --projectId <projectId> --tier M50
 

@@ -66,7 +66,7 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Creates one alert configuration in the specified project.",
-		Example: fmt.Sprintf(`This example uses the "%[1]s alerts settings create" command to create one alert configuration in the specified project. It uses the default profile to access the Atlas project:
+		Example: fmt.Sprintf(`  This example uses the "%[1]s alerts settings create" command to create one alert configuration in the specified project. It uses the default profile to access the Atlas project:
   $ %[1]s alert settings create --event JOINED_GROUP --enabled \
   --notificationType USER --notificationEmailEnabled \
   --notificationUsername john@example.com \

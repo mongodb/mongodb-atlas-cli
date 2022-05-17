@@ -121,8 +121,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update [clusterName]",
 		Short: "Update a MongoDB Atlas cluster.",
-		Example: fmt.Sprintf(`
-  Update tier for a cluster:
+		Example: fmt.Sprintf(`  Update tier for a cluster:
   $ %[1]s cluster update <clusterName> --projectId <projectId> --tier M50
 
   Update disk size for a cluster:

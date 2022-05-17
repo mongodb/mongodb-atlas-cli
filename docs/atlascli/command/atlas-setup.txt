@@ -112,6 +112,6 @@ Examples
 
 .. code-block::
 
- Override default cluster settings like name, provider, or database username by using the command options
+   Override default cluster settings like name, provider, or database username by using the command options
    $ atlas setup --clusterName Test --provider GCP --username dbuserTest
 

@@ -77,7 +77,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 				opts.InitOutput(cmd.OutOrStdout(), "\nPrivate endpoint changes completed.\n"),
 			)
 		},
-		Example: fmt.Sprintf(`$ %s privateEndpoint watch vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  $ %s privateEndpoint watch vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.Run()

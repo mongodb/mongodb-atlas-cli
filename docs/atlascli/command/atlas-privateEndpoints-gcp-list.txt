@@ -74,6 +74,5 @@ Examples
 
 .. code-block::
 
-
    $ atlas privateEndpoint gcp ls
 

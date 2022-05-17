@@ -146,7 +146,7 @@ func RestoresStartBuilder() *cobra.Command {
 			"requiredArgs":     "deliveryType",
 			"deliveryTypeDesc": "Type of restore job to create. Accepted values include: automated, download, pointInTime.",
 		},
-		Example: fmt.Sprintf(`The following example creates an automated restore:
+		Example: fmt.Sprintf(`  The following example creates an automated restore:
   $ %[1]s backup restore start automated \
          --clusterName myDemo \
          --snapshotId 5e7e00128f8ce03996a47179 \

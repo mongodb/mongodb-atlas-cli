@@ -78,7 +78,7 @@ func WatchBuilder() *cobra.Command {
 Once it reaches the expected state, the command prints "Network peering changes completed."
 If you run the command in the terminal, it blocks the terminal session until the resource is available.
 You can interrupt the command's polling at any time with CTRL-C.`,
-		Example: fmt.Sprintf(`$ %s networking peering watch peeringConnectionSampleId`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  $ %s networking peering watch peeringConnectionSampleId`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

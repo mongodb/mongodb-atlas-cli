@@ -74,7 +74,7 @@ func ListBuilder() *cobra.Command {
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 		},
 		Example: fmt.Sprintf(
-			`This example lists the available disks for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
+			`  This example lists the available disks for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
   $ %s metrics disk ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

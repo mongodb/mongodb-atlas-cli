@@ -70,7 +70,7 @@ func DescribeBuilder() *cobra.Command {
 			"requiredArgs":          "privateEndpointId",
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
-		Example: fmt.Sprintf(`$ %s privateEndpoint gcp describe vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  $ %s privateEndpoint gcp describe vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.PreRunE(

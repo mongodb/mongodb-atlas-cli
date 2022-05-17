@@ -433,7 +433,7 @@ func Builder() *cobra.Command {
 		Use:   "quickstart",
 		Short: "Create and access an Atlas Cluster.",
 		Long:  "This command creates a new cluster, adds your public IP to the atlas access list and creates a db user to access your new MongoDB instance.",
-		Example: fmt.Sprintf(`Skip setting cluster name, provider or database username by using the command options:
+		Example: fmt.Sprintf(`  Skip setting cluster name, provider or database username by using the command options:
   $ %s quickstart --clusterName Test --provider GCP --username dbuserTest`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRun(cmd.Context(), cmd.OutOrStdout())

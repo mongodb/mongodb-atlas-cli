@@ -110,6 +110,5 @@ Examples
 
 .. code-block::
 
-
    $ mongocli atlas metrics process atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
 

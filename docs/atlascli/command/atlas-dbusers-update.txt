@@ -101,6 +101,6 @@ Examples
    Update roles for a user:
    $ atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>
 
- Update scopes for a user:
+   Update scopes for a user:
    $ atlas dbuser update <username> --scope resourceName:resourceType --projectId <projectId>
 

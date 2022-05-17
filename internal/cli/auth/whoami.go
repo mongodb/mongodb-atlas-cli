@@ -35,9 +35,11 @@ func (opts *whoOpts) Run() error {
 	return nil
 }
 
+var ErrUnauthenticated = errors.New("not logged in")
+
 func AccountWithAccessToken() (string, error) {
 	if config.AccessToken() == "" {
-		return "", errors.New("not logged in")
+		return "", ErrUnauthenticated
 	}
 	return config.AccessTokenSubject()
 }

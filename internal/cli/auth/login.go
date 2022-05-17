@@ -180,7 +180,6 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	opts.SetUpProject()
 
 	opts.SetUpMongoSHPath()
-	opts.SetUpTelemetryEnabled()
 	return opts.config.Save()
 }
 

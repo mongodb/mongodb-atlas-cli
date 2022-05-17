@@ -248,6 +248,9 @@ func (p *Profile) GetString(name string) string {
 
 func GetBool(name string) bool { return Default().GetBool(name) }
 func (p *Profile) GetBool(name string) bool {
+	return p.GetBoolWithDefault(name, false)
+}
+func (p *Profile) GetBoolWithDefault(name string, defaultValue bool) bool {
 	value := p.Get(name)
 	switch v := value.(type) {
 	case bool:
@@ -255,7 +258,7 @@ func (p *Profile) GetBool(name string) bool {
 	case string:
 		return IsTrue(v)
 	default:
-		return false
+		return defaultValue
 	}
 }
 
@@ -457,7 +460,7 @@ func (*Profile) IsTelemetryEnabledSet() bool {
 // TelemetryEnabled get the configured telemetry enabled value.
 func TelemetryEnabled() bool { return Default().TelemetryEnabled() }
 func (p *Profile) TelemetryEnabled() bool {
-	return isTelemetryFeatureAllowed() && p.GetBool(telemetryEnabled)
+	return isTelemetryFeatureAllowed() && p.GetBoolWithDefault(telemetryEnabled, true)
 }
 
 // SetTelemetryEnabled sets the telemetry enabled value.
@@ -476,7 +479,10 @@ func boolEnv(key string) bool {
 }
 
 func isTelemetryFeatureAllowed() bool {
-	return ToolName == AtlasCLI && !boolEnv("DO_NOT_TRACK") && boolEnv(AtlasCLIEnvPrefix+"_TELEMETRY_FEATURE_FLAG")
+	tool := ToolName == AtlasCLI
+	doNotTrack := boolEnv("DO_NOT_TRACK")
+	featureFlag := boolEnv(AtlasCLIEnvPrefix + "_TELEMETRY_FEATURE_FLAG")
+	return tool && !doNotTrack && featureFlag
 }
 
 // Output get configured output format.

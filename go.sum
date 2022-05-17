@@ -344,8 +344,8 @@ github.com/tangzero/inflector v1.0.0/go.mod h1:OknKjAyDPCDzcWt0yOh2I7hqTukEdyyAp
 github.com/tebeka/go2xunit v1.4.10/go.mod h1:wmc9jKT7KlU4QLU6DNTaIXNnYNOjKKNlp6mjOS0UrqY=
 github.com/tidwall/pretty v1.0.0 h1:HsD+QiTn7sK6flMKIvNmpqz1qrpP3Ps6jOKIKMooyg4=
 github.com/tidwall/pretty v1.0.0/go.mod h1:XNkn88O1ChpSDQmQeStsy+sBenx6DDtFZJxhVysOjyk=
-github.com/withfig/autocomplete-tools/packages/cobra v1.1.3 h1:toi+jQYY7SG/DRYZxP2U2VkFeCY+6FYLXEr8QR8VXzY=
-github.com/withfig/autocomplete-tools/packages/cobra v1.1.3/go.mod h1:RoXh7+7qknOXL65uTzdzE1mPxqcPwS7FLCE9K5GfmKo=
+github.com/withfig/autocomplete-tools/packages/cobra v1.2.0 h1:MzD3XeOOSO3mAjOPpF07jFteSKZxsRHvlIcAR9RQzKM=
+github.com/withfig/autocomplete-tools/packages/cobra v1.2.0/go.mod h1:RoXh7+7qknOXL65uTzdzE1mPxqcPwS7FLCE9K5GfmKo=
 github.com/xdg-go/pbkdf2 v1.0.0/go.mod h1:jrpuAogTd400dnrH08LKmI/xc1MbPOebTwRqcT5RDeI=
 github.com/xdg-go/scram v1.0.2/go.mod h1:1WAq6h33pAW+iRreB34OORO2Nf7qel3VV3fjBj+hCSs=
 github.com/xdg-go/stringprep v1.0.2/go.mod h1:8F9zXuvzgwmyT5DUm4GUfZGDdT3W+LCvS6+da4O5kxM=

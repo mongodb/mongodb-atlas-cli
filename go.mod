@@ -12,6 +12,7 @@ require (
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/aws/aws-sdk-go v1.44.10
 	github.com/briandowns/spinner v1.18.1
+	github.com/fatih/color v1.13.0
 	github.com/gemalto/kmip-go v0.0.6-0.20210426170211-84e83580888d
 	github.com/go-test/deep v1.0.8
 	github.com/golang-jwt/jwt/v4 v4.4.1
@@ -30,7 +31,7 @@ require (
 	github.com/spf13/viper v1.11.0
 	github.com/stretchr/testify v1.7.1
 	github.com/tangzero/inflector v1.0.0
-	github.com/withfig/autocomplete-tools/packages/cobra v1.1.3
+	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
 	go.mongodb.org/atlas v0.15.1-0.20220506113516-0a876936c455
 	go.mongodb.org/mongo-driver v1.9.1
 	go.mongodb.org/ops-manager v0.38.0
@@ -52,7 +53,6 @@ require (
 	github.com/PaesslerAG/gval v1.0.0 // indirect
 	github.com/ansel1/merry v1.5.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gemalto/flume v0.12.0 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect

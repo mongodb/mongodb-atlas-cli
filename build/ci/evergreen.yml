@@ -390,7 +390,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,config
   - name: brew_e2e
-    tags: ["e2e","generic"]
+    tags: ["e2e","required"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -1249,6 +1249,15 @@ buildvariants:
       go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: ".e2e .generic"
+  - name: e2e_required
+    display_name: "E2E Tests Required"
+    run_on:
+      - rhel80-small
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+    tasks:
+      - name: ".e2e .required"
   - name: e2e_atlas_clusters
     display_name: "E2E Atlas Cluster Tests"
     run_on:

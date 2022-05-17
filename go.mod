@@ -10,8 +10,9 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys v0.5.0
 	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/PaesslerAG/jsonpath v0.1.1
-	github.com/aws/aws-sdk-go v1.44.10
+	github.com/aws/aws-sdk-go v1.44.15
 	github.com/briandowns/spinner v1.18.1
+	github.com/fatih/color v1.13.0
 	github.com/gemalto/kmip-go v0.0.6-0.20210426170211-84e83580888d
 	github.com/go-test/deep v1.0.8
 	github.com/golang-jwt/jwt/v4 v4.4.1
@@ -52,7 +53,6 @@ require (
 	github.com/PaesslerAG/gval v1.0.0 // indirect
 	github.com/ansel1/merry v1.5.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gemalto/flume v0.12.0 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect

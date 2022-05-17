@@ -89,7 +89,7 @@ func DatabasesDescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.Period, flag.Period, "", usage.Period)
 	cmd.Flags().StringVar(&opts.Start, flag.Start, "", usage.MeasurementStart)
 	cmd.Flags().StringVar(&opts.End, flag.End, "", usage.MeasurementEnd)
-	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.Type, nil, usage.MeasurementType)
+	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.TypeFlag, nil, usage.MeasurementType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

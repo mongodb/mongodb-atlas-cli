@@ -101,7 +101,12 @@ func CreateBuilder() *cobra.Command {
 			"requiredArgs":        "endpointGroupId",
 			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",
 		},
-		Example: `$ mongocli atlas privateEndpoints gcp interfaces create endpoint-1 --endpointServiceId 61eaca605af86411903de1dd --gcpProjectId mcli-private-endpoints --endpoint endpoint-0@10.142.0.2,endpoint-1@10.142.0.3,endpoint-2@10.142.0.4,endpoint-3@10.142.0.5,endpoint-4@10.142.0.6,endpoint-5@10.142.0.7`,
+		Example: fmt.Sprintf(
+			`$ %s privateEndpoints gcp interfaces create endpoint-1 \
+  --endpointServiceId 61eaca605af86411903de1dd \
+  --gcpProjectId mcli-private-endpoints \
+  --endpoint endpoint-0@10.142.0.2,endpoint-1@10.142.0.3,endpoint-2@10.142.0.4,endpoint-3@10.142.0.5,endpoint-4@10.142.0.6,endpoint-5@10.142.0.7`,
+			cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.validateEndpoints,

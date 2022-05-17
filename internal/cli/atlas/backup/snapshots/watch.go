@@ -16,6 +16,7 @@ package snapshots
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -68,7 +69,7 @@ func WatchBuilder() *cobra.Command {
 Once the snapshot reaches the expected status, the command prints "Snapshot changes completed."
 If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
 You can interrupt the command's polling at any time with CTRL-C.`,
-		Example: `$ mongocli atlas snapshot watch snapshotIdSample --clusterName clusterNameSample`,
+		Example: fmt.Sprintf(`$ %s atlas snapshot watch snapshotIdSample --clusterName clusterNameSample`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":           "snapshotId",

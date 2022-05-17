@@ -16,6 +16,7 @@ package gcp
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -61,7 +62,7 @@ func DeleteBuilder() *cobra.Command {
 			"requiredArgs":          "privateEndpointId",
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
-		Example: `$ mongocli atlas privateEndpoint gcp delete vpce-abcdefg0123456789 --force`,
+		Example: fmt.Sprintf(`$ %s privateEndpoint gcp delete vpce-abcdefg0123456789 --force`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {

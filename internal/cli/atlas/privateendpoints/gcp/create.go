@@ -16,6 +16,7 @@ package gcp
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -70,7 +71,7 @@ func CreateBuilder() *cobra.Command {
 		Use:     "create",
 		Short:   "Create a new GCP private endpoint for your project.",
 		Args:    require.NoArgs,
-		Example: `$ mongocli atlas privateEndpoints gcp create --region CENTRAL_US`,
+		Example: fmt.Sprintf(`$ %s privateEndpoints gcp create --region CENTRAL_US`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

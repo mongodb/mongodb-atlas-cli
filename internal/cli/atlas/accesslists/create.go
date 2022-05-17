@@ -34,9 +34,6 @@ const (
 	ipAddress        = "ipAddress"
 	awsSecurityGroup = "awsSecurityGroup"
 	createTemplate   = "Created new IP access list.\n"
-	example          = `Create IP address access list with the current IP address. Entry is not needed in this case.
-  $ %s accessList create --currentIP
-		`
 )
 
 type CreateOpts struct {
@@ -142,7 +139,8 @@ func CreateBuilder() *cobra.Command {
 			"args":      "entry",
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to create.",
 		},
-		Example: fmt.Sprintf(example, exampleCmd),
+		Example: fmt.Sprintf(`Create IP address access list with the current IP address. Entry is not needed in this case.
+  $ %s accessList create --currentIP`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -167,7 +165,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.entryType, flag.Type, ipAddress, usage.AccessListType)
+	cmd.Flags().StringVar(&opts.entryType, flag.TypeFlag, ipAddress, usage.AccessListType)
 	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
 	cmd.Flags().StringVar(&opts.deleteAfter, flag.DeleteAfter, "", usage.AccessListsDeleteAfter)
 	cmd.Flags().BoolVar(&opts.currentIP, flag.CurrentIP, false, usage.CurrentIP)

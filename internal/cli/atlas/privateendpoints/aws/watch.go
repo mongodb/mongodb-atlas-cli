@@ -16,6 +16,7 @@ package aws
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -67,7 +68,7 @@ func WatchBuilder() *cobra.Command {
 Once the endpoint reaches the expected state, the command prints "Private endpoint changes completed."
 If you run the command in the terminal, it blocks the terminal session until the resource becomes available or fails.
 You can interrupt the command's polling at any time with CTRL-C.`,
-		Example: `$ mongocli atlas privateEndpoint aws watch vpce-abcdefg0123456789`,
+		Example: fmt.Sprintf(`$ %s privateEndpoint aws watch vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

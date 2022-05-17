@@ -16,6 +16,7 @@ package interfaces
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -69,7 +70,8 @@ func DescribeBuilder() *cobra.Command {
 			"requiredArgs":        "endpointGroupId",
 			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",
 		},
-		Example: `$ mongocli atlas privateEndpoints gcp interfaces describe endpoint-1 --endpointServiceId 61eaca605af86411903de1dd`,
+		Example: fmt.Sprintf(`$ %s privateEndpoints gcp interfaces describe endpoint-1 \
+  --endpointServiceId 61eaca605af86411903de1dd`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.privateEndpointGroupID = args[0]
 			return opts.PreRunE(

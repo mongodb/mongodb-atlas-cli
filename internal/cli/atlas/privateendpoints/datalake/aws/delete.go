@@ -16,6 +16,7 @@ package aws
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -58,8 +59,8 @@ func DeleteBuilder() *cobra.Command {
 			"requiredArgs":          "privateEndpointId",
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
-		Example: `
-  $ mongocli atlas privateEndpoint dataLake aws delete vpce-0fcd9d80bbafe1607 --force`,
+		Example: fmt.Sprintf(`
+  $ %s privateEndpoint dataLake aws delete vpce-0fcd9d80bbafe1607 --force`, cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {

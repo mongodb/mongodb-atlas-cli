@@ -16,6 +16,7 @@ package dbusers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -78,12 +79,12 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <username>",
 		Short: "Update a database user for your project.",
-		Example: `
-  Update roles for a user
-  $ mongocli atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>
+		Example: fmt.Sprintf(`Update roles for a user:
+  $ %[1]s dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>
 
-  Update scopes for a user
-  $ mongocli atlas dbuser update <username> --scope resourceName:resourceType --projectId <projectId>`,
+Update scopes for a user:
+  $ %[1]s dbuser update <username> --scope resourceName:resourceType --projectId <projectId>`,
+			cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":         "username",

@@ -32,27 +32,14 @@ import (
 )
 
 const (
-	replicaSet    = "REPLICASET"
-	tenant        = "TENANT"
-	atlasM0       = "M0"
-	atlasM2       = "M2"
-	atlasM5       = "M5"
-	zoneName      = "Zone 1"
-	labelKey      = "Infrastructure Tool"
-	labelValue    = "mongoCLI"
-	exampleCreate = `  
-  Deploy a three-member replica set in AWS:
-  $ %[1]s cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 5.0 --diskSizeGB 10
-
-  Deploy a three-member replica set in AZURE:
-  $ %[1]s cluster create <clusterName> --projectId <projectId> --provider AZURE --region US_EAST_2 --members 3 --tier M10  --mdbVersion 5.0 --diskSizeGB 10
-  
-  Deploy a three-member replica set in GCP:
-  $ %[1]s cluster create <clusterName> --projectId <projectId> --provider GCP --region EASTERN_US --members 3 --tier M10  --mdbVersion 5.0 --diskSizeGB 10
-
-  Deploy a cluster or a multi-cloud cluster from a JSON configuration file:
-  $ %[1]s cluster create --projectId <projectId> --file <path/to/file.json>
-`
+	replicaSet = "REPLICASET"
+	tenant     = "TENANT"
+	atlasM0    = "M0"
+	atlasM2    = "M2"
+	atlasM5    = "M5"
+	zoneName   = "Zone 1"
+	labelKey   = "Infrastructure Tool"
+	labelValue = "mongoCLI"
 )
 
 type CreateOpts struct {
@@ -202,8 +189,18 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create one cluster in the specified project.",
 		Long: `To get started quickly, specify a name for your cluster, a cloud provider, and a region to deploy a three-member replica set with the latest MongoDB server version.
 For full control of your deployment, or to create multi-cloud clusters, provide a JSON configuration file with the --file flag.`,
-		Example: fmt.Sprintf(exampleCreate, exampleCmd),
-		Args:    require.MaximumNArgs(1),
+		Example: fmt.Sprintf(`Deploy a three-member replica set in AWS:
+  $ %[1]s cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 5.0 --diskSizeGB 10
+
+  Deploy a three-member replica set in AZURE:
+  $ %[1]s cluster create <clusterName> --projectId <projectId> --provider AZURE --region US_EAST_2 --members 3 --tier M10  --mdbVersion 5.0 --diskSizeGB 10
+  
+  Deploy a three-member replica set in GCP:
+  $ %[1]s cluster create <clusterName> --projectId <projectId> --provider GCP --region EASTERN_US --members 3 --tier M10  --mdbVersion 5.0 --diskSizeGB 10
+
+  Deploy a cluster or a multi-cloud cluster from a JSON configuration file:
+  $ %[1]s cluster create --projectId <projectId> --file <path/to/file.json>`, cli.ExampleAtlasEntryPoint()),
+		Args: require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {
 				_ = cmd.MarkFlagRequired(flag.Provider)
@@ -246,7 +243,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 	cmd.Flags().BoolVar(&opts.backup, flag.Backup, false, usage.Backup)
 	cmd.Flags().BoolVar(&opts.biConnector, flag.BIConnector, false, usage.BIConnector)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.ClusterFilename)
-	cmd.Flags().StringVar(&opts.clusterType, flag.Type, replicaSet, usage.ClusterTypes)
+	cmd.Flags().StringVar(&opts.clusterType, flag.TypeFlag, replicaSet, usage.ClusterTypes)
 	cmd.Flags().IntVarP(&opts.shards, flag.Shards, flag.ShardsShort, defaultShardSize, usage.Shards)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

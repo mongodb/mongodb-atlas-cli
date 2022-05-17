@@ -19,11 +19,12 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/search"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
@@ -92,18 +93,24 @@ func DownloadBuilder() *cobra.Command {
 		Short: "Download a host mongodb logs.",
 		Long: `Download a gzipped file containing the logs for the selected hostname.
 To find the hostnames for an Atlas project, you can use the process list command.`,
-		Args: require.ExactArgs(argsN),
+		Args: cobra.MatchAll(
+			require.ExactArgs(argsN),
+			func(cmd *cobra.Command, args []string) error {
+				if !search.StringInSlice(cmd.ValidArgs, args[1]) {
+					return fmt.Errorf("<logname> must be one of %s", cmd.ValidArgs)
+				}
+				return nil
+			},
+		),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.host = args[0]
 			opts.name = args[1]
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()), opts.initDefaultOut)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if !search.StringInSlice(cmd.ValidArgs, opts.name) {
-				return fmt.Errorf("<logname> must be one of %s", cmd.ValidArgs)
-			}
 			return opts.Run()
 		},
+
 		ValidArgs: []string{"mongodb.gz", "mongos.gz", "mongosqld.gz", "mongodb-audit-log.gz", "mongos-audit-log.gz"},
 	}
 

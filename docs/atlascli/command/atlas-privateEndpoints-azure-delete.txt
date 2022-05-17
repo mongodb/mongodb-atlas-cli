@@ -83,5 +83,5 @@ Examples
 .. code-block::
 
 
-   $ mongocli atlas privateEndpoint azure delete 0fcd9d80bbafe1607 --force
+   $ atlas privateEndpoint azure delete 0fcd9d80bbafe1607 --force
 

@@ -16,6 +16,7 @@ package processes
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -71,8 +72,8 @@ func Builder() *cobra.Command {
 			"requiredArgs":      "hostname:port",
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 		},
-		Example: `
-  $ mongocli atlas metrics process atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`,
+		Example: fmt.Sprintf(`
+  $ %s metrics process atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -98,7 +99,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.Period, flag.Period, "", usage.Period)
 	cmd.Flags().StringVar(&opts.Start, flag.Start, "", usage.MeasurementStart)
 	cmd.Flags().StringVar(&opts.End, flag.End, "", usage.MeasurementEnd)
-	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.Type, nil, usage.MeasurementType)
+	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.TypeFlag, nil, usage.MeasurementType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

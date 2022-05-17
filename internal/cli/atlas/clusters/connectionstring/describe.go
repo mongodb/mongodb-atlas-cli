@@ -88,7 +88,7 @@ func DescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVar(&opts.csType, flag.Type, "standard", usage.ConnectionStringType)
+	cmd.Flags().StringVar(&opts.csType, flag.TypeFlag, "standard", usage.ConnectionStringType)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

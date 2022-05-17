@@ -100,7 +100,7 @@ const (
 	Format                                   = "format"                          // Format flag
 	AlertType                                = "alertType"                       // AlertType flag
 	Mechanisms                               = "mechanisms"                      // Mechanisms flag
-	Type                                     = "type"                            // Type flag
+	TypeFlag                                 = "type"                            // TypeFlag flag
 	Comment                                  = "comment"                         // Comment flag
 	DeleteAfter                              = "deleteAfter"                     // DeleteAfter flag
 	ArchiveAfter                             = "archiveAfter"                    // ArchiveAfter flag
@@ -173,7 +173,6 @@ const (
 	Unique                                   = "unique"                          // Unique flag
 	RSName                                   = "rsName"                          // RSName flag
 	Sparse                                   = "sparse"                          // Sparse flag
-	Background                               = "background"                      // Background flag
 	Locale                                   = "locale"                          // Locale flag
 	CaseLevel                                = "caseLevel"                       // CaseLevel flag
 	CaseFirst                                = "caseFirst"                       // CaseFirst flag

@@ -125,12 +125,11 @@ func Builder() *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use: "setup",
+		Use:   "setup",
+		Short: "Register, authenticate, create, and access an Atlas cluster.",
+		Long:  "This command takes you through registration, login, default profile creation, creating your first free tier cluster and connecting to it using MongoDB Shell.",
 		Example: `Override default cluster settings like name, provider, or database username by using the command options
-  $ atlas setup --clusterName Test --provider GCP --username dbuserTest
-`,
-		Short:  "Register, authenticate, create, and access an Atlas cluster.",
-		Long:   "This command takes you through registration, login, default profile creation, creating your first free tier cluster and connecting to it using MongoDB Shell.",
+  $ atlas setup --clusterName Test --provider GCP --username dbuserTest`,
 		Hidden: false,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

@@ -16,6 +16,7 @@ package databases
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -71,8 +72,8 @@ func ListBuilder() *cobra.Command {
 			"requiredArgs":      "hostname:port",
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 		},
-		Example: `This example lists the available databases for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
-  $ mongocli atlas metrics database ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`,
+		Example: fmt.Sprintf(`This example lists the available databases for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
+  $ %s metrics database ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

@@ -150,7 +150,7 @@ func (t *tracker) read() ([]Event, error) {
 		decoder := json.NewDecoder(file)
 		for decoder.More() {
 			var event Event
-			err = decoder.Decode(&event) // Reads the next JSON-encoded value
+			err = decoder.Decode(&event)
 			if err != nil {
 				return events, err
 			}
@@ -160,7 +160,7 @@ func (t *tracker) read() ([]Event, error) {
 	return events, nil
 }
 
-// Removes the cache file
+// Removes the cache file.
 func (t *tracker) remove() error {
 	filename := filepath.Join(t.cacheDir, cacheFilename)
 	exists, err := afero.Exists(t.fs, filename)

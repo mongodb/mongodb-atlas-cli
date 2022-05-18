@@ -44,6 +44,7 @@ func TestTrackCommand(t *testing.T) {
 		fs:               afero.NewMemMapFs(),
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		store:            mockStore,
+		storeSet:         true,
 	}
 
 	cmd := cobra.Command{
@@ -81,6 +82,7 @@ func TestTrackCommandWithError(t *testing.T) {
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		cacheDir:         cacheDir,
 		store:            mockStore,
+		storeSet:         true,
 	}
 
 	cmd := cobra.Command{
@@ -121,6 +123,7 @@ func TestTrackCommandWithSendError(t *testing.T) {
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		cacheDir:         cacheDir,
 		store:            mockStore,
+		storeSet:         true,
 	}
 
 	cmd := cobra.Command{

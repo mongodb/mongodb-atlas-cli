@@ -42,6 +42,7 @@ type tracker struct {
 	maxCacheFileSize int64
 	cacheDir         string
 	store            store.EventsSender
+	storeSet         bool
 	maxBatchSize     int
 }
 
@@ -53,9 +54,11 @@ func newTracker(ctx context.Context) (*tracker, error) {
 
 	cacheDir = filepath.Join(cacheDir, config.ToolName)
 
+	storeSet := true
 	telemetryStore, err := store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry())
 	if err != nil {
-		return nil, err
+		logError(err)
+		storeSet = false
 	}
 
 	return &tracker{
@@ -63,6 +66,7 @@ func newTracker(ctx context.Context) (*tracker, error) {
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		cacheDir:         cacheDir,
 		store:            telemetryStore,
+		storeSet:         storeSet,
 		maxBatchSize:     defaultMaxBatchSize,
 	}, nil
 }
@@ -75,6 +79,9 @@ func (t *tracker) trackCommand(data TrackOptions) error {
 	}
 	event := newEvent(options...)
 	err := t.save(event)
+	if !t.storeSet {
+		return err
+	}
 	if err != nil {
 		// If the event cannot be cached, at least make an effort to send it
 		return t.store.SendEvents(&[]Event{event})
@@ -130,6 +137,7 @@ func (t *tracker) save(event Event) error {
 	if err != nil {
 		return err
 	}
+	data = append(data, '\n')
 	_, err = file.Write(data)
 	return err
 }

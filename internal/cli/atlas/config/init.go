@@ -84,7 +84,6 @@ Enter [?] on any option to get help.
 	}
 	opts.SetUpOutput()
 	opts.SetUpMongoSHPath()
-	opts.SetUpTelemetryEnabled()
 
 	if err := config.Save(); err != nil {
 		return err

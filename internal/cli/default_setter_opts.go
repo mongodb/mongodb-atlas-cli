@@ -295,16 +295,6 @@ func (opts *DefaultSetterOpts) SetUpMongoSHPath() {
 	config.SetMongoShellPath(defaultPath)
 }
 
-func (*DefaultSetterOpts) SetUpTelemetryEnabled() {
-	// Telemetry is enabled by default
-	telemetryEnabled := true
-	if config.IsTelemetryEnabledSet() {
-		// But if telemetry has previously been set, preserve that setting
-		telemetryEnabled = config.TelemetryEnabled()
-	}
-	config.SetTelemetryEnabled(telemetryEnabled)
-}
-
 func (opts *DefaultSetterOpts) SetUpOutput() {
 	if opts.Output != plaintextFormat {
 		config.SetOutput(opts.Output)

@@ -88,15 +88,56 @@ func TestTrackCommandWithError(t *testing.T) {
 	cmd := cobra.Command{
 		Use: "test-command",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return errors.New("test")
+			return errors.New("test command error")
 		},
 	}
 	errCmd := cmd.ExecuteContext(NewContext())
+	a.Error(errCmd)
 
 	mockStore.
 		EXPECT().
 		SendEvents(gomock.Any()).
-		Return(errors.New("test")).
+		Return(nil).
+		Times(1)
+
+	err = tracker.trackCommand(TrackOptions{
+		Cmd: &cmd,
+		Err: errCmd,
+	})
+	a.NoError(err)
+}
+
+func TestTrackCommandWithSendError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockEventsSender(ctrl)
+	defer ctrl.Finish()
+
+	config.ToolName = config.AtlasCLI
+
+	a := assert.New(t)
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
+	a.NoError(err)
+
+	tracker := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+		store:            mockStore,
+		storeSet:         true,
+	}
+
+	cmd := cobra.Command{
+		Use: "test-command",
+		Run: func(cmd *cobra.Command, args []string) {
+		},
+	}
+	errCmd := cmd.ExecuteContext(NewContext())
+	a.NoError(errCmd)
+
+	mockStore.
+		EXPECT().
+		SendEvents(gomock.Any()).
+		Return(errors.New("test send error")).
 		Times(1)
 
 	err = tracker.trackCommand(TrackOptions{

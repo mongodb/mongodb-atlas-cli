@@ -31,7 +31,7 @@ const (
 	cacheFilename           = "telemetry"
 	dirPermissions          = 0700
 	filePermissions         = 0600
-	defaultMaxCacheFileSize = 100_000_000 // 100MB
+	defaultMaxCacheFileSize = 500_000 // 500KB
 )
 
 type tracker struct {
@@ -68,25 +68,23 @@ func newTracker(ctx context.Context) (*tracker, error) {
 
 func (t *tracker) trackCommand(data TrackOptions) error {
 	options := []eventOpt{withCommandPath(data.Cmd), withDuration(data.Cmd), withFlags(data.Cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(data.Cmd), withOrgID(data.Cmd), withTerminal(), withInstaller(t.fs), withExtraProps(data.extraProps)}
-
 	if data.Err != nil {
 		options = append(options, withError(data.Err))
 	}
-
 	event := newEvent(options...)
-
 	if !t.storeSet {
 		return t.save(event)
 	}
-
-	err := t.store.SendEvents(&[]Event{event})
+	events, err := t.read()
 	if err != nil {
-		// Could not send the event, so log the error and cache the event
 		logError(err)
+	}
+	events = append(events, event)
+	err = t.store.SendEvents(events)
+	if err != nil {
 		return t.save(event)
 	}
-
-	return nil
+	return t.remove()
 }
 
 func (t *tracker) openCacheFile() (afero.File, error) {
@@ -118,18 +116,57 @@ func (t *tracker) openCacheFile() (afero.File, error) {
 	return file, err
 }
 
+// Append a single event to the cache file.
 func (t *tracker) save(event Event) error {
 	file, err := t.openCacheFile()
 	if err != nil {
 		return err
 	}
 	defer file.Close()
-	data, err := json.Marshal(event)
+	data, err := json.MarshalIndent(event, "", "  ")
 	if err != nil {
 		return err
 	}
 	data = append(data, '\n')
 	_, err = file.Write(data)
+	return err
+}
+
+// Read all events in the cache file.
+func (t *tracker) read() ([]Event, error) {
+	initialSize := 100
+	events := make([]Event, 0, initialSize)
+	filename := filepath.Join(t.cacheDir, cacheFilename)
+	exists, err := afero.Exists(t.fs, filename)
+	if err != nil {
+		return events, err
+	}
+	if exists {
+		file, err := t.fs.Open(filename)
+		if err != nil {
+			return events, err
+		}
+		defer file.Close()
+		decoder := json.NewDecoder(file)
+		for decoder.More() {
+			var event Event
+			err = decoder.Decode(&event)
+			if err != nil {
+				return events, err
+			}
+			events = append(events, event)
+		}
+	}
+	return events, nil
+}
+
+// Removes the cache file.
+func (t *tracker) remove() error {
+	filename := filepath.Join(t.cacheDir, cacheFilename)
+	exists, err := afero.Exists(t.fs, filename)
+	if exists && err == nil {
+		return t.fs.Remove(filename)
+	}
 	return err
 }
 

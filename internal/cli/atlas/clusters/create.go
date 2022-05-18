@@ -122,9 +122,9 @@ func (opts *CreateOpts) applyOpts(out *atlas.AdvancedCluster) {
 
 	if !opts.isTenant() {
 		out.DiskSizeGB = &opts.diskSizeGB
+		out.MongoDBMajorVersion = opts.mdbVersion
 	}
 
-	out.MongoDBMajorVersion = opts.mdbVersion
 	out.ReplicationSpecs = []*atlas.AdvancedReplicationSpec{replicationSpec}
 }
 

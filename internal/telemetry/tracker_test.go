@@ -144,7 +144,7 @@ func TestTrackCommandWithSendError(t *testing.T) {
 		Cmd: &cmd,
 		Err: errCmd,
 	})
-	a.Error(err)
+	a.NoError(err)
 
 	// Verify that the file exists
 	filename := filepath.Join(cacheDir, cacheFilename)

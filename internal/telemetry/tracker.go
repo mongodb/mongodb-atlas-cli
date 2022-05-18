@@ -20,8 +20,6 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
-	"strconv"
-	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -33,8 +31,7 @@ const (
 	cacheFilename           = "telemetry"
 	dirPermissions          = 0700
 	filePermissions         = 0600
-	defaultMaxCacheFileSize = 10_000_000 // 10MB
-	defaultMaxBatchSize     = 100
+	defaultMaxCacheFileSize = 500_000 // 500KB
 )
 
 type tracker struct {
@@ -43,7 +40,6 @@ type tracker struct {
 	cacheDir         string
 	store            store.EventsSender
 	storeSet         bool
-	maxBatchSize     int
 }
 
 func newTracker(ctx context.Context) (*tracker, error) {
@@ -67,34 +63,28 @@ func newTracker(ctx context.Context) (*tracker, error) {
 		cacheDir:         cacheDir,
 		store:            telemetryStore,
 		storeSet:         storeSet,
-		maxBatchSize:     defaultMaxBatchSize,
 	}, nil
 }
 
 func (t *tracker) trackCommand(data TrackOptions) error {
 	options := []eventOpt{withCommandPath(data.Cmd), withDuration(data.Cmd), withFlags(data.Cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(data.Cmd), withOrgID(data.Cmd), withTerminal(), withInstaller(t.fs), withExtraProps(data.extraProps)}
-
 	if data.Err != nil {
 		options = append(options, withError(data.Err))
 	}
 	event := newEvent(options...)
-	err := t.save(event)
 	if !t.storeSet {
-		return err
+		return t.save(event)
 	}
+	events, err := t.read()
 	if err != nil {
-		// If the event cannot be cached, at least make an effort to send it
-		return t.store.SendEvents(&[]Event{event})
+		logError(err)
 	}
-	events, err := t.read(t.maxBatchSize)
-	if err != nil {
-		return err
-	}
+	events = append(events, event)
 	err = t.store.SendEvents(events)
 	if err != nil {
-		return err
+		return t.save(event)
 	}
-	return t.remove(t.maxBatchSize)
+	return t.remove()
 }
 
 func (t *tracker) openCacheFile() (afero.File, error) {
@@ -133,7 +123,7 @@ func (t *tracker) save(event Event) error {
 		return err
 	}
 	defer file.Close()
-	data, err := json.Marshal(event)
+	data, err := json.MarshalIndent(event, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -142,84 +132,42 @@ func (t *tracker) save(event Event) error {
 	return err
 }
 
-// Read the first n events from the cache file.
-func (t *tracker) read(n int) (*[]Event, error) {
-	events := make([]Event, 0, n)
+// Read all events in the cache file.
+func (t *tracker) read() ([]Event, error) {
+	initialSize := 100
+	events := make([]Event, 0, initialSize)
 	filename := filepath.Join(t.cacheDir, cacheFilename)
 	exists, err := afero.Exists(t.fs, filename)
 	if err != nil {
-		return nil, err
+		return events, err
 	}
 	if exists {
-		// Read the first n events...
 		file, err := t.fs.Open(filename)
 		if err != nil {
-			return nil, err
+			return events, err
 		}
 		defer file.Close()
 		decoder := json.NewDecoder(file)
-		for i := 0; i < n && decoder.More(); i++ {
+		for decoder.More() {
 			var event Event
 			err = decoder.Decode(&event) // Reads the next JSON-encoded value
 			if err != nil {
-				return nil, err
+				return events, err
 			}
 			events = append(events, event)
 		}
 	}
-	return &events, nil
+	return events, nil
 }
 
-// Remove the first n events from the cache file.
-func (t *tracker) remove(n int) error {
+// Removes the cache file
+func (t *tracker) remove() error {
 	filename := filepath.Join(t.cacheDir, cacheFilename)
 	exists, err := afero.Exists(t.fs, filename)
-	if !exists || err != nil {
-		// Nothing to do
-		return nil
+	if exists && err == nil {
+		return t.fs.Remove(filename)
 	}
-	file, err := t.fs.Open(filename)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	tmpFilename := filepath.Join(t.cacheDir, timeString())
-	tmpFile, err := t.fs.OpenFile(tmpFilename, os.O_WRONLY|os.O_CREATE, filePermissions)
-	if err != nil {
-		return err
-	}
-	defer tmpFile.Close()
-	decoder := json.NewDecoder(file)
-	for i := 0; decoder.More(); i++ {
-		var event Event
-		err = decoder.Decode(&event) // Reads the next JSON-encoded value
-		if err != nil {
-			return err
-		}
-		if i < n {
-			continue
-		}
-		data, e := json.Marshal(event)
-		if e != nil {
-			return e
-		}
-		_, e = tmpFile.Write(data)
-		if e != nil {
-			return e
-		}
-	}
-	err = t.fs.Rename(tmpFilename, filename)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// Used to generate a unique temporary filename.
-func timeString() string {
-	base := 32
-	nanos := time.Now().UnixNano()
-	return strconv.FormatInt(nanos, base)
+	return err
 }
 
 func castBool(i interface{}) bool {

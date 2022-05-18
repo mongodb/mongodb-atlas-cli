@@ -64,7 +64,7 @@ func TestTelemetry_Track(t *testing.T) {
 	a.NoError(err)
 }
 
-func TestTelemetry_TrackWithError(t *testing.T) {
+func TestTelemetry_TrackWithCommandError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventsSender(ctrl)
 	defer ctrl.Finish()
@@ -85,15 +85,16 @@ func TestTelemetry_TrackWithError(t *testing.T) {
 	cmd := cobra.Command{
 		Use: "test-command",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return errors.New("test")
+			return errors.New("test command error")
 		},
 	}
 	errCmd := cmd.ExecuteContext(NewContext())
+	a.Error(errCmd)
 
 	mockStore.
 		EXPECT().
 		SendEvents(gomock.Any()).
-		Return(errors.New("test")).
+		Return(nil).
 		Times(1)
 
 	err = tracker.track(TrackOptions{
@@ -101,6 +102,45 @@ func TestTelemetry_TrackWithError(t *testing.T) {
 		Err: errCmd,
 	})
 	a.NoError(err)
+}
+
+func TestTelemetry_TrackWithSendError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockEventsSender(ctrl)
+	defer ctrl.Finish()
+
+	config.ToolName = config.AtlasCLI
+
+	a := assert.New(t)
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
+	a.NoError(err)
+
+	tracker := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+		store:            mockStore,
+	}
+
+	cmd := cobra.Command{
+		Use: "test-command",
+		Run: func(cmd *cobra.Command, args []string) {
+		},
+	}
+	errCmd := cmd.ExecuteContext(NewContext())
+	a.NoError(errCmd)
+
+	mockStore.
+		EXPECT().
+		SendEvents(gomock.Any()).
+		Return(errors.New("test send error")).
+		Times(1)
+
+	err = tracker.track(TrackOptions{
+		Cmd: &cmd,
+		Err: errCmd,
+	})
+	a.Error(err)
 
 	// Verify that the file exists
 	filename := filepath.Join(cacheDir, cacheFilename)

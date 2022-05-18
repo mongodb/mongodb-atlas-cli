@@ -65,7 +65,9 @@ Creating your cluster... [It's safe to 'Ctrl + C']
 `
 const quickstartTemplateIPNotFound = `
 We could not find your public IP address. To add your IP address run:
-  mongocli atlas accesslist create`
+  %s accesslist create
+
+`
 
 var ErrFreeClusterAlreadyExists = errors.New("this project already has another free cluster")
 
@@ -150,7 +152,7 @@ func (opts *Opts) Run() error {
 		if publicIP := store.IPAddress(); publicIP != "" {
 			opts.IPAddresses = []string{publicIP}
 		} else {
-			_, _ = fmt.Fprintln(os.Stderr, quickstartTemplateIPNotFound)
+			_, _ = fmt.Fprintf(os.Stderr, quickstartTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
 		}
 	}
 
@@ -361,7 +363,7 @@ func (opts *Opts) newDefaultValues() (*quickstart, error) {
 		if publicIP := store.IPAddress(); publicIP != "" {
 			values.IPAddresses = []string{publicIP}
 		} else {
-			_, _ = fmt.Fprintln(os.Stderr, quickstartTemplateIPNotFound)
+			_, _ = fmt.Fprintf(os.Stderr, quickstartTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
 		}
 	}
 

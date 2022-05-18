@@ -18,9 +18,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	atlas "go.mongodb.org/atlas/mongodbatlas"

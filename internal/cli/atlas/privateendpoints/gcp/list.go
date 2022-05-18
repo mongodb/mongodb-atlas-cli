@@ -16,6 +16,7 @@ package gcp
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -62,9 +63,8 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "List GCP private endpoints for your project.",
-		Example: `
-  $ mongocli atlas privateEndpoint gcp ls`,
-		Args: require.NoArgs,
+		Example: fmt.Sprintf(`  $ %s privateEndpoint gcp ls`, cli.ExampleAtlasEntryPoint()),
+		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

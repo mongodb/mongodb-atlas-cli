@@ -16,6 +16,7 @@ package interfaces
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -60,7 +61,10 @@ func DeleteBuilder() *cobra.Command {
 			"requiredArgs":        "endpointGroupId",
 			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",
 		},
-		Example: `$ mongocli atlas privateEndpoints gcp interfaces delete endpoint-1 --endpointServiceId 61eaca605af86411903de1dd`,
+		Example: fmt.Sprintf(
+			`  $ %s privateEndpoints gcp interfaces delete endpoint-1 \
+  --endpointServiceId 61eaca605af86411903de1dd`,
+			cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},

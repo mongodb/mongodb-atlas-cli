@@ -12,7 +12,7 @@ mongocli atlas clusters update
    :depth: 1
    :class: singlecol
 
-Update a MongoDB cluster.
+Update a MongoDB Atlas cluster.
 
 Syntax
 ------
@@ -98,14 +98,12 @@ Examples
 
 .. code-block::
 
-
-   Update tier for a cluster
+   Update tier for a cluster:
    $ mongocli atlas cluster update <clusterName> --projectId <projectId> --tier M50
 
-   Update disk size for a cluster
+   Update disk size for a cluster:
    $ mongocli atlas cluster update <clusterName> --projectId <projectId> --diskSizeGB 20
 
-   Update MongoDB version for a cluster
+   Update MongoDB version for a cluster:
    $ mongocli atlas cluster update <clusterName> --projectId <projectId> --mdbVersion 4.2
-
 

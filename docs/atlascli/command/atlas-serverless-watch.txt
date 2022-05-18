@@ -84,5 +84,5 @@ Examples
 
 .. code-block::
 
- $ mongocli atlas serverless watch instanceNameSample
+   $ atlas serverless watch instanceNameSample
 

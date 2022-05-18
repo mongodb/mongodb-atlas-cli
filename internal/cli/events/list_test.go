@@ -79,7 +79,7 @@ func TestListBuilder(t *testing.T) {
 			flag.Output,
 			flag.ProjectID,
 			flag.OrgID,
-			flag.Type,
+			flag.TypeFlag,
 			flag.MaxDate,
 			flag.MinDate,
 		},

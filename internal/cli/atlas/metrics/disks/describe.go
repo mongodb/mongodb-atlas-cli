@@ -16,6 +16,7 @@ package disks
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -74,8 +75,8 @@ func DescribeBuilder() *cobra.Command {
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 			"diskNameDesc":      "Label that identifies the disk or partition from which you want to retrieve metrics.",
 		},
-		Example: `This example retrieves disks metrics for the database "testDB" in the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
-  $ mongocli atlas metrics disk describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H`,
+		Example: fmt.Sprintf(`  This example retrieves disks metrics for the database "testDB" in the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
+  $ %s metrics disk describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -102,7 +103,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.Period, flag.Period, "", usage.Period)
 	cmd.Flags().StringVar(&opts.Start, flag.Start, "", usage.MeasurementStart)
 	cmd.Flags().StringVar(&opts.End, flag.End, "", usage.MeasurementEnd)
-	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.Type, nil, usage.MeasurementType)
+	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.TypeFlag, nil, usage.MeasurementType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

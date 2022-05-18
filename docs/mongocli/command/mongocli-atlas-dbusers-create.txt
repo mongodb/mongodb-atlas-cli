@@ -98,17 +98,15 @@ Examples
 
 .. code-block::
 
-   
-   Create an Atlas admin user
+   Create an Atlas database admin user:
    $ mongocli atlas dbuser create atlasAdmin --username <username>  --projectId <projectId>
 
-   Create user with read/write access to any database
+   Create a database user with read/write access to any database:
    $ mongocli atlas dbuser create readWriteAnyDatabase --username <username> --projectId <projectId>
 
-   Create user with multiple roles 
+   Create a database user with multiple roles:
    $ mongocli atlas dbuser create --username <username> --role clusterMonitor,backup --projectId <projectId>
 
-   Create user with multiple scopes 
+   Create a database user with multiple scopes:
    $ mongocli atlas dbuser create --username <username> --role clusterMonitor --scope clusterName:CLUSTER,DataLakeName:DATA_LAKE --projectId <projectId>
-
 

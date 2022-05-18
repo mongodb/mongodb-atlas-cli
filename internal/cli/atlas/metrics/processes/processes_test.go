@@ -62,6 +62,6 @@ func TestBuilder(t *testing.T) {
 		0,
 		[]string{
 			flag.Page, flag.Limit, flag.Granularity, flag.Period, flag.Start,
-			flag.End, flag.Type, flag.ProjectID, flag.Output},
+			flag.End, flag.TypeFlag, flag.ProjectID, flag.Output},
 	)
 }

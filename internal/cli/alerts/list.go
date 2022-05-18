@@ -16,6 +16,7 @@ package alerts
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -73,11 +74,11 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "Retrieves all alerts for the specified Atlas project.",
-		Example: `  
-  This example uses the "mongocli atlas alerts list" command to retrieve all alerts that occurred for the specified project. It uses the profile named "myprofile" for accessing Atlas.
-  $ mongocli atlas alerts list --projectId 5df90590f10fab5e33de2305 \
-  -o json --profile myprofile
-`,
+		Example: fmt.Sprintf(`  This example uses the "%[1]s alerts list" command to retrieve all alerts that occurred for the specified project. It uses the profile named "myprofile" for accessing Atlas.
+  $ %[1]s alerts list \
+    --projectId 5df90590f10fab5e33de2305 \
+    -o json \
+    --profile myprofile`, cli.ExampleAtlasEntryPoint()),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

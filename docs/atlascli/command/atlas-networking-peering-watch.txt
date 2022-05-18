@@ -71,5 +71,5 @@ Examples
 
 .. code-block::
 
- $ mongocli atlas networking peering watch peeringConnectionSampleId
+   $ atlas networking peering watch peeringConnectionSampleId
 

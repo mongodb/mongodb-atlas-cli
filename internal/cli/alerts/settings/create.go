@@ -16,6 +16,7 @@ package settings
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -65,12 +66,11 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Creates one alert configuration in the specified project.",
-		Example: `  
-  This example uses the "mongocli atlas alerts settings create" command to create one alert configuration in the specified project. It uses the default profile to access the Atlas project:
-  $ mongocli atlas alert settings create --event JOINED_GROUP --enabled \
+		Example: fmt.Sprintf(`  This example uses the "%[1]s alerts settings create" command to create one alert configuration in the specified project. It uses the default profile to access the Atlas project:
+  $ %[1]s alert settings create --event JOINED_GROUP --enabled \
   --notificationType USER --notificationEmailEnabled \
   --notificationUsername john@example.com \
-  -o json --projectId 5df90590f10fab5e33de2305`,
+  -o json --projectId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -101,12 +101,12 @@ func JobsCollectOptsBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.logTypes, flag.Type, []string{}, usage.LogTypes)
+	cmd.Flags().StringSliceVar(&opts.logTypes, flag.TypeFlag, []string{}, usage.LogTypes)
 	cmd.Flags().Int64Var(&opts.sizeRequestedPerFileBytes, flag.SizeRequestedPerFileBytes, 0, usage.SizeRequestedPerFileBytes)
 	cmd.Flags().BoolVar(&opts.redacted, flag.Redacted, false, usage.LogRedacted)
 
 	_ = cmd.MarkFlagRequired(flag.SizeRequestedPerFileBytes)
-	_ = cmd.MarkFlagRequired(flag.Type)
+	_ = cmd.MarkFlagRequired(flag.TypeFlag)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

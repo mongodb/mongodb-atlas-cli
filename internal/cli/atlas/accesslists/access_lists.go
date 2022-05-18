@@ -16,21 +16,12 @@ package accesslists
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
-)
-
-var (
-	exampleCmd = "mongocli atlas"
 )
 
 func Builder() *cobra.Command {
 	const use = "accessLists"
 	deprecated := append([]string{"whitelists"}, cli.GenerateAliases("whitelists")...)
-
-	if config.ToolName == config.AtlasCLI {
-		exampleCmd = "atlas"
-	}
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use, deprecated...),

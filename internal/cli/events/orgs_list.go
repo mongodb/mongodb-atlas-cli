@@ -85,7 +85,7 @@ func OrgListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
-	cmd.Flags().StringSliceVar(&opts.EventType, flag.Type, nil, usage.Event)
+	cmd.Flags().StringSliceVar(&opts.EventType, flag.TypeFlag, nil, usage.Event)
 	cmd.Flags().StringVar(&opts.MaxDate, flag.MaxDate, "", usage.MaxDate)
 	cmd.Flags().StringVar(&opts.MinDate, flag.MinDate, "", usage.MinDate)
 

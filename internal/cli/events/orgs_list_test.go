@@ -55,7 +55,7 @@ func TestOrgListBuilder(t *testing.T) {
 			flag.Page,
 			flag.Output,
 			flag.OrgID,
-			flag.Type,
+			flag.TypeFlag,
 			flag.MaxDate,
 			flag.MinDate,
 		},

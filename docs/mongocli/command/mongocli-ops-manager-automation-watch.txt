@@ -67,5 +67,5 @@ Examples
 
 .. code-block::
 
- $ mongocli ops-manager automation watch
+   $ mongocli ops-manager automation watch
 

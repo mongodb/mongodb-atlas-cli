@@ -55,7 +55,7 @@ func TestProjectListBuilder(t *testing.T) {
 			flag.Page,
 			flag.Output,
 			flag.ProjectID,
-			flag.Type,
+			flag.TypeFlag,
 			flag.MaxDate,
 			flag.MinDate,
 		},

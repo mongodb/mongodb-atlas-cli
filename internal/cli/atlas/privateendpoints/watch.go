@@ -16,6 +16,7 @@ package privateendpoints
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -76,7 +77,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 				opts.InitOutput(cmd.OutOrStdout(), "\nPrivate endpoint changes completed.\n"),
 			)
 		},
-		Example: `$ mongocli atlas privateEndpoint watch vpce-abcdefg0123456789`,
+		Example: fmt.Sprintf(`  $ %s privateEndpoint watch vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.Run()
@@ -85,7 +86,6 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 	}
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd

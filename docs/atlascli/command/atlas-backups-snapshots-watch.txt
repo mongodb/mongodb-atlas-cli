@@ -87,5 +87,5 @@ Examples
 
 .. code-block::
 
- $ mongocli atlas snapshot watch snapshotIdSample --clusterName clusterNameSample
+   $ atlas snapshot watch snapshotIdSample --clusterName clusterNameSample
 

@@ -62,7 +62,7 @@ Related Commands
 * :ref:`atlas-clusters-pause` - Pause a running MongoDB cluster in Atlas.
 * :ref:`atlas-clusters-search` - Manage Atlas Search for your cluster.
 * :ref:`atlas-clusters-start` - Start a paused MongoDB cluster in Atlas.
-* :ref:`atlas-clusters-update` - Update a MongoDB cluster.
+* :ref:`atlas-clusters-update` - Update a MongoDB Atlas cluster.
 * :ref:`atlas-clusters-watch` - Watch for a cluster to be available.
 
 

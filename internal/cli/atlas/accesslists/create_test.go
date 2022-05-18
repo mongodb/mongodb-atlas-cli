@@ -55,7 +55,7 @@ func TestCreateBuilder(t *testing.T) {
 		t,
 		CreateBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.Type, flag.Comment, flag.DeleteAfter},
+		[]string{flag.ProjectID, flag.Output, flag.TypeFlag, flag.Comment, flag.DeleteAfter},
 	)
 }
 

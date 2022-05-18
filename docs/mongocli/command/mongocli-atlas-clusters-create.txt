@@ -129,7 +129,6 @@ Examples
 
 .. code-block::
 
-   
    Deploy a three-member replica set in AWS:
    $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 5.0 --diskSizeGB 10
 
@@ -141,5 +140,4 @@ Examples
 
    Deploy a cluster or a multi-cloud cluster from a JSON configuration file:
    $ mongocli atlas cluster create --projectId <projectId> --file <path/to/file.json>
-
 

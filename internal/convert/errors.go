@@ -12,17 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package convert
 
-import (
-	"context"
+import "errors"
+
+var (
+	ErrNoFeatureCompatibility = errors.New("no featureCompatibilityVersion available")
+	ErrInvalidConfig          = errors.New("invalid config")
 )
-
-// RefreshToken a token from the current configuration.
-func RefreshToken(ctx context.Context) error {
-	opts := &RefresherOpts{}
-	if err := opts.InitFlow(); err != nil {
-		return err
-	}
-	return opts.RefreshAccessToken(ctx)
-}

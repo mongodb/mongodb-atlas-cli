@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package backup
 
@@ -21,7 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -34,9 +35,31 @@ func TestRestoresStart_Run(t *testing.T) {
 
 	t.Run(automatedRestore, func(t *testing.T) {
 		listOpts := &RestoresStartOpts{
-			store:       mockStore,
-			method:      automatedRestore,
-			clusterName: "Cluster0",
+			store:             mockStore,
+			method:            automatedRestore,
+			clusterName:       "Cluster0",
+			targetClusterName: "Cluster1",
+			targetProjectID:   "1",
+		}
+
+		mockStore.
+			EXPECT().
+			CreateRestoreJobs(listOpts.ProjectID, "Cluster0", listOpts.newCloudProviderSnapshotRestoreJob()).
+			Return(expected, nil).
+			Times(1)
+
+		if err := listOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+
+	t.Run(pointInTimeRestore, func(t *testing.T) {
+		listOpts := &RestoresStartOpts{
+			store:             mockStore,
+			method:            pointInTimeRestore,
+			clusterName:       "Cluster0",
+			targetClusterName: "Cluster1",
+			targetProjectID:   "1",
 		}
 
 		mockStore.
@@ -67,4 +90,22 @@ func TestRestoresStart_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
+}
+
+func TestRestoresStartBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		RestoresStartBuilder(),
+		0,
+		[]string{
+			flag.SnapshotID,
+			flag.ClusterName,
+			flag.TargetProjectID,
+			flag.TargetClusterName,
+			flag.OplogTS,
+			flag.OplogInc,
+			flag.ProjectID,
+			flag.Output,
+		},
+	)
 }

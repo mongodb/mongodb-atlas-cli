@@ -22,6 +22,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
@@ -30,7 +31,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTelemetry_Track(t *testing.T) {
+func TestTrackCommand(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventsSender(ctrl)
 	defer ctrl.Finish()
@@ -58,13 +59,13 @@ func TestTelemetry_Track(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	err := tracker.track(TrackOptions{
+	err := tracker.trackCommand(TrackOptions{
 		Cmd: &cmd,
 	})
 	a.NoError(err)
 }
 
-func TestTelemetry_TrackWithCommandError(t *testing.T) {
+func TestTrackCommandWithError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventsSender(ctrl)
 	defer ctrl.Finish()
@@ -97,14 +98,14 @@ func TestTelemetry_TrackWithCommandError(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	err = tracker.track(TrackOptions{
+	err = tracker.trackCommand(TrackOptions{
 		Cmd: &cmd,
 		Err: errCmd,
 	})
 	a.NoError(err)
 }
 
-func TestTelemetry_TrackWithSendError(t *testing.T) {
+func TestTrackCommandWithSendError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventsSender(ctrl)
 	defer ctrl.Finish()
@@ -136,7 +137,7 @@ func TestTelemetry_TrackWithSendError(t *testing.T) {
 		Return(errors.New("test send error")).
 		Times(1)
 
-	err = tracker.track(TrackOptions{
+	err = tracker.trackCommand(TrackOptions{
 		Cmd: &cmd,
 		Err: errCmd,
 	})
@@ -153,7 +154,7 @@ func TestTelemetry_TrackWithSendError(t *testing.T) {
 	a.True(info.Size() > minExpectedSize)
 }
 
-func TestTelemetry_Save(t *testing.T) {
+func TestSave(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	a := assert.New(t)
@@ -186,7 +187,7 @@ func TestTelemetry_Save(t *testing.T) {
 	a.True(info.Size() > minExpectedSize)
 }
 
-func TestTelemetry_Save_MaxCacheFileSize(t *testing.T) {
+func TestSaveOverMaxCacheFileSize(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	a := assert.New(t)
@@ -214,7 +215,7 @@ func TestTelemetry_Save_MaxCacheFileSize(t *testing.T) {
 	a.Error(tracker.save(event))
 }
 
-func TestTelemetry_OpenCacheFile(t *testing.T) {
+func TestOpenCacheFile(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	a := assert.New(t)
@@ -238,4 +239,35 @@ func TestTelemetry_OpenCacheFile(t *testing.T) {
 	// Verify that the file is empty
 	var expectedSize int64 // The nil value is zero
 	a.Equal(info.Size(), expectedSize)
+}
+
+func TestTrackSurvey(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
+	a := assert.New(t)
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
+	a.NoError(err)
+
+	tracker := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+	}
+
+	response := true
+	err = tracker.trackSurvey(
+		&survey.Confirm{Message: "test"},
+		&response,
+		nil,
+	)
+	a.NoError(err)
+	// Verify that the file exists
+	filename := filepath.Join(cacheDir, cacheFilename)
+	info, statError := tracker.fs.Stat(filename)
+	a.NoError(statError)
+	// Verify the file name
+	a.Equal(info.Name(), cacheFilename)
+	// Verify that the file contains some data
+	var minExpectedSize int64 = 10
+	a.True(info.Size() > minExpectedSize)
 }

@@ -19,6 +19,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
@@ -65,7 +66,7 @@ func (opts *Opts) askDBUserOptions() error {
 	fmt.Print(`
 [Set up your database authentication access details. Store them in a secure location.]
 `)
-	return survey.Ask(qs, opts)
+	return telemetry.TrackAsk(qs, opts)
 }
 
 func (opts *Opts) validateUniqueUsername(val interface{}) error {

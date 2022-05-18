@@ -21,7 +21,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/cloudmanager"
@@ -33,6 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
+	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/version"
 	"github.com/spf13/afero"
@@ -146,7 +146,7 @@ func formattedVersion() string {
 }
 
 func (n *Notifier) shouldCheck() (shouldCheck, isHb bool) {
-	shouldCheck = !config.SkipUpdateCheck() && cli.IsTerminal(n.writer)
+	shouldCheck = !config.SkipUpdateCheck() && terminal.IsTerminal(n.writer)
 	isHb = false
 
 	if !shouldCheck {

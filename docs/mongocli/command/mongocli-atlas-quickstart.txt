@@ -42,6 +42,10 @@ Options
      - string
      - false
      - Name of the cluster.
+   * - --currentIp
+     - 
+     - false
+     - Flag that indicates whether to use the IP Address from the host that is currently executing the command.
    * - -Y, --default
      - 
      - false

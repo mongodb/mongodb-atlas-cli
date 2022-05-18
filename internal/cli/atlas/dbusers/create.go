@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
@@ -144,7 +145,7 @@ func (opts *CreateOpts) Prompt() error {
 	prompt := &survey.Password{
 		Message: "Password:",
 	}
-	return survey.AskOne(prompt, &opts.password)
+	return telemetry.TrackAskOne(prompt, &opts.password)
 }
 
 func (opts *CreateOpts) validate() error {

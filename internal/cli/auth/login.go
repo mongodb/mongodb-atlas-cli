@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/oauth"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
@@ -89,9 +90,7 @@ func (c *confirmPrompt) confirm() (response bool, err error) {
 		Message: c.message,
 		Default: c.defaultResponse,
 	}
-	// todo: CLOUDP-118532 make sure the survey confirm is tracked
-	//       and use the survey stub created for telemetry project
-	err = survey.AskOne(p, &response)
+	err = telemetry.TrackAskOne(p, &response)
 	return response, err
 }
 

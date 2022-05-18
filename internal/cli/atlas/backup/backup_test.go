@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,39 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package jsonpathwriter
+//go:build unit
+
+package backup
 
 import (
-	"encoding/json"
-	"errors"
-	"fmt"
-	"io"
+	"testing"
 
-	"github.com/PaesslerAG/jsonpath"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
-var ErrEmptyPath = errors.New("empty jsonpath")
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		2,
+		[]string{},
+	)
+}
 
-func Print(w io.Writer, path string, obj interface{}) error {
-	if path == "" {
-		return ErrEmptyPath
-	}
-
-	jsonString, err := json.Marshal(obj)
-	if err != nil {
-		return err
-	}
-
-	var val interface{}
-	if e := json.Unmarshal(jsonString, &val); e != nil {
-		return e
-	}
-
-	v, err := jsonpath.Get(path, val)
-	if err != nil {
-		return err
-	}
-
-	_, err = fmt.Fprintln(w, v)
-	return err
+func TestRestoresBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		RestoresBuilder(),
+		2,
+		[]string{},
+	)
 }

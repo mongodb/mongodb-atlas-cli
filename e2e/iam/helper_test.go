@@ -38,6 +38,8 @@ const (
 	invitationsEntity      = "invitations"
 )
 
+var errNoAPIKey = errors.New("the apiKey ID is empty")
+
 func createOrgAPIKey() (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -55,7 +57,7 @@ func createOrgAPIKey() (string, error) {
 	resp, err := cmd.CombinedOutput()
 
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
 	var key mongodbatlas.APIKey
@@ -67,7 +69,7 @@ func createOrgAPIKey() (string, error) {
 		return key.ID, nil
 	}
 
-	return "", errors.New("the apiKey ID is empty")
+	return "", errNoAPIKey
 }
 
 func deleteOrgAPIKey(id string) error {
@@ -100,7 +102,7 @@ func createProject(projectName string) (string, error) {
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
 	var project mongodbatlas.Project
@@ -146,9 +148,8 @@ func createTeam(teamName string) (string, error) {
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
 	var team mongodbatlas.Team
@@ -173,6 +174,8 @@ func deleteTeam(teamID string) error {
 	cmd.Env = os.Environ()
 	return cmd.Run()
 }
+
+var errInvalidIndex = errors.New("invalid index")
 
 // OrgNUser returns the user at the position userIndex.
 // We need to pass the userIndex because the command iam teams users add would not work
@@ -202,7 +205,7 @@ func OrgNUser(n int) (username, userID string, err error) {
 	}
 
 	if len(users.Results) <= n {
-		return "", "", fmt.Errorf("invalid index %d for %d users", n, len(users.Results))
+		return "", "", fmt.Errorf("%w: %d for %d users", errInvalidIndex, n, len(users.Results))
 	}
 
 	return users.Results[n].Username, users.Results[n].ID, nil

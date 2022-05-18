@@ -15,7 +15,6 @@
 package convert
 
 import (
-	"errors"
 	"strconv"
 
 	"github.com/Masterminds/semver/v3"
@@ -89,7 +88,7 @@ func (c *RSConfig) protocolVer() (string, error) {
 		}
 	}
 	if fcVersion == "" {
-		return "", errors.New("no featureCompatibilityVersion available")
+		return "", ErrNoFeatureCompatibility
 	}
 	ver, err := semver.NewVersion(fcVersion)
 	if err != nil {

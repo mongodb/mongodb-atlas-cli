@@ -17,6 +17,7 @@ package aes
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"errors"
 	"fmt"
 )
 
@@ -25,10 +26,12 @@ type CBCInput struct {
 	IV  []byte
 }
 
+var ErrAESCBCDecrypt = errors.New("aes-cbc decrypt error")
+
 func (input *CBCInput) Decrypt(cipherText []byte) (decrypted []byte, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = fmt.Errorf("aes-cbc decrypt error: %v", r)
+			err = fmt.Errorf("%w: %v", ErrAESCBCDecrypt, r)
 			decrypted = nil
 		}
 	}()

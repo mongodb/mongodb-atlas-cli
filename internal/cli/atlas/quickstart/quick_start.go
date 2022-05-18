@@ -32,6 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
@@ -98,6 +99,7 @@ type Opts struct {
 	mongoShellInstalled bool
 	defaultValue        bool
 	Confirm             bool
+	CurrentIP           bool
 	store               store.AtlasClusterQuickStarter
 }
 
@@ -127,6 +129,11 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 
 func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
 	opts.setTier()
+
+	if opts.CurrentIP && len(opts.IPAddresses) > 0 {
+		return fmt.Errorf("cannot use %s and %s, please use only one of the flags", flag.CurrentIP, flag.AccessListIP)
+	}
+
 	return opts.PreRunE(
 		opts.ValidateProjectID,
 		opts.initStore(ctx),
@@ -138,6 +145,14 @@ func (opts *Opts) Run() error {
 	const base10 = 10
 	opts.defaultName = "Cluster" + strconv.FormatInt(time.Now().Unix(), base10)[5:]
 	opts.providerAndRegionToConstant()
+
+	if opts.CurrentIP {
+		if publicIP := store.IPAddress(); publicIP != "" {
+			opts.IPAddresses = []string{publicIP}
+		} else {
+			_, _ = fmt.Fprintln(os.Stderr, quickstartTemplateIPNotFound)
+		}
+	}
 
 	values, dErr := opts.newDefaultValues()
 	if dErr != nil {
@@ -261,7 +276,7 @@ func (opts *Opts) askSampleDataQuestion() error {
 
 	q := newSampleDataQuestion(opts.ClusterName)
 	var addSampleData bool
-	if err := survey.AskOne(q, &addSampleData); err != nil {
+	if err := telemetry.TrackAskOne(q, &addSampleData); err != nil {
 		return err
 	}
 	opts.SkipSampleData = !addSampleData
@@ -272,7 +287,7 @@ func (opts *Opts) askSampleDataQuestion() error {
 func askMongoShellAndSetConfig() error {
 	var mongoShellPath string
 	q := newMongoShellPathInput()
-	if err := survey.AskOne(q, &mongoShellPath, survey.WithValidator(validate.Path)); err != nil {
+	if err := telemetry.TrackAskOne(q, &mongoShellPath, survey.WithValidator(validate.Path)); err != nil {
 		return err
 	}
 
@@ -440,6 +455,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
 	cmd.Flags().BoolVarP(&opts.defaultValue, flag.Default, "Y", false, usage.QuickstartDefault)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().BoolVar(&opts.CurrentIP, flag.CurrentIP, false, usage.CurrentIPSimplified)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

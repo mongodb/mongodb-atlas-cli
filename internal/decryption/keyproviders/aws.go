@@ -61,7 +61,7 @@ func (ki *AWSKeyIdentifier) ValidateCredentials() error {
 	cred := credentials.NewCredentials(p)
 	_, err := cred.Get()
 	if err != nil {
-		if err != credentials.ErrNoValidProvidersFoundInChain {
+		if !errors.Is(err, credentials.ErrNoValidProvidersFoundInChain) {
 			return err
 		}
 		fmt.Fprintf(os.Stderr, `No credentials found for resource: AWS region="%v" endpoint="%v" key="%v"

@@ -16,11 +16,7 @@ package telemetry
 
 import (
 	"context"
-	"strings"
 	"time"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/spf13/cobra"
 )
 
 var contextKey = telemetryContextKey{}
@@ -37,43 +33,7 @@ func NewContext() context.Context {
 	})
 }
 
-type TrackOptions struct {
-	Cmd        *cobra.Command
-	Err        error
-	extraProps map[string]interface{}
-}
-
-func TrackCommand(opt TrackOptions, args ...string) {
-	if !config.TelemetryEnabled() {
-		return
-	}
-	t, err := newTracker(opt.Cmd.Context())
-	if err != nil {
-		logError(err)
-		return
-	}
-
-	checkHelp(&opt, args...)
-
-	if err = t.track(opt); err != nil {
-		logError(err)
-	}
-}
-
 func logError(err error) {
 	// No-op function until logging is implemented (CLOUDP-110988)
 	_ = err
-}
-
-func checkHelp(opt *TrackOptions, args ...string) {
-	if opt.Cmd.Name() != "help" {
-		return
-	}
-	cmd, _, err := opt.Cmd.Root().Find(args)
-	if err != nil {
-		return
-	}
-	opt.extraProps = map[string]interface{}{
-		"help_command": strings.ReplaceAll(cmd.CommandPath(), " ", "-"),
-	}
 }

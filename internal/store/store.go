@@ -393,7 +393,7 @@ func New(opts ...Option) (*Store, error) {
 	case config.CloudManagerService, config.OpsManagerService:
 		err = store.setOpsManagerClient(client)
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", store.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, store.service)
 	}
 	if err != nil {
 		return nil, err

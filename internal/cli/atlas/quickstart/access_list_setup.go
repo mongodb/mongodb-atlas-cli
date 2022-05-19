@@ -19,6 +19,7 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -60,7 +61,8 @@ func (opts *Opts) askAccessListOptions() error {
 }
 
 func (opts *Opts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
-	const accessListComment = "IP added with mongocli atlas quickstart"
+	var accessListComment = fmt.Sprintf("IP added with %s quickstart", cli.ExampleAtlasEntryPoint())
+
 	accessListArray := make([]*atlas.ProjectIPAccessList, len(opts.IPAddresses))
 	for i, addr := range opts.IPAddresses {
 		accessList := &atlas.ProjectIPAccessList{

@@ -226,7 +226,7 @@ func (opts *Opts) createResources() error {
 
 	if err := opts.createCluster(); err != nil {
 		var target *atlas.ErrorResponse
-		if errors.As(err, &target) && target.ErrorCode == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" {
+		if errors.As(err, &target) && target.ErrorCode == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" && strings.Contains(strings.ToLower(target.Detail), ErrFreeClusterAlreadyExists.Error()) {
 			return ErrFreeClusterAlreadyExists
 		}
 		return err

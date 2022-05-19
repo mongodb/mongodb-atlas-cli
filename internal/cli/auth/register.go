@@ -30,8 +30,8 @@ import (
 //go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth RegisterFlow
 
 const (
-	accountURI     = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
-	govAccountURI  = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
+	accountURI     = "https://account.mongodb.com/account/register/cli?n=/account/connect&nRegister=/account/connect"
+	govAccountURI  = "https://account.mongodbgov.com/account/register/cli?n=/account/connect&nRegister=/account/connect"
 	WithProfileMsg = `run "atlas auth register --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`
 )
 

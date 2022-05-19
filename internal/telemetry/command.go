@@ -34,14 +34,14 @@ func TrackCommand(opt TrackOptions, args ...string) {
 	}
 	t, err := newTracker(opt.Cmd.Context())
 	if err != nil {
-		logging.Log(logging.Debug, err)
+		logging.Debug(err)
 		return
 	}
 
 	checkHelp(&opt, args...)
 
 	if err = t.trackCommand(opt); err != nil {
-		logging.Log(logging.Debug, err)
+		logging.Debug(err)
 	}
 }
 

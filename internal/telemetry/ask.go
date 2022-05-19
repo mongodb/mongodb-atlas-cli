@@ -28,7 +28,7 @@ func TrackAsk(qs []*survey.Question, response interface{}, opts ...survey.AskOpt
 
 	t, e := newTracker(NewContext())
 	if e != nil {
-		logging.Log(logging.Debug, err)
+		logging.Debug(err)
 		return err
 	}
 
@@ -36,7 +36,7 @@ func TrackAsk(qs []*survey.Question, response interface{}, opts ...survey.AskOpt
 		answer, _ := readAnswer(response, q.Name)
 		e := t.trackSurvey(q.Prompt, answer, err)
 		if e != nil {
-			logging.Log(logging.Debug, e)
+			logging.Debug(e)
 		}
 	}
 	return err
@@ -50,12 +50,12 @@ func TrackAskOne(p survey.Prompt, response interface{}, opts ...survey.AskOpt) e
 
 	t, e := newTracker(NewContext())
 	if e != nil {
-		logging.Log(logging.Debug, e)
+		logging.Debug(e)
 		return err
 	}
 	e = t.trackSurvey(p, response, err)
 	if e != nil {
-		logging.Log(logging.Debug, e)
+		logging.Debug(e)
 	}
 	return err
 }

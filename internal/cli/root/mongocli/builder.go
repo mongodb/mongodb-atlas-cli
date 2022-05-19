@@ -21,8 +21,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/logging"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/cloudmanager"
@@ -33,6 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/internal/latestrelease"
+	"github.com/mongodb/mongodb-atlas-cli/internal/logging"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -67,7 +66,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			debug, _ := cmd.Flags().GetBool(flag.Debug)
 			if debug {
-				logging.SetLevel(logging.Debug)
+				logging.SetLevel(logging.LevelDebug)
 			}
 			return nil
 		},

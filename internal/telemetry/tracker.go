@@ -54,7 +54,7 @@ func newTracker(ctx context.Context) (*tracker, error) {
 	storeSet := true
 	telemetryStore, err := store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry())
 	if err != nil {
-		logging.Log(logging.Debug, err)
+		logging.Debug(err)
 		storeSet = false
 	}
 
@@ -78,7 +78,7 @@ func (t *tracker) trackCommand(data TrackOptions) error {
 	}
 	events, err := t.read()
 	if err != nil {
-		logging.Log(logging.Debug, err)
+		logging.Debug(err)
 	}
 	events = append(events, event)
 	err = t.store.SendEvents(events)

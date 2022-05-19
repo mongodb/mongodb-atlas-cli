@@ -93,7 +93,7 @@ func withDuration(cmd *cobra.Command) eventOpt {
 	return func(event Event) {
 		ctxValue, found := cmd.Context().Value(contextKey).(telemetryContextValue)
 		if !found {
-			logging.Log(logging.Debug, "telemetry context not found")
+			logging.Debug("telemetry context not found")
 			return
 		}
 
@@ -195,7 +195,7 @@ func withInstaller(fs afero.Fs) eventOpt {
 	return func(event Event) {
 		c, err := homebrew.NewChecker(fs)
 		if err != nil {
-			logging.Log(logging.Debug, err)
+			logging.Debug(err)
 			return
 		}
 		if c.IsHomebrew() {

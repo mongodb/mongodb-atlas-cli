@@ -98,7 +98,7 @@ func Builder(profile *string) *cobra.Command {
 
 			debug, _ := cmd.Flags().GetBool(flag.Debug)
 			if debug {
-				logging.SetLevel(logging.Debug)
+				logging.SetLevel(logging.LevelDebug)
 			}
 
 			if shouldCheckCredentials(cmd) {

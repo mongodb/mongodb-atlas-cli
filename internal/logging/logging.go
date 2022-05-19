@@ -19,25 +19,29 @@ import (
 )
 
 const (
-	None  Level = iota
-	Debug Level = iota
+	LevelNone  Level = iota
+	LevelDebug Level = iota
 	// Can add more levels in future if required...
 )
 
 type Level int
 
 // By default, nothing will be logged.
-var logLevel = None
+var logLevel = LevelNone
 
 func SetLevel(l Level) {
 	logLevel = l
 }
 
 func Log(level Level, message interface{}) {
-	if logLevel == None {
+	if logLevel == LevelNone {
 		return
 	}
 	if level >= logLevel {
 		log.Println(message)
 	}
+}
+
+func Debug(message interface{}) {
+	Log(LevelDebug, message)
 }

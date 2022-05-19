@@ -124,7 +124,7 @@ func mongoCLIConfigFilePath() (configPath string, err error) {
 		return configPath, nil
 	}
 
-	if configDir, err := config.OldMongoCLIConfigHome(); err == nil { //nolint:staticcheck // Deprecated before fully removing support in the future
+	if configDir, err := config.OldMongoCLIConfigHome(); err == nil {
 		configPath = fmt.Sprintf("%s/mongocli.toml", configDir)
 	}
 

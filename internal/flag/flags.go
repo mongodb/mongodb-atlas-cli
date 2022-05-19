@@ -18,6 +18,7 @@ const (
 	Service                                  = "service"                         // Service flag to set service
 	Profile                                  = "profile"                         // Profile flag to use a profile
 	ProfileShort                             = "P"                               // ProfileShort flag to use a profile
+	Debug                                    = "debug"                           // Debug flag to log debug messages to stderr
 	OrgID                                    = "orgId"                           // OrgID flag to use an Organization ID
 	TeamID                                   = "teamId"                          // TeamID flag
 	URL                                      = "url"                             // URL flag

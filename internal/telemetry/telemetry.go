@@ -32,8 +32,3 @@ func NewContext() context.Context {
 		startTime: time.Now(),
 	})
 }
-
-func logError(err error) {
-	// No-op function until logging is implemented (CLOUDP-110988)
-	_ = err
-}

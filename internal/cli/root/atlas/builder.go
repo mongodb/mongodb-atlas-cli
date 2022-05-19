@@ -57,6 +57,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/internal/latestrelease"
+	"github.com/mongodb/mongodb-atlas-cli/internal/logging"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -93,6 +94,11 @@ func Builder(profile *string) *cobra.Command {
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
+			}
+
+			debug, _ := cmd.Flags().GetBool(flag.Debug)
+			if debug {
+				logging.SetLevel(logging.Debug)
 			}
 
 			if shouldCheckCredentials(cmd) {
@@ -181,6 +187,7 @@ func Builder(profile *string) *cobra.Command {
 	)
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
+	rootCmd.PersistentFlags().Bool(flag.Debug, false, usage.Debug)
 
 	return rootCmd
 }

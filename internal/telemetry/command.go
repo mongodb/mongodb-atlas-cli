@@ -18,6 +18,7 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/logging"
 	"github.com/spf13/cobra"
 )
 
@@ -33,14 +34,14 @@ func TrackCommand(opt TrackOptions, args ...string) {
 	}
 	t, err := newTracker(opt.Cmd.Context())
 	if err != nil {
-		logError(err)
+		logging.Log(logging.Debug, err)
 		return
 	}
 
 	checkHelp(&opt, args...)
 
 	if err = t.trackCommand(opt); err != nil {
-		logError(err)
+		logging.Log(logging.Debug, err)
 	}
 }
 

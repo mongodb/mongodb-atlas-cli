@@ -18,6 +18,7 @@ const (
 	ProjectID                                = "Project ID to use. Overrides the settings in the configuration file or environment variable."
 	OrgID                                    = "Organization ID to use. Overrides the settings in the configuration file or environment variable."
 	Profile                                  = "Profile to use from your configuration file."
+	Debug                                    = "Debug flag to log debug messages to stderr."
 	Members                                  = "Number of members in the replica set."
 	Shards                                   = "Number of shards in the cluster."
 	ProcessName                              = "Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}."

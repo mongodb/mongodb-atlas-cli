@@ -116,6 +116,10 @@ Inherited Options
      - Type
      - Required
      - Description
+   * - --debug
+     - 
+     - false
+     - Debug flag to log debug messages to stderr.
    * - -P, --profile
      - string
      - false

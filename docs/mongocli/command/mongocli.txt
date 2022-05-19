@@ -27,6 +27,10 @@ Options
      - Type
      - Required
      - Description
+   * - --debug
+     - 
+     - false
+     - Debug flag to log debug messages to stderr.
    * - -h, --help
      - 
      - false

@@ -21,6 +21,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/logging"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/cloudmanager"
@@ -61,6 +63,13 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		SilenceUsage: true,
 		Annotations: map[string]string{
 			"toc": "true",
+		},
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			debug, _ := cmd.Flags().GetBool(flag.Debug)
+			if debug {
+				logging.SetLevel(logging.Debug)
+			}
+			return nil
 		},
 		PersistentPostRun: func(cmd *cobra.Command, args []string) {
 			// we don't run the release alert feature on the completion command
@@ -122,6 +131,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	)
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
+	rootCmd.PersistentFlags().Bool(flag.Debug, false, usage.Debug)
 
 	return rootCmd
 }

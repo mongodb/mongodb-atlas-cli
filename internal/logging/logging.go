@@ -26,7 +26,7 @@ const (
 
 type Level int
 
-// By default, nothing wil be logged.
+// By default, nothing will be logged.
 var logLevel = None
 
 func SetLevel(l Level) {

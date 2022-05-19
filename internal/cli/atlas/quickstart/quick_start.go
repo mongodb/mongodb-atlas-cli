@@ -229,6 +229,7 @@ func (opts *Opts) createResources() error {
 		if errors.As(err, &target) && target.ErrorCode == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" {
 			return ErrFreeClusterAlreadyExists
 		}
+		return err
 	}
 	return nil
 }

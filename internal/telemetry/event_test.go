@@ -329,6 +329,33 @@ func TestWithExtraProps(t *testing.T) {
 	a.Equal(true, e.Properties["a"])
 }
 
+func TestSanitizePrompt(t *testing.T) {
+	testCases := []struct {
+		input    string
+		expected string
+	}{
+		{
+			input:    "Test",
+			expected: "Test",
+		},
+		{
+			input:    "Test [test1]",
+			expected: "Test []",
+		},
+		{
+			input:    "Test [test1] test2 [test3]",
+			expected: "Test [] test2 []",
+		},
+	}
+
+	for _, testCase := range testCases {
+		got := sanitizePrompt(testCase.input)
+		if got != testCase.expected {
+			t.Errorf("expected: %v, got %v", testCase.expected, got)
+		}
+	}
+}
+
 func TestWithPrompt(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 

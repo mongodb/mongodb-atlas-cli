@@ -31,9 +31,10 @@ import (
 
 type logoutOpts struct {
 	*cli.DeleteOpts
-	OutWriter io.Writer
-	config    ConfigDeleter
-	flow      Revoker
+	OutWriter  io.Writer
+	config     ConfigDeleter
+	flow       Revoker
+	keepConfig bool
 }
 
 //go:generate mockgen -destination=../../mocks/mock_logout.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth Revoker,ConfigDeleter
@@ -58,7 +59,14 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Delete(opts.config.Delete)
+	if !opts.keepConfig {
+		return opts.Delete(opts.config.Delete)
+	}
+	config.SetAccessToken("")
+	config.SetRefreshToken("")
+	config.SetProjectID("")
+	config.SetOrgID("")
+	return config.Save()
 }
 
 func LogoutBuilder() *cobra.Command {
@@ -95,6 +103,8 @@ func LogoutBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().BoolVar(&opts.keepConfig, "keep", false, usage.Keep)
 
+	_ = cmd.Flags().MarkHidden("keep")
 	return cmd
 }

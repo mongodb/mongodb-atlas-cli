@@ -67,3 +67,29 @@ func Test_logoutOpts_Run(t *testing.T) {
 		Times(1)
 	require.NoError(t, opts.Run(ctx))
 }
+
+func Test_logoutOpts_Run_Keep(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := mocks.NewMockRevoker(ctrl)
+	mockConfig := mocks.NewMockConfigDeleter(ctrl)
+	defer ctrl.Finish()
+	buf := new(bytes.Buffer)
+
+	opts := logoutOpts{
+		OutWriter: buf,
+		config:    mockConfig,
+		flow:      mockFlow,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+		},
+		keepConfig: true,
+	}
+	ctx := context.TODO()
+	mockFlow.
+		EXPECT().
+		RevokeToken(ctx, gomock.Any(), gomock.Any()).
+		Return(nil, nil).
+		Times(1)
+
+	require.NoError(t, opts.Run(ctx))
+}

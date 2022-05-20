@@ -189,8 +189,6 @@ func (opts *Opts) Run() error {
 		return er
 	}
 
-	fmt.Print(quickstartTemplateCluster)
-
 	fmt.Print("Cluster created.")
 
 	if err := opts.loadSampleData(); err != nil {

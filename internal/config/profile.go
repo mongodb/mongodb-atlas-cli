@@ -481,8 +481,7 @@ func boolEnv(key string) bool {
 func isTelemetryFeatureAllowed() bool {
 	tool := ToolName == AtlasCLI
 	doNotTrack := boolEnv("DO_NOT_TRACK")
-	featureFlag := boolEnv(AtlasCLIEnvPrefix + "_TELEMETRY_FEATURE_FLAG")
-	return tool && !doNotTrack && featureFlag
+	return tool && !doNotTrack
 }
 
 // Output get configured output format.

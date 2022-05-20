@@ -56,6 +56,8 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		Confirm:        true,
 	}
 
+	opts.runMongoShell = true
+
 	projectIPAccessList := opts.newProjectIPAccessList()
 
 	mockStore.

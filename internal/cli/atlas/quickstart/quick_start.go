@@ -201,7 +201,7 @@ func (opts *Opts) Run() error {
 	}
 
 	// If user does not want to open MongoShell, skip everything below
-	if !opts.Confirm {
+	if !opts.runMongoShell {
 		return nil
 	}
 	// Get cluster's connection string

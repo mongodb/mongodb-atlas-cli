@@ -105,6 +105,6 @@ func LogoutBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().BoolVar(&opts.keepConfig, "keep", false, usage.Keep)
 
-	cmd.Flags().MarkHidden("keep")
+	_ = cmd.Flags().MarkHidden("keep")
 	return cmd
 }

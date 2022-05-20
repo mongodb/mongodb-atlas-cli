@@ -61,6 +61,18 @@ func withPrompt(p, k string) eventOpt {
 	}
 }
 
+func withChoice(c string) eventOpt {
+	return func(event Event) {
+		event.Properties["choice"] = sanitizeSelectOption(c)
+	}
+}
+
+func sanitizeSelectOption(v string) string {
+	parenthesesRegex := regexp.MustCompile(`^.*\(([^\(\)]*)\)$`)
+
+	return parenthesesRegex.ReplaceAllString(v, "$1")
+}
+
 func sanitizePrompt(q string) string {
 	bracketsRegex := regexp.MustCompile(`\[[^\]\[]*\]`)
 

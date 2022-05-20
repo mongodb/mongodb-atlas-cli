@@ -217,12 +217,14 @@ func (t *tracker) trackSurvey(p survey.Prompt, response interface{}, e error) er
 	case *survey.Password:
 		options = append(options, withPrompt(v.Message, "password"), withEmpty(castString(response) == ""))
 	case *survey.Select:
-		options = append(options, withPrompt(v.Message, "select"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""))
+		options = append(options, withPrompt(v.Message, "select"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""), withChoice(castString(response)))
 	default:
 		return errors.New("unknown survey prompt")
 	}
 
 	event := newEvent(options...)
 
+	// all sent at once via TrackCommand
+	// assuming there is always a TrackCommand after many TrackAsk
 	return t.save(event)
 }

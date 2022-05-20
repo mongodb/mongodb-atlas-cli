@@ -15,11 +15,14 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"log"
 	"os"
+	"os/signal"
 	"path"
+	"syscall"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/root/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -37,13 +40,35 @@ var (
 func Execute() {
 	ctx := telemetry.NewContext()
 	rootCmd := atlas.Builder(&profile)
+	initSignalHandler(rootCmd)
 	if cmd, err := rootCmd.ExecuteContextC(ctx); err != nil {
-		telemetry.TrackCommand(telemetry.TrackOptions{
-			Cmd: cmd,
-			Err: err,
-		})
-		os.Exit(1)
+		handleError(cmd, err)
 	}
+}
+
+// TODO: add to mongocli as well...
+func initSignalHandler(cmd *cobra.Command) {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c,
+		syscall.SIGINT,  // CTRL-C
+		syscall.SIGTSTP, // CTRL-Z
+		syscall.SIGQUIT) // CTRL-\
+	go func() {
+		sig := <-c
+		message := fmt.Sprintf("Error: %v\n", sig)
+		fmt.Println()
+		fmt.Println(message)
+		handleError(cmd, errors.New(message))
+		os.Exit(1)
+	}()
+}
+
+func handleError(cmd *cobra.Command, err error) {
+	telemetry.TrackCommand(telemetry.TrackOptions{
+		Cmd: cmd,
+		Err: err,
+	})
+	os.Exit(1)
 }
 
 // loadConfig reads in config file and ENV variables if set.
@@ -124,7 +149,7 @@ func mongoCLIConfigFilePath() (configPath string, err error) {
 		return configPath, nil
 	}
 
-	if configDir, err := config.OldMongoCLIConfigHome(); err == nil { //nolint:staticcheck // Deprecated before fully removing support in the future
+	if configDir, err := config.OldMongoCLIConfigHome(); err == nil {
 		configPath = fmt.Sprintf("%s/mongocli.toml", configDir)
 	}
 

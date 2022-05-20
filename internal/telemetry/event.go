@@ -19,6 +19,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"os"
+	"regexp"
 	"runtime"
 	"strings"
 	"time"
@@ -55,9 +56,15 @@ func withProfile() eventOpt { // either "default" or base64 hash
 
 func withPrompt(p, k string) eventOpt {
 	return func(event Event) {
-		event.Properties["prompt"] = p
+		event.Properties["prompt"] = sanitizePrompt(p)
 		event.Properties["prompt_type"] = k
 	}
+}
+
+func sanitizePrompt(q string) string {
+	bracketsRegex := regexp.MustCompile(`\[[^\]\[]*\]`)
+
+	return bracketsRegex.ReplaceAllString(q, "[]")
 }
 
 func withDefault(d bool) eventOpt {

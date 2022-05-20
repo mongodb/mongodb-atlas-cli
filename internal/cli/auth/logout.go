@@ -94,7 +94,7 @@ func LogoutBuilder() *cobra.Command {
 				return err
 			}
 			opts.Entry = s
-			if err := opts.PromptWithMessage("Are you sure you want to log out of account %s?"); err != nil {
+			if err := opts.PromptWithMessage("Are you sure you want to log out of account %s?"); err != nil || !opts.Confirm {
 				return err
 			}
 			return opts.Run(cmd.Context())

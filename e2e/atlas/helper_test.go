@@ -225,6 +225,14 @@ func RandProjectName() (string, error) {
 	return fmt.Sprintf("e2e-%v", n), nil
 }
 
+func RandUsername() (string, error) {
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("user-%v", n), nil
+}
+
 func RandProjectNameWithPrefix(prefix string) (string, error) {
 	name, err := RandProjectName()
 	if err != nil {

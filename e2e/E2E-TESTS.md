@@ -345,3 +345,5 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `completion zsh`                              | Y         | Y         | Y         | Y         | Y     | Y     |
 | `completion fish`                             | Y         | Y         | Y         | Y         | Y     | Y     |
 | `completion powershell`                       | Y         | Y         | Y         | Y         | Y     | Y     |
+| `setup`                                       | S         |           |           | Y         |       |       |
+| `register`                                    | N         |           |           | Y         |       |       |

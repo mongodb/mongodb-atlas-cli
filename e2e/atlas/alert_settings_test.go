@@ -157,6 +157,7 @@ func TestAlertConfig(t *testing.T) {
 			"REPLICA_SET_NAME",
 			"SHARD_NAME",
 			"CLUSTER_NAME",
+			"APPLICATION_ID",
 		}
 		if diff := deep.Equal(fields, expected); diff != nil {
 			t.Error(diff)

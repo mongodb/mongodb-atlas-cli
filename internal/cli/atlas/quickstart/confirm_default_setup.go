@@ -47,10 +47,11 @@ Load sample data:			Yes`
 Cluster Tier:				%s
 Cluster Disk Size (GiB):		%.1f`, opts.Tier, diskSize)
 	}
-	fmt.Printf(`[Default Settings]
+	fmt.Printf(`
+[Default Settings]
 Cluster Name:				%s%s
 Cloud Provider and Region:		%s
-Database Username:			%s
+Database User Username:			%s
 Allow connections from (IP Address):	%s%s`,
 		values.ClusterName,
 		clusterTier+clusterDisk,

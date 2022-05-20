@@ -348,7 +348,7 @@ tasks:
       - func: "install golangci-lint"
       - func: "lint"
   - name: snyk_scan
-    tags: ["code_health"]
+    tags: ["snyk"]
     commands:
       - func: "clone"
       - func: "install snyk"
@@ -1339,6 +1339,14 @@ buildvariants:
       go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: ".ops-manager-50"
-
+  - name: snyk
+    display_name: "Snyk"
+    run_on:
+      - rhel80-small
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+    tasks:
+      - name: .snyk
 include:
   - filename: build/ci/release.yml

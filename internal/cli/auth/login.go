@@ -49,7 +49,7 @@ type LoginConfig interface {
 
 const (
 	AlreadyAuthenticatedMsg      = "you are already authenticated with an API key (Public key: %s)"
-	AlreadyAuthenticatedEmailMsg = "you are already authenticated with an email (%s)"
+	AlreadyAuthenticatedEmailMsg = "you are already authenticated with an account (%s)"
 	LoginWithProfileMsg          = `run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile`
 	LogoutToLoginAccountMsg      = `run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile`
 )

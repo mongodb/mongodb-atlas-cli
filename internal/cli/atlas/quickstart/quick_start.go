@@ -51,8 +51,8 @@ Enter 'atlas cluster watch %s' to learn when your cluster is available.
 
 const quickstartTemplateStoreWarning = `
 Please store your database authentication access details in a secure location: 
-username: %s 
-password: %s
+Database User Username: %s
+Database User Password: %s
 `
 
 const quickstartTemplateIntro = `Press [Enter] to use the default values.
@@ -177,7 +177,8 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	fmt.Printf(`We are deploying %s...`, opts.ClusterName)
+	fmt.Printf(`We are deploying %s...
+`, opts.ClusterName)
 
 	fmt.Printf(quickstartTemplateStoreWarning, opts.DBUsername, opts.DBUserPassword)
 	opts.setupCloseHandler()
@@ -189,8 +190,6 @@ func (opts *Opts) Run() error {
 		return er
 	}
 
-	fmt.Print(quickstartTemplateCluster)
-
 	fmt.Print("Cluster created.")
 
 	if err := opts.loadSampleData(); err != nil {
@@ -199,6 +198,11 @@ func (opts *Opts) Run() error {
 
 	if err := opts.askMongoShellQuestion(); err != nil {
 		return err
+	}
+
+	// If user does not want to open MongoShell, skip everything below
+	if !opts.runMongoShell {
+		return nil
 	}
 	// Get cluster's connection string
 	cluster, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)

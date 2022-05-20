@@ -46,7 +46,6 @@ func Execute() {
 	}
 }
 
-// TODO: add to mongocli as well...
 func initSignalHandler(cmd *cobra.Command) {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c,
@@ -55,11 +54,8 @@ func initSignalHandler(cmd *cobra.Command) {
 		syscall.SIGQUIT) // CTRL-\
 	go func() {
 		sig := <-c
-		message := fmt.Sprintf("Error: %v\n", sig)
-		fmt.Println()
-		fmt.Println(message)
-		handleError(cmd, errors.New(message))
-		os.Exit(1)
+		fmt.Printf("\nError: %s\n", sig.String())
+		handleError(cmd, errors.New(sig.String()))
 	}()
 }
 
@@ -149,7 +145,7 @@ func mongoCLIConfigFilePath() (configPath string, err error) {
 		return configPath, nil
 	}
 
-	if configDir, err := config.OldMongoCLIConfigHome(); err == nil {
+	if configDir, err := config.OldMongoCLIConfigHome(); err == nil { //nolint:staticcheck // Deprecated before fully removing support in the future
 		configPath = fmt.Sprintf("%s/mongocli.toml", configDir)
 	}
 

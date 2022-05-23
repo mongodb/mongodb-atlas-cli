@@ -42,7 +42,7 @@ const (
 )
 
 func TestDBUserWithFlags(t *testing.T) {
-	username, err := generateUsername()
+	username, err := RandUsername()
 	require.NoError(t, err)
 
 	cliPath, err := e2e.AtlasCLIBin()
@@ -110,7 +110,7 @@ func TestDBUserWithFlags(t *testing.T) {
 }
 
 func TestDBUsersWithStdin(t *testing.T) {
-	username, err := generateUsername()
+	username, err := RandUsername()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -159,14 +159,6 @@ func TestDBUsersWithStdin(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		testDeleteUser(t, cliPath, dbusersEntity, username)
 	})
-}
-
-func generateUsername() (string, error) {
-	n, err := e2e.RandInt(1000)
-	if err != nil {
-		return "", err
-	}
-	return fmt.Sprintf("user-%v", n), nil
 }
 
 func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {

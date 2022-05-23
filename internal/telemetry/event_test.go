@@ -356,6 +356,29 @@ func TestSanitizePrompt(t *testing.T) {
 	}
 }
 
+func TestSanitizeSelectOption(t *testing.T) {
+	testCases := []struct {
+		input    string
+		expected string
+	}{
+		{
+			input:    "Test",
+			expected: "Test",
+		},
+		{
+			input:    "Test (test1)", // org id or projet id
+			expected: "test1",
+		},
+	}
+
+	for _, testCase := range testCases {
+		got := sanitizeSelectOption(testCase.input)
+		if got != testCase.expected {
+			t.Errorf("expected: %v, got %v", testCase.expected, got)
+		}
+	}
+}
+
 func TestWithPrompt(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
@@ -367,6 +390,17 @@ func TestWithPrompt(t *testing.T) {
 	a := assert.New(t)
 	a.Equal(q, e.Properties["prompt"])
 	a.Equal(k, e.Properties["prompt_type"])
+}
+
+func TestWithChoice(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
+	c := "test choice"
+
+	e := newEvent(withChoice(c))
+
+	a := assert.New(t)
+	a.Equal(c, e.Properties["choice"])
 }
 
 func TestWithDefault(t *testing.T) {

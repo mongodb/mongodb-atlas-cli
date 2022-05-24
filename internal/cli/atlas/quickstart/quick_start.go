@@ -30,6 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
@@ -152,7 +153,7 @@ func (opts *Opts) Run() error {
 		if publicIP := store.IPAddress(); publicIP != "" {
 			opts.IPAddresses = []string{publicIP}
 		} else {
-			_, _ = fmt.Fprintf(os.Stderr, quickstartTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
+			_, _ = log.Warningf(quickstartTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
 		}
 	}
 
@@ -368,7 +369,7 @@ func (opts *Opts) newDefaultValues() (*quickstart, error) {
 		if publicIP := store.IPAddress(); publicIP != "" {
 			values.IPAddresses = []string{publicIP}
 		} else {
-			_, _ = fmt.Fprintf(os.Stderr, quickstartTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
+			_, _ = log.Warningf(quickstartTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
 		}
 	}
 

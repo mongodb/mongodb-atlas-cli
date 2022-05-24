@@ -15,6 +15,8 @@
 package opsmanager
 
 import (
+	"log"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/events"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/admin"
@@ -50,6 +52,8 @@ func Builder() *cobra.Command {
 		Aliases: []string{"om"},
 		Short:   "MongoDB Ops Manager operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			log.SetOutput(cmd.ErrOrStderr())
+
 			config.SetService(config.OpsManagerService)
 			// do not validate to create an owner
 			if cmd.CommandPath() != "mongocli ops-manager owner create" {

@@ -17,6 +17,7 @@ package atlas
 import (
 	"fmt"
 	"io"
+	"log"
 	"runtime"
 	"strings"
 	"time"
@@ -91,6 +92,8 @@ func Builder(profile *string) *cobra.Command {
 			"toc": "true",
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			log.SetOutput(cmd.ErrOrStderr())
+
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
 			}

@@ -16,7 +16,6 @@ package atlas
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/alerts"
@@ -43,6 +42,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/events"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 )
@@ -58,7 +58,9 @@ func Builder() *cobra.Command {
 		Short: "MongoDB Atlas operations.",
 		Long:  deprecatedMessage,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			_, _ = fmt.Fprint(os.Stderr, deprecatedMessage)
+			log.SetOutput(cmd.ErrOrStderr())
+
+			_, _ = log.Warning(deprecatedMessage)
 			if err := opts.InitFlow(); err != nil {
 				return err
 			}

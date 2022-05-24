@@ -16,9 +16,9 @@ package quickstart
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/pkg/browser"
 )
@@ -40,7 +40,7 @@ func (opts *Opts) askMongoShellQuestion() error {
 	if config.MongoShellPath() != "" {
 		return nil
 	}
-	_, _ = fmt.Fprint(os.Stderr, "No MongoDB shell version configured.\n")
+	_, _ = log.Warningln("No MongoDB shell version configured.")
 	if err := telemetry.TrackAskOne(newIsMongoShellInstalledQuestion(), &opts.mongoShellInstalled); err != nil {
 		return err
 	}

@@ -17,7 +17,6 @@ package atlas
 import (
 	"fmt"
 	"io"
-	"log"
 	"runtime"
 	"strings"
 	"time"
@@ -58,6 +57,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/internal/latestrelease"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -78,6 +78,8 @@ type Notifier struct {
 
 // Builder conditionally adds children commands as needed.
 func Builder(profile *string) *cobra.Command {
+	var debugLevel bool
+
 	rootCmd := &cobra.Command{
 		Version: version.Version,
 		Use:     atlas,
@@ -93,6 +95,9 @@ func Builder(profile *string) *cobra.Command {
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			log.SetOutput(cmd.ErrOrStderr())
+			if debugLevel {
+				log.SetLevel(log.DebugLevel)
+			}
 
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
@@ -184,6 +189,7 @@ func Builder(profile *string) *cobra.Command {
 	)
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
+	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
 
 	return rootCmd
 }

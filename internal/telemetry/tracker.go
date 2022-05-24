@@ -123,7 +123,7 @@ func (t *tracker) save(event Event) error {
 		return err
 	}
 	defer file.Close()
-	data, err := json.MarshalIndent(event, "", "  ")
+	data, err := json.Marshal(event)
 	if err != nil {
 		return err
 	}

@@ -95,8 +95,20 @@ func handleSignal(cmd *cobra.Command) {
 	}()
 }
 
+func initProfile(profile string) {
+	if profile != "" {
+		config.SetName(profile)
+	} else if profile = config.GetString(flag.Profile); profile != "" {
+		config.SetName(profile)
+	} else if availableProfiles := config.List(); len(availableProfiles) == 1 {
+		config.SetName(availableProfiles[0])
+	}
+}
+
 // Builder conditionally adds children commands as needed.
-func Builder(profile *string) *cobra.Command {
+func Builder() *cobra.Command {
+	var profile string
+
 	rootCmd := &cobra.Command{
 		Version: version.Version,
 		Use:     atlas,
@@ -112,6 +124,8 @@ func Builder(profile *string) *cobra.Command {
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			handleSignal(cmd)
+
+			initProfile(profile)
 
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
@@ -202,7 +216,7 @@ func Builder(profile *string) *cobra.Command {
 		figautocomplete.Builder(),
 	)
 
-	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
+	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
 
 	return rootCmd
 }

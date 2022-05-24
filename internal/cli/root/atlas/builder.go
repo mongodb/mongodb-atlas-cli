@@ -15,10 +15,14 @@
 package atlas
 
 import (
+	"errors"
 	"fmt"
 	"io"
+	"os"
+	"os/signal"
 	"runtime"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -75,6 +79,22 @@ type Notifier struct {
 	writer         io.Writer
 }
 
+func handleSignal(cmd *cobra.Command) {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c,
+		os.Interrupt,    // CTRL-C
+		syscall.SIGTSTP, // CTRL-Z
+		syscall.SIGQUIT) // CTRL-\
+	go func() {
+		sig := <-c
+		telemetry.TrackCommand(telemetry.TrackOptions{
+			Cmd: cmd,
+			Err: errors.New(sig.String()),
+		})
+		os.Exit(1)
+	}()
+}
+
 // Builder conditionally adds children commands as needed.
 func Builder(profile *string) *cobra.Command {
 	rootCmd := &cobra.Command{
@@ -91,6 +111,8 @@ func Builder(profile *string) *cobra.Command {
 			"toc": "true",
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			handleSignal(cmd)
+
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
 			}

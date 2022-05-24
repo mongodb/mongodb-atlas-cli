@@ -22,7 +22,6 @@ import (
 	"os/signal"
 	"runtime"
 	"strings"
-	"syscall"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -81,10 +80,8 @@ type Notifier struct {
 
 func handleSignal(cmd *cobra.Command) {
 	c := make(chan os.Signal, 1)
-	signal.Notify(c,
-		os.Interrupt,    // CTRL-C
-		syscall.SIGTSTP, // CTRL-Z
-		syscall.SIGQUIT) // CTRL-\
+	signal.Notify(c, os.Interrupt)
+
 	go func() {
 		sig := <-c
 		telemetry.TrackCommand(telemetry.TrackOptions{

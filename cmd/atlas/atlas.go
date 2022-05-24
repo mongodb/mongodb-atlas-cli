@@ -15,14 +15,11 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"log"
 	"os"
-	"os/signal"
 	"path"
-	"syscall"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/root/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -40,31 +37,13 @@ var (
 func Execute() {
 	ctx := telemetry.NewContext()
 	rootCmd := atlas.Builder(&profile)
-	initSignalHandler(rootCmd)
 	if cmd, err := rootCmd.ExecuteContextC(ctx); err != nil {
-		handleError(cmd, err)
+		telemetry.TrackCommand(telemetry.TrackOptions{
+			Cmd: cmd,
+			Err: err,
+		})
+		os.Exit(1)
 	}
-}
-
-func initSignalHandler(cmd *cobra.Command) {
-	c := make(chan os.Signal, 1)
-	signal.Notify(c,
-		syscall.SIGINT,  // CTRL-C
-		syscall.SIGTSTP, // CTRL-Z
-		syscall.SIGQUIT) // CTRL-\
-	go func() {
-		sig := <-c
-		fmt.Printf("\nError: %s\n", sig.String())
-		handleError(cmd, errors.New(sig.String()))
-	}()
-}
-
-func handleError(cmd *cobra.Command, err error) {
-	telemetry.TrackCommand(telemetry.TrackOptions{
-		Cmd: cmd,
-		Err: err,
-	})
-	os.Exit(1)
 }
 
 // loadConfig reads in config file and ENV variables if set.

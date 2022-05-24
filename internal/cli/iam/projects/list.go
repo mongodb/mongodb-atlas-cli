@@ -16,7 +16,6 @@ package projects
 
 import (
 	"context"
-	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -47,7 +46,6 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	time.Sleep(time.Minute)
 	var r interface{}
 	var err error
 	listOptions := opts.NewListOptions()

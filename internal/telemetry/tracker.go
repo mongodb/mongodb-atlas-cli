@@ -23,6 +23,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/spf13/afero"
 )
@@ -53,7 +54,7 @@ func newTracker(ctx context.Context) (*tracker, error) {
 	storeSet := true
 	telemetryStore, err := store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry())
 	if err != nil {
-		logError(err)
+		_, _ = log.Debugf("telemetry: failed to set store: %v\n", err)
 		storeSet = false
 	}
 
@@ -77,7 +78,7 @@ func (t *tracker) trackCommand(data TrackOptions) error {
 	}
 	events, err := t.read()
 	if err != nil {
-		logError(err)
+		_, _ = log.Debugf("telemetry: failed to read cache: %v\n", err)
 	}
 	events = append(events, event)
 	err = t.store.SendEvents(events)

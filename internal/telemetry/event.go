@@ -17,7 +17,6 @@ package telemetry
 import (
 	"crypto/sha256"
 	"encoding/base64"
-	"errors"
 	"os"
 	"regexp"
 	"runtime"
@@ -27,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/internal/version"
 	"github.com/spf13/afero"
@@ -105,7 +105,7 @@ func withDuration(cmd *cobra.Command) eventOpt {
 	return func(event Event) {
 		ctxValue, found := cmd.Context().Value(contextKey).(telemetryContextValue)
 		if !found {
-			logError(errors.New("telemetry context not found"))
+			_, _ = log.Debugln("telemetry: context not found")
 			return
 		}
 
@@ -207,7 +207,7 @@ func withInstaller(fs afero.Fs) eventOpt {
 	return func(event Event) {
 		c, err := homebrew.NewChecker(fs)
 		if err != nil {
-			logError(err)
+			_, _ = log.Debugf("telemetry: failed to generate homebrew checker: %v\n", err)
 			return
 		}
 		if c.IsHomebrew() {

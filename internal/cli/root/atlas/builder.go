@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"os/signal"
 	"runtime"
 	"strings"
 	"time"
@@ -60,6 +59,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/internal/latestrelease"
+	"github.com/mongodb/mongodb-atlas-cli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -79,17 +79,13 @@ type Notifier struct {
 }
 
 func handleSignal(cmd *cobra.Command) {
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
-
-	go func() {
-		sig := <-c
+	sighandle.Notify(func(sig os.Signal) {
 		telemetry.TrackCommand(telemetry.TrackOptions{
 			Cmd: cmd,
 			Err: errors.New(sig.String()),
 		})
 		os.Exit(1)
-	}()
+	}, os.Interrupt)
 }
 
 func initProfile(profile string) {

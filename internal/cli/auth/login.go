@@ -188,7 +188,7 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 func (opts *LoginOpts) printAuthInstructions(code *auth.DeviceCode) {
 	codeDuration := time.Duration(code.ExpiresIn) * time.Second
 	_, _ = fmt.Fprintf(opts.OutWriter, `
-To verify your account, copy your one-time code:
+To verify your account, copy your one-time verification code:
 `)
 
 	userCode := fmt.Sprintf("%s-%s", code.UserCode[0:len(code.UserCode)/2], code.UserCode[len(code.UserCode)/2:])

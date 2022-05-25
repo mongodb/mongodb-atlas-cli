@@ -175,7 +175,7 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 			if tt.expectNewVersion {
 				want = fmt.Sprintf(`
 A new version of %s is available '%v'!
-To upgrade, see: https://dochub.mongodb.org/core/%s-install.
+To upgrade, see: https://dochub.mongodb.org/core/install-%s.
 
 To disable this alert, run "%s config set skip_update_check true".
 `, config.ToolName, v, config.ToolName, config.BinName())

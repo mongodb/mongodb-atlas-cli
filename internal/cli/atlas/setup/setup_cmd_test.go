@@ -79,7 +79,7 @@ func Test_setupOpts_Run(t *testing.T) {
 	require.NoError(t, opts.Run(ctx))
 }
 
-func Test_registerOpts_RunWithAPIKeys(t *testing.T) {
+func Test_setupOpts_RunWithAPIKeys(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
@@ -113,9 +113,9 @@ func Test_registerOpts_RunWithAPIKeys(t *testing.T) {
 	require.NoError(t, opts.PreRun(ctx))
 	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `
-you are already authenticated with an API key (Public key: publicKey)
+You are already authenticated with an API key (Public key: publicKey).
 
-run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile
+Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.
 `, buf.String())
 }
 

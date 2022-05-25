@@ -22,6 +22,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 )
 
+const loadSampleDataMsg = `
+Load sample data:			Yes`
+
 func (opts *Opts) askConfirmConfigQuestion() error {
 	if opts.Confirm {
 		return nil
@@ -29,14 +32,10 @@ func (opts *Opts) askConfirmConfigQuestion() error {
 
 	loadSampleData := ""
 	if !opts.SkipSampleData {
-		loadSampleData = `
-Load sample data:			Yes
-`
+		loadSampleData = loadSampleDataMsg
 	}
 
 	clusterTier := ""
-	clusterDisk := ""
-
 	if opts.Tier != DefaultAtlasTier {
 		diskSize := 0.5
 
@@ -52,15 +51,15 @@ Cluster Disk Size (GiB):		%.1f`, opts.Tier, diskSize)
 [Confirm cluster settings]
 Cluster Name:				%s%s
 Cloud Provider and Region:		%s
-Database User Username:			%s
-Allow connections from (IP Address):	%s%s
+Database User Username:			%s%s
+Allow connections from (IP Address):	%s
 `,
 		opts.ClusterName,
-		clusterTier+clusterDisk,
+		clusterTier,
 		opts.Provider+" - "+opts.Region,
 		opts.DBUsername,
-		strings.Join(opts.IPAddresses, ", "),
 		loadSampleData,
+		strings.Join(opts.IPAddresses, ", "),
 	)
 
 	q := newClusterCreateConfirm()

@@ -121,14 +121,14 @@ func (opts *registerOpts) PreRun(outWriter io.Writer) error {
 
 func registerPreRun() error {
 	if hasUserProgrammaticKeys() {
-		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
+		msg := fmt.Sprintf(AlreadyAuthenticatedError, config.PublicAPIKey())
 		return fmt.Errorf(`%s
 
 %s`, msg, WithProfileMsg)
 	}
 
 	if account, err := AccountWithAccessToken(); err == nil {
-		msg := fmt.Sprintf(AlreadyAuthenticatedEmailMsg, account)
+		msg := fmt.Sprintf(AlreadyAuthenticatedEmailError, account)
 		return fmt.Errorf(`%s
 
 %s`, msg, WithProfileMsg)

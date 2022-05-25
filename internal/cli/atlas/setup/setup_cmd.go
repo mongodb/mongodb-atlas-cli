@@ -29,7 +29,7 @@ import (
 )
 
 const (
-	withProfileMsg = `run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`
+	withProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
 )
 
 type Opts struct {
@@ -52,7 +52,6 @@ func (opts *Opts) Run(ctx context.Context) error {
 This command will help you
 1. Create and verify your MongoDB Atlas account in your browser.
 2. Return to the terminal to create your first free MongoDB database in Atlas.
-
 `)
 		if err := opts.register.Run(ctx); err != nil {
 			return err

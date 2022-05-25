@@ -30,8 +30,9 @@ import (
 //go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth RegisterFlow
 
 const (
-	accountURI     = "https://account.mongodb.com/account/register/cli?n=/account/connect&nRegister=/account/connect"
-	govAccountURI  = "https://account.mongodbgov.com/account/register/cli?n=/account/connect&nRegister=/account/connect"
+	baseURI        = "https://account.mongodb.com/"
+	govBaseURI     = "https://account.mongodbgov.com/"
+	accountParams  = "account/register/cli?n=/account/connect&nRegister=/account/connect"
 	WithProfileMsg = `run "atlas auth register --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`
 )
 
@@ -79,13 +80,17 @@ func (ra *registerAuthenticator) RequestCode(ctx context.Context) (*auth.DeviceC
 	// TODO:CLOUDP-121210 - Replace with new request and remove URI override.
 	code, response, err := ra.authenticator.RequestCode(ctx)
 	if err != nil {
-		return nil, nil, err
+		return code, response, err
 	}
 
-	if ra.isGov {
-		code.VerificationURI = govAccountURI
+	if config.OpsManagerURL() == "" {
+		if ra.isGov {
+			code.VerificationURI = govBaseURI + accountParams
+		} else {
+			code.VerificationURI = baseURI + accountParams
+		}
 	} else {
-		code.VerificationURI = accountURI
+		code.VerificationURI = config.OpsManagerURL() + accountParams
 	}
 
 	return code, response, nil

@@ -134,9 +134,14 @@ func newClusterCreateConfirm() survey.Prompt {
 	}
 }
 
-func newClusterDefaultConfirm() survey.Prompt {
+func newClusterDefaultConfirm(tier string) survey.Prompt {
+	message := "Do you want to set up your first free database in Atlas with default settings (it's free forever)?"
+	if tier != DefaultAtlasTier {
+		message = "Are you ready to create your Atlas cluster with the above settings?"
+	}
+
 	return &survey.Confirm{
-		Message: "Do you want to set up your first free database in Atlas with default settings (it's free forever)?",
+		Message: message,
 		Default: true,
 	}
 }

@@ -21,6 +21,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -85,7 +86,7 @@ func handleSignal(cmd *cobra.Command) {
 			Err: errors.New(sig.String()),
 		})
 		os.Exit(1)
-	}, os.Interrupt)
+	}, os.Interrupt, syscall.SIGTERM)
 }
 
 func initProfile(profile string) {

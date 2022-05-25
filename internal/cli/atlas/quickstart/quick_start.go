@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"os/signal"
 	"strconv"
 	"strings"
 	"syscall"
@@ -31,6 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
+	"github.com/mongodb/mongodb-atlas-cli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -305,14 +305,14 @@ func askMongoShellAndSetConfig() error {
 // setupCloseHandler creates a 'listener' on a new goroutine which will notify the
 // program if it receives an interrupt from the OS. We then handle this by printing
 // the dbUsername and dbPassword.
-func (opts *Opts) setupCloseHandler(_ *cobra.Command) {
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	go func() {
-		<-c
+func (opts *Opts) setupCloseHandler(cmd *cobra.Command) {
+	sighandle.Notify(func(sig os.Signal) {
 		fmt.Printf(quickstartTemplateCloseHandler, opts.ClusterName)
+		telemetry.TrackCommand(telemetry.TrackOptions{
+			Cmd: cmd,
+		})
 		os.Exit(0)
-	}()
+	}, os.Interrupt, syscall.SIGTERM)
 }
 
 func (opts *Opts) providerAndRegionToConstant() {

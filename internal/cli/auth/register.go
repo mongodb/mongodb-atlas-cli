@@ -78,6 +78,9 @@ type registerAuthenticator struct {
 func (ra *registerAuthenticator) RequestCode(ctx context.Context) (*auth.DeviceCode, *atlas.Response, error) {
 	// TODO:CLOUDP-121210 - Replace with new request and remove URI override.
 	code, response, err := ra.authenticator.RequestCode(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	if ra.isGov {
 		code.VerificationURI = govAccountURI
@@ -85,7 +88,7 @@ func (ra *registerAuthenticator) RequestCode(ctx context.Context) (*auth.DeviceC
 		code.VerificationURI = accountURI
 	}
 
-	return code, response, err
+	return code, response, nil
 }
 
 func (ra *registerAuthenticator) PollToken(ctx context.Context, code *auth.DeviceCode) (*auth.Token, *atlas.Response, error) {
@@ -129,7 +132,7 @@ func registerPreRun() error {
 }
 
 func RegisterBuilder() *cobra.Command {
-	opts := newRegisterOpts(&LoginOpts{})
+	opts := newRegisterOpts(NewLoginOpts())
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",

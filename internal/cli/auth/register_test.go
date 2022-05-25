@@ -129,5 +129,5 @@ Successfully logged in as test@10gen.com.
 func TestRegisterPreRun(t *testing.T) {
 	config.SetPublicAPIKey("public")
 	config.SetPrivateAPIKey("private")
-	require.ErrorContains(t, registerPreRun(), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), WithProfileMsg)
+	require.ErrorContains(t, registerPreRun(), fmt.Sprintf(AlreadyAuthenticatedError, "public"), WithProfileMsg)
 }

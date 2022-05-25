@@ -48,10 +48,12 @@ type LoginConfig interface {
 }
 
 const (
-	AlreadyAuthenticatedMsg      = "you are already authenticated with an API key (Public key: %s)"
-	AlreadyAuthenticatedEmailMsg = "you are already authenticated with an account (%s)"
-	LoginWithProfileMsg          = `run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile`
-	LogoutToLoginAccountMsg      = `run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile`
+	AlreadyAuthenticatedError      = "you are already authenticated with an API key (Public key: %s)"
+	AlreadyAuthenticatedMsg        = "You are already authenticated with an API key (Public key: %s)."
+	AlreadyAuthenticatedEmailError = "you are already authenticated with an account (%s)"
+	AlreadyAuthenticatedEmailMsg   = "You are already authenticated with an account (%s)."
+	LoginWithProfileMsg            = `run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile`
+	LogoutToLoginAccountMsg        = `run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile`
 )
 
 type LoginOpts struct {
@@ -263,7 +265,7 @@ func hasUserProgrammaticKeys() bool {
 
 func loginPreRun(ctx context.Context) error {
 	if hasUserProgrammaticKeys() {
-		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
+		msg := fmt.Sprintf(AlreadyAuthenticatedError, config.PublicAPIKey())
 		return fmt.Errorf(`%s
 
 %s`, msg, LoginWithProfileMsg)
@@ -271,7 +273,7 @@ func loginPreRun(ctx context.Context) error {
 
 	if account, err := AccountWithAccessToken(); err == nil {
 		if err := cli.RefreshToken(ctx); err == nil && validate.Token() == nil {
-			msg := fmt.Sprintf(AlreadyAuthenticatedEmailMsg, account)
+			msg := fmt.Sprintf(AlreadyAuthenticatedEmailError, account)
 			return fmt.Errorf(`%s
 
 %s`, msg, LogoutToLoginAccountMsg)

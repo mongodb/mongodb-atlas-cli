@@ -29,13 +29,10 @@ func (opts *Opts) askConfirmDefaultQuestion(values *quickstart) error {
 
 	loadSampleData := ""
 	if !opts.SkipSampleData {
-		loadSampleData = `
-Load sample data:			Yes`
+		loadSampleData = loadSampleDataMsg
 	}
 
 	clusterTier := ""
-	clusterDisk := ""
-
 	if opts.Tier != DefaultAtlasTier {
 		diskSize := 0.5
 
@@ -51,14 +48,15 @@ Cluster Disk Size (GiB):		%.1f`, opts.Tier, diskSize)
 [Default Settings]
 Cluster Name:				%s%s
 Cloud Provider and Region:		%s
-Database User Username:			%s
-Allow connections from (IP Address):	%s%s`,
+Database User Username:			%s%s
+Allow connections from (IP Address):	%s
+`,
 		values.ClusterName,
-		clusterTier+clusterDisk,
+		clusterTier,
 		values.Provider+" - "+values.Region,
 		values.DBUsername,
-		strings.Join(values.IPAddresses, ", "),
 		loadSampleData,
+		strings.Join(values.IPAddresses, ", "),
 	)
 
 	q := newClusterDefaultConfirm()

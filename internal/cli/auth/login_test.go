@@ -162,7 +162,7 @@ func TestLoginPreRun(t *testing.T) {
 	ctx := context.TODO()
 	config.SetPublicAPIKey("public")
 	config.SetPrivateAPIKey("private")
-	require.ErrorContains(t, loginPreRun(ctx), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), LoginWithProfileMsg)
+	require.ErrorContains(t, loginPreRun(ctx), fmt.Sprintf(AlreadyAuthenticatedError, "public"), LoginWithProfileMsg)
 }
 
 func Test_loginOpts_oauthFlow(t *testing.T) {

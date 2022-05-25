@@ -309,7 +309,8 @@ func (opts *Opts) setupCloseHandler(cmd *cobra.Command) {
 	sighandle.Notify(func(sig os.Signal) {
 		fmt.Printf(quickstartTemplateCloseHandler, opts.ClusterName)
 		telemetry.TrackCommand(telemetry.TrackOptions{
-			Cmd: cmd,
+			Cmd:    cmd,
+			Signal: sig.String(),
 		})
 		os.Exit(0)
 	}, os.Interrupt, syscall.SIGTERM)

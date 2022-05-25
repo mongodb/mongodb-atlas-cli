@@ -82,8 +82,9 @@ type Notifier struct {
 func handleSignal(cmd *cobra.Command) {
 	sighandle.Notify(func(sig os.Signal) {
 		telemetry.TrackCommand(telemetry.TrackOptions{
-			Cmd: cmd,
-			Err: errors.New(sig.String()),
+			Cmd:    cmd,
+			Err:    errors.New(sig.String()),
+			Signal: sig.String(),
 		})
 		os.Exit(1)
 	}, os.Interrupt, syscall.SIGTERM)

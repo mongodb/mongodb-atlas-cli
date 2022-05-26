@@ -28,6 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -66,7 +67,7 @@ func Test_setupOpts_Run(t *testing.T) {
 
 	mockQuickstartFlow.
 		EXPECT().
-		Run().
+		Run(gomock.Any()).
 		Return(nil).
 		Times(1)
 
@@ -76,7 +77,7 @@ func Test_setupOpts_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	require.NoError(t, opts.Run(ctx))
+	require.NoError(t, opts.Run(ctx, &cobra.Command{Use: "test"}))
 }
 
 func Test_setupOpts_RunWithAPIKeys(t *testing.T) {
@@ -100,7 +101,7 @@ func Test_setupOpts_RunWithAPIKeys(t *testing.T) {
 
 	mockQuickstartFlow.
 		EXPECT().
-		Run().
+		Run(gomock.Any()).
 		Return(nil).
 		Times(1)
 
@@ -111,7 +112,7 @@ func Test_setupOpts_RunWithAPIKeys(t *testing.T) {
 		Times(1)
 
 	require.NoError(t, opts.PreRun(ctx))
-	require.NoError(t, opts.Run(ctx))
+	require.NoError(t, opts.Run(ctx, &cobra.Command{Use: "test2"}))
 	assert.Equal(t, `
 You are already authenticated with an API key (Public key: publicKey).
 
@@ -148,7 +149,7 @@ func Test_setupOpts_RunSkipRegister(t *testing.T) {
 
 	mockQuickstartFlow.
 		EXPECT().
-		Run().
+		Run(gomock.Any()).
 		Return(nil).
 		Times(1)
 
@@ -160,5 +161,5 @@ func Test_setupOpts_RunSkipRegister(t *testing.T) {
 
 	require.NoError(t, opts.PreRun(ctx))
 	assert.Equal(t, opts.skipRegister, true)
-	require.NoError(t, opts.Run(ctx))
+	require.NoError(t, opts.Run(ctx, &cobra.Command{Use: "test3"}))
 }

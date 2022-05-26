@@ -15,9 +15,9 @@
 package decryption
 
 import (
-	"fmt"
 	"io"
-	"os"
+
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 )
 
 func ListKeyProviders(logReader io.ReadSeeker) ([]*AuditLogLineKeyStoreIdentifier, error) {
@@ -32,7 +32,7 @@ func ListKeyProviders(logReader io.ReadSeeker) ([]*AuditLogLineKeyStoreIdentifie
 		lineNb := idx + 1
 		logLine, err := logLineScanner.AuditLogLine()
 		if err != nil {
-			if _, printErr := fmt.Fprintf(os.Stderr, "error parsing line %d, %v", lineNb, err); printErr != nil {
+			if _, printErr := log.Warningf("error parsing line %d, %v", lineNb, err); printErr != nil {
 				return nil, printErr
 			}
 			continue
@@ -46,7 +46,7 @@ func ListKeyProviders(logReader io.ReadSeeker) ([]*AuditLogLineKeyStoreIdentifie
 	}
 	if err := logLineScanner.Err(); err != nil {
 		lineNb := idx + 1
-		if _, printErr := fmt.Fprintf(os.Stderr, "error parsing line %d, %v", lineNb, err); printErr != nil {
+		if _, printErr := log.Warningf("error parsing line %d, %v", lineNb, err); printErr != nil {
 			return nil, printErr
 		}
 	}

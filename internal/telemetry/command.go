@@ -18,6 +18,7 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/spf13/cobra"
 )
 
@@ -34,14 +35,14 @@ func TrackCommand(opt TrackOptions, args ...string) {
 	}
 	t, err := newTracker(opt.Cmd.Context())
 	if err != nil {
-		logError(err)
+		_, _ = log.Debugf("telemetry: failed to create tracker: %v\n", err)
 		return
 	}
 
 	checkHelp(&opt, args...)
 
 	if err = t.trackCommand(opt); err != nil {
-		logError(err)
+		_, _ = log.Debugf("telemetry: failed to track command: %v\n", err)
 	}
 }
 
@@ -51,6 +52,7 @@ func checkHelp(opt *TrackOptions, args ...string) {
 	}
 	cmd, _, err := opt.Cmd.Root().Find(args)
 	if err != nil {
+		_, _ = log.Debugf("telemetry: failed to find help command: %v\n", err)
 		return
 	}
 	opt.extraProps = map[string]interface{}{

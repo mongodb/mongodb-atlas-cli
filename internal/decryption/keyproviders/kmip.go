@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/aes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/kmip"
 	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/pem"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -67,7 +68,7 @@ var (
 
 func (ki *KMIPKeyIdentifier) ValidateCredentials() error {
 	if ki.ServerCAFileName == "" || ki.ClientCertificateFileName == "" {
-		_, err := fmt.Fprintf(os.Stderr, `No credentials found for resource: KMIP uniqueKeyID="%v" serverNames="%v" serverPort="%v" keyWrapMethod="%v"
+		_, err := log.Warningf(`No credentials found for resource: KMIP uniqueKeyID="%v" serverNames="%v" serverPort="%v" keyWrapMethod="%v"
 `, ki.UniqueKeyID, strings.Join(ki.ServerNames, "; "), ki.ServerPort, ki.KeyWrapMethod)
 		if err != nil {
 			return err

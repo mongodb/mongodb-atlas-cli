@@ -17,10 +17,10 @@ package keyproviders
 import (
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/aes"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 )
 
 // LocalKeyIdentifier config for the localKey used to encrypt the Log Encryption Key (LEK).
@@ -38,7 +38,7 @@ var ErrLocalKeyCredentialMissing = errors.New("filename missing")
 
 func (ki *LocalKeyIdentifier) ValidateCredentials() error {
 	if ki.Filename == "" {
-		fmt.Fprintf(os.Stderr, `No credentials found for resource: LocalKey filename="%v"
+		_, _ = log.Warningf(`No credentials found for resource: LocalKey filename="%v"
 `, ki.HeaderFilename)
 
 		f, err := provideInput("Provide key filename:", "")

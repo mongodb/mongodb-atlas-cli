@@ -326,4 +326,5 @@ const (
 	DecryptAWSSecretKey                      = "AWS Secret Access Key  that is part of long-term credentials." //nolint:gosec // This is just a message not a credential
 	AWSSessionToken                          = "AWS session token used with temporary security credentials."   //nolint:gosec // This is just a message not a credential
 	Keep                                     = "If specified, skips deleting config file."
+	Debug                                    = "Debug log level."
 )

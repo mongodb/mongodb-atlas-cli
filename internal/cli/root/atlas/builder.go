@@ -60,6 +60,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/internal/latestrelease"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
@@ -103,6 +104,7 @@ func initProfile(profile string) {
 // Builder conditionally adds children commands as needed.
 func Builder() *cobra.Command {
 	var profile string
+	var debugLevel bool
 
 	rootCmd := &cobra.Command{
 		Version: version.Version,
@@ -118,6 +120,11 @@ func Builder() *cobra.Command {
 			"toc": "true",
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			log.SetOutput(cmd.ErrOrStderr())
+			if debugLevel {
+				log.SetLevel(log.DebugLevel)
+			}
+
 			handleSignal(cmd)
 
 			initProfile(profile)
@@ -212,6 +219,8 @@ func Builder() *cobra.Command {
 	)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
+	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
+	_ = rootCmd.PersistentFlags().MarkHidden(flag.Debug)
 
 	return rootCmd
 }

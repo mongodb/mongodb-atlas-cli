@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"os/signal"
 	"strconv"
 	"strings"
 	"syscall"
@@ -32,6 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
+	"github.com/mongodb/mongodb-atlas-cli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -110,6 +110,7 @@ type quickstart struct {
 	ClusterName    string
 	Provider       string
 	Region         string
+	Tier           string
 	DBUsername     string
 	DBUserPassword string
 	IPAddresses    []string
@@ -119,7 +120,7 @@ type quickstart struct {
 
 type Flow interface {
 	PreRun(ctx context.Context, outWriter io.Writer) error
-	Run() error
+	Run(cmd *cobra.Command) error
 }
 
 func (opts *Opts) initStore(ctx context.Context) func() error {
@@ -144,7 +145,7 @@ func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
 	)
 }
 
-func (opts *Opts) Run() error {
+func (opts *Opts) Run(cmd *cobra.Command) error {
 	const base10 = 10
 	opts.defaultName = "Cluster" + strconv.FormatInt(time.Now().Unix(), base10)[5:]
 	opts.providerAndRegionToConstant()
@@ -182,7 +183,7 @@ func (opts *Opts) Run() error {
 `, opts.ClusterName)
 
 	fmt.Printf(quickstartTemplateStoreWarning, opts.DBUsername, opts.DBUserPassword)
-	opts.setupCloseHandler()
+	opts.setupCloseHandler(cmd)
 
 	fmt.Print(quickstartTemplateCluster)
 
@@ -306,14 +307,15 @@ func askMongoShellAndSetConfig() error {
 // setupCloseHandler creates a 'listener' on a new goroutine which will notify the
 // program if it receives an interrupt from the OS. We then handle this by printing
 // the dbUsername and dbPassword.
-func (opts *Opts) setupCloseHandler() {
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	go func() {
-		<-c
+func (opts *Opts) setupCloseHandler(cmd *cobra.Command) {
+	sighandle.Notify(func(sig os.Signal) {
 		fmt.Printf(quickstartTemplateCloseHandler, opts.ClusterName)
+		telemetry.TrackCommand(telemetry.TrackOptions{
+			Cmd:    cmd,
+			Signal: sig.String(),
+		})
 		os.Exit(0)
-	}()
+	}, os.Interrupt, syscall.SIGTERM)
 }
 
 func (opts *Opts) providerAndRegionToConstant() {
@@ -372,6 +374,8 @@ func (opts *Opts) newDefaultValues() (*quickstart, error) {
 			_, _ = log.Warningf(quickstartTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
 		}
 	}
+
+	values.Tier = opts.Tier
 
 	return values, nil
 }
@@ -447,7 +451,7 @@ func Builder() *cobra.Command {
 			return opts.PreRun(cmd.Context(), cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd)
 		},
 	}
 

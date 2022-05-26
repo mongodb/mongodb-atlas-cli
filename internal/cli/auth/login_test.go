@@ -148,7 +148,7 @@ func Test_loginOpts_Run(t *testing.T) {
 	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(0)
 	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `
-To verify your account, copy your one-time code:
+To verify your account, copy your one-time verification code:
 1234-5678
 
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
@@ -162,7 +162,7 @@ func TestLoginPreRun(t *testing.T) {
 	ctx := context.TODO()
 	config.SetPublicAPIKey("public")
 	config.SetPrivateAPIKey("private")
-	require.ErrorContains(t, loginPreRun(ctx), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), LoginWithProfileMsg)
+	require.ErrorContains(t, loginPreRun(ctx), fmt.Sprintf(AlreadyAuthenticatedError, "public"), LoginWithProfileMsg)
 }
 
 func Test_loginOpts_oauthFlow(t *testing.T) {
@@ -216,7 +216,7 @@ func Test_loginOpts_oauthFlow(t *testing.T) {
 		assert.Equal(t, opts.AccessToken, expectedToken.AccessToken)
 		assert.Equal(t, opts.RefreshToken, expectedToken.RefreshToken)
 		assert.Equal(t, `
-To verify your account, copy your one-time code:
+To verify your account, copy your one-time verification code:
 1234-5678
 
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
@@ -272,7 +272,7 @@ To continue, go to http://localhost
 		err := opts.oauthFlow(ctx)
 		assert.Equal(t, err, auth.ErrTimeout)
 		assert.Equal(t, `
-To verify your account, copy your one-time code:
+To verify your account, copy your one-time verification code:
 1234-5678
 
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
@@ -280,7 +280,7 @@ Paste the code in the browser when prompted to activate your Atlas CLI. Your cod
 To continue, go to http://localhost
 ? Your one-time verification code is expired. Would you like to generate a new one? (Y/n)
 
-To verify your account, copy your one-time code:
+To verify your account, copy your one-time verification code:
 1234-5678
 
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.

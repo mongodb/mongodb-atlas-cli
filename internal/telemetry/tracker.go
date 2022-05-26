@@ -69,6 +69,9 @@ func newTracker(ctx context.Context) (*tracker, error) {
 
 func (t *tracker) trackCommand(data TrackOptions) error {
 	options := []eventOpt{withCommandPath(data.Cmd), withDuration(data.Cmd), withFlags(data.Cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(data.Cmd), withOrgID(data.Cmd), withTerminal(), withInstaller(t.fs), withExtraProps(data.extraProps)}
+	if data.Signal != "" {
+		options = append(options, withSignal(data.Signal))
+	}
 	if data.Err != nil {
 		options = append(options, withError(data.Err))
 	}
@@ -124,7 +127,7 @@ func (t *tracker) save(event Event) error {
 		return err
 	}
 	defer file.Close()
-	data, err := json.MarshalIndent(event, "", "  ")
+	data, err := json.Marshal(event)
 	if err != nil {
 		return err
 	}

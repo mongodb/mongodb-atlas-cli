@@ -226,6 +226,12 @@ func withError(err error) eventOpt {
 	}
 }
 
+func withSignal(s string) eventOpt {
+	return func(event Event) {
+		event.Properties["signal"] = s
+	}
+}
+
 func withExtraProps(props map[string]interface{}) eventOpt {
 	return func(event Event) {
 		for k, v := range props {

@@ -23,20 +23,15 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/root/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/spf13/cobra"
-)
-
-var (
-	profile string
 )
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	ctx := telemetry.NewContext()
-	rootCmd := atlas.Builder(&profile)
+	rootCmd := atlas.Builder()
 	if cmd, err := rootCmd.ExecuteContextC(ctx); err != nil {
 		telemetry.TrackCommand(telemetry.TrackOptions{
 			Cmd: cmd,
@@ -50,16 +45,6 @@ func Execute() {
 func loadConfig() {
 	if err := config.LoadAtlasCLIConfig(); err != nil {
 		log.Fatalf("Error loading config: %v", err)
-	}
-}
-
-func initProfile() {
-	if profile != "" {
-		config.SetName(profile)
-	} else if profile = config.GetString(flag.Profile); profile != "" {
-		config.SetName(profile)
-	} else if availableProfiles := config.List(); len(availableProfiles) == 1 {
-		config.SetName(availableProfiles[0])
 	}
 }
 
@@ -139,8 +124,6 @@ func main() {
 
 	createConfigFromMongoCLIConfig()
 	loadConfig()
-
-	cobra.OnInitialize(initProfile)
 
 	Execute()
 }

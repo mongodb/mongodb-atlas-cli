@@ -29,7 +29,7 @@ import (
 )
 
 const (
-	withProfileMsg = `run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`
+	withProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
 )
 
 type Opts struct {
@@ -46,13 +46,12 @@ type Opts struct {
 	skipLogin    bool
 }
 
-func (opts *Opts) Run(ctx context.Context) error {
+func (opts *Opts) Run(ctx context.Context, cmd *cobra.Command) error {
 	if !opts.skipRegister {
 		_, _ = fmt.Fprintf(opts.OutWriter, `
 This command will help you
 1. Create and verify your MongoDB Atlas account in your browser.
 2. Return to the terminal to create your first free MongoDB database in Atlas.
-
 `)
 		if err := opts.register.Run(ctx); err != nil {
 			return err
@@ -72,7 +71,7 @@ This command will help you
 		return err
 	}
 
-	return opts.quickstart.Run()
+	return opts.quickstart.Run(cmd)
 }
 
 func (opts *Opts) PreRun(ctx context.Context) error {
@@ -157,7 +156,7 @@ func Builder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd)
 		},
 	}
 

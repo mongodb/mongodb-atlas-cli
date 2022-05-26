@@ -30,8 +30,9 @@ import (
 //go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth RegisterFlow
 
 const (
-	accountURI     = "https://account.mongodb.com/account/register/cli?n=/account/connect&nRegister=/account/connect"
-	govAccountURI  = "https://account.mongodbgov.com/account/register/cli?n=/account/connect&nRegister=/account/connect"
+	baseURI        = "https://account.mongodb.com/"
+	govBaseURI     = "https://account.mongodbgov.com/"
+	accountParams  = "account/register/cli?n=/account/connect&nRegister=/account/connect"
 	WithProfileMsg = `run "atlas auth register --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`
 )
 
@@ -78,14 +79,21 @@ type registerAuthenticator struct {
 func (ra *registerAuthenticator) RequestCode(ctx context.Context) (*auth.DeviceCode, *atlas.Response, error) {
 	// TODO:CLOUDP-121210 - Replace with new request and remove URI override.
 	code, response, err := ra.authenticator.RequestCode(ctx)
-
-	if ra.isGov {
-		code.VerificationURI = govAccountURI
-	} else {
-		code.VerificationURI = accountURI
+	if err != nil {
+		return code, response, err
 	}
 
-	return code, response, err
+	if config.OpsManagerURL() == "" {
+		if ra.isGov {
+			code.VerificationURI = govBaseURI + accountParams
+		} else {
+			code.VerificationURI = baseURI + accountParams
+		}
+	} else {
+		code.VerificationURI = config.OpsManagerURL() + accountParams
+	}
+
+	return code, response, nil
 }
 
 func (ra *registerAuthenticator) PollToken(ctx context.Context, code *auth.DeviceCode) (*auth.Token, *atlas.Response, error) {
@@ -113,14 +121,14 @@ func (opts *registerOpts) PreRun(outWriter io.Writer) error {
 
 func registerPreRun() error {
 	if hasUserProgrammaticKeys() {
-		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
+		msg := fmt.Sprintf(AlreadyAuthenticatedError, config.PublicAPIKey())
 		return fmt.Errorf(`%s
 
 %s`, msg, WithProfileMsg)
 	}
 
 	if account, err := AccountWithAccessToken(); err == nil {
-		msg := fmt.Sprintf(AlreadyAuthenticatedEmailMsg, account)
+		msg := fmt.Sprintf(AlreadyAuthenticatedEmailError, account)
 		return fmt.Errorf(`%s
 
 %s`, msg, WithProfileMsg)
@@ -129,7 +137,7 @@ func registerPreRun() error {
 }
 
 func RegisterBuilder() *cobra.Command {
-	opts := newRegisterOpts(&LoginOpts{})
+	opts := newRegisterOpts(NewLoginOpts())
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",

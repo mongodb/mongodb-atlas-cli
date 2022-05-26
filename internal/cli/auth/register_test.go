@@ -114,7 +114,7 @@ func Test_registerOpts_Run(t *testing.T) {
 
 	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `
-To verify your account, copy your one-time code:
+To verify your account, copy your one-time verification code:
 1234-5678
 
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
@@ -129,5 +129,5 @@ Successfully logged in as test@10gen.com.
 func TestRegisterPreRun(t *testing.T) {
 	config.SetPublicAPIKey("public")
 	config.SetPrivateAPIKey("private")
-	require.ErrorContains(t, registerPreRun(), fmt.Sprintf(AlreadyAuthenticatedMsg, "public"), WithProfileMsg)
+	require.ErrorContains(t, registerPreRun(), fmt.Sprintf(AlreadyAuthenticatedError, "public"), WithProfileMsg)
 }

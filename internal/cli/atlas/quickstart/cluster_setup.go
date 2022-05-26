@@ -27,6 +27,8 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
+var ErrNoRegions = errors.New("no regions found for cloud provider")
+
 func (opts *Opts) createCluster() error {
 	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
 		return err
@@ -69,6 +71,11 @@ func (opts *Opts) askClusterRegion() error {
 	if err != nil {
 		return err
 	}
+
+	if len(regions) == 0 {
+		return fmt.Errorf("%w: %v", ErrNoRegions, opts.Provider)
+	}
+
 	regionQ := newRegionQuestions(regions)
 	return telemetry.TrackAskOne(regionQ, &opts.Region, survey.WithValidator(survey.Required))
 }
@@ -79,6 +86,10 @@ func newRegionQuestions(defaultRegions []string) survey.Prompt {
 		Help:    usage.Region,
 		Options: defaultRegions,
 	}
+}
+
+func defaultDiskSizeGB(provider, tier string) float64 {
+	return atlas.DefaultDiskSizeGB[strings.ToUpper(provider)][tier]
 }
 
 func (opts *Opts) newCluster() *atlas.AdvancedCluster {
@@ -96,7 +107,7 @@ func (opts *Opts) newCluster() *atlas.AdvancedCluster {
 	}
 
 	if opts.providerName() != tenant {
-		diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(opts.providerName())][opts.Tier]
+		diskSizeGB := defaultDiskSizeGB(opts.providerName(), opts.Tier)
 		mdbVersion, _ := cli.DefaultMongoDBMajorVersion()
 		cluster.DiskSizeGB = &diskSizeGB
 		cluster.MongoDBMajorVersion = mdbVersion
@@ -120,6 +131,7 @@ func (opts *Opts) newAdvanceReplicationSpec() *atlas.AdvancedReplicationSpec {
 
 const (
 	tenant  = "TENANT"
+	atlasM2 = "M2"
 	atlasM5 = "M5"
 )
 
@@ -147,11 +159,19 @@ func (opts *Opts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
 	return &regionConfig
 }
 
-func (opts *Opts) providerName() string {
-	if opts.Tier == DefaultAtlasTier || opts.Tier == atlasM5 {
+func providerName(tier, provider string) string {
+	if tier == DefaultAtlasTier || tier == atlasM2 || tier == atlasM5 {
 		return tenant
 	}
-	return strings.ToUpper(opts.Provider)
+	return strings.ToUpper(provider)
+}
+
+func (opts *Opts) providerName() string {
+	return providerName(opts.Tier, opts.Provider)
+}
+
+func (opts *quickstart) providerName() string {
+	return providerName(opts.Tier, opts.Provider)
 }
 
 func (opts *Opts) defaultRegions() ([]string, error) {

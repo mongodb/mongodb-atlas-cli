@@ -10,6 +10,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	cobra "github.com/spf13/cobra"
 )
 
 // MockFlow is a mock of Flow interface.
@@ -50,15 +51,15 @@ func (mr *MockFlowMockRecorder) PreRun(arg0, arg1 interface{}) *gomock.Call {
 }
 
 // Run mocks base method.
-func (m *MockFlow) Run() error {
+func (m *MockFlow) Run(arg0 *cobra.Command) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Run")
+	ret := m.ctrl.Call(m, "Run", arg0)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Run indicates an expected call of Run.
-func (mr *MockFlowMockRecorder) Run() *gomock.Call {
+func (mr *MockFlowMockRecorder) Run(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockFlow)(nil).Run))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockFlow)(nil).Run), arg0)
 }

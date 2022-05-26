@@ -25,6 +25,7 @@ import (
 type TrackOptions struct {
 	Cmd        *cobra.Command
 	Err        error
+	Signal     string
 	extraProps map[string]interface{}
 }
 

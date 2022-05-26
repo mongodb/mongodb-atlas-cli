@@ -424,3 +424,14 @@ func TestWithEmpty(t *testing.T) {
 	a := assert.New(t)
 	a.Equal(q, e.Properties["empty"])
 }
+
+func TestWithSignal(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
+	q := "interrupt"
+
+	e := newEvent(withSignal(q))
+
+	a := assert.New(t)
+	a.Equal(q, e.Properties["signal"])
+}

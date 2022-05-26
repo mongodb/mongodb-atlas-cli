@@ -34,16 +34,13 @@ func (opts *Opts) askConfirmDefaultQuestion(values *quickstart) error {
 
 	clusterTier := ""
 	if opts.Tier != DefaultAtlasTier {
-		diskSize := 0.5
-
-		if opts.newCluster().DiskSizeGB != nil {
-			diskSize = *opts.newCluster().DiskSizeGB
-		}
+		diskSize := defaultDiskSizeGB(values.providerName(), opts.Tier)
 
 		clusterTier = fmt.Sprintf(`
 Cluster Tier:				%s
 Cluster Disk Size (GiB):		%.1f`, opts.Tier, diskSize)
 	}
+
 	fmt.Printf(`
 [Default Settings]
 Cluster Name:				%s%s
@@ -59,7 +56,7 @@ Allow connections from (IP Address):	%s
 		strings.Join(values.IPAddresses, ", "),
 	)
 
-	q := newClusterDefaultConfirm()
+	q := newClusterDefaultConfirm(opts.Tier)
 	if err := telemetry.TrackAskOne(q, &opts.Confirm); err != nil {
 		return err
 	}

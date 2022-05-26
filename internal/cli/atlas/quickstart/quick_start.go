@@ -109,6 +109,7 @@ type quickstart struct {
 	ClusterName    string
 	Provider       string
 	Region         string
+	Tier           string
 	DBUsername     string
 	DBUserPassword string
 	IPAddresses    []string
@@ -371,6 +372,8 @@ func (opts *Opts) newDefaultValues() (*quickstart, error) {
 			_, _ = fmt.Fprintf(os.Stderr, quickstartTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
 		}
 	}
+
+	values.Tier = opts.Tier
 
 	return values, nil
 }

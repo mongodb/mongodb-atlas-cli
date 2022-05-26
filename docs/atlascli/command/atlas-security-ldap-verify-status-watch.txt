@@ -57,10 +57,6 @@ Inherited Options
      - Type
      - Required
      - Description
-   * - -D, --debug
-     - 
-     - false
-     - Debug log level.
    * - -P, --profile
      - string
      - false

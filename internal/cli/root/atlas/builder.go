@@ -190,6 +190,7 @@ func Builder(profile *string) *cobra.Command {
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
+	_ = rootCmd.PersistentFlags().MarkHidden(flag.Debug)
 
 	return rootCmd
 }

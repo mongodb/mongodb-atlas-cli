@@ -146,24 +146,6 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 	return &http.Client{Transport: tr}, nil
 }
 
-func (*Store) logResponse(method string, resp *atlas.Response) {
-	respHeaders := ""
-	for key, value := range resp.Header {
-		respHeaders += fmt.Sprintf("%v: %v\n", key, strings.Join(value, " "))
-	}
-
-	_, _ = log.Debugf(`**************
-store.%v
-**************
-%v %v
-**************
-%v %v
-%v
-%v
-**************
-`, method, resp.Request.Method, resp.Request.URL.Path, resp.Proto, resp.Status, respHeaders, string(resp.Raw))
-}
-
 type Transport struct {
 	token *atlasauth.Token
 	base  http.RoundTripper
@@ -295,6 +277,20 @@ func (s *Store) setAtlasClient(client *http.Client) error {
 	if err != nil {
 		return err
 	}
+	c.OnAfterRequestCompleted(func(resp *atlas.Response) {
+		respHeaders := ""
+		for key, value := range resp.Header {
+			respHeaders += fmt.Sprintf("%v: %v\n", key, strings.Join(value, " "))
+		}
+
+		_, _ = log.Debugf(`request:
+%v %v
+response:
+%v %v
+%v
+%v
+`, resp.Request.Method, resp.Request.URL.Path, resp.Proto, resp.Status, respHeaders, string(resp.Raw))
+	})
 	s.client = c
 	return nil
 }

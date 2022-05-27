@@ -52,6 +52,10 @@ type DefaultSetterOpts struct {
 }
 
 func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {
+	if opts.Store != nil {
+		return nil
+	}
+
 	var err error
 	opts.Store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 	return err

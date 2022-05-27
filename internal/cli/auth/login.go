@@ -150,9 +150,6 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 		return opts.config.Save()
 	}
 
-	_, _ = fmt.Fprint(opts.OutWriter, "Press Enter to continue your profile configuration")
-	_, _ = fmt.Scanln()
-
 	if err := opts.setUpProfile(ctx); err != nil {
 		return err
 	}

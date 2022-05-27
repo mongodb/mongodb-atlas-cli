@@ -70,10 +70,12 @@ type ProjectTeamDeleter interface {
 func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(s.ctx, opts)
+		result, resp, err := s.client.(*atlas.Client).Projects.GetAllProjects(s.ctx, opts)
+		s.logResponse("Projects", resp)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.List(s.ctx, opts)
+		result, resp, err := s.client.(*opsmngr.Client).Projects.List(s.ctx, opts)
+		s.logResponse("Projects", resp)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

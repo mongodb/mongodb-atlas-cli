@@ -23,10 +23,12 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
@@ -142,6 +144,24 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 	}
 
 	return &http.Client{Transport: tr}, nil
+}
+
+func (*Store) logResponse(method string, resp *atlas.Response) {
+	respHeaders := ""
+	for key, value := range resp.Header {
+		respHeaders += fmt.Sprintf("%v: %v\n", key, strings.Join(value, " "))
+	}
+
+	_, _ = log.Debugf(`**************
+store.%v
+**************
+%v %v
+**************
+%v %v
+%v
+%v
+**************
+`, method, resp.Request.Method, resp.Request.URL.Path, resp.Proto, resp.Status, respHeaders, string(resp.Raw))
 }
 
 type Transport struct {
@@ -268,6 +288,9 @@ func (s *Store) setAtlasClient(client *http.Client) error {
 	if s.baseURL != "" {
 		opts = append(opts, atlas.SetBaseURL(s.baseURL))
 	}
+	if log.IsDebugLevel() {
+		opts = append(opts, atlas.SetWithRaw())
+	}
 	c, err := atlas.New(client, opts...)
 	if err != nil {
 		return err
@@ -281,6 +304,9 @@ func (s *Store) setOpsManagerClient(client *http.Client) error {
 	opts := []opsmngr.ClientOpt{opsmngr.SetUserAgent(config.UserAgent)}
 	if s.baseURL != "" {
 		opts = append(opts, opsmngr.SetBaseURL(s.baseURL))
+	}
+	if log.IsDebugLevel() {
+		opts = append(opts, opsmngr.SetWithRaw())
 	}
 	c, err := opsmngr.New(client, opts...)
 	if err != nil {

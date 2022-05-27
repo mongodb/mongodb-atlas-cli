@@ -171,13 +171,18 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 		return err
 	}
 
-	if err := opts.AskOrgIfCurrentNotAvailable(config.OrgID()); err != nil {
-		return err
+	if config.OrgID() == "" || !opts.OrgExists(config.OrgID()) {
+		if err := opts.AskOrg(); err != nil {
+			return err
+		}
 	}
+
 	opts.SetUpOrg()
 
-	if err := opts.AskProjectIfCurrentNotAvailable(config.ProjectID()); err != nil {
-		return err
+	if config.ProjectID() == "" || !opts.ProjectExists(config.ProjectID()) {
+		if err := opts.AskProject(); err != nil {
+			return err
+		}
 	}
 	opts.SetUpProject()
 

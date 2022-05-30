@@ -166,7 +166,11 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 		return err
 	}
 	// Initialize the text to be displayed if users are asked to select orgs or projects
-	opts.AskOrgsAndProjectsText = "\nYou have multiple organizations or projects, select one to proceed.\n"
+	opts.OnMultipleOrgsOrProjects = func() {
+		if !opts.AskedOrgsOrProjects {
+			_, _ = fmt.Fprintf(opts.OutWriter, "\nYou have multiple organizations or projects, select one to proceed.\n")
+		}
+	}
 
 	if config.OrgID() == "" || !opts.OrgExists(config.OrgID()) {
 		if err := opts.AskOrg(); err != nil {

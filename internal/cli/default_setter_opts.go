@@ -42,17 +42,17 @@ type ProjectOrgsLister interface {
 }
 
 type DefaultSetterOpts struct {
-	Service                string
-	OpsManagerURL          string
-	ProjectID              string
-	OrgID                  string
-	MongoShellPath         string
-	TelemetryEnabled       bool
-	Output                 string
-	Store                  ProjectOrgsLister
-	OutWriter              io.Writer
-	AskedOrgsOrProjects    bool
-	AskOrgsAndProjectsText string
+	Service                  string
+	OpsManagerURL            string
+	ProjectID                string
+	OrgID                    string
+	MongoShellPath           string
+	TelemetryEnabled         bool
+	Output                   string
+	Store                    ProjectOrgsLister
+	OutWriter                io.Writer
+	AskedOrgsOrProjects      bool
+	OnMultipleOrgsOrProjects func()
 }
 
 func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {
@@ -188,7 +188,7 @@ func (opts *DefaultSetterOpts) AskProject() error {
 	if len(pSlice) == 1 {
 		opts.ProjectID = pMap[pSlice[0]]
 	} else {
-		opts.displayInitialSelectText()
+		opts.OnMultipleOrgsOrProjects()
 		p := prompt.NewProjectSelect(pSlice)
 		var projectID string
 		if err := telemetry.TrackAskOne(p, &projectID); err != nil {
@@ -207,12 +207,6 @@ func (opts *DefaultSetterOpts) OrgExists(id string) bool {
 		return false
 	}
 	return true
-}
-
-func (opts *DefaultSetterOpts) displayInitialSelectText() {
-	if !opts.AskedOrgsOrProjects && opts.AskOrgsAndProjectsText != "" {
-		_, _ = fmt.Fprintf(opts.OutWriter, "%s", opts.AskOrgsAndProjectsText)
-	}
 }
 
 // AskOrg will try to construct a select based on fetched organizations.
@@ -251,7 +245,7 @@ func (opts *DefaultSetterOpts) AskOrg() error {
 	if len(oSlice) == 1 {
 		opts.OrgID = oMap[oSlice[0]]
 	} else {
-		opts.displayInitialSelectText()
+		opts.OnMultipleOrgsOrProjects()
 		p := prompt.NewOrgSelect(oSlice)
 		var orgID string
 		if err := telemetry.TrackAskOne(p, &orgID); err != nil {

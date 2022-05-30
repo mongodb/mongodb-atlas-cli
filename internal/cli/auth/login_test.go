@@ -153,9 +153,6 @@ Paste the code in the browser when prompted to activate your Atlas CLI. Your cod
 
 To continue, go to http://localhost
 Successfully logged in as test@10gen.com.
-
-Your profile is now configured.
-You can use [mongocli config set] to change these settings at a later time.
 `, buf.String())
 }
 

@@ -42,15 +42,16 @@ type ProjectOrgsLister interface {
 }
 
 type DefaultSetterOpts struct {
-	Service          string
-	OpsManagerURL    string
-	ProjectID        string
-	OrgID            string
-	MongoShellPath   string
-	TelemetryEnabled bool
-	Output           string
-	Store            ProjectOrgsLister
-	OutWriter        io.Writer
+	Service             string
+	OpsManagerURL       string
+	ProjectID           string
+	OrgID               string
+	MongoShellPath      string
+	TelemetryEnabled    bool
+	Output              string
+	Store               ProjectOrgsLister
+	OutWriter           io.Writer
+	AskedOrgsOrProjects bool
 }
 
 func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {
@@ -174,6 +175,7 @@ func (opts *DefaultSetterOpts) AskProject() error {
 		if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
 			return err2
 		}
+		opts.AskedOrgsOrProjects = true
 		if manually {
 			p := prompt.NewProjectIDInput()
 			return telemetry.TrackAskOne(p, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
@@ -181,8 +183,6 @@ func (opts *DefaultSetterOpts) AskProject() error {
 		_, _ = fmt.Fprint(opts.OutWriter, "Skipping default project setting\n")
 		return nil
 	}
-
-	fmt.Println("projects", pSlice)
 
 	if len(pSlice) == 1 {
 		opts.ProjectID = pMap[pSlice[0]]
@@ -193,6 +193,7 @@ func (opts *DefaultSetterOpts) AskProject() error {
 			return err
 		}
 		opts.ProjectID = pMap[projectID]
+		opts.AskedOrgsOrProjects = true
 	}
 
 	return nil
@@ -230,6 +231,7 @@ func (opts *DefaultSetterOpts) AskOrg() error {
 		if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
 			return err2
 		}
+		opts.AskedOrgsOrProjects = true
 		if manually {
 			p := prompt.NewOrgIDInput()
 			return telemetry.TrackAskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
@@ -247,6 +249,7 @@ func (opts *DefaultSetterOpts) AskOrg() error {
 			return err
 		}
 		opts.OrgID = oMap[orgID]
+		opts.AskedOrgsOrProjects = true
 	}
 
 	return nil

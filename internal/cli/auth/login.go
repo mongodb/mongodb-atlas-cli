@@ -182,7 +182,7 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	opts.SetUpProject()
 
 	// Only make references to profile if user was asked about org or projects
-	if opts.AskedOrgsOrProjects {
+	if opts.AskedOrgsOrProjects && opts.ProjectID != "" && opts.OrgID != "" {
 		_, _ = fmt.Fprint(opts.OutWriter, "\nYour profile is now configured.\n")
 		_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.BinName())
 	}

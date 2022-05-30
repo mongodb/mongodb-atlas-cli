@@ -188,7 +188,7 @@ func (opts *DefaultSetterOpts) AskProject() error {
 	if len(pSlice) == 1 {
 		opts.ProjectID = pMap[pSlice[0]]
 	} else {
-		opts.OnMultipleOrgsOrProjects()
+		opts.runOnMultipleProjects()
 		p := prompt.NewProjectSelect(pSlice)
 		var projectID string
 		if err := telemetry.TrackAskOne(p, &projectID); err != nil {
@@ -245,7 +245,7 @@ func (opts *DefaultSetterOpts) AskOrg() error {
 	if len(oSlice) == 1 {
 		opts.OrgID = oMap[oSlice[0]]
 	} else {
-		opts.OnMultipleOrgsOrProjects()
+		opts.runOnMultipleProjects()
 		p := prompt.NewOrgSelect(oSlice)
 		var orgID string
 		if err := telemetry.TrackAskOne(p, &orgID); err != nil {
@@ -327,4 +327,10 @@ func (*DefaultSetterOpts) DefaultQuestions() []*survey.Question {
 		},
 	}
 	return q
+}
+
+func (opts *DefaultSetterOpts) runOnMultipleProjects() {
+	if opts.OnMultipleOrgsOrProjects != nil {
+		opts.OnMultipleOrgsOrProjects()
+	}
 }

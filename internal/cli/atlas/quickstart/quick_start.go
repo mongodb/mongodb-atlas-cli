@@ -130,6 +130,12 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 	}
 }
 
+func (opts *Opts) quickstartPreRun() error {
+	return opts.PreRunE(
+		opts.ValidateProjectID,
+	)
+}
+
 func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
 	opts.setTier()
 
@@ -138,7 +144,6 @@ func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
 	}
 
 	return opts.PreRunE(
-		opts.ValidateProjectID,
 		opts.initStore(ctx),
 		opts.InitOutput(outWriter, ""),
 	)
@@ -446,6 +451,9 @@ func Builder() *cobra.Command {
 		Example: fmt.Sprintf(`  Skip setting cluster name, provider or database username by using the command options:
   $ %s quickstart --clusterName Test --provider GCP --username dbuserTest`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := opts.quickstartPreRun(); err != nil {
+				return err
+			}
 			return opts.PreRun(cmd.Context(), cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

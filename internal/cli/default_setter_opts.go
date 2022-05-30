@@ -211,7 +211,7 @@ func (opts *DefaultSetterOpts) OrgExists(id string) bool {
 
 func (opts *DefaultSetterOpts) displayInitialSelectText() {
 	if !opts.AskedOrgsOrProjects && opts.AskOrgsAndProjectsText != "" {
-		_, _ = fmt.Fprint(opts.OutWriter, opts.AskOrgsAndProjectsText)
+		_, _ = fmt.Fprintf(opts.OutWriter, "%s",opts.AskOrgsAndProjectsText)
 	}
 }
 

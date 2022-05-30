@@ -49,6 +49,21 @@ func (mr *MockProjectOrgsListerMockRecorder) GetOrgProjects(arg0, arg1 interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrgProjects", reflect.TypeOf((*MockProjectOrgsLister)(nil).GetOrgProjects), arg0, arg1)
 }
 
+// Organization mocks base method.
+func (m *MockProjectOrgsLister) Organization(arg0 string) (*mongodbatlas.Organization, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Organization", arg0)
+	ret0, _ := ret[0].(*mongodbatlas.Organization)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Organization indicates an expected call of Organization.
+func (mr *MockProjectOrgsListerMockRecorder) Organization(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Organization", reflect.TypeOf((*MockProjectOrgsLister)(nil).Organization), arg0)
+}
+
 // Organizations mocks base method.
 func (m *MockProjectOrgsLister) Organizations(arg0 *mongodbatlas.OrganizationsListOptions) (*mongodbatlas.Organizations, error) {
 	m.ctrl.T.Helper()
@@ -62,6 +77,21 @@ func (m *MockProjectOrgsLister) Organizations(arg0 *mongodbatlas.OrganizationsLi
 func (mr *MockProjectOrgsListerMockRecorder) Organizations(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Organizations", reflect.TypeOf((*MockProjectOrgsLister)(nil).Organizations), arg0)
+}
+
+// Project mocks base method.
+func (m *MockProjectOrgsLister) Project(arg0 string) (interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Project", arg0)
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Project indicates an expected call of Project.
+func (mr *MockProjectOrgsListerMockRecorder) Project(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Project", reflect.TypeOf((*MockProjectOrgsLister)(nil).Project), arg0)
 }
 
 // Projects mocks base method.

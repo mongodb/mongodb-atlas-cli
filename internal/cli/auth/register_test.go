@@ -18,12 +18,19 @@
 package auth
 
 import (
+	"bytes"
+	"context"
 	"fmt"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.mongodb.org/atlas/auth"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestRegisterBuilder(t *testing.T) {
@@ -35,8 +42,6 @@ func TestRegisterBuilder(t *testing.T) {
 	)
 }
 
-// todo: CLOUDP-122551 re-enable this test
-/*
 func Test_registerOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockAuthenticator(ctrl)
@@ -50,10 +55,9 @@ func Test_registerOpts_Run(t *testing.T) {
 	buf := new(bytes.Buffer)
 	ctx := context.TODO()
 	loginOpts := &LoginOpts{
-		flow:       mockRegisterFlow,
-		config:     mockConfig,
-		NoBrowser:  true,
-		SkipConfig: true,
+		flow:      mockRegisterFlow,
+		config:    mockConfig,
+		NoBrowser: true,
 	}
 
 	opts := &registerOpts{
@@ -123,8 +127,6 @@ To continue, go to https://account.mongodb.com/account/register/cli?n=/account/c
 Successfully logged in as test@10gen.com.
 `, buf.String())
 }
-
-*/
 
 func TestRegisterPreRun(t *testing.T) {
 	config.SetPublicAPIKey("public")

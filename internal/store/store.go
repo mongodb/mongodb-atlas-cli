@@ -277,7 +277,7 @@ func (s *Store) setAtlasClient(client *http.Client) error {
 	if err != nil {
 		return err
 	}
-	c.OnAfterRequestCompleted(func(resp *atlas.Response) {
+	c.OnResponseProcessed(func(resp *atlas.Response) {
 		respHeaders := ""
 		for key, value := range resp.Header {
 			respHeaders += fmt.Sprintf("%v: %v\n", key, strings.Join(value, " "))

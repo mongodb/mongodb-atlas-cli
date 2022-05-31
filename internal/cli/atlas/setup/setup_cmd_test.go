@@ -62,7 +62,7 @@ func Test_setupOpts_Run(t *testing.T) {
 	mockRegFlow.
 		EXPECT().
 		Run(ctx).
-		Return(nil).
+		DoAndReturn(setConfig()).
 		Times(1)
 
 	mockQuickstartFlow.
@@ -144,7 +144,7 @@ func Test_setupOpts_RunSkipRegister(t *testing.T) {
 	mockLoginFlow.
 		EXPECT().
 		Run(ctx).
-		Return(nil).
+		DoAndReturn(setConfig()).
 		Times(1)
 
 	mockQuickstartFlow.
@@ -162,4 +162,12 @@ func Test_setupOpts_RunSkipRegister(t *testing.T) {
 	require.NoError(t, opts.PreRun(ctx))
 	assert.Equal(t, opts.skipRegister, true)
 	require.NoError(t, opts.Run(ctx, &cobra.Command{Use: "test3"}))
+}
+
+func setConfig() func(ctx context.Context) error {
+	return func(ctx context.Context) error {
+		config.SetOrgID("a")
+		config.SetProjectID("b")
+		return nil
+	}
 }

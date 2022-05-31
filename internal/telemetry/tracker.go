@@ -215,7 +215,11 @@ func (t *tracker) trackSurvey(p survey.Prompt, response interface{}, e error) er
 
 	switch v := p.(type) {
 	case *survey.Confirm:
-		options = append(options, withPrompt(v.Message, "confirm"), withDefault(castBool(response) == v.Default))
+		choice := "false"
+		if castBool(response) {
+			choice = "true"
+		}
+		options = append(options, withPrompt(v.Message, "confirm"), withDefault(castBool(response) == v.Default), withChoice(choice))
 	case *survey.Input:
 		options = append(options, withPrompt(v.Message, "input"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""))
 	case *survey.Password:

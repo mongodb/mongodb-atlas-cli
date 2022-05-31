@@ -94,8 +94,6 @@ func Test_loginOpts_Run(t *testing.T) {
 		flow:      mockFlow,
 		config:    mockConfig,
 		NoBrowser: true,
-		// todo: CLOUDP-122551 do not test using SkipConfig flag (deprecated)
-		SkipConfig: true,
 	}
 	opts.OutWriter = buf
 	opts.Store = mockStore
@@ -139,13 +137,13 @@ func Test_loginOpts_Run(t *testing.T) {
 			{ID: "o1", Name: "Org1"},
 		},
 	}
-	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(0)
+	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
 	expectedProjects := &atlas.Projects{TotalCount: 1,
 		Results: []*atlas.Project{
 			{ID: "p1", Name: "Project1"},
 		},
 	}
-	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(0)
+	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
 	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `
 To verify your account, copy your one-time verification code:
@@ -178,7 +176,6 @@ func Test_loginOpts_oauthFlow(t *testing.T) {
 			flow:                 mockFlow,
 			config:               mockConfig,
 			NoBrowser:            true,
-			SkipConfig:           true,
 			regenerateCodePrompt: nil,
 		}
 
@@ -243,7 +240,6 @@ To continue, go to http://localhost
 			flow:                 mockFlow,
 			config:               mockConfig,
 			NoBrowser:            true,
-			SkipConfig:           true,
 			regenerateCodePrompt: regenerateCodePromptMock,
 		}
 

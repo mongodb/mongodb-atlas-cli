@@ -34,24 +34,32 @@ import (
 //go:generate mockgen -destination=../mocks/mock_default_opts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli ProjectOrgsLister
 
 type ProjectOrgsLister interface {
+	Project(id string) (interface{}, error)
 	Projects(*atlas.ListOptions) (interface{}, error)
+	Organization(id string) (*atlas.Organization, error)
 	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
 	GetOrgProjects(string, *atlas.ListOptions) (interface{}, error)
 }
 
 type DefaultSetterOpts struct {
-	Service          string
-	OpsManagerURL    string
-	ProjectID        string
-	OrgID            string
-	MongoShellPath   string
-	TelemetryEnabled bool
-	Output           string
-	Store            ProjectOrgsLister
-	OutWriter        io.Writer
+	Service                  string
+	OpsManagerURL            string
+	ProjectID                string
+	OrgID                    string
+	MongoShellPath           string
+	TelemetryEnabled         bool
+	Output                   string
+	Store                    ProjectOrgsLister
+	OutWriter                io.Writer
+	AskedOrgsOrProjects      bool
+	OnMultipleOrgsOrProjects func()
 }
 
 func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {
+	if opts.Store != nil {
+		return nil
+	}
+
 	var err error
 	opts.Store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 	return err
@@ -136,18 +144,18 @@ func (opts *DefaultSetterOpts) orgs() (oMap map[string]string, oSlice []string, 
 	return oMap, oSlice, nil
 }
 
+// ProjectExists checks if the project exists and the current user has access to it.
+func (opts *DefaultSetterOpts) ProjectExists(id string) bool {
+	if p, err := opts.Store.Project(id); p == nil || err != nil {
+		return false
+	}
+	return true
+}
+
 // AskProject will try to construct a select based on fetched projects.
 // If it fails or there are no projects to show we fallback to ask for project by ID.
 // If only one project, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskProject() error {
-	return opts.AskProjectIfCurrentNotAvailable("")
-}
-
-// AskProjectIfCurrentNotAvailable checks if the currentProjectID is still available for current account.
-// If it's not, it will try to construct a select based on fetched projects.
-// If it fails or there are no projects to show we fallback to ask for project by ID.
-// If only one project, select it by default without prompting the user.
-func (opts *DefaultSetterOpts) AskProjectIfCurrentNotAvailable(currentProjectID string) error {
 	pMap, pSlice, err := opts.projects()
 	if err != nil {
 		var target *atlas.ErrorResponse
@@ -155,10 +163,6 @@ func (opts *DefaultSetterOpts) AskProjectIfCurrentNotAvailable(currentProjectID 
 		case errors.Is(err, errNoResults):
 			_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any project")
 		case errors.Is(err, errTooManyResults):
-			if currentProjectID != "" {
-				opts.ProjectID = currentProjectID
-				return nil
-			}
 			_, _ = fmt.Fprintf(opts.OutWriter, "You have access to more than %d projects\n", resultsLimit)
 		case errors.As(err, &target):
 			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your projects: %s\n", target.Detail)
@@ -172,6 +176,7 @@ func (opts *DefaultSetterOpts) AskProjectIfCurrentNotAvailable(currentProjectID 
 		if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
 			return err2
 		}
+		opts.AskedOrgsOrProjects = true
 		if manually {
 			p := prompt.NewProjectIDInput()
 			return telemetry.TrackAskOne(p, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
@@ -180,41 +185,34 @@ func (opts *DefaultSetterOpts) AskProjectIfCurrentNotAvailable(currentProjectID 
 		return nil
 	}
 
-	if currentProjectID != "" {
-		for _, pID := range pMap {
-			if pID == currentProjectID {
-				opts.ProjectID = currentProjectID
-				return nil
-			}
-		}
-	}
-
 	if len(pSlice) == 1 {
 		opts.ProjectID = pMap[pSlice[0]]
 	} else {
+		opts.runOnMultipleOrgsOrProjects()
 		p := prompt.NewProjectSelect(pSlice)
 		var projectID string
 		if err := telemetry.TrackAskOne(p, &projectID); err != nil {
 			return err
 		}
 		opts.ProjectID = pMap[projectID]
+		opts.AskedOrgsOrProjects = true
 	}
 
 	return nil
+}
+
+// OrgExists checks if the org exists and the current user has access to it.
+func (opts *DefaultSetterOpts) OrgExists(id string) bool {
+	if o, err := opts.Store.Organization(id); o == nil || err != nil {
+		return false
+	}
+	return true
 }
 
 // AskOrg will try to construct a select based on fetched organizations.
 // If it fails or there are no organizations to show we fallback to ask for org by ID.
 // If only one organization, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskOrg() error {
-	return opts.AskOrgIfCurrentNotAvailable("")
-}
-
-// AskOrgIfCurrentNotAvailable checks if the currentOrgID is still available for current account.
-// If it's not, it will try to construct a select based on fetched organizations.
-// If it fails or there are no organizations to show we fallback to ask for org by ID.
-// If only one organization, select it by default without prompting the user.
-func (opts *DefaultSetterOpts) AskOrgIfCurrentNotAvailable(currentOrgID string) error {
 	oMap, oSlice, err := opts.orgs()
 	if err != nil {
 		var target *atlas.ErrorResponse
@@ -222,10 +220,6 @@ func (opts *DefaultSetterOpts) AskOrgIfCurrentNotAvailable(currentOrgID string) 
 		case errors.Is(err, errNoResults):
 			_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any organization")
 		case errors.Is(err, errTooManyResults):
-			if currentOrgID != "" {
-				opts.OrgID = currentOrgID
-				return nil
-			}
 			_, _ = fmt.Fprintf(opts.OutWriter, "You have access to more than %d organizations\n", resultsLimit)
 		case errors.As(err, &target):
 			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", target.Detail)
@@ -239,6 +233,7 @@ func (opts *DefaultSetterOpts) AskOrgIfCurrentNotAvailable(currentOrgID string) 
 		if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
 			return err2
 		}
+		opts.AskedOrgsOrProjects = true
 		if manually {
 			p := prompt.NewOrgIDInput()
 			return telemetry.TrackAskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
@@ -247,24 +242,17 @@ func (opts *DefaultSetterOpts) AskOrgIfCurrentNotAvailable(currentOrgID string) 
 		return nil
 	}
 
-	if currentOrgID != "" {
-		for _, oID := range oMap {
-			if oID == currentOrgID {
-				opts.OrgID = currentOrgID
-				return nil
-			}
-		}
-	}
-
 	if len(oSlice) == 1 {
 		opts.OrgID = oMap[oSlice[0]]
 	} else {
+		opts.runOnMultipleOrgsOrProjects()
 		p := prompt.NewOrgSelect(oSlice)
 		var orgID string
 		if err := telemetry.TrackAskOne(p, &orgID); err != nil {
 			return err
 		}
 		opts.OrgID = oMap[orgID]
+		opts.AskedOrgsOrProjects = true
 	}
 
 	return nil
@@ -339,4 +327,10 @@ func (*DefaultSetterOpts) DefaultQuestions() []*survey.Question {
 		},
 	}
 	return q
+}
+
+func (opts *DefaultSetterOpts) runOnMultipleOrgsOrProjects() {
+	if opts.OnMultipleOrgsOrProjects != nil {
+		opts.OnMultipleOrgsOrProjects()
+	}
 }

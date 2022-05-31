@@ -150,18 +150,13 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 		return opts.config.Save()
 	}
 
-	_, _ = fmt.Fprint(opts.OutWriter, "Press Enter to continue your profile configuration")
-	_, _ = fmt.Scanln()
-
 	if err := opts.setUpProfile(ctx); err != nil {
 		return err
 	}
 
-	_, _ = fmt.Fprint(opts.OutWriter, "\nYour profile is now configured.\n")
 	if config.Name() != config.DefaultProfile {
 		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.BinName())
 
 	return nil
 }
@@ -170,16 +165,33 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
-
-	if err := opts.AskOrgIfCurrentNotAvailable(config.OrgID()); err != nil {
-		return err
+	// Initialize the text to be displayed if users are asked to select orgs or projects
+	opts.OnMultipleOrgsOrProjects = func() {
+		if !opts.AskedOrgsOrProjects {
+			_, _ = fmt.Fprintf(opts.OutWriter, "\nYou have multiple organizations or projects, select one to proceed.\n")
+		}
 	}
+
+	if config.OrgID() == "" || !opts.OrgExists(config.OrgID()) {
+		if err := opts.AskOrg(); err != nil {
+			return err
+		}
+	}
+
 	opts.SetUpOrg()
 
-	if err := opts.AskProjectIfCurrentNotAvailable(config.ProjectID()); err != nil {
-		return err
+	if config.ProjectID() == "" || !opts.ProjectExists(config.ProjectID()) {
+		if err := opts.AskProject(); err != nil {
+			return err
+		}
 	}
 	opts.SetUpProject()
+
+	// Only make references to profile if user was asked about org or projects
+	if opts.AskedOrgsOrProjects && opts.ProjectID != "" && opts.OrgID != "" {
+		_, _ = fmt.Fprint(opts.OutWriter, "\nYour profile is now configured.\n")
+		_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.BinName())
+	}
 
 	opts.SetUpMongoSHPath()
 	return opts.config.Save()

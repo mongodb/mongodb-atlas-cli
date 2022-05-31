@@ -16,6 +16,7 @@ package setup
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -31,6 +32,8 @@ import (
 const (
 	withProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
 )
+
+var errNeedsOrgAndProject = errors.New("please make sure to select or add an org and project to the profile: %s")
 
 type Opts struct {
 	cli.GlobalOpts
@@ -69,6 +72,10 @@ This command will help you
 
 	if err := opts.quickstart.PreRun(ctx, opts.OutWriter); err != nil {
 		return err
+	}
+
+	if config.ProjectID() == "" || config.OrgID() == "" {
+		return fmt.Errorf(errNeedsOrgAndProject.Error(), config.Default().Name())
 	}
 
 	return opts.quickstart.Run(cmd)

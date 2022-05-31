@@ -42,15 +42,17 @@ type ProjectOrgsLister interface {
 }
 
 type DefaultSetterOpts struct {
-	Service          string
-	OpsManagerURL    string
-	ProjectID        string
-	OrgID            string
-	MongoShellPath   string
-	TelemetryEnabled bool
-	Output           string
-	Store            ProjectOrgsLister
-	OutWriter        io.Writer
+	Service                  string
+	OpsManagerURL            string
+	ProjectID                string
+	OrgID                    string
+	MongoShellPath           string
+	TelemetryEnabled         bool
+	Output                   string
+	Store                    ProjectOrgsLister
+	OutWriter                io.Writer
+	AskedOrgsOrProjects      bool
+	OnMultipleOrgsOrProjects func()
 }
 
 func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {
@@ -174,6 +176,7 @@ func (opts *DefaultSetterOpts) AskProject() error {
 		if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
 			return err2
 		}
+		opts.AskedOrgsOrProjects = true
 		if manually {
 			p := prompt.NewProjectIDInput()
 			return telemetry.TrackAskOne(p, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
@@ -182,17 +185,17 @@ func (opts *DefaultSetterOpts) AskProject() error {
 		return nil
 	}
 
-	fmt.Println("projects", pSlice)
-
 	if len(pSlice) == 1 {
 		opts.ProjectID = pMap[pSlice[0]]
 	} else {
+		opts.runOnMultipleOrgsOrProjects()
 		p := prompt.NewProjectSelect(pSlice)
 		var projectID string
 		if err := telemetry.TrackAskOne(p, &projectID); err != nil {
 			return err
 		}
 		opts.ProjectID = pMap[projectID]
+		opts.AskedOrgsOrProjects = true
 	}
 
 	return nil
@@ -230,6 +233,7 @@ func (opts *DefaultSetterOpts) AskOrg() error {
 		if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
 			return err2
 		}
+		opts.AskedOrgsOrProjects = true
 		if manually {
 			p := prompt.NewOrgIDInput()
 			return telemetry.TrackAskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
@@ -241,12 +245,14 @@ func (opts *DefaultSetterOpts) AskOrg() error {
 	if len(oSlice) == 1 {
 		opts.OrgID = oMap[oSlice[0]]
 	} else {
+		opts.runOnMultipleOrgsOrProjects()
 		p := prompt.NewOrgSelect(oSlice)
 		var orgID string
 		if err := telemetry.TrackAskOne(p, &orgID); err != nil {
 			return err
 		}
 		opts.OrgID = oMap[orgID]
+		opts.AskedOrgsOrProjects = true
 	}
 
 	return nil
@@ -321,4 +327,10 @@ func (*DefaultSetterOpts) DefaultQuestions() []*survey.Question {
 		},
 	}
 	return q
+}
+
+func (opts *DefaultSetterOpts) runOnMultipleOrgsOrProjects() {
+	if opts.OnMultipleOrgsOrProjects != nil {
+		opts.OnMultipleOrgsOrProjects()
+	}
 }

@@ -16,6 +16,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -54,6 +55,11 @@ const (
 	AlreadyAuthenticatedEmailMsg   = "You are already authenticated with an account (%s)."
 	LoginWithProfileMsg            = `run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile`
 	LogoutToLoginAccountMsg        = `run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile`
+)
+
+var (
+	ErrProjectIDNotFound  = errors.New("you don't have access to this or it doesn't exist")
+	ErrOrgIDNotFound  = errors.New("you don't have access to this organization ID or it doesn't exist")
 )
 
 type LoginOpts struct {
@@ -190,11 +196,11 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	// Only make references to profile if user was asked about org or projects
 	if opts.AskedOrgsOrProjects && opts.ProjectID != "" && opts.OrgID != "" {
 		if !opts.ProjectExists(config.ProjectID()) {
-			return fmt.Errorf("you don't have access to this project ID or it doesn't exist")
+			return fmt.Errorf("%w", ErrProjectIDNotFound)
 		}
 
 		if !opts.OrgExists(config.OrgID()) {
-			return fmt.Errorf("you don't have access to this organization ID or it doesn't exist")
+			return fmt.Errorf("%w", ErrOrgIDNotFound)
 		}
 
 		_, _ = fmt.Fprint(opts.OutWriter, "\nYour profile is now configured.\n")

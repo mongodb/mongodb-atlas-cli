@@ -312,11 +312,10 @@ func askMongoShellAndSetConfig() error {
 // setupCloseHandler creates a 'listener' on a new goroutine which will notify the
 // program if it receives an interrupt from the OS. We then handle this by printing
 // the dbUsername and dbPassword.
-func (opts *Opts) setupCloseHandler(cmd *cobra.Command) {
+func (opts *Opts) setupCloseHandler(_ *cobra.Command) {
 	sighandle.Notify(func(sig os.Signal) {
 		fmt.Printf(quickstartTemplateCloseHandler, opts.ClusterName)
-		telemetry.TrackCommand(telemetry.TrackOptions{
-			Cmd:    cmd,
+		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
 			Signal: sig.String(),
 		})
 		os.Exit(0)

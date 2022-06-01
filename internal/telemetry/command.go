@@ -21,23 +21,30 @@ import (
 )
 
 type TrackOptions struct {
-	Cmd    *cobra.Command
 	Err    error
 	Signal string
-	Args   []string
 }
 
-func TrackCommand(opt TrackOptions) {
+var currentTracker *tracker
+
+func StartTrackingCommand(cmd *cobra.Command, args []string) {
 	if !config.TelemetryEnabled() {
 		return
 	}
-	t, err := newTracker(opt.Cmd.Context(), opt.Cmd, opt.Args)
+	var err error
+	currentTracker, err = newTracker(cmd.Context(), cmd, args)
 	if err != nil {
 		_, _ = log.Debugf("telemetry: failed to create tracker: %v\n", err)
 		return
 	}
+}
 
-	if err = t.trackCommand(opt); err != nil {
+func FinishTrackingCommand(opt TrackOptions) {
+	if !config.TelemetryEnabled() {
+		return
+	}
+
+	if err := currentTracker.trackCommand(opt); err != nil {
 		_, _ = log.Debugf("telemetry: failed to track command: %v\n", err)
 	}
 }

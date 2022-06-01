@@ -190,11 +190,11 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	// Only make references to profile if user was asked about org or projects
 	if opts.AskedOrgsOrProjects && opts.ProjectID != "" && opts.OrgID != "" {
 		if !opts.ProjectExists(config.ProjectID()) {
-			return fmt.Errorf("you don't have access to the project id you provided or it does not exist")
+			return fmt.Errorf("you don't have access to this project ID or it doesn't exist")
 		}
 
 		if !opts.OrgExists(config.OrgID()) {
-			return fmt.Errorf("you don't have access to the organization id you provided or it does not exist")
+			return fmt.Errorf("you don't have access to this organization ID or it doesn't exist")
 		}
 
 		_, _ = fmt.Fprint(opts.OutWriter, "\nYour profile is now configured.\n")

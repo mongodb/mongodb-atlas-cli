@@ -41,10 +41,12 @@ func Execute() {
 }
 
 // loadConfig reads in config file and ENV variables if set.
-func loadConfig() {
+func loadConfig() error {
 	if err := config.LoadAtlasCLIConfig(); err != nil {
-		log.Fatalf("Error loading config: %v", err)
+		return fmt.Errorf("error loading config: %w", err)
 	}
+
+	return nil
 }
 
 // createConfigFromMongoCLIConfig creates the atlasCLI config file from the mongocli config file.
@@ -118,11 +120,24 @@ func mongoCLIConfigFilePath() (configPath string, err error) {
 	return configPath, nil
 }
 
+func trackInitError(e error) {
+	if e == nil {
+		return
+	}
+	if cmd, args, err := atlas.Builder().Find(os.Args[1:]); err == nil {
+		telemetry.StartTrackingCommand(cmd, args)
+		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
+			Err: e,
+		})
+	}
+	log.Fatal(e)
+}
+
 func main() {
 	cobra.EnableCommandSorting = false
 
 	createConfigFromMongoCLIConfig()
-	loadConfig()
+	trackInitError(loadConfig())
 
 	Execute()
 }

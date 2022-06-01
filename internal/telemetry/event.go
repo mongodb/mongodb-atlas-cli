@@ -119,6 +119,11 @@ func withCommandPath(cmd *cobra.Command) eventOpt {
 
 func withDuration(cmd *cobra.Command) eventOpt {
 	return func(event Event) {
+		if cmd.Context() == nil {
+			_, _ = log.Debugln("telemetry: context not found")
+			return
+		}
+
 		ctxValue, found := cmd.Context().Value(contextKey).(telemetryContextValue)
 		if !found {
 			_, _ = log.Debugln("telemetry: context not found")

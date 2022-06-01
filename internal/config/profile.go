@@ -18,7 +18,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -73,10 +72,9 @@ const (
 )
 
 var (
-	ToolName        = MongoCLI
-	UserAgent       = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
-	defaultProfile  = newProfile()
-	atlasCLIProfile = newAtlasProfile()
+	ToolName       = MongoCLI
+	UserAgent      = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
+	defaultProfile = newProfile()
 )
 
 func BinName() string {
@@ -108,6 +106,7 @@ type Profile struct {
 	name      string
 	configDir string
 	fs        afero.Fs
+	err       error
 }
 
 func Properties() []string {
@@ -150,14 +149,7 @@ func IsTrue(s string) bool {
 }
 
 func Default() *Profile {
-	if ToolName == MongoCLI {
-		return defaultProfile
-	}
-	return atlasCLIProfile
-}
-
-func AtlasCLIDefault() *Profile {
-	return atlasCLIProfile
+	return defaultProfile
 }
 
 // List returns the names of available profiles.
@@ -181,27 +173,12 @@ func Exists(name string) bool {
 }
 
 func newProfile() *Profile {
-	configDir, err := MongoCLIConfigHome()
-	if err != nil {
-		log.Fatal(err)
-	}
+	configDir, err := CLIConfigHome()
 	np := &Profile{
 		name:      DefaultProfile,
 		configDir: configDir,
 		fs:        afero.NewOsFs(),
-	}
-	return np
-}
-
-func newAtlasProfile() *Profile {
-	configDir, err := AtlasCLIConfigHome()
-	if err != nil {
-		log.Fatal(err)
-	}
-	np := &Profile{
-		name:      DefaultProfile,
-		configDir: configDir,
-		fs:        afero.NewOsFs(),
+		err:       err,
 	}
 	return np
 }
@@ -631,6 +608,9 @@ func (p *Profile) LoadAtlasCLIConfig(readEnvironmentVars bool) error {
 
 func LoadMongoCLIConfig() error { return Default().LoadMongoCLIConfig(true) }
 func (p *Profile) LoadMongoCLIConfig(readEnvironmentVars bool) error {
+	if p.err != nil {
+		return p.err
+	}
 	viper.SetConfigName("config")
 	return p.load(readEnvironmentVars, MongoCLIEnvPrefix)
 }
@@ -724,16 +704,18 @@ func AtlasCLIConfigHome() (string, error) {
 	return path.Join(home, "atlascli"), nil
 }
 
+// CLIConfigHome retrieves configHome path.
+func CLIConfigHome() (string, error) {
+	if ToolName == AtlasCLI {
+		return AtlasCLIConfigHome()
+	}
+	return MongoCLIConfigHome()
+}
+
 func Path(f string) (string, error) {
 	var p bytes.Buffer
-	var h string
-	var err error
 
-	if ToolName == AtlasCLI {
-		h, err = AtlasCLIConfigHome()
-	} else {
-		h, err = MongoCLIConfigHome()
-	}
+	h, err := CLIConfigHome()
 	if err != nil {
 		return "", err
 	}

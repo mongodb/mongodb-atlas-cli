@@ -193,7 +193,7 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 			return fmt.Errorf("you don't have access to the project id you provided or it does not exist")
 		}
 
-		if !opts.ProjectExists(config.OrgID()) {
+		if !opts.OrgExists(config.OrgID()) {
 			return fmt.Errorf("you don't have access to the organization id you provided or it does not exist")
 		}
 

@@ -124,9 +124,9 @@ func trackInitError(e error) {
 	if e == nil {
 		return
 	}
-	if cmd, _, err := atlas.Builder().Find(os.Args[1:]); err == nil {
-		telemetry.TrackCommand(telemetry.TrackOptions{
-			Cmd: cmd,
+	if cmd, args, err := atlas.Builder().Find(os.Args[1:]); err == nil {
+		telemetry.StartTrackingCommand(cmd, args)
+		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
 			Err: e,
 		})
 	}

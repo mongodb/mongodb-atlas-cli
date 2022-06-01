@@ -120,7 +120,7 @@ type quickstart struct {
 
 type Flow interface {
 	PreRun(ctx context.Context, outWriter io.Writer) error
-	Run(cmd *cobra.Command) error
+	Run() error
 }
 
 func (opts *Opts) initStore(ctx context.Context) func() error {
@@ -150,7 +150,7 @@ func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
 	)
 }
 
-func (opts *Opts) Run(cmd *cobra.Command) error {
+func (opts *Opts) Run() error {
 	const base10 = 10
 	opts.defaultName = "Cluster" + strconv.FormatInt(time.Now().Unix(), base10)[5:]
 	opts.providerAndRegionToConstant()
@@ -188,7 +188,7 @@ func (opts *Opts) Run(cmd *cobra.Command) error {
 `, opts.ClusterName)
 
 	fmt.Printf(quickstartTemplateStoreWarning, opts.DBUsername, opts.DBUserPassword)
-	opts.setupCloseHandler(cmd)
+	opts.setupCloseHandler()
 
 	fmt.Print(quickstartTemplateCluster)
 
@@ -312,11 +312,10 @@ func askMongoShellAndSetConfig() error {
 // setupCloseHandler creates a 'listener' on a new goroutine which will notify the
 // program if it receives an interrupt from the OS. We then handle this by printing
 // the dbUsername and dbPassword.
-func (opts *Opts) setupCloseHandler(cmd *cobra.Command) {
+func (opts *Opts) setupCloseHandler() {
 	sighandle.Notify(func(sig os.Signal) {
 		fmt.Printf(quickstartTemplateCloseHandler, opts.ClusterName)
-		telemetry.TrackCommand(telemetry.TrackOptions{
-			Cmd:    cmd,
+		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
 			Signal: sig.String(),
 		})
 		os.Exit(0)
@@ -459,7 +458,7 @@ func Builder() *cobra.Command {
 			return opts.PreRun(cmd.Context(), cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd)
+			return opts.Run()
 		},
 	}
 

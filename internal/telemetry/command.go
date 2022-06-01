@@ -15,47 +15,36 @@
 package telemetry
 
 import (
-	"strings"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/spf13/cobra"
 )
 
 type TrackOptions struct {
-	Cmd        *cobra.Command
-	Err        error
-	Signal     string
-	extraProps map[string]interface{}
+	Err    error
+	Signal string
 }
 
-func TrackCommand(opt TrackOptions, args ...string) {
+var currentTracker *tracker
+
+func StartTrackingCommand(cmd *cobra.Command, args []string) {
 	if !config.TelemetryEnabled() {
 		return
 	}
-	t, err := newTracker(opt.Cmd.Context())
+	var err error
+	currentTracker, err = newTracker(cmd.Context(), cmd, args)
 	if err != nil {
 		_, _ = log.Debugf("telemetry: failed to create tracker: %v\n", err)
 		return
 	}
-
-	checkHelp(&opt, args...)
-
-	if err = t.trackCommand(opt); err != nil {
-		_, _ = log.Debugf("telemetry: failed to track command: %v\n", err)
-	}
 }
 
-func checkHelp(opt *TrackOptions, args ...string) {
-	if opt.Cmd.Name() != "help" {
+func FinishTrackingCommand(opt TrackOptions) {
+	if !config.TelemetryEnabled() {
 		return
 	}
-	cmd, _, err := opt.Cmd.Root().Find(args)
-	if err != nil {
-		_, _ = log.Debugf("telemetry: failed to find help command: %v\n", err)
-		return
-	}
-	opt.extraProps = map[string]interface{}{
-		"help_command": strings.ReplaceAll(cmd.CommandPath(), " ", "-"),
+
+	if err := currentTracker.trackCommand(opt); err != nil {
+		_, _ = log.Debugf("telemetry: failed to track command: %v\n", err)
 	}
 }

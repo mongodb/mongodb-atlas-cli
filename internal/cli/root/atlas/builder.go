@@ -80,10 +80,9 @@ type Notifier struct {
 	writer         io.Writer
 }
 
-func handleSignal(cmd *cobra.Command) {
+func handleSignal() {
 	sighandle.Notify(func(sig os.Signal) {
-		telemetry.TrackCommand(telemetry.TrackOptions{
-			Cmd:    cmd,
+		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
 			Err:    errors.New(sig.String()),
 			Signal: sig.String(),
 		})
@@ -125,7 +124,9 @@ func Builder() *cobra.Command {
 				log.SetLevel(log.DebugLevel)
 			}
 
-			handleSignal(cmd)
+			telemetry.StartTrackingCommand(cmd, args)
+
+			handleSignal()
 
 			initProfile(profile)
 
@@ -163,9 +164,7 @@ func Builder() *cobra.Command {
 			if check, isHb := notifier.shouldCheck(); check {
 				_ = notifier.notifyIfApplicable(isHb)
 			}
-			telemetry.TrackCommand(telemetry.TrackOptions{
-				Cmd: cmd,
-			}, args...)
+			telemetry.FinishTrackingCommand(telemetry.TrackOptions{})
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())

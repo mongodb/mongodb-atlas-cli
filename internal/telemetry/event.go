@@ -42,6 +42,22 @@ type Event struct {
 
 type eventOpt func(Event)
 
+func withHelpCommand(cmd *cobra.Command, args []string) eventOpt {
+	return func(event Event) {
+		if cmd.Name() != "help" {
+			return
+		}
+
+		helpCmd, _, err := cmd.Root().Find(args)
+		if err != nil {
+			_, _ = log.Debugf("telemetry: failed to find help command: %v\n", err)
+			return
+		}
+
+		event.Properties["help_command"] = strings.ReplaceAll(helpCmd.CommandPath(), " ", "-")
+	}
+}
+
 func withProfile() eventOpt { // either "default" or base64 hash
 	return func(event Event) {
 		if config.Name() == config.DefaultProfile {
@@ -229,14 +245,6 @@ func withError(err error) eventOpt {
 func withSignal(s string) eventOpt {
 	return func(event Event) {
 		event.Properties["signal"] = s
-	}
-}
-
-func withExtraProps(props map[string]interface{}) eventOpt {
-	return func(event Event) {
-		for k, v := range props {
-			event.Properties[k] = v
-		}
 	}
 }
 

@@ -68,7 +68,7 @@ func newTracker(ctx context.Context) (*tracker, error) {
 }
 
 func (t *tracker) trackCommand(data TrackOptions) error {
-	options := []eventOpt{withCommandPath(data.Cmd), withDuration(data.Cmd), withFlags(data.Cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(data.Cmd), withOrgID(data.Cmd), withTerminal(), withInstaller(t.fs), withExtraProps(data.extraProps)}
+	options := []eventOpt{withCommandPath(data.Cmd), withHelpCommand(data.Cmd, data.Args), withDuration(data.Cmd), withFlags(data.Cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(data.Cmd), withOrgID(data.Cmd), withTerminal(), withInstaller(t.fs)}
 	if data.Signal != "" {
 		options = append(options, withSignal(data.Signal))
 	}

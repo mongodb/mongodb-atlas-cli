@@ -15,21 +15,19 @@
 package telemetry
 
 import (
-	"strings"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/spf13/cobra"
 )
 
 type TrackOptions struct {
-	Cmd        *cobra.Command
-	Err        error
-	Signal     string
-	extraProps map[string]interface{}
+	Cmd    *cobra.Command
+	Err    error
+	Signal string
+	Args   []string
 }
 
-func TrackCommand(opt TrackOptions, args ...string) {
+func TrackCommand(opt TrackOptions) {
 	if !config.TelemetryEnabled() {
 		return
 	}
@@ -39,23 +37,7 @@ func TrackCommand(opt TrackOptions, args ...string) {
 		return
 	}
 
-	checkHelp(&opt, args...)
-
 	if err = t.trackCommand(opt); err != nil {
 		_, _ = log.Debugf("telemetry: failed to track command: %v\n", err)
-	}
-}
-
-func checkHelp(opt *TrackOptions, args ...string) {
-	if opt.Cmd.Name() != "help" {
-		return
-	}
-	cmd, _, err := opt.Cmd.Root().Find(args)
-	if err != nil {
-		_, _ = log.Debugf("telemetry: failed to find help command: %v\n", err)
-		return
-	}
-	opt.extraProps = map[string]interface{}{
-		"help_command": strings.ReplaceAll(cmd.CommandPath(), " ", "-"),
 	}
 }

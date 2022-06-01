@@ -164,8 +164,9 @@ func Builder() *cobra.Command {
 				_ = notifier.notifyIfApplicable(isHb)
 			}
 			telemetry.TrackCommand(telemetry.TrackOptions{
-				Cmd: cmd,
-			}, args...)
+				Cmd:  cmd,
+				Args: args,
+			})
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())

@@ -320,15 +320,6 @@ func TestWithError(t *testing.T) {
 	a.Equal("test", e.Properties["error"])
 }
 
-func TestWithExtraProps(t *testing.T) {
-	config.ToolName = config.AtlasCLI
-
-	e := newEvent(withExtraProps(map[string]interface{}{"a": true}))
-
-	a := assert.New(t)
-	a.Equal(true, e.Properties["a"])
-}
-
 func TestSanitizePrompt(t *testing.T) {
 	testCases := []struct {
 		input    string
@@ -434,4 +425,45 @@ func TestWithSignal(t *testing.T) {
 
 	a := assert.New(t)
 	a.Equal(q, e.Properties["signal"])
+}
+
+func TestWithHelpCommand(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+	testCmd := &cobra.Command{
+		Use: "test",
+	}
+	rootCmd := &cobra.Command{
+		Use: "root",
+	}
+	rootCmd.AddCommand(testCmd)
+	rootCmd.InitDefaultHelpCmd()
+	helpCmd := rootCmd.Commands()[0]
+
+	args := []string{"test"}
+
+	e := newEvent(withHelpCommand(helpCmd, args))
+
+	a := assert.New(t)
+	a.Equal("root-test", e.Properties["help_command"])
+}
+
+func TestWithHelpCommand_NotFound(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+	testCmd := &cobra.Command{
+		Use: "test",
+	}
+	rootCmd := &cobra.Command{
+		Use: "root",
+	}
+	rootCmd.AddCommand(testCmd)
+	rootCmd.InitDefaultHelpCmd()
+	helpCmd := rootCmd.Commands()[0]
+
+	args := []string{"test2"}
+
+	e := newEvent(withHelpCommand(helpCmd, args))
+
+	a := assert.New(t)
+	_, ok := e.Properties["help_command"]
+	a.False(ok)
 }

@@ -24,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -81,7 +80,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		CreateDatabaseUser(opts.newDatabaseUser()).Return(expectedDBUser, nil).
 		Times(1)
 
-	if err := opts.Run(&cobra.Command{Use: "test"}); err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

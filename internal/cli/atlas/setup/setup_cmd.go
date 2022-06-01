@@ -49,7 +49,7 @@ type Opts struct {
 	skipLogin    bool
 }
 
-func (opts *Opts) Run(ctx context.Context, cmd *cobra.Command) error {
+func (opts *Opts) Run(ctx context.Context) error {
 	if !opts.skipRegister {
 		_, _ = fmt.Fprintf(opts.OutWriter, `
 This command will help you
@@ -78,7 +78,7 @@ This command will help you
 		return fmt.Errorf(errNeedsOrgAndProject.Error(), config.Default().Name())
 	}
 
-	return opts.quickstart.Run(cmd)
+	return opts.quickstart.Run()
 }
 
 func (opts *Opts) PreRun(ctx context.Context) error {
@@ -163,7 +163,7 @@ func Builder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd)
+			return opts.Run(cmd.Context())
 		},
 	}
 

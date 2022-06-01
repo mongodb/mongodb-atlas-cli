@@ -26,16 +26,9 @@ func TrackAsk(qs []*survey.Question, response interface{}, opts ...survey.AskOpt
 		return err
 	}
 
-	t, e := newTracker(NewContext())
-	if e != nil {
-		_, _ = log.Debugf("telemetry: failed to create tracker: %v\n", e)
-		return err
-	}
-
 	for _, q := range qs {
 		answer, _ := readAnswer(response, q.Name)
-		e := t.trackSurvey(q.Prompt, answer, err)
-		if e != nil {
+		if e := currentTracker.trackSurvey(q.Prompt, answer, err); e != nil {
 			_, _ = log.Debugf("telemetry: failed to track survey: %v\n", e)
 		}
 	}
@@ -48,13 +41,7 @@ func TrackAskOne(p survey.Prompt, response interface{}, opts ...survey.AskOpt) e
 		return err
 	}
 
-	t, e := newTracker(NewContext())
-	if e != nil {
-		_, _ = log.Debugf("telemetry: failed to create tracker: %v\n", e)
-		return err
-	}
-	e = t.trackSurvey(p, response, err)
-	if e != nil {
+	if e := currentTracker.trackSurvey(p, response, err); e != nil {
 		_, _ = log.Debugf("telemetry: failed to track survey: %v\n", e)
 	}
 	return err

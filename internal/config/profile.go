@@ -597,6 +597,10 @@ func (p *Profile) Rename(newProfileName string) error {
 
 func LoadAtlasCLIConfig() error { return Default().LoadAtlasCLIConfig(true) }
 func (p *Profile) LoadAtlasCLIConfig(readEnvironmentVars bool) error {
+	if p.err != nil {
+		return p.err
+	}
+
 	viper.SetConfigName("config")
 
 	if hasMongoCLIEnvVars() {

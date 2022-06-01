@@ -40,19 +40,20 @@ func TestTrackCommand(t *testing.T) {
 
 	a := assert.New(t)
 
-	tracker := &tracker{
-		fs:               afero.NewMemMapFs(),
-		maxCacheFileSize: defaultMaxCacheFileSize,
-		store:            mockStore,
-		storeSet:         true,
-	}
-
-	cmd := cobra.Command{
+	cmd := &cobra.Command{
 		Use: "test-command",
 		Run: func(cmd *cobra.Command, args []string) {
 		},
 	}
 	_ = cmd.ExecuteContext(NewContext())
+
+	tracker := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		store:            mockStore,
+		storeSet:         true,
+		cmd:              cmd,
+	}
 
 	mockStore.
 		EXPECT().
@@ -60,9 +61,7 @@ func TestTrackCommand(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	err := tracker.trackCommand(TrackOptions{
-		Cmd: &cmd,
-	})
+	err := tracker.trackCommand(TrackOptions{})
 	a.NoError(err)
 }
 
@@ -77,15 +76,7 @@ func TestTrackCommandWithError(t *testing.T) {
 	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
 	a.NoError(err)
 
-	tracker := &tracker{
-		fs:               afero.NewMemMapFs(),
-		maxCacheFileSize: defaultMaxCacheFileSize,
-		cacheDir:         cacheDir,
-		store:            mockStore,
-		storeSet:         true,
-	}
-
-	cmd := cobra.Command{
+	cmd := &cobra.Command{
 		Use: "test-command",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return errors.New("test command error")
@@ -94,6 +85,15 @@ func TestTrackCommandWithError(t *testing.T) {
 	errCmd := cmd.ExecuteContext(NewContext())
 	a.Error(errCmd)
 
+	tracker := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+		store:            mockStore,
+		storeSet:         true,
+		cmd:              cmd,
+	}
+
 	mockStore.
 		EXPECT().
 		SendEvents(gomock.Any()).
@@ -101,7 +101,6 @@ func TestTrackCommandWithError(t *testing.T) {
 		Times(1)
 
 	err = tracker.trackCommand(TrackOptions{
-		Cmd: &cmd,
 		Err: errCmd,
 	})
 	a.NoError(err)
@@ -118,21 +117,22 @@ func TestTrackCommandWithSendError(t *testing.T) {
 	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
 	a.NoError(err)
 
-	tracker := &tracker{
-		fs:               afero.NewMemMapFs(),
-		maxCacheFileSize: defaultMaxCacheFileSize,
-		cacheDir:         cacheDir,
-		store:            mockStore,
-		storeSet:         true,
-	}
-
-	cmd := cobra.Command{
+	cmd := &cobra.Command{
 		Use: "test-command",
 		Run: func(cmd *cobra.Command, args []string) {
 		},
 	}
 	errCmd := cmd.ExecuteContext(NewContext())
 	a.NoError(errCmd)
+
+	tracker := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+		store:            mockStore,
+		storeSet:         true,
+		cmd:              cmd,
+	}
 
 	mockStore.
 		EXPECT().
@@ -141,7 +141,6 @@ func TestTrackCommandWithSendError(t *testing.T) {
 		Times(1)
 
 	err = tracker.trackCommand(TrackOptions{
-		Cmd: &cmd,
 		Err: errCmd,
 	})
 	a.NoError(err)

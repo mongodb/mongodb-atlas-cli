@@ -31,7 +31,7 @@ func TrackCommand(opt TrackOptions) {
 	if !config.TelemetryEnabled() {
 		return
 	}
-	t, err := newTracker(opt.Cmd.Context())
+	t, err := newTracker(opt.Cmd.Context(), opt.Cmd, opt.Args)
 	if err != nil {
 		_, _ = log.Debugf("telemetry: failed to create tracker: %v\n", err)
 		return

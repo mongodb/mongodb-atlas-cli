@@ -80,7 +80,7 @@ type Notifier struct {
 	writer         io.Writer
 }
 
-func handleSignal(_ *cobra.Command) {
+func handleSignal() {
 	sighandle.Notify(func(sig os.Signal) {
 		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
 			Err:    errors.New(sig.String()),
@@ -126,7 +126,7 @@ func Builder() *cobra.Command {
 
 			telemetry.StartTrackingCommand(cmd, args)
 
-			handleSignal(cmd)
+			handleSignal()
 
 			initProfile(profile)
 

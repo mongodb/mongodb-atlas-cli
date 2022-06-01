@@ -250,10 +250,19 @@ func TestTrackSurvey(t *testing.T) {
 	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
 	a.NoError(err)
 
+	cmd := &cobra.Command{
+		Use: "test-command",
+		Run: func(cmd *cobra.Command, args []string) {
+		},
+	}
+	errCmd := cmd.ExecuteContext(NewContext())
+	a.NoError(errCmd)
+
 	tracker := &tracker{
 		fs:               afero.NewMemMapFs(),
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		cacheDir:         cacheDir,
+		cmd:              cmd,
 	}
 
 	response := true

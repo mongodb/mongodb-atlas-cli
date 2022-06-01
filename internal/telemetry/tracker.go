@@ -72,8 +72,12 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 	}, nil
 }
 
+func (t *tracker) defaultCommandOptions() []eventOpt {
+	return []eventOpt{withCommandPath(t.cmd), withHelpCommand(t.cmd, t.args), withFlags(t.cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(t.cmd), withOrgID(t.cmd), withTerminal(), withInstaller(t.fs)}
+}
+
 func (t *tracker) trackCommand(data TrackOptions) error {
-	options := []eventOpt{withCommandPath(t.cmd), withHelpCommand(t.cmd, t.args), withDuration(t.cmd), withFlags(t.cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(t.cmd), withOrgID(t.cmd), withTerminal(), withInstaller(t.fs)}
+	options := append(t.defaultCommandOptions(), withDuration(t.cmd))
 	if data.Signal != "" {
 		options = append(options, withSignal(data.Signal))
 	}
@@ -212,7 +216,7 @@ func castString(i interface{}) string {
 }
 
 func (t *tracker) trackSurvey(p survey.Prompt, response interface{}, e error) error {
-	options := []eventOpt{}
+	options := t.defaultCommandOptions()
 
 	if e != nil {
 		options = append(options, withError(e))

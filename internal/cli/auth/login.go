@@ -58,8 +58,8 @@ const (
 )
 
 var (
-	ErrProjectIDNotFound  = errors.New("you don't have access to this or it doesn't exist")
-	ErrOrgIDNotFound  = errors.New("you don't have access to this organization ID or it doesn't exist")
+	ErrProjectIDNotFound = errors.New("you don't have access to this or it doesn't exist")
+	ErrOrgIDNotFound     = errors.New("you don't have access to this organization ID or it doesn't exist")
 )
 
 type LoginOpts struct {
@@ -196,11 +196,11 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	// Only make references to profile if user was asked about org or projects
 	if opts.AskedOrgsOrProjects && opts.ProjectID != "" && opts.OrgID != "" {
 		if !opts.ProjectExists(config.ProjectID()) {
-			return fmt.Errorf("%w", ErrProjectIDNotFound)
+			return ErrProjectIDNotFound
 		}
 
 		if !opts.OrgExists(config.OrgID()) {
-			return fmt.Errorf("%w", ErrOrgIDNotFound)
+			return ErrOrgIDNotFound
 		}
 
 		_, _ = fmt.Fprint(opts.OutWriter, "\nYour profile is now configured.\n")

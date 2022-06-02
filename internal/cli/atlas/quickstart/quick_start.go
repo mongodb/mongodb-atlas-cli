@@ -28,6 +28,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
@@ -85,6 +86,7 @@ const (
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
+	login               *auth.LoginOpts
 	defaultName         string
 	ClusterName         string
 	Tier                string
@@ -103,6 +105,7 @@ type Opts struct {
 	Confirm             bool
 	CurrentIP           bool
 	store               store.AtlasClusterQuickStarter
+	skipLogin           bool
 }
 
 type quickstart struct {
@@ -130,13 +133,30 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *Opts) quickstartPreRun() error {
+func (opts *Opts) quickstartPreRun(ctx context.Context, outWriter io.Writer) error {
+	opts.skipLogin = true
+	opts.OutWriter = outWriter
+
+	// Get authentication status to define whether login should be run
+	status, _ := auth.GetStatus(ctx)
+	if status == auth.NotLoggedIn || status == auth.LoggedInWithInvalidToken {
+		opts.login.OutWriter = opts.OutWriter
+
+		if err := opts.login.PreRun(); err != nil {
+			return err
+		}
+		opts.skipLogin = false
+		return nil
+	}
+
 	return opts.PreRunE(
 		opts.ValidateProjectID,
 	)
 }
 
 func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
+	opts.login = auth.NewLoginOpts()
+	opts.skipLogin = true
 	opts.setTier()
 
 	if opts.CurrentIP && len(opts.IPAddresses) > 0 {
@@ -451,12 +471,19 @@ func Builder() *cobra.Command {
 		Example: fmt.Sprintf(`  Skip setting cluster name, provider or database username by using the command options:
   $ %s quickstart --clusterName Test --provider GCP --username dbuserTest`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.quickstartPreRun(); err != nil {
+			if err := opts.PreRun(cmd.Context(), cmd.OutOrStdout()); err != nil {
 				return err
 			}
-			return opts.PreRun(cmd.Context(), cmd.OutOrStdout())
+			return opts.quickstartPreRun(cmd.Context(), cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if !opts.skipLogin {
+				err := opts.login.Run(cmd.Context())
+				if err != nil {
+					return err
+				}
+			}
+
 			return opts.Run()
 		},
 	}

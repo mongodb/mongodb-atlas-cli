@@ -22,10 +22,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -82,32 +82,30 @@ This command will help you
 }
 
 func (opts *Opts) PreRun(ctx context.Context) error {
-	opts.skipRegister = false
+	opts.skipRegister = true
 	opts.skipLogin = true
 
-	if config.PublicAPIKey() != "" && config.PrivateAPIKey() != "" {
-		opts.skipRegister = true
+	status, _ := auth.GetStatus(ctx)
+	switch status {
+	case auth.LoggedInWithAPIKeys:
 		msg := fmt.Sprintf(auth.AlreadyAuthenticatedMsg, config.PublicAPIKey())
 		_, _ = fmt.Fprintf(opts.OutWriter, `
 %s
 
 %s
 `, msg, withProfileMsg)
-	}
-
-	if account, err := auth.AccountWithAccessToken(); err == nil {
-		opts.skipRegister = true
+	case auth.LoggedInWithValidToken:
+		account, _ := auth.AccountWithAccessToken()
 		msg := fmt.Sprintf(auth.AlreadyAuthenticatedEmailMsg, account)
-		// token exists but it is not refreshed
-		if err := cli.RefreshToken(ctx); err != nil || validate.Token() != nil {
-			opts.skipLogin = false
-			return nil
-		}
-
 		_, _ = fmt.Fprintf(opts.OutWriter, `%s
 
 %s
 `, msg, withProfileMsg)
+	case auth.LoggedInWithInvalidToken:
+		opts.skipLogin = false
+	case auth.NotLoggedIn:
+		opts.skipRegister = false
+	default:
 	}
 
 	return nil
@@ -137,6 +135,7 @@ func Builder() *cobra.Command {
 		Example: `  Override default cluster settings like name, provider, or database username by using the command options
   $ atlas setup --clusterName Test --provider GCP --username dbuserTest`,
 		Hidden: false,
+		Args:   require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			// setup pre run

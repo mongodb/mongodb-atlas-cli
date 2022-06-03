@@ -105,7 +105,7 @@ type Opts struct {
 	Confirm             bool
 	CurrentIP           bool
 	store               store.AtlasClusterQuickStarter
-	skipLogin           bool
+	shouldRunLogin      bool
 }
 
 type quickstart struct {
@@ -134,29 +134,43 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *Opts) quickstartPreRun(ctx context.Context, outWriter io.Writer) error {
-	opts.skipLogin = true
+	opts.shouldRunLogin = false
 	opts.OutWriter = outWriter
 
 	// Get authentication status to define whether login should be run
 	status, _ := auth.GetStatus(ctx)
-	if status == auth.NotLoggedIn || status == auth.LoggedInWithInvalidToken {
-		opts.login.OutWriter = opts.OutWriter
-
-		if err := opts.login.PreRun(); err != nil {
-			return err
-		}
-		opts.skipLogin = false
-		return nil
+	if status == auth.LoggedInWithValidToken || status == auth.LoggedInWithAPIKeys {
+		return opts.PreRunE(
+			opts.ValidateProjectID,
+		)
 	}
 
-	return opts.PreRunE(
-		opts.ValidateProjectID,
-	)
+	// If customer used --force and is not authenticated, check credentials and proceed. Likely to
+	// throw an error here.
+	if opts.Confirm {
+		if err := validate.Credentials(); err != nil {
+			return err
+		}
+		return opts.PreRunE(
+			opts.ValidateProjectID,
+		)
+	}
+
+	opts.login.OutWriter = opts.OutWriter
+	if err := opts.login.PreRun(); err != nil {
+		return err
+	}
+
+	opts.shouldRunLogin = true
+	_, _ = fmt.Fprintf(opts.OutWriter, `This action requires authentication.
+`)
+
+	return nil
 }
 
 func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
 	opts.login = auth.NewLoginOpts()
-	opts.skipLogin = true
+	opts.shouldRunLogin = false
 	opts.setTier()
 
 	if opts.CurrentIP && len(opts.IPAddresses) > 0 {
@@ -477,7 +491,7 @@ func Builder() *cobra.Command {
 			return opts.quickstartPreRun(cmd.Context(), cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if !opts.skipLogin {
+			if opts.shouldRunLogin {
 				err := opts.login.Run(cmd.Context())
 				if err != nil {
 					return err

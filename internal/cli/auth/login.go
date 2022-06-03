@@ -204,7 +204,7 @@ To verify your account, copy your one-time verification code:
 `)
 
 	userCode := fmt.Sprintf("%s-%s", code.UserCode[0:len(code.UserCode)/2], code.UserCode[len(code.UserCode)/2:])
-	opts.printlnWithColor(color.New(color.FgYellow, color.Bold), userCode)
+	_, _ = fmt.Fprintln(opts.OutWriter, userCode)
 
 	_, _ = fmt.Fprintf(opts.OutWriter, `
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after %.0f minutes.
@@ -212,7 +212,7 @@ Paste the code in the browser when prompted to activate your Atlas CLI. Your cod
 To continue, go to `,
 		codeDuration.Minutes(),
 	)
-	opts.printlnWithColor(color.New(color.FgBlue, color.Bold), code.VerificationURI)
+	_, _ = fmt.Fprintln(opts.OutWriter, code.VerificationURI)
 }
 
 func (opts *LoginOpts) printlnWithColor(c *color.Color, text string) {

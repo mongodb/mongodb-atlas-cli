@@ -33,7 +33,7 @@ import (
 )
 
 func TestBuilder(t *testing.T) {
-	t.Cleanup(cleanUpConfig)
+	t.Cleanup(test.CleanupConfig)
 	test.CmdValidator(
 		t,
 		Builder(),
@@ -43,7 +43,7 @@ func TestBuilder(t *testing.T) {
 }
 
 func Test_setupOpts_Run(t *testing.T) {
-	t.Cleanup(cleanUpConfig)
+	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
@@ -82,7 +82,7 @@ func Test_setupOpts_Run(t *testing.T) {
 }
 
 func Test_setupOpts_RunWithAPIKeys(t *testing.T) {
-	t.Cleanup(cleanUpConfig)
+	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
@@ -123,7 +123,7 @@ Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on
 }
 
 func Test_setupOpts_RunSkipRegister(t *testing.T) {
-	t.Cleanup(cleanUpConfig)
+	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
@@ -173,10 +173,4 @@ func setConfig() func(ctx context.Context) error {
 		config.SetProjectID("b")
 		return nil
 	}
-}
-
-func cleanUpConfig() {
-	config.SetAccessToken("")
-	config.SetPublicAPIKey("")
-	config.SetPrivateAPIKey("")
 }

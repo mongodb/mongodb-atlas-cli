@@ -21,7 +21,6 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/fatih/color"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -204,7 +203,7 @@ To verify your account, copy your one-time verification code:
 `)
 
 	userCode := fmt.Sprintf("%s-%s", code.UserCode[0:len(code.UserCode)/2], code.UserCode[len(code.UserCode)/2:])
-	opts.printlnWithColor(color.New(color.FgYellow, color.Bold), userCode)
+	_, _ = fmt.Fprintln(opts.OutWriter, userCode)
 
 	_, _ = fmt.Fprintf(opts.OutWriter, `
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after %.0f minutes.
@@ -212,14 +211,7 @@ Paste the code in the browser when prompted to activate your Atlas CLI. Your cod
 To continue, go to `,
 		codeDuration.Minutes(),
 	)
-	opts.printlnWithColor(color.New(color.FgBlue, color.Bold), code.VerificationURI)
-}
-
-func (opts *LoginOpts) printlnWithColor(c *color.Color, text string) {
-	_, err := c.Fprintln(opts.OutWriter, text)
-	if err != nil {
-		_, _ = fmt.Fprintln(opts.OutWriter, text)
-	}
+	_, _ = fmt.Fprintln(opts.OutWriter, code.VerificationURI)
 }
 
 func (opts *LoginOpts) handleBrowser(uri string) {

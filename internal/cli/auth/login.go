@@ -196,6 +196,8 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	return opts.config.Save()
 }
 
+
+
 func (opts *LoginOpts) printAuthInstructions(code *auth.DeviceCode) {
 	codeDuration := time.Duration(code.ExpiresIn) * time.Second
 	_, _ = fmt.Fprintf(opts.OutWriter, `

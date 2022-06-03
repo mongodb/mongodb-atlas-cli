@@ -121,11 +121,11 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 //	[--skipMongosh skipMongosh]
 func Builder() *cobra.Command {
 	loginOpts := auth.NewLoginOpts()
-	qsOpts := &quickstart.Opts{}
+	qsOpts := quickstart.NewQuickstartOpts(loginOpts)
 	opts := &Opts{
 		register:   auth.NewRegisterFlow(loginOpts),
 		login:      auth.NewLoginFlow(loginOpts),
-		quickstart: qsOpts,
+		quickstart: quickstart.NewQuickstartFlow(qsOpts),
 	}
 
 	cmd := &cobra.Command{

@@ -86,7 +86,8 @@ const (
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	login               *auth.LoginOpts
+	login               auth.LoginFlow
+	loginOpts           *auth.LoginOpts
 	defaultName         string
 	ClusterName         string
 	Tier                string
@@ -125,6 +126,17 @@ type Flow interface {
 	Run() error
 }
 
+func NewQuickstartFlow(qsOpts *Opts) Flow {
+	return qsOpts
+}
+
+func NewQuickstartOpts(loginOpts *auth.LoginOpts) *Opts {
+	return &Opts{
+		loginOpts: loginOpts,
+		login:     auth.NewLoginFlow(loginOpts),
+	}
+}
+
 func (opts *Opts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -156,7 +168,7 @@ func (opts *Opts) quickstartPreRun(ctx context.Context, outWriter io.Writer) err
 		)
 	}
 
-	opts.login.OutWriter = opts.OutWriter
+	opts.loginOpts.OutWriter = opts.OutWriter
 	if err := opts.login.PreRun(); err != nil {
 		return err
 	}
@@ -164,12 +176,10 @@ func (opts *Opts) quickstartPreRun(ctx context.Context, outWriter io.Writer) err
 	opts.shouldRunLogin = true
 	_, _ = fmt.Fprintf(opts.OutWriter, `This action requires authentication.
 `)
-
-	return nil
+	return opts.login.Run(ctx)
 }
 
 func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
-	opts.login = auth.NewLoginOpts()
 	opts.shouldRunLogin = false
 	opts.setTier()
 
@@ -477,7 +487,7 @@ func (opts *Opts) interactiveSetup() error {
 //	[--skipMongosh skipMongosh]
 //	[--default]
 func Builder() *cobra.Command {
-	opts := &Opts{}
+	opts := NewQuickstartOpts(auth.NewLoginOpts())
 	cmd := &cobra.Command{
 		Use:   "quickstart",
 		Short: "Create and access an Atlas Cluster.",
@@ -491,13 +501,6 @@ func Builder() *cobra.Command {
 			return opts.quickstartPreRun(cmd.Context(), cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if opts.shouldRunLogin {
-				err := opts.login.Run(cmd.Context())
-				if err != nil {
-					return err
-				}
-			}
-
 			return opts.Run()
 		},
 	}

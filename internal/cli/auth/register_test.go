@@ -34,6 +34,7 @@ import (
 )
 
 func TestRegisterBuilder(t *testing.T) {
+	t.Cleanup(cleanUpConfig)
 	test.CmdValidator(
 		t,
 		RegisterBuilder(),
@@ -43,6 +44,7 @@ func TestRegisterBuilder(t *testing.T) {
 }
 
 func Test_registerOpts_Run(t *testing.T) {
+	t.Cleanup(cleanUpConfig)
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockAuthenticator(ctrl)
 	mockRegisterFlow := &registerAuthenticator{
@@ -129,6 +131,7 @@ Successfully logged in as test@10gen.com.
 }
 
 func TestRegisterPreRun(t *testing.T) {
+	t.Cleanup(cleanUpConfig)
 	config.SetPublicAPIKey("public")
 	config.SetPrivateAPIKey("private")
 	require.ErrorContains(t, registerPreRun(), fmt.Sprintf(AlreadyAuthenticatedError, "public"), WithProfileMsg)

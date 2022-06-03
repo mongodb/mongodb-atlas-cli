@@ -21,7 +21,6 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/fatih/color"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -213,13 +212,6 @@ To continue, go to `,
 		codeDuration.Minutes(),
 	)
 	_, _ = fmt.Fprintln(opts.OutWriter, code.VerificationURI)
-}
-
-func (opts *LoginOpts) printlnWithColor(c *color.Color, text string) {
-	_, err := c.Fprintln(opts.OutWriter, text)
-	if err != nil {
-		_, _ = fmt.Fprintln(opts.OutWriter, text)
-	}
 }
 
 func (opts *LoginOpts) handleBrowser(uri string) {

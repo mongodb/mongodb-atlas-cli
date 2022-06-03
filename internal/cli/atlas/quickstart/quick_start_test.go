@@ -35,7 +35,7 @@ import (
 )
 
 func TestBuilder(t *testing.T) {
-	t.Cleanup(cleanUpConfig)
+	t.Cleanup(test.CleanupConfig)
 	test.CmdValidator(
 		t,
 		Builder(),
@@ -45,7 +45,7 @@ func TestBuilder(t *testing.T) {
 }
 
 func TestQuickstartOpts_Run(t *testing.T) {
-	t.Cleanup(cleanUpConfig)
+	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
 	defer ctrl.Finish()
@@ -104,7 +104,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 }
 
 func TestQuickstartOpts_Run_NotLoggedIn(t *testing.T) {
-	t.Cleanup(cleanUpConfig)
+	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
 	defer ctrl.Finish()
@@ -128,7 +128,7 @@ func TestQuickstartOpts_Run_NotLoggedIn(t *testing.T) {
 }
 
 func TestQuickstartOpts_Run_NeedLogin_ForceAfterLogin(t *testing.T) {
-	t.Cleanup(cleanUpConfig)
+	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
 	mockLoginFlow := mocks.NewMockLoginFlow(ctrl)
@@ -218,10 +218,4 @@ func setConfig() func(ctx context.Context) error {
 		config.SetService("cloud")
 		return nil
 	}
-}
-
-func cleanUpConfig() {
-	config.SetAccessToken("")
-	config.SetPublicAPIKey("")
-	config.SetPrivateAPIKey("")
 }

@@ -68,6 +68,18 @@ nfpms:
   formats: [deb,rpm]
   replacements:
     amd64: x86_64
+- id: mongodb-atlas
+  package_name: mongodb-atlas
+  vendor: MongoDB Inc.
+  homepage: https://www.mongodb.com/
+  maintainer: MongoDB Inc. <support@mongodb.com>
+  description: MongoDB Atlas Command Line Interface (atlascli) is a tool for managing your MongoDB Atlas account.
+  license: Apache 2.0
+  formats: [deb,rpm]
+  dependencies:
+    - mongodb-atlas-cli
+    - mongosh
+  meta: true
 checksum:
   name_template: checksums.txt
 snapshot:

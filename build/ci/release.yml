@@ -426,6 +426,50 @@ tasks:
         vars:
           image: debian10-deb
           tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_amazon2
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: amazonlinux2-rpm
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_centos7
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: centos7-rpm
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_centos8
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: centos8-rpm
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_ubuntu1804
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: ubuntu18.04-deb
+          tool_name: atlascli
   - name: pkg_test_atlascli_meta_docker_ubuntu2004
     tags: [ "smoke-test", "atlascli", "meta" ]
     depends_on:
@@ -436,6 +480,28 @@ tasks:
       - func: "docker build meta"
         vars:
           image: ubuntu20.04-deb
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_debian9
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: debian9-deb
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_debian10
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: debian10-deb
           tool_name: atlascli
   - name: release_mongocli
     stepback: false

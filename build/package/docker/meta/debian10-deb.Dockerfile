@@ -26,6 +26,7 @@ RUN set -eux; \
 	apt-get install -y ./${entrypoint}.deb; \
 	rm -rf /var/lib/apt/lists/* ./${entrypoint}.deb
 
+RUN mongosh --version
 RUN ${entrypoint} --version
 
 ENV ENTRY=${entrypoint}

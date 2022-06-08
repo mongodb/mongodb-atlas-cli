@@ -4,13 +4,9 @@ ARG url
 ARG entrypoint
 ARG server_version
 
-RUN echo $'[mongodb-org-${server_version}] \n\
-name=MongoDB Repository \n\
-baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/${server_version}/x86_64/ \n\
-gpgcheck=1 \n\
-enabled=1 \n\
-gpgkey=https://pgp.mongodb.com/server-${server_version}.asc \n\
-' > /etc/yum.repos.d/mongodb-org-${server_version}.repo
+RUN rm -rf /etc/yum.repos.d/*
+
+RUN printf "[mongodb-org-${server_version}]\nname=MongoDB Repository\nbaseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/${server_version}/x86_64/\ngpgcheck=1\nenabled=1\ngpgkey=https://pgp.mongodb.com/server-${server_version}.asc\n" > /etc/yum.repos.d/mongodb-org-${server_version}.repo
 
 RUN set -eux; \
     curl --silent --show-error --fail --location --retry 3 \
@@ -19,6 +15,7 @@ RUN set -eux; \
     yum install -y ./${entrypoint}.rpm; \
     rm ./${entrypoint}.rpm
 
+RUN mongosh --version
 RUN ${entrypoint} --version
 
 ENV ENTRY=${entrypoint}

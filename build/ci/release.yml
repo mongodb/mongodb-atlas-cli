@@ -166,7 +166,7 @@ functions:
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/x-gzip}
-        display_name: inernal-bucket
+        display_name: internal-bucket
   "push":
     - command: subprocess.exec
       type: test

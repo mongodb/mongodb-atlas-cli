@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package decryption
 
@@ -23,17 +22,14 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/keyproviders"
+	"github.com/openlyinc/pointy"
 )
 
 func Test_validateMAC(t *testing.T) {
 	validKey, _ := base64.StdEncoding.DecodeString("pnvb++3sbhxIJdfODOq5uIaUX8yxTuWS95VLgES30FM=")
 	invalidKey, _ := base64.StdEncoding.DecodeString("pnvb++4sbhxIJdfODOq5uIaUX8yxTuWS95VLgES30FM=")
-	validVersion := "0.0"
-	invalidVersion := "0.1"
 	validTimestamp := time.UnixMilli(1644232049921)
 	invalidTimestamp := time.UnixMilli(0)
-	validMAC := "qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA"
-	invalidMAC := "wrongAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
 	testCases := []struct {
 		input       HeaderRecord
@@ -43,8 +39,8 @@ func Test_validateMAC(t *testing.T) {
 		{
 			input: HeaderRecord{
 				Timestamp: validTimestamp,
-				Version:   validVersion,
-				MAC:       validMAC,
+				Version:   "0.0",
+				MAC:       "qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA",
 			},
 			inputKey:    validKey,
 			expectedErr: false,
@@ -52,8 +48,8 @@ func Test_validateMAC(t *testing.T) {
 		{
 			input: HeaderRecord{
 				Timestamp: invalidTimestamp,
-				Version:   validVersion,
-				MAC:       validMAC,
+				Version:   "0.0",
+				MAC:       "qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA",
 			},
 			inputKey:    validKey,
 			expectedErr: true,
@@ -61,8 +57,8 @@ func Test_validateMAC(t *testing.T) {
 		{
 			input: HeaderRecord{
 				Timestamp: validTimestamp,
-				Version:   invalidVersion,
-				MAC:       validMAC,
+				Version:   "0.1",
+				MAC:       "qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA",
 			},
 			inputKey:    validKey,
 			expectedErr: true,
@@ -70,8 +66,8 @@ func Test_validateMAC(t *testing.T) {
 		{
 			input: HeaderRecord{
 				Timestamp: validTimestamp,
-				Version:   validVersion,
-				MAC:       invalidMAC,
+				Version:   "0.0",
+				MAC:       "wrongAAAAAAAAAAAAAAAAAAAAAAAAAAA",
 			},
 			inputKey:    validKey,
 			expectedErr: true,
@@ -79,8 +75,8 @@ func Test_validateMAC(t *testing.T) {
 		{
 			input: HeaderRecord{
 				Timestamp: validTimestamp,
-				Version:   validVersion,
-				MAC:       validMAC,
+				Version:   "0.0",
+				MAC:       "qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA",
 			},
 			inputKey:    invalidKey,
 			expectedErr: true,
@@ -99,13 +95,9 @@ func Test_validateMAC(t *testing.T) {
 
 func Test_validateHeaderFields(t *testing.T) {
 	ts := time.Now()
-	version := "0.0"
-	compressionMode := "none"
 	invalidCompressionMode := "foo"
 	provider := keyproviders.LocalKey
 	encryptedKey := []byte{0, 1, 2, 3}
-	mac := "mac"
-	recordType := AuditHeaderRecord
 
 	testCases := []struct {
 		input     AuditLogLine
@@ -118,117 +110,117 @@ func Test_validateHeaderFields(t *testing.T) {
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				Version:         &version,
-				CompressionMode: &compressionMode,
+				Version:         pointy.String("0.0"),
+				CompressionMode: pointy.String("none"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
 				EncryptedKey:    encryptedKey,
-				MAC:             &mac,
-				AuditRecordType: recordType,
+				MAC:             pointy.String("mac"),
+				AuditRecordType: AuditHeaderRecord,
 			},
 			expectErr: false,
 		},
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				Version:         &version,
-				CompressionMode: &compressionMode,
+				Version:         pointy.String("0.0"),
+				CompressionMode: pointy.String("none"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
 				EncryptedKey: encryptedKey,
-				MAC:          &mac,
+				MAC:          pointy.String("mac"),
 			},
 			expectErr: true,
 		},
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				Version:         &version,
-				CompressionMode: &compressionMode,
+				Version:         pointy.String("0.0"),
+				CompressionMode: pointy.String("none"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
 				EncryptedKey:    encryptedKey,
-				AuditRecordType: recordType,
+				AuditRecordType: AuditHeaderRecord,
 			},
 			expectErr: true,
 		},
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				Version:         &version,
-				CompressionMode: &compressionMode,
+				Version:         pointy.String("0.0"),
+				CompressionMode: pointy.String("none"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
-				MAC:             &mac,
-				AuditRecordType: recordType,
+				MAC:             pointy.String("mac"),
+				AuditRecordType: AuditHeaderRecord,
 			},
 			expectErr: true,
 		},
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				Version:         &version,
-				CompressionMode: &compressionMode,
-				MAC:             &mac,
+				Version:         pointy.String("0.0"),
+				CompressionMode: pointy.String("none"),
+				MAC:             pointy.String("mac"),
 				EncryptedKey:    encryptedKey,
-				AuditRecordType: recordType,
+				AuditRecordType: AuditHeaderRecord,
 			},
 			expectErr: true,
 		},
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				CompressionMode: &compressionMode,
+				CompressionMode: pointy.String("none"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
-				MAC:             &mac,
+				MAC:             pointy.String("mac"),
 				EncryptedKey:    encryptedKey,
-				AuditRecordType: recordType,
+				AuditRecordType: AuditHeaderRecord,
 			},
 			expectErr: true,
 		},
 		{
 			input: AuditLogLine{
-				Version:         &version,
-				CompressionMode: &compressionMode,
+				Version:         pointy.String("0.0"),
+				CompressionMode: pointy.String("none"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
-				MAC:             &mac,
+				MAC:             pointy.String("mac"),
 				EncryptedKey:    encryptedKey,
-				AuditRecordType: recordType,
+				AuditRecordType: AuditHeaderRecord,
 			},
 			expectErr: true,
 		},
 		{
 			input: AuditLogLine{
 				TS:      &ts,
-				Version: &version,
+				Version: pointy.String("0.0"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
 				EncryptedKey:    encryptedKey,
-				MAC:             &mac,
-				AuditRecordType: recordType,
+				MAC:             pointy.String("mac"),
+				AuditRecordType: AuditHeaderRecord,
 			},
 			expectErr: true,
 		},
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				Version:         &version,
+				Version:         pointy.String("0.0"),
 				CompressionMode: &invalidCompressionMode,
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
-				MAC:             &mac,
+				MAC:             pointy.String("mac"),
 				EncryptedKey:    encryptedKey,
-				AuditRecordType: recordType,
+				AuditRecordType: AuditHeaderRecord,
 			},
 			expectErr: true,
 		},

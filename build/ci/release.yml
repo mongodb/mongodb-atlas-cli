@@ -1408,3 +1408,4 @@ buildvariants:
       - name: pkg_test_atlascli_docker_ubuntu2004
       - name: pkg_test_atlascli_docker_debian9
       - name: pkg_test_atlascli_docker_debian10
+      - name: pkg_test_atlascli_meta_docker_ubuntu2004

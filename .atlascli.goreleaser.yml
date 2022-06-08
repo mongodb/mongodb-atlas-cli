@@ -75,6 +75,7 @@ nfpms:
   maintainer: MongoDB Inc. <support@mongodb.com>
   description: MongoDB Atlas Command Line Interface (atlascli) is a tool for managing your MongoDB Atlas account.
   license: Apache 2.0
+  file_name_template: "{{ .PackageName }}_{{ .Version }}_{{ .Os }}"
   formats: [deb,rpm]
   replacements:
     amd64: x86_64

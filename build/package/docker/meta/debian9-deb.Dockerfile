@@ -10,6 +10,7 @@ RUN set -eux; \
 		ca-certificates \
 		curl \
 		gnupg \
+		apt-transport-https \
 	; \
 	if ! command -v ps > /dev/null; then \
 		apt-get install -y --no-install-recommends procps; \

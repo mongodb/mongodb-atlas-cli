@@ -116,6 +116,7 @@ functions:
           - latest_deb
           - latest_rpm
           - package_name
+          - meta_package_name
           - tool_name
         working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:

@@ -251,6 +251,7 @@ tasks:
           latest_deb: ~latest
           latest_rpm: .latest
           package_name: ${package_name}
+          meta_package_name: ${meta_package_name}
           tool_name: ${tool_name}
       - command: archive.targz_pack
         params:
@@ -506,6 +507,7 @@ tasks:
       - func: "rename pkg"
         vars:
           package_name: mongodb-atlas-cli
+          meta_package_name: mongodb-atlas
           tool_name: atlascli
       - command: archive.targz_pack
         params:
@@ -1259,6 +1261,7 @@ buildvariants:
       server_version: "4.4.0-rc3"
       goreleaser_file: ".atlascli.goreleaser.yml"
       package_name: "mongodb-atlas-cli"
+      meta_package_name: "mongodb-atlas"
       tool_name: "atlascli"
     tasks:
       - name: package_goreleaser

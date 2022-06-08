@@ -205,6 +205,17 @@ functions:
           - tool_name
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker
         binary: ./docker-build.sh
+  "docker build meta":
+    - command: subprocess.exec
+      type: test
+      params:
+        include_expansions_in_env:
+          - revision
+          - created_at
+          - image
+          - tool_name
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/meta
+        binary: ./docker-build.sh
 
 tasks:
   - name: package_msi
@@ -414,6 +425,17 @@ tasks:
       - func: "docker build"
         vars:
           image: debian10-deb
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_ubuntu2004
+    tags: [ "smoke-test" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: ubuntu20.04-deb
           tool_name: atlascli
   - name: release_mongocli
     stepback: false

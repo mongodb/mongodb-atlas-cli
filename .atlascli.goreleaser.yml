@@ -80,7 +80,7 @@ nfpms:
     amd64: x86_64
   dependencies:
     - mongodb-atlas-cli
-    - mongosh
+    - mongodb-mongosh
   meta: true
 checksum:
   name_template: checksums.txt

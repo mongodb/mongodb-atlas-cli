@@ -4,14 +4,13 @@ ARG url
 ARG entrypoint
 ARG server_version
 
-RUN cat <<EOF > /etc/yum.repos.d/mongodb-org-${server_version}.repo
-[mongodb-org-${server_version}]
-name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/${server_version}/x86_64/
-gpgcheck=1
-enabled=1
-gpgkey=https://pgp.mongodb.com/server-${server_version}.asc
-EOF
+RUN echo $'[mongodb-org-${server_version}] \n\
+name=MongoDB Repository \n\
+baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/${server_version}/x86_64/ \n\
+gpgcheck=1 \n\
+enabled=1 \n\
+gpgkey=https://pgp.mongodb.com/server-${server_version}.asc \n\
+' > /etc/yum.repos.d/mongodb-org-${server_version}.repo
 
 RUN set -eux; \
     curl --silent --show-error --fail --location --retry 3 \

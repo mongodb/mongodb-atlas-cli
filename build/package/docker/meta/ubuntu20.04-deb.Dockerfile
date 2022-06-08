@@ -15,7 +15,8 @@ RUN set -eux; \
 		apt-get install -y --no-install-recommends procps; \
 	fi; \
 	curl -L https://www.mongodb.org/static/pgp/server-${server_version}.asc | apt-key add -; \
-	echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/${server_version} multiverse" | tee /etc/apt/sources.list.d/mongodb-org-${server_version}.list
+	echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/${server_version} multiverse" | tee /etc/apt/sources.list.d/mongodb-org-${server_version}.list; \
+	rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
     curl --silent --show-error --fail --location --retry 3 \
@@ -23,7 +24,7 @@ RUN set -eux; \
     ${url}; \
 	apt-get update; \
 	apt-get install ./${entrypoint}.deb; \
-	rm -rf /var/lib/apt/lists/*
+	rm -rf /var/lib/apt/lists/* ./${entrypoint}.deb
 
 RUN mongosh --version
 RUN ${entrypoint} --version

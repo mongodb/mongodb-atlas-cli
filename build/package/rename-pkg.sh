@@ -33,7 +33,7 @@ function rename {
   FROM=$1
   TO=$2
   ECHO "Renaming ${FROM} to ${TO}"
-  cp "$FROM" "$TO"
+  mv "$FROM" "$TO"
 }
 
 # we could generate a similar name with goreleaser but we want to keep the vars evg compatible to use later

@@ -44,7 +44,7 @@ else
   rename "${FILENAME}.deb" "apt/mongodb-atlas-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
   rename "${FILENAME}.rpm" "yum/mongodb-atlas-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
 
-  rename "${META_FILENAME}.deb" "apt/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
-  rename "${META_FILENAME}.rpm" "yum/mongodb-atlas${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
+  rename "${META_FILENAME}.deb" "apt/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}.deb"
+  rename "${META_FILENAME}.rpm" "yum/mongodb-atlas${unstable-}-${VERSION}${latest_rpm-}.rpm"
 fi
 

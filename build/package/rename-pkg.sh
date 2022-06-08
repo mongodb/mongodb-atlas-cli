@@ -23,7 +23,7 @@ if [[ "${unstable-}" == "-unstable" ]]; then
   VERSION="${VERSION}-next"
 fi
 FILENAME="${package_name-}_${VERSION}_linux_x86_64"
-META_FILENAME="${meta_package_name-}_${VERSION}_linux_x86_64"
+META_FILENAME="${meta_package_name-}_${VERSION}_linux"
 
 cd dist
 

@@ -12,4 +12,6 @@ RUN set -eux; \
 
 RUN ${entrypoint} --version
 
-ENTRYPOINT [ "${entrypoint}" ]
+ENV ENTRY=${entrypoint}
+
+ENTRYPOINT $ENTRY

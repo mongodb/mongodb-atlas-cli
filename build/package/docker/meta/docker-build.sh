@@ -28,7 +28,7 @@ if [[ "${image-}" =~ "rpm" ]]; then
   FILE_EXT=rpm
 fi
 
-URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision-}_${created_at-}/mongodb-atlas_${VERSION}-next_linux.${FILE_EXT}
+URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision-}_${created_at-}/mongodb-atlas_${VERSION}-next_linux_x86_64.${FILE_EXT}
 ENTRYPOINT=atlas
 
 docker build \

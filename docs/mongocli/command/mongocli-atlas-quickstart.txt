@@ -113,5 +113,6 @@ Examples
 .. code-block::
 
    Skip setting cluster name, provider or database username by using the command options:
+   $ mongocli atlas quickstart --force
    $ mongocli atlas quickstart --clusterName Test --provider GCP --username dbuserTest
 

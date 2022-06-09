@@ -37,6 +37,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -107,6 +108,8 @@ type Opts struct {
 	CurrentIP           bool
 	store               store.AtlasClusterQuickStarter
 	shouldRunLogin      bool
+	flags               *pflag.FlagSet
+	flagSet             map[string]struct{}
 }
 
 type quickstart struct {
@@ -179,6 +182,23 @@ func (opts *Opts) quickstartPreRun(ctx context.Context, outWriter io.Writer) err
 	return opts.login.Run(ctx)
 }
 
+func (opts *Opts) shouldAskForValue(f string) bool {
+	_, isFlagSet := opts.flagSet[f]
+	return !isFlagSet
+}
+
+func (opts *Opts) trackFlags() {
+	if opts.flags == nil {
+		opts.flagSet = make(map[string]struct{})
+		return
+	}
+
+	opts.flagSet = make(map[string]struct{}, opts.flags.NFlag())
+	opts.flags.Visit(func(f *pflag.Flag) {
+		opts.flagSet[f.Name] = struct{}{}
+	})
+}
+
 func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
 	opts.shouldRunLogin = false
 	opts.setTier()
@@ -197,6 +217,7 @@ func (opts *Opts) Run() error {
 	const base10 = 10
 	opts.defaultName = "Cluster" + strconv.FormatInt(time.Now().Unix(), base10)[5:]
 	opts.providerAndRegionToConstant()
+	opts.trackFlags()
 
 	if opts.CurrentIP {
 		if publicIP := store.IPAddress(); publicIP != "" {
@@ -457,23 +478,31 @@ func (opts *Opts) replaceWithDefaultSettings(values *quickstart) {
 }
 
 func (opts *Opts) interactiveSetup() error {
-	if err := opts.askClusterOptions(); err != nil {
-		return err
-	}
+	for {
+		if err := opts.askClusterOptions(); err != nil {
+			return err
+		}
 
-	if err := opts.askSampleDataQuestion(); err != nil {
-		return err
-	}
+		if err := opts.askSampleDataQuestion(); err != nil {
+			return err
+		}
 
-	if err := opts.askDBUserOptions(); err != nil {
-		return err
-	}
+		if err := opts.askDBUserOptions(); err != nil {
+			return err
+		}
 
-	if err := opts.askAccessListOptions(); err != nil {
-		return err
-	}
+		if err := opts.askAccessListOptions(); err != nil {
+			return err
+		}
 
-	return opts.askConfirmConfigQuestion()
+		if err := opts.askConfirmConfigQuestion(); err != nil && !errors.Is(err, ErrUserAborted) {
+			return err
+		}
+
+		if opts.Confirm {
+			return nil
+		}
+	}
 }
 
 // Builder
@@ -502,6 +531,7 @@ func Builder() *cobra.Command {
 			return opts.quickstartPreRun(cmd.Context(), cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.flags = cmd.Flags()
 			return opts.Run()
 		},
 	}

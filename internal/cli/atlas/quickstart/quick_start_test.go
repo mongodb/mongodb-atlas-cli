@@ -20,7 +20,6 @@ package quickstart
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -30,6 +29,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
+	"github.com/spf13/pflag"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -199,8 +200,6 @@ func TestQuickstartOpts_Run_NeedLogin_ForceAfterLogin(t *testing.T) {
 		CreateDatabaseUser(opts.newDatabaseUser()).Return(expectedDBUser, nil).
 		Times(1)
 
-	fmt.Println(config.Service())
-
 	if err := opts.quickstartPreRun(ctx, buf); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
@@ -209,6 +208,80 @@ func TestQuickstartOpts_Run_NeedLogin_ForceAfterLogin(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
+	defer ctrl.Finish()
+
+	expectedCluster := &mongodbatlas.AdvancedCluster{
+		StateName: "IDLE",
+		ConnectionStrings: &mongodbatlas.ConnectionStrings{
+			StandardSrv: "",
+		},
+	}
+
+	expectedDBUser := &mongodbatlas.DatabaseUser{}
+
+	var expectedProjectAccessLists *mongodbatlas.ProjectIPAccessLists
+
+	opts := &Opts{
+		ClusterName:    "ProjectBar",
+		Region:         "US",
+		store:          mockStore,
+		IPAddresses:    []string{"0.0.0.0"},
+		DBUsername:     "user",
+		DBUserPassword: "test",
+		Provider:       "AWS",
+		SkipMongosh:    true,
+		SkipSampleData: true,
+		Confirm:        true,
+	}
+
+	opts.runMongoShell = true
+
+	projectIPAccessList := opts.newProjectIPAccessList()
+
+	mockStore.
+		EXPECT().
+		CreateCluster(opts.newCluster()).Return(expectedCluster, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		CreateProjectIPAccessList(projectIPAccessList).Return(expectedProjectAccessLists, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		AtlasCluster(opts.ConfigProjectID(), opts.ClusterName).Return(expectedCluster, nil).
+		Times(2)
+
+	mockStore.
+		EXPECT().
+		CreateDatabaseUser(opts.newDatabaseUser()).Return(expectedDBUser, nil).
+		Times(1)
+
+	cmd := Builder()
+	cmd.Flags().VisitAll(func(f *pflag.Flag) {
+		f.Changed = false
+		_ = cmd.Flags().Set(f.Name, f.DefValue)
+	})
+
+	opts.flags = cmd.Flags()
+
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+
+	assert.False(t, opts.shouldAskForValue(flag.ClusterName))
+	assert.False(t, opts.shouldAskForValue(flag.Region))
+	assert.False(t, opts.shouldAskForValue(flag.AccessListIP))
+	assert.False(t, opts.shouldAskForValue(flag.Region))
+	assert.False(t, opts.shouldAskForValue(flag.Username))
+	assert.False(t, opts.shouldAskForValue(flag.Password))
 }
 
 func setConfig() func(ctx context.Context) error {

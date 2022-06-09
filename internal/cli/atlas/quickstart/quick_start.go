@@ -81,6 +81,8 @@ const (
 	mongoshURL          = "https://www.mongodb.com/try/download/shell"
 	defaultProvider     = "AWS"
 	defaultRegion       = "US_EAST_1"
+	defaultRegionGCP    = "US_EAST_4"
+	defaultRegionAzure  = "US_EAST_2"
 	defaultRegionGov    = "US_GOV_EAST_1"
 )
 
@@ -414,9 +416,17 @@ func (opts *Opts) newDefaultValues() (*quickstart, error) {
 
 	values.Region = opts.Region
 	if opts.Region == "" {
-		values.Region = defaultRegion
 		if config.CloudGovService == config.Service() {
 			values.Region = defaultRegionGov
+		} else {
+			switch strings.ToUpper(opts.Provider) {
+			case "AZURE":
+				values.Region = defaultRegionAzure
+			case "GCP":
+				values.Region = defaultRegionGCP
+			default:
+				values.Region = defaultRegion
+			}
 		}
 	}
 

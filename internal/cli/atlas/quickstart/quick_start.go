@@ -26,7 +26,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -34,17 +33,24 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../../../mocks/mock_quick_start.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart Flow
 
-const quickstartTemplate = `
-Now you can connect to your Atlas cluster with: mongosh -u %s -p %s %s
-
+const quickstartTemplateMongoshDetected = `
+MongoDB Shell detected. Connecting to your Atlas cluster:
+$ mongosh -u %s -p %s %s
 `
+
+const quickstartTemplateMongoshNotDetected = `
+MongoDB Shell not detected. To install, open www.mongodb.com/try/download/shell
+[MongoDB Shell (mongosh) is an interactive command line interface to query, update and manage data in the MongoDB database.]
+Once mongosh is installed, you can connect to your Atlas Cluster0 database with:
+$ mongosh -u %s -p %s %s
+`
+
 const quickstartTemplateCloseHandler = `
 Enter 'atlas cluster watch %s' to learn when your cluster is available.
 `
@@ -76,7 +82,6 @@ const (
 	DefaultAtlasTier    = "M0"
 	defaultAtlasGovTier = "M30"
 	atlasAdmin          = "atlasAdmin"
-	mongoshURL          = "https://www.mongodb.com/try/download/shell"
 	defaultProvider     = "AWS"
 	defaultRegion       = "US_EAST_1"
 	defaultRegionGov    = "US_GOV_EAST_1"
@@ -97,8 +102,6 @@ type Opts struct {
 	SampleDataJobID     string
 	SkipSampleData      bool
 	SkipMongosh         bool
-	runMongoShell       bool
-	mongoShellInstalled bool
 	defaultValue        bool
 	Confirm             bool
 	CurrentIP           bool
@@ -198,31 +201,30 @@ func (opts *Opts) Run() error {
 
 	fmt.Print("Cluster created.")
 
-	if err := opts.loadSampleData(); err != nil {
-		return err
-	}
-
-	if err := opts.askMongoShellQuestion(); err != nil {
-		return err
-	}
-
-	// If user does not want to open MongoShell, skip everything below
-	if !opts.runMongoShell {
-		return nil
-	}
 	// Get cluster's connection string
 	cluster, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
+	fmt.Printf("Your connection string: %v\n", cluster.ConnectionStrings.StandardSrv)
 
-	if opts.runMongoShell && config.MongoShellPath() != "" {
-		return mongosh.Run(config.MongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
+	if err := opts.loadSampleData(); err != nil {
+		return err
 	}
 
-	return nil
+	if opts.SkipMongosh {
+		return nil
+	}
+
+	if !mongosh.Detect() {
+		fmt.Printf(quickstartTemplateMongoshNotDetected, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
+
+		return nil
+	}
+
+	fmt.Printf(quickstartTemplateMongoshDetected, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
+	return mongosh.Run(opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
 }
 
 func (opts *Opts) createResources() error {
@@ -295,17 +297,6 @@ func (opts *Opts) askSampleDataQuestion() error {
 	opts.SkipSampleData = !addSampleData
 
 	return nil
-}
-
-func askMongoShellAndSetConfig() error {
-	var mongoShellPath string
-	q := newMongoShellPathInput()
-	if err := telemetry.TrackAskOne(q, &mongoShellPath, survey.WithValidator(validate.Path)); err != nil {
-		return err
-	}
-
-	config.SetMongoShellPath(mongoShellPath)
-	return config.Save()
 }
 
 // setupCloseHandler creates a 'listener' on a new goroutine which will notify the

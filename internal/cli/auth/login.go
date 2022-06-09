@@ -192,7 +192,6 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 		_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.BinName())
 	}
 
-	opts.SetUpMongoSHPath()
 	return opts.config.Save()
 }
 

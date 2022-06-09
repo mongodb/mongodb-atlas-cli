@@ -80,9 +80,7 @@ Available properties include: %v.`, config.Properties()),
   Set Ops Manager Base URL in the profile myProfile:
   $ %[1]s config set ops_manager_url http://localhost:30700/ -P myProfile
   Set Organization ID in the default profile:
-  $ %[1]s config set org_id 5dd5aaef7a3e5a6c5bd12de4
-  Set path for the MongoDB Shell in the default profile:
-  $ %[1]s config set mongosh_path /usr/local/bin/mongosh`, config.BinName()),
+  $ %[1]s config set org_id 5dd5aaef7a3e5a6c5bd12de4`, config.BinName()),
 		Annotations: map[string]string{
 			"args":             "propertyName,value",
 			"requiredArgs":     "propertyName,value",

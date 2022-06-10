@@ -17,6 +17,7 @@ package test
 import (
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )
@@ -37,4 +38,12 @@ func CmdValidator(t *testing.T, subject *cobra.Command, nSubCommands int, flags 
 	for _, f := range flags {
 		a.NotNilf(subject.Flags().Lookup(f), "command has no flag: %s", f)
 	}
+}
+
+func CleanupConfig() {
+	config.SetAccessToken("")
+	config.SetPublicAPIKey("")
+	config.SetPrivateAPIKey("")
+	config.SetOrgID("")
+	config.SetProjectID("")
 }

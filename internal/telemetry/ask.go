@@ -17,6 +17,7 @@ package telemetry
 import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 )
 
 func TrackAsk(qs []*survey.Question, response interface{}, opts ...survey.AskOpt) error {
@@ -25,17 +26,10 @@ func TrackAsk(qs []*survey.Question, response interface{}, opts ...survey.AskOpt
 		return err
 	}
 
-	t, e := newTracker(NewContext())
-	if e != nil {
-		logError(e)
-		return err
-	}
-
 	for _, q := range qs {
 		answer, _ := readAnswer(response, q.Name)
-		e := t.trackSurvey(q.Prompt, answer, err)
-		if e != nil {
-			logError(e)
+		if e := currentTracker.trackSurvey(q.Prompt, answer, err); e != nil {
+			_, _ = log.Debugf("telemetry: failed to track survey: %v\n", e)
 		}
 	}
 	return err
@@ -47,14 +41,8 @@ func TrackAskOne(p survey.Prompt, response interface{}, opts ...survey.AskOpt) e
 		return err
 	}
 
-	t, e := newTracker(NewContext())
-	if e != nil {
-		logError(e)
-		return err
-	}
-	e = t.trackSurvey(p, response, err)
-	if e != nil {
-		logError(e)
+	if e := currentTracker.trackSurvey(p, response, err); e != nil {
+		_, _ = log.Debugf("telemetry: failed to track survey: %v\n", e)
 	}
 	return err
 }

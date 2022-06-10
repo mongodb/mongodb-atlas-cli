@@ -18,12 +18,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
-
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/randgen"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -40,23 +40,28 @@ func (opts *Opts) askDBUserOptions() error {
 
 	if opts.DBUsername == "" {
 		opts.DBUsername = opts.defaultName
+	}
 
+	if opts.shouldAskForValue(flag.Username) {
 		qs = append(qs, newDBUsernameQuestion(opts.DBUsername, opts.validateUniqueUsername))
 	}
 
-	if opts.DBUserPassword == "" {
-		pwd, err := generatePassword()
-		if err != nil {
-			return err
+	if opts.shouldAskForValue(flag.Password) {
+		if opts.DBUserPassword == "" {
+			pwd, err := generatePassword()
+			if err != nil {
+				return err
+			}
+			opts.DBUserPassword = pwd
 		}
-		opts.DBUserPassword = pwd
+
 		minLength := 10
 		if config.Service() == config.CloudGovService {
 			minLength = 12
 		}
 		message := fmt.Sprintf(" [Must be >%d characters. Press Enter to use an auto-generated password]", minLength)
 
-		qs = append(qs, newDBUserPasswordQuestion(pwd, message))
+		qs = append(qs, newDBUserPasswordQuestion(opts.DBUserPassword, message))
 	}
 
 	if len(qs) == 0 {

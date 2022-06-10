@@ -282,4 +282,8 @@ const (
 	AzureTenantID                 = "azureTenantId"                 // AzureTenantID flag
 	AzureSecret                   = "azureSecret"                   // AzureSecret flag
 	AWSSessionToken               = "awsSessionToken"               // AWSSessionToken flag
+
+	Debug      = "debug" // Debug flag to set debug log level
+	DebugShort = "D"     // DebugShort flag to set debug log level
+
 )

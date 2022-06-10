@@ -32,10 +32,9 @@ import (
 )
 
 func TestBuilder(t *testing.T) {
-	var profile string
 	test.CmdValidator(
 		t,
-		Builder(&profile),
+		Builder(),
 		35,
 		[]string{},
 	)

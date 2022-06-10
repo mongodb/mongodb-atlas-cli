@@ -224,18 +224,18 @@ func (m *MockDBUserCertificateLister) EXPECT() *MockDBUserCertificateListerMockR
 }
 
 // DBUserCertificates mocks base method.
-func (m *MockDBUserCertificateLister) DBUserCertificates(arg0, arg1 string) ([]mongodbatlas.UserCertificate, error) {
+func (m *MockDBUserCertificateLister) DBUserCertificates(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) ([]mongodbatlas.UserCertificate, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DBUserCertificates", arg0, arg1)
+	ret := m.ctrl.Call(m, "DBUserCertificates", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]mongodbatlas.UserCertificate)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // DBUserCertificates indicates an expected call of DBUserCertificates.
-func (mr *MockDBUserCertificateListerMockRecorder) DBUserCertificates(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockDBUserCertificateListerMockRecorder) DBUserCertificates(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DBUserCertificates", reflect.TypeOf((*MockDBUserCertificateLister)(nil).DBUserCertificates), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DBUserCertificates", reflect.TypeOf((*MockDBUserCertificateLister)(nil).DBUserCertificates), arg0, arg1, arg2)
 }
 
 // MockDBUserCertificateCreator is a mock of DBUserCertificateCreator interface.

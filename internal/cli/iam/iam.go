@@ -15,6 +15,8 @@
 package iam
 
 import (
+	"log"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/globalaccesslists"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/globalapikeys"
@@ -32,6 +34,8 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "iam",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			log.SetOutput(cmd.ErrOrStderr())
+
 			if err := opts.InitFlow(); err != nil {
 				return err
 			}

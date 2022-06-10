@@ -33,6 +33,7 @@ import (
 )
 
 func TestBuilder(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	test.CmdValidator(
 		t,
 		Builder(),
@@ -42,6 +43,7 @@ func TestBuilder(t *testing.T) {
 }
 
 func Test_setupOpts_Run(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
@@ -80,6 +82,7 @@ func Test_setupOpts_Run(t *testing.T) {
 }
 
 func Test_setupOpts_RunWithAPIKeys(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
@@ -95,18 +98,18 @@ func Test_setupOpts_RunWithAPIKeys(t *testing.T) {
 
 	config.SetPublicAPIKey("publicKey")
 	config.SetPrivateAPIKey("privateKey")
+	_ = setConfig()(ctx)
 
 	opts.OutWriter = buf
-
 	mockQuickstartFlow.
 		EXPECT().
-		Run().
+		PreRun(ctx, buf).
 		Return(nil).
 		Times(1)
 
 	mockQuickstartFlow.
 		EXPECT().
-		PreRun(ctx, buf).
+		Run().
 		Return(nil).
 		Times(1)
 
@@ -120,6 +123,7 @@ Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on
 }
 
 func Test_setupOpts_RunSkipRegister(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)

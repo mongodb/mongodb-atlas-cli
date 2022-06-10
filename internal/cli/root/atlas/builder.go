@@ -15,10 +15,13 @@
 package atlas
 
 import (
+	"errors"
 	"fmt"
 	"io"
+	"os"
 	"runtime"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,6 +60,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/internal/latestrelease"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -75,8 +80,31 @@ type Notifier struct {
 	writer         io.Writer
 }
 
+func handleSignal() {
+	sighandle.Notify(func(sig os.Signal) {
+		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
+			Err:    errors.New(sig.String()),
+			Signal: sig.String(),
+		})
+		os.Exit(1)
+	}, os.Interrupt, syscall.SIGTERM)
+}
+
+func initProfile(profile string) {
+	if profile != "" {
+		config.SetName(profile)
+	} else if profile = config.GetString(flag.Profile); profile != "" {
+		config.SetName(profile)
+	} else if availableProfiles := config.List(); len(availableProfiles) == 1 {
+		config.SetName(availableProfiles[0])
+	}
+}
+
 // Builder conditionally adds children commands as needed.
-func Builder(profile *string) *cobra.Command {
+func Builder() *cobra.Command {
+	var profile string
+	var debugLevel bool
+
 	rootCmd := &cobra.Command{
 		Version: version.Version,
 		Use:     atlas,
@@ -91,6 +119,17 @@ func Builder(profile *string) *cobra.Command {
 			"toc": "true",
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			log.SetOutput(cmd.ErrOrStderr())
+			if debugLevel {
+				log.SetLevel(log.DebugLevel)
+			}
+
+			telemetry.StartTrackingCommand(cmd, args)
+
+			handleSignal()
+
+			initProfile(profile)
+
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
 			}
@@ -125,9 +164,7 @@ func Builder(profile *string) *cobra.Command {
 			if check, isHb := notifier.shouldCheck(); check {
 				_ = notifier.notifyIfApplicable(isHb)
 			}
-			telemetry.TrackCommand(telemetry.TrackOptions{
-				Cmd: cmd,
-			}, args...)
+			telemetry.FinishTrackingCommand(telemetry.TrackOptions{})
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())
@@ -180,7 +217,9 @@ func Builder(profile *string) *cobra.Command {
 		figautocomplete.Builder(),
 	)
 
-	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
+	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
+	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
+	_ = rootCmd.PersistentFlags().MarkHidden(flag.Debug)
 
 	return rootCmd
 }
@@ -227,6 +266,7 @@ func shouldCheckCredentials(cmd *cobra.Command) bool {
 		fmt.Sprintf("%s %s", atlas, "login"),      // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "setup"),      // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "register"),   // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "quickstart"), // command supports login
 	}
 	for _, p := range searchByPath {
 		if strings.HasPrefix(cmd.CommandPath(), p) {

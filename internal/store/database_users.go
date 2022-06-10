@@ -45,7 +45,7 @@ type DatabaseUserDescriber interface {
 }
 
 type DBUserCertificateLister interface {
-	DBUserCertificates(string, string) ([]atlas.UserCertificate, error)
+	DBUserCertificates(string, string, *atlas.ListOptions) ([]atlas.UserCertificate, error)
 }
 
 type DBUserCertificateCreator interface {
@@ -105,10 +105,10 @@ func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlas.DatabaseU
 }
 
 // DBUserCertificates retrieves the current Atlas managed certificates for a database user.
-func (s *Store) DBUserCertificates(projectID, username string) ([]atlas.UserCertificate, error) {
+func (s *Store) DBUserCertificates(projectID, username string, opts *atlas.ListOptions) ([]atlas.UserCertificate, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetUserCertificates(s.ctx, projectID, username)
+		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetUserCertificates(s.ctx, projectID, username, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -15,44 +15,56 @@
 package sighandle
 
 import (
+	"context"
 	"os"
 	"os/signal"
 )
 
 type handler struct {
-	sig      []os.Signal
-	f        func(os.Signal)
-	c        chan os.Signal
-	notified bool
+	sig         []os.Signal
+	handlerFunc func(os.Signal)
+	sigChannel  chan os.Signal
+	cancel      func()
 }
 
-func (h *handler) routine() {
-	h.f(<-h.c)
-}
-
-func (h *handler) notify() {
-	if h.notified {
-		h.reset()
+func (h *handler) routine(ctx context.Context) {
+	select {
+	case <-ctx.Done():
+		// cancel this goroutine
+	case s := <-h.sigChannel:
+		h.handlerFunc(s)
 	}
-	h.notified = true
-	h.c = make(chan os.Signal, 1)
-	go h.routine()
-	signal.Notify(h.c, h.sig...)
+}
+
+func (h *handler) notify(ctx context.Context) {
+	go h.routine(ctx)
+	signal.Notify(h.sigChannel, h.sig...)
 }
 
 func (h *handler) reset() {
 	signal.Reset(h.sig...)
-	h.notified = false
+	h.cancel()
 }
 
-var std = &handler{}
+var std *handler
 
 func Notify(f func(os.Signal), sig ...os.Signal) {
-	std.f = f
-	std.sig = sig
-	std.notify()
+	Reset()
+
+	ctx, cancel := context.WithCancel(context.Background())
+
+	std = &handler{
+		handlerFunc: f,
+		sig:         sig,
+		sigChannel:  make(chan os.Signal, 1),
+		cancel:      cancel,
+	}
+	std.notify(ctx)
 }
 
 func Reset() {
-	std.reset()
+	if std != nil {
+		std.reset()
+		std = nil
+	}
 }

@@ -21,6 +21,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -40,16 +41,18 @@ func (opts *Opts) createCluster() error {
 func (opts *Opts) askClusterOptions() error {
 	var qs []*survey.Question
 
-	if opts.ClusterName == "" {
-		opts.ClusterName = opts.defaultName
+	if opts.shouldAskForValue(flag.ClusterName) {
+		if opts.ClusterName == "" {
+			opts.ClusterName = opts.defaultName
+		}
 		qs = append(qs, newClusterNameQuestion(opts.ClusterName))
 	}
 
-	if opts.Provider == "" {
+	if opts.shouldAskForValue(flag.Provider) {
 		qs = append(qs, newClusterProviderQuestion())
 	}
 
-	if opts.Provider == "" || opts.ClusterName == "" || opts.Region == "" {
+	if opts.shouldAskForValue(flag.ClusterName) || opts.shouldAskForValue(flag.Provider) || opts.shouldAskForValue(flag.Region) {
 		fmt.Print(`
 [Set up your Atlas cluster]
 `)
@@ -60,7 +63,7 @@ func (opts *Opts) askClusterOptions() error {
 	}
 
 	// We need the provider to ask for the region
-	if opts.Region == "" {
+	if opts.shouldAskForValue(flag.Region) {
 		return opts.askClusterRegion()
 	}
 	return nil

@@ -157,6 +157,7 @@ Successfully logged in as test@10gen.com.
 }
 
 func TestLoginPreRun(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	ctx := context.TODO()
 	config.SetPublicAPIKey("public")
 	config.SetPrivateAPIKey("private")
@@ -164,6 +165,7 @@ func TestLoginPreRun(t *testing.T) {
 }
 
 func Test_loginOpts_oauthFlow(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	t.Run("updates accessToken and refreshToken after code is verified", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		mockFlow := mocks.NewMockAuthenticator(ctrl)

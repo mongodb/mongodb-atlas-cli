@@ -27,6 +27,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
@@ -37,6 +38,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -86,6 +88,8 @@ const (
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
+	login               auth.LoginFlow
+	loginOpts           *auth.LoginOpts
 	defaultName         string
 	ClusterName         string
 	Tier                string
@@ -104,6 +108,9 @@ type Opts struct {
 	Confirm             bool
 	CurrentIP           bool
 	store               store.AtlasClusterQuickStarter
+	shouldRunLogin      bool
+	flags               *pflag.FlagSet
+	flagSet             map[string]struct{}
 }
 
 type quickstart struct {
@@ -123,6 +130,17 @@ type Flow interface {
 	Run() error
 }
 
+func NewQuickstartFlow(qsOpts *Opts) Flow {
+	return qsOpts
+}
+
+func NewQuickstartOpts(loginOpts *auth.LoginOpts) *Opts {
+	return &Opts{
+		loginOpts: loginOpts,
+		login:     auth.NewLoginFlow(loginOpts),
+	}
+}
+
 func (opts *Opts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -131,13 +149,59 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *Opts) quickstartPreRun() error {
-	return opts.PreRunE(
-		opts.ValidateProjectID,
-	)
+func (opts *Opts) quickstartPreRun(ctx context.Context, outWriter io.Writer) error {
+	opts.shouldRunLogin = false
+	opts.OutWriter = outWriter
+
+	// Get authentication status to define whether login should be run
+	status, _ := auth.GetStatus(ctx)
+	if status == auth.LoggedInWithValidToken || status == auth.LoggedInWithAPIKeys {
+		return opts.PreRunE(
+			opts.ValidateProjectID,
+		)
+	}
+
+	// If customer used --force and is not authenticated, check credentials and proceed. Likely to
+	// throw an error here.
+	if opts.Confirm {
+		if err := validate.Credentials(); err != nil {
+			return err
+		}
+		return opts.PreRunE(
+			opts.ValidateProjectID,
+		)
+	}
+
+	opts.loginOpts.OutWriter = opts.OutWriter
+	if err := opts.login.PreRun(); err != nil {
+		return err
+	}
+
+	opts.shouldRunLogin = true
+	_, _ = fmt.Fprintf(opts.OutWriter, `This action requires authentication.
+`)
+	return opts.login.Run(ctx)
+}
+
+func (opts *Opts) shouldAskForValue(f string) bool {
+	_, isFlagSet := opts.flagSet[f]
+	return !isFlagSet
+}
+
+func (opts *Opts) trackFlags() {
+	if opts.flags == nil {
+		opts.flagSet = make(map[string]struct{})
+		return
+	}
+
+	opts.flagSet = make(map[string]struct{}, opts.flags.NFlag())
+	opts.flags.Visit(func(f *pflag.Flag) {
+		opts.flagSet[f.Name] = struct{}{}
+	})
 }
 
 func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
+	opts.shouldRunLogin = false
 	opts.setTier()
 
 	if opts.CurrentIP && len(opts.IPAddresses) > 0 {
@@ -154,6 +218,7 @@ func (opts *Opts) Run() error {
 	const base10 = 10
 	opts.defaultName = "Cluster" + strconv.FormatInt(time.Now().Unix(), base10)[5:]
 	opts.providerAndRegionToConstant()
+	opts.trackFlags()
 
 	if opts.CurrentIP {
 		if publicIP := store.IPAddress(); publicIP != "" {
@@ -414,23 +479,31 @@ func (opts *Opts) replaceWithDefaultSettings(values *quickstart) {
 }
 
 func (opts *Opts) interactiveSetup() error {
-	if err := opts.askClusterOptions(); err != nil {
-		return err
-	}
+	for {
+		if err := opts.askClusterOptions(); err != nil {
+			return err
+		}
 
-	if err := opts.askSampleDataQuestion(); err != nil {
-		return err
-	}
+		if err := opts.askSampleDataQuestion(); err != nil {
+			return err
+		}
 
-	if err := opts.askDBUserOptions(); err != nil {
-		return err
-	}
+		if err := opts.askDBUserOptions(); err != nil {
+			return err
+		}
 
-	if err := opts.askAccessListOptions(); err != nil {
-		return err
-	}
+		if err := opts.askAccessListOptions(); err != nil {
+			return err
+		}
 
-	return opts.askConfirmConfigQuestion()
+		if err := opts.askConfirmConfigQuestion(); err != nil && !errors.Is(err, ErrUserAborted) {
+			return err
+		}
+
+		if opts.Confirm {
+			return nil
+		}
+	}
 }
 
 // Builder
@@ -444,7 +517,7 @@ func (opts *Opts) interactiveSetup() error {
 //	[--skipMongosh skipMongosh]
 //	[--default]
 func Builder() *cobra.Command {
-	opts := &Opts{}
+	opts := NewQuickstartOpts(auth.NewLoginOpts())
 	cmd := &cobra.Command{
 		Use:   "quickstart",
 		Short: "Create and access an Atlas Cluster.",
@@ -453,12 +526,13 @@ func Builder() *cobra.Command {
   $ %[1]s quickstart --force
   $ %[1]s quickstart --clusterName Test --provider GCP --username dbuserTest`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.quickstartPreRun(); err != nil {
+			if err := opts.PreRun(cmd.Context(), cmd.OutOrStdout()); err != nil {
 				return err
 			}
-			return opts.PreRun(cmd.Context(), cmd.OutOrStdout())
+			return opts.quickstartPreRun(cmd.Context(), cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.flags = cmd.Flags()
 			return opts.Run()
 		},
 	}

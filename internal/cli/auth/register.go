@@ -97,13 +97,13 @@ func (ra *registerAuthenticatorWrapper) PollToken(ctx context.Context, code *aut
 	return ra.authenticator.PollToken(ctx, code)
 }
 
-func (opts *registerOpts) initFlow() (*registerAuthenticatorWrapper, error) {
+func (opts *registerOpts) initFlow() error {
 	flow, err := oauth.FlowWithConfig(config.Default())
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	return &registerAuthenticatorWrapper{authenticator: flow}, nil
+	opts.login.flow = &registerAuthenticatorWrapper{authenticator: flow}
+	return nil
 }
 
 func (opts *registerOpts) PreRun(outWriter io.Writer) error {
@@ -114,12 +114,7 @@ func (opts *registerOpts) PreRun(outWriter io.Writer) error {
 		opts.login.OpsManagerURL = config.OpsManagerURL()
 	}
 
-	var err error
-	if opts.login.flow, err = opts.initFlow(); err != nil {
-		return err
-	}
-
-	return nil
+	return opts.initFlow()
 }
 
 func registerPreRun() error {

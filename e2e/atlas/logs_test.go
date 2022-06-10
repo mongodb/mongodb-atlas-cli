@@ -16,7 +16,6 @@
 package atlas_test
 
 import (
-	"log"
 	"os"
 	"strings"
 	"testing"
@@ -58,7 +57,7 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile, projectID stri
 	t.Helper()
 	dir, err := os.Getwd()
 	if err != nil {
-		log.Fatal(err)
+		t.Fatal(err)
 	}
 	filepath := dir + logFile
 

@@ -28,6 +28,8 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
+var ErrNoRegions = errors.New("no regions found for cloud provider")
+
 func (opts *Opts) createCluster() error {
 	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
 		return err
@@ -72,6 +74,11 @@ func (opts *Opts) askClusterRegion() error {
 	if err != nil {
 		return err
 	}
+
+	if len(regions) == 0 {
+		return fmt.Errorf("%w: %v", ErrNoRegions, opts.Provider)
+	}
+
 	regionQ := newRegionQuestions(regions)
 	return telemetry.TrackAskOne(regionQ, &opts.Region, survey.WithValidator(survey.Required))
 }

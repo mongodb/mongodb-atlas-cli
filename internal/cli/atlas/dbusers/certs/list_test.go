@@ -42,7 +42,7 @@ func TestListBuilder(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DBUserCertificates(listOpts.ProjectID, username).
+		DBUserCertificates(listOpts.ProjectID, username, nil).
 		Return(expected, nil).
 		Times(1)
 

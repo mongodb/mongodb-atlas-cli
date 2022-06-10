@@ -27,6 +27,10 @@ type TrackOptions struct {
 
 var currentTracker *tracker
 
+func StartedTrackingCommand() bool {
+	return currentTracker != nil
+}
+
 func StartTrackingCommand(cmd *cobra.Command, args []string) {
 	if !config.TelemetryEnabled() {
 		return

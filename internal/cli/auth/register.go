@@ -28,7 +28,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth RegisterFlow
+//go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth RegisterAuthenticator,RegisterFlow
 
 const (
 	baseURI        = "https://account.mongodb.com/"

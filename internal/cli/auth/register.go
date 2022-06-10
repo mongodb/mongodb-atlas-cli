@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/oauth"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -32,7 +33,6 @@ import (
 const (
 	baseURI        = "https://account.mongodb.com/"
 	govBaseURI     = "https://account.mongodbgov.com/"
-	accountParams  = "account/register/cli?n=/account/connect&nRegister=/account/connect"
 	WithProfileMsg = `run "atlas auth register --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile`
 )
 
@@ -71,33 +71,41 @@ func (opts *registerOpts) Run(ctx context.Context) error {
 	return opts.login.setUpProfile(ctx)
 }
 
-type registerAuthenticator struct {
-	isGov         bool
-	authenticator Authenticator
+type RegisterAuthenticator interface {
+	Authenticator
+	RegistrationConfig(ctx context.Context) (*auth.RegistrationConfig, *atlas.Response, error)
 }
 
-func (ra *registerAuthenticator) RequestCode(ctx context.Context) (*auth.DeviceCode, *atlas.Response, error) {
-	// TODO:CLOUDP-121210 - Replace with new request and remove URI override.
+type registerAuthenticatorWrapper struct {
+	authenticator RegisterAuthenticator
+}
+
+func (ra *registerAuthenticatorWrapper) RequestCode(ctx context.Context) (*auth.DeviceCode, *atlas.Response, error) {
 	code, response, err := ra.authenticator.RequestCode(ctx)
 	if err != nil {
-		return code, response, err
+		return nil, response, err
 	}
 
-	if config.OpsManagerURL() == "" {
-		if ra.isGov {
-			code.VerificationURI = govBaseURI + accountParams
-		} else {
-			code.VerificationURI = baseURI + accountParams
-		}
-	} else {
-		code.VerificationURI = config.OpsManagerURL() + accountParams
+	conf, _, err := ra.authenticator.RegistrationConfig(ctx)
+	if err != nil {
+		return nil, nil, err
 	}
+	code.VerificationURI = conf.RegistrationURL
 
 	return code, response, nil
 }
 
-func (ra *registerAuthenticator) PollToken(ctx context.Context, code *auth.DeviceCode) (*auth.Token, *atlas.Response, error) {
+func (ra *registerAuthenticatorWrapper) PollToken(ctx context.Context, code *auth.DeviceCode) (*auth.Token, *atlas.Response, error) {
 	return ra.authenticator.PollToken(ctx, code)
+}
+
+func (opts *registerOpts) initFlow() (*registerAuthenticatorWrapper, error) {
+	flow, err := oauth.FlowWithConfig(config.Default())
+	if err != nil {
+		return nil, err
+	}
+
+	return &registerAuthenticatorWrapper{authenticator: flow}, nil
 }
 
 func (opts *registerOpts) PreRun(outWriter io.Writer) error {
@@ -108,12 +116,9 @@ func (opts *registerOpts) PreRun(outWriter io.Writer) error {
 		opts.login.OpsManagerURL = config.OpsManagerURL()
 	}
 
-	if err := opts.login.initFlow(); err != nil {
+	var err error
+	if opts.login.flow, err = opts.initFlow(); err != nil {
 		return err
-	}
-	opts.login.flow = &registerAuthenticator{
-		authenticator: opts.login.flow,
-		isGov:         opts.login.IsGov,
 	}
 
 	return nil

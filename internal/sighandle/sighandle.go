@@ -12,23 +12,47 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package telemetry
+package sighandle
 
 import (
-	"context"
-	"time"
+	"os"
+	"os/signal"
 )
 
-var contextKey = telemetryContextKey{}
-
-type telemetryContextKey struct{}
-
-type telemetryContextValue struct {
-	startTime time.Time
+type handler struct {
+	sig      []os.Signal
+	f        func(os.Signal)
+	c        chan os.Signal
+	notified bool
 }
 
-func NewContext() context.Context {
-	return context.WithValue(context.Background(), contextKey, telemetryContextValue{
-		startTime: time.Now(),
-	})
+func (h *handler) routine() {
+	h.f(<-h.c)
+}
+
+func (h *handler) notify() {
+	if h.notified {
+		h.reset()
+	}
+	h.notified = true
+	h.c = make(chan os.Signal, 1)
+	go h.routine()
+	signal.Notify(h.c, h.sig...)
+}
+
+func (h *handler) reset() {
+	signal.Reset(h.sig...)
+	h.notified = false
+}
+
+var std = &handler{}
+
+func Notify(f func(os.Signal), sig ...os.Signal) {
+	std.f = f
+	std.sig = sig
+	std.notify()
+}
+
+func Reset() {
+	std.reset()
 }

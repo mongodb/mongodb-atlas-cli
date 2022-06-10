@@ -23,8 +23,10 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/spf13/afero"
+	"github.com/spf13/cobra"
 )
 
 const (
@@ -40,9 +42,11 @@ type tracker struct {
 	cacheDir         string
 	store            store.EventsSender
 	storeSet         bool
+	cmd              *cobra.Command
+	args             []string
 }
 
-func newTracker(ctx context.Context) (*tracker, error) {
+func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracker, error) {
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {
 		return nil, err
@@ -53,7 +57,7 @@ func newTracker(ctx context.Context) (*tracker, error) {
 	storeSet := true
 	telemetryStore, err := store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry())
 	if err != nil {
-		logError(err)
+		_, _ = log.Debugf("telemetry: failed to set store: %v\n", err)
 		storeSet = false
 	}
 
@@ -63,11 +67,20 @@ func newTracker(ctx context.Context) (*tracker, error) {
 		cacheDir:         cacheDir,
 		store:            telemetryStore,
 		storeSet:         storeSet,
+		cmd:              cmd,
+		args:             args,
 	}, nil
 }
 
+func (t *tracker) defaultCommandOptions() []eventOpt {
+	return []eventOpt{withCommandPath(t.cmd), withHelpCommand(t.cmd, t.args), withFlags(t.cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(t.cmd), withOrgID(t.cmd), withTerminal(), withInstaller(t.fs)}
+}
+
 func (t *tracker) trackCommand(data TrackOptions) error {
-	options := []eventOpt{withCommandPath(data.Cmd), withDuration(data.Cmd), withFlags(data.Cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(data.Cmd), withOrgID(data.Cmd), withTerminal(), withInstaller(t.fs), withExtraProps(data.extraProps)}
+	options := append(t.defaultCommandOptions(), withDuration(t.cmd))
+	if data.Signal != "" {
+		options = append(options, withSignal(data.Signal))
+	}
 	if data.Err != nil {
 		options = append(options, withError(data.Err))
 	}
@@ -77,7 +90,7 @@ func (t *tracker) trackCommand(data TrackOptions) error {
 	}
 	events, err := t.read()
 	if err != nil {
-		logError(err)
+		_, _ = log.Debugf("telemetry: failed to read cache: %v\n", err)
 	}
 	events = append(events, event)
 	err = t.store.SendEvents(events)
@@ -123,7 +136,7 @@ func (t *tracker) save(event Event) error {
 		return err
 	}
 	defer file.Close()
-	data, err := json.MarshalIndent(event, "", "  ")
+	data, err := json.Marshal(event)
 	if err != nil {
 		return err
 	}
@@ -203,7 +216,7 @@ func castString(i interface{}) string {
 }
 
 func (t *tracker) trackSurvey(p survey.Prompt, response interface{}, e error) error {
-	options := []eventOpt{}
+	options := t.defaultCommandOptions()
 
 	if e != nil {
 		options = append(options, withError(e))

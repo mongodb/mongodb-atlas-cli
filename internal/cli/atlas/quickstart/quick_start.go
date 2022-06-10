@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"os/signal"
 	"strconv"
 	"strings"
 	"syscall"
@@ -30,7 +29,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
+	"github.com/mongodb/mongodb-atlas-cli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -158,7 +159,7 @@ func (opts *Opts) Run() error {
 		if publicIP := store.IPAddress(); publicIP != "" {
 			opts.IPAddresses = []string{publicIP}
 		} else {
-			_, _ = fmt.Fprintf(os.Stderr, quickstartTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
+			_, _ = log.Warningf(quickstartTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
 		}
 	}
 
@@ -312,13 +313,13 @@ func askMongoShellAndSetConfig() error {
 // program if it receives an interrupt from the OS. We then handle this by printing
 // the dbUsername and dbPassword.
 func (opts *Opts) setupCloseHandler() {
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	go func() {
-		<-c
+	sighandle.Notify(func(sig os.Signal) {
 		fmt.Printf(quickstartTemplateCloseHandler, opts.ClusterName)
+		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
+			Signal: sig.String(),
+		})
 		os.Exit(0)
-	}()
+	}, os.Interrupt, syscall.SIGTERM)
 }
 
 func (opts *Opts) providerAndRegionToConstant() {
@@ -374,7 +375,7 @@ func (opts *Opts) newDefaultValues() (*quickstart, error) {
 		if publicIP := store.IPAddress(); publicIP != "" {
 			values.IPAddresses = []string{publicIP}
 		} else {
-			_, _ = fmt.Fprintf(os.Stderr, quickstartTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
+			_, _ = log.Warningf(quickstartTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
 		}
 	}
 

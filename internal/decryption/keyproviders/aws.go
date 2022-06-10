@@ -17,12 +17,12 @@ package keyproviders
 import (
 	"errors"
 	"fmt"
-	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/kms"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 )
 
 type AWSKeyIdentifier struct {
@@ -64,9 +64,9 @@ func (ki *AWSKeyIdentifier) ValidateCredentials() error {
 		if !errors.Is(err, credentials.ErrNoValidProvidersFoundInChain) {
 			return err
 		}
-		fmt.Fprintf(os.Stderr, `No credentials found for resource: AWS region="%v" endpoint="%v" key="%v"
+		_, _ = log.Warningf(`No credentials found for resource: AWS region="%v" endpoint="%v" key="%v"
 `, ki.Region, ki.Endpoint, ki.Key)
-		fmt.Fprintln(os.Stderr, "Note: if you have an AWS session token leave AWS access key and AWS secret access key empty")
+		_, _ = log.Warningf("Note: if you have an AWS session token leave AWS access key and AWS secret access key empty")
 		ki.AccessKey, err = provideInput("Provide AWS access key:", ki.AccessKey)
 		if err != nil {
 			return err

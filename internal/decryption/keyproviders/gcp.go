@@ -18,9 +18,9 @@ import (
 	"context"
 	"fmt"
 	"hash/crc32"
-	"os"
 
 	kms "cloud.google.com/go/kms/apiv1"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"google.golang.org/api/option"
 	kmspb "google.golang.org/genproto/googleapis/cloud/kms/v1"
 	"google.golang.org/protobuf/types/known/wrapperspb"
@@ -55,7 +55,7 @@ func (ki *GCPKeyIdentifier) ValidateCredentials() error {
 
 	ki.client, err = kms.NewKeyManagementClient(context.Background())
 	if err != nil {
-		fmt.Fprintf(os.Stderr, `No credentials found for resource: GCP location="%v" projectID="%v" keyRing="%v" keyName="%v"
+		_, _ = log.Warningf(`No credentials found for resource: GCP location="%v" projectID="%v" keyRing="%v" keyName="%v"
 `, ki.Location, ki.ProjectID, ki.KeyRing, ki.KeyName)
 
 		var json string

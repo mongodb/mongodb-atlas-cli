@@ -17,7 +17,6 @@ package auth
 import (
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -25,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/oauth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
@@ -220,7 +220,7 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 	}
 
 	if errBrowser := browser.OpenURL(uri); errBrowser != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
+		_, _ = log.Warningln("There was an issue opening your browser")
 	}
 }
 

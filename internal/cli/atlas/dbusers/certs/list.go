@@ -43,7 +43,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.DBUserCertificates(opts.ConfigProjectID(), opts.username)
+	r, err := opts.store.DBUserCertificates(opts.ConfigProjectID(), opts.username, nil)
 	if err != nil {
 		return err
 	}

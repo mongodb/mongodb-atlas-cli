@@ -38,13 +38,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var profile string
 	const docsPermissions = 0766
 	if err := os.MkdirAll("./docs/atlascli/command", docsPermissions); err != nil {
 		log.Fatal(err)
 	}
 
-	atlasBuilder := atlas.Builder(&profile)
+	atlasBuilder := atlas.Builder()
 
 	// init completion command indirectly
 	// See: https://github.com/spf13/cobra/issues/1464

@@ -15,6 +15,8 @@
 package cloudmanager
 
 import (
+	"log"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/events"
@@ -46,6 +48,8 @@ func Builder() *cobra.Command {
 		Aliases: []string{"cm"},
 		Short:   "MongoDB Cloud Manager operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			log.SetOutput(cmd.ErrOrStderr())
+
 			if err := opts.InitFlow(); err != nil {
 				return err
 			}

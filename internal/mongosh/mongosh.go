@@ -21,10 +21,10 @@ import (
 )
 
 func Detect() bool {
-	return BinPath() != ""
+	return binPath() != ""
 }
 
-func BinPath() string {
+func binPath() string {
 	if p, err := exec.LookPath(mongoshBin); err == nil {
 		return p
 	}
@@ -35,5 +35,5 @@ func BinPath() string {
 func Run(username, password, mongoURI string) error {
 	args := []string{mongoshBin, "-u", username, "-p", password, mongoURI}
 	env := os.Environ()
-	return syscall.Exec(BinPath(), args, env) //nolint:gosec // false positive, this path won't be tampered
+	return syscall.Exec(binPath(), args, env) //nolint:gosec // false positive, this path won't be tampered
 }

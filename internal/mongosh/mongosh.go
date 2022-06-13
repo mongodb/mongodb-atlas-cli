@@ -15,7 +15,6 @@ package mongosh
 
 import (
 	"os"
-	"path"
 	"syscall"
 
 	exec "golang.org/x/sys/execabs"
@@ -27,14 +26,14 @@ func Detect() bool {
 
 func BinPath() string {
 	if p, err := exec.LookPath(mongoshBin); err == nil {
-		return path.Join(p, mongoshBin)
+		return p
 	}
 
 	return ""
 }
 
 func Run(username, password, mongoURI string) error {
-	args := []string{"-u", username, "-p", password, mongoURI}
+	args := []string{mongoshBin, "-u", username, "-p", password, mongoURI}
 	env := os.Environ()
 	return syscall.Exec(BinPath(), args, env) //nolint:gosec // false positive, this path won't be tampered
 }

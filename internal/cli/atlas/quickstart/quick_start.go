@@ -266,7 +266,7 @@ func (opts *Opts) Run() error {
 		return er
 	}
 
-	fmt.Print("Cluster created.")
+	fmt.Println("Cluster created.")
 
 	// Get cluster's connection string
 	cluster, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)

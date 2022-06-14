@@ -1,5 +1,4 @@
-FROM amazonlinux:2
-
+FROM centos:8
 
 ARG url
 ARG entrypoint

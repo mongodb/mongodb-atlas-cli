@@ -49,7 +49,8 @@ $ mongosh -u %s -p %s %s
 `
 
 const quickstartTemplateMongoshNotDetected = `
-MongoDB Shell not detected. To install, open www.mongodb.com/try/download/shell
+MongoDB Shell not detected. To install, open www.mongodb.com/try/download/shell.
+
 MongoDB Shell (mongosh) is an interactive command line interface to query, update, and manage data in your MongoDB database.
 
 Once you install the MongoDB Shell, connect to your database with:

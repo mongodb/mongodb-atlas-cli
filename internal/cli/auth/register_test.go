@@ -46,10 +46,9 @@ func TestRegisterBuilder(t *testing.T) {
 func Test_registerOpts_Run(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
-	mockFlow := mocks.NewMockAuthenticator(ctrl)
-	mockRegisterFlow := &registerAuthenticator{
+	mockFlow := mocks.NewMockRegisterAuthenticator(ctrl)
+	mockRegisterFlow := &registerAuthenticatorWrapper{
 		authenticator: mockFlow,
-		isGov:         false,
 	}
 	mockConfig := mocks.NewMockLoginConfig(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
@@ -82,6 +81,11 @@ func Test_registerOpts_Run(t *testing.T) {
 		EXPECT().
 		RequestCode(ctx).
 		Return(expectedCode, nil, nil).
+		Times(1)
+	mockFlow.
+		EXPECT().
+		RegistrationConfig(ctx).
+		Return(&auth.RegistrationConfig{RegistrationURL: "https://account.mongodb.com/account/register/cli"}, nil, nil).
 		Times(1)
 
 	expectedToken := &auth.Token{
@@ -125,7 +129,7 @@ To verify your account, copy your one-time verification code:
 
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-To continue, go to https://account.mongodb.com/account/register/cli?n=/account/connect&nRegister=/account/connect
+To continue, go to https://account.mongodb.com/account/register/cli
 Successfully logged in as test@10gen.com.
 `, buf.String())
 }

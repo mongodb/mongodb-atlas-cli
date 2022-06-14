@@ -32,8 +32,20 @@ func binPath() string {
 	return ""
 }
 
-func Run(username, password, mongoURI string) error {
-	args := []string{mongoshBin, "-u", username, "-p", password, mongoURI}
+func execCommand(args ...string) error {
+	a := append([]string{mongoshBin}, args...)
 	env := os.Environ()
-	return syscall.Exec(binPath(), args, env) //nolint:gosec // false positive, this path won't be tampered
+	return syscall.Exec(binPath(), a, env) //nolint:gosec // false positive, this path won't be tampered
+}
+
+func SetTelemetry(enable bool) error {
+	cmd := "disableTelemetry()"
+	if enable {
+		cmd = "enableTelemetry()"
+	}
+	return execCommand("--nodb", "--eval", cmd)
+}
+
+func Run(username, password, mongoURI string) error {
+	return execCommand("-u", username, "-p", password, mongoURI)
 }

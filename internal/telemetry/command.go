@@ -44,7 +44,7 @@ func StartTrackingCommand(cmd *cobra.Command, args []string) {
 }
 
 func FinishTrackingCommand(opt TrackOptions) {
-	if !config.TelemetryEnabled() {
+	if !config.TelemetryEnabled() || currentTracker == nil {
 		return
 	}
 

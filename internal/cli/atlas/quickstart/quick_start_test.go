@@ -75,8 +75,6 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		Confirm:        true,
 	}
 
-	opts.runMongoShell = true
-
 	projectIPAccessList := opts.newProjectIPAccessList()
 
 	mockStore.
@@ -124,7 +122,6 @@ func TestQuickstartOpts_Run_NotLoggedIn(t *testing.T) {
 		Confirm:        true,
 	}
 
-	opts.runMongoShell = true
 	require.Error(t, validate.ErrMissingCredentials, opts.quickstartPreRun(ctx, buf))
 }
 
@@ -164,7 +161,6 @@ func TestQuickstartOpts_Run_NeedLogin_ForceAfterLogin(t *testing.T) {
 		loginOpts:      auth.NewLoginOpts(),
 	}
 
-	opts.runMongoShell = true
 	setConfig()
 	projectIPAccessList := opts.newProjectIPAccessList()
 
@@ -239,8 +235,6 @@ func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 		SkipSampleData: true,
 		Confirm:        true,
 	}
-
-	opts.runMongoShell = true
 
 	projectIPAccessList := opts.newProjectIPAccessList()
 

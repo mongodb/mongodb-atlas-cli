@@ -22,7 +22,6 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
@@ -46,7 +45,6 @@ type DefaultSetterOpts struct {
 	OpsManagerURL            string
 	ProjectID                string
 	OrgID                    string
-	MongoShellPath           string
 	TelemetryEnabled         bool
 	Output                   string
 	Store                    ProjectOrgsLister
@@ -268,19 +266,6 @@ func (opts *DefaultSetterOpts) SetUpOrg() {
 	if opts.OrgID != "" {
 		config.SetOrgID(opts.OrgID)
 	}
-}
-
-func (opts *DefaultSetterOpts) SetUpMongoSHPath() {
-	if !opts.IsCloud() {
-		return
-	}
-
-	defaultPath := config.MongoShellPath()
-	if defaultPath == "" {
-		defaultPath = mongosh.Path()
-	}
-
-	config.SetMongoShellPath(defaultPath)
 }
 
 func (opts *DefaultSetterOpts) SetUpOutput() {

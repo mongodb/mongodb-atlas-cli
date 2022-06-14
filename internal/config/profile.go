@@ -404,18 +404,6 @@ func (p *Profile) SetOrgID(v string) {
 	p.Set(orgID, v)
 }
 
-// MongoShellPath get the configured MongoDB Shell path.
-func MongoShellPath() string { return Default().MongoShellPath() }
-func (p *Profile) MongoShellPath() string {
-	return p.GetString(mongoShellPath)
-}
-
-// SetMongoShellPath sets the global MongoDB Shell path.
-func SetMongoShellPath(v string) { Default().SetMongoShellPath(v) }
-func (*Profile) SetMongoShellPath(v string) {
-	SetGlobal(mongoShellPath, v)
-}
-
 // SkipUpdateCheck get the global skip update check.
 func SkipUpdateCheck() bool { return Default().SkipUpdateCheck() }
 func (p *Profile) SkipUpdateCheck() bool {
@@ -496,9 +484,6 @@ func Map() map[string]string { return Default().Map() }
 func (p *Profile) Map() map[string]string {
 	settings := viper.GetStringMapString(p.Name())
 	profileSettings := make(map[string]string, len(settings)+1)
-	if p.MongoShellPath() != "" {
-		profileSettings[mongoShellPath] = p.MongoShellPath()
-	}
 	for k, v := range settings {
 		if k == privateAPIKey || k == publicAPIKey || k == AccessTokenField || k == RefreshTokenField {
 			profileSettings[k] = "redacted"

@@ -83,7 +83,6 @@ Enter [?] on any option to get help.
 		return err
 	}
 	opts.SetUpOutput()
-	opts.SetUpMongoSHPath()
 
 	if err := config.Save(); err != nil {
 		return err

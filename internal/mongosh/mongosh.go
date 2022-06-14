@@ -20,20 +20,20 @@ import (
 	exec "golang.org/x/sys/execabs"
 )
 
-func Bin() string {
-	return mongoshBin
+func Detect() bool {
+	return binPath() != ""
 }
 
-func Path() string {
-	if path, err := exec.LookPath(Bin()); err == nil {
-		return path
+func binPath() string {
+	if p, err := exec.LookPath(mongoshBin); err == nil {
+		return p
 	}
 
 	return ""
 }
 
-func Run(binary, username, password, mongoURI string) error {
+func Run(username, password, mongoURI string) error {
 	args := []string{mongoshBin, "-u", username, "-p", password, mongoURI}
 	env := os.Environ()
-	return syscall.Exec(binary, args, env)
+	return syscall.Exec(binPath(), args, env) //nolint:gosec // false positive, this path won't be tampered
 }

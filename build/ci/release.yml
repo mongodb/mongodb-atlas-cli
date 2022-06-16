@@ -267,13 +267,13 @@ tasks:
           tool_name: ${tool_name}
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${package_name}-deb.tgz
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-deb.tgz
           source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${package_name}-rpm.tgz
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-rpm.tgz
           source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum
           include:
             - "*.rpm"

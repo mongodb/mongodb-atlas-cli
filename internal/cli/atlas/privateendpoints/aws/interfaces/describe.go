@@ -71,7 +71,7 @@ func DescribeBuilder() *cobra.Command {
 			"endpointIdDesc": "Unique alphanumeric string that identifies the private endpoint.",
 		},
 		Example: fmt.Sprintf(`  This example uses the profile named "myprofile" for accessing Atlas.
-  $ %s atlas privateendpoints aws interfaces describe vpce-svc-0123456789abcdefg --endpointServiceId 0123456789abcdefghijklmn -P myprofile`, cli.ExampleAtlasEntryPoint()),
+  $ %s privateendpoints aws interfaces describe vpce-svc-0123456789abcdefg --endpointServiceId 0123456789abcdefghijklmn -P myprofile`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.privateEndpointID = args[0]
 			return opts.PreRunE(

@@ -216,7 +216,17 @@ functions:
           - tool_name
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/meta
         binary: ./docker-build.sh
-
+  "docker build repo":
+    - command: subprocess.exec
+      type: test
+      params:
+        include_expansions_in_env:
+          - image
+          - package
+          - server_version
+          - entrypoint
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/repo
+        binary: ./docker-build.sh
 tasks:
   - name: package_msi
     tags: ["packaging"]
@@ -503,6 +513,55 @@ tasks:
         vars:
           image: debian10-deb
           tool_name: atlascli
+  - name: pkg_test_repo_docker_amazon2
+    tags: [ "smoke-test", "repo" ]
+    commands:
+      - func: "clone"
+      - func: "docker build repo"
+        vars:
+          image: amazonlinux2-${repo}
+  - name: pkg_test_repo_docker_centos7
+    tags: [ "smoke-test", "repo" ]
+    commands:
+      - func: "clone"
+      - func: "docker build repo"
+        vars:
+          image: centos7-${repo}
+  - name: pkg_test_repo_docker_centos8
+    tags: [ "smoke-test", "repo" ]
+    commands:
+      - func: "clone"
+      - func: "docker build repo"
+        vars:
+          image: centos8-${repo}
+  - name: pkg_test_repo_docker_debian9
+    tags: [ "smoke-test", "repo" ]
+    commands:
+      - func: "clone"
+      - func: "docker build repo"
+        vars:
+          image: debian9-${repo}
+  - name: pkg_test_repo_docker_debian10
+    tags: [ "smoke-test", "repo" ]
+    commands:
+      - func: "clone"
+      - func: "docker build repo"
+        vars:
+          image: debian10-${repo}
+  - name: pkg_test_repo_docker_ubuntu18
+    tags: [ "smoke-test", "repo" ]
+    commands:
+      - func: "clone"
+      - func: "docker build repo"
+        vars:
+          image: ubuntu18.04-${repo}
+  - name: pkg_test_repo_docker_ubuntu20
+    tags: [ "smoke-test", "repo" ]
+    commands:
+      - func: "clone"
+      - func: "docker build repo"
+        vars:
+          image: ubuntu20.04-${repo}
   - name: release_mongocli
     stepback: false
     git_tag_only: true
@@ -1468,3 +1527,135 @@ buildvariants:
     run_on: ubuntu1804-small
     tasks:
       - name: .smoke-test .atlascli
+  - name: repo_atlascli_42_org
+    display_name: "Test AtlasCLI yum/apt 4.2 org repo"
+    run_on:
+      - ubuntu1804-small
+    expansions:
+      server_version: "4.2"
+      package: "mongodb-atlas"
+      entrypoint: atlas
+      repo: org
+    tasks:
+      - name: .smoke-test .repo
+  - name: repo_atlascli_42_ent
+    display_name: "Test AtlasCLI yum/apt 4.2 ent repo"
+    run_on:
+      - ubuntu1804-small
+    expansions:
+      server_version: "4.2"
+      package: "mongodb-atlas"
+      entrypoint: atlas
+      repo: ent
+    tasks:
+      - name: .smoke-test .repo
+  - name: repo_atlascli_44_org
+    display_name: "Test AtlasCLI yum/apt 4.4 org repo"
+    run_on:
+      - ubuntu1804-small
+    expansions:
+      server_version: "4.4"
+      package: "mongodb-atlas"
+      entrypoint: atlas
+      repo: org
+    tasks:
+      - name: .smoke-test .repo
+  - name: repo_atlascli_44_ent
+    display_name: "Test AtlasCLI yum/apt 4.4 ent repo"
+    run_on:
+      - ubuntu1804-small
+    expansions:
+      server_version: "4.4"
+      package: "mongodb-atlas"
+      entrypoint: atlas
+      repo: ent
+    tasks:
+      - name: .smoke-test .repo
+  - name: repo_atlascli_50_org
+    display_name: "Test AtlasCLI yum/apt 5.0 org repo"
+    run_on:
+      - ubuntu1804-small
+    expansions:
+      server_version: "5.0"
+      package: "mongodb-atlas"
+      entrypoint: atlas
+      repo: org
+    tasks:
+      - name: .smoke-test .repo
+  - name: repo_atlascli_50_ent
+    display_name: "Test AtlasCLI yum/apt 5.0 ent repo"
+    run_on:
+      - ubuntu1804-small
+    expansions:
+      server_version: "5.0"
+      package: "mongodb-atlas"
+      entrypoint: atlas
+      repo: ent
+    tasks:
+      - name: .smoke-test .repo
+  - name: repo_mongocli_42_org
+    display_name: "Test mongoCLI yum/apt 4.2 org repo"
+    run_on:
+      - ubuntu1804-small
+    expansions:
+      server_version: "4.2"
+      package: "mongocli"
+      entrypoint: mongo
+      repo: org
+    tasks:
+      - name: .smoke-test .repo
+  - name: repo_mongocli_42_ent
+    display_name: "Test mongoCLI yum/apt 4.2 ent repo"
+    run_on:
+      - ubuntu1804-small
+    expansions:
+      server_version: "4.2"
+      package: "mongocli"
+      entrypoint: mongo
+      repo: ent
+    tasks:
+      - name: .smoke-test .repo
+  - name: repo_mongocli_44_org
+    display_name: "Test mongoCLI yum/apt 4.4 org repo"
+    run_on:
+      - ubuntu1804-small
+    expansions:
+      server_version: "4.4"
+      package: "mongocli"
+      entrypoint: mongo
+      repo: org
+    tasks:
+      - name: .smoke-test .repo
+  - name: repo_mongocli_44_ent
+    display_name: "Test mongoCLI yum/apt 4.4 ent repo"
+    run_on:
+      - ubuntu1804-small
+    expansions:
+      server_version: "4.4"
+      package: "mongocli"
+      entrypoint: mongo
+      repo: ent
+    tasks:
+      - name: .smoke-test .repo
+  - name: repo_mongocli_50_org
+    display_name: "Test mongoCLI yum/apt 5.0 org repo"
+    run_on:
+      - ubuntu1804-small
+    expansions:
+      server_version: "5.0"
+      package: "mongocli"
+      entrypoint: mongo
+      repo: org
+    tasks:
+      - name: .smoke-test .repo
+  - name: repo_mongocli_50_ent
+    display_name: "Test mongoCLI yum/apt 5.0 ent repo"
+    run_on:
+      - ubuntu1804-small
+    expansions:
+      server_version: "5.0"
+      package: "mongocli"
+      entrypoint: mongo
+      repo: ent
+    tasks:
+      - name: .smoke-test .repo

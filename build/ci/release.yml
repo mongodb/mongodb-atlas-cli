@@ -1333,6 +1333,8 @@ tasks:
           ext: deb
           tool_name: atlascli
   - name: pkg_test_repo_atlascli
+    patchable: false
+    git_tag_only: true
     depends_on:
         - name: release_atlascli
           variant: "release_atlascli_github"
@@ -1343,6 +1345,8 @@ tasks:
         vars:
           tool_name: atlascli
   - name: pkg_test_repo_mongocli
+    patchable: false
+    git_tag_only: true
     depends_on:
         - name: release_mongocli
           variant: "release_mongocli_github"

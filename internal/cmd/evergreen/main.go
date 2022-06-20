@@ -20,12 +20,35 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/evergreen-ci/shrub"
 )
 
 const atlascli = "atlascli"
 const mongocli = "mongocli"
+
+func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDependency {
+	newOs := map[string]string{
+		"centos7":      "rhel70",
+		"centos8":      "rhel80",
+		"amazonlinux2": "amazon2",
+		"ubuntu18.04":  "ubuntu1804",
+		"ubuntu20.04":  "ubuntu2004",
+		"debian9":      "debian92",
+		"debian10":     "debian10",
+	}
+
+	newRepo := map[string]string{
+		"org": "org",
+		"ent": "enterprise",
+	}
+
+	return shrub.TaskDependency{
+		Name:    fmt.Sprintf("push_%v_%v_%v_stable", toolName, newOs[os], newRepo[repo]),
+		Variant: fmt.Sprintf("release_%v_publish_%v", toolName, strings.ReplaceAll(serverVersion, ".", "")),
+	}
+}
 
 func generateRepoTasks(toolName string) *shrub.Configuration {
 	serverVersions := []string{"4.2", "4.4", "5.0"}
@@ -53,6 +76,9 @@ func generateRepoTasks(toolName string) *shrub.Configuration {
 				t := &shrub.Task{
 					Name: fmt.Sprintf("test_repo_%v_%v_%v_%v", toolName, os, repo, serverVersion),
 				}
+				t = t.Stepback(false)
+				t = t.GitTagOnly(true)
+				t = t.Dependency(buildDependency(toolName, os, serverVersion, repo))
 				t = t.Function("clone").FunctionWithVars("docker build repo", map[string]string{
 					"server_version": serverVersion,
 					"package":        pkg,

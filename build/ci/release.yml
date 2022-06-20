@@ -1332,13 +1332,26 @@ tasks:
           distro: debian10
           ext: deb
           tool_name: atlascli
-  - name: pkg_test_repo
-    tags: [ "smoke-test", "generate", "repo" ]
+  - name: pkg_test_repo_atlascli
+    depends_on:
+        - name: release_atlascli
+          variant: "release_atlascli_github"
+    tags: [ "smoke-test", "generate", "repo", "atlascli" ]
     commands:
       - func: "clone"
       - func: "generate evergreen"
         vars:
-          tool_name: ${tool_name}
+          tool_name: atlascli
+  - name: pkg_test_repo_mongocli
+    depends_on:
+        - name: release_mongocli
+          variant: "release_mongocli_github"
+    tags: [ "smoke-test", "generate", "repo", "mongocli" ]
+    commands:
+      - func: "clone"
+      - func: "generate evergreen"
+        vars:
+          tool_name: mongocli
 
 buildvariants:
   - name: go_mongocli_msi_snapshot
@@ -1507,18 +1520,16 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
-      tool_name: atlascli
     run_on:
       - ubuntu1804-small
     tasks:
-      - name: .smoke-test .generate .repo
+      - name: .smoke-test .generate .repo .atlascli
   - name: test_mongocli_repo
     display_name: "Test MongoCLI repo"
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
-      tool_name: mongocli
     run_on:
       - ubuntu1804-small
     tasks:
-      - name: .smoke-test .generate .repo
+      - name: .smoke-test .generate .repo .mongocli

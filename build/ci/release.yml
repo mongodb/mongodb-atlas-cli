@@ -1533,7 +1533,7 @@ buildvariants:
       - ubuntu1804-small
     expansions:
       server_version: "4.2"
-      package: "mongodb-atlas"
+      package: "mongodb-atlas-cli"
       entrypoint: atlas
       repo: org
     tasks:
@@ -1544,7 +1544,7 @@ buildvariants:
       - ubuntu1804-small
     expansions:
       server_version: "4.2"
-      package: "mongodb-atlas"
+      package: "mongodb-atlas-cli"
       entrypoint: atlas
       repo: ent
     tasks:

@@ -1600,7 +1600,7 @@ buildvariants:
     expansions:
       server_version: "4.2"
       package: "mongocli"
-      entrypoint: mongo
+      entrypoint: mongocli
       repo: org
     tasks:
       - name: .smoke-test .repo
@@ -1611,7 +1611,7 @@ buildvariants:
     expansions:
       server_version: "4.2"
       package: "mongocli"
-      entrypoint: mongo
+      entrypoint: mongocli
       repo: ent
     tasks:
       - name: .smoke-test .repo
@@ -1622,7 +1622,7 @@ buildvariants:
     expansions:
       server_version: "4.4"
       package: "mongocli"
-      entrypoint: mongo
+      entrypoint: mongocli
       repo: org
     tasks:
       - name: .smoke-test .repo
@@ -1633,7 +1633,7 @@ buildvariants:
     expansions:
       server_version: "4.4"
       package: "mongocli"
-      entrypoint: mongo
+      entrypoint: mongocli
       repo: ent
     tasks:
       - name: .smoke-test .repo
@@ -1644,7 +1644,7 @@ buildvariants:
     expansions:
       server_version: "5.0"
       package: "mongocli"
-      entrypoint: mongo
+      entrypoint: mongocli
       repo: org
     tasks:
       - name: .smoke-test .repo
@@ -1655,7 +1655,7 @@ buildvariants:
     expansions:
       server_version: "5.0"
       package: "mongocli"
-      entrypoint: mongo
+      entrypoint: mongocli
       repo: ent
     tasks:
       - name: .smoke-test .repo

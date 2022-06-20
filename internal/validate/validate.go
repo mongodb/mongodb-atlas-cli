@@ -88,7 +88,7 @@ func OptionalObjectID(val interface{}) error {
 func ObjectID(s string) error {
 	b, err := hex.DecodeString(s)
 	if err != nil || len(b) != 12 {
-		return fmt.Errorf("the provided value '%s' is not a valid Id", s)
+		return fmt.Errorf("the provided value '%s' is not a valid ID", s)
 	}
 	return nil
 }

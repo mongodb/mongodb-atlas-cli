@@ -17,11 +17,6 @@ stepback: true
 command_type: system
 pre_error_fails_task: true
 
-# Files that match an ignore-list pattern will not trigger a build, if they're the only modified
-# files in the patch.
-ignore:
-  - "*.md"
-  - "*.txt"
 variables:
   - &go_options
     GO111MODULE: "on"
@@ -98,7 +93,7 @@ functions:
 
           export GOROOT="${go_root}"
           export PATH="./bin:$GOROOT/bin:$PATH"
-          go tool cover -html=coverage.out -o coverage.html  
+          go tool cover -html=coverage.out -o coverage.html
   "upload html coverage":
     - command: s3.put
       params:
@@ -1277,7 +1272,7 @@ buildvariants:
       go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: ".e2e .required"
-  - name: e2e_iteractive
+  - name: e2e_interactive
     display_name: "E2E Interactive Commands"
     run_on:
       - rhel80-small

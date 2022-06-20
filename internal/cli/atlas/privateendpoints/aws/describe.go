@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -56,14 +57,17 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) aws describe|get <privateEndpointId> [--projectId projectId].
+// DescribeBuilder mongocli atlas privateEndpoint(s)|privateendpoint(s)
+//   aws describe|get <privateEndpointId> [--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
 		Use:     "describe <privateEndpointId>",
 		Aliases: []string{"get"},
-		Args:    require.ExactArgs(1),
-		Short:   "Return a specific AWS Private Endpoints for your project.",
+		Args: cobra.MatchAll(require.ExactArgs(1), func(cmd *cobra.Command, args []string) error {
+			return validate.ObjectID(args[0])
+		}),
+		Short: "Return a specific AWS Private Endpoints for your project.",
 		Annotations: map[string]string{
 			"args":                  "privateEndpointId",
 			"requiredArgs":          "privateEndpointId",

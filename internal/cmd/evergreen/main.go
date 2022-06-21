@@ -85,7 +85,7 @@ func generateRepoTasks(toolName string) *shrub.Configuration {
 					"package":        pkg,
 					"entrypoint":     entrypoint,
 					"image":          os,
-					"mongo_package":  fmt.Sprintf("mongo-%v", repo),
+					"mongo_package":  fmt.Sprintf("mongodb-%v", repo),
 					"mongo_repo":     mongoRepo,
 				})
 				c.Tasks = append(c.Tasks, t)

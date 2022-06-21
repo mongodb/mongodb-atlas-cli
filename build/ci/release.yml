@@ -216,7 +216,47 @@ functions:
           - tool_name
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/meta
         binary: ./docker-build.sh
-
+  "generate evergreen":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        include_expansions_in_env:
+          - tool_name
+          - workdir
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
+        env:
+          <<: *go_options
+        binary: build/ci/evergreen-generate-tasks.sh
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+          - src/github.com/mongodb/mongodb-atlas-cli/tasks.json
+        remote_file: ${project}/dist/${revision}_${created_at}/
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/json}
+        display_name: internal-bucket
+    - command: generate.tasks
+      params:
+        files:
+          - tasks.json
+  "docker build repo":
+    - command: subprocess.exec
+      type: test
+      params:
+        include_expansions_in_env:
+          - image
+          - package
+          - server_version
+          - entrypoint
+          - mongo_package
+          - mongo_repo
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/repo
+        binary: ./docker-build.sh
 tasks:
   - name: package_msi
     tags: ["packaging"]
@@ -1305,6 +1345,30 @@ tasks:
           distro: debian10
           ext: deb
           tool_name: atlascli
+  - name: pkg_test_repo_atlascli
+    patchable: false
+    git_tag_only: true
+    depends_on:
+        - name: release_atlascli
+          variant: "release_atlascli_github"
+    tags: [ "smoke-test", "generate", "repo", "atlascli" ]
+    commands:
+      - func: "clone"
+      - func: "generate evergreen"
+        vars:
+          tool_name: atlascli
+  - name: pkg_test_repo_mongocli
+    patchable: false
+    git_tag_only: true
+    depends_on:
+        - name: release_mongocli
+          variant: "release_mongocli_github"
+    tags: [ "smoke-test", "generate", "repo", "mongocli" ]
+    commands:
+      - func: "clone"
+      - func: "generate evergreen"
+        vars:
+          tool_name: mongocli
 
 buildvariants:
   - name: go_mongocli_msi_snapshot
@@ -1468,3 +1532,21 @@ buildvariants:
     run_on: ubuntu1804-small
     tasks:
       - name: .smoke-test .atlascli
+  - name: test_atlascli_repo
+    display_name: "Test AtlasCLI repo"
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+    run_on:
+      - ubuntu1804-small
+    tasks:
+      - name: .smoke-test .generate .repo .atlascli
+  - name: test_mongocli_repo
+    display_name: "Test MongoCLI repo"
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+    run_on:
+      - ubuntu1804-small
+    tasks:
+      - name: .smoke-test .generate .repo .mongocli

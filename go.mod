@@ -12,6 +12,7 @@ require (
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/aws/aws-sdk-go v1.44.38
 	github.com/briandowns/spinner v1.18.1
+	github.com/evergreen-ci/shrub v0.0.0-20220520145438-44fbdf0045c8
 	github.com/gemalto/kmip-go v0.0.6-0.20210426170211-84e83580888d
 	github.com/go-test/deep v1.0.8
 	github.com/golang-jwt/jwt/v4 v4.4.1

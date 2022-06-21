@@ -25,8 +25,16 @@ import (
 	"github.com/evergreen-ci/shrub"
 )
 
-const atlascli = "atlascli"
-const mongocli = "mongocli"
+const (
+	atlascli = "atlascli"
+	mongocli = "mongocli"
+)
+
+var (
+	serverVersions = []string{"4.2", "4.4", "5.0"}
+	oses           = []string{"amazonlinux2", "centos7", "centos8", "debian9", "debian10", "ubuntu18.04", "ubuntu20.04"}
+	repos          = []string{"org", "enterprise"}
+)
 
 func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDependency {
 	newOs := map[string]string{
@@ -39,22 +47,13 @@ func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDepende
 		"debian10":     "debian10",
 	}
 
-	newRepo := map[string]string{
-		"org": "org",
-		"ent": "enterprise",
-	}
-
 	return shrub.TaskDependency{
-		Name:    fmt.Sprintf("push_%v_%v_%v_stable", toolName, newOs[os], newRepo[repo]),
+		Name:    fmt.Sprintf("push_%v_%v_%v_stable", toolName, newOs[os], repo),
 		Variant: fmt.Sprintf("release_%v_publish_%v", toolName, strings.ReplaceAll(serverVersion, ".", "")),
 	}
 }
 
 func generateRepoTasks(toolName string) *shrub.Configuration {
-	serverVersions := []string{"4.2", "4.4", "5.0"}
-	oses := []string{"amazonlinux2", "centos7", "centos8", "debian9", "debian10", "ubuntu18.04", "ubuntu20.04"}
-	repos := []string{"org", "ent"}
-
 	c := &shrub.Configuration{}
 
 	for _, serverVersion := range serverVersions {
@@ -73,17 +72,21 @@ func generateRepoTasks(toolName string) *shrub.Configuration {
 
 		for _, os := range oses {
 			for _, repo := range repos {
+				mongoRepo := "https://repo.mongodb.com"
+				if repo == "org" {
+					mongoRepo = "https://repo.mongodb.org"
+				}
+
 				t := &shrub.Task{
 					Name: fmt.Sprintf("test_repo_%v_%v_%v_%v", toolName, os, repo, serverVersion),
 				}
-				t = t.Stepback(false)
-				t = t.GitTagOnly(true)
-				t = t.Dependency(buildDependency(toolName, os, serverVersion, repo))
-				t = t.Function("clone").FunctionWithVars("docker build repo", map[string]string{
+				t = t.Stepback(false).GitTagOnly(true).Dependency(buildDependency(toolName, os, serverVersion, repo)).Function("clone").FunctionWithVars("docker build repo", map[string]string{
 					"server_version": serverVersion,
 					"package":        pkg,
 					"entrypoint":     entrypoint,
-					"image":          fmt.Sprintf("%v-%v", os, repo),
+					"image":          os,
+					"mongo_package":  fmt.Sprintf("mongo-%v", repo),
+					"mongo_repo":     mongoRepo,
 				})
 				c.Tasks = append(c.Tasks, t)
 				v.AddTasks(t.Name)

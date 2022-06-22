@@ -30,12 +30,3 @@ func TestBuilder(t *testing.T) {
 		[]string{},
 	)
 }
-
-func TestRestoresBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		RestoresBuilder(),
-		2,
-		[]string{},
-	)
-}

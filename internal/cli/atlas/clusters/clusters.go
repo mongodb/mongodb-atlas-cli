@@ -26,7 +26,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-// MongoCLIBuilder is to split "mongocli atlas logs" and "atlas logs".
+// MongoCLIBuilder is to split "mongocli atlas clusters" and "atlas clusters".
 func MongoCLIBuilder() *cobra.Command {
 	const use = "clusters"
 	cmd := &cobra.Command{

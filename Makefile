@@ -9,7 +9,7 @@ MCLI_VERSION?=$(shell git tag --list 'mongocli/v*' --sort=taggerdate | tail -1 |
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
 MCLI_DESTINATION=./bin/$(MCLI_BINARY_NAME)
 MCLI_INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
-MCLI_E2E_BINARY?=../../bin/${MCLI_BINARY_NAME}
+MCLI_E2E_BINARY?=../../../bin/${MCLI_BINARY_NAME}
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
 ATLAS_BINARY_NAME=atlas
@@ -26,7 +26,7 @@ endif
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit=${MCLI_GIT_SHA}
 MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=$(MCLI_BINARY_NAME) -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${MCLI_VERSION}
 ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${ATLAS_VERSION}
-ATLAS_E2E_BINARY?=../../bin/${ATLAS_BINARY_NAME}
+ATLAS_E2E_BINARY?=../../../bin/${ATLAS_BINARY_NAME}
 
 DEBUG_FLAGS=all=-N -l
 

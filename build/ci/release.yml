@@ -566,7 +566,7 @@ tasks:
       - func: "package"
         vars:
           tool_name: "mongocli"
-          goreleaser_config: .mongocli.goreleaser.yml
+          goreleaser_config: build/package/.mongocli.goreleaser.yml
           changelog_file: CHANGELOG_MONGOCLI.md
       - func: "rename pkg"
         vars:
@@ -631,7 +631,7 @@ tasks:
       - func: "package"
         vars:
           tool_name: "atlascli"
-          goreleaser_config: .atlascli.goreleaser.yml
+          goreleaser_config: build/package/.atlascli.goreleaser.yml
           changelog_file: CHANGELOG_ATLASCLI.md
       - func: "rename pkg"
         vars:
@@ -1399,7 +1399,7 @@ buildvariants:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
       server_version: "4.4.0-rc3"
-      goreleaser_file: ".mongocli.goreleaser.yml"
+      goreleaser_file: "build/package/.mongocli.goreleaser.yml"
       package_name: "mongocli"
       tool_name: "mongocli"
     tasks:
@@ -1412,7 +1412,7 @@ buildvariants:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
       server_version: "4.4.0-rc3"
-      goreleaser_file: ".atlascli.goreleaser.yml"
+      goreleaser_file: "build/package/.atlascli.goreleaser.yml"
       package_name: "mongodb-atlas-cli"
       meta_package_name: "mongodb-atlas"
       tool_name: "atlascli"

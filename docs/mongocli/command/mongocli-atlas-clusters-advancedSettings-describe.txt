@@ -1,8 +1,8 @@
-.. _atlas-clusters-config-describe:
+.. _mongocli-atlas-clusters-advancedSettings-describe:
 
-==============================
-atlas clusters config describe
-==============================
+=================================================
+mongocli atlas clusters advancedSettings describe
+=================================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ atlas clusters config describe
    :depth: 1
    :class: singlecol
 
-Retrieve advanced configuration options for one Cluster.
+Retrieve advanced configuration settings for one cluster.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas clusters config describe <clusterName> [options]
+   mongocli atlas clusters advancedSettings describe <clusterName> [options]
 
 Arguments
 ---------
@@ -35,7 +35,7 @@ Arguments
    * - clusterName
      - string
      - false
-     - Name of the Atlas cluster for which you want to retrieve configuration options.
+     - Name of the Atlas cluster for which you want to retrieve configuration settings.
 
 Options
 -------

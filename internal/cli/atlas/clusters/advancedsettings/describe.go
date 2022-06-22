@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package config
+package advancedsettings
 
 import (
 	"context"
@@ -53,17 +53,17 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas cluster(s) config describe <clusterName>  --projectId projectId.
+// atlas cluster(s) advancedSettings describe <clusterName>  --projectId projectId.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:     "describe <clusterName>",
 		Aliases: []string{"get"},
-		Short:   "Retrieve advanced configuration options for one Cluster.",
+		Short:   "Retrieve advanced configuration settings for one cluster.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":            "clusterName",
-			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve configuration options.",
+			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve configuration settings.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

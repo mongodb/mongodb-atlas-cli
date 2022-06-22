@@ -1,8 +1,8 @@
-.. _mongocli-atlas-clusters-config:
+.. _atlas-clusters-advancedSettings:
 
-==============================
-mongocli atlas clusters config
-==============================
+===============================
+atlas clusters advancedSettings
+===============================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ mongocli atlas clusters config
    :depth: 1
    :class: singlecol
 
-Manage advanced configuration options for your clusters.
+Manage advanced configuration settings for your cluster.
 
 Options
 -------
@@ -28,7 +28,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for config
+     - help for advancedSettings
 
 Inherited Options
 -----------------
@@ -49,11 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-clusters-config-describe` - Retrieve advanced configuration options for one Cluster.
+* :ref:`atlas-clusters-advancedSettings-describe` - Retrieve advanced configuration settings for one cluster.
 
 
 .. toctree::
    :titlesonly:
 
-   describe </command/mongocli-atlas-clusters-config-describe>
+   describe </command/atlas-clusters-advancedSettings-describe>
 

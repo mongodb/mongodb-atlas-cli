@@ -15,7 +15,7 @@
 //go:build unit
 // +build unit
 
-package config
+package advancedsettings
 
 import (
 	"testing"

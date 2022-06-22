@@ -57,6 +57,7 @@ Related Commands
 * :ref:`mongocli-iam-projects-describe` - Describe a project.
 * :ref:`mongocli-iam-projects-invitations` - Invitation operations.
 * :ref:`mongocli-iam-projects-list` - List projects.
+* :ref:`mongocli-iam-projects-settings` - Settings operations.
 * :ref:`mongocli-iam-projects-teams` - Teams operations.
 * :ref:`mongocli-iam-projects-users` - Manage users for a project.
 
@@ -70,6 +71,7 @@ Related Commands
    describe </command/mongocli-iam-projects-describe>
    invitations </command/mongocli-iam-projects-invitations>
    list </command/mongocli-iam-projects-list>
+   settings </command/mongocli-iam-projects-settings>
    teams </command/mongocli-iam-projects-teams>
    users </command/mongocli-iam-projects-users>
 

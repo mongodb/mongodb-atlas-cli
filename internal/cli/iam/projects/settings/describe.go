@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package events
+package settings
 
 import (
 	"context"
@@ -24,17 +24,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type projectListOpts struct {
-	EventListOpts
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ProjectEventLister
+	store store.ProjectSettingsDescriber
 }
 
-func (opts *projectListOpts) initStore(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -42,39 +40,30 @@ func (opts *projectListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *projectListOpts) Run() error {
-	listOpts := opts.newEventListOptions()
+var describeTemplate = `COLLECT DATABASE SPECIFICS STATISTICS ENABLED	DATA EXPLORER ENABLED	PERFORMANCE ADVISOR ENABLED	REALTIME PERFORMANCE PANEL ENABLED	SCHEMA ADVISOR ENABLED
+{{.IsCollectDatabaseSpecificsStatisticsEnabled}}	{{.IsDataExplorerEnabled}}	{{.IsPerformanceAdvisorEnabled}}	{{.IsRealtimePerformancePanelEnabled}}	{{.IsSchemaAdvisorEnabled}}
+`
 
-	var r *atlas.EventResponse
-	var err error
-	r, err = opts.store.ProjectEvents(opts.ConfigProjectID(), listOpts)
-
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.ProjectSettings(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}
-
 	return opts.Print(r)
 }
 
-// ProjectListBuilder
-// 	mongocli atlas event(s) list
-// [--page N]
-// [--limit N]
-// [--minDate minDate]
-// [--maxDate maxDate].
-func ProjectListBuilder() *cobra.Command {
-	opts := &projectListOpts{}
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "Return all events for a project.",
-		Long:    "Your API Key must have the Project Read Only role to successfully call this resource.",
-		Aliases: []string{"ls"},
+		Use:     "describe",
+		Aliases: []string{"get"},
+		Short:   "Retrieve details for settings to the specified project.",
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -82,30 +71,8 @@ func ProjectListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
-
-	cmd.Flags().StringSliceVar(&opts.EventType, flag.TypeFlag, nil, usage.Event)
-	cmd.Flags().StringVar(&opts.MaxDate, flag.MaxDate, "", usage.MaxDate)
-	cmd.Flags().StringVar(&opts.MinDate, flag.MinDate, "", usage.MinDate)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	return cmd
-}
-
-func ProjectsBuilder() *cobra.Command {
-	const use = "projects"
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   "Project operations.",
-		Long:    "List projects events.",
-		Aliases: cli.GenerateAliases(use),
-	}
-	cmd.AddCommand(
-		ProjectListBuilder(),
-	)
 
 	return cmd
 }

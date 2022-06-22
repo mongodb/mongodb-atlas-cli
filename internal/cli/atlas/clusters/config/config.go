@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	const use = "config"
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: append(cli.GenerateAliases(use), "cs"),
+		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage advanced configuration options for your clusters.",
 	}
 	cmd.AddCommand(DescribeBuilder())

@@ -97,11 +97,11 @@ gen-docs: gen-docs-mongocli gen-docs-atlascli ## Generate docs for commands
 
 gen-docs-mongocli: ## Generate docs for mongocli commands
 	@echo "==> Generating docs for mongocli"
-	go run ./internal/cmd/mongoclidocs/main.go
+	go run ./tools/mongoclidocs/main.go
 
 gen-docs-atlascli: ## Generate docs for atlascli commands
 	@echo "==> Generating docs for atlascli"
-	go run ./internal/cmd/atlasclidocs/main.go
+	go run ./tools/atlasclidocs/main.go
 
 .PHONY: build
 build: build-mongocli ## Generate a binary for mongocli

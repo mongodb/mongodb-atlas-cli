@@ -165,6 +165,8 @@ The following example creates a download restore:
          --clusterName myDemo \
          --snapshotId 5e7e00128f8ce03996a47179`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.method = args[0]
+
 			if opts.isAutomatedRestore() {
 				if err := markRequiredAutomatedRestoreFlags(cmd); err != nil {
 					return err
@@ -190,8 +192,6 @@ The following example creates a download restore:
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.method = args[0]
-
 			return opts.Run()
 		},
 	}

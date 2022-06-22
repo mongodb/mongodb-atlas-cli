@@ -14,7 +14,7 @@
 
 //go:build unit
 
-package backup
+package restores
 
 import (
 	"testing"
@@ -26,14 +26,14 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestRestoresListOpts_Run(t *testing.T) {
+func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockRestoreJobsLister(ctrl)
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.CloudProviderSnapshotRestoreJobs{}
 
-	listOpts := &RestoresListOpts{
+	listOpts := &ListOpts{
 		store:       mockStore,
 		clusterName: "Cluster0",
 	}
@@ -49,10 +49,10 @@ func TestRestoresListOpts_Run(t *testing.T) {
 	}
 }
 
-func TestRestoresListBuilder(t *testing.T) {
+func TestListBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		RestoresListBuilder(),
+		ListBuilder(),
 		0,
 		[]string{
 			flag.Page,

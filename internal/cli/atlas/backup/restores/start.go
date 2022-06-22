@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package restores
 
 import (
 	"context"
@@ -34,7 +34,7 @@ const (
 	pointInTimeRestore = "pointInTime"
 )
 
-type RestoresStartOpts struct {
+type StartOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	method               string
@@ -48,7 +48,7 @@ type RestoresStartOpts struct {
 	store                store.RestoreJobsCreator
 }
 
-func (opts *RestoresStartOpts) initStore(ctx context.Context) func() error {
+func (opts *StartOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -58,7 +58,7 @@ func (opts *RestoresStartOpts) initStore(ctx context.Context) func() error {
 
 var startTemplate = "Restore job '{{.ID}}' successfully started\n"
 
-func (opts *RestoresStartOpts) Run() error {
+func (opts *StartOpts) Run() error {
 	request := opts.newCloudProviderSnapshotRestoreJob()
 	r, err := opts.store.CreateRestoreJobs(opts.ConfigProjectID(), opts.clusterName, request)
 
@@ -69,7 +69,7 @@ func (opts *RestoresStartOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *RestoresStartOpts) newCloudProviderSnapshotRestoreJob() *atlas.CloudProviderSnapshotRestoreJob {
+func (opts *StartOpts) newCloudProviderSnapshotRestoreJob() *atlas.CloudProviderSnapshotRestoreJob {
 	request := new(atlas.CloudProviderSnapshotRestoreJob)
 	request.DeliveryType = opts.method
 
@@ -97,15 +97,15 @@ func (opts *RestoresStartOpts) newCloudProviderSnapshotRestoreJob() *atlas.Cloud
 	return request
 }
 
-func (opts *RestoresStartOpts) isAutomatedRestore() bool {
+func (opts *StartOpts) isAutomatedRestore() bool {
 	return opts.method == automatedRestore
 }
 
-func (opts *RestoresStartOpts) isPointInTimeRestore() bool {
+func (opts *StartOpts) isPointInTimeRestore() bool {
 	return opts.method == pointInTimeRestore
 }
 
-func (opts *RestoresStartOpts) isDownloadRestore() bool {
+func (opts *StartOpts) isDownloadRestore() bool {
 	return opts.method == downloadRestore
 }
 
@@ -134,8 +134,8 @@ func markRequiredPointInTimeRestoreFlags(cmd *cobra.Command) error {
 }
 
 // mongocli atlas backup(s) restore(s) job(s) start <automated|download|pointInTime>.
-func RestoresStartBuilder() *cobra.Command {
-	opts := new(RestoresStartOpts)
+func StartBuilder() *cobra.Command {
+	opts := new(StartOpts)
 	cmd := &cobra.Command{
 		Use:       fmt.Sprintf("start <%s|%s|%s>", automatedRestore, downloadRestore, pointInTimeRestore),
 		Short:     "Start a restore job for your project and cluster.",
@@ -165,6 +165,8 @@ The following example creates a download restore:
          --clusterName myDemo \
          --snapshotId 5e7e00128f8ce03996a47179`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.method = args[0]
+
 			if opts.isAutomatedRestore() {
 				if err := markRequiredAutomatedRestoreFlags(cmd); err != nil {
 					return err
@@ -190,8 +192,6 @@ The following example creates a download restore:
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.method = args[0]
-
 			return opts.Run()
 		},
 	}

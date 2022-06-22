@@ -20,4 +20,4 @@ set -Eeou pipefail
 export GOPATH="${workdir:?}"
 export PATH="$GOPATH/bin:$PATH"
 
-go run internal/cmd/evergreen/main.go -tool_name "${tool_name:?}" > tasks.json
+go run tools/evergreen/main.go -tool_name "${tool_name:?}" > tasks.json

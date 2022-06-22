@@ -38,6 +38,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		ListBuilder(),
 		DescribeBuilder(),
+		config.Builder(),
 		CreateBuilder(),
 		WatchBuilder(),
 		UpdateBuilder(),
@@ -50,7 +51,6 @@ func Builder() *cobra.Command {
 		onlinearchive.Builder(),
 		connectionstring.Builder(),
 		availableregions.Builder(),
-		config.Builder(),
 	)
 
 	return cmd

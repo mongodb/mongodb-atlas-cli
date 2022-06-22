@@ -15,16 +15,14 @@
 package config
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	const use = "config"
 	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage advanced configuration options for your clusters.",
+		Use:   use,
+		Short: "Manage advanced configuration options for your clusters.",
 	}
 	cmd.AddCommand(DescribeBuilder())
 

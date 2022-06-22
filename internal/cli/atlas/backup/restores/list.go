@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package restores
 
 import (
 	"context"
@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type RestoresListOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
@@ -35,7 +35,7 @@ type RestoresListOpts struct {
 	store       store.RestoreJobsLister
 }
 
-func (opts *RestoresListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -47,7 +47,7 @@ var restoreListTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT{{range .Results}}
 {{.ID}}	{{.SnapshotID}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}{{end}}
 `
 
-func (opts *RestoresListOpts) Run() error {
+func (opts *ListOpts) Run() error {
 	listOpts := opts.NewListOptions()
 	r, err := opts.store.RestoreJobs(opts.ConfigProjectID(), opts.clusterName, listOpts)
 	if err != nil {
@@ -58,8 +58,8 @@ func (opts *RestoresListOpts) Run() error {
 }
 
 // mongocli atlas backup(s) restore(s) job(s) list <clusterName> [--page N] [--limit N].
-func RestoresListBuilder() *cobra.Command {
-	opts := new(RestoresListOpts)
+func ListBuilder() *cobra.Command {
+	opts := new(ListOpts)
 	cmd := &cobra.Command{
 		Use:     "list <clusterName>",
 		Aliases: []string{"ls"},

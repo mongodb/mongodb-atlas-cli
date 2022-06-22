@@ -14,7 +14,7 @@
 
 //go:build unit
 
-package backup
+package restores
 
 import (
 	"testing"
@@ -26,7 +26,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestRestoresStart_Run(t *testing.T) {
+func TestStart_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockRestoreJobsCreator(ctrl)
 	defer ctrl.Finish()
@@ -34,7 +34,7 @@ func TestRestoresStart_Run(t *testing.T) {
 	expected := &mongodbatlas.CloudProviderSnapshotRestoreJob{}
 
 	t.Run(automatedRestore, func(t *testing.T) {
-		listOpts := &RestoresStartOpts{
+		listOpts := &StartOpts{
 			store:             mockStore,
 			method:            automatedRestore,
 			clusterName:       "Cluster0",
@@ -54,7 +54,7 @@ func TestRestoresStart_Run(t *testing.T) {
 	})
 
 	t.Run(pointInTimeRestore, func(t *testing.T) {
-		listOpts := &RestoresStartOpts{
+		listOpts := &StartOpts{
 			store:             mockStore,
 			method:            pointInTimeRestore,
 			clusterName:       "Cluster0",
@@ -74,7 +74,7 @@ func TestRestoresStart_Run(t *testing.T) {
 	})
 
 	t.Run(downloadRestore, func(t *testing.T) {
-		listOpts := &RestoresStartOpts{
+		listOpts := &StartOpts{
 			store:       mockStore,
 			method:      downloadRestore,
 			clusterName: "Cluster0",
@@ -92,10 +92,10 @@ func TestRestoresStart_Run(t *testing.T) {
 	})
 }
 
-func TestRestoresStartBuilder(t *testing.T) {
+func TestStartBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		RestoresStartBuilder(),
+		StartBuilder(),
 		0,
 		[]string{
 			flag.SnapshotID,

@@ -16,6 +16,7 @@ package advancedsettings
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -65,6 +66,7 @@ func DescribeBuilder() *cobra.Command {
 			"args":            "clusterName",
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve configuration settings.",
 		},
+		Example: fmt.Sprintf(`  $ %s cluster advancedSettings describe Cluster0`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

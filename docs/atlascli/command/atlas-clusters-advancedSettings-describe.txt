@@ -77,3 +77,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   $ atlas cluster advancedSettings describe Cluster0
+

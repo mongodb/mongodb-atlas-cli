@@ -26,6 +26,36 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
+// MongoCLIBuilder is to split "mongocli atlas logs" and "atlas logs".
+func MongoCLIBuilder() *cobra.Command {
+	const use = "clusters"
+	cmd := &cobra.Command{
+		Use:        use,
+		Aliases:    cli.GenerateAliases(use),
+		SuggestFor: []string{"replicasets"},
+		Short:      "Manage clusters for your project.",
+		Long:       "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters.",
+	}
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		CreateBuilder(),
+		WatchBuilder(),
+		UpdateBuilder(),
+		PauseBuilder(),
+		StartBuilder(),
+		DeleteBuilder(),
+		LoadSampleDataBuilder(),
+		indexes.Builder(),
+		search.Builder(),
+		onlinearchive.Builder(),
+		connectionstring.Builder(),
+		availableregions.Builder(),
+	)
+
+	return cmd
+}
+
 func Builder() *cobra.Command {
 	const use = "clusters"
 	cmd := &cobra.Command{

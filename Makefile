@@ -133,7 +133,7 @@ build-atlascli-debug: ## Generate a binary in ./bin for debugging atlascli
 e2e-test: build-all ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI_* environment variables are exported
-	$(TEST_CMD) -v -p 1 -parallel 1 -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./e2e...
+	$(TEST_CMD) -v -p 1 -parallel 1 -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e...
 
 .PHONY: integration-test
 integration-test: ## Run integration tests

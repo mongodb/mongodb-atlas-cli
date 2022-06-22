@@ -158,10 +158,10 @@ func TestClustersFlags(t *testing.T) {
 		a.NotEmpty(connectionString.StandardSrv)
 	})
 
-	t.Run("Describe Configuration Options", func(t *testing.T) {
+	t.Run("Describe Advanced Configuration Settings", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
-			"config",
+			"advancedSettings",
 			"describe",
 			clusterName,
 			"--projectId", g.projectID,

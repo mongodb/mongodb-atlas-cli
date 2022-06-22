@@ -51,6 +51,7 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`mongocli-atlas-clusters-config` - Manage advanced configuration options for your clusters.
 * :ref:`mongocli-atlas-clusters-connectionStrings` - Manage MongoDB cluster connection string.
 * :ref:`mongocli-atlas-clusters-create` - Create one cluster in the specified project.
 * :ref:`mongocli-atlas-clusters-delete` - Delete a cluster from your project.
@@ -69,6 +70,7 @@ Related Commands
 .. toctree::
    :titlesonly:
 
+   config </command/mongocli-atlas-clusters-config>
    connectionStrings </command/mongocli-atlas-clusters-connectionStrings>
    create </command/mongocli-atlas-clusters-create>
    delete </command/mongocli-atlas-clusters-delete>

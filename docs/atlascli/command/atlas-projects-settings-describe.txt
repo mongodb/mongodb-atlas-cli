@@ -61,3 +61,11 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   This example uses the profile named "myprofile" for accessing Atlas.
+   $ atlas projects settings describe -P myprofile
+

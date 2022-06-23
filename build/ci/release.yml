@@ -216,7 +216,47 @@ functions:
           - tool_name
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/meta
         binary: ./docker-build.sh
-
+  "generate evergreen":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        include_expansions_in_env:
+          - tool_name
+          - workdir
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
+        env:
+          <<: *go_options
+        binary: build/ci/evergreen-generate-tasks.sh
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+          - src/github.com/mongodb/mongodb-atlas-cli/tasks.json
+        remote_file: ${project}/dist/${revision}_${created_at}/
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/json}
+        display_name: internal-bucket
+    - command: generate.tasks
+      params:
+        files:
+          - tasks.json
+  "docker build repo":
+    - command: subprocess.exec
+      type: test
+      params:
+        include_expansions_in_env:
+          - image
+          - package
+          - server_version
+          - entrypoint
+          - mongo_package
+          - mongo_repo
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/repo
+        binary: ./docker-build.sh
 tasks:
   - name: package_msi
     tags: ["packaging"]
@@ -526,7 +566,7 @@ tasks:
       - func: "package"
         vars:
           tool_name: "mongocli"
-          goreleaser_config: .mongocli.goreleaser.yml
+          goreleaser_config: build/package/.mongocli.goreleaser.yml
           changelog_file: CHANGELOG_MONGOCLI.md
       - func: "rename pkg"
         vars:
@@ -591,7 +631,7 @@ tasks:
       - func: "package"
         vars:
           tool_name: "atlascli"
-          goreleaser_config: .atlascli.goreleaser.yml
+          goreleaser_config: build/package/.atlascli.goreleaser.yml
           changelog_file: CHANGELOG_ATLASCLI.md
       - func: "rename pkg"
         vars:
@@ -1305,6 +1345,30 @@ tasks:
           distro: debian10
           ext: deb
           tool_name: atlascli
+  - name: pkg_test_repo_atlascli
+    patchable: false
+    git_tag_only: true
+    depends_on:
+        - name: release_atlascli
+          variant: "release_atlascli_github"
+    tags: [ "smoke-test", "generate", "repo", "atlascli" ]
+    commands:
+      - func: "clone"
+      - func: "generate evergreen"
+        vars:
+          tool_name: atlascli
+  - name: pkg_test_repo_mongocli
+    patchable: false
+    git_tag_only: true
+    depends_on:
+        - name: release_mongocli
+          variant: "release_mongocli_github"
+    tags: [ "smoke-test", "generate", "repo", "mongocli" ]
+    commands:
+      - func: "clone"
+      - func: "generate evergreen"
+        vars:
+          tool_name: mongocli
 
 buildvariants:
   - name: go_mongocli_msi_snapshot
@@ -1335,7 +1399,7 @@ buildvariants:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
       server_version: "4.4.0-rc3"
-      goreleaser_file: ".mongocli.goreleaser.yml"
+      goreleaser_file: "build/package/.mongocli.goreleaser.yml"
       package_name: "mongocli"
       tool_name: "mongocli"
     tasks:
@@ -1348,7 +1412,7 @@ buildvariants:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
       server_version: "4.4.0-rc3"
-      goreleaser_file: ".atlascli.goreleaser.yml"
+      goreleaser_file: "build/package/.atlascli.goreleaser.yml"
       package_name: "mongodb-atlas-cli"
       meta_package_name: "mongodb-atlas"
       tool_name: "atlascli"
@@ -1468,3 +1532,21 @@ buildvariants:
     run_on: ubuntu1804-small
     tasks:
       - name: .smoke-test .atlascli
+  - name: test_atlascli_repo
+    display_name: "Test AtlasCLI repo"
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+    run_on:
+      - ubuntu1804-small
+    tasks:
+      - name: .smoke-test .generate .repo .atlascli
+  - name: test_mongocli_repo
+    display_name: "Test MongoCLI repo"
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+    run_on:
+      - ubuntu1804-small
+    tasks:
+      - name: .smoke-test .generate .repo .mongocli

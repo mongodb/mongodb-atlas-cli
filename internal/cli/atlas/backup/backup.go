@@ -16,6 +16,7 @@ package backup
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/restores"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/snapshots"
 	"github.com/spf13/cobra"
 )
@@ -30,23 +31,7 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		snapshots.Builder(),
-		RestoresBuilder(),
-	)
-
-	return cmd
-}
-
-func RestoresBuilder() *cobra.Command {
-	const use = "restores"
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   "Manage cloud backup restore jobs for your project.",
-		Aliases: cli.GenerateAliases(use),
-	}
-
-	cmd.AddCommand(
-		RestoresListBuilder(),
-		RestoresStartBuilder(),
+		restores.Builder(),
 	)
 
 	return cmd

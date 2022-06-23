@@ -54,9 +54,9 @@ Related Commands
 * :ref:`mongocli-iam-globalAccessLists` - Manage IP access list for Global API Key.
 * :ref:`mongocli-iam-globalApiKeys` - Global API Keys operations.
 * :ref:`mongocli-iam-organizations` - Organization operations.
-* :ref:`mongocli-iam-projects` - Project operations.
-* :ref:`mongocli-iam-teams` - Teams operations.
-* :ref:`mongocli-iam-users` - Users operations.
+* :ref:`mongocli-iam-projects` - Manage your Atlas projects.
+* :ref:`mongocli-iam-teams` - Manage your Atlas teams.
+* :ref:`mongocli-iam-users` - Manage your Atlas users.
 
 
 .. toctree::

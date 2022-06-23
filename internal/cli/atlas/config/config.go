@@ -23,7 +23,7 @@ import (
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "config",
-		Short: "Manage your profile to store access settings for your MongoDB deployment.",
+		Short: "Configure and manage your user profiles.",
 		Long: `Configure settings in a user profile.
 All settings are optional. You can specify settings individually by running: 
 $ atlas config set --help 

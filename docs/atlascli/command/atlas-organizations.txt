@@ -12,7 +12,7 @@ atlas organizations
    :depth: 1
    :class: singlecol
 
-Organization operations.
+Manage your Atlas organizations.
 
 Create, list and manage your MongoDB organizations.
 

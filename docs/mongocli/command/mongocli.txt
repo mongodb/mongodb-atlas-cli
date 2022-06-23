@@ -52,7 +52,7 @@ Related Commands
 * :ref:`mongocli-auth` - Manage the CLI's authentication state.
 * :ref:`mongocli-cloud-manager` - MongoDB Cloud Manager operations.
 * :ref:`mongocli-completion` - Generate the autocompletion script for the specified shell
-* :ref:`mongocli-config` - Configure a profile to store access settings for your MongoDB deployment.
+* :ref:`mongocli-config` - Configure and manage your user profiles.
 * :ref:`mongocli-iam` - Organization and projects operations.
 * :ref:`mongocli-ops-manager` - MongoDB Ops Manager operations.
 

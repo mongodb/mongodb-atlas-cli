@@ -12,7 +12,7 @@ atlas teams
    :depth: 1
    :class: singlecol
 
-Teams operations.
+Manage your Atlas teams.
 
 Create, list and manage your Atlas teams.
 

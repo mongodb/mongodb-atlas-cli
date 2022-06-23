@@ -524,7 +524,7 @@ func Builder() *cobra.Command {
 	opts := NewQuickstartOpts(auth.NewLoginOpts())
 	cmd := &cobra.Command{
 		Use:   "quickstart",
-		Short: "Create and access an Atlas Cluster.",
+		Short: "Create, configure and connect to an Atlas cluster.",
 		Long:  "This command creates a new cluster, adds your public IP to the atlas access list and creates a db user to access your new MongoDB instance.",
 		Example: fmt.Sprintf(`  Skip setting cluster name, provider or database username by using the command options:
   $ %[1]s quickstart --force

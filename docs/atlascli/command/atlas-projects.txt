@@ -12,7 +12,7 @@ atlas projects
    :depth: 1
    :class: singlecol
 
-Project operations.
+Manage your Atlas projects.
 
 Create, list and manage your MongoDB projects.
 

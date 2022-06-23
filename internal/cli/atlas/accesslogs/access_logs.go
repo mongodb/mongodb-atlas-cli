@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage the access logs of a cluster.",
+		Short:   "Retrieve the access logs of a cluster.",
 	}
 	cmd.AddCommand(ListBuilder())
 

@@ -11,9 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || iam
+//go:build e2e || (atlas && generic)
 
-package iam_test
+package atlas_test
 
 import (
 	"encoding/json"
@@ -27,7 +27,7 @@ import (
 )
 
 func TestProjectSettings(t *testing.T) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	n, err := e2e.RandInt(1000)
@@ -45,7 +45,6 @@ func TestProjectSettings(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			settingsEntity,
 			"get",
@@ -58,20 +57,11 @@ func TestProjectSettings(t *testing.T) {
 		if err := json.Unmarshal(resp, &settings); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-		if _, ok := settings["isCollectDatabaseSpecificsStatisticsEnabled"]; !ok {
-			t.Errorf("expected %v, to have key %s\n", settings, "isCollectDatabaseSpecificsStatisticsEnabled")
-		}
-		if _, ok := settings["isDataExplorerEnabled"]; !ok {
-			t.Errorf("expected %v, to have key %s\n", settings, "isDataExplorerEnabled")
-		}
-		if _, ok := settings["isPerformanceAdvisorEnabled"]; !ok {
-			t.Errorf("expected %v, to have key %s\n", settings, "isPerformanceAdvisorEnabled")
-		}
-		if _, ok := settings["isRealtimePerformancePanelEnabled"]; !ok {
-			t.Errorf("expected %v, to have key %s\n", settings, "isRealtimePerformancePanelEnabled")
-		}
-		if _, ok := settings["isSchemaAdvisorEnabled"]; !ok {
-			t.Errorf("expected %v, to have key %s\n", settings, "isSchemaAdvisorEnabled")
+		keys := [5]string{"isCollectDatabaseSpecificsStatisticsEnabled", "isDataExplorerEnabled", "isPerformanceAdvisorEnabled", "isRealtimePerformancePanelEnabled", "isSchemaAdvisorEnabled"}
+		for _, k := range keys {
+			if _, ok := settings[k]; !ok {
+				t.Errorf("expected %v, to have key %s\n", settings, k)
+			}
 		}
 	})
 }

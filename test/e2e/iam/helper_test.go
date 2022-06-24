@@ -36,7 +36,6 @@ const (
 	projectsEntity         = "projects"
 	teamsEntity            = "teams"
 	invitationsEntity      = "invitations"
-	settingsEntity         = "settings"
 )
 
 var errNoAPIKey = errors.New("the apiKey ID is empty")

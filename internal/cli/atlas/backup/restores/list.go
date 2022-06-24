@@ -43,7 +43,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var restoreListTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT	URLs{{range .Results}}
+var restoreListTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT	URL(s){{range .Results}}
 {{.ID}}	{{.SnapshotID}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}	{{range $index, $element := .DeliveryURL}}{{if $index}}; {{end}}{{$element}}{{end}}{{end}}
 `
 

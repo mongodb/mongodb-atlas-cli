@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_project_settings.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectSettingsDescriber,ProjectSettingsUpdater,ProjectSettingsGetterUpdater
+//go:generate mockgen -destination=../mocks/mock_project_settings.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectSettingsDescriber,ProjectSettingsUpdater
 
 type ProjectSettingsDescriber interface {
 	ProjectSettings(string) (*atlas.ProjectSettings, error)
@@ -29,11 +29,6 @@ type ProjectSettingsDescriber interface {
 
 type ProjectSettingsUpdater interface {
 	UpdateProjectSettings(string, *atlas.ProjectSettings) (*atlas.ProjectSettings, error)
-}
-
-type ProjectSettingsGetterUpdater interface {
-	ProjectSettingsDescriber
-	ProjectSettingsUpdater
 }
 
 // ProjectSettings encapsulates the logic of getting settings of a particular project.

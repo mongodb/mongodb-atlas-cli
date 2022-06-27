@@ -28,12 +28,10 @@ import (
 
 const updateTemplate = "Project settings updated.\n"
 
-// TODO: Verify if there should be two flags for each value
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	projectSettings                           *atlas.ProjectSettings
-	store                                     store.ProjectSettingsGetterUpdater
+	store                                     store.ProjectSettingsUpdater
 	enableCollectDatabaseSpecificsStatistics  bool
 	disableCollectDatabaseSpecificsStatistics bool
 	enableDataExplorer                        bool
@@ -55,7 +53,7 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	r, err := opts.store.UpdateProjectSettings(opts.ConfigProjectID(), opts.projectSettings)
+	r, err := opts.store.UpdateProjectSettings(opts.ConfigProjectID(), opts.newProjectSettings())
 	if err != nil {
 		return err
 	}
@@ -63,27 +61,21 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// TODO: Is this a correct way of handling errors from this place?
-func (opts *UpdateOpts) GetCurrentProjectSettings() *atlas.ProjectSettings {
-	r, err := opts.store.ProjectSettings(opts.ConfigProjectID())
-	if err != nil {
+func (opts *UpdateOpts) newProjectSettings() *atlas.ProjectSettings {
+	return &atlas.ProjectSettings{
+		IsCollectDatabaseSpecificsStatisticsEnabled: returnValueForSetting(opts.enableCollectDatabaseSpecificsStatistics, opts.disableCollectDatabaseSpecificsStatistics),
+		IsDataExplorerEnabled:                       returnValueForSetting(opts.enableDataExplorer, opts.disableDataExplorer),
+		IsPerformanceAdvisorEnabled:                 returnValueForSetting(opts.enablePerformanceAdvisor, opts.disablePerformanceAdvisor),
+		IsRealtimePerformancePanelEnabled:           returnValueForSetting(opts.enableRealtimePerformancePanel, opts.disableRealtimePerformancePanel),
+		IsSchemaAdvisorEnabled:                      returnValueForSetting(opts.enableSchemaAdvisor, opts.disableSchemaAdvisor),
+	}
+}
+
+func returnValueForSetting(enableFlag, disableFlag bool) *bool {
+	var valueToSet bool
+	if enableFlag && disableFlag {
 		return nil
 	}
-	return r
-}
-
-func (opts *UpdateOpts) newProjectSettings(currentSettings *atlas.ProjectSettings) {
-	opts.projectSettings = &atlas.ProjectSettings{
-		IsCollectDatabaseSpecificsStatisticsEnabled: returnValueForSetting(opts.enableCollectDatabaseSpecificsStatistics, opts.disableCollectDatabaseSpecificsStatistics, *currentSettings.IsCollectDatabaseSpecificsStatisticsEnabled),
-		IsDataExplorerEnabled:                       returnValueForSetting(opts.enableDataExplorer, opts.disableDataExplorer, *currentSettings.IsDataExplorerEnabled),
-		IsPerformanceAdvisorEnabled:                 returnValueForSetting(opts.enablePerformanceAdvisor, opts.disablePerformanceAdvisor, *currentSettings.IsPerformanceAdvisorEnabled),
-		IsRealtimePerformancePanelEnabled:           returnValueForSetting(opts.enableRealtimePerformancePanel, opts.disableRealtimePerformancePanel, *currentSettings.IsSchemaAdvisorEnabled),
-		IsSchemaAdvisorEnabled:                      returnValueForSetting(opts.enableSchemaAdvisor, opts.disableSchemaAdvisor, *currentSettings.IsRealtimePerformancePanelEnabled),
-	}
-}
-
-func returnValueForSetting(enableFlag, disableFlag, previousValue bool) *bool {
-	var valueToSet bool
 	if enableFlag {
 		valueToSet = true
 		return &valueToSet
@@ -92,13 +84,10 @@ func returnValueForSetting(enableFlag, disableFlag, previousValue bool) *bool {
 		valueToSet = false
 		return &valueToSet
 	}
-	return &previousValue
+	return nil
 }
 
-// TODO: Should this comment be here?
-// atlas projects(s) settings describe [–-enableCollectDatabaseSpecificsStatistics/–-disableCollectDatabaseSpecificsStatistics]
-//[–-enableDataExplorer/–-disableDataExplorer] [--enablePerformanceAdvisor/--disablePerformanceAdvisor]
-//[--enableSchemaAdvisor/--disableSchemaAdvisor] [--enableRealtimePerformancePanel/--disableRealtimePerformancePanel] [--projectId projectId]
+//atlas projects(s) settings describe [–-enableCollectDatabaseSpecificsStatistics] [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
@@ -111,7 +100,7 @@ func UpdateBuilder() *cobra.Command {
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
-			opts.newProjectSettings(opts.GetCurrentProjectSettings())
+			opts.newProjectSettings()
 			return preRun
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -20,6 +20,8 @@ package settings
 import (
 	"testing"
 
+	"github.com/openlyinc/pointy"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
@@ -30,7 +32,7 @@ import (
 
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectSettingsGetterUpdater(ctrl)
+	mockStore := mocks.NewMockProjectSettingsUpdater(ctrl)
 	defer ctrl.Finish()
 
 	opts := &UpdateOpts{
@@ -45,20 +47,13 @@ func TestUpdateOpts_Run(t *testing.T) {
 		disableSchemaAdvisor:                      false,
 		enableRealtimePerformancePanel:            true,
 		disableRealtimePerformancePanel:           false,
-		projectSettings: &atlas.ProjectSettings{
-			IsCollectDatabaseSpecificsStatisticsEnabled: returnMockValueForSetting(true),
-			IsDataExplorerEnabled:                       returnMockValueForSetting(true),
-			IsPerformanceAdvisorEnabled:                 returnMockValueForSetting(false),
-			IsRealtimePerformancePanelEnabled:           returnMockValueForSetting(false),
-			IsSchemaAdvisorEnabled:                      returnMockValueForSetting(true),
-		},
 	}
 
 	expected := &atlas.ProjectSettings{}
 
 	mockStore.
 		EXPECT().
-		UpdateProjectSettings(opts.ProjectID, opts.projectSettings).
+		UpdateProjectSettings(opts.ProjectID, gomock.Any()).
 		Return(expected, nil).
 		Times(1)
 
@@ -75,12 +70,42 @@ func TestUpdateBuilder(t *testing.T) {
 	)
 }
 
-func returnMockValueForSetting(value bool) *bool {
-	var valueToSet bool
-	if value == true {
-		valueToSet = true
-		return &valueToSet
+func TestReturnMockValueForSetting(t *testing.T) {
+	tests := []struct {
+		name             string
+		inputEnableFlag  bool
+		inputDisableFlag bool
+		want             *bool
+	}{
+		{
+			name:             "both true",
+			inputEnableFlag:  true,
+			inputDisableFlag: true,
+			want:             nil,
+		},
+		{
+			name:             "enable only",
+			inputEnableFlag:  true,
+			inputDisableFlag: false,
+			want:             pointy.Bool(true),
+		},
+		{
+			name:             "disable only",
+			inputEnableFlag:  false,
+			inputDisableFlag: true,
+			want:             pointy.Bool(false),
+		},
+		{
+			name:             "both false",
+			inputEnableFlag:  false,
+			inputDisableFlag: false,
+			want:             nil,
+		},
 	}
-	valueToSet = false
-	return &valueToSet
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := returnValueForSetting(tt.inputEnableFlag, tt.inputDisableFlag)
+			assert.Equalf(t, tt.want, got, "returnValueForSetting()")
+		})
+	}
 }

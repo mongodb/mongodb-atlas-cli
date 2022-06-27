@@ -87,7 +87,7 @@ func returnValueForSetting(enableFlag, disableFlag bool) *bool {
 	return nil
 }
 
-//atlas projects(s) settings describe [–-enableCollectDatabaseSpecificsStatistics] [--projectId projectId].
+// atlas projects(s) settings describe [–-enableCollectDatabaseSpecificsStatistics] [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{

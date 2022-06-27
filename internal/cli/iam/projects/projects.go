@@ -46,6 +46,7 @@ func Builder() *cobra.Command {
 	return cmd
 }
 
+// TODO: What's the idea for that change from git?
 func AtlasCLIBuilder() *cobra.Command {
 	const use = "projects"
 	cmd := &cobra.Command{

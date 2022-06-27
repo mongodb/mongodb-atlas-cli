@@ -28,6 +28,7 @@ import (
 
 const updateTemplate = "Project settings updated.\n"
 
+// TODO: Verify if there should be two flags for each value
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -62,6 +63,7 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
+// TODO: Is this a correct way of handling errors from this place?
 func (opts *UpdateOpts) GetCurrentProjectSettings() *atlas.ProjectSettings {
 	r, err := opts.store.ProjectSettings(opts.ConfigProjectID())
 	if err != nil {
@@ -93,6 +95,10 @@ func returnValueForSetting(enableFlag, disableFlag, previousValue bool) *bool {
 	return &previousValue
 }
 
+// TODO: Should this comment be here?
+// atlas projects(s) settings describe [–-enableCollectDatabaseSpecificsStatistics/–-disableCollectDatabaseSpecificsStatistics]
+//[–-enableDataExplorer/–-disableDataExplorer] [--enablePerformanceAdvisor/--disablePerformanceAdvisor]
+//[--enableSchemaAdvisor/--disableSchemaAdvisor] [--enableRealtimePerformancePanel/--disableRealtimePerformancePanel] [--projectId projectId]
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{

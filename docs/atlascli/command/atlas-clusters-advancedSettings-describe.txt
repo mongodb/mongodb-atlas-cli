@@ -82,5 +82,5 @@ Examples
 
 .. code-block::
 
-   $ atlas cluster advancedSettings describe Cluster0
+   $ atlas clusters advancedSettings describe Cluster0
 

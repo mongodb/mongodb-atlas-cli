@@ -62,7 +62,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <ID>",
 		Aliases: []string{"ls"},
-		Short:   "List cloud backup restore jobs for your project and cluster.",
+		Short:   "Describe a cloud backup restore job.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":         "ID",

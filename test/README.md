@@ -71,6 +71,7 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `cluster search index describe`               | Y         |           |           | Y         | N     | N     |
 | `cluster search index list`                   | Y         |           |           | Y         | N     | N     |
 | `cluster search index update`                 | Y         |           |           | Y         | N     | N     |
+| `cluster advancedSettings describe`           | Y         |           |           | Y         | N     | N     |
 | `dbrole create`                               | Y         |           |           | Y         |       |       |
 | `dbrole delete`                               | Y         |           |           | Y         |       |       |
 | `dbrole describe`                             | Y         |           |           | Y         |       |       |

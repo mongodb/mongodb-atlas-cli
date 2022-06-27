@@ -78,7 +78,7 @@ func Builder() *cobra.Command {
 	}
 	cmd.AddCommand(
 		quickstart.Builder(),
-		clusters.Builder(),
+		clusters.MongoCLIBuilder(),
 		dbusers.Builder(),
 		customdbroles.Builder(),
 		accesslists.Builder(),

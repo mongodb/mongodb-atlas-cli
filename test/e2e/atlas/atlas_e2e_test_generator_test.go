@@ -62,15 +62,18 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 		g.projectName, err = RandProjectNameWithPrefix(prefix)
 	}
 	if err != nil {
-		g.t.Errorf("unexpected error: %v", err)
+		g.t.Fatalf("unexpected error: %v", err)
 	}
 
 	g.projectID, err = createProject(g.projectName)
 	if err != nil {
-		g.t.Errorf("unexpected error: %v", err)
+		g.t.Fatalf("unexpected error: %v", err)
 	}
 	g.t.Logf("projectID=%s", g.projectID)
 	g.t.Logf("projectName=%s", g.projectName)
+	if g.projectID == "" {
+		g.t.Fatal("projectID not created")
+	}
 
 	g.t.Cleanup(func() {
 		g.deleteProjectWithRetry()
@@ -90,7 +93,7 @@ func (g *atlasE2ETestGenerator) deleteProjectWithRetry() {
 	}
 
 	if attempts > maxRetryAttempts {
-		g.t.Errorf("we could not delete the project '%s' (projectId: '%s')", g.projectName, g.projectID)
+		g.t.Fatalf("we could not delete the project '%s' (projectId: '%s')", g.projectName, g.projectID)
 	}
 }
 

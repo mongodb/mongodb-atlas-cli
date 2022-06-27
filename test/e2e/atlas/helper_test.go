@@ -71,6 +71,8 @@ const (
 	tierM30                      = "M30"
 	diskSizeGB40                 = "40"
 	diskSizeGB30                 = "30"
+	projectsEntity               = "projects"
+	settingsEntity               = "settings"
 )
 
 // Cluster settings.

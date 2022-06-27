@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,15 +27,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ListOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.ListOpts
+	id          string
 	clusterName string
-	store       store.RestoreJobsLister
+	store       store.RestoreJobsDescriber
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -43,13 +43,12 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var restoreListTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT{{range .Results}}
-{{.ID}}	{{.SnapshotID}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}{{end}}
+var restoreDescribeTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT	URLs{{range .Results}}
+{{.ID}}	{{.SnapshotID}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}	{{range $index, $element := .DeliveryURL}}{{if $index}}; {{end}}{{$element}}{{end}}{{end}}
 `
 
-func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.RestoreJobs(opts.ConfigProjectID(), opts.clusterName, listOpts)
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.RestoreJob(opts.ConfigProjectID(), opts.clusterName, opts.id)
 	if err != nil {
 		return err
 	}
@@ -57,40 +56,40 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas backup(s) restore(s) job(s) list <clusterName> [--page N] [--limit N].
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+// mongocli atlas backup(s) restore(s) job(s) describe <ID>.
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "list <clusterName>",
+		Use:     "describe <ID>",
 		Aliases: []string{"ls"},
 		Short:   "List cloud backup restore jobs for your project and cluster.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
-			"requiredArgs":    "clusterName",
-			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve restore jobs.",
+			"args":         "ID",
+			"requiredArgs": "ID",
+			"IDDesc":       "ID of the restore job.",
 		},
-		Example: fmt.Sprintf(`  The following example retrieves the continuous backup restore jobs for the cluster Cluster0:
-  $ %s backup restore list Cluster0`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  The following example retrieves the continuous backup restore job for the cluster Cluster0:
+  $ %s backup restore describe 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), restoreListTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), restoreDescribeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
+			opts.id = args[0]
 
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
-
+	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
 	return cmd
 }

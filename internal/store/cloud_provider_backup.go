@@ -21,10 +21,14 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter
+//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter
 
 type RestoreJobsLister interface {
 	RestoreJobs(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error)
+}
+
+type RestoreJobsDescriber interface {
+	RestoreJob(string, string, string) (*atlas.CloudProviderSnapshotRestoreJob, error)
 }
 
 type RestoreJobsCreator interface {
@@ -47,7 +51,7 @@ type SnapshotsDeleter interface {
 	DeleteSnapshot(string, string, string) error
 }
 
-// SnapshotRestoreJobs encapsulates the logic to manage different cloud providers.
+// RestoreJobs encapsulates the logic to manage different cloud providers.
 func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error) {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,
@@ -62,7 +66,23 @@ func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptio
 	}
 }
 
-// CreateSnapshotRestoreJobs encapsulates the logic to manage different cloud providers.
+// RestoreJob encapsulates the logic to manage different cloud providers.
+func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlas.CloudProviderSnapshotRestoreJob, error) {
+	o := &atlas.SnapshotReqPathParameters{
+		GroupID:     projectID,
+		ClusterName: clusterName,
+		JobID:       jobID,
+	}
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.Get(s.ctx, o)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// CreateRestoreJobs encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlas.CloudProviderSnapshotRestoreJob) (*atlas.CloudProviderSnapshotRestoreJob, error) {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,

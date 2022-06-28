@@ -12,7 +12,7 @@ atlas projects settings update
    :depth: 1
    :class: singlecol
 
-Updates settings of a given project.
+Updates settings for a project.
 
 Syntax
 ------
@@ -35,43 +35,43 @@ Options
    * - --disableCollectDatabaseSpecificsStatistics
      - 
      - false
-     - Flag that disables the IsCollectDatabaseSpecificsStatisticsEnabled field in project settings.
+     - Flag that disables the Collect Database Specific Statistics project setting.
    * - --disableDataExplorer
      - 
      - false
-     - Flag that disables the IsDataExplorerEnabled field in project settings.
+     - Flag that disables the Data Explorer project setting.
    * - --disablePerformanceAdvisor
      - 
      - false
-     - Flag that disables the IsPerformanceAdvisorEnabled field in project settings.
+     - Flag that disables the Performance Advisor project setting.
    * - --disableRealtimePerformancePanel
      - 
      - false
-     - Flag that disables the IsRealtimePerformancePanelEnabled field in project settings.
+     - Flag that disables the Real Time Performance Panel project setting.
    * - --disableSchemaAdvisor
      - 
      - false
-     - Flag that disables the IsSchemaAdvisorEnabled field in project settings.
+     - Flag that disables the Schema Advisor project setting.
    * - --enableCollectDatabaseSpecificsStatistics
      - 
      - false
-     - Flag that enables the IsCollectDatabaseSpecificsStatisticsEnabled field in project settings.
+     - Flag that enables the Collect Database Specific Statistics project setting.
    * - --enableDataExplorer
      - 
      - false
-     - Flag that enables the IsDataExplorerEnabled field in project settings.
+     - Flag that enables the Data Explorer project setting.
    * - --enablePerformanceAdvisor
      - 
      - false
-     - Flag that enables the IsPerformanceAdvisorEnabled field in project settings.
+     - Flag that enables the Performance Advisor project setting.
    * - --enableRealtimePerformancePanel
      - 
      - false
-     - Flag that enables the IsRealtimePerformancePanelEnabled field in project settings.
+     - Flag that enables the Real Time Performance Panel project setting.
    * - --enableSchemaAdvisor
      - 
      - false
-     - Flag that enables the IsSchemaAdvisorEnabled field in project settings.
+     - Flag that enables the Schema Advisor project setting.
    * - -h, --help
      - 
      - false

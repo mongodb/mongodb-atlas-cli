@@ -12,7 +12,7 @@ atlas projects
    :depth: 1
    :class: singlecol
 
-Manage your Atlas projects.
+Project operations.
 
 Create, list and manage your MongoDB projects.
 
@@ -57,8 +57,8 @@ Related Commands
 * :ref:`atlas-projects-describe` - Describe a project.
 * :ref:`atlas-projects-invitations` - Invitation operations.
 * :ref:`atlas-projects-list` - List projects.
-* :ref:`atlas-projects-teams` - Manage your Atlas teams.
 * :ref:`atlas-projects-settings` - Settings operations.
+* :ref:`atlas-projects-teams` - Manage your Atlas teams.
 * :ref:`atlas-projects-users` - Manage users for a project.
 
 

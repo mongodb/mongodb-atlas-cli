@@ -16,6 +16,7 @@ package settings
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -94,6 +95,8 @@ func UpdateBuilder() *cobra.Command {
 		Use:     "update",
 		Aliases: []string{"updates"},
 		Short:   "Updates settings of a given project.",
+		Example: fmt.Sprintf(`  This example uses the profile named "myprofile" for accessing Atlas.
+  $ %s projects settings update --disableCollectDatabaseSpecificsStatistics -P myprofile`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			preRun := opts.PreRunE(
 				opts.ValidateProjectID,

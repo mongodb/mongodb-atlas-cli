@@ -1,4 +1,10 @@
 variables:
+  - &go_env
+      XDG_CONFIG_HOME: ${workdir}
+      GO111MODULE: "on"
+      GOROOT: ${go_root}
+      GOPATH: ${workdir}
+      ADD_PATH: "${go_bin}:${workdir}/bin:${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
   - &go_options
     add_to_path:
       - ${go_bin}
@@ -8,11 +14,7 @@ variables:
       - workdir
     working_dir: src/github.com/mongodb/mongodb-atlas-cli
     env:
-      XDG_CONFIG_HOME: ${workdir}
-      GO111MODULE: "on"
-      GOROOT: ${go_root}
-      GOPATH: ${workdir}
-      ADD_PATH: "${go_bin}:${workdir}/bin:${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
+      <<: *go_env
 functions:
   "install goreleaser":
     - command: shell.exec
@@ -62,6 +64,7 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
+          - workdir
           - notary_service_key_id
           - notary_service_secret
           - notary_service_url
@@ -91,11 +94,15 @@ functions:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli
         add_to_path:
+          - ${go_bin}
+          - ${workdir}/bin
+          - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
           - "/cygdrive/c/Program Files/go-msi"
           - "/cygdrive/c/wixtools/bin"
         include_expansions_in_env:
           - workdir
         env:
+          <<: *go_env
           TOOL_NAME: ${TOOL_NAME}
         command: bash.exe -c build/package/generate-msi.sh
   "rename pkg":
@@ -104,6 +111,7 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
+          - workdir
           - unstable
           - latest_deb
           - latest_rpm
@@ -132,6 +140,7 @@ functions:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/dist
         include_expansions_in_env:
+          - workdir
           - FEED_FILE_NAME
           - TOOL_NAME
         binary: ../build/package/generate-download-archive-manifest.sh
@@ -159,6 +168,7 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
+          - workdir
           - barque_url
           - distro
           - edition
@@ -173,6 +183,7 @@ functions:
           - signing_auth_token_50
           - tool_name
         env:
+          <<: *go_env
           NOTARY_KEY_NAME: ${notary_key_name|server-4.4}
           BARQUE_USERNAME: ${barque_user}
           BARQUE_API_KEY: ${barque_api_key}
@@ -205,6 +216,7 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
+          - workdir
           - tool_name
         binary: build/ci/evergreen-generate-tasks.sh
     - command: s3.put

@@ -18,6 +18,12 @@ command_type: system
 pre_error_fails_task: true
 
 variables:
+  - &go_env
+      XDG_CONFIG_HOME: ${workdir}
+      GO111MODULE: "on"
+      GOROOT: ${go_root}
+      GOPATH: ${workdir}
+      ADD_PATH: "${go_bin}:${workdir}/bin:${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
   - &go_options
     add_to_path:
       - ${go_bin}
@@ -27,11 +33,7 @@ variables:
       - workdir
     working_dir: src/github.com/mongodb/mongodb-atlas-cli
     env:
-      XDG_CONFIG_HOME: ${workdir}
-      GO111MODULE: "on"
-      GOROOT: ${go_root}
-      GOPATH: ${workdir}
-      ADD_PATH: "${go_bin}:${workdir}/bin:${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
+      <<: *go_env
 functions:
   "clone":
     - command: git.get_project
@@ -70,6 +72,7 @@ functions:
       params:
         <<: *go_options
         env:
+          <<: *go_env
           TEST_CMD: gotestsum --junitfile unit-tests.xml --
         command: make integration-test
   "generate html coverage":
@@ -98,6 +101,7 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
+          - workdir
           - MCLI_ORG_ID
           - MCLI_PROJECT_ID
           - MCLI_PRIVATE_API_KEY
@@ -120,6 +124,7 @@ functions:
           - AZURE_CLIENT_SECRET
           - revision
         env:
+          <<: *go_env
           MCLI_SKIP_UPDATE_CHECK: "yes"
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
@@ -180,6 +185,7 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
+          - workdir
           - ops_manager_service
         binary: ./set-up-ops-manager.sh
         args: ['-h', 'hosts.json']
@@ -188,14 +194,14 @@ functions:
       type: setup
       params:
         <<: *go_options
-        add_to_path:
-          - ../../bin
         include_expansions_in_env:
+          - workdir
           - cloud_manager_service
           - revision
         binary: ./set-up-cloud-manager.sh
         args: ['-h', 'hosts.json']
         env:
+          <<: *go_env
           MCLI_ORG_ID: ${cloud_manager_org_id}
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
@@ -260,6 +266,7 @@ functions:
         binary: ./install.sh
         args: ["-h", "hosts.json"]
         env:
+          <<: *go_env
           KMIP_CA: ${logs_decrypt_kmip_ca}
           KMIP_CERT: ${logs_decrypt_kmip_cert}
 post:

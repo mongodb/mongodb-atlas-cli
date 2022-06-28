@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterConfigurationOptionsDescriber
 
 type ClusterLister interface {
 	ProjectClusters(string, *atlas.ListOptions) (interface{}, error)
@@ -30,6 +30,10 @@ type ClusterLister interface {
 
 type AtlasClusterDescriber interface {
 	AtlasCluster(string, string) (*atlas.AdvancedCluster, error)
+}
+
+type AtlasClusterConfigurationOptionsDescriber interface {
+	AtlasClusterConfigurationOptions(string, string) (*atlas.ProcessArgs, error)
 }
 
 type OpsManagerClusterDescriber interface {
@@ -195,6 +199,17 @@ func (s *Store) ListAllProjectClusters() (*opsmngr.AllClustersProjects, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Clusters.ListAll(s.ctx)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// AtlasClusterConfigurationOptions encapsulates the logic to manage different cloud providers.
+func (s *Store) AtlasClusterConfigurationOptions(projectID, name string) (*atlas.ProcessArgs, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).Clusters.GetProcessArgs(s.ctx, projectID, name)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

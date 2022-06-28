@@ -158,6 +158,26 @@ func TestClustersFlags(t *testing.T) {
 		a.NotEmpty(connectionString.StandardSrv)
 	})
 
+	t.Run("Describe Advanced Configuration Settings", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"advancedSettings",
+			"describe",
+			clusterName,
+			"--projectId", g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var config mongodbatlas.ProcessArgs
+		err = json.Unmarshal(resp, &config)
+		req.NoError(err)
+
+		a := assert.New(t)
+		a.NotEmpty(config.MinimumEnabledTLSProtocol)
+	})
+
 	t.Run("Create Rolling Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,

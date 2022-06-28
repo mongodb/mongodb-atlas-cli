@@ -58,6 +58,7 @@ Related Commands
 * :ref:`atlas-projects-invitations` - Invitation operations.
 * :ref:`atlas-projects-list` - List projects.
 * :ref:`atlas-projects-teams` - Manage your Atlas teams.
+* :ref:`atlas-projects-settings` - Settings operations.
 * :ref:`atlas-projects-users` - Manage users for a project.
 
 
@@ -70,6 +71,7 @@ Related Commands
    describe </command/atlas-projects-describe>
    invitations </command/atlas-projects-invitations>
    list </command/atlas-projects-list>
+   settings </command/atlas-projects-settings>
    teams </command/atlas-projects-teams>
    users </command/atlas-projects-users>
 

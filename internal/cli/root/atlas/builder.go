@@ -184,7 +184,7 @@ func Builder() *cobra.Command {
 		auth.Builder(),
 		quickstart.Builder(),
 		setup.Builder(),
-		projects.Builder(),
+		projects.AtlasCLIBuilder(),
 		organizations.AtlasCLIBuilder(),
 		users.Builder(),
 		teams.Builder(),

@@ -1,16 +1,17 @@
 variables:
   - &go_env
-      XDG_CONFIG_HOME: ${workdir}
+      XDG_CONFIG_HOME: ${go_base_path}${workdir}
       GO111MODULE: "on"
       GOROOT: ${go_root}
-      GOPATH: ${workdir}
-      ADD_PATH: "${go_bin}:${workdir}/bin:${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
+      GOPATH: ${go_base_path}${workdir}
+      ADD_PATH: "${go_bin}:${go_base_path}${workdir}/bin:${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
   - &go_options
     add_to_path:
       - ${go_bin}
-      - ${workdir}/bin
-      - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
+      - ${go_base_path}${workdir}/bin
+      - ${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
     include_expansions_in_env:
+      - go_base_path
       - workdir
     working_dir: src/github.com/mongodb/mongodb-atlas-cli
     env:
@@ -64,6 +65,7 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
+          - go_base_path
           - workdir
           - notary_service_key_id
           - notary_service_secret
@@ -95,11 +97,12 @@ functions:
         working_dir: src/github.com/mongodb/mongodb-atlas-cli
         add_to_path:
           - ${go_bin}
-          - ${workdir}/bin
-          - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
+          - ${go_base_path}${workdir}/bin
+          - ${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
           - "/cygdrive/c/Program Files/go-msi"
           - "/cygdrive/c/wixtools/bin"
         include_expansions_in_env:
+          - go_base_path
           - workdir
         env:
           <<: *go_env
@@ -111,6 +114,7 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
+          - go_base_path
           - workdir
           - unstable
           - latest_deb
@@ -140,6 +144,7 @@ functions:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/dist
         include_expansions_in_env:
+          - go_base_path
           - workdir
           - FEED_FILE_NAME
           - TOOL_NAME
@@ -168,6 +173,7 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
+          - go_base_path
           - workdir
           - barque_url
           - distro
@@ -216,6 +222,7 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
+          - go_base_path
           - workdir
           - tool_name
         binary: build/ci/evergreen-generate-tasks.sh
@@ -1368,6 +1375,7 @@ buildvariants:
     expansions:
       go_root: "c:\\golang\\go1.18"
       go_bin: "c:\\golang\\go1.18/bin"
+      go_base_path: "c:"
       tool_name: "mongocli"
     tasks:
       - name: package_msi
@@ -1378,6 +1386,7 @@ buildvariants:
     expansions:
       go_root: "c:\\golang\\go1.18"
       go_bin: "c:\\golang\\go1.18/bin"
+      go_base_path: "c:"
       tool_name: "atlascli"
     tasks:
       - name: package_msi
@@ -1388,6 +1397,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
       server_version: "4.4.0-rc3"
       goreleaser_file: "build/package/.mongocli.goreleaser.yml"
       package_name: "mongocli"
@@ -1401,6 +1411,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
       server_version: "4.4.0-rc3"
       goreleaser_file: "build/package/.atlascli.goreleaser.yml"
       package_name: "mongodb-atlas-cli"
@@ -1415,6 +1426,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
       server_version: "4.4.0-rc3"
     tasks:
       - name: .push
@@ -1427,6 +1439,7 @@ buildvariants:
     expansions:
       go_root: "c:\\golang\\go1.18"
       go_bin: "c:\\golang\\go1.18/bin"
+      go_base_path: "c:"
       tool_name: "mongocli"
     tasks:
       - name: release_msi
@@ -1437,6 +1450,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: release_mongocli
   - name: release_atlascli_github
@@ -1446,6 +1460,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: release_atlascli
   - name: release_atlascli_msi
@@ -1455,6 +1470,7 @@ buildvariants:
     expansions:
       go_root: "c:\\golang\\go1.18"
       go_bin: "c:\\golang\\go1.18/bin"
+      go_base_path: "c:"
       tool_name: "atlascli"
     tasks:
       - name: release_msi
@@ -1527,6 +1543,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     run_on:
       - ubuntu1804-small
     tasks:
@@ -1536,6 +1553,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     run_on:
       - ubuntu1804-small
     tasks:

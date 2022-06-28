@@ -19,17 +19,18 @@ pre_error_fails_task: true
 
 variables:
   - &go_env
-      XDG_CONFIG_HOME: ${workdir}
+      XDG_CONFIG_HOME: ${go_base_path}${workdir}
       GO111MODULE: "on"
       GOROOT: ${go_root}
-      GOPATH: ${workdir}
-      ADD_PATH: "${go_bin}:${workdir}/bin:${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
+      GOPATH: ${go_base_path}${workdir}
+      ADD_PATH: "${go_bin}:${go_base_path}${workdir}/bin:${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
   - &go_options
     add_to_path:
       - ${go_bin}
-      - ${workdir}/bin
-      - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
+      - ${go_base_path}${workdir}/bin
+      - ${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
     include_expansions_in_env:
+      - go_base_path
       - workdir
     working_dir: src/github.com/mongodb/mongodb-atlas-cli
     env:
@@ -101,6 +102,7 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
+          - go_base_path
           - workdir
           - MCLI_ORG_ID
           - MCLI_PROJECT_ID
@@ -185,6 +187,7 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
+          - go_base_path
           - workdir
           - ops_manager_service
         binary: ./set-up-ops-manager.sh
@@ -195,6 +198,7 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
+          - go_base_path
           - workdir
           - cloud_manager_service
           - revision
@@ -344,7 +348,7 @@ tasks:
         type: test
         params:
           env:
-            XDG_CONFIG_HOME: ${workdir}
+            XDG_CONFIG_HOME: ${go_base_path}${workdir}
           script: |
             set -Eeou pipefail
             mkdir "$XDG_CONFIG_HOME/mongocli"
@@ -1231,6 +1235,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: .code_health
   - name: e2e_generic
@@ -1240,6 +1245,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .generic"
   - name: e2e_required
@@ -1249,6 +1255,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .required"
   - name: e2e_interactive
@@ -1258,6 +1265,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .interactive"
   - name: e2e_atlas_clusters
@@ -1267,6 +1275,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .clusters .atlas"
   - name: e2e_decryption
@@ -1276,6 +1285,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .decrypt"
   - name: e2e_atlas_gov_clusters
@@ -1285,6 +1295,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .clusters .atlasgov"
   - name: e2e_atlas_networking
@@ -1294,6 +1305,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .networking .atlas"
   - name: e2e_atlas_live_migrations
@@ -1303,6 +1315,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .livemigrations .atlas"
   - name: e2e_atlas_datalake
@@ -1312,6 +1325,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .datalake .atlas"
   - name: e2e_cloud_manager_remote
@@ -1321,6 +1335,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .clusters .cloudmanager"
   - name: e2e_ops_manager_44
@@ -1330,6 +1345,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".ops-manager-44"
   - name: e2e_ops_manager_50
@@ -1339,6 +1355,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".ops-manager-50"
   - name: snyk
@@ -1348,6 +1365,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: .snyk
 include:

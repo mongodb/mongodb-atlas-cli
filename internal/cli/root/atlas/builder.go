@@ -194,7 +194,7 @@ func Builder() *cobra.Command {
 		accesslists.Builder(),
 		datalake.Builder(),
 		alerts.Builder(),
-		backup.Builder(),
+		backup.AtlasCLIBuilder(),
 		events.Builder(),
 		metrics.Builder(),
 		performanceadvisor.Builder(),

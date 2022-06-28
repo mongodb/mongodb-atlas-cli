@@ -49,7 +49,6 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-backups-restores-describe` - Describe a cloud backup restore job.
 * :ref:`mongocli-atlas-backups-restores-list` - List cloud backup restore jobs for your project and cluster.
 * :ref:`mongocli-atlas-backups-restores-start` - Start a restore job for your project and cluster.
 
@@ -57,7 +56,6 @@ Related Commands
 .. toctree::
    :titlesonly:
 
-   describe </command/mongocli-atlas-backups-restores-describe>
    list </command/mongocli-atlas-backups-restores-list>
    start </command/mongocli-atlas-backups-restores-start>
 

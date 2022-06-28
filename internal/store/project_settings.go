@@ -21,10 +21,14 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_project_settings.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectSettingsDescriber
+//go:generate mockgen -destination=../mocks/mock_project_settings.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectSettingsDescriber,ProjectSettingsUpdater
 
 type ProjectSettingsDescriber interface {
 	ProjectSettings(string) (*atlas.ProjectSettings, error)
+}
+
+type ProjectSettingsUpdater interface {
+	UpdateProjectSettings(string, *atlas.ProjectSettings) (*atlas.ProjectSettings, error)
 }
 
 // ProjectSettings encapsulates the logic of getting settings of a particular project.
@@ -32,6 +36,17 @@ func (s *Store) ProjectSettings(projectID string) (*atlas.ProjectSettings, error
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Projects.GetProjectSettings(s.ctx, projectID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// UpdateProjectSettings encapsulates the logic of updating settings of a particular project.
+func (s *Store) UpdateProjectSettings(projectID string, projectSettings *atlas.ProjectSettings) (*atlas.ProjectSettings, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).Projects.UpdateProjectSettings(s.ctx, projectID, projectSettings)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

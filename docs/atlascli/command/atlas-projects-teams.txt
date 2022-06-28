@@ -12,7 +12,7 @@ atlas projects teams
    :depth: 1
    :class: singlecol
 
-Teams operations.
+Manage your Atlas teams.
 
 Options
 -------

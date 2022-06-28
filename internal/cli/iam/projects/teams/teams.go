@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	const use = "teams"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   "Teams operations.",
+		Short:   "Manage your Atlas teams.",
 		Aliases: cli.GenerateAliases(use),
 	}
 

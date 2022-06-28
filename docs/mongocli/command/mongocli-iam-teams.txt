@@ -55,7 +55,7 @@ Related Commands
 * :ref:`mongocli-iam-teams-delete` - Delete a team from an organization.
 * :ref:`mongocli-iam-teams-describe` - Get a team in an organization.
 * :ref:`mongocli-iam-teams-list` - Get all teams in an organization.
-* :ref:`mongocli-iam-teams-users` - Users operations.
+* :ref:`mongocli-iam-teams-users` - Manage your Atlas users.
 
 
 .. toctree::

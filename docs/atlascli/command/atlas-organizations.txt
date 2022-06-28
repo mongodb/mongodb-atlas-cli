@@ -56,7 +56,7 @@ Related Commands
 * :ref:`atlas-organizations-describe` - Describe an organizations.
 * :ref:`atlas-organizations-invitations` - Invitation operations.
 * :ref:`atlas-organizations-list` - List organizations.
-* :ref:`atlas-organizations-users` - Users operations.
+* :ref:`atlas-organizations-users` - Manage your Atlas users.
 
 
 .. toctree::

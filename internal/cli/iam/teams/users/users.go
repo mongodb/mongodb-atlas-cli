@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	const use = "users"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   "Users operations.",
+		Short:   "Manage your Atlas users.",
 		Long:    "Create, list and manage your users.",
 		Aliases: cli.GenerateAliases(use),
 	}

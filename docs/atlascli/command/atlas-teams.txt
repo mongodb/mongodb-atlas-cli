@@ -55,7 +55,7 @@ Related Commands
 * :ref:`atlas-teams-delete` - Delete a team from an organization.
 * :ref:`atlas-teams-describe` - Get a team in an organization.
 * :ref:`atlas-teams-list` - Get all teams in an organization.
-* :ref:`atlas-teams-users` - Users operations.
+* :ref:`atlas-teams-users` - Manage your Atlas users.
 
 
 .. toctree::

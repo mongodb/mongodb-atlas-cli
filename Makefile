@@ -59,6 +59,7 @@ setup: deps setupgolangcilint ## Set up dev env
 	go install github.com/google/addlicense@latest
 	go install github.com/golang/mock/mockgen@latest
 	go install golang.org/x/tools/cmd/goimports@latest
+	go install github.com/google/go-licenses@latest
 
 .PHONY: link-git-hooks
 link-git-hooks: ## Install git hooks

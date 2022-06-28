@@ -1,8 +1,18 @@
 variables:
   - &go_options
-    GO111MODULE: "on"
-    GOROOT: ${go_root}
-
+    add_to_path:
+      - ${go_bin}
+      - ${workdir}/bin
+      - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
+    include_expansions_in_env:
+      - workdir
+    working_dir: src/github.com/mongodb/mongodb-atlas-cli
+    env:
+      XDG_CONFIG_HOME: ${workdir}
+      GO111MODULE: "on"
+      GOROOT: ${go_root}
+      GOPATH: ${workdir}
+      ADD_PATH: "${go_bin}:${workdir}/bin:${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
 functions:
   "install goreleaser":
     - command: shell.exec
@@ -38,33 +48,19 @@ functions:
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-        include_expansions_in_env:
-          - workdir
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        env:
-          <<: *go_options
+        <<: *go_options
         binary: build/ci/check-licenses.sh
   "generate notices":
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-        include_expansions_in_env:
-          - workdir
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        env:
-          <<: *go_options
+        <<: *go_options
         binary: build/package/generate-notices.sh
   "package":
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
+        <<: *go_options
         include_expansions_in_env:
           - notary_service_key_id
           - notary_service_secret
@@ -75,8 +71,6 @@ functions:
           - changelog_file
           - github_token
           - unstable
-        env:
-          <<: *go_options
         binary: build/package/package.sh
   "install go-msi":
     - command: subprocess.exec
@@ -94,23 +88,21 @@ functions:
     - command: subprocess.exec
       type: test
       params:
+        <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli
         add_to_path:
-          - ${go_bin}
           - "/cygdrive/c/Program Files/go-msi"
           - "/cygdrive/c/wixtools/bin"
         include_expansions_in_env:
           - workdir
         env:
-          <<: *go_options
           TOOL_NAME: ${TOOL_NAME}
         command: bash.exe -c build/package/generate-msi.sh
   "rename pkg":
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
+        <<: *go_options
         include_expansions_in_env:
           - unstable
           - latest_deb
@@ -118,9 +110,6 @@ functions:
           - package_name
           - meta_package_name
           - tool_name
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        env:
-          <<: *go_options
         binary: build/package/rename-pkg.sh
   "send slack notification":
     - command: subprocess.exec
@@ -140,14 +129,11 @@ functions:
     - command: subprocess.exec
       type: test
       params:
+        <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/dist
         include_expansions_in_env:
           - FEED_FILE_NAME
           - TOOL_NAME
-        add_to_path:
-          - ${go_bin}
-        env:
-          <<: *go_options
         binary: ../build/package/generate-download-archive-manifest.sh
   "upload dist":
     - command: s3.put
@@ -171,6 +157,7 @@ functions:
     - command: subprocess.exec
       type: test
       params:
+        <<: *go_options
         include_expansions_in_env:
           - barque_url
           - distro
@@ -185,11 +172,7 @@ functions:
           - signing_auth_token_46
           - signing_auth_token_50
           - tool_name
-        add_to_path:
-          - ./bin
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
-          <<: *go_options
           NOTARY_KEY_NAME: ${notary_key_name|server-4.4}
           BARQUE_USERNAME: ${barque_user}
           BARQUE_API_KEY: ${barque_api_key}
@@ -220,14 +203,9 @@ functions:
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
+        <<: *go_options
         include_expansions_in_env:
           - tool_name
-          - workdir
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        env:
-          <<: *go_options
         binary: build/ci/evergreen-generate-tasks.sh
     - command: s3.put
       params:

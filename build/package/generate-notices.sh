@@ -17,9 +17,6 @@
 
 set -Eeou pipefail
 
-export GOPATH="${workdir:?}"
-export PATH="$GOPATH/bin:$PATH"
-
 go install github.com/google/go-licenses@latest
 
 go-licenses save "github.com/mongodb/mongodb-atlas-cli/cmd/mongocli" --save_path=third_party_notices

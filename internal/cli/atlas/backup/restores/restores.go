@@ -19,6 +19,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func AtlasCLIBuilder() *cobra.Command {
+	cmd := Builder()
+	cmd.AddCommand(
+		DescribeBuilder(),
+	)
+	return cmd
+}
+
 func Builder() *cobra.Command {
 	const use = "restores"
 	cmd := &cobra.Command{

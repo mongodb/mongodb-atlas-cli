@@ -21,7 +21,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func Builder() *cobra.Command {
+func baseCommand() *cobra.Command {
 	const use = "backups"
 	cmd := &cobra.Command{
 		Use:     use,
@@ -29,9 +29,26 @@ func Builder() *cobra.Command {
 		Short:   "Manage cloud backups for your project.",
 	}
 
+	return cmd
+}
+
+func Builder() *cobra.Command {
+	cmd := baseCommand()
+
 	cmd.AddCommand(
 		snapshots.Builder(),
 		restores.Builder(),
+	)
+
+	return cmd
+}
+
+func AtlasCLIBuilder() *cobra.Command {
+	cmd := baseCommand()
+
+	cmd.AddCommand(
+		snapshots.Builder(),
+		restores.AtlasCLIBuilder(),
 	)
 
 	return cmd

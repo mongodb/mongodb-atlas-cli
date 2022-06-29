@@ -20,11 +20,10 @@ package search
 import (
 	"testing"
 
-	"github.com/spf13/afero"
-	"github.com/stretchr/testify/assert"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/spf13/afero"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 

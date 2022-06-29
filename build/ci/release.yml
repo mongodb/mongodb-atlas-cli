@@ -286,6 +286,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "clone"
+      - func: "install dev tools"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -550,6 +551,7 @@ tasks:
         variant: "release_mongocli_msi"
     commands:
       - func: "clone"
+      - func: "install dev tools"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -615,6 +617,7 @@ tasks:
         variant: "release_atlascli_msi"
     commands:
       - func: "clone"
+      - func: "install dev tools"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"

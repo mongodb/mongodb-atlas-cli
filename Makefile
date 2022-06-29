@@ -44,24 +44,23 @@ export GO111MODULE := on
 export MCLI_E2E_BINARY
 export ATLAS_E2E_BINARY
 
-.PHONY: setupgolangcilint
-setupgolangcilint:  ## Install golangci-lint
-	@echo "==> Installing golangci-lint..."
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin $(GOLANGCI_VERSION)
-
 .PHONY: deps
 deps:  ## Download go module dependencies
 	@echo "==> Installing go.mod dependencies..."
 	go mod download
 	go mod tidy
 
-.PHONY: setup
-setup: deps setupgolangcilint ## Set up dev env
+.PHONY: devtools
+devtools:  ## Install dev tools
 	@echo "==> Installing dev tools..."
 	go install github.com/google/addlicense@latest
 	go install github.com/golang/mock/mockgen@latest
 	go install golang.org/x/tools/cmd/goimports@latest
 	go install github.com/google/go-licenses@latest
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin $(GOLANGCI_VERSION)
+
+.PHONY: setup
+setup: deps devtools ## Set up dev env
 
 .PHONY: link-git-hooks
 link-git-hooks: ## Install git hooks

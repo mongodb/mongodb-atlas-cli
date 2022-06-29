@@ -231,13 +231,12 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-  "install golangci-lint":
+  "install dev tools":
     - command: subprocess.exec
       type: setup
       params:
         <<: *go_options
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        command: make setupgolangcilint
+        command: make devtools
   "install snyk":
     - command: shell.exec
       type: setup
@@ -321,7 +320,7 @@ tasks:
     tags: ["code_health"]
     commands:
       - func: "clone"
-      - func: "install golangci-lint"
+      - func: "install dev tools"
       - func: "lint"
   - name: snyk_scan
     tags: ["snyk"]
@@ -333,6 +332,7 @@ tasks:
     tags: ["code_health"]
     commands:
       - func: "clone"
+      - func: "install dev tools"
       - func: "check license header"
   - name: config_e2e
     tags: ["e2e","generic"]

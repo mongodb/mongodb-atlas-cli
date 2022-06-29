@@ -12,7 +12,7 @@ mongocli iam teams
    :depth: 1
    :class: singlecol
 
-Manage your Atlas teams.
+Manage your Ops Manager or Cloud Manager teams.
 
 Create, list and manage your Cloud Manager or Ops Manager teams.
 
@@ -55,7 +55,7 @@ Related Commands
 * :ref:`mongocli-iam-teams-delete` - Delete a team from an organization.
 * :ref:`mongocli-iam-teams-describe` - Get a team in an organization.
 * :ref:`mongocli-iam-teams-list` - Get all teams in an organization.
-* :ref:`mongocli-iam-teams-users` - Manage your Atlas users.
+* :ref:`mongocli-iam-teams-users` - Manage your Ops Manager or Cloud Manager users.
 
 
 .. toctree::

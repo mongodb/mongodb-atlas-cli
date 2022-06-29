@@ -12,7 +12,7 @@ mongocli iam users
    :depth: 1
    :class: singlecol
 
-Manage your Atlas users.
+Manage your Ops Manager or Cloud Manager users.
 
 Create, list and manage your Cloud Manager or Ops Manager users.
 

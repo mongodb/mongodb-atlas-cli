@@ -12,7 +12,7 @@ mongocli iam projects teams
    :depth: 1
    :class: singlecol
 
-Manage your Atlas teams.
+Manage your Ops Manager or Cloud Manager teams.
 
 Options
 -------

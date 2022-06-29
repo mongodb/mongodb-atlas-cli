@@ -50,10 +50,10 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-accessLists` - Manage the list of IP addresses that can access your Atlas project.
-* :ref:`mongocli-atlas-accessLogs` - Retrieve the access logs of a cluster.
+* :ref:`mongocli-atlas-accessLogs` - Return the access logs for a cluster.
 * :ref:`mongocli-atlas-alerts` - Manage alerts for your project.
 * :ref:`mongocli-atlas-backups` - Manage cloud backups for your project.
-* :ref:`mongocli-atlas-cloudProviders` - Cloud Provider access. Manage unified IAM role access in Atlas.
+* :ref:`mongocli-atlas-cloudProviders` - Manage cloud provider access in Atlas using AWS IAM roles.
 * :ref:`mongocli-atlas-clusters` - Manage clusters for your project.
 * :ref:`mongocli-atlas-customDbRoles` - Manage custom database roles for your project.
 * :ref:`mongocli-atlas-customDns` - Manage DNS configuration of Atlas project’s clusters deployed to AWS.
@@ -69,7 +69,7 @@ Related Commands
 * :ref:`mongocli-atlas-performanceAdvisor` - Learn more about slow queries and get suggestions to improve database performance.
 * :ref:`mongocli-atlas-privateEndpoints` - Manage Atlas private endpoints.
 * :ref:`mongocli-atlas-processes` - Manage MongoDB processes for your project.
-* :ref:`mongocli-atlas-quickstart` - Create, configure and connect to an Atlas cluster.
+* :ref:`mongocli-atlas-quickstart` - Create, configure, and connect to an Atlas cluster.
 * :ref:`mongocli-atlas-security` - Manage security configuration for your project.
 * :ref:`mongocli-atlas-serverless` - Manage serverless instances for your project.
 

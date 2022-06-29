@@ -12,7 +12,7 @@ mongocli atlas cloudProviders
    :depth: 1
    :class: singlecol
 
-Cloud Provider access. Manage unified IAM role access in Atlas.
+Manage cloud provider access in Atlas using AWS IAM roles.
 
 Options
 -------

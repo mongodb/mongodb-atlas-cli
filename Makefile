@@ -37,7 +37,9 @@ E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
 
 export PATH := $(shell go env GOPATH)/bin:$(PATH)
-export SHELL := env PATH=$(PATH) /bin/bash
+ifneq ($(OS),Windows_NT)
+	export SHELL := env PATH=$(PATH) /bin/bash
+endif
 export GO111MODULE := on
 export MCLI_E2E_BINARY
 export ATLAS_E2E_BINARY

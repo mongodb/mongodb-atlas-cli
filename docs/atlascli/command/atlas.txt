@@ -72,7 +72,7 @@ Related Commands
 * :ref:`atlas-performanceAdvisor` - Learn more about slow queries and get suggestions to improve database performance.
 * :ref:`atlas-privateEndpoints` - Manage Atlas private endpoints.
 * :ref:`atlas-processes` - Manage MongoDB processes for your project.
-* :ref:`atlas-projects` - Project operations.
+* :ref:`atlas-projects` - Manage your Atlas projects.
 * :ref:`atlas-quickstart` - Create, configure and connect to an Atlas cluster.
 * :ref:`atlas-security` - Manage security configuration for your project.
 * :ref:`atlas-serverless` - Manage serverless instances for your project.

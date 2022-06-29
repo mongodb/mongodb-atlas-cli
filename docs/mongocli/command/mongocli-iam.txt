@@ -53,10 +53,10 @@ Related Commands
 
 * :ref:`mongocli-iam-globalAccessLists` - Manage IP access list for Global API Key.
 * :ref:`mongocli-iam-globalApiKeys` - Global API Keys operations.
-* :ref:`mongocli-iam-organizations` - Organization operations.
-* :ref:`mongocli-iam-projects` - Project operations.
-* :ref:`mongocli-iam-teams` - Teams operations.
-* :ref:`mongocli-iam-users` - Users operations.
+* :ref:`mongocli-iam-organizations` - Manage your Ops Manager or Cloud Manager organizations.
+* :ref:`mongocli-iam-projects` - Manage your Ops Manager or Cloud Manager projects.
+* :ref:`mongocli-iam-teams` - Manage your Ops Manager or Cloud Manager teams.
+* :ref:`mongocli-iam-users` - Manage your Ops Manager or Cloud Manager users.
 
 
 .. toctree::

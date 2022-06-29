@@ -23,7 +23,7 @@ import (
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "networking",
-		Short: "Networking operations.",
+		Short: "Manage or configure network peering for your Atlas project.",
 	}
 	cmd.AddCommand(
 		containers.Builder(),

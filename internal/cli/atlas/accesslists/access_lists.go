@@ -25,7 +25,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use, deprecated...),
-		Short:   "Manage the access IP access list for your project.",
+		Short:   "Manage the list of IP addresses that can access your Atlas project.",
 	}
 	cmd.AddCommand(
 		DescribeBuilder(),

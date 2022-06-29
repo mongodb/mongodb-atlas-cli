@@ -25,7 +25,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Third party integration operations",
+		Short:   "Configure third-party integrations for your Atlas project.",
 	}
 	cmd.AddCommand(
 		create.Builder(),

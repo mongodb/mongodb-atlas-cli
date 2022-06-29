@@ -12,7 +12,7 @@ mongocli config
    :depth: 1
    :class: singlecol
 
-Configure a profile to store access settings for your MongoDB deployment.
+Configure and manage your user profiles.
 
 You can define the settings that the MongoDB CLI uses to interact with MongoDB services.
 All settings are optional. You can specify settings individually by running: 

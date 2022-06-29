@@ -12,7 +12,7 @@ mongocli atlas accessLists
    :depth: 1
    :class: singlecol
 
-Manage the access IP access list for your project.
+Manage the list of IP addresses that can access your Atlas project.
 
 Options
 -------

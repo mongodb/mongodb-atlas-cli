@@ -120,3 +120,12 @@ func ExampleAtlasEntryPoint() string {
 	}
 	return exampleBin
 }
+
+// DescriptionServiceName returns the name of the service that uses a given IAM command.
+func DescriptionServiceName() string {
+	exampleBin = config.BinName()
+	if exampleBin == config.MongoCLI {
+		return "Ops Manager or Cloud Manager"
+	}
+	return "Atlas"
+}

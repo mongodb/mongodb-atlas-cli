@@ -12,7 +12,7 @@ atlas config
    :depth: 1
    :class: singlecol
 
-Manage your profile to store access settings for your MongoDB deployment.
+Configure and manage your user profiles.
 
 Configure settings in a user profile.
 All settings are optional. You can specify settings individually by running: 

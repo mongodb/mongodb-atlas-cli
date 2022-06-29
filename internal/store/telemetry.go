@@ -17,9 +17,8 @@ package store
 import (
 	"net/http"
 
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store EventsSender

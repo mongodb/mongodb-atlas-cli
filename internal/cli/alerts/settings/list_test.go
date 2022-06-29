@@ -20,10 +20,9 @@ package settings
 import (
 	"testing"
 
-	"go.mongodb.org/atlas/mongodbatlas"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestConfigList_Run(t *testing.T) {

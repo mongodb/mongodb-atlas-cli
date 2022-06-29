@@ -20,9 +20,8 @@ package dbusers
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
-
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
 )

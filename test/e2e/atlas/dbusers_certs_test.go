@@ -22,11 +22,10 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/dbusers"
-	exec "golang.org/x/sys/execabs"
-
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
+	exec "golang.org/x/sys/execabs"
 )
 
 func TestDBUserCerts(t *testing.T) {

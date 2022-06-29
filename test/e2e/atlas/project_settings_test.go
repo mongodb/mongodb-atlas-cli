@@ -22,7 +22,9 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 	exec "golang.org/x/sys/execabs"
 )
 
@@ -52,7 +54,6 @@ func TestProjectSettings(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-
 		var settings map[string]interface{}
 		if err := json.Unmarshal(resp, &settings); err != nil {
 			t.Fatalf("unexpected error: %v", err)
@@ -63,5 +64,27 @@ func TestProjectSettings(t *testing.T) {
 				t.Errorf("expected %v, to have key %s\n", settings, k)
 			}
 		}
+	})
+
+	t.Run("Update", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			projectsEntity,
+			settingsEntity,
+			"update",
+			"--disableCollectDatabaseSpecificsStatistics",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		var settings atlas.ProjectSettings
+		if err := json.Unmarshal(resp, &settings); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		a := assert.New(t)
+		a.Equal(false, *settings.IsCollectDatabaseSpecificsStatisticsEnabled)
+		a.Equal(true, *settings.IsSchemaAdvisorEnabled)
+		a.Equal(true, *settings.IsPerformanceAdvisorEnabled)
+		a.Equal(true, *settings.IsRealtimePerformancePanelEnabled)
+		a.Equal(true, *settings.IsDataExplorerEnabled)
 	})
 }

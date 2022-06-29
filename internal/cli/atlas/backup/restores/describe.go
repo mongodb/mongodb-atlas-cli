@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package settings
+package restores
 
 import (
 	"context"
@@ -30,7 +30,9 @@ import (
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ProjectSettingsDescriber
+	id          string
+	clusterName string
+	store       store.RestoreJobsDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
@@ -41,42 +43,53 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var describeTemplate = `COLLECT DATABASE SPECIFICS STATISTICS ENABLED	DATA EXPLORER ENABLED	PERFORMANCE ADVISOR ENABLED	REALTIME PERFORMANCE PANEL ENABLED	SCHEMA ADVISOR ENABLED
-{{.IsCollectDatabaseSpecificsStatisticsEnabled}}	{{.IsDataExplorerEnabled}}	{{.IsPerformanceAdvisorEnabled}}	{{.IsRealtimePerformancePanelEnabled}}	{{.IsSchemaAdvisorEnabled}}
+var restoreDescribeTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT	URLs
+{{.ID}}	{{.SnapshotID}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}	{{range $index, $element := .DeliveryURL}}{{if $index}}; {{end}}{{$element}}{{end}}
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.ProjectSettings(opts.ConfigProjectID())
+	r, err := opts.store.RestoreJob(opts.ConfigProjectID(), opts.clusterName, opts.id)
 	if err != nil {
 		return err
 	}
+
 	return opts.Print(r)
 }
 
-// atlas projects(s) settings describe [--projectId projectId].
+// mongocli atlas backup(s) restore(s) job(s) describe <ID>.
 func DescribeBuilder() *cobra.Command {
-	opts := &DescribeOpts{}
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe",
-		Aliases: []string{"get"},
-		Short:   "Retrieve details for settings to the specified project.",
-		Example: fmt.Sprintf(`  This example uses the profile named "myprofile" for accessing Atlas.
-  $ %s projects settings describe -P myprofile`, cli.ExampleAtlasEntryPoint()),
-		Args: require.NoArgs,
+		Use:     "describe <ID>",
+		Aliases: []string{"ls"},
+		Short:   "Describe a cloud backup restore job.",
+		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":         "ID",
+			"requiredArgs": "ID",
+			"IDDesc":       "ID of the restore job.",
+		},
+		Example: fmt.Sprintf(`  The following example retrieves the continuous backup restore job for the cluster Cluster0:
+  $ %s backup restore describe 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), restoreDescribeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
+
 			return opts.Run()
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
 	return cmd
 }

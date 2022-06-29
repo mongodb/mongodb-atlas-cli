@@ -52,10 +52,12 @@ Related Commands
 ----------------
 
 * :ref:`atlas-projects-settings-describe` - Retrieve details for settings to the specified project.
+* :ref:`atlas-projects-settings-update` - Updates settings for a project.
 
 
 .. toctree::
    :titlesonly:
 
    describe </command/atlas-projects-settings-describe>
+   update </command/atlas-projects-settings-update>
 

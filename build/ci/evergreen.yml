@@ -18,9 +18,23 @@ command_type: system
 pre_error_fails_task: true
 
 variables:
+  - &go_env
+      XDG_CONFIG_HOME: ${go_base_path}${workdir}
+      GO111MODULE: "on"
+      GOROOT: ${go_root}
+      GOPATH: ${go_base_path}${workdir}
+      ADD_PATH: "${go_bin}:${go_base_path}${workdir}/bin:${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
   - &go_options
-    GO111MODULE: "on"
-    GOROOT: ${go_root}
+    add_to_path:
+      - ${go_bin}
+      - ${go_base_path}${workdir}/bin
+      - ${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
+    include_expansions_in_env:
+      - go_base_path
+      - workdir
+    working_dir: src/github.com/mongodb/mongodb-atlas-cli
+    env:
+      <<: *go_env
 functions:
   "clone":
     - command: git.get_project
@@ -31,68 +45,45 @@ functions:
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        env:
-          <<: *go_options
+        <<: *go_options
         command: make build-all
   "build mongocli":
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        env:
-          <<: *go_options
+        <<: *go_options
         command: make build-mongocli
   "build atlascli":
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        env:
-          <<: *go_options
+        <<: *go_options
         command: make build-atlascli
   "unit-test":
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
+        <<: *go_options
         env:
           TEST_CMD: gotestsum --junitfile unit-tests.xml --
-          <<: *go_options
         command: make unit-test
   "integration-test":
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
+        <<: *go_options
         env:
+          <<: *go_env
           TEST_CMD: gotestsum --junitfile unit-tests.xml --
-          <<: *go_options
         command: make integration-test
   "generate html coverage":
     - command: shell.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        env:
-          <<: *go_options
+        <<: *go_options
         script: |
           set -Eeou pipefail
-
-          export GOROOT="${go_root}"
-          export PATH="./bin:$GOROOT/bin:$PATH"
+          export PATH="$ADD_PATH:$PATH"
           go tool cover -html=coverage.out -o coverage.html
   "upload html coverage":
     - command: s3.put
@@ -109,9 +100,10 @@ functions:
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
+        <<: *go_options
         include_expansions_in_env:
+          - go_base_path
+          - workdir
           - MCLI_ORG_ID
           - MCLI_PROJECT_ID
           - MCLI_PRIVATE_API_KEY
@@ -133,12 +125,10 @@ functions:
           - AZURE_CLIENT_ID
           - AZURE_CLIENT_SECRET
           - revision
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
+          <<: *go_env
           MCLI_SKIP_UPDATE_CHECK: "yes"
-          XDG_CONFIG_HOME: ${workdir}
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
-          <<: *go_options
         command: make e2e-test
   "deploy spawn host":
     - command: shell.exec
@@ -195,30 +185,27 @@ functions:
     - command: subprocess.exec
       type: setup
       params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
+        <<: *go_options
         include_expansions_in_env:
+          - go_base_path
+          - workdir
           - ops_manager_service
         binary: ./set-up-ops-manager.sh
         args: ['-h', 'hosts.json']
-        env:
-          XDG_CONFIG_HOME: ${workdir}
   "set-up cloud manager":
     - command: subprocess.exec
       type: setup
       params:
-        add_to_path:
-          - ${go_bin}
-          - ../../bin
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
+        <<: *go_options
         include_expansions_in_env:
+          - go_base_path
+          - workdir
           - cloud_manager_service
           - revision
         binary: ./set-up-cloud-manager.sh
         args: ['-h', 'hosts.json']
         env:
-          XDG_CONFIG_HOME: ${workdir}
+          <<: *go_env
           MCLI_ORG_ID: ${cloud_manager_org_id}
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
@@ -229,28 +216,27 @@ functions:
     - command: shell.exec
       type: test
       params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
+        <<: *go_options
         script: |
           set -Eeou pipefail
-
-          export GOROOT="${go_root}"
-          export PATH="./bin:$GOROOT/bin:$PATH"
+          export PATH="$ADD_PATH:$PATH"
           golangci-lint run --out-format junit-xml > lint-tests.xml
   "install gotestsum":
     - command: shell.exec
       type: setup
       params:
+        <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         script: |
           set -Eeou pipefail
-
+          export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-  "install golangci-lint":
+  "install dev tools":
     - command: subprocess.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        command: make setupgolangcilint
+        <<: *go_options
+        command: make devtools
   "install snyk":
     - command: shell.exec
       type: setup
@@ -278,28 +264,22 @@ functions:
     - command: subprocess.exec
       type: setup
       params:
-        add_to_path:
-          - ${go_bin}
-          - ../../bin
+        <<: *go_options
         working_dir: /src/github.com/mongodb/mongodb-atlas-cli/build/ci/kmip
         binary: ./install.sh
         args: ["-h", "hosts.json"]
         env:
-          XDG_CONFIG_HOME: ${workdir}
+          <<: *go_env
           KMIP_CA: ${logs_decrypt_kmip_ca}
           KMIP_CERT: ${logs_decrypt_kmip_cert}
 post:
   - command: subprocess.exec
     type: setup
     params:
-      add_to_path:
-        - ${go_bin}
-        - ../../bin
+      <<: *go_options
       working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
       binary: ./clean-up-cloud-manager.sh
       args: ['-h', 'hosts.json']
-      env:
-        XDG_CONFIG_HOME: ${workdir}
   - command: attach.xunit_results
     params:
       files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
@@ -340,7 +320,7 @@ tasks:
     tags: ["code_health"]
     commands:
       - func: "clone"
-      - func: "install golangci-lint"
+      - func: "install dev tools"
       - func: "lint"
   - name: snyk_scan
     tags: ["snyk"]
@@ -352,6 +332,7 @@ tasks:
     tags: ["code_health"]
     commands:
       - func: "clone"
+      - func: "install dev tools"
       - func: "check license header"
   - name: config_e2e
     tags: ["e2e","generic"]
@@ -366,10 +347,12 @@ tasks:
       - command: shell.exec
         type: test
         params:
+          env:
+            XDG_CONFIG_HOME: ${go_base_path}${workdir}
           script: |
             set -Eeou pipefail
-            mkdir mongocli
-            cat <<EOF > mongocli/config.toml
+            mkdir "$XDG_CONFIG_HOME/mongocli"
+            cat <<EOF > "$XDG_CONFIG_HOME/mongocli/config.toml"
             [e2e]
               org_id = "5e429e7706822c6eac4d5971"
               public_api_key = "AAUMGJXA"
@@ -1252,6 +1235,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: .code_health
   - name: e2e_generic
@@ -1261,6 +1245,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .generic"
   - name: e2e_required
@@ -1270,6 +1255,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .required"
   - name: e2e_interactive
@@ -1279,6 +1265,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .interactive"
   - name: e2e_atlas_clusters
@@ -1288,6 +1275,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .clusters .atlas"
   - name: e2e_decryption
@@ -1297,6 +1285,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .decrypt"
   - name: e2e_atlas_gov_clusters
@@ -1306,6 +1295,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .clusters .atlasgov"
   - name: e2e_atlas_networking
@@ -1315,6 +1305,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .networking .atlas"
   - name: e2e_atlas_live_migrations
@@ -1324,6 +1315,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .livemigrations .atlas"
   - name: e2e_atlas_datalake
@@ -1333,6 +1325,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .datalake .atlas"
   - name: e2e_cloud_manager_remote
@@ -1342,6 +1335,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".e2e .clusters .cloudmanager"
   - name: e2e_ops_manager_44
@@ -1351,6 +1345,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".ops-manager-44"
   - name: e2e_ops_manager_50
@@ -1360,6 +1355,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: ".ops-manager-50"
   - name: snyk
@@ -1369,6 +1365,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: .snyk
 include:

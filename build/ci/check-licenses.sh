@@ -17,11 +17,6 @@
 
 set -Eeou pipefail
 
-export GOPATH="${workdir:?}"
-export PATH="$GOPATH/bin:$PATH"
-
-go install github.com/google/addlicense@latest
-
 find_files() {
   find . -not \( \
     \( \

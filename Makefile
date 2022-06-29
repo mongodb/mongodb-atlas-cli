@@ -36,15 +36,13 @@ INTEGRATION_TAGS?=integration
 E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
 
-export PATH := ./bin:$(PATH)
+export PATH := $(shell go env GOPATH)/bin:$(PATH)
+ifneq ($(OS),Windows_NT)
+	export SHELL := env PATH=$(PATH) /bin/bash
+endif
 export GO111MODULE := on
 export MCLI_E2E_BINARY
 export ATLAS_E2E_BINARY
-
-.PHONY: setupgolangcilint
-setupgolangcilint:  ## Install golangci-lint
-	@echo "==> Installing golangci-lint..."
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s $(GOLANGCI_VERSION)
 
 .PHONY: deps
 deps:  ## Download go module dependencies
@@ -52,12 +50,17 @@ deps:  ## Download go module dependencies
 	go mod download
 	go mod tidy
 
-.PHONY: setup
-setup: deps setupgolangcilint ## Set up dev env
+.PHONY: devtools
+devtools:  ## Install dev tools
 	@echo "==> Installing dev tools..."
 	go install github.com/google/addlicense@latest
 	go install github.com/golang/mock/mockgen@latest
 	go install golang.org/x/tools/cmd/goimports@latest
+	go install github.com/google/go-licenses@latest
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin $(GOLANGCI_VERSION)
+
+.PHONY: setup
+setup: deps devtools ## Set up dev env
 
 .PHONY: link-git-hooks
 link-git-hooks: ## Install git hooks
@@ -95,10 +98,12 @@ gen-mocks: ## Generate mocks
 .PHONY: gen-docs
 gen-docs: gen-docs-mongocli gen-docs-atlascli ## Generate docs for commands
 
+.PHONY: gen-docs-mongocli
 gen-docs-mongocli: ## Generate docs for mongocli commands
 	@echo "==> Generating docs for mongocli"
 	go run ./tools/mongoclidocs/main.go
 
+.PHONY: gen-docs-atlascli
 gen-docs-atlascli: ## Generate docs for atlascli commands
 	@echo "==> Generating docs for atlascli"
 	go run ./tools/atlasclidocs/main.go
@@ -109,6 +114,7 @@ build: build-mongocli ## Generate a binary for mongocli
 .PHONY: build-all
 build-all: build-mongocli build-atlascli ## Generate a binary for both CLIs
 
+.PHONY: build-mongocli
 build-mongocli: ## Generate a mongocli binary in ./bin
 	@echo "==> Building $(MCLI_BINARY_NAME) binary"
 	go build -ldflags "$(MCLI_LINKER_FLAGS)" -o $(MCLI_DESTINATION) $(MCLI_SOURCE_FILES)
@@ -121,10 +127,12 @@ build-atlascli: ## Generate a atlascli binary in ./bin
 .PHONY: build-debug
 build-debug: build-mongocli-debug build-atlascli-debug ## Generate binaries in ./bin for debugging both CLIs
 
+.PHONY: build-mongocli-debug
 build-mongocli-debug: ## Generate a binary in ./bin for debugging mongocli
 	@echo "==> Building $(MCLI_BINARY_NAME) binary for debugging"
 	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(MCLI_LINKER_FLAGS)" -o $(MCLI_DESTINATION) $(MCLI_SOURCE_FILES)
 
+.PHONY: build-atlascli-debug
 build-atlascli-debug: ## Generate a binary in ./bin for debugging atlascli
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary for debugging"
 	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
@@ -148,11 +156,13 @@ unit-test: ## Run unit-tests
 .PHONY: install
 install: install-mongocli install-atlascli ## Install binaries in $GOPATH/bin for both CLIs
 
+.PHONY: install-mongocli
 install-mongocli: ## Install mongocli binary in $GOPATH/bin
 	@echo "==> Installing $(MCLI_BINARY_NAME) to $(MCLI_INSTALL_PATH)"
 	go install -ldflags "$(MCLI_LINKER_FLAGS)" $(MCLI_SOURCE_FILES)
 	@echo "==> Done..."
 
+.PHONY: install-atlascli
 install-atlascli: ## Install atlascli binary in $GOPATH/bin
 	@echo "==> Installing $(ATLAS_BINARY_NAME) to $(ATLAS_INSTALL_PATH)"
 	go install -ldflags "$(ATLAS_LINKER_FLAGS)" $(ATLAS_SOURCE_FILES)

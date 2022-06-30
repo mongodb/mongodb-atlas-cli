@@ -32,7 +32,7 @@ mkdir yum apt
 function rename {
   FROM=$1
   TO=$2
-  ECHO "Renaming ${FROM} to ${TO}"
+  echo "Renaming ${FROM} to ${TO}"
   cp "$FROM" "$TO"
 }
 

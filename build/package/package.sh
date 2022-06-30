@@ -34,3 +34,17 @@ else
   # avoid race conditions on the notarization step by using `-p 1`
   ./bin/goreleaser --config "${goreleaser_config:?}" --rm-dist --release-notes "${changelog_file:?}" -p 1
 fi
+
+# check that the notarization service signed the mac binaries
+SIGNED_FILE_NAME=mongocli_macos_signed.zip
+if [[ "${tool_name-}" == "atlascli" ]]; then
+    SIGNED_FILE_NAME=mongodb-atlas-cli_macos_signed.zip
+fi
+
+if [[ -f "dist/$SIGNED_FILE_NAME" ]]; then
+  echo "$SIGNED_FILE_NAME exists. The Mac notarization service has run."
+else
+  echo "ERROR: $SIGNED_FILE_NAME does not exist. The Mac notarization service has not run."
+  exit 1 # ERROR
+fi
+

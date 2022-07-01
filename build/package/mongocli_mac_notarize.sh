@@ -23,7 +23,7 @@ set -Eeou pipefail
 if [[ -f "./dist/macos_darwin_amd64_v1/bin/mongocli" && -f "./dist/macos_darwin_arm64/bin/mongocli" && ! -f "./dist/mongocli_macos_signed.zip" ]]; then
   echo "notarizing macOs binaries"
   zip -r ./dist/mongocli_amd64_arm64_bin.zip ./dist/macos_darwin_amd64_v1/bin/mongocli ./dist/macos_darwin_arm64/bin/mongocli # The Notarization Service takes an archive as input
-  ./darwin_amd64/macnotary \
+  ./linux_arm64/macnotary \
       -f ./dist/mongocli_amd64_arm64_bin.zip \
       -m notarizeAndSign -u https://dev.macos-notary.build.10gen.cc/api \
       -b com.mongodb.mongocli \

@@ -37,7 +37,7 @@ functions:
           set -Eeou pipefail
           curl "${notary_service_url}" --output macos-notary.zip
           unzip -u macos-notary.zip
-          chmod 755 ./darwin_amd64/macnotary
+          chmod 755 ./linux_amd64/macnotary
   "install curator":
     - command: shell.exec
       type: setup
@@ -1396,7 +1396,7 @@ buildvariants:
   - name: goreleaser_mongocli_snapshot
     display_name: "Packaging MongoCLI (goreleaser)"
     run_on:
-      - macos-1014-codesign
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
@@ -1410,7 +1410,7 @@ buildvariants:
   - name: goreleaser_atlascli_snapshot
     display_name: "Packaging AtlasCLI (goreleaser)"
     run_on:
-      - macos-1014-codesign
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
@@ -1449,7 +1449,7 @@ buildvariants:
   - name: release_mongocli_github
     display_name: "Release MongoCLI (goreleaser)"
     run_on:
-      - macos-1014-codesign
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
@@ -1459,7 +1459,7 @@ buildvariants:
   - name: release_atlascli_github
     display_name: "Release AtlasCLI (goreleaser)"
     run_on:
-      - macos-1014-codesign
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"

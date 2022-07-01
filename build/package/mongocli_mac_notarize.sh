@@ -20,16 +20,16 @@ set -Eeou pipefail
 # This depends on binaries being generated in a goreleaser manner and gon being set up.
 # goreleaser should already take care of calling this script as a hook.
 
-if [[ -f "./dist/macos_darwin_amd64/bin/mongocli" && -f "./dist/macos_darwin_arm64/bin/mongocli" && ! -f "./dist/mongocli_macos_signed.zip" ]]; then
+if [[ -f "./dist/macos_darwin_amd64_v1/bin/mongocli" && -f "./dist/macos_darwin_arm64/bin/mongocli" && ! -f "./dist/mongocli_macos_signed.zip" ]]; then
   echo "notarizing macOs binaries"
-  zip -r ./dist/mongocli_amd64_arm64_bin.zip ./dist/macos_darwin_amd64/bin/mongocli ./dist/macos_darwin_arm64/bin/mongocli # The Notarization Service takes an archive as input
-  ./darwin_amd64/macnotary \
+  zip -r ./dist/mongocli_amd64_arm64_bin.zip ./dist/macos_darwin_amd64_v1/bin/mongocli ./dist/macos_darwin_arm64/bin/mongocli # The Notarization Service takes an archive as input
+  ./linux_amd64/macnotary \
       -f ./dist/mongocli_amd64_arm64_bin.zip \
       -m notarizeAndSign -u https://dev.macos-notary.build.10gen.cc/api \
       -b com.mongodb.mongocli \
       -o ./dist/mongocli_macos_signed.zip
 
   echo "replacing original files"
-  unzip -oj ./dist/mongocli_macos_signed.zip dist/macos_darwin_amd64/bin/mongocli -d ./dist/macos_darwin_amd64/bin/
+  unzip -oj ./dist/mongocli_macos_signed.zip dist/macos_darwin_amd64_v1/bin/mongocli -d ./dist/macos_darwin_amd64_v1/bin/
   unzip -oj ./dist/mongocli_macos_signed.zip dist/macos_darwin_arm64/bin/mongocli -d ./dist/macos_darwin_arm64/bin/
 fi

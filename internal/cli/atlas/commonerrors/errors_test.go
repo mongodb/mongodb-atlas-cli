@@ -44,7 +44,7 @@ func TestCheck(t *testing.T) {
 			want: errClusterUnsupported,
 		},
 		{
-			name: "arbritary error",
+			name: "arbitrary error",
 			err:  dummyErr,
 			want: dummyErr,
 		},

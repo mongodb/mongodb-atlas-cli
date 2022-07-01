@@ -171,7 +171,7 @@ func (s *Store) DeleteCluster(projectID, name string) error {
 	}
 }
 
-// AtlasSharedCluster encapsulates the logic to fetch details of one shared cluster
+// AtlasSharedCluster encapsulates the logic to fetch details of one shared cluster.
 func (s *Store) AtlasSharedCluster(projectID, name string) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService, config.CloudService:
@@ -182,7 +182,7 @@ func (s *Store) AtlasSharedCluster(projectID, name string) (*atlas.Cluster, erro
 	}
 }
 
-// UpgradeCluster encapsulate the logic to upgrade shared clusters in a project
+// UpgradeCluster encapsulate the logic to upgrade shared clusters in a project.
 func (s *Store) UpgradeCluster(projectID string, cluster *atlas.Cluster) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:

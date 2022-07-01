@@ -126,7 +126,9 @@ func RemoveReadOnlyAttributesSharedCluster(out *atlas.Cluster) {
 	out.MongoURI = ""
 	out.MongoURIUpdated = ""
 	out.MongoURIWithOptions = ""
-	out.ProviderSettings.AutoScaling = nil
+	if out.ProviderSettings != nil {
+		out.ProviderSettings.AutoScaling = nil
+	}
 
 	for _, spec := range out.ReplicationSpecs {
 		spec.ID = ""

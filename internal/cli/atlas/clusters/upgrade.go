@@ -93,10 +93,12 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 		out.DiskSizeGB = &opts.diskSizeGB
 	}
 	if opts.tier != "" {
-		out.ProviderSettings.InstanceSizeName = opts.tier
-		if opts.tier != "M2" && opts.tier != "M5" {
-			out.ProviderSettings.ProviderName = out.ProviderSettings.BackingProviderName
-			out.ProviderSettings.BackingProviderName = ""
+		if out.ProviderSettings != nil {
+			out.ProviderSettings.InstanceSizeName = opts.tier
+			if opts.tier != "M2" && opts.tier != "M5" {
+				out.ProviderSettings.ProviderName = out.ProviderSettings.BackingProviderName
+				out.ProviderSettings.BackingProviderName = ""
+			}
 		}
 	}
 	AddLabelSharedCluster(out, atlas.Label{

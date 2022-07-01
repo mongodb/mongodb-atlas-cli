@@ -18,6 +18,7 @@ import (
 	"context"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -46,7 +47,7 @@ var pauseTmpl = "Pausing cluster '{{.Name}}'.\n"
 func (opts *PauseOpts) Run() error {
 	r, err := opts.store.PauseCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
-		return err
+		return commonerrors.Check(err)
 	}
 
 	return opts.Print(r)

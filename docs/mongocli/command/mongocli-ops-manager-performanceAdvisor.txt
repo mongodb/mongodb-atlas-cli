@@ -12,7 +12,7 @@ mongocli ops-manager performanceAdvisor
    :depth: 1
    :class: singlecol
 
-Performance Advisor operations.
+Learn more about slow queries and get suggestions to improve database performance.
 
 Options
 -------

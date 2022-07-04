@@ -12,7 +12,7 @@ mongocli atlas accessLogs
    :depth: 1
    :class: singlecol
 
-Manage the access logs of a cluster.
+Return the access logs for a cluster.
 
 Options
 -------

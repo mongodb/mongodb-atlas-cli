@@ -12,7 +12,7 @@ mongocli atlas networking
    :depth: 1
    :class: singlecol
 
-Networking operations.
+Manage or configure network peering for your Atlas project.
 
 Options
 -------

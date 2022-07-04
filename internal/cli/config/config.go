@@ -71,7 +71,6 @@ Enter [?] on any option to get help.
 		return err
 	}
 	opts.SetUpOutput()
-	opts.SetUpMongoSHPath()
 
 	if err := config.Save(); err != nil {
 		return err
@@ -117,7 +116,7 @@ func Builder() *cobra.Command {
 	opt := &opts{}
 	cmd := &cobra.Command{
 		Use:   "config",
-		Short: "Configure a profile to store access settings for your MongoDB deployment.",
+		Short: "Configure and manage your user profiles.",
 		Long: `You can define the settings that the MongoDB CLI uses to interact with MongoDB services.
 All settings are optional. You can specify settings individually by running: 
 $ mongocli config set --help 

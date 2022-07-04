@@ -16,11 +16,11 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/fatih/color"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -54,6 +54,11 @@ const (
 	AlreadyAuthenticatedEmailMsg   = "You are already authenticated with an account (%s)."
 	LoginWithProfileMsg            = `run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile`
 	LogoutToLoginAccountMsg        = `run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile`
+)
+
+var (
+	ErrProjectIDNotFound = errors.New("you don't have access to this or it doesn't exist")
+	ErrOrgIDNotFound     = errors.New("you don't have access to this organization ID or it doesn't exist")
 )
 
 type LoginOpts struct {
@@ -189,11 +194,18 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 
 	// Only make references to profile if user was asked about org or projects
 	if opts.AskedOrgsOrProjects && opts.ProjectID != "" && opts.OrgID != "" {
+		if !opts.ProjectExists(config.ProjectID()) {
+			return ErrProjectIDNotFound
+		}
+
+		if !opts.OrgExists(config.OrgID()) {
+			return ErrOrgIDNotFound
+		}
+
 		_, _ = fmt.Fprint(opts.OutWriter, "\nYour profile is now configured.\n")
 		_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.BinName())
 	}
 
-	opts.SetUpMongoSHPath()
 	return opts.config.Save()
 }
 
@@ -204,7 +216,7 @@ To verify your account, copy your one-time verification code:
 `)
 
 	userCode := fmt.Sprintf("%s-%s", code.UserCode[0:len(code.UserCode)/2], code.UserCode[len(code.UserCode)/2:])
-	opts.printlnWithColor(color.New(color.FgYellow, color.Bold), userCode)
+	_, _ = fmt.Fprintln(opts.OutWriter, userCode)
 
 	_, _ = fmt.Fprintf(opts.OutWriter, `
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after %.0f minutes.
@@ -212,14 +224,7 @@ Paste the code in the browser when prompted to activate your Atlas CLI. Your cod
 To continue, go to `,
 		codeDuration.Minutes(),
 	)
-	opts.printlnWithColor(color.New(color.FgBlue, color.Bold), code.VerificationURI)
-}
-
-func (opts *LoginOpts) printlnWithColor(c *color.Color, text string) {
-	_, err := c.Fprintln(opts.OutWriter, text)
-	if err != nil {
-		_, _ = fmt.Fprintln(opts.OutWriter, text)
-	}
+	_, _ = fmt.Fprintln(opts.OutWriter, code.VerificationURI)
 }
 
 func (opts *LoginOpts) handleBrowser(uri string) {

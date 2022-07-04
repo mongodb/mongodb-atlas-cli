@@ -129,6 +129,9 @@ Examples
 
 .. code-block::
 
+   Deploy a free cluster:
+   $ atlas cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --tier M0
+
    Deploy a three-member replica set in AWS:
    $ atlas cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 5.0 --diskSizeGB 10
 

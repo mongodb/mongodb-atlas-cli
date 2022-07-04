@@ -25,6 +25,8 @@ import (
 const loadSampleDataMsg = `
 Load sample data:			Yes`
 
+var ErrUserAborted = errors.New("user-aborted. Not creating cluster")
+
 func (opts *Opts) askConfirmConfigQuestion() error {
 	if opts.Confirm {
 		return nil
@@ -68,7 +70,7 @@ Allow connections from (IP Address):	%s
 	}
 
 	if !opts.Confirm {
-		return errors.New("user-aborted. Not creating cluster")
+		return ErrUserAborted
 	}
 	return nil
 }

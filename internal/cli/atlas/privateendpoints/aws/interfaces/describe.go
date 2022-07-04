@@ -16,6 +16,7 @@ package interfaces
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -64,6 +65,13 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return a specific AWS private endpoint interface for your project.",
+		Annotations: map[string]string{
+			"args":           "endpointId",
+			"requiredArgs":   "endpointId",
+			"endpointIdDesc": "Unique alphanumeric string that identifies the private endpoint.",
+		},
+		Example: fmt.Sprintf(`  This example uses the profile named "myprofile" for accessing Atlas.
+  $ %s privateendpoints aws interfaces describe vpce-svc-0123456789abcdefg --endpointServiceId 0123456789abcdefghijklmn -P myprofile`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.privateEndpointID = args[0]
 			return opts.PreRunE(

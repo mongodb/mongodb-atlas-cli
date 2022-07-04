@@ -16,6 +16,7 @@ package aws
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -23,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -33,8 +35,8 @@ var describeTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	id    string
-	store store.PrivateEndpointDescriber
+	privateEndpointID string
+	store             store.PrivateEndpointDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
@@ -46,7 +48,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), provider, opts.id)
+	r, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), provider, opts.privateEndpointID)
 
 	if err != nil {
 		return err
@@ -55,16 +57,26 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) aws describe|get <ID> [--projectId projectId].
+// DescribeBuilder mongocli atlas privateEndpoint(s)|privateendpoint(s)
+//   aws describe|get <privateEndpointId> [--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <ID>",
+		Use:     "describe <privateEndpointId>",
 		Aliases: []string{"get"},
-		Args:    require.ExactArgs(1),
-		Short:   "Return a specific AWS Private Endpoints for your project.",
+		Args: cobra.MatchAll(require.ExactArgs(1), func(cmd *cobra.Command, args []string) error {
+			return validate.ObjectID(args[0])
+		}),
+		Short: "Return a specific AWS Private Endpoints for your project.",
+		Annotations: map[string]string{
+			"args":                  "privateEndpointId",
+			"requiredArgs":          "privateEndpointId",
+			"privateEndpointIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint.",
+		},
+		Example: fmt.Sprintf(`  This example uses the profile named "myprofile" for accessing Atlas.
+  $ %s privateendpoints aws describe 0123456789abcdefghijklmn -P myprofile`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.id = args[0]
+			opts.privateEndpointID = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),

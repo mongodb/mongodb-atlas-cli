@@ -15,9 +15,12 @@
 package projects
 
 import (
+	"fmt"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects/apikeys"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects/invitations"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects/settings"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects/teams"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects/users"
 	"github.com/spf13/cobra"
@@ -27,7 +30,7 @@ func Builder() *cobra.Command {
 	const use = "projects"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   "Project operations.",
+		Short:   fmt.Sprintf("Manage your %s projects.", cli.DescriptionServiceName()),
 		Long:    "Create, list and manage your MongoDB projects.",
 		Aliases: cli.GenerateAliases(use),
 	}
@@ -42,5 +45,13 @@ func Builder() *cobra.Command {
 		invitations.Builder(),
 	)
 
+	return cmd
+}
+
+func AtlasCLIBuilder() *cobra.Command {
+	cmd := Builder()
+	cmd.AddCommand(
+		settings.Builder(),
+	)
 	return cmd
 }

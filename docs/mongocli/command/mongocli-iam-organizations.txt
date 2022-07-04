@@ -12,7 +12,7 @@ mongocli iam organizations
    :depth: 1
    :class: singlecol
 
-Organization operations.
+Manage your Ops Manager or Cloud Manager organizations.
 
 Create, list and manage your MongoDB organizations.
 
@@ -57,7 +57,7 @@ Related Commands
 * :ref:`mongocli-iam-organizations-describe` - Describe an organizations.
 * :ref:`mongocli-iam-organizations-invitations` - Invitation operations.
 * :ref:`mongocli-iam-organizations-list` - List organizations.
-* :ref:`mongocli-iam-organizations-users` - Users operations.
+* :ref:`mongocli-iam-organizations-users` - Manage your Ops Manager or Cloud Manager users.
 
 
 .. toctree::

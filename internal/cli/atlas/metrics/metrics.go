@@ -19,7 +19,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/metrics/databases"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/metrics/disks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/metrics/processes"
-
 	"github.com/spf13/cobra"
 )
 

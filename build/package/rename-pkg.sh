@@ -19,32 +19,32 @@ set -Eeou pipefail
 
 VERSION="$(git tag --list "${tool_name:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
-FILENAME="${package_name-}"_"${VERSION}"_linux_x86_64
 if [[ "${unstable-}" == "-unstable" ]]; then
   VERSION="${VERSION}-next"
-  FILENAME="${package_name-}_${VERSION}_linux_x86_64"
 fi
+FILENAME="${package_name-}_${VERSION}_linux_x86_64"
+META_FILENAME="${meta_package_name-}_${VERSION}_linux_x86_64"
 
 cd dist
 
 mkdir yum apt
 
+function rename {
+  FROM=$1
+  TO=$2
+  echo "Renaming ${FROM} to ${TO}"
+  cp "$FROM" "$TO"
+}
+
 # we could generate a similar name with goreleaser but we want to keep the vars evg compatible to use later
 if [[ "${package_name:?}" == mongocli ]]; then
-  ECHO "Renaming ${FILENAME}.deb to apt/mongodb-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
-  cp "$FILENAME.deb" apt/
-  mv "apt/$FILENAME.deb" "apt/mongodb-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
-
-  ECHO "Renaming ${FILENAME}.rpm to yum/mongodb-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
-  cp "$FILENAME.rpm" yum/
-  mv "yum/$FILENAME.rpm" "yum/mongodb-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
+  rename "${FILENAME}.deb" "apt/mongodb-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
+  rename "${FILENAME}.rpm" "yum/mongodb-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
 else
-  ECHO "Renaming ${FILENAME}.deb to apt/mongodb-atlas-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
-  cp "$FILENAME.deb" apt/
-  mv "apt/$FILENAME.deb" "apt/mongodb-atlas-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
+  rename "${FILENAME}.deb" "apt/mongodb-atlas-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
+  rename "${FILENAME}.rpm" "yum/mongodb-atlas-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
 
-  ECHO "Renaming ${FILENAME}.rpm to yum/mongodb-atlas-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
-  cp "$FILENAME.rpm" yum/
-  mv "yum/$FILENAME.rpm" "yum/mongodb-atlas-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
+  rename "${META_FILENAME}.deb" "apt/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
+  rename "${META_FILENAME}.rpm" "yum/mongodb-atlas${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
 fi
 

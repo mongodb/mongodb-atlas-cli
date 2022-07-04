@@ -60,6 +60,12 @@ linters-settings:
       - name: imports-blacklist
         arguments:
           - "github.com/pkg/errors"
+  gci:
+    sections:
+      - standard
+      - default
+    section-separators:
+      - newLine
 linters:
   disable-all: true
   enable:
@@ -103,46 +109,46 @@ linters:
     - unused # Checks Go code for unused constants, variables, functions and types [fast: false, auto-fix: false]
     - varcheck # Finds unused global variables and constants [fast: false, auto-fix: false]
     - whitespace # Tool for detection of leading and trailing whitespace [fast: true, auto-fix: true]
+    - gci # Gci control golang package import order and make it always deterministic. [fast: true, auto-fix: true]
 
   # don't enable:
-  # - asciicheck: Simple linter to check that your code does not contain non-ASCII identifiers [fast: true, auto-fix: false]
-  # - cyclop: checks function and package cyclomatic complexity [fast: false, auto-fix: false]
-  # - dupl: Tool for code clone detection [fast: true, auto-fix: false]
-  # - durationcheck: check for two durations multiplied together [fast: false, auto-fix: false]
-  # - exhaustivestruct: Checks if all struct's fields are initialized [fast: false, auto-fix: false]
-  # - forbidigo: Forbids identifiers [fast: true, auto-fix: false]
-  # - forcetypeassert: finds forced type assertions [fast: true, auto-fix: false]
-  # - funlen: Tool for detection of long functions [fast: true, auto-fix: false]
-  # - gci: Gci control golang package import order and make it always deterministic. [fast: true, auto-fix: true]
-  # - gochecknoglobals: check that no global variables exist [fast: true, auto-fix: false]
-  # - gocognit: Computes and checks the cognitive complexity of functions [fast: true, auto-fix: false]
-  # - godox: Tool for detection of FIXME, TODO and other comment keywords [fast: true, auto-fix: false]
-  # - goerr113: Golang linter to check the errors handling expressions [fast: false, auto-fix: false]
-  # - gofumpt: Gofumpt checks whether code was gofumpt-ed. [fast: true, auto-fix: true]
-  # - goheader: Checks is file header matches to pattern [fast: true, auto-fix: false]
-  # - gomoddirectives: Manage the use of 'replace', 'retract', and 'excludes' directives in go.mod. [fast: true, auto-fix: false]
-  # - gomodguard: Allow and block list linter for direct Go module dependencies. This is different from depguard where there are different block types for example version constraints and module recommendations. [fast: true, auto-fix: false]
-  # - importas: Enforces consistent import aliases [fast: false, auto-fix: false]
-  # - interfacer: Linter that suggests narrower interface types [fast: false, auto-fix: false]
-  # - lll: Reports long lines [fast: true, auto-fix: false]
-  # - maligned: Tool to detect Go structs that would take less memory if their fields were sorted [fast: false, auto-fix: false]
-  # - nestif: Reports deeply nested if statements [fast: true, auto-fix: false]
-  # - nilerr: Finds the code that returns nil even if it checks that the error is not nil. [fast: false, auto-fix: false]
-  # - nlreturn: nlreturn checks for a new line before return and branch statements to increase code clarity [fast: true, auto-fix: false]
-  # - paralleltest: paralleltest detects missing usage of t.Parallel() method in your Go test [fast: true, auto-fix: false]
-  # - prealloc: Finds slice declarations that could potentially be preallocated [fast: true, auto-fix: false]
-  # - promlinter: Check Prometheus metrics naming via promlint [fast: true, auto-fix: false]
-  # - scopelint: Scopelint checks for unpinned variables in go programs [fast: true, auto-fix: false]
-  # - sqlclosecheck: Checks that sql.Rows and sql.Stmt are closed. [fast: false, auto-fix: false]
-  # - tagliatelle: Checks the struct tags. [fast: true, auto-fix: false]
-  # - testpackage: linter that makes you use a separate _test package [fast: true, auto-fix: false]
-  # - tparallel: tparallel detects inappropriate usage of t.Parallel() method in your Go test codes [fast: false, auto-fix: false]
-  # - wastedassign: wastedassign finds wasted assignment statements. [fast: false, auto-fix: false]
-  # - wrapcheck: Checks that errors returned from external packages are wrapped [fast: false, auto-fix: false]
-  # - wsl: Whitespace Linter - Forces you to use empty lines! [fast: true, auto-fix: false]
+  # - asciicheck # Simple linter to check that your code does not contain non-ASCII identifiers [fast: true, auto-fix: false]
+  # - cyclop # checks function and package cyclomatic complexity [fast: false, auto-fix: false]
+  # - dupl # Tool for code clone detection [fast: true, auto-fix: false]
+  # - durationcheck # check for two durations multiplied together [fast: false, auto-fix: false]
+  # - exhaustivestruct # Checks if all struct's fields are initialized [fast: false, auto-fix: false]
+  # - forbidigo # Forbids identifiers [fast: true, auto-fix: false]
+  # - forcetypeassert # finds forced type assertions [fast: true, auto-fix: false]
+  # - funlen # Tool for detection of long functions [fast: true, auto-fix: false]
+  # - gochecknoglobals # check that no global variables exist [fast: true, auto-fix: false]
+  # - gocognit # Computes and checks the cognitive complexity of functions [fast: true, auto-fix: false]
+  # - godox # Tool for detection of FIXME, TODO and other comment keywords [fast: true, auto-fix: false]
+  # - goerr113 # Golang linter to check the errors handling expressions [fast: false, auto-fix: false]
+  # - gofumpt # Gofumpt checks whether code was gofumpt-ed. [fast: true, auto-fix: true]
+  # - goheader # Checks is file header matches to pattern [fast: true, auto-fix: false]
+  # - gomoddirectives # Manage the use of 'replace', 'retract', and 'excludes' directives in go.mod. [fast: true, auto-fix: false]
+  # - gomodguard # Allow and block list linter for direct Go module dependencies. This is different from depguard where there are different block types for example version constraints and module recommendations. [fast: true, auto-fix: false]
+  # - importas # Enforces consistent import aliases [fast: false, auto-fix: false]
+  # - interfacer # Linter that suggests narrower interface types [fast: false, auto-fix: false]
+  # - lll # Reports long lines [fast: true, auto-fix: false]
+  # - maligned # Tool to detect Go structs that would take less memory if their fields were sorted [fast: false, auto-fix: false]
+  # - nestif # Reports deeply nested if statements [fast: true, auto-fix: false]
+  # - nilerr # Finds the code that returns nil even if it checks that the error is not nil. [fast: false, auto-fix: false]
+  # - nlreturn # nlreturn checks for a new line before return and branch statements to increase code clarity [fast: true, auto-fix: false]
+  # - paralleltest # paralleltest detects missing usage of t.Parallel() method in your Go test [fast: true, auto-fix: false]
+  # - prealloc # Finds slice declarations that could potentially be preallocated [fast: true, auto-fix: false]
+  # - promlinter # Check Prometheus metrics naming via promlint [fast: true, auto-fix: false]
+  # - scopelint # Scopelint checks for unpinned variables in go programs [fast: true, auto-fix: false]
+  # - sqlclosecheck # Checks that sql.Rows and sql.Stmt are closed. [fast: false, auto-fix: false]
+  # - tagliatelle # Checks the struct tags. [fast: true, auto-fix: false]
+  # - testpackage # linter that makes you use a separate _test package [fast: true, auto-fix: false]
+  # - tparallel # tparallel detects inappropriate usage of t.Parallel() method in your Go test codes [fast: false, auto-fix: false]
+  # - wastedassign # wastedassign finds wasted assignment statements. [fast: false, auto-fix: false]
+  # - wrapcheck # Checks that errors returned from external packages are wrapped [fast: false, auto-fix: false]
+  # - wsl # Whitespace Linter - Forces you to use empty lines! [fast: true, auto-fix: false]
 
 run:
-#  go: '1.17'
+  go: '1.17'
   tests: true
   timeout: 5m
   build-tags:

@@ -20,6 +20,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -35,27 +36,30 @@ func (opts *Opts) createAccessList() error {
 }
 
 func (opts *Opts) askAccessListOptions() error {
-	if len(opts.IPAddresses) > 0 {
+	if !opts.shouldAskForValue(flag.AccessListIP) {
 		return nil
 	}
+	message := ""
 
+	if len(opts.IPAddresses) == 0 {
+		publicIP := store.IPAddress()
+		if publicIP != "" {
+			message = fmt.Sprintf(" [Press Enter to use your public IP address '%s']", publicIP)
+		}
+		opts.IPAddresses = append(opts.IPAddresses, publicIP)
+	}
 	fmt.Print(`
 [Set up your database network access details]
 `)
-	message := ""
-	publicIP := store.IPAddress()
-	if publicIP != "" {
-		message = fmt.Sprintf(" [Press Enter to use your public IP address '%s']", publicIP)
-	}
 	err := telemetry.TrackAskOne(
-		newAccessListQuestion(publicIP, message),
+		newAccessListQuestion(strings.Join(opts.IPAddresses, ", "), message),
 		&opts.IPAddressesResponse,
 		survey.WithValidator(survey.Required),
 	)
 
 	if err == nil && opts.IPAddressesResponse != "" {
 		ips := strings.Split(opts.IPAddressesResponse, ",")
-		opts.IPAddresses = append(opts.IPAddresses, ips...)
+		opts.IPAddresses = ips
 	}
 	return err
 }

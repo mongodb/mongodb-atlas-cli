@@ -28,12 +28,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestBuilder(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	test.CmdValidator(
 		t,
 		Builder(),
@@ -43,6 +43,7 @@ func TestBuilder(t *testing.T) {
 }
 
 func Test_setupOpts_Run(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
@@ -67,7 +68,7 @@ func Test_setupOpts_Run(t *testing.T) {
 
 	mockQuickstartFlow.
 		EXPECT().
-		Run(gomock.Any()).
+		Run().
 		Return(nil).
 		Times(1)
 
@@ -77,10 +78,11 @@ func Test_setupOpts_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	require.NoError(t, opts.Run(ctx, &cobra.Command{Use: "test"}))
+	require.NoError(t, opts.Run(ctx))
 }
 
 func Test_setupOpts_RunWithAPIKeys(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
@@ -96,23 +98,23 @@ func Test_setupOpts_RunWithAPIKeys(t *testing.T) {
 
 	config.SetPublicAPIKey("publicKey")
 	config.SetPrivateAPIKey("privateKey")
+	_ = setConfig()(ctx)
 
 	opts.OutWriter = buf
-
-	mockQuickstartFlow.
-		EXPECT().
-		Run(gomock.Any()).
-		Return(nil).
-		Times(1)
-
 	mockQuickstartFlow.
 		EXPECT().
 		PreRun(ctx, buf).
 		Return(nil).
 		Times(1)
 
+	mockQuickstartFlow.
+		EXPECT().
+		Run().
+		Return(nil).
+		Times(1)
+
 	require.NoError(t, opts.PreRun(ctx))
-	require.NoError(t, opts.Run(ctx, &cobra.Command{Use: "test2"}))
+	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `
 You are already authenticated with an API key (Public key: publicKey).
 
@@ -121,6 +123,7 @@ Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on
 }
 
 func Test_setupOpts_RunSkipRegister(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
@@ -149,7 +152,7 @@ func Test_setupOpts_RunSkipRegister(t *testing.T) {
 
 	mockQuickstartFlow.
 		EXPECT().
-		Run(gomock.Any()).
+		Run().
 		Return(nil).
 		Times(1)
 
@@ -161,7 +164,7 @@ func Test_setupOpts_RunSkipRegister(t *testing.T) {
 
 	require.NoError(t, opts.PreRun(ctx))
 	assert.Equal(t, opts.skipRegister, true)
-	require.NoError(t, opts.Run(ctx, &cobra.Command{Use: "test3"}))
+	require.NoError(t, opts.Run(ctx))
 }
 
 func setConfig() func(ctx context.Context) error {

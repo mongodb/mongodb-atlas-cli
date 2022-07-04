@@ -1,8 +1,21 @@
 variables:
+  - &go_env
+      XDG_CONFIG_HOME: ${go_base_path}${workdir}
+      GO111MODULE: "on"
+      GOROOT: ${go_root}
+      GOPATH: ${go_base_path}${workdir}
+      ADD_PATH: "${go_bin}:${go_base_path}${workdir}/bin:${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
   - &go_options
-    GO111MODULE: "on"
-    GOROOT: ${go_root}
-
+    add_to_path:
+      - ${go_bin}
+      - ${go_base_path}${workdir}/bin
+      - ${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
+    include_expansions_in_env:
+      - go_base_path
+      - workdir
+    working_dir: src/github.com/mongodb/mongodb-atlas-cli
+    env:
+      <<: *go_env
 functions:
   "install goreleaser":
     - command: shell.exec
@@ -24,7 +37,7 @@ functions:
           set -Eeou pipefail
           curl "${notary_service_url}" --output macos-notary.zip
           unzip -u macos-notary.zip
-          chmod 755 ./darwin_amd64/macnotary
+          chmod 755 ./linux_amd64/macnotary
   "install curator":
     - command: shell.exec
       type: setup
@@ -38,34 +51,22 @@ functions:
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-        include_expansions_in_env:
-          - workdir
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        env:
-          <<: *go_options
+        <<: *go_options
         binary: build/ci/check-licenses.sh
   "generate notices":
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-        include_expansions_in_env:
-          - workdir
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        env:
-          <<: *go_options
+        <<: *go_options
         binary: build/package/generate-notices.sh
   "package":
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
+        <<: *go_options
         include_expansions_in_env:
+          - go_base_path
+          - workdir
           - notary_service_key_id
           - notary_service_secret
           - notary_service_url
@@ -75,8 +76,6 @@ functions:
           - changelog_file
           - github_token
           - unstable
-        env:
-          <<: *go_options
         binary: build/package/package.sh
   "install go-msi":
     - command: subprocess.exec
@@ -94,32 +93,35 @@ functions:
     - command: subprocess.exec
       type: test
       params:
+        <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli
         add_to_path:
           - ${go_bin}
+          - ${go_base_path}${workdir}/bin
+          - ${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
           - "/cygdrive/c/Program Files/go-msi"
           - "/cygdrive/c/wixtools/bin"
         include_expansions_in_env:
+          - go_base_path
           - workdir
         env:
-          <<: *go_options
+          <<: *go_env
           TOOL_NAME: ${TOOL_NAME}
         command: bash.exe -c build/package/generate-msi.sh
   "rename pkg":
     - command: subprocess.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
+        <<: *go_options
         include_expansions_in_env:
+          - go_base_path
+          - workdir
           - unstable
           - latest_deb
           - latest_rpm
           - package_name
+          - meta_package_name
           - tool_name
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        env:
-          <<: *go_options
         binary: build/package/rename-pkg.sh
   "send slack notification":
     - command: subprocess.exec
@@ -139,14 +141,13 @@ functions:
     - command: subprocess.exec
       type: test
       params:
+        <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/dist
         include_expansions_in_env:
+          - go_base_path
+          - workdir
           - FEED_FILE_NAME
           - TOOL_NAME
-        add_to_path:
-          - ${go_bin}
-        env:
-          <<: *go_options
         binary: ../build/package/generate-download-archive-manifest.sh
   "upload dist":
     - command: s3.put
@@ -165,12 +166,15 @@ functions:
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/x-gzip}
-        display_name: inernal-bucket
+        display_name: internal-bucket
   "push":
     - command: subprocess.exec
       type: test
       params:
+        <<: *go_options
         include_expansions_in_env:
+          - go_base_path
+          - workdir
           - barque_url
           - distro
           - edition
@@ -184,11 +188,8 @@ functions:
           - signing_auth_token_46
           - signing_auth_token_50
           - tool_name
-        add_to_path:
-          - ./bin
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
-          <<: *go_options
+          <<: *go_env
           NOTARY_KEY_NAME: ${notary_key_name|server-4.4}
           BARQUE_USERNAME: ${barque_user}
           BARQUE_API_KEY: ${barque_api_key}
@@ -204,7 +205,55 @@ functions:
           - tool_name
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker
         binary: ./docker-build.sh
-
+  "docker build meta":
+    - command: subprocess.exec
+      type: test
+      params:
+        include_expansions_in_env:
+          - revision
+          - created_at
+          - image
+          - tool_name
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/meta
+        binary: ./docker-build.sh
+  "generate evergreen":
+    - command: subprocess.exec
+      type: test
+      params:
+        <<: *go_options
+        include_expansions_in_env:
+          - go_base_path
+          - workdir
+          - tool_name
+        binary: build/ci/evergreen-generate-tasks.sh
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+          - src/github.com/mongodb/mongodb-atlas-cli/tasks.json
+        remote_file: ${project}/dist/${revision}_${created_at}/
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/json}
+        display_name: internal-bucket
+    - command: generate.tasks
+      params:
+        files:
+          - tasks.json
+  "docker build repo":
+    - command: subprocess.exec
+      type: test
+      params:
+        include_expansions_in_env:
+          - image
+          - package
+          - server_version
+          - entrypoint
+          - mongo_package
+          - mongo_repo
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/repo
+        binary: ./docker-build.sh
 tasks:
   - name: package_msi
     tags: ["packaging"]
@@ -237,6 +286,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "clone"
+      - func: "install dev tools"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -251,16 +301,17 @@ tasks:
           latest_deb: ~latest
           latest_rpm: .latest
           package_name: ${package_name}
+          meta_package_name: ${meta_package_name}
           tool_name: ${tool_name}
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${package_name}-deb.tgz
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-deb.tgz
           source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${package_name}-rpm.tgz
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-rpm.tgz
           source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum
           include:
             - "*.rpm"
@@ -271,7 +322,7 @@ tasks:
           TOOL_NAME: ${tool_name}
       - func: "upload dist"
   - name: pkg_test_mongocli_docker_ubuntu1804
-    tags: ["smoke-test"]
+    tags: [ "smoke-test", "mongocli", "pkg" ]
     depends_on:
       - name: package_goreleaser
         variant: "goreleaser_mongocli_snapshot"
@@ -282,7 +333,7 @@ tasks:
           image: ubuntu18.04-deb
           tool_name: mongocli
   - name: pkg_test_mongocli_docker_ubuntu2004
-    tags: ["smoke-test"]
+    tags: [ "smoke-test", "mongocli", "pkg" ]
     depends_on:
       - name: package_goreleaser
         variant: "goreleaser_mongocli_snapshot"
@@ -293,7 +344,7 @@ tasks:
           image: ubuntu20.04-deb
           tool_name: mongocli
   - name: pkg_test_mongocli_docker_debian9
-    tags: [ "smoke-test" ]
+    tags: [ "smoke-test", "mongocli", "pkg" ]
     depends_on:
       - name: package_goreleaser
         variant: "goreleaser_mongocli_snapshot"
@@ -304,7 +355,7 @@ tasks:
           image: debian9-deb
           tool_name: mongocli
   - name: pkg_test_mongocli_docker_debian10
-    tags: [ "smoke-test" ]
+    tags: [ "smoke-test", "mongocli", "pkg" ]
     depends_on:
       - name: package_goreleaser
         variant: "goreleaser_mongocli_snapshot"
@@ -315,7 +366,7 @@ tasks:
           image: debian10-deb
           tool_name: mongocli
   - name: pkg_test_mongocli_docker_amazon2
-    tags: [ "smoke-test" ]
+    tags: [ "smoke-test", "mongocli", "pkg" ]
     depends_on:
       - name: package_goreleaser
         variant: "goreleaser_mongocli_snapshot"
@@ -326,7 +377,7 @@ tasks:
           image: amazonlinux2-rpm
           tool_name: mongocli
   - name: pkg_test_mongocli_docker_centos7
-    tags: [ "smoke-test" ]
+    tags: [ "smoke-test", "mongocli", "pkg" ]
     depends_on:
       - name: package_goreleaser
         variant: "goreleaser_mongocli_snapshot"
@@ -337,7 +388,7 @@ tasks:
           image: centos7-rpm
           tool_name: mongocli
   - name: pkg_test_atlascli_docker_amazon2
-    tags: [ "smoke-test" ]
+    tags: [ "smoke-test", "atlascli", "pkg" ]
     depends_on:
       - name: package_goreleaser
         variant: "goreleaser_atlascli_snapshot"
@@ -348,7 +399,7 @@ tasks:
           image: amazonlinux2-rpm
           tool_name: atlascli
   - name: pkg_test_atlascli_docker_centos7
-    tags: [ "smoke-test" ]
+    tags: [ "smoke-test", "atlascli", "pkg" ]
     depends_on:
       - name: package_goreleaser
         variant: "goreleaser_atlascli_snapshot"
@@ -359,7 +410,7 @@ tasks:
           image: centos7-rpm
           tool_name: atlascli
   - name: pkg_test_atlascli_docker_centos8
-    tags: [ "smoke-test" ]
+    tags: [ "smoke-test", "atlascli", "pkg" ]
     depends_on:
       - name: package_goreleaser
         variant: "goreleaser_atlascli_snapshot"
@@ -370,7 +421,7 @@ tasks:
           image: centos8-rpm
           tool_name: atlascli
   - name: pkg_test_atlascli_docker_ubuntu1804
-    tags: [ "smoke-test" ]
+    tags: [ "smoke-test", "atlascli", "pkg" ]
     depends_on:
       - name: package_goreleaser
         variant: "goreleaser_atlascli_snapshot"
@@ -381,7 +432,7 @@ tasks:
           image: ubuntu18.04-deb
           tool_name: atlascli
   - name: pkg_test_atlascli_docker_ubuntu2004
-    tags: [ "smoke-test" ]
+    tags: [ "smoke-test", "atlascli", "pkg" ]
     depends_on:
       - name: package_goreleaser
         variant: "goreleaser_atlascli_snapshot"
@@ -392,7 +443,7 @@ tasks:
           image: ubuntu20.04-deb
           tool_name: atlascli
   - name: pkg_test_atlascli_docker_debian9
-    tags: [ "smoke-test" ]
+    tags: [ "smoke-test", "atlascli", "pkg" ]
     depends_on:
       - name: package_goreleaser
         variant: "goreleaser_atlascli_snapshot"
@@ -403,13 +454,90 @@ tasks:
           image: debian9-deb
           tool_name: atlascli
   - name: pkg_test_atlascli_docker_debian10
-    tags: [ "smoke-test" ]
+    tags: [ "smoke-test", "atlascli", "pkg" ]
     depends_on:
       - name: package_goreleaser
         variant: "goreleaser_atlascli_snapshot"
     commands:
       - func: "clone"
       - func: "docker build"
+        vars:
+          image: debian10-deb
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_amazon2
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: amazonlinux2-rpm
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_centos7
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: centos7-rpm
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_centos8
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: centos8-rpm
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_ubuntu1804
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: ubuntu18.04-deb
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_ubuntu2004
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: ubuntu20.04-deb
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_debian9
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: debian9-deb
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_debian10
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
         vars:
           image: debian10-deb
           tool_name: atlascli
@@ -423,6 +551,7 @@ tasks:
         variant: "release_mongocli_msi"
     commands:
       - func: "clone"
+      - func: "install dev tools"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -436,7 +565,7 @@ tasks:
       - func: "package"
         vars:
           tool_name: "mongocli"
-          goreleaser_config: .mongocli.goreleaser.yml
+          goreleaser_config: build/package/.mongocli.goreleaser.yml
           changelog_file: CHANGELOG_MONGOCLI.md
       - func: "rename pkg"
         vars:
@@ -488,6 +617,7 @@ tasks:
         variant: "release_atlascli_msi"
     commands:
       - func: "clone"
+      - func: "install dev tools"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -501,11 +631,12 @@ tasks:
       - func: "package"
         vars:
           tool_name: "atlascli"
-          goreleaser_config: .atlascli.goreleaser.yml
+          goreleaser_config: build/package/.atlascli.goreleaser.yml
           changelog_file: CHANGELOG_ATLASCLI.md
       - func: "rename pkg"
         vars:
           package_name: mongodb-atlas-cli
+          meta_package_name: mongodb-atlas
           tool_name: atlascli
       - command: archive.targz_pack
         params:
@@ -1214,6 +1345,30 @@ tasks:
           distro: debian10
           ext: deb
           tool_name: atlascli
+  - name: pkg_test_repo_atlascli
+    patchable: false
+    git_tag_only: true
+    depends_on:
+        - name: release_atlascli
+          variant: "release_atlascli_github"
+    tags: [ "smoke-test", "generate", "repo", "atlascli" ]
+    commands:
+      - func: "clone"
+      - func: "generate evergreen"
+        vars:
+          tool_name: atlascli
+  - name: pkg_test_repo_mongocli
+    patchable: false
+    git_tag_only: true
+    depends_on:
+        - name: release_mongocli
+          variant: "release_mongocli_github"
+    tags: [ "smoke-test", "generate", "repo", "mongocli" ]
+    commands:
+      - func: "clone"
+      - func: "generate evergreen"
+        vars:
+          tool_name: mongocli
 
 buildvariants:
   - name: go_mongocli_msi_snapshot
@@ -1223,6 +1378,7 @@ buildvariants:
     expansions:
       go_root: "c:\\golang\\go1.18"
       go_bin: "c:\\golang\\go1.18/bin"
+      go_base_path: "c:"
       tool_name: "mongocli"
     tasks:
       - name: package_msi
@@ -1233,18 +1389,20 @@ buildvariants:
     expansions:
       go_root: "c:\\golang\\go1.18"
       go_bin: "c:\\golang\\go1.18/bin"
+      go_base_path: "c:"
       tool_name: "atlascli"
     tasks:
       - name: package_msi
   - name: goreleaser_mongocli_snapshot
     display_name: "Packaging MongoCLI (goreleaser)"
     run_on:
-      - macos-1014-codesign
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
       server_version: "4.4.0-rc3"
-      goreleaser_file: ".mongocli.goreleaser.yml"
+      goreleaser_file: "build/package/.mongocli.goreleaser.yml"
       package_name: "mongocli"
       tool_name: "mongocli"
     tasks:
@@ -1252,13 +1410,15 @@ buildvariants:
   - name: goreleaser_atlascli_snapshot
     display_name: "Packaging AtlasCLI (goreleaser)"
     run_on:
-      - macos-1014-codesign
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
       server_version: "4.4.0-rc3"
-      goreleaser_file: ".atlascli.goreleaser.yml"
+      goreleaser_file: "build/package/.atlascli.goreleaser.yml"
       package_name: "mongodb-atlas-cli"
+      meta_package_name: "mongodb-atlas"
       tool_name: "atlascli"
     tasks:
       - name: package_goreleaser
@@ -1269,6 +1429,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
       server_version: "4.4.0-rc3"
     tasks:
       - name: .push
@@ -1281,25 +1442,28 @@ buildvariants:
     expansions:
       go_root: "c:\\golang\\go1.18"
       go_bin: "c:\\golang\\go1.18/bin"
+      go_base_path: "c:"
       tool_name: "mongocli"
     tasks:
       - name: release_msi
   - name: release_mongocli_github
     display_name: "Release MongoCLI (goreleaser)"
     run_on:
-      - macos-1014-codesign
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: release_mongocli
   - name: release_atlascli_github
     display_name: "Release AtlasCLI (goreleaser)"
     run_on:
-      - macos-1014-codesign
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.18"
       go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
       - name: release_atlascli
   - name: release_atlascli_msi
@@ -1309,6 +1473,7 @@ buildvariants:
     expansions:
       go_root: "c:\\golang\\go1.18"
       go_bin: "c:\\golang\\go1.18/bin"
+      go_base_path: "c:"
       tool_name: "atlascli"
     tasks:
       - name: release_msi
@@ -1366,19 +1531,33 @@ buildvariants:
       notary_key_name: "server-5.0"
     tasks:
       - name: .push_atlascli_stable
-  - name: pkg_smoke_tests_docker
-    display_name: "Post packaging smoke tests (Docker)"
+  - name: pkg_smoke_tests_docker_mongocli
+    display_name: "Post packaging smoke tests (Docker / MongoCLI)"
     run_on: ubuntu1804-small
     tasks:
-      - name: pkg_test_mongocli_docker_amazon2
-      - name: pkg_test_mongocli_docker_centos7
-      - name: pkg_test_mongocli_docker_ubuntu1804
-      - name: pkg_test_mongocli_docker_ubuntu2004
-      - name: pkg_test_mongocli_docker_debian9
-      - name: pkg_test_mongocli_docker_debian10
-      - name: pkg_test_atlascli_docker_amazon2
-      - name: pkg_test_atlascli_docker_centos7
-      - name: pkg_test_atlascli_docker_ubuntu1804
-      - name: pkg_test_atlascli_docker_ubuntu2004
-      - name: pkg_test_atlascli_docker_debian9
-      - name: pkg_test_atlascli_docker_debian10
+      - name: .smoke-test .mongocli
+  - name: pkg_smoke_tests_docker_atlascli
+    display_name: "Post packaging smoke tests (Docker / AtlasCLI)"
+    run_on: ubuntu1804-small
+    tasks:
+      - name: .smoke-test .atlascli
+  - name: test_atlascli_repo
+    display_name: "Test AtlasCLI repo"
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
+    run_on:
+      - ubuntu1804-small
+    tasks:
+      - name: .smoke-test .generate .repo .atlascli
+  - name: test_mongocli_repo
+    display_name: "Test MongoCLI repo"
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
+    run_on:
+      - ubuntu1804-small
+    tasks:
+      - name: .smoke-test .generate .repo .mongocli

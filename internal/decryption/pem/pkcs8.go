@@ -20,7 +20,7 @@ package pem
 import (
 	"crypto/aes"
 	"crypto/cipher"
-	"crypto/des"  //nolint:gosec // used as part of the des cbc standard
+	"crypto/des"  //nolint // used as part of the des cbc standard
 	"crypto/sha1" //nolint:gosec // used as part of the sha1 standard
 	"crypto/sha256"
 	"crypto/x509"

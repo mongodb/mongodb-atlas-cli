@@ -16,11 +16,12 @@ package backup
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/restores"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/snapshots"
 	"github.com/spf13/cobra"
 )
 
-func Builder() *cobra.Command {
+func baseCommand() *cobra.Command {
 	const use = "backups"
 	cmd := &cobra.Command{
 		Use:     use,
@@ -28,25 +29,26 @@ func Builder() *cobra.Command {
 		Short:   "Manage cloud backups for your project.",
 	}
 
+	return cmd
+}
+
+func Builder() *cobra.Command {
+	cmd := baseCommand()
+
 	cmd.AddCommand(
 		snapshots.Builder(),
-		RestoresBuilder(),
+		restores.Builder(),
 	)
 
 	return cmd
 }
 
-func RestoresBuilder() *cobra.Command {
-	const use = "restores"
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   "Manage cloud backup restore jobs for your project.",
-		Aliases: cli.GenerateAliases(use),
-	}
+func AtlasCLIBuilder() *cobra.Command {
+	cmd := baseCommand()
 
 	cmd.AddCommand(
-		RestoresListBuilder(),
-		RestoresStartBuilder(),
+		snapshots.Builder(),
+		restores.AtlasCLIBuilder(),
 	)
 
 	return cmd

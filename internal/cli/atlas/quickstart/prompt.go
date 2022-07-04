@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 )
@@ -85,44 +84,6 @@ func newSampleDataQuestion(clusterName string) survey.Prompt {
 	return &survey.Confirm{
 		Message: fmt.Sprintf("Do you want to load sample data into %s?", clusterName),
 		Help:    "Load sample data to help you test cluster features. See: https://docs.atlas.mongodb.com/sample-data/available-sample-datasets/.",
-		Default: true,
-	}
-}
-
-func newMongoShellQuestionAccessDeployment(clusterName string) survey.Prompt {
-	return &survey.Confirm{
-		Message: fmt.Sprintf("Do you want to connect to %s with MongoDB Shell?", clusterName),
-		Help:    "MongoDB CLI will use your installed version of MongoDB Shell to access your deployments.",
-		Default: true,
-	}
-}
-
-func newMongoShellPathQuestion() survey.Prompt {
-	return &survey.Confirm{
-		Message: "Do you want to provide the path to your MongoDB Shell binary?",
-		Help:    "MongoDB CLI will store the path in your profile, type ‘mongocli config’ to change it.",
-		Default: true,
-	}
-}
-
-func newIsMongoShellInstalledQuestion() survey.Prompt {
-	return &survey.Confirm{
-		Message: "Do you have a MongoDB Shell version installed on your machine?",
-		Default: true,
-	}
-}
-
-func newMongoShellPathInput() survey.Prompt {
-	return &survey.Input{
-		Message: "Default MongoDB Shell Path",
-		Help:    "MongoDB CLI will use your installed version of MongoDB Shell to access your deployments.",
-		Default: mongosh.Path(),
-	}
-}
-
-func newMongoShellQuestionOpenBrowser() survey.Prompt {
-	return &survey.Confirm{
-		Message: "Do you want to download MongoDB Shell [This will open www.mongodb.com on your browser]?",
 		Default: true,
 	}
 }

@@ -15,11 +15,9 @@
 package store
 
 import (
-	"bytes"
 	"context"
 	"crypto/tls"
 	"crypto/x509"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
@@ -285,16 +283,13 @@ func (s *Store) setAtlasClient(client *http.Client) error {
 			respHeaders += fmt.Sprintf("%v: %v\n", key, strings.Join(value, " "))
 		}
 
-		respBody := &bytes.Buffer{}
-		_ = json.Indent(respBody, resp.Raw, "", "  ")
-
 		_, _ = log.Debugf(`request:
 %v %v
 response:
 %v %v
 %v
 %v
-`, resp.Request.Method, resp.Request.URL.Path, resp.Proto, resp.Status, respHeaders, respBody.String())
+`, resp.Request.Method, resp.Request.URL.Path, resp.Proto, resp.Status, respHeaders, string(resp.Raw))
 	})
 	s.client = c
 	return nil

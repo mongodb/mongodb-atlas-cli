@@ -17,11 +17,6 @@
 
 set -Eeou pipefail
 
-export GOPATH="${workdir:?}"
-export PATH="$GOPATH/bin:$PATH"
-
-go install github.com/google/go-licenses@latest
-
 go-licenses save "github.com/mongodb/mongodb-atlas-cli/cmd/mongocli" --save_path=third_party_notices
 # For HCL, a dependency of viper, go-license adds the source code with restricted permissions, this is a problem for some linux users
 sudo chmod -R 755 ./third_party_notices

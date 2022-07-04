@@ -22,12 +22,14 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/mongodb/mongodb-atlas-cli/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestWithCommandPath(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 	testCmd := &cobra.Command{
 		Use: "test",
@@ -44,6 +46,7 @@ func TestWithCommandPath(t *testing.T) {
 }
 
 func TestWithCommandPathAndAlias(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 	rootCmd := &cobra.Command{
 		Use: "root",
@@ -63,6 +66,7 @@ func TestWithCommandPathAndAlias(t *testing.T) {
 }
 
 func TestWithProfileDefault(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withProfile())
@@ -72,6 +76,7 @@ func TestWithProfileDefault(t *testing.T) {
 }
 
 func TestWithProfileCustom(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	const profile = "test"
@@ -85,6 +90,7 @@ func TestWithProfileCustom(t *testing.T) {
 }
 
 func TestWithDuration(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -102,6 +108,7 @@ func TestWithDuration(t *testing.T) {
 }
 
 func TestWithFlags(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -122,6 +129,7 @@ func TestWithFlags(t *testing.T) {
 }
 
 func TestWithVersion(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	version.Version = "vTest"
@@ -135,6 +143,7 @@ func TestWithVersion(t *testing.T) {
 }
 
 func TestWithOS(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withOS())
@@ -145,6 +154,7 @@ func TestWithOS(t *testing.T) {
 }
 
 func TestWithAuthMethod_apiKey(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	config.SetPublicAPIKey("test-public")
@@ -157,6 +167,7 @@ func TestWithAuthMethod_apiKey(t *testing.T) {
 }
 
 func TestWithAuthMethod_oauth(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	config.SetPublicAPIKey("")
@@ -169,6 +180,7 @@ func TestWithAuthMethod_oauth(t *testing.T) {
 }
 
 func TestWithService(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	const url = "http://host.test"
@@ -183,6 +195,7 @@ func TestWithService(t *testing.T) {
 }
 
 func TestWithProjectID_Flag(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -205,6 +218,7 @@ func TestWithProjectID_Flag(t *testing.T) {
 }
 
 func TestWithProjectID_Config(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -227,6 +241,7 @@ func TestWithProjectID_Config(t *testing.T) {
 }
 
 func TestWithProjectID_NoFlagOrConfig(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -247,6 +262,7 @@ func TestWithProjectID_NoFlagOrConfig(t *testing.T) {
 }
 
 func TestWithOrgID_Flag(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -269,6 +285,7 @@ func TestWithOrgID_Flag(t *testing.T) {
 }
 
 func TestWithOrgID_Config(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -291,6 +308,7 @@ func TestWithOrgID_Config(t *testing.T) {
 }
 
 func TestWithOrgID_NoFlagOrConfig(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -311,6 +329,7 @@ func TestWithOrgID_NoFlagOrConfig(t *testing.T) {
 }
 
 func TestWithError(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withError(errors.New("test")))
@@ -318,15 +337,6 @@ func TestWithError(t *testing.T) {
 	a := assert.New(t)
 	a.Equal("ERROR", e.Properties["result"])
 	a.Equal("test", e.Properties["error"])
-}
-
-func TestWithExtraProps(t *testing.T) {
-	config.ToolName = config.AtlasCLI
-
-	e := newEvent(withExtraProps(map[string]interface{}{"a": true}))
-
-	a := assert.New(t)
-	a.Equal(true, e.Properties["a"])
 }
 
 func TestSanitizePrompt(t *testing.T) {
@@ -380,6 +390,7 @@ func TestSanitizeSelectOption(t *testing.T) {
 }
 
 func TestWithPrompt(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	q := "random question"
@@ -393,6 +404,7 @@ func TestWithPrompt(t *testing.T) {
 }
 
 func TestWithChoice(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	c := "test choice"
@@ -404,6 +416,7 @@ func TestWithChoice(t *testing.T) {
 }
 
 func TestWithDefault(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	q := true
@@ -415,6 +428,7 @@ func TestWithDefault(t *testing.T) {
 }
 
 func TestWithEmpty(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	q := true
@@ -434,4 +448,45 @@ func TestWithSignal(t *testing.T) {
 
 	a := assert.New(t)
 	a.Equal(q, e.Properties["signal"])
+}
+
+func TestWithHelpCommand(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+	testCmd := &cobra.Command{
+		Use: "test",
+	}
+	rootCmd := &cobra.Command{
+		Use: "root",
+	}
+	rootCmd.AddCommand(testCmd)
+	rootCmd.InitDefaultHelpCmd()
+	helpCmd := rootCmd.Commands()[0]
+
+	args := []string{"test"}
+
+	e := newEvent(withHelpCommand(helpCmd, args))
+
+	a := assert.New(t)
+	a.Equal("root-test", e.Properties["help_command"])
+}
+
+func TestWithHelpCommand_NotFound(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+	testCmd := &cobra.Command{
+		Use: "test",
+	}
+	rootCmd := &cobra.Command{
+		Use: "root",
+	}
+	rootCmd.AddCommand(testCmd)
+	rootCmd.InitDefaultHelpCmd()
+	helpCmd := rootCmd.Commands()[0]
+
+	args := []string{"test2"}
+
+	e := newEvent(withHelpCommand(helpCmd, args))
+
+	a := assert.New(t)
+	_, ok := e.Properties["help_command"]
+	a.False(ok)
 }

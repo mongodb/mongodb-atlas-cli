@@ -65,7 +65,7 @@ Related Commands
 * :ref:`mongocli-ops-manager-metrics` - Get measurements on the state of the MongoDB process.
 * :ref:`mongocli-ops-manager-monitoring` - Manage monitoring for your project.
 * :ref:`mongocli-ops-manager-owner` - Manage Ops Manager owners.
-* :ref:`mongocli-ops-manager-performanceAdvisor` - Performance Advisor operations.
+* :ref:`mongocli-ops-manager-performanceAdvisor` - Learn more about slow queries and get suggestions to improve database performance.
 * :ref:`mongocli-ops-manager-processes` - Manage MongoDB processes for your project.
 * :ref:`mongocli-ops-manager-security` - Manage security configuration for your project.
 * :ref:`mongocli-ops-manager-serverUsage` - Manage your server usage.

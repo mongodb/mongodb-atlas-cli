@@ -118,11 +118,10 @@ func UpgradeBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  Upgrade tier, disk size and MongoDB version for a cluster:
   $ %s cluster upgrade <clusterName> --projectId <projectId> --tier M50 --diskSizeGB 20 --mdbVersion 4.2`,
 			cli.ExampleAtlasEntryPoint()),
-		Args: require.MaximumNArgs(1),
+		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 0 {
 				opts.name = args[0]
-				fmt.Println(opts.name)
 			}
 			return opts.PreRunE(
 				opts.ValidateProjectID,

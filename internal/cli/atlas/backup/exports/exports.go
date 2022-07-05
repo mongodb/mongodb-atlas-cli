@@ -16,6 +16,7 @@ package exports
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/exports/buckets"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/exports/jobs"
 	"github.com/spf13/cobra"
 )
@@ -30,6 +31,7 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		jobs.Builder(),
+		buckets.Builder(),
 	)
 
 	return cmd

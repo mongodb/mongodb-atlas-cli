@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package jobs
+package buckets
 
 import (
 	"context"
@@ -31,8 +31,7 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	clusterName string
-	store       store.ExportJobsLister
+	store store.ExportBucketsLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -43,13 +42,13 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	EXPORT BUCKET ID	STATE	SNAPSHOT ID{{range .Results}}
-{{.ID}}	{{.ExportBucketID}}	{{.State}}	{{.SnapshotID}}{{end}}
+var listTemplate = `ID	BUCKET NAME	CLOUD PROVIDER	IAM ROLE ID{{range .Results}}
+{{.ID}}	{{.BucketName}}	{{.CloudProvider}}	{{.IAMRoleID}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
 	listOpts := opts.NewListOptions()
-	r, err := opts.store.ExportJobs(opts.ConfigProjectID(), opts.clusterName, listOpts)
+	r, err := opts.store.ExportBuckets(opts.ConfigProjectID(), listOpts)
 	if err != nil {
 		return err
 	}
@@ -57,24 +56,17 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas backup(s) export(s) job(s) list <clusterName> [--page N] [--limit N].
+// atlas backup(s) export(s) bucket(s) list [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
-		Use:     "list <clusterName>",
+		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "List cloud backup restore jobs for your project and cluster.",
-		Args:    require.ExactArgs(1),
-		Annotations: map[string]string{
-			"args":            "clusterName",
-			"requiredArgs":    "clusterName",
-			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve restore jobs.",
-		},
-		Example: fmt.Sprintf(`  The following example retrieves the continuous backup export jobs for the cluster Cluster0:
-  $ %s backup exports jobs list Cluster0`, cli.ExampleAtlasEntryPoint()),
+		Short:   "List cloud backup restore buckets for your project and cluster.",
+		Args:    require.NoArgs,
+		Example: fmt.Sprintf(`  The following example retrieves the continuous backup export buckets for the cluster Cluster0:
+  $ %s backup exports buckets list`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
-
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),

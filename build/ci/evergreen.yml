@@ -203,6 +203,7 @@ functions:
           - workdir
           - cloud_manager_service
           - revision
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
         binary: ./set-up-cloud-manager.sh
         args: ['-h', 'hosts.json']
         env:

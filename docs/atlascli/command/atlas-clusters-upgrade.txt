@@ -12,7 +12,7 @@ atlas clusters upgrade
    :depth: 1
    :class: singlecol
 
-Upgrade a MongoDB Atlas cluster.
+Upgrade a MongoDB Atlas cluster's tier, disk size, and/or MongoDB version.
 
 Syntax
 ------
@@ -35,7 +35,7 @@ Arguments
    * - clusterName
      - string
      - false
-     - Name of the cluster to upgrade
+     - Name of the cluster to upgrade.
 
 Options
 -------
@@ -63,7 +63,7 @@ Options
    * - --mdbVersion
      - string
      - false
-     - MongoDB version of the cluster to deploy.
+     - MongoDB version of the cluster.
    * - -o, --output
      - string
      - false
@@ -98,6 +98,6 @@ Examples
 
 .. code-block::
 
-   Upgrade tier, disk size and MongoDB version for a cluster:
+   The following example upgrades the tier, disk size, and MongoDB version for a cluster:
    $ atlas cluster upgrade <clusterName> --projectId <projectId> --tier M50 --diskSizeGB 20 --mdbVersion 4.2
 

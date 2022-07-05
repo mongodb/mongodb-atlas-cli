@@ -74,7 +74,7 @@ Options
    * - --mdbVersion
      - string
      - false
-     - MongoDB version of the cluster to deploy.
+     - MongoDB version of the cluster.
    * - -m, --members
      - int
      - false

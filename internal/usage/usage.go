@@ -33,7 +33,7 @@ const (
 	SuggestedIndexNamespaces                  = "Namespaces from which to retrieve suggested indexes."
 	NExamples                                 = "Maximum number of example queries to provide that will be improved by a suggested index."
 	NIndexes                                  = "Maximum number of indexes to suggest."
-	MDBVersion                                = "MongoDB version of the cluster to deploy."
+	MDBVersion                                = "MongoDB version of the cluster."
 	AuthDB                                    = "Authentication database name."
 	Granularity                               = "Duration in ISO 8601 notation that specifies the interval between measurement data points. Only the following subset of ISO 8601-formatted time periods are supported: PT10S, PT1M, PT5M, PT1H, P1D."
 	Page                                      = "Page number."

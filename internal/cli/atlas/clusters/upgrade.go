@@ -114,8 +114,8 @@ func UpgradeBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "upgrade [clusterName]",
-		Short: "Upgrade a MongoDB Atlas cluster.",
-		Example: fmt.Sprintf(`  Upgrade tier, disk size and MongoDB version for a cluster:
+		Short: "Upgrade a MongoDB Atlas cluster's tier, disk size, and/or MongoDB version.",
+		Example: fmt.Sprintf(`  The following example upgrades the tier, disk size, and MongoDB version for a cluster:
   $ %s cluster upgrade <clusterName> --projectId <projectId> --tier M50 --diskSizeGB 20 --mdbVersion 4.2`,
 			cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
@@ -134,7 +134,7 @@ func UpgradeBuilder() *cobra.Command {
 		},
 		Annotations: map[string]string{
 			"args":            "clusterName",
-			"clusterNameDesc": "Name of the cluster to upgrade",
+			"clusterNameDesc": "Name of the cluster to upgrade.",
 		},
 	}
 

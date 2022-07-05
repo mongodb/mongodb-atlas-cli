@@ -1,8 +1,8 @@
-.. _atlas-backups-exports:
+.. _atlas-backups-exports-buckets:
 
-=====================
-atlas backups exports
-=====================
+=============================
+atlas backups exports buckets
+=============================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ atlas backups exports
    :depth: 1
    :class: singlecol
 
-Manage cloud backup export jobs for your project.
+Manage cloud backup export buckets for your project.
 
 Options
 -------
@@ -28,7 +28,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for exports
+     - help for buckets
 
 Inherited Options
 -----------------
@@ -49,13 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-backups-exports-buckets` - Manage cloud backup export buckets for your project.
-* :ref:`atlas-backups-exports-jobs` - Manage cloud backup export jobs for your project.
+* :ref:`atlas-backups-exports-buckets-list` - List cloud backup restore buckets for your project and cluster.
 
 
 .. toctree::
    :titlesonly:
 
-   buckets </command/atlas-backups-exports-buckets>
-   jobs </command/atlas-backups-exports-jobs>
+   list </command/atlas-backups-exports-buckets-list>
 

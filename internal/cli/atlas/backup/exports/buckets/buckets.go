@@ -12,21 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
-package exports
+package buckets
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		2,
-		[]string{},
+func Builder() *cobra.Command {
+	const use = "buckets"
+	cmd := &cobra.Command{
+		Use:     use,
+		Short:   "Manage cloud backup export buckets for your project.",
+		Aliases: cli.GenerateAliases(use),
+	}
+
+	cmd.AddCommand(
+		ListBuilder(),
 	)
+
+	return cmd
 }

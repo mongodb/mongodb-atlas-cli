@@ -21,21 +21,29 @@ if [[ -f project.sh ]]; then
   source project.sh
 fi
 
+if [[ "${MUST_CLEANUP_CM-}" != "true" ]]; then
+  echo "skipping cloud manager clean up post task"
+  exit 0
+fi
+
+if [[ -z "${MCLI_PROJECT_ID-}" ]]; then
+  echo "MCLI_PROJECT_ID not set"
+  exit 1
+fi
+
 delete_project() {
   mongocli iam projects delete "${MCLI_PROJECT_ID-}" --force
 } 
 
-if [[ "${MUST_CLEANUP_CM-}" == "true" ]]; then
-  for _ in {1..10}
-  do
-    echo "attempting to delete cloud manager project ${MCLI_PROJECT_ID-}"
-    if [[ $(delete_project) ]]; then
-      echo "cloud manager project ${MCLI_PROJECT_ID-} was deleted successfully"
-      exit 0
-    fi
-    sleep 30
-  done
-fi
+for _ in {1..10}
+do
+  echo "attempting to delete cloud manager project ${MCLI_PROJECT_ID-}"
+  if [[ $(delete_project) ]]; then
+    echo "cloud manager project ${MCLI_PROJECT_ID-} was deleted successfully"
+    exit 0
+  fi
+  sleep 30
+done
 
 echo "cloud manager project ${MCLI_PROJECT_ID-} was unable to be deleted"
 exit 1

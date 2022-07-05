@@ -26,6 +26,11 @@ if [[ "${MUST_CLEANUP_CM-}" != "true" ]]; then
   exit 0
 fi
 
+if [[ -z "${MCLI_PROJECT_ID-}" ]]; then
+  echo "MCLI_PROJECT_ID not set"
+  exit 1
+fi
+
 delete_project() {
   mongocli iam projects delete "${MCLI_PROJECT_ID-}" --force
 } 

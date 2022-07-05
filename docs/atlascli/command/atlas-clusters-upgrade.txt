@@ -1,8 +1,8 @@
-.. _atlas-clusters-update:
+.. _atlas-clusters-upgrade:
 
-=====================
-atlas clusters update
-=====================
+======================
+atlas clusters upgrade
+======================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ atlas clusters update
    :depth: 1
    :class: singlecol
 
-Update a MongoDB Atlas cluster.
+Upgrade a MongoDB Atlas cluster's tier, disk size, and/or MongoDB version.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas clusters update [clusterName] [options]
+   atlas clusters upgrade [clusterName] [options]
 
 Arguments
 ---------
@@ -35,7 +35,7 @@ Arguments
    * - clusterName
      - string
      - false
-     - Name of the cluster to update.
+     - Name of the cluster to upgrade.
 
 Options
 -------
@@ -59,7 +59,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for update
+     - help for upgrade
    * - --mdbVersion
      - string
      - false
@@ -98,12 +98,6 @@ Examples
 
 .. code-block::
 
-   Update tier for a cluster:
-   $ atlas cluster update <clusterName> --projectId <projectId> --tier M50
-
-   Update disk size for a cluster:
-   $ atlas cluster update <clusterName> --projectId <projectId> --diskSizeGB 20
-
-   Update MongoDB version for a cluster:
-   $ atlas cluster update <clusterName> --projectId <projectId> --mdbVersion 4.2
+   The following example upgrades the tier, disk size, and MongoDB version for a cluster:
+   $ atlas cluster upgrade <clusterName> --projectId <projectId> --tier M50 --diskSizeGB 20 --mdbVersion 4.2
 

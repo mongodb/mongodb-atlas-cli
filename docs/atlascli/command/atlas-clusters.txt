@@ -64,6 +64,7 @@ Related Commands
 * :ref:`atlas-clusters-search` - Manage Atlas Search for your cluster.
 * :ref:`atlas-clusters-start` - Start a paused MongoDB cluster in Atlas.
 * :ref:`atlas-clusters-update` - Update a MongoDB Atlas cluster.
+* :ref:`atlas-clusters-upgrade` - Upgrade a MongoDB Atlas cluster's tier, disk size, and/or MongoDB version.
 * :ref:`atlas-clusters-watch` - Watch for a cluster to be available.
 
 
@@ -83,5 +84,6 @@ Related Commands
    search </command/atlas-clusters-search>
    start </command/atlas-clusters-start>
    update </command/atlas-clusters-update>
+   upgrade </command/atlas-clusters-upgrade>
    watch </command/atlas-clusters-watch>
 

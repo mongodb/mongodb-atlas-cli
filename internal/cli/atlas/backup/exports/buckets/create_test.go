@@ -31,24 +31,22 @@ func TestCreateOpts_Run(t *testing.T) {
 
 	expected := &mongodbatlas.CloudProviderSnapshotExportBucket{}
 
-	t.Run("flags run", func(t *testing.T) {
-		createOpts := &CreateOpts{
-			bucketName:    "testBucket",
-			iamRoleID:     "12345678f901a234dbdb00ca",
-			cloudProvider: "AWS",
-			store:         mockStore,
-		}
+	createOpts := &CreateOpts{
+		bucketName:    "testBucket",
+		iamRoleID:     "12345678f901a234dbdb00ca",
+		cloudProvider: "AWS",
+		store:         mockStore,
+	}
 
-		bucket := createOpts.newExportBucket()
-		mockStore.
-			EXPECT().
-			CreateExportBucket("", bucket).Return(expected, nil).
-			Times(1)
+	bucket := createOpts.newExportBucket()
+	mockStore.
+		EXPECT().
+		CreateExportBucket("", bucket).Return(expected, nil).
+		Times(1)
 
-		if err := createOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
+	if err := createOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }
 
 func TestCreateBuilder(t *testing.T) {
@@ -56,6 +54,6 @@ func TestCreateBuilder(t *testing.T) {
 		t,
 		CreateBuilder(),
 		0,
-		[]string{flag.CloudProvider, flag.IamRoleID, flag.ProjectID, flag.Output},
+		[]string{flag.CloudProvider, flag.IAMRoleID, flag.ProjectID, flag.Output},
 	)
 }

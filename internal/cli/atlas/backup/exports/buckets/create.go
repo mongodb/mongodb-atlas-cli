@@ -93,12 +93,12 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.cloudProvider, flag.CloudProvider, "", usage.CloudProvider)
-	cmd.Flags().StringVar(&opts.iamRoleID, flag.IamRoleID, "", usage.IamRoleID)
+	cmd.Flags().StringVar(&opts.iamRoleID, flag.IAMRoleID, "", usage.ExportBucketIAMRoleID)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_, _ = cmd.MarkFlagRequired(flag.CloudProvider), cmd.MarkFlagRequired(flag.IamRoleID)
+	_, _ = cmd.MarkFlagRequired(flag.CloudProvider), cmd.MarkFlagRequired(flag.IAMRoleID)
 
 	return cmd
 }

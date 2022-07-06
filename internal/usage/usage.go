@@ -338,5 +338,5 @@ const (
 	EnableRealtimePerformancePanel            = "Flag that enables the Real Time Performance Panel project setting."
 	DisableRealtimePerformancePanel           = "Flag that disables the Real Time Performance Panel project setting."
 	CloudProvider                             = "Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS."
-	IamRoleID                                 = "Unique identifier of the role that Atlas can use to access the bucket."
+	ExportBucketIAMRoleID                     = "Unique identifier of the role that Atlas can use to access the bucket."
 )

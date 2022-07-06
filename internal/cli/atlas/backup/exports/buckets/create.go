@@ -74,7 +74,7 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create <bucketName>",
 		Short: "Create new export bucket.",
 		Example: fmt.Sprintf(`  Create new export bucket:
-  $ %s config rename myProfile testProfile`, config.BinName()),
+  $ %s backup export buckets create michal-test-bucket-2 --cloudProvider AWS --iamRoleID 12345678f901a234dbdb00ca`, config.BinName()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":           "bucketName",

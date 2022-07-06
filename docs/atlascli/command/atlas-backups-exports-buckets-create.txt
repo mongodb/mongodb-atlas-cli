@@ -91,5 +91,5 @@ Examples
 .. code-block::
 
    Create new export bucket:
-   $ atlas config rename myProfile testProfile
+   $ atlas backup export buckets create michal-test-bucket-2 --cloudProvider AWS --iamRoleID 12345678f901a234dbdb00ca
 

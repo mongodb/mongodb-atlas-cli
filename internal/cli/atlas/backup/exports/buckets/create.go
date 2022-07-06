@@ -67,6 +67,7 @@ func (opts *CreateOpts) newExportBucket() *mongodbatlas.CloudProviderSnapshotExp
 	return createRequest
 }
 
+// mongocli atlas backup(s) export(s) bucket(s) create <bucketName> --cloudProvider AWS.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -76,9 +77,8 @@ func CreateBuilder() *cobra.Command {
   $ %s config rename myProfile testProfile`, config.BinName()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":         "bucketName",
-			"requiredArgs": "bucketName",
-			"bucketName":   "Name of the bucket that the provided role ID is authorized to access.",
+			"args":           "bucketName",
+			"bucketNameDesc": "Name of the bucket that the provided role ID is authorized to access.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

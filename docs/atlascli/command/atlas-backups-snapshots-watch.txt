@@ -1,8 +1,8 @@
-.. _atlas-backups-exports-buckets-create:
+.. _atlas-backups-snapshots-watch:
 
-====================================
-atlas backups exports buckets create
-====================================
+=============================
+atlas backups snapshots watch
+=============================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,19 @@ atlas backups exports buckets create
    :depth: 1
    :class: singlecol
 
-Create new export bucket.
+Watch for a snapshot to be available.
+
+This command checks the snapshot's status periodically until it reaches a completed or failed status. 
+Once the snapshot reaches the expected status, the command prints "Snapshot changes completed."
+If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
+You can interrupt the command's polling at any time with CTRL-C.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports buckets create <bucketName> [options]
+   atlas backups snapshots watch <snapshotId> [options]
 
 Arguments
 ---------
@@ -32,10 +37,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - bucketName
+   * - snapshotId
      - string
      - false
-     - Name of the bucket that the provided role ID is authorized to access.
+     - Unique identifier of the snapshot you want to watch.
 
 Options
 -------
@@ -48,22 +53,14 @@ Options
      - Type
      - Required
      - Description
-   * - --cloudProvider
+   * - --clusterName
      - string
      - true
-     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS.
+     - Name of the cluster.
    * - -h, --help
      - 
      - false
-     - help for create
-   * - --iamRoleID
-     - string
-     - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
-   * - -o, --output
-     - string
-     - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - help for watch
    * - --projectId
      - string
      - false
@@ -90,6 +87,5 @@ Examples
 
 .. code-block::
 
-   Create new export bucket:
-   $ atlas config rename myProfile testProfile
+   $ atlas snapshot watch snapshotIdSample --clusterName clusterNameSample
 

@@ -1,8 +1,8 @@
-.. _atlas-backups-exports-buckets-create:
+.. _atlas-backups-restores-describe:
 
-====================================
-atlas backups exports buckets create
-====================================
+===============================
+atlas backups restores describe
+===============================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ atlas backups exports buckets create
    :depth: 1
    :class: singlecol
 
-Create new export bucket.
+Describe a cloud backup restore job.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports buckets create <bucketName> [options]
+   atlas backups restores describe <ID> [options]
 
 Arguments
 ---------
@@ -32,10 +32,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - bucketName
+   * - ID
      - string
-     - false
-     - Name of the bucket that the provided role ID is authorized to access.
+     - true
+     - ID of the restore job.
 
 Options
 -------
@@ -48,18 +48,14 @@ Options
      - Type
      - Required
      - Description
-   * - --cloudProvider
+   * - --clusterName
      - string
      - true
-     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS.
+     - Name of the cluster.
    * - -h, --help
      - 
      - false
-     - help for create
-   * - --iamRoleID
-     - string
-     - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
+     - help for describe
    * - -o, --output
      - string
      - false
@@ -90,6 +86,6 @@ Examples
 
 .. code-block::
 
-   Create new export bucket:
-   $ atlas config rename myProfile testProfile
+   The following example retrieves the continuous backup restore job for the cluster Cluster0:
+   $ atlas backup restore describe 507f1f77bcf86cd799439011 --clusterName Cluster0
 

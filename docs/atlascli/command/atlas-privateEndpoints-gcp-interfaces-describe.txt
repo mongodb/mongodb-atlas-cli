@@ -1,8 +1,8 @@
-.. _atlas-backups-exports-buckets-create:
+.. _atlas-privateEndpoints-gcp-interfaces-describe:
 
-====================================
-atlas backups exports buckets create
-====================================
+==============================================
+atlas privateEndpoints gcp interfaces describe
+==============================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ atlas backups exports buckets create
    :depth: 1
    :class: singlecol
 
-Create new export bucket.
+Return a specific GCP private endpoint interface for your project.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports buckets create <bucketName> [options]
+   atlas privateEndpoints gcp interfaces describe <endpointGroupId> [options]
 
 Arguments
 ---------
@@ -32,10 +32,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - bucketName
+   * - endpointGroupId
      - string
-     - false
-     - Name of the bucket that the provided role ID is authorized to access.
+     - true
+     - Unique identifier for the endpoint group.
 
 Options
 -------
@@ -48,18 +48,14 @@ Options
      - Type
      - Required
      - Description
-   * - --cloudProvider
+   * - --endpointServiceId
      - string
      - true
-     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS.
+     - Unique identifier of the private endpoint service for which you want to retrieve a private endpoint.
    * - -h, --help
      - 
      - false
-     - help for create
-   * - --iamRoleID
-     - string
-     - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
+     - help for describe
    * - -o, --output
      - string
      - false
@@ -90,6 +86,6 @@ Examples
 
 .. code-block::
 
-   Create new export bucket:
-   $ atlas config rename myProfile testProfile
+   $ atlas privateEndpoints gcp interfaces describe endpoint-1 \
+   --endpointServiceId 61eaca605af86411903de1dd
 

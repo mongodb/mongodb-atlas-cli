@@ -1,7 +1,7 @@
-.. _atlas-backups-exports-buckets-create:
+.. _atlas-clusters-search-indexes-create:
 
 ====================================
-atlas backups exports buckets create
+atlas clusters search indexes create
 ====================================
 
 .. default-domain:: mongodb
@@ -12,30 +12,14 @@ atlas backups exports buckets create
    :depth: 1
    :class: singlecol
 
-Create new export bucket.
+Create a search index for a cluster.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports buckets create <bucketName> [options]
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - bucketName
-     - string
-     - false
-     - Name of the bucket that the provided role ID is authorized to access.
+   atlas clusters search indexes create [indexName] [options]
 
 Options
 -------
@@ -48,18 +32,18 @@ Options
      - Type
      - Required
      - Description
-   * - --cloudProvider
+   * - --clusterName
      - string
      - true
-     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS.
+     - Name of the cluster.
+   * - -f, --file
+     - string
+     - false
+     - File name to use, file with a json index configuration.
    * - -h, --help
      - 
      - false
      - help for create
-   * - --iamRoleID
-     - string
-     - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
    * - -o, --output
      - string
      - false
@@ -84,12 +68,4 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
-
-Examples
---------
-
-.. code-block::
-
-   Create new export bucket:
-   $ atlas config rename myProfile testProfile
 

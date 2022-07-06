@@ -1,8 +1,8 @@
-.. _atlas-backups-exports-buckets-create:
+.. _atlas-privateEndpoints-dataLakes-aws-describe:
 
-====================================
-atlas backups exports buckets create
-====================================
+=============================================
+atlas privateEndpoints dataLakes aws describe
+=============================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ atlas backups exports buckets create
    :depth: 1
    :class: singlecol
 
-Create new export bucket.
+Return a specific Data Lake private endpoint for your project.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports buckets create <bucketName> [options]
+   atlas privateEndpoints dataLakes aws describe <privateEndpointId> [options]
 
 Arguments
 ---------
@@ -32,10 +32,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - bucketName
+   * - privateEndpointId
      - string
-     - false
-     - Name of the bucket that the provided role ID is authorized to access.
+     - true
+     - Unique 22-character alphanumeric string that identifies the private endpoint.
 
 Options
 -------
@@ -48,18 +48,10 @@ Options
      - Type
      - Required
      - Description
-   * - --cloudProvider
-     - string
-     - true
-     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS.
    * - -h, --help
      - 
      - false
-     - help for create
-   * - --iamRoleID
-     - string
-     - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
+     - help for describe
    * - -o, --output
      - string
      - false
@@ -90,6 +82,6 @@ Examples
 
 .. code-block::
 
-   Create new export bucket:
-   $ atlas config rename myProfile testProfile
+   This example uses the profile named "myprofile" for accessing Atlas.
+   $ atlas privateEndpoint dataLake aws describe vpce-abcdefg0123456789 -P myprofile
 

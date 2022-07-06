@@ -1,8 +1,8 @@
-.. _atlas-backups-exports-buckets-create:
+.. _atlas-organizations-invitations-invite:
 
-====================================
-atlas backups exports buckets create
-====================================
+======================================
+atlas organizations invitations invite
+======================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ atlas backups exports buckets create
    :depth: 1
    :class: singlecol
 
-Create new export bucket.
+Invites one user to the organization that you specify.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports buckets create <bucketName> [options]
+   atlas organizations invitations invite <email> [options]
 
 Arguments
 ---------
@@ -32,10 +32,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - bucketName
+   * - email
      - string
      - false
-     - Name of the bucket that the provided role ID is authorized to access.
+     - Email of the user being invited to the organization.
 
 Options
 -------
@@ -48,26 +48,26 @@ Options
      - Type
      - Required
      - Description
-   * - --cloudProvider
-     - string
-     - true
-     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS.
    * - -h, --help
      - 
      - false
-     - help for create
-   * - --iamRoleID
+     - help for invite
+   * - --orgId
      - string
-     - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
+     - false
+     - Organization ID to use. Overrides the settings in the configuration file or environment variable.
    * - -o, --output
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
-   * - --projectId
-     - string
+   * - --role
+     - strings
+     - true
+     - User's roles  for the associated organization.
+   * - --teamId
+     - strings
      - false
-     - Project ID to use. Overrides the settings in the configuration file or environment variable.
+     - Unique identification of the team.
 
 Inherited Options
 -----------------
@@ -84,12 +84,4 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
-
-Examples
---------
-
-.. code-block::
-
-   Create new export bucket:
-   $ atlas config rename myProfile testProfile
 

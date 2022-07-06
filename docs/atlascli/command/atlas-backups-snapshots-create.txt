@@ -1,8 +1,8 @@
-.. _atlas-backups-exports-buckets-create:
+.. _atlas-backups-snapshots-create:
 
-====================================
-atlas backups exports buckets create
-====================================
+==============================
+atlas backups snapshots create
+==============================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ atlas backups exports buckets create
    :depth: 1
    :class: singlecol
 
-Create new export bucket.
+Create a backup snapshot for your project and cluster.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports buckets create <bucketName> [options]
+   atlas backups snapshots create <clusterName> [options]
 
 Arguments
 ---------
@@ -32,10 +32,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - bucketName
+   * - clusterName
      - string
      - false
-     - Name of the bucket that the provided role ID is authorized to access.
+     - Name of the Atlas cluster whose snapshot you want to restore.
 
 Options
 -------
@@ -48,18 +48,14 @@ Options
      - Type
      - Required
      - Description
-   * - --cloudProvider
+   * - --desc
      - string
      - true
-     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS.
+     - Description of the on-demand snapshot.
    * - -h, --help
      - 
      - false
      - help for create
-   * - --iamRoleID
-     - string
-     - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
    * - -o, --output
      - string
      - false
@@ -68,6 +64,10 @@ Options
      - string
      - false
      - Project ID to use. Overrides the settings in the configuration file or environment variable.
+   * - --retention
+     - int
+     - false
+     - Cloud provider region in which you want to create the private endpoint connection. This value defaults to 1.
 
 Inherited Options
 -----------------
@@ -84,12 +84,4 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
-
-Examples
---------
-
-.. code-block::
-
-   Create new export bucket:
-   $ atlas config rename myProfile testProfile
 

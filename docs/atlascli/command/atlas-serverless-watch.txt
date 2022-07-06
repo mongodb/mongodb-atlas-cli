@@ -1,8 +1,8 @@
-.. _atlas-backups-exports-buckets-create:
+.. _atlas-serverless-watch:
 
-====================================
-atlas backups exports buckets create
-====================================
+======================
+atlas serverless watch
+======================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,20 @@ atlas backups exports buckets create
    :depth: 1
    :class: singlecol
 
-Create new export bucket.
+Monitor the status of serverless instance.
+
+Your API Key must have the Project Read Only role to successfully call this resource.
+This command checks the serverless instance's state periodically until the instance reaches an IDLE state. 
+Once the instance reaches the expected state, the command prints "Instance available."
+If you run the command in the terminal, it blocks the terminal session until the resource becomes idle.
+You can interrupt the command's polling at any time with CTRL-C.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports buckets create <bucketName> [options]
+   atlas serverless watch <instanceName> [options]
 
 Arguments
 ---------
@@ -32,10 +38,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - bucketName
+   * - instanceName
      - string
      - false
-     - Name of the bucket that the provided role ID is authorized to access.
+     - Name of the instance to watch.
 
 Options
 -------
@@ -48,22 +54,10 @@ Options
      - Type
      - Required
      - Description
-   * - --cloudProvider
-     - string
-     - true
-     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS.
    * - -h, --help
      - 
      - false
-     - help for create
-   * - --iamRoleID
-     - string
-     - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
-   * - -o, --output
-     - string
-     - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - help for watch
    * - --projectId
      - string
      - false
@@ -90,6 +84,5 @@ Examples
 
 .. code-block::
 
-   Create new export bucket:
-   $ atlas config rename myProfile testProfile
+   $ atlas serverless watch instanceNameSample
 

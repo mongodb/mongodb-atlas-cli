@@ -1,8 +1,8 @@
-.. _atlas-backups-exports-buckets-create:
+.. _atlas-clusters-indexes-create:
 
-====================================
-atlas backups exports buckets create
-====================================
+=============================
+atlas clusters indexes create
+=============================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ atlas backups exports buckets create
    :depth: 1
    :class: singlecol
 
-Create new export bucket.
+Create a rolling index for your MongoDB cluster.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports buckets create <bucketName> [options]
+   atlas clusters indexes create [indexName] [options]
 
 Arguments
 ---------
@@ -32,10 +32,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - bucketName
+   * - indexName
      - string
      - false
-     - Name of the bucket that the provided role ID is authorized to access.
+     - Name of the index.
 
 Options
 -------
@@ -48,26 +48,34 @@ Options
      - Type
      - Required
      - Description
-   * - --cloudProvider
+   * - --clusterName
      - string
      - true
-     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS.
+     - Name of the cluster.
+   * - --collection
+     - string
+     - true
+     - Collection name.
+   * - --db
+     - string
+     - true
+     - Database name.
    * - -h, --help
      - 
      - false
      - help for create
-   * - --iamRoleID
-     - string
+   * - --key
+     - strings
      - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
-   * - -o, --output
-     - string
-     - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - Field to be indexed and the type of index in the following format: field:type.
    * - --projectId
      - string
      - false
      - Project ID to use. Overrides the settings in the configuration file or environment variable.
+   * - --sparse
+     - 
+     - false
+     - Flag that indicates whether Atlas should create a sparse index.
 
 Inherited Options
 -----------------
@@ -84,12 +92,4 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
-
-Examples
---------
-
-.. code-block::
-
-   Create new export bucket:
-   $ atlas config rename myProfile testProfile
 

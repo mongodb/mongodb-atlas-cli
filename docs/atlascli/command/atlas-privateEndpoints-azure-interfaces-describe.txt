@@ -1,8 +1,8 @@
-.. _atlas-backups-exports-buckets-create:
+.. _atlas-privateEndpoints-azure-interfaces-describe:
 
-====================================
-atlas backups exports buckets create
-====================================
+================================================
+atlas privateEndpoints azure interfaces describe
+================================================
 
 .. default-domain:: mongodb
 
@@ -12,30 +12,14 @@ atlas backups exports buckets create
    :depth: 1
    :class: singlecol
 
-Create new export bucket.
+Return a specific Azure private endpoint interface for your project.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports buckets create <bucketName> [options]
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - bucketName
-     - string
-     - false
-     - Name of the bucket that the provided role ID is authorized to access.
+   atlas privateEndpoints azure interfaces describe <endpointId> [options]
 
 Options
 -------
@@ -48,18 +32,14 @@ Options
      - Type
      - Required
      - Description
-   * - --cloudProvider
+   * - --endpointServiceId
      - string
      - true
-     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS.
+     - Unique identifier of the private endpoint service for which you want to retrieve a private endpoint.
    * - -h, --help
      - 
      - false
-     - help for create
-   * - --iamRoleID
-     - string
-     - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
+     - help for describe
    * - -o, --output
      - string
      - false
@@ -84,12 +64,4 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
-
-Examples
---------
-
-.. code-block::
-
-   Create new export bucket:
-   $ atlas config rename myProfile testProfile
 

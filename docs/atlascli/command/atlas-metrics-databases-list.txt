@@ -1,8 +1,8 @@
-.. _atlas-backups-exports-buckets-create:
+.. _atlas-metrics-databases-list:
 
-====================================
-atlas backups exports buckets create
-====================================
+============================
+atlas metrics databases list
+============================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,16 @@ atlas backups exports buckets create
    :depth: 1
    :class: singlecol
 
-Create new export bucket.
+List available databases or database metrics for a given host.
+
+To retrieve the hostname and port needed for this command, run mongocli atlas process list.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports buckets create <bucketName> [options]
+   atlas metrics databases list <hostname:port> [options]
 
 Arguments
 ---------
@@ -32,10 +34,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - bucketName
+   * - hostname:port
      - string
-     - false
-     - Name of the bucket that the provided role ID is authorized to access.
+     - true
+     - Hostname and port number of the instance running the Atlas MongoDB process.
 
 Options
 -------
@@ -48,22 +50,22 @@ Options
      - Type
      - Required
      - Description
-   * - --cloudProvider
-     - string
-     - true
-     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS.
    * - -h, --help
      - 
      - false
-     - help for create
-   * - --iamRoleID
-     - string
-     - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
+     - help for list
+   * - --limit
+     - int
+     - false
+     - Number of items per page. This value defaults to 100.
    * - -o, --output
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
+   * - --page
+     - int
+     - false
+     - Page number. This value defaults to 1.
    * - --projectId
      - string
      - false
@@ -90,6 +92,6 @@ Examples
 
 .. code-block::
 
-   Create new export bucket:
-   $ atlas config rename myProfile testProfile
+   This example lists the available databases for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
+   $ atlas metrics database ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
 

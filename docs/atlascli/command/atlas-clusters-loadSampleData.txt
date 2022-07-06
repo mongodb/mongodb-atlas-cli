@@ -1,8 +1,8 @@
-.. _atlas-backups-exports-buckets-create:
+.. _atlas-clusters-loadSampleData:
 
-====================================
-atlas backups exports buckets create
-====================================
+=============================
+atlas clusters loadSampleData
+=============================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ atlas backups exports buckets create
    :depth: 1
    :class: singlecol
 
-Create new export bucket.
+Load sample data into a MongoDB cluster in Atlas.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports buckets create <bucketName> [options]
+   atlas clusters loadSampleData <clusterName> [options]
 
 Arguments
 ---------
@@ -32,10 +32,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - bucketName
+   * - clusterName
      - string
      - false
-     - Name of the bucket that the provided role ID is authorized to access.
+     - Name of the cluster for which you want to load sample data.
 
 Options
 -------
@@ -48,18 +48,10 @@ Options
      - Type
      - Required
      - Description
-   * - --cloudProvider
-     - string
-     - true
-     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS.
    * - -h, --help
      - 
      - false
-     - help for create
-   * - --iamRoleID
-     - string
-     - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
+     - help for loadSampleData
    * - -o, --output
      - string
      - false
@@ -84,12 +76,4 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
-
-Examples
---------
-
-.. code-block::
-
-   Create new export bucket:
-   $ atlas config rename myProfile testProfile
 

@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-backups-exports-buckets-create` - Create new export bucket.
+* :ref:`atlas-backups-exports-buckets-create` - Create an export destination for Atlas backups using an existing AWS S3 bucket.
 * :ref:`atlas-backups-exports-buckets-list` - List cloud backup restore buckets for your project and cluster.
 
 

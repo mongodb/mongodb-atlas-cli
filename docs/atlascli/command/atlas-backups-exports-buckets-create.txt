@@ -12,7 +12,7 @@ atlas backups exports buckets create
    :depth: 1
    :class: singlecol
 
-Create new export bucket.
+Create an export destination for Atlas backups using an existing AWS S3 bucket.
 
 Syntax
 ------
@@ -35,7 +35,7 @@ Arguments
    * - bucketName
      - string
      - false
-     - Name of the bucket that the provided role ID is authorized to access.
+     - Name of the existing S3 bucket that the provided role ID is authorized to access.
 
 Options
 -------
@@ -90,6 +90,6 @@ Examples
 
 .. code-block::
 
-   Create new export bucket:
-   $ atlas backup export buckets create michal-test-bucket-2 --cloudProvider AWS --iamRoleID 12345678f901a234dbdb00ca
+   The following command creates an export destination for Atlas backups using the existing AWS S3 bucket named test-bucket:
+   $ atlas backup export buckets create test-bucket --cloudProvider AWS --iamRoleID 12345678f901a234dbdb00ca
 

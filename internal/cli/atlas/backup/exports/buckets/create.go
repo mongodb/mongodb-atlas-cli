@@ -45,7 +45,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Bucket '{{.BucketName}}' created.\n"
+var createTemplate = "Export destination created using '{{.BucketName}}'.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newExportBucket()
@@ -72,13 +72,13 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <bucketName>",
-		Short: "Create new export bucket.",
-		Example: fmt.Sprintf(`  Create new export bucket:
-  $ %s backup export buckets create michal-test-bucket-2 --cloudProvider AWS --iamRoleID 12345678f901a234dbdb00ca`, config.BinName()),
+		Short: "Create an export destination for Atlas backups using an existing AWS S3 bucket.",
+		Example: fmt.Sprintf(`  The following command creates an export destination for Atlas backups using the existing AWS S3 bucket named test-bucket:
+  $ %s backup export buckets create test-bucket --cloudProvider AWS --iamRoleID 12345678f901a234dbdb00ca`, config.BinName()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":           "bucketName",
-			"bucketNameDesc": "Name of the bucket that the provided role ID is authorized to access.",
+			"bucketNameDesc": "Name of the existing S3 bucket that the provided role ID is authorized to access.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportBucketsLister
+//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportBucketsLister,ExportBucketsCreator
 
 type RestoreJobsLister interface {
 	RestoreJobs(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error)
@@ -57,6 +57,10 @@ type ExportJobsLister interface {
 
 type ExportBucketsLister interface {
 	ExportBuckets(string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotExportBuckets, error)
+}
+
+type ExportBucketsCreator interface {
+	CreateExportBucket(string, *atlas.CloudProviderSnapshotExportBucket) (*atlas.CloudProviderSnapshotExportBucket, error)
 }
 
 // RestoreJobs encapsulates the logic to manage different cloud providers.
@@ -183,6 +187,17 @@ func (s *Store) ExportBuckets(projectID string, opts *atlas.ListOptions) (*atlas
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotExportBuckets.List(s.ctx, projectID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// CreateExportBucket encapsulates the logic to manage different cloud providers.
+func (s *Store) CreateExportBucket(projectID string, bucket *atlas.CloudProviderSnapshotExportBucket) (*atlas.CloudProviderSnapshotExportBucket, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotExportBuckets.Create(s.ctx, projectID, bucket)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

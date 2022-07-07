@@ -283,6 +283,8 @@ const (
 	DisableSchemaAdvisor                      = "disableSchemaAdvisor"                      // DisableSchemaAdvisor flag
 	EnableRealtimePerformancePanel            = "enableRealtimePerformancePanel"            // EnableRealtimePerformancePanel flag
 	DisableRealtimePerformancePanel           = "disableRealtimePerformancePanel"           // DisableRealtimePerformancePanel flag
+	CloudProvider                             = "cloudProvider"                             // CloudProvider flag
+	IAMRoleID                                 = "iamRoleId"                                 // IamRoleID flag
 	/* #nosec */
 	KMIPClientCertificatePassword = "kmipClientCertificatePassword" // KMIPClientCertificatePassword flag
 	KMIPUsername                  = "kmipUsername"                  // KMIPUsername flag

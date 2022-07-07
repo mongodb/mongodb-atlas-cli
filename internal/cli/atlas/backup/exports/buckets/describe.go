@@ -60,9 +60,9 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Aliases: []string{"get"},
-		Short:   "Retrieve one snapshot export bucket.",
+		Short:   "Return one snapshot export bucket.",
 		Args:    require.NoArgs,
-		Example: fmt.Sprintf(`  The following example retrieves the continuous backup export bucket specified by ID:
+		Example: fmt.Sprintf(`  The following example returns the continuous backup export bucket specified by ID:
   $ %s backup exports buckets describe dbdb00ca12345678f901a234`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

@@ -16,6 +16,7 @@ package buckets
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -58,6 +59,8 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Delete a snapshot export bucket.",
 		Args:    require.NoArgs,
+		Example: fmt.Sprintf(`  The following deletes the continuous backup export bucket specified by ID:
+  $ %s backup exports buckets delete --bucketId dbdb00ca12345678f901a234`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

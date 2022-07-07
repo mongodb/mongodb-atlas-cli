@@ -65,3 +65,11 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   The following deletes the continuous backup export bucket specified by ID:
+   $ atlas backup exports buckets delete --bucketId dbdb00ca12345678f901a234
+

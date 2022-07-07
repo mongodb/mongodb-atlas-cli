@@ -150,6 +150,7 @@ const (
 	IndexName                                 = "indexName"                                 // IndexName flag
 	ClusterName                               = "clusterName"                               // ClusterName flag
 	ClusterID                                 = "clusterId"                                 // ClusterID flag
+	BucketID                                  = "bucketId"                                  // ClusterID flag
 	TargetProjectID                           = "targetProjectId"                           // TargetProjectID flag
 	TargetClusterID                           = "targetClusterId"                           // TargetClusterID flag
 	TargetClusterName                         = "targetClusterName"                         // TargetClusterName flag

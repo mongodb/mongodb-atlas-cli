@@ -150,7 +150,6 @@ const (
 	IndexName                                 = "indexName"                                 // IndexName flag
 	ClusterName                               = "clusterName"                               // ClusterName flag
 	ClusterID                                 = "clusterId"                                 // ClusterID flag
-	BucketID                                  = "bucketId"                                  // ClusterID flag
 	TargetProjectID                           = "targetProjectId"                           // TargetProjectID flag
 	TargetClusterID                           = "targetClusterId"                           // TargetClusterID flag
 	TargetClusterName                         = "targetClusterName"                         // TargetClusterName flag
@@ -286,6 +285,7 @@ const (
 	DisableRealtimePerformancePanel           = "disableRealtimePerformancePanel"           // DisableRealtimePerformancePanel flag
 	CloudProvider                             = "cloudProvider"                             // CloudProvider flag
 	IAMRoleID                                 = "iamRoleId"                                 // IamRoleID flag
+	BucketID                                  = "bucketId"                                  // BucketID flag
 	/* #nosec */
 	KMIPClientCertificatePassword = "kmipClientCertificatePassword" // KMIPClientCertificatePassword flag
 	KMIPUsername                  = "kmipUsername"                  // KMIPUsername flag

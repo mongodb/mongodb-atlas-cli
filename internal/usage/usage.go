@@ -340,4 +340,5 @@ const (
 	CloudProvider                             = "Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS."
 	ExportBucketIAMRoleID                     = "Unique identifier of the role that Atlas can use to access the bucket."
 	BucketID                                  = "Unique identifier that Atlas assigns to the bucket."
+	CustomData                                = "Custom data to include in the metadata file named .complete that Atlas uploads to the bucket when the export job finishes. Custom data can be specified as key and value pairs."
 )

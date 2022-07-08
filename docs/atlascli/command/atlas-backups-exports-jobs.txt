@@ -49,8 +49,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-backups-exports-jobs-describe` - Describe cloud backup export job for your project, cluster and bucket.
-* :ref:`atlas-backups-exports-jobs-list` - List cloud backup restore jobs for your project and cluster.
+* :ref:`atlas-backups-exports-jobs-describe` - Return one cloud backup export job for your project, cluster and bucket.
+* :ref:`atlas-backups-exports-jobs-list` - Return all cloud backup export jobs for your project and cluster.
 
 
 .. toctree::

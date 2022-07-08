@@ -12,7 +12,7 @@ atlas backups exports jobs describe
    :depth: 1
    :class: singlecol
 
-Describe cloud backup export job for your project, cluster and bucket.
+Return one cloud backup export job for your project, cluster and bucket.
 
 Syntax
 ------
@@ -35,7 +35,7 @@ Options
    * - --bucketId
      - string
      - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
+     - Unique identifier of the bucket that Atlas will use.
    * - --clusterName
      - string
      - true

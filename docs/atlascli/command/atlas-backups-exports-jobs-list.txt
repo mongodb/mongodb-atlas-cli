@@ -12,7 +12,7 @@ atlas backups exports jobs list
    :depth: 1
    :class: singlecol
 
-List cloud backup restore jobs for your project and cluster.
+Return all cloud backup export jobs for your project and cluster.
 
 Syntax
 ------

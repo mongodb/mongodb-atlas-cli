@@ -14,6 +14,7 @@ if [[ -n "${STAGED_GO_FILES}" ]]; then
     go test --tags="unit integration" -race ./internal...
     make fix-lint
     set +o errexit
+    git add "${STAGED_GO_FILES}"
 
     make gen-docs > /dev/null
     git add docs

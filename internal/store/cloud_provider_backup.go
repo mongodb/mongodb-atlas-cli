@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportBucketsLister,ExportBucketsCreator,ExportBucketsDeleter,ExportBucketsDescriber
+//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportBucketsLister,ExportBucketsCreator,ExportBucketsDeleter,ExportBucketsDescriber,ScheduleDescriber
 
 type RestoreJobsLister interface {
 	RestoreJobs(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error)
@@ -69,6 +69,10 @@ type ExportBucketsDeleter interface {
 
 type ExportBucketsDescriber interface {
 	DescribeExportBucket(string, string) (*atlas.CloudProviderSnapshotExportBucket, error)
+}
+
+type ScheduleDescriber interface {
+	DescribeSchedule(string, string) (*atlas.CloudProviderSnapshotBackupPolicy, error)
 }
 
 // RestoreJobs encapsulates the logic to manage different cloud providers.
@@ -228,6 +232,17 @@ func (s *Store) DescribeExportBucket(projectID, bucketID string) (*atlas.CloudPr
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotExportBuckets.Get(s.ctx, projectID, bucketID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// DescribeSchedule encapsulates the logic to manage different cloud providers.
+func (s *Store) DescribeSchedule(projectID, clusterName string) (*atlas.CloudProviderSnapshotBackupPolicy, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotBackupPolicies.Get(s.ctx, projectID, clusterName)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

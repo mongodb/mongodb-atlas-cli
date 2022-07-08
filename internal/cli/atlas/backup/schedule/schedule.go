@@ -12,30 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
-package backup
+package schedule
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		2,
-		[]string{},
-	)
-}
+func AtlasCLIBuilder() *cobra.Command {
+	const use = "schedule"
+	cmd := &cobra.Command{
+		Use:     use,
+		Short:   "Get cloud backup schedule of a given cluster in your project.",
+		Aliases: cli.GenerateAliases(use),
+	}
 
-func TestAtlasCLIBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		AtlasCLIBuilder(),
-		4,
-		[]string{},
+	cmd.AddCommand(
+		DescribeBuilder(),
 	)
+
+	return cmd
 }

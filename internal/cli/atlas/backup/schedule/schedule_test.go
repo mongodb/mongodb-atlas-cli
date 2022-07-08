@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
-package backup
+package schedule
 
 import (
 	"testing"
@@ -22,20 +20,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		2,
-		[]string{},
-	)
-}
-
 func TestAtlasCLIBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		AtlasCLIBuilder(),
-		4,
+		1,
 		[]string{},
 	)
 }

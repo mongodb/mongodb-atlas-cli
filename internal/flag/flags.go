@@ -284,7 +284,7 @@ const (
 	EnableRealtimePerformancePanel            = "enableRealtimePerformancePanel"            // EnableRealtimePerformancePanel flag
 	DisableRealtimePerformancePanel           = "disableRealtimePerformancePanel"           // DisableRealtimePerformancePanel flag
 	CloudProvider                             = "cloudProvider"                             // CloudProvider flag
-	IAMRoleID                                 = "iamRoleId"                                 // IAMRoleID flag
+	IAMRoleID                                 = "iamRoleId"                                 // IamRoleID flag
 	BucketID                                  = "bucketId"                                  // BucketID flag
 	/* #nosec */
 	KMIPClientCertificatePassword = "kmipClientCertificatePassword" // KMIPClientCertificatePassword flag

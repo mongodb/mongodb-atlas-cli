@@ -12,27 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
+
 package buckets
 
 import (
+	"testing"
+
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/spf13/cobra"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 )
 
-func Builder() *cobra.Command {
-	const use = "buckets"
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   "Manage cloud backup export buckets for your project.",
-		Aliases: cli.GenerateAliases(use),
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockExportBucketsDeleter(ctrl)
+	defer ctrl.Finish()
+
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+		},
+		bucketID: "test-bucket-id",
+		store:    mockStore,
 	}
 
-	cmd.AddCommand(
-		ListBuilder(),
-		CreateBuilder(),
-		DeleteBuilder(),
-		DescribeBuilder(),
-	)
+	mockStore.
+		EXPECT().
+		DeleteExportBucket(deleteOpts.ConfigProjectID(), deleteOpts.bucketID).
+		Return(nil).
+		Times(1)
 
-	return cmd
+	if err := deleteOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

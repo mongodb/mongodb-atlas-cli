@@ -199,7 +199,7 @@ func TestIntegrations(t *testing.T) {
 			"create",
 			webhookEntity,
 			"--url",
-			key,
+			"https://example.com/"+key,
 			"--secret",
 			key,
 			"--projectId",

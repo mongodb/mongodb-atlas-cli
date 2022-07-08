@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportBucketsLister,ExportBucketsCreator,ExportBucketsDeleter
+//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportBucketsLister,ExportBucketsCreator,ExportBucketsDeleter,ExportBucketsDescriber
 
 type RestoreJobsLister interface {
 	RestoreJobs(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error)
@@ -65,6 +65,10 @@ type ExportBucketsCreator interface {
 
 type ExportBucketsDeleter interface {
 	DeleteExportBucket(string, string) error
+}
+
+type ExportBucketsDescriber interface {
+	DescribeExportBucket(string, string) (*atlas.CloudProviderSnapshotExportBucket, error)
 }
 
 // RestoreJobs encapsulates the logic to manage different cloud providers.
@@ -216,5 +220,16 @@ func (s *Store) DeleteExportBucket(projectID, bucketID string) error {
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// DescribeExportBucket encapsulates the logic to manage different cloud providers.
+func (s *Store) DescribeExportBucket(projectID, bucketID string) (*atlas.CloudProviderSnapshotExportBucket, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotExportBuckets.Get(s.ctx, projectID, bucketID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

@@ -1,8 +1,8 @@
-.. _atlas-backups-exports-jobs-describe:
+.. _atlas-backups-exports-buckets-delete:
 
-===================================
-atlas backups exports jobs describe
-===================================
+====================================
+atlas backups exports buckets delete
+====================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ atlas backups exports jobs describe
    :depth: 1
    :class: singlecol
 
-Return one cloud backup export job for your project, cluster and bucket.
+Delete a snapshot export bucket.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports jobs describe [options]
+   atlas backups exports buckets delete [options]
 
 Options
 -------
@@ -36,18 +36,14 @@ Options
      - string
      - true
      - Unique identifier that Atlas assigns to the bucket.
-   * - --clusterName
-     - string
-     - true
-     - Name of the cluster.
+   * - --force
+     - 
+     - false
+     - If specified, skips asking for confirmation before proceeding with a requested action.
    * - -h, --help
      - 
      - false
-     - help for describe
-   * - -o, --output
-     - string
-     - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - help for delete
    * - --projectId
      - string
      - false
@@ -74,6 +70,6 @@ Examples
 
 .. code-block::
 
-   The following example describes the continuous backup export job for the cluster Cluster0 and bucket 5df90590f10fab5e33de2305:
-   $ atlas backup exports jobs describe --clusterName Cluster0 --bucketId 5df90590f10fab5e33de2305
+   The following deletes the continuous backup export bucket specified by ID:
+   $ atlas backup exports buckets delete --bucketId dbdb00ca12345678f901a234
 

@@ -50,6 +50,8 @@ Related Commands
 ----------------
 
 * :ref:`atlas-backups-exports-buckets-create` - Create an export destination for Atlas backups using an existing AWS S3 bucket.
+* :ref:`atlas-backups-exports-buckets-delete` - Delete a snapshot export bucket.
+* :ref:`atlas-backups-exports-buckets-describe` - Return one snapshot export bucket.
 * :ref:`atlas-backups-exports-buckets-list` - List cloud backup restore buckets for your project and cluster.
 
 
@@ -57,5 +59,7 @@ Related Commands
    :titlesonly:
 
    create </command/atlas-backups-exports-buckets-create>
+   delete </command/atlas-backups-exports-buckets-delete>
+   describe </command/atlas-backups-exports-buckets-describe>
    list </command/atlas-backups-exports-buckets-list>
 

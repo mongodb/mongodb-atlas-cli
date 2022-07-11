@@ -12,7 +12,7 @@ atlas backups schedule
    :depth: 1
    :class: singlecol
 
-Get cloud backup schedule of a given cluster in your project.
+Return a cloud backup schedule for the cluster you specify.
 
 Options
 -------
@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-backups-schedule-describe` - Describe a cloud backup schedule of a given cluster.
+* :ref:`atlas-backups-schedule-describe` - Describe a cloud backup schedule for the cluster you specify.
 
 
 .. toctree::

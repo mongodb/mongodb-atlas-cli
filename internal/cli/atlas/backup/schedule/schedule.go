@@ -23,7 +23,7 @@ func AtlasCLIBuilder() *cobra.Command {
 	const use = "schedule"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   "Get cloud backup schedule of a given cluster in your project.",
+		Short:   "Return a cloud backup schedule for the cluster you specify.",
 		Aliases: cli.GenerateAliases(use),
 	}
 

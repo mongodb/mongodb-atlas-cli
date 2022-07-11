@@ -51,7 +51,7 @@ Related Commands
 
 * :ref:`atlas-backups-exports` - Manage cloud backup export jobs for your project.
 * :ref:`atlas-backups-restores` - Manage cloud backup restore jobs for your project.
-* :ref:`atlas-backups-schedule` - Get cloud backup schedule of a given cluster in your project.
+* :ref:`atlas-backups-schedule` - Return a cloud backup schedule for the cluster you specify.
 * :ref:`atlas-backups-snapshots` - Manage cloud backup snapshots for your project.
 
 

@@ -12,7 +12,7 @@ atlas backups schedule describe
    :depth: 1
    :class: singlecol
 
-Describe a cloud backup schedule of a given cluster.
+Describe a cloud backup schedule for the cluster you specify.
 
 Syntax
 ------
@@ -35,7 +35,7 @@ Arguments
    * - clusterName
      - string
      - false
-     - Name of the Cluster.
+     - Human-readable label for the cluster.
 
 Options
 -------

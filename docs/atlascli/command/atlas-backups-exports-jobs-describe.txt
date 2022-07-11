@@ -1,8 +1,8 @@
-.. _atlas-backups-exports-jobs-list:
+.. _atlas-backups-exports-jobs-describe:
 
-===============================
-atlas backups exports jobs list
-===============================
+===================================
+atlas backups exports jobs describe
+===================================
 
 .. default-domain:: mongodb
 
@@ -12,30 +12,14 @@ atlas backups exports jobs list
    :depth: 1
    :class: singlecol
 
-Return all cloud backup export jobs for your project and cluster.
+Return one cloud backup export job for your project, cluster and bucket.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports jobs list <clusterName> [options]
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - clusterName
-     - string
-     - true
-     - Name of the Atlas cluster for which you want to retrieve restore jobs.
+   atlas backups exports jobs describe [options]
 
 Options
 -------
@@ -48,22 +32,22 @@ Options
      - Type
      - Required
      - Description
+   * - --bucketId
+     - string
+     - true
+     - Unique identifier that Atlas assigns to the bucket.
+   * - --clusterName
+     - string
+     - true
+     - Name of the cluster.
    * - -h, --help
      - 
      - false
-     - help for list
-   * - --limit
-     - int
-     - false
-     - Number of items per page. This value defaults to 100.
+     - help for describe
    * - -o, --output
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
-   * - --page
-     - int
-     - false
-     - Page number. This value defaults to 1.
    * - --projectId
      - string
      - false
@@ -90,6 +74,6 @@ Examples
 
 .. code-block::
 
-   The following example retrieves the continuous backup export jobs for the cluster Cluster0:
-   $ atlas backup exports jobs list Cluster0
+   The following example describes the continuous backup export job for the cluster Cluster0 and bucket 5df90590f10fab5e33de2305:
+   $ atlas backup exports jobs describe --clusterName Cluster0 --bucketId 5df90590f10fab5e33de2305
 

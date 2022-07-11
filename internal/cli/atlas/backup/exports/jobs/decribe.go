@@ -27,15 +27,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ListOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.ListOpts
 	clusterName string
-	store       store.ExportJobsLister
+	bucketID    string
+	store       store.ExportJobsDescriber
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -43,13 +43,12 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	EXPORT BUCKET ID	STATE	SNAPSHOT ID{{range .Results}}
-{{.ID}}	{{.ExportBucketID}}	{{.State}}	{{.SnapshotID}}{{end}}
+var describeTemplate = `ID	EXPORT BUCKET ID	STATE	SNAPSHOT ID
+{{.ID}}	{{.ExportBucketID}}	{{.State}}	{{.SnapshotID}}
 `
 
-func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.ExportJobs(opts.ConfigProjectID(), opts.clusterName, listOpts)
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.ExportJob(opts.ConfigProjectID(), opts.clusterName, opts.bucketID)
 	if err != nil {
 		return err
 	}
@@ -57,28 +56,21 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas backup(s) export(s) job(s) list <clusterName> [--page N] [--limit N].
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+// atlas backup(s) export(s) job(s) describe --clusterName <clusterName> --bucketID <bucketID> [--projectID <projectID>].
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "list <clusterName>",
-		Aliases: []string{"ls"},
-		Short:   "Return all cloud backup export jobs for your project and cluster.",
-		Args:    require.ExactArgs(1),
-		Annotations: map[string]string{
-			"args":            "clusterName",
-			"requiredArgs":    "clusterName",
-			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve restore jobs.",
-		},
-		Example: fmt.Sprintf(`  The following example retrieves the continuous backup export jobs for the cluster Cluster0:
-  $ %s backup exports jobs list Cluster0`, cli.ExampleAtlasEntryPoint()),
+		Use:     "describe",
+		Aliases: []string{"get"},
+		Short:   "Return one cloud backup export job for your project, cluster and bucket.",
+		Args:    require.NoArgs,
+		Example: fmt.Sprintf(`  The following example describes the continuous backup export job for the cluster Cluster0 and bucket 5df90590f10fab5e33de2305:
+  $ %s backup exports jobs describe --clusterName Cluster0 --bucketId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
-
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -86,8 +78,11 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.bucketID, flag.BucketID, "", usage.BucketID)
+
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
+	_ = cmd.MarkFlagRequired(flag.BucketID)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

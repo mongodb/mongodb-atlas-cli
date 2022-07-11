@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportJobsDescriber,ExportBucketsLister,ExportBucketsCreator,ExportBucketsDeleter,ExportBucketsDescriber
+//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportJobsDescriber,ExportJobsCreator,ExportBucketsLister,ExportBucketsCreator,ExportBucketsDeleter,ExportBucketsDescriber
 
 type RestoreJobsLister interface {
 	RestoreJobs(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error)
@@ -53,6 +53,10 @@ type SnapshotsDeleter interface {
 
 type ExportJobsLister interface {
 	ExportJobs(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotExportJobs, error)
+}
+
+type ExportJobsCreator interface {
+	CreateExportJob(string, string, *atlas.CloudProviderSnapshotExportJob) (*atlas.CloudProviderSnapshotExportJob, error)
 }
 
 type ExportBucketsLister interface {
@@ -199,6 +203,17 @@ func (s *Store) ExportJob(projectID, clusterName, bucketID string) (*atlas.Cloud
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotExportJobs.Get(s.ctx, projectID, clusterName, bucketID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// CreateExportJob encapsulates the logic to manage different cloud providers.
+func (s *Store) CreateExportJob(projectID, clusterName string, job *atlas.CloudProviderSnapshotExportJob) (*atlas.CloudProviderSnapshotExportJob, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotExportJobs.Create(s.ctx, projectID, clusterName, job)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

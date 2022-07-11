@@ -49,11 +49,13 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`atlas-backups-exports-jobs-create` - Export one backup snapshot for an M10 or higher Atlas cluster to an existing AWS S3 bucket.
 * :ref:`atlas-backups-exports-jobs-list` - List cloud backup restore jobs for your project and cluster.
 
 
 .. toctree::
    :titlesonly:
 
+   create </command/atlas-backups-exports-jobs-create>
    list </command/atlas-backups-exports-jobs-list>
 

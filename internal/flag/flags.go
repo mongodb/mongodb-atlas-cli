@@ -286,6 +286,7 @@ const (
 	CloudProvider                             = "cloudProvider"                             // CloudProvider flag
 	IAMRoleID                                 = "iamRoleId"                                 // IamRoleID flag
 	BucketID                                  = "bucketId"                                  // BucketID flag
+	CustomData                                = "customData"                                // CustomData flag
 	/* #nosec */
 	KMIPClientCertificatePassword = "kmipClientCertificatePassword" // KMIPClientCertificatePassword flag
 	KMIPUsername                  = "kmipUsername"                  // KMIPUsername flag

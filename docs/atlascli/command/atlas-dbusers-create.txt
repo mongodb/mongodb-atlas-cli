@@ -64,8 +64,8 @@ Options
      - strings
      - false
      - User's roles and the databases or collections on which the roles apply.
-       The roles format is action[@dbName[.collection]].
-       action can either be a builtin role or a custom role.
+       The roles format is roleName[@dbName[.collection]].
+       roleName can either be a builtin role or a custom role.
        dbName and collection are optional and only needed for builtin roles.
    * - --scope
      - strings

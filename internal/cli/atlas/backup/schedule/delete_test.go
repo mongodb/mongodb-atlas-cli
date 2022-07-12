@@ -15,22 +15,32 @@
 package schedule
 
 import (
+	"testing"
+
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/spf13/cobra"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 )
 
-func AtlasCLIBuilder() *cobra.Command {
-	const use = "schedule"
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   "Return a cloud backup schedule for the cluster you specify.",
-		Aliases: cli.GenerateAliases(use),
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockScheduleDeleter(ctrl)
+
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "cluster",
+		},
+		store: mockStore,
 	}
 
-	cmd.AddCommand(
-		DescribeBuilder(),
-		DeleteBuilder(),
-	)
+	mockStore.
+		EXPECT().
+		DeleteSchedule(deleteOpts.ConfigProjectID(), deleteOpts.Entry).
+		Return(nil).
+		Times(1)
 
-	return cmd
+	if err := deleteOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

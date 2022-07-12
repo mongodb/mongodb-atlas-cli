@@ -18,6 +18,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/exports"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/restores"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/schedule"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/snapshots"
 	"github.com/spf13/cobra"
 )
@@ -51,6 +52,7 @@ func AtlasCLIBuilder() *cobra.Command {
 		snapshots.Builder(),
 		restores.AtlasCLIBuilder(),
 		exports.Builder(),
+		schedule.Builder(),
 	)
 
 	return cmd

@@ -76,8 +76,8 @@ const (
 	Period                   = "Duration in ISO 8601 that specifies how far back in the past to retrieve measurements."
 	Roles                    = "User's roles and the databases or collections on which the roles apply."
 	RolesExtended            = `User's roles and the databases or collections on which the roles apply.
-The roles format is action[@dbName[.collection]].
-action can either be a builtin role or a custom role.
+The roles format is roleName[@dbName[.collection]].
+roleName can either be a builtin role or a custom role.
 dbName and collection are optional and only needed for builtin roles.`
 	Scopes                                    = "Array of clusters and Atlas Data Lakes that this user has access to."
 	DataLakeRole                              = "Amazon Resource Name (ARN) of the role which Atlas Data Lake uses for accessing the data stores."

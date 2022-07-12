@@ -23,7 +23,7 @@ import (
 func TestAtlasCLIBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		AtlasCLIBuilder(),
+		Builder(),
 		1,
 		[]string{},
 	)

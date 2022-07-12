@@ -52,7 +52,7 @@ func AtlasCLIBuilder() *cobra.Command {
 		snapshots.Builder(),
 		restores.AtlasCLIBuilder(),
 		exports.Builder(),
-		schedule.AtlasCLIBuilder(),
+		schedule.Builder(),
 	)
 
 	return cmd

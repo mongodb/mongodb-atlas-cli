@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasCLIBuilder() *cobra.Command {
+func Builder() *cobra.Command {
 	const use = "schedule"
 	cmd := &cobra.Command{
 		Use:     use,

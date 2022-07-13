@@ -77,8 +77,8 @@ const (
 	Roles                    = "User's roles and the databases or collections on which the roles apply."
 	RolesExtended            = `User's roles and the databases or collections on which the roles apply.
 The roles format is roleName[@dbName[.collection]].
-roleName can either be a builtin role or a custom role.
-dbName and collection are optional and only needed for builtin roles.`
+roleName can either be a built-in role or a custom role.
+dbName and collection are only required for built-in roles.`
 	Scopes                                    = "Array of clusters and Atlas Data Lakes that this user has access to."
 	DataLakeRole                              = "Amazon Resource Name (ARN) of the role which Atlas Data Lake uses for accessing the data stores."
 	DataLakeRegion                            = "Name of the region to which Atlas Data Lake routes client connections for data processing."

@@ -16,6 +16,7 @@ package schedule
 
 import (
 	"context"
+	"math"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -23,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 var updateTemplate = "Snapshot backup policy for cluster '{{.ClusterName}}' updated.\n"
@@ -32,6 +32,7 @@ type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	clusterName string
+	configOpts  ConfigOpts
 	store       store.ScheduleUpdater
 }
 
@@ -44,7 +45,11 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	r, err := opts.store.UpdateSchedule(opts.ConfigProjectID(), opts.clusterName, &atlas.CloudProviderSnapshotBackupPolicy{})
+	policy, err := opts.NewBackupPolicy(opts.clusterName)
+	if err != nil {
+		return err
+	}
+	r, err := opts.store.UpdateSchedule(opts.ConfigProjectID(), opts.clusterName, policy)
 	if err != nil {
 		return err
 	}
@@ -74,6 +79,25 @@ func UpdateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.configOpts.exportBucketID, flag.ExportBucketID, "", usage.BucketID)
+	cmd.Flags().StringVar(&opts.configOpts.exportFrequencyType, flag.ExportFrequencyType, "", usage.ExportFrequencyType)
+	cmd.Flags().Int64Var(&opts.configOpts.referenceHourOfDay, flag.ReferenceHourOfDay, math.MinInt64, usage.ReferenceHourOfDay)
+	cmd.Flags().Int64Var(&opts.configOpts.referenceMinuteOfHour, flag.ReferenceMinuteOfHour, math.MinInt64, usage.ReferenceMinuteOfHour)
+	cmd.Flags().Int64Var(&opts.configOpts.restoreWindowDays, flag.RestoreWindowDays, math.MinInt64, usage.RestoreWindowDays)
+
+	cmd.Flags().BoolVar(&opts.configOpts.autoExport, flag.AutoExport, false, usage.AutoExport)
+	cmd.Flags().BoolVar(&opts.configOpts.noAutoExport, flag.NoAutoExport, false, usage.NoAutoExport)
+	cmd.MarkFlagsMutuallyExclusive(flag.AutoExport, flag.NoAutoExport)
+	cmd.MarkFlagsMutuallyExclusive(flag.NoAutoExport, flag.ExportBucketID)
+	cmd.MarkFlagsMutuallyExclusive(flag.NoAutoExport, flag.ExportFrequencyType)
+
+	cmd.Flags().BoolVar(&opts.configOpts.updateSnapshots, flag.UpdateSnapshots, false, usage.UpdateSnapshots)
+	cmd.Flags().BoolVar(&opts.configOpts.noUpdateSnapshots, flag.NoUpdateSnapshots, false, usage.NoUpdateSnapshots)
+	cmd.MarkFlagsMutuallyExclusive(flag.UpdateSnapshots, flag.NoUpdateSnapshots)
+
+	cmd.Flags().BoolVar(&opts.configOpts.autoExport, flag.UseOrgAndGroupNamesInExportPrefix, false, usage.UseOrgAndGroupNamesInExportPrefix)
+	cmd.Flags().BoolVar(&opts.configOpts.noAutoExport, flag.NoUseOrgAndGroupNamesInExportPrefix, false, usage.NoUseOrgAndGroupNamesInExportPrefix)
+	cmd.MarkFlagsMutuallyExclusive(flag.UseOrgAndGroupNamesInExportPrefix, flag.NoUseOrgAndGroupNamesInExportPrefix)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

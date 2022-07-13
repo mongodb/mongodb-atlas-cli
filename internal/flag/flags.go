@@ -287,6 +287,15 @@ const (
 	IAMRoleID                                 = "iamRoleId"                                 // IamRoleID flag
 	BucketID                                  = "bucketId"                                  // BucketID flag
 	CustomData                                = "customData"                                // CustomData flag
+	ExportBucketID                            = "exportBucketId"                            // ExportBucketID flag
+	ExportFrequencyType                       = "exportFrequencyType"                       // ExportFrequencyType flag
+	RestoreWindowDays                         = "restoreWindowDays"                         // RestoreWindowDays flag
+	AutoExport                                = "autoExport"                                // AutoExport flag
+	NoAutoExport                              = "noAutoExport"                              // NoAutoExport flag
+	UpdateSnapshots                           = "updateSnapshots"                           // UpdateSnapshots flag
+	NoUpdateSnapshots                         = "noUpdateSnapshots"                         // NoUpdateSnapshots flag
+	UseOrgAndGroupNamesInExportPrefix         = "useOrgAndGroupNamesInExportPrefix"         // UseOrgAndGroupNamesInExportPrefix flag
+	NoUseOrgAndGroupNamesInExportPrefix       = "noUseOrgAndGroupNamesInExportPrefix"       // NoUseOrgAndGroupNamesInExportPrefix flag
 	/* #nosec */
 	KMIPClientCertificatePassword = "kmipClientCertificatePassword" // KMIPClientCertificatePassword flag
 	KMIPUsername                  = "kmipUsername"                  // KMIPUsername flag

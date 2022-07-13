@@ -17,14 +17,30 @@ package schedule
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 )
 
-func TestAtlasCLIBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		2,
-		[]string{},
-	)
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockScheduleDeleter(ctrl)
+
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "cluster",
+		},
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		DeleteSchedule(deleteOpts.ConfigProjectID(), deleteOpts.Entry).
+		Return(nil).
+		Times(1)
+
+	if err := deleteOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

@@ -50,10 +50,12 @@ Related Commands
 ----------------
 
 * :ref:`atlas-backups-schedule-describe` - Describe a cloud backup schedule for the cluster you specify.
+* :ref:`atlas-backups-schedule-update` - Update a snapshot backup policies for a cluster.
 
 
 .. toctree::
    :titlesonly:
 
    describe </command/atlas-backups-schedule-describe>
+   update </command/atlas-backups-schedule-update>
 

@@ -74,6 +74,7 @@ func (opts *CreateOpts) newExportJob() *mongodbatlas.CloudProviderSnapshotExport
 	return createRequest
 }
 
+// atlas backup(s) export(s) job(s) –-clusterName clusterName [--bucketId bucketId] [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

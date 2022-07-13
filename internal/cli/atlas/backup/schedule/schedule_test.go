@@ -24,7 +24,7 @@ func TestAtlasCLIBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
-		1,
+		2,
 		[]string{},
 	)
 }

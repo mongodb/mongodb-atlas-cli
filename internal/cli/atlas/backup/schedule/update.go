@@ -52,8 +52,6 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// TODO: Add example later when flags are finished
-
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{

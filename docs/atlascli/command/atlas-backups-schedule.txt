@@ -49,6 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`atlas-backups-schedule-delete` - Delete all backup schedules of a cluster.
 * :ref:`atlas-backups-schedule-describe` - Describe a cloud backup schedule for the cluster you specify.
 * :ref:`atlas-backups-schedule-update` - Update a snapshot backup policies for a cluster.
 
@@ -56,6 +57,7 @@ Related Commands
 .. toctree::
    :titlesonly:
 
+   delete </command/atlas-backups-schedule-delete>
    describe </command/atlas-backups-schedule-describe>
    update </command/atlas-backups-schedule-update>
 

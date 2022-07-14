@@ -30,7 +30,6 @@ import (
 
 const (
 	datadogEntity   = "DATADOG"
-	flowdockEntity  = "FLOWDOCK"
 	newRelicEntity  = "NEW_RELIC"
 	opsGenieEntity  = "OPS_GENIE"
 	pagerDutyEntity = "PAGER_DUTY"
@@ -68,32 +67,6 @@ func TestIntegrations(t *testing.T) {
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
 			a.True(integrationExists(datadogEntity, thirdPartyIntegrations))
-		}
-	})
-
-	t.Run("Create FLOWDOCK", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			integrationsEntity,
-			"create",
-			flowdockEntity,
-			"--apiToken",
-			key,
-			"--flowName",
-			"test",
-			"--orgName",
-			"testOrg",
-			"--projectId",
-			g.projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
-
-		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
-		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.True(integrationExists(flowdockEntity, thirdPartyIntegrations))
 		}
 	})
 

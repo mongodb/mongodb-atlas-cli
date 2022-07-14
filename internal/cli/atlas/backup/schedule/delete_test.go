@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,47 +11,36 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build unit
-// +build unit
 
-package create
+package schedule
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestFlowDockOpts_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockIntegrationCreator(ctrl)
-	defer ctrl.Finish()
+	mockStore := mocks.NewMockScheduleDeleter(ctrl)
 
-	opts := &FlowdockOpts{
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "cluster",
+		},
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.ThirdPartyIntegrations{}
 	mockStore.
 		EXPECT().
-		CreateIntegration(opts.ProjectID, flowdockType, opts.newFlowdockIntegration()).
-		Return(expected, nil).
+		DeleteSchedule(deleteOpts.ConfigProjectID(), deleteOpts.Entry).
+		Return(nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
+	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestFlowDockBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		FlowdockBuilder(),
-		0,
-		[]string{flag.APIToken, flag.FlowName, flag.OrgName},
-	)
 }

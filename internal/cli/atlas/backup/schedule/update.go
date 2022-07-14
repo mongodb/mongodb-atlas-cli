@@ -56,6 +56,7 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
 		Use:     "update",
+		Hidden:  true,
 		Aliases: []string{"updates"},
 		Short:   "Update a snapshot backup policies for a cluster.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {

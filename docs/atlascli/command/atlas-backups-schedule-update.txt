@@ -75,15 +75,15 @@ Options
    * - --referenceHourOfDay
      - int
      - false
-     - Hour of the day to schedule snapshots using a 24-hour clock. Accepted values are between 0 and 23 inclusive. This value defaults to -9223372036854775808.
+     - Hour of the day to schedule snapshots using a 24-hour clock. Accepted values are between 0 and 23 inclusive.
    * - --referenceMinuteOfHour
      - int
      - false
-     - Minute of the hour to schedule snapshots. Accepted values are between 0 and 59 inclusive. This value defaults to -9223372036854775808.
+     - Minute of the hour to schedule snapshots. Accepted values are between 0 and 59 inclusive.
    * - --restoreWindowDays
      - int
      - false
-     - Number of days back in time you can restore to with Continuous Cloud Backup accuracy. Must be a positive, non-zero integer. Applies to continuous cloud backups only. This value defaults to -9223372036854775808.
+     - Number of days back in time you can restore to with Continuous Cloud Backup accuracy. Must be a positive, non-zero integer. Applies to continuous cloud backups only.
    * - --updateSnapshots
      - 
      - false
@@ -108,4 +108,12 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+   The following updates a snapshot backup policies for a cluster Cluster0:
+   $ atlas backup schedule update --clusterName Cluster0 --updateSnapshots --exportBucketId 62c569f85b7a381c093cc539 --exportFrequencyType monthly
 

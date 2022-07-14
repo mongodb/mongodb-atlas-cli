@@ -16,7 +16,8 @@ package schedule
 
 import (
 	"context"
-	"math"
+	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -24,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 var updateTemplate = "Snapshot backup policy for cluster '{{.ClusterName}}' updated.\n"
@@ -31,9 +33,19 @@ var updateTemplate = "Snapshot backup policy for cluster '{{.ClusterName}}' upda
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	clusterName string
-	configOpts  ConfigOpts
-	store       store.ScheduleUpdater
+	clusterName                         string
+	exportBucketID                      string
+	exportFrequencyType                 string
+	referenceHourOfDay                  int64
+	referenceMinuteOfHour               int64
+	restoreWindowDays                   int64
+	autoExport                          bool
+	noAutoExport                        bool
+	updateSnapshots                     bool
+	noUpdateSnapshots                   bool
+	useOrgAndGroupNamesInExportPrefix   bool
+	noUseOrgAndGroupNamesInExportPrefix bool
+	store                               store.ScheduleUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -44,12 +56,13 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *UpdateOpts) Run() error {
-	policy, err := opts.NewBackupPolicy(opts.clusterName)
+func (opts *UpdateOpts) Run(cmd *cobra.Command) error {
+	backupConfig, err := opts.NewBackupConfig(cmd, opts.clusterName)
 	if err != nil {
 		return err
 	}
-	r, err := opts.store.UpdateSchedule(opts.ConfigProjectID(), opts.clusterName, policy)
+
+	r, err := opts.store.UpdateSchedule(opts.ConfigProjectID(), opts.clusterName, backupConfig)
 	if err != nil {
 		return err
 	}
@@ -57,7 +70,97 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// TODO: Add example later when flags are finished
+func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) (*atlas.CloudProviderSnapshotBackupPolicy, error) {
+	out := new(atlas.CloudProviderSnapshotBackupPolicy)
+
+	out.ClusterName = clusterName
+	opts.verifyExportBucketID(out)
+
+	if cmd.Flags().Changed(flag.ExportFrequencyType) {
+		checkForExport(out)
+		out.Export.FrequencyType = opts.exportFrequencyType
+	}
+	if cmd.Flags().Changed(flag.ReferenceHourOfDay) {
+		out.ReferenceHourOfDay = &opts.referenceHourOfDay
+	}
+	if cmd.Flags().Changed(flag.ReferenceMinuteOfHour) {
+		out.ReferenceMinuteOfHour = &opts.referenceMinuteOfHour
+	}
+	if cmd.Flags().Changed(flag.RestoreWindowDays) {
+		out.RestoreWindowDays = &opts.restoreWindowDays
+	}
+
+	out.AutoExportEnabled = returnValueForSetting(opts.autoExport, opts.noAutoExport)
+	out.UpdateSnapshots = returnValueForSetting(opts.updateSnapshots, opts.noUpdateSnapshots)
+	out.UseOrgAndGroupNamesInExportPrefix = returnValueForSetting(opts.useOrgAndGroupNamesInExportPrefix, opts.noUseOrgAndGroupNamesInExportPrefix)
+
+	return out, nil
+}
+
+func (opts *UpdateOpts) verifyExportBucketID(out *atlas.CloudProviderSnapshotBackupPolicy) {
+	if opts.exportBucketID != "" {
+		checkForExport(out)
+		out.Export.ExportBucketID = opts.exportBucketID
+	}
+}
+
+func (opts *UpdateOpts) verifyExportFrequencyType() error {
+	if opts.exportFrequencyType != "" {
+		if opts.exportFrequencyType != "daily" && opts.exportFrequencyType != "weekly" && opts.exportFrequencyType != "monthly" {
+			return errors.New("incorrect value for parameter exportFrequencyType. Value must be daily, weekly, or monthly")
+		}
+	}
+	return nil
+}
+
+func (opts *UpdateOpts) verifyReferenceHourOfDay(cmd *cobra.Command) error {
+	if cmd.Flags().Changed(flag.ReferenceHourOfDay) {
+		if opts.referenceHourOfDay < 0 || opts.referenceHourOfDay > 23 {
+			return errors.New("incorrect value for parameter referenceHourOfDay. Value must be an integer between 0 and 23 inclusive")
+		}
+	}
+	return nil
+}
+
+func (opts *UpdateOpts) verifyReferenceMinuteOfHour(cmd *cobra.Command) error {
+	if cmd.Flags().Changed(flag.ReferenceMinuteOfHour) {
+		if opts.referenceMinuteOfHour < 0 || opts.referenceMinuteOfHour > 59 {
+			return errors.New("incorrect value for parameter referenceMinuteOfHour. Value must be an integer between 0 and 59 inclusive")
+		}
+	}
+	return nil
+}
+
+func (opts *UpdateOpts) verifyRestoreWindowDays(cmd *cobra.Command) error {
+	if cmd.Flags().Changed(flag.RestoreWindowDays) {
+		if opts.restoreWindowDays <= 0 {
+			return errors.New("incorrect value for parameter restoreWindowDays. Value must be a positive, non-zero integer")
+		}
+	}
+	return nil
+}
+
+func checkForExport(out *atlas.CloudProviderSnapshotBackupPolicy) {
+	if out.Export == nil {
+		out.Export = new(atlas.Export)
+	}
+}
+
+func returnValueForSetting(enableFlag, disableFlag bool) *bool {
+	var valueToSet bool
+	if enableFlag && disableFlag {
+		return nil
+	}
+	if enableFlag {
+		valueToSet = true
+		return &valueToSet
+	}
+	if disableFlag {
+		valueToSet = false
+		return &valueToSet
+	}
+	return nil
+}
 
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
@@ -65,38 +168,55 @@ func UpdateBuilder() *cobra.Command {
 		Use:     "update",
 		Aliases: []string{"updates"},
 		Short:   "Update a snapshot backup policies for a cluster.",
+		Example: fmt.Sprintf(`  The following updates a snapshot backup policies for a cluster Cluster0:
+  $ %s backup schedule update --clusterName Cluster0 --updateSnapshots --exportBucketId 62c569f85b7a381c093cc539 --exportFrequencyType monthly`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			preRun := opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
+			err := opts.verifyExportFrequencyType()
+			if err != nil {
+				return err
+			}
+			err = opts.verifyReferenceHourOfDay(cmd)
+			if err != nil {
+				return err
+			}
+			err = opts.verifyReferenceMinuteOfHour(cmd)
+			if err != nil {
+				return err
+			}
+			err = opts.verifyRestoreWindowDays(cmd)
+			if err != nil {
+				return err
+			}
 			return preRun
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd)
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.configOpts.exportBucketID, flag.ExportBucketID, "", usage.BucketID)
-	cmd.Flags().StringVar(&opts.configOpts.exportFrequencyType, flag.ExportFrequencyType, "", usage.ExportFrequencyType)
-	cmd.Flags().Int64Var(&opts.configOpts.referenceHourOfDay, flag.ReferenceHourOfDay, math.MinInt64, usage.ReferenceHourOfDay)
-	cmd.Flags().Int64Var(&opts.configOpts.referenceMinuteOfHour, flag.ReferenceMinuteOfHour, math.MinInt64, usage.ReferenceMinuteOfHour)
-	cmd.Flags().Int64Var(&opts.configOpts.restoreWindowDays, flag.RestoreWindowDays, math.MinInt64, usage.RestoreWindowDays)
+	cmd.Flags().StringVar(&opts.exportBucketID, flag.ExportBucketID, "", usage.BucketID)
+	cmd.Flags().StringVar(&opts.exportFrequencyType, flag.ExportFrequencyType, "", usage.ExportFrequencyType)
+	cmd.Flags().Int64Var(&opts.referenceHourOfDay, flag.ReferenceHourOfDay, 0, usage.ReferenceHourOfDay)
+	cmd.Flags().Int64Var(&opts.referenceMinuteOfHour, flag.ReferenceMinuteOfHour, 0, usage.ReferenceMinuteOfHour)
+	cmd.Flags().Int64Var(&opts.restoreWindowDays, flag.RestoreWindowDays, 0, usage.RestoreWindowDays)
 
-	cmd.Flags().BoolVar(&opts.configOpts.autoExport, flag.AutoExport, false, usage.AutoExport)
-	cmd.Flags().BoolVar(&opts.configOpts.noAutoExport, flag.NoAutoExport, false, usage.NoAutoExport)
+	cmd.Flags().BoolVar(&opts.autoExport, flag.AutoExport, false, usage.AutoExport)
+	cmd.Flags().BoolVar(&opts.noAutoExport, flag.NoAutoExport, false, usage.NoAutoExport)
 	cmd.MarkFlagsMutuallyExclusive(flag.AutoExport, flag.NoAutoExport)
-	cmd.MarkFlagsMutuallyExclusive(flag.NoAutoExport, flag.ExportBucketID)
-	cmd.MarkFlagsMutuallyExclusive(flag.NoAutoExport, flag.ExportFrequencyType)
+	cmd.MarkFlagsRequiredTogether(flag.AutoExport, flag.ExportBucketID, flag.ExportFrequencyType)
 
-	cmd.Flags().BoolVar(&opts.configOpts.updateSnapshots, flag.UpdateSnapshots, false, usage.UpdateSnapshots)
-	cmd.Flags().BoolVar(&opts.configOpts.noUpdateSnapshots, flag.NoUpdateSnapshots, false, usage.NoUpdateSnapshots)
+	cmd.Flags().BoolVar(&opts.updateSnapshots, flag.UpdateSnapshots, false, usage.UpdateSnapshots)
+	cmd.Flags().BoolVar(&opts.noUpdateSnapshots, flag.NoUpdateSnapshots, false, usage.NoUpdateSnapshots)
 	cmd.MarkFlagsMutuallyExclusive(flag.UpdateSnapshots, flag.NoUpdateSnapshots)
 
-	cmd.Flags().BoolVar(&opts.configOpts.autoExport, flag.UseOrgAndGroupNamesInExportPrefix, false, usage.UseOrgAndGroupNamesInExportPrefix)
-	cmd.Flags().BoolVar(&opts.configOpts.noAutoExport, flag.NoUseOrgAndGroupNamesInExportPrefix, false, usage.NoUseOrgAndGroupNamesInExportPrefix)
+	cmd.Flags().BoolVar(&opts.useOrgAndGroupNamesInExportPrefix, flag.UseOrgAndGroupNamesInExportPrefix, false, usage.UseOrgAndGroupNamesInExportPrefix)
+	cmd.Flags().BoolVar(&opts.noUseOrgAndGroupNamesInExportPrefix, flag.NoUseOrgAndGroupNamesInExportPrefix, false, usage.NoUseOrgAndGroupNamesInExportPrefix)
 	cmd.MarkFlagsMutuallyExclusive(flag.UseOrgAndGroupNamesInExportPrefix, flag.NoUseOrgAndGroupNamesInExportPrefix)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

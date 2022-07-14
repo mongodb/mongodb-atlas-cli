@@ -104,40 +104,48 @@ func (opts *UpdateOpts) verifyExportBucketID(out *atlas.CloudProviderSnapshotBac
 	}
 }
 
-func (opts *UpdateOpts) verifyExportFrequencyType() error {
-	if opts.exportFrequencyType != "" {
-		if opts.exportFrequencyType != "daily" && opts.exportFrequencyType != "weekly" && opts.exportFrequencyType != "monthly" {
-			return errors.New("incorrect value for parameter exportFrequencyType. Value must be daily, weekly, or monthly")
+func (opts *UpdateOpts) verifyExportFrequencyType() func() error {
+	return func() error {
+		if opts.exportFrequencyType != "" {
+			if opts.exportFrequencyType != "daily" && opts.exportFrequencyType != "weekly" && opts.exportFrequencyType != "monthly" {
+				return errors.New("incorrect value for parameter exportFrequencyType. Value must be daily, weekly, or monthly")
+			}
 		}
+		return nil
 	}
-	return nil
 }
 
-func (opts *UpdateOpts) verifyReferenceHourOfDay(cmd *cobra.Command) error {
-	if cmd.Flags().Changed(flag.ReferenceHourOfDay) {
-		if opts.referenceHourOfDay < 0 || opts.referenceHourOfDay > 23 {
-			return errors.New("incorrect value for parameter referenceHourOfDay. Value must be an integer between 0 and 23 inclusive")
+func (opts *UpdateOpts) verifyReferenceHourOfDay(cmd *cobra.Command) func() error {
+	return func() error {
+		if cmd.Flags().Changed(flag.ReferenceHourOfDay) {
+			if opts.referenceHourOfDay < 0 || opts.referenceHourOfDay > 23 {
+				return errors.New("incorrect value for parameter referenceHourOfDay. Value must be an integer between 0 and 23 inclusive")
+			}
 		}
+		return nil
 	}
-	return nil
 }
 
-func (opts *UpdateOpts) verifyReferenceMinuteOfHour(cmd *cobra.Command) error {
-	if cmd.Flags().Changed(flag.ReferenceMinuteOfHour) {
-		if opts.referenceMinuteOfHour < 0 || opts.referenceMinuteOfHour > 59 {
-			return errors.New("incorrect value for parameter referenceMinuteOfHour. Value must be an integer between 0 and 59 inclusive")
+func (opts *UpdateOpts) verifyReferenceMinuteOfHour(cmd *cobra.Command) func() error {
+	return func() error {
+		if cmd.Flags().Changed(flag.ReferenceMinuteOfHour) {
+			if opts.referenceMinuteOfHour < 0 || opts.referenceMinuteOfHour > 59 {
+				return errors.New("incorrect value for parameter referenceMinuteOfHour. Value must be an integer between 0 and 59 inclusive")
+			}
 		}
+		return nil
 	}
-	return nil
 }
 
-func (opts *UpdateOpts) verifyRestoreWindowDays(cmd *cobra.Command) error {
-	if cmd.Flags().Changed(flag.RestoreWindowDays) {
-		if opts.restoreWindowDays <= 0 {
-			return errors.New("incorrect value for parameter restoreWindowDays. Value must be a positive, non-zero integer")
+func (opts *UpdateOpts) verifyRestoreWindowDays(cmd *cobra.Command) func() error {
+	return func() error {
+		if cmd.Flags().Changed(flag.RestoreWindowDays) {
+			if opts.restoreWindowDays <= 0 {
+				return errors.New("incorrect value for parameter restoreWindowDays. Value must be a positive, non-zero integer")
+			}
 		}
+		return nil
 	}
-	return nil
 }
 
 func checkForExport(out *atlas.CloudProviderSnapshotBackupPolicy) {
@@ -171,28 +179,15 @@ func UpdateBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  The following updates a snapshot backup policies for a cluster Cluster0:
   $ %s backup schedule update --clusterName Cluster0 --updateSnapshots --exportBucketId 62c569f85b7a381c093cc539 --exportFrequencyType monthly`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			preRun := opts.PreRunE(
+			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
+				opts.verifyExportFrequencyType(),
+				opts.verifyReferenceHourOfDay(cmd),
+				opts.verifyReferenceMinuteOfHour(cmd),
+				opts.verifyRestoreWindowDays(cmd),
 			)
-			err := opts.verifyExportFrequencyType()
-			if err != nil {
-				return err
-			}
-			err = opts.verifyReferenceHourOfDay(cmd)
-			if err != nil {
-				return err
-			}
-			err = opts.verifyReferenceMinuteOfHour(cmd)
-			if err != nil {
-				return err
-			}
-			err = opts.verifyRestoreWindowDays(cmd)
-			if err != nil {
-				return err
-			}
-			return preRun
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd)

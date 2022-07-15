@@ -155,6 +155,7 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
 		Use:     "update",
+		Hidden:  true,
 		Aliases: []string{"updates"},
 		Short:   "Update a snapshot backup policies for a cluster.",
 		Example: fmt.Sprintf(`  The following updates a snapshot backup policies for a cluster Cluster0:

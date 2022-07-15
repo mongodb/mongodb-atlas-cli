@@ -15,7 +15,7 @@
 //go:build unit
 // +build unit
 
-package settings
+package schedule
 
 import (
 	"testing"
@@ -26,38 +26,42 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/openlyinc/pointy"
+	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectSettingsUpdater(ctrl)
-	defer ctrl.Finish()
+	mockStore := mocks.NewMockScheduleDescriberUpdater(ctrl)
 
 	opts := &UpdateOpts{
-		store:                                    mockStore,
-		enableCollectDatabaseSpecificsStatistics: true,
-		disableCollectDatabaseSpecificsStatistics: false,
-		enableDataExplorer:                        false,
-		disableDataExplorer:                       true,
-		enablePerformanceAdvisor:                  true,
-		disablePerformanceAdvisor:                 false,
-		enableSchemaAdvisor:                       true,
-		disableSchemaAdvisor:                      false,
-		enableRealtimePerformancePanel:            true,
-		disableRealtimePerformancePanel:           false,
+		store:                               mockStore,
+		clusterName:                         "Test",
+		exportBucketID:                      "604f6322dc786a5341d4f7fb",
+		exportFrequencyType:                 "monthly",
+		backupPolicy:                        []string{},
+		referenceHourOfDay:                  12,
+		referenceMinuteOfHour:               30,
+		restoreWindowDays:                   5,
+		autoExport:                          true,
+		noAutoExport:                        false,
+		updateSnapshots:                     true,
+		noUpdateSnapshots:                   false,
+		useOrgAndGroupNamesInExportPrefix:   true,
+		noUseOrgAndGroupNamesInExportPrefix: false,
 	}
 
-	expected := &atlas.ProjectSettings{}
+	expected := &atlas.CloudProviderSnapshotBackupPolicy{}
+	cmd := &cobra.Command{}
 
 	mockStore.
 		EXPECT().
-		UpdateProjectSettings(opts.ProjectID, gomock.Any()).
+		UpdateSchedule(opts.ProjectID, opts.clusterName, gomock.Any()).
 		Return(expected, nil).
 		Times(1)
 
-	err := opts.Run()
+	err := opts.Run(cmd)
 	assert.NoError(t, err)
 }
 

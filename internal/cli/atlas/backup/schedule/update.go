@@ -102,9 +102,9 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 		out.RestoreWindowDays = &opts.restoreWindowDays
 	}
 
-	out.AutoExportEnabled = returnValueForSetting(opts.autoExport, opts.noAutoExport)
-	out.UpdateSnapshots = returnValueForSetting(opts.updateSnapshots, opts.noUpdateSnapshots)
-	out.UseOrgAndGroupNamesInExportPrefix = returnValueForSetting(opts.useOrgAndGroupNamesInExportPrefix, opts.noUseOrgAndGroupNamesInExportPrefix)
+	out.AutoExportEnabled = cli.ReturnValueForSetting(opts.autoExport, opts.noAutoExport)
+	out.UpdateSnapshots = cli.ReturnValueForSetting(opts.updateSnapshots, opts.noUpdateSnapshots)
+	out.UseOrgAndGroupNamesInExportPrefix = cli.ReturnValueForSetting(opts.useOrgAndGroupNamesInExportPrefix, opts.noUseOrgAndGroupNamesInExportPrefix)
 
 	if cmd.Flags().Changed(flag.BackupPolicy) {
 		currentSchedule, err := opts.store.DescribeSchedule(opts.ConfigProjectID(), opts.clusterName)
@@ -334,22 +334,6 @@ func checkForExport(out *atlas.CloudProviderSnapshotBackupPolicy) {
 	if out.Export == nil {
 		out.Export = new(atlas.Export)
 	}
-}
-
-func returnValueForSetting(enableFlag, disableFlag bool) *bool {
-	var valueToSet bool
-	if enableFlag && disableFlag {
-		return nil
-	}
-	if enableFlag {
-		valueToSet = true
-		return &valueToSet
-	}
-	if disableFlag {
-		valueToSet = false
-		return &valueToSet
-	}
-	return nil
 }
 
 func UpdateBuilder() *cobra.Command {

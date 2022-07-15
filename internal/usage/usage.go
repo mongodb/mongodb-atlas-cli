@@ -345,4 +345,12 @@ dbName and collection are only required for built-in roles.`
 	ExportBucketIAMRoleID                     = "Unique identifier of the role that Atlas can use to access the bucket."
 	BucketID                                  = "Unique identifier that Atlas assigns to the bucket."
 	CustomData                                = "Custom data to include in the metadata file named .complete that Atlas uploads to the bucket when the export job finishes. Custom data can be specified as key and value pairs."
+	ExportFrequencyType                       = "Frequency associated with the export policy. Value can be daily, weekly, or monthly."
+	RestoreWindowDays                         = "Number of days back in time you can restore to with Continuous Cloud Backup accuracy. Must be a positive, non-zero integer. Applies to continuous cloud backups only."
+	AutoExport                                = "Flag that enables automatic export of cloud backup snapshots to the AWS bucket."
+	NoAutoExport                              = "Flag that disables automatic export of cloud backup snapshots to the AWS bucket."
+	UpdateSnapshots                           = "Flag that enables applying the retention changes in the updated backup policy to snapshots that Atlas took previously."
+	NoUpdateSnapshots                         = "Flag that disables applying the retention changes in the updated backup policy to snapshots that Atlas took previously."
+	UseOrgAndGroupNamesInExportPrefix         = "Flag that enables usage of organization and project names instead of organization and project UUIDs in the path for the metadata files that Atlas uploads to your S3 bucket after it finishes exporting the snapshots."
+	NoUseOrgAndGroupNamesInExportPrefix       = "Flag that disables usage of organization and project names instead of organization and project UUIDs in the path for the metadata files that Atlas uploads to your S3 bucket after it finishes exporting the snapshots."
 )

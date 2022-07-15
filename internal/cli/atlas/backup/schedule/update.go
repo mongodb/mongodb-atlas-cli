@@ -16,25 +16,26 @@ package schedule
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type DescribeOpts struct {
+var updateTemplate = "Snapshot backup policy for cluster '{{.ClusterName}}' updated.\n"
+
+type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	clusterName string
-	store       store.ScheduleDescriber
+	store       store.ScheduleUpdater
 }
 
-func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -42,15 +43,8 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var scheduleDescribeTemplate = `CLUSTER NAME	AUTO EXPORT ENABLED	NEXT SNAPSHOT
-{{.ClusterName}}	{{.AutoExportEnabled}}	{{.NextSnapshot}}
-
-ID	Frequency Interval	Frequency Type	Retention Value	Retention Unit{{range .Policies}}{{range.PolicyItems}}
-{{.ID}}	{{.FrequencyInterval}}	{{.FrequencyType}}	{{.RetentionValue}}	{{.RetentionUnit}}{{end}}{{end}}
-`
-
-func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.DescribeSchedule(opts.ConfigProjectID(), opts.clusterName)
+func (opts *UpdateOpts) Run() error {
+	r, err := opts.store.UpdateSchedule(opts.ConfigProjectID(), opts.clusterName, &atlas.CloudProviderSnapshotBackupPolicy{})
 	if err != nil {
 		return err
 	}
@@ -58,35 +52,32 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas backup(s) schedule describe <clusterName> [--projectId projectId].
-func DescribeBuilder() *cobra.Command {
-	opts := new(DescribeOpts)
+func UpdateBuilder() *cobra.Command {
+	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe <clusterName>",
-		Aliases: []string{"get"},
-		Short:   "Describe a cloud backup schedule for the cluster you specify.",
-		Args:    require.ExactArgs(1),
-		Annotations: map[string]string{
-			"args":            "clusterName",
-			"clusterNameDesc": "Human-readable label for the cluster.",
-		},
-		Example: fmt.Sprintf(`  The following example describes the cloud backup schedule for the cluster Cluster0:
-  $ %s backup schedule describe Cluster0`, cli.ExampleAtlasEntryPoint()),
+		Use:     "update",
+		Hidden:  true,
+		Aliases: []string{"updates"},
+		Short:   "Update a snapshot backup policies for a cluster.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
+			preRun := opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), scheduleDescribeTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
+			return preRun
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
 			return opts.Run()
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
 	return cmd
 }

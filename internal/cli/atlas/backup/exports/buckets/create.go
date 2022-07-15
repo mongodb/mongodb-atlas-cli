@@ -67,7 +67,7 @@ func (opts *CreateOpts) newExportBucket() *mongodbatlas.CloudProviderSnapshotExp
 	return createRequest
 }
 
-// mongocli atlas backup(s) export(s) bucket(s) create <bucketName> --cloudProvider AWS.
+// atlas backup(s) export(s) bucket(s) create <bucketName> --cloudProvider AWS.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

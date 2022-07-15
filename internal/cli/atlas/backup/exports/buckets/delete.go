@@ -50,6 +50,7 @@ func (opts *DeleteOpts) Run() error {
 	return nil
 }
 
+// atlas backup(s) export(s) bucket(s) delete --bucketId bucketId [--projectId projectId].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Snapshot export bucket with id '%s' deleted.\n", "Snapshot export bucket not deleted.\n"),

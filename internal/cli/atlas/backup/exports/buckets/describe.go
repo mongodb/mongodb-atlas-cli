@@ -54,7 +54,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas backup(s) export(s) bucket(s) describe --bucketId bucketId --projectId projectId.
+// atlas backup(s) export(s) bucket(s) describe --bucketId bucketId [--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

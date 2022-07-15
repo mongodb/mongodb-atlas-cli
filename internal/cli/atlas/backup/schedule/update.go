@@ -57,7 +57,7 @@ type UpdateOpts struct {
 	noUpdateSnapshots                   bool
 	useOrgAndGroupNamesInExportPrefix   bool
 	noUseOrgAndGroupNamesInExportPrefix bool
-	store                               store.ScheduleUpdater
+	store                               store.ScheduleDescriberUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -106,22 +106,30 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 	out.UpdateSnapshots = returnValueForSetting(opts.updateSnapshots, opts.noUpdateSnapshots)
 	out.UseOrgAndGroupNamesInExportPrefix = returnValueForSetting(opts.useOrgAndGroupNamesInExportPrefix, opts.noUseOrgAndGroupNamesInExportPrefix)
 
-	var policies []atlas.Policy
-
-	for _, backupPolicy := range opts.backupPolicy {
-		policyItems := strings.Split(backupPolicy, ",")
-		frequencyInterval, err := strconv.Atoi(policyItems[3])
+	if cmd.Flags().Changed(flag.BackupPolicy) {
+		currentSchedule, err := opts.store.DescribeSchedule(opts.ConfigProjectID(), opts.clusterName)
 		if err != nil {
 			return nil, err
 		}
-		retentionValue, err := strconv.Atoi(policyItems[5])
-		if err != nil {
-			return nil, err
-		}
+		policies := currentSchedule.Policies
 
-		policyIndex := checkIfPolicyExists(policyItems[1], policies)
+		for _, backupPolicy := range opts.backupPolicy {
+			policyItems := strings.Split(backupPolicy, ",")
+			frequencyInterval, err := strconv.Atoi(policyItems[3])
+			if err != nil {
+				return nil, err
+			}
+			retentionValue, err := strconv.Atoi(policyItems[5])
+			if err != nil {
+				return nil, err
+			}
 
-		if policyIndex != -1 {
+			policyIndex := findPolicyIndex(policyItems[0], policies)
+
+			if policyIndex == -1 {
+				return nil, errors.New("incorrect value for parameter policyID. Policy with such ID does not exist")
+			}
+
 			policyItem := atlas.PolicyItem{
 				ID:                policyItems[1],
 				FrequencyType:     policyItems[2],
@@ -129,32 +137,33 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 				RetentionUnit:     policyItems[4],
 				RetentionValue:    retentionValue,
 			}
-			policies[policyIndex].PolicyItems = append(policies[policyIndex].PolicyItems, policyItem)
-		} else {
-			policy := atlas.Policy{
-				ID: policyItems[0],
-				PolicyItems: []atlas.PolicyItem{
-					{
-						ID:                policyItems[1],
-						FrequencyType:     policyItems[2],
-						FrequencyInterval: frequencyInterval,
-						RetentionUnit:     policyItems[4],
-						RetentionValue:    retentionValue,
-					},
-				},
+			policyItemIndex := findPolicyItemsIndex(policyItems[1], policies[policyIndex].PolicyItems)
+			if policyItemIndex == -1 {
+				return nil, errors.New("incorrect value for parameter policyItemID. Policy item with such ID does not exist")
 			}
-			policies = append(policies, policy)
-		}
-	}
 
-	out.Policies = policies
+			policies[policyIndex].PolicyItems[policyItemIndex] = policyItem
+		}
+
+		out.Policies = policies
+	}
 
 	return out, nil
 }
 
-func checkIfPolicyExists(currentPolicyID string, policies []atlas.Policy) int {
+func findPolicyIndex(policyID string, policies []atlas.Policy) int {
 	for index, policy := range policies {
-		if policy.ID == currentPolicyID {
+		if policy.ID == policyID {
+			return index
+		}
+	}
+
+	return -1
+}
+
+func findPolicyItemsIndex(policyItemID string, policyItems []atlas.PolicyItem) int {
+	for index, policyItem := range policyItems {
+		if policyItemID == policyItem.ID {
 			return index
 		}
 	}

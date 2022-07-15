@@ -18,6 +18,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"regexp"
+	"strconv"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -30,12 +33,21 @@ import (
 
 var updateTemplate = "Snapshot backup policy for cluster '{{.ClusterName}}' updated.\n"
 
+const (
+	Daily              = "daily"
+	Hourly             = "hourly"
+	Weekly             = "weekly"
+	Monthly            = "monthly"
+	BackupPolicyLength = 6
+)
+
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	clusterName                         string
 	exportBucketID                      string
 	exportFrequencyType                 string
+	backupPolicy                        []string
 	referenceHourOfDay                  int64
 	referenceMinuteOfHour               int64
 	restoreWindowDays                   int64
@@ -94,7 +106,60 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 	out.UpdateSnapshots = returnValueForSetting(opts.updateSnapshots, opts.noUpdateSnapshots)
 	out.UseOrgAndGroupNamesInExportPrefix = returnValueForSetting(opts.useOrgAndGroupNamesInExportPrefix, opts.noUseOrgAndGroupNamesInExportPrefix)
 
+	var policies []atlas.Policy
+
+	for _, backupPolicy := range opts.backupPolicy {
+		policyItems := strings.Split(backupPolicy, ",")
+		frequencyInterval, err := strconv.Atoi(policyItems[3])
+		if err != nil {
+			return nil, err
+		}
+		retentionValue, err := strconv.Atoi(policyItems[5])
+		if err != nil {
+			return nil, err
+		}
+
+		policyIndex := checkIfPolicyExists(policyItems[1], policies)
+
+		if policyIndex != -1 {
+			policyItem := atlas.PolicyItem{
+				ID:                policyItems[1],
+				FrequencyType:     policyItems[2],
+				FrequencyInterval: frequencyInterval,
+				RetentionUnit:     policyItems[4],
+				RetentionValue:    retentionValue,
+			}
+			policies[policyIndex].PolicyItems = append(policies[policyIndex].PolicyItems, policyItem)
+		} else {
+			policy := atlas.Policy{
+				ID: policyItems[0],
+				PolicyItems: []atlas.PolicyItem{
+					{
+						ID:                policyItems[1],
+						FrequencyType:     policyItems[2],
+						FrequencyInterval: frequencyInterval,
+						RetentionUnit:     policyItems[4],
+						RetentionValue:    retentionValue,
+					},
+				},
+			}
+			policies = append(policies, policy)
+		}
+	}
+
+	out.Policies = policies
+
 	return out, nil
+}
+
+func checkIfPolicyExists(currentPolicyID string, policies []atlas.Policy) int {
+	for index, policy := range policies {
+		if policy.ID == currentPolicyID {
+			return index
+		}
+	}
+
+	return -1
 }
 
 func (opts *UpdateOpts) verifyExportBucketID(out *atlas.CloudProviderSnapshotBackupPolicy) {
@@ -106,7 +171,7 @@ func (opts *UpdateOpts) verifyExportBucketID(out *atlas.CloudProviderSnapshotBac
 
 func (opts *UpdateOpts) verifyExportFrequencyType() error {
 	if opts.exportFrequencyType != "" {
-		if opts.exportFrequencyType != "daily" && opts.exportFrequencyType != "weekly" && opts.exportFrequencyType != "monthly" {
+		if opts.exportFrequencyType != Daily && opts.exportFrequencyType != Weekly && opts.exportFrequencyType != Monthly {
 			return errors.New("incorrect value for parameter exportFrequencyType. Value must be daily, weekly, or monthly")
 		}
 	}
@@ -138,6 +203,122 @@ func (opts *UpdateOpts) verifyRestoreWindowDays(cmd *cobra.Command) error {
 		}
 	}
 	return nil
+}
+
+func (opts *UpdateOpts) validateBackupPolicy(cmd *cobra.Command) error {
+	if cmd.Flags().Changed(flag.Policy) {
+		for _, policy := range opts.backupPolicy {
+			policyItems := strings.Split(policy, ",")
+			fmt.Println(policyItems)
+			err := validatePolicyLength(policyItems)
+			if err != nil {
+				return err
+			}
+			err = validateID(policyItems[0], policyItems[1])
+			if err != nil {
+				return err
+			}
+			err = validateFrequencyType(policyItems[2])
+			if err != nil {
+				return err
+			}
+			err = validateFrequencyIntervalNumber(policyItems[2], policyItems[3])
+			if err != nil {
+				return err
+			}
+			err = validateRetentionType(policyItems[4])
+			if err != nil {
+				return err
+			}
+			err = validateRetentionValue(policyItems[5])
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func validatePolicyLength(policyItems []string) error {
+	if len(policyItems) != BackupPolicyLength {
+		return errors.New("error when parsing policy. You must specify it in a format: '--policy policyID,policyItemID,frequencyType,frequencyIntervalNumber,retentionUnit,retentionValue'")
+	}
+	return nil
+}
+
+func validateID(policyID, policyItemID string) error {
+	r := regexp.MustCompile(`^[A-Za-z\d]{24}$`) // Regular expression that matches 24-characters alphanumeric string
+	if !r.MatchString(policyID) {
+		return errors.New("policyID was provided in an incorrect format. It must be a 24-characters alphanumeric string")
+	}
+	if !r.MatchString(policyItemID) {
+		return errors.New("policyItemID was provided in an incorrect format. It must be a 24-characters alphanumeric string")
+	}
+	return nil
+}
+
+func validateFrequencyType(frequencyType string) error {
+	if frequencyType != Hourly && frequencyType != Daily && frequencyType != Weekly && frequencyType != Monthly {
+		return errors.New("frequencyType was provided in an incorrect format. It must be equal to 'hourly', 'daily', 'weekly' or 'monthly'")
+	}
+	return nil
+}
+
+func validateFrequencyIntervalNumber(frequencyType, frequencyIntervalNumber string) error {
+	intervalNumber, err := strconv.Atoi(frequencyIntervalNumber)
+	if err != nil {
+		return errors.New("frequencyIntervalNumber was provided in an incorrect format. It must be an integer")
+	}
+
+	hourlyAllowedValues := []int{1, 2, 4, 6, 8, 12}
+	dailyAllowedValues := []int{1}
+	weeklyAllowedValues := []int{1, 7}
+	monthlyAllowedValues := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 40}
+
+	switch frequencyType {
+	case Hourly:
+		if !intInSlice(intervalNumber, hourlyAllowedValues) {
+			return errors.New("frequencyIntervalNumber was provided in an incorrect format for 'hourly' frequencyType")
+		}
+	case Daily:
+		if !intInSlice(intervalNumber, dailyAllowedValues) {
+			return errors.New("frequencyIntervalNumber was provided in an incorrect format for 'daily' frequencyType")
+		}
+	case Weekly:
+		if !intInSlice(intervalNumber, weeklyAllowedValues) {
+			return errors.New("frequencyIntervalNumber was provided in an incorrect format for 'weekly' frequencyType")
+		}
+	case Monthly:
+		if !intInSlice(intervalNumber, monthlyAllowedValues) {
+			return errors.New("frequencyIntervalNumber was provided in an incorrect format for 'monthly' frequencyType")
+		}
+	}
+
+	return nil
+}
+
+func validateRetentionType(retentionType string) error {
+	if retentionType != "days" && retentionType != "weeks" && retentionType != "months" {
+		return errors.New("retentionType was provided in an incorrect format. It must be equal to 'days', 'weeks' or 'months'")
+	}
+	return nil
+}
+
+func validateRetentionValue(retentionValue string) error {
+	_, err := strconv.Atoi(retentionValue)
+	if err != nil {
+		return errors.New("retentionValue was provided in an incorrect format. It must be an integer")
+	}
+	return nil
+}
+
+func intInSlice(a int, list []int) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }
 
 func checkForExport(out *atlas.CloudProviderSnapshotBackupPolicy) {
@@ -192,6 +373,10 @@ func UpdateBuilder() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			err = opts.validateBackupPolicy(cmd)
+			if err != nil {
+				return err
+			}
 			return preRun
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -218,6 +403,8 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.useOrgAndGroupNamesInExportPrefix, flag.UseOrgAndGroupNamesInExportPrefix, false, usage.UseOrgAndGroupNamesInExportPrefix)
 	cmd.Flags().BoolVar(&opts.noUseOrgAndGroupNamesInExportPrefix, flag.NoUseOrgAndGroupNamesInExportPrefix, false, usage.NoUseOrgAndGroupNamesInExportPrefix)
 	cmd.MarkFlagsMutuallyExclusive(flag.UseOrgAndGroupNamesInExportPrefix, flag.NoUseOrgAndGroupNamesInExportPrefix)
+
+	cmd.Flags().StringArrayVar(&opts.backupPolicy, flag.BackupPolicy, nil, usage.BackupPolicy)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

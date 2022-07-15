@@ -68,6 +68,10 @@ Options
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
+   * - --policy
+     - stringArray
+     - false
+     - Array containing a document for each backup policy item in the desired updated backup policy. You must specify it in a format: '--policy policyID,policyItemID,frequencyType,frequencyIntervalNumber,retentionUnit,retentionValue'.
    * - --projectId
      - string
      - false

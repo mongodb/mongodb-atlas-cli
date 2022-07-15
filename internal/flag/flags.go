@@ -296,6 +296,7 @@ const (
 	NoUpdateSnapshots                         = "noUpdateSnapshots"                         // NoUpdateSnapshots flag
 	UseOrgAndGroupNamesInExportPrefix         = "useOrgAndGroupNamesInExportPrefix"         // UseOrgAndGroupNamesInExportPrefix flag
 	NoUseOrgAndGroupNamesInExportPrefix       = "noUseOrgAndGroupNamesInExportPrefix"       // NoUseOrgAndGroupNamesInExportPrefix flag
+	BackupPolicy                              = "policy"                                    // BackupPolicy flag
 	/* #nosec */
 	KMIPClientCertificatePassword = "kmipClientCertificatePassword" // KMIPClientCertificatePassword flag
 	KMIPUsername                  = "kmipUsername"                  // KMIPUsername flag

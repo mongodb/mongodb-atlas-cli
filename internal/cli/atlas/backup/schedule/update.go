@@ -218,7 +218,6 @@ func (opts *UpdateOpts) validateBackupPolicy(cmd *cobra.Command) error {
 	if cmd.Flags().Changed(flag.Policy) {
 		for _, policy := range opts.backupPolicy {
 			policyItems := strings.Split(policy, ",")
-			fmt.Println(policyItems)
 			err := validatePolicyLength(policyItems)
 			if err != nil {
 				return err

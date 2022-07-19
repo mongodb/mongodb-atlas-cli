@@ -124,11 +124,11 @@ func Builder() *cobra.Command {
 				log.SetLevel(log.DebugLevel)
 			}
 
-			initProfile(profile)
-
 			telemetry.StartTrackingCommand(cmd, args)
 
 			handleSignal()
+
+			initProfile(profile)
 
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)

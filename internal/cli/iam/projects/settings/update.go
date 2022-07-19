@@ -64,12 +64,28 @@ func (opts *UpdateOpts) Run() error {
 
 func (opts *UpdateOpts) newProjectSettings() *atlas.ProjectSettings {
 	return &atlas.ProjectSettings{
-		IsCollectDatabaseSpecificsStatisticsEnabled: cli.ReturnValueForSetting(opts.enableCollectDatabaseSpecificsStatistics, opts.disableCollectDatabaseSpecificsStatistics),
-		IsDataExplorerEnabled:                       cli.ReturnValueForSetting(opts.enableDataExplorer, opts.disableDataExplorer),
-		IsPerformanceAdvisorEnabled:                 cli.ReturnValueForSetting(opts.enablePerformanceAdvisor, opts.disablePerformanceAdvisor),
-		IsRealtimePerformancePanelEnabled:           cli.ReturnValueForSetting(opts.enableRealtimePerformancePanel, opts.disableRealtimePerformancePanel),
-		IsSchemaAdvisorEnabled:                      cli.ReturnValueForSetting(opts.enableSchemaAdvisor, opts.disableSchemaAdvisor),
+		IsCollectDatabaseSpecificsStatisticsEnabled: returnValueForSetting(opts.enableCollectDatabaseSpecificsStatistics, opts.disableCollectDatabaseSpecificsStatistics),
+		IsDataExplorerEnabled:                       returnValueForSetting(opts.enableDataExplorer, opts.disableDataExplorer),
+		IsPerformanceAdvisorEnabled:                 returnValueForSetting(opts.enablePerformanceAdvisor, opts.disablePerformanceAdvisor),
+		IsRealtimePerformancePanelEnabled:           returnValueForSetting(opts.enableRealtimePerformancePanel, opts.disableRealtimePerformancePanel),
+		IsSchemaAdvisorEnabled:                      returnValueForSetting(opts.enableSchemaAdvisor, opts.disableSchemaAdvisor),
 	}
+}
+
+func returnValueForSetting(enableFlag, disableFlag bool) *bool {
+	var valueToSet bool
+	if enableFlag && disableFlag {
+		return nil
+	}
+	if enableFlag {
+		valueToSet = true
+		return &valueToSet
+	}
+	if disableFlag {
+		valueToSet = false
+		return &valueToSet
+	}
+	return nil
 }
 
 // atlas projects(s) settings describe [–-enableCollectDatabaseSpecificsStatistics] [--projectId projectId].

@@ -1,7 +1,7 @@
-.. _atlas-backups-exports-buckets-list:
+.. _atlas-integrations-create-FLOWDOCK:
 
 ==================================
-atlas backups exports buckets list
+atlas integrations create FLOWDOCK
 ==================================
 
 .. default-domain:: mongodb
@@ -12,14 +12,14 @@ atlas backups exports buckets list
    :depth: 1
    :class: singlecol
 
-List cloud backup restore buckets for your project and cluster.
+Create or update the Flowdock integration.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups exports buckets list [options]
+   atlas integrations create FLOWDOCK [options]
 
 Options
 -------
@@ -32,22 +32,26 @@ Options
      - Type
      - Required
      - Description
+   * - --apiToken
+     - string
+     - true
+     - Your API Token.
+   * - --flowName
+     - string
+     - true
+     - Flowdock Flow name.
    * - -h, --help
      - 
      - false
-     - help for list
-   * - --limit
-     - int
-     - false
-     - Number of items per page. This value defaults to 100.
+     - help for FLOWDOCK
+   * - --orgName
+     - string
+     - true
+     - Your Flowdock organization's name.
    * - -o, --output
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
-   * - --page
-     - int
-     - false
-     - Page number. This value defaults to 1.
    * - --projectId
      - string
      - false
@@ -68,12 +72,4 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
-
-Examples
---------
-
-.. code-block::
-
-   The following example retrieves the continuous backup export buckets:
-   $ atlas backup exports buckets list
 

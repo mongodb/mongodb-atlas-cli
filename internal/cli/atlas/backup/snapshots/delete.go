@@ -18,7 +18,6 @@ import (
 	"context"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -43,7 +42,7 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return commonerrors.Check(opts.Delete(opts.store.DeleteSnapshot, opts.ConfigProjectID(), opts.clusterName))
+	return opts.Delete(opts.store.DeleteSnapshot, opts.ConfigProjectID(), opts.clusterName)
 }
 
 // mongocli atlas snapshot(s) delete <snapshotId> --force --clusterName [--projectId projectId].

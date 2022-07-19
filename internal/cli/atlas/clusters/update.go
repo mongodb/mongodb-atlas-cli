@@ -19,7 +19,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
@@ -66,7 +65,7 @@ func (opts *UpdateOpts) Run() error {
 
 	r, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
 	if err != nil {
-		return commonerrors.Check(err)
+		return err
 	}
 
 	return opts.Print(r)
@@ -107,15 +106,9 @@ func (opts *UpdateOpts) patchOpts(out *atlas.AdvancedCluster) {
 func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlas.AdvancedCluster) {
 	for _, replicationSpec := range out.ReplicationSpecs {
 		for _, regionConf := range replicationSpec.RegionConfigs {
-			if regionConf.ReadOnlySpecs != nil {
-				regionConf.ReadOnlySpecs.InstanceSize = opts.tier
-			}
-			if regionConf.AnalyticsSpecs != nil {
-				regionConf.AnalyticsSpecs.InstanceSize = opts.tier
-			}
-			if regionConf.ElectableSpecs != nil {
-				regionConf.ElectableSpecs.InstanceSize = opts.tier
-			}
+			regionConf.ReadOnlySpecs.InstanceSize = opts.tier
+			regionConf.AnalyticsSpecs.InstanceSize = opts.tier
+			regionConf.ElectableSpecs.InstanceSize = opts.tier
 		}
 	}
 }

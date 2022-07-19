@@ -63,7 +63,7 @@ Options
    * - --mdbVersion
      - string
      - false
-     - MongoDB version of the cluster.
+     - MongoDB version of the cluster to deploy.
    * - -o, --output
      - string
      - false

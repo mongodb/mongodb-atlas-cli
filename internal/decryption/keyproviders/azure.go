@@ -16,10 +16,11 @@ package keyproviders
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
-	"github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys"
+	"github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys/crypto"
 )
 
 type AzureKeyIdentifier struct {
@@ -56,14 +57,14 @@ func (ki *AzureKeyIdentifier) ValidateCredentials() error {
 }
 
 func (ki *AzureKeyIdentifier) DecryptKey(key []byte) ([]byte, error) {
-	client := azkeys.NewClient(ki.KeyVaultEndpoint, ki.credentials, nil)
-	algo := azkeys.JSONWebKeyEncryptionAlgorithmRSAOAEP
-	r, err := client.Decrypt(context.Background(), ki.KeyName, ki.KeyVersion, azkeys.KeyOperationsParameters{
-		Value:     key,
-		Algorithm: &algo,
-	}, nil)
+	keyURL := fmt.Sprintf("%v/keys/%v/%v", ki.KeyVaultEndpoint, ki.KeyName, ki.KeyVersion)
+	client, err := crypto.NewClient(keyURL, ki.credentials, nil)
 	if err != nil {
 		return nil, err
 	}
-	return r.Result, nil
+	r, err := client.Decrypt(context.Background(), crypto.EncryptionAlgRSAOAEP, key, &crypto.DecryptOptions{})
+	if err != nil {
+		return nil, err
+	}
+	return r.Plaintext, nil
 }

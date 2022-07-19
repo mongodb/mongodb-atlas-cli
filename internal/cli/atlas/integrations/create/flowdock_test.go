@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2020 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,8 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//go:build unit
+// +build unit
 
-package jobs
+package create
 
 import (
 	"testing"
@@ -24,39 +26,32 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestListOpts_Run(t *testing.T) {
+func TestFlowDockOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockExportJobsLister(ctrl)
+	mockStore := mocks.NewMockIntegrationCreator(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.CloudProviderSnapshotExportJobs{}
-
-	listOpts := &ListOpts{
-		store:       mockStore,
-		clusterName: "Cluster0",
+	opts := &FlowdockOpts{
+		store: mockStore,
 	}
 
+	expected := &mongodbatlas.ThirdPartyIntegrations{}
 	mockStore.
 		EXPECT().
-		ExportJobs(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
+		CreateIntegration(opts.ProjectID, flowdockType, opts.newFlowdockIntegration()).
 		Return(expected, nil).
 		Times(1)
 
-	if err := listOpts.Run(); err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestListBuilder(t *testing.T) {
+func TestFlowDockBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		ListBuilder(),
+		FlowdockBuilder(),
 		0,
-		[]string{
-			flag.Page,
-			flag.Limit,
-			flag.ProjectID,
-			flag.Output,
-		},
+		[]string{flag.APIToken, flag.FlowName, flag.OrgName},
 	)
 }

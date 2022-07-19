@@ -18,7 +18,6 @@ import (
 	"context"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -47,7 +46,7 @@ var startTmpl = "Starting cluster '{{.Name}}'.\n"
 func (opts *StartOpts) Run() error {
 	r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
-		return commonerrors.Check(err)
+		return err
 	}
 
 	return opts.Print(r)

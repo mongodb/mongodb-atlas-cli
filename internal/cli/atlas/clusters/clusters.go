@@ -76,7 +76,6 @@ func Builder() *cobra.Command {
 		StartBuilder(),
 		DeleteBuilder(),
 		LoadSampleDataBuilder(),
-		UpgradeBuilder(),
 		indexes.Builder(),
 		search.Builder(),
 		onlinearchive.Builder(),
@@ -114,31 +113,4 @@ func RemoveReadOnlyAttributes(out *atlas.AdvancedCluster) {
 	for _, spec := range out.ReplicationSpecs {
 		spec.ID = ""
 	}
-}
-
-func RemoveReadOnlyAttributesSharedCluster(out *atlas.Cluster) {
-	out.ID = ""
-	out.CreateDate = ""
-	out.StateName = ""
-	out.MongoDBVersion = ""
-	out.ConnectionStrings = nil
-	out.ReplicationSpec = nil
-	out.MongoURI = ""
-	out.MongoURIUpdated = ""
-	out.MongoURIWithOptions = ""
-	if out.ProviderSettings != nil {
-		out.ProviderSettings.AutoScaling = nil
-	}
-
-	for _, spec := range out.ReplicationSpecs {
-		spec.ID = ""
-	}
-}
-
-func AddLabelSharedCluster(out *atlas.Cluster, l atlas.Label) {
-	if LabelExists(out.Labels, l) {
-		return
-	}
-
-	out.Labels = append(out.Labels, l)
 }

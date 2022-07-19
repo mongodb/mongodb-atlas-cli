@@ -21,7 +21,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
@@ -104,7 +103,7 @@ func TestReturnMockValueForSetting(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := cli.ReturnValueForSetting(tt.inputEnableFlag, tt.inputDisableFlag)
+			got := returnValueForSetting(tt.inputEnableFlag, tt.inputDisableFlag)
 			assert.Equalf(t, tt.want, got, "returnValueForSetting()")
 		})
 	}

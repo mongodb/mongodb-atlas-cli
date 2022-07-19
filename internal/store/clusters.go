@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterConfigurationOptionsDescriber
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterConfigurationOptionsDescriber,AtlasSharedClusterDescriber,ClusterUpgrader,AtlasSharedClusterGetterUpgrader
 
 type ClusterLister interface {
 	ProjectClusters(string, *atlas.ListOptions) (interface{}, error)
@@ -38,6 +38,10 @@ type AtlasClusterConfigurationOptionsDescriber interface {
 
 type OpsManagerClusterDescriber interface {
 	OpsManagerCluster(string, string) (*opsmngr.Cluster, error)
+}
+
+type AtlasSharedClusterDescriber interface {
+	AtlasSharedCluster(string, string) (*atlas.Cluster, error)
 }
 
 type ClusterCreator interface {
@@ -60,6 +64,10 @@ type ClusterStarter interface {
 	StartCluster(string, string) (*atlas.AdvancedCluster, error)
 }
 
+type ClusterUpgrader interface {
+	UpgradeCluster(string, *atlas.Cluster) (*atlas.Cluster, error)
+}
+
 type SampleDataAdder interface {
 	AddSampleData(string, string) (*atlas.SampleDatasetJob, error)
 }
@@ -71,6 +79,11 @@ type SampleDataStatusDescriber interface {
 type AtlasClusterGetterUpdater interface {
 	AtlasClusterDescriber
 	ClusterUpdater
+}
+
+type AtlasSharedClusterGetterUpgrader interface {
+	AtlasSharedClusterDescriber
+	ClusterUpgrader
 }
 
 type AtlasClusterQuickStarter interface {
@@ -96,7 +109,7 @@ func (s *Store) AddSampleData(groupID, clusterName string) (*atlas.SampleDataset
 	}
 }
 
-// SampleData encapsulate the logic to manage different cloud providers.
+// SampleDataStatus encapsulate the logic to manage different cloud providers.
 func (s *Store) SampleDataStatus(groupID, id string) (*atlas.SampleDatasetJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
@@ -155,6 +168,28 @@ func (s *Store) DeleteCluster(projectID, name string) error {
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// AtlasSharedCluster encapsulates the logic to fetch details of one shared cluster.
+func (s *Store) AtlasSharedCluster(projectID, name string) (*atlas.Cluster, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService, config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Clusters.Get(s.ctx, projectID, name)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// UpgradeCluster encapsulate the logic to upgrade shared clusters in a project.
+func (s *Store) UpgradeCluster(projectID string, cluster *atlas.Cluster) (*atlas.Cluster, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).Clusters.Upgrade(s.ctx, projectID, cluster)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 

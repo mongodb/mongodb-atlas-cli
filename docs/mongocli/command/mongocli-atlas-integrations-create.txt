@@ -50,7 +50,6 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-integrations-create-DATADOG` - Create or update the Datadog integration.
-* :ref:`mongocli-atlas-integrations-create-FLOWDOCK` - Create or update the Flowdock integration.
 * :ref:`mongocli-atlas-integrations-create-NEW_RELIC` - Create or update the New Relic integration.
 * :ref:`mongocli-atlas-integrations-create-OPS_GENIE` - Create or update the Ops Genie integration.
 * :ref:`mongocli-atlas-integrations-create-PAGER_DUTY` - Create or update the PagerDuty integration.
@@ -62,7 +61,6 @@ Related Commands
    :titlesonly:
 
    DATADOG </command/mongocli-atlas-integrations-create-DATADOG>
-   FLOWDOCK </command/mongocli-atlas-integrations-create-FLOWDOCK>
    NEW_RELIC </command/mongocli-atlas-integrations-create-NEW_RELIC>
    OPS_GENIE </command/mongocli-atlas-integrations-create-OPS_GENIE>
    PAGER_DUTY </command/mongocli-atlas-integrations-create-PAGER_DUTY>

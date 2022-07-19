@@ -1,8 +1,8 @@
-.. _mongocli-atlas-integrations-create-FLOWDOCK:
+.. _atlas-backups-exports-jobs-describe:
 
-===========================================
-mongocli atlas integrations create FLOWDOCK
-===========================================
+===================================
+atlas backups exports jobs describe
+===================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ mongocli atlas integrations create FLOWDOCK
    :depth: 1
    :class: singlecol
 
-Create or update the Flowdock integration.
+Return one cloud backup export job for your project, cluster and bucket.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas integrations create FLOWDOCK [options]
+   atlas backups exports jobs describe [options]
 
 Options
 -------
@@ -32,22 +32,18 @@ Options
      - Type
      - Required
      - Description
-   * - --apiToken
+   * - --bucketId
      - string
      - true
-     - Your API Token.
-   * - --flowName
+     - Unique identifier that Atlas assigns to the bucket.
+   * - --clusterName
      - string
      - true
-     - Flowdock Flow name.
+     - Name of the cluster.
    * - -h, --help
      - 
      - false
-     - help for FLOWDOCK
-   * - --orgName
-     - string
-     - true
-     - Your Flowdock organization's name.
+     - help for describe
    * - -o, --output
      - string
      - false
@@ -72,4 +68,12 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+   The following example describes the continuous backup export job for the cluster Cluster0 and bucket 5df90590f10fab5e33de2305:
+   $ atlas backup exports jobs describe --clusterName Cluster0 --bucketId 5df90590f10fab5e33de2305
 

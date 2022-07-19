@@ -21,6 +21,8 @@ Syntax
 
    mongocli cloud-manager alerts settings update <alertConfigId> [options]
 
+.. Code end marker, please don't delete this comment
+
 Arguments
 ---------
 

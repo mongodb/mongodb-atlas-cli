@@ -35,6 +35,8 @@ Syntax
 
    atlas completion bash
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

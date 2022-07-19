@@ -21,6 +21,8 @@ Syntax
 
    mongocli cloud-manager security enable <MONGODB-CR|SCRAM-SHA-256> [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

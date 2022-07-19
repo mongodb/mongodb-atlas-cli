@@ -26,6 +26,8 @@ Syntax
 
    mongocli atlas networking peering watch <ID> [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

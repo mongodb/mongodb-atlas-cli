@@ -21,6 +21,8 @@ Syntax
 
    mongocli iam organizations apiKeys accessLists list <apiKeyID> [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

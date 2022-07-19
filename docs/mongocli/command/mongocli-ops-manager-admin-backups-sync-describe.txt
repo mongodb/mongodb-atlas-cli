@@ -21,6 +21,8 @@ Syntax
 
    mongocli ops-manager admin backups sync describe <name> [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

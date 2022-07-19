@@ -21,6 +21,8 @@ Syntax
 
    mongocli atlas backups snapshots describe <snapshotId> [options]
 
+.. Code end marker, please don't delete this comment
+
 Arguments
 ---------
 

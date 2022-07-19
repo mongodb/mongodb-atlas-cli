@@ -31,6 +31,8 @@ Syntax
 
    atlas completion powershell [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

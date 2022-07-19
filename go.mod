@@ -18,7 +18,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/golang/mock v1.6.0
 	github.com/google/go-github/v42 v42.0.0
-	github.com/klauspost/compress v1.15.7
+	github.com/klauspost/compress v1.15.8
 	github.com/mattn/go-isatty v0.0.14
 	github.com/mongodb-forks/digest v1.0.4
 	github.com/mongodb-labs/cobra2snooty v0.8.0

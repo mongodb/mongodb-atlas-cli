@@ -23,6 +23,8 @@ Syntax
 
    mongocli cloud-manager clusters unmanage <name> [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

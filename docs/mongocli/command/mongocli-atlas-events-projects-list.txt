@@ -23,6 +23,8 @@ Syntax
 
    mongocli atlas events projects list [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

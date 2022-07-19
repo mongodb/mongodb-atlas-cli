@@ -23,6 +23,8 @@ Syntax
 
    mongocli cloud-manager liveMigrations link describe [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

@@ -24,6 +24,8 @@ Syntax
 
    mongocli atlas clusters create [name] [options]
 
+.. Code end marker, please don't delete this comment
+
 Arguments
 ---------
 

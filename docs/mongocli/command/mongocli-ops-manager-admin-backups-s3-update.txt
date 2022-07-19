@@ -21,6 +21,8 @@ Syntax
 
    mongocli ops-manager admin backups s3 update <name> [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

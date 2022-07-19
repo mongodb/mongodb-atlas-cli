@@ -21,6 +21,8 @@ Syntax
 
    mongocli cloud-manager metrics databases list <ID> [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

@@ -21,6 +21,8 @@ Syntax
 
    mongocli ops-manager metrics disks describe <hostId> <name> [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

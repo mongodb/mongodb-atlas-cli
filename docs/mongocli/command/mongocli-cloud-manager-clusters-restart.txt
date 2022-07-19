@@ -21,6 +21,8 @@ Syntax
 
    mongocli cloud-manager clusters restart <clusterName> [options]
 
+.. Code end marker, please don't delete this comment
+
 Arguments
 ---------
 

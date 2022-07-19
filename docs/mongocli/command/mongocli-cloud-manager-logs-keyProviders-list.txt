@@ -21,6 +21,8 @@ Syntax
 
    mongocli cloud-manager logs keyProviders list [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

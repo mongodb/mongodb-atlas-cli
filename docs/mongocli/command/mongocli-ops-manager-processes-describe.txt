@@ -21,6 +21,8 @@ Syntax
 
    mongocli ops-manager processes describe <ID> [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

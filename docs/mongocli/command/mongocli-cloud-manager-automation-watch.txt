@@ -26,6 +26,8 @@ Syntax
 
    mongocli cloud-manager automation watch [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

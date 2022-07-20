@@ -30,6 +30,10 @@ type DeleteOpts struct {
 }
 
 func (opts *DeleteOpts) Run() error {
+	if !opts.Confirm {
+		return nil
+	}
+
 	config.SetName(opts.Entry)
 	if err := config.Delete(); err != nil {
 		return err
@@ -47,6 +51,11 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Delete a profile.",
 		Args:    require.ExactArgs(1),
+		Example: `  Delete the default profile configuration:
+  $ atlas config delete default
+
+  Skip the confirmation question and delete the default profile configuration:
+  $ atlas config delete default --force`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]
 			if !config.Exists(opts.Entry) {

@@ -30,6 +30,10 @@ type DeleteOpts struct {
 }
 
 func (opts *DeleteOpts) Run() error {
+	if !opts.Confirm {
+		return nil
+	}
+
 	config.SetName(opts.Entry)
 	if err := config.Delete(); err != nil {
 		return err

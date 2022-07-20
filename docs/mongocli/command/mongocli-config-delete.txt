@@ -64,9 +64,9 @@ Examples
 
 .. code-block::
 
-   To delete the default profile configuration:
+   Delete the default profile configuration:
    $ atlas config delete default
 
-   To skip the confirmation question:
+   Skip the confirmation question and delete the default profile configuration:
    $ atlas config delete default --force
 

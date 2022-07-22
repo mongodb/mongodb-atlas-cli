@@ -86,7 +86,11 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 	out := new(atlas.CloudProviderSnapshotBackupPolicy)
 
 	out.ClusterName = clusterName
-	opts.verifyExportBucketID(out)
+
+	if opts.exportBucketID != "" {
+		checkForExport(out)
+		out.Export.ExportBucketID = opts.exportBucketID
+	}
 
 	if cmd.Flags().Changed(flag.ExportFrequencyType) {
 		checkForExport(out)
@@ -171,80 +175,50 @@ func findPolicyItemsIndex(policyItemID string, policyItems []atlas.PolicyItem) i
 	return -1
 }
 
-func (opts *UpdateOpts) verifyExportBucketID(out *atlas.CloudProviderSnapshotBackupPolicy) {
-	if opts.exportBucketID != "" {
-		checkForExport(out)
-		out.Export.ExportBucketID = opts.exportBucketID
+func (opts *UpdateOpts) verifyExportFrequencyType() func() error {
+	return func() error {
+		if opts.exportFrequencyType != "" {
+			if opts.exportFrequencyType != "daily" && opts.exportFrequencyType != "weekly" && opts.exportFrequencyType != "monthly" {
+				return errors.New("incorrect value for parameter exportFrequencyType. Value must be daily, weekly, or monthly")
+			}
+		}
+		return nil
 	}
 }
 
-func (opts *UpdateOpts) verifyExportFrequencyType() error {
-	if opts.exportFrequencyType != "" {
-		if opts.exportFrequencyType != daily && opts.exportFrequencyType != weekly && opts.exportFrequencyType != monthly {
-			return errors.New("incorrect value for parameter exportFrequencyType. Value must be daily, weekly, or monthly")
-		}
-	}
-	return nil
-}
-
-func (opts *UpdateOpts) verifyReferenceHourOfDay(cmd *cobra.Command) error {
-	if cmd.Flags().Changed(flag.ReferenceHourOfDay) {
-		if opts.referenceHourOfDay < 0 || opts.referenceHourOfDay > 23 {
-			return errors.New("incorrect value for parameter referenceHourOfDay. Value must be an integer between 0 and 23 inclusive")
-		}
-	}
-	return nil
-}
-
-func (opts *UpdateOpts) verifyReferenceMinuteOfHour(cmd *cobra.Command) error {
-	if cmd.Flags().Changed(flag.ReferenceMinuteOfHour) {
-		if opts.referenceMinuteOfHour < 0 || opts.referenceMinuteOfHour > 59 {
-			return errors.New("incorrect value for parameter referenceMinuteOfHour. Value must be an integer between 0 and 59 inclusive")
-		}
-	}
-	return nil
-}
-
-func (opts *UpdateOpts) verifyRestoreWindowDays(cmd *cobra.Command) error {
-	if cmd.Flags().Changed(flag.RestoreWindowDays) {
-		if opts.restoreWindowDays <= 0 {
-			return errors.New("incorrect value for parameter restoreWindowDays. Value must be a positive, non-zero integer")
-		}
-	}
-	return nil
-}
-
-func (opts *UpdateOpts) validateBackupPolicy(cmd *cobra.Command) error {
-	if cmd.Flags().Changed(flag.Policy) {
-		for _, policy := range opts.backupPolicy {
-			policyItems := strings.Split(policy, ",")
-			err := validatePolicyLength(policyItems)
-			if err != nil {
-				return err
-			}
-			err = validateID(policyItems[0], policyItems[1])
-			if err != nil {
-				return err
-			}
-			err = validateFrequencyType(policyItems[2])
-			if err != nil {
-				return err
-			}
-			err = validateFrequencyIntervalNumber(policyItems[2], policyItems[3])
-			if err != nil {
-				return err
-			}
-			err = validateRetentionType(policyItems[4])
-			if err != nil {
-				return err
-			}
-			err = validateRetentionValue(policyItems[5])
-			if err != nil {
-				return err
+func (opts *UpdateOpts) validateBackupPolicy(cmd *cobra.Command) func() error {
+	return func() error {
+		if cmd.Flags().Changed(flag.Policy) {
+			for _, policy := range opts.backupPolicy {
+				policyItems := strings.Split(policy, ",")
+				err := validatePolicyLength(policyItems)
+				if err != nil {
+					return err
+				}
+				err = validateID(policyItems[0], policyItems[1])
+				if err != nil {
+					return err
+				}
+				err = validateFrequencyType(policyItems[2])
+				if err != nil {
+					return err
+				}
+				err = validateFrequencyIntervalNumber(policyItems[2], policyItems[3])
+				if err != nil {
+					return err
+				}
+				err = validateRetentionType(policyItems[4])
+				if err != nil {
+					return err
+				}
+				err = validateRetentionValue(policyItems[5])
+				if err != nil {
+					return err
+				}
 			}
 		}
+		return nil
 	}
-	return nil
 }
 
 func validatePolicyLength(policyItems []string) error {
@@ -329,6 +303,39 @@ func intInSlice(a int, list []int) bool {
 	return false
 }
 
+func (opts *UpdateOpts) verifyReferenceHourOfDay(cmd *cobra.Command) func() error {
+	return func() error {
+		if cmd.Flags().Changed(flag.ReferenceHourOfDay) {
+			if opts.referenceHourOfDay < 0 || opts.referenceHourOfDay > 23 {
+				return errors.New("incorrect value for parameter referenceHourOfDay. Value must be an integer between 0 and 23 inclusive")
+			}
+		}
+		return nil
+	}
+}
+
+func (opts *UpdateOpts) verifyReferenceMinuteOfHour(cmd *cobra.Command) func() error {
+	return func() error {
+		if cmd.Flags().Changed(flag.ReferenceMinuteOfHour) {
+			if opts.referenceMinuteOfHour < 0 || opts.referenceMinuteOfHour > 59 {
+				return errors.New("incorrect value for parameter referenceMinuteOfHour. Value must be an integer between 0 and 59 inclusive")
+			}
+		}
+		return nil
+	}
+}
+
+func (opts *UpdateOpts) verifyRestoreWindowDays(cmd *cobra.Command) func() error {
+	return func() error {
+		if cmd.Flags().Changed(flag.RestoreWindowDays) {
+			if opts.restoreWindowDays <= 0 {
+				return errors.New("incorrect value for parameter restoreWindowDays. Value must be a positive, non-zero integer")
+			}
+		}
+		return nil
+	}
+}
+
 func checkForExport(out *atlas.CloudProviderSnapshotBackupPolicy) {
 	if out.Export == nil {
 		out.Export = new(atlas.Export)
@@ -344,32 +351,16 @@ func UpdateBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  The following updates a snapshot backup policies for a cluster Cluster0:
   $ %s backup schedule update --clusterName Cluster0 --updateSnapshots --exportBucketId 62c569f85b7a381c093cc539 --exportFrequencyType monthly`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			preRun := opts.PreRunE(
+			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
+				opts.verifyExportFrequencyType(),
+				opts.verifyReferenceHourOfDay(cmd),
+				opts.verifyReferenceMinuteOfHour(cmd),
+				opts.verifyRestoreWindowDays(cmd),
+				opts.validateBackupPolicy(cmd),
 			)
-			err := opts.verifyExportFrequencyType()
-			if err != nil {
-				return err
-			}
-			err = opts.verifyReferenceHourOfDay(cmd)
-			if err != nil {
-				return err
-			}
-			err = opts.verifyReferenceMinuteOfHour(cmd)
-			if err != nil {
-				return err
-			}
-			err = opts.verifyRestoreWindowDays(cmd)
-			if err != nil {
-				return err
-			}
-			err = opts.validateBackupPolicy(cmd)
-			if err != nil {
-				return err
-			}
-			return preRun
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd)

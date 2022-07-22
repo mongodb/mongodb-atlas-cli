@@ -21,6 +21,8 @@ Syntax
 
    mongocli cloud-manager maintenanceWindows describe <ID> [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

@@ -23,6 +23,8 @@ Syntax
 
    mongocli atlas metrics disks list <hostname:port> [options]
 
+.. Code end marker, please don't delete this comment
+
 Arguments
 ---------
 

@@ -26,6 +26,8 @@ Syntax
 
    atlas clusters onlineArchives watch <archiveId> [options]
 
+.. Code end marker, please don't delete this comment
+
 Arguments
 ---------
 

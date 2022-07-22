@@ -23,6 +23,8 @@ Syntax
 
    atlas metrics disks describe <hostname:port> <diskName> [options]
 
+.. Code end marker, please don't delete this comment
+
 Arguments
 ---------
 

@@ -21,6 +21,8 @@ Syntax
 
    mongocli atlas alerts settings fields type [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

@@ -21,6 +21,8 @@ Syntax
 
    mongocli iam projects apiKeys list [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

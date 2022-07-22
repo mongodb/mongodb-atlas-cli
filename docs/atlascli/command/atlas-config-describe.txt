@@ -21,6 +21,8 @@ Syntax
 
    atlas config describe <name> [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

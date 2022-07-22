@@ -21,6 +21,8 @@ Syntax
 
    mongocli ops-manager backups restores start <AUTOMATED_RESTORE|HTTP> [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

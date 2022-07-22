@@ -35,6 +35,8 @@ Syntax
 
    mongocli completion bash
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

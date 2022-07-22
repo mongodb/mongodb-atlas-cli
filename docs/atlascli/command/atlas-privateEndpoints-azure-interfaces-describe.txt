@@ -21,6 +21,8 @@ Syntax
 
    atlas privateEndpoints azure interfaces describe <endpointId> [options]
 
+.. Code end marker, please don't delete this comment
+
 Options
 -------
 

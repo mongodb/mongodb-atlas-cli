@@ -34,11 +34,11 @@ import (
 var updateTemplate = "Snapshot backup policy for cluster '{{.ClusterName}}' updated.\n"
 
 const (
-	Daily              = "daily"
-	Hourly             = "hourly"
-	Weekly             = "weekly"
-	Monthly            = "monthly"
-	BackupPolicyLength = 6
+	daily              = "daily"
+	hourly             = "hourly"
+	weekly             = "weekly"
+	monthly            = "monthly"
+	backupPolicyLength = 6
 )
 
 type UpdateOpts struct {
@@ -180,7 +180,7 @@ func (opts *UpdateOpts) verifyExportBucketID(out *atlas.CloudProviderSnapshotBac
 
 func (opts *UpdateOpts) verifyExportFrequencyType() error {
 	if opts.exportFrequencyType != "" {
-		if opts.exportFrequencyType != Daily && opts.exportFrequencyType != Weekly && opts.exportFrequencyType != Monthly {
+		if opts.exportFrequencyType != daily && opts.exportFrequencyType != weekly && opts.exportFrequencyType != monthly {
 			return errors.New("incorrect value for parameter exportFrequencyType. Value must be daily, weekly, or monthly")
 		}
 	}
@@ -248,7 +248,7 @@ func (opts *UpdateOpts) validateBackupPolicy(cmd *cobra.Command) error {
 }
 
 func validatePolicyLength(policyItems []string) error {
-	if len(policyItems) != BackupPolicyLength {
+	if len(policyItems) != backupPolicyLength {
 		return errors.New("error when parsing policy. You must specify it in a format: '--policy policyID,policyItemID,frequencyType,frequencyIntervalNumber,retentionUnit,retentionValue'")
 	}
 	return nil
@@ -266,7 +266,7 @@ func validateID(policyID, policyItemID string) error {
 }
 
 func validateFrequencyType(frequencyType string) error {
-	if frequencyType != Hourly && frequencyType != Daily && frequencyType != Weekly && frequencyType != Monthly {
+	if frequencyType != hourly && frequencyType != daily && frequencyType != weekly && frequencyType != monthly {
 		return errors.New("frequencyType was provided in an incorrect format. It must be equal to 'hourly', 'daily', 'weekly' or 'monthly'")
 	}
 	return nil
@@ -284,19 +284,19 @@ func validateFrequencyIntervalNumber(frequencyType, frequencyIntervalNumber stri
 	monthlyAllowedValues := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 40}
 
 	switch frequencyType {
-	case Hourly:
+	case hourly:
 		if !intInSlice(intervalNumber, hourlyAllowedValues) {
 			return errors.New("frequencyIntervalNumber was provided in an incorrect format for 'hourly' frequencyType")
 		}
-	case Daily:
+	case daily:
 		if !intInSlice(intervalNumber, dailyAllowedValues) {
 			return errors.New("frequencyIntervalNumber was provided in an incorrect format for 'daily' frequencyType")
 		}
-	case Weekly:
+	case weekly:
 		if !intInSlice(intervalNumber, weeklyAllowedValues) {
 			return errors.New("frequencyIntervalNumber was provided in an incorrect format for 'weekly' frequencyType")
 		}
-	case Monthly:
+	case monthly:
 		if !intInSlice(intervalNumber, monthlyAllowedValues) {
 			return errors.New("frequencyIntervalNumber was provided in an incorrect format for 'monthly' frequencyType")
 		}

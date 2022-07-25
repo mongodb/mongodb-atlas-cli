@@ -18,10 +18,10 @@ import (
 	"errors"
 	"fmt"
 	"math"
-	"strings"
 	"time"
 
 	"github.com/briandowns/spinner"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type WatchOpts struct {
@@ -60,9 +60,6 @@ func (opts *WatchOpts) Watch(f Watcher) error {
 		}
 		if !opts.IsTerminal() {
 			if _, err = fmt.Fprint(opts.ConfigWriter(), "."); err != nil {
-				if opts.exponentialBackoff(err) {
-					continue
-				}
 				return err
 			}
 		}
@@ -71,13 +68,22 @@ func (opts *WatchOpts) Watch(f Watcher) error {
 }
 
 func (opts *WatchOpts) exponentialBackoff(err error) bool {
-	// 404 and 401 are the most common errors thrown when upgrading cluster, as it is temporarily deleted
-	if opts.n <= 8 && (strings.Contains(err.Error(), "404")) || (strings.Contains(err.Error(), "401")) {
+	if opts.n <= 8 && checkForError(err, "CLUSTER_NOT_FOUND") {
 		backoff := math.Pow(base, float64(opts.n))
 		opts.n *= 2
 		sleepTime := time.Duration(backoff) * time.Second
 		time.Sleep(sleepTime)
 		return true
+	}
+	return false
+}
+
+func checkForError(err error, code string) bool {
+	var atlasErr *atlas.ErrorResponse
+	if errors.As(err, &atlasErr) {
+		if atlasErr.ErrorCode == code {
+			return true
+		}
 	}
 	return false
 }

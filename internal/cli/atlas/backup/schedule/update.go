@@ -223,7 +223,7 @@ func (opts *UpdateOpts) validateBackupPolicy(cmd *cobra.Command) func() error {
 
 func validatePolicyLength(policyItems []string) error {
 	if len(policyItems) != backupPolicyLength {
-		return errors.New("error when parsing policy. You must specify it in a format: '--policy policyID,policyItemID,frequencyType,frequencyIntervalNumber,retentionUnit,retentionValue'")
+		return errors.New("error when parsing policy. You must specify it in the following format: '--policy policyID,policyItemID,frequencyType,frequencyIntervalNumber,retentionUnit,retentionValue'")
 	}
 	return nil
 }
@@ -349,7 +349,7 @@ func UpdateBuilder() *cobra.Command {
 		Use:     "update",
 		Aliases: []string{"updates"},
 		Short:   "Update a snapshot backup policies for a cluster.",
-		Example: fmt.Sprintf(`  The following updates a snapshot backup policies for a cluster Cluster0:
+		Example: fmt.Sprintf(`  Update a snapshot backup policy for a cluster named Cluster0:
   $ %s backup schedule update --clusterName Cluster0 --updateSnapshots --exportBucketId 62c569f85b7a381c093cc539 --exportFrequencyType monthly --policy 62da8faac84a2721e448d767,62da8faac84a2721e448d768,hourly,6,days,7`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

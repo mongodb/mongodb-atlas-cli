@@ -17,6 +17,8 @@ package cli
 import (
 	"errors"
 	"fmt"
+	"math"
+	"strings"
 	"time"
 
 	"github.com/briandowns/spinner"
@@ -25,11 +27,13 @@ import (
 type WatchOpts struct {
 	OutputOpts
 	s *spinner.Spinner
+	n int
 }
 
 const (
 	defaultWait = 4 * time.Second
 	speed       = 100 * time.Millisecond
+	base        = 2
 )
 
 type Watcher func() (bool, error)
@@ -40,19 +44,42 @@ func (opts *WatchOpts) Watch(f Watcher) error {
 		return errors.New("no watcher provided")
 	}
 	opts.start()
+	opts.n = 2
 	for {
 		done, err := f()
-		if err != nil || done {
+		if err != nil {
+			if opts.exponentialBackoff(err) {
+				continue
+			}
+			opts.stop()
+			return err
+		}
+		if done {
 			opts.stop()
 			return err
 		}
 		if !opts.IsTerminal() {
 			if _, err = fmt.Fprint(opts.ConfigWriter(), "."); err != nil {
+				if opts.exponentialBackoff(err) {
+					continue
+				}
 				return err
 			}
 		}
 		time.Sleep(defaultWait)
 	}
+}
+
+func (opts *WatchOpts) exponentialBackoff(err error) bool {
+	// 404 and 401 are the most common errors thrown when upgrading cluster, as it is temporarily deleted
+	if opts.n <= 8 && (strings.Contains(err.Error(), "404")) || (strings.Contains(err.Error(), "401")) {
+		backoff := math.Pow(base, float64(opts.n))
+		opts.n *= 2
+		sleepTime := time.Duration(backoff) * time.Second
+		time.Sleep(sleepTime)
+		return true
+	}
+	return false
 }
 
 func (opts *WatchOpts) start() {

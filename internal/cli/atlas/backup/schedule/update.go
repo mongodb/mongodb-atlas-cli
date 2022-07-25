@@ -342,6 +342,7 @@ func checkForExport(out *atlas.CloudProviderSnapshotBackupPolicy) {
 	}
 }
 
+// atlas backup(s) schedule update --clusterName clusterName [--projectId projectId] [--exportBucketId exportBucketID].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
@@ -349,7 +350,7 @@ func UpdateBuilder() *cobra.Command {
 		Aliases: []string{"updates"},
 		Short:   "Update a snapshot backup policies for a cluster.",
 		Example: fmt.Sprintf(`  The following updates a snapshot backup policies for a cluster Cluster0:
-  $ %s backup schedule update --clusterName Cluster0 --updateSnapshots --exportBucketId 62c569f85b7a381c093cc539 --exportFrequencyType monthly`, cli.ExampleAtlasEntryPoint()),
+  $ %s backup schedule update --clusterName Cluster0 --updateSnapshots --exportBucketId 62c569f85b7a381c093cc539 --exportFrequencyType monthly --policy 62da8faac84a2721e448d767,62da8faac84a2721e448d768,hourly,6,days,7`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

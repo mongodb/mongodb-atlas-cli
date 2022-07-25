@@ -348,7 +348,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "update",
 		Aliases: []string{"updates"},
-		Short:   "Update a snapshot backup policies for a cluster.",
+		Short:   "Update snapshot backup policies for a cluster.",
 		Example: fmt.Sprintf(`  Update a snapshot backup policy for a cluster named Cluster0:
   $ %s backup schedule update --clusterName Cluster0 --updateSnapshots --exportBucketId 62c569f85b7a381c093cc539 --exportFrequencyType monthly --policy 62da8faac84a2721e448d767,62da8faac84a2721e448d768,hourly,6,days,7`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -12,7 +12,7 @@ atlas backups schedule update
    :depth: 1
    :class: singlecol
 
-Update a snapshot backup policies for a cluster.
+Update snapshot backup policies for a cluster.
 
 Syntax
 ------

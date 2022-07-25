@@ -51,7 +51,7 @@ Related Commands
 
 * :ref:`atlas-backups-schedule-delete` - Delete all backup schedules of a cluster.
 * :ref:`atlas-backups-schedule-describe` - Describe a cloud backup schedule for the cluster you specify.
-* :ref:`atlas-backups-schedule-update` - Update a snapshot backup policies for a cluster.
+* :ref:`atlas-backups-schedule-update` - Update snapshot backup policies for a cluster.
 
 
 .. toctree::

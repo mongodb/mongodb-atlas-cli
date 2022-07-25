@@ -353,4 +353,5 @@ dbName and collection are only required for built-in roles.`
 	NoUpdateSnapshots                         = "Flag that disables applying the retention changes in the updated backup policy to snapshots that Atlas took previously."
 	UseOrgAndGroupNamesInExportPrefix         = "Flag that enables usage of organization and project names instead of organization and project UUIDs in the path for the metadata files that Atlas uploads to your S3 bucket after it finishes exporting the snapshots."
 	NoUseOrgAndGroupNamesInExportPrefix       = "Flag that disables usage of organization and project names instead of organization and project UUIDs in the path for the metadata files that Atlas uploads to your S3 bucket after it finishes exporting the snapshots."
+	BackupPolicy                              = "Array containing a document for each backup policy item in the desired updated backup policy. You must specify it in a format: '--policy policyID,policyItemID,frequencyType,frequencyIntervalNumber,retentionUnit,retentionValue'."
 )

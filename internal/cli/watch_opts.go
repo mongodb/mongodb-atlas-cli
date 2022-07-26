@@ -24,8 +24,8 @@ import (
 
 type WatchOpts struct {
 	OutputOpts
-	s *spinner.Spinner
-	n int
+	s                         *spinner.Spinner
+	exponentialBackoffTrigger func(err error) bool
 }
 
 const (
@@ -35,19 +35,8 @@ const (
 
 type Watcher func() (bool, error)
 
-type UpdateError struct {
-	ErrorCode string
-}
-
-func (e *UpdateError) Error() string {
-	return fmt.Sprintf("Error with code %v encountered while performing an update.", e.ErrorCode)
-}
-
-func (e *UpdateError) Is(target error) bool {
-	var v *UpdateError
-
-	return errors.As(target, &v) &&
-		e.ErrorCode == v.ErrorCode
+func (opts *WatchOpts) SetExponentialBackoffTrigger(trigger func(err error) bool) {
+	opts.exponentialBackoffTrigger = trigger
 }
 
 // Watch allow to init the OutputOpts in a functional way.
@@ -56,17 +45,9 @@ func (opts *WatchOpts) Watch(f Watcher) error {
 		return errors.New("no watcher provided")
 	}
 	opts.start()
-	opts.n = 0
 	for {
-		done, err := f()
-		if err != nil {
-			if opts.exponentialBackoff(err) {
-				continue
-			}
-			opts.stop()
-			return err
-		}
-		if done {
+		done, err := opts.exponentialBackoff(f)
+		if err != nil || done {
 			opts.stop()
 			return err
 		}
@@ -79,15 +60,21 @@ func (opts *WatchOpts) Watch(f Watcher) error {
 	}
 }
 
-func (opts *WatchOpts) exponentialBackoff(err error) bool {
-	backoffTimes := []time.Duration{2 * time.Second, 4 * time.Second, 8 * time.Second}
-	var updateError *UpdateError
-	if opts.n < len(backoffTimes) && errors.As(err, &updateError) {
-		time.Sleep(backoffTimes[opts.n])
-		opts.n++
-		return true
+func (opts *WatchOpts) exponentialBackoff(f Watcher) (bool, error) {
+	if opts.exponentialBackoffTrigger == nil {
+		return f()
 	}
-	return false
+	backoffTimes := []time.Duration{2 * time.Second, 4 * time.Second, 8 * time.Second}
+	for _, backoffTime := range backoffTimes {
+		done, err := f()
+		if opts.exponentialBackoffTrigger(err) {
+			time.Sleep(backoffTime)
+			continue
+		}
+		return done, err
+	}
+	// Should only happen after trying three times (>14 seconds)
+	return f()
 }
 
 func (opts *WatchOpts) start() {

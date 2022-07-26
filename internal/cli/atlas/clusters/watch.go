@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -25,14 +26,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type WatchOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	name           string
-	previousStatus string
-	store          store.AtlasClusterDescriber
+	name  string
+	store store.AtlasClusterDescriber
 }
 
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
@@ -45,13 +46,17 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 
 func (opts *WatchOpts) watcher() (bool, error) {
 	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
-	if opts.previousStatus == "UPDATING" && err != nil {
-		return false, &cli.UpdateError{ErrorCode: "CLUSTER_NOT_FOUND_DURING_UPDATE"}
-	}
 	if err != nil {
 		return false, err
 	}
-	opts.previousStatus = result.StateName
+	if result.StateName == "UPDATING" {
+		trigger := func(err error) bool {
+			var atlasErr *atlas.ErrorResponse
+			errorCode := "CLUSTER_NOT_FOUND"
+			return errors.As(err, &atlasErr) && atlasErr.ErrorCode == errorCode
+		}
+		opts.SetExponentialBackoffTrigger(trigger)
+	}
 	return result.StateName == "IDLE", nil
 }
 

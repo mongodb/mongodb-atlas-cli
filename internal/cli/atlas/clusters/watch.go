@@ -46,7 +46,6 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 func (opts *WatchOpts) watcher() (bool, error) {
 	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
 	if opts.previousStatus == "UPDATING" && err != nil {
-		fmt.Println(err.Error())
 		return false, &cli.UpdateError{ErrorCode: "CLUSTER_NOT_FOUND_DURING_UPDATE"}
 	}
 	if err != nil {

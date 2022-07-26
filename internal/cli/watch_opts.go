@@ -17,7 +17,6 @@ package cli
 import (
 	"errors"
 	"fmt"
-	"math"
 	"time"
 
 	"github.com/briandowns/spinner"
@@ -33,7 +32,6 @@ type WatchOpts struct {
 const (
 	defaultWait = 4 * time.Second
 	speed       = 100 * time.Millisecond
-	base        = 2
 )
 
 type Watcher func() (bool, error)
@@ -44,7 +42,7 @@ func (opts *WatchOpts) Watch(f Watcher) error {
 		return errors.New("no watcher provided")
 	}
 	opts.start()
-	opts.n = 2
+	opts.n = 0
 	for {
 		done, err := f()
 		if err != nil {
@@ -68,22 +66,13 @@ func (opts *WatchOpts) Watch(f Watcher) error {
 }
 
 func (opts *WatchOpts) exponentialBackoff(err error) bool {
-	if opts.n <= 8 && checkForError(err, "CLUSTER_NOT_FOUND") {
-		backoff := math.Pow(base, float64(opts.n))
-		opts.n *= 2
-		sleepTime := time.Duration(backoff) * time.Second
-		time.Sleep(sleepTime)
-		return true
-	}
-	return false
-}
-
-func checkForError(err error, code string) bool {
+	backoffTimes := []time.Duration{1 * time.Second, 2 * time.Second, 4 * time.Second}
 	var atlasErr *atlas.ErrorResponse
-	if errors.As(err, &atlasErr) {
-		if atlasErr.ErrorCode == code {
-			return true
-		}
+	errorCode := "CLUSTER_NOT_FOUND"
+	if opts.n < 3 && errors.As(err, &atlasErr) && atlasErr.ErrorCode == errorCode {
+		time.Sleep(backoffTimes[opts.n])
+		opts.n++
+		return true
 	}
 	return false
 }

@@ -69,7 +69,7 @@ func (opts *WatchOpts) exponentialBackoff(err error) bool {
 	backoffTimes := []time.Duration{1 * time.Second, 2 * time.Second, 4 * time.Second}
 	var atlasErr *atlas.ErrorResponse
 	errorCode := "CLUSTER_NOT_FOUND"
-	if opts.n < 3 && errors.As(err, &atlasErr) && atlasErr.ErrorCode == errorCode {
+	if opts.n < len(backoffTimes) && errors.As(err, &atlasErr) && atlasErr.ErrorCode == errorCode {
 		time.Sleep(backoffTimes[opts.n])
 		opts.n++
 		return true

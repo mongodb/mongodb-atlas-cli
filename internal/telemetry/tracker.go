@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/surveyprompts"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
@@ -234,6 +235,8 @@ func (t *tracker) trackSurvey(p survey.Prompt, response interface{}, e error) er
 	case *survey.Password:
 		options = append(options, withPrompt(v.Message, "password"), withEmpty(castString(response) == ""))
 	case *survey.Select:
+		options = append(options, withPrompt(v.Message, "select"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""), withChoice(castString(response)))
+	case *surveyprompts.SelectNetwork:
 		options = append(options, withPrompt(v.Message, "select"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""), withChoice(castString(response)))
 	default:
 		return errors.New("unknown survey prompt")

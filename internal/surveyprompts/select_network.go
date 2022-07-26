@@ -2,45 +2,50 @@ package surveyprompts
 
 import (
 	"errors"
+	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/AlecAivazis/survey/v2/core"
 	"github.com/AlecAivazis/survey/v2/terminal"
+	"github.com/briandowns/spinner"
 )
 
 // code adapted from https://github.com/AlecAivazis/survey/blob/v2.3.5/select.go
 
 /*
-Select is a prompt that presents a list of various options to the user
+SelectNetwork is a prompt that presents a list of various options to the user
 for them to select using the arrow keys and enter. Response type is a string.
 
 	color := ""
-	prompt := &survey.Select{
+	prompt := &surveyprompts.SelectNetwork{
 		Message: "Choose a color:",
 		Options: []string{"red", "blue", "green"},
 	}
 	survey.AskOne(prompt, &color)
 */
-type Select struct {
+type SelectNetwork struct {
 	survey.Renderer
-	Message       string
-	Options       []string
-	Default       interface{}
-	Help          string
-	PageSize      int
-	VimMode       bool
-	FilterMessage string
-	Filter        func(filter string, value string, index int) bool
-	Description   func(value string, index int) string
-	filter        string
-	selectedIndex int
-	useDefault    bool
-	showingHelp   bool
+	Message        string
+	Options        func(filter string, page int) ([]string, int, error)
+	Default        interface{}
+	Help           string
+	PageSize       int
+	VimMode        bool
+	FilterMessage  string
+	Filter         func(filter string, value string, index int) bool
+	Description    func(value string, index int) string
+	filter         string
+	selectedIndex  int
+	useDefault     bool
+	showingHelp    bool
+	currentOptions []string
+	loadedPages    int
+	totalResults   int
 }
 
-// SelectTemplateData is the data available to the templates when processing
-type SelectTemplateData struct {
-	Select
+// SelectNetworkTemplateData is the data available to the templates when processing
+type SelectNetworkTemplateData struct {
+	SelectNetwork
 	PageEntries   []core.OptionAnswer
 	SelectedIndex int
 	Answer        string
@@ -55,14 +60,14 @@ type SelectTemplateData struct {
 }
 
 // IterateOption sets CurrentOpt and CurrentIndex appropriately so a select option can be rendered individually
-func (s SelectTemplateData) IterateOption(ix int, opt core.OptionAnswer) interface{} {
+func (s SelectNetworkTemplateData) IterateOption(ix int, opt core.OptionAnswer) interface{} {
 	copy := s
 	copy.CurrentIndex = ix
 	copy.CurrentOpt = opt
 	return copy
 }
 
-func (s SelectTemplateData) GetDescription(opt core.OptionAnswer) string {
+func (s SelectNetworkTemplateData) GetDescription(opt core.OptionAnswer) string {
 	if s.Description == nil {
 		return ""
 	}
@@ -88,32 +93,27 @@ var SelectQuestionTemplate = `
 {{- end}}`
 
 // OnChange is called on every keypress.
-func (s *Select) OnChange(key rune, config *survey.PromptConfig) bool {
-	options := s.filterOptions(config)
+func (s *SelectNetwork) OnChange(key rune, config *survey.PromptConfig) (bool, error) {
+	options := core.OptionAnswerList(s.currentOptions)
 	oldFilter := s.filter
 
 	// if the user pressed the enter key and the index is a valid option
 	if key == terminal.KeyEnter || key == '\n' {
 		// if the selected index is a valid option
 		if len(options) > 0 && s.selectedIndex < len(options) {
-
 			// we're done (stop prompting the user)
-			return true
+			return true, nil
 		}
 
 		// we're not done (keep prompting)
-		return false
+		return false, nil
 
 		// if the user pressed the up arrow or 'k' to emulate vim
 	} else if (key == terminal.KeyArrowUp || (s.VimMode && key == 'k')) && len(options) > 0 {
 		s.useDefault = false
 
 		// if we are at the top of the list
-		if s.selectedIndex == 0 {
-			// start from the button
-			s.selectedIndex = len(options) - 1
-		} else {
-			// otherwise we are not at the top of the list so decrement the selected index
+		if s.selectedIndex > 0 {
 			s.selectedIndex--
 		}
 
@@ -121,12 +121,16 @@ func (s *Select) OnChange(key rune, config *survey.PromptConfig) bool {
 	} else if (key == terminal.KeyTab || key == terminal.KeyArrowDown || (s.VimMode && key == 'j')) && len(options) > 0 {
 		s.useDefault = false
 		// if we are at the bottom of the list
-		if s.selectedIndex == len(options)-1 {
-			// start from the top
-			s.selectedIndex = 0
-		} else {
-			// increment the selected index
-			s.selectedIndex++
+		s.selectedIndex++
+		if s.selectedIndex >= len(options) {
+			s.selectedIndex = len(options) - 1
+			if s.shouldLoadMore() {
+				if err := s.loadNextPage(); err != nil {
+					return false, err
+				}
+				options = core.OptionAnswerList(s.currentOptions)
+				s.selectedIndex++
+			}
 		}
 		// only show the help message if we have one
 	} else if string(key) == config.HelpInput && s.Help != "" {
@@ -158,12 +162,15 @@ func (s *Select) OnChange(key rune, config *survey.PromptConfig) bool {
 	if s.filter != "" {
 		s.FilterMessage = " " + s.filter
 	}
+
 	if oldFilter != s.filter {
-		// filter changed
-		options = s.filterOptions(config)
-		if len(options) > 0 && len(options) <= s.selectedIndex {
-			s.selectedIndex = len(options) - 1
+		s.loadedPages = 0 // reset
+		s.currentOptions = []string{}
+		if err := s.loadNextPage(); err != nil {
+			return false, err
 		}
+		options = core.OptionAnswerList(s.currentOptions)
+		s.selectedIndex = 0
 	}
 
 	// figure out the options and index to render
@@ -179,8 +186,8 @@ func (s *Select) OnChange(key rune, config *survey.PromptConfig) bool {
 	// and we have modified the filter then we should move the page back!
 	opts, idx := paginate(pageSize, options, s.selectedIndex)
 
-	tmplData := SelectTemplateData{
-		Select:        *s,
+	tmplData := SelectNetworkTemplateData{
+		SelectNetwork: *s,
 		SelectedIndex: idx,
 		ShowHelp:      s.showingHelp,
 		Description:   s.Description,
@@ -192,16 +199,16 @@ func (s *Select) OnChange(key rune, config *survey.PromptConfig) bool {
 	_ = s.RenderWithCursorOffset(SelectQuestionTemplate, tmplData, opts, idx)
 
 	// keep prompting
-	return false
+	return false, nil
 }
 
-func (s *Select) filterOptions(config *PromptConfig) []core.OptionAnswer {
+func (s *SelectNetwork) filterOptions(config *survey.PromptConfig) []core.OptionAnswer {
 	// the filtered list
 	answers := []core.OptionAnswer{}
 
 	// if there is no filter applied
 	if s.filter == "" {
-		return core.OptionAnswerList(s.Options)
+		return core.OptionAnswerList(s.currentOptions)
 	}
 
 	// the filter to apply
@@ -211,7 +218,7 @@ func (s *Select) filterOptions(config *PromptConfig) []core.OptionAnswer {
 	}
 
 	//
-	for i, opt := range s.Options {
+	for i, opt := range s.currentOptions {
 		// i the filter says to include the option
 		if filter(s.filter, opt, i) {
 			answers = append(answers, core.OptionAnswer{
@@ -225,30 +232,40 @@ func (s *Select) filterOptions(config *PromptConfig) []core.OptionAnswer {
 	return answers
 }
 
-func (s *Select) Prompt(config *PromptConfig) (interface{}, error) {
-	// if there are no options to render
-	if len(s.Options) == 0 {
-		// we failed
-		return "", errors.New("please provide options to select from")
+func (s *SelectNetwork) findSelectedIndex() (int, error) {
+	if s.Default == "" {
+		return 0, nil
 	}
-
-	// start off with the first option selected
-	sel := 0
-	// if there is a default
-	if s.Default != "" {
-		// find the choice
-		for i, opt := range s.Options {
-			// if the option corresponds to the default
+	for {
+		if !s.shouldLoadMore() {
+			return 0, nil
+		}
+		if err := s.loadNextPage(); err != nil {
+			return -1, err
+		}
+		for i, opt := range s.currentOptions {
 			if opt == s.Default {
-				// we found our initial value
-				sel = i
-				// stop looking
-				break
+				return i, nil
 			}
 		}
 	}
+}
+
+func (s *SelectNetwork) Prompt(config *survey.PromptConfig) (interface{}, error) {
+	// start off with the first option selected
+	s.totalResults = -1
+	sel, err := s.findSelectedIndex()
+	if err != nil {
+		return "", err
+	}
 	// save the selected index
 	s.selectedIndex = sel
+
+	// if there are no options to render
+	if len(s.currentOptions) == 0 {
+		// we failed
+		return "", errors.New("please provide options to select from")
+	}
 
 	// figure out the page size
 	pageSize := s.PageSize
@@ -259,7 +276,7 @@ func (s *Select) Prompt(config *PromptConfig) (interface{}, error) {
 	}
 
 	// figure out the options and index to render
-	opts, idx := paginate(pageSize, core.OptionAnswerList(s.Options), sel)
+	opts, idx := paginate(pageSize, core.OptionAnswerList(s.currentOptions), sel)
 
 	cursor := s.NewCursor()
 	cursor.Save()          // for proper cursor placement during selection
@@ -267,8 +284,8 @@ func (s *Select) Prompt(config *PromptConfig) (interface{}, error) {
 	defer cursor.Show()    // show the cursor when we're done
 	defer cursor.Restore() // clear any accessibility offsetting on exit
 
-	tmplData := SelectTemplateData{
-		Select:        *s,
+	tmplData := SelectNetworkTemplateData{
+		SelectNetwork: *s,
 		SelectedIndex: idx,
 		Description:   s.Description,
 		ShowHelp:      s.showingHelp,
@@ -277,7 +294,7 @@ func (s *Select) Prompt(config *PromptConfig) (interface{}, error) {
 	}
 
 	// ask the question
-	err := s.RenderWithCursorOffset(SelectQuestionTemplate, tmplData, opts, idx)
+	err = s.RenderWithCursorOffset(SelectQuestionTemplate, tmplData, opts, idx)
 	if err != nil {
 		return "", err
 	}
@@ -303,7 +320,11 @@ func (s *Select) Prompt(config *PromptConfig) (interface{}, error) {
 		if r == terminal.KeyEndTransmission {
 			break
 		}
-		if s.OnChange(r, config) {
+		done, err := s.OnChange(r, config)
+		if err != nil {
+			return "", err
+		}
+		if done {
 			break
 		}
 	}
@@ -323,7 +344,7 @@ func (s *Select) Prompt(config *PromptConfig) (interface{}, error) {
 				val = defaultString
 				// the default value could also be an interpret which is interpretted as the index
 			} else if defaultIndex, ok := s.Default.(int); ok {
-				val = s.Options[defaultIndex]
+				val = s.currentOptions[defaultIndex]
 			} else {
 				return val, errors.New("default value of select must be an int or string")
 			}
@@ -339,7 +360,7 @@ func (s *Select) Prompt(config *PromptConfig) (interface{}, error) {
 
 	// now that we have the value lets go hunt down the right index to return
 	idx = -1
-	for i, optionValue := range s.Options {
+	for i, optionValue := range s.currentOptions {
 		if optionValue == val {
 			idx = i
 		}
@@ -348,20 +369,42 @@ func (s *Select) Prompt(config *PromptConfig) (interface{}, error) {
 	return core.OptionAnswer{Value: val, Index: idx}, err
 }
 
-func (s *Select) Cleanup(config *PromptConfig, val interface{}) error {
+func (s *SelectNetwork) Cleanup(config *survey.PromptConfig, val interface{}) error {
 	cursor := s.NewCursor()
 	cursor.Restore()
 	return s.Render(
 		SelectQuestionTemplate,
-		SelectTemplateData{
-			Select:      *s,
-			Answer:      val.(core.OptionAnswer).Value,
-			ShowAnswer:  true,
-			Description: s.Description,
-			Config:      config,
+		SelectNetworkTemplateData{
+			SelectNetwork: *s,
+			Answer:        val.(core.OptionAnswer).Value,
+			ShowAnswer:    true,
+			Description:   s.Description,
+			Config:        config,
 		},
 	)
 }
+
+func (s *SelectNetwork) shouldLoadMore() bool {
+	return s.totalResults == -1 || len(s.currentOptions) < s.totalResults
+}
+
+func (s *SelectNetwork) loadNextPage() error {
+	spinner := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
+	spinner.Start()
+
+	opt, results, err := s.Options(s.filter, s.loadedPages)
+	spinner.Stop()
+	if err != nil {
+		return err
+	}
+
+	s.currentOptions = append(s.currentOptions, opt...)
+	s.totalResults = results
+	s.loadedPages++
+	return nil
+}
+
+// code adapted from https://github.com/AlecAivazis/survey/blob/v2.3.5/survey.go#L371
 
 func paginate(pageSize int, choices []core.OptionAnswer, sel int) ([]core.OptionAnswer, int) {
 	var start, end, cursor int

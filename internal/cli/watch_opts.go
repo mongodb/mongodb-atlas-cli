@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/briandowns/spinner"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type WatchOpts struct {
@@ -35,6 +34,21 @@ const (
 )
 
 type Watcher func() (bool, error)
+
+type UpdateError struct {
+	ErrorCode string
+}
+
+func (e *UpdateError) Error() string {
+	return fmt.Sprintf("Error with code %v encountered while performing an update.", e.ErrorCode)
+}
+
+func (e *UpdateError) Is(target error) bool {
+	var v *UpdateError
+
+	return errors.As(target, &v) &&
+		e.ErrorCode == v.ErrorCode
+}
 
 // Watch allow to init the OutputOpts in a functional way.
 func (opts *WatchOpts) Watch(f Watcher) error {
@@ -66,10 +80,9 @@ func (opts *WatchOpts) Watch(f Watcher) error {
 }
 
 func (opts *WatchOpts) exponentialBackoff(err error) bool {
-	backoffTimes := []time.Duration{1 * time.Second, 2 * time.Second, 4 * time.Second}
-	var atlasErr *atlas.ErrorResponse
-	errorCode := "CLUSTER_NOT_FOUND"
-	if opts.n < len(backoffTimes) && errors.As(err, &atlasErr) && atlasErr.ErrorCode == errorCode {
+	backoffTimes := []time.Duration{2 * time.Second, 4 * time.Second, 8 * time.Second}
+	var updateError *UpdateError
+	if opts.n < len(backoffTimes) && errors.As(err, &updateError) {
 		time.Sleep(backoffTimes[opts.n])
 		opts.n++
 		return true

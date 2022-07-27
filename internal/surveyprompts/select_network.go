@@ -41,6 +41,7 @@ type SelectNetwork struct {
 	currentOptions []string
 	loadedPages    int
 	totalResults   int
+	changingFilter bool
 }
 
 // SelectNetworkTemplateData is the data available to the templates when processing
@@ -99,15 +100,24 @@ func (s *SelectNetwork) OnChange(key rune, config *survey.PromptConfig) (bool, e
 
 	// if the user pressed the enter key and the index is a valid option
 	if key == terminal.KeyEnter || key == '\n' {
-		// if the selected index is a valid option
-		if len(options) > 0 && s.selectedIndex < len(options) {
-			// we're done (stop prompting the user)
-			return true, nil
+		if s.changingFilter { // act on applying the filter
+			s.loadedPages = 0 // reset
+			s.currentOptions = []string{}
+			if err := s.loadNextPage(); err != nil {
+				return false, err
+			}
+			options = core.OptionAnswerList(s.currentOptions)
+			s.selectedIndex = 0
+		} else { // act on selecting an option
+			// if the selected index is a valid option
+			if len(options) > 0 && s.selectedIndex < len(options) {
+				// we're done (stop prompting the user)
+				return true, nil
+			}
+
+			// we're not done (keep prompting)
+			return false, nil
 		}
-
-		// we're not done (keep prompting)
-		return false, nil
-
 		// if the user pressed the up arrow or 'k' to emulate vim
 	} else if (key == terminal.KeyArrowUp || (s.VimMode && key == 'k')) && len(options) > 0 {
 		s.useDefault = false
@@ -163,15 +173,7 @@ func (s *SelectNetwork) OnChange(key rune, config *survey.PromptConfig) (bool, e
 		s.FilterMessage = " " + s.filter
 	}
 
-	if oldFilter != s.filter {
-		s.loadedPages = 0 // reset
-		s.currentOptions = []string{}
-		if err := s.loadNextPage(); err != nil {
-			return false, err
-		}
-		options = core.OptionAnswerList(s.currentOptions)
-		s.selectedIndex = 0
-	}
+	s.changingFilter = oldFilter != s.filter
 
 	// figure out the options and index to render
 	// figure out the page size
@@ -233,11 +235,14 @@ func (s *SelectNetwork) filterOptions(config *survey.PromptConfig) []core.Option
 }
 
 func (s *SelectNetwork) findSelectedIndex() (int, error) {
-	if s.Default == "" {
+	if s.Default == "" || s.Default == nil {
+		if err := s.loadNextPage(); err != nil { // load the first page
+			return -1, err
+		}
 		return 0, nil
 	}
 	for {
-		if !s.shouldLoadMore() {
+		if !s.shouldLoadMore() { // keep loading pages until we have the option
 			return 0, nil
 		}
 		if err := s.loadNextPage(); err != nil {

@@ -24,8 +24,8 @@ import (
 
 type WatchOpts struct {
 	OutputOpts
-	s                         *spinner.Spinner
-	exponentialBackoffTrigger func(err error) bool
+	s              *spinner.Spinner
+	IsRetryableErr func(err error) bool
 }
 
 const (
@@ -34,10 +34,6 @@ const (
 )
 
 type Watcher func() (bool, error)
-
-func (opts *WatchOpts) SetExponentialBackoffTrigger(trigger func(err error) bool) {
-	opts.exponentialBackoffTrigger = trigger
-}
 
 // Watch allow to init the OutputOpts in a functional way.
 func (opts *WatchOpts) Watch(f Watcher) error {
@@ -60,18 +56,18 @@ func (opts *WatchOpts) Watch(f Watcher) error {
 	}
 }
 
+var backoffTimes = []time.Duration{2 * time.Second, 4 * time.Second, 8 * time.Second}
+
 func (opts *WatchOpts) exponentialBackoff(f Watcher) (bool, error) {
-	if opts.exponentialBackoffTrigger == nil {
+	if opts.IsRetryableErr == nil {
 		return f()
 	}
-	backoffTimes := []time.Duration{2 * time.Second, 4 * time.Second, 8 * time.Second}
+
 	for _, backoffTime := range backoffTimes {
-		done, err := f()
-		if opts.exponentialBackoffTrigger(err) {
-			time.Sleep(backoffTime)
-			continue
+		if done, err := f(); err == nil || !opts.IsRetryableErr(err) {
+			return done, err
 		}
-		return done, err
+		time.Sleep(backoffTime)
 	}
 	// Should only happen after trying three times (>14 seconds)
 	return f()

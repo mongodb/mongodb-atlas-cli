@@ -220,36 +220,6 @@ func (s *SelectNetwork) OnChange(key rune, config *survey.PromptConfig) (bool, e
 	return false, nil
 }
 
-func (s *SelectNetwork) filterOptions(config *survey.PromptConfig) []core.OptionAnswer {
-	// the filtered list
-	answers := []core.OptionAnswer{}
-
-	// if there is no filter applied
-	if s.filter == "" {
-		return core.OptionAnswerList(s.currentOptions)
-	}
-
-	// the filter to apply
-	filter := s.Filter
-	if filter == nil {
-		filter = config.Filter
-	}
-
-	//
-	for i, opt := range s.currentOptions {
-		// i the filter says to include the option
-		if filter(s.filter, opt, i) {
-			answers = append(answers, core.OptionAnswer{
-				Index: i,
-				Value: opt,
-			})
-		}
-	}
-
-	// return the list of answers
-	return answers
-}
-
 func (s *SelectNetwork) findSelectedIndex() (int, error) {
 	if s.Default == "" || s.Default == nil {
 		if err := s.loadNextPage(); err != nil { // load the first page
@@ -349,7 +319,7 @@ func (s *SelectNetwork) Prompt(config *survey.PromptConfig) (interface{}, error)
 			break
 		}
 	}
-	options := s.filterOptions(config)
+	options := core.OptionAnswerList(s.currentOptions)
 	s.filter = ""
 	s.FilterMessage = ""
 

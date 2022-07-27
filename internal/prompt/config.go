@@ -16,10 +16,12 @@ package prompt
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func NewOMURLInput() survey.Prompt {
@@ -107,10 +109,21 @@ func NewProfileReplaceConfirm(entry string) survey.Prompt {
 }
 
 // NewOrgSelect create a prompt to choice the organization.
-func NewOrgSelect(options []string) survey.Prompt {
+func NewOrgSelect(options []*atlas.Organization) survey.Prompt {
+	opt := make([]string, len(options))
+	for i, o := range options {
+		opt[i] = o.ID
+	}
+
 	return &survey.Select{
 		Message: "Choose a default organization:",
-		Options: options,
+		Options: opt,
+		Description: func(_ string, i int) string {
+			return options[i].Name
+		},
+		Filter: func(filter string, _ string, i int) bool {
+			return strings.HasPrefix(options[i].Name, filter)
+		},
 	}
 }
 

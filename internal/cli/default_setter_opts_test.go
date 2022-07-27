@@ -115,7 +115,7 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 	t.Run("empty", func(t *testing.T) {
 		expectedOrgs := &atlas.Organizations{}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
-		_, _, err := opts.orgs()
+		_, err := opts.orgs("")
 		require.Error(t, err)
 	})
 	t.Run("with one org", func(t *testing.T) {
@@ -129,9 +129,8 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 			TotalCount: 1,
 		}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
-		gotOMap, gotOSlice, err := opts.orgs()
+		gotOrgs, err := opts.orgs("")
 		require.NoError(t, err)
-		assert.Equal(t, map[string]string{"Org 1 (1)": "1"}, gotOMap)
-		assert.Equal(t, []string{"Org 1 (1)"}, gotOSlice)
+		assert.Equal(t, expectedOrgs.Results, gotOrgs)
 	})
 }

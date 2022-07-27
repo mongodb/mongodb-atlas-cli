@@ -118,28 +118,21 @@ func (opts *DefaultSetterOpts) projects() (pMap map[string]string, pSlice []stri
 // and a map such as `map[nameIDFormat]=ID`.
 // This is necessary as we can only prompt using `nameIDFormat`
 // and we want them to get the ID mapping to store on the config.
-func (opts *DefaultSetterOpts) orgs() (oMap map[string]string, oSlice []string, err error) {
+func (opts *DefaultSetterOpts) orgs(filter string) ([]*atlas.Organization, error) {
 	includeDeleted := false
-	pagination := &atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted}
+	pagination := &atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted, Name: filter}
 	pagination.ItemsPerPage = resultsLimit
 	orgs, err := opts.Store.Organizations(pagination)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	if orgs.TotalCount == 0 {
-		return nil, nil, errNoResults
+		return nil, errNoResults
 	}
 	if orgs.TotalCount > resultsLimit {
-		return nil, nil, errTooManyResults
+		return nil, errTooManyResults
 	}
-	oMap = make(map[string]string, len(orgs.Results))
-	oSlice = make([]string, len(orgs.Results))
-	for i, o := range orgs.Results {
-		d := fmt.Sprintf(nameIDFormat, o.Name, o.ID)
-		oMap[d] = o.ID
-		oSlice[i] = d
-	}
-	return oMap, oSlice, nil
+	return orgs.Results, nil
 }
 
 // ProjectExists checks if the project exists and the current user has access to it.
@@ -211,45 +204,72 @@ func (opts *DefaultSetterOpts) OrgExists(id string) bool {
 // If it fails or there are no organizations to show we fallback to ask for org by ID.
 // If only one organization, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskOrg() error {
-	oMap, oSlice, err := opts.orgs()
+	return opts.askOrgWithFilter("")
+}
+
+func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
+	orgs, err := opts.orgs(filter)
 	if err != nil {
+		applyFilter := false
 		var target *atlas.ErrorResponse
 		switch {
 		case errors.Is(err, errNoResults):
 			_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any organization")
 		case errors.Is(err, errTooManyResults):
-			_, _ = fmt.Fprintf(opts.OutWriter, "You have access to more than %d organizations\n", resultsLimit)
+			_, _ = fmt.Fprintf(opts.OutWriter, "Looks like there are more than %d organizations\nType to filter or leave empty to input ID manually\n", resultsLimit)
+			filterPrompt := &survey.Input{
+				Message: "Org Name filter:",
+				Help:    "Beginning of an Organization name to filter results.",
+			}
+			filterErr := telemetry.TrackAskOne(filterPrompt, &filter)
+			if filterErr != nil {
+				return filterErr
+			}
+			if filter != "" {
+				return opts.askOrgWithFilter(filter)
+			}
+			_, _ = fmt.Fprintln(opts.OutWriter, "No filter provided")
 		case errors.As(err, &target):
 			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", target.Detail)
 		default:
 			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", err)
 		}
-		p := &survey.Confirm{
-			Message: "Do you want to enter the Org ID manually?",
-		}
-		manually := true
-		if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
-			return err2
-		}
-		opts.AskedOrgsOrProjects = true
-		if manually {
-			p := prompt.NewOrgIDInput()
-			return telemetry.TrackAskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
-		}
-		_, _ = fmt.Fprint(opts.OutWriter, "Skipping default organization setting\n")
-		return nil
+
+		return opts.manualOrgID()
 	}
 
-	if len(oSlice) == 1 {
-		opts.OrgID = oMap[oSlice[0]]
+	return opts.selectOrg(orgs)
+}
+
+func (opts *DefaultSetterOpts) manualOrgID() error {
+	p := &survey.Confirm{
+		Message: "Do you want to enter the Org ID manually?",
+	}
+	manually := true
+	if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
+		return err2
+	}
+	opts.AskedOrgsOrProjects = true
+	if manually {
+		p := prompt.NewOrgIDInput()
+		return telemetry.TrackAskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
+	}
+	_, _ = fmt.Fprint(opts.OutWriter, "Skipping default organization setting\n")
+	return nil
+}
+
+func (opts *DefaultSetterOpts) selectOrg(orgs []*atlas.Organization) error {
+	if len(orgs) == 1 {
+		opts.OrgID = orgs[0].ID
 	} else {
 		opts.runOnMultipleOrgsOrProjects()
-		p := prompt.NewOrgSelect(oSlice)
+
+		p := prompt.NewOrgSelect(orgs)
 		var orgID string
 		if err := telemetry.TrackAskOne(p, &orgID); err != nil {
 			return err
 		}
-		opts.OrgID = oMap[orgID]
+		opts.OrgID = orgID
 		opts.AskedOrgsOrProjects = true
 	}
 

@@ -69,6 +69,8 @@ const (
 	suggestedIndexesEntity       = "suggestedIndexes"
 	slowoperationThresholdEntity = "slowOperationThreshold"
 	tierM30                      = "M30"
+	tierM10                      = "M10"
+	tierM2                       = "M2"
 	diskSizeGB40                 = "40"
 	diskSizeGB30                 = "30"
 	projectsEntity               = "projects"
@@ -80,6 +82,7 @@ const (
 	e2eClusterTier     = "M30"
 	e2eClusterProvider = "AWS" // e2eClusterProvider preferred provider for e2e testing.
 	e2eMDBVer          = "4.4"
+	e2eSharedMDBVer    = "5.0"
 )
 
 func deployClusterForProject(projectID string) (string, error) {
@@ -325,5 +328,16 @@ func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterN
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.Name)
 	a.Equal(version, cluster.MongoDBMajorVersion)
+	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
+}
+
+func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, version, tier string, diskSizeGB float64) {
+	t.Helper()
+	a := assert.New(t)
+	a.Equal(clusterName, cluster.Name)
+	a.Equal(version, cluster.MongoDBMajorVersion)
+	if cluster.ProviderSettings != nil {
+		a.Equal(tier, cluster.ProviderSettings.InstanceSizeName)
+	}
 	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
 }

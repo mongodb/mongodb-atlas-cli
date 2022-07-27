@@ -214,9 +214,23 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 		var target *atlas.ErrorResponse
 		switch {
 		case errors.Is(err, errNoResults):
-			_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any organization")
+			if filter == "" {
+				_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any organization")
+			} else {
+				_, _ = fmt.Fprintln(opts.OutWriter, "No organizations found matching the filter")
+				applyFilter = true
+			}
 		case errors.Is(err, errTooManyResults):
-			_, _ = fmt.Fprintf(opts.OutWriter, "Looks like there are more than %d organizations\nType to filter or leave empty to input ID manually\n", resultsLimit)
+			_, _ = fmt.Fprintf(opts.OutWriter, "Looks like there are more than %d organizations\n", resultsLimit)
+			applyFilter = true
+		case errors.As(err, &target):
+			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", target.Detail)
+		default:
+			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", err)
+		}
+
+		if applyFilter {
+			_, _ = fmt.Fprintln(opts.OutWriter, "Type to filter or leave empty to input ID manually")
 			filterPrompt := &survey.Input{
 				Message: "Org Name filter:",
 				Help:    "Beginning of an Organization name to filter results.",
@@ -229,10 +243,6 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 				return opts.askOrgWithFilter(filter)
 			}
 			_, _ = fmt.Fprintln(opts.OutWriter, "No filter provided")
-		case errors.As(err, &target):
-			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", target.Detail)
-		default:
-			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", err)
 		}
 
 		return opts.manualOrgID()

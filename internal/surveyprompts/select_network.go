@@ -1,3 +1,17 @@
+// Copyright 2022 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package surveyprompts
 
 import (
@@ -11,6 +25,8 @@ import (
 )
 
 // code adapted from https://github.com/AlecAivazis/survey/blob/v2.3.5/select.go
+
+const spinnerDelay = time.Millisecond * 100
 
 /*
 SelectNetwork is a prompt that presents a list of various options to the user
@@ -34,7 +50,7 @@ type SelectNetwork struct {
 	FilterMessage  string
 	Filter         func(filter string, value string, index int) bool
 	Description    func(value string, index int) string
-	filter         string
+	filter         string //nolint:revive // nolint to keep code as close as possible from original
 	selectedIndex  int
 	useDefault     bool
 	showingHelp    bool
@@ -44,7 +60,7 @@ type SelectNetwork struct {
 	changingFilter bool
 }
 
-// SelectNetworkTemplateData is the data available to the templates when processing
+// SelectNetworkTemplateData is the data available to the templates when processing.
 type SelectNetworkTemplateData struct {
 	SelectNetwork
 	PageEntries   []core.OptionAnswer
@@ -60,15 +76,15 @@ type SelectNetworkTemplateData struct {
 	CurrentIndex int
 }
 
-// IterateOption sets CurrentOpt and CurrentIndex appropriately so a select option can be rendered individually
-func (s SelectNetworkTemplateData) IterateOption(ix int, opt core.OptionAnswer) interface{} {
-	copy := s
+// IterateOption sets CurrentOpt and CurrentIndex appropriately so a select option can be rendered individually.
+func (s SelectNetworkTemplateData) IterateOption(ix int, opt core.OptionAnswer) interface{} { //nolint:gocritic // survey expects a non pointer
+	copy := s //nolint // nolint to keep code as close as possible from original
 	copy.CurrentIndex = ix
 	copy.CurrentOpt = opt
 	return copy
 }
 
-func (s SelectNetworkTemplateData) GetDescription(opt core.OptionAnswer) string {
+func (s SelectNetworkTemplateData) GetDescription(opt core.OptionAnswer) string { //nolint:gocritic // survey expects a non pointer
 	if s.Description == nil {
 		return ""
 	}
@@ -94,21 +110,13 @@ var SelectQuestionTemplate = `
 {{- end}}`
 
 // OnChange is called on every keypress.
-func (s *SelectNetwork) OnChange(key rune, config *survey.PromptConfig) (bool, error) {
+func (s *SelectNetwork) OnChange(key rune, config *survey.PromptConfig) (bool, error) { //nolint:gocyclo // nolint to keep code as close as possible from original
 	options := core.OptionAnswerList(s.currentOptions)
 	oldFilter := s.filter
 
 	// if the user pressed the enter key and the index is a valid option
-	if key == terminal.KeyEnter || key == '\n' {
-		if s.changingFilter { // act on applying the filter
-			s.loadedPages = 0 // reset
-			s.currentOptions = []string{}
-			if err := s.loadNextPage(); err != nil {
-				return false, err
-			}
-			options = core.OptionAnswerList(s.currentOptions)
-			s.selectedIndex = 0
-		} else { // act on selecting an option
+	if key == terminal.KeyEnter || key == '\n' { //nolint:gocritic // nolint to keep code as close as possible from original
+		if !s.changingFilter {
 			// if the selected index is a valid option
 			if len(options) > 0 && s.selectedIndex < len(options) {
 				// we're done (stop prompting the user)
@@ -118,6 +126,14 @@ func (s *SelectNetwork) OnChange(key rune, config *survey.PromptConfig) (bool, e
 			// we're not done (keep prompting)
 			return false, nil
 		}
+
+		s.loadedPages = 0 // reset
+		s.currentOptions = []string{}
+		if err := s.loadNextPage(); err != nil {
+			return false, err
+		}
+		options = core.OptionAnswerList(s.currentOptions)
+		s.selectedIndex = 0
 		// if the user pressed the up arrow or 'k' to emulate vim
 	} else if (key == terminal.KeyArrowUp || (s.VimMode && key == 'k')) && len(options) > 0 {
 		s.useDefault = false
@@ -256,7 +272,7 @@ func (s *SelectNetwork) findSelectedIndex() (int, error) {
 	}
 }
 
-func (s *SelectNetwork) Prompt(config *survey.PromptConfig) (interface{}, error) {
+func (s *SelectNetwork) Prompt(config *survey.PromptConfig) (interface{}, error) { //nolint:gocyclo // nolint to keep code as close as possible from original
 	// start off with the first option selected
 	s.totalResults = -1
 	sel, err := s.findSelectedIndex()
@@ -284,10 +300,10 @@ func (s *SelectNetwork) Prompt(config *survey.PromptConfig) (interface{}, error)
 	opts, idx := paginate(pageSize, core.OptionAnswerList(s.currentOptions), sel)
 
 	cursor := s.NewCursor()
-	cursor.Save()          // for proper cursor placement during selection
-	cursor.Hide()          // hide the cursor
-	defer cursor.Show()    // show the cursor when we're done
-	defer cursor.Restore() // clear any accessibility offsetting on exit
+	cursor.Save()          //nolint:errcheck // for proper cursor placement during selection (nolint to keep code as close as possible from original)
+	cursor.Hide()          //nolint:errcheck // hide the cursor (nolint to keep code as close as possible from original)
+	defer cursor.Show()    //nolint:errcheck // show the cursor when we're done (nolint to keep code as close as possible from original)
+	defer cursor.Restore() //nolint:errcheck // clear any accessibility offsetting on exit (nolint to keep code as close as possible from original)
 
 	tmplData := SelectNetworkTemplateData{
 		SelectNetwork: *s,
@@ -315,7 +331,7 @@ func (s *SelectNetwork) Prompt(config *survey.PromptConfig) (interface{}, error)
 
 	// start waiting for input
 	for {
-		r, _, err := rr.ReadRune()
+		r, _, err := rr.ReadRune() //nolint:govet // nolint to keep code as close as possible from original
 		if err != nil {
 			return "", err
 		}
@@ -344,11 +360,11 @@ func (s *SelectNetwork) Prompt(config *survey.PromptConfig) (interface{}, error)
 		// if there is a default value
 		if s.Default != nil {
 			// if the default is a string
-			if defaultString, ok := s.Default.(string); ok {
+			if defaultString, ok := s.Default.(string); ok { //nolint:gocritic // nolint to keep code as close as possible from original
 				// use the default value
 				val = defaultString
 				// the default value could also be an interpret which is interpretted as the index
-			} else if defaultIndex, ok := s.Default.(int); ok {
+			} else if defaultIndex, ok := s.Default.(int); ok { //nolint:revive // nolint to keep code as close as possible from original
 				val = s.currentOptions[defaultIndex]
 			} else {
 				return val, errors.New("default value of select must be an int or string")
@@ -376,7 +392,7 @@ func (s *SelectNetwork) Prompt(config *survey.PromptConfig) (interface{}, error)
 
 func (s *SelectNetwork) Cleanup(config *survey.PromptConfig, val interface{}) error {
 	cursor := s.NewCursor()
-	cursor.Restore()
+	cursor.Restore() //nolint:errcheck // nolint to keep code as close as possible from original
 	return s.Render(
 		SelectQuestionTemplate,
 		SelectNetworkTemplateData{
@@ -394,11 +410,11 @@ func (s *SelectNetwork) shouldLoadMore() bool {
 }
 
 func (s *SelectNetwork) loadNextPage() error {
-	spinner := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
-	spinner.Start()
+	spin := spinner.New(spinner.CharSets[9], spinnerDelay)
+	spin.Start()
 
 	opt, results, err := s.Options(s.filter, s.loadedPages)
-	spinner.Stop()
+	spin.Stop()
 	if err != nil {
 		return err
 	}
@@ -411,10 +427,10 @@ func (s *SelectNetwork) loadNextPage() error {
 
 // code adapted from https://github.com/AlecAivazis/survey/blob/v2.3.5/survey.go#L371
 
-func paginate(pageSize int, choices []core.OptionAnswer, sel int) ([]core.OptionAnswer, int) {
+func paginate(pageSize int, choices []core.OptionAnswer, sel int) ([]core.OptionAnswer, int) { //nolint:gocritic // nolint to keep code as close as possible from original
 	var start, end, cursor int
 
-	if len(choices) < pageSize {
+	if len(choices) < pageSize { //nolint:gocritic // nolint to keep code as close as possible from original
 		// if we dont have enough options to fill a page
 		start = 0
 		end = len(choices)
@@ -431,10 +447,10 @@ func paginate(pageSize int, choices []core.OptionAnswer, sel int) ([]core.Option
 		cursor = sel - start
 	} else {
 		// somewhere in the middle
-		above := pageSize / 2
+		above := pageSize / 2 //nolint:gomnd // nolint to keep code as close as possible from original
 		below := pageSize - above
 
-		cursor = pageSize / 2
+		cursor = pageSize / 2 //nolint:gomnd // nolint to keep code as close as possible from original
 		start = sel - above
 		end = sel + below
 	}

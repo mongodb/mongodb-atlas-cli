@@ -112,10 +112,7 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 	return ids, names, nil
 }
 
-// Orgs fetches organizations and returns then as a slice of the format `nameIDFormat`,
-// and a map such as `map[nameIDFormat]=ID`.
-// This is necessary as we can only prompt using `nameIDFormat`
-// and we want them to get the ID mapping to store on the config.
+// Orgs fetches organizations, filtering by name.
 func (opts *DefaultSetterOpts) orgs(filter string) ([]*atlas.Organization, error) {
 	includeDeleted := false
 	pagination := &atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted, Name: filter}

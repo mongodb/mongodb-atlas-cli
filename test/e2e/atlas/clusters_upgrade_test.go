@@ -28,7 +28,7 @@ import (
 	exec "golang.org/x/sys/execabs"
 )
 
-func TestSharedClusterFlags(t *testing.T) {
+func TestSharedClusterUpgrade(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("clustersUpgrade")
 
@@ -48,7 +48,6 @@ func TestSharedClusterFlags(t *testing.T) {
 			"create",
 			clusterName,
 			"--region", region,
-			"--members=3",
 			"--tier", tierM2,
 			"--provider", e2eClusterProvider,
 			"--mdbVersion", e2eSharedMDBVer,

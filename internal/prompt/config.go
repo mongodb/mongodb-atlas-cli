@@ -122,15 +122,21 @@ func NewOrgSelect(options []*atlas.Organization) survey.Prompt {
 			return options[i].Name
 		},
 		Filter: func(filter string, _ string, i int) bool {
-			return strings.HasPrefix(options[i].Name, filter)
+			return strings.HasPrefix(options[i].Name, filter) || strings.HasPrefix(options[i].ID, filter)
 		},
 	}
 }
 
 // NewProjectSelect create a prompt to choice the project.
-func NewProjectSelect(options []string) survey.Prompt {
+func NewProjectSelect(ids, names []string) survey.Prompt {
 	return &survey.Select{
 		Message: "Choose a default project:",
-		Options: options,
+		Options: ids,
+		Description: func(_ string, i int) string {
+			return names[i]
+		},
+		Filter: func(filter string, _ string, i int) bool {
+			return strings.HasPrefix(names[i], filter) || strings.HasPrefix(ids[i], filter)
+		},
 	}
 }

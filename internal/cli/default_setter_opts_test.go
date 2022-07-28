@@ -97,10 +97,10 @@ func TestDefaultOpts_Projects(t *testing.T) {
 			TotalCount: 1,
 		}
 		mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(1)
-		gotPMap, gotPSlice, err := opts.projects()
+		gotIDs, gotNames, err := opts.projects()
 		require.NoError(t, err)
-		assert.Equal(t, map[string]string{"Project 1 (1)": "1"}, gotPMap)
-		assert.Equal(t, []string{"Project 1 (1)"}, gotPSlice)
+		assert.Equal(t, []string{"1"}, gotIDs)
+		assert.Equal(t, []string{"Project 1"}, gotNames)
 	})
 }
 

@@ -78,14 +78,12 @@ var (
 	errNoResults      = errors.New("no results")
 )
 
-// Projects fetches projects and returns then as a slice of the format `nameIDFormat`,
-// and a map such as `map[nameIDFormat]=ID`.
-// This is necessary as we can only prompt using `nameIDFormat`
-// and we want them to get the ID mapping to store in the config.
-func (opts *DefaultSetterOpts) projects() (pMap map[string]string, pSlice []string, err error) {
+// Projects fetches projects and returns then as two slices of string.
+// One for names and another for ids.
+func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 	var projects interface{}
 	if opts.OrgID == "" {
-		projects, err = opts.Store.Projects(nil)
+		projects, err = opts.Store.Projects(&atlas.ListOptions{ItemsPerPage: resultsLimit})
 	} else {
 		projects, err = opts.Store.GetOrgProjects(opts.OrgID, &atlas.ListOptions{ItemsPerPage: resultsLimit})
 	}
@@ -100,7 +98,7 @@ func (opts *DefaultSetterOpts) projects() (pMap map[string]string, pSlice []stri
 		if r.TotalCount > resultsLimit {
 			return nil, nil, errTooManyResults
 		}
-		pMap, pSlice = atlasProjects(r.Results)
+		ids, names = atlasProjects(r.Results)
 	case *opsmngr.Projects:
 		if r.TotalCount == 0 {
 			return nil, nil, errNoResults
@@ -108,10 +106,10 @@ func (opts *DefaultSetterOpts) projects() (pMap map[string]string, pSlice []stri
 		if r.TotalCount > resultsLimit {
 			return nil, nil, errTooManyResults
 		}
-		pMap, pSlice = omProjects(r.Results)
+		ids, names = omProjects(r.Results)
 	}
 
-	return pMap, pSlice, nil
+	return ids, names, nil
 }
 
 // Orgs fetches organizations and returns then as a slice of the format `nameIDFormat`,
@@ -147,7 +145,7 @@ func (opts *DefaultSetterOpts) ProjectExists(id string) bool {
 // If it fails or there are no projects to show we fallback to ask for project by ID.
 // If only one project, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskProject() error {
-	pMap, pSlice, err := opts.projects()
+	ids, names, err := opts.projects()
 	if err != nil {
 		var target *atlas.ErrorResponse
 		switch {
@@ -176,16 +174,16 @@ func (opts *DefaultSetterOpts) AskProject() error {
 		return nil
 	}
 
-	if len(pSlice) == 1 {
-		opts.ProjectID = pMap[pSlice[0]]
+	if len(ids) == 1 {
+		opts.ProjectID = ids[0]
 	} else {
 		opts.runOnMultipleOrgsOrProjects()
-		p := prompt.NewProjectSelect(pSlice)
+		p := prompt.NewProjectSelect(ids, names)
 		var projectID string
 		if err := telemetry.TrackAskOne(p, &projectID); err != nil {
 			return err
 		}
-		opts.ProjectID = pMap[projectID]
+		opts.ProjectID = projectID
 		opts.AskedOrgsOrProjects = true
 	}
 
@@ -304,30 +302,26 @@ func (opts *DefaultSetterOpts) SetUpOutput() {
 	}
 }
 
-const nameIDFormat = "%s (%s)"
-
-// atlasProjects transform []*atlas.Project to a map[string]string and []string.
-func atlasProjects(projects []*atlas.Project) (pMap map[string]string, pSlice []string) {
-	pMap = make(map[string]string, len(projects))
-	pSlice = make([]string, len(projects))
+// atlasProjects transform []*atlas.Project to a []string of ids and another for names.
+func atlasProjects(projects []*atlas.Project) (ids, names []string) {
+	names = make([]string, len(projects))
+	ids = make([]string, len(projects))
 	for i, p := range projects {
-		d := fmt.Sprintf(nameIDFormat, p.Name, p.ID)
-		pMap[d] = p.ID
-		pSlice[i] = d
+		ids[i] = p.ID
+		names[i] = p.Name
 	}
-	return pMap, pSlice
+	return ids, names
 }
 
-// omProjects transform []*opsmngr.Project to a map[string]string and []string.
-func omProjects(projects []*opsmngr.Project) (pMap map[string]string, pSlice []string) {
-	pMap = make(map[string]string, len(projects))
-	pSlice = make([]string, len(projects))
+// omProjects transform []*opsmngr.Project to a []string of ids and another for names.
+func omProjects(projects []*opsmngr.Project) (ids, names []string) {
+	names = make([]string, len(projects))
+	ids = make([]string, len(projects))
 	for i, p := range projects {
-		d := fmt.Sprintf(nameIDFormat, p.Name, p.ID)
-		pMap[d] = p.ID
-		pSlice[i] = d
+		ids[i] = p.ID
+		names[i] = p.Name
 	}
-	return pMap, pSlice
+	return ids, names
 }
 
 func (*DefaultSetterOpts) DefaultQuestions() []*survey.Question {

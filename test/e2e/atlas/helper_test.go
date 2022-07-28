@@ -75,6 +75,9 @@ const (
 	diskSizeGB30                 = "30"
 	projectsEntity               = "projects"
 	settingsEntity               = "settings"
+	backupsEntity                = "backups"
+	exportsEntity                = "exports"
+	bucketsEntity                = "buckets"
 )
 
 // Cluster settings.

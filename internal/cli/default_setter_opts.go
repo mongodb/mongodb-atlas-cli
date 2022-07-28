@@ -251,8 +251,8 @@ func (opts *DefaultSetterOpts) manualOrgID() error {
 		Message: "Do you want to enter the Org ID manually?",
 	}
 	manually := true
-	if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
-		return err2
+	if err := telemetry.TrackAskOne(p, &manually); err != nil {
+		return err
 	}
 	opts.AskedOrgsOrProjects = true
 	if manually {

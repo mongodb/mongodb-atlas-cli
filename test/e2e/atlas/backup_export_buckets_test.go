@@ -35,8 +35,9 @@ func TestExportBuckets(t *testing.T) {
 	const cloudProvider = "AWS"
 	iamRoleID := os.Getenv("E2E_CLOUD_ROLE_ID")
 	bucketName := os.Getenv("E2E_TEST_BUCKET")
-	var bucketID string
 	r.NotEmpty(iamRoleID)
+	r.NotEmpty(bucketName)
+	var bucketID string
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

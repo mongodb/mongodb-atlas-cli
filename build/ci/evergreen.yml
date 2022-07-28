@@ -349,8 +349,7 @@ tasks:
       - command: shell.exec
         type: test
         params:
-          env:
-            XDG_CONFIG_HOME: ${go_base_path}${workdir}
+          <<: *go_options
           script: |
             set -Eeou pipefail
             mkdir "$XDG_CONFIG_HOME/mongocli"
@@ -1270,6 +1269,44 @@ tasks:
           E2E_TAGS: atlas,backup
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
+  - name: atlas_cleanup_e2e
+    tags: [ "e2e","cleanup" ]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,cleanup
+  - name: atlas_gov_cleanup_e2e
+    tags: [ "e2e","cleanup" ]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_gov_org_id}
+          MCLI_PROJECT_ID: ${atlas_gov_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_gov_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
+          MCLI_SERVICE: cloudgov
+          E2E_TAGS: atlas,cleanup
 buildvariants:
   - name: code_health
     display_name: "Code Health"
@@ -1391,6 +1428,17 @@ buildvariants:
       go_base_path: ""
     tasks:
       - name: ".e2e .clusters .cloudmanager"
+  - name: e2e_cleanup
+    display_name: "E2E Cleanup Resources"
+    run_on:
+      - rhel80-small
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
+    tasks:
+      - name: ".e2e .cleanup"
+        cron: "0 2 * * *" # 2am daily
   - name: e2e_ops_manager_44
     display_name: "E2E Ops Manager 4.4 Tests"
     run_on:

@@ -74,6 +74,10 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	if g.projectID == "" {
 		g.t.Fatal("projectID not created")
 	}
+
+	g.t.Cleanup(func() {
+		deleteProjectWithRetry(g.t, g.projectID)
+	})
 }
 
 func deleteProjectWithRetry(t *testing.T, projectID string) {

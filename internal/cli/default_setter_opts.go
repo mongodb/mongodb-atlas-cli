@@ -235,11 +235,11 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 			if filter == "" {
 				_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any organization")
 			} else {
-				_, _ = fmt.Fprintln(opts.OutWriter, "No results match, please type the organization name to filter or leave it empty to skip.")
+				_, _ = fmt.Fprintln(opts.OutWriter, "No results match, please type the organization ID or the organization name to filter.")
 				applyFilter = true
 			}
 		case errors.Is(err, errTooManyResults):
-			_, _ = fmt.Fprintf(opts.OutWriter, "Since you have access to more than %d organizations, please type the organization name to filter or leave it empty to skip.\n", resultsLimit)
+			_, _ = fmt.Fprintf(opts.OutWriter, "Since you have access to more than %d organizations, please type the organization ID or the organization name to filter.\n", resultsLimit)
 			applyFilter = true
 		case errors.As(err, &target):
 			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", target.Detail)
@@ -249,14 +249,18 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 
 		if applyFilter {
 			filterPrompt := &survey.Input{
-				Message: "Organization name filter:",
-				Help:    "The filter matches input letters and words in order, please type from the beginning of the name.",
+				Message: "Organization filter:",
+				Help:    "Please type Organization ID or Organization Name to filter from the beginning of the name.",
 			}
 			filterErr := telemetry.TrackAskOne(filterPrompt, &filter)
 			if filterErr != nil {
 				return filterErr
 			}
 			if filter != "" {
+				if validate.ObjectID(filter) == nil {
+					opts.OrgID = filter
+					return nil
+				}
 				return opts.askOrgWithFilter(filter)
 			}
 		}
@@ -269,7 +273,7 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 
 func (opts *DefaultSetterOpts) manualOrgID() error {
 	p := &survey.Confirm{
-		Message: "Do you want to enter the Org ID manually?",
+		Message: "Do you want to enter the Organization ID manually?",
 	}
 	manually := true
 	if err := telemetry.TrackAskOne(p, &manually); err != nil {
@@ -287,17 +291,16 @@ func (opts *DefaultSetterOpts) manualOrgID() error {
 func (opts *DefaultSetterOpts) selectOrg(orgs []*atlas.Organization) error {
 	if len(orgs) == 1 {
 		opts.OrgID = orgs[0].ID
-	} else {
-		opts.runOnMultipleOrgsOrProjects()
-
-		p := prompt.NewOrgSelect(orgs)
-		var orgID string
-		if err := telemetry.TrackAskOne(p, &orgID); err != nil {
-			return err
-		}
-		opts.OrgID = orgID
-		opts.AskedOrgsOrProjects = true
+		return nil
 	}
+
+	opts.runOnMultipleOrgsOrProjects()
+
+	p := prompt.NewOrgSelect(orgs)
+	if err := telemetry.TrackAskOne(p, &opts.OrgID); err != nil {
+		return err
+	}
+	opts.AskedOrgsOrProjects = true
 
 	return nil
 }

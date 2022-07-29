@@ -21,6 +21,7 @@ import (
 	"io"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
@@ -78,18 +79,28 @@ var (
 	errNoResults      = errors.New("no results")
 )
 
-// Projects fetches projects and returns then as a slice of the format `nameIDFormat`,
-// and a map such as `map[nameIDFormat]=ID`.
-// This is necessary as we can only prompt using `nameIDFormat`
-// and we want them to get the ID mapping to store in the config.
-func (opts *DefaultSetterOpts) projects() (pMap map[string]string, pSlice []string, err error) {
+func newSpinner() *spinner.Spinner {
+	return spinner.New(spinner.CharSets[9], speed)
+}
+
+// Projects fetches projects and returns then as two slices of string.
+// One for names and another for ids.
+func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
+	spin := newSpinner()
+	spin.Start()
+	defer spin.Stop()
+
 	var projects interface{}
 	if opts.OrgID == "" {
-		projects, err = opts.Store.Projects(nil)
+		projects, err = opts.Store.Projects(&atlas.ListOptions{ItemsPerPage: resultsLimit})
 	} else {
 		projects, err = opts.Store.GetOrgProjects(opts.OrgID, &atlas.ListOptions{ItemsPerPage: resultsLimit})
 	}
 	if err != nil {
+		var atlasErr *atlas.ErrorResponse
+		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
+			return nil, nil, errNoResults
+		}
 		return nil, nil, err
 	}
 	switch r := projects.(type) {
@@ -100,7 +111,7 @@ func (opts *DefaultSetterOpts) projects() (pMap map[string]string, pSlice []stri
 		if r.TotalCount > resultsLimit {
 			return nil, nil, errTooManyResults
 		}
-		pMap, pSlice = atlasProjects(r.Results)
+		ids, names = atlasProjects(r.Results)
 	case *opsmngr.Projects:
 		if r.TotalCount == 0 {
 			return nil, nil, errNoResults
@@ -108,38 +119,36 @@ func (opts *DefaultSetterOpts) projects() (pMap map[string]string, pSlice []stri
 		if r.TotalCount > resultsLimit {
 			return nil, nil, errTooManyResults
 		}
-		pMap, pSlice = omProjects(r.Results)
+		ids, names = omProjects(r.Results)
 	}
 
-	return pMap, pSlice, nil
+	return ids, names, nil
 }
 
-// Orgs fetches organizations and returns then as a slice of the format `nameIDFormat`,
-// and a map such as `map[nameIDFormat]=ID`.
-// This is necessary as we can only prompt using `nameIDFormat`
-// and we want them to get the ID mapping to store on the config.
-func (opts *DefaultSetterOpts) orgs() (oMap map[string]string, oSlice []string, err error) {
+// Orgs fetches organizations, filtering by name.
+func (opts *DefaultSetterOpts) orgs(filter string) ([]*atlas.Organization, error) {
+	spin := newSpinner()
+	spin.Start()
+	defer spin.Stop()
+
 	includeDeleted := false
-	pagination := &atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted}
+	pagination := &atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted, Name: filter}
 	pagination.ItemsPerPage = resultsLimit
 	orgs, err := opts.Store.Organizations(pagination)
 	if err != nil {
-		return nil, nil, err
+		var atlasErr *atlas.ErrorResponse
+		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
+			return nil, errNoResults
+		}
+		return nil, err
 	}
 	if orgs.TotalCount == 0 {
-		return nil, nil, errNoResults
+		return nil, errNoResults
 	}
 	if orgs.TotalCount > resultsLimit {
-		return nil, nil, errTooManyResults
+		return nil, errTooManyResults
 	}
-	oMap = make(map[string]string, len(orgs.Results))
-	oSlice = make([]string, len(orgs.Results))
-	for i, o := range orgs.Results {
-		d := fmt.Sprintf(nameIDFormat, o.Name, o.ID)
-		oMap[d] = o.ID
-		oSlice[i] = d
-	}
-	return oMap, oSlice, nil
+	return orgs.Results, nil
 }
 
 // ProjectExists checks if the project exists and the current user has access to it.
@@ -154,7 +163,7 @@ func (opts *DefaultSetterOpts) ProjectExists(id string) bool {
 // If it fails or there are no projects to show we fallback to ask for project by ID.
 // If only one project, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskProject() error {
-	pMap, pSlice, err := opts.projects()
+	ids, names, err := opts.projects()
 	if err != nil {
 		var target *atlas.ErrorResponse
 		switch {
@@ -183,16 +192,16 @@ func (opts *DefaultSetterOpts) AskProject() error {
 		return nil
 	}
 
-	if len(pSlice) == 1 {
-		opts.ProjectID = pMap[pSlice[0]]
+	if len(ids) == 1 {
+		opts.ProjectID = ids[0]
 	} else {
 		opts.runOnMultipleOrgsOrProjects()
-		p := prompt.NewProjectSelect(pSlice)
+		p := prompt.NewProjectSelect(ids, names)
 		var projectID string
 		if err := telemetry.TrackAskOne(p, &projectID); err != nil {
 			return err
 		}
-		opts.ProjectID = pMap[projectID]
+		opts.ProjectID = projectID
 		opts.AskedOrgsOrProjects = true
 	}
 
@@ -211,47 +220,88 @@ func (opts *DefaultSetterOpts) OrgExists(id string) bool {
 // If it fails or there are no organizations to show we fallback to ask for org by ID.
 // If only one organization, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskOrg() error {
-	oMap, oSlice, err := opts.orgs()
+	_, _ = fmt.Fprintln(opts.OutWriter, "Now set your default organization and project.")
+
+	return opts.askOrgWithFilter("")
+}
+
+func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
+	orgs, err := opts.orgs(filter)
 	if err != nil {
+		applyFilter := false
 		var target *atlas.ErrorResponse
 		switch {
 		case errors.Is(err, errNoResults):
-			_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any organization")
+			if filter == "" {
+				_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any organization")
+			} else {
+				_, _ = fmt.Fprintln(opts.OutWriter, "No results match, please type the organization ID or the organization name to filter.")
+				applyFilter = true
+			}
 		case errors.Is(err, errTooManyResults):
-			_, _ = fmt.Fprintf(opts.OutWriter, "You have access to more than %d organizations\n", resultsLimit)
+			_, _ = fmt.Fprintf(opts.OutWriter, "Since you have access to more than %d organizations, please type the organization ID or the organization name to filter.\n", resultsLimit)
+			applyFilter = true
 		case errors.As(err, &target):
 			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", target.Detail)
 		default:
 			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", err)
 		}
-		p := &survey.Confirm{
-			Message: "Do you want to enter the Org ID manually?",
+
+		if applyFilter {
+			filterPrompt := &survey.Input{
+				Message: "Organization filter:",
+				Help:    "Enter the 24 digit ID or type from the beginning of the name to filter.",
+			}
+			filterErr := telemetry.TrackAskOne(filterPrompt, &filter)
+			if filterErr != nil {
+				return filterErr
+			}
+			if filter != "" {
+				if validate.ObjectID(filter) == nil {
+					opts.OrgID = filter
+					_, _ = fmt.Fprintf(opts.OutWriter, "Chosen default organization: %v\n", opts.OrgID)
+					return nil
+				}
+				return opts.askOrgWithFilter(filter)
+			}
 		}
-		manually := true
-		if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
-			return err2
-		}
-		opts.AskedOrgsOrProjects = true
-		if manually {
-			p := prompt.NewOrgIDInput()
-			return telemetry.TrackAskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
-		}
-		_, _ = fmt.Fprint(opts.OutWriter, "Skipping default organization setting\n")
+
+		return opts.manualOrgID()
+	}
+
+	return opts.selectOrg(orgs)
+}
+
+func (opts *DefaultSetterOpts) manualOrgID() error {
+	p := &survey.Confirm{
+		Message: "Do you want to enter the Organization ID manually?",
+	}
+	manually := true
+	if err := telemetry.TrackAskOne(p, &manually); err != nil {
+		return err
+	}
+	opts.AskedOrgsOrProjects = true
+	if manually {
+		p := prompt.NewOrgIDInput()
+		return telemetry.TrackAskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
+	}
+	_, _ = fmt.Fprint(opts.OutWriter, "Skipping default organization setting\n")
+	return nil
+}
+
+func (opts *DefaultSetterOpts) selectOrg(orgs []*atlas.Organization) error {
+	if len(orgs) == 1 {
+		opts.OrgID = orgs[0].ID
 		return nil
 	}
 
-	if len(oSlice) == 1 {
-		opts.OrgID = oMap[oSlice[0]]
-	} else {
-		opts.runOnMultipleOrgsOrProjects()
-		p := prompt.NewOrgSelect(oSlice)
-		var orgID string
-		if err := telemetry.TrackAskOne(p, &orgID); err != nil {
-			return err
-		}
-		opts.OrgID = oMap[orgID]
-		opts.AskedOrgsOrProjects = true
+	opts.runOnMultipleOrgsOrProjects()
+
+	p := prompt.NewOrgSelect(orgs)
+	if err := telemetry.TrackAskOne(p, &opts.OrgID); err != nil {
+		return err
 	}
+	opts.AskedOrgsOrProjects = true
 
 	return nil
 }
@@ -274,30 +324,26 @@ func (opts *DefaultSetterOpts) SetUpOutput() {
 	}
 }
 
-const nameIDFormat = "%s (%s)"
-
-// atlasProjects transform []*atlas.Project to a map[string]string and []string.
-func atlasProjects(projects []*atlas.Project) (pMap map[string]string, pSlice []string) {
-	pMap = make(map[string]string, len(projects))
-	pSlice = make([]string, len(projects))
+// atlasProjects transform []*atlas.Project to a []string of ids and another for names.
+func atlasProjects(projects []*atlas.Project) (ids, names []string) {
+	names = make([]string, len(projects))
+	ids = make([]string, len(projects))
 	for i, p := range projects {
-		d := fmt.Sprintf(nameIDFormat, p.Name, p.ID)
-		pMap[d] = p.ID
-		pSlice[i] = d
+		ids[i] = p.ID
+		names[i] = p.Name
 	}
-	return pMap, pSlice
+	return ids, names
 }
 
-// omProjects transform []*opsmngr.Project to a map[string]string and []string.
-func omProjects(projects []*opsmngr.Project) (pMap map[string]string, pSlice []string) {
-	pMap = make(map[string]string, len(projects))
-	pSlice = make([]string, len(projects))
+// omProjects transform []*opsmngr.Project to a []string of ids and another for names.
+func omProjects(projects []*opsmngr.Project) (ids, names []string) {
+	names = make([]string, len(projects))
+	ids = make([]string, len(projects))
 	for i, p := range projects {
-		d := fmt.Sprintf(nameIDFormat, p.Name, p.ID)
-		pMap[d] = p.ID
-		pSlice[i] = d
+		ids[i] = p.ID
+		names[i] = p.Name
 	}
-	return pMap, pSlice
+	return ids, names
 }
 
 func (*DefaultSetterOpts) DefaultQuestions() []*survey.Question {

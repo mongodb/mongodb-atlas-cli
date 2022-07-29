@@ -1248,6 +1248,28 @@ tasks:
           AZURE_CLIENT_ID: ${logs_decrypt_azure_client_id}
           AZURE_CLIENT_SECRET: ${logs_decrypt_azure_client_secret}
           E2E_TAGS: atlas,decrypt
+  # export buckets require cloud provider role authentication and a s3 bucket created
+  - name: atlas_backups_e2e
+    tags: [ "e2e","backup","atlas" ]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,backup
+          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
 buildvariants:
   - name: code_health
     display_name: "Code Health"
@@ -1349,6 +1371,16 @@ buildvariants:
       go_base_path: ""
     tasks:
       - name: ".e2e .datalake .atlas"
+  - name: e2e_atlas_backups
+    display_name: "E2E Atlas Backup Tests"
+    run_on:
+      - rhel80-small
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
+    tasks:
+      - name: ".e2e .backup .atlas"
   - name: e2e_cloud_manager_remote
     display_name: "E2E Cloud Manager Remote Host Tests"
     run_on:

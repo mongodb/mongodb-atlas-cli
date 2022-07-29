@@ -1250,7 +1250,7 @@ tasks:
           E2E_TAGS: atlas,decrypt
   # export buckets require cloud provider role authentication and a s3 bucket created
   - name: atlas_backups_export_buckets_e2e
-    tags: [ "e2e","buckets","atlas" ]
+    tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -1269,6 +1269,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,buckets
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
 buildvariants:
   - name: code_health
     display_name: "Code Health"
@@ -1370,8 +1371,8 @@ buildvariants:
       go_base_path: ""
     tasks:
       - name: ".e2e .datalake .atlas"
-  - name: e2e_atlas_backups_export_buckets
-    display_name: "E2E Atlas Backups Tests"
+  - name: e2e_atlas_backups
+    display_name: "E2E Atlas Backup Tests"
     run_on:
       - rhel80-small
     expansions:
@@ -1379,7 +1380,7 @@ buildvariants:
       go_bin: "/opt/golang/go1.18/bin"
       go_base_path: ""
     tasks:
-      - name: ".e2e .buckets .atlas"
+      - name: ".e2e .backup .atlas"
   - name: e2e_cloud_manager_remote
     display_name: "E2E Cloud Manager Remote Host Tests"
     run_on:

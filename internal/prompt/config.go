@@ -122,7 +122,8 @@ func NewOrgSelect(options []*atlas.Organization) survey.Prompt {
 			return options[i].Name
 		},
 		Filter: func(filter string, _ string, i int) bool {
-			return strings.HasPrefix(options[i].Name, filter) || strings.HasPrefix(options[i].ID, filter)
+			filter = strings.ToLower(filter)
+			return strings.HasPrefix(strings.ToLower(options[i].Name), filter) || strings.HasPrefix(options[i].ID, filter)
 		},
 	}
 }
@@ -136,7 +137,8 @@ func NewProjectSelect(ids, names []string) survey.Prompt {
 			return names[i]
 		},
 		Filter: func(filter string, _ string, i int) bool {
-			return strings.HasPrefix(names[i], filter) || strings.HasPrefix(ids[i], filter)
+			filter = strings.ToLower(filter)
+			return strings.HasPrefix(strings.ToLower(names[i]), filter) || strings.HasPrefix(ids[i], filter)
 		},
 	}
 }

@@ -21,6 +21,7 @@ import (
 	"io"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
@@ -78,9 +79,17 @@ var (
 	errNoResults      = errors.New("no results")
 )
 
+func newSpinner() *spinner.Spinner {
+	return spinner.New(spinner.CharSets[9], speed)
+}
+
 // Projects fetches projects and returns then as two slices of string.
 // One for names and another for ids.
 func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
+	spin := newSpinner()
+	spin.Start()
+	defer spin.Stop()
+
 	var projects interface{}
 	if opts.OrgID == "" {
 		projects, err = opts.Store.Projects(&atlas.ListOptions{ItemsPerPage: resultsLimit})
@@ -88,6 +97,10 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 		projects, err = opts.Store.GetOrgProjects(opts.OrgID, &atlas.ListOptions{ItemsPerPage: resultsLimit})
 	}
 	if err != nil {
+		var atlasErr *atlas.ErrorResponse
+		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
+			return nil, nil, errNoResults
+		}
 		return nil, nil, err
 	}
 	switch r := projects.(type) {
@@ -114,11 +127,19 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 
 // Orgs fetches organizations, filtering by name.
 func (opts *DefaultSetterOpts) orgs(filter string) ([]*atlas.Organization, error) {
+	spin := newSpinner()
+	spin.Start()
+	defer spin.Stop()
+
 	includeDeleted := false
 	pagination := &atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted, Name: filter}
 	pagination.ItemsPerPage = resultsLimit
 	orgs, err := opts.Store.Organizations(pagination)
 	if err != nil {
+		var atlasErr *atlas.ErrorResponse
+		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
+			return nil, errNoResults
+		}
 		return nil, err
 	}
 	if orgs.TotalCount == 0 {
@@ -199,6 +220,8 @@ func (opts *DefaultSetterOpts) OrgExists(id string) bool {
 // If it fails or there are no organizations to show we fallback to ask for org by ID.
 // If only one organization, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskOrg() error {
+	_, _ = fmt.Fprintln(opts.OutWriter, "Now set your default organization and project")
+
 	return opts.askOrgWithFilter("")
 }
 
@@ -212,11 +235,11 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 			if filter == "" {
 				_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any organization")
 			} else {
-				_, _ = fmt.Fprintln(opts.OutWriter, "No organizations found matching the filter")
+				_, _ = fmt.Fprintln(opts.OutWriter, "No results match, please type the organization name to filter or leave it empty to skip.")
 				applyFilter = true
 			}
 		case errors.Is(err, errTooManyResults):
-			_, _ = fmt.Fprintf(opts.OutWriter, "Looks like there are more than %d organizations\n", resultsLimit)
+			_, _ = fmt.Fprintf(opts.OutWriter, "Since you have access to more than %d organizations, please type the organization name to filter or leave it empty to skip.\n", resultsLimit)
 			applyFilter = true
 		case errors.As(err, &target):
 			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", target.Detail)
@@ -225,10 +248,9 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 		}
 
 		if applyFilter {
-			_, _ = fmt.Fprintln(opts.OutWriter, "Type to filter or leave empty to input ID manually")
 			filterPrompt := &survey.Input{
-				Message: "Org Name filter:",
-				Help:    "Beginning of an Organization name to filter results.",
+				Message: "Organization name filter:",
+				Help:    "The filter matches input letters and words in order, please type from the beginning of the name.",
 			}
 			filterErr := telemetry.TrackAskOne(filterPrompt, &filter)
 			if filterErr != nil {
@@ -237,7 +259,6 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 			if filter != "" {
 				return opts.askOrgWithFilter(filter)
 			}
-			_, _ = fmt.Fprintln(opts.OutWriter, "No filter provided")
 		}
 
 		return opts.manualOrgID()

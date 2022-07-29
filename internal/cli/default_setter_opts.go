@@ -220,7 +220,7 @@ func (opts *DefaultSetterOpts) OrgExists(id string) bool {
 // If it fails or there are no organizations to show we fallback to ask for org by ID.
 // If only one organization, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskOrg() error {
-	_, _ = fmt.Fprintln(opts.OutWriter, "Now set your default organization and project")
+	_, _ = fmt.Fprintln(opts.OutWriter, "Now set your default organization and project.")
 
 	return opts.askOrgWithFilter("")
 }
@@ -250,7 +250,7 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 		if applyFilter {
 			filterPrompt := &survey.Input{
 				Message: "Organization filter:",
-				Help:    "Please type Organization ID or Organization Name to filter from the beginning of the name.",
+				Help:    "Enter the 24 digit ID or type from the beginning of the name to filter.",
 			}
 			filterErr := telemetry.TrackAskOne(filterPrompt, &filter)
 			if filterErr != nil {

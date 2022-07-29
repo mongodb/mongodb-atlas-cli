@@ -259,6 +259,7 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 			if filter != "" {
 				if validate.ObjectID(filter) == nil {
 					opts.OrgID = filter
+					_, _ = fmt.Fprintf(opts.OutWriter, "Chosen default organization: %v\n", opts.OrgID)
 					return nil
 				}
 				return opts.askOrgWithFilter(filter)

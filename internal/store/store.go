@@ -289,7 +289,7 @@ response:
 %v %v
 %v
 %v
-`, resp.Request.Method, resp.Request.URL.Path, resp.Proto, resp.Status, respHeaders, string(resp.Raw))
+`, resp.Request.Method, resp.Request.URL.String(), resp.Proto, resp.Status, respHeaders, string(resp.Raw))
 	})
 	s.client = c
 	return nil

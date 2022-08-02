@@ -76,24 +76,26 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	}
 
 	g.t.Cleanup(func() {
-		g.deleteProjectWithRetry()
+		deleteProjectWithRetry(g.t, g.projectID)
 	})
 }
 
-func (g *atlasE2ETestGenerator) deleteProjectWithRetry() {
-	var attempts int
-	for attempts = 1; attempts <= maxRetryAttempts; attempts++ {
-		if e := deleteProject(g.projectID); e != nil {
-			g.t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project '%s': %v", attempts, maxRetryAttempts, sleepTimeInSeconds, g.projectID, e)
+func deleteProjectWithRetry(t *testing.T, projectID string) {
+	t.Helper()
+	deleted := false
+	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
+		if e := deleteProject(projectID); e != nil {
+			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project '%s': %v", attempts, maxRetryAttempts, sleepTimeInSeconds, projectID, e)
 			time.Sleep(sleepTimeInSeconds * time.Second)
 		} else {
-			g.t.Logf("project '%s' successfully deleted", g.projectID)
+			t.Logf("project '%s' successfully deleted", projectID)
+			deleted = true
 			break
 		}
 	}
 
-	if attempts > maxRetryAttempts {
-		g.t.Fatalf("we could not delete the project '%s' (projectId: '%s')", g.projectName, g.projectID)
+	if !deleted {
+		t.Errorf("we could not delete the project '%s'", projectID)
 	}
 }
 

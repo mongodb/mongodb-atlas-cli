@@ -47,6 +47,7 @@ func TestCleanup(t *testing.T) {
 	for _, project := range projects.Results {
 		if project.ID == os.Getenv("MCLI_PROJECT_ID") {
 			fmt.Println("skipping project", project.ID)
+			continue
 		}
 		t.Run("Project "+project.ID, func(t *testing.T) {
 			deleteProjectWithRetry(t, project.ID)

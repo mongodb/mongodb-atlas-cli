@@ -7,6 +7,7 @@
 bin/**
 dist/**
 # mac notarization service
+linux_amd64/**
 darwin_amd64/**
 macos-notary.zip
 

@@ -24,7 +24,7 @@ FILE="./dist/windows_windows_amd64_v1/bin/mongocli.exe"
 
 if [[ -f "$FILE" ]]; then
   echo "notarizing windows binaries"
-  ./build/package/notary-client.py \
+  notary-client.py \
     --key-name "$NOTARY_SIGNING_KEY_MONGOCLI" \
     --comment "$NOTARY_SIGNING_COMMENT" \
     --auth-token "$NOTARY_AUTH_TOKEN" \

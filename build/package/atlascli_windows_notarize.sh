@@ -20,7 +20,7 @@ set -Eeou pipefail
 # This depends on binaries being generated in a goreleaser manner and gon being set up.
 # goreleaser should already take care of calling this script as a hook.
 
-FILE="./dist/windows_windows_amd64_v1/bin/atlas.exe"
+FILE="$PWD/dist/windows_windows_amd64_v1/bin/atlas.exe"
 
 if [[ -f "$FILE" ]]; then
   echo "notarizing windows binaries"

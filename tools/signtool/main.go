@@ -27,7 +27,7 @@
 // NOTARY_AUTH_TOKEN - The password for using the selected signing key
 // NOTARY_URL - The URL of the notary service
 
-// copied from https://github.com/mongodb-js/compass/blob/b37db421f97911f6046cfbad2b4d6f0800560d53/packages/hadron-build/signtool/signtool.go
+// adapted from https://github.com/10gen/notary-service/blob/ef2a3a8ff5b9afe179fbab115373232900ada57b/client/signtool/signtool.go
 
 package main
 

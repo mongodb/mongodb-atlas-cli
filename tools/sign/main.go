@@ -163,7 +163,7 @@ func main() {
 
 	var filePath string
 
-	flag.StringVar(&key, "key", "", "The key to use for signing")
+	flag.StringVar(&filePath, "file", "", "file to sign")
 	flag.Parse()
 
 	if key == "" {

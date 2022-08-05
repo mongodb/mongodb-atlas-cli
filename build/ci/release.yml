@@ -70,7 +70,7 @@ functions:
           NOTARY_SIGNING_KEY_MONGOCLI: ${notary_service_signing_key_mongocli}
           NOTARY_SIGNING_COMMENT: "Evergreen Automatic Signing (${tool_name})"
           NOTARY_AUTH_TOKEN: ${signing_auth_token_50}
-          NOTARY_URL: ${notary_service_url}
+          NOTARY_URL: ${notary_service_notary_url}
         include_expansions_in_env:
           - go_base_path
           - workdir
@@ -321,7 +321,7 @@ tasks:
             NOTARY_SIGNING_KEY_MONGOCLI: ${notary_service_signing_key_mongocli}
             NOTARY_SIGNING_COMMENT: "Evergreen Automatic Signing (${tool_name})"
             NOTARY_AUTH_TOKEN: ${signing_auth_token_50}
-            NOTARY_URL: ${notary_service_url}
+            NOTARY_URL: ${notary_service_notary_url}
           binary: ./build/package/atlascli_windows_notarize.sh
       - func: "rename pkg"
         vars:

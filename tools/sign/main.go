@@ -156,30 +156,30 @@ func downloadFile(ctx context.Context, url, localPath string) error {
 }
 
 func main() {
-	var key, comment, authToken, url, filePath string
+	key := os.Getenv("NOTARY_SIGNING_KEY")
+	comment := os.Getenv("NOTARY_SIGNING_COMMENT")
+	authToken := os.Getenv("NOTARY_AUTH_TOKEN")
+	url := os.Getenv("NOTARY_URL")
+
+	var filePath string
 
 	flag.StringVar(&key, "key", "", "The key to use for signing")
-	flag.StringVar(&comment, "comment", "", "The comment to use for signing")
-	flag.StringVar(&authToken, "authToken", "", "The auth token to use for signing")
-	flag.StringVar(&url, "url", "", "The url to the notary server")
-	flag.StringVar(&filePath, "file", "", "The file to sign")
-
 	flag.Parse()
 
 	if key == "" {
-		log.Fatalln("You must specify a notary signing key")
+		log.Fatalln("You must specify $NOTARY_SIGNING_KEY")
 	}
 
 	if comment == "" {
-		log.Fatalln("You must specify a notary signing comment")
+		log.Fatalln("You must specify $NOTARY_SIGNING_COMMENT")
 	}
 
 	if authToken == "" {
-		log.Fatalln("You must specify a notary auth token")
+		log.Fatalln("You must specify $NOTARY_AUTH_TOKEN")
 	}
 
 	if url == "" {
-		log.Fatalln("You must specify a notary url")
+		log.Fatalln("You must specify $NOTARY_URL")
 	}
 
 	if filePath == "" {

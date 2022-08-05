@@ -307,6 +307,7 @@ tasks:
         params:
           <<: *go_options
           silent: true
+          working_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/windows_windows_amd64_v1/bin
           script: |
             set -Eeou pipefail
 

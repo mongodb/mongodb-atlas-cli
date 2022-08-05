@@ -49,4 +49,4 @@ env GOOS=windows GOARCH=amd64 go build \
 
 go-msi make --path "${WIX_MANIFEST_FILE}"  --msi "dist/${PACKAGE_NAME}" --version "${VERSION}"
 
-go run ./tools/signtool "dist/${PACKAGE_NAME}"
+go run ./tools/sign -file "dist/${PACKAGE_NAME}" -key "$NOTARY_SIGNING_KEY" -comment "$NOTARY_SIGNING_COMMENT" -authToken "$NOTARY_AUTH_TOKEN" -url "$NOTARY_URL"

@@ -168,16 +168,3 @@ issues:
     - path: internal/test/fixture # Don't check for magic numbers on fixtures.
       linters:
         - gomnd
-    - path: tools/signtool # Don't check copied file.
-      linters:
-        - errcheck
-        - gocritic
-        - gosec
-        - gomod
-        - gosimple
-        - noctx
-        - gomnd
-        - revive
-        - ineffassign
-        - staticcheck
-        - stylecheck

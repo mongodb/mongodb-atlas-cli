@@ -16,8 +16,9 @@
 
 set -Eeou pipefail
 
-FILE="$PWD/dist/windows_windows_amd64_v1/bin/atlas.exe"
+pushd "dist/windows_windows_amd64_v1/bin"
 
+FILE="atlas.exe"
 if [[ -f "$FILE" ]]; then
   echo "notarizing $FILE"
   notary-client.py \
@@ -25,6 +26,7 @@ if [[ -f "$FILE" ]]; then
     --comment "$NOTARY_SIGNING_COMMENT" \
     --auth-token-file "$PWD/notary_auth_token" \
     --notary-url "$NOTARY_URL" \
-    "$FILE"
-  ls -la
+    "atlas.exe"
 fi
+
+popd

@@ -20,6 +20,7 @@ GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")"
 CGO_ENABLED=0
 export GOCACHE
 export CGO_ENABLED
+export NOTARY_SIGNING_KEY
 
 go-msi check-env
 
@@ -31,20 +32,21 @@ COMMIT=$(git log -n1 --format=format:"%H")
 SOURCE_FILES=./cmd/mongocli
 PACKAGE_NAME=mongocli_${VERSION}_windows_x86_64.msi
 OUTPUT=./bin/mongocli.exe
-LINKER_FLAGS="-s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${VERSION} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit=${COMMIT}"
+LINKER_FLAGS="-s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${VERSION} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit=${COMMIT} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=${TOOL_NAME:?}"
 WIX_MANIFEST_FILE="./build/package/wix/mongocli.json"
+NOTARY_SIGNING_KEY=${NOTARY_SIGNING_KEY_MONGOCLI:?}
 
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
+  NOTARY_SIGNING_KEY=${NOTARY_SIGNING_KEY_ATLASCLI:?}
   SOURCE_FILES=./cmd/atlas
   PACKAGE_NAME=mongodb-atlas-cli_${VERSION}_windows_x86_64.msi
   OUTPUT=./bin/atlas.exe
-  LINKER_FLAGS="${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=${TOOL_NAME:?}"
   WIX_MANIFEST_FILE="./build/package/wix/atlascli.json"
-else
-   LINKER_FLAGS="${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=${TOOL_NAME:?}"
 fi
 
 env GOOS=windows GOARCH=amd64 go build \
   -ldflags "${LINKER_FLAGS}" -o ${OUTPUT} "${SOURCE_FILES}"
 
 go-msi make --path "${WIX_MANIFEST_FILE}"  --msi "dist/${PACKAGE_NAME}" --version "${VERSION}"
+
+go run ./tools/sign -file "dist/${PACKAGE_NAME}"

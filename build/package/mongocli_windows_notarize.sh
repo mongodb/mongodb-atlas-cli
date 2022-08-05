@@ -16,10 +16,6 @@
 
 set -Eeou pipefail
 
-# Notarize generated binaries with Apple and replace the original binary with the notarized one
-# This depends on binaries being generated in a goreleaser manner and gon being set up.
-# goreleaser should already take care of calling this script as a hook.
-
 FILE="$PWD/dist/windows_windows_amd64_v1/bin/mongocli.exe"
 
 if [[ -f "$FILE" ]]; then

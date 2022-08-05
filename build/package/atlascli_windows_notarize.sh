@@ -29,6 +29,6 @@ if [[ -f "$FILE" ]]; then
     --comment "$NOTARY_SIGNING_COMMENT" \
     --auth-token "$NOTARY_AUTH_TOKEN" \
     --notary-url "$NOTARY_URL" \
-    $FILE
+    "$FILE"
   ls -la
 fi

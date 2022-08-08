@@ -1542,7 +1542,7 @@ buildvariants:
     run_on: ubuntu1804-small
     tasks:
       - name: .smoke-test .atlascli
-  - name: test_atlascli_repo
+  - name: release_atlascli_repo_test
     display_name: "Test AtlasCLI repo"
     expansions:
       go_root: "/opt/golang/go1.18"
@@ -1552,7 +1552,7 @@ buildvariants:
       - ubuntu1804-small
     tasks:
       - name: .smoke-test .generate .repo .atlascli
-  - name: test_mongocli_repo
+  - name: release_mongocli_repo_test
     display_name: "Test MongoCLI repo"
     expansions:
       go_root: "/opt/golang/go1.18"

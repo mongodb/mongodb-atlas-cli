@@ -1354,16 +1354,6 @@ buildvariants:
     tasks:
       - name: ".e2e .cleanup"
         cron: "0 2 * * *" # 2am daily
-  - name: e2e_ops_manager_44
-    display_name: "E2E Ops Manager 4.4 Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
-      go_base_path: ""
-    tasks:
-      - name: ".ops-manager-44"
   - name: e2e_ops_manager_50
     display_name: "E2E Ops Manager 5.0 Tests"
     run_on:

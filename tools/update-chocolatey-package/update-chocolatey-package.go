@@ -53,12 +53,6 @@ func checkError(err error) {
 	}
 }
 
-func cleanup(path string) error {
-	location := fmt.Sprintf("%s/temp", path)
-	err := os.RemoveAll(location)
-	return err
-}
-
 func replaceNuspec(path, version string) error {
 	nuspecPath := fmt.Sprintf("%s/atlascli.nuspec", path)
 	newVersion := NuspecDetails{version}
@@ -107,7 +101,7 @@ func generateSha256(f *os.File) (string, error) {
 	return string(h.Sum(nil)), nil
 }
 
-func replaceInstallScript(path, msiPath string) error {
+func replaceInstallScript(path, msiPath, url string) error {
 	scriptPath := fmt.Sprintf("%s/tools/chocolateyinstall.ps1", path)
 
 	f, err := os.Open(msiPath)
@@ -126,7 +120,7 @@ func replaceInstallScript(path, msiPath string) error {
 		return err
 	}
 	newInstallDetails := InstallScriptDetails{
-		URL:      "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv1.1.5/mongodb-atlas-cli_1.1.5_windows_x86_64.msi",
+		URL:      url,
 		CheckSum: checkSum,
 	}
 
@@ -171,7 +165,7 @@ func replaceInstallScript(path, msiPath string) error {
 
 func main() {
 	args := os.Args[1:]
-	const argumentsLength = 2
+	const argumentsLength = 3
 	if len(args) < argumentsLength {
 		log.Fatal("Exactly 2 arguments must be present to run Chocolatey update script.")
 	}
@@ -186,11 +180,9 @@ func main() {
 	checkError(err)
 
 	msiPath := args[1]
-	err = replaceInstallScript(path, msiPath)
+	downloadURL := args[2]
+	err = replaceInstallScript(path, msiPath, downloadURL)
 	checkError(err)
 
 	fmt.Println("Done!")
-
-	err = cleanup(path)
-	checkError(err)
 }

@@ -1,12 +1,12 @@
 ﻿$ErrorActionPreference = 'Stop';
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
-$url        = {{.Url}}
+$url        = {{.URL}}
 
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
   unzipLocation = $toolsDir
   fileType      = 'msi' 
-  url           = {{.Url}}
+  url           = {{.URL}}
 
   softwareName  = 'atlascli*'
   checksum      = {{.CheckSum}}

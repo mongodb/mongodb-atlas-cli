@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister,OrganizationAPIKeyWhitelistLister,OrganizationAPIKeyWhitelistDeleter,OrganizationAPIKeyWhitelistCreator,OrganizationAPIKeyAccessListWhitelistLister,OrganizationAPIKeyAccessListWhitelistDeleter,OrganizationAPIKeyAccessListWhitelistCreator
+//go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
 
 type OrganizationAPIKeyAccessListLister interface {
 	OrganizationAPIKeyAccessLists(string, string, *atlas.ListOptions) (*atlas.AccessListAPIKeys, error)
@@ -46,24 +46,6 @@ type OrganizationAPIKeyWhitelistDeleter interface {
 
 type OrganizationAPIKeyWhitelistCreator interface {
 	CreateOrganizationAPIKeyWhitelist(string, string, []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error)
-}
-
-type OrganizationAPIKeyAccessListWhitelistLister interface {
-	OrganizationAPIKeyAccessListLister
-	OrganizationAPIKeyWhitelistLister
-	ServiceVersionDescriber
-}
-
-type OrganizationAPIKeyAccessListWhitelistDeleter interface {
-	OrganizationAPIKeyAccessListDeleter
-	OrganizationAPIKeyWhitelistDeleter
-	ServiceVersionDescriber
-}
-
-type OrganizationAPIKeyAccessListWhitelistCreator interface {
-	OrganizationAPIKeyAccessListCreator
-	OrganizationAPIKeyWhitelistCreator
-	ServiceVersionDescriber
 }
 
 // CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
@@ -103,45 +85,6 @@ func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atla
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.List(s.ctx, orgID, apiKeyID, opts)
 		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
-// CreateOrganizationAPIKeyWhitelist encapsulates the logic to manage different cloud providers.
-//
-// Deprecated: kept until Ops Manager 4.4 reaches EOL.
-func (s *Store) CreateOrganizationAPIKeyWhitelist(orgID, apiKeyID string, opts []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error) {
-	switch s.service {
-	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).WhitelistAPIKeys.Create(s.ctx, orgID, apiKeyID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
-// DeleteOrganizationAPIKeyWhitelist encapsulates the logic to manage different cloud providers.
-//
-// Deprecated: kept until Ops Manager 4.4 reaches EOL.
-func (s *Store) DeleteOrganizationAPIKeyWhitelist(orgID, apiKeyID, ipAddress string) error {
-	switch s.service {
-	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Delete(s.ctx, orgID, apiKeyID, ipAddress)
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
-// OrganizationAPIKeyWhitelists encapsulates the logic to manage different cloud providers.
-//
-// Deprecated: kept until Ops Manager 4.4 reaches EOL.
-func (s *Store) OrganizationAPIKeyWhitelists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error) {
-	switch s.service {
-	case config.OpsManagerService:
-		result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.List(s.ctx, orgID, apiKeyID, opts)
-		return result, e
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

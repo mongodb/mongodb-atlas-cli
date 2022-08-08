@@ -48,3 +48,7 @@ env GOOS=windows GOARCH=amd64 go build \
   -ldflags "${LINKER_FLAGS}" -o ${OUTPUT} "${SOURCE_FILES}"
 
 go-msi make --path "${WIX_MANIFEST_FILE}"  --msi "dist/${PACKAGE_NAME}" --version "${VERSION}"
+
+go run ./build/package/update-chocolatey-package.go "${VERSION}" "dist/${PACKAGE_NAME}"
+cd ./build/package/chocolatey/temp
+choco pack

@@ -303,28 +303,6 @@ tasks:
           unstable: -unstable
           tool_name: ${tool_name}
           goreleaser_config: ${goreleaser_file}
-      - command: shell.exec
-        type: test
-        params:
-          <<: *go_options
-          silent: true
-          working_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/windows_windows_amd64_v1/bin
-          script: |
-            set -Eeou pipefail
-
-            echo ${signing_auth_token_50} > notary_auth_token
-      - command: subprocess.exec
-        type: test
-        params:
-          <<: *go_options
-          env:
-            <<: *go_env
-            NOTARY_SIGNING_KEY_ATLASCLI: ${notary_service_signing_key_atlascli}
-            NOTARY_SIGNING_KEY_MONGOCLI: ${notary_service_signing_key_mongocli}
-            NOTARY_SIGNING_COMMENT: "Evergreen Automatic Signing (${tool_name})"
-            NOTARY_AUTH_TOKEN: ${signing_auth_token_50}
-            NOTARY_URL: ${notary_service_notary_url}
-          binary: ./build/package/atlascli_windows_notarize.sh
       - func: "rename pkg"
         vars:
           unstable: -unstable

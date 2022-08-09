@@ -17,6 +17,7 @@ package main
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"log"
@@ -98,7 +99,7 @@ func generateSha256(f *os.File) (string, error) {
 	if _, err := io.Copy(h, f); err != nil {
 		return "", err
 	}
-	return string(h.Sum(nil)), nil
+	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
 func replaceInstallScript(path, msiPath, url string) error {
@@ -167,7 +168,7 @@ func main() {
 	args := os.Args[1:]
 	const argumentsLength = 3
 	if len(args) < argumentsLength {
-		log.Fatal("Exactly 2 arguments must be present to run Chocolatey update script.")
+		log.Fatal("Exactly 3 arguments must be present to run Chocolatey update script.")
 	}
 
 	const path = "build/package/chocolatey"
@@ -183,6 +184,4 @@ func main() {
 	downloadURL := args[2]
 	err = replaceInstallScript(path, msiPath, downloadURL)
 	checkError(err)
-
-	fmt.Println("Done!")
 }

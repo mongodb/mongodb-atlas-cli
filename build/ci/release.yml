@@ -324,7 +324,6 @@ tasks:
             NOTARY_SIGNING_COMMENT: "Evergreen Automatic Signing (${tool_name})"
             NOTARY_AUTH_TOKEN: ${signing_auth_token_50}
             NOTARY_URL: ${notary_service_notary_url}
-            PYTHONIOENCODING: utf-8
           binary: ./build/package/atlascli_windows_notarize.sh
       - func: "rename pkg"
         vars:

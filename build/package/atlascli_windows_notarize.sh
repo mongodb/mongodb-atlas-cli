@@ -16,17 +16,8 @@
 
 set -Eeou pipefail
 
-pushd "dist/windows_windows_amd64_v1/bin"
-
-FILE="atlas.exe"
+FILE="dist/windows_windows_amd64_v1/bin/atlas.exe"
 if [[ -f "$FILE" ]]; then
   echo "notarizing $FILE"
-  notary-client.py \
-    --key-name "$NOTARY_SIGNING_KEY_ATLASCLI" \
-    --comment "$NOTARY_SIGNING_COMMENT" \
-    --auth-token-file "$PWD/notary_auth_token" \
-    --notary-url "$NOTARY_URL" \
-    "atlas.exe"
+  go run ./tools/sign -file "dist/${PACKAGE_NAME}"
 fi
-
-popd

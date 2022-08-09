@@ -10,7 +10,7 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys v0.6.0
 	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/PaesslerAG/jsonpath v0.1.1
-	github.com/aws/aws-sdk-go v1.44.67
+	github.com/aws/aws-sdk-go v1.44.71
 	github.com/briandowns/spinner v1.19.0
 	github.com/evergreen-ci/shrub v0.0.0-20220520145438-44fbdf0045c8
 	github.com/gemalto/kmip-go v0.0.6-0.20210426170211-84e83580888d
@@ -33,11 +33,11 @@ require (
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
 	go.mongodb.org/atlas v0.16.1-0.20220629103822-a2c83580fda1
-	go.mongodb.org/mongo-driver v1.10.0
+	go.mongodb.org/mongo-driver v1.10.1
 	go.mongodb.org/ops-manager v0.39.0
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	golang.org/x/sys v0.0.0-20220624220833-87e55d714810
-	google.golang.org/api v0.90.0
+	google.golang.org/api v0.91.0
 	google.golang.org/genproto v0.0.0-20220624142145-8cd45d7dbd1f
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/yaml.v2 v2.4.0

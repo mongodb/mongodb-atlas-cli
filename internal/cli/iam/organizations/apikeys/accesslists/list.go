@@ -24,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const listTemplate = `IP ADDRESS	CIDR BLOCK	CREATED AT{{range .Results}}
@@ -36,7 +35,7 @@ type ListOpts struct {
 	cli.OutputOpts
 	cli.ListOpts
 	id    string
-	store store.OrganizationAPIKeyAccessListWhitelistLister
+	store store.OrganizationAPIKeyAccessListLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -48,26 +47,10 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	useAccessList, err := shouldUseAccessList(opts.store)
+	result, err := opts.store.OrganizationAPIKeyAccessLists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
 	if err != nil {
 		return err
 	}
-
-	var result *atlas.AccessListAPIKeys
-
-	if useAccessList {
-		result, err = opts.store.OrganizationAPIKeyAccessLists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
-		if err != nil {
-			return err
-		}
-		return opts.Print(result)
-	}
-
-	r, e := opts.store.OrganizationAPIKeyWhitelists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
-	if e != nil {
-		return e
-	}
-	result = fromWhitelistAPIKeysToAccessListAPIKeys(r)
 	return opts.Print(result)
 }
 

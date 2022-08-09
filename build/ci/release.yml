@@ -101,19 +101,20 @@ functions:
       type: test
       params:
         <<: *go_options
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         add_to_path:
           - ${go_bin}
           - ${go_base_path}${workdir}/bin
           - ${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
           - "/cygdrive/c/Program Files/go-msi"
           - "/cygdrive/c/wixtools/bin"
-        include_expansions_in_env:
-          - go_base_path
-          - workdir
         env:
           <<: *go_env
           TOOL_NAME: ${TOOL_NAME}
+          NOTARY_SIGNING_KEY_MONGOCLI: ${notary_service_signing_key_mongocli}
+          NOTARY_SIGNING_KEY_ATLASCLI: ${notary_service_signing_key_atlascli}
+          NOTARY_SIGNING_COMMENT: "Evergreen Automatic Signing (${TOOL_NAME})"
+          NOTARY_AUTH_TOKEN: ${signing_auth_token_50}
+          NOTARY_URL: ${notary_service_notary_url}
         command: bash.exe -c build/package/generate-msi.sh
   "rename pkg":
     - command: subprocess.exec
@@ -1571,7 +1572,7 @@ buildvariants:
     run_on: ubuntu1804-small
     tasks:
       - name: .smoke-test .atlascli
-  - name: test_atlascli_repo
+  - name: release_atlascli_repo_test
     display_name: "Test AtlasCLI repo"
     expansions:
       go_root: "/opt/golang/go1.18"
@@ -1581,7 +1582,7 @@ buildvariants:
       - ubuntu1804-small
     tasks:
       - name: .smoke-test .generate .repo .atlascli
-  - name: test_mongocli_repo
+  - name: release_mongocli_repo_test
     display_name: "Test MongoCLI repo"
     expansions:
       go_root: "/opt/golang/go1.18"

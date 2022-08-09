@@ -35,7 +35,7 @@ type CreateOpts struct {
 	apyKey string
 	ips    []string
 	cidrs  []string
-	store  store.OrganizationAPIKeyAccessListWhitelistCreator
+	store  store.OrganizationAPIKeyAccessListCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -74,26 +74,12 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	useAccessList, err := shouldUseAccessList(opts.store)
+	var result *atlas.AccessListAPIKeys
+
+	result, err = opts.store.CreateOrganizationAPIKeyAccessList(opts.ConfigOrgID(), opts.apyKey, req)
 	if err != nil {
 		return err
 	}
-
-	var result *atlas.AccessListAPIKeys
-
-	if useAccessList {
-		result, err = opts.store.CreateOrganizationAPIKeyAccessList(opts.ConfigOrgID(), opts.apyKey, req)
-		if err != nil {
-			return err
-		}
-		return opts.Print(result)
-	}
-
-	r, e := opts.store.CreateOrganizationAPIKeyWhitelist(opts.ConfigOrgID(), opts.apyKey, fromAccessListAPIKeysReqToWhitelistAPIKeysReq(req))
-	if e != nil {
-		return e
-	}
-	result = fromWhitelistAPIKeysToAccessListAPIKeys(r)
 	return opts.Print(result)
 }
 
@@ -125,21 +111,4 @@ func CreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.APIKey)
 
 	return cmd
-}
-
-// fromAccessListAPIKeysReqToWhitelistAPIKeysReq convert from atlas.AccessListAPIKeysReq format to atlas.WhitelistAPIKeysReq
-// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4.
-func fromAccessListAPIKeysReqToWhitelistAPIKeysReq(in []*atlas.AccessListAPIKeysReq) []*atlas.WhitelistAPIKeysReq {
-	if in == nil {
-		return nil
-	}
-	out := make([]*atlas.WhitelistAPIKeysReq, len(in))
-	for i, element := range in {
-		accessListElement := &atlas.WhitelistAPIKeysReq{
-			IPAddress: element.IPAddress,
-			CidrBlock: element.CidrBlock,
-		}
-		out[i] = accessListElement
-	}
-	return out
 }

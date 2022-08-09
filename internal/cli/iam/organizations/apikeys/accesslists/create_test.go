@@ -13,16 +13,13 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package accesslists
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
@@ -30,65 +27,30 @@ import (
 )
 
 func TestCreate_Run(t *testing.T) {
-	runCreateTest := func(t *testing.T, service string, version string, accessList bool) {
-		t.Helper()
-		t.Run(fmt.Sprintf("%s %s", service, version), func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			mockStore := mocks.NewMockOrganizationAPIKeyAccessListWhitelistCreator(ctrl)
-			defer ctrl.Finish()
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockOrganizationAPIKeyAccessListCreator(ctrl)
+	defer ctrl.Finish()
 
-			createOpts := &CreateOpts{
-				store:  mockStore,
-				apyKey: "1",
-				ips:    []string{"77.54.32.11"},
-			}
-
-			r, err := createOpts.newAccessListAPIKeysReq()
-			if err != nil {
-				t.Fatalf("newAccessListAPIKeysReq() unexpected error: %v", err)
-			}
-
-			prevServ := config.Service()
-			config.SetService(service)
-			defer func() {
-				config.SetService(prevServ)
-			}()
-
-			if version != "" {
-				mockStore.
-					EXPECT().
-					ServiceVersion().
-					Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: version}, nil).
-					Times(1)
-			}
-
-			if accessList {
-				mockStore.
-					EXPECT().
-					CreateOrganizationAPIKeyAccessList(createOpts.OrgID, createOpts.apyKey, r).
-					Return(&atlas.AccessListAPIKeys{}, nil).
-					Times(1)
-			} else {
-				mockStore.
-					EXPECT().
-					CreateOrganizationAPIKeyWhitelist(createOpts.OrgID, createOpts.apyKey, fromAccessListAPIKeysReqToWhitelistAPIKeysReq(r)).
-					Return(&atlas.WhitelistAPIKeys{}, nil).
-					Times(1)
-			}
-
-			if err = createOpts.Run(); err != nil {
-				t.Fatalf("Run() unexpected error: %v", err)
-			}
-		})
+	createOpts := &CreateOpts{
+		store:  mockStore,
+		apyKey: "1",
+		ips:    []string{"77.54.32.11"},
 	}
 
-	runCreateTest(t, config.CloudService, "", true)
-	runCreateTest(t, config.CloudGovService, "", true)
-	runCreateTest(t, config.CloudManagerService, "", true)
-	runCreateTest(t, config.OpsManagerService, "5.0.0.100.20210101T0000Z", true)
-	runCreateTest(t, config.OpsManagerService, "5.0.0-rc0.100.20210101T0000Z", true)
-	runCreateTest(t, config.OpsManagerService, "4.4.0.100.20210101T0000Z", false)
-	runCreateTest(t, config.OpsManagerService, "4.2.0.100.20210101T0000Z", false)
+	r, err := createOpts.newAccessListAPIKeysReq()
+	if err != nil {
+		t.Fatalf("newAccessListAPIKeysReq() unexpected error: %v", err)
+	}
+
+	mockStore.
+		EXPECT().
+		CreateOrganizationAPIKeyAccessList(createOpts.OrgID, createOpts.apyKey, r).
+		Return(&atlas.AccessListAPIKeys{}, nil).
+		Times(1)
+
+	if err = createOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }
 
 func TestCreateBuilder(t *testing.T) {

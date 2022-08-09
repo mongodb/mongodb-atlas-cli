@@ -19,5 +19,6 @@ set -Eeou pipefail
 FILE="dist/windows_windows_amd64_v1/bin/atlas.exe"
 if [[ -f "$FILE" ]]; then
   echo "notarizing $FILE"
+  export NOTARY_SIGNING_KEY=$NOTARY_SIGNING_KEY_ATLASCLI
   go run ./tools/sign -file "dist/${PACKAGE_NAME}"
 fi

@@ -49,7 +49,7 @@ env GOOS=windows GOARCH=amd64 go build \
 
 go-msi make --path "${WIX_MANIFEST_FILE}"  --msi "dist/${PACKAGE_NAME}" --version "${VERSION}"
 
+go run ./tools/sign -file "dist/${PACKAGE_NAME}"
 go run ./tools/update-chocolatey-package/update-chocolatey-package.go "${VERSION}" ./dist/"${PACKAGE_NAME}" https://fastdl.mongodb.org/mongocli/"${PACKAGE_NAME}"
 cd ./build/package/chocolatey/temp
 choco pack
-go run ./tools/sign -file "dist/${PACKAGE_NAME}"

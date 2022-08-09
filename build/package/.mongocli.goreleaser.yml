@@ -15,6 +15,10 @@ builds:
       main: ./cmd/mongocli/mongocli.go
       ldflags:
         - -s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version={{.Version}} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit={{.FullCommit}}
+    id: linux
+    goos: [linux]
+    goarch: [amd64,arm64]
+  - <<: *build_defaults
     id: macos
     goos: [darwin]
     goarch: [amd64,arm64]
@@ -22,13 +26,11 @@ builds:
       # This will notarize Apple binaries and replace goreleaser bins with the notarized ones
       post: ./build/package/mongocli_mac_notarize.sh
   - <<: *build_defaults
-    id: linux
-    goos: [linux]
-    goarch: [amd64,arm64]
-  - <<: *build_defaults
     id: windows
     goos: [windows]
     goarch: [amd64]
+    hooks:
+      post: ./build/package/mongocli_windows_notarize.sh
 archives:
 - id: linux
   builds: [linux]

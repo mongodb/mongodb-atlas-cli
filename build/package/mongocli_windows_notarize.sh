@@ -16,15 +16,9 @@
 
 set -Eeou pipefail
 
-FILE="$PWD/dist/windows_windows_amd64_v1/bin/mongocli.exe"
-
+FILE="dist/windows_windows_amd64_v1/bin/mongocli.exe"
 if [[ -f "$FILE" ]]; then
   echo "notarizing windows binaries"
-  notary-client.py \
-    --key-name "$NOTARY_SIGNING_KEY_MONGOCLI" \
-    --comment "$NOTARY_SIGNING_COMMENT" \
-    --auth-token "$NOTARY_AUTH_TOKEN" \
-    --notary-url "$NOTARY_URL" \
-    "$FILE"
-  ls -la
+  export NOTARY_SIGNING_KEY=$NOTARY_SIGNING_KEY_MONGOCLI
+  go run ./tools/sign -file "$FILE"
 fi

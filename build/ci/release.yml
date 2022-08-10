@@ -282,6 +282,7 @@ tasks:
           aws_secret: ${aws_secret}
           local_files_include_filter:
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
+            - src/github.com/mongodb/mongodb-atlas-cli/build/package/chocolatey/temp/*.nupkg
           remote_file: ${project}/dist/${revision}_${created_at}/
           bucket: mongodb-mongocli-build
           permissions: public-read

@@ -23,6 +23,8 @@ import (
 	"log"
 	"os"
 	"text/template"
+
+	exec "golang.org/x/sys/execabs"
 )
 
 type NuspecDetails struct {
@@ -183,5 +185,11 @@ func main() {
 	msiPath := args[1]
 	downloadURL := args[2]
 	err = replaceInstallScript(path, msiPath, downloadURL)
+	checkError(err)
+
+	const chocoCommand = "pack"
+	cmd := exec.Command("choco", chocoCommand)
+	cmd.Dir = path + "/temp"
+	err = cmd.Start()
 	checkError(err)
 }

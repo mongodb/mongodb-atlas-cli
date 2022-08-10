@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -167,24 +168,31 @@ func replaceInstallScript(path, msiPath, url string) error {
 }
 
 func main() {
-	args := os.Args[1:]
-	const argumentsLength = 3
-	if len(args) < argumentsLength {
-		log.Fatal("Exactly 3 arguments must be present to run Chocolatey update script.")
-	}
-
 	const path = "build/package/chocolatey"
+	var version, filePath, downloadURL string
+
+	flag.StringVar(&version, "version", "", "Atlas CLI version")
+	flag.StringVar(&filePath, "file", "", "Path to .msi file")
+	flag.StringVar(&downloadURL, "url", "", "URL to download Atlas CLI installer")
+	flag.Parse()
+
+	if filePath == "" {
+		log.Fatalln("You must specify MSI file path")
+	}
+	if version == "" {
+		log.Fatalln("You must specify Atlas CLI version")
+	}
+	if downloadURL == "" {
+		log.Fatalln("You must specify download URL")
+	}
 
 	err := createDirectory(path, "temp")
 	checkError(err)
 
-	version := args[0]
 	err = replaceNuspec(path, version)
 	checkError(err)
 
-	msiPath := args[1]
-	downloadURL := args[2]
-	err = replaceInstallScript(path, msiPath, downloadURL)
+	err = replaceInstallScript(path, filePath, downloadURL)
 	checkError(err)
 
 	const chocoCommand = "pack"

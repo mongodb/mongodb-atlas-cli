@@ -52,5 +52,5 @@ go-msi make --path "${WIX_MANIFEST_FILE}"  --msi "dist/${PACKAGE_NAME}" --versio
 go run ./tools/sign -file "dist/${PACKAGE_NAME}"
 
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-  go run ./tools/chocolateypkg/main.go "${VERSION}" ./dist/"${PACKAGE_NAME}" https://fastdl.mongodb.org/mongocli/"${PACKAGE_NAME}"
+  go run ./tools/chocolateypkg/main.go --version "${VERSION}" --file "dist/${PACKAGE_NAME}" --url https://fastdl.mongodb.org/mongocli/"${PACKAGE_NAME}"
 fi

@@ -1513,6 +1513,15 @@ buildvariants:
       notary_key_name: "server-5.0"
     tasks:
       - name: .push_mongocli_stable
+  - name: release_mongocli_publish_60
+    display_name: "Publish MongoCLI yum/apt 6.0"
+    run_on:
+      - rhel80-small
+    expansions:
+      server_version: "6.0.0"
+      notary_key_name: "server-6.0"
+    tasks:
+      - name: .push_mongocli_stable
   - name: release_atlascli_publish_42
     display_name: "Publish AtlasCLI yum/apt 4.2"
     run_on:
@@ -1538,6 +1547,15 @@ buildvariants:
     expansions:
       server_version: "5.0.0"
       notary_key_name: "server-5.0"
+    tasks:
+      - name: .push_atlascli_stable
+  - name: release_atlascli_publish_60
+    display_name: "Publish AtlasCLI yum/apt 6.0"
+    run_on:
+      - rhel80-small
+    expansions:
+      server_version: "6.0.0"
+      notary_key_name: "server-6.0"
     tasks:
       - name: .push_atlascli_stable
   - name: pkg_smoke_tests_docker_mongocli

@@ -8,12 +8,12 @@
     <title>MongoDB Atlas CLI</title>
     <authors>MongoDB</authors>
     <projectUrl>https://www.mongodb.com/tools/atlas-cli</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/mongodb/mongodb-atlas-cli/master/assets/atlas-cli-icon.png</iconUrl>
+    <iconUrl>https://webimages.mongodb.com/_com_assets/cms/l6p6e7hkjmr83g1wy-atlas-cli-icon.png</iconUrl>
     <copyright>2022 MongoDB Inc</copyright>
     <licenseUrl>https://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/mongodb/mongodb-atlas-cli</projectSourceUrl>
-    <docsUrl>https://dochub.mongodb.org/core/atlas-cli-changelog</docsUrl>
+    <docsUrl>https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-changelog/</docsUrl>
     <bugTrackerUrl>https://github.com/mongodb/mongodb-atlas-cli/issues</bugTrackerUrl>
     <tags>atlascli mongodb atlas cli mongodb-atlas</tags>
     <description>## MongoDB Atlas CLI

@@ -16,34 +16,35 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
 
 	exec "golang.org/x/sys/execabs"
 )
 
-func update(path, version, secret string) error {
-	packageName := fmt.Sprintf("atlascli.%s.nupkg", version)
-	cmd := exec.Command("choco", "push", packageName, "--api-key", secret)
+func update(path, name, secret string) error {
+	cmd := exec.Command("choco", "push", name, "--api-key", secret)
 	cmd.Dir = path
 	err := cmd.Start()
 	return err
 }
 
 func main() {
-	var version string
-	const packagePath = "build/package/chocolatey/temp"
+	var packagePath, packageName string
 	secret := os.Getenv("SECRET_API_KEY")
 
-	flag.StringVar(&version, "version", "", "Atlas CLI version")
+	flag.StringVar(&packagePath, "path", "", "Chocolatey package path")
+	flag.StringVar(&packageName, "name", "", "Chocolatey package name")
 	flag.Parse()
 
-	if version == "" {
-		log.Fatalln("You must specify Atlas CLI version")
+	if packagePath == "" {
+		log.Fatalln("You must specify Chocolatey package path")
+	}
+	if packageName == "" {
+		log.Fatalln("You must specify Chocolatey package name")
 	}
 
-	err := update(packagePath, version, secret)
+	err := update(packagePath, packageName, secret)
 	if err != nil {
 		log.Fatal(err)
 	}

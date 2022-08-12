@@ -51,9 +51,12 @@ go-msi make --path "${WIX_MANIFEST_FILE}"  --msi "dist/${PACKAGE_NAME}" --versio
 
 go run ./tools/sign -file "dist/${PACKAGE_NAME}"
 
+CHOCOLATEY_PACKAGE_PATH=build/package/chocolatey/temp
+CHOCOLATEY_PACKAGE_NAME="atlascli.${VERSION}.nupkg"
+
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
   go run ./tools/chocolateypkg/main.go --version "${VERSION}" --file "dist/${PACKAGE_NAME}" --url https://fastdl.mongodb.org/mongocli/"${PACKAGE_NAME}"
   if [[ "${RELEASING:?}" == true ]]; then
-      go run ./tools/chocolateyupdate/main.go --version "${VERSION}"
+      go run ./tools/chocolateyupdate/main.go ---path "${CHOCOLATEY_PACKAGE_PATH}" --name "${CHOCOLATEY_PACKAGE_NAME}"
   fi
 fi

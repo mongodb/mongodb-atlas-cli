@@ -22,29 +22,24 @@ import (
 	exec "golang.org/x/sys/execabs"
 )
 
-func update(path, name, secret string) error {
-	cmd := exec.Command("choco", "push", name, "--api-key", secret)
-	cmd.Dir = path
+func update(path, secret string) error {
+	cmd := exec.Command("choco", "push", path, "--api-key", secret)
 	err := cmd.Start()
 	return err
 }
 
 func main() {
-	var packagePath, packageName string
+	var packagePath string
 	secret := os.Getenv("SECRET_API_KEY")
 
 	flag.StringVar(&packagePath, "path", "", "Chocolatey package path")
-	flag.StringVar(&packageName, "name", "", "Chocolatey package name")
 	flag.Parse()
 
 	if packagePath == "" {
 		log.Fatalln("You must specify Chocolatey package path")
 	}
-	if packageName == "" {
-		log.Fatalln("You must specify Chocolatey package name")
-	}
 
-	err := update(packagePath, packageName, secret)
+	err := update(packagePath, secret)
 	if err != nil {
 		log.Fatal(err)
 	}

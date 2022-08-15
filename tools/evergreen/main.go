@@ -32,7 +32,7 @@ const (
 
 var (
 	serverVersions = []string{"4.2", "4.4", "5.0"}
-	oses           = []string{"amazonlinux2", "centos7", "centos8", "debian9", "debian10", "ubuntu18.04", "ubuntu20.04"}
+	oses           = []string{"amazonlinux2", "centos7", "centos8", "rhel9", "debian9", "debian10", "ubuntu18.04", "ubuntu20.04", "ubuntu22.04"}
 	repos          = []string{"org", "enterprise"}
 )
 
@@ -40,9 +40,11 @@ func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDepende
 	newOs := map[string]string{
 		"centos7":      "rhel70",
 		"centos8":      "rhel80",
+		"rhel90":       "rhel90",
 		"amazonlinux2": "amazon2",
 		"ubuntu18.04":  "ubuntu1804",
 		"ubuntu20.04":  "ubuntu2004",
+		"ubuntu22.04":  "ubuntu2204",
 		"debian9":      "debian92",
 		"debian10":     "debian10",
 	}

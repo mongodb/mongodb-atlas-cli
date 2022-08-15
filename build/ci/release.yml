@@ -355,6 +355,17 @@ tasks:
         vars:
           image: ubuntu20.04-deb
           tool_name: mongocli
+  - name: pkg_test_mongocli_docker_ubuntu2204
+    tags: [ "smoke-test", "mongocli", "pkg" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_mongocli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: ubuntu22.04-deb
+          tool_name: mongocli
   - name: pkg_test_mongocli_docker_debian9
     tags: [ "smoke-test", "mongocli", "pkg" ]
     depends_on:
@@ -399,6 +410,28 @@ tasks:
         vars:
           image: centos7-rpm
           tool_name: mongocli
+  - name: pkg_test_mongocli_docker_centos8
+    tags: [ "smoke-test", "mongocli", "pkg" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_mongocli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: centos8-rpm
+          tool_name: mongocli
+  - name: pkg_test_mongocli_docker_rhel9
+    tags: [ "smoke-test", "mongocli", "pkg" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_mongocli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: rhel9-rpm
+          tool_name: mongocli
   - name: pkg_test_atlascli_docker_amazon2
     tags: [ "smoke-test", "atlascli", "pkg" ]
     depends_on:
@@ -432,6 +465,17 @@ tasks:
         vars:
           image: centos8-rpm
           tool_name: atlascli
+  - name: pkg_test_atlascli_docker_rhel9
+    tags: [ "smoke-test", "atlascli", "pkg" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: rhel9-rpm
+          tool_name: atlascli
   - name: pkg_test_atlascli_docker_ubuntu1804
     tags: [ "smoke-test", "atlascli", "pkg" ]
     depends_on:
@@ -453,6 +497,17 @@ tasks:
       - func: "docker build"
         vars:
           image: ubuntu20.04-deb
+          tool_name: atlascli
+  - name: pkg_test_atlascli_docker_ubuntu2204
+    tags: [ "smoke-test", "atlascli", "pkg" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: ubuntu22.04-deb
           tool_name: atlascli
   - name: pkg_test_atlascli_docker_debian9
     tags: [ "smoke-test", "atlascli", "pkg" ]
@@ -509,6 +564,17 @@ tasks:
         vars:
           image: centos8-rpm
           tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_rhel9
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: rhel9-rpm
+          tool_name: atlascli
   - name: pkg_test_atlascli_meta_docker_ubuntu1804
     tags: [ "smoke-test", "atlascli", "meta" ]
     depends_on:
@@ -530,6 +596,17 @@ tasks:
       - func: "docker build meta"
         vars:
           image: ubuntu20.04-deb
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_ubuntu2204
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: ubuntu22.04-deb
           tool_name: atlascli
   - name: pkg_test_atlascli_meta_docker_debian9
     tags: [ "smoke-test", "atlascli", "meta" ]
@@ -769,6 +846,28 @@ tasks:
           distro: rhel80
           ext: rpm
           tool_name: atlascli
+  - name: push_atlascli_rhel90_enterprise
+    <<: *default_atlascli_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel90
+          ext: rpm
+          tool_name: atlascli
+  - name: push_atlascli_rhel90_org
+    <<: *default_atlascli_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel90
+          ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_amazon2_enterprise
     <<: *default_atlascli_push_def
     commands:
@@ -834,6 +933,28 @@ tasks:
         vars:
           edition: org
           distro: ubuntu2004
+          ext: deb
+          tool_name: atlascli
+  - name: push_atlascli_ubuntu2204_enterprise
+    <<: *default_atlascli_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu2204
+          ext: deb
+          tool_name: atlascli
+  - name: push_atlascli_ubuntu2204_org
+    <<: *default_atlascli_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu2204
           ext: deb
           tool_name: atlascli
   - name: push_atlascli_debian92_enterprise
@@ -937,6 +1058,28 @@ tasks:
           distro: rhel80
           ext: rpm
           tool_name: mongocli
+  - name: push_mongocli_rhel90_enterprise
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel90
+          ext: rpm
+          tool_name: mongocli
+  - name: push_mongocli_rhel90_org
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel90
+          ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_amazon2_enterprise
     <<: *default_push_def
     commands:
@@ -1002,6 +1145,28 @@ tasks:
         vars:
           edition: org
           distro: ubuntu2004
+          ext: deb
+          tool_name: mongocli
+  - name: push_mongocli_ubuntu2204_enterprise
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu2204
+          ext: deb
+          tool_name: mongocli
+  - name: push_mongocli_ubuntu2204_org
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu2204
           ext: deb
           tool_name: mongocli
   - name: push_mongocli_debian92_enterprise
@@ -1103,6 +1268,28 @@ tasks:
           distro: rhel80
           ext: rpm
           tool_name: mongocli
+  - name: push_mongocli_rhel90_enterprise_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel90
+          ext: rpm
+          tool_name: mongocli
+  - name: push_mongocli_rhel90_org_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel90
+          ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_amazon2_enterprise_stable
     <<: *default_push_stable_def
     commands:
@@ -1168,6 +1355,28 @@ tasks:
         vars:
           edition: org
           distro: ubuntu2004
+          ext: deb
+          tool_name: mongocli
+  - name: push_mongocli_ubuntu2204_enterprise_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu2204
+          ext: deb
+          tool_name: mongocli
+  - name: push_mongocli_ubuntu2204_org_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu2204
           ext: deb
           tool_name: mongocli
   - name: push_mongocli_debian10_enterprise_stable
@@ -1247,6 +1456,28 @@ tasks:
           distro: rhel80
           ext: rpm
           tool_name: atlascli
+  - name: push_atlascli_rhel90_enterprise_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel90
+          ext: rpm
+          tool_name: atlascli
+  - name: push_atlascli_rhel90_org_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel90
+          ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_amazon2_enterprise_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1312,6 +1543,28 @@ tasks:
         vars:
           edition: org
           distro: ubuntu2004
+          ext: deb
+          tool_name: atlascli
+  - name: push_atlascli_ubuntu2204_enterprise_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu2204
+          ext: deb
+          tool_name: atlascli
+  - name: push_atlascli_ubuntu2204_org_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu2204
           ext: deb
           tool_name: atlascli
   - name: push_atlascli_debian92_enterprise_stable

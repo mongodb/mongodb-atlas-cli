@@ -355,6 +355,17 @@ tasks:
         vars:
           image: ubuntu20.04-deb
           tool_name: mongocli
+  - name: pkg_test_mongocli_docker_ubuntu2204
+    tags: [ "smoke-test", "mongocli", "pkg" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_mongocli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: ubuntu22.04-deb
+          tool_name: mongocli
   - name: pkg_test_mongocli_docker_debian9
     tags: [ "smoke-test", "mongocli", "pkg" ]
     depends_on:
@@ -432,6 +443,17 @@ tasks:
         vars:
           image: centos8-rpm
           tool_name: atlascli
+  - name: pkg_test_atlascli_docker_rhel9
+    tags: [ "smoke-test", "atlascli", "pkg" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: rhel9-rpm
+          tool_name: atlascli
   - name: pkg_test_atlascli_docker_ubuntu1804
     tags: [ "smoke-test", "atlascli", "pkg" ]
     depends_on:
@@ -453,6 +475,17 @@ tasks:
       - func: "docker build"
         vars:
           image: ubuntu20.04-deb
+          tool_name: atlascli
+  - name: pkg_test_atlascli_docker_ubuntu2204
+    tags: [ "smoke-test", "atlascli", "pkg" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: ubuntu22.04-deb
           tool_name: atlascli
   - name: pkg_test_atlascli_docker_debian9
     tags: [ "smoke-test", "atlascli", "pkg" ]
@@ -509,6 +542,17 @@ tasks:
         vars:
           image: centos8-rpm
           tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_rhel9
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: rhel9-rpm
+          tool_name: atlascli
   - name: pkg_test_atlascli_meta_docker_ubuntu1804
     tags: [ "smoke-test", "atlascli", "meta" ]
     depends_on:
@@ -530,6 +574,17 @@ tasks:
       - func: "docker build meta"
         vars:
           image: ubuntu20.04-deb
+          tool_name: atlascli
+  - name: pkg_test_atlascli_meta_docker_ubuntu2204
+    tags: [ "smoke-test", "atlascli", "meta" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_atlascli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build meta"
+        vars:
+          image: ubuntu22.04-deb
           tool_name: atlascli
   - name: pkg_test_atlascli_meta_docker_debian9
     tags: [ "smoke-test", "atlascli", "meta" ]

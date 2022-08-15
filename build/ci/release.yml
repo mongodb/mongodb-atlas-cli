@@ -110,11 +110,13 @@ functions:
         env:
           <<: *go_env
           TOOL_NAME: ${TOOL_NAME}
+          RELEASING: ${RELEASING}
           NOTARY_SIGNING_KEY_MONGOCLI: ${notary_service_signing_key_mongocli}
           NOTARY_SIGNING_KEY_ATLASCLI: ${notary_service_signing_key_atlascli}
           NOTARY_SIGNING_COMMENT: "Evergreen Automatic Signing (${TOOL_NAME})"
           NOTARY_AUTH_TOKEN: ${signing_auth_token_50}
           NOTARY_URL: ${notary_service_notary_url}
+          SECRET_API_KEY: ${chocolatey_api_key}
         command: bash.exe -c build/package/generate-msi.sh
   "rename pkg":
     - command: subprocess.exec
@@ -275,6 +277,7 @@ tasks:
       - func: "generate msi"
         vars:
           TOOL_NAME: ${tool_name}
+          RELEASING: false
       - func: "uninstall go-msi"
       - command: s3.put
         params:
@@ -695,6 +698,7 @@ tasks:
       - func: "generate msi"
         vars:
           TOOL_NAME: ${tool_name}
+          RELEASING: true
       - func: "uninstall go-msi"
       - func: "upload dist"
       - command: s3.put

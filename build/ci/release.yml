@@ -410,6 +410,28 @@ tasks:
         vars:
           image: centos7-rpm
           tool_name: mongocli
+  - name: pkg_test_mongocli_docker_centos8
+    tags: [ "smoke-test", "mongocli", "pkg" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_mongocli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: centos8-rpm
+          tool_name: mongocli
+  - name: pkg_test_mongocli_docker_rhel9
+    tags: [ "smoke-test", "mongocli", "pkg" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_mongocli_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: rhel9-rpm
+          tool_name: mongocli
   - name: pkg_test_atlascli_docker_amazon2
     tags: [ "smoke-test", "atlascli", "pkg" ]
     depends_on:

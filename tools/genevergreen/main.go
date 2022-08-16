@@ -66,9 +66,7 @@ func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDepende
 	}
 }
 
-func generateRepoTasks(toolName string) *shrub.Configuration {
-	c := &shrub.Configuration{}
-
+func generateRepoTasks(c *shrub.Configuration, toolName string) {
 	for _, serverVersion := range serverVersions {
 		v := &shrub.Variant{
 			BuildName:        fmt.Sprintf("test_repo_%v_%v", toolName, serverVersion),
@@ -108,13 +106,9 @@ func generateRepoTasks(toolName string) *shrub.Configuration {
 
 		c.Variants = append(c.Variants, v)
 	}
-
-	return c
 }
 
-func generatePostPkgTasks(toolName string) *shrub.Configuration {
-	c := &shrub.Configuration{}
-
+func generatePostPkgTasks(c *shrub.Configuration, toolName string) {
 	v := &shrub.Variant{
 		BuildName:        fmt.Sprintf("pkg_smoke_tests_docker_%v", toolName),
 		BuildDisplayName: fmt.Sprintf("Post packaging smoke tests (Docker / %v)", toolName),
@@ -151,14 +145,12 @@ func generatePostPkgTasks(toolName string) *shrub.Configuration {
 		}
 	}
 
-	c.Variants = append(c.Variants, v, generatePostPkgMetaTasks(toolName))
-
-	return c
+	c.Variants = append(c.Variants, v)
 }
 
-func generatePostPkgMetaTasks(toolName string) *shrub.Variant {
+func generatePostPkgMetaTasks(c *shrub.Configuration, toolName string) {
 	if toolName != atlascli {
-		return nil
+		return
 	}
 
 	v := &shrub.Variant{
@@ -182,7 +174,7 @@ func generatePostPkgMetaTasks(toolName string) *shrub.Variant {
 		v.AddTasks(t.Name)
 	}
 
-	return v
+	c.Variants = append(c.Variants, v)
 }
 
 func run() error {
@@ -205,16 +197,18 @@ func run() error {
 		return errors.New("-tasks missing")
 	}
 
-	if taskType != "repo" {
-		return errors.New("-tasks must be 'repo'")
+	c := &shrub.Configuration{}
+
+	switch taskType {
+	case "repo":
+		generateRepoTasks(c, toolName)
+	case "postpkg":
+		generatePostPkgTasks(c, toolName)
+		generatePostPkgMetaTasks(c, toolName)
+	default:
+		return errors.New("-tasks is invalid")
 	}
 
-	var c *shrub.Configuration
-	if taskType == "repo" {
-		c = generateRepoTasks(toolName)
-	} else if taskType == "postpkg" {
-		c = generatePostPkgTasks(toolName)
-	}
 	var b []byte
 	b, err := json.MarshalIndent(c, "", "\t")
 

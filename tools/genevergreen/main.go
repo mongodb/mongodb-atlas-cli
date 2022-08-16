@@ -37,7 +37,7 @@ var (
 	postPkgImg     = map[string]string{
 		"centos7":      "centos7-rpm",
 		"centos8":      "centos8-rpm",
-		"rhel90":       "rhel9-rpm",
+		"rhel9":        "rhel9-rpm",
 		"amazonlinux2": "amazonlinux2-rpm",
 		"ubuntu18.04":  "ubuntu18.04-deb",
 		"ubuntu20.04":  "ubuntu20.04-deb",
@@ -51,7 +51,7 @@ func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDepende
 	newOs := map[string]string{
 		"centos7":      "rhel70",
 		"centos8":      "rhel80",
-		"rhel90":       "rhel90",
+		"rhel9":        "rhel90",
 		"amazonlinux2": "amazon2",
 		"ubuntu18.04":  "ubuntu1804",
 		"ubuntu20.04":  "ubuntu2004",

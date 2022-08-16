@@ -1539,13 +1539,21 @@ buildvariants:
   - name: pkg_smoke_tests_docker_mongocli
     display_name: "Post packaging smoke tests (Docker / MongoCLI)"
     run_on: ubuntu1804-small
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
-      - name: .smoke-test .mongocli
+      - name: .smoke-test .mongocli .pkg
   - name: pkg_smoke_tests_docker_atlascli
     display_name: "Post packaging smoke tests (Docker / AtlasCLI)"
     run_on: ubuntu1804-small
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
-      - name: .smoke-test .atlascli
+      - name: .smoke-test .atlascli .pkg
   - name: release_atlascli_repo_test
     display_name: "Test AtlasCLI repo"
     expansions:

@@ -110,8 +110,8 @@ func generateRepoTasks(c *shrub.Configuration, toolName string) {
 
 func generatePostPkgTasks(c *shrub.Configuration, toolName string) {
 	v := &shrub.Variant{
-		BuildName:        fmt.Sprintf("pkg_smoke_tests_docker_%v", toolName),
-		BuildDisplayName: fmt.Sprintf("Post packaging smoke tests (Docker / %v)", toolName),
+		BuildName:        fmt.Sprintf("pkg_smoke_tests_docker_%v_generated", toolName),
+		BuildDisplayName: fmt.Sprintf("Generated post packaging smoke tests (Docker / %v)", toolName),
 		DistroRunOn:      []string{"ubuntu1804-small"},
 	}
 
@@ -139,8 +139,8 @@ func generatePostPkgMetaTasks(c *shrub.Configuration, toolName string) {
 	}
 
 	v := &shrub.Variant{
-		BuildName:        fmt.Sprintf("pkg_smoke_tests_docker_meta_%v", toolName),
-		BuildDisplayName: fmt.Sprintf("Post packaging smoke tests (Meta / %v)", toolName),
+		BuildName:        fmt.Sprintf("pkg_smoke_tests_docker_meta_%v_generated", toolName),
+		BuildDisplayName: fmt.Sprintf("Generated post packaging smoke tests (Meta / %v)", toolName),
 		DistroRunOn:      []string{"ubuntu1804-small"},
 	}
 

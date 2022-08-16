@@ -336,9 +336,6 @@ tasks:
       - func: "upload dist"
   - name: pkg_test_mongocli_generate
     tags: [ "smoke-test", "mongocli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_mongocli_snapshot"
     commands:
       - func: "clone"
       - func: "generate evergreen"
@@ -347,9 +344,6 @@ tasks:
           task_type: postpkg
   - name: pkg_test_atlascli_generate
     tags: [ "smoke-test", "atlascli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_mongocli_snapshot"
     commands:
       - func: "clone"
       - func: "generate evergreen"

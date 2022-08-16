@@ -128,21 +128,6 @@ func generatePostPkgTasks(c *shrub.Configuration, toolName string) {
 		})
 		c.Tasks = append(c.Tasks, t)
 		v.AddTasks(t.Name)
-
-		if toolName == atlascli {
-			t := &shrub.Task{
-				Name: fmt.Sprintf("pkg_test_%v_meta_docker_%v", toolName, os),
-			}
-			t = t.Dependency(shrub.TaskDependency{
-				Name:    "package_goreleaser",
-				Variant: fmt.Sprintf("goreleaser_%v_snapshot", toolName),
-			}).Function("clone").FunctionWithVars("docker build meta", map[string]string{
-				"tool_name": toolName,
-				"image":     postPkgImg[os],
-			})
-			c.Tasks = append(c.Tasks, t)
-			v.AddTasks(t.Name)
-		}
 	}
 
 	c.Variants = append(c.Variants, v)

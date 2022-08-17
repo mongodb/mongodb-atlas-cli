@@ -28,6 +28,7 @@ import (
 const (
 	atlascli = "atlascli"
 	mongocli = "mongocli"
+	runOn    = "ubuntu1804-small"
 )
 
 var (
@@ -71,7 +72,7 @@ func generateRepoTasks(c *shrub.Configuration, toolName string) {
 		v := &shrub.Variant{
 			BuildName:        fmt.Sprintf("test_repo_%v_%v", toolName, serverVersion),
 			BuildDisplayName: fmt.Sprintf("Test %v on repo %v", toolName, serverVersion),
-			DistroRunOn:      []string{"ubuntu1804-small"},
+			DistroRunOn:      []string{runOn},
 		}
 
 		pkg := "mongodb-atlas-cli"
@@ -112,7 +113,7 @@ func generatePostPkgTasks(c *shrub.Configuration, toolName string) {
 	v := &shrub.Variant{
 		BuildName:        fmt.Sprintf("pkg_smoke_tests_docker_%v_generated", toolName),
 		BuildDisplayName: fmt.Sprintf("Generated post packaging smoke tests (Docker / %v)", toolName),
-		DistroRunOn:      []string{"ubuntu1804-small"},
+		DistroRunOn:      []string{runOn},
 	}
 
 	for _, os := range oses {
@@ -141,7 +142,7 @@ func generatePostPkgMetaTasks(c *shrub.Configuration, toolName string) {
 	v := &shrub.Variant{
 		BuildName:        fmt.Sprintf("pkg_smoke_tests_docker_meta_%v_generated", toolName),
 		BuildDisplayName: fmt.Sprintf("Generated post packaging smoke tests (Meta / %v)", toolName),
-		DistroRunOn:      []string{"ubuntu1804-small"},
+		DistroRunOn:      []string{runOn},
 	}
 
 	for _, os := range oses {

@@ -28,19 +28,31 @@ import (
 const (
 	atlascli = "atlascli"
 	mongocli = "mongocli"
+	runOn    = "ubuntu1804-small"
 )
 
 var (
 	serverVersions = []string{"4.2", "4.4", "5.0"}
 	oses           = []string{"amazonlinux2", "centos7", "centos8", "rhel9", "debian9", "debian10", "ubuntu18.04", "ubuntu20.04", "ubuntu22.04"}
 	repos          = []string{"org", "enterprise"}
+	postPkgImg     = map[string]string{
+		"centos7":      "centos7-rpm",
+		"centos8":      "centos8-rpm",
+		"rhel9":        "rhel9-rpm",
+		"amazonlinux2": "amazonlinux2-rpm",
+		"ubuntu18.04":  "ubuntu18.04-deb",
+		"ubuntu20.04":  "ubuntu20.04-deb",
+		"ubuntu22.04":  "ubuntu22.04-deb",
+		"debian9":      "debian9-deb",
+		"debian10":     "debian10-deb",
+	}
 )
 
 func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDependency {
 	newOs := map[string]string{
 		"centos7":      "rhel70",
 		"centos8":      "rhel80",
-		"rhel90":       "rhel90",
+		"rhel9":        "rhel90",
 		"amazonlinux2": "amazon2",
 		"ubuntu18.04":  "ubuntu1804",
 		"ubuntu20.04":  "ubuntu2004",
@@ -55,14 +67,12 @@ func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDepende
 	}
 }
 
-func generateRepoTasks(toolName string) *shrub.Configuration {
-	c := &shrub.Configuration{}
-
+func generateRepoTasks(c *shrub.Configuration, toolName string) {
 	for _, serverVersion := range serverVersions {
 		v := &shrub.Variant{
 			BuildName:        fmt.Sprintf("test_repo_%v_%v", toolName, serverVersion),
 			BuildDisplayName: fmt.Sprintf("Test %v on repo %v", toolName, serverVersion),
-			DistroRunOn:      []string{"ubuntu1804-small"},
+			DistroRunOn:      []string{runOn},
 		}
 
 		pkg := "mongodb-atlas-cli"
@@ -97,13 +107,66 @@ func generateRepoTasks(toolName string) *shrub.Configuration {
 
 		c.Variants = append(c.Variants, v)
 	}
+}
 
-	return c
+func generatePostPkgTasks(c *shrub.Configuration, toolName string) {
+	v := &shrub.Variant{
+		BuildName:        fmt.Sprintf("pkg_smoke_tests_docker_%v_generated", toolName),
+		BuildDisplayName: fmt.Sprintf("Generated post packaging smoke tests (Docker / %v)", toolName),
+		DistroRunOn:      []string{runOn},
+	}
+
+	for _, os := range oses {
+		t := &shrub.Task{
+			Name: fmt.Sprintf("pkg_test_%v_docker_%v", toolName, os),
+		}
+		t = t.Dependency(shrub.TaskDependency{
+			Name:    "package_goreleaser",
+			Variant: fmt.Sprintf("goreleaser_%v_snapshot", toolName),
+		}).Function("clone").FunctionWithVars("docker build", map[string]string{
+			"tool_name": toolName,
+			"image":     postPkgImg[os],
+		})
+		c.Tasks = append(c.Tasks, t)
+		v.AddTasks(t.Name)
+	}
+
+	c.Variants = append(c.Variants, v)
+}
+
+func generatePostPkgMetaTasks(c *shrub.Configuration, toolName string) {
+	if toolName != atlascli {
+		return
+	}
+
+	v := &shrub.Variant{
+		BuildName:        fmt.Sprintf("pkg_smoke_tests_docker_meta_%v_generated", toolName),
+		BuildDisplayName: fmt.Sprintf("Generated post packaging smoke tests (Meta / %v)", toolName),
+		DistroRunOn:      []string{runOn},
+	}
+
+	for _, os := range oses {
+		t := &shrub.Task{
+			Name: fmt.Sprintf("pkg_test_%v_meta_docker_%v", toolName, os),
+		}
+		t = t.Dependency(shrub.TaskDependency{
+			Name:    "package_goreleaser",
+			Variant: fmt.Sprintf("goreleaser_%v_snapshot", toolName),
+		}).Function("clone").FunctionWithVars("docker build meta", map[string]string{
+			"tool_name": toolName,
+			"image":     postPkgImg[os],
+		})
+		c.Tasks = append(c.Tasks, t)
+		v.AddTasks(t.Name)
+	}
+
+	c.Variants = append(c.Variants, v)
 }
 
 func run() error {
-	var toolName string
+	var toolName, taskType string
 
+	flag.StringVar(&taskType, "tasks", "", "type of task to be generated")
 	flag.StringVar(&toolName, "tool_name", "", fmt.Sprintf("Tool to generate tasks for (%v or %v)", atlascli, mongocli))
 
 	flag.Parse()
@@ -116,7 +179,22 @@ func run() error {
 		return fmt.Errorf("-tool_name must be either '%v' or '%v'", atlascli, mongocli)
 	}
 
-	c := generateRepoTasks(toolName)
+	if taskType == "" {
+		return errors.New("-tasks missing")
+	}
+
+	c := &shrub.Configuration{}
+
+	switch taskType {
+	case "repo":
+		generateRepoTasks(c, toolName)
+	case "postpkg":
+		generatePostPkgTasks(c, toolName)
+		generatePostPkgMetaTasks(c, toolName)
+	default:
+		return errors.New("-tasks is invalid")
+	}
+
 	var b []byte
 	b, err := json.MarshalIndent(c, "", "\t")
 

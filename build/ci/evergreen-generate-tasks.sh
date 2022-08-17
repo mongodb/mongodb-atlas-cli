@@ -17,4 +17,4 @@
 
 set -Eeou pipefail
 
-go run tools/evergreen/main.go -tool_name "${tool_name:?}" > tasks.json
+go run tools/genevergreen/main.go -tool_name "${tool_name:?}" -tasks "${task_type:?}" > tasks.json

@@ -235,6 +235,7 @@ functions:
           - go_base_path
           - workdir
           - tool_name
+          - task_type
         binary: build/ci/evergreen-generate-tasks.sh
     - command: s3.put
       params:
@@ -333,303 +334,22 @@ tasks:
           FEED_FILE_NAME: "${package_name}.json"
           TOOL_NAME: ${tool_name}
       - func: "upload dist"
-  - name: pkg_test_mongocli_docker_ubuntu1804
+  - name: pkg_test_mongocli_generate
     tags: [ "smoke-test", "mongocli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_mongocli_snapshot"
     commands:
       - func: "clone"
-      - func: "docker build"
+      - func: "generate evergreen"
         vars:
-          image: ubuntu18.04-deb
           tool_name: mongocli
-  - name: pkg_test_mongocli_docker_ubuntu2004
-    tags: [ "smoke-test", "mongocli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_mongocli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: ubuntu20.04-deb
-          tool_name: mongocli
-  - name: pkg_test_mongocli_docker_ubuntu2204
-    tags: [ "smoke-test", "mongocli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_mongocli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: ubuntu22.04-deb
-          tool_name: mongocli
-  - name: pkg_test_mongocli_docker_debian9
-    tags: [ "smoke-test", "mongocli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_mongocli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: debian9-deb
-          tool_name: mongocli
-  - name: pkg_test_mongocli_docker_debian10
-    tags: [ "smoke-test", "mongocli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_mongocli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: debian10-deb
-          tool_name: mongocli
-  - name: pkg_test_mongocli_docker_amazon2
-    tags: [ "smoke-test", "mongocli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_mongocli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: amazonlinux2-rpm
-          tool_name: mongocli
-  - name: pkg_test_mongocli_docker_centos7
-    tags: [ "smoke-test", "mongocli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_mongocli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: centos7-rpm
-          tool_name: mongocli
-  - name: pkg_test_mongocli_docker_centos8
-    tags: [ "smoke-test", "mongocli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_mongocli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: centos8-rpm
-          tool_name: mongocli
-  - name: pkg_test_mongocli_docker_rhel9
-    tags: [ "smoke-test", "mongocli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_mongocli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: rhel9-rpm
-          tool_name: mongocli
-  - name: pkg_test_atlascli_docker_amazon2
+          task_type: postpkg
+  - name: pkg_test_atlascli_generate
     tags: [ "smoke-test", "atlascli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
     commands:
       - func: "clone"
-      - func: "docker build"
+      - func: "generate evergreen"
         vars:
-          image: amazonlinux2-rpm
           tool_name: atlascli
-  - name: pkg_test_atlascli_docker_centos7
-    tags: [ "smoke-test", "atlascli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: centos7-rpm
-          tool_name: atlascli
-  - name: pkg_test_atlascli_docker_centos8
-    tags: [ "smoke-test", "atlascli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: centos8-rpm
-          tool_name: atlascli
-  - name: pkg_test_atlascli_docker_rhel9
-    tags: [ "smoke-test", "atlascli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: rhel9-rpm
-          tool_name: atlascli
-  - name: pkg_test_atlascli_docker_ubuntu1804
-    tags: [ "smoke-test", "atlascli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: ubuntu18.04-deb
-          tool_name: atlascli
-  - name: pkg_test_atlascli_docker_ubuntu2004
-    tags: [ "smoke-test", "atlascli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: ubuntu20.04-deb
-          tool_name: atlascli
-  - name: pkg_test_atlascli_docker_ubuntu2204
-    tags: [ "smoke-test", "atlascli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: ubuntu22.04-deb
-          tool_name: atlascli
-  - name: pkg_test_atlascli_docker_debian9
-    tags: [ "smoke-test", "atlascli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: debian9-deb
-          tool_name: atlascli
-  - name: pkg_test_atlascli_docker_debian10
-    tags: [ "smoke-test", "atlascli", "pkg" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build"
-        vars:
-          image: debian10-deb
-          tool_name: atlascli
-  - name: pkg_test_atlascli_meta_docker_amazon2
-    tags: [ "smoke-test", "atlascli", "meta" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build meta"
-        vars:
-          image: amazonlinux2-rpm
-          tool_name: atlascli
-  - name: pkg_test_atlascli_meta_docker_centos7
-    tags: [ "smoke-test", "atlascli", "meta" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build meta"
-        vars:
-          image: centos7-rpm
-          tool_name: atlascli
-  - name: pkg_test_atlascli_meta_docker_centos8
-    tags: [ "smoke-test", "atlascli", "meta" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build meta"
-        vars:
-          image: centos8-rpm
-          tool_name: atlascli
-  - name: pkg_test_atlascli_meta_docker_rhel9
-    tags: [ "smoke-test", "atlascli", "meta" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build meta"
-        vars:
-          image: rhel9-rpm
-          tool_name: atlascli
-  - name: pkg_test_atlascli_meta_docker_ubuntu1804
-    tags: [ "smoke-test", "atlascli", "meta" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build meta"
-        vars:
-          image: ubuntu18.04-deb
-          tool_name: atlascli
-  - name: pkg_test_atlascli_meta_docker_ubuntu2004
-    tags: [ "smoke-test", "atlascli", "meta" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build meta"
-        vars:
-          image: ubuntu20.04-deb
-          tool_name: atlascli
-  - name: pkg_test_atlascli_meta_docker_ubuntu2204
-    tags: [ "smoke-test", "atlascli", "meta" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build meta"
-        vars:
-          image: ubuntu22.04-deb
-          tool_name: atlascli
-  - name: pkg_test_atlascli_meta_docker_debian9
-    tags: [ "smoke-test", "atlascli", "meta" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build meta"
-        vars:
-          image: debian9-deb
-          tool_name: atlascli
-  - name: pkg_test_atlascli_meta_docker_debian10
-    tags: [ "smoke-test", "atlascli", "meta" ]
-    depends_on:
-      - name: package_goreleaser
-        variant: "goreleaser_atlascli_snapshot"
-    commands:
-      - func: "clone"
-      - func: "docker build meta"
-        vars:
-          image: debian10-deb
-          tool_name: atlascli
+          task_type: postpkg
   - name: release_mongocli
     stepback: false
     git_tag_only: true
@@ -1623,6 +1343,7 @@ tasks:
       - func: "generate evergreen"
         vars:
           tool_name: atlascli
+          task_type: repo
   - name: pkg_test_repo_mongocli
     patchable: false
     git_tag_only: true
@@ -1635,7 +1356,7 @@ tasks:
       - func: "generate evergreen"
         vars:
           tool_name: mongocli
-
+          task_type: repo
 buildvariants:
   - name: go_mongocli_msi_snapshot
     display_name: "Packaging MongoCLI (go-msi)"
@@ -1818,13 +1539,21 @@ buildvariants:
   - name: pkg_smoke_tests_docker_mongocli
     display_name: "Post packaging smoke tests (Docker / MongoCLI)"
     run_on: ubuntu1804-small
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
-      - name: .smoke-test .mongocli
+      - name: .smoke-test .mongocli .pkg
   - name: pkg_smoke_tests_docker_atlascli
     display_name: "Post packaging smoke tests (Docker / AtlasCLI)"
     run_on: ubuntu1804-small
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+      go_base_path: ""
     tasks:
-      - name: .smoke-test .atlascli
+      - name: .smoke-test .atlascli .pkg
   - name: release_atlascli_repo_test
     display_name: "Test AtlasCLI repo"
     expansions:

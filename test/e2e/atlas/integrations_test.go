@@ -48,29 +48,30 @@ func TestIntegrations(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
-	if !Gov() { // cloudgov does not have an available datadog region
-		t.Run("Create DATADOG", func(t *testing.T) {
-			cmd := exec.Command(cliPath,
-				integrationsEntity,
-				"create",
-				datadogEntity,
-				"--apiKey",
-				key,
-				"--projectId",
-				g.projectID,
-				"-o=json")
-			cmd.Env = os.Environ()
-			resp, err := cmd.CombinedOutput()
+	t.Run("Create DATADOG", func(t *testing.T) {
+		if Gov() {
+			t.Skip("Skipping DATADOG integration test, cloudgov does not have an available datadog region")
+		}
+		cmd := exec.Command(cliPath,
+			integrationsEntity,
+			"create",
+			datadogEntity,
+			"--apiKey",
+			key,
+			"--projectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
 
-			a := assert.New(t)
-			a.NoError(err, string(resp))
+		a := assert.New(t)
+		a.NoError(err, string(resp))
 
-			var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
-			if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-				a.True(integrationExists(datadogEntity, thirdPartyIntegrations))
-			}
-		})
-	}
+		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
+			a.True(integrationExists(datadogEntity, thirdPartyIntegrations))
+		}
+	})
 
 	t.Run("Create NEW_RELIC", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

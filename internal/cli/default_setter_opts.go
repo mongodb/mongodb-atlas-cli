@@ -245,7 +245,7 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", err)
 		}
 
-		if applyFilter{
+		if applyFilter {
 			_, _ = fmt.Fprintf(opts.OutWriter, "Since you have access to more than %d organizations, please type the organization ID or the organization name to filter.\n", resultsLimit)
 			filterPrompt := &survey.Input{
 				Message: "Organization filter:",

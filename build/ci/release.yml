@@ -197,6 +197,7 @@ functions:
           - signing_auth_token_44
           - signing_auth_token_46
           - signing_auth_token_50
+          - signing_auth_token_60
           - tool_name
         env:
           <<: *go_env

@@ -48,7 +48,7 @@ func TestIntegrations(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
-	if Gov() { // cloudgov does not have an available datadog region
+	if !Gov() { // cloudgov does not have an available datadog region
 		t.Run("Create DATADOG", func(t *testing.T) {
 			cmd := exec.Command(cliPath,
 				integrationsEntity,

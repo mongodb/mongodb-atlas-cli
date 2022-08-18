@@ -231,6 +231,9 @@ functions:
       type: test
       params:
         include_expansions_in_env:
+          - project
+          - revision
+          - created_at
           - tool_name
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/powershell
         binary: Powershell -File ./windows_post_package_test.ps1
@@ -1367,6 +1370,9 @@ tasks:
           task_type: repo
   - name: pkg_test_windows
     tags: [ "smoke-test", "windows" ]
+    depends_on:
+      - name: package_msi
+        variant: go_atlascli_msi_snapshot
     commands:
       - func: "clone"
       - func: "powershell build"

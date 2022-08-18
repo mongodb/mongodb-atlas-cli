@@ -2,7 +2,7 @@
 $NewestVersion = git tag --list ${Env:TOOL_NAME}/v* --sort=taggerdate | tail -1 | cut -d "v" -f 2
 cd ../../../dist/
 $PackageName = "mongodb-atlas-cli_${NewestVersion}_windows_x86_64.msi"
-$Source = "https://fastdl.mongodb.org/mongocli/${PackageName}"
+$Source = "https://mongodb-mongocli-build.s3.amazonaws.com/${Env:PROJECT}/dist/${Env:REVISION}_${Env:CREATED_AT}/${PackageName}"
 Invoke-WebRequest -Uri $Source -OutFile $PackageName | Out-Null
 Start-Process -Wait -FilePath msiexec -ArgumentList /i, $PackageName, /quiet, /norestart -Verb RunAs
 # Set missing %APPDATA% environment variable

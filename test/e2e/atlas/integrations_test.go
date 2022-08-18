@@ -48,27 +48,29 @@ func TestIntegrations(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("Create DATADOG", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			integrationsEntity,
-			"create",
-			datadogEntity,
-			"--apiKey",
-			key,
-			"--projectId",
-			g.projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+	if !Gov() { // cloudgov does not have an available datadog region
+		t.Run("Create DATADOG", func(t *testing.T) {
+			cmd := exec.Command(cliPath,
+				integrationsEntity,
+				"create",
+				datadogEntity,
+				"--apiKey",
+				key,
+				"--projectId",
+				g.projectID,
+				"-o=json")
+			cmd.Env = os.Environ()
+			resp, err := cmd.CombinedOutput()
 
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+			a := assert.New(t)
+			a.NoError(err, string(resp))
 
-		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
-		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.True(integrationExists(datadogEntity, thirdPartyIntegrations))
-		}
-	})
+			var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+			if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
+				a.True(integrationExists(datadogEntity, thirdPartyIntegrations))
+			}
+		})
+	}
 
 	t.Run("Create NEW_RELIC", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -212,7 +214,7 @@ func TestIntegrations(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
 			"describe",
-			datadogEntity,
+			newRelicEntity,
 			"--projectId",
 			g.projectID,
 			"-o=json")
@@ -223,7 +225,7 @@ func TestIntegrations(t *testing.T) {
 		a.NoError(err, string(resp))
 		var thirdPartyIntegration mongodbatlas.ThirdPartyIntegration
 		if err := json.Unmarshal(resp, &thirdPartyIntegration); a.NoError(err) {
-			a.Equal(datadogEntity, thirdPartyIntegration.Type)
+			a.Equal(newRelicEntity, thirdPartyIntegration.Type)
 		}
 	})
 
@@ -231,7 +233,7 @@ func TestIntegrations(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
 			"delete",
-			datadogEntity,
+			newRelicEntity,
 			"--force",
 			"--projectId",
 			g.projectID)
@@ -241,7 +243,7 @@ func TestIntegrations(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Integration '%s' deleted\n", datadogEntity)
+		expected := fmt.Sprintf("Integration '%s' deleted\n", newRelicEntity)
 		a.Equal(expected, string(resp))
 	})
 }

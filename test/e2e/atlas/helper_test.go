@@ -279,6 +279,10 @@ func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPar
 	return false
 }
 
+func Gov() bool {
+	return os.Getenv("MCLI_SERVICE") == "cloudgov"
+}
+
 func createProject(projectName string) (string, error) {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
@@ -290,7 +294,7 @@ func createProject(projectName string) (string, error) {
 		projectName,
 		"-o=json",
 	}
-	if os.Getenv("MCLI_SERVICE") == "cloudgov" {
+	if Gov() {
 		args = append(args, "--govCloudRegionsOnly")
 	}
 	cmd := exec.Command(cliPath, args...)

@@ -214,7 +214,7 @@ func TestIntegrations(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
 			"describe",
-			datadogEntity,
+			newRelicEntity,
 			"--projectId",
 			g.projectID,
 			"-o=json")
@@ -225,7 +225,7 @@ func TestIntegrations(t *testing.T) {
 		a.NoError(err, string(resp))
 		var thirdPartyIntegration mongodbatlas.ThirdPartyIntegration
 		if err := json.Unmarshal(resp, &thirdPartyIntegration); a.NoError(err) {
-			a.Equal(datadogEntity, thirdPartyIntegration.Type)
+			a.Equal(newRelicEntity, thirdPartyIntegration.Type)
 		}
 	})
 
@@ -233,7 +233,7 @@ func TestIntegrations(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
 			"delete",
-			datadogEntity,
+			newRelicEntity,
 			"--force",
 			"--projectId",
 			g.projectID)
@@ -243,7 +243,7 @@ func TestIntegrations(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Integration '%s' deleted\n", datadogEntity)
+		expected := fmt.Sprintf("Integration '%s' deleted\n", newRelicEntity)
 		a.Equal(expected, string(resp))
 	})
 }

@@ -173,6 +173,7 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	// Initialize the text to be displayed if users are asked to select orgs or projects
 	opts.OnMultipleOrgsOrProjects = func() {
 		if !opts.AskedOrgsOrProjects {
+			_, _ = fmt.Fprintln(opts.OutWriter, "Now set your default organization and project.")
 			_, _ = fmt.Fprintf(opts.OutWriter, "\nYou have multiple organizations or projects, select one to proceed.\n")
 		}
 	}

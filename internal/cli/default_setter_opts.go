@@ -237,6 +237,7 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 				applyFilter = true
 			}
 		case errors.Is(err, errTooManyResults):
+			_, _ = fmt.Fprintln(opts.OutWriter, "Now set your default organization and project.")
 			_, _ = fmt.Fprintf(opts.OutWriter, "Since you have access to more than %d organizations, please type the organization ID or the organization name to filter.\n", resultsLimit)
 			applyFilter = true
 		case errors.As(err, &target):
@@ -246,7 +247,6 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 		}
 
 		if applyFilter {
-			_, _ = fmt.Fprintf(opts.OutWriter, "Since you have access to more than %d organizations, please type the organization ID or the organization name to filter.\n", resultsLimit)
 			filterPrompt := &survey.Input{
 				Message: "Organization filter:",
 				Help:    "Enter the 24 digit ID or type from the beginning of the name to filter.",

@@ -30,10 +30,11 @@ import (
 
 type DownloadOpts struct {
 	cli.DownloaderOpts
-	startDate string
-	endDate   string
-	format    string
-	store     store.ServerUsageReportDownloader
+	startDate     string
+	endDate       string
+	format        string
+	skipRedaction bool
+	store         store.ServerUsageReportDownloader
 }
 
 var downloadMessage = "Download of %s completed.\n"
@@ -63,10 +64,12 @@ func (opts *DownloadOpts) Run() error {
 }
 
 func (opts *DownloadOpts) newServerTypeOptions() *opsmngr.ServerTypeOptions {
+	redact := !opts.skipRedaction
 	return &opsmngr.ServerTypeOptions{
 		StartDate:  opts.startDate,
 		EndDate:    opts.endDate,
 		FileFormat: opts.format,
+		Redact:     &redact,
 	}
 }
 
@@ -81,8 +84,9 @@ func DownloadBuilder() *cobra.Command {
 	opts := &DownloadOpts{}
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
-		Use:   "download",
-		Short: "Download the server usage report.",
+		Use:     "download",
+		Short:   "Download the server usage report.",
+		Example: `  mongocli ops-manager serverUsage download --endDate 2022-12-12 --startDate 2022-01-01`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.initDefaultOut()
 			return opts.initStore(cmd.Context())()
@@ -96,10 +100,12 @@ func DownloadBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.endDate, flag.EndDate, "", usage.ServerUsageEndDate)
 	cmd.Flags().StringVar(&opts.format, flag.Format, "tar.gz", usage.ServerUsageFormat)
 	cmd.Flags().StringVar(&opts.Out, flag.Out, "", usage.LogOut)
+	cmd.Flags().BoolVar(&opts.skipRedaction, flag.SkipRedaction, false, usage.ServerUsageSkipRedacted)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
 
 	_ = cmd.MarkFlagRequired(flag.StartDate)
 	_ = cmd.MarkFlagRequired(flag.EndDate)
+	cmd.MarkFlagsRequiredTogether(flag.StartDate, flag.EndDate)
 
 	return cmd
 }

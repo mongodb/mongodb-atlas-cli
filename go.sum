@@ -346,7 +346,6 @@ github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5
 github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.7.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
-github.com/stretchr/testify v1.7.2/go.mod h1:R6va5+xMeoiuVRoj+gSkQ7d3FALtqAAGI1FQKckRals=
 github.com/stretchr/testify v1.8.0 h1:pSgiaMZlXftHpm5L7V1+rVB+AZJydKsMxsQBIJw4PKk=
 github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO+kdMU+MU=
 github.com/subosito/gotenv v1.3.0 h1:mjC+YW8QpAdXibNi+vNWgzmgBH4+5l5dCXv8cNysBLI=
@@ -373,8 +372,8 @@ go.mongodb.org/atlas v0.16.1-0.20220629103822-a2c83580fda1 h1:2VvMaLPjk75rKenaKp
 go.mongodb.org/atlas v0.16.1-0.20220629103822-a2c83580fda1/go.mod h1:lQhRHIxc6jQHEK3/q9WLu/SdBkPj2fQYhjLGUF6Z3U8=
 go.mongodb.org/mongo-driver v1.10.1 h1:NujsPveKwHaWuKUer/ceo9DzEe7HIj1SlJ6uvXZG0S4=
 go.mongodb.org/mongo-driver v1.10.1/go.mod h1:z4XpeoU6w+9Vht+jAFyLgVrD+jGSQQe0+CBWFHNiHt8=
-go.mongodb.org/ops-manager v0.39.0 h1:5lVGm6ZSdSFyiv/ojHoUrcN7+HUkqgx3gVAO93ugENk=
-go.mongodb.org/ops-manager v0.39.0/go.mod h1:57CR2dQ7759TmthVKvZYSOKLzVrEiRuL7V1FP6AYAH0=
+go.mongodb.org/ops-manager v0.41.0 h1:TyOPTvqiSW8TjPB18Q0s3EjtSfuiS0SPGKl2CJ13yHI=
+go.mongodb.org/ops-manager v0.41.0/go.mod h1:YZgGx+Xjn8gJfdkwLB+QE4M09hEGogUqAgx0dUyPxNE=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
 go.opencensus.io v0.22.2/go.mod h1:yxeiOL68Rb0Xd1ddK5vPZ/oVn4vY4Ynel7k9FzqtOIw=

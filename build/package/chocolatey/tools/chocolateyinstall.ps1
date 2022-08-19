@@ -1,15 +1,15 @@
 ﻿$ErrorActionPreference = 'Stop';
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
-$url        = {{.URL}}
+$url        = "{{.URL}}"
 
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
   unzipLocation = $toolsDir
   fileType      = 'msi' 
-  url           = {{.URL}}
+  url           = $url
 
   softwareName  = 'atlascli*'
-  checksum      = {{.CheckSum}}
+  checksum      = "{{.CheckSum}}"
   checksumType  = 'sha256'
 
   silentArgs    = "/qn /norestart /l*v `"$($env:TEMP)\$($packageName).$($env:chocolateyPackageVersion).MsiInstall.log`"" 

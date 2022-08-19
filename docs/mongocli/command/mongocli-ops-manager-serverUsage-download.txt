@@ -54,6 +54,10 @@ Options
      - string
      - false
      - Optional output file name. Uses the log name if the output file's name is not specified.
+   * - --skipRedaction
+     - 
+     - false
+     - If set to true, emails, hostnames, IP addresses, and namespaces in API responses involving this job are kept with their original values.
    * - --startDate
      - string
      - true

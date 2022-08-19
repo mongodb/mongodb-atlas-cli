@@ -184,6 +184,7 @@ const (
 	Strength                                  = "strength"                                  // Strength flag
 	SizeRequestedPerFileBytes                 = "sizeRequestedPerFileBytes"                 // SizeRequestedPerFileBytes flag
 	Redacted                                  = "redacted"                                  // Redacted flag
+	SkipRedaction                             = "skipRedaction"                             // SkipRedaction flag
 	Verbose                                   = "verbose"                                   // Verbose flag
 	TestBucket                                = "testBucket"                                // TestBucket flag
 	Partition                                 = "partition"                                 // Partition flag

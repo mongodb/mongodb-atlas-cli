@@ -30,10 +30,11 @@ import (
 
 type DownloadOpts struct {
 	cli.DownloaderOpts
-	startDate string
-	endDate   string
-	format    string
-	store     store.ServerUsageReportDownloader
+	startDate     string
+	endDate       string
+	format        string
+	skipRedaction bool
+	store         store.ServerUsageReportDownloader
 }
 
 var downloadMessage = "Download of %s completed.\n"
@@ -63,10 +64,12 @@ func (opts *DownloadOpts) Run() error {
 }
 
 func (opts *DownloadOpts) newServerTypeOptions() *opsmngr.ServerTypeOptions {
+	redact := !opts.skipRedaction
 	return &opsmngr.ServerTypeOptions{
 		StartDate:  opts.startDate,
 		EndDate:    opts.endDate,
 		FileFormat: opts.format,
+		Redact:     &redact,
 	}
 }
 
@@ -96,10 +99,12 @@ func DownloadBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.endDate, flag.EndDate, "", usage.ServerUsageEndDate)
 	cmd.Flags().StringVar(&opts.format, flag.Format, "tar.gz", usage.ServerUsageFormat)
 	cmd.Flags().StringVar(&opts.Out, flag.Out, "", usage.LogOut)
+	cmd.Flags().BoolVar(&opts.skipRedaction, flag.SkipRedaction, false, usage.ServerUsageSkipRedacted)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
 
 	_ = cmd.MarkFlagRequired(flag.StartDate)
 	_ = cmd.MarkFlagRequired(flag.EndDate)
+	cmd.MarkFlagsRequiredTogether(flag.StartDate, flag.EndDate)
 
 	return cmd
 }

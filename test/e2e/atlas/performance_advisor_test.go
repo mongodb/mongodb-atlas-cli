@@ -89,7 +89,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 	t.Run("Enable Managed Slow Operation Threshold", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			performanceAdvisorEntity,
-			slowoperationThresholdEntity,
+			slowOperationThresholdEntity,
 			"enable",
 			"--projectId", g.projectID,
 		)
@@ -103,7 +103,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 	t.Run("Disable Managed Slow Operation Threshold", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			performanceAdvisorEntity,
-			slowoperationThresholdEntity,
+			slowOperationThresholdEntity,
 			"disable",
 			"--projectId", g.projectID,
 		)

@@ -202,6 +202,7 @@ dbName and collection are only required for built-in roles.`
 	LogTypes                                  = "Array of strings specifying the types of logs to collect."
 	SizeRequestedPerFileBytes                 = "Size for each log file in bytes."
 	LogRedacted                               = "If set to true, emails, hostnames, IP addresses, and namespaces in API responses involving this job are replaced with random string values."
+	ServerUsageSkipRedacted                   = "If set to true, emails, hostnames, IP addresses, and namespaces in API responses involving this job are kept with their original values."
 	Sparse                                    = "Flag that indicates whether Atlas should create a sparse index."
 	Locale                                    = "Locale that the ICU defines."
 	CaseLevel                                 = "Flag that indicates whether the index uses case comparison. This flag applies only if the strength level is set to 1 or 2."

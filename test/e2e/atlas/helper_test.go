@@ -67,7 +67,7 @@ const (
 	slowQueryLogsEntity          = "slowQueryLogs"
 	namespacesEntity             = "namespaces"
 	suggestedIndexesEntity       = "suggestedIndexes"
-	slowoperationThresholdEntity = "slowOperationThreshold"
+	slowOperationThresholdEntity = "slowOperationThreshold"
 	tierM30                      = "M30"
 	tierM10                      = "M10"
 	tierM2                       = "M2"

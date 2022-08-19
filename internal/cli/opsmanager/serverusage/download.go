@@ -84,8 +84,9 @@ func DownloadBuilder() *cobra.Command {
 	opts := &DownloadOpts{}
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
-		Use:   "download",
-		Short: "Download the server usage report.",
+		Use:     "download",
+		Short:   "Download the server usage report.",
+		Example: `  mongocli ops-manager serverUsage download --endDate 2022-12-12 --startDate 2022-01-01`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.initDefaultOut()
 			return opts.initStore(cmd.Context())()

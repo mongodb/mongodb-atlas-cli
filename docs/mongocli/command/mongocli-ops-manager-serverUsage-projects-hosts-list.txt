@@ -53,7 +53,7 @@ Options
    * - --page
      - int
      - false
-     - Page number. This value defaults to 1.
+     - Page number.
    * - --projectId
      - string
      - false

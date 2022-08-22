@@ -75,7 +75,7 @@ func replaceNuspec(dir, version string) error {
 		return err
 	}
 
-	filePath := path.Join(dir, "temp/atlascli.nuspec")
+	filePath := path.Join(dir, "temp", "atlascli.nuspec")
 	f, err := createFile(filePath)
 	if err != nil {
 		return err
@@ -106,7 +106,7 @@ func generateSha256(f *os.File) (string, error) {
 }
 
 func replaceInstallScript(dir, msiPath, url string) error {
-	scriptPath := path.Join(dir, "tools/chocolateyinstall.ps1")
+	scriptPath := path.Join(dir, "tools", "chocolateyinstall.ps1")
 
 	f, err := os.Open(msiPath)
 	if err != nil {
@@ -148,7 +148,7 @@ func replaceInstallScript(dir, msiPath, url string) error {
 		return err
 	}
 
-	filePath := path.Join(dir, "temp/tools/chocolateyinstall.ps1")
+	filePath := path.Join(dir, "temp", "tools", "chocolateyinstall.ps1")
 	f, err = createFile(filePath)
 	if err != nil {
 		return err

@@ -24,7 +24,9 @@ import (
 
 func update(path, secret string) error {
 	cmd := exec.Command("choco", "push", path, "--api-key", secret)
-	err := cmd.Start()
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
 	return err
 }
 

@@ -16,50 +16,48 @@
     <docsUrl>https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-changelog/</docsUrl>
     <bugTrackerUrl>https://github.com/mongodb/mongodb-atlas-cli/issues</bugTrackerUrl>
     <tags>atlascli mongodb atlas cli mongodb-atlas</tags>
-    <description>
-    # MongoDB Atlas CLI
-    The Atlas CLI is a unified command line tool for MongoDB Atlas. It can help you create, manage, and automate MongoDB Atlas resources from your command line.
+    <description># MongoDB Atlas CLI
+The Atlas CLI is a unified command line tool for MongoDB Atlas. It can help you create, manage, and automate MongoDB Atlas resources from your command line.
 
-    ![atlascli-atlas-quickstart](https://user-images.githubusercontent.com/5663078/156184669-57c8ddce-6f0a-4e84-9311-2d996cb27942.gif)
+![atlascli-atlas-quickstart](https://user-images.githubusercontent.com/5663078/156184669-57c8ddce-6f0a-4e84-9311-2d996cb27942.gif)
 
-    ## Work smarter by letting your command line work harder.
+## Work smarter by letting your command line work harder.
 
-    Use the Atlas CLI to create and manage MongoDB Atlas resources from your command line and easily automate them using scripts.
+Use the Atlas CLI to create and manage MongoDB Atlas resources from your command line and easily automate them using scripts.
 
-    ## Familiar terminal interface
+## Familiar terminal interface
 
-    If you’re a developer or in DevOps, the terminal is your home turf. With the Atlas CLI you get a terminal-first experience so you can work with ease.
+If you’re a developer or in DevOps, the terminal is your home turf. With the Atlas CLI you get a terminal-first experience so you can work with ease.
 
-    ## Unified and powerful control pane
+## Unified and powerful control pane
 
-    Use the Atlas CLI to manage not only your Atlas database but also other products in the MongoDB application data platform like Search, Data Lake, and Serverless databases.
+Use the Atlas CLI to manage not only your Atlas database but also other products in the MongoDB application data platform like Search, Data Lake, and Serverless databases.
 
-    ## Automate repeatable tasks
+## Automate repeatable tasks
 
-    Use scripts to automate common tasks like creating new users and clusters, cluster replication, managing network access, alerts ingestion, logs automation, and more.
+Use scripts to automate common tasks like creating new users and clusters, cluster replication, managing network access, alerts ingestion, logs automation, and more.
 
-    ## Intelligent autocomplete
+## Intelligent autocomplete
 
-    Get up and running with confidence using supportive features such as autocomplete and guided workflows like the interactive Atlas quick start.
+Get up and running with confidence using supportive features such as autocomplete and guided workflows like the interactive Atlas quick start.
 
-    ## Usage
+## Usage
 
-    To get a list of available commands, run `atlas help`
-    or check our documentation for more details.
+To get a list of available commands, run `atlas help`
+or check our documentation for more details.
 
-    ### Configuring Atlas CLI
-    To use `atlascli`, open your terminal, run `atlas auth login`, and follow the prompted steps.
+### Configuring Atlas CLI
+To use `atlascli`, open your terminal, run `atlas auth login`, and follow the prompted steps.
 
-    ### Shell Completions
+### Shell Completions
 
-    If you install via Chocolatey no additional actions are needed.
+If you install via Chocolatey no additional actions are needed.
 
-    To get specific instructions for your preferred shell, run:
+To get specific instructions for your preferred shell, run:
 
-    ```bash
-    atlas completion bash|zsh|fish|powershell --help
-    ```
-    </description>
+```bash
+atlas completion bash|zsh|fish|powershell --help
+```</description>
   </metadata>
   <files>
     <file src="tools\**" target="tools" />

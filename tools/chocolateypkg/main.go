@@ -19,10 +19,10 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"flag"
-	"fmt"
 	"io"
 	"log"
 	"os"
+	"path"
 	"text/template"
 
 	exec "golang.org/x/sys/execabs"
@@ -37,8 +37,8 @@ type InstallScriptDetails struct {
 	CheckSum string
 }
 
-func createDirectory(path, name string) error {
-	dirLocation := fmt.Sprintf("%s/%s", path, name)
+func createDirectory(dir, name string) error {
+	dirLocation := path.Join(dir, name)
 	err := os.MkdirAll(dirLocation, os.ModePerm)
 	return err
 }
@@ -57,8 +57,8 @@ func checkError(err error) {
 	}
 }
 
-func replaceNuspec(path, version string) error {
-	nuspecPath := fmt.Sprintf("%s/atlascli.nuspec", path)
+func replaceNuspec(dir, version string) error {
+	nuspecPath := path.Join(dir, "atlascli.nuspec")
 	newVersion := NuspecDetails{version}
 
 	p, err := os.ReadFile(nuspecPath)
@@ -75,7 +75,7 @@ func replaceNuspec(path, version string) error {
 		return err
 	}
 
-	filePath := fmt.Sprintf("%s/temp/atlascli.nuspec", path)
+	filePath := path.Join(dir, "temp/atlascli.nuspec")
 	f, err := createFile(filePath)
 	if err != nil {
 		return err
@@ -105,8 +105,8 @@ func generateSha256(f *os.File) (string, error) {
 	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
-func replaceInstallScript(path, msiPath, url string) error {
-	scriptPath := fmt.Sprintf("%s/tools/chocolateyinstall.ps1", path)
+func replaceInstallScript(dir, msiPath, url string) error {
+	scriptPath := path.Join(dir, "tools/chocolateyinstall.ps1")
 
 	f, err := os.Open(msiPath)
 	if err != nil {
@@ -142,13 +142,13 @@ func replaceInstallScript(path, msiPath, url string) error {
 		return err
 	}
 
-	newDirectoryPath := fmt.Sprintf("%s/temp", path)
+	newDirectoryPath := path.Join(dir, "temp")
 	err = createDirectory(newDirectoryPath, "tools")
 	if err != nil {
 		return err
 	}
 
-	filePath := fmt.Sprintf("%s/temp/tools/chocolateyinstall.ps1", path)
+	filePath := path.Join(dir, "temp/tools/chocolateyinstall.ps1")
 	f, err = createFile(filePath)
 	if err != nil {
 		return err
@@ -168,10 +168,10 @@ func replaceInstallScript(path, msiPath, url string) error {
 }
 
 func main() {
-	const path = "build/package/chocolatey"
-	var version, filePath, downloadURL string
+	var version, filePath, downloadURL, srcPath string
 
 	flag.StringVar(&version, "version", "", "Atlas CLI version")
+	flag.StringVar(&srcPath, "srcPath", "", "Path to templates")
 	flag.StringVar(&filePath, "file", "", "Path to .msi file")
 	flag.StringVar(&downloadURL, "url", "", "URL to download Atlas CLI installer")
 	flag.Parse()
@@ -186,18 +186,20 @@ func main() {
 		log.Fatalln("You must specify download URL")
 	}
 
-	err := createDirectory(path, "temp")
+	err := createDirectory(srcPath, "temp")
 	checkError(err)
 
-	err = replaceNuspec(path, version)
+	err = replaceNuspec(srcPath, version)
 	checkError(err)
 
-	err = replaceInstallScript(path, filePath, downloadURL)
+	err = replaceInstallScript(srcPath, filePath, downloadURL)
 	checkError(err)
 
 	const chocoCommand = "pack"
 	cmd := exec.Command("choco", chocoCommand)
-	cmd.Dir = path + "/temp"
-	err = cmd.Start()
+	cmd.Dir = path.Join(srcPath, "temp")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
 	checkError(err)
 }

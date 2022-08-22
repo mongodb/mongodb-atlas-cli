@@ -153,7 +153,6 @@ Paste the code in the browser when prompted to activate your Atlas CLI. Your cod
 
 To continue, go to http://localhost
 Successfully logged in as test@10gen.com.
-Now set your default organization and project.
 `, buf.String())
 }
 

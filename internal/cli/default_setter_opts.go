@@ -220,8 +220,6 @@ func (opts *DefaultSetterOpts) OrgExists(id string) bool {
 // If it fails or there are no organizations to show we fallback to ask for org by ID.
 // If only one organization, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskOrg() error {
-	_, _ = fmt.Fprintln(opts.OutWriter, "Now set your default organization and project.")
-
 	return opts.askOrgWithFilter("")
 }
 
@@ -239,6 +237,7 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 				applyFilter = true
 			}
 		case errors.Is(err, errTooManyResults):
+			_, _ = fmt.Fprintln(opts.OutWriter, "Now set your default organization and project.")
 			_, _ = fmt.Fprintf(opts.OutWriter, "Since you have access to more than %d organizations, please type the organization ID or the organization name to filter.\n", resultsLimit)
 			applyFilter = true
 		case errors.As(err, &target):

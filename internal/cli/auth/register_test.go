@@ -131,7 +131,6 @@ Paste the code in the browser when prompted to activate your Atlas CLI. Your cod
 
 To continue, go to https://account.mongodb.com/account/register/cli
 Successfully logged in as test@10gen.com.
-Now set your default organization and project.
 `, buf.String())
 }
 

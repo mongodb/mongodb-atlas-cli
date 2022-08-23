@@ -302,7 +302,7 @@ tasks:
           remote_file: ${project}/dist/${revision}_${created_at}/
           bucket: mongodb-mongocli-build
           permissions: public-read
-          content_type: ${content_type|application/x-gzip}
+          content_type: ${content_type|application/octet-stream}
   - name: package_goreleaser
     tags: ["packaging"]
     depends_on:
@@ -520,7 +520,7 @@ tasks:
           remote_file: mongocli/
           bucket: downloads.mongodb.org
           permissions: public-read
-          content_type: ${content_type|application/x-gzip}
+          content_type: ${content_type|application/octet-stream}
           display_name: downloads-center-
   ################################################################
   # Unstable Publish - AtlasCLI

@@ -33,7 +33,7 @@ SOURCE_FILES=./cmd/mongocli
 PACKAGE_NAME=mongocli_${VERSION}_windows_x86_64.msi
 OUTPUT=./bin/mongocli.exe
 LINKER_FLAGS="-s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${VERSION} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit=${COMMIT} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=${TOOL_NAME:?}"
-WIX_MANIFEST_FILE="./build/package/wix/mongocli.json"
+WIX_MANIFEST_FILE="./build/package/wix/${TOOL_NAME:?}.json"
 NOTARY_SIGNING_KEY=${NOTARY_SIGNING_KEY_MONGOCLI:?}
 
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
@@ -41,7 +41,6 @@ if [[ "${TOOL_NAME:?}" == atlascli ]]; then
   SOURCE_FILES=./cmd/atlas
   PACKAGE_NAME=mongodb-atlas-cli_${VERSION}_windows_x86_64.msi
   OUTPUT=./bin/atlas.exe
-  WIX_MANIFEST_FILE="./build/package/wix/atlascli.json"
 fi
 
 env GOOS=windows GOARCH=amd64 go build \
@@ -51,11 +50,9 @@ go-msi make --path "${WIX_MANIFEST_FILE}"  --msi "dist/${PACKAGE_NAME}" --versio
 
 go run ./tools/sign -file "dist/${PACKAGE_NAME}"
 
-CHOCOLATEY_PACKAGE_PATH="build/package/chocolatey/temp/atlascli.${VERSION}.nupkg"
-
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-  go run ./tools/chocolateypkg/main.go --srcPath "build/package/chocolatey" --version "${VERSION}" --file "dist/${PACKAGE_NAME}" --url https://fastdl.mongodb.org/mongocli/"${PACKAGE_NAME}"
+  go run ./tools/chocolateypkg/main.go --srcPath "build/package/chocolatey" --version "${VERSION}" --url https://fastdl.mongodb.org/mongocli/"${PACKAGE_NAME}"
   if [[ "${RELEASING:?}" == true ]]; then
-      go run ./tools/chocolateyupdate/main.go --path "${CHOCOLATEY_PACKAGE_PATH}"
+      go run ./tools/chocolateyupdate/main.go --path "build/package/chocolatey/temp/atlascli.${VERSION}.nupkg"
   fi
 fi

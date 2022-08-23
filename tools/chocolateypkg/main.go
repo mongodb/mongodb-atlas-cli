@@ -60,7 +60,7 @@ func checkError(err error) {
 }
 
 func replaceNuspec(dir, version string) error {
-	nuspecPath := path.Join(dir, "atlascli.nuspec")
+	nuspecPath := path.Join(dir, "mongodb-atlas.nuspec")
 	newVersion := NuspecDetails{version}
 
 	p, err := os.ReadFile(nuspecPath)
@@ -77,7 +77,7 @@ func replaceNuspec(dir, version string) error {
 		return err
 	}
 
-	filePath := path.Join(dir, "temp", "atlascli.nuspec")
+	filePath := path.Join(dir, "temp", "mongodb-atlas.nuspec")
 	f, err := createFile(filePath)
 	if err != nil {
 		return err

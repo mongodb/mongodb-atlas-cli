@@ -16,11 +16,13 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"flag"
 	"io"
 	"log"
+	"net/http"
 	"os"
 	"path"
 	"text/template"
@@ -97,29 +99,29 @@ func replaceNuspec(dir, version string) error {
 	return nil
 }
 
-func generateSha256(f *os.File) (string, error) {
+func generateSha256(url string) (string, error) {
+	r, err := http.NewRequestWithContext(context.Background(), http.MethodGet, url, http.NoBody)
+	if err != nil {
+		return "", err
+	}
+	resp, err := http.DefaultClient.Do(r)
+	if err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
 	h := sha256.New()
-	if _, err := io.Copy(h, f); err != nil {
+	if _, err := io.Copy(h, resp.Body); err != nil {
 		return "", err
 	}
 	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
-func replaceInstallScript(dir, msiPath, url string) error {
+func replaceInstallScript(dir, url string) error {
 	scriptPath := path.Join(dir, "tools", "chocolateyinstall.ps1")
 
-	f, err := os.Open(msiPath)
-	if err != nil {
-		return err
-	}
-	defer func(f *os.File) {
-		fileErr := f.Close()
-		if fileErr != nil {
-			log.Fatal("Error when closing file.")
-		}
-	}(f)
-
-	checkSum, err := generateSha256(f)
+	checkSum, err := generateSha256(url)
 	if err != nil {
 		return err
 	}
@@ -149,7 +151,7 @@ func replaceInstallScript(dir, msiPath, url string) error {
 	}
 
 	filePath := path.Join(dir, "temp", "tools", "chocolateyinstall.ps1")
-	f, err = createFile(filePath)
+	f, err := createFile(filePath)
 	if err != nil {
 		return err
 	}
@@ -168,17 +170,13 @@ func replaceInstallScript(dir, msiPath, url string) error {
 }
 
 func main() {
-	var version, filePath, downloadURL, srcPath string
+	var version, downloadURL, srcPath string
 
 	flag.StringVar(&version, "version", "", "Atlas CLI version")
 	flag.StringVar(&srcPath, "srcPath", "", "Path to templates")
-	flag.StringVar(&filePath, "file", "", "Path to .msi file")
 	flag.StringVar(&downloadURL, "url", "", "URL to download Atlas CLI installer")
 	flag.Parse()
 
-	if filePath == "" {
-		log.Fatalln("You must specify MSI file path")
-	}
 	if version == "" {
 		log.Fatalln("You must specify Atlas CLI version")
 	}
@@ -192,7 +190,7 @@ func main() {
 	err = replaceNuspec(srcPath, version)
 	checkError(err)
 
-	err = replaceInstallScript(srcPath, filePath, downloadURL)
+	err = replaceInstallScript(srcPath, downloadURL)
 	checkError(err)
 
 	const chocoCommand = "pack"

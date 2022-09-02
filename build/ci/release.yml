@@ -1034,7 +1034,7 @@ tasks:
           distro: amazon2
           ext: rpm
           tool_name: mongocli
-  - name: push_mongocli_amazon2_org_44
+  - name: push_mongocli_amazon2_org_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1134,6 +1134,28 @@ tasks:
           distro: debian10
           ext: deb
           tool_name: mongocli
+  - name: push_mongocli_debian92_enterprise_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian92
+          ext: deb
+          tool_name: mongocli
+  - name: push_mongocli_debian92_org_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian92
+          ext: deb
+          tool_name: mongocli
   ################################################################
   # Stable Publish - AtlasCLI
   # RPM Distros
@@ -1222,7 +1244,7 @@ tasks:
           distro: amazon2
           ext: rpm
           tool_name: atlascli
-  - name: push_atlascli_amazon2_org_44
+  - name: push_atlascli_amazon2_org_stable
     <<: *default_push_atlascli_stable_def
     commands:
       - func: "clone"

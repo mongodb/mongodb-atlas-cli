@@ -79,16 +79,17 @@ func TestAlertConfig(t *testing.T) {
 		assert.FailNow(t, "Failed to create alert setting")
 	}
 
-	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			alertsEntity,
-			configEntity,
-			"ls",
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
-	})
+	// TODO: Uncomment once CLOUDP-135288 is resolved
+	// t.Run("List", func(t *testing.T) {
+	//	cmd := exec.Command(cliPath,
+	//		alertsEntity,
+	//		configEntity,
+	//		"ls",
+	//		"-o=json")
+	//	cmd.Env = os.Environ()
+	//	resp, err := cmd.CombinedOutput()
+	//	assert.NoError(t, err, string(resp))
+	// })
 
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

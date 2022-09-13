@@ -370,8 +370,8 @@ github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1
 go.mongodb.org/atlas v0.16.1-0.20220531163122-551edbfb2f27/go.mod h1:lQhRHIxc6jQHEK3/q9WLu/SdBkPj2fQYhjLGUF6Z3U8=
 go.mongodb.org/atlas v0.16.1-0.20220629103822-a2c83580fda1 h1:2VvMaLPjk75rKenaKppkExJEPnVEjjL95nrFfHf9M24=
 go.mongodb.org/atlas v0.16.1-0.20220629103822-a2c83580fda1/go.mod h1:lQhRHIxc6jQHEK3/q9WLu/SdBkPj2fQYhjLGUF6Z3U8=
-go.mongodb.org/mongo-driver v1.10.1 h1:NujsPveKwHaWuKUer/ceo9DzEe7HIj1SlJ6uvXZG0S4=
-go.mongodb.org/mongo-driver v1.10.1/go.mod h1:z4XpeoU6w+9Vht+jAFyLgVrD+jGSQQe0+CBWFHNiHt8=
+go.mongodb.org/mongo-driver v1.10.2 h1:4Wk3cnqOrQCn0P92L3/mmurMxzdvWWs5J9jinAVKD+k=
+go.mongodb.org/mongo-driver v1.10.2/go.mod h1:z4XpeoU6w+9Vht+jAFyLgVrD+jGSQQe0+CBWFHNiHt8=
 go.mongodb.org/ops-manager v0.41.0 h1:TyOPTvqiSW8TjPB18Q0s3EjtSfuiS0SPGKl2CJ13yHI=
 go.mongodb.org/ops-manager v0.41.0/go.mod h1:YZgGx+Xjn8gJfdkwLB+QE4M09hEGogUqAgx0dUyPxNE=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=

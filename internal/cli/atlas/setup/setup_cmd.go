@@ -113,6 +113,7 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 
 // Builder
 // atlas setup
+//
 //	[--clusterName clusterName]
 //	[--provider provider]
 //	[--region regionName]

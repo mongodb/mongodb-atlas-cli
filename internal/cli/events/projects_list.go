@@ -57,7 +57,9 @@ func (opts *projectListOpts) Run() error {
 }
 
 // ProjectListBuilder
-// 	mongocli atlas event(s) list
+//
+//	mongocli atlas event(s) list
+//
 // [--page N]
 // [--limit N]
 // [--minDate minDate]

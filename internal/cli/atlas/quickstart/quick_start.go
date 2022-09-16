@@ -512,6 +512,7 @@ func (opts *Opts) interactiveSetup() error {
 
 // Builder
 // mongocli atlas dbuser(s) quickstart
+//
 //	[--clusterName clusterName]
 //	[--provider provider]
 //	[--region regionName]

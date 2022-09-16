@@ -734,6 +734,28 @@ tasks:
           distro: debian10
           ext: deb
           tool_name: atlascli
+  - name: push_atlascli_debian11_enterprise
+    <<: *default_atlascli_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian11
+          ext: deb
+          tool_name: atlascli
+  - name: push_atlascli_debian11_org
+    <<: *default_atlascli_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian11
+          ext: deb
+          tool_name: atlascli
   ################################################################
   # Unstable Publish - MongoCLI
   # RPM Distros
@@ -946,6 +968,28 @@ tasks:
           distro: debian10
           ext: deb
           tool_name: mongocli
+  - name: push_mongocli_debian11_enterprise
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian11
+          ext: deb
+          tool_name: mongocli
+  - name: push_mongocli_debian11_org
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian11
+          ext: deb
+          tool_name: mongocli
   ################################################################
   # Stable Publish - MongoCLI
   # RPM Distros
@@ -1156,6 +1200,28 @@ tasks:
           distro: debian92
           ext: deb
           tool_name: mongocli
+  - name: push_mongocli_debian11_enterprise_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian11
+          ext: deb
+          tool_name: mongocli
+  - name: push_mongocli_debian11_org_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian11
+          ext: deb
+          tool_name: mongocli
   ################################################################
   # Stable Publish - AtlasCLI
   # RPM Distros
@@ -1356,6 +1422,28 @@ tasks:
           ext: deb
           tool_name: atlascli
   - name: push_atlascli_debian10_org_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian10
+          ext: deb
+          tool_name: atlascli
+  - name: push_atlascli_debian11_enterprise_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian11
+          ext: deb
+          tool_name: atlascli
+  - name: push_atlascli_debian11_org_stable
     <<: *default_push_atlascli_stable_def
     commands:
       - func: "clone"

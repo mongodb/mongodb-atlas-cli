@@ -33,7 +33,7 @@ const (
 
 var (
 	serverVersions = []string{"4.2", "4.4", "5.0", "6.0"}
-	oses           = []string{"amazonlinux2", "centos7", "centos8", "rhel9", "debian9", "debian10", "ubuntu18.04", "ubuntu20.04", "ubuntu22.04"}
+	oses           = []string{"amazonlinux2", "centos7", "centos8", "rhel9", "debian10", "debian11", "ubuntu18.04", "ubuntu20.04", "ubuntu22.04"}
 	repos          = []string{"org", "enterprise"}
 	postPkgImg     = map[string]string{
 		"centos7":      "centos7-rpm",

@@ -1228,8 +1228,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: .code_health
@@ -1238,8 +1238,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: ".e2e .generic"
@@ -1248,8 +1248,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: ".e2e .required"
@@ -1258,8 +1258,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: ".e2e .interactive"
@@ -1268,8 +1268,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: ".e2e .clusters .atlas"
@@ -1278,8 +1278,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: ".e2e .decrypt"
@@ -1288,8 +1288,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: ".e2e .clusters .atlasgov"
@@ -1298,8 +1298,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: ".e2e .networking .atlas"
@@ -1308,8 +1308,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: ".e2e .livemigrations .atlas"
@@ -1318,8 +1318,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: ".e2e .datalake .atlas"
@@ -1328,8 +1328,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: ".e2e .backup .atlas"
@@ -1338,8 +1338,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: ".e2e .clusters .cloudmanager"
@@ -1348,8 +1348,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: ".e2e .cleanup"
@@ -1359,8 +1359,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: ".ops-manager-50"
@@ -1369,8 +1369,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: .snyk

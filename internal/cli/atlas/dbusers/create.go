@@ -160,13 +160,14 @@ func (opts *CreateOpts) validate() error {
 
 // CreateBuilder
 // mongocli atlas dbuser(s) create
-//		--username username --password password
-//		--role roleName@dbName
-// 		--scope resourceName@resourceType
-//		[--projectId projectId]
-//		[--x509Type NONE|MANAGED|CUSTOMER]
-//		[--awsIAMType NONE|ROLE|USER]
-//		[--ldapType NONE|USER|GROUP]
+//
+//	--username username --password password
+//	--role roleName@dbName
+//	--scope resourceName@resourceType
+//	[--projectId projectId]
+//	[--x509Type NONE|MANAGED|CUSTOMER]
+//	[--awsIAMType NONE|ROLE|USER]
+//	[--ldapType NONE|USER|GROUP]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

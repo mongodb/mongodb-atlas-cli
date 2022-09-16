@@ -63,22 +63,25 @@ func (opts *CreateOpts) Run() error {
 // Create an online archive for a cluster.
 //
 // Usage:
-//   mongocli atlas clusters search index create [indexName] [flags]
+//
+//	mongocli atlas clusters search index create [indexName] [flags]
 //
 // Flags:
-//      --analyzer string         Analyzer to use when creating the index (default "lucene.standard")
-//      --clusterName string      Name of the cluster.
-//      --collection string       Collection name.
-//      --db string               Database name.
-//      --dynamic                 Indicates whether the index uses dynamic or static mappings.
-//      --field strings           Static field specifications.
-//  -h, --help                    help for create
-//      --projectId string        Project ID to use. Overrides configuration file or environment variable settings.
-//      --searchAnalyzer string   Analyzer to use when searching the index. (default "lucene.standard")
-//  -f, --file string             JSON file to use in order to create the index
+//
+//	    --analyzer string         Analyzer to use when creating the index (default "lucene.standard")
+//	    --clusterName string      Name of the cluster.
+//	    --collection string       Collection name.
+//	    --db string               Database name.
+//	    --dynamic                 Indicates whether the index uses dynamic or static mappings.
+//	    --field strings           Static field specifications.
+//	-h, --help                    help for create
+//	    --projectId string        Project ID to use. Overrides configuration file or environment variable settings.
+//	    --searchAnalyzer string   Analyzer to use when searching the index. (default "lucene.standard")
+//	-f, --file string             JSON file to use in order to create the index
 //
 // Global Flags:
-//  -P, --profile string   Profile to use from your configuration file.
+//
+//	-P, --profile string   Profile to use from your configuration file.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.fs = afero.NewOsFs()

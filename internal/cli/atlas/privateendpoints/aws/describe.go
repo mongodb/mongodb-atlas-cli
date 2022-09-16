@@ -58,7 +58,8 @@ func (opts *DescribeOpts) Run() error {
 }
 
 // DescribeBuilder mongocli atlas privateEndpoint(s)|privateendpoint(s)
-//   aws describe|get <privateEndpointId> [--projectId projectId].
+//
+//	aws describe|get <privateEndpointId> [--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{

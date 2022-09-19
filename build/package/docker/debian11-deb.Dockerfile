@@ -1,4 +1,4 @@
-FROM debian:9-slim
+FROM debian:11-slim
 
 ARG url
 ARG entrypoint

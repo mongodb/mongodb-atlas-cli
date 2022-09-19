@@ -116,8 +116,8 @@ func generateFile(name, version string) error {
 		TutorialLink:         tutorialLink,
 		Platform: []Platform{
 			*newPlatform(packageName, version, "x86_64", "linux", "Linux (x86_64)", []string{"tar.gz"}),
-			*newPlatform(packageName, version, "x86_64", "linux", "Debian 9, 10 / Ubuntu 18.04, 20.04", []string{"deb"}),
-			*newPlatform(packageName, version, "x86_64", "linux", "Red Hat + CentOS 6, 7, 8 / SUSE 12 + 15 / Amazon Linux", []string{"rpm"}),
+			*newPlatform(packageName, version, "x86_64", "linux", "Debian 10, 11 / Ubuntu 18.04, 20.04, 22.04", []string{"deb"}),
+			*newPlatform(packageName, version, "x86_64", "linux", "Red Hat + CentOS 7, 8, 9 / SUSE 12 + 15 / Amazon Linux 2", []string{"rpm"}),
 			*newPlatform(packageName, version, "x86_64", "windows", "Microsoft Windows", []string{"zip", "msi"}),
 			*newPlatform(packageName, version, "x86_64", "macos", "macOS (x86_64)", []string{"zip"}),
 			*newPlatform(packageName, version, "arm64", "macos", "macOS (arm64)", []string{"zip"}),

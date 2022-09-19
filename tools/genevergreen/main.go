@@ -33,7 +33,7 @@ const (
 
 var (
 	serverVersions = []string{"4.2", "4.4", "5.0", "6.0"}
-	oses           = []string{"amazonlinux2", "centos7", "centos8", "rhel9", "debian9", "debian10", "ubuntu18.04", "ubuntu20.04", "ubuntu22.04"}
+	oses           = []string{"amazonlinux2", "centos7", "centos8", "rhel9", "debian10", "debian11", "ubuntu18.04", "ubuntu20.04", "ubuntu22.04"}
 	repos          = []string{"org", "enterprise"}
 	postPkgImg     = map[string]string{
 		"centos7":      "centos7-rpm",
@@ -43,8 +43,8 @@ var (
 		"ubuntu18.04":  "ubuntu18.04-deb",
 		"ubuntu20.04":  "ubuntu20.04-deb",
 		"ubuntu22.04":  "ubuntu22.04-deb",
-		"debian9":      "debian9-deb",
 		"debian10":     "debian10-deb",
+		"debian11":     "debian11-deb",
 	}
 )
 
@@ -57,8 +57,8 @@ func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDepende
 		"ubuntu18.04":  "ubuntu1804",
 		"ubuntu20.04":  "ubuntu2004",
 		"ubuntu22.04":  "ubuntu2204",
-		"debian9":      "debian92",
 		"debian10":     "debian10",
+		"debian11":     "debian11",
 	}
 
 	return shrub.TaskDependency{

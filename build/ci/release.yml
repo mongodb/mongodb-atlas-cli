@@ -199,6 +199,7 @@ functions:
           - signing_auth_token_50
           - signing_auth_token_60
           - tool_name
+          - arch
         env:
           <<: *go_env
           NOTARY_KEY_NAME: ${notary_key_name|server-4.4}
@@ -690,28 +691,6 @@ tasks:
           distro: ubuntu2204
           ext: deb
           tool_name: atlascli
-  - name: push_atlascli_debian92_enterprise
-    <<: *default_atlascli_push_def
-    commands:
-      - func: "clone"
-      - func: "install curator"
-      - func: "push"
-        vars:
-          edition: enterprise
-          distro: debian92
-          ext: deb
-          tool_name: atlascli
-  - name: push_atlascli_debian92_org
-    <<: *default_atlascli_push_def
-    commands:
-      - func: "clone"
-      - func: "install curator"
-      - func: "push"
-        vars:
-          edition: org
-          distro: debian92
-          ext: deb
-          tool_name: atlascli
   - name: push_atlascli_debian10_enterprise
     <<: *default_atlascli_push_def
     commands:
@@ -732,6 +711,28 @@ tasks:
         vars:
           edition: org
           distro: debian10
+          ext: deb
+          tool_name: atlascli
+  - name: push_atlascli_debian11_enterprise
+    <<: *default_atlascli_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian11
+          ext: deb
+          tool_name: atlascli
+  - name: push_atlascli_debian11_org
+    <<: *default_atlascli_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian11
           ext: deb
           tool_name: atlascli
   ################################################################
@@ -902,28 +903,6 @@ tasks:
           distro: ubuntu2204
           ext: deb
           tool_name: mongocli
-  - name: push_mongocli_debian92_enterprise
-    <<: *default_push_def
-    commands:
-      - func: "clone"
-      - func: "install curator"
-      - func: "push"
-        vars:
-          edition: enterprise
-          distro: debian92
-          ext: deb
-          tool_name: mongocli
-  - name: push_mongocli_debian92_org
-    <<: *default_push_def
-    commands:
-      - func: "clone"
-      - func: "install curator"
-      - func: "push"
-        vars:
-          edition: org
-          distro: debian92
-          ext: deb
-          tool_name: mongocli
   - name: push_mongocli_debian10_enterprise
     <<: *default_push_def
     commands:
@@ -944,6 +923,28 @@ tasks:
         vars:
           edition: org
           distro: debian10
+          ext: deb
+          tool_name: mongocli
+  - name: push_mongocli_debian11_enterprise
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian11
+          ext: deb
+          tool_name: mongocli
+  - name: push_mongocli_debian11_org
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian11
           ext: deb
           tool_name: mongocli
   ################################################################
@@ -1134,7 +1135,7 @@ tasks:
           distro: debian10
           ext: deb
           tool_name: mongocli
-  - name: push_mongocli_debian92_enterprise_stable
+  - name: push_mongocli_debian11_enterprise_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1142,10 +1143,10 @@ tasks:
       - func: "push"
         vars:
           edition: enterprise
-          distro: debian92
+          distro: debian11
           ext: deb
           tool_name: mongocli
-  - name: push_mongocli_debian92_org_stable
+  - name: push_mongocli_debian11_org_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1153,7 +1154,7 @@ tasks:
       - func: "push"
         vars:
           edition: org
-          distro: debian92
+          distro: debian11
           ext: deb
           tool_name: mongocli
   ################################################################
@@ -1322,28 +1323,6 @@ tasks:
           distro: ubuntu2204
           ext: deb
           tool_name: atlascli
-  - name: push_atlascli_debian92_enterprise_stable
-    <<: *default_push_atlascli_stable_def
-    commands:
-      - func: "clone"
-      - func: "install curator"
-      - func: "push"
-        vars:
-          edition: enterprise
-          distro: debian92
-          ext: deb
-          tool_name: atlascli
-  - name: push_atlascli_debian92_org_stable
-    <<: *default_push_atlascli_stable_def
-    commands:
-      - func: "clone"
-      - func: "install curator"
-      - func: "push"
-        vars:
-          edition: org
-          distro: debian92
-          ext: deb
-          tool_name: atlascli
   - name: push_atlascli_debian10_enterprise_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1356,6 +1335,28 @@ tasks:
           ext: deb
           tool_name: atlascli
   - name: push_atlascli_debian10_org_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian10
+          ext: deb
+          tool_name: atlascli
+  - name: push_atlascli_debian11_enterprise_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian11
+          ext: deb
+          tool_name: atlascli
+  - name: push_atlascli_debian11_org_stable
     <<: *default_push_atlascli_stable_def
     commands:
       - func: "clone"

@@ -113,5 +113,5 @@ Examples
    $ atlas dbuser create --username <username> --role clusterMonitor,backup --projectId <projectId>
 
    Create a database user with multiple scopes:
-   $ atlas dbuser create --username <username> --role clusterMonitor --scope clusterName:CLUSTER,DataLakeName:DATA_LAKE --projectId <projectId>
-
+   $ atlas dbuser create --username <username> --role clusterMonitor --scope <REPLICA-SET ID>,<storeName> --projectId <projectId>
+   

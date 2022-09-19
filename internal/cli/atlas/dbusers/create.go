@@ -183,7 +183,7 @@ func CreateBuilder() *cobra.Command {
   $ %[1]s dbuser create --username <username> --role clusterMonitor,backup --projectId <projectId>
 
   Create a database user with multiple scopes:
-  $ %[1]s dbuser create --username <username> --role clusterMonitor --scope clusterName:CLUSTER,DataLakeName:DATA_LAKE --projectId <projectId>`,
+  $ %[1]s dbuser create --username <username> --role clusterMonitor --scope <REPLICA-SET ID>,<storeName> --projectId <projectId>`,
 			cli.ExampleAtlasEntryPoint()),
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},

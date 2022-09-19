@@ -64,6 +64,14 @@ func (opts *registerOpts) Run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+
+	if err := opts.login.CheckProfile(ctx); err != nil {
+		return err
+	}
+
+	if err := opts.login.config.Save(); err != nil {
+		return err
+	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
 
 	return opts.login.setUpProfile(ctx)

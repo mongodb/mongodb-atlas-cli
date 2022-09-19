@@ -107,7 +107,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
-	mockConfig.EXPECT().Save().Return(nil).Times(1)
+	mockConfig.EXPECT().Save().Return(nil).Times(2)
 	expectedOrgs := &atlas.Organizations{
 		TotalCount: 1,
 		Results: []*atlas.Organization{

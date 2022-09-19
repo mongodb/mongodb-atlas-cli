@@ -150,9 +150,18 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+
+	if err := opts.CheckProfile(ctx); err != nil {
+		return err
+	}
+
+	if err := opts.config.Save(); err != nil {
+		return err
+	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
+
 	if opts.SkipConfig {
-		return opts.config.Save()
+		return nil
 	}
 
 	if err := opts.setUpProfile(ctx); err != nil {
@@ -163,6 +172,20 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
 
+	return nil
+}
+
+func (opts *LoginOpts) CheckProfile(ctx context.Context) error {
+	if err := opts.InitStore(ctx); err != nil {
+		return err
+	}
+	if config.OrgID() != "" && !opts.OrgExists(config.OrgID()) {
+		config.SetOrgID("")
+	}
+
+	if config.ProjectID() != "" && !opts.ProjectExists(config.ProjectID()) {
+		config.SetProjectID("")
+	}
 	return nil
 }
 

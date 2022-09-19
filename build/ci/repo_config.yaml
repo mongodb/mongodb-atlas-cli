@@ -181,8 +181,8 @@ repos:
     architectures:
       - amd64
     repos:
-      - apt/debian/dists/buster/mongodb-org
-      -
+      - apt/debian/dists/bullseye/mongodb-org
+
   - name: debian10
     type: deb
     code_name: "buster"
@@ -391,8 +391,8 @@ repos:
     architectures:
       - amd64
     repos:
-      - apt/debian/dists/buster/mongodb-enterprise
-      -
+      - apt/debian/dists/bullseye/mongodb-enterprise
+
   - name: debian10
     type: deb
     edition: enterprise

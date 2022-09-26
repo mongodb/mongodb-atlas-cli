@@ -91,7 +91,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.SnapshotDescription)
-	cmd.Flags().IntVar(&opts.retentionInDays, flag.Retention, 1, usage.PrivateEndpointRegion)
+	cmd.Flags().IntVar(&opts.retentionInDays, flag.Retention, 1, usage.RetentionInDays)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

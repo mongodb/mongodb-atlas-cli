@@ -220,6 +220,7 @@ dbName and collection are only required for built-in roles.`
 	ClusterID                                 = "Unique identifier of the cluster."
 	ReferenceTimeZoneOffset                   = "The ISO-8601-formatted timezone offset where the Ops Manager host resides."
 	DailySnapshotRetentionDays                = "Number of days to retain daily snapshots. Accepted values are between 1 and 365 inclusive."
+	RetentionInDays                           = "Number of days that Atlas should retain the on-demand snapshot. Must be at least 1."
 	SnapshotRetentionDays                     = "Number of days to keep recent snapshots. Accepted values are between 2 and 5 inclusive."
 	WeeklySnapshotRetentionWeeks              = "Number of weeks to retain weekly snapshots. Accepted values are between 1 and 52 inclusive."
 	PointInTimeWindowHours                    = "Number of hours in the past for which MongoDB should create a point-in-time snapshot."

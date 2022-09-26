@@ -32,16 +32,17 @@ type LiveMigrationsOpts struct {
 	cli.OutputOpts
 	cli.InputOpts
 	cli.GlobalOpts
-	DestinationClusterName      string
-	DestinationDropEnabled      bool
 	MigrationHosts              []string
 	SourceCACertificatePath     string
 	SourceClusterName           string
 	SourceProjectID             string
-	SourceSSL                   bool
-	SourceManagedAuthentication bool
 	SourceUsername              string
 	SourcePassword              string
+	DestinationClusterName      string
+	SourceSSL                   bool
+	SourceManagedAuthentication bool
+	Force                       bool
+	DestinationDropEnabled      bool
 }
 
 func (opts *LiveMigrationsOpts) NewCreateRequest() *mongodbatlas.LiveMigration {
@@ -65,7 +66,7 @@ func (opts *LiveMigrationsOpts) NewCreateRequest() *mongodbatlas.LiveMigration {
 }
 
 func (opts *LiveMigrationsOpts) askDestinationDropConfirm() error {
-	if !opts.DestinationDropEnabled {
+	if opts.Force || !opts.DestinationDropEnabled {
 		return nil
 	}
 	confirmDrop := false
@@ -148,6 +149,7 @@ func (opts *LiveMigrationsOpts) GenerateFlags(cmd *cobra.Command) {
 	cmd.Flags().StringVar(&opts.DestinationClusterName, flag.ClusterName, "", usage.LiveMigrationDestinationClusterName)
 	cmd.Flags().StringSliceVar(&opts.MigrationHosts, flag.LiveMigrationHost, []string{}, usage.LiveMigrationHostEntries)
 	cmd.Flags().BoolVar(&opts.DestinationDropEnabled, flag.LiveMigrationDropCollections, false, usage.LiveMigrationDropCollections)
+	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.Force)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.LiveMigrationSourceClusterName)

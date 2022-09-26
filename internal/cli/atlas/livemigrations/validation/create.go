@@ -54,7 +54,7 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas liveMigrations|lm validation create --clusterName clusterName --migrationHosts hosts --sourceClusterName clusterName --sourceProjectId projectId [--sourceSSL] [--sourceCACertificatePath path] [--sourceManagedAuthentication] [--sourceUsername userName] [--sourcePassword password] [--drop] [--projectId projectId].
+// mongocli atlas liveMigrations|lm validation create --clusterName clusterName --migrationHosts hosts --sourceClusterName clusterName --sourceProjectId projectId [--sourceSSL] [--sourceCACertificatePath path] [--sourceManagedAuthentication] [--sourceUsername userName] [--sourcePassword password] [--drop] [--force] [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -75,6 +75,5 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	opts.GenerateFlags(cmd)
-
 	return cmd
 }

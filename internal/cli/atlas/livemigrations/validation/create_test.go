@@ -75,6 +75,7 @@ func TestCreateBuilder(t *testing.T) {
 			flag.ClusterName,
 			flag.LiveMigrationHost,
 			flag.LiveMigrationDropCollections,
+			flag.Force,
 		},
 	)
 }

@@ -19,6 +19,7 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/tangzero/inflector"
 )
@@ -48,18 +49,8 @@ func (opts *GlobalOpts) ConfigOrgID() string {
 	return opts.OrgID
 }
 
-type cmdOpt func() error
-
-// PreRunE is a function to call before running the command,
-// this will call any additional function pass as a callback.
-func (*GlobalOpts) PreRunE(cbs ...cmdOpt) error {
-	for _, f := range cbs {
-		if err := f(); err != nil {
-			return err
-		}
-	}
-
-	return nil
+func (*GlobalOpts) PreRunE(cbs ...prerun.CmdOpt) error {
+	return prerun.ExecuteE(cbs...)
 }
 
 // ValidateProjectID validates projectID.

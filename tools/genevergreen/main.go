@@ -83,47 +83,40 @@ func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDepende
 	}
 }
 
-func generatePublishTasks(c *shrub.Configuration, toolName string, stable bool) {
-	distros := []string{
-		"amazon2",
-		"rhel7",
-		"rhel8",
-		"rhel9",
-		"debian10",
-		"debian11",
-		"ubuntu18.04",
-		"ubuntu20.04",
-		"ubuntu22.04",
-	}
-	exts := map[string]string{
-		"amazon2":     "rpm",
-		"rhel7":       "rpm",
-		"rhel8":       "rpm",
-		"rhel9":       "rpm",
-		"debian10":    "deb",
-		"debian11":    "deb",
-		"ubuntu18.04": "deb",
-		"ubuntu20.04": "deb",
-		"ubuntu22.04": "deb",
-	}
+var distros = []string{
+	"amazon2",
+	"rhel7",
+	"rhel8",
+	"rhel9",
+	"debian10",
+	"debian11",
+	"ubuntu18.04",
+	"ubuntu20.04",
+	"ubuntu22.04",
+}
+
+var exts = map[string]string{
+	"amazon2":     "rpm",
+	"rhel7":       "rpm",
+	"rhel8":       "rpm",
+	"rhel9":       "rpm",
+	"debian10":    "deb",
+	"debian11":    "deb",
+	"ubuntu18.04": "deb",
+	"ubuntu20.04": "deb",
+	"ubuntu22.04": "deb",
+}
+
+func generatePublishStableTasks(c *shrub.Configuration, toolName string) {
 	dependency := []shrub.TaskDependency{
 		{
 			Name:    fmt.Sprintf("compile_%s", toolName),
 			Variant: "code_health",
 		},
-	}
-	stableSuffix := ""
-	if stable {
-		stableSuffix = "_stable"
-		dependency = append(dependency, shrub.TaskDependency{
+		{
 			Name:    fmt.Sprintf("release_%s", toolName),
 			Variant: fmt.Sprintf("release_%s_github", toolName),
-		})
-	} else {
-		dependency = append(dependency, shrub.TaskDependency{
-			Name:    "package_goreleaser",
-			Variant: fmt.Sprintf("goreleaser_%s_snapshot", toolName),
-		})
+		},
 	}
 	for _, sv := range serverVersions {
 		v := &shrub.Variant{
@@ -131,37 +124,61 @@ func generatePublishTasks(c *shrub.Configuration, toolName string, stable bool) 
 			BuildDisplayName: fmt.Sprintf("Publish %s yum/apt %s", toolName, sv),
 			DistroRunOn:      []string{"rhel80-small"},
 		}
-		taskServerVersion := fmt.Sprintf("%s.0", sv)
-		notaryKey := fmt.Sprintf("server-%s", sv)
-		if !stable {
-			taskServerVersion = "4.4.0-rc3"
-			notaryKey = "server-4.0"
-		}
-		for _, distro := range distros {
-			for _, edition := range repos {
-				t := &shrub.Task{
-					Name: fmt.Sprintf("push_%s_%s_%s%s", toolName, distro, edition, stableSuffix),
-				}
-				t.Stepback(false).
-					GitTagOnly(stable).
-					Dependency(dependency...).
-					Function("clone").
-					Function("install curator").
-					FunctionWithVars("push", map[string]string{
-						"tool_name":       toolName,
-						"distro":          distro,
-						"ext":             exts[distro],
-						"server_version":  taskServerVersion,
-						"notary_key_name": notaryKey,
-						"arch":            archs[0],
-					})
-				c.Tasks = append(c.Tasks, t)
-				v.AddTasks(t.Name)
-			}
-		}
-
-		c.Variants = append(c.Variants, v)
+		publishVariant(c, v, toolName, sv, "_stable", dependency, true)
 	}
+}
+
+func generatePublishSnapshotTasks(c *shrub.Configuration, toolName string) {
+	dependency := []shrub.TaskDependency{
+		{
+			Name:    fmt.Sprintf("compile_%s", toolName),
+			Variant: "code_health",
+		},
+		{
+			Name:    "package_goreleaser",
+			Variant: fmt.Sprintf("goreleaser_%s_snapshot", toolName),
+		},
+	}
+	v := &shrub.Variant{
+		BuildName:        fmt.Sprintf("publish_%s_snapshot", toolName),
+		BuildDisplayName: fmt.Sprintf("Publish %s yum/apt main", toolName),
+		DistroRunOn:      []string{"rhel80-small"},
+	}
+	publishVariant(c, v, toolName, "4.4", "", dependency, false)
+}
+
+func publishVariant(c *shrub.Configuration, v *shrub.Variant, toolName, sv, stableSuffix string, dependency []shrub.TaskDependency, stable bool) {
+	taskServerVersion := fmt.Sprintf("%s.0", sv)
+	notaryKey := fmt.Sprintf("server-%s", sv)
+	taskSv := "_" + sv
+	if !stable {
+		taskServerVersion = "4.4.0-rc3"
+		notaryKey = "server-4.0"
+		taskSv = ""
+	}
+	for _, distro := range distros {
+		for _, edition := range repos {
+			t := &shrub.Task{
+				Name: fmt.Sprintf("push_%s_%s_%s%s%s", toolName, distro, edition, taskSv, stableSuffix),
+			}
+			t.Stepback(false).
+				GitTagOnly(stable).
+				Dependency(dependency...).
+				Function("clone").
+				Function("install curator").
+				FunctionWithVars("push", map[string]string{
+					"tool_name":       toolName,
+					"distro":          distro,
+					"ext":             exts[distro],
+					"server_version":  taskServerVersion,
+					"notary_key_name": notaryKey,
+					"arch":            archs[0],
+				})
+			c.Tasks = append(c.Tasks, t)
+			v.AddTasks(t.Name)
+		}
+	}
+	c.Variants = append(c.Variants, v)
 }
 
 func generateRepoTasks(c *shrub.Configuration, toolName string) {
@@ -293,9 +310,9 @@ func run() error {
 		generatePostPkgTasks(c, toolName)
 		generatePostPkgMetaTasks(c, toolName)
 	case "snapshot":
-		generatePublishTasks(c, toolName, false)
+		generatePublishSnapshotTasks(c, toolName)
 	case "publish":
-		generatePublishTasks(c, toolName, true)
+		generatePublishStableTasks(c, toolName)
 	default:
 		return errors.New("-tasks is invalid")
 	}

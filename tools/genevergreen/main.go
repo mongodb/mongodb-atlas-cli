@@ -120,7 +120,7 @@ func generatePublishStableTasks(c *shrub.Configuration, toolName string) {
 	}
 	for _, sv := range serverVersions {
 		v := &shrub.Variant{
-			BuildName:        fmt.Sprintf("release_%s_publish_%s", toolName, sv),
+			BuildName:        fmt.Sprintf("generated_release_%s_publish_%s", toolName, sv),
 			BuildDisplayName: fmt.Sprintf("Publish %s yum/apt %s", toolName, sv),
 			DistroRunOn:      []string{"rhel80-small"},
 		}
@@ -140,7 +140,7 @@ func generatePublishSnapshotTasks(c *shrub.Configuration, toolName string) {
 		},
 	}
 	v := &shrub.Variant{
-		BuildName:        fmt.Sprintf("publish_%s_snapshot", toolName),
+		BuildName:        fmt.Sprintf("generated_publish_%s_snapshot", toolName),
 		BuildDisplayName: fmt.Sprintf("Publish %s yum/apt main", toolName),
 		DistroRunOn:      []string{"rhel80-small"},
 	}

@@ -49,5 +49,5 @@ curator \
     --distro "${distro:?}" \
     --edition "${edition:?}" \
     --version "${server_version:?}" \
-    --arch x86_64 \
+    --arch "${arch:?}" \
     --packages "https://s3.amazonaws.com/mongodb-mongocli-build/${project:?}/dist/${revision:?}_${created_at:?}/${tool_name:?}-${ext:?}.tgz"

@@ -110,10 +110,6 @@ var exts = map[string]string{
 func generatePublishStableTasks(c *shrub.Configuration, toolName string) {
 	dependency := []shrub.TaskDependency{
 		{
-			Name:    fmt.Sprintf("compile_%s", toolName),
-			Variant: "code_health",
-		},
-		{
 			Name:    fmt.Sprintf("release_%s", toolName),
 			Variant: fmt.Sprintf("release_%s_github", toolName),
 		},
@@ -138,10 +134,6 @@ func generatePublishStableTasks(c *shrub.Configuration, toolName string) {
 
 func generatePublishSnapshotTasks(c *shrub.Configuration, toolName string) {
 	dependency := []shrub.TaskDependency{
-		{
-			Name:    fmt.Sprintf("compile_%s", toolName),
-			Variant: "code_health",
-		},
 		{
 			Name:    "package_goreleaser",
 			Variant: fmt.Sprintf("goreleaser_%s_snapshot", toolName),

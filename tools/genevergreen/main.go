@@ -124,7 +124,15 @@ func generatePublishStableTasks(c *shrub.Configuration, toolName string) {
 			BuildDisplayName: fmt.Sprintf("Publish %s yum/apt %s", toolName, sv),
 			DistroRunOn:      []string{"rhel80-small"},
 		}
-		publishVariant(c, v, toolName, sv, "_stable", dependency, true)
+		publishVariant(
+			c,
+			v,
+			toolName,
+			sv,
+			"_stable",
+			dependency,
+			true,
+		)
 	}
 }
 
@@ -139,12 +147,15 @@ func generatePublishSnapshotTasks(c *shrub.Configuration, toolName string) {
 			Variant: fmt.Sprintf("goreleaser_%s_snapshot", toolName),
 		},
 	}
-	v := &shrub.Variant{
-		BuildName:        fmt.Sprintf("generated_publish_%s_snapshot", toolName),
-		BuildDisplayName: fmt.Sprintf("Publish %s yum/apt main", toolName),
-		DistroRunOn:      []string{"rhel80-small"},
-	}
-	publishVariant(c, v, toolName, "4.4", "", dependency, false)
+	publishVariant(
+		c,
+		c.Variant(fmt.Sprintf("publish_%s_snapshot", toolName)),
+		toolName,
+		"4.4",
+		"",
+		dependency,
+		false,
+	)
 }
 
 func publishVariant(c *shrub.Configuration, v *shrub.Variant, toolName, sv, stableSuffix string, dependency []shrub.TaskDependency, stable bool) {

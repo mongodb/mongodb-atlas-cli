@@ -256,7 +256,7 @@ functions:
         aws_secret: ${aws_secret}
         local_files_include_filter:
           - src/github.com/mongodb/mongodb-atlas-cli/tasks.json
-        remote_file: ${project}/dist/${revision}_${created_at}/
+        remote_file: ${project}/dist/${revision}_${created_at}/${tool_name}/${task_type}/
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/json}

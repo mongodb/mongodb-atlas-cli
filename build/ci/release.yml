@@ -359,7 +359,7 @@ tasks:
       - func: "clone"
       - func: "generate evergreen"
         vars:
-          tool_name: mongocli
+          tool_name: atlascli
           task_type: snapshot
   - name: push_stable_mongocli_generate
     commands:

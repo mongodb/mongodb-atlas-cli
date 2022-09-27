@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -77,19 +78,6 @@ func (opts *DescribeOpts) validate() error {
 	return nil
 }
 
-type cmdOpt func() error
-
-// PreRunE is a function to call before running the command,
-// It calls any additional function pass as a callback.
-func PreRunE(cbs ...cmdOpt) error {
-	for _, f := range cbs {
-		if err := f(); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 // mongocli iam user(s) describe --id id --username USERNAME.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
@@ -106,7 +94,7 @@ func DescribeBuilder() *cobra.Command {
 		Short: "Get a user by username or id.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return PreRunE(
+			return prerun.ExecuteE(
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 				opts.validate,

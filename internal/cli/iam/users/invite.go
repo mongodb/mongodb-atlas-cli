@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -246,12 +247,11 @@ func InviteBuilder() *cobra.Command {
 		Short: "Invite a user.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.OutWriter = cmd.OutOrStdout()
-			opts.InitInput(cmd.InOrStdin())
 			if config.Service() != config.OpsManagerService {
 				_ = cmd.MarkFlagRequired(flag.Country)
 			}
-			return opts.initStore(cmd.Context())()
+
+			return prerun.ExecuteE(opts.InitOutput(cmd.OutOrStdout(), ""), opts.InitInput(cmd.InOrStdin()), opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.Prompt(); err != nil {

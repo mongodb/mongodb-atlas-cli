@@ -166,6 +166,7 @@ func publishVariant(c *shrub.Configuration, v *shrub.Variant, toolName, sv, stab
 				Dependency(dependency...).
 				Function("clone").
 				Function("install curator").
+				Patchable(false).
 				FunctionWithVars("push", map[string]string{
 					"tool_name":       toolName,
 					"distro":          distro,

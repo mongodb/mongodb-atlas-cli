@@ -185,6 +185,7 @@ func publishVariant(c *shrub.Configuration, v *shrub.Variant, toolName, sv, stab
 					"server_version":  taskServerVersion,
 					"notary_key_name": notaryKey,
 					"arch":            archs[0],
+					"edition":         edition,
 				})
 			c.Tasks = append(c.Tasks, t)
 			v.AddTasks(t.Name)

@@ -366,14 +366,14 @@ tasks:
       - func: "clone"
       - func: "generate evergreen"
         vars:
-          tool_name: atlascli
+          tool_name: mongocli
           task_type: publish
   - name: push_stable_atlascli_generate
     commands:
       - func: "clone"
       - func: "generate evergreen"
         vars:
-          tool_name: mongocli
+          tool_name: atlascli
           task_type: publish
   - name: pkg_test_mongocli_generate
     tags: [ "smoke-test", "mongocli", "pkg" ]
@@ -641,7 +641,7 @@ buildvariants:
     tasks:
       - name: package_goreleaser
   - name: publish_mongocli_snapshot
-    display_name: "Publish MongoCLI Snapshot generate"
+    display_name: "Publish MongoCLI Snapshot"
     run_on:
       - rhel80-small
     expansions:
@@ -652,7 +652,7 @@ buildvariants:
     tasks:
       - name: push_mongocli_generate
   - name: publish_atlascli_snapshot
-    display_name: "Publish AtlasCLI Snapshot generate"
+    display_name: "Publish AtlasCLI Snapshot"
     run_on:
       - rhel80-small
     expansions:

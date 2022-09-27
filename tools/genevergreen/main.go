@@ -78,8 +78,8 @@ func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDepende
 	}
 
 	return shrub.TaskDependency{
-		Name:    fmt.Sprintf("push_%v_%v_%v_stable", toolName, newOs[os], repo),
-		Variant: fmt.Sprintf("release_%v_publish_%v", toolName, strings.ReplaceAll(serverVersion, ".", "")),
+		Name:    fmt.Sprintf("push_%s_%s_%s_stable", toolName, newOs[os], repo),
+		Variant: fmt.Sprintf("release_%s_publish_%s", toolName, strings.ReplaceAll(serverVersion, ".", "")),
 	}
 }
 

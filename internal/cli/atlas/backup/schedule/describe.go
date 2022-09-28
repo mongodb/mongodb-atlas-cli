@@ -68,6 +68,7 @@ func DescribeBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":            "clusterName",
+			"requiredArgs":    "clusterName",
 			"clusterNameDesc": "Human-readable label for the cluster.",
 		},
 		Example: fmt.Sprintf(`  The following example describes the cloud backup schedule for the cluster Cluster0:

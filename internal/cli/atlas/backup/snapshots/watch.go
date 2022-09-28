@@ -73,6 +73,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":           "snapshotId",
+			"requiredArgs":   "snapshotId",
 			"snapshotIdDesc": "Unique identifier of the snapshot you want to watch.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

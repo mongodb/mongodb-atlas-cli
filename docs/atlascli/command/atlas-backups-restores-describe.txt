@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   atlas backups restores describe <ID> [options]
+   atlas backups restores describe <restoreJobId> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -34,7 +34,7 @@ Arguments
      - Type
      - Required
      - Description
-   * - ID
+   * - restoreJobId
      - string
      - true
      - ID of the restore job.

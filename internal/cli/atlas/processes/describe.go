@@ -16,6 +16,7 @@ package processes
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -59,9 +60,10 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <hostname:port>",
-		Short: "List MongoDB processes for your project.",
-		Args:  require.ExactArgs(1),
+		Use:     "describe <hostname:port>",
+		Short:   "List MongoDB processes for your project.",
+		Example: fmt.Sprintf(`  $ %s process describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
+		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":              "hostname:port",
 			"requiredArgs":      "hostname:port",
@@ -83,7 +85,6 @@ func DescribeBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

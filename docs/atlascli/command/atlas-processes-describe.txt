@@ -79,3 +79,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   $ atlas process describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
+

@@ -61,7 +61,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:     "describe <hostname:port>",
-		Short:   "List MongoDB processes for your project.",
+		Short:   "Return the details for the MongoDB process you specify.",
 		Example: fmt.Sprintf(`  $ %s process describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{

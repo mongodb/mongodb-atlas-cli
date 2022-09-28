@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-processes-describe` - List MongoDB processes for your project.
+* :ref:`atlas-processes-describe` - Return the details for the MongoDB process you specify.
 * :ref:`atlas-processes-list` - List MongoDB processes for your project.
 
 

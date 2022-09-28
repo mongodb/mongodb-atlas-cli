@@ -12,7 +12,7 @@ atlas processes describe
    :depth: 1
    :class: singlecol
 
-List MongoDB processes for your project.
+Return the details for the MongoDB process you specify.
 
 Syntax
 ------

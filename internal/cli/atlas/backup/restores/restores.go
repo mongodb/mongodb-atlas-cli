@@ -23,6 +23,7 @@ func AtlasCLIBuilder() *cobra.Command {
 	cmd := Builder()
 	cmd.AddCommand(
 		DescribeBuilder(),
+		WatchBuilder(),
 	)
 	return cmd
 }

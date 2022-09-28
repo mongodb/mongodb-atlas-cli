@@ -27,15 +27,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type DescribeOpts struct {
+type WatchOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
+	cli.WatchOpts
 	id          string
 	clusterName string
 	store       store.RestoreJobsDescriber
 }
 
-func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
+func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -43,43 +43,49 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var restoreDescribeTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT	URLs
-{{.ID}}	{{.SnapshotID}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}	{{range $index, $element := .DeliveryURL}}{{if $index}}; {{end}}{{$element}}{{end}}
-`
-
-func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.RestoreJob(opts.ConfigProjectID(), opts.clusterName, opts.id)
+func (opts *WatchOpts) watcher() (bool, error) {
+	result, err := opts.store.RestoreJob(opts.ConfigProjectID(), opts.clusterName, opts.id)
 	if err != nil {
+		return false, err
+	}
+	return result.Expired || result.Cancelled || *result.Failed || result.FinishedAt != "", nil
+}
+
+func (opts *WatchOpts) Run() error {
+	if err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	return opts.Print(nil)
 }
 
-// mongocli atlas backup(s) restore(s) job(s) describe <ID>.
-func DescribeBuilder() *cobra.Command {
-	opts := new(DescribeOpts)
+// mongocli atlas backup(s) restore(s) job(s) watch <ID>.
+func WatchBuilder() *cobra.Command {
+	opts := new(WatchOpts)
 	cmd := &cobra.Command{
-		Use:   "describe <restoreJobId>",
-		Short: "Describe a cloud backup restore job.",
-		Args:  require.ExactArgs(1),
+		Use:   "watch <restoreJobId>",
+		Short: "Watch for a restore job to complete.",
+		Long: `This command checks the restore job's status periodically until it reaches a completed, failed or canceled status. 
+Once the restore reaches the expected status, the command prints "Restore completed."
+If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
+You can interrupt the command's polling at any time with CTRL-C.`,
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":             "restoreJobId",
-			"requiredArgs":     "restoreJobId",
-			"restoreJobIdDesc": "ID of the restore job.",
+			"args":         "restoreJobId",
+			"requiredArgs": "restoreJobId",
+			"IDDesc":       "ID of the restore job.",
 		},
 		Example: fmt.Sprintf(`  The following example retrieves the continuous backup restore job for the cluster Cluster0:
-  $ %s backup restore describe 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),
+  $ %s backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), restoreDescribeTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), "\nRestore completed.\n"),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
-
 			return opts.Run()
 		},
 	}

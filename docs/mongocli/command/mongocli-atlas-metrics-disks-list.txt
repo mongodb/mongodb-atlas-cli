@@ -14,7 +14,8 @@ mongocli atlas metrics disks list
 
 List available disks or disk partitions for a given host.
 
-To retrieve the hostname and port needed for this command, run mongocli atlas process list.
+To retrieve the hostname and port needed for this command, run:
+$ mongocli atlas process list
 
 Syntax
 ------

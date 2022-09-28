@@ -21,10 +21,25 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_processes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessLister
+//go:generate mockgen -destination=../mocks/mock_processes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessLister,ProcessDescriber
 
 type ProcessLister interface {
 	Processes(string, *atlas.ProcessesListOptions) ([]*atlas.Process, error)
+}
+
+type ProcessDescriber interface {
+	Process(string, string, int) (*atlas.Process, error)
+}
+
+// Process encapsulate the logic to manage different cloud providers.
+func (s *Store) Process(groupID, hostname string, port int) (*atlas.Process, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).Processes.Get(s.ctx, groupID, hostname, port)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // Processes encapsulate the logic to manage different cloud providers.

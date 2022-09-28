@@ -63,8 +63,9 @@ func (opts *ListsOpts) Run() error {
 func ListBuilder() *cobra.Command {
 	opts := &ListsOpts{}
 	cmd := &cobra.Command{
-		Use:     "list <hostname:port>",
-		Long:    `To retrieve the hostname and port needed for this command, run mongocli atlas process list.`,
+		Use: "list <hostname:port>",
+		Long: fmt.Sprintf(`To retrieve the hostname and port needed for this command, run:
+$ %s process list`, cli.ExampleAtlasEntryPoint()),
 		Short:   "List available databases or database metrics for a given host.",
 		Aliases: []string{"ls"},
 		Annotations: map[string]string{

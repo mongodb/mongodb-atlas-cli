@@ -35,7 +35,7 @@ func (m *MockProjectOrgsLister) EXPECT() *MockProjectOrgsListerMockRecorder {
 }
 
 // GetOrgProjects mocks base method.
-func (m *MockProjectOrgsLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
+func (m *MockProjectOrgsLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ProjectsListOptions) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrgProjects", arg0, arg1)
 	ret0, _ := ret[0].(interface{})

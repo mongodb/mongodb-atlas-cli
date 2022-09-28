@@ -36,18 +36,6 @@ type OrganizationAPIKeyAccessListCreator interface {
 	CreateOrganizationAPIKeyAccessList(string, string, []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error)
 }
 
-type OrganizationAPIKeyWhitelistLister interface {
-	OrganizationAPIKeyWhitelists(string, string, *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error)
-}
-
-type OrganizationAPIKeyWhitelistDeleter interface {
-	DeleteOrganizationAPIKeyWhitelist(string, string, string) error
-}
-
-type OrganizationAPIKeyWhitelistCreator interface {
-	CreateOrganizationAPIKeyWhitelist(string, string, []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error)
-}
-
 // CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error) {
 	switch s.service {

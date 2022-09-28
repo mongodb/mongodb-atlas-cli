@@ -26,7 +26,10 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage MongoDB processes for your project.",
 	}
-	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+	)
 
 	return cmd
 }

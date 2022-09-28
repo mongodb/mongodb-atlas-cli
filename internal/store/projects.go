@@ -26,7 +26,7 @@ import (
 
 type ProjectLister interface {
 	Projects(*atlas.ListOptions) (interface{}, error)
-	GetOrgProjects(string, *atlas.ListOptions) (interface{}, error)
+	GetOrgProjects(string, *atlas.ProjectsListOptions) (interface{}, error)
 }
 
 type OrgProjectLister interface {
@@ -81,7 +81,7 @@ func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 }
 
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
-func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (interface{}, error) {
+func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Organizations.Projects(s.ctx, orgID, opts)

@@ -14,7 +14,8 @@ mongocli atlas metrics databases describe
 
 Describe database metrics for a database on a specific host.
 
-To retrieve the hostname and port needed for this command, run mongocli atlas process list.
+To retrieve the hostname and port needed for this command, run:
+$ mongocli atlas process list
 
 Syntax
 ------

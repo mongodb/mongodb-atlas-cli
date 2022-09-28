@@ -49,11 +49,13 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`atlas-processes-describe` - Return the details for the MongoDB process you specify.
 * :ref:`atlas-processes-list` - List MongoDB processes for your project.
 
 
 .. toctree::
    :titlesonly:
 
+   describe </command/atlas-processes-describe>
    list </command/atlas-processes-list>
 

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,33 +26,33 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestList_Run(t *testing.T) {
+func TestDescribeBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DescribeBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Output},
+	)
+}
+
+func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessLister(ctrl)
+	mockStore := mocks.NewMockProcessDescriber(ctrl)
 	defer ctrl.Finish()
 
-	var expected []*mongodbatlas.Process
+	var expected *mongodbatlas.Process
 
-	listOpts := &ListOpts{
+	opts := &DescribeOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		Processes(listOpts.ProjectID, listOpts.newProcessesListOptions()).
+		Process(opts.ProjectID, opts.host, opts.port).
 		Return(expected, nil).
 		Times(1)
 
-	if err := listOpts.Run(); err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestListBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ListBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit},
-	)
 }

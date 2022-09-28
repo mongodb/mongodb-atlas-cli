@@ -59,7 +59,7 @@ func (opts *WatchOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli atlas backup(s) restore(s) job(s) watch <ID>.
+// WatchBuilder atlas backup(s) restore(s) job(s) watch <restoreJobId>.
 func WatchBuilder() *cobra.Command {
 	opts := new(WatchOpts)
 	cmd := &cobra.Command{

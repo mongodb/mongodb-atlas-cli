@@ -38,7 +38,7 @@ type ProjectOrgsLister interface {
 	Projects(*atlas.ListOptions) (interface{}, error)
 	Organization(id string) (*atlas.Organization, error)
 	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
-	GetOrgProjects(string, *atlas.ListOptions) (interface{}, error)
+	GetOrgProjects(string, *atlas.ProjectsListOptions) (interface{}, error)
 }
 
 type DefaultSetterOpts struct {
@@ -94,7 +94,9 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 	if opts.OrgID == "" {
 		projects, err = opts.Store.Projects(&atlas.ListOptions{ItemsPerPage: resultsLimit})
 	} else {
-		projects, err = opts.Store.GetOrgProjects(opts.OrgID, &atlas.ListOptions{ItemsPerPage: resultsLimit})
+		list := &atlas.ProjectsListOptions{}
+		list.ItemsPerPage = resultsLimit
+		projects, err = opts.Store.GetOrgProjects(opts.OrgID, list)
 	}
 	if err != nil {
 		var atlasErr *atlas.ErrorResponse

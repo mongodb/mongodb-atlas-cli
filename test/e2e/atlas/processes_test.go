@@ -22,6 +22,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 	exec "golang.org/x/sys/execabs"
 )
@@ -31,10 +32,9 @@ func TestProcesses(t *testing.T) {
 	g.generateProjectAndCluster("processes")
 
 	cliPath, err := e2e.AtlasCLIBin()
+	require.NoError(t, err)
 
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	var processes []*mongodbatlas.Process
 
 	t.Run("list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -50,9 +50,29 @@ func TestProcesses(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var indexes []*mongodbatlas.Process
-		if err := json.Unmarshal(resp, &indexes); assert.NoError(t, err) {
-			assert.NotEmpty(t, indexes)
+		if err := json.Unmarshal(resp, &processes); assert.NoError(t, err) {
+			require.NotEmpty(t, processes)
+		}
+	})
+
+	t.Run("describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			processesEntity,
+			"describe",
+			processes[0].ID,
+			"--projectId", g.projectID,
+			"-o=json")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		var process *mongodbatlas.Process
+		if err := json.Unmarshal(resp, &process); assert.NoError(t, err) {
+			assert.Equal(t, process.ID, processes[0].ID)
 		}
 	})
 }

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,16 +27,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type Opts struct {
+const describeTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION
+{{.ID}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}
+`
+
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.MetricsOpts
 	host  string
 	port  int
-	store store.ProcessMeasurementLister
+	store store.ProcessDescriber
 }
 
-func (opts *Opts) initStore(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -44,9 +47,8 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *Opts) Run() error {
-	listOpts := opts.NewProcessMetricsListOptions()
-	r, err := opts.store.ProcessMeasurements(opts.ConfigProjectID(), opts.host, opts.port, listOpts)
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.Process(opts.ConfigProjectID(), opts.host, opts.port)
 	if err != nil {
 		return err
 	}
@@ -54,33 +56,24 @@ func (opts *Opts) Run() error {
 	return opts.Print(r)
 }
 
-var metricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .Measurements}} {{if .DataPoints}}
-{{- $name := .Name }}{{- $unit := .Units }}{{- range .DataPoints}}	
-{{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
-`
-
-// mongocli atlas metric(s) process(es) <hostname:port> [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId].
-func Builder() *cobra.Command {
-	opts := &Opts{}
+// DescribeBuilder atlas process(es) describe <hostname:port> --projectId projectId.
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "processes <hostname:port>",
-		Short: "Get MongoDB process metrics for a given host.",
-		Long: fmt.Sprintf(`To retrieve the hostname and port needed for this command, run:
-$ %s process list`, cli.ExampleAtlasEntryPoint()),
-		Aliases: []string{"process"},
+		Use:     "describe <hostname:port>",
+		Short:   "Return the details for the MongoDB process you specify.",
+		Example: fmt.Sprintf(`  $ %s process describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":              "hostname:port",
 			"requiredArgs":      "hostname:port",
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 		},
-		Example: fmt.Sprintf(`  $ %s metrics process atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.ValidatePeriodStartEnd,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), metricTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -89,23 +82,11 @@ $ %s process list`, cli.ExampleAtlasEntryPoint()),
 			if err != nil {
 				return err
 			}
-
 			return opts.Run()
 		},
 	}
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
-
-	cmd.Flags().StringVar(&opts.Granularity, flag.Granularity, "", usage.Granularity)
-	cmd.Flags().StringVar(&opts.Period, flag.Period, "", usage.Period)
-	cmd.Flags().StringVar(&opts.Start, flag.Start, "", usage.MeasurementStart)
-	cmd.Flags().StringVar(&opts.End, flag.End, "", usage.MeasurementEnd)
-	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.TypeFlag, nil, usage.MeasurementType)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	_ = cmd.MarkFlagRequired(flag.Granularity)
 
 	return cmd
 }

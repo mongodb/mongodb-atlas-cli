@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package projects
 
@@ -33,11 +32,10 @@ func TestList_Run(t *testing.T) {
 
 	expected := &mongodbatlas.Projects{}
 
-	listOpts := &ListOpts{
-		store: mockStore,
-	}
-
 	t.Run("No ConfigOrgID is given", func(t *testing.T) {
+		listOpts := &ListOpts{
+			store: mockStore,
+		}
 		mockStore.
 			EXPECT().
 			Projects(listOpts.NewListOptions()).
@@ -54,10 +52,10 @@ func TestList_Run(t *testing.T) {
 			store: mockStore,
 		}
 		listOpts.OrgID = "1"
-
+		filter := &mongodbatlas.ProjectsListOptions{ListOptions: *listOpts.NewListOptions()}
 		mockStore.
 			EXPECT().
-			GetOrgProjects("1", listOpts.NewListOptions()).
+			GetOrgProjects("1", filter).
 			Return(expected, nil).
 			Times(1)
 

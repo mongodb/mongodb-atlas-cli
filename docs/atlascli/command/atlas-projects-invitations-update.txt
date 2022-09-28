@@ -1,8 +1,8 @@
-.. _atlas-backups-restores-watch:
+.. _atlas-projects-invitations-update:
 
-============================
-atlas backups restores watch
-============================
+=================================
+atlas projects invitations update
+=================================
 
 .. default-domain:: mongodb
 
@@ -12,19 +12,14 @@ atlas backups restores watch
    :depth: 1
    :class: singlecol
 
-Watch for a restore job to complete.
-
-This command checks the restore job's status periodically until it reaches a completed, failed or canceled status. 
-Once the restore reaches the expected status, the command prints "Restore completed."
-If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
-You can interrupt the command's polling at any time with CTRL-C.
+Updates one pending invitation by invitationId or email to the project that you specify.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups restores watch <restoreJobId> [options]
+   atlas projects invitations update [invitationId] [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -39,10 +34,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - restoreJobId
+   * - invitationId
      - string
-     - true
-     - ID of the restore job.
+     - false
+     - Unique 24-hexadecimal digit string that identifies the invitation.
 
 Options
 -------
@@ -55,14 +50,14 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterName
+   * - --email
      - string
-     - true
-     - Name of the cluster.
+     - false
+     - User's email address.
    * - -h, --help
      - 
      - false
-     - help for watch
+     - help for update
    * - -o, --output
      - string
      - false
@@ -71,6 +66,10 @@ Options
      - string
      - false
      - Project ID to use. Overrides the settings in the configuration file or environment variable.
+   * - --role
+     - strings
+     - true
+     - User's roles  for the associated organization.
 
 Inherited Options
 -----------------
@@ -87,12 +86,4 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
-
-Examples
---------
-
-.. code-block::
-
-   The following example retrieves the continuous backup restore job for the cluster Cluster0:
-   $ atlas backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0
 

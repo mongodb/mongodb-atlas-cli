@@ -1,8 +1,8 @@
-.. _atlas-backups-restores-watch:
+.. _atlas-clusters-watch:
 
-============================
-atlas backups restores watch
-============================
+====================
+atlas clusters watch
+====================
 
 .. default-domain:: mongodb
 
@@ -12,11 +12,11 @@ atlas backups restores watch
    :depth: 1
    :class: singlecol
 
-Watch for a restore job to complete.
+Watch for a cluster to be available.
 
-This command checks the restore job's status periodically until it reaches a completed, failed or canceled status. 
-Once the restore reaches the expected status, the command prints "Restore completed."
-If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
+This command checks the cluster's status periodically until it reaches an IDLE state. 
+Once the cluster reaches the expected state, the command prints "Cluster available."
+If you run the command in the terminal, it blocks the terminal session until the resource state changes to IDLE.
 You can interrupt the command's polling at any time with CTRL-C.
 
 Syntax
@@ -24,7 +24,7 @@ Syntax
 
 .. code-block::
 
-   atlas backups restores watch <restoreJobId> [options]
+   atlas clusters watch <clusterName> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -39,10 +39,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - restoreJobId
+   * - clusterName
      - string
-     - true
-     - ID of the restore job.
+     - false
+     - Name of the cluster to watch.
 
 Options
 -------
@@ -55,18 +55,10 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterName
-     - string
-     - true
-     - Name of the cluster.
    * - -h, --help
      - 
      - false
      - help for watch
-   * - -o, --output
-     - string
-     - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --projectId
      - string
      - false
@@ -93,6 +85,5 @@ Examples
 
 .. code-block::
 
-   The following example retrieves the continuous backup restore job for the cluster Cluster0:
-   $ atlas backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0
+   $ atlas cluster watch clusterNameSample
 

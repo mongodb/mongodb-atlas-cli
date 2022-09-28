@@ -1,8 +1,8 @@
-.. _atlas-backups-restores-watch:
+.. _atlas-serverless-create:
 
-============================
-atlas backups restores watch
-============================
+=======================
+atlas serverless create
+=======================
 
 .. default-domain:: mongodb
 
@@ -12,19 +12,16 @@ atlas backups restores watch
    :depth: 1
    :class: singlecol
 
-Watch for a restore job to complete.
+Creates one serverless instance in the specified project.
 
-This command checks the restore job's status periodically until it reaches a completed, failed or canceled status. 
-Once the restore reaches the expected status, the command prints "Restore completed."
-If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
-You can interrupt the command's polling at any time with CTRL-C.
+Your API Key must have the Organization Owner or Project Owner role to successfully call this resource.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups restores watch <restoreJobId> [options]
+   atlas serverless create <instanceName> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -39,10 +36,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - restoreJobId
+   * - instanceName
      - string
-     - true
-     - ID of the restore job.
+     - false
+     - Human-readable label that identifies your serverless instance.
 
 Options
 -------
@@ -55,14 +52,10 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterName
-     - string
-     - true
-     - Name of the cluster.
    * - -h, --help
      - 
      - false
-     - help for watch
+     - help for create
    * - -o, --output
      - string
      - false
@@ -71,6 +64,14 @@ Options
      - string
      - false
      - Project ID to use. Overrides the settings in the configuration file or environment variable.
+   * - --provider
+     - string
+     - true
+     - Cloud service provider that applies to the provisioned serverless instance.
+   * - --region
+     - string
+     - true
+     - Human-readable label that identifies the physical location of your MongoDB serverless instance. The region you choose can affect network latency for clients accessing your databases.
 
 Inherited Options
 -----------------
@@ -87,12 +88,4 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
-
-Examples
---------
-
-.. code-block::
-
-   The following example retrieves the continuous backup restore job for the cluster Cluster0:
-   $ atlas backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0
 

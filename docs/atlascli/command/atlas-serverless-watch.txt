@@ -1,8 +1,8 @@
-.. _atlas-backups-restores-watch:
+.. _atlas-serverless-watch:
 
-============================
-atlas backups restores watch
-============================
+======================
+atlas serverless watch
+======================
 
 .. default-domain:: mongodb
 
@@ -12,11 +12,12 @@ atlas backups restores watch
    :depth: 1
    :class: singlecol
 
-Watch for a restore job to complete.
+Monitor the status of serverless instance.
 
-This command checks the restore job's status periodically until it reaches a completed, failed or canceled status. 
-Once the restore reaches the expected status, the command prints "Restore completed."
-If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
+Your API Key must have the Project Read Only role to successfully call this resource.
+This command checks the serverless instance's state periodically until the instance reaches an IDLE state. 
+Once the instance reaches the expected state, the command prints "Instance available."
+If you run the command in the terminal, it blocks the terminal session until the resource becomes idle.
 You can interrupt the command's polling at any time with CTRL-C.
 
 Syntax
@@ -24,7 +25,7 @@ Syntax
 
 .. code-block::
 
-   atlas backups restores watch <restoreJobId> [options]
+   atlas serverless watch <instanceName> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -39,10 +40,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - restoreJobId
+   * - instanceName
      - string
-     - true
-     - ID of the restore job.
+     - false
+     - Name of the instance to watch.
 
 Options
 -------
@@ -55,18 +56,10 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterName
-     - string
-     - true
-     - Name of the cluster.
    * - -h, --help
      - 
      - false
      - help for watch
-   * - -o, --output
-     - string
-     - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --projectId
      - string
      - false
@@ -93,6 +86,5 @@ Examples
 
 .. code-block::
 
-   The following example retrieves the continuous backup restore job for the cluster Cluster0:
-   $ atlas backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0
+   $ atlas serverless watch instanceNameSample
 

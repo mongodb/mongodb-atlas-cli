@@ -1,8 +1,8 @@
-.. _atlas-backups-restores-watch:
+.. _atlas-privateEndpoints-dataLakes-aws-describe:
 
-============================
-atlas backups restores watch
-============================
+=============================================
+atlas privateEndpoints dataLakes aws describe
+=============================================
 
 .. default-domain:: mongodb
 
@@ -12,19 +12,14 @@ atlas backups restores watch
    :depth: 1
    :class: singlecol
 
-Watch for a restore job to complete.
-
-This command checks the restore job's status periodically until it reaches a completed, failed or canceled status. 
-Once the restore reaches the expected status, the command prints "Restore completed."
-If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
-You can interrupt the command's polling at any time with CTRL-C.
+Return a specific Data Lake private endpoint for your project.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups restores watch <restoreJobId> [options]
+   atlas privateEndpoints dataLakes aws describe <privateEndpointId> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -39,10 +34,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - restoreJobId
+   * - privateEndpointId
      - string
      - true
-     - ID of the restore job.
+     - Unique 22-character alphanumeric string that identifies the private endpoint.
 
 Options
 -------
@@ -55,14 +50,10 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterName
-     - string
-     - true
-     - Name of the cluster.
    * - -h, --help
      - 
      - false
-     - help for watch
+     - help for describe
    * - -o, --output
      - string
      - false
@@ -93,6 +84,6 @@ Examples
 
 .. code-block::
 
-   The following example retrieves the continuous backup restore job for the cluster Cluster0:
-   $ atlas backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0
+   This example uses the profile named "myprofile" for accessing Atlas.
+   $ atlas privateEndpoint dataLake aws describe vpce-abcdefg0123456789 -P myprofile
 

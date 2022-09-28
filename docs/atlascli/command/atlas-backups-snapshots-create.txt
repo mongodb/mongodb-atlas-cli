@@ -1,8 +1,8 @@
-.. _atlas-backups-restores-watch:
+.. _atlas-backups-snapshots-create:
 
-============================
-atlas backups restores watch
-============================
+==============================
+atlas backups snapshots create
+==============================
 
 .. default-domain:: mongodb
 
@@ -12,19 +12,14 @@ atlas backups restores watch
    :depth: 1
    :class: singlecol
 
-Watch for a restore job to complete.
-
-This command checks the restore job's status periodically until it reaches a completed, failed or canceled status. 
-Once the restore reaches the expected status, the command prints "Restore completed."
-If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
-You can interrupt the command's polling at any time with CTRL-C.
+Create a backup snapshot for your project and cluster.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas backups restores watch <restoreJobId> [options]
+   atlas backups snapshots create <clusterName> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -39,10 +34,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - restoreJobId
+   * - clusterName
      - string
-     - true
-     - ID of the restore job.
+     - false
+     - Name of the Atlas cluster whose snapshot you want to restore.
 
 Options
 -------
@@ -55,14 +50,14 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterName
+   * - --desc
      - string
      - true
-     - Name of the cluster.
+     - Description of the on-demand snapshot.
    * - -h, --help
      - 
      - false
-     - help for watch
+     - help for create
    * - -o, --output
      - string
      - false
@@ -71,6 +66,10 @@ Options
      - string
      - false
      - Project ID to use. Overrides the settings in the configuration file or environment variable.
+   * - --retention
+     - int
+     - false
+     - Number of days that Atlas should retain the on-demand snapshot. Must be at least 1. This value defaults to 1.
 
 Inherited Options
 -----------------
@@ -87,12 +86,4 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
-
-Examples
---------
-
-.. code-block::
-
-   The following example retrieves the continuous backup restore job for the cluster Cluster0:
-   $ atlas backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0
 

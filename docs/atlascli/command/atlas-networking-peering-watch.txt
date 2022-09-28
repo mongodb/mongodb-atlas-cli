@@ -1,8 +1,8 @@
-.. _atlas-backups-restores-watch:
+.. _atlas-networking-peering-watch:
 
-============================
-atlas backups restores watch
-============================
+==============================
+atlas networking peering watch
+==============================
 
 .. default-domain:: mongodb
 
@@ -12,11 +12,11 @@ atlas backups restores watch
    :depth: 1
    :class: singlecol
 
-Watch for a restore job to complete.
+Watch for a peering connection to be available.
 
-This command checks the restore job's status periodically until it reaches a completed, failed or canceled status. 
-Once the restore reaches the expected status, the command prints "Restore completed."
-If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
+This command checks the peering connection's status periodically until it becomes available. 
+Once it reaches the expected state, the command prints "Network peering changes completed."
+If you run the command in the terminal, it blocks the terminal session until the resource is available.
 You can interrupt the command's polling at any time with CTRL-C.
 
 Syntax
@@ -24,25 +24,9 @@ Syntax
 
 .. code-block::
 
-   atlas backups restores watch <restoreJobId> [options]
+   atlas networking peering watch <ID> [options]
 
 .. Code end marker, please don't delete this comment
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - restoreJobId
-     - string
-     - true
-     - ID of the restore job.
 
 Options
 -------
@@ -55,10 +39,6 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterName
-     - string
-     - true
-     - Name of the cluster.
    * - -h, --help
      - 
      - false
@@ -93,6 +73,5 @@ Examples
 
 .. code-block::
 
-   The following example retrieves the continuous backup restore job for the cluster Cluster0:
-   $ atlas backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0
+   $ atlas networking peering watch peeringConnectionSampleId
 

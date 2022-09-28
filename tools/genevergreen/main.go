@@ -29,6 +29,10 @@ const (
 	atlascli = "atlascli"
 	mongocli = "mongocli"
 	runOn    = "ubuntu1804-small"
+	x86_64   = "x86_64"
+	arm64    = "arm64"
+	deb      = "deb"
+	rpm      = "rpm"
 )
 
 var (
@@ -50,7 +54,6 @@ var (
 		"ubuntu22.04",
 	}
 	repos      = []string{"org", "enterprise"}
-	archs      = []string{"x86_64"}
 	postPkgImg = map[string]string{
 		"centos7":      "centos7-rpm",
 		"centos8":      "centos8-rpm",
@@ -62,10 +65,7 @@ var (
 		"debian10":     "debian10-deb",
 		"debian11":     "debian11-deb",
 	}
-)
-
-func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDependency {
-	newOs := map[string]string{
+	newOs = map[string]string{
 		"centos7":      "rhel70",
 		"centos8":      "rhel80",
 		"rhel9":        "rhel90",
@@ -76,35 +76,58 @@ func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDepende
 		"debian10":     "debian10",
 		"debian11":     "debian11",
 	}
+)
 
+func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDependency {
 	return shrub.TaskDependency{
 		Name:    fmt.Sprintf("push_%s_%s_%s_stable", toolName, newOs[os], repo),
 		Variant: fmt.Sprintf("release_%s_publish_%s", toolName, strings.ReplaceAll(serverVersion, ".", "")),
 	}
 }
 
-var distros = []string{
-	"amazon2",
-	"rhel7",
-	"rhel8",
-	"rhel9",
-	"debian10",
-	"debian11",
-	"ubuntu18.04",
-	"ubuntu20.04",
-	"ubuntu22.04",
+type Platform struct {
+	extension     string
+	architectures []string
 }
 
-var exts = map[string]string{
-	"amazon2":     "rpm",
-	"rhel7":       "rpm",
-	"rhel8":       "rpm",
-	"rhel9":       "rpm",
-	"debian10":    "deb",
-	"debian11":    "deb",
-	"ubuntu18.04": "deb",
-	"ubuntu20.04": "deb",
-	"ubuntu22.04": "deb",
+// if updating this list verify build/ci/repo_config.yaml matches.
+var distros = map[string]Platform{
+	"amazon2": {
+		extension:     rpm,
+		architectures: []string{x86_64, arm64},
+	},
+	"rhel7": {
+		extension:     rpm,
+		architectures: []string{x86_64},
+	},
+	"rhel8": {
+		extension:     rpm,
+		architectures: []string{x86_64, arm64},
+	},
+	"rhel9": {
+		extension:     rpm,
+		architectures: []string{x86_64, arm64},
+	},
+	"debian10": {
+		extension:     rpm,
+		architectures: []string{x86_64},
+	},
+	"debian11": {
+		extension:     deb,
+		architectures: []string{x86_64},
+	},
+	"ubuntu18.04": {
+		extension:     deb,
+		architectures: []string{x86_64, arm64},
+	},
+	"ubuntu20.04": {
+		extension:     deb,
+		architectures: []string{x86_64, arm64},
+	},
+	"ubuntu22.04": {
+		extension:     deb,
+		architectures: []string{x86_64, arm64},
+	},
 }
 
 func generatePublishStableTasks(c *shrub.Configuration, toolName string) {
@@ -167,31 +190,39 @@ func publishVariant(c *shrub.Configuration, v *shrub.Variant, toolName, sv, stab
 		notaryKey = "server-4.0"
 		taskSv = ""
 	}
-	for _, distro := range distros {
-		for _, edition := range repos {
-			t := &shrub.Task{
-				Name: fmt.Sprintf("push_%s_%s_%s%s%s", toolName, distro, edition, taskSv, stableSuffix),
+	for k, d := range distros {
+		for _, r := range repos {
+			for _, a := range d.architectures {
+				taskName := fmt.Sprintf("push_%s_%s_%s_%s%s%s", toolName, k, r, a, taskSv, stableSuffix)
+				t := newPublishTask(taskName, toolName, d.extension, r, k, taskServerVersion, notaryKey, a, stable, dependency)
+				c.Tasks = append(c.Tasks, t)
+				v.AddTasks(t.Name)
 			}
-			t.Stepback(false).
-				GitTagOnly(stable).
-				Dependency(dependency...).
-				Function("clone").
-				Function("install curator").
-				// Patchable(false).
-				FunctionWithVars("push", map[string]string{
-					"tool_name":       toolName,
-					"distro":          distro,
-					"ext":             exts[distro],
-					"server_version":  taskServerVersion,
-					"notary_key_name": notaryKey,
-					"arch":            archs[0],
-					"edition":         edition,
-				})
-			c.Tasks = append(c.Tasks, t)
-			v.AddTasks(t.Name)
 		}
 	}
 	c.Variants = append(c.Variants, v)
+}
+
+func newPublishTask(taskName, toolName, extension, edition, distro, taskServerVersion, notaryKey, arch string, stable bool, dependency []shrub.TaskDependency) *shrub.Task {
+	t := &shrub.Task{
+		Name: taskName,
+	}
+	t.Stepback(false).
+		GitTagOnly(stable).
+		Dependency(dependency...).
+		Function("clone").
+		Function("install curator").
+		// Patchable(false).
+		FunctionWithVars("push", map[string]string{
+			"tool_name":       toolName,
+			"distro":          distro,
+			"ext":             extension,
+			"server_version":  taskServerVersion,
+			"notary_key_name": notaryKey,
+			"arch":            arch,
+			"edition":         edition,
+		})
+	return t
 }
 
 func generateRepoTasks(c *shrub.Configuration, toolName string) {

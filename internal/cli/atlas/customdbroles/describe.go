@@ -62,7 +62,6 @@ func DescribeBuilder() *cobra.Command {
 		Short: "Return a single custom database role for your project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":         "roleName",
 			"roleNameDesc": "Name of the custom role to retrieve.",
 		},
 		Aliases: []string{"get"},

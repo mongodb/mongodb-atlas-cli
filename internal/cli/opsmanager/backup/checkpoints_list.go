@@ -66,6 +66,9 @@ func AtlasBackupsCheckpointsListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "List continuous backup checkpoints for your project.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"clusterIdDesc": "ID of the cLuster.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := validate.ObjectID(args[0]); err != nil {
 				return err

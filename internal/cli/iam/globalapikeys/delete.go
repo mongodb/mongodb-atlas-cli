@@ -54,6 +54,9 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Delete a Global API Key.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"IDDesc": "Access list identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.initStore(cmd.Context())(); err != nil {
 				return err

@@ -72,7 +72,7 @@ func (opts *WatchOpts) Run() error {
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
-		Use:   "watch <ID>",
+		Use:   "watch <peerId>",
 		Short: "Watch for a peering connection to be available.",
 		Long: `This command checks the peering connection's status periodically until it becomes available. 
 Once it reaches the expected state, the command prints "Network peering changes completed."
@@ -80,6 +80,9 @@ If you run the command in the terminal, it blocks the terminal session until the
 You can interrupt the command's polling at any time with CTRL-C.`,
 		Example: fmt.Sprintf(`  $ %s networking peering watch peeringConnectionSampleId`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"peerIdDesc": "Network peering connection ID.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

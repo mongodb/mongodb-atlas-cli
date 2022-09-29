@@ -55,6 +55,9 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Delete an API Key for your project.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"IDDesc": "API key identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

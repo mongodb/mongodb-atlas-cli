@@ -90,6 +90,9 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create [indexName]",
 		Short: "Create a search index for a cluster.",
 		Args:  require.MaximumNArgs(1),
+		Annotations: map[string]string{
+			"indexNameDesc": "Name of the index.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {
 				_ = cmd.MarkFlagRequired(flag.Database)

@@ -55,7 +55,6 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Delete a data lake from your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":     "name",
 			"nameDesc": "Name of the Atlas Data Lake to delete.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

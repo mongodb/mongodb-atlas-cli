@@ -76,7 +76,6 @@ func CreateBuilder() *cobra.Command {
 		Long:  "Your API Key must have the Organization Owner or Project Owner role to successfully call this resource.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":             "instanceName",
 			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

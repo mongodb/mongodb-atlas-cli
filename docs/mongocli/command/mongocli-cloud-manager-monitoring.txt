@@ -51,7 +51,7 @@ Related Commands
 
 * :ref:`mongocli-cloud-manager-monitoring-disable` - Disable monitoring for a given hostname
 * :ref:`mongocli-cloud-manager-monitoring-enable` - Enable monitoring for a given hostname
-* :ref:`mongocli-cloud-manager-monitoring-stop` - Stops monitoring the MongoDB process  specified
+* :ref:`mongocli-cloud-manager-monitoring-stop` - Stops monitoring the MongoDB process specified
 
 
 .. toctree::

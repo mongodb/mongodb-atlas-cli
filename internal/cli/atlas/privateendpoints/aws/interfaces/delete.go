@@ -51,10 +51,13 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Interface endpoint '%s' deleted\n", "Interface endpoint not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <endpointId>",
+		Use:     "delete <endpointServiceId>",
 		Aliases: []string{"rm"},
 		Short:   "Delete a specific AWS private endpoint interface and the related endpoint service for your project.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"endpointServiceIdDesc": "Private endpoint service ID.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},

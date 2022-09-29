@@ -44,7 +44,6 @@ func (opts *EnableOpts) initStore(ctx context.Context) func() error {
 
 func (opts *EnableOpts) Run() error {
 	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
-
 	if err != nil {
 		return err
 	}
@@ -68,6 +67,9 @@ func EnableBuilder() *cobra.Command {
 		Use:   "enable <hostname>",
 		Short: "Enable backup for a given hostname",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"hostnameDesc": "Label hostname.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

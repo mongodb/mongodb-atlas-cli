@@ -52,10 +52,13 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Index '%s' deleted\n", "Index not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <ID>",
+		Use:     "delete <indexId>",
 		Aliases: []string{"rm"},
 		Short:   "Delete a search index from a cluster.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"indexIdDesc": "ID of the index.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

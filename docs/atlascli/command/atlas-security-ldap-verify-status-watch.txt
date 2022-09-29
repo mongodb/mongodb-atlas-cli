@@ -24,7 +24,7 @@ Syntax
 
 .. code-block::
 
-   atlas security ldap verify status watch <ID> [options]
+   atlas security ldap verify status watch <requestId [options]
 
 .. Code end marker, please don't delete this comment
 

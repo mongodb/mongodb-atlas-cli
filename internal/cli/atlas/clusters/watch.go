@@ -81,7 +81,6 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 		Example: fmt.Sprintf("  $ %s cluster watch clusterNameSample", cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
 			"clusterNameDesc": "Name of the cluster to watch.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

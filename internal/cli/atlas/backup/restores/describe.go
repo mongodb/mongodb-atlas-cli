@@ -64,8 +64,6 @@ func DescribeBuilder() *cobra.Command {
 		Short: "Describe a cloud backup restore job.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":             "restoreJobId",
-			"requiredArgs":     "restoreJobId",
 			"restoreJobIdDesc": "ID of the restore job.",
 		},
 		Example: fmt.Sprintf(`  The following example retrieves the continuous backup restore job for the cluster Cluster0:

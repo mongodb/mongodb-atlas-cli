@@ -95,7 +95,6 @@ func UpdateBuilder() *cobra.Command {
 		Use:   "update <roleName>",
 		Short: "Update a custom database role for your project.",
 		Annotations: map[string]string{
-			"args":         "roleName",
 			"roleNameDesc": "Name of the custom role to update.",
 		},
 		Args: require.ExactArgs(1),

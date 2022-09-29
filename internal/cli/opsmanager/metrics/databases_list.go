@@ -65,6 +65,9 @@ func DatabasesListBuilder() *cobra.Command {
 		Short:   "List available databases for a given host.",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"IDDesc": "Process identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

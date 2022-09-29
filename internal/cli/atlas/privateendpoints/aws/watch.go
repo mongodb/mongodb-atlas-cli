@@ -62,7 +62,7 @@ func (opts *WatchOpts) Run() error {
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
-		Use:   "watch <name>",
+		Use:   "watch <privateEndpointId>",
 		Short: "Watch for a specific AWS Private Endpoint to be available.",
 		Long: `This command checks the endpoint's state periodically until the endpoint reaches an AVAILABLE or FAILED state. 
 Once the endpoint reaches the expected state, the command prints "Private endpoint changes completed."
@@ -70,6 +70,9 @@ If you run the command in the terminal, it blocks the terminal session until the
 You can interrupt the command's polling at any time with CTRL-C.`,
 		Example: fmt.Sprintf(`  $ %s privateEndpoint aws watch vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

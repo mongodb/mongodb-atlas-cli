@@ -61,6 +61,9 @@ func DescribeBuilder() *cobra.Command {
 		Use:   "describe <ID>",
 		Short: "Get a maintenance window.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"IDDesc": "Maintenance window identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

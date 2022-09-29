@@ -59,10 +59,13 @@ func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	opts.Template = describeTemplate
 	cmd := &cobra.Command{
-		Use:     "describe <ID>",
+		Use:     "describe <invitationId>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Retrieve details for one pending invitation to the specified organization.",
+		Annotations: map[string]string{
+			"invitationIdDesc": "Invitation identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

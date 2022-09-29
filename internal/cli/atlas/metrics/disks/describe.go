@@ -71,8 +71,6 @@ $ %s process list`, cli.ExampleAtlasEntryPoint()),
 		Short: "Describe disk partition metrics for a disk partition on a specified host.",
 		Args:  require.ExactArgs(argsN),
 		Annotations: map[string]string{
-			"args":              "hostname:port,diskName",
-			"requiredArgs":      "hostname:port,diskName",
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 			"diskNameDesc":      "Label that identifies the disk or partition from which you want to retrieve metrics.",
 		},

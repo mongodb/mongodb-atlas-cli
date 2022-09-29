@@ -68,6 +68,9 @@ func UpdateBuilder() *cobra.Command {
 		Aliases: []string{"updates"},
 		Args:    require.ExactArgs(1),
 		Short:   "Update roles for a team in a project.",
+		Annotations: map[string]string{
+			"teamIdDesc": "Team identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.teamID = args[0]
 			return opts.PreRunE(

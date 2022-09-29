@@ -61,10 +61,13 @@ func (opts *ProcessOpts) Run() error {
 func ProcessBuilder() *cobra.Command {
 	opts := &ProcessOpts{}
 	cmd := &cobra.Command{
-		Use:     "process <ID>",
+		Use:     "process <hostId>",
 		Short:   "Get measurements for a given host.",
 		Aliases: []string{"processes"},
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"hostIdDesc": "Process identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

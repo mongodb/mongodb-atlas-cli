@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package globalaccesslists
 
 import (
@@ -61,6 +62,9 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"show"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return one Global IP access list entry.",
+		Annotations: map[string]string{
+			"IDDesc": "Access list identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

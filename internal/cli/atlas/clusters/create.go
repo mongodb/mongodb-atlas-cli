@@ -225,8 +225,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 			return opts.Run()
 		},
 		Annotations: map[string]string{
-			"args":            "clusterName",
-			"clusterNameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphens.",
+			"nameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphens.",
 		},
 	}
 

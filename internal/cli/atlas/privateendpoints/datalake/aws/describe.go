@@ -63,8 +63,6 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Short:   "Return a specific Data Lake private endpoint for your project.",
 		Annotations: map[string]string{
-			"args":                  "privateEndpointId",
-			"requiredArgs":          "privateEndpointId",
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
 		Example: fmt.Sprintf(`  This example uses the profile named "myprofile" for accessing Atlas.

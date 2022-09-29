@@ -53,6 +53,9 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Delete a backup oplog configuration.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"nameDesc": "Oplog name.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.initStore(cmd.Context())(); err != nil {
 				return err

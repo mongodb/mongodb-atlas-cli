@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   atlas privateEndpoints aws interfaces describe <endpointId> [options]
+   atlas privateEndpoints aws interfaces describe <endpointServiceId> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -34,7 +34,7 @@ Arguments
      - Type
      - Required
      - Description
-   * - endpointId
+   * - endpointServiceId
      - string
      - true
      - Unique alphanumeric string that identifies the private endpoint.

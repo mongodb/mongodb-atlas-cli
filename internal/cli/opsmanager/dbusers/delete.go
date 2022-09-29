@@ -74,6 +74,9 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Delete a database user for your project.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"usernameDesc": "Username to delete in the MongoDB database.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

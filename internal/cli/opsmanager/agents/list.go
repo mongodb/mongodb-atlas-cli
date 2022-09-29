@@ -67,6 +67,9 @@ func ListBuilder() *cobra.Command {
 		Args:      require.ExactValidArgs(1),
 		ValidArgs: validArgs,
 		Short:     "List available MongoDB Agents for your project.",
+		Annotations: map[string]string{
+			"AUTOMATION|MONITORING|BACKUPDesc": "Agent type",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

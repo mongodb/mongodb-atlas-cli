@@ -65,6 +65,9 @@ func RestoresListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "Lists restore jobs for a project and cluster.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"clusterIdDesc": "ID of the cLuster.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

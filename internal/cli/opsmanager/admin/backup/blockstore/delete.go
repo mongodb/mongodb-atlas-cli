@@ -53,6 +53,9 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Delete a backup blockstore configuration.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"IDDesc": "Blockstore identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.initStore(cmd.Context())(); err != nil {
 				return err

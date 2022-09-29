@@ -77,7 +77,7 @@ func AcknowledgeBuilder() *cobra.Command {
 	opts := new(AcknowledgeOpts)
 	opts.Template = ackTemplate
 	cmd := &cobra.Command{
-		Use:     "acknowledge <alertID>",
+		Use:     "acknowledge <alertId>",
 		Short:   "Acknowledges one alert for the specified project.",
 		Aliases: []string{"ack"},
 		Args:    require.ExactArgs(1),
@@ -92,7 +92,6 @@ func AcknowledgeBuilder() *cobra.Command {
 			)
 		},
 		Annotations: map[string]string{
-			"args":        "alertId",
 			"alertIdDesc": "ID of the alert you want to acknowledge or un-acknowledge.",
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

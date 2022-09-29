@@ -57,8 +57,6 @@ func DeleteBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Short:   "Delete a specific GCP private endpoint interface for your project.",
 		Annotations: map[string]string{
-			"args":                "endpointGroupId",
-			"requiredArgs":        "endpointGroupId",
 			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",
 		},
 		Example: fmt.Sprintf(

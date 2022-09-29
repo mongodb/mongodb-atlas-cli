@@ -98,10 +98,13 @@ func (opts *DescribeOpts) template() string {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:       "describe <TYPE>",
+		Use:       "describe <integrationType>",
 		Short:     "Get a third party integration",
 		Args:      require.ExactValidArgs(1),
-		ValidArgs: []string{"WEBHOOK", "OPS_GENIE", "VICTOR_OPS", "PAGER_DUTY", "NEW_RELIC", "FLOWDOCK", "DATADOG", "SLACK"},
+		ValidArgs: []string{"PAGER_DUTY", "MICROSOFT_TEAMS", "SLACK", "DATADOG", "NEW_RELIC", "OPS_GENIE", "VICTOR_OPS", "WEBHOOK", "PROMETHEUS"},
+		Annotations: map[string]string{
+			"integrationTypeDesc": "Human-readable label that identifies the service which you want to integrate with.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.integrationType = strings.ToUpper(args[0])
 			return opts.PreRunE(

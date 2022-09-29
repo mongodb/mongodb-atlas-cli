@@ -77,7 +77,6 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create a new data lake for your project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":     "name",
 			"nameDesc": "Name of the Atlas Data Lake to create.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

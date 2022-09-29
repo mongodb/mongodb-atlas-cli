@@ -57,9 +57,12 @@ func (opts *AddOpts) Run() error {
 func AddBuilder() *cobra.Command {
 	opts := &AddOpts{}
 	cmd := &cobra.Command{
-		Use:   "add <userId> [userId]...",
+		Use:   "add <userId>...",
 		Args:  require.MinimumNObjectIDArgs(1),
 		Short: "Add a user to a team.",
+		Annotations: map[string]string{
+			"userIdDesc": "User identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.users = args
 			return opts.PreRunE(

@@ -91,8 +91,6 @@ Available properties include: %v.`, config.Properties()),
   Set Organization ID in the default profile:
   $ %[1]s config set org_id 5dd5aaef7a3e5a6c5bd12de4`, config.BinName()),
 		Annotations: map[string]string{
-			"args":             "propertyName,value",
-			"requiredArgs":     "propertyName,value",
 			"propertyNameDesc": "Property to set in the profile.",
 			"valueDesc":        "Value for the property to set in the profile.",
 		},

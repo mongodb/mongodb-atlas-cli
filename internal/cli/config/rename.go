@@ -66,8 +66,6 @@ func RenameBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  Rename a profile called myProfile to testProfile:
   $ %s config rename myProfile testProfile`, config.BinName()),
 		Annotations: map[string]string{
-			"args":               "oldProfileName,newProfileName",
-			"requiredArgs":       "oldProfileName,newProfileName",
 			"oldProfileNameDesc": "Name of the profile to rename.",
 			"newProfileNameDesc": "New name of the profile.",
 		},

@@ -12,7 +12,7 @@ mongocli ops-manager monitoring stop
    :depth: 1
    :class: singlecol
 
-Stops monitoring the MongoDB process  specified
+Stops monitoring the MongoDB process specified
 
 Syntax
 ------
@@ -22,6 +22,22 @@ Syntax
    mongocli ops-manager monitoring stop <ID> [options]
 
 .. Code end marker, please don't delete this comment
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - ID
+     - string
+     - true
+     - Process identifier.
 
 Options
 -------

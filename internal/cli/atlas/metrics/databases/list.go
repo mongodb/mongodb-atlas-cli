@@ -69,8 +69,6 @@ $ %s process list`, cli.ExampleAtlasEntryPoint()),
 		Short:   "List available databases or database metrics for a given host.",
 		Aliases: []string{"ls"},
 		Annotations: map[string]string{
-			"args":              "hostname:port",
-			"requiredArgs":      "hostname:port",
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 		},
 		Example: fmt.Sprintf(

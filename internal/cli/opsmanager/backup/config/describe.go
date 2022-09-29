@@ -58,10 +58,13 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe <clusterID>",
+		Use:     "describe <clusterId>",
 		Aliases: []string{"get"},
 		Short:   "Get a backup configuration.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"clusterIdDesc": "ID of the cLuster.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

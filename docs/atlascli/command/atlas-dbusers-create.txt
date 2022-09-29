@@ -19,9 +19,25 @@ Syntax
 
 .. code-block::
 
-   atlas dbusers create [options]
+   atlas dbusers create [builtInRole]... [options]
 
 .. Code end marker, please don't delete this comment
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - builtInRole
+     - string
+     - false
+     - One of Atlas built-in roles.
 
 Options
 -------

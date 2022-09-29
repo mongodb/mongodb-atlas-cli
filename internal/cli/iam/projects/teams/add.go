@@ -70,6 +70,9 @@ func AddBuilder() *cobra.Command {
 		Use:   "add <teamId>",
 		Args:  require.ExactArgs(1),
 		Short: "Add team to a project.",
+		Annotations: map[string]string{
+			"teamIdDesc": "Team identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.teamID = args[0]
 			return opts.PreRunE(

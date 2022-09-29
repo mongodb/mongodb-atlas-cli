@@ -71,8 +71,6 @@ If you run the command in the terminal, it blocks the terminal session until the
 You can interrupt the command's polling at any time with CTRL-C.`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":             "restoreJobId",
-			"requiredArgs":     "restoreJobId",
 			"restoreJobIdDesc": "ID of the restore job.",
 		},
 		Example: fmt.Sprintf(`  The following example retrieves the continuous backup restore job for the cluster Cluster0:

@@ -19,9 +19,25 @@ Syntax
 
 .. code-block::
 
-   mongocli ops-manager processes describe <ID> [options]
+   mongocli ops-manager processes describe <hostId> [options]
 
 .. Code end marker, please don't delete this comment
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - hostId
+     - string
+     - true
+     - Process identifier.
 
 Options
 -------

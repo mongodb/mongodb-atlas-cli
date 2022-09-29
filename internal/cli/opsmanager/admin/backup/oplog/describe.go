@@ -62,6 +62,9 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Short:   "Get a backup oplog configuration.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"nameDesc": "Oplog name.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

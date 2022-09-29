@@ -88,9 +88,12 @@ func UpdateBuilder() *cobra.Command {
 	opts.fs = afero.NewOsFs()
 
 	cmd := &cobra.Command{
-		Use:   "update <ID>",
+		Use:   "update <indexId>",
 		Short: "Update a search index for a cluster.",
-		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"indexIdDesc": "ID of the index.",
+		},
+		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {
 				_ = cmd.MarkFlagRequired(flag.IndexName)

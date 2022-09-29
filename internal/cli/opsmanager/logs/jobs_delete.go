@@ -54,6 +54,9 @@ func JobsDeleteOptsBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Args:    require.ExactArgs(1),
 		Short:   "Delete a log collection job from your project.",
+		Annotations: map[string]string{
+			"IDDesc": "Log job identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

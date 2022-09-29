@@ -69,7 +69,6 @@ func AuthorizeBuilder() *cobra.Command {
 		Short: "Authorize an AWS IAM role.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":       "roleId",
 			"roleIdDesc": "Unique ID of the role to authorize.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -67,6 +67,9 @@ func SetBuilder() *cobra.Command {
 		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{"DEV_SERVER", "TEST_SERVER", "PRODUCTION_SERVER", "RAM_POOL"},
 		Short:     "Set the default server type for a project.",
+		Annotations: map[string]string{
+			"typeDesc": "Server type to set.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

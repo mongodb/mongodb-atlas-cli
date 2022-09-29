@@ -62,7 +62,6 @@ func DescribeBuilder() *cobra.Command {
 		Short:   "Describe a cluster.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
 			"clusterNameDesc": "Name of the cluster to retrieve.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

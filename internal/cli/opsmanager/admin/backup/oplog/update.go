@@ -60,9 +60,12 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	opts.Template = updateTemplate
 	cmd := &cobra.Command{
-		Use:   "update <name>",
+		Use:   "update <ID>",
 		Short: "Update a backup oplog configuration.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"IDDesc": "Oplog identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

@@ -74,6 +74,9 @@ func EnableBuilder() *cobra.Command {
 		Short:     "Enable authentication mechanisms for your project.",
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{cr, sha1, sha256},
+		Annotations: map[string]string{
+			"MONGODB-CR|SCRAM-SHA-256Desc": "Authentication mechanism.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},

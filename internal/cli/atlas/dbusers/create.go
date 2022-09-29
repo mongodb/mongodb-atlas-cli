@@ -171,7 +171,7 @@ func (opts *CreateOpts) validate() error {
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
+		Use:   "create [builtInRole]...",
 		Short: "Create a database user for your project.",
 		Example: fmt.Sprintf(`  Create an Atlas database admin user:
   $ %[1]s dbuser create atlasAdmin --username <username>  --projectId <projectId>
@@ -185,7 +185,10 @@ func CreateBuilder() *cobra.Command {
   Create a database user with multiple scopes:
   $ %[1]s dbuser create --username <username> --role clusterMonitor --scope <REPLICA-SET ID>,<storeName> --projectId <projectId>`,
 			cli.ExampleAtlasEntryPoint()),
-		Args:      cobra.OnlyValidArgs,
+		Args: cobra.OnlyValidArgs,
+		Annotations: map[string]string{
+			"builtInRoleDesc": "One of Atlas built-in roles.",
+		},
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.roles = append(opts.roles, args...)

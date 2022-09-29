@@ -87,7 +87,6 @@ func UpdateBuilder() *cobra.Command {
 			cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":         "username",
 			"usernameDesc": "Username to update in the MongoDB database.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

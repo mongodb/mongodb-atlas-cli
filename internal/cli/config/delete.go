@@ -56,6 +56,9 @@ func DeleteBuilder() *cobra.Command {
 
   Skip the confirmation question and delete the default profile configuration:
   $ atlas config delete default --force`,
+		Annotations: map[string]string{
+			"nameDesc": "Name of the profile.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]
 			if !config.Exists(opts.Entry) {

@@ -58,12 +58,11 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe <name>",
+		Use:     "describe <entry>",
 		Aliases: []string{"get"},
 		Short:   "Describe an IP access list entry.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":      "entry",
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to retrieve.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

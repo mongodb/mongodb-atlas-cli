@@ -78,6 +78,9 @@ func UnmanageBuilder() *cobra.Command {
 		Short: "Stop managing a cluster via automation.",
 		Long:  "This commands only removes entries from the automation config but does not actually remove a cluster.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"nameDesc": "Name of the cluster for which you want to un-manage.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

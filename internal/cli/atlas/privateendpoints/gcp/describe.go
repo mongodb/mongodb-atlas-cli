@@ -66,8 +66,6 @@ func DescribeBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Short:   "Return a specific GCP private endpoint for your project.",
 		Annotations: map[string]string{
-			"args":                  "privateEndpointId",
-			"requiredArgs":          "privateEndpointId",
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
 		Example: fmt.Sprintf(`  $ %s privateEndpoint gcp describe vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),

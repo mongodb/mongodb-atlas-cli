@@ -66,8 +66,6 @@ func ListBuilder() *cobra.Command {
 		Short:   "List cloud backup restore jobs for your project and cluster.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
-			"requiredArgs":    "clusterName",
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve restore jobs.",
 		},
 		Example: fmt.Sprintf(`  The following example retrieves the continuous backup restore jobs for the cluster Cluster0:

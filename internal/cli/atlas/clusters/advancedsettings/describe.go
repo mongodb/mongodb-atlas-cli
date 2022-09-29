@@ -63,7 +63,6 @@ func DescribeBuilder() *cobra.Command {
 		Short:   "Retrieve advanced configuration settings for one cluster.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve configuration settings.",
 		},
 		Example: fmt.Sprintf(`  $ %s clusters advancedSettings describe Cluster0`, cli.ExampleAtlasEntryPoint()),

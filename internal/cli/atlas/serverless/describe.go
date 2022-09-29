@@ -62,7 +62,6 @@ func DescribeBuilder() *cobra.Command {
 		Long:  "Your API Key must have the Project Read Only role to successfully call this resource.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":             "instanceName",
 			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",
 		},
 		Aliases: []string{"get"},

@@ -67,7 +67,6 @@ func StartBuilder() *cobra.Command {
 		Short: "Start a paused online archive from a cluster.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":          "archiveId",
 			"archiveIdDesc": "Unique identifier of the online archive to start.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

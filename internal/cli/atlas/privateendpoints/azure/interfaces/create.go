@@ -66,10 +66,13 @@ func (opts *CreateOpts) newInterfaceEndpointConnection() *atlas.InterfaceEndpoin
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "create <atlasPrivateEndpointId>",
+		Use:     "create <endpointServiceId>",
 		Aliases: []string{"add"},
 		Short:   "Add a new Azure interface to a private endpoint.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"endpointServiceIdDesc": "Private endpoint service ID.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -152,7 +152,6 @@ func UpdateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 		Annotations: map[string]string{
-			"args":            "clusterName",
 			"clusterNameDesc": "Name of the cluster to update.",
 		},
 	}

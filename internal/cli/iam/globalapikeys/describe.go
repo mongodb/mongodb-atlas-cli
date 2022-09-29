@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package globalapikeys
 
 import (
@@ -58,9 +59,12 @@ func DescribeBuilder() *cobra.Command {
 	opts.Template = describeTemplate
 	cmd := &cobra.Command{
 		Use:     "describe <ID>",
+		Short:   "Get a specific Global API Key.",
 		Aliases: []string{"show"},
 		Args:    require.ExactArgs(1),
-		Short:   "Get a specific Global API Key.",
+		Annotations: map[string]string{
+			"IDDesc": "Access list identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

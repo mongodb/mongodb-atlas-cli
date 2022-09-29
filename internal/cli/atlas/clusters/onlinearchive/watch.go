@@ -74,7 +74,6 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 		Example: fmt.Sprintf(`  $ %s cluster onlineArchive watch archiveIdSample --clusterName clusterNameSample`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":          "archiveId",
 			"archiveIdDesc": "Unique identifier of the online archive to watch.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

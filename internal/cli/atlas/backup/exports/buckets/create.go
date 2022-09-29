@@ -77,7 +77,6 @@ func CreateBuilder() *cobra.Command {
   $ %s backup export buckets create test-bucket --cloudProvider AWS --iamRoleId 12345678f901a234dbdb00ca`, config.BinName()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":           "bucketName",
 			"bucketNameDesc": "Name of the existing S3 bucket that the provided role ID is authorized to access.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

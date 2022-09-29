@@ -136,7 +136,6 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create an IP access list for your project.",
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
-			"args":      "entry",
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to create.",
 		},
 		Example: fmt.Sprintf(`  Create IP address access list with the current IP address. Entry is not needed in this case.

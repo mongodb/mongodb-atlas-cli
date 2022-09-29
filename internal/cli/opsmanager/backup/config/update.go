@@ -105,7 +105,7 @@ func UpdateBuilder() *cobra.Command {
 		Short: "Update a backup configuration.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"clusterIdDesc": "ID of the cLuster.",
+			"clusterIdDesc": "ID of the cluster.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

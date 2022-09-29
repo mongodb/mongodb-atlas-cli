@@ -187,7 +187,7 @@ func CreateBuilder() *cobra.Command {
 			cli.ExampleAtlasEntryPoint()),
 		Args: cobra.OnlyValidArgs,
 		Annotations: map[string]string{
-			"builtInRoleDesc": "One of Atlas built-in roles.",
+			"builtInRoleDesc": "Atlas built-in role that you want to assign to the user.",
 		},
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

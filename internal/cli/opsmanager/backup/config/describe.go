@@ -63,7 +63,7 @@ func DescribeBuilder() *cobra.Command {
 		Short:   "Get a backup configuration.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"clusterIdDesc": "ID of the cLuster.",
+			"clusterIdDesc": "ID of the cluster.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

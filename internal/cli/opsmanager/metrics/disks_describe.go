@@ -68,7 +68,7 @@ func DisksDescribeBuilder() *cobra.Command {
 		Args:  require.ExactArgs(argsN),
 		Annotations: map[string]string{
 			"hostIdDesc": "Process identifier.",
-			"nameDesc":   "partition name.",
+			"nameDesc":   "Partition name.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

@@ -90,7 +90,8 @@ func ReclaimFreeSpaceBuilder() *cobra.Command {
 	opts := &ReclaimFreeSpaceOpts{}
 	cmd := &cobra.Command{
 		Use:     "reclaimFreeSpace <clusterName>",
-		Short:   "Reclaim unused space for a cluster.",
+		Short:   "Reclaim unused space for a cluster using compact.",
+		Long:    "During certain operations, MongoDB might move or delete data but it doesn't free the currently unused space. Ops Manager reclaims the disk space in a rolling fashion across members of the replica set or shards.",
 		Aliases: []string{"rfs"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{

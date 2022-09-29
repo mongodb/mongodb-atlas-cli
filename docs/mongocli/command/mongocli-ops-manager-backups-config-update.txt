@@ -37,7 +37,7 @@ Arguments
    * - clusterId
      - string
      - true
-     - ID of the cLuster.
+     - ID of the cluster.
 
 Options
 -------

@@ -40,7 +40,7 @@ Arguments
    * - id|name
      - string
      - true
-     - Name or ID of the cLuster.
+     - Name or ID of the cluster.
 
 Options
 -------

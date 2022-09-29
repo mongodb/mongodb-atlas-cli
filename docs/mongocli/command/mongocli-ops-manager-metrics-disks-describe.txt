@@ -41,7 +41,7 @@ Arguments
    * - name
      - string
      - true
-     - partition name.
+     - Partition name.
 
 Options
 -------

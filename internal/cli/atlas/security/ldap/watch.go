@@ -63,7 +63,7 @@ func (opts *WatchOpts) Run() error {
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
-		Use:   "watch <requestId",
+		Use:   "watch <requestId>",
 		Short: "Watch for an LDAP configuration request to complete.",
 		Long: `This command checks the LDAP configuration's status periodically until it reaches a SUCCESS or FAILED status. 
 Once the LDAP configuration reaches the expected status, the command prints "LDAP Configuration request completed."

@@ -99,7 +99,6 @@ func ShutdownBuilder() *cobra.Command {
 		Short: "Shutdown a cluster for your project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
 			"clusterNameDesc": "Name of the cluster that you want to shutdown.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

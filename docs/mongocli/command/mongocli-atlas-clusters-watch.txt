@@ -41,7 +41,7 @@ Arguments
      - Description
    * - clusterName
      - string
-     - false
+     - true
      - Name of the cluster to watch.
 
 Options

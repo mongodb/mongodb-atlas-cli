@@ -57,18 +57,16 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s) aws interface(s) describe <endpointId> --endpointServiceID endpointServiceID [--projectId projectId].
+// mongocli atlas privateEndpoint(s) aws interface(s) describe <privateEndpointId> --endpointServiceId endpointServiceId [--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <endpointId>",
+		Use:     "describe <interfaceEndpointId>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return a specific AWS private endpoint interface for your project.",
 		Annotations: map[string]string{
-			"args":           "endpointId",
-			"requiredArgs":   "endpointId",
-			"endpointIdDesc": "Unique alphanumeric string that identifies the private endpoint.",
+			"interfaceEndpointIdDesc": "Unique identifier of the private endpoint you want to retrieve.",
 		},
 		Example: fmt.Sprintf(`  This example uses the profile named "myprofile" for accessing Atlas.
   $ %s privateendpoints aws interfaces describe vpce-svc-0123456789abcdefg --endpointServiceId 0123456789abcdefghijklmn -P myprofile`, cli.ExampleAtlasEntryPoint()),

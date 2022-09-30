@@ -62,6 +62,9 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"show"},
 		Args:    require.ExactArgs(1),
 		Short:   "Describe an organizations.",
+		Annotations: map[string]string{
+			"IDDesc": "Organization identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

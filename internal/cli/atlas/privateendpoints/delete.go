@@ -54,6 +54,9 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Delete a private endpoint from your project.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"peerIdDesc": "Network peering connection ID.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

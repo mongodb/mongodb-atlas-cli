@@ -65,8 +65,6 @@ func DescribeBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  $ %s process describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":              "hostname:port",
-			"requiredArgs":      "hostname:port",
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

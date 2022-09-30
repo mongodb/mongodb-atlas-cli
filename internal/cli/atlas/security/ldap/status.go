@@ -58,9 +58,12 @@ func (opts *StatusOpts) Run() error {
 func StatusBuilder() *cobra.Command {
 	opts := &StatusOpts{}
 	cmd := &cobra.Command{
-		Use:   "status <ID>",
+		Use:   "status <requestId>",
 		Args:  require.ExactValidArgs(1),
 		Short: "Get the status of an LDAP configuration request.",
+		Annotations: map[string]string{
+			"requestIdDesc": "ID of the request to verify an LDAP configuration.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

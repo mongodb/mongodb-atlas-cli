@@ -168,9 +168,12 @@ func markRequiredAutomatedRestoreFlags(cmd *cobra.Command) error {
 func RestoresStartBuilder() *cobra.Command {
 	opts := new(RestoresStartOpts)
 	cmd := &cobra.Command{
-		Use:       fmt.Sprintf("start <%s|%s>", automatedRestore, httpRestore),
-		Short:     "Start a restore job for a project and cluster.",
-		Args:      require.ExactValidArgs(1),
+		Use:   fmt.Sprintf("start <%s|%s>", automatedRestore, httpRestore),
+		Short: "Start a restore job for a project and cluster.",
+		Args:  require.ExactValidArgs(1),
+		Annotations: map[string]string{
+			"AUTOMATED_RESTORE|HTTPDesc": "Restore type.",
+		},
 		ValidArgs: []string{automatedRestore, httpRestore},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.method = args[0]

@@ -36,7 +36,7 @@ Arguments
      - Description
    * - name
      - string
-     - false
+     - true
      - Name of the Atlas Data Lake to create.
 
 Options

@@ -58,10 +58,13 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	opts.Template = describeTemplate
 	cmd := &cobra.Command{
-		Use:     "describe <name>",
+		Use:     "describe <ID>",
 		Aliases: []string{"get"},
 		Short:   "Get a backup s3 blockstore configuration.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"IDDesc": "Configuration identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

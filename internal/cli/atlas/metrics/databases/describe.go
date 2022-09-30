@@ -65,14 +65,12 @@ func DescribeBuilder() *cobra.Command {
 	const argsN = 2
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use: "describe <host:port> <databaseName>",
+		Use: "describe <hostname:port> <databaseName>",
 		Long: fmt.Sprintf(`To retrieve the hostname and port needed for this command, run:
 $ %s process list`, cli.ExampleAtlasEntryPoint()),
 		Short: "Describe database metrics for a database on a specific host.",
 		Args:  require.ExactArgs(argsN),
 		Annotations: map[string]string{
-			"args":              "hostname:port,databaseName",
-			"requiredArgs":      "hostname:port,databaseName",
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 			"databaseNameDesc":  "Label that identifies the database from which you want to retrieve metrics.",
 		},

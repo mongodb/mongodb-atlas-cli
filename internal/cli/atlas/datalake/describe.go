@@ -62,7 +62,6 @@ func DescribeBuilder() *cobra.Command {
 		Short: "Return a specific data lake.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":     "name",
 			"nameDesc": "Name of the Atlas Data Lake to retrieve.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

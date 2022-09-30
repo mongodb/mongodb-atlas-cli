@@ -59,7 +59,6 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Delete all backup schedules of a cluster.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
 			"clusterNameDesc": "Name of the cluster.",
 		},
 		Example: fmt.Sprintf(`  The following example deletes all backup schedules of the cluster Cluster0:

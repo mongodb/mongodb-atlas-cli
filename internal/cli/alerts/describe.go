@@ -64,7 +64,6 @@ func DescribeBuilder() *cobra.Command {
 		Short:   "Retrieves one alert for the specified project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":        "alertId",
 			"alertIdDesc": "Unique identifier of the alert you want to describe.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

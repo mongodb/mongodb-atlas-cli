@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package globalapikeys
 
 import (
@@ -68,6 +69,9 @@ func UpdateBuilder() *cobra.Command {
 		Use:   "update <ID>",
 		Args:  require.ExactArgs(1),
 		Short: "Update a Global API Key.",
+		Annotations: map[string]string{
+			"IDDesc": "Access list identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

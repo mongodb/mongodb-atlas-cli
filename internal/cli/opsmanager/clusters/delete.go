@@ -194,6 +194,9 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Completely removes a cluster from your project.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"nameDesc": "Name of the cLuster.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

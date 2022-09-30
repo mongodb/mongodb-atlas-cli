@@ -36,7 +36,7 @@ Arguments
      - Description
    * - bucketName
      - string
-     - false
+     - true
      - Name of the existing S3 bucket that the provided role ID is authorized to access.
 
 Options

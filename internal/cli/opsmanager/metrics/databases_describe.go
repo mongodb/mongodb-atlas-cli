@@ -66,6 +66,10 @@ func DatabasesDescribeBuilder() *cobra.Command {
 		Use:   "describe <hostId> <name>",
 		Short: "Describe database measurements for a given host database.",
 		Args:  require.ExactArgs(argsN),
+		Annotations: map[string]string{
+			"hostIdDesc": "Process identifier.",
+			"nameDesc":   "Database name.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -57,7 +57,6 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Delete a cluster from your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
 			"clusterNameDesc": "Name of the cluster to delete.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

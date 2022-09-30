@@ -56,8 +56,6 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Delete a specific Azure Private Endpoint for your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":                  "privateEndpointId",
-			"requiredArgs":          "privateEndpointId",
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
 		Example: fmt.Sprintf(`  $ %s privateEndpoint azure delete 0fcd9d80bbafe1607 --force`, cli.ExampleAtlasEntryPoint()),

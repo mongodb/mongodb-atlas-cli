@@ -101,9 +101,12 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	opts.Template = updateTemplate
 	cmd := &cobra.Command{
-		Use:   "update <clusterID>",
+		Use:   "update <clusterId>",
 		Short: "Update a backup configuration.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"clusterIdDesc": "ID of the cluster.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))

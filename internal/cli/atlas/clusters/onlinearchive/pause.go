@@ -67,7 +67,6 @@ func PauseBuilder() *cobra.Command {
 		Short: "Pause an online archive from a cluster.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":          "archiveId",
 			"archiveIdDesc": "Unique identifier of the online archive to pause.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

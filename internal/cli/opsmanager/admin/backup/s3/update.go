@@ -88,9 +88,12 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	opts.Template = updateTemplate
 	cmd := &cobra.Command{
-		Use:   "update <name>",
+		Use:   "update <ID>",
 		Args:  require.ExactArgs(1),
 		Short: "Update a backup S3 blockstore configuration.",
+		Annotations: map[string]string{
+			"IDDesc": "Blockstore identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

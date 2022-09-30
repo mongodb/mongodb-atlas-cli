@@ -60,12 +60,11 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <name>",
+		Use:     "describe <username>",
 		Short:   "Return a single Atlas database user for your project.",
 		Args:    require.ExactArgs(1),
 		Aliases: []string{"get"},
 		Annotations: map[string]string{
-			"args":         "username",
 			"usernameDesc": "Username to retrieve from the MongoDB database.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -82,6 +82,9 @@ func DescribeBuilder() *cobra.Command {
 		Long: `When describing cluster with no output format please provide the cluster ID.
 When using an output format the please provide the cluster name.`,
 		Args: require.ExactArgs(1),
+		Annotations: map[string]string{
+			"id|nameDesc": "Name or ID of the cluster.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -84,6 +84,9 @@ func EnableBuilder() *cobra.Command {
 		Use:   "enable <hostname>",
 		Short: "Enable monitoring for a given hostname",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"hostnameDesc": "Label for the hostname.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

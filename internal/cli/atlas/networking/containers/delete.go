@@ -50,10 +50,13 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Network peering container '%s' deleted\n", "Network peering container not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <ID>",
+		Use:     "delete <containerId>",
 		Aliases: []string{"rm"},
 		Short:   "Remove one network peering container in an Atlas project.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"containerIdDesc": "Network container ID.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

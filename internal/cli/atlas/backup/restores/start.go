@@ -143,9 +143,7 @@ func StartBuilder() *cobra.Command {
 		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, downloadRestore, pointInTimeRestore},
 		Annotations: map[string]string{
-			"args":             "deliveryType",
-			"requiredArgs":     "deliveryType",
-			"deliveryTypeDesc": "Type of restore job to create. Accepted values include: automated, download, pointInTime.",
+			"automated|download|pointInTimeDesc": "Type of restore job to create. Accepted values include: automated, download, pointInTime.",
 		},
 		Example: fmt.Sprintf(`  The following example creates an automated restore:
   $ %[1]s backup restore start automated \

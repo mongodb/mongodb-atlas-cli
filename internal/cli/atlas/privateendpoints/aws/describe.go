@@ -70,8 +70,6 @@ func DescribeBuilder() *cobra.Command {
 		}),
 		Short: "Return a specific AWS Private Endpoints for your project.",
 		Annotations: map[string]string{
-			"args":                  "privateEndpointId",
-			"requiredArgs":          "privateEndpointId",
 			"privateEndpointIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint.",
 		},
 		Example: fmt.Sprintf(`  This example uses the profile named "myprofile" for accessing Atlas.

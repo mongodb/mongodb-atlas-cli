@@ -74,7 +74,6 @@ func UpdateBuilder() *cobra.Command {
 		Short: "Update an online archive for a cluster.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":          "archiveId",
 			"archiveIdDesc": "Unique identifier of the online archive to update.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

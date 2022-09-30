@@ -50,6 +50,9 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Short:   "Return a specific profile.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"nameDesc": "Name of the profile.",
+		},
 		PreRun: func(cmd *cobra.Command, args []string) {
 			opts.OutWriter = cmd.OutOrStdout()
 		},

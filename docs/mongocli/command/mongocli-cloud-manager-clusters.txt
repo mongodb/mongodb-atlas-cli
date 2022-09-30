@@ -55,7 +55,7 @@ Related Commands
 * :ref:`mongocli-cloud-manager-clusters-describe` - Describe a cluster.
 * :ref:`mongocli-cloud-manager-clusters-indexes` - Manage cluster rolling indexes for your project.
 * :ref:`mongocli-cloud-manager-clusters-list` - List clusters for your project.
-* :ref:`mongocli-cloud-manager-clusters-reclaimFreeSpace` - Reclaim unused space for a cluster.
+* :ref:`mongocli-cloud-manager-clusters-reclaimFreeSpace` - Reclaim unused space for a cluster using compact.
 * :ref:`mongocli-cloud-manager-clusters-restart` - Restart a cluster for your project.
 * :ref:`mongocli-cloud-manager-clusters-shutdown` - Shutdown a cluster for your project.
 * :ref:`mongocli-cloud-manager-clusters-startup` - Start up a cluster for your project.

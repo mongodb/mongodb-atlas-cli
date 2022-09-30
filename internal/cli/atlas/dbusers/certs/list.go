@@ -64,7 +64,6 @@ func ListBuilder() *cobra.Command {
 		Short:   "List of all Atlas-managed, unexpired certificates for a database user.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":         "username",
 			"usernameDesc": "Username of the database user for whom you want to list Atlas-managed certificates.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

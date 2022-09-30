@@ -60,6 +60,9 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create <name>",
 		Short: "Create an organization.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"nameDesc": "Organization name.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

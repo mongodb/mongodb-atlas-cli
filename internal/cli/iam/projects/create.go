@@ -147,8 +147,6 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create a project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "projectName",
-			"requiredArgs":    "projectName",
 			"projectNameDesc": "Name of the project.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -61,7 +61,6 @@ func StartBuilder() *cobra.Command {
 		Short: "Start a paused MongoDB cluster in Atlas.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
 			"clusterNameDesc": "Name of the cluster to start.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

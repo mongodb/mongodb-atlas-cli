@@ -87,6 +87,10 @@ func JobsCollectOptsBuilder() *cobra.Command {
 			return nil
 		},
 		ValidArgs: []string{"cluster", "process", "replicaset"},
+		Annotations: map[string]string{
+			"resourceTypeDesc": "Type of resource to collect logs from.",
+			"resourceNameDesc": "Name of the resource to collect logs from.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

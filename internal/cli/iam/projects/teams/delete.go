@@ -50,10 +50,13 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Team '%s' deleted\n", "Team not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <TeamID>",
+		Use:     "delete <teamId>",
 		Aliases: []string{"rm"},
 		Short:   "Delete team from a project.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"teamIdDesc": "Team identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]
 			return opts.PreRunE(

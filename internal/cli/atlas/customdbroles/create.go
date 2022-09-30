@@ -83,7 +83,6 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create a custom database role for your project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":         "roleName",
 			"roleNameDesc": "Name of the custom role to create.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

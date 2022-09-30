@@ -70,8 +70,6 @@ $ %s process list`, cli.ExampleAtlasEntryPoint()),
 		Aliases: []string{"process"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":              "hostname:port",
-			"requiredArgs":      "hostname:port",
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 		},
 		Example: fmt.Sprintf(`  $ %s metrics process atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),

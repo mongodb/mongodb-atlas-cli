@@ -57,7 +57,6 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Delete a backup snapshot.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":           "snapshotId",
 			"snapshotIdDesc": "Unique identifier of the snapshot you want to delete.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package apikeys
 
 import (
@@ -65,10 +66,13 @@ func (opts *UpdateOpts) Run() error {
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
-		Use:     "assign <ID>",
+		Use:     "assign <apiKeyId>",
 		Aliases: []string{"updates"},
 		Args:    require.ExactArgs(1),
 		Short:   "Update an Organization API Key.",
+		Annotations: map[string]string{
+			"apiKeyIdDesc": "API key identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

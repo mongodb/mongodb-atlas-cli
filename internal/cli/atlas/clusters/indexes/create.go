@@ -104,7 +104,6 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create a rolling index for your MongoDB cluster.",
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
-			"args":          "indexName",
 			"indexNameDesc": "Name of the index.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

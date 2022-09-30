@@ -59,10 +59,13 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <ID>",
+		Use:     "describe <privateEndpointId>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return a specific Azure Private Endpoints for your project.",
+		Annotations: map[string]string{
+			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.PreRunE(

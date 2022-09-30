@@ -101,6 +101,9 @@ func UpdateBuilder() *cobra.Command {
 		Use:   "update <version>",
 		Short: "Update Ops Manager version manifest.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"versionDesc": "Manifest version.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

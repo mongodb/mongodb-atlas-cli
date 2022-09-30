@@ -52,8 +52,11 @@ func StopBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "stop <ID>",
 		Aliases: []string{"rm"},
-		Short:   "Stops monitoring the MongoDB process  specified",
+		Short:   "Stops monitoring the MongoDB process specified",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"IDDesc": "Process identifier.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

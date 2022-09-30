@@ -53,7 +53,10 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
 		Short:   "Delete a maintenance window.",
-		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"IDDesc": "Maintenance window identifier.",
+		},
+		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

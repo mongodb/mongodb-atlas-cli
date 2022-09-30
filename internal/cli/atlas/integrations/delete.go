@@ -50,10 +50,14 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Integration '%s' deleted\n", "Integration not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <TYPE>",
-		Aliases: []string{"rm"},
-		Short:   "Delete a third party integration",
-		Args:    require.ExactArgs(1),
+		Use:       "delete <integrationType>",
+		Aliases:   []string{"rm"},
+		Short:     "Delete a third party integration",
+		Args:      require.ExactValidArgs(1),
+		ValidArgs: []string{"PAGER_DUTY", "MICROSOFT_TEAMS", "SLACK", "DATADOG", "NEW_RELIC", "OPS_GENIE", "VICTOR_OPS", "WEBHOOK", "PROMETHEUS"},
+		Annotations: map[string]string{
+			"integrationTypeDesc": "Human-readable label that identifies the service which you want to integrate with.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]
 			return opts.PreRunE(

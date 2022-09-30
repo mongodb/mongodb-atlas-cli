@@ -65,6 +65,9 @@ func ListBuilder() *cobra.Command {
 		Short:   "List snapshots for a project and cluster.",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"clusterIdDesc": "ID of the cluster.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

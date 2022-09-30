@@ -37,7 +37,7 @@ Arguments
      - Type
      - Required
      - Description
-   * - clusterName
+   * - name
      - string
      - false
      - Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphens.

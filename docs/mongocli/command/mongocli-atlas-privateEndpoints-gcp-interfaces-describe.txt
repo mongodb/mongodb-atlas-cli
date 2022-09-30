@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas privateEndpoints gcp interfaces describe <endpointGroupId> [options]
+   mongocli atlas privateEndpoints gcp interfaces describe <id> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -34,10 +34,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - endpointGroupId
+   * - id
      - string
      - true
-     - Unique identifier for the endpoint group.
+     - Unique identifier of the private endpoint you want to retrieve.
 
 Options
 -------

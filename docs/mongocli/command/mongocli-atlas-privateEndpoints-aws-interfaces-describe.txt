@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas privateEndpoints aws interfaces describe <endpointServiceId> [options]
+   mongocli atlas privateEndpoints aws interfaces describe <interfaceEndpointId> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -34,10 +34,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - endpointServiceId
+   * - interfaceEndpointId
      - string
      - true
-     - Unique alphanumeric string that identifies the private endpoint.
+     - Unique identifier of the private endpoint you want to retrieve.
 
 Options
 -------

@@ -52,12 +52,12 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Interface endpoint '%s' deleted\n", "Interface endpoint not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <endpointGroupId>",
+		Use:     "delete <id>",
 		Aliases: []string{"rm"},
 		Args:    require.ExactArgs(1),
 		Short:   "Delete a specific GCP private endpoint interface for your project.",
 		Annotations: map[string]string{
-			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",
+			"idDesc": "Unique identifier for the endpoint group.",
 		},
 		Example: fmt.Sprintf(
 			`  $ %s privateEndpoints gcp interfaces delete endpoint-1 \

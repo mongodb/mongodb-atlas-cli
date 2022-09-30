@@ -61,12 +61,12 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <endpointGroupId>",
+		Use:     "describe <id>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return a specific GCP private endpoint interface for your project.",
 		Annotations: map[string]string{
-			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",
+			"idDesc": "Unique identifier of the private endpoint you want to retrieve.",
 		},
 		Example: fmt.Sprintf(`  $ %s privateEndpoints gcp interfaces describe endpoint-1 \
   --endpointServiceId 61eaca605af86411903de1dd`, cli.ExampleAtlasEntryPoint()),

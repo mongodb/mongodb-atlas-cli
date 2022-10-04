@@ -29,7 +29,7 @@ META_FILENAME_ARM="${meta_package_name-}_${VERSION}_linux_arm64"
 
 pushd dist
 
-mkdir -p yum/x86_64 yum/aarch64 apt/x86_64 apt/arm64
+mkdir -p yum/x86_64 yum/arm64 apt/x86_64 apt/arm64
 
 function rename {
   FROM=$1

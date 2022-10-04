@@ -53,15 +53,15 @@ distros = map[string]Platform{
 		extension:     deb,
 		architectures: []string{x86_64},
 	},
-	"ubuntu18.04": {
+	"ubuntu1804": {
 		extension:     deb,
 		architectures: []string{x86_64, arm64},
 	},
-	"ubuntu20.04": {
+	"ubuntu2004": {
 		extension:     deb,
 		architectures: []string{x86_64, arm64},
 	},
-	"ubuntu22.04": {
+	"ubuntu2204": {
 		extension:     deb,
 		architectures: []string{x86_64, arm64},
 	},

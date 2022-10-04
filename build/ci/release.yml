@@ -366,7 +366,7 @@ tasks:
           tool_name: atlascli
           task_type: snapshot
   - name: push_stable_mongocli_generate
-    patchable: false
+    git_tag_only: false
     stepback: false
     commands:
       - func: "clone"
@@ -375,7 +375,7 @@ tasks:
           tool_name: mongocli
           task_type: publish
   - name: push_stable_atlascli_generate
-    patchable: false
+    git_tag_only: true
     stepback: false
     commands:
       - func: "clone"

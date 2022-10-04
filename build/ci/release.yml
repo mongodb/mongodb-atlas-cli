@@ -331,14 +331,26 @@ tasks:
           tool_name: ${tool_name}
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-deb.tgz
-          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-deb-x86_64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/x86_64
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-rpm.tgz
-          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-deb-arm64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/arm64
+          include:
+            - "*.deb"
+      - command: archive.targz_pack
+        params:
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-rpm-x86_64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/x86_64
+          include:
+            - "*.rpm"
+      - command: archive.targz_pack
+        params:
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-rpm-arm64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/arm64
           include:
             - "*.rpm"
       - func: "generate download archive json"
@@ -366,7 +378,7 @@ tasks:
           tool_name: atlascli
           task_type: snapshot
   - name: push_stable_mongocli_generate
-    patchable: false
+    git_tag_only: false
     stepback: false
     commands:
       - func: "clone"
@@ -375,7 +387,7 @@ tasks:
           tool_name: mongocli
           task_type: publish
   - name: push_stable_atlascli_generate
-    patchable: false
+    git_tag_only: true
     stepback: false
     commands:
       - func: "clone"
@@ -431,14 +443,26 @@ tasks:
           tool_name: mongocli
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-deb.tgz
-          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-deb-x86_64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/x86_64
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-rpm.tgz
-          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-deb-arm64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/arm64
+          include:
+            - "*.deb"
+      - command: archive.targz_pack
+        params:
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-rpm-x86_64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/x86_64
+          include:
+            - "*.rpm"
+      - command: archive.targz_pack
+        params:
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-rpm-arm64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/arm64
           include:
             - "*.rpm"
       - func: "generate download archive json"

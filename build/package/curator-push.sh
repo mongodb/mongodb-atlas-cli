@@ -50,4 +50,4 @@ curator \
     --edition "${edition:?}" \
     --version "${server_version:?}" \
     --arch "${arch:?}" \
-    --packages "https://s3.amazonaws.com/mongodb-mongocli-build/${project:?}/dist/${revision:?}_${created_at:?}/${tool_name:?}-${ext:?}.tgz"
+    --packages "https://s3.amazonaws.com/mongodb-mongocli-build/${project:?}/dist/${revision:?}_${created_at:?}/${tool_name:?}-${ext:?}-${arch:?}.tgz"

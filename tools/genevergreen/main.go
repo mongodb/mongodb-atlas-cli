@@ -212,7 +212,7 @@ func newPublishTask(taskName, toolName, extension, edition, distro, taskServerVe
 		Dependency(dependency...).
 		Function("clone").
 		Function("install curator").
-		// Patchable(false).
+		Patchable(false).
 		FunctionWithVars("push", map[string]string{
 			"tool_name":       toolName,
 			"distro":          distro,

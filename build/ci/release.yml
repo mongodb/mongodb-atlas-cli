@@ -309,7 +309,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-#        patch_optional: true
+        patch_optional: true
     commands:
       - func: "clone"
       - func: "install dev tools"

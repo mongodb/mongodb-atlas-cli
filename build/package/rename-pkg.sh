@@ -23,7 +23,9 @@ if [[ "${unstable-}" == "-unstable" ]]; then
   VERSION="${VERSION}-next"
 fi
 FILENAME="${package_name-}_${VERSION}_linux_x86_64"
+FILENAME_ARM="${package_name-}_${VERSION}_linux_arm64"
 META_FILENAME="${meta_package_name-}_${VERSION}_linux_x86_64"
+META_FILENAME_ARM="${meta_package_name-}_${VERSION}_linux_arm64"
 
 cd dist
 
@@ -39,12 +41,18 @@ function rename {
 # we could generate a similar name with goreleaser but we want to keep the vars evg compatible to use later
 if [[ "${package_name:?}" == mongocli ]]; then
   rename "${FILENAME}.deb" "apt/mongodb-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
+  rename "${FILENAME_ARM}.deb" "apt/mongodb-cli${unstable-}_${VERSION}${latest_deb-}_arm64.deb"
   rename "${FILENAME}.rpm" "yum/mongodb-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
+  rename "${FILENAME_ARM}.rpm" "yum/mongodb-cli${unstable-}-${VERSION}${latest_rpm-}.aarch64.rpm"
 else
   rename "${FILENAME}.deb" "apt/mongodb-atlas-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
+  rename "${FILENAME_ARM}.deb" "apt/mongodb-atlas-cli${unstable-}_${VERSION}${latest_deb-}_arm64.deb"
   rename "${FILENAME}.rpm" "yum/mongodb-atlas-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
+  rename "${FILENAME_ARM}.rpm" "yum/mongodb-atlas-cli${unstable-}-${VERSION}${latest_rpm-}.aarch64.rpm"
 
-  rename "${META_FILENAME}.deb" "apt/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
+  rename "${META_FILENAME}.deb" "apt/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}_arm64.deb"
+  rename "${META_FILENAME_ARM}.deb" "apt/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
   rename "${META_FILENAME}.rpm" "yum/mongodb-atlas${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
+  rename "${META_FILENAME_ARM}.rpm" "yum/mongodb-atlas${unstable-}-${VERSION}${latest_rpm-}.aarch64.rpm"
 fi
 

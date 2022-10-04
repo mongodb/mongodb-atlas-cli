@@ -29,13 +29,32 @@ const (
 	atlascli = "atlascli"
 	mongocli = "mongocli"
 	runOn    = "ubuntu1804-small"
+	x86_64   = "x86_64"
+	arm64    = "arm64"
+	deb      = "deb"
+	rpm      = "rpm"
 )
 
 var (
-	serverVersions = []string{"4.2", "4.4", "5.0", "6.0"}
-	oses           = []string{"amazonlinux2", "centos7", "centos8", "rhel9", "debian10", "debian11", "ubuntu18.04", "ubuntu20.04", "ubuntu22.04"}
-	repos          = []string{"org", "enterprise"}
-	postPkgImg     = map[string]string{
+	serverVersions = []string{
+		"4.2",
+		"4.4",
+		"5.0",
+		"6.0",
+	}
+	oses = []string{
+		"amazonlinux2",
+		"centos7",
+		"centos8",
+		"rhel9",
+		"debian10",
+		"debian11",
+		"ubuntu18.04",
+		"ubuntu20.04",
+		"ubuntu22.04",
+	}
+	repos      = []string{"org", "enterprise"}
+	postPkgImg = map[string]string{
 		"centos7":      "centos7-rpm",
 		"centos8":      "centos8-rpm",
 		"rhel9":        "rhel9-rpm",
@@ -46,10 +65,7 @@ var (
 		"debian10":     "debian10-deb",
 		"debian11":     "debian11-deb",
 	}
-)
-
-func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDependency {
-	newOs := map[string]string{
+	newOs = map[string]string{
 		"centos7":      "rhel70",
 		"centos8":      "rhel80",
 		"rhel9":        "rhel90",
@@ -60,11 +76,153 @@ func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDepende
 		"debian10":     "debian10",
 		"debian11":     "debian11",
 	}
+)
 
+func buildDependency(toolName, os, serverVersion, repo string) shrub.TaskDependency {
 	return shrub.TaskDependency{
-		Name:    fmt.Sprintf("push_%v_%v_%v_stable", toolName, newOs[os], repo),
-		Variant: fmt.Sprintf("release_%v_publish_%v", toolName, strings.ReplaceAll(serverVersion, ".", "")),
+		Name:    fmt.Sprintf("push_%s_%s_%s_stable", toolName, newOs[os], repo),
+		Variant: fmt.Sprintf("release_%s_publish_%s", toolName, strings.ReplaceAll(serverVersion, ".", "")),
 	}
+}
+
+type Platform struct {
+	extension     string
+	architectures []string
+}
+
+// if updating this list verify build/ci/repo_config.yaml matches.
+var distros = map[string]Platform{
+	"amazon2": {
+		extension:     rpm,
+		architectures: []string{x86_64, arm64},
+	},
+	"rhel7": {
+		extension:     rpm,
+		architectures: []string{x86_64},
+	},
+	"rhel8": {
+		extension:     rpm,
+		architectures: []string{x86_64, arm64},
+	},
+	"rhel9": {
+		extension:     rpm,
+		architectures: []string{x86_64, arm64},
+	},
+	"debian10": {
+		extension:     rpm,
+		architectures: []string{x86_64},
+	},
+	"debian11": {
+		extension:     deb,
+		architectures: []string{x86_64},
+	},
+	"ubuntu18.04": {
+		extension:     deb,
+		architectures: []string{x86_64, arm64},
+	},
+	"ubuntu20.04": {
+		extension:     deb,
+		architectures: []string{x86_64, arm64},
+	},
+	"ubuntu22.04": {
+		extension:     deb,
+		architectures: []string{x86_64, arm64},
+	},
+}
+
+func generatePublishStableTasks(c *shrub.Configuration, toolName string) {
+	dependency := []shrub.TaskDependency{
+		{
+			Name:    fmt.Sprintf("compile_%s", toolName),
+			Variant: "code_health",
+		},
+		{
+			Name:    fmt.Sprintf("release_%s", toolName),
+			Variant: fmt.Sprintf("release_%s_github", toolName),
+		},
+	}
+	for _, sv := range serverVersions {
+		v := &shrub.Variant{
+			BuildName:        fmt.Sprintf("generated_release_%s_publish_%s", toolName, sv),
+			BuildDisplayName: fmt.Sprintf("Publish %s yum/apt %s", toolName, sv),
+			DistroRunOn:      []string{"rhel80-small"},
+		}
+		publishVariant(
+			c,
+			v,
+			toolName,
+			sv,
+			"_stable",
+			dependency,
+			true,
+		)
+	}
+}
+
+func generatePublishSnapshotTasks(c *shrub.Configuration, toolName string) {
+	dependency := []shrub.TaskDependency{
+		{
+			Name:    fmt.Sprintf("compile_%s", toolName),
+			Variant: "code_health",
+		},
+		{
+			Name:    "package_goreleaser",
+			Variant: fmt.Sprintf("goreleaser_%s_snapshot", toolName),
+		},
+	}
+	publishVariant(
+		c,
+		c.Variant(fmt.Sprintf("publish_%s_snapshot", toolName)),
+		toolName,
+		"4.4",
+		"",
+		dependency,
+		false,
+	)
+}
+
+func publishVariant(c *shrub.Configuration, v *shrub.Variant, toolName, sv, stableSuffix string, dependency []shrub.TaskDependency, stable bool) {
+	taskServerVersion := fmt.Sprintf("%s.0", sv)
+	notaryKey := fmt.Sprintf("server-%s", sv)
+	taskSv := "_" + sv
+	if !stable {
+		taskServerVersion = "4.4.0-rc3"
+		notaryKey = "server-4.0"
+		taskSv = ""
+	}
+	for k, d := range distros {
+		for _, r := range repos {
+			for _, a := range d.architectures {
+				taskName := fmt.Sprintf("push_%s_%s_%s_%s%s%s", toolName, k, r, a, taskSv, stableSuffix)
+				t := newPublishTask(taskName, toolName, d.extension, r, k, taskServerVersion, notaryKey, a, stable, dependency)
+				c.Tasks = append(c.Tasks, t)
+				v.AddTasks(t.Name)
+			}
+		}
+	}
+	c.Variants = append(c.Variants, v)
+}
+
+func newPublishTask(taskName, toolName, extension, edition, distro, taskServerVersion, notaryKey, arch string, stable bool, dependency []shrub.TaskDependency) *shrub.Task {
+	t := &shrub.Task{
+		Name: taskName,
+	}
+	t.Stepback(false).
+		GitTagOnly(stable).
+		Dependency(dependency...).
+		Function("clone").
+		Function("install curator").
+		Patchable(false).
+		FunctionWithVars("push", map[string]string{
+			"tool_name":       toolName,
+			"distro":          distro,
+			"ext":             extension,
+			"server_version":  taskServerVersion,
+			"notary_key_name": notaryKey,
+			"arch":            arch,
+			"edition":         edition,
+		})
+	return t
 }
 
 func generateRepoTasks(c *shrub.Configuration, toolName string) {
@@ -140,14 +298,14 @@ func generatePostPkgMetaTasks(c *shrub.Configuration, toolName string) {
 	}
 
 	v := &shrub.Variant{
-		BuildName:        fmt.Sprintf("pkg_smoke_tests_docker_meta_%v_generated", toolName),
-		BuildDisplayName: fmt.Sprintf("Generated post packaging smoke tests (Meta / %v)", toolName),
+		BuildName:        fmt.Sprintf("pkg_smoke_tests_docker_meta_%s_generated", toolName),
+		BuildDisplayName: fmt.Sprintf("Generated post packaging smoke tests (Meta / %s)", toolName),
 		DistroRunOn:      []string{runOn},
 	}
 
 	for _, os := range oses {
 		t := &shrub.Task{
-			Name: fmt.Sprintf("pkg_test_%v_meta_docker_%v", toolName, os),
+			Name: fmt.Sprintf("pkg_test_%s_meta_docker_%s", toolName, os),
 		}
 		t = t.Dependency(shrub.TaskDependency{
 			Name:    "package_goreleaser",
@@ -163,24 +321,28 @@ func generatePostPkgMetaTasks(c *shrub.Configuration, toolName string) {
 	c.Variants = append(c.Variants, v)
 }
 
+var (
+	ErrMissingOption = errors.New("missing option")
+)
+
 func run() error {
 	var toolName, taskType string
 
 	flag.StringVar(&taskType, "tasks", "", "type of task to be generated")
-	flag.StringVar(&toolName, "tool_name", "", fmt.Sprintf("Tool to generate tasks for (%v or %v)", atlascli, mongocli))
+	flag.StringVar(&toolName, "tool_name", "", fmt.Sprintf("Tool to generate tasks for (%s or %s)", atlascli, mongocli))
 
 	flag.Parse()
 
 	if toolName == "" {
-		return errors.New("-tool_name missing")
+		return fmt.Errorf("%w: %s", ErrMissingOption, "tool_name")
 	}
 
 	if toolName != atlascli && toolName != mongocli {
-		return fmt.Errorf("-tool_name must be either '%v' or '%v'", atlascli, mongocli)
+		return fmt.Errorf("-tool_name must be either %q or %q", atlascli, mongocli)
 	}
 
 	if taskType == "" {
-		return errors.New("-tasks missing")
+		return fmt.Errorf("%w: %s", ErrMissingOption, "tasks")
 	}
 
 	c := &shrub.Configuration{}
@@ -191,13 +353,16 @@ func run() error {
 	case "postpkg":
 		generatePostPkgTasks(c, toolName)
 		generatePostPkgMetaTasks(c, toolName)
+	case "snapshot":
+		generatePublishSnapshotTasks(c, toolName)
+	case "publish":
+		generatePublishStableTasks(c, toolName)
 	default:
 		return errors.New("-tasks is invalid")
 	}
 
 	var b []byte
 	b, err := json.MarshalIndent(c, "", "\t")
-
 	if err != nil {
 		return err
 	}

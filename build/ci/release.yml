@@ -336,11 +336,11 @@ tasks:
           include:
             - "*.deb"
       - command: archive.targz_pack
-          params:
-            target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-deb-arm64.tgz
-            source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/arm64
-            include:
-              - "*.deb"
+        params:
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-deb-arm64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/arm64
+          include:
+            - "*.deb"
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-rpm-x86_64.tgz
@@ -348,11 +348,11 @@ tasks:
           include:
             - "*.rpm"
       - command: archive.targz_pack
-          params:
-            target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-rpm-arm64.tgz
-            source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/arm64
-            include:
-              - "*.rpm"
+        params:
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-rpm-arm64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/arm64
+          include:
+            - "*.rpm"
       - func: "generate download archive json"
         vars:
           package_name: ${package_name}

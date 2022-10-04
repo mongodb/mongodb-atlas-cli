@@ -348,6 +348,8 @@ tasks:
           TOOL_NAME: ${tool_name}
       - func: "upload dist"
   - name: push_mongocli_generate
+    patchable: false
+    stepback: false
     commands:
       - func: "clone"
       - func: "generate evergreen"
@@ -355,6 +357,8 @@ tasks:
           tool_name: mongocli
           task_type: snapshot
   - name: push_atlascli_generate
+    patchable: false
+    stepback: false
     commands:
       - func: "clone"
       - func: "generate evergreen"
@@ -362,6 +366,8 @@ tasks:
           tool_name: atlascli
           task_type: snapshot
   - name: push_stable_mongocli_generate
+    patchable: false
+    stepback: false
     commands:
       - func: "clone"
       - func: "generate evergreen"
@@ -369,6 +375,8 @@ tasks:
           tool_name: mongocli
           task_type: publish
   - name: push_stable_atlascli_generate
+    patchable: false
+    stepback: false
     commands:
       - func: "clone"
       - func: "generate evergreen"

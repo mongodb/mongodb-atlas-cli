@@ -312,7 +312,6 @@ tasks:
         patch_optional: true
     commands:
       - func: "clone"
-      - func: "install dev tools"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -349,7 +348,7 @@ tasks:
             - "*.rpm"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-rpm-arm64.tgz
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-rpm-aarch64.tgz
           source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/arm64
           include:
             - "*.rpm"
@@ -378,7 +377,7 @@ tasks:
           tool_name: atlascli
           task_type: snapshot
   - name: push_stable_mongocli_generate
-    git_tag_only: false
+    git_tag_only: true
     stepback: false
     commands:
       - func: "clone"
@@ -421,7 +420,6 @@ tasks:
         variant: "release_mongocli_msi"
     commands:
       - func: "clone"
-      - func: "install dev tools"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -499,7 +497,6 @@ tasks:
         variant: "release_atlascli_msi"
     commands:
       - func: "clone"
-      - func: "install dev tools"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"

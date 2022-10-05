@@ -151,7 +151,7 @@ integration-test: ## Run integration tests
 .PHONY: unit-test
 unit-test: ## Run unit-tests
 	@echo "==> Running unit tests..."
-	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./internal...
+	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./...
 
 .PHONY: install
 install: install-mongocli install-atlascli ## Install binaries in $GOPATH/bin for both CLIs

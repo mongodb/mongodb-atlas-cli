@@ -37,6 +37,10 @@ esac
 
 set -Eeou pipefail
 
+# Confirm package is there
+echo "Confirm package is there https://s3.amazonaws.com/mongodb-mongocli-build/${project:?}/dist/${revision:?}_${created_at:?}/${tool_name:?}-${ext:?}-${arch:?}.tgz"
+curl -fLO --show-error "https://s3.amazonaws.com/mongodb-mongocli-build/${project:?}/dist/${revision:?}_${created_at:?}/${tool_name:?}-${ext:?}-${arch:?}.tgz"
+
 # --version needs to match the mongodb server version to publish to the right repo
 # 4.X goes to the 4.x repo
 # any *-rc version goes to testing repo

@@ -66,22 +66,6 @@ repos:
   #
   ####################
 
-  - name: rhel62
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - yum/redhat/6/mongodb-org
-      - yum/redhat/6Server/mongodb-org
-
-  - name: rhel67
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - yum/redhat/6/mongodb-org
-      - yum/redhat/6Server/mongodb-org
-
   - name: rhel70
     type: rpm
     edition: org
@@ -114,13 +98,6 @@ repos:
       - yum/redhat/9/mongodb-org
       - yum/redhat/9Server/mongodb-org
 
-  - name: amazon
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - yum/amazon/2013.03/mongodb-org
-
   - name: amazon2
     type: rpm
     edition: org
@@ -148,18 +125,6 @@ repos:
     bucket: repo.mongodb.org
     repos:
       - zypper/suse/15/mongodb-org
-
-  - name: debian81
-    type: deb
-    code_name: "jessie"
-    bucket: repo.mongodb.org
-    edition: org
-    component: main
-    architectures:
-      - amd64
-      - i386
-    repos:
-      - apt/debian/dists/jessie/mongodb-org
 
   - name: debian92
     type: deb
@@ -194,55 +159,6 @@ repos:
     repos:
       - apt/debian/dists/buster/mongodb-org
 
-  - name: debian71
-    type: deb
-    code_name: "wheezy"
-    bucket: repo.mongodb.org
-    edition: org
-    component: main
-    architectures:
-      - amd64
-      - i386
-    repos:
-      - apt/debian/dists/wheezy/mongodb-org
-
-  - name: ubuntu1204
-    type: deb
-    code_name: "precise"
-    edition: org
-    bucket: repo.mongodb.org
-    component: multiverse
-    architectures:
-      - amd64
-      - i386
-    repos:
-      - apt/ubuntu/dists/precise/mongodb-org
-
-  - name: ubuntu1404
-    type: deb
-    code_name: "trusty"
-    edition: org
-    bucket: repo.mongodb.org
-    component: multiverse
-    architectures:
-      - amd64
-      - i386
-    repos:
-      - apt/ubuntu/dists/trusty/mongodb-org
-
-  - name: ubuntu1604
-    type: deb
-    code_name: "xenial"
-    edition: org
-    bucket: repo.mongodb.org
-    component: multiverse
-    architectures:
-      - amd64
-      - arm64
-      - i386
-    repos:
-      - apt/ubuntu/dists/xenial/mongodb-org
-
   - name: ubuntu1804
     type: deb
     code_name: "bionic"
@@ -265,7 +181,6 @@ repos:
     component: multiverse
     architectures:
       - amd64
-      - i386
       - s390x
       - arm64
     repos:
@@ -279,7 +194,6 @@ repos:
     component: multiverse
     architectures:
       - amd64
-      - i386
       - s390x
       - arm64
     repos:
@@ -290,22 +204,6 @@ repos:
   # Enterprise Repos:
   #
   ####################
-
-  - name: rhel62
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - yum/redhat/6/mongodb-enterprise
-      - yum/redhat/6Server/mongodb-enterprise
-
-  - name: rhel67
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - yum/redhat/6/mongodb-enterprise
-      - yum/redhat/6Server/mongodb-enterprise
 
   - name: rhel70
     type: rpm
@@ -346,13 +244,6 @@ repos:
     repos:
       - yum/redhat/9/mongodb-enterprise
       - yum/redhat/9Server/mongodb-enterprise
-
-  - name: amazon
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - yum/amazon/2013.03/mongodb-enterprise
 
   - name: amazon2
     type: rpm
@@ -415,77 +306,6 @@ repos:
     repos:
       - apt/debian/dists/stretch/mongodb-enterprise
 
-  - name: debian81
-    type: deb
-    edition: enterprise
-    code_name: "jessie"
-    bucket: repo.mongodb.com
-    component: main
-    architectures:
-      - amd64
-      - ppc64el
-      - s390x
-      - i386
-    repos:
-      - apt/debian/dists/jessie/mongodb-enterprise
-
-  - name: debian71
-    type: deb
-    code_name: "wheezy"
-    edition: enterprise
-    bucket: repo.mongodb.com
-    component: main
-    architectures:
-      - amd64
-      - ppc64el
-      - s390x
-      - i386
-    repos:
-      - apt/debian/dists/wheezy/mongodb-enterprise
-
-  - name: ubuntu1204
-    type: deb
-    code_name: "precise"
-    edition: enterprise
-    bucket: repo.mongodb.com
-    component: multiverse
-    architectures:
-      - amd64
-      - ppc64el
-      - s390x
-      - i386
-    repos:
-      - apt/ubuntu/dists/precise/mongodb-enterprise
-
-  - name: ubuntu1404
-    type: deb
-    code_name: "trusty"
-    edition: enterprise
-    bucket: repo.mongodb.com
-    component: multiverse
-    architectures:
-      - amd64
-      - ppc64el
-      - s390x
-      - i386
-    repos:
-      - apt/ubuntu/dists/trusty/mongodb-enterprise
-
-  - name: ubuntu1604
-    type: deb
-    code_name: "xenial"
-    edition: enterprise
-    bucket: repo.mongodb.com
-    component: multiverse
-    architectures:
-      - amd64
-      - ppc64el
-      - s390x
-      - arm64
-      - i386
-    repos:
-      - apt/ubuntu/dists/xenial/mongodb-enterprise
-
   - name: ubuntu1804
     type: deb
     code_name: "bionic"
@@ -500,6 +320,7 @@ repos:
       - arm64
     repos:
       - apt/ubuntu/dists/bionic/mongodb-enterprise
+
   - name: ubuntu2004
     type: deb
     code_name: "focal"
@@ -509,11 +330,11 @@ repos:
     architectures:
       - amd64
       - ppc64el
-      - i386
       - s390x
       - arm64
     repos:
       - apt/ubuntu/dists/focal/mongodb-enterprise
+
   - name: ubuntu2204
     type: deb
     code_name: "jammy"
@@ -523,7 +344,6 @@ repos:
     architectures:
       - amd64
       - ppc64el
-      - i386
       - s390x
       - arm64
     repos:

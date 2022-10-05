@@ -47,10 +47,11 @@ var distros = map[string]Platform{
 		extension:     rpm,
 		architectures: []string{x86_64, aarch64},
 	},
-	"rhel90": {
-		extension:     rpm,
-		architectures: []string{x86_64, aarch64},
-	},
+	// TODO: CLOUDP-139190
+	// "rhel90": {
+	//	extension:     rpm,
+	//	architectures: []string{x86_64, aarch64},
+	// },
 	"debian10": {
 		extension:     rpm,
 		architectures: []string{x86_64},

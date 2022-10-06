@@ -18,12 +18,14 @@
 package settings
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/openlyinc/pointy"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -65,10 +67,13 @@ func TestConfigList_Run(t *testing.T) {
 		},
 	}
 
+	buf := new(bytes.Buffer)
+
 	listOpts := &ListOpts{
 		store: mockStore,
 		OutputOpts: cli.OutputOpts{
-			Template: settingsListTemplate,
+			Template:  settingsListTemplate,
+			OutWriter: buf,
 		},
 	}
 
@@ -81,4 +86,9 @@ func TestConfigList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+
+	assert.Equal(t, `ID     TYPE   ENABLED
+test   test   true
+`, buf.String())
+	t.Log(buf.String())
 }

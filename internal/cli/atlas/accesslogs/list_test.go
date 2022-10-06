@@ -18,6 +18,7 @@
 package accesslogs
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -26,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/openlyinc/pointy"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -51,11 +53,13 @@ func TestAccessLogListClusterName_Run(t *testing.T) {
 		},
 	}
 
+	buf := new(bytes.Buffer)
 	opts := &ListOpts{
 		store:       mockStore,
 		clusterName: "test",
 		OutputOpts: cli.OutputOpts{
-			Template: listTemplate,
+			Template:  listTemplate,
+			OutWriter: buf,
 		},
 	}
 
@@ -68,6 +72,11 @@ func TestAccessLogListClusterName_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+
+	assert.Equal(t, `HOSTNAME    CLUSTER NAME   AUTH RESULT   LOG LINE 
+test test   test           true          test
+`, buf.String())
+	t.Log(buf.String())
 }
 
 func TestAccessLogListHostname_Run(t *testing.T) {

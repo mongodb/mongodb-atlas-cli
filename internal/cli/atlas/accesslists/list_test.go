@@ -18,6 +18,7 @@
 package accesslists
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -25,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -53,10 +55,12 @@ func TestWhitelistList_Run(t *testing.T) {
 		TotalCount: 0,
 	}
 
+	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{
 		store: mockStore,
 		OutputOpts: cli.OutputOpts{
-			Template: listTemplate,
+			Template:  listTemplate,
+			OutWriter: buf,
 		},
 	}
 
@@ -69,6 +73,11 @@ func TestWhitelistList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+
+	assert.Equal(t, `CIDR BLOCK   AWS SECURITY GROUP
+test         test 
+`, buf.String())
+	t.Log(buf.String())
 }
 
 func TestListBuilder(t *testing.T) {

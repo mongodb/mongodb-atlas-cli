@@ -18,6 +18,7 @@
 package alerts
 
 import (
+	"bytes"
 	"errors"
 	"testing"
 
@@ -52,6 +53,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		Status:        "test",
 		MetricName:    "test",
 	}
+	buf := new(bytes.Buffer)
 
 	tests := []struct {
 		name    string
@@ -61,11 +63,12 @@ func TestDescribeOpts_Run(t *testing.T) {
 		{
 			name: "default",
 			cmd: &DescribeOpts{
+				OutputOpts: cli.OutputOpts{
+					Template:  describeTemplate,
+					OutWriter: buf,
+				},
 				alertID: "533dc40ae4b00835ff81eaee",
 				store:   mockStore,
-				OutputOpts: cli.OutputOpts{
-					Template: describeTemplate,
-				},
 			},
 
 			wantErr: false,
@@ -76,7 +79,8 @@ func TestDescribeOpts_Run(t *testing.T) {
 				alertID: "533dc40ae4b00835ff81eaee",
 				store:   mockStore,
 				OutputOpts: cli.OutputOpts{
-					Template: describeTemplate,
+					Template:  describeTemplate,
+					OutWriter: buf,
 				},
 			},
 			wantErr: true,
@@ -100,6 +104,10 @@ func TestDescribeOpts_Run(t *testing.T) {
 					Return(expected, nil).
 					Times(1)
 				assert.NoError(t, cmd.Run())
+				assert.Equal(t, `ID     TYPE   METRIC   STATUS
+test   test   test     test
+`, buf.String())
+				t.Log(buf.String())
 			}
 		})
 	}

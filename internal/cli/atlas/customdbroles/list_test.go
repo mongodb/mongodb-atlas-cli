@@ -18,6 +18,7 @@
 package customdbroles
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -26,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/openlyinc/pointy"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -57,10 +59,12 @@ func TestListOpts_Run(t *testing.T) {
 		},
 	}
 
+	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{
 		store: mockStore,
 		OutputOpts: cli.OutputOpts{
-			Template: listTemplate,
+			Template:  listTemplate,
+			OutWriter: buf,
 		},
 	}
 
@@ -73,6 +77,11 @@ func TestListOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+
+	assert.Equal(t, `NAME   ACTION   DB     COLLECTION   CLUSTER  
+Test   test     test   test         true
+`, buf.String())
+	t.Log(buf.String())
 }
 
 func TestListBuilder(t *testing.T) {

@@ -17,11 +17,13 @@
 package alerts
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -42,11 +44,14 @@ func TestList_Run(t *testing.T) {
 		TotalCount: 0,
 	}
 
+	buf := new(bytes.Buffer)
+
 	listOpts := &ListOpts{
 		store:  mockStore,
 		status: "OPEN",
 		OutputOpts: cli.OutputOpts{
-			Template: listTemplate,
+			Template:  listTemplate,
+			OutWriter: buf,
 		},
 	}
 
@@ -59,4 +64,9 @@ func TestList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+
+	assert.Equal(t, `ID     TYPE   STATUS
+test   test   test
+`, buf.String())
+	t.Log(buf.String())
 }

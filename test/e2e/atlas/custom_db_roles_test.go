@@ -83,7 +83,7 @@ func TestDBRoles(t *testing.T) {
 		assert.NotEmpty(t, roles)
 	})
 
-	t.Run("List default format", func(t *testing.T) {
+	t.Run("List - default format", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"ls")
@@ -92,7 +92,7 @@ func TestDBRoles(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Describe default format", func(t *testing.T) {
+	t.Run("Describe - default format", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"describe",

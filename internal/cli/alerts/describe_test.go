@@ -21,7 +21,10 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
@@ -45,6 +48,12 @@ func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertDescriber(ctrl)
 	defer ctrl.Finish()
+	expected := &mongodbatlas.Alert{
+		ID:            "test",
+		EventTypeName: "test",
+		Status:        "test",
+		MetricName:    "test",
+	}
 
 	tests := []struct {
 		name    string
@@ -56,7 +65,11 @@ func TestDescribeOpts_Run(t *testing.T) {
 			cmd: &DescribeOpts{
 				alertID: "533dc40ae4b00835ff81eaee",
 				store:   mockStore,
+				OutputOpts: cli.OutputOpts{
+					Template: describeTemplate,
+				},
 			},
+
 			wantErr: false,
 		},
 		{
@@ -64,6 +77,9 @@ func TestDescribeOpts_Run(t *testing.T) {
 			cmd: &DescribeOpts{
 				alertID: "533dc40ae4b00835ff81eaee",
 				store:   mockStore,
+				OutputOpts: cli.OutputOpts{
+					Template: describeTemplate,
+				},
 			},
 			wantErr: true,
 		},
@@ -80,7 +96,6 @@ func TestDescribeOpts_Run(t *testing.T) {
 					Times(1)
 				assert.Error(t, cmd.Run())
 			} else {
-				expected := &mongodbatlas.Alert{}
 				mockStore.
 					EXPECT().
 					Alert(cmd.ProjectID, cmd.alertID).

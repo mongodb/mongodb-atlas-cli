@@ -20,10 +20,13 @@ package accesslogs
 import (
 	"testing"
 
+
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/openlyinc/pointy"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -32,11 +35,29 @@ func TestAccessLogListClusterName_Run(t *testing.T) {
 	mockStore := mocks.NewMockAccessLogsLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.AccessLogSettings{}
+	expected := &mongodbatlas.AccessLogSettings{
+		AccessLogs: []*mongodbatlas.AccessLogs{
+			{
+				GroupID:       "test",
+				Hostname:      "test",
+				ClusterName:   "test",
+				IPAddress:     "test",
+				AuthResult:    pointy.Bool(true),
+				LogLine:       "test",
+				Timestamp:     "test",
+				Username:      "test",
+				FailureReason: "test",
+				AuthSource:    "test",
+			},
+		},
+	}
 
 	opts := &ListOpts{
 		store:       mockStore,
 		clusterName: "test",
+		OutputOpts: cli.OutputOpts{
+			Template: listTemplate,
+		},
 	}
 
 	mockStore.

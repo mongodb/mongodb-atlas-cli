@@ -20,10 +20,13 @@ package customdbroles
 import (
 	"testing"
 
+
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/openlyinc/pointy"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -32,10 +35,33 @@ func TestDescribeOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockDatabaseRoleDescriber(ctrl)
 	defer ctrl.Finish()
 
-	var expected mongodbatlas.CustomDBRole
+	expected := mongodbatlas.CustomDBRole{
+		Actions: []mongodbatlas.Action{
+			{
+				Action: "test",
+				Resources: []mongodbatlas.Resource{
+					{
+						Collection: pointy.String("test"),
+						DB:         pointy.String("test"),
+						Cluster:    pointy.Bool(true)},
+				},
+			},
+		},
+		InheritedRoles: []mongodbatlas.InheritedRole{
+			{
+				Db:   "test",
+				Role: "test",
+			},
+		},
+		RoleName: "Test",
+	}
 
 	describeOpts := &DescribeOpts{
-		store: mockStore,
+		OutputOpts: cli.OutputOpts{
+			Template: describeTemplate,
+		},
+		store:    mockStore,
+		roleName: "",
 	}
 
 	mockStore.

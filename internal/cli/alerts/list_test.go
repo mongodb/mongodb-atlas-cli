@@ -19,7 +19,10 @@ package alerts
 import (
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -29,11 +32,24 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockAlertLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.AlertsResponse{}
+	expected := &mongodbatlas.AlertsResponse{
+		Links: nil,
+		Results: []mongodbatlas.Alert{
+			{
+				ID:            "test",
+				EventTypeName: "test",
+				Status:        "test",
+				MetricName:    "test"},
+		},
+		TotalCount: 0,
+	}
 
 	listOpts := &ListOpts{
 		store:  mockStore,
 		status: "OPEN",
+		OutputOpts: cli.OutputOpts{
+			Template: listTemplate,
+		},
 	}
 
 	mockStore.

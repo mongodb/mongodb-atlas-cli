@@ -20,7 +20,10 @@ package accesslists
 import (
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
@@ -32,10 +35,31 @@ func TestWhitelistList_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectIPAccessListLister(ctrl)
 	defer ctrl.Finish()
 
-	var expected *mongodbatlas.ProjectIPAccessLists
+	expected := &mongodbatlas.ProjectIPAccessLists{
+		Links: []*mongodbatlas.Link{
+			{
+				Rel:  "test",
+				Href: "test",
+			},
+		},
+		Results: []mongodbatlas.ProjectIPAccessList{
+			{
+				AwsSecurityGroup: "test",
+				CIDRBlock:        "test",
+				Comment:          "test",
+				DeleteAfterDate:  "test",
+				GroupID:          "test",
+				IPAddress:        "test",
+			},
+		},
+		TotalCount: 0,
+	}
 
 	listOpts := &ListOpts{
 		store: mockStore,
+		OutputOpts: cli.OutputOpts{
+			Template: listTemplate,
+		},
 	}
 
 	mockStore.

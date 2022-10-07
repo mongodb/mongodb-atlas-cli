@@ -83,25 +83,6 @@ func TestDBRoles(t *testing.T) {
 		assert.NotEmpty(t, roles)
 	})
 
-	t.Run("List (default format)", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			customDBRoleEntity,
-			"ls")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
-	})
-
-	t.Run("Describe (default format)", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			customDBRoleEntity,
-			"describe",
-			roleName)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
-	})
-
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,

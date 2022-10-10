@@ -89,14 +89,7 @@ func replaceNuspec(dir, version string) error {
 		}
 	}(f)
 	_, err = f.Write(generatedNuspec.Bytes())
-	if err != nil {
-		return err
-	}
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func generateSha256(url string) (string, error) {

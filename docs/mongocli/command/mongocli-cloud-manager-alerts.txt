@@ -51,6 +51,7 @@ Related Commands
 
 * :ref:`mongocli-cloud-manager-alerts-acknowledge` - Acknowledges one alert for the specified project.
 * :ref:`mongocli-cloud-manager-alerts-describe` - Retrieves one alert for the specified project.
+* :ref:`mongocli-cloud-manager-alerts-enable` - Enables one alert for the specified project.
 * :ref:`mongocli-cloud-manager-alerts-global` - Retrieves all the global alerts for the specified Ops Manager project.
 * :ref:`mongocli-cloud-manager-alerts-list` - Retrieves all alerts for the specified Atlas project.
 * :ref:`mongocli-cloud-manager-alerts-settings` - Manages alerts configuration for your project.
@@ -62,6 +63,7 @@ Related Commands
 
    acknowledge </command/mongocli-cloud-manager-alerts-acknowledge>
    describe </command/mongocli-cloud-manager-alerts-describe>
+   enable </command/mongocli-cloud-manager-alerts-enable>
    global </command/mongocli-cloud-manager-alerts-global>
    list </command/mongocli-cloud-manager-alerts-list>
    settings </command/mongocli-cloud-manager-alerts-settings>

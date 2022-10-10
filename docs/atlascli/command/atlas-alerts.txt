@@ -51,6 +51,7 @@ Related Commands
 
 * :ref:`atlas-alerts-acknowledge` - Acknowledges one alert for the specified project.
 * :ref:`atlas-alerts-describe` - Retrieves one alert for the specified project.
+* :ref:`atlas-alerts-enable` - Enables one alert for the specified project.
 * :ref:`atlas-alerts-list` - Retrieves all alerts for the specified Atlas project.
 * :ref:`atlas-alerts-settings` - Manages alerts configuration for your project.
 * :ref:`atlas-alerts-unacknowledge` - Unacknowledges one alert for the specified project.
@@ -61,6 +62,7 @@ Related Commands
 
    acknowledge </command/atlas-alerts-acknowledge>
    describe </command/atlas-alerts-describe>
+   enable </command/atlas-alerts-enable>
    list </command/atlas-alerts-list>
    settings </command/atlas-alerts-settings>
    unacknowledge </command/atlas-alerts-unacknowledge>

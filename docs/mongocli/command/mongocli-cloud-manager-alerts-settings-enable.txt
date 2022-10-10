@@ -1,8 +1,8 @@
-.. _mongocli-cloud-manager-alerts-enable:
+.. _mongocli-cloud-manager-alerts-settings-enable:
 
-====================================
-mongocli cloud-manager alerts enable
-====================================
+=============================================
+mongocli cloud-manager alerts settings enable
+=============================================
 
 .. default-domain:: mongodb
 
@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli cloud-manager alerts enable <alertId> [options]
+   mongocli cloud-manager alerts settings enable <alertId> [options]
 
 .. Code end marker, please don't delete this comment
 

@@ -1,8 +1,8 @@
-.. _mongocli-atlas-alerts-enable:
+.. _mongocli-ops-manager-alerts-settings-disable:
 
-============================
-mongocli atlas alerts enable
-============================
+============================================
+mongocli ops-manager alerts settings disable
+============================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ mongocli atlas alerts enable
    :depth: 1
    :class: singlecol
 
-Enables one alert for the specified project.
+Disables one alert for the specified project.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas alerts enable <alertId> [options]
+   mongocli ops-manager alerts settings disable <alertId> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -53,7 +53,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for enable
+     - help for disable
    * - -o, --output
      - string
      - false

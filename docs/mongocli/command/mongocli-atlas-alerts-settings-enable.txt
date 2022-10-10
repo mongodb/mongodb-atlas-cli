@@ -1,8 +1,8 @@
-.. _atlas-alerts-enable:
+.. _mongocli-atlas-alerts-settings-enable:
 
-===================
-atlas alerts enable
-===================
+=====================================
+mongocli atlas alerts settings enable
+=====================================
 
 .. default-domain:: mongodb
 
@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   atlas alerts enable <alertId> [options]
+   mongocli atlas alerts settings enable <alertId> [options]
 
 .. Code end marker, please don't delete this comment
 

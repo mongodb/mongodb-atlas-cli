@@ -35,8 +35,6 @@ func Builder() *cobra.Command {
 		ListBuilder(),
 		AcknowledgeBuilder(),
 		UnacknowledgeBuilder(),
-		EnableBuilder(),
-		DisableBuilder(),
 	)
 
 	if config.ToolName == config.MongoCLI {

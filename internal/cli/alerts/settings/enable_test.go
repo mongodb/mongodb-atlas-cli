@@ -15,7 +15,7 @@
 //go:build unit
 // +build unit
 
-package alerts
+package settings
 
 import (
 	"testing"

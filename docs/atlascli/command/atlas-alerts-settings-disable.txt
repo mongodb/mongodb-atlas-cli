@@ -1,8 +1,8 @@
-.. _mongocli-cloud-manager-alerts-disable:
+.. _atlas-alerts-settings-disable:
 
-=====================================
-mongocli cloud-manager alerts disable
-=====================================
+=============================
+atlas alerts settings disable
+=============================
 
 .. default-domain:: mongodb
 
@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli cloud-manager alerts disable <alertId> [options]
+   atlas alerts settings disable <alertId> [options]
 
 .. Code end marker, please don't delete this comment
 

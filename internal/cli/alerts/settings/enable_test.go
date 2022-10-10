@@ -56,7 +56,7 @@ func TestEnableOpts_Run(t *testing.T) {
 	expected := &mongodbatlas.AlertConfiguration{}
 	mockStore.
 		EXPECT().
-		EnableAlertConfiguration(opts.ProjectID, opts.alertID, true).
+		EnableAlertConfiguration(opts.ProjectID, opts.alertID).
 		Return(expected, nil).
 		Times(1)
 	assert.NoError(t, opts.Run())

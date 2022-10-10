@@ -30,7 +30,7 @@ type DisableOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	alertID string
-	store   store.AlertConfigurationEnabler
+	store   store.AlertConfigurationDisabler
 }
 
 func (opts *DisableOpts) initStore(ctx context.Context) func() error {
@@ -44,7 +44,7 @@ func (opts *DisableOpts) initStore(ctx context.Context) func() error {
 var disableTemplate = "Alert '{{.ID}}' disabled\n"
 
 func (opts *DisableOpts) Run() error {
-	r, err := opts.store.EnableAlertConfiguration(opts.ConfigProjectID(), opts.alertID, false)
+	r, err := opts.store.DisableAlertConfiguration(opts.ConfigProjectID(), opts.alertID)
 	if err != nil {
 		return err
 	}

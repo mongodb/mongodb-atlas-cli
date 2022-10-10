@@ -44,7 +44,7 @@ func (opts *EnableOpts) initStore(ctx context.Context) func() error {
 var enableTemplate = "Alert '{{.ID}}' enabled\n"
 
 func (opts *EnableOpts) Run() error {
-	r, err := opts.store.EnableAlertConfiguration(opts.ConfigProjectID(), opts.alertID, true)
+	r, err := opts.store.EnableAlertConfiguration(opts.ConfigProjectID(), opts.alertID)
 	if err != nil {
 		return err
 	}

@@ -43,7 +43,7 @@ func TestDisableBuilder(t *testing.T) {
 
 func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAlertConfigurationEnabler(ctrl)
+	mockStore := mocks.NewMockAlertConfigurationDisabler(ctrl)
 	defer ctrl.Finish()
 
 	opts := &DisableOpts{
@@ -56,7 +56,7 @@ func TestDisableOpts_Run(t *testing.T) {
 	expected := &mongodbatlas.AlertConfiguration{}
 	mockStore.
 		EXPECT().
-		EnableAlertConfiguration(opts.ProjectID, opts.alertID, false).
+		DisableAlertConfiguration(opts.ProjectID, opts.alertID).
 		Return(expected, nil).
 		Times(1)
 	assert.NoError(t, opts.Run())

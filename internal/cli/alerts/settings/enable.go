@@ -41,7 +41,7 @@ func (opts *EnableOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var enableTemplate = "Alert '{{.ID}}' enabled\n"
+var enableTemplate = "Alert configuration '{{.ID}}' enabled\n"
 
 func (opts *EnableOpts) Run() error {
 	r, err := opts.store.EnableAlertConfiguration(opts.ConfigProjectID(), opts.alertID)
@@ -56,8 +56,8 @@ func (opts *EnableOpts) Run() error {
 func EnableBuilder() *cobra.Command {
 	opts := new(EnableOpts)
 	cmd := &cobra.Command{
-		Use:   "enable <alertId>",
-		Short: "Enables one alert for the specified project.",
+		Use:   "enable <alertConfigId>",
+		Short: "Enables one alert configuration for the specified project.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -67,7 +67,7 @@ func EnableBuilder() *cobra.Command {
 			)
 		},
 		Annotations: map[string]string{
-			"alertIdDesc": "ID of the alert you want to enable.",
+			"alertConfigIdDesc": "ID of the alert you want to enable.",
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.alertID = args[0]

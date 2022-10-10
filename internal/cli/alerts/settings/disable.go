@@ -41,7 +41,7 @@ func (opts *DisableOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var disableTemplate = "Alert '{{.ID}}' disabled\n"
+var disableTemplate = "Alert configuration '{{.ID}}' disabled\n"
 
 func (opts *DisableOpts) Run() error {
 	r, err := opts.store.DisableAlertConfiguration(opts.ConfigProjectID(), opts.alertID)
@@ -56,8 +56,8 @@ func (opts *DisableOpts) Run() error {
 func DisableBuilder() *cobra.Command {
 	opts := new(DisableOpts)
 	cmd := &cobra.Command{
-		Use:   "disable <alertId>",
-		Short: "Disables one alert for the specified project.",
+		Use:   "disable <alertConfigId>",
+		Short: "Disables one alert configuration for the specified project.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -67,7 +67,7 @@ func DisableBuilder() *cobra.Command {
 			)
 		},
 		Annotations: map[string]string{
-			"alertIdDesc": "ID of the alert you want to enable.",
+			"alertConfigIdDesc": "ID of the alert configuration you want to disable.",
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.alertID = args[0]

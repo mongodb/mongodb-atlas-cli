@@ -12,14 +12,14 @@ atlas alerts settings disable
    :depth: 1
    :class: singlecol
 
-Disables one alert for the specified project.
+Disables one alert configuration for the specified project.
 
 Syntax
 ------
 
 .. code-block::
 
-   atlas alerts settings disable <alertId> [options]
+   atlas alerts settings disable <alertConfigId> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -34,10 +34,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - alertId
+   * - alertConfigId
      - string
      - true
-     - ID of the alert you want to enable.
+     - ID of the alert configuration you want to disable.
 
 Options
 -------

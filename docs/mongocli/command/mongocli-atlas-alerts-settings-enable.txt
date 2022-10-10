@@ -12,14 +12,14 @@ mongocli atlas alerts settings enable
    :depth: 1
    :class: singlecol
 
-Enables one alert for the specified project.
+Enables one alert configuration for the specified project.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas alerts settings enable <alertId> [options]
+   mongocli atlas alerts settings enable <alertConfigId> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -34,7 +34,7 @@ Arguments
      - Type
      - Required
      - Description
-   * - alertId
+   * - alertConfigId
      - string
      - true
      - ID of the alert you want to enable.

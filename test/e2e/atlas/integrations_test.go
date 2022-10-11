@@ -102,6 +102,8 @@ func TestIntegrations(t *testing.T) {
 	})
 
 	t.Run("Create OPSGENIE", func(t *testing.T) {
+		n, err := e2e.RandInt(9)
+		require.NoError(t, err)
 		opsGenieKey := "00000000-aaaa-2222-bbbb-3333333333" + n.String() + n.String()
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
@@ -125,6 +127,8 @@ func TestIntegrations(t *testing.T) {
 	})
 
 	t.Run("Create PAGER_DUTY", func(t *testing.T) {
+		n, err := e2e.RandInt(9)
+		require.NoError(t, err)
 		pagerDutyKey := "000000000000000000000000000000" + n.String() + n.String()
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
@@ -148,6 +152,8 @@ func TestIntegrations(t *testing.T) {
 	})
 
 	t.Run("Create VICTOR_OPS", func(t *testing.T) {
+		n, err := e2e.RandInt(9)
+		require.NoError(t, err)
 		victorOpsKey := "fa07bbc8-eab2-4085-81af-daed47dc1c" + n.String() + n.String()
 		cmd := exec.Command(cliPath,
 			integrationsEntity,

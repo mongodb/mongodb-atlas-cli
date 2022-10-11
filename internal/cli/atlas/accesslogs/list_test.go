@@ -18,12 +18,16 @@
 package accesslogs
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/openlyinc/pointy"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -32,11 +36,31 @@ func TestAccessLogListClusterName_Run(t *testing.T) {
 	mockStore := mocks.NewMockAccessLogsLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.AccessLogSettings{}
+	expected := &mongodbatlas.AccessLogSettings{
+		AccessLogs: []*mongodbatlas.AccessLogs{
+			{
+				GroupID:       "test",
+				Hostname:      "test",
+				ClusterName:   "test",
+				IPAddress:     "test",
+				AuthResult:    pointy.Bool(true),
+				LogLine:       "test",
+				Timestamp:     "test",
+				Username:      "test",
+				FailureReason: "test",
+				AuthSource:    "test",
+			},
+		},
+	}
 
+	buf := new(bytes.Buffer)
 	opts := &ListOpts{
 		store:       mockStore,
 		clusterName: "test",
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
 	}
 
 	mockStore.
@@ -48,6 +72,11 @@ func TestAccessLogListClusterName_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+
+	assert.Equal(t, `HOSTNAME    CLUSTER NAME   AUTH RESULT   LOG LINE 
+test test   test           true          test
+`, buf.String())
+	t.Log(buf.String())
 }
 
 func TestAccessLogListHostname_Run(t *testing.T) {

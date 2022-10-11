@@ -18,12 +18,15 @@
 package accesslists
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -32,11 +35,23 @@ func TestWhitelistDescribe_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectIPAccessListDescriber(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ProjectIPAccessList{}
+	expected := &mongodbatlas.ProjectIPAccessList{
+		AwsSecurityGroup: "test",
+		CIDRBlock:        "test",
+		Comment:          "test",
+		DeleteAfterDate:  "test",
+		GroupID:          "test",
+		IPAddress:        "test",
+	}
 
+	buf := new(bytes.Buffer)
 	describeOpts := &DescribeOpts{
 		name:  "test",
 		store: mockStore,
+		OutputOpts: cli.OutputOpts{
+			Template:  describeTemplate,
+			OutWriter: buf,
+		},
 	}
 
 	mockStore.
@@ -48,6 +63,10 @@ func TestWhitelistDescribe_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	assert.Equal(t, `CIDR BLOCK   SECURITY GROUP
+test         test 
+`, buf.String())
+	t.Log(buf.String())
 }
 
 func TestDescribeBuilder(t *testing.T) {

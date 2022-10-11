@@ -18,10 +18,14 @@
 package settings
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/openlyinc/pointy"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -30,10 +34,47 @@ func TestConfigList_Run(t *testing.T) {
 	mockStore := mocks.NewMockAlertConfigurationLister(ctrl)
 	defer ctrl.Finish()
 
-	var expected []mongodbatlas.AlertConfiguration
+	expected := []mongodbatlas.AlertConfiguration{
+		{
+			ID:                     "test",
+			GroupID:                "test",
+			AlertConfigID:          "test",
+			EventTypeName:          "test",
+			Created:                "test",
+			Status:                 "test",
+			AcknowledgedUntil:      "test",
+			AcknowledgementComment: "test",
+			AcknowledgingUsername:  "test",
+			Updated:                "test",
+			Resolved:               "test",
+			LastNotified:           "test",
+			HostnameAndPort:        "test",
+			HostID:                 "test",
+			ReplicaSetName:         "test",
+			MetricName:             "test",
+			Enabled:                pointy.Bool(true),
+			ClusterID:              "test",
+			ClusterName:            "test",
+			SourceTypeName:         "test",
+			CurrentValue: &mongodbatlas.CurrentValue{
+				Number: pointy.Float64(1.2),
+				Units:  "test",
+			},
+			Matchers:        nil,
+			MetricThreshold: nil,
+			Threshold:       nil,
+			Notifications:   nil,
+		},
+	}
+
+	buf := new(bytes.Buffer)
 
 	listOpts := &ListOpts{
 		store: mockStore,
+		OutputOpts: cli.OutputOpts{
+			Template:  settingsListTemplate,
+			OutWriter: buf,
+		},
 	}
 
 	mockStore.
@@ -45,4 +86,9 @@ func TestConfigList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+
+	assert.Equal(t, `ID     TYPE   ENABLED
+test   test   true
+`, buf.String())
+	t.Log(buf.String())
 }

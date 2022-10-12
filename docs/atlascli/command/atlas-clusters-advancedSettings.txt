@@ -50,10 +50,12 @@ Related Commands
 ----------------
 
 * :ref:`atlas-clusters-advancedSettings-describe` - Retrieve advanced configuration settings for one cluster.
+* :ref:`atlas-clusters-advancedSettings-update` - Update advanced configuration settings for one cluster.
 
 
 .. toctree::
    :titlesonly:
 
    describe </command/atlas-clusters-advancedSettings-describe>
+   update </command/atlas-clusters-advancedSettings-update>
 

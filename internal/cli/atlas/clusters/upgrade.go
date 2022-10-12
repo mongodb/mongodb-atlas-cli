@@ -101,14 +101,8 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 			}
 		}
 	}
-	labelValue := atlasCLILabelValue
-	if config.ToolName == config.MongoCLI {
-		labelValue = mongoCLILabelValue
-	}
-	AddLabelSharedCluster(out, atlas.Label{
-		Key:   labelKey,
-		Value: labelValue,
-	})
+
+	AddLabelSharedCluster(out, NewCLILabel())
 }
 
 // mongocli atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].

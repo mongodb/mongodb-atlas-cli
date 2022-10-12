@@ -22,8 +22,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/indexes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/onlinearchive"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+)
+
+const (
+	labelKey           = "Infrastructure Tool"
+	atlasCLILabelValue = "Atlas CLI"
+	mongoCLILabelValue = "mongoCLI"
 )
 
 // MongoCLIBuilder is to split "mongocli atlas clusters" and "atlas clusters".
@@ -85,6 +92,18 @@ func Builder() *cobra.Command {
 	)
 
 	return cmd
+}
+
+func NewCLILabel() atlas.Label {
+	labelValue := atlasCLILabelValue
+	if config.ToolName == config.MongoCLI {
+		labelValue = mongoCLILabelValue
+	}
+
+	return atlas.Label{
+		Key:   labelKey,
+		Value: labelValue,
+	}
 }
 
 func AddLabel(out *atlas.AdvancedCluster, l atlas.Label) {

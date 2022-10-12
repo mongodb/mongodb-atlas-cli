@@ -98,10 +98,8 @@ func (opts *UpdateOpts) patchOpts(out *atlas.AdvancedCluster) {
 	if opts.tier != "" {
 		opts.addTierToAdvancedCluster(out)
 	}
-	AddLabel(out, atlas.Label{
-		Key:   labelKey,
-		Value: labelValue,
-	})
+
+	AddLabel(out, NewCLILabel())
 }
 
 func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlas.AdvancedCluster) {

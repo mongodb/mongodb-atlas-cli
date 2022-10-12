@@ -31,6 +31,8 @@ import (
 
 const (
 	withProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
+	labelKey       = "Infrastructure Tool"
+	labelValue     = "Atlas CLI"
 )
 
 var errNeedsOrgAndProject = errors.New("please make sure to select or add an org and project to the profile: %s")
@@ -123,6 +125,8 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 func Builder() *cobra.Command {
 	loginOpts := auth.NewLoginOpts()
 	qsOpts := quickstart.NewQuickstartOpts(loginOpts)
+	qsOpts.LabelKey = labelKey
+	qsOpts.LabelValue = labelValue
 	opts := &Opts{
 		register:   auth.NewRegisterFlow(loginOpts),
 		login:      auth.NewLoginFlow(loginOpts),

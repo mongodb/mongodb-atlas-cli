@@ -103,8 +103,8 @@ func (opts *Opts) newCluster() *atlas.AdvancedCluster {
 		Name:             opts.ClusterName,
 		Labels: []atlas.Label{
 			{
-				Key:   "Infrastructure Tool",
-				Value: "MongoDB CLI Quickstart",
+				Key:   opts.LabelKey,
+				Value: opts.LabelValue,
 			},
 		},
 	}

@@ -32,14 +32,15 @@ import (
 )
 
 const (
-	replicaSet = "REPLICASET"
-	tenant     = "TENANT"
-	atlasM0    = "M0"
-	atlasM2    = "M2"
-	atlasM5    = "M5"
-	zoneName   = "Zone 1"
-	labelKey   = "Infrastructure Tool"
-	labelValue = "mongoCLI"
+	replicaSet         = "REPLICASET"
+	tenant             = "TENANT"
+	atlasM0            = "M0"
+	atlasM2            = "M2"
+	atlasM5            = "M5"
+	zoneName           = "Zone 1"
+	labelKey           = "Infrastructure Tool"
+	atlasCLILabelValue = "Atlas CLI"
+	mongoCLILabelValue = "mongoCLI"
 )
 
 type CreateOpts struct {
@@ -100,6 +101,10 @@ func (opts *CreateOpts) newCluster() (*atlas.AdvancedCluster, error) {
 		cluster.Name = opts.name
 	}
 
+	labelValue := atlasCLILabelValue
+	if config.ToolName == config.MongoCLI {
+		labelValue = mongoCLILabelValue
+	}
 	AddLabel(cluster, atlas.Label{
 		Key:   labelKey,
 		Value: labelValue,

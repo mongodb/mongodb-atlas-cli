@@ -98,6 +98,12 @@ func (opts *UpdateOpts) patchOpts(out *atlas.AdvancedCluster) {
 	if opts.tier != "" {
 		opts.addTierToAdvancedCluster(out)
 	}
+
+	labelValue := atlasCLILabelValue
+	if config.ToolName == config.MongoCLI {
+		labelValue = mongoCLILabelValue
+	}
+
 	AddLabel(out, atlas.Label{
 		Key:   labelKey,
 		Value: labelValue,

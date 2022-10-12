@@ -101,6 +101,10 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 			}
 		}
 	}
+	labelValue := atlasCLILabelValue
+	if config.ToolName == config.MongoCLI {
+		labelValue = mongoCLILabelValue
+	}
 	AddLabelSharedCluster(out, atlas.Label{
 		Key:   labelKey,
 		Value: labelValue,

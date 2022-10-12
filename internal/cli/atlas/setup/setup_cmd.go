@@ -32,7 +32,7 @@ import (
 const (
 	withProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
 	labelKey       = "Infrastructure Tool"
-	labelValue     = "Atlas CLI"
+	labelValue     = "Atlas CLI Setup"
 )
 
 var errNeedsOrgAndProject = errors.New("please make sure to select or add an org and project to the profile: %s")

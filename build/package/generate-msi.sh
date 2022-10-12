@@ -46,6 +46,8 @@ fi
 env GOOS=windows GOARCH=amd64 go build \
   -ldflags "${LINKER_FLAGS}" -o ${OUTPUT} "${SOURCE_FILES}"
 
+echo -n "msi" > "package_source"
+
 go-msi make --path "${WIX_MANIFEST_FILE}"  --msi "dist/${PACKAGE_NAME}" --version "${VERSION}"
 
 go run ./tools/sign -file "dist/${PACKAGE_NAME}"

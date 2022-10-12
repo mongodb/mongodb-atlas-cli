@@ -339,6 +339,15 @@ func TestWithError(t *testing.T) {
 	a.Equal("test", e.Properties["error"])
 }
 
+func TestWithPackageSource(t *testing.T) {
+	t.Cleanup(test.CleanupConfig)
+	config.ToolName = config.AtlasCLI
+
+	e := newEvent(withPackageSource("test"))
+
+	a := assert.New(t)
+	a.Equal("test", e.Properties["package_source"])
+}
 func TestSanitizePrompt(t *testing.T) {
 	testCases := []struct {
 		input    string

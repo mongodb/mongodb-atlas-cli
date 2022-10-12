@@ -117,6 +117,12 @@ func withCommandPath(cmd *cobra.Command) eventOpt {
 	}
 }
 
+func withPackageSource(packageSource string) eventOpt {
+	return func(event Event) {
+		event.Properties["package_source"] = packageSource
+	}
+}
+
 func withDuration(cmd *cobra.Command) eventOpt {
 	return func(event Event) {
 		if cmd.Context() == nil {

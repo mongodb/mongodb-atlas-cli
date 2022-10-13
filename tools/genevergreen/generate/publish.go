@@ -16,6 +16,7 @@ package generate
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/evergreen-ci/shrub"
 )
@@ -33,8 +34,8 @@ const (
 	rpm     = "rpm"
 )
 
-// if updating this list verify build/ci/repo_config.yaml matches.
-var distros = map[string]Platform{
+// Distros - if updating this list verify build/ci/repo_config.yaml matches.
+var Distros = map[string]Platform{
 	"amazon2": {
 		extension:     rpm,
 		architectures: []string{x86_64, aarch64},
@@ -104,9 +105,9 @@ func publishVariant(c *shrub.Configuration, v *shrub.Variant, toolName, sv, stab
 		taskSv = ""
 	}
 	for _, r := range repos {
-		for k, d := range distros {
+		for k, d := range Distros {
 			for _, a := range d.architectures {
-				taskName := fmt.Sprintf("push_%s_%s_%s_%s%s%s", toolName, k, r, a, taskSv, stableSuffix)
+				taskName := fmt.Sprintf("push_%s_%s_%s_%s%s%s", toolName, k, r, a, strings.ReplaceAll(taskSv, ".", ""), stableSuffix)
 				t := newPublishTask(taskName, toolName, d.extension, r, k, taskServerVersion, notaryKey, a, stable, dependency)
 				c.Tasks = append(c.Tasks, t)
 				v.AddTasks(t.Name)

@@ -16,6 +16,6 @@
 
 package telemetry
 
-func readPackageSource() *string {
-	return readPackageSourceHomebrew()
+func readInstaller() *string {
+	return readInstallerHomebrew()
 }

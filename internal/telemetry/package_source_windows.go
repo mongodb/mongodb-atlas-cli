@@ -21,8 +21,8 @@ import (
 	"path"
 )
 
-func readPackageSource() *string {
-	if b, err := os.ReadFile(path.Join(path.Base(os.Args[0]), "package_source")); err == nil {
+func readInstaller() *string {
+	if b, err := os.ReadFile(path.Join(path.Base(os.Args[0]), "installer")); err == nil {
 		s := string(b)
 		return &s
 	}

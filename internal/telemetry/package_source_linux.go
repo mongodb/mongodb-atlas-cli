@@ -20,12 +20,12 @@ import (
 	"os"
 )
 
-func readPackageSource() *string {
-	if h := readPackageSourceHomebrew(); h != nil {
+func readInstaller() *string {
+	if h := readInstallerHomebrew(); h != nil {
 		return h
 	}
 
-	if b, err := os.ReadFile("/etc/atlascli/package_source"); err == nil {
+	if b, err := os.ReadFile("/etc/atlascli/installer"); err == nil {
 		s := string(b)
 		return &s
 	}

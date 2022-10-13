@@ -44,7 +44,7 @@ type tracker struct {
 	storeSet         bool
 	cmd              *cobra.Command
 	args             []string
-	packageSource    *string
+	installer        *string
 }
 
 func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracker, error) {
@@ -70,18 +70,12 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 		storeSet:         storeSet,
 		cmd:              cmd,
 		args:             args,
-		packageSource:    readPackageSource(),
+		installer:        readInstaller(),
 	}, nil
 }
 
 func (t *tracker) defaultCommandOptions() []eventOpt {
-	ret := []eventOpt{withCommandPath(t.cmd), withHelpCommand(t.cmd, t.args), withFlags(t.cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(t.cmd), withOrgID(t.cmd), withTerminal(), withInstaller(t.fs)}
-
-	if t.packageSource != nil {
-		ret = append(ret, withPackageSource(*t.packageSource))
-	}
-
-	return ret
+	return []eventOpt{withCommandPath(t.cmd), withHelpCommand(t.cmd, t.args), withFlags(t.cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(t.cmd), withOrgID(t.cmd), withTerminal(), withInstaller(t.installer)}
 }
 
 func (t *tracker) trackCommand(data TrackOptions) error {

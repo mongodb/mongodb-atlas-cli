@@ -71,12 +71,12 @@ nfpms:
   replacements:
     amd64: x86_64
   contents:
-    - src: ./build/package/rpm/package_source
-      dst: /etc/atlascli/package_source
+    - src: ./build/package/rpm/installer
+      dst: /etc/atlascli/installer
       type: "config|noreplace"
       packager: rpm
-    - src: ./build/package/deb/package_source
-      dst: /etc/atlascli/package_source
+    - src: ./build/package/deb/installer
+      dst: /etc/atlascli/installer
       type: "config|noreplace"
       packager: deb
 - id: mongodb-atlas

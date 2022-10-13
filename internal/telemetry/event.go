@@ -25,11 +25,9 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/internal/version"
-	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -114,12 +112,6 @@ func withCommandPath(cmd *cobra.Command) eventOpt {
 		if cmd.CalledAs() != "" {
 			event.Properties["alias"] = cmd.CalledAs()
 		}
-	}
-}
-
-func withPackageSource(packageSource string) eventOpt {
-	return func(event Event) {
-		event.Properties["package_source"] = packageSource
 	}
 }
 
@@ -230,15 +222,10 @@ func withTerminal() eventOpt {
 	}
 }
 
-func withInstaller(fs afero.Fs) eventOpt {
+func withInstaller(installer *string) eventOpt {
 	return func(event Event) {
-		c, err := homebrew.NewChecker(fs)
-		if err != nil {
-			_, _ = log.Debugf("telemetry: failed to generate homebrew checker: %v\n", err)
-			return
-		}
-		if c.IsHomebrew() {
-			event.Properties["installer"] = "brew"
+		if installer != nil {
+			event.Properties["installer"] = installer
 		}
 	}
 }

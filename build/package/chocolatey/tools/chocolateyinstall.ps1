@@ -19,4 +19,4 @@ $packageArgs = @{
 
 Install-ChocolateyPackage @packageArgs 
 
-"chocolatey" | Out-File "$(Join-Path $installDir 'package_source')" -NoNewline
+"chocolatey" | Out-File "$(Join-Path $installDir 'installer')" -NoNewline

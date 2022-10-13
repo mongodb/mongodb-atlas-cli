@@ -19,9 +19,9 @@ import (
 	"github.com/spf13/afero"
 )
 
-func readPackageSourceHomebrew() *string {
+func readInstallerHomebrew() *string {
 	if c, err := homebrew.NewChecker(afero.NewOsFs()); err == nil && c.IsHomebrew() {
-		s := "homebrew"
+		s := "brew"
 		return &s
 	}
 	return nil

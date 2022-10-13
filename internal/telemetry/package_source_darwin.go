@@ -16,16 +16,6 @@
 
 package telemetry
 
-import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
-	"github.com/spf13/afero"
-)
-
 func readPackageSource() *string {
-	if c, err := homebrew.NewChecker(afero.NewOsFs()); err == nil && c.IsHomebrew() {
-		s := "homebrew"
-		return &s
-	}
-
-	return nil
+	return readPackageSourceHomebrew()
 }

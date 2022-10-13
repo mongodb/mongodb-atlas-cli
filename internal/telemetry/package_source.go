@@ -11,24 +11,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build !windows && !darwin
-// +build !windows,!darwin
 
 package telemetry
 
 import (
-	"os"
+	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
+	"github.com/spf13/afero"
 )
 
-func readPackageSource() *string {
-	if h := readPackageSourceHomebrew(); h != nil {
-		return h
-	}
-
-	if b, err := os.ReadFile("/etc/atlascli/package_source"); err == nil {
-		s := string(b)
+func readPackageSourceHomebrew() *string {
+	if c, err := homebrew.NewChecker(afero.NewOsFs()); err == nil && c.IsHomebrew() {
+		s := "homebrew"
 		return &s
 	}
-
 	return nil
 }

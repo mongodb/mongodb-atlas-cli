@@ -225,7 +225,7 @@ func withTerminal() eventOpt {
 func withInstaller(installer *string) eventOpt {
 	return func(event Event) {
 		if installer != nil {
-			event.Properties["installer"] = installer
+			event.Properties["installer"] = *installer
 		}
 	}
 }

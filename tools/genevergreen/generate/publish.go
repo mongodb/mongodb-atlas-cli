@@ -34,8 +34,8 @@ const (
 	rpm     = "rpm"
 )
 
-// Distros - if updating this list verify build/ci/repo_config.yaml matches.
-var Distros = map[string]Platform{
+// distros - if updating this list verify build/ci/repo_config.yaml matches.
+var distros = map[string]Platform{
 	"amazon2": {
 		extension:     rpm,
 		architectures: []string{x86_64, aarch64},
@@ -105,7 +105,7 @@ func publishVariant(c *shrub.Configuration, v *shrub.Variant, toolName, sv, stab
 		taskSv = ""
 	}
 	for _, r := range repos {
-		for k, d := range Distros {
+		for k, d := range distros {
 			for _, a := range d.architectures {
 				taskName := fmt.Sprintf("push_%s_%s_%s_%s%s%s", toolName, k, r, a, strings.ReplaceAll(taskSv, ".", ""), stableSuffix)
 				t := newPublishTask(taskName, toolName, d.extension, r, k, taskServerVersion, notaryKey, a, stable, dependency)

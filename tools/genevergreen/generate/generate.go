@@ -70,19 +70,11 @@ var (
 	}
 )
 
-func newDependency(toolName, os, serverVersion, repo string) []shrub.TaskDependency {
-	var deps []shrub.TaskDependency
-	architectures := Distros[newOs[os]].architectures
-
-	for _, arch := range architectures {
-		dep := shrub.TaskDependency{
-			Name:    fmt.Sprintf("push_%s_%s_%s_%s_%s_stable", toolName, newOs[os], repo, arch, strings.ReplaceAll(serverVersion, ".", "")),
-			Variant: fmt.Sprintf("generated_release_%s_publish_%s", toolName, strings.ReplaceAll(serverVersion, ".", "")),
-		}
-		deps = append(deps, dep)
+func newDependency(toolName, os, serverVersion, repo string) shrub.TaskDependency {
+	return shrub.TaskDependency{
+		Name:    fmt.Sprintf("push_%s_%s_%s_%s_%s_stable", toolName, newOs[os], repo, x86_64, strings.ReplaceAll(serverVersion, ".", "")),
+		Variant: fmt.Sprintf("generated_release_%s_publish_%s", toolName, strings.ReplaceAll(serverVersion, ".", "")),
 	}
-
-	return deps
 }
 
 func RepoTasks(c *shrub.Configuration, toolName string) {
@@ -112,7 +104,7 @@ func RepoTasks(c *shrub.Configuration, toolName string) {
 				}
 				t = t.Stepback(false).
 					GitTagOnly(true).
-					Dependency(newDependency(toolName, os, serverVersion, repo)...).
+					Dependency(newDependency(toolName, os, serverVersion, repo)).
 					Function("clone").
 					FunctionWithVars("docker build repo", map[string]string{
 						"server_version": serverVersion,

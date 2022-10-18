@@ -1,5 +1,5 @@
 ---
-name: 'Stale issue handler'
+name: 'Stale issues and PRs handler'
 on:
   workflow_dispatch:
   schedule:

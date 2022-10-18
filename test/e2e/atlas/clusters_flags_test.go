@@ -28,7 +28,7 @@ import (
 	exec "golang.org/x/sys/execabs"
 )
 
-const oplogSizeMB = "1222"
+const writeConcern = "2"
 
 func TestClustersFlags(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
@@ -166,8 +166,8 @@ func TestClustersFlags(t *testing.T) {
 			"advancedSettings",
 			"update",
 			clusterName,
-			"--oplogSizeMB",
-			oplogSizeMB,
+			"--writeConcern",
+			writeConcern,
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -193,7 +193,7 @@ func TestClustersFlags(t *testing.T) {
 
 		a := assert.New(t)
 		a.NotEmpty(config.MinimumEnabledTLSProtocol)
-		a.Equal(config.OplogSizeMB, oplogSizeMB)
+		a.Equal(writeConcern, config.DefaultWriteConcern)
 	})
 
 	t.Run("Create Rolling Index", func(t *testing.T) {

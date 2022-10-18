@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterConfigurationOptionsDescriber,AtlasSharedClusterDescriber,ClusterUpgrader,AtlasSharedClusterGetterUpgrader,AtlasClusterConfigurationOptionsUpdater
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterConfigurationOptionsDescriber,AtlasSharedClusterDescriber,ClusterUpgrader,AtlasSharedClusterGetterUpgrader
 
 type ClusterLister interface {
 	ProjectClusters(string, *atlas.ListOptions) (interface{}, error)
@@ -34,10 +34,6 @@ type AtlasClusterDescriber interface {
 
 type AtlasClusterConfigurationOptionsDescriber interface {
 	AtlasClusterConfigurationOptions(string, string) (*atlas.ProcessArgs, error)
-}
-
-type AtlasClusterConfigurationOptionsUpdater interface {
-	UpdateAtlasClusterConfigurationOptions(string, string, *atlas.ProcessArgs) (*atlas.ProcessArgs, error)
 }
 
 type OpsManagerClusterDescriber interface {
@@ -249,17 +245,6 @@ func (s *Store) AtlasClusterConfigurationOptions(projectID, name string) (*atlas
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Clusters.GetProcessArgs(s.ctx, projectID, name)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
-// UpdateAtlasClusterConfigurationOptions encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName string, args *atlas.ProcessArgs) (*atlas.ProcessArgs, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Clusters.UpdateProcessArgs(s.ctx, projectID, clusterName, args)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

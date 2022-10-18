@@ -26,9 +26,7 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use, "settings"),
 		Short:   "Manage advanced configuration settings for your cluster.",
 	}
-	cmd.AddCommand(
-		DescribeBuilder(),
-		UpdateBuilder())
+	cmd.AddCommand(DescribeBuilder())
 
 	return cmd
 }

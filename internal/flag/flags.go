@@ -228,15 +228,6 @@ const (
 	MaxCapacityGB                             = "maxCapacityGB"                             // MaxCapacityGB flag
 	URI                                       = "uri"                                       // URI flag
 	WriteConcern                              = "writeConcern"                              // WriteConcern flag
-	ReadConcern                               = "readConcern"                               // ReadConcern flag
-	DisableFailIndexKeyTooLong                = "disableFailIndexKeyTooLong"                // DisableFailIndexKeyTooLong flag
-	DisableJavascript                         = "disableJavascript"                         // DisableJavascript flag
-	TLSProtocol                               = "tlsProtocol"                               // TLSProtocol flag
-	NoTableScan                               = "noTableScan"                               // NoTableScan flag
-	OplogMinRetentionHours                    = "oplogMinRetentionHours"                    // OplogMinRetentionHours flag
-	OplogSizeMB                               = "oplogSizeMB"                               // OplogSizeMB flag
-	SampleRefreshIntervalBIConnector          = "sampleRefreshIntervalBIConnector"          // SampleRefreshIntervalBIConnector flag
-	SampleSizeBIConnector                     = "sampleSizeBIConnector"                     // SampleSizeBIConnector flag
 	IncludeDeleted                            = "includeDeleted"                            // IncludeDeleted flag
 	AWSAccessKey                              = "awsAccessKey"                              // AWSAccessKey flag
 	AWSSecretKey                              = "awsSecretKey"                              // AWSSecretKey fag
@@ -307,7 +298,6 @@ const (
 	UseOrgAndGroupNamesInExportPrefix         = "useOrgAndGroupNamesInExportPrefix"         // UseOrgAndGroupNamesInExportPrefix flag
 	NoUseOrgAndGroupNamesInExportPrefix       = "noUseOrgAndGroupNamesInExportPrefix"       // NoUseOrgAndGroupNamesInExportPrefix flag
 	BackupPolicy                              = "policy"                                    // BackupPolicy flag
-
 	/* #nosec */
 	KMIPClientCertificatePassword = "kmipClientCertificatePassword" // KMIPClientCertificatePassword flag
 	KMIPUsername                  = "kmipUsername"                  // KMIPUsername flag

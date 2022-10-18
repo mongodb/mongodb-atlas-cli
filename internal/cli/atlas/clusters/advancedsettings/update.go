@@ -133,8 +133,8 @@ func (opts *UpdateOpts) newProcessArgs() *atlas.ProcessArgs {
 }
 
 // atlas cluster(s) advancedSettings update <clusterName> --projectId projectId [--readConcern readConcern]
-// [--writeConcern writeConcern] [--disableFailIndexKeyTooLong true/fale] [--disableJavascript true/false]
-// [--minimumEnabledTLSProtocol minimumEnabledTLSProtocol] [--disableTableScan true/false] [--oplogMinRetentionHours oplogMinRetentionHours]
+// [--writeConcern writeConcern] [--disableFailIndexKeyTooLong true/fale] [--enableFailIndexKeyTooLong true/fale] [--disableJavascript true/false] [--enableJavascript true/false]
+// [--minimumEnabledTLSProtocol minimumEnabledTLSProtocol] [--disableTableScan true/false] [--enableTableScan true/false] [--oplogMinRetentionHours oplogMinRetentionHours]
 // [--oplogSizeMB oplogSizeMB] [--sampleRefreshIntervalBIConnector sampleRefreshIntervalBIConnector] [--sampleSizeBIConnector sampleSizeBIConnector].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}

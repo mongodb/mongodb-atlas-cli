@@ -8,6 +8,7 @@ this document describes some guidelines necessary to participate in the communit
 - [Asking Support Questions](#asking-support-questions)
 - [Feature Requests](#feature-requests)
 - [Reporting Issues](#reporting-issues)
+- [Autoclose stale issues and PRs](#autoclose-stale-issues-and-prs)
 - [Submitting Patches](#submitting-patches)
   - [Code Contribution Guidelines](#code-contribution-guidelines)
   - [Development Setup](#development-setup)
@@ -35,6 +36,12 @@ with as much detail as possible, including things like operating system or anyth
 
 The MongoDB CLI project welcomes all contributors and contributions regardless of skill or experience level.
 If you are interested in helping with the project, please follow our [guidelines](#code-contribution-guidelines).
+
+## Autoclose stale issues and PRs
+
+- After 30 days of no activity (no comments or commits are on an issue/PR) we automatically tag it as "stale" and add a message: ```This issue/PR has gone 30 days without any activity and meets the project's definition of "stale". This will be auto-closed if there is no new activity over the next 60 days. If the issue is still relevant and active, you can simply comment with a "bump" to keep it open, or add the label "not_stale". Thanks for keeping our repository healthy!```
+- After 60 more days of no activity we automatically close the issue/PR.
+
 
 ### Code Contribution Guidelines
 
@@ -138,3 +145,4 @@ To run Snyk locally please follow their [CLI reference](https://support.snyk.io/
 Reviewers, please ensure that the CLA has been signed by referring to [the contributors tool](https://contributors.corp.mongodb.com/) (internal link).
 
 For changes that involve user facing copy please include `docs-cloud-team` as a reviewer.
+

@@ -14,7 +14,7 @@ mongocli atlas alerts settings
 
 Manages alerts configuration for your project.
 
-Use this command to list, create, edit, and delete alert configurations.
+Use this command to list, create, edit, delete, enable and disable alert configurations.
 
 Options
 -------
@@ -53,6 +53,8 @@ Related Commands
 
 * :ref:`mongocli-atlas-alerts-settings-create` - Creates one alert configuration in the specified project.
 * :ref:`mongocli-atlas-alerts-settings-delete` - Deletes the specified alert configuration in a specified project.
+* :ref:`mongocli-atlas-alerts-settings-disable` - Disables one alert configuration for the specified project.
+* :ref:`mongocli-atlas-alerts-settings-enable` - Enables one alert configuration for the specified project.
 * :ref:`mongocli-atlas-alerts-settings-fields` - Manages alert configuration fields for your project.
 * :ref:`mongocli-atlas-alerts-settings-list` - Returns alert configurations for the specified project.
 * :ref:`mongocli-atlas-alerts-settings-update` - Updates one alert configuration in the specified project.
@@ -63,6 +65,8 @@ Related Commands
 
    create </command/mongocli-atlas-alerts-settings-create>
    delete </command/mongocli-atlas-alerts-settings-delete>
+   disable </command/mongocli-atlas-alerts-settings-disable>
+   enable </command/mongocli-atlas-alerts-settings-enable>
    fields </command/mongocli-atlas-alerts-settings-fields>
    list </command/mongocli-atlas-alerts-settings-list>
    update </command/mongocli-atlas-alerts-settings-update>

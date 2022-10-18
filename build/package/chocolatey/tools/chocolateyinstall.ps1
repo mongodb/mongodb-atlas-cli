@@ -1,6 +1,7 @@
 ﻿$ErrorActionPreference = 'Stop';
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $url        = "{{.URL}}"
+$installDir = "$(Join-Path "$env:ProgramFiles` `(x86`)" 'MongoDB Atlas CLI')"
 
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
@@ -17,3 +18,5 @@ $packageArgs = @{
 }
 
 Install-ChocolateyPackage @packageArgs 
+
+"chocolatey" | Out-File "$(Join-Path $installDir 'installer')" -NoNewline

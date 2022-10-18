@@ -93,6 +93,9 @@ const (
 	defaultRegionGCP    = "US_EAST_4"
 	defaultRegionAzure  = "US_EAST_2"
 	defaultRegionGov    = "US_GOV_EAST_1"
+	labelKey            = "Infrastructure Tool"
+	atlasCLILabelValue  = "Atlas CLI Quickstart"
+	mongoCLILabelValue  = "MongoDB CLI Quickstart"
 )
 
 type Opts struct {
@@ -110,6 +113,8 @@ type Opts struct {
 	DBUsername          string
 	DBUserPassword      string
 	SampleDataJobID     string
+	LabelKey            string
+	LabelValue          string
 	SkipSampleData      bool
 	SkipMongosh         bool
 	defaultValue        bool
@@ -143,9 +148,15 @@ func NewQuickstartFlow(qsOpts *Opts) Flow {
 }
 
 func NewQuickstartOpts(loginOpts *auth.LoginOpts) *Opts {
+	labelValue := atlasCLILabelValue
+	if config.ToolName == config.MongoCLI {
+		labelValue = mongoCLILabelValue
+	}
 	return &Opts{
-		loginOpts: loginOpts,
-		login:     auth.NewLoginFlow(loginOpts),
+		loginOpts:  loginOpts,
+		login:      auth.NewLoginFlow(loginOpts),
+		LabelKey:   labelKey,
+		LabelValue: labelValue,
 	}
 }
 

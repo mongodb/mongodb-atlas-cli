@@ -38,8 +38,6 @@ const (
 	atlasM2    = "M2"
 	atlasM5    = "M5"
 	zoneName   = "Zone 1"
-	labelKey   = "Infrastructure Tool"
-	labelValue = "mongoCLI"
 )
 
 type CreateOpts struct {
@@ -100,10 +98,7 @@ func (opts *CreateOpts) newCluster() (*atlas.AdvancedCluster, error) {
 		cluster.Name = opts.name
 	}
 
-	AddLabel(cluster, atlas.Label{
-		Key:   labelKey,
-		Value: labelValue,
-	})
+	AddLabel(cluster, NewCLILabel())
 
 	cluster.GroupID = opts.ConfigProjectID()
 	return cluster, nil

@@ -70,6 +70,15 @@ nfpms:
   formats: [deb,rpm]
   replacements:
     amd64: x86_64
+  contents:
+    - src: ./build/package/rpm/installer
+      dst: /etc/atlascli/installer
+      type: "config|noreplace"
+      packager: rpm
+    - src: ./build/package/deb/installer
+      dst: /etc/atlascli/installer
+      type: "config|noreplace"
+      packager: deb
 - id: mongodb-atlas
   package_name: mongodb-atlas
   vendor: MongoDB Inc.

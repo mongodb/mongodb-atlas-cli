@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,22 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-// +build unit
-
-package settings
+package telemetry
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
+	"github.com/spf13/afero"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		7,
-		[]string{},
-	)
+func readInstallerHomebrew() *string {
+	if c, err := homebrew.NewChecker(afero.NewOsFs()); err == nil && c.IsHomebrew() {
+		s := "brew"
+		return &s
+	}
+	return nil
 }

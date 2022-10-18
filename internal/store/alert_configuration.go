@@ -18,11 +18,12 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/openlyinc/pointy"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_alert_configuration.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister
+//go:generate mockgen -destination=../mocks/mock_alert_configuration.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler
 
 type AlertConfigurationLister interface {
 	AlertConfigurations(string, *atlas.ListOptions) ([]atlas.AlertConfiguration, error)
@@ -42,6 +43,14 @@ type AlertConfigurationUpdater interface {
 
 type MatcherFieldsLister interface {
 	MatcherFields() ([]string, error)
+}
+
+type AlertConfigurationEnabler interface {
+	EnableAlertConfiguration(string, string) (*atlas.AlertConfiguration, error)
+}
+
+type AlertConfigurationDisabler interface {
+	DisableAlertConfiguration(string, string) (*atlas.AlertConfiguration, error)
 }
 
 // AlertConfigurations encapsulate the logic to manage different cloud providers.
@@ -107,6 +116,34 @@ func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) 
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.Update(s.ctx, alertConfig.GroupID, alertConfig.ID, alertConfig)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// EnableAlertConfiguration encapsulate the logic to manage different cloud providers.
+func (s *Store) EnableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointy.Bool(true))
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointy.Bool(true))
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// DisableAlertConfiguration encapsulate the logic to manage different cloud providers.
+func (s *Store) DisableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointy.Bool(false))
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointy.Bool(false))
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

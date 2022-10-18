@@ -72,8 +72,8 @@ var (
 
 func newDependency(toolName, os, serverVersion, repo string) shrub.TaskDependency {
 	return shrub.TaskDependency{
-		Name:    fmt.Sprintf("push_%s_%s_%s_stable", toolName, newOs[os], repo),
-		Variant: fmt.Sprintf("release_%s_publish_%s", toolName, strings.ReplaceAll(serverVersion, ".", "")),
+		Name:    fmt.Sprintf("push_%s_%s_%s_%s_%s_stable", toolName, newOs[os], repo, x86_64, strings.ReplaceAll(serverVersion, ".", "")),
+		Variant: fmt.Sprintf("generated_release_%s_publish_%s", toolName, strings.ReplaceAll(serverVersion, ".", "")),
 	}
 }
 
@@ -191,7 +191,7 @@ func PublishStableTasks(c *shrub.Configuration, toolName string) {
 	}
 	for _, sv := range serverVersions {
 		v := &shrub.Variant{
-			BuildName:        fmt.Sprintf("generated_release_%s_publish_%s", toolName, sv),
+			BuildName:        fmt.Sprintf("generated_release_%s_publish_%s", toolName, strings.ReplaceAll(sv, ".", "")),
 			BuildDisplayName: fmt.Sprintf("Publish %s yum/apt %s", toolName, sv),
 			DistroRunOn:      []string{"rhel80-small"},
 		}

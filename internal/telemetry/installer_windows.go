@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,23 +11,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//go:build windows
+// +build windows
 
-//go:build unit
-// +build unit
-
-package settings
+package telemetry
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"os"
+	"path"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		7,
-		[]string{},
-	)
+func readInstaller() *string {
+	if b, err := os.ReadFile(path.Join(path.Base(os.Args[0]), "installer")); err == nil {
+		s := string(b)
+		return &s
+	}
+	return nil
 }

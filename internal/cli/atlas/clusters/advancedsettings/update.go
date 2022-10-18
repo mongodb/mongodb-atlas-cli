@@ -72,13 +72,30 @@ func (opts *UpdateOpts) Run() error {
 }
 
 func (opts *UpdateOpts) newProcessArgs() *atlas.ProcessArgs {
-	args := &atlas.ProcessArgs{
-		DefaultReadConcern:               opts.defaultReadConcern,
-		DefaultWriteConcern:              opts.defaultWriteConcern,
-		MinimumEnabledTLSProtocol:        opts.minimumEnabledTLSProtocol,
-		SampleSizeBIConnector:            pointy.Int64(opts.sampleSizeBIConnector),
-		SampleRefreshIntervalBIConnector: pointy.Int64(opts.sampleRefreshIntervalBIConnector),
-		NoTableScan:                      pointy.Bool(opts.noTableScan),
+	args := &atlas.ProcessArgs{}
+
+	if opts.defaultReadConcern != defaultReadConcern {
+		args.DefaultReadConcern = opts.defaultReadConcern
+	}
+
+	if opts.defaultWriteConcern != defaultWriteConcern {
+		args.DefaultWriteConcern = opts.defaultWriteConcern
+	}
+
+	if opts.minimumEnabledTLSProtocol != "" {
+		args.MinimumEnabledTLSProtocol = opts.minimumEnabledTLSProtocol
+	}
+
+	if opts.sampleSizeBIConnector != defaultSampleSizeBIConnector {
+		args.SampleSizeBIConnector = pointy.Int64(opts.sampleSizeBIConnector)
+	}
+
+	if opts.sampleRefreshIntervalBIConnector != 0 {
+		args.SampleRefreshIntervalBIConnector = pointy.Int64(opts.sampleRefreshIntervalBIConnector)
+	}
+
+	if opts.noTableScan {
+		args.NoTableScan = pointy.Bool(opts.noTableScan)
 	}
 
 	if opts.disableJavascript {

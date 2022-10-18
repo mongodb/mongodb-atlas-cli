@@ -28,7 +28,7 @@ import (
 	exec "golang.org/x/sys/execabs"
 )
 
-const writeConcern = "2"
+const writeConcern = "majority"
 
 func TestClustersFlags(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)

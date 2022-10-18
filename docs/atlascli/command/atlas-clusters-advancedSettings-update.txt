@@ -53,19 +53,31 @@ Options
    * - --disableFailIndexKeyTooLong
      - 
      - false
-     - Flag that indicates whether you can insert or update documents where all indexed entries don't exceed 1024 bytes. If you provide this flag, mongod writes documents that exceed this limit but doesn't index them.
+     - Flag that disables the mongod to writes documents that exceed 1024 bytes but doesn't index them.
    * - --disableJavascript
      - 
      - false
-     - Flag that indicates whether the cluster allows execution of operations that perform server-side executions of JavaScript.
+     - Flag that disables the execution of operations that perform server-side executions of JavaScript.
+   * - --disableTableScan
+     - 
+     - false
+     - Flag that disables executing any query that requires a collection scan to return results.
+   * - --enableFailIndexKeyTooLong
+     - 
+     - false
+     - Flag that enables the mongod to write documents that exceed 1024 bytes limit but doesn't index them.
+   * - --enableJavascript
+     - 
+     - false
+     - Flag that enables the execution of operations that perform server-side executions of JavaScript.
+   * - --enableTableScan
+     - 
+     - false
+     - Flag that enables executing any query that requires a collection scan to return results.
    * - -h, --help
      - 
      - false
      - help for update
-   * - --noTableScan
-     - 
-     - false
-     - Flag that indicates whether the cluster disables executing any query that requires a collection scan to return results.
    * - --oplogMinRetentionHours
      - float
      - false

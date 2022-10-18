@@ -230,9 +230,12 @@ const (
 	WriteConcern                              = "writeConcern"                              // WriteConcern flag
 	ReadConcern                               = "readConcern"                               // ReadConcern flag
 	DisableFailIndexKeyTooLong                = "disableFailIndexKeyTooLong"                // DisableFailIndexKeyTooLong flag
+	EnableFailIndexKeyTooLong                 = "enableFailIndexKeyTooLong"                 // EnableFailIndexKeyTooLong flag
 	DisableJavascript                         = "disableJavascript"                         // DisableJavascript flag
+	EnableJavascript                          = "enableJavascript"                          // EnableJavascript flag
 	TLSProtocol                               = "tlsProtocol"                               // TLSProtocol flag
-	NoTableScan                               = "noTableScan"                               // NoTableScan flag
+	DisableTableScan                          = "disableTableScan"                          // DisableTableScan flag
+	EnableTableScan                           = "enableTableScan"                           // EnableTableScan flag
 	OplogMinRetentionHours                    = "oplogMinRetentionHours"                    // OplogMinRetentionHours flag
 	OplogSizeMB                               = "oplogSizeMB"                               // OplogSizeMB flag
 	SampleRefreshIntervalBIConnector          = "sampleRefreshIntervalBIConnector"          // SampleRefreshIntervalBIConnector flag

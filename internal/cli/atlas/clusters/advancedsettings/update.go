@@ -44,9 +44,12 @@ type UpdateOpts struct {
 	defaultReadConcern               string
 	defaultWriteConcern              string
 	minimumEnabledTLSProtocol        string
-	noTableScan                      bool
+	disableTableScan                 bool
+	enableTableScan                  bool
 	disableFailIndexKeyTooLong       bool
+	enableFailIndexKeyTooLong        bool
 	disableJavascript                bool
+	enableJavascript                 bool
 	oplogMinRetentionHours           float64
 	oplogSizeMB                      int64
 	sampleRefreshIntervalBIConnector int64
@@ -94,16 +97,28 @@ func (opts *UpdateOpts) newProcessArgs() *atlas.ProcessArgs {
 		args.SampleRefreshIntervalBIConnector = pointy.Int64(opts.sampleRefreshIntervalBIConnector)
 	}
 
-	if opts.noTableScan {
-		args.NoTableScan = pointy.Bool(opts.noTableScan)
+	if opts.disableTableScan {
+		args.NoTableScan = pointy.Bool(opts.disableTableScan)
+	}
+
+	if opts.enableTableScan {
+		args.NoTableScan = pointy.Bool(!opts.enableTableScan)
 	}
 
 	if opts.disableJavascript {
 		args.JavascriptEnabled = pointy.Bool(false)
 	}
 
+	if opts.enableJavascript {
+		args.JavascriptEnabled = pointy.Bool(true)
+	}
+
 	if opts.disableFailIndexKeyTooLong {
 		args.FailIndexKeyTooLong = pointy.Bool(false)
+	}
+
+	if opts.enableFailIndexKeyTooLong {
+		args.FailIndexKeyTooLong = pointy.Bool(true)
 	}
 
 	if opts.oplogSizeMB != 0 {
@@ -119,7 +134,7 @@ func (opts *UpdateOpts) newProcessArgs() *atlas.ProcessArgs {
 
 // atlas cluster(s) advancedSettings update <clusterName> --projectId projectId [--readConcern readConcern]
 // [--writeConcern writeConcern] [--disableFailIndexKeyTooLong true/fale] [--disableJavascript true/false]
-// [--minimumEnabledTLSProtocol minimumEnabledTLSProtocol] [--noTableScan true/false] [--oplogMinRetentionHours oplogMinRetentionHours]
+// [--minimumEnabledTLSProtocol minimumEnabledTLSProtocol] [--disableTableScan true/false] [--oplogMinRetentionHours oplogMinRetentionHours]
 // [--oplogSizeMB oplogSizeMB] [--sampleRefreshIntervalBIConnector sampleRefreshIntervalBIConnector] [--sampleSizeBIConnector sampleSizeBIConnector].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
@@ -154,9 +169,19 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.defaultReadConcern, flag.ReadConcern, defaultReadConcern, usage.ReadConcern)
 	cmd.Flags().StringVar(&opts.defaultWriteConcern, flag.WriteConcern, defaultWriteConcern, usage.WriteConcernAdvancedSettings)
 	cmd.Flags().StringVar(&opts.minimumEnabledTLSProtocol, flag.TLSProtocol, "", usage.TLSProtocol)
-	cmd.Flags().BoolVar(&opts.noTableScan, flag.NoTableScan, false, usage.NoTableScan)
+
+	cmd.Flags().BoolVar(&opts.disableTableScan, flag.DisableTableScan, false, usage.DisableTableScan)
+	cmd.Flags().BoolVar(&opts.enableTableScan, flag.EnableTableScan, false, usage.EnableTableScan)
+	cmd.MarkFlagsMutuallyExclusive(flag.DisableTableScan, flag.EnableTableScan)
+
 	cmd.Flags().BoolVar(&opts.disableFailIndexKeyTooLong, flag.DisableFailIndexKeyTooLong, false, usage.DisableFailIndexKeyTooLong)
+	cmd.Flags().BoolVar(&opts.enableFailIndexKeyTooLong, flag.EnableFailIndexKeyTooLong, false, usage.EnableFailIndexKeyTooLong)
+	cmd.MarkFlagsMutuallyExclusive(flag.DisableFailIndexKeyTooLong, flag.EnableFailIndexKeyTooLong)
+
 	cmd.Flags().BoolVar(&opts.disableJavascript, flag.DisableJavascript, false, usage.DisableJavascript)
+	cmd.Flags().BoolVar(&opts.enableJavascript, flag.EnableJavascript, false, usage.EnableJavascript)
+	cmd.MarkFlagsMutuallyExclusive(flag.DisableJavascript, flag.EnableJavascript)
+
 	cmd.Flags().Float64Var(&opts.oplogMinRetentionHours, flag.OplogMinRetentionHours, 0, usage.OplogMinRetentionHours)
 	cmd.Flags().Int64Var(&opts.oplogSizeMB, flag.OplogSizeMB, 0, usage.OplogSizeMB)
 	cmd.Flags().Int64Var(&opts.sampleRefreshIntervalBIConnector, flag.SampleRefreshIntervalBIConnector, 0, usage.SampleRefreshIntervalBIConnector)

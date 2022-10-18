@@ -65,8 +65,9 @@ func TestUpdateBuilder(t *testing.T) {
 		UpdateBuilder(),
 		0,
 		[]string{
-			flag.ReadConcern, flag.WriteConcern, flag.TLSProtocol, flag.DisableFailIndexKeyTooLong, flag.OplogMinRetentionHours,
+			flag.ReadConcern, flag.WriteConcern, flag.TLSProtocol, flag.DisableFailIndexKeyTooLong, flag.EnableFailIndexKeyTooLong,
+			flag.OplogMinRetentionHours, flag.EnableJavascript, flag.EnableTableScan,
 			flag.DisableJavascript, flag.OplogMinRetentionHours, flag.OplogSizeMB, flag.SampleRefreshIntervalBIConnector,
-			flag.SampleSizeBIConnector, flag.NoTableScan, flag.ProjectID, flag.Output},
+			flag.SampleSizeBIConnector, flag.DisableTableScan, flag.ProjectID, flag.Output},
 	)
 }

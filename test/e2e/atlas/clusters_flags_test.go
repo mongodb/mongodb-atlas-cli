@@ -28,6 +28,8 @@ import (
 	exec "golang.org/x/sys/execabs"
 )
 
+const writeConcern = "majority"
+
 func TestClustersFlags(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("clustersFlags")
@@ -158,6 +160,21 @@ func TestClustersFlags(t *testing.T) {
 		a.NotEmpty(connectionString.StandardSrv)
 	})
 
+	t.Run("Update Advanced Configuration Settings", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"advancedSettings",
+			"update",
+			clusterName,
+			"--writeConcern",
+			writeConcern,
+			"--projectId", g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+	})
+
 	t.Run("Describe Advanced Configuration Settings", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -176,6 +193,7 @@ func TestClustersFlags(t *testing.T) {
 
 		a := assert.New(t)
 		a.NotEmpty(config.MinimumEnabledTLSProtocol)
+		a.Equal(writeConcern, config.DefaultWriteConcern)
 	})
 
 	t.Run("Create Rolling Index", func(t *testing.T) {

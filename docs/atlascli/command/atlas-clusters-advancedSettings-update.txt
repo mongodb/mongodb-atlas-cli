@@ -101,11 +101,11 @@ Options
    * - --sampleRefreshIntervalBIConnector
      - int
      - false
-     - Interval in seconds at which the mongosqld process re-samples data to create its relational schema.
+     - Interval in seconds at which the mongosqld process re-samples data to create its relational schema. This value defaults to -1.
    * - --sampleSizeBIConnector
      - int
      - false
-     - Number of documents per database to sample when gathering schema information.
+     - Number of documents per database to sample when gathering schema information. This value defaults to -1.
    * - --tlsProtocol
      - string
      - false

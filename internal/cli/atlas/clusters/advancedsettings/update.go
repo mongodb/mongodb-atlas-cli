@@ -84,11 +84,11 @@ func (opts *UpdateOpts) newProcessArgs() *atlas.ProcessArgs {
 		args.MinimumEnabledTLSProtocol = opts.minimumEnabledTLSProtocol
 	}
 
-	if opts.sampleSizeBIConnector != 0 {
+	if opts.sampleSizeBIConnector != -1 {
 		args.SampleSizeBIConnector = pointy.Int64(opts.sampleSizeBIConnector)
 	}
 
-	if opts.sampleRefreshIntervalBIConnector != 0 {
+	if opts.sampleRefreshIntervalBIConnector != -1 {
 		args.SampleRefreshIntervalBIConnector = pointy.Int64(opts.sampleRefreshIntervalBIConnector)
 	}
 
@@ -179,8 +179,8 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().Float64Var(&opts.oplogMinRetentionHours, flag.OplogMinRetentionHours, 0, usage.OplogMinRetentionHours)
 	cmd.Flags().Int64Var(&opts.oplogSizeMB, flag.OplogSizeMB, 0, usage.OplogSizeMB)
-	cmd.Flags().Int64Var(&opts.sampleRefreshIntervalBIConnector, flag.SampleRefreshIntervalBIConnector, 0, usage.SampleRefreshIntervalBIConnector)
-	cmd.Flags().Int64Var(&opts.sampleSizeBIConnector, flag.SampleSizeBIConnector, 0, usage.SampleSizeBIConnector)
+	cmd.Flags().Int64Var(&opts.sampleRefreshIntervalBIConnector, flag.SampleRefreshIntervalBIConnector, -1, usage.SampleRefreshIntervalBIConnector)
+	cmd.Flags().Int64Var(&opts.sampleSizeBIConnector, flag.SampleSizeBIConnector, -1, usage.SampleSizeBIConnector)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

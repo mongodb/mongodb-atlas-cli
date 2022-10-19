@@ -136,9 +136,9 @@ Examples
 
 .. code-block::
 
-   Update oplog minimum size for a cluster:
+   Update the minimum oplog size for a cluster:
    $ atlas cluster advancedSettings update <clusterName> --projectId <projectId> --oplogSizeMB 1000
 
-   Update minimum TLS protocol for a cluster:
-   $ atlas cluster advancedSettings update <clusterName> --projectId <projectId> --minimumEnabledTLSProtocol "TLS1_0"
+   Update the minimum TLS protocol version for a cluster:
+   $ atlas cluster advancedSettings update <clusterName> --projectId <projectId> --minimumEnabledTLSProtocol "TLS1_2"
 

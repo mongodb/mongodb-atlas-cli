@@ -33,8 +33,8 @@ func TestUpdate_Run(t *testing.T) {
 	mockStore := mocks.NewMockAtlasClusterConfigurationOptionsUpdater(ctrl)
 	defer ctrl.Finish()
 	expected := &mongodbatlas.ProcessArgs{
-		DefaultReadConcern:               defaultReadConcern,
-		DefaultWriteConcern:              defaultWriteConcern,
+		DefaultReadConcern:               "",
+		DefaultWriteConcern:              "",
 		MinimumEnabledTLSProtocol:        "",
 		SampleSizeBIConnector:            pointy.Int64(1000),
 		SampleRefreshIntervalBIConnector: pointy.Int64(0),

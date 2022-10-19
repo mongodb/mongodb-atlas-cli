@@ -30,12 +30,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	updateTmpl                   = "Updating advanced configuration settings of your cluster'.\n"
-	defaultReadConcern           = "available"
-	defaultWriteConcern          = "1"
-	defaultSampleSizeBIConnector = 1000
-)
+const updateTmpl = "Updating advanced configuration settings of your cluster'.\n"
 
 type UpdateOpts struct {
 	cli.GlobalOpts
@@ -77,11 +72,11 @@ func (opts *UpdateOpts) Run() error {
 func (opts *UpdateOpts) newProcessArgs() *atlas.ProcessArgs {
 	args := &atlas.ProcessArgs{}
 
-	if opts.defaultReadConcern != defaultReadConcern {
+	if opts.defaultReadConcern != "" {
 		args.DefaultReadConcern = opts.defaultReadConcern
 	}
 
-	if opts.defaultWriteConcern != defaultWriteConcern {
+	if opts.defaultWriteConcern != "" {
 		args.DefaultWriteConcern = opts.defaultWriteConcern
 	}
 
@@ -89,7 +84,7 @@ func (opts *UpdateOpts) newProcessArgs() *atlas.ProcessArgs {
 		args.MinimumEnabledTLSProtocol = opts.minimumEnabledTLSProtocol
 	}
 
-	if opts.sampleSizeBIConnector != defaultSampleSizeBIConnector {
+	if opts.sampleSizeBIConnector != 0 {
 		args.SampleSizeBIConnector = pointy.Int64(opts.sampleSizeBIConnector)
 	}
 
@@ -166,8 +161,8 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.defaultReadConcern, flag.ReadConcern, defaultReadConcern, usage.ReadConcern)
-	cmd.Flags().StringVar(&opts.defaultWriteConcern, flag.WriteConcern, defaultWriteConcern, usage.WriteConcernAdvancedSettings)
+	cmd.Flags().StringVar(&opts.defaultReadConcern, flag.ReadConcern, "", usage.ReadConcern)
+	cmd.Flags().StringVar(&opts.defaultWriteConcern, flag.WriteConcern, "", usage.WriteConcernAdvancedSettings)
 	cmd.Flags().StringVar(&opts.minimumEnabledTLSProtocol, flag.TLSProtocol, "", usage.TLSProtocol)
 
 	cmd.Flags().BoolVar(&opts.disableTableScan, flag.DisableTableScan, false, usage.DisableTableScan)
@@ -185,7 +180,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().Float64Var(&opts.oplogMinRetentionHours, flag.OplogMinRetentionHours, 0, usage.OplogMinRetentionHours)
 	cmd.Flags().Int64Var(&opts.oplogSizeMB, flag.OplogSizeMB, 0, usage.OplogSizeMB)
 	cmd.Flags().Int64Var(&opts.sampleRefreshIntervalBIConnector, flag.SampleRefreshIntervalBIConnector, 0, usage.SampleRefreshIntervalBIConnector)
-	cmd.Flags().Int64Var(&opts.sampleSizeBIConnector, flag.SampleSizeBIConnector, defaultSampleSizeBIConnector, usage.SampleSizeBIConnector)
+	cmd.Flags().Int64Var(&opts.sampleSizeBIConnector, flag.SampleSizeBIConnector, 0, usage.SampleSizeBIConnector)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

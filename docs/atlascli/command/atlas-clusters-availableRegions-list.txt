@@ -80,8 +80,5 @@ Examples
    $ atlas cluster availableRegions --provider AWS --tier M50
 
    List available regions by tier for a given provider:
-   $ atlas cluster availableRegions --provider AWS --tier M50
-
-   List available regions by provider for a given tier:
-   $ atlas cluster availableRegions --tier M50
+   $ atlas cluster availableRegions --provider GCP
 

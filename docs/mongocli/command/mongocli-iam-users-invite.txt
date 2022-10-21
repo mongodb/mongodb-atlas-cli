@@ -61,7 +61,7 @@ Options
    * - --orgRole
      - strings
      - false
-     - User's roles  for the associated organization.
+     - User's roles  for the associated organization. To learn which values MCLI accepts, see the Items Enum for roles in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/#operation/inviteOneMongoDBUserToJoinOneAtlasOrganization/.
    * - -o, --output
      - string
      - false
@@ -73,7 +73,7 @@ Options
    * - --projectRole
      - strings
      - false
-     - User's roles  for the associated project.
+     - User's roles  for the associated project. To learn which values MCLI accepts, see the Items Enum for roles in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/#operation/inviteOneMongoDBCloudUserToJoinOneProject/. Additionally, MCLI accepts the following values: GROUP_AUTOMATION_ADMIN, GROUP_BACKUP_ADMIN, and GROUP_MONITORING_ADMIN.
    * - --username
      - string
      - true

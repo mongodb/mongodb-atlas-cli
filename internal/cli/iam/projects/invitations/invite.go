@@ -86,7 +86,11 @@ func InviteBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
+	if config.BinName() == config.MongoCLI {
+		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.MCLIOrgRole)
+	} else {
+		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
+	}
 	cmd.Flags().StringSliceVar(&opts.teamIds, flag.TeamID, []string{}, usage.TeamID)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

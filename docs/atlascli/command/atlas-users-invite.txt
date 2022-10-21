@@ -59,9 +59,9 @@ Options
      - false
      - The user's mobile or cell phone number.
    * - --orgRole
-     - 
+     - strings
      - false
-     - User's roles  for the associated organization. To learn which values the Atlas CLI accepts, see the Items Enum for roles`` in the API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/#operation/inviteOneMongoDBUserToJoinOneAtlasOrganization/.
+     - User's roles  for the associated organization. To learn which values the Atlas CLI accepts, see the Items Enum for roles in the API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/#operation/inviteOneMongoDBUserToJoinOneAtlasOrganization/.
    * - -o, --output
      - string
      - false
@@ -71,9 +71,9 @@ Options
      - false
      - User's password.
    * - --projectRole
-     - 
+     - strings
      - false
-     - User's roles  for the associated project. To learn which values the Atlas CLI accepts, see the Items Enum for roles`` in the API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/#operation/inviteOneMongoDBCloudUserToJoinOneProject/.
+     - User's roles  for the associated project. To learn which values the Atlas CLI accepts, see the Items Enum for roles in the API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/#operation/inviteOneMongoDBCloudUserToJoinOneProject/.
    * - --username
      - string
      - true

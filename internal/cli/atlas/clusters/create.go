@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -76,7 +77,10 @@ func (opts *CreateOpts) Run() error {
 	}
 
 	r, err := opts.store.CreateCluster(cluster)
-	if err != nil {
+	var target *atlas.ErrorResponse
+	if errors.As(err, &target) && target.ErrorCode == "INVALID_ATTRIBUTE" && strings.Contains(target.Detail, "regionName") {
+		return cli.ErrNoRegionExistsTryCommand
+	} else if err != nil {
 		return err
 	}
 

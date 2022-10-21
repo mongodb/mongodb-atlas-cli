@@ -72,13 +72,13 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  List available regions for a given cloud provider and tier:
-  $ %[1]s cluster availableRegions --provider AWS --tier M50
+  $ atlas cluster availableRegions --provider AWS --tier M50
 
   List available regions by tier for a given provider:
-  $ %[1]s cluster availableRegions --provider AWS --tier M50
+  $ atlas cluster availableRegions --provider AWS --tier M50
 
   List available regions by provider for a given tier:
-  $ %[1]s cluster availableRegions --tier M50`, cli.ExampleAtlasEntryPoint()),
+  $ atlas cluster availableRegions --tier M50`),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

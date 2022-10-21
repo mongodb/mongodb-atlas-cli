@@ -57,7 +57,6 @@ func MongoCLIBuilder() *cobra.Command {
 		search.Builder(),
 		onlinearchive.Builder(),
 		connectionstring.Builder(),
-		availableregions.Builder(),
 	)
 
 	return cmd

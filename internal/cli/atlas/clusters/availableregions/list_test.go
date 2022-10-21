@@ -27,6 +27,29 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
+func TestList_Run_NoFlags(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockCloudProviderRegionsLister(ctrl)
+	defer ctrl.Finish()
+
+	var expected *mongodbatlas.CloudProviders
+	var empty []*string
+
+	listOpts := &ListOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		CloudProviderRegions(listOpts.ProjectID, "", empty).
+		Return(expected, nil).
+		Times(1)
+
+	if err := listOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderRegionsLister(ctrl)

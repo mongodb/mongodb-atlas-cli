@@ -38,7 +38,7 @@ func TestMongoCLIBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		MongoCLIBuilder(),
-		14,
+		13,
 		[]string{},
 	)
 }

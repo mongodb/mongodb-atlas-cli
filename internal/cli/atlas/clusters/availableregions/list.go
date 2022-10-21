@@ -16,6 +16,7 @@ package availableregions
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -74,11 +75,12 @@ func ListBuilder() *cobra.Command {
   $ atlas cluster availableRegions --provider AWS --tier M50
 
   List available regions by tier for a given provider:
-  $ atlas cluster availableRegions --provider AWS --tier M50
-
-  List available regions by provider for a given tier:
-  $ atlas cluster availableRegions --tier M50`,
+  $ atlas cluster availableRegions --provider GCP`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if opts.tier != "" && opts.provider == "" {
+				return fmt.Errorf("tier search also requires a %s flag", flag.Provider)
+			}
+
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),

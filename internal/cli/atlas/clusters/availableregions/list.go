@@ -34,6 +34,7 @@ type ListOpts struct {
 	provider string
 	tier     string
 }
+
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error

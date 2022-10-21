@@ -79,10 +79,8 @@ const (
 	PasswordShort                             = "p"                                         // PasswordShort flag
 	Email                                     = "email"                                     // Email flag
 	Mobile                                    = "mobile"                                    // Mobile flag
-	OrgRole                                   = "orgRole"                                   // Atlas CLI OrgRole flag
-	ProjectRole                               = "projectRole"                               // Atlas CLI ProjectRole flag
-	mcliOrgRole                               = "mcliorgRole"                               // MCLI OrgRole flag
-	mcliProjectRole                           = "mcliprojectRole"                           // MCLI ProjectRole flag
+	OrgRole                                   = "orgRole"                                   // OrgRole flag
+	ProjectRole                               = "projectRole"                               // ProjectRole flag
 	Out                                       = "out"                                       // Out flag
 	Output                                    = "output"                                    // Output flag
 	OutputShort                               = "o"                                         // OutputShort flag

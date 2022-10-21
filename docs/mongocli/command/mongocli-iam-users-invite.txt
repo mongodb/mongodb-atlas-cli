@@ -59,9 +59,9 @@ Options
      - false
      - The user's mobile or cell phone number.
    * - --orgRole
-     - strings
+     - 
      - false
-     - User's roles  for the associated organization. Valid values are ORG_MEMBER, ORG_READ_ONLY, ORG_BILLING_ADMIN, ORG_GROUP_CREATOR, and ORG_OWNER.
+     - User's roles  for the associated organization. To learn which values MCLI accepts, see the Items Enum for roles`` in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/#operation/inviteOneMongoDBUserToJoinOneAtlasOrganization/.
    * - -o, --output
      - string
      - false
@@ -71,9 +71,9 @@ Options
      - false
      - User's password.
    * - --projectRole
-     - strings
+     - 
      - false
-     - User's roles  for the associated project. Valid Atlas CLI values are GROUP_OWNER, GROUP_READ_ONLY, GROUP_USER_ADMIN, GROUP_BILLING_ADMIN, GROUP_DATA_ACCESS_ADMIN, GROUP_DATA_ACCESS_READ_ONLY, GROUP_DATA_ACCESS_READ_WRITE, GROUP_CHARTS_ADMIN, and GROUP_CLUSTER_MANAGER. Valid MCLI values are all Atlas CLI values and GROUP_AUTOMATION_ADMIN, GROUP_BACKUP_ADMIN, GROUP_MONITORING_ADMIN.
+     - User's roles  for the associated project. To learn which values MCLI accepts, see the Items Enum for roles`` in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/#operation/inviteOneMongoDBCloudUserToJoinOneProject/. Additionally, MCLI accepts the following values: GROUP_AUTOMATION_ADMIN, GROUP_BACKUP_ADMIN, and GROUP_MONITORING_ADMIN.
    * - --username
      - string
      - true

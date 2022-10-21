@@ -67,9 +67,9 @@ Options
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --role
-     - strings
+     - 
      - true
-     - User's roles  for the associated organization. Valid values are ORG_MEMBER, ORG_READ_ONLY, ORG_BILLING_ADMIN, ORG_GROUP_CREATOR, and ORG_OWNER.
+     - User's roles  for the associated organization. To learn which values the Atlas CLI accepts, see the Items Enum for roles`` in the API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/#operation/inviteOneMongoDBUserToJoinOneAtlasOrganization/.
 
 Inherited Options
 -----------------

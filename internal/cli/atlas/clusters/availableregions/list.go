@@ -34,7 +34,6 @@ type ListOpts struct {
 	provider string
 	tier     string
 }
-
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -44,8 +43,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `PROVIDER	INSTANCE SIZE	REGIONS{{range .Results}}{{ $providerName := .Provider }}{{range .InstanceSizes}}
-{{$providerName}}	{{.Name}}{{range .AvailableRegions}} {{.Name}}{{end}}{{end}}
-{{end}}
+{{$providerName}}	{{.Name}}	{{range .AvailableRegions}}{{.Name}} {{end}}{{end}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

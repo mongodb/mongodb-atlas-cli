@@ -16,6 +16,7 @@ package availableregions
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -42,12 +43,19 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `PROVIDER	INSTANCE SIZE	REGIONS{{range .Results}}
-{{.Provider}}{{range .InstanceSizes}}	{{.Name}}{{range .AvailableRegions}}	{{.Name}}{{end}}{{end}}{{end}}
+var listTemplate = `PROVIDER	INSTANCE SIZE	REGIONS{{range .Results}}{{ $providerName := .Provider }}{{range .InstanceSizes}}
+{{$providerName}}	{{.Name}}{{range .AvailableRegions}} {{.Name}}{{end}}{{end}}
+{{end}}
 `
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.CloudProviderRegions(opts.ConfigProjectID(), opts.tier, []*string{&opts.provider})
+	// Set provider if existent
+	var provider []*string
+	if opts.provider != "" {
+		provider = []*string{&opts.provider}
+	}
+
+	r, err := opts.store.CloudProviderRegions(opts.ConfigProjectID(), opts.tier, provider)
 	if err != nil {
 		return err
 	}
@@ -55,7 +63,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) availableRegions list --provider provider --tier tier --projectId projectId.
+// atlas cluster(s) availableRegions list --provider provider --tier tier --projectId projectId.
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -63,6 +71,14 @@ func ListBuilder() *cobra.Command {
 		Short:   "List available regions for your project.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Example: fmt.Sprintf(`  List available regions for a given cloud provider and tier:
+  $ %[1]s cluster availableRegions --provider AWS --tier M50
+
+  List available regions by tier for a given provider:
+  $ %[1]s cluster availableRegions --provider AWS --tier M50
+
+  List available regions by provider for a given tier:
+  $ %[1]s cluster availableRegions --tier M50`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -80,9 +96,6 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	_ = cmd.MarkFlagRequired(flag.Tier)
-	_ = cmd.MarkFlagRequired(flag.Provider)
 
 	return cmd
 }

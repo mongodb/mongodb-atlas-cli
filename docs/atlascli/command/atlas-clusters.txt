@@ -52,6 +52,7 @@ Related Commands
 ----------------
 
 * :ref:`atlas-clusters-advancedSettings` - Manage advanced configuration settings for your cluster.
+* :ref:`atlas-clusters-availableRegions` - Manage available regions for your project.
 * :ref:`atlas-clusters-connectionStrings` - Manage MongoDB cluster connection string.
 * :ref:`atlas-clusters-create` - Create one cluster in the specified project.
 * :ref:`atlas-clusters-delete` - Delete a cluster from your project.
@@ -72,6 +73,7 @@ Related Commands
    :titlesonly:
 
    advancedSettings </command/atlas-clusters-advancedSettings>
+   availableRegions </command/atlas-clusters-availableRegions>
    connectionStrings </command/atlas-clusters-connectionStrings>
    create </command/atlas-clusters-create>
    delete </command/atlas-clusters-delete>

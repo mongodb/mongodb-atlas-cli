@@ -175,7 +175,7 @@ func (s *Store) transport() (*http.Transport, error) {
 
 // Option is any configuration for Store.
 // New will take a list of Option and process them sequentially.
-// The store package provides a list of common and preset set of Option you can use
+// The store package provides a list of pointers and preset set of Option you can use
 // but you can implement your own.
 type Option func(s *Store) error
 

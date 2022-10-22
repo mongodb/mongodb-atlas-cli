@@ -72,6 +72,10 @@ link-git-hooks: ## Install git hooks
 fmt: ## Format changed go
 	@scripts/fmt.sh
 
+fmt-all: ### Format all go files with goimports and gofmt
+	find . -name "*.go" -not -path "./vendor/*" -exec gofmt -w "{}" \;
+	find . -name "*.go" -not -path "./vendor/*" -exec goimports -l -w "{}" \;
+
 .PHONY: test
 test: unit-test integration-test
 

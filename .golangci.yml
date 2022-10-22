@@ -171,7 +171,7 @@ linters:
   # - wsl # Whitespace Linter - Forces you to use empty lines! [fast: true, auto-fix: false]
 
 run:
-  go: '1.17'
+  go: '1.19'
   tests: true
   timeout: 5m
   build-tags:
@@ -191,3 +191,8 @@ issues:
     - path: internal/test/fixture # Don't check for magic numbers on fixtures.
       linters:
         - gomnd
+    - path: internal/kubernetes/*
+      linters:
+        - nolintlint
+        - gci
+        - gocyclo

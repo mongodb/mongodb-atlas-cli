@@ -1,0 +1,61 @@
+.. _atlas-kubernetes:
+
+================
+atlas kubernetes
+================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Manage kubernetes resources.
+
+The kubernetes command provides access to kubernetes features of the atlas.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for kubernetes
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Profile to use from your configuration file.
+
+Related Commands
+----------------
+
+* :ref:`atlas-kubernetes-config` - Manage kubernetes resources configuration.
+
+
+.. toctree::
+   :titlesonly:
+
+   config </command/atlas-kubernetes-config>
+

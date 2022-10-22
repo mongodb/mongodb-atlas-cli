@@ -37,6 +37,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalake"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/integrations"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/livemigrations"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/logs"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/maintenance"
@@ -215,6 +216,7 @@ func Builder() *cobra.Command {
 		whoCmd,
 		registerCmd,
 		figautocomplete.Builder(),
+		kubernetes.Builder(),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)

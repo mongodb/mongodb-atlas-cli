@@ -81,8 +81,6 @@ We could not find your public IP address. To add your IP address run:
 
 `
 
-var ErrFreeClusterAlreadyExists = errors.New("this project already has another free cluster")
-
 const (
 	replicaSet          = "REPLICASET"
 	DefaultAtlasTier    = "M0"
@@ -320,8 +318,11 @@ func (opts *Opts) createResources() error {
 
 	if err := opts.createCluster(); err != nil {
 		var target *atlas.ErrorResponse
-		if errors.As(err, &target) && target.ErrorCode == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" && strings.Contains(strings.ToLower(target.Detail), ErrFreeClusterAlreadyExists.Error()) {
-			return ErrFreeClusterAlreadyExists
+		_ = errors.As(err, &target)
+		if target.ErrorCode == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" && strings.Contains(strings.ToLower(target.Detail), cli.ErrFreeClusterAlreadyExists.Error()) {
+			return cli.ErrFreeClusterAlreadyExists
+		} else if target.ErrorCode == "INVALID_ATTRIBUTE" && strings.Contains(target.Detail, "regionName") {
+			return cli.ErrNoRegionExistsTryCommand
 		}
 		return err
 	}

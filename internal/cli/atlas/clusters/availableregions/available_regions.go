@@ -25,7 +25,6 @@ func Builder() *cobra.Command {
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage available regions for your project.",
-		Hidden:  true,
 	}
 	cmd.AddCommand(ListBuilder())
 

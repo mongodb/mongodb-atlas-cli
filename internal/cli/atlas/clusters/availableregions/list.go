@@ -67,7 +67,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List available regions for your project.",
+		Short:   "List available regions that Atlas supports for new deployments.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: `  List available regions for a given cloud provider and tier:

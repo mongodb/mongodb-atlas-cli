@@ -12,7 +12,7 @@ atlas clusters availableRegions list
    :depth: 1
    :class: singlecol
 
-List available regions for your project.
+List available regions that Atlas supports for new deployments.
 
 Syntax
 ------

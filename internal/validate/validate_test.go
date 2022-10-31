@@ -13,12 +13,10 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package validate
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -256,11 +254,13 @@ func TestOptionalURL(t *testing.T) {
 }
 
 func TestPath(t *testing.T) {
-	f, err := ioutil.TempFile("", "sample")
+	f, err := os.CreateTemp("", "sample")
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.Remove(f.Name())
+	t.Cleanup(func() {
+		os.Remove(f.Name())
+	})
 
 	tests := []struct {
 		name    string
@@ -300,11 +300,13 @@ func TestPath(t *testing.T) {
 }
 
 func TestOptionalPath(t *testing.T) {
-	f, err := ioutil.TempFile("", "sample")
+	f, err := os.CreateTemp("", "sample")
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.Remove(f.Name())
+	t.Cleanup(func() {
+		os.Remove(f.Name())
+	})
 
 	tests := []struct {
 		name    string

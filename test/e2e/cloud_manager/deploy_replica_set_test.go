@@ -20,11 +20,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	exec "golang.org/x/sys/execabs"
 )
 
 func TestDeployReplicaSet(t *testing.T) {

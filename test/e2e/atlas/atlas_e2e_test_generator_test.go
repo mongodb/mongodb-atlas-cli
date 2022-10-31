@@ -18,12 +18,12 @@ package atlas_test
 import (
 	"encoding/json"
 	"os"
+	"os/exec"
 	"testing"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
-	exec "golang.org/x/sys/execabs"
 )
 
 const (

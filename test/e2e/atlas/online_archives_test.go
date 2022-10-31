@@ -19,13 +19,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
-	exec "golang.org/x/sys/execabs"
 )
 
 func TestOnlineArchives(t *testing.T) {

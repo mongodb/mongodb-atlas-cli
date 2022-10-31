@@ -17,12 +17,12 @@ package atlas_test
 
 import (
 	"os"
+	"os/exec"
 	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/require"
-	exec "golang.org/x/sys/execabs"
 )
 
 func TestLogs(t *testing.T) {

@@ -20,13 +20,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 	"testing"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/ops-manager/opsmngr"
-	exec "golang.org/x/sys/execabs"
 )
 
 func TestMaintenanceWindows(t *testing.T) {

@@ -17,11 +17,11 @@ package config
 import (
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
-	exec "golang.org/x/sys/execabs"
 )
 
 type editOpts struct {

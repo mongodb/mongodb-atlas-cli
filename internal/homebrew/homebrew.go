@@ -17,6 +17,7 @@ package homebrew
 import (
 	"bytes"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -24,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/spf13/afero"
-	exec "golang.org/x/sys/execabs"
 )
 
 const (

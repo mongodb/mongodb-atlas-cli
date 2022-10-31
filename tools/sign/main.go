@@ -34,8 +34,10 @@ import (
 	"golang.org/x/crypto/pbkdf2"
 )
 
-const pbkdf2Iterations = 1000
-const pbkdf2KeyLength = 16
+const (
+	pbkdf2Iterations = 1000
+	pbkdf2KeyLength  = 16
+)
 
 func generateAuthTokenString(authTokenPassword string) string {
 	salt := []byte(authTokenPassword)

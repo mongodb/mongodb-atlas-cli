@@ -17,6 +17,7 @@ package customdbroles
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -79,9 +80,10 @@ func (opts *CreateOpts) validate() error {
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create <roleName>",
-		Short: "Create a custom database role for your project.",
-		Args:  require.ExactArgs(1),
+		Use:     "create <roleName>",
+		Short:   "Create a custom database role for your project.",
+		Example: fmt.Sprintf(`  $ %s customDbRoles create customRole --privilege FIND@database,UPDATE@database`, cli.ExampleAtlasEntryPoint()),
+		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"roleNameDesc": "Name of the custom role to create.",
 		},

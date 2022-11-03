@@ -64,7 +64,7 @@ Examples
 
 
    To open the config
-   $ atlas config edit
+   atlas config edit
 
 
 

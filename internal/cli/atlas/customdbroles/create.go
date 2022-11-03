@@ -82,7 +82,7 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "create <roleName>",
 		Short:   "Create a custom database role for your project.",
-		Example: fmt.Sprintf(`  $ %s customDbRoles create customRole --privilege FIND@database,UPDATE@database`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  %s customDbRoles create customRole --privilege FIND@database,UPDATE@database`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"roleNameDesc": "Name of the custom role to create.",

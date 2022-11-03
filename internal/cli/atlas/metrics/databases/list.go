@@ -65,7 +65,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "list <hostname:port>",
 		Long: fmt.Sprintf(`To retrieve the hostname and port needed for this command, run:
-$ %s process list`, cli.ExampleAtlasEntryPoint()),
+%s process list`, cli.ExampleAtlasEntryPoint()),
 		Short:   "List available databases or database metrics for a given host.",
 		Aliases: []string{"ls"},
 		Annotations: map[string]string{
@@ -73,7 +73,7 @@ $ %s process list`, cli.ExampleAtlasEntryPoint()),
 		},
 		Example: fmt.Sprintf(
 			`  This example lists the available databases for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
-  $ %s metrics database ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`,
+  %s metrics database ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`,
 			cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

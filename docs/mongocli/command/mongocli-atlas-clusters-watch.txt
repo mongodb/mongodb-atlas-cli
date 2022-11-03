@@ -85,5 +85,5 @@ Examples
 
 .. code-block::
 
-   $ mongocli atlas cluster watch clusterNameSample
+   mongocli atlas cluster watch clusterNameSample
 

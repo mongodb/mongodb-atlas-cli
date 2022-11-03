@@ -85,14 +85,15 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe",
 		Aliases: []string{"get"},
 		Example: `  
-  Describe a user by ID
-  $ mongocli iam users describe --id <id>
-
-  Describe a user by username
-  $ mongocli iam users describe --username <username>
+  # Describe a user by ID
+  mongocli iam users describe --id <id>
 `,
 		Short: "Get a user by username or id.",
 		Args:  require.NoArgs,
+		Annotations: map[string]string{
+			"Example2": `  # Describe a user by username
+  mongocli iam users describe --username <username>`,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return prerun.ExecuteE(
 				opts.initStore(cmd.Context()),

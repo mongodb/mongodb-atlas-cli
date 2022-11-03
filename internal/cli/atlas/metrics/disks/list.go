@@ -65,7 +65,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "list <hostname:port>",
 		Long: fmt.Sprintf(`To retrieve the hostname and port needed for this command, run:
-$ %s process list`, cli.ExampleAtlasEntryPoint()),
+%s process list`, cli.ExampleAtlasEntryPoint()),
 		Short:   "List available disks or disk partitions for a given host.",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
@@ -74,7 +74,7 @@ $ %s process list`, cli.ExampleAtlasEntryPoint()),
 		},
 		Example: fmt.Sprintf(
 			`  This example lists the available disks for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
-  $ %s metrics disk ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
+  %s metrics disk ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

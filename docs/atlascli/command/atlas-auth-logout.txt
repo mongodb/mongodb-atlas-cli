@@ -64,7 +64,7 @@ Examples
 
 .. code-block::
 
-   To log out from the CLI:
-   $ atlas auth logout
+   # To log out from the CLI:
+   atlas auth logout
 
 

@@ -15,7 +15,7 @@ atlas metrics processes
 Get MongoDB process metrics for a given host.
 
 To retrieve the hostname and port needed for this command, run:
-$ atlas process list
+atlas process list
 
 Syntax
 ------
@@ -115,5 +115,5 @@ Examples
 
 .. code-block::
 
-   $ atlas metrics process atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
+   atlas metrics process atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
 

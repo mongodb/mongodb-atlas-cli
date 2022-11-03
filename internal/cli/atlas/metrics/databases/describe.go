@@ -67,7 +67,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "describe <hostname:port> <databaseName>",
 		Long: fmt.Sprintf(`To retrieve the hostname and port needed for this command, run:
-$ %s process list`, cli.ExampleAtlasEntryPoint()),
+%s process list`, cli.ExampleAtlasEntryPoint()),
 		Short: "Describe database metrics for a database on a specific host.",
 		Args:  require.ExactArgs(argsN),
 		Annotations: map[string]string{
@@ -76,7 +76,7 @@ $ %s process list`, cli.ExampleAtlasEntryPoint()),
 		},
 		Example: fmt.Sprintf(
 			`  This example retrieves database metrics for the database "testDB" in the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017" 
-  $ %s metrics database describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H`,
+  %s metrics database describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H`,
 			cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

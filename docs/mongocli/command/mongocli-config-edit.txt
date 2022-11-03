@@ -64,7 +64,7 @@ Examples
 
 
    To open the config
-   $ mongocli config edit
+   mongocli config edit
 
 
 

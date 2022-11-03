@@ -79,15 +79,14 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <username>",
 		Short: "Update a database user for your project.",
-		Example: fmt.Sprintf(`  Update roles for a database user:
-  $ %[1]s dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>
-
-  Update scopes for a database user:
-  $ %[1]s dbuser update <username> --scope resourceName:resourceType --projectId <projectId>`,
+		Example: fmt.Sprintf(`  # Update roles for a database user:
+  %[1]s dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>`,
 			cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"usernameDesc": "Username to update in the MongoDB database.",
+			"Example2": fmt.Sprintf(`  # Update scopes for a database user:
+  %[1]s dbuser update <username> --scope resourceName:resourceType --projectId <projectId>`, cli.ExampleAtlasEntryPoint()),
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

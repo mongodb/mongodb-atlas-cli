@@ -51,13 +51,12 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Delete a profile.",
 		Args:    require.ExactArgs(1),
-		Example: `  Delete the default profile configuration:
-  $ atlas config delete default
-
-  Skip the confirmation question and delete the default profile configuration:
-  $ atlas config delete default --force`,
+		Example: `  # Delete the default profile configuration:
+  mongocli config delete default`,
 		Annotations: map[string]string{
 			"nameDesc": "Name of the profile.",
+			"Example2": `  # Skip the confirmation question and delete the default profile configuration:
+  mongocli config delete default --force`,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]

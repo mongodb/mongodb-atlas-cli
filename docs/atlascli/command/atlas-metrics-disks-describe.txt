@@ -15,7 +15,7 @@ atlas metrics disks describe
 Describe disk partition metrics for a disk partition on a specified host.
 
 To retrieve the hostname and port needed for this command, run:
-$ atlas process list
+atlas process list
 
 Syntax
 ------
@@ -119,6 +119,6 @@ Examples
 
 .. code-block::
 
-   This example retrieves disks metrics for the database "testDB" in the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
-   $ atlas metrics disk describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H
+   # This example retrieves disks metrics for the database "testDB" in the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
+   atlas metrics disk describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H
 

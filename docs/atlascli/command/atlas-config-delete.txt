@@ -80,9 +80,6 @@ Examples
 
 .. code-block::
 
-   Delete the default profile configuration:
-   $ atlas config delete default
-
-   Skip the confirmation question and delete the default profile configuration:
-   $ atlas config delete default --force
+   # Delete the default profile configuration:
+   mongocli config delete default
 

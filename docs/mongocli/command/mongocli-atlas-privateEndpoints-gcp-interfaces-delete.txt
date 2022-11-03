@@ -88,6 +88,6 @@ Examples
 
 .. code-block::
 
-   $ mongocli atlas privateEndpoints gcp interfaces delete endpoint-1 \
+   mongocli atlas privateEndpoints gcp interfaces delete endpoint-1 \
    --endpointServiceId 61eaca605af86411903de1dd
 

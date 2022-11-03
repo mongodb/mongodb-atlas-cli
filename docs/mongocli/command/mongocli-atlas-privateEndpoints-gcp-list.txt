@@ -76,5 +76,5 @@ Examples
 
 .. code-block::
 
-   $ mongocli atlas privateEndpoint gcp ls
+   mongocli atlas privateEndpoint gcp ls
 

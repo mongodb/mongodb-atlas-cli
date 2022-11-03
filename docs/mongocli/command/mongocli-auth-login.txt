@@ -72,7 +72,7 @@ Examples
 
 .. code-block::
 
-   To start the interactive login for your MongoDB Atlas or Cloud Manager account:
-   $ mongocli auth login
+   # To start the interactive login for your MongoDB Atlas or Cloud Manager account:
+   mongocli auth login
 
 

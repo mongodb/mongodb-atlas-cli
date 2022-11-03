@@ -50,7 +50,7 @@ func EditBuilder() *cobra.Command {
 		Long:  `Uses the default editor to open the config file. You can use EDITOR or VISUAL envs to change the default.`,
 		Example: fmt.Sprintf(`
   To open the config
-  $ %s config edit
+  %s config edit
 `, config.BinName()),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opt.Run()

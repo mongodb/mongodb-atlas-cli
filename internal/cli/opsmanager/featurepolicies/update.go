@@ -16,6 +16,7 @@ package featurepolicies
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -97,12 +98,12 @@ func UpdateBuilder() *cobra.Command {
 		Use:   "update",
 		Short: "Update feature control policies for your project.",
 		Long:  "Feature Control Policies allow you to enable or disable certain MongoDB features based on your site-specific needs.",
-		Example: `Disable user management for a project:
-  $ mongocli ops-manager featurePolicies update --projectId <projectId> --name Operator --policy DISABLE_USER_MANAGEMENT
-
-  Update policies from a JSON configuration file:
-  $ mongocli atlas featurePolicies update --projectId <projectId> --file <path/to/file.json>
-`,
+		Example: `  # Disable user management for a project:
+  mongocli ops-manager featurePolicies update --projectId <projectId> --name Operator --policy DISABLE_USER_MANAGEMENT`,
+		Annotations: map[string]string{
+			"Example2": fmt.Sprintf(`  # Update policies from a JSON configuration file:
+  mongocli atlas featurePolicies update --projectId <projectId> --file <path/to/file.json>`, cli.ExampleAtlasEntryPoint()),
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {
 				_ = cmd.MarkFlagRequired(flag.Name)

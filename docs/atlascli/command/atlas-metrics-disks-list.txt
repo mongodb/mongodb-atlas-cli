@@ -15,7 +15,7 @@ atlas metrics disks list
 List available disks or disk partitions for a given host.
 
 To retrieve the hostname and port needed for this command, run:
-$ atlas process list
+atlas process list
 
 Syntax
 ------
@@ -96,5 +96,5 @@ Examples
 .. code-block::
 
    This example lists the available disks for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
-   $ atlas metrics disk ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
+   atlas metrics disk ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
 

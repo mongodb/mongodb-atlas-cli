@@ -77,8 +77,8 @@ func LogoutBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "logout",
 		Short: "Log out of the CLI.",
-		Example: fmt.Sprintf(`  To log out from the CLI:
-  $ %s auth logout
+		Example: fmt.Sprintf(`  # To log out from the CLI:
+  %s auth logout
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

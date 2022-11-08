@@ -69,7 +69,7 @@ func ListBuilder() *cobra.Command {
 			"clusterNameDesc": "Name of the Atlas cluster that contains the snapshots you want to retrieve.",
 		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of snapshots for the cluster named myDemo 
-		  %s atlas backups snapshots list myDemo --output json`, cli.ExampleAtlasEntryPoint()),
+		  %s backups snapshots list myDemo --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

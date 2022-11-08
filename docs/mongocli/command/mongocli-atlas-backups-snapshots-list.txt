@@ -93,5 +93,5 @@ Examples
 .. code-block::
 
    # Return a JSON-formatted list of snapshots for the cluster named myDemo 
- 		  mongocli atlas atlas backups snapshots list myDemo --output json
+ 		  mongocli atlas backups snapshots list myDemo --output json
 

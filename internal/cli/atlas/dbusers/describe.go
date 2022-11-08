@@ -15,6 +15,7 @@ package dbusers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -67,6 +68,14 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"usernameDesc": "Username to retrieve from the MongoDB database.",
 		},
+		Example: fmt.Sprintf(`  # The following example returns a MongoDB database user named myDbUser on an Atlas cluster:
+  %[1]s dbuser describe myDbUser --authDB admin --output json
+
+  # The following example returns a MongoDB database user with X.509 authentication on an Atlas cluster. Prepend $external with \ to escape the special-use character.
+  %[1]s dbuser describe CN=ellen@example.com,OU=users,DC=example,DC=com --authDB \$external --output json
+
+  # The following example returns a MongoDB database user with AWS IAM authentication on an Atlas cluster. Prepend $external with \ to escape the special-use character.
+  %[1]s dbuser describe arn:aws:iam::772401394250:user/my-test-user --authDB \$external --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]
 

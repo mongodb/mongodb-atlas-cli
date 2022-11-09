@@ -16,6 +16,7 @@ package create
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -124,6 +125,8 @@ func AwsBuilder() *cobra.Command {
 		Use:   "aws",
 		Short: "Create a connection with AWS.",
 		Args:  require.NoArgs,
+		Example: fmt.Sprintf(`  # The following command creates a peering connection between the Atlas VPC and your AWS VPC for a project using the default profile.
+  %s networking peering create aws --accountId <aws-account-id> --atlasCidrBlock 192.168.0.0/24 --region us-east-1 --routeTableCidrBlock 10.0.0.0/24 --vpcId vpc-078ac381aa90e1e63`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

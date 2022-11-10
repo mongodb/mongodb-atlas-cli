@@ -87,12 +87,12 @@ Available properties include: %v.`, config.Properties()),
 		},
 		Example: fmt.Sprintf(`
   # Set Ops Manager Base URL in the profile myProfile:
-  %[1]s config set ops_manager_url http://localhost:30700/ -P myProfile`, config.BinName()),
+  %[1]s config set ops_manager_url http://localhost:30700/ -P myProfile
+  # Set Organization ID in the default profile:
+  %[1]s config set org_id 5dd5aaef7a3e5a6c5bd12de4`, config.BinName()),
 		Annotations: map[string]string{
 			"propertyNameDesc": "Property to set in the profile.",
 			"valueDesc":        "Value for the property to set in the profile.",
-			"Example2": fmt.Sprintf(`  # Set Organization ID in the default profile:
-  %[1]s config set org_id 5dd5aaef7a3e5a6c5bd12de4`, cli.ExampleAtlasEntryPoint()),
 		},
 		ValidArgs: config.Properties(),
 		RunE: func(cmd *cobra.Command, args []string) error {

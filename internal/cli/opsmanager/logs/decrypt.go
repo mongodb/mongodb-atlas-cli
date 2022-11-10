@@ -91,12 +91,11 @@ func DecryptBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "decrypt",
 		Short: "Decrypts an audit log file with the provided local key file or with a server that supports KMIP.",
-		Example: `  # For audit logs in BSON format:
-  mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.bson --out /path/to/file.json`,
-		Annotations: map[string]string{
-			"Example2": `  # For audit logs in JSON format:
+		Example: `
+  # For audit logs in BSON format:
+  mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.bson --out /path/to/file.json
+	For audit logs in JSON format:
   mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.json --out /path/to/file.json`,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initDefaultOut)
 		},

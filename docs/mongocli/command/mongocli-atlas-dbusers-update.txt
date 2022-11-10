@@ -103,3 +103,6 @@ Examples
    # Update roles for a database user:
    mongocli atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>
 
+   # Update scopes for a database user:
+   mongocli atlas dbuser update <username> --scope resourceName:resourceType --projectId <projectId>
+

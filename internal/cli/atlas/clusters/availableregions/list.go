@@ -70,12 +70,11 @@ func ListBuilder() *cobra.Command {
 		Short:   "List available regions that Atlas supports for new deployments.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
-		Annotations: map[string]string{
-			"Example2": `  # List available regions by tier for a given provider:
-  atlas cluster availableRegions --provider GCP`,
-		},
 		Example: `  # List available regions for a given cloud provider and tier:
-  atlas cluster availableRegions --provider AWS --tier M50`,
+  atlas cluster availableRegions --provider AWS --tier M50
+
+  # List available regions by tier for a given provider:
+  atlas cluster availableRegions --provider GCP`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.tier != "" && opts.provider == "" {
 				return fmt.Errorf("tier search also requires a %s flag", flag.Provider)

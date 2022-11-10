@@ -85,5 +85,4 @@ Examples
 
 .. code-block::
 
-   mongocli atlas privateEndpoint aws watch vpce-abcdefg0123456789
-
+    mongocli atlas privateEndpoint aws watch vpce-abcdefg0123456789

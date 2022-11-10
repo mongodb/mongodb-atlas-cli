@@ -86,4 +86,3 @@ Examples
 
    # The following example deletes all backup schedules of the cluster Cluster0:
    atlas backup schedule delete Cluster0
-

@@ -78,4 +78,3 @@ Examples
 
    # This example uses the profile named "myprofile" for accessing Atlas.
    mongocli atlas alerts settings list --projectId 5df90590f10fab5e33de2305 -o json --profile myprofile
-

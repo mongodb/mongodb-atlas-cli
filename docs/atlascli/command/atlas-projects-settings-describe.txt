@@ -70,4 +70,3 @@ Examples
 
    # This example uses the profile named "myprofile" for accessing Atlas.
    atlas projects settings describe -P myprofile
-

@@ -71,4 +71,3 @@ Examples
    # To start the interactive setup:
    atlas auth register
 
-

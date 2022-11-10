@@ -249,8 +249,8 @@ github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyua
 github.com/mitchellh/mapstructure v1.5.0/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/mongodb-forks/digest v1.0.4 h1:9FrGTc7MGAchgaQBcXBnEwUM/Oo8obW7OGWxnsSvZ64=
 github.com/mongodb-forks/digest v1.0.4/go.mod h1:eHRfgovT+dvSFfltrOa27hy1oR/rcwyDdp5H1ZQxEMA=
-github.com/mongodb-labs/cobra2snooty v0.11.0 h1:wwxU9OE0ayemPlnHQPHcClPcvL/ALtoBtfP5CBx1FnM=
-github.com/mongodb-labs/cobra2snooty v0.11.0/go.mod h1:GZIm50ATfP1kgLzFKa9OH6oY96A0aNLR8UssrzLn2uI=
+github.com/mongodb-labs/cobra2snooty v0.12.0 h1:JjdKU8Zh3QFwBuFuS0WKBPObyASp8MzuQ1d3UL5hrqE=
+github.com/mongodb-labs/cobra2snooty v0.12.0/go.mod h1:35BYcRwKG+Lu+bKidg7lw1RT8W4K3zLsExyMLyTZB7U=
 github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe/go.mod h1:wL8QJuTMNUDYhXwkmfOly8iTdp5TEcJFWZD2D7SIkUc=
 github.com/montanaflynn/stats v0.6.6/go.mod h1:etXPPgVO6n31NxCd9KQUMvCM+ve0ruNzt6R8Bnaayow=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e h1:fD57ERR4JtEqsWbfPhv4DMiApHyliiK5xCTNVSPiaAs=

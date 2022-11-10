@@ -89,5 +89,4 @@ Examples
 
 .. code-block::
 
-   mongocli atlas networking peering watch peeringConnectionSampleId
-
+    mongocli atlas networking peering watch peeringConnectionSampleId

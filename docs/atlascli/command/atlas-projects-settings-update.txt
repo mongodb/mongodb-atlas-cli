@@ -110,4 +110,3 @@ Examples
 
    # This example uses the profile named "myprofile" for accessing Atlas.
    atlas projects settings update --disableCollectDatabaseSpecificsStatistics -P myprofile
-

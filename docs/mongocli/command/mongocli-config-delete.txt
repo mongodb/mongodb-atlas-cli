@@ -83,6 +83,8 @@ Examples
    # Delete the default profile configuration:
    atlas config delete default
 
+   
+.. code-block::
+
    # Skip the confirmation question and delete the default profile configuration:
    atlas config delete default --force
-

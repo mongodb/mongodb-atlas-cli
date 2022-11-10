@@ -103,6 +103,8 @@ Examples
    # Update roles for a database user:
    atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>
 
+   
+.. code-block::
+
    # Update scopes for a database user:
    atlas dbuser update <username> --scope resourceName:resourceType --projectId <projectId>
-

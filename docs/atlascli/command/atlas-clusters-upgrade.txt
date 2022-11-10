@@ -102,4 +102,3 @@ Examples
 
    # The following example upgrades the tier, disk size, and MongoDB version for a cluster:
    atlas cluster upgrade <clusterName> --projectId <projectId> --tier M50 --diskSizeGB 20 --mdbVersion 4.2
-

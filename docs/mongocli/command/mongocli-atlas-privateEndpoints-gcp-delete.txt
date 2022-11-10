@@ -84,5 +84,4 @@ Examples
 
 .. code-block::
 
-   mongocli atlas privateEndpoint gcp delete vpce-abcdefg0123456789 --force
-
+    mongocli atlas privateEndpoint gcp delete vpce-abcdefg0123456789 --force

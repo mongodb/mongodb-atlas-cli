@@ -102,4 +102,3 @@ Examples
 
    # Create IP address access list with the current IP address. Entry is not needed in this case.
    atlas accessList create --currentIp
-

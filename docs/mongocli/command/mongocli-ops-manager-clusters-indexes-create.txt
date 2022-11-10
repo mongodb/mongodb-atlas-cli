@@ -142,4 +142,3 @@ Examples
    mongocli om clusters indexes create bedrooms_1 \
      --collectionName listings --db realestate --key bedrooms:1 \
      --rsName repl1
-

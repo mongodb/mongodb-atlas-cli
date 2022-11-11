@@ -34,10 +34,8 @@ import (
 	"golang.org/x/crypto/pbkdf2"
 )
 
-const (
-	pbkdf2Iterations = 1000
-	pbkdf2KeyLength  = 16
-)
+const pbkdf2Iterations = 1000
+const pbkdf2KeyLength = 16
 
 func generateAuthTokenString(authTokenPassword string) string {
 	salt := []byte(authTokenPassword)
@@ -121,12 +119,13 @@ func sign(notaryURL, filePath, notarySigningKey, notarySigningComment, notaryAut
 	}
 
 	downloadURL := jsonResponse["permalink"].(string)
-	tmpDir, err := os.CreateTemp("", "sign")
+	os.TempDir()
+	tmpDir := os.TempDir()
 	if err != nil {
 		return err
 	}
 
-	tmpFile := filepath.Join(tmpDir.Name(), path.Base(filePath))
+	tmpFile := filepath.Join(tmpDir, path.Base(filePath))
 
 	err = downloadFile(context.Background(), notaryURL+downloadURL, tmpFile)
 	if err != nil {

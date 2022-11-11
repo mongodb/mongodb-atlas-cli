@@ -635,8 +635,8 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.18"
-      go_bin: "c:\\golang\\go1.18/bin"
+      go_root: "c:\\golang\\go1.19"
+      go_bin: "c:\\golang\\go1.19/bin"
       go_base_path: "c:"
       tool_name: "mongocli"
     tasks:
@@ -646,8 +646,8 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.18"
-      go_bin: "c:\\golang\\go1.18/bin"
+      go_root: "c:\\golang\\go1.19"
+      go_bin: "c:\\golang\\go1.19/bin"
       go_base_path: "c:"
       tool_name: "atlascli"
     tasks:
@@ -657,8 +657,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
       server_version: "4.4.0-rc3"
       goreleaser_file: "build/package/.mongocli.goreleaser.yml"
@@ -671,8 +671,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
       server_version: "4.4.0-rc3"
       goreleaser_file: "build/package/.atlascli.goreleaser.yml"
@@ -686,8 +686,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
       server_version: "4.4.0-rc3"
     tasks:
@@ -697,8 +697,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: push_atlascli_generate
@@ -707,8 +707,8 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.18"
-      go_bin: "c:\\golang\\go1.18/bin"
+      go_root: "c:\\golang\\go1.19"
+      go_bin: "c:\\golang\\go1.19/bin"
       go_base_path: "c:"
       tool_name: "mongocli"
     tasks:
@@ -718,8 +718,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: release_mongocli
@@ -728,8 +728,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: release_atlascli
@@ -738,8 +738,8 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.18"
-      go_bin: "c:\\golang\\go1.18/bin"
+      go_root: "c:\\golang\\go1.19"
+      go_bin: "c:\\golang\\go1.19/bin"
       go_base_path: "c:"
       tool_name: "atlascli"
     tasks:
@@ -749,8 +749,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: push_stable_mongocli_generate
@@ -759,8 +759,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: push_stable_atlascli_generate
@@ -768,8 +768,8 @@ buildvariants:
     display_name: "Post packaging smoke tests (Docker / MongoCLI)"
     run_on: ubuntu1804-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: .smoke-test .mongocli .pkg
@@ -777,8 +777,8 @@ buildvariants:
     display_name: "Post packaging smoke tests (Docker / AtlasCLI)"
     run_on: ubuntu1804-small
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
       - name: .smoke-test .atlascli .pkg
@@ -790,8 +790,8 @@ buildvariants:
   - name: release_atlascli_repo_test
     display_name: "Test AtlasCLI repo"
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     run_on:
       - ubuntu1804-small
@@ -800,8 +800,8 @@ buildvariants:
   - name: release_mongocli_repo_test
     display_name: "Test MongoCLI repo"
     expansions:
-      go_root: "/opt/golang/go1.18"
-      go_bin: "/opt/golang/go1.18/bin"
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     run_on:
       - ubuntu1804-small

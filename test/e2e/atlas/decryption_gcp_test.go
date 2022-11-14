@@ -19,13 +19,13 @@ import (
 	"embed"
 	"io/fs"
 	"os"
+	"os/exec"
 	"path"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e/decryption"
 	"github.com/stretchr/testify/require"
-	exec "golang.org/x/sys/execabs"
 )
 
 //go:embed decryption/gcp/*

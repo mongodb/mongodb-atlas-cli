@@ -20,11 +20,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"go.mongodb.org/ops-manager/opsmngr"
-	exec "golang.org/x/sys/execabs"
 )
 
 func TestFeaturePolicies(t *testing.T) {

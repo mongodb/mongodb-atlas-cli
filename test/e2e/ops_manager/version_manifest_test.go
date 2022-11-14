@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (generic && (om44 || om50))
 
 package ops_manager_test
@@ -18,11 +19,11 @@ package ops_manager_test
 import (
 	"encoding/json"
 	"os"
+	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"go.mongodb.org/ops-manager/opsmngr"
-	exec "golang.org/x/sys/execabs"
 )
 
 func TestVersionManifest(t *testing.T) {

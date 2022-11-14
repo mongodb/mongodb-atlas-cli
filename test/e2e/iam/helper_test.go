@@ -20,11 +20,11 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
-	exec "golang.org/x/sys/execabs"
 )
 
 const (

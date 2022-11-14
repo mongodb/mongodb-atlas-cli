@@ -24,10 +24,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path"
 	"text/template"
-
-	exec "golang.org/x/sys/execabs"
 )
 
 type NuspecDetails struct {

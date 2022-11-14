@@ -1,6 +1,6 @@
 # Contributing to MongoDB CLI
 
-Thanks for your interest in contributing to `mongocli`,
+Thanks for your interest in contributing to MongoDB Atlas CLI and MongoDB CLI,
 this document describes some guidelines necessary to participate in the community.
 
 ## Table of Contents
@@ -63,7 +63,7 @@ To make the contribution process as seamless as possible, we ask for the followi
 #### Prerequisite Tools
 
 - [Git](https://git-scm.com/)
-- [Go (at least Go 1.18)](https://golang.org/dl/)
+- [Go (at least Go 1.19)](https://golang.org/dl/)
 
 #### Environment
 

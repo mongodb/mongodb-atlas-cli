@@ -23,7 +23,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"mime/multipart"
 	"net/http"
@@ -120,7 +119,8 @@ func sign(notaryURL, filePath, notarySigningKey, notarySigningComment, notaryAut
 	}
 
 	downloadURL := jsonResponse["permalink"].(string)
-	tmpDir, err := ioutil.TempDir("", "sign")
+	os.TempDir()
+	tmpDir := os.TempDir()
 	if err != nil {
 		return err
 	}

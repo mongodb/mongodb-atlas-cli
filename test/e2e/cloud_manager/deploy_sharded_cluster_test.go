@@ -19,10 +19,10 @@ package cloud_manager_test
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	exec "golang.org/x/sys/execabs"
 )
 
 func TestDeployCluster(t *testing.T) {

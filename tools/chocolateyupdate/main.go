@@ -18,8 +18,7 @@ import (
 	"flag"
 	"log"
 	"os"
-
-	exec "golang.org/x/sys/execabs"
+	"os/exec"
 )
 
 func update(path, secret string) error {

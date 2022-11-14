@@ -14,14 +14,14 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.18
+          go-version: 1.19
       - name: Cache Dependencies
         uses: actions/cache@v3
         with:
           path: ~/go/pkg/mod
-          key: Linux-go-1.18-${{ hashFiles('**/go.sum') }}
+          key: Linux-go-1.19-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            Linux-go-1.18-
+            Linux-go-1.19-
       - name: Generate docs
         run: make gen-docs > /dev/null
       - name: Check for uncommited files

@@ -60,7 +60,6 @@ Examples
 
 .. code-block::
 
-   See the logged account:
+    See the logged account:
    $ mongocli auth whoami
-
 

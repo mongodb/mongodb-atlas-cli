@@ -83,4 +83,3 @@ Examples
    Describe a team by Name
    $ mongocli iam team(s) describe --name teamName --orgId <orgId>
 
-

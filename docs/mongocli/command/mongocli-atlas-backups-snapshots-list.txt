@@ -94,4 +94,3 @@ Examples
 
    # Return a JSON-formatted list of snapshots for the cluster named myDemo 
    mongocli atlas backups snapshots list myDemo --output json
-

@@ -92,5 +92,4 @@ Examples
 
 .. code-block::
 
-   $ mongocli atlas customDbRoles create customRole --privilege FIND@database,UPDATE@database
-
+    $ mongocli atlas customDbRoles create customRole --privilege FIND@database,UPDATE@database

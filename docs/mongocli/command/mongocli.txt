@@ -41,10 +41,9 @@ Examples
 
 .. code-block::
 
-
+   
    Display the help menu for the config command
    $ mongocli config --help
-
 Related Commands
 ----------------
 

@@ -68,7 +68,6 @@ Examples
 
 .. code-block::
 
-   To start the interactive login for your MongoDB Atlas account:
+    To start the interactive login for your MongoDB Atlas account:
    $ atlas auth login
-
 

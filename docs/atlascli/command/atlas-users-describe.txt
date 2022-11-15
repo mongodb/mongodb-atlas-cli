@@ -79,4 +79,3 @@ Examples
    Describe a user by username
    $ mongocli iam users describe --username <username>
 
-

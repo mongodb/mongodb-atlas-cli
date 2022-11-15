@@ -76,5 +76,5 @@ Examples
 
 .. code-block::
 
-    The following example retrieves the continuous backup export buckets:
+   The following example retrieves the continuous backup export buckets:
    $ atlas backup exports buckets list

@@ -76,7 +76,7 @@ Examples
 
 .. code-block::
 
-   
+  
    Describe a team by ID
    $ mongocli iam team(s) describe --id teamId --orgId <orgId>
 

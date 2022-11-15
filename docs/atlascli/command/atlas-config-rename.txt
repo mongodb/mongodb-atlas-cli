@@ -80,5 +80,5 @@ Examples
 
 .. code-block::
 
-    Rename a profile called myProfile to testProfile:
+   Rename a profile called myProfile to testProfile:
    $ atlas config rename myProfile testProfile

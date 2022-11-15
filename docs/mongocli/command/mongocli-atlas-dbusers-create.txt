@@ -119,7 +119,7 @@ Examples
 
 .. code-block::
 
-    Create an Atlas database admin user:
+   Create an Atlas database admin user:
    $ mongocli atlas dbuser create atlasAdmin --username <username>  --projectId <projectId>
 
    Create a database user with read/write access to any database:

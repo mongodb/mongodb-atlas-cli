@@ -83,7 +83,7 @@ Examples
 
 .. code-block::
 
-   
+  
    Set Ops Manager Base URL in the profile myProfile:
    $ mongocli config set ops_manager_url http://localhost:30700/ -P myProfile
    Set Organization ID in the default profile:

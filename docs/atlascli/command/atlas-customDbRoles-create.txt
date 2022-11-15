@@ -92,4 +92,4 @@ Examples
 
 .. code-block::
 
-    $ atlas customDbRoles create customRole --privilege FIND@database,UPDATE@database
+   $ atlas customDbRoles create customRole --privilege FIND@database,UPDATE@database

@@ -247,8 +247,8 @@ github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyua
 github.com/mitchellh/mapstructure v1.5.0/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/mongodb-forks/digest v1.0.4 h1:9FrGTc7MGAchgaQBcXBnEwUM/Oo8obW7OGWxnsSvZ64=
 github.com/mongodb-forks/digest v1.0.4/go.mod h1:eHRfgovT+dvSFfltrOa27hy1oR/rcwyDdp5H1ZQxEMA=
-github.com/mongodb-labs/cobra2snooty v0.12.0 h1:JjdKU8Zh3QFwBuFuS0WKBPObyASp8MzuQ1d3UL5hrqE=
-github.com/mongodb-labs/cobra2snooty v0.12.0/go.mod h1:35BYcRwKG+Lu+bKidg7lw1RT8W4K3zLsExyMLyTZB7U=
+github.com/mongodb-labs/cobra2snooty v0.12.1 h1:tA0m/2DV01oy6JuLkelQ9LoKqIxb3j2mSMRvdKAKFes=
+github.com/mongodb-labs/cobra2snooty v0.12.1/go.mod h1:35BYcRwKG+Lu+bKidg7lw1RT8W4K3zLsExyMLyTZB7U=
 github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe/go.mod h1:wL8QJuTMNUDYhXwkmfOly8iTdp5TEcJFWZD2D7SIkUc=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e h1:fD57ERR4JtEqsWbfPhv4DMiApHyliiK5xCTNVSPiaAs=
 github.com/openlyinc/pointy v1.2.0 h1:vbb/WoPbshyTH8j3/XYu3enlZfv+NHxAD15qTm1zbk0=

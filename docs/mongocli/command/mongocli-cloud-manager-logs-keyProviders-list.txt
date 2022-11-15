@@ -68,5 +68,5 @@ Examples
 
 .. code-block::
 
-   
+  
    $ mongocli ops-manager listKeyProvider --file log.gz

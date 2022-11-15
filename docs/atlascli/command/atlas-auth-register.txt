@@ -68,6 +68,6 @@ Examples
 
 .. code-block::
 
-    To start the interactive setup:
+   To start the interactive setup:
    $ atlas auth register
 

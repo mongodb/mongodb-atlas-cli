@@ -131,7 +131,7 @@ Examples
 
 .. code-block::
 
-    Deploy a free cluster:
+   Deploy a free cluster:
    $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --tier M0
 
    Deploy a three-member replica set in AWS:

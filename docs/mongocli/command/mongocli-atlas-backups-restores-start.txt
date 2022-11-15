@@ -112,7 +112,7 @@ Examples
 
 .. code-block::
 
-    The following example creates an automated restore:
+   The following example creates an automated restore:
    $ mongocli atlas backup restore start automated \
           --clusterName myDemo \
           --snapshotId 5e7e00128f8ce03996a47179 \

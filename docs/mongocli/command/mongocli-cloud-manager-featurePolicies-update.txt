@@ -86,7 +86,7 @@ Examples
 
 .. code-block::
 
-    Disable user management for a project:
+   Disable user management for a project:
    $ mongocli ops-manager featurePolicies update --projectId <projectId> --name Operator --policy DISABLE_USER_MANAGEMENT
 
    Update policies from a JSON configuration file:

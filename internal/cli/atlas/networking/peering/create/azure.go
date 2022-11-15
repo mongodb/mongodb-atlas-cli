@@ -16,6 +16,7 @@ package create
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -123,7 +124,10 @@ func AzureBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "azure",
 		Short: "Create a connection with Azure.",
-		Args:  require.NoArgs,
+		Example: fmt.Sprintf(`  The following command creates a peering connection between the Atlas VPC and your Azure VNet for a project using the default profile:
+  %s networking peering create azure --atlasCidrBlock 192.168.0.0/21 --directoryId 56657fdb-ca45-40dc-fr56-77fd8b6d2b37 --subscriptionId 345654f3-77cf-4084-9e06-8943a079ed75 
+  --resourceGroup atlascli-test --region US_EAST_2 --vnet atlascli-test`, cli.ExampleAtlasEntryPoint()),
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

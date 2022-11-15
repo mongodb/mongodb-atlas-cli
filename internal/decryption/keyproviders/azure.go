@@ -56,7 +56,11 @@ func (ki *AzureKeyIdentifier) ValidateCredentials() error {
 }
 
 func (ki *AzureKeyIdentifier) DecryptKey(key []byte) ([]byte, error) {
-	client := azkeys.NewClient(ki.KeyVaultEndpoint, ki.credentials, nil)
+	client, err := azkeys.NewClient(ki.KeyVaultEndpoint, ki.credentials, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	algo := azkeys.JSONWebKeyEncryptionAlgorithmRSAOAEP
 	r, err := client.Decrypt(context.Background(), ki.KeyName, ki.KeyVersion, azkeys.KeyOperationsParameters{
 		Value:     key,

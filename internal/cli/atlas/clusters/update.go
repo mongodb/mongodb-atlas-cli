@@ -126,14 +126,14 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update [clusterName]",
 		Short: "Update a MongoDB Atlas cluster.",
-		Example: fmt.Sprintf(`  Update tier for a cluster:
-  $ %[1]s cluster update <clusterName> --projectId <projectId> --tier M50
+		Example: fmt.Sprintf(`  # Update tier for a cluster:
+  %[1]s cluster update <clusterName> --projectId <projectId> --tier M50
 
-  Update disk size for a cluster:
-  $ %[1]s cluster update <clusterName> --projectId <projectId> --diskSizeGB 20
+  # Update disk size for a cluster:
+  %[1]s cluster update <clusterName> --projectId <projectId> --diskSizeGB 20
 
-  Update MongoDB version for a cluster:
-  $ %[1]s cluster update <clusterName> --projectId <projectId> --mdbVersion 4.2`,
+  # Update MongoDB version for a cluster:
+  %[1]s cluster update <clusterName> --projectId <projectId> --mdbVersion 4.2`,
 			cli.ExampleAtlasEntryPoint()),
 		Args: require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

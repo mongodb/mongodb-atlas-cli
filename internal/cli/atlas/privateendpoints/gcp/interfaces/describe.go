@@ -68,7 +68,7 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"idDesc": "Unique identifier of the private endpoint you want to retrieve.",
 		},
-		Example: fmt.Sprintf(`  $ %s privateEndpoints gcp interfaces describe endpoint-1 \
+		Example: fmt.Sprintf(`  %s privateEndpoints gcp interfaces describe endpoint-1 \
   --endpointServiceId 61eaca605af86411903de1dd`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.privateEndpointGroupID = args[0]

@@ -74,8 +74,8 @@ $ %s process list`, cli.ExampleAtlasEntryPoint()),
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 			"diskNameDesc":      "Label that identifies the disk or partition from which you want to retrieve metrics.",
 		},
-		Example: fmt.Sprintf(`  This example retrieves disks metrics for the database "testDB" in the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
-  $ %s metrics disk describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # This example retrieves disks metrics for the database "testDB" in the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
+  %s metrics disk describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

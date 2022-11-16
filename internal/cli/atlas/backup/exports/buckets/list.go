@@ -64,8 +64,8 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "List cloud backup restore buckets for your project and cluster.",
 		Args:    require.NoArgs,
-		Example: fmt.Sprintf(`  The following example retrieves the continuous backup export buckets:
-  $ %s backup exports buckets list`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # The following example retrieves the continuous backup export buckets:
+  %s backup exports buckets list`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

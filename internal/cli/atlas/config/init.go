@@ -101,11 +101,11 @@ func InitBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "init",
 		Short: "Configure a profile to store access settings for your MongoDB deployment.",
-		Example: `  To configure the tool to work with Atlas:
-  $ atlas config init
+		Example: `  # To configure the tool to work with Atlas:
+  atlas config init
 
-  To configure the tool to work with Atlas for Government:
-  $ atlas config init --gov`,
+  # To configure the tool to work with Atlas for Government:
+  atlas config init --gov`,
 		PreRun: func(cmd *cobra.Command, args []string) {
 			opts.OutWriter = cmd.OutOrStdout()
 		},

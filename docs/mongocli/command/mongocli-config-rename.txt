@@ -80,5 +80,5 @@ Examples
 
 .. code-block::
 
-   Rename a profile called myProfile to testProfile:
-   $ mongocli config rename myProfile testProfile
+   # Rename a profile called myProfile to testProfile:
+   mongocli config rename myProfile testProfile

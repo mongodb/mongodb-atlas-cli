@@ -70,16 +70,28 @@ Examples
 
 .. code-block::
 
-  
-   Configure a profile to interact with Atlas:
-   $ mongocli config
-   Configure a profile to interact with Atlas for Government:
-   $ mongocli config --service cloudgov
+   #
    
-   Configure a profile to interact with Cloud Manager:
-   $ mongocli config --service cloud-manager
-   Configure a profile to interact with Ops Manager:
-   $ mongocli config --service ops-manager
+.. code-block::
+
+   # Configure a profile to interact with Atlas:
+   mongocli config
+   
+.. code-block::
+
+   # Configure a profile to interact with Atlas for Government:
+   mongocli config --service cloudgov
+   
+   
+.. code-block::
+
+   # Configure a profile to interact with Cloud Manager:
+   mongocli config --service cloud-manager
+   
+.. code-block::
+
+   # Configure a profile to interact with Ops Manager:
+   mongocli config --service ops-manager
 
 Related Commands
 ----------------

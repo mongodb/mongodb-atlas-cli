@@ -137,8 +137,8 @@ func Builder() *cobra.Command {
 		Use:   "setup",
 		Short: "Register, authenticate, create, and access an Atlas cluster.",
 		Long:  "This command takes you through registration, login, default profile creation, creating your first free tier cluster and connecting to it using MongoDB Shell.",
-		Example: `  Override default cluster settings like name, provider, or database username by using the command options
-  $ atlas setup --clusterName Test --provider GCP --username dbuserTest`,
+		Example: `  # Override default cluster settings like name, provider, or database username by using the command options
+  atlas setup --clusterName Test --provider GCP --username dbuserTest`,
 		Hidden: false,
 		Args:   require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

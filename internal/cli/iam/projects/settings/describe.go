@@ -60,8 +60,8 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe",
 		Aliases: []string{"get"},
 		Short:   "Retrieve details for settings to the specified project.",
-		Example: fmt.Sprintf(`  This example uses the profile named "myprofile" for accessing Atlas.
-  $ %s projects settings describe -P myprofile`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # This example uses the profile named "myprofile" for accessing Atlas.
+  %s projects settings describe -P myprofile`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

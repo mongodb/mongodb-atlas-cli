@@ -123,15 +123,15 @@ $ mongocli config set --help
 You can also use environment variables (MCLI_*) when running the tool.
 To find out more, see the documentation: https://docs.mongodb.com/mongocli/stable/configure/environment-variables/.`,
 		Example: `
-  Configure a profile to interact with Atlas:
-  $ mongocli config
-  Configure a profile to interact with Atlas for Government:
-  $ mongocli config --service cloudgov
+  # Configure a profile to interact with Atlas:
+  mongocli config
+  # Configure a profile to interact with Atlas for Government:
+  mongocli config --service cloudgov
   
-  Configure a profile to interact with Cloud Manager:
-  $ mongocli config --service cloud-manager
-  Configure a profile to interact with Ops Manager:
-  $ mongocli config --service ops-manager
+  # Configure a profile to interact with Cloud Manager:
+  mongocli config --service cloud-manager
+  # Configure a profile to interact with Ops Manager:
+  mongocli config --service ops-manager
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opt.OutWriter = cmd.OutOrStdout()

@@ -137,7 +137,7 @@ func Builder() *cobra.Command {
 		Use:   "main",
 		Short: "Generate the download center json file",
 		Example: `
-  Generate the download center json file for mongocli
+  # Generate the download center json file for mongocli
   $ main --version 1.23.0 --file mongocli.json`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			fmt.Printf("Generating JSON: %s\n", opts.fileName)

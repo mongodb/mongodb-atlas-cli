@@ -73,7 +73,7 @@ func mongoCLIExample() string {
 	if config.BinName() == config.MongoCLI {
 		return fmt.Sprintf(`
   Set Ops Manager Base URL in the profile myProfile:
-  $ %s config set ops_manager_url http://localhost:30700/ -P myProfile
+  %s config set ops_manager_url http://localhost:30700/ -P myProfile
 `, config.BinName())
 	}
 
@@ -96,9 +96,9 @@ Available properties include: %v.`, config.Properties()),
 			}
 			return nil
 		},
-		Example: fmt.Sprintf(`%s
+		Example: fmt.Sprintf(`  %s
   Set Organization ID in the default profile:
-  $ %s config set org_id 5dd5aaef7a3e5a6c5bd12de4`, mongoCLIExample(), config.BinName()),
+  %s config set org_id 5dd5aaef7a3e5a6c5bd12de4`, mongoCLIExample(), config.BinName()),
 		Annotations: map[string]string{
 			"propertyNameDesc": "Property to set in the profile.",
 			"valueDesc":        "Value for the property to set in the profile.",

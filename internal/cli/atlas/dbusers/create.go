@@ -173,17 +173,17 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create [builtInRole]...",
 		Short: "Create a database user for your project.",
-		Example: fmt.Sprintf(`  Create an Atlas database admin user:
-  $ %[1]s dbuser create atlasAdmin --username <username>  --projectId <projectId>
+		Example: fmt.Sprintf(`  # Create an Atlas database admin user:
+  %[1]s dbuser create atlasAdmin --username <username>  --projectId <projectId>
 
-  Create a database user with read/write access to any database:
-  $ %[1]s dbuser create readWriteAnyDatabase --username <username> --projectId <projectId>
+  # Create a database user with read/write access to any database:
+  %[1]s dbuser create readWriteAnyDatabase --username <username> --projectId <projectId>
 
-  Create a database user with multiple roles:
-  $ %[1]s dbuser create --username <username> --role clusterMonitor,backup --projectId <projectId>
+  # Create a database user with multiple roles:
+  %[1]s dbuser create --username <username> --role clusterMonitor,backup --projectId <projectId>
 
-  Create a database user with multiple scopes:
-  $ %[1]s dbuser create --username <username> --role clusterMonitor --scope <REPLICA-SET ID>,<storeName> --projectId <projectId>`,
+  # Create a database user with multiple scopes:
+  %[1]s dbuser create --username <username> --role clusterMonitor --scope <REPLICA-SET ID>,<storeName> --projectId <projectId>`,
 			cli.ExampleAtlasEntryPoint()),
 		Args: cobra.OnlyValidArgs,
 		Annotations: map[string]string{

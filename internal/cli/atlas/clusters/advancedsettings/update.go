@@ -136,11 +136,11 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <clusterName>",
 		Short: "Update advanced configuration settings for one cluster.",
-		Example: fmt.Sprintf(`  Update the minimum oplog size for a cluster:
-  $ %[1]s cluster advancedSettings update <clusterName> --projectId <projectId> --oplogSizeMB 1000
+		Example: fmt.Sprintf(`  # Update the minimum oplog size for a cluster:
+  %[1]s cluster advancedSettings update <clusterName> --projectId <projectId> --oplogSizeMB 1000
 
-  Update the minimum TLS protocol version for a cluster:
-  $ %[1]s cluster advancedSettings update <clusterName> --projectId <projectId> --minimumEnabledTLSProtocol "TLS1_2"`,
+  # Update the minimum TLS protocol version for a cluster:
+  %[1]s cluster advancedSettings update <clusterName> --projectId <projectId> --minimumEnabledTLSProtocol "TLS1_2"`,
 			cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

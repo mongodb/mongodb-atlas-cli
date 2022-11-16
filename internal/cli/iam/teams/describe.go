@@ -85,11 +85,11 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe",
 		Aliases: []string{"get"},
 		Example: `  
-  Describe a team by ID
-  $ mongocli iam team(s) describe --id teamId --orgId <orgId>
+  # Describe a team by ID
+  mongocli iam team(s) describe --id teamId --orgId <orgId>
 
-  Describe a team by Name
-  $ mongocli iam team(s) describe --name teamName --orgId <orgId>
+  # Describe a team by Name
+  mongocli iam team(s) describe --name teamName --orgId <orgId>
 `,
 		Short: "Get a team in an organization.",
 		Args:  require.NoArgs,

@@ -62,8 +62,8 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Short:   "Return one snapshot export bucket.",
 		Args:    require.NoArgs,
-		Example: fmt.Sprintf(`  The following example returns the continuous backup export bucket specified by ID:
-  $ %s backup exports buckets describe dbdb00ca12345678f901a234`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # The following example returns the continuous backup export bucket specified by ID:
+  %s backup exports buckets describe dbdb00ca12345678f901a234`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

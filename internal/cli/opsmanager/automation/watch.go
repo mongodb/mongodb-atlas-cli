@@ -72,7 +72,7 @@ func WatchBuilder() *cobra.Command {
 Once the expected status is reached, the command prints "Changes deployed successfully."
 If you run the command in the terminal, it blocks the terminal session until the changes are completed.
 You can interrupt the command's polling at any time with CTRL-C.`,
-		Example: `  $ mongocli ops-manager automation watch`,
+		Example: `  mongocli ops-manager automation watch`,
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

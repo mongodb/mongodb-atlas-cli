@@ -64,8 +64,8 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Short:   "Return one cloud backup export job for your project, cluster and bucket.",
 		Args:    require.NoArgs,
-		Example: fmt.Sprintf(`  The following example describes the continuous backup export job for the cluster Cluster0 and bucket 5df90590f10fab5e33de2305:
-  $ %s backup exports jobs describe --clusterName Cluster0 --bucketId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # The following example describes the continuous backup export job for the cluster Cluster0 and bucket 5df90590f10fab5e33de2305:
+  %s backup exports jobs describe --clusterName Cluster0 --bucketId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

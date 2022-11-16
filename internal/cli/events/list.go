@@ -102,10 +102,10 @@ func ListBuilder() *cobra.Command {
 		Short: "Return all events for an organization or project.",
 		Deprecated: `  
   To return project events prefer
-  $ mongocli atlas|ops-manager|cloud-manager events projects list [--projectId <projectId>]
+  mongocli atlas|ops-manager|cloud-manager events projects list [--projectId <projectId>]
 
   To return organization events prefer
-  $ mongocli atlas|ops-manager|cloud-manager events organizations list [--orgId <orgId>]
+  mongocli atlas|ops-manager|cloud-manager events organizations list [--orgId <orgId>]
 `,
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,

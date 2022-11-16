@@ -62,9 +62,12 @@ Examples
 
 .. code-block::
 
-  
-   To open the config
-   $ atlas config edit
+   #
+   
+.. code-block::
+
+   # To open the config
+   atlas config edit
 
 
 .. toctree::

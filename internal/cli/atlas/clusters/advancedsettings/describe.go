@@ -65,7 +65,7 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve configuration settings.",
 		},
-		Example: fmt.Sprintf(`  $ %s clusters advancedSettings describe Cluster0`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  %s clusters advancedSettings describe Cluster0`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

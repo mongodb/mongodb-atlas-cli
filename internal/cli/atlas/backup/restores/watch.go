@@ -73,8 +73,8 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 		Annotations: map[string]string{
 			"restoreJobIdDesc": "ID of the restore job.",
 		},
-		Example: fmt.Sprintf(`  The following example retrieves the continuous backup restore job for the cluster Cluster0:
-  $ %s backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # The following example retrieves the continuous backup restore job for the cluster Cluster0:
+  %s backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

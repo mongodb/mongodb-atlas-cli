@@ -66,7 +66,7 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to retrieve.",
 		},
-		Example: fmt.Sprintf(`  The following example returns the JSON-formatted details for the access list entry 192.0.2.0/24 in the project with ID 5e2211c17a3e5a48f5497de3.
+		Example: fmt.Sprintf(`  # The following example returns the JSON-formatted details for the access list entry 192.0.2.0/24 in the project with ID 5e2211c17a3e5a48f5497de3.
   %s accessLists describe 192.0.2.0/24 --output json --projectId 5e1234c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

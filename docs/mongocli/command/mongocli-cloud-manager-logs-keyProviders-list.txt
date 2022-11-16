@@ -69,4 +69,4 @@ Examples
 .. code-block::
 
   
-   $ mongocli ops-manager listKeyProvider --file log.gz
+   mongocli ops-manager listKeyProvider --file log.gz

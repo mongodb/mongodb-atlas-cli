@@ -41,9 +41,12 @@ Examples
 
 .. code-block::
 
-  
-   Display the help menu for the config command
-   $ atlas config --help
+   #
+   
+.. code-block::
+
+   # Display the help menu for the config command
+   atlas config --help
 Related Commands
 ----------------
 

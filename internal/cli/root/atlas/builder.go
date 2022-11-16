@@ -112,8 +112,8 @@ func Builder() *cobra.Command {
 		Short:   "CLI tool to manage MongoDB Atlas",
 		Long:    fmt.Sprintf("Use %s command help for information on a specific command", atlas),
 		Example: `
-  Display the help menu for the config command
-  $ atlas config --help`,
+  # Display the help menu for the config command
+  atlas config --help`,
 		SilenceUsage: true,
 		Annotations: map[string]string{
 			"toc": "true",

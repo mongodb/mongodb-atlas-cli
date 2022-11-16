@@ -148,8 +148,8 @@ func RegisterBuilder() *cobra.Command {
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",
 		Hidden: false,
-		Example: fmt.Sprintf(`  To start the interactive setup:
-  $ %s auth register
+		Example: fmt.Sprintf(`  # To start the interactive setup:
+  %s auth register
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := registerPreRun(); err != nil {

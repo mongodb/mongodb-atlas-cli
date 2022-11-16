@@ -74,8 +74,8 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "Retrieves all alerts for the specified Atlas project.",
-		Example: fmt.Sprintf(`  This example uses the "%[1]s alerts list" command to retrieve all alerts that occurred for the specified project. It uses the profile named "myprofile" for accessing Atlas.
-  $ %[1]s alerts list \
+		Example: fmt.Sprintf(`  # This example uses the "%[1]s alerts list" command to retrieve all alerts that occurred for the specified project. It uses the profile named "myprofile" for accessing Atlas.
+  %[1]s alerts list \
     --projectId 5df90590f10fab5e33de2305 \
     -o json \
     --profile myprofile`, cli.ExampleAtlasEntryPoint()),

@@ -130,4 +130,3 @@ Examples
 
    Create a database user with multiple scopes:
    $ mongocli atlas dbuser create --username <username> --role clusterMonitor --scope <REPLICA-SET ID>,<storeName> --projectId <projectId>
-

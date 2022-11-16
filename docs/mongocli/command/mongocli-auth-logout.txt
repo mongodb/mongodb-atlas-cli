@@ -67,4 +67,3 @@ Examples
    To log out from the CLI:
    $ mongocli auth logout
 
-

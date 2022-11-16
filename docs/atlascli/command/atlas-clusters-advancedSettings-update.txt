@@ -141,4 +141,3 @@ Examples
 
    Update the minimum TLS protocol version for a cluster:
    $ atlas cluster advancedSettings update <clusterName> --projectId <projectId> --minimumEnabledTLSProtocol "TLS1_2"
-

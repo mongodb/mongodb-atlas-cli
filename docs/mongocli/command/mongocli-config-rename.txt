@@ -82,4 +82,3 @@ Examples
 
    Rename a profile called myProfile to testProfile:
    $ mongocli config rename myProfile testProfile
-

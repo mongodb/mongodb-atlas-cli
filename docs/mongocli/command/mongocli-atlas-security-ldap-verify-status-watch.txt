@@ -86,4 +86,3 @@ Examples
 .. code-block::
 
    $ mongocli atlas security ldap status watch requestIdSample
-

@@ -71,4 +71,3 @@ Examples
    To start the interactive login for your MongoDB Atlas account:
    $ atlas auth login
 
-

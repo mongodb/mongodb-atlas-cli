@@ -70,4 +70,3 @@ Examples
 .. code-block::
 
    $ mongocli ops-manager automation watch
-

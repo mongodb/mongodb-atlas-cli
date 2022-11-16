@@ -81,4 +81,3 @@ Examples
 
    List available regions by tier for a given provider:
    $ atlas cluster availableRegions --provider GCP
-

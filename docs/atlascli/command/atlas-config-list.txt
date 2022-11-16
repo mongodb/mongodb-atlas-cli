@@ -67,4 +67,3 @@ Examples
 .. code-block::
 
    $ atlas config ls
-

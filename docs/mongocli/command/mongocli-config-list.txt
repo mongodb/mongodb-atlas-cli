@@ -67,4 +67,3 @@ Examples
 .. code-block::
 
    $ mongocli config ls
-

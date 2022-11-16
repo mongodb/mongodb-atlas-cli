@@ -85,4 +85,3 @@ Examples
 .. code-block::
 
    mongocli ops-manager serverUsage download --endDate 2022-12-12 --startDate 2022-01-01
-

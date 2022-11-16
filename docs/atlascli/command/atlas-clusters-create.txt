@@ -145,4 +145,3 @@ Examples
 
    Deploy a cluster or a multi-cloud cluster from a JSON configuration file:
    $ atlas cluster create --projectId <projectId> --file <path/to/file.json>
-

@@ -86,4 +86,3 @@ Examples
 
    This example uses the profile named "myprofile" for accessing Atlas.
    $ atlas privateEndpoint dataLake aws describe vpce-abcdefg0123456789 -P myprofile
-

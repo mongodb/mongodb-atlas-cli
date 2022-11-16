@@ -84,7 +84,6 @@ Examples
 
 .. code-block::
 
-
+  
    Create a user with readWriteAnyDatabase and clusterMonitor access
    $ mongocli om dbuser create --username <username>  --role readWriteAnyDatabase,clusterMonitor --mechanisms SCRAM-SHA-256 --projectId <projectId>
-

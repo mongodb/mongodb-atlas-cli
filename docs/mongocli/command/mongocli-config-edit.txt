@@ -62,10 +62,9 @@ Examples
 
 .. code-block::
 
-
+  
    To open the config
    $ mongocli config edit
-
 
 
 .. toctree::

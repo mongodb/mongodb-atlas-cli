@@ -87,4 +87,3 @@ Examples
 .. code-block::
 
    $ atlas serverless watch instanceNameSample
-

@@ -69,4 +69,3 @@ Examples
 
    To configure the tool to work with Atlas for Government:
    $ atlas config init --gov
-

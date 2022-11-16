@@ -105,4 +105,3 @@ Examples
 
    Update scopes for a database user:
    $ mongocli atlas dbuser update <username> --scope resourceName:resourceType --projectId <projectId>
-

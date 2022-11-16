@@ -86,4 +86,3 @@ Examples
 .. code-block::
 
    $ atlas security ldap status watch requestIdSample
-

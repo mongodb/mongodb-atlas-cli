@@ -87,4 +87,3 @@ Examples
 .. code-block::
 
    $ mongocli atlas serverless watch instanceNameSample
-

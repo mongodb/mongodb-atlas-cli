@@ -78,4 +78,3 @@ Examples
 
    The following example retrieves the continuous backup export buckets:
    $ atlas backup exports buckets list
-

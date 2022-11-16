@@ -90,4 +90,3 @@ Examples
 .. code-block::
 
    $ atlas networking peering watch peeringConnectionSampleId
-

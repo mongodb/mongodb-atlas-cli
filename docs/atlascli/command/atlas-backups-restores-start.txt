@@ -130,4 +130,3 @@ Examples
    $ atlas backup restore start download \
           --clusterName myDemo \
           --snapshotId 5e7e00128f8ce03996a47179
-

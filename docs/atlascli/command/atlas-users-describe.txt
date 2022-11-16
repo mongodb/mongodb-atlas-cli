@@ -72,11 +72,10 @@ Examples
 
 .. code-block::
 
-   
+  
    Describe a user by ID
    $ mongocli iam users describe --id <id>
 
    Describe a user by username
    $ mongocli iam users describe --username <username>
-
 

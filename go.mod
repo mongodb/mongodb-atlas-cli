@@ -21,7 +21,7 @@ require (
 	github.com/klauspost/compress v1.15.12
 	github.com/mattn/go-isatty v0.0.16
 	github.com/mongodb-forks/digest v1.0.4
-	github.com/mongodb-labs/cobra2snooty v0.11.0
+	github.com/mongodb-labs/cobra2snooty v0.12.2
 	github.com/openlyinc/pointy v1.2.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4

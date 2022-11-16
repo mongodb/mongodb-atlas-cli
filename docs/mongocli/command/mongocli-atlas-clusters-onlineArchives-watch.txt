@@ -90,4 +90,3 @@ Examples
 .. code-block::
 
    $ mongocli atlas cluster onlineArchive watch archiveIdSample --clusterName clusterNameSample
-

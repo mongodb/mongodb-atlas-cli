@@ -70,7 +70,7 @@ Examples
 
 .. code-block::
 
-
+  
    Configure a profile to interact with Atlas:
    $ mongocli config
    Configure a profile to interact with Atlas for Government:
@@ -80,7 +80,6 @@ Examples
    $ mongocli config --service cloud-manager
    Configure a profile to interact with Ops Manager:
    $ mongocli config --service ops-manager
-
 
 Related Commands
 ----------------

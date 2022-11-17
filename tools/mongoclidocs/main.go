@@ -42,12 +42,8 @@ func main() {
 	}
 
 	mongocliBuilder := mongocli.Builder(&profile, []string{})
+	mongocliBuilder.InitDefaultCompletionCmd()
 	removeDeprecateStringAtlasCommand(mongocliBuilder)
-
-	// init completion command indirectly
-	// See: https://github.com/spf13/cobra/issues/1464
-	_, _ = mongocliBuilder.ExecuteC()
-
 	setDisableAutoGenTag(mongocliBuilder)
 
 	if err := cobra2snooty.GenTreeDocs(mongocliBuilder, "./docs/mongocli/command"); err != nil {

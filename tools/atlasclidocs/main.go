@@ -44,10 +44,7 @@ func main() {
 	}
 
 	atlasBuilder := atlas.Builder()
-
-	// init completion command indirectly
-	// See: https://github.com/spf13/cobra/issues/1464
-	_, _ = atlasBuilder.ExecuteC()
+	atlasBuilder.InitDefaultCompletionCmd()
 
 	setDisableAutoGenTag(atlasBuilder)
 

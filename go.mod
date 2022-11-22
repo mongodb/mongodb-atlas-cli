@@ -34,7 +34,7 @@ require (
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
 	go.mongodb.org/atlas v0.19.0
 	go.mongodb.org/mongo-driver v1.11.0
-	go.mongodb.org/ops-manager v0.43.0
+	go.mongodb.org/ops-manager v0.44.0
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	google.golang.org/api v0.102.0
 	google.golang.org/protobuf v1.28.1

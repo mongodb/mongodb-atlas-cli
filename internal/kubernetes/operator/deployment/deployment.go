@@ -18,13 +18,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
+	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"go.mongodb.org/atlas/mongodbatlas"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

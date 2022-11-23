@@ -23,7 +23,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"

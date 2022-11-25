@@ -19,18 +19,19 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"io"
+	"os"
+	"os/exec"
+	"testing"
+
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"io"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	k8syaml "k8s.io/apimachinery/pkg/util/yaml"
 	"k8s.io/client-go/kubernetes/scheme"
-	"os"
-	"os/exec"
-	"testing"
 )
 
 func getK8SEntities(data []byte) ([]runtime.Object, error) {

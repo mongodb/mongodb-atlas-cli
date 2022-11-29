@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && kubernetes)
+//go:build e2e || (atlas && project && kubernetes)
 
 package atlas_test
 
@@ -65,11 +65,12 @@ func getK8SEntities(data []byte) ([]runtime.Object, error) {
 func TestKubernetesConfigGenerate(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("importer-test")
+	g.generateCluster()
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
-	n, err := e2e.RandInt(9)
+	n, err := e2e.RandInt(255)
 	require.NoError(t, err)
 
 	targetNamespace := fmt.Sprintf("importer-namespace-%d", n)

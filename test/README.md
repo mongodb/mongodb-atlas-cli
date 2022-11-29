@@ -349,4 +349,4 @@
 | `completion powershell`                     | Y         | Y         | Y         | Y         | Y     | Y     |
 | `setup`                                     | Y         |           |           | Y         |       |       |
 | `register`                                  | N         |           |           | Y         |       |       |
-| `kubernetes config generate`                | Y         |           |           | Y         | N     |
+| `kubernetes config generate`                | Y         |           |           | Y         | N     |       |

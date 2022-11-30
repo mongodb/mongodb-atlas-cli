@@ -95,7 +95,7 @@ func GenerateBuilder() *cobra.Command {
   # Export Project, DatabaseUsers resources for a specific project including connection and integration secrets to a specific namespace:
   atlas kubernetes config generate --projectId=<projectId> --includeSecrets --targetNamespace=<namespace>
   
-  # Export Project, DatabaseUsers, Deployments resources for a specific project including connection and integrations secrets to a specific namespace
+  # Export Project, DatabaseUsers, and Deployment resources for a specific project including connection and integration secrets to a specific namespace:
   atlas kubernetes config generate --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

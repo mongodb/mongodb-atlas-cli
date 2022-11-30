@@ -12,9 +12,9 @@ atlas kubernetes config generate
    :depth: 1
    :class: singlecol
 
-Generate kubernetes resources configuration.
+Generate Kubernetes configuration resources.
 
-The kubernetes command provides access to kubernetes configuration features of the atlas. You can generate Atlas operator resources from the Atlas resources like Projects, Deployments and Users
+This command provides your Kubernetes configuration access to Atlas. You can generate Atlas Operator resources for Atlas objects, including Projects, Deployments, and Users.
 
 Syntax
 ------
@@ -82,23 +82,23 @@ Examples
 
 .. code-block::
 
-   # Export Project, DatabaseUsers resources for specific project without connection and integrations secrets':
+   # Export Project, DatabaseUsers resources for a specific project without connection and integration secrets:
    atlas kubernetes config generate --projectId=<projectId>
 
    
 .. code-block::
 
-   # Export Project, DatabaseUsers resources for a specific project including connection and integrations secrets
+   # Export Project, DatabaseUsers resources for a specific project including connection and integration secrets:
    atlas kubernetes config generate --projectId=<projectId> --includeSecrets
 
    
 .. code-block::
 
-   # Export Project, DatabaseUsers resources for a specific project including connection and integrations secrets to a specific namespace
+   # Export Project, DatabaseUsers resources for a specific project including connection and integration secrets to a specific namespace:
    atlas kubernetes config generate --projectId=<projectId> --includeSecrets --targetNamespace=<namespace>
    
    
 .. code-block::
 
-   # Export Project, DatabaseUsers, Deployments resources for a specific project including connection and integrations secrets to a specific namespace
+   # Export Project, DatabaseUsers, and Deployment resources for a specific project including connection and integration secrets to a specific namespace:
    atlas kubernetes config generate --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>

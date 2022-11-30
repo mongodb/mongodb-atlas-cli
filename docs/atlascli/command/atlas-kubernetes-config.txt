@@ -12,9 +12,9 @@ atlas kubernetes config
    :depth: 1
    :class: singlecol
 
-Manage kubernetes resources configuration.
+Manage Kubernetes configuration resources.
 
-The kubernetes config command provides access to kubernetes configuration features of the atlas.
+This command provides your Kubernetes configuration access to Atlas.
 
 Options
 -------
@@ -51,7 +51,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-kubernetes-config-generate` - Generate kubernetes resources configuration.
+* :ref:`atlas-kubernetes-config-generate` - Generate Kubernetes configuration resources.
 
 
 .. toctree::

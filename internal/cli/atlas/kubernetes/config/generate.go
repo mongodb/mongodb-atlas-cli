@@ -83,7 +83,7 @@ func GenerateBuilder() *cobra.Command {
 		Use:     use,
 		Args:    require.NoArgs,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Generate kubernetes resources configuration.",
+		Short:   "Generate Kubernetes configuration resources.",
 		Long: "The kubernetes command provides access to kubernetes configuration features of the atlas. " +
 			"You can generate Atlas operator resources from the Atlas resources like Projects, Deployments and Users",
 		Example: `# Export Project, DatabaseUsers resources for specific project without connection and integrations secrets':

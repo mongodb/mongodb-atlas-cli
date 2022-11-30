@@ -33,10 +33,15 @@ import (
 )
 
 type MockAtlasOperatorClusterStore struct {
-	projectToAdvancedClusters     map[string]map[string]*mongodbatlas.AdvancedCluster
-	projectToClusterToProcessArgs map[string]map[string]*mongodbatlas.ProcessArgs
-	projectToClusterToSchedule    map[string]map[string]*mongodbatlas.CloudProviderSnapshotBackupPolicy
-	projectToServerlessClusters   map[string]map[string]*mongodbatlas.Cluster
+	projectToAdvancedClusters             map[string]map[string]*mongodbatlas.AdvancedCluster
+	projectToClusterToProcessArgs         map[string]map[string]*mongodbatlas.ProcessArgs
+	projectToClusterToSchedule            map[string]map[string]*mongodbatlas.CloudProviderSnapshotBackupPolicy
+	projectToServerlessClusters           map[string]map[string]*mongodbatlas.Cluster
+	projectIDToServerlessPrivateEndpoints map[string]map[string][]mongodbatlas.ServerlessPrivateEndpointConnection
+}
+
+func (m *MockAtlasOperatorClusterStore) ServerlessPrivateEndpoints(projectID, instanceName string, _ *mongodbatlas.ListOptions) ([]mongodbatlas.ServerlessPrivateEndpointConnection, error) {
+	return m.projectIDToServerlessPrivateEndpoints[projectID][instanceName], nil
 }
 
 func (m *MockAtlasOperatorClusterStore) AtlasCluster(projectName, clusterName string) (*mongodbatlas.AdvancedCluster, error) {
@@ -372,6 +377,23 @@ func TestBuildServerlessDeployments(t *testing.T) {
 			projectToAdvancedClusters:     nil,
 			projectToClusterToProcessArgs: nil,
 			projectToClusterToSchedule:    nil,
+			projectIDToServerlessPrivateEndpoints: map[string]map[string][]mongodbatlas.ServerlessPrivateEndpointConnection{
+				projectName: {
+					clusterName: {
+						{
+							ID:                           "TestPEId",
+							CloudProviderEndpointID:      "TestCloudProviderID",
+							Comment:                      "TestPEName",
+							EndpointServiceName:          "",
+							ErrorMessage:                 "",
+							Status:                       "",
+							ProviderName:                 "",
+							PrivateEndpointIPAddress:     "",
+							PrivateLinkServiceResourceID: "",
+						},
+					},
+				},
+			},
 			projectToServerlessClusters: map[string]map[string]*mongodbatlas.Cluster{
 				projectName: {
 					clusterName: &mongodbatlas.Cluster{
@@ -478,6 +500,13 @@ func TestBuildServerlessDeployments(t *testing.T) {
 								MinInstanceSize:  cluster.ProviderSettings.AutoScaling.Compute.MinInstanceSize,
 								MaxInstanceSize:  cluster.ProviderSettings.AutoScaling.Compute.MaxInstanceSize,
 							},
+						},
+					},
+					PrivateEndpoints: []atlasV1.ServerlessPrivateEndpoint{
+						{
+							Name:                     clusterStore.projectIDToServerlessPrivateEndpoints[projectName][clusterName][0].Comment,
+							CloudProviderEndpointID:  clusterStore.projectIDToServerlessPrivateEndpoints[projectName][clusterName][0].CloudProviderEndpointID,
+							PrivateEndpointIPAddress: clusterStore.projectIDToServerlessPrivateEndpoints[projectName][clusterName][0].PrivateEndpointIPAddress,
 						},
 					},
 				},

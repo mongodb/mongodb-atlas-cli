@@ -353,7 +353,7 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID string) ([]atlasV1.PrivateEndpoint, error) {
 	var result []atlasV1.PrivateEndpoint
 	for _, cloudProvider := range []provider.ProviderName{provider.ProviderAWS, provider.ProviderGCP, provider.ProviderAzure} {
-		peList, err := peProvider.PrivateEndpoints(projectID, string(cloudProvider), &atlas.ListOptions{})
+		peList, err := peProvider.PrivateEndpoints(projectID, string(cloudProvider), &atlas.ListOptions{ItemsPerPage: MaxItems})
 		if err != nil {
 			return nil, err
 		}

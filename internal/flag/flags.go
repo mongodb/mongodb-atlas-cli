@@ -310,6 +310,8 @@ const (
 	UseOrgAndGroupNamesInExportPrefix         = "useOrgAndGroupNamesInExportPrefix"         // UseOrgAndGroupNamesInExportPrefix flag
 	NoUseOrgAndGroupNamesInExportPrefix       = "noUseOrgAndGroupNamesInExportPrefix"       // NoUseOrgAndGroupNamesInExportPrefix flag
 	BackupPolicy                              = "policy"                                    // BackupPolicy flag
+	OperatorIncludeSecrets                    = "includeSecrets"                            // OperatorIncludeSecrets flag
+	OperatorTargetNamespace                   = "targetNamespace"                           // OperatorTargetNamespace flag
 
 	/* #nosec */
 	KMIPClientCertificatePassword = "kmipClientCertificatePassword" // KMIPClientCertificatePassword flag

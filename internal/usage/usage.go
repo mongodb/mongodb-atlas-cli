@@ -371,4 +371,7 @@ dbName and collection are only required for built-in roles.`
 	OplogSizeMB                               = "Storage limit of cluster's oplog expressed in megabytes."
 	SampleRefreshIntervalBIConnector          = "Interval in seconds at which the mongosqld process re-samples data to create its relational schema."
 	SampleSizeBIConnector                     = "Number of documents per database to sample when gathering schema information."
+	ExporterClusterName                       = "One or more comma separated cluster names to import"
+	OperatorIncludeSecrets                    = "Generate kubernetes secrets with data for projects, users, deployments entities" //nolint:gosec //This is just a message, not a credential
+	OperatorTargetNamespace                   = "Namespaces to use for generated kubernetes entities"
 )

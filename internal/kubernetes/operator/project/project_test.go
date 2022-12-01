@@ -60,11 +60,12 @@ type MockAtlasOperatorProjectStore struct {
 	projectTeams           map[string]*mongodbatlas.TeamsAssigned
 }
 
-func (m *MockAtlasOperatorProjectStore) TeamByID(orgID string, teamID string) (*mongodbatlas.Team, error) {
+func (m *MockAtlasOperatorProjectStore) TeamByID(orgID, teamID string) (*mongodbatlas.Team, error) {
 	return m.teams[orgID][teamID], nil
 }
 
-func (m *MockAtlasOperatorProjectStore) TeamByName(origID string, teamName string) (*mongodbatlas.Team, error) {
+// nolint
+func (m *MockAtlasOperatorProjectStore) TeamByName(_, _ string) (*mongodbatlas.Team, error) {
 	return nil, fmt.Errorf("shoudn't be called")
 }
 

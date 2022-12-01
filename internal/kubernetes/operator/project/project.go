@@ -638,14 +638,12 @@ func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, p
 	teamsRefs := make([]atlasV1.Team, 0, len(projectTeams.Results))
 	atlasTeamCRs := make([]*atlasV1.AtlasTeam, 0, len(projectTeams.Results))
 	for i := range projectTeams.Results {
-		if projectTeams.Results[i] == nil {
-			continue
-		}
-
 		teamRef := projectTeams.Results[i]
+
 		if teamRef == nil {
 			continue
 		}
+
 		team, err := teamsProvider.TeamByID(orgID, teamRef.TeamID)
 		if err != nil {
 			return nil, nil, fmt.Errorf("team id: %s is assigned to project %s (id: %s) but not found. %w",

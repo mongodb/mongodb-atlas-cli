@@ -17,7 +17,6 @@
 package project
 
 import (
-	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
@@ -602,12 +601,6 @@ func TestBuildAtlasProject(t *testing.T) {
 		if !reflect.DeepEqual(expectedProject, gotProject) {
 			t.Fatalf("Project mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expectedProject, gotProject)
 		}
-
-		te, _ := json.MarshalIndent(expectedTeams, "", " ")
-		fmt.Println("EXPECTED:", string(te))
-
-		tg, _ := json.MarshalIndent(gotTeams, "", " ")
-		fmt.Println("GOT:", string(tg))
 
 		if !reflect.DeepEqual(expectedTeams, gotTeams) {
 			t.Fatalf("Teams mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expectedTeams, gotTeams)

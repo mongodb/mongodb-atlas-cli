@@ -17,6 +17,7 @@
 package project
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
@@ -37,6 +38,7 @@ import (
 
 const orgID = "TestOrgID"
 const projectID = "TestProjectID"
+const teamID = "TestTeamID"
 
 // nolint
 type MockAtlasOperatorProjectStore struct {
@@ -54,6 +56,20 @@ type MockAtlasOperatorProjectStore struct {
 	projectSettings        map[string]*mongodbatlas.ProjectSettings
 	alertConfigs           map[string][]mongodbatlas.AlertConfiguration
 	customRoles            map[string]*[]mongodbatlas.CustomDBRole
+	teams                  map[string]map[string]*mongodbatlas.Team
+	projectTeams           map[string]*mongodbatlas.TeamsAssigned
+}
+
+func (m *MockAtlasOperatorProjectStore) TeamByID(orgID string, teamID string) (*mongodbatlas.Team, error) {
+	return m.teams[orgID][teamID], nil
+}
+
+func (m *MockAtlasOperatorProjectStore) TeamByName(origID string, teamName string) (*mongodbatlas.Team, error) {
+	return nil, fmt.Errorf("shoudn't be called")
+}
+
+func (m *MockAtlasOperatorProjectStore) ProjectTeams(projectID string) (interface{}, error) {
+	return m.projectTeams[projectID], nil
 }
 
 func (m *MockAtlasOperatorProjectStore) Project(projectID string) (interface{}, error) {
@@ -332,12 +348,36 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 			},
+			projectTeams: map[string]*mongodbatlas.TeamsAssigned{
+				projectID: {
+					Links: nil,
+					Results: []*mongodbatlas.Result{
+						{
+							Links:     nil,
+							TeamID:    teamID,
+							RoleNames: []string{string(atlasV1.TeamRoleClusterManager)},
+						},
+					},
+					TotalCount: 1,
+				},
+			},
+			teams: map[string]map[string]*mongodbatlas.Team{
+				orgID: {
+					teamID: {
+						ID:        teamID,
+						Name:      "TestTeamName",
+						Usernames: []string{"testusername@mongodb.com"},
+					},
+				},
+			},
 		}
 
-		gotProject, _, err := BuildAtlasProject(projectStore, projectID, targetNamespace, true)
+		projectResult, err := BuildAtlasProject(projectStore, orgID, projectID, targetNamespace, true)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
+		gotProject := projectResult.Project
+		gotTeams := projectResult.Teams
 
 		expectedThreshold := &atlasV1.Threshold{
 			Operator:  projectStore.alertConfigs[projectID][0].Threshold.Operator,
@@ -384,6 +424,27 @@ func TestBuildAtlasProject(t *testing.T) {
 			Threshold:  fmt.Sprintf("%f", projectStore.alertConfigs[projectID][0].MetricThreshold.Threshold),
 			Units:      projectStore.alertConfigs[projectID][0].MetricThreshold.Units,
 			Mode:       projectStore.alertConfigs[projectID][0].MetricThreshold.Mode,
+		}
+		expectedTeams := []*atlasV1.AtlasTeam{
+			{
+				TypeMeta: v1.TypeMeta{
+					Kind:       "AtlasTeam",
+					APIVersion: "atlas.mongodb.com/v1",
+				},
+				ObjectMeta: v1.ObjectMeta{
+					Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(projectStore.projects[projectID].Name), strings.ToLower(projectStore.teams[orgID][teamID].Name)),
+					Namespace: targetNamespace,
+				},
+				Spec: atlasV1.TeamSpec{
+					Name:      projectStore.teams[orgID][teamID].Name,
+					Usernames: []atlasV1.TeamUser{atlasV1.TeamUser(projectStore.teams[orgID][teamID].Usernames[0])},
+				},
+				Status: status.TeamStatus{
+					Common: status.Common{
+						Conditions: []status.Condition{},
+					},
+				},
+			},
 		}
 		expectedProject := &atlasV1.AtlasProject{
 			TypeMeta: v1.TypeMeta{
@@ -520,6 +581,15 @@ func TestBuildAtlasProject(t *testing.T) {
 						},
 					},
 				},
+				Teams: []atlasV1.Team{
+					{
+						TeamRef: common.ResourceRefNamespaced{
+							Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(projectStore.projects[projectID].Name), strings.ToLower(projectStore.teams[orgID][teamID].Name)),
+							Namespace: targetNamespace,
+						},
+						Roles: []atlasV1.TeamRole{atlasV1.TeamRole(projectStore.projectTeams[projectID].Results[0].RoleNames[0])},
+					},
+				},
 			},
 			Status: status.AtlasProjectStatus{
 				Common: status.Common{
@@ -530,6 +600,16 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		if !reflect.DeepEqual(expectedProject, gotProject) {
 			t.Fatalf("Project mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expectedProject, gotProject)
+		}
+
+		te, _ := json.MarshalIndent(expectedTeams, "", " ")
+		fmt.Println("EXPECTED:", string(te))
+
+		tg, _ := json.MarshalIndent(gotTeams, "", " ")
+		fmt.Println("GOT:", string(tg))
+
+		if !reflect.DeepEqual(expectedTeams, gotTeams) {
+			t.Fatalf("Teams mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expectedTeams, gotTeams)
 		}
 	})
 }

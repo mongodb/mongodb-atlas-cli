@@ -309,6 +309,8 @@ github.com/mongodb/mongodb-atlas-kubernetes v1.3.1-0.20221024110443-0c2d71e4f1e4
 github.com/mongodb/mongodb-atlas-kubernetes v1.3.1-0.20221024110443-0c2d71e4f1e4/go.mod h1:H5wWPLYdbtRXny/1lic5O8r0uvJV5sWePVZpIR/o0Oo=
 github.com/mongodb/mongodb-atlas-kubernetes v1.4.1 h1:2NATlIHzJvzXlvBjwMFEE4fdkvDpQ6nIn9ghuI60SL8=
 github.com/mongodb/mongodb-atlas-kubernetes v1.4.1/go.mod h1:imHiPWtckmjn8Qte2kT/tV0rKrhnQUW5jPCiq/lH/Vs=
+github.com/mongodb/mongodb-atlas-kubernetes v1.4.2-0.20221130122923-895f2a95c6f2 h1:Sk+eEXfP5hXRJceTJVjhdZ0OFt8S/5UoKfhQdOxfkqE=
+github.com/mongodb/mongodb-atlas-kubernetes v1.4.2-0.20221130122923-895f2a95c6f2/go.mod h1:imHiPWtckmjn8Qte2kT/tV0rKrhnQUW5jPCiq/lH/Vs=
 github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe/go.mod h1:wL8QJuTMNUDYhXwkmfOly8iTdp5TEcJFWZD2D7SIkUc=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq1c1nUAm88MOHcQC9l5mIlSMApZMrHA=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=

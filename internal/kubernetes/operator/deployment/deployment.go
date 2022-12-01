@@ -28,6 +28,10 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const (
+	MaxItems = 500
+)
+
 type AtlasDeploymentResult struct {
 	Deployment     *atlasV1.AtlasDeployment
 	BackupSchedule *atlasV1.AtlasBackupSchedule
@@ -313,6 +317,11 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 		return nil, err
 	}
 
+	privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, deployment.Name)
+	if err != nil {
+		return nil, err
+	}
+
 	var providerSettings *atlasV1.ProviderSettingsSpec
 
 	if deployment.ProviderSettings != nil {
@@ -352,6 +361,7 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 	serverlessSpec := &atlasV1.ServerlessSpec{
 		Name:             deployment.Name,
 		ProviderSettings: providerSettings,
+		PrivateEndpoints: privateEndpoints,
 	}
 
 	atlasDeployment := &atlasV1.AtlasDeployment{
@@ -380,4 +390,22 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 	}
 
 	return atlasDeployment, nil
+}
+
+func buildServerlessPrivateEndpoints(deploymentStore store.ServerlessPrivateEndpointsLister, projectID, clusterName string) ([]atlasV1.ServerlessPrivateEndpoint, error) {
+	endpoints, err := deploymentStore.ServerlessPrivateEndpoints(projectID, clusterName, &mongodbatlas.ListOptions{ItemsPerPage: MaxItems})
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]atlasV1.ServerlessPrivateEndpoint, 0, len(endpoints))
+
+	for i := range endpoints {
+		result = append(result, atlasV1.ServerlessPrivateEndpoint{
+			Name:                     endpoints[i].Comment,
+			CloudProviderEndpointID:  endpoints[i].CloudProviderEndpointID,
+			PrivateEndpointIPAddress: endpoints[i].PrivateEndpointIPAddress,
+		})
+	}
+	return result, nil
 }

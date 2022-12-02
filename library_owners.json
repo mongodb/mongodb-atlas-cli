@@ -10,7 +10,7 @@
   	"github.com/briandowns/spinner": "API Experience Triage",
   	"github.com/evergreen-ci/shrub": "API Experience Triage",
   	"github.com/gemalto/kmip-go": "API Experience Triage",
-		"github.com/go-test/deep": "API Experience Triage",
+  	"github.com/go-test/deep": "API Experience Triage",
   	"github.com/golang-jwt/jwt/v4": "API Experience Triage",
   	"github.com/golang/mock": "API Experience Triage",
   	"github.com/google/go-github/v42 ": "API Experience Triage",

@@ -40,6 +40,7 @@ export PATH := $(shell go env GOPATH)/bin:$(PATH)
 ifneq ($(OS),Windows_NT)
 	export SHELL := env PATH=$(PATH) /bin/bash
 endif
+export TERM := linux-m
 export GO111MODULE := on
 export MCLI_E2E_BINARY
 export ATLAS_E2E_BINARY
@@ -72,6 +73,7 @@ link-git-hooks: ## Install git hooks
 fmt: ## Format changed go
 	@scripts/fmt.sh
 
+.PHONY: fmt-all
 fmt-all: ### Format all go files with goimports and gofmt
 	find . -name "*.go" -not -path "./vendor/*" -not -path "./internal/mocks" -exec gofmt -w "{}" \;
 	find . -name "*.go" -not -path "./vendor/*" -not -path "./internal/mocks" -exec goimports -l -w "{}" \;

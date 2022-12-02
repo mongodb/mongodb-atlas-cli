@@ -1,6 +1,6 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-GOLANGCI_VERSION=v1.49.0
+GOLANGCI_VERSION=v1.50.1
 COVERAGE=coverage.out
 
 MCLI_SOURCE_FILES?=./cmd/mongocli

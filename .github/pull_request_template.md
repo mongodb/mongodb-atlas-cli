@@ -35,6 +35,7 @@ We're here to help! This is simply a reminder of what we are going to look for b
 - [ ] I have added any necessary documentation in document requirements section listed in [CONTRIBUTING.md](https://github.com/mongodb/mongodb-atlas-cli/blob/master/CONTRIBUTING.md) (if appropriate)
 - [ ] I have addressed the @mongodb/docs-cloud-team comments (if appropriate)
 - [ ] I have updated [test/README.md](https://github.com/mongodb/mongodb-atlas-cli/blob/master/test/README.md) (if an e2e test has been added)
+- [ ] I have updated [library_owners.json](https://github.com/mongodb/mongodb-atlas-cli/blob/master/library_owners.json) (if a new library has been added)
 - [ ] I have run `make fmt` and formatted my code
 
 ## Further comments

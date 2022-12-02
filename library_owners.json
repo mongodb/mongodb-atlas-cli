@@ -1,5 +1,5 @@
 {
-		"cloud.google.com/go/kms": "API Experience Triage",
+  	"cloud.google.com/go/kms": "API Experience Triage",
   	"github.com/AlecAivazis/survey/v2": "API Experience Triage",
   	"github.com/Azure/azure-sdk-for-go/sdk/azcore": "API Experience Triage",
   	"github.com/Azure/azure-sdk-for-go/sdk/azidentity": "API Experience Triage",

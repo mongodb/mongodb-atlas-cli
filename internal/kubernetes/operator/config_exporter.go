@@ -109,22 +109,27 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 	var resources []runtime.Object
 
 	// Project
-	projectData, relatedSecrets, err := project.BuildAtlasProject(e.dataProvider, e.projectID, e.targetNamespace, e.includeSecretsData)
+	projectData, err := project.BuildAtlasProject(e.dataProvider, e.orgID, e.projectID, e.targetNamespace, e.includeSecretsData)
 	if err != nil {
 		return nil, "", err
 	}
-	resources = append(resources, projectData)
-	for _, secret := range relatedSecrets {
+	resources = append(resources, projectData.Project)
+	for _, secret := range projectData.Secrets {
 		resources = append(resources, secret)
+	}
+
+	// Teams
+	for _, team := range projectData.Teams {
+		resources = append(resources, team)
 	}
 
 	// Project secret with credentials
 	resources = append(resources, project.BuildProjectConnectionSecret(e.credsProvider,
-		projectData.Name,
-		projectData.Namespace, e.orgID, e.includeSecretsData))
+		projectData.Project.Name,
+		projectData.Project.Namespace, e.orgID, e.includeSecretsData))
 
 	// DB users
-	usersData, relatedSecrets, err := dbusers.BuildDBUsers(e.dataProvider, e.projectID, projectData.Name, e.targetNamespace, e.includeSecretsData)
+	usersData, relatedSecrets, err := dbusers.BuildDBUsers(e.dataProvider, e.projectID, projectData.Project.Name, e.targetNamespace, e.includeSecretsData)
 	if err != nil {
 		return nil, "", err
 	}
@@ -135,7 +140,7 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		resources = append(resources, secret)
 	}
 
-	return resources, projectData.Name, nil
+	return resources, projectData.Project.Name, nil
 }
 
 func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object, error) {

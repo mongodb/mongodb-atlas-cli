@@ -15,6 +15,7 @@
 package store
 
 type AtlasOperatorProjectStore interface {
+	AtlasOperatorTeamsStore
 	ProjectDescriber
 	ProjectIPAccessListLister
 	ProjectSettingsDescriber
@@ -39,6 +40,11 @@ type AtlasOperatorClusterStore interface {
 	ScheduleDescriber
 	ServerlessInstanceDescriber
 	ServerlessPrivateEndpointsLister
+}
+
+type AtlasOperatorTeamsStore interface {
+	TeamDescriber
+	ProjectTeamLister
 }
 
 type AtlasOperatorGenericStore interface {

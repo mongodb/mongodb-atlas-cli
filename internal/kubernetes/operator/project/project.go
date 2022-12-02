@@ -38,28 +38,35 @@ const (
 )
 
 var (
-	ErrAtlasProject = errors.New("can not get 'atlas project' resource")
+	ErrAtlasProject  = errors.New("can not get 'atlas project' resource")
+	ErrTeamsAssigned = errors.New("can not get 'atlas assigned teams' resource")
 )
 
-func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, projectID, targetNamespace string, includeSecret bool) (*atlasV1.AtlasProject, []*corev1.Secret, error) {
+type AtlasProjectResult struct {
+	Project *atlasV1.AtlasProject
+	Secrets []*corev1.Secret
+	Teams   []*atlasV1.AtlasTeam
+}
+
+func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, orgID, projectID, targetNamespace string, includeSecret bool) (*AtlasProjectResult, error) {
 	data, err := projectStore.Project(projectID)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	project, ok := data.(*atlas.Project)
 	if !ok {
-		return nil, nil, ErrAtlasProject
+		return nil, ErrAtlasProject
 	}
 
 	ipAccessList, err := buildAccessLists(projectStore, projectID)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	maintenanceWindows, err := buildMaintenanceWindows(projectStore, projectID)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	secretRef := &common.ResourceRef{}
@@ -69,50 +76,55 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, projectID, 
 
 	integrations, intSecrets, err := buildIntegrations(projectStore, projectID, targetNamespace, true)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	networkPeering, err := buildNetworkPeering(projectStore, projectID)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	privateEndpoints, err := buildPrivateEndpoints(projectStore, projectID)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	encryptionAtRest, err := buildEncryptionAtRest(projectStore, projectID)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	cpa, err := buildCloudProviderAccessRoles(projectStore, projectID)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	projectSettings, err := buildProjectSettings(projectStore, projectID)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	auditing, err := buildAuditing(projectStore, projectID)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	alertConfigurations, err := buildAlertConfigurations(projectStore, projectID)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	customRoles, err := buildCustomRoles(projectStore, projectID)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	return &atlasV1.AtlasProject{
+	teamsRefs, teams, err := buildTeams(projectStore, orgID, projectID, project.Name, targetNamespace)
+	if err != nil {
+		return nil, err
+	}
+
+	projectResult := &atlasV1.AtlasProject{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AtlasProject",
 			APIVersion: "atlas.mongodb.com/v1",
@@ -138,13 +150,20 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, projectID, 
 			Auditing:                      auditing,
 			Settings:                      projectSettings,
 			CustomRoles:                   customRoles,
+			Teams:                         teamsRefs,
 		},
 		Status: status.AtlasProjectStatus{
 			Common: status.Common{
 				Conditions: []status.Condition{},
 			},
 		},
-	}, intSecrets, nil
+	}
+
+	return &AtlasProjectResult{
+		Project: projectResult,
+		Secrets: intSecrets,
+		Teams:   teams,
+	}, err
 }
 
 func BuildProjectConnectionSecret(credsProvider store.CredentialsGetter, name, namespace, orgID string, includeCreds bool) *corev1.Secret {
@@ -581,4 +600,84 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 	}
 
 	return result, nil
+}
+
+func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, projectName, targetNamespace string) ([]atlasV1.Team, []*atlasV1.AtlasTeam, error) {
+	pt, err := teamsProvider.ProjectTeams(projectID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	projectTeams, ok := pt.(*atlas.TeamsAssigned)
+	if !ok {
+		return nil, nil, ErrTeamsAssigned
+	}
+
+	convertRoleNames := func(input []string) []atlasV1.TeamRole {
+		if len(input) == 0 {
+			return nil
+		}
+		result := make([]atlasV1.TeamRole, 0, len(input))
+		for i := range input {
+			result = append(result, atlasV1.TeamRole(input[i]))
+		}
+		return result
+	}
+
+	convertUserNames := func(input []string) []atlasV1.TeamUser {
+		if len(input) == 0 {
+			return nil
+		}
+		result := make([]atlasV1.TeamUser, 0, len(input))
+		for i := range input {
+			result = append(result, atlasV1.TeamUser(input[i]))
+		}
+		return result
+	}
+
+	teamsRefs := make([]atlasV1.Team, 0, len(projectTeams.Results))
+	atlasTeamCRs := make([]*atlasV1.AtlasTeam, 0, len(projectTeams.Results))
+	for i := range projectTeams.Results {
+		teamRef := projectTeams.Results[i]
+
+		if teamRef == nil {
+			continue
+		}
+
+		team, err := teamsProvider.TeamByID(orgID, teamRef.TeamID)
+		if err != nil {
+			return nil, nil, fmt.Errorf("team id: %s is assigned to project %s (id: %s) but not found. %w",
+				teamRef.TeamID, projectName, projectID, err)
+		}
+
+		crName := fmt.Sprintf("%s-team-%s", strings.ToLower(projectName), strings.ToLower(team.Name))
+		teamsRefs = append(teamsRefs, atlasV1.Team{
+			TeamRef: common.ResourceRefNamespaced{
+				Name:      crName,
+				Namespace: targetNamespace,
+			},
+			Roles: convertRoleNames(teamRef.RoleNames),
+		})
+		atlasTeamCRs = append(atlasTeamCRs, &atlasV1.AtlasTeam{
+			TypeMeta: v1.TypeMeta{
+				Kind:       "AtlasTeam",
+				APIVersion: "atlas.mongodb.com/v1",
+			},
+			ObjectMeta: v1.ObjectMeta{
+				Name:      crName,
+				Namespace: targetNamespace,
+			},
+			Spec: atlasV1.TeamSpec{
+				Name:      team.Name,
+				Usernames: convertUserNames(team.Usernames),
+			},
+			Status: status.TeamStatus{
+				Common: status.Common{
+					Conditions: []status.Condition{},
+				},
+			},
+		})
+	}
+
+	return teamsRefs, atlasTeamCRs, nil
 }

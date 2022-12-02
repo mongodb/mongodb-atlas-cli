@@ -73,8 +73,8 @@ fmt: ## Format changed go
 	@scripts/fmt.sh
 
 fmt-all: ### Format all go files with goimports and gofmt
-	find . -name "*.go" -not -path "./vendor/*" -not "./internal/mocks" -exec gofmt -w "{}" \;
-	find . -name "*.go" -not -path "./vendor/*" -not "./internal/mocks" -exec goimports -l -w "{}" \;
+	find . -name "*.go" -not -path "./vendor/*" -not -path "./internal/mocks" -exec gofmt -w "{}" \;
+	find . -name "*.go" -not -path "./vendor/*" -not -path "./internal/mocks" -exec goimports -l -w "{}" \;
 
 .PHONY: test
 test: unit-test integration-test

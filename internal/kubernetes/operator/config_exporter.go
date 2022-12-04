@@ -19,6 +19,9 @@ import (
 	"errors"
 	"fmt"
 
+	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/deployment"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/project"
@@ -29,7 +32,9 @@ import (
 )
 
 const (
-	yamlSeparator = "---\r\n"
+	yamlSeparator        = "---\r\n"
+	maxClusters          = 500
+	DefaultClustersCount = 10
 )
 
 type ConfigExporter struct {
@@ -43,7 +48,10 @@ type ConfigExporter struct {
 }
 
 var (
-	ErrClusterNotFound = errors.New("cluster not found")
+	ErrClusterNotFound        = errors.New("cluster not found")
+	ErrNoOpsManagerClusters   = errors.New("can not get 'clusters' object")
+	ErrNoCloudManagerClusters = errors.New("can not get 'advanced clusters' object")
+	ErrNoClusters             = errors.New("can not get 'advanced clusters' or 'clusters' objects")
 )
 
 func NewConfigExporter(dataProvider store.AtlasOperatorGenericStore, credsProvider store.CredentialsGetter, projectID, orgID string) *ConfigExporter {
@@ -146,6 +154,14 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object, error) {
 	var result []runtime.Object
 
+	if len(e.clusters) == 0 {
+		clusters, err := fetchClusterNames(e.dataProvider, e.projectID)
+		if err != nil {
+			return nil, err
+		}
+		e.clusters = clusters
+	}
+
 	for _, deploymentName := range e.clusters {
 		// Try advanced cluster first
 		if advancedCluster, err := deployment.BuildAtlasAdvancedDeployment(e.dataProvider, e.projectID, projectName, deploymentName, e.targetNamespace); err == nil {
@@ -171,5 +187,59 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 		}
 		return nil, fmt.Errorf("%w: %s(%s)", ErrClusterNotFound, deploymentName, e.projectID)
 	}
+	return result, nil
+}
+
+func fetchClusterNames(clustersProvider store.AtlasAllClustersLister, projectID string) ([]string, error) {
+	result := make([]string, 0, DefaultClustersCount)
+	response, err := clustersProvider.ProjectClusters(projectID, &mongodbatlas.ListOptions{ItemsPerPage: maxClusters})
+	if err != nil {
+		return nil, err
+	}
+
+	switch clusters := response.(type) {
+	case *opsmngr.Clusters:
+		if clusters == nil {
+			return nil, ErrNoOpsManagerClusters
+		}
+
+		for i := range clusters.Results {
+			cluster := clusters.Results[i]
+			if cluster == nil {
+				continue
+			}
+			result = append(result, cluster.ClusterName)
+		}
+	case *mongodbatlas.AdvancedClustersResponse:
+		if clusters == nil {
+			return nil, ErrNoCloudManagerClusters
+		}
+
+		for i := range clusters.Results {
+			cluster := clusters.Results[i]
+			if cluster == nil {
+				continue
+			}
+			result = append(result, cluster.Name)
+		}
+	}
+
+	serverlessInstances, err := clustersProvider.ServerlessInstances(projectID, &mongodbatlas.ListOptions{ItemsPerPage: maxClusters})
+	if err != nil {
+		return nil, err
+	}
+
+	if serverlessInstances == nil {
+		return result, nil
+	}
+
+	for i := range serverlessInstances.Results {
+		cluster := serverlessInstances.Results[i]
+		if cluster == nil {
+			continue
+		}
+		result = append(result, serverlessInstances.Results[i].Name)
+	}
+
 	return result, nil
 }

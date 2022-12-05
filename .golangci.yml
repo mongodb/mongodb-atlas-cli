@@ -4,11 +4,11 @@ linters-settings:
     min-occurrences: 2
   gocritic:
     enabled-tags:
-#      - diagnostic
-#      - experimental
+      - diagnostic
+      - experimental
       - opinionated
-#      - performance
-#      - style
+      - performance
+      - style
     disabled-checks:
       - octalLiteral
   gocyclo:
@@ -173,7 +173,7 @@ linters:
 run:
   go: '1.19'
   tests: true
-  timeout: 10m
+  timeout: 15m
   build-tags:
     - e2e
     - unit

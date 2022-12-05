@@ -5,10 +5,10 @@ linters-settings:
   gocritic:
     enabled-tags:
       - diagnostic
-#      - experimental
-#      - opinionated
+      - experimental
+      - opinionated
 #      - performance
-      - style
+#      - style
     disabled-checks:
       - octalLiteral
   gocyclo:

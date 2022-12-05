@@ -64,8 +64,7 @@ func DeleteBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # Delete the IP address 192.0.2.0 from the access list for the project with ID 5e2211c17a3e5a48f5497de3 after prompting for a confirmation:
   %[1]s accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3
   # Uses the --force option to delete the IP address 192.0.2.0 from the access list for the project with ID 5e2211c17a3e5a48f5497de3 without confirmation:
-  %[1]s accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3 --force
-		`, cli.ExampleAtlasEntryPoint()),
+  %[1]s accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3 --force`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

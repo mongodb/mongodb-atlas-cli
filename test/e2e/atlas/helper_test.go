@@ -136,7 +136,7 @@ func (kh *K8SHelper) NewProject(project *mongodbatlas.Project) {
 	require.Nil(kh.t, err, "error while creating project", err, resp.Status)
 	kh.project = createdProject
 
-	require.Eventually(kh.t, func() bool {
+	assert.Eventually(kh.t, func() bool {
 		_, _, err := kh.atlasClient.Projects.GetOneProject(context.Background(), kh.project.ID)
 		return assert.NoError(kh.t, err, "waiting for project to be created", kh.project.ID)
 	}, defaultTimeout, defaultTick, "project should've been created")
@@ -144,10 +144,6 @@ func (kh *K8SHelper) NewProject(project *mongodbatlas.Project) {
 	kh.t.Cleanup(func() {
 		assert.Eventually(kh.t, func() bool {
 			_, err := kh.atlasClient.Projects.Delete(context.Background(), kh.project.ID)
-			if !assert.NoError(kh.t, err, "can not delete test project", kh.project.ID) {
-				return false
-			}
-			_, _, err = kh.atlasClient.Projects.GetOneProject(context.Background(), kh.project.ID)
 			if err != nil {
 				var apiError *mongodbatlas.ErrorResponse
 				if errors.As(err, &apiError) && (apiError.ErrorCode == "GROUP_NOT_FOUND" || apiError.ErrorCode == ResourceNotFound) {
@@ -169,7 +165,7 @@ func (kh *K8SHelper) NewCluster(cluster *mongodbatlas.Cluster) {
 
 	kh.clusters[cluster.Name] = createdCluster
 
-	require.Eventually(kh.t, func() bool {
+	assert.Eventually(kh.t, func() bool {
 		_, _, err := kh.atlasClient.Clusters.Get(context.Background(), kh.project.ID, cluster.Name)
 		return assert.NoError(kh.t, err, "waiting for cluster to be created", cluster.Name)
 	}, defaultTimeout, defaultTick, "cluster should've been created")
@@ -201,7 +197,7 @@ func (kh *K8SHelper) NewServerlessInstance(instance *mongodbatlas.ServerlessCrea
 
 	kh.clusters[createdInstance.Name] = createdInstance
 
-	require.Eventually(kh.t, func() bool {
+	assert.Eventually(kh.t, func() bool {
 		_, _, err := kh.atlasClient.ServerlessInstances.Get(context.Background(), kh.project.ID, createdInstance.Name)
 		return assert.NoError(kh.t, err, "waiting for serverless instance to be created", createdInstance.Name)
 	}, defaultTimeout, defaultTick, "serverless instance should've been created")

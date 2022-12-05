@@ -5,7 +5,7 @@ linters-settings:
   gocritic:
     enabled-tags:
       - diagnostic
-      - experimental
+#      - experimental
       - opinionated
 #      - performance
 #      - style

@@ -36,7 +36,11 @@ INTEGRATION_TAGS?=integration
 E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
 
+export PATH := $(shell go env GOPATH)/bin:$(PATH)
 export PATH := ./bin:$(PATH)
+ifneq ($(OS),Windows_NT)
+	export SHELL := env PATH=$(PATH) /bin/bash
+endif
 export GO111MODULE := on
 export MCLI_E2E_BINARY
 export ATLAS_E2E_BINARY
@@ -54,7 +58,7 @@ devtools:  ## Install dev tools
 	go install github.com/golang/mock/mockgen@latest
 	go install golang.org/x/tools/cmd/goimports@latest
 	go install github.com/google/go-licenses@latest
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.50.1
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin $(GOLANGCI_VERSION)
 
 .PHONY: setup
 setup: deps devtools ## Set up dev env

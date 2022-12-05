@@ -22,6 +22,4 @@ mkdir golangci-lint-cache
 GOLANGCI_LINT_CACHE="$(pwd)/golangci-lint-cache"
 export GOLANGCI_LINT_CACHE
 
-GL_DEBUG=gocritic
-export GL_DEBUG
-golangci-lint run --verbose
+golangci-lint run --out-format junit-xml > lint-tests.xml

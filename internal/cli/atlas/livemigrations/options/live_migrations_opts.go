@@ -125,9 +125,6 @@ func (opts *LiveMigrationsOpts) Validate() error {
 		return err
 	}
 
-	if opts.SourceManagedAuthentication && opts.SourceUsername != "" {
-		return fmt.Errorf("--%s and --%s are exclusive", flag.LiveMigrationSourceManagedAuthentication, flag.LiveMigrationSourceUsername)
-	}
 	if !opts.SourceManagedAuthentication && opts.SourceUsername == "" {
 		return fmt.Errorf("MongoDB Automation is not managing authentication, --%s must be set", flag.LiveMigrationSourceUsername)
 	}
@@ -151,6 +148,8 @@ func (opts *LiveMigrationsOpts) GenerateFlags(cmd *cobra.Command) {
 	cmd.Flags().BoolVar(&opts.DestinationDropEnabled, flag.LiveMigrationDropCollections, false, usage.LiveMigrationDropCollections)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.Force)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	cmd.MarkFlagsMutuallyExclusive(flag.LiveMigrationSourceManagedAuthentication, flag.LiveMigrationSourceUsername)
 
 	_ = cmd.MarkFlagRequired(flag.LiveMigrationSourceClusterName)
 	_ = cmd.MarkFlagRequired(flag.LiveMigrationSourceProjectID)

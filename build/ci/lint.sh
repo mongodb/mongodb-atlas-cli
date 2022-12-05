@@ -18,7 +18,7 @@ set -Eeou pipefail
 
 export PATH="$ADD_PATH:$PATH"
 mkdir golangci-lint-cache
-# dont user home cache since running on evergreen
+# don't use the user home cache since running on evergreen
 GOLANGCI_LINT_CACHE="$(pwd)/golangci-lint-cache"
 export GOLANGCI_LINT_CACHE
 

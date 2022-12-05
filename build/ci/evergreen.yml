@@ -222,7 +222,7 @@ functions:
         script: |
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
-          golangci-lint run --verbose --concurrency 20 --out-format junit-xml
+          golangci-lint run --out-format junit-xml > lint-tests.xml
   "install gotestsum":
     - command: shell.exec
       type: setup

@@ -10,7 +10,7 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys v0.9.0
 	github.com/Masterminds/semver/v3 v3.2.0
 	github.com/PaesslerAG/jsonpath v0.1.1
-	github.com/aws/aws-sdk-go v1.44.146
+	github.com/aws/aws-sdk-go v1.44.151
 	github.com/briandowns/spinner v1.19.0
 	github.com/evergreen-ci/shrub v0.0.0-20220520145438-44fbdf0045c8
 	github.com/gemalto/kmip-go v0.0.6-0.20210426170211-84e83580888d
@@ -22,7 +22,7 @@ require (
 	github.com/mattn/go-isatty v0.0.16
 	github.com/mongodb-forks/digest v1.0.4
 	github.com/mongodb-labs/cobra2snooty v0.12.2
-	github.com/mongodb/mongodb-atlas-kubernetes v1.4.2-0.20221201111116-f392310fe252
+	github.com/mongodb/mongodb-atlas-kubernetes v1.5.0
 	github.com/openlyinc/pointy v1.2.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4
@@ -102,10 +102,10 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.23.0 // indirect
-	golang.org/x/net v0.1.0 // indirect
+	golang.org/x/net v0.2.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783 // indirect
-	golang.org/x/sys v0.1.0 // indirect
-	golang.org/x/term v0.1.0 // indirect
+	golang.org/x/sys v0.2.0 // indirect
+	golang.org/x/term v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect

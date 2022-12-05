@@ -40,6 +40,42 @@ type MockAtlasOperatorClusterStore struct {
 	projectIDToServerlessPrivateEndpoints map[string]map[string][]mongodbatlas.ServerlessPrivateEndpointConnection
 }
 
+func (m *MockAtlasOperatorClusterStore) ServerlessInstances(projectID string, _ *mongodbatlas.ListOptions) (*mongodbatlas.ClustersResponse, error) {
+	clusters := make([]*mongodbatlas.Cluster, 0, len(m.projectToServerlessClusters[projectID]))
+
+	for clusterName := range m.projectToServerlessClusters[projectID] {
+		clusters = append(clusters, m.projectToServerlessClusters[projectID][clusterName])
+	}
+	return &mongodbatlas.ClustersResponse{
+		Links:      nil,
+		Results:    clusters,
+		TotalCount: 0,
+	}, nil
+}
+
+func (m *MockAtlasOperatorClusterStore) ProjectClusters(projectID string, _ *mongodbatlas.ListOptions) (interface{}, error) {
+	clusterNames := make([]string, 0, len(m.projectToAdvancedClusters[projectID])+len(m.projectToServerlessClusters[projectID]))
+	for k := range m.projectToAdvancedClusters[projectID] {
+		clusterNames = append(clusterNames, m.projectToAdvancedClusters[projectID][k].Name)
+	}
+	for k := range m.projectToServerlessClusters[projectID] {
+		clusterNames = append(clusterNames, m.projectToServerlessClusters[projectID][k].Name)
+	}
+
+	clusters := make([]*mongodbatlas.AdvancedCluster, 0, len(clusterNames))
+	for i := range clusterNames {
+		clusters = append(clusters, &mongodbatlas.AdvancedCluster{
+			Name:    clusterNames[i],
+			GroupID: projectID,
+		})
+	}
+	return &mongodbatlas.AdvancedClustersResponse{
+		Links:      nil,
+		Results:    clusters,
+		TotalCount: 0,
+	}, nil
+}
+
 func (m *MockAtlasOperatorClusterStore) ServerlessPrivateEndpoints(projectID, instanceName string, _ *mongodbatlas.ListOptions) ([]mongodbatlas.ServerlessPrivateEndpointConnection, error) {
 	return m.projectIDToServerlessPrivateEndpoints[projectID][instanceName], nil
 }

@@ -219,7 +219,7 @@ functions:
       type: test
       params:
         <<: *go_options
-        binary: ./build/ci/clean-up-cloud-manager.sh
+        binary: ./build/ci/lint.sh
   "upload lint cache":
     - command: archive.targz_pack
       params:

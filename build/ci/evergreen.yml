@@ -222,7 +222,7 @@ functions:
         script: |
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
-          golangci-lint run
+          golangci-lint run --verbose
   "install gotestsum":
     - command: shell.exec
       type: setup

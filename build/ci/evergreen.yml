@@ -224,7 +224,26 @@ functions:
           export PATH="$ADD_PATH:$PATH"
           mkdir golangci-lint-cache
           export GOLANGCI_LINT_CACHE="$(pwd)/golangci-lint-cache"
+          echo "${GOLANGCI_LINT_CACHE}"
           golangci-lint run --verbose
+          ls "${GOLANGCI_LINT_CACHE}"
+  "upload lint cache":
+    - command: archive.targz_pack
+      params:
+        target: src/github.com/mongodb/mongodb-atlas-cli/dist/golangci-lint-cache.tgz
+        source_dir: src/github.com/mongodb/mongodb-atlas-cli/golangci-lint-cache
+        include:
+          - "**"
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/golangci-lint-cache.tgz
+        remote_file: ${project}/coverage/internal/golangci-lint-cache.tgz
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: text/html
+        display_name: internal-html-coverage
   "install gotestsum":
     - command: shell.exec
       type: setup

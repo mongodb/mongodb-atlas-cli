@@ -5,7 +5,6 @@ linters-settings:
   gocritic:
     enabled-tags:
       - diagnostic
-      - opinionated
       - performance
       - style
     disabled-checks:
@@ -172,7 +171,7 @@ linters:
 run:
   go: '1.19'
   tests: true
-  timeout: 15m
+  timeout: 10m
   build-tags:
     - e2e
     - unit

@@ -35,11 +35,17 @@ type AtlasOperatorDBUsersStore interface {
 }
 
 type AtlasOperatorClusterStore interface {
+	AtlasAllClustersLister
 	AtlasClusterDescriber
 	AtlasClusterConfigurationOptionsDescriber
 	ScheduleDescriber
 	ServerlessInstanceDescriber
 	ServerlessPrivateEndpointsLister
+}
+
+type AtlasAllClustersLister interface {
+	ClusterLister
+	ServerlessInstanceLister
 }
 
 type AtlasOperatorTeamsStore interface {

@@ -223,7 +223,7 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           mkdir golangci-lint-cache
-          expoort GOLANGCI_LINT_CACHE="$(pwd)/golangci-lint-cache"
+          export GOLANGCI_LINT_CACHE="$(pwd)/golangci-lint-cache"
           golangci-lint run --verbose
   "install gotestsum":
     - command: shell.exec

@@ -138,7 +138,7 @@ func (opts *LiveMigrationsOpts) Validate() error {
 }
 
 func (opts *LiveMigrationsOpts) GenerateFlags(cmd *cobra.Command) {
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.SourceClusterName, flag.LiveMigrationSourceClusterName, "", usage.LiveMigrationSourceClusterName)
 	cmd.Flags().StringVar(&opts.SourceProjectID, flag.LiveMigrationSourceProjectID, "", usage.LiveMigrationSourceProjectID)
 	cmd.Flags().StringVarP(&opts.SourceUsername, flag.LiveMigrationSourceUsername, flag.UsernameShort, "", usage.LiveMigrationSourceUsername)

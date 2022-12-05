@@ -23,4 +23,4 @@ export GOLANGCI_LINT_CACHE
 
 echo "GOLANGCI_LINT_CACHE=${GOLANGCI_LINT_CACHE}"
 golangci-lint run --verbose
-ls "${GOLANGCI_LINT_CACHE}"
+#ls "${GOLANGCI_LINT_CACHE}"

@@ -54,13 +54,16 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <entry>",
 		Aliases: []string{"rm"},
 		Short:   "Delete an IP access list from your project.",
+		Long:    "The command prompts you to confirm the operation when you run the command without the --force option.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to delete.",
+			"args":         "entry",
+			"requiredArgs": "entry",
+			"entryDesc":    "The IP address, CIDR address, or AWS security group ID of the access list entry to delete.",
 		},
-		Example: fmt.Sprintf(`  # The following command deletes the IP address 192.0.2.0 from the access list for the project with ID 5e2211c17a3e5a48f5497de3 after prompting for a confirmation.
+		Example: fmt.Sprintf(`  # Delete the IP address 192.0.2.0 from the access list for the project with ID 5e2211c17a3e5a48f5497de3 after prompting for a confirmation:
   %[1]s accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3
-  # The following command uses the --force option to delete the IP address 192.0.2.0 from the access list for the project with ID 5e2211c17a3e5a48f5497de3 without confirmation.
+  # Uses the --force option to delete the IP address 192.0.2.0 from the access list for the project with ID 5e2211c17a3e5a48f5497de3 without confirmation:
   %[1]s accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3 --force
 		`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

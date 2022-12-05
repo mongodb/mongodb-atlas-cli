@@ -6,9 +6,9 @@ linters-settings:
     enabled-tags:
       - diagnostic
 #      - experimental
-      - opinionated
-      - performance
-      - style
+#      - opinionated
+#      - performance
+#      - style
   gocyclo:
     min-complexity: 15
   govet:

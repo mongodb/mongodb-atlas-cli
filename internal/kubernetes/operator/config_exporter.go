@@ -24,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/project"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -195,20 +194,7 @@ func fetchClusterNames(clustersProvider store.AtlasAllClustersLister, projectID 
 		return nil, err
 	}
 
-	switch clusters := response.(type) {
-	case *opsmngr.Clusters:
-		if clusters == nil {
-			return nil, ErrNoOpsManagerClusters
-		}
-
-		for i := range clusters.Results {
-			cluster := clusters.Results[i]
-			if cluster == nil {
-				continue
-			}
-			result = append(result, cluster.ClusterName)
-		}
-	case *mongodbatlas.AdvancedClustersResponse:
+	if clusters, ok := response.(*mongodbatlas.AdvancedClustersResponse); ok {
 		if clusters == nil {
 			return nil, ErrNoCloudManagerClusters
 		}

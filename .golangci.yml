@@ -2,15 +2,15 @@ linters-settings:
   goconst:
     min-len: 2
     min-occurrences: 2
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - experimental
-      - opinionated
-      - performance
-      - style
-    disabled-checks:
-      - octalLiteral
+#  gocritic:
+#    enabled-tags:
+#      - diagnostic
+#      - experimental
+#      - opinionated
+#      - performance
+#      - style
+#    disabled-checks:
+#      - octalLiteral
   gocyclo:
     min-complexity: 15
   govet:

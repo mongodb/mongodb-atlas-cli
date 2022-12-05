@@ -173,7 +173,7 @@ linters:
 run:
   go: '1.19'
   tests: true
-  timeout: 15m
+  timeout: 5m
   build-tags:
     - e2e
     - unit

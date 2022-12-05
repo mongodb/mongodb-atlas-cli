@@ -19,13 +19,12 @@ import (
 	"errors"
 	"fmt"
 
-	"go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/deployment"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/project"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -51,7 +50,6 @@ var (
 	ErrClusterNotFound        = errors.New("cluster not found")
 	ErrNoOpsManagerClusters   = errors.New("can not get 'clusters' object")
 	ErrNoCloudManagerClusters = errors.New("can not get 'advanced clusters' object")
-	ErrNoClusters             = errors.New("can not get 'advanced clusters' or 'clusters' objects")
 )
 
 func NewConfigExporter(dataProvider store.AtlasOperatorGenericStore, credsProvider store.CredentialsGetter, projectID, orgID string) *ConfigExporter {

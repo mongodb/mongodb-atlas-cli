@@ -86,6 +86,11 @@ func (kh *K8SHelper) NewProject(project *atlas.Project) {
 	require.Nil(kh.t, err, "error while creating project", err, resp.Status)
 	kh.project = createdProject
 
+	require.Eventually(kh.t, func() bool {
+		_, _, err := kh.atlasClient.Projects.GetOneProject(context.Background(), kh.project.ID)
+		return assert.NoError(kh.t, err, "waiting for project to be created", kh.project.ID)
+	}, defaultTimeout, defaultTick, "project should've been created")
+
 	kh.t.Cleanup(func() {
 		assert.Eventually(kh.t, func() bool {
 			_, err := kh.atlasClient.Projects.Delete(context.Background(), kh.project.ID)
@@ -114,6 +119,11 @@ func (kh *K8SHelper) NewCluster(cluster *atlas.Cluster) {
 
 	kh.clusters[cluster.Name] = createdCluster
 
+	require.Eventually(kh.t, func() bool {
+		_, _, err := kh.atlasClient.Clusters.Get(context.Background(), kh.project.ID, cluster.Name)
+		return assert.NoError(kh.t, err, "waiting for cluster to be created", cluster.Name)
+	}, defaultTimeout, defaultTick, "cluster should've been created")
+
 	kh.t.Cleanup(func() {
 		assert.Eventually(kh.t, func() bool {
 			_, err := kh.atlasClient.Clusters.Delete(context.Background(), kh.project.ID, cluster.Name)
@@ -140,6 +150,12 @@ func (kh *K8SHelper) NewServerlessInstance(instance *atlas.ServerlessCreateReque
 	require.Nil(kh.t, err, "error while creating serverless instance")
 
 	kh.clusters[createdInstance.Name] = createdInstance
+
+	require.Eventually(kh.t, func() bool {
+		_, _, err := kh.atlasClient.ServerlessInstances.Get(context.Background(), kh.project.ID, createdInstance.Name)
+		return assert.NoError(kh.t, err, "waiting for serverless instance to be created", createdInstance.Name)
+	}, defaultTimeout, defaultTick, "serverless instance should've been created")
+
 	kh.t.Cleanup(func() {
 		assert.Eventually(kh.t, func() bool {
 			_, err := kh.atlasClient.ServerlessInstances.Delete(context.Background(), kh.project.ID, createdInstance.Name)
@@ -240,8 +256,6 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 			RegionName:          "US_EAST_1",
 		},
 	})
-
-	time.Sleep(30 * time.Second)
 
 	// always register atlas entities
 	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))

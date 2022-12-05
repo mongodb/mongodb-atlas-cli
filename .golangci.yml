@@ -8,7 +8,9 @@ linters-settings:
 #      - experimental
 #      - opinionated
 #      - performance
-#      - style
+      - style
+    disabled-checks:
+      - octalLiteral
   gocyclo:
     min-complexity: 15
   govet:

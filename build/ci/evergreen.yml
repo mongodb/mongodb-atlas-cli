@@ -222,7 +222,7 @@ functions:
         script: |
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
-          golangci-lint run --verbose
+          golangci-lint run --verbose -D gocritic
   "install gotestsum":
     - command: shell.exec
       type: setup

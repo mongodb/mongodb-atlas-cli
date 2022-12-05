@@ -136,7 +136,7 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create an IP access list for your project.",
 		Long: `The access list can contain trusted IP addresses, AWS security group IDs, and entries in Classless Inter-Domain Routing (CIDR) notation. You can add only one access list entry at a time. You can create one access list per project. 
 		
-Note: the command does not overwrite existing entries in the access list. Instead, it adds the new entries to the list of entries.`,
+Note: The command doesn't overwrite existing entries in the access list. Instead, it adds the new entries to the list of entries.`,
 		Args: require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to create.",

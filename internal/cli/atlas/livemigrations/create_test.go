@@ -65,7 +65,7 @@ func TestCreateBuilder(t *testing.T) {
 		CreateBuilder(),
 		0,
 		[]string{
-			flag.OrgID,
+			flag.ProjectID,
 			flag.LiveMigrationSourceClusterName,
 			flag.LiveMigrationSourceProjectID,
 			flag.LiveMigrationSourceUsername,

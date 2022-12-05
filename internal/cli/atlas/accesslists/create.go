@@ -134,13 +134,14 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create [entry]",
 		Short: "Create an IP access list for your project.",
-		Long:  `The access list can contain one or more trusted IP addresses, AWS security group IDs, and entries in Classless Inter-Domain Routing (CIDR) notation. You can create one access list per project. Note: the command does not overwrite existing entries in the access list. Instead, it adds the new entries to the list of entries.`,
-		Args:  require.MaximumNArgs(1),
+		Long: `The access list can contain trusted IP addresses, AWS security group IDs, and entries in Classless Inter-Domain Routing (CIDR) notation. You can add only one access list entry at a time. You can create one access list per project. 
+		
+		Note: the command does not overwrite existing entries in the access list. Instead, it adds the new entries to the list of entries.`,
+		Args: require.MaximumNArgs(1),
 		Annotations: map[string]string{
-			"args":      "entry",
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to create.",
 		},
-		Example: fmt.Sprintf(`  # Create an IP access list entry using the current IP address. You don't need the entry argument when you use the currentIp flag.:
+		Example: fmt.Sprintf(`  # Create an IP access list entry using the current IP address. You don't need the entry argument when you use the currentIp flag:
   %[1]s accessList create --currentIp
   
   # Create an access list entry for the IP address 192.0.2.15 in the project with ID 5e2211c17a3e5a48f5497de3:

@@ -222,7 +222,7 @@ functions:
         script: |
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
-          golangci-lint run --out-format junit-xml > lint-tests.xml
+          golangci-lint run --verbose --concurrency 20 --out-format junit-xml
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -318,12 +318,12 @@ tasks:
       - func: "clone"
       - func: "install gotestsum"
       - func: "integration-test"
-  - name: lint
-    tags: ["code_health"]
-    commands:
-      - func: "clone"
-      - func: "install dev tools"
-      - func: "lint"
+#  - name: lint // This task will be reintroduced in CLOUDP-149030
+#    tags: ["code_health"]
+#    commands:
+#      - func: "clone"
+#      - func: "install dev tools"
+#      - func: "lint"
   - name: snyk_scan
     tags: ["snyk"]
     commands:

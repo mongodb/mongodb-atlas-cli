@@ -22,5 +22,5 @@ GOLANGCI_LINT_CACHE="$(pwd)/golangci-lint-cache"
 export GOLANGCI_LINT_CACHE
 
 echo "GOLANGCI_LINT_CACHE=${GOLANGCI_LINT_CACHE}"
-golangci-lint run --verbose
+GL_DEBUG=gocritic golangci-lint run --verbose
 #ls "${GOLANGCI_LINT_CACHE}"

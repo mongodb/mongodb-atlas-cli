@@ -57,9 +57,7 @@ func DeleteBuilder() *cobra.Command {
 		Long:    "The command prompts you to confirm the operation when you run the command without the --force option.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":         "entry",
-			"requiredArgs": "entry",
-			"entryDesc":    "The IP address, CIDR address, or AWS security group ID of the access list entry to delete.",
+			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to delete.",
 		},
 		Example: fmt.Sprintf(`  # Delete the IP address 192.0.2.0 from the access list for the project with ID 5e2211c17a3e5a48f5497de3 after prompting for a confirmation:
   %[1]s accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3

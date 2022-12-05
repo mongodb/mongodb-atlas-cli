@@ -315,12 +315,12 @@ tasks:
       - func: "clone"
       - func: "install gotestsum"
       - func: "integration-test"
-#  - name: lint // This task will be reintroduced in CLOUDP-149030
-#    tags: ["code_health"]
-#    commands:
-#      - func: "clone"
-#      - func: "install dev tools"
-#      - func: "lint"
+  - name: lint
+    tags: ["code_health"]
+    commands:
+      - func: "clone"
+      - func: "install dev tools"
+      - func: "lint"
   - name: snyk_scan
     tags: ["snyk"]
     commands:

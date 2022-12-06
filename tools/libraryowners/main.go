@@ -58,6 +58,10 @@ func newLibraryOwners() map[string]interface{} {
 
 func validate(libraryOwner map[string]interface{}, goMod *modfile.File) {
 	for _, library := range goMod.Require {
+		if library.Indirect {
+			continue
+		}
+
 		if val, ok := libraryOwner[library.Mod.Path]; !ok {
 			log.Fatalf("\n'%s' is not inside '%s'. Please, add this dependency to '%s'.", library.Mod.Path, libraryOwnersPath, libraryOwnersPath)
 		} else if val == "" {

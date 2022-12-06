@@ -26,4 +26,3 @@ jobs:
         run: go install github.com/golang/mock/mockgen@latest
       - name: Run check-library-owners
         run: make check-library-owners
-        

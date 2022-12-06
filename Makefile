@@ -37,6 +37,7 @@ E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
 
 export PATH := $(shell go env GOPATH)/bin:$(PATH)
+export PATH := ./bin:$(PATH)
 ifneq ($(OS),Windows_NT)
 	export SHELL := env PATH=$(PATH) /bin/bash
 endif

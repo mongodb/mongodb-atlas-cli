@@ -11,21 +11,14 @@ jobs:
       fail-fast: false
       matrix:
         golang: [1.19]
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+        os: [ubuntu-latest]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Install Go
         uses: actions/setup-go@v3
-        with:
-          go-version: ${{ matrix.golang }}
       - name: Cache Dependencies
         uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ matrix.golang }}-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ matrix.golang }}-
-      - name: Run tests
+      - name: Run check-library-owners
         run: make check-library-owners

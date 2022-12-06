@@ -64,6 +64,8 @@ func ListBuilder() *cobra.Command {
 		Short:   "List Atlas IP access list entries for your project.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Example: `  # Return a JSON-formatted list of all access list entries for the project with ID 5e1234c17a3e5a48f5497de3:		
+  atlas accessLists list --output json --projectId 5e1234c17a3e5a48f5497de3`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -2,15 +2,6 @@ linters-settings:
   goconst:
     min-len: 2
     min-occurrences: 2
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - experimental
-      - opinionated
-      - performance
-      - style
-    disabled-checks:
-      - octalLiteral
   gocyclo:
     min-complexity: 15
   govet:
@@ -70,7 +61,6 @@ linters:
   disable-all: true
   enable:
     - bodyclose # checks whether HTTP response body is closed successfully [fast: false, auto-fix: false]
-    - deadcode  # [deprecated] Finds unused code [fast: false, auto-fix: false]
     - depguard # Go linter that checks if package imports are in a list of acceptable packages [fast: true, auto-fix: false]
     - dogsled # Checks assignments with too many blank identifiers (e.g. x, _, _, _, := f()) [fast: true, auto-fix: false]
     - errcheck # Errcheck is a program for checking for unchecked errors in go programs. These unchecked errors can be critical bugs in some cases [fast: false, auto-fix: false]
@@ -89,7 +79,6 @@ linters:
     - gosec # (gas) Inspects source code for security problems [fast: false, auto-fix: false]
     - gosimple # (megacheck) Linter for Go source code that specializes in simplifying code [fast: false, auto-fix: false]
     - govet # (vet, vetshadow) Vet examines Go source code and reports suspicious constructs, such as Printf calls whose arguments do not align with the format string [fast: false, auto-fix: false]
-    - ifshort # [deprecated] Checks that your code uses short syntax for if-statements whenever possible [fast: true, auto-fix: false]
     - ineffassign # Detects when assignments to existing variables are not used [fast: true, auto-fix: false]
     - makezero # Finds slice declarations with non-zero initial length [fast: false, auto-fix: false]
     - misspell # Finds commonly misspelled English words in comments [fast: true, auto-fix: true]
@@ -100,7 +89,6 @@ linters:
     - revive # Fast, configurable, extensible, flexible, and beautiful linter for Go. Drop-in replacement of golint. [fast: false, auto-fix: false]
     - rowserrcheck # checks whether Err of rows is checked successfully [fast: false, auto-fix: false]
     - staticcheck # (megacheck) It's a set of rules from staticcheck. It's not the same thing as the staticcheck binary. The author of staticcheck doesn't support or approve the use of staticcheck as a library inside golangci-lint. [fast: false, auto-fix: false]
-    - structcheck # [deprecated] Finds unused struct fields [fast: false, auto-fix: false]
     - stylecheck # Stylecheck is a replacement for golint [fast: false, auto-fix: false]
     - tenv # tenv is analyzer that detects using os.Setenv instead of t.Setenv since Go1.17 [fast: false, auto-fix: false]
     - thelper # thelper detects golang test helpers without t.Helper() call and checks the consistency of test helpers [fast: false, auto-fix: false]
@@ -108,7 +96,6 @@ linters:
     - unconvert # Remove unnecessary type conversions [fast: false, auto-fix: false]
     - unparam # Reports unused function parameters [fast: false, auto-fix: false]
     - unused # (megacheck) Checks Go code for unused constants, variables, functions and types [fast: false, auto-fix: false]
-    - varcheck # [deprecated] Finds unused global variables and constants [fast: false, auto-fix: false]
     - whitespace # Tool for detection of leading and trailing whitespace [fast: true, auto-fix: true]
 
   # don't enable:
@@ -119,6 +106,7 @@ linters:
   # - contextcheck # check the function whether use a non-inherited context [fast: false, auto-fix: false]
   # - cyclop # checks function and package cyclomatic complexity [fast: false, auto-fix: false]
   # - decorder # check declaration order and count of types, constants, variables and functions [fast: true, auto-fix: false]
+  # - deadcode  # [deprecated] Finds unused code [fast: false, auto-fix: false]
   # - dupl # Tool for code clone detection [fast: true, auto-fix: false]
   # - durationcheck # check for two durations multiplied together [fast: false, auto-fix: false]
   # - errchkjson # Checks types passed to the json encoding functions. Reports unsupported types and optionally reports occasions, where the check for the returned error can be omitted. [fast: false, auto-fix: false]
@@ -140,6 +128,7 @@ linters:
   # - gomoddirectives # Manage the use of 'replace', 'retract', and 'excludes' directives in go.mod. [fast: true, auto-fix: false]
   # - gomodguard # Allow and block list linter for direct Go module dependencies. This is different from depguard where there are different block types for example version constraints and module recommendations. [fast: true, auto-fix: false]
   # - grouper # An analyzer to analyze expression groups. [fast: true, auto-fix: false]
+  # - ifshort # [deprecated] Checks that your code uses short syntax for if-statements whenever possible [fast: true, auto-fix: false]
   # - importas # Enforces consistent import aliases [fast: false, auto-fix: false]
   # - interfacebloat # A linter that checks the number of methods inside an interface. [fast: true, auto-fix: false]
   # - interfacer # [deprecated]: Linter that suggests narrower interface types [fast: false, auto-fix: false]
@@ -161,10 +150,12 @@ linters:
   # - reassign # Checks that package variables are not reassigned [fast: true, auto-fix: false]
   # - scopelint #[deprecated]: Scopelint checks for unpinned variables in go programs [fast: true, auto-fix: false]
   # - sqlclosecheck # Checks that sql.Rows and sql.Stmt are closed. [fast: false, auto-fix: false]
+  # - structcheck # [deprecated] Finds unused struct fields [fast: false, auto-fix: false]
   # - tagliatelle # Checks the struct tags. [fast: true, auto-fix: false]
   # - testpackage # linter that makes you use a separate _test package [fast: true, auto-fix: false]
   # - tparallel # tparallel detects inappropriate usage of t.Parallel() method in your Go test codes [fast: false, auto-fix: false]
   # - usestdlibvars # A linter that detect the possibility to use variables/constants from the Go standard library. [fast: true, auto-fix: false]
+  # - varcheck # [deprecated] Finds unused global variables and constants [fast: false, auto-fix: false]
   # - varnamelen # checks that the length of a variable's name matches its scope [fast: false, auto-fix: false]
   # - wastedassign # wastedassign finds wasted assignment statements. [fast: false, auto-fix: false]
   # - wrapcheck # Checks that errors returned from external packages are wrapped [fast: false, auto-fix: false]
@@ -173,7 +164,7 @@ linters:
 run:
   go: '1.19'
   tests: true
-  timeout: 5m
+  timeout: 10m
   build-tags:
     - e2e
     - unit

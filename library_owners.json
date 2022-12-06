@@ -36,7 +36,6 @@
   	"google.golang.org/protobuf": "API Experience Triage",
   	"gopkg.in/yaml.v2": "API Experience Triage",
   	"github.com/mongodb/mongodb-atlas-kubernetes": "Atlas Kubernetes",
-  	"gopkg.in/yaml.v3": "Atlas Kubernetes",
   	"k8s.io/api": "Atlas Kubernetes",
   	"k8s.io/apimachinery": "Atlas Kubernetes",
   	"k8s.io/client-go": "Atlas Kubernetes"

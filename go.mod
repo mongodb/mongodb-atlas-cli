@@ -3,7 +3,7 @@ module github.com/mongodb/mongodb-atlas-cli
 go 1.19
 
 require (
-	cloud.google.com/go/kms v1.6.0
+	cloud.google.com/go/kms v1.7.0
 	github.com/AlecAivazis/survey/v2 v2.3.6
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.2.0
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.2.0
@@ -11,13 +11,13 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.0
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
 	github.com/PaesslerAG/jsonpath v0.1.1
-	github.com/aws/aws-sdk-go v1.44.146
+	github.com/aws/aws-sdk-go v1.44.151
 	github.com/briandowns/spinner v1.19.0
 	github.com/creack/pty v1.1.17
 	github.com/evergreen-ci/shrub v0.0.0-20220520145438-44fbdf0045c8
 	github.com/gemalto/kmip-go v0.0.6-0.20210426170211-84e83580888d
 	github.com/go-test/deep v1.0.8
-	github.com/golang-jwt/jwt/v4 v4.4.2
+	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/golang/mock v1.6.0
 	github.com/google/go-github/v42 v42.0.0
 	github.com/hinshun/vt10x v0.0.0-20220119200601-820417d04eec
@@ -25,7 +25,7 @@ require (
 	github.com/mattn/go-isatty v0.0.16
 	github.com/mongodb-forks/digest v1.0.4
 	github.com/mongodb-labs/cobra2snooty v0.12.2
-	github.com/mongodb/mongodb-atlas-kubernetes v1.4.2-0.20221201111116-f392310fe252
+	github.com/mongodb/mongodb-atlas-kubernetes v1.5.0
 	github.com/openlyinc/pointy v1.2.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4
@@ -51,7 +51,7 @@ require (
 require (
 	cloud.google.com/go/compute v1.12.1 // indirect
 	cloud.google.com/go/compute/metadata v0.2.1 // indirect
-	cloud.google.com/go/iam v0.6.0 // indirect
+	cloud.google.com/go/iam v0.7.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.0.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/internal v0.7.0 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v0.7.0 // indirect
@@ -105,15 +105,15 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.23.0 // indirect
-	golang.org/x/net v0.1.0 // indirect
+	golang.org/x/net v0.2.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783 // indirect
-	golang.org/x/sys v0.1.0 // indirect
-	golang.org/x/term v0.1.0 // indirect
+	golang.org/x/sys v0.2.0 // indirect
+	golang.org/x/term v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20221027153422-115e99e71e1c // indirect
+	google.golang.org/genproto v0.0.0-20221201164419-0e50fba7f41c // indirect
 	google.golang.org/grpc v1.50.1 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect

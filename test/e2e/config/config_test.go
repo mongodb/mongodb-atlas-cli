@@ -68,7 +68,7 @@ func TestConfig(t *testing.T) {
 		if err = cmd.Start(); err != nil {
 			t.Fatal(err)
 		}
-		//
+
 		if _, err = c.ExpectString("Public API Key"); err != nil {
 			t.Fatal(err)
 		}

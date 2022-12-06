@@ -53,7 +53,7 @@ func TestConfig(t *testing.T) {
 
 		term := vt10x.New(vt10x.WithWriter(tty))
 		// To debug add os.Stdout to expect.WithStdout
-		c, err := expect.NewConsole(expect.WithStdin(pty), expect.WithStdout(term, os.Stdout), expect.WithCloser(pty, tty))
+		c, err := expect.NewConsole(expect.WithStdin(pty), expect.WithStdout(term), expect.WithCloser(pty, tty))
 		if err != nil {
 			t.Fatalf("failed to create console: %v", err)
 		}

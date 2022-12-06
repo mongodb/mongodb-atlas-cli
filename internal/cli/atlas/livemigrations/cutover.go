@@ -43,7 +43,7 @@ func (opts *CutoverOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CutoverOpts) Run() error {
-	r, err := opts.store.CreateLiveMigrationCutover(opts.ConfigOrgID(), opts.liveMigrationID)
+	r, err := opts.store.CreateLiveMigrationCutover(opts.ConfigProjectID(), opts.liveMigrationID)
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func CutoverBuilder() *cobra.Command {
 		Long:  "Your API Key must have the Organization Owner role to successfully run this command.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateOrgID,
+				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), cutoverTemplate),
 			)

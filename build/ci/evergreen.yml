@@ -215,14 +215,11 @@ functions:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
   "lint":
-    - command: shell.exec
+    - command: subprocess.exec
       type: test
       params:
         <<: *go_options
-        script: |
-          set -Eeou pipefail
-          export PATH="$ADD_PATH:$PATH"
-          golangci-lint run --out-format junit-xml > lint-tests.xml
+        binary: ./build/ci/lint.sh
   "install gotestsum":
     - command: shell.exec
       type: setup

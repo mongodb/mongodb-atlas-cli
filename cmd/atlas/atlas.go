@@ -20,7 +20,9 @@ import (
 	"log"
 	"os"
 	"path"
+	"strings"
 
+	survey "github.com/AlecAivazis/survey/v2/core"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/root/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
@@ -139,6 +141,9 @@ func trackInitError(e error) {
 
 func main() {
 	cobra.EnableCommandSorting = false
+	if term := os.Getenv("TERM"); strings.HasSuffix(term, "-m") {
+		survey.DisableColor = true
+	}
 
 	createConfigFromMongoCLIConfig()
 	trackInitError(loadConfig())

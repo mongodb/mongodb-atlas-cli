@@ -1,6 +1,6 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-GOLANGCI_VERSION=v1.49.0
+GOLANGCI_VERSION=v1.50.1
 COVERAGE=coverage.out
 
 MCLI_SOURCE_FILES?=./cmd/mongocli
@@ -37,6 +37,7 @@ E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
 
 export PATH := $(shell go env GOPATH)/bin:$(PATH)
+export PATH := ./bin:$(PATH)
 ifneq ($(OS),Windows_NT)
 	export SHELL := env PATH=$(PATH) /bin/bash
 endif
@@ -72,6 +73,7 @@ link-git-hooks: ## Install git hooks
 fmt: ## Format changed go
 	@scripts/fmt.sh
 
+.PHONY: fmt-all
 fmt-all: ### Format all go files with goimports and gofmt
 	find . -name "*.go" -not -path "./vendor/*" -not -path "./internal/mocks" -exec gofmt -w "{}" \;
 	find . -name "*.go" -not -path "./vendor/*" -not -path "./internal/mocks" -exec goimports -l -w "{}" \;

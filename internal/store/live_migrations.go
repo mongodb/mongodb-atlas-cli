@@ -32,7 +32,7 @@ type LiveMigrationDescriber interface {
 	LiveMigrationDescribe(string, string) (*atlas.LiveMigration, error)
 }
 
-// LiveMigrationCreate encapsulate the logic to manage different cloud providers.
+// LiveMigrationCreate encapsulates the logic to manage different cloud providers.
 func (s *Store) LiveMigrationCreate(groupID string, liveMigration *atlas.LiveMigration) (*atlas.LiveMigration, error) {
 	switch s.service {
 	case config.CloudService:
@@ -43,7 +43,7 @@ func (s *Store) LiveMigrationCreate(groupID string, liveMigration *atlas.LiveMig
 	}
 }
 
-// LiveMigrationCreate encapsulate the logic to manage different cloud providers.
+// LiveMigrationDescribe encapsulates the logic to manage different cloud providers.
 func (s *Store) LiveMigrationDescribe(groupID, migrationID string) (*atlas.LiveMigration, error) {
 	switch s.service {
 	case config.CloudService:

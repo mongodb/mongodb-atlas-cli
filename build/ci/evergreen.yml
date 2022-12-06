@@ -372,10 +372,10 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,config
   - name: library_owners_check
-      tags: ["code_health"]
-      commands:
-        - func: "clone"
-        - func: "snyk scan"
+    tags: ["code_health"]
+    commands:
+      - func: "clone"
+      - func: "snyk scan"
   - name: brew_e2e
     tags: ["e2e","required"]
     depends_on:

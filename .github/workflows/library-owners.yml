@@ -1,5 +1,5 @@
 ---
-name: GO tests
+name: Library owners check
 on:
   push:
     branches:

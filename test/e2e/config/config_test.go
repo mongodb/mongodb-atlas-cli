@@ -41,6 +41,11 @@ func TestConfig(t *testing.T) {
 	}
 
 	t.Run("config", func(t *testing.T) {
+		key := os.Getenv("MCLI_PRIVATE_API_KEY")
+		_ = os.Unsetenv("MCLI_PRIVATE_API_KEY")
+		t.Cleanup(func() {
+			_ = os.Setenv("MCLI_PRIVATE_API_KEY", key)
+		})
 		pty, tty, err := pseudotty.Open()
 		if err != nil {
 			t.Fatalf("failed to open pseudotty: %v", err)
@@ -54,7 +59,7 @@ func TestConfig(t *testing.T) {
 		}
 		defer c.Close()
 
-		cmd := exec.Command(cliPath, configEntity, "-P", "e2e")
+		cmd := exec.Command(cliPath, configEntity, "-P", "e2e-expect")
 		cmd.Stdin = c.Tty()
 		cmd.Stdout = c.Tty()
 		cmd.Stderr = c.Tty()

@@ -16,7 +16,7 @@ package main
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"os"
 
 	"golang.org/x/mod/modfile"
@@ -30,12 +30,14 @@ const (
 func newGoMod() *modfile.File {
 	goModFile, err := os.ReadFile(goModpath)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Printf("error reading %s: %v\n", goModpath, err)
+		os.Exit(1)
 	}
 
 	f, err := modfile.Parse(goModpath, goModFile, nil)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Printf("error parsing %s: %v\n", goModpath, err)
+		os.Exit(1)
 	}
 	return f
 }
@@ -43,35 +45,43 @@ func newGoMod() *modfile.File {
 func newLibraryOwners() map[string]string {
 	libraryOwnersFile, err := os.ReadFile(libraryOwnersPath)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Printf("error reading '%s': %v\n", libraryOwnersPath, err)
+		os.Exit(1)
 	}
 
 	if len(libraryOwnersFile) == 0 {
-		log.Fatalf("\n'%s' is empty", libraryOwnersPath)
+		fmt.Printf("'%s' is empty: %v\n", libraryOwnersPath, err)
+		os.Exit(1)
 	}
 
 	var libraryOwnersContent map[string]string
 	err = json.Unmarshal(libraryOwnersFile, &libraryOwnersContent)
 	if err != nil {
-		log.Fatal("\nError during Unmarshal(): ", err)
+		fmt.Printf("Error during Unmarshal(): %v\n", err)
+		os.Exit(1)
 	}
 	return libraryOwnersContent
 }
 
-func validate(libraryOwner map[string]string, goMod *modfile.File) {
+func validate(libraryOwner map[string]string, goMod *modfile.File) error {
 	for _, library := range goMod.Require {
 		if library.Indirect {
 			continue
 		}
 
 		if val, ok := libraryOwner[library.Mod.Path]; !ok {
-			log.Fatalf("\n'%s' is not inside '%s'. Please, remove this dependency from '%s'.", library.Mod.Path, libraryOwnersPath, goModpath)
+			return fmt.Errorf("'%s' is not inside '%s'. Please, remove this dependency from '%s'", library.Mod.Path, libraryOwnersPath, goModpath)
 		} else if val == "" {
-			log.Fatalf("\n'%s' doesn't have a owner. Please, add a owner to %s in '%s'.", library.Mod.Path, library.Mod.Path, libraryOwnersPath)
+			return fmt.Errorf("'%s' doesn't have a owner. Please, add a owner to %s in '%s", library.Mod.Path, library.Mod.Path, libraryOwnersPath)
 		}
 	}
+
+	return nil
 }
 
 func main() {
-	validate(newLibraryOwners(), newGoMod())
+	if err := validate(newLibraryOwners(), newGoMod()); err != nil {
+		fmt.Printf("Error during the validation of '%s': %v\n", libraryOwnersPath, err)
+		os.Exit(1)
+	}
 }

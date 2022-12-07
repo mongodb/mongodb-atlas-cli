@@ -9,15 +9,18 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.2.0
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys v0.9.0
 	github.com/Masterminds/semver/v3 v3.2.0
+	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/aws/aws-sdk-go v1.44.151
 	github.com/briandowns/spinner v1.19.0
+	github.com/creack/pty v1.1.17
 	github.com/evergreen-ci/shrub v0.0.0-20220520145438-44fbdf0045c8
 	github.com/gemalto/kmip-go v0.0.6-0.20210426170211-84e83580888d
 	github.com/go-test/deep v1.0.8
 	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/golang/mock v1.6.0
 	github.com/google/go-github/v42 v42.0.0
+	github.com/hinshun/vt10x v0.0.0-20220119200601-820417d04eec
 	github.com/klauspost/compress v1.15.12
 	github.com/mattn/go-isatty v0.0.16
 	github.com/mongodb-forks/digest v1.0.4

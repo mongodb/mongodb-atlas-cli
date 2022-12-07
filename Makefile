@@ -41,6 +41,7 @@ export PATH := ./bin:$(PATH)
 ifneq ($(OS),Windows_NT)
 	export SHELL := env PATH=$(PATH) /bin/bash
 endif
+export TERM := linux-m
 export GO111MODULE := on
 export MCLI_E2E_BINARY
 export ATLAS_E2E_BINARY

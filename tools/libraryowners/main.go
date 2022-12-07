@@ -58,19 +58,39 @@ func newLibraryOwners() (map[string]string, error) {
 	return libraryOwnersContent, nil
 }
 
-func validate(libraryOwner map[string]string, goMod *modfile.File) error {
+func validateNewLibs(libraryOwner map[string]string, goMod *modfile.File) error {
+	var addedLibs []string
 	for _, library := range goMod.Require {
 		if library.Indirect {
 			continue
 		}
-
-		if val, ok := libraryOwner[library.Mod.Path]; !ok {
-			return fmt.Errorf("'%s' is not inside '%s'. Please, remove this dependency from '%s'", library.Mod.Path, libraryOwnersPath, goModpath)
-		} else if val == "" {
-			return fmt.Errorf("'%s' doesn't have a owner. Please, add a owner to %s in '%s", library.Mod.Path, library.Mod.Path, libraryOwnersPath)
+		if val, ok := libraryOwner[library.Mod.Path]; !ok || val == "" {
+			addedLibs = append(addedLibs, library.Mod.Path)
 		}
 	}
+	if len(addedLibs) != 0 {
+		return fmt.Errorf("%q doesn't have an owner, please, add one to %q", addedLibs, libraryOwnersPath)
+	}
+	return nil
+}
 
+func validateRemovedLibs(libraryOwner map[string]string, goMod *modfile.File) error {
+	var removedLibs []string
+	for library := range libraryOwner {
+		var found bool
+		for _, dep := range goMod.Require {
+			if library == dep.Mod.Path {
+				found = true
+			}
+		}
+		if !found {
+			removedLibs = append(removedLibs, library)
+			found = false
+		}
+	}
+	if len(removedLibs) != 0 {
+		return fmt.Errorf("%q are not defined, please remove from %q", removedLibs, libraryOwnersPath)
+	}
 	return nil
 }
 
@@ -87,7 +107,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := validate(libraryOwners, goMod); err != nil {
+	if err := validateNewLibs(libraryOwners, goMod); err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Error during the validation of '%s': %v\n", libraryOwnersPath, err)
+		os.Exit(1)
+	}
+
+	if err := validateRemovedLibs(libraryOwners, goMod); err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "Error during the validation of '%s': %v\n", libraryOwnersPath, err)
 		os.Exit(1)
 	}

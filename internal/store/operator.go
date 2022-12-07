@@ -51,6 +51,7 @@ type AtlasAllClustersLister interface {
 type AtlasOperatorTeamsStore interface {
 	TeamDescriber
 	ProjectTeamLister
+	TeamUserLister
 }
 
 type AtlasOperatorGenericStore interface {

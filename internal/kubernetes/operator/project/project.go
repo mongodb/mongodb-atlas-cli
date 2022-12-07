@@ -40,6 +40,7 @@ const (
 var (
 	ErrAtlasProject  = errors.New("can not get 'atlas project' resource")
 	ErrTeamsAssigned = errors.New("can not get 'atlas assigned teams' resource")
+	ErrTeamUsers     = errors.New("can not get 'users' objects")
 )
 
 type AtlasProjectResult struct {
@@ -613,6 +614,22 @@ func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, p
 		return nil, nil, ErrTeamsAssigned
 	}
 
+	fetchUsers := func(teamID string) ([]string, error) {
+		assignedUsers, err := teamsProvider.TeamUsers(orgID, teamID)
+		if err != nil {
+			return nil, err
+		}
+		users, ok := assignedUsers.([]atlas.AtlasUser)
+		if !ok {
+			return nil, ErrTeamUsers
+		}
+		result := make([]string, 0, len(users))
+		for i := range users {
+			result = append(result, users[i].Username)
+		}
+		return result, nil
+	}
+
 	convertRoleNames := func(input []string) []atlasV1.TeamRole {
 		if len(input) == 0 {
 			return nil
@@ -628,6 +645,7 @@ func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, p
 		if len(input) == 0 {
 			return nil
 		}
+
 		result := make([]atlasV1.TeamUser, 0, len(input))
 		for i := range input {
 			result = append(result, atlasV1.TeamUser(input[i]))
@@ -637,6 +655,7 @@ func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, p
 
 	teamsRefs := make([]atlasV1.Team, 0, len(projectTeams.Results))
 	atlasTeamCRs := make([]*atlasV1.AtlasTeam, 0, len(projectTeams.Results))
+
 	for i := range projectTeams.Results {
 		teamRef := projectTeams.Results[i]
 
@@ -658,6 +677,12 @@ func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, p
 			},
 			Roles: convertRoleNames(teamRef.RoleNames),
 		})
+
+		users, err := fetchUsers(team.ID)
+		if err != nil {
+			return nil, nil, err
+		}
+
 		atlasTeamCRs = append(atlasTeamCRs, &atlasV1.AtlasTeam{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AtlasTeam",
@@ -669,7 +694,7 @@ func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, p
 			},
 			Spec: atlasV1.TeamSpec{
 				Name:      team.Name,
-				Usernames: convertUserNames(team.Usernames),
+				Usernames: convertUserNames(users),
 			},
 			Status: status.TeamStatus{
 				Common: status.Common{

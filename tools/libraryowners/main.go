@@ -58,13 +58,13 @@ func newLibraryOwners() (map[string]string, error) {
 	return libraryOwnersContent, nil
 }
 
-func validateNewLibs(libraryOwner map[string]string, goMod *modfile.File) error {
+func validateNewLibs(libOwners map[string]string, goMod *modfile.File) error {
 	var addedLibs []string
 	for _, library := range goMod.Require {
 		if library.Indirect {
 			continue
 		}
-		if val, ok := libraryOwner[library.Mod.Path]; !ok || val == "" {
+		if val, ok := libOwners[library.Mod.Path]; !ok || val == "" {
 			addedLibs = append(addedLibs, library.Mod.Path)
 		}
 	}
@@ -74,9 +74,9 @@ func validateNewLibs(libraryOwner map[string]string, goMod *modfile.File) error 
 	return nil
 }
 
-func validateRemovedLibs(libraryOwner map[string]string, goMod *modfile.File) error {
+func validateRemovedLibs(libOwners map[string]string, goMod *modfile.File) error {
 	var removedLibs []string
-	for library := range libraryOwner {
+	for library := range libOwners {
 		var found bool
 		for _, dep := range goMod.Require {
 			if library == dep.Mod.Path {

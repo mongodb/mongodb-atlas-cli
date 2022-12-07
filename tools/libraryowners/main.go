@@ -27,40 +27,35 @@ const (
 	goModpath         = "go.mod"
 )
 
-func newGoMod() *modfile.File {
+func newGoMod() (*modfile.File, error) {
 	goModFile, err := os.ReadFile(goModpath)
 	if err != nil {
-		fmt.Printf("error reading %s: %v\n", goModpath, err)
-		os.Exit(1)
+		return nil, err
 	}
 
 	f, err := modfile.Parse(goModpath, goModFile, nil)
 	if err != nil {
-		fmt.Printf("error parsing %s: %v\n", goModpath, err)
-		os.Exit(1)
+		return nil, err
 	}
-	return f
+	return f, nil
 }
 
-func newLibraryOwners() map[string]string {
+func newLibraryOwners() (map[string]string, error) {
 	libraryOwnersFile, err := os.ReadFile(libraryOwnersPath)
 	if err != nil {
-		fmt.Printf("error reading '%s': %v\n", libraryOwnersPath, err)
-		os.Exit(1)
+		return nil, err
 	}
 
 	if len(libraryOwnersFile) == 0 {
-		fmt.Printf("'%s' is empty: %v\n", libraryOwnersPath, err)
-		os.Exit(1)
+		return nil, fmt.Errorf("'%s' is empty", libraryOwnersPath)
 	}
 
 	var libraryOwnersContent map[string]string
-	err = json.Unmarshal(libraryOwnersFile, &libraryOwnersContent)
-	if err != nil {
-		fmt.Printf("Error during Unmarshal(): %v\n", err)
-		os.Exit(1)
+	if err = json.Unmarshal(libraryOwnersFile, &libraryOwnersContent); err != nil {
+		return nil, err
 	}
-	return libraryOwnersContent
+
+	return libraryOwnersContent, nil
 }
 
 func validate(libraryOwner map[string]string, goMod *modfile.File) error {
@@ -80,8 +75,20 @@ func validate(libraryOwner map[string]string, goMod *modfile.File) error {
 }
 
 func main() {
-	if err := validate(newLibraryOwners(), newGoMod()); err != nil {
-		fmt.Printf("Error during the validation of '%s': %v\n", libraryOwnersPath, err)
+	libraryOwners, err := newLibraryOwners()
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Error while parsing '%s': %v\n", libraryOwnersPath, err)
+		os.Exit(1)
+	}
+
+	goMod, err := newGoMod()
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Error while parsing '%s': %v\n", goModpath, err)
+		os.Exit(1)
+	}
+
+	if err := validate(libraryOwners, goMod); err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Error during the validation of '%s': %v\n", libraryOwnersPath, err)
 		os.Exit(1)
 	}
 }

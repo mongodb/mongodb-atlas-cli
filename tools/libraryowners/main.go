@@ -22,8 +22,10 @@ import (
 	"golang.org/x/mod/modfile"
 )
 
-const libraryOwnersPath = "library_owners.json"
-const goModpath = "go.mod"
+const (
+	libraryOwnersPath = "build/ci/library_owners.json"
+	goModpath         = "go.mod"
+)
 
 func newGoMod() *modfile.File {
 	goModFile, err := os.ReadFile(goModpath)
@@ -38,7 +40,7 @@ func newGoMod() *modfile.File {
 	return f
 }
 
-func newLibraryOwners() map[string]interface{} {
+func newLibraryOwners() map[string]string {
 	libraryOwnersFile, err := os.ReadFile(libraryOwnersPath)
 	if err != nil {
 		log.Fatalln(err)
@@ -48,7 +50,7 @@ func newLibraryOwners() map[string]interface{} {
 		log.Fatalf("\n'%s' is empty", libraryOwnersPath)
 	}
 
-	var libraryOwnersContent map[string]interface{}
+	var libraryOwnersContent map[string]string
 	err = json.Unmarshal(libraryOwnersFile, &libraryOwnersContent)
 	if err != nil {
 		log.Fatal("\nError during Unmarshal(): ", err)
@@ -56,14 +58,14 @@ func newLibraryOwners() map[string]interface{} {
 	return libraryOwnersContent
 }
 
-func validate(libraryOwner map[string]interface{}, goMod *modfile.File) {
+func validate(libraryOwner map[string]string, goMod *modfile.File) {
 	for _, library := range goMod.Require {
 		if library.Indirect {
 			continue
 		}
 
 		if val, ok := libraryOwner[library.Mod.Path]; !ok {
-			log.Fatalf("\n'%s' is not inside '%s'. Please, add this dependency to '%s'.", library.Mod.Path, libraryOwnersPath, libraryOwnersPath)
+			log.Fatalf("\n'%s' is not inside '%s'. Please, remove this dependency from '%s'.", library.Mod.Path, libraryOwnersPath, goModpath)
 		} else if val == "" {
 			log.Fatalf("\n'%s' doesn't have a owner. Please, add a owner to %s in '%s'.", library.Mod.Path, library.Mod.Path, libraryOwnersPath)
 		}

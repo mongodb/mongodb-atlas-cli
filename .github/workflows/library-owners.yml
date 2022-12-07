@@ -22,7 +22,5 @@ jobs:
           key: Linux-go-1.19-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             Linux-go-1.19-
-      - name: Intsall go-mock
-        run: go install github.com/golang/mock/mockgen@latest
       - name: Run check-library-owners
         run: make check-library-owners

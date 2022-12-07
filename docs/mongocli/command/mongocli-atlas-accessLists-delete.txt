@@ -14,6 +14,8 @@ mongocli atlas accessLists delete
 
 Delete an IP access list from your project.
 
+The command prompts you to confirm the operation when you run the command without the --force option.
+
 Syntax
 ------
 
@@ -84,11 +86,10 @@ Examples
 
 .. code-block::
 
-   # The following command deletes the IP address 192.0.2.0 from the access list for the project with ID 5e2211c17a3e5a48f5497de3 after prompting for a confirmation.
+   # Delete the IP address 192.0.2.0 from the access list for the project with ID 5e2211c17a3e5a48f5497de3 after prompting for a confirmation:
    mongocli atlas accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3
    
 .. code-block::
 
-   # The following command uses the --force option to delete the IP address 192.0.2.0 from the access list for the project with ID 5e2211c17a3e5a48f5497de3 without confirmation.
+   # Use the --force option to delete the IP address 192.0.2.0 from the access list for the project with ID 5e2211c17a3e5a48f5497de3 without confirmation:
    mongocli atlas accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3 --force
- 		

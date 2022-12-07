@@ -29,3 +29,5 @@ for FILE in ${STAGED_EVG_FILES}
 do
     evergreen validate "${FILE}"
 done
+
+make check-library-owners

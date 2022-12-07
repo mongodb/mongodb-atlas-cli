@@ -179,6 +179,12 @@ install-atlascli: ## Install atlascli binary in $GOPATH/bin
 list: ## List all make targets
 	@${MAKE} -pRrn : -f $(MAKEFILE_LIST) 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | sort
 
+.PHONY: check-library-owners
+check-library-owners: ## Check that all the dependencies in go.mod has a owner in library_owners.json
+	@echo "==> Check library_owners.json"
+	go run ./tools/libraryowners/main.go
+
+
 .PHONY: help
 .DEFAULT_GOAL := help
 help:

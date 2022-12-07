@@ -59,6 +59,12 @@ functions:
       params:
         <<: *go_options
         command: make build-atlascli
+  "check library_owners.json":
+    - command: subprocess.exec
+      type: test
+      params:
+        <<: *go_options
+        command: make check-library-owners
   "unit-test":
     - command: subprocess.exec
       type: test
@@ -365,6 +371,11 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,config
+  - name: library_owners_check
+    tags: ["code_health"]
+    commands:
+      - func: "clone"
+      - func: "check library_owners.json"
   - name: brew_e2e
     tags: ["e2e","required"]
     depends_on:

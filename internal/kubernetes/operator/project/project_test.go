@@ -57,6 +57,11 @@ type MockAtlasOperatorProjectStore struct {
 	customRoles            map[string]*[]mongodbatlas.CustomDBRole
 	teams                  map[string]map[string]*mongodbatlas.Team
 	projectTeams           map[string]*mongodbatlas.TeamsAssigned
+	teamUsers              map[string]map[string][]mongodbatlas.AtlasUser
+}
+
+func (m *MockAtlasOperatorProjectStore) TeamUsers(orgID string, teamID string) (interface{}, error) {
+	return m.teamUsers[orgID][teamID], nil
 }
 
 func (m *MockAtlasOperatorProjectStore) TeamByID(orgID, teamID string) (*mongodbatlas.Team, error) {
@@ -366,7 +371,19 @@ func TestBuildAtlasProject(t *testing.T) {
 					teamID: {
 						ID:        teamID,
 						Name:      "TestTeamName",
-						Usernames: []string{"testusername@mongodb.com"},
+						Usernames: []string{},
+					},
+				},
+			},
+			teamUsers: map[string]map[string][]mongodbatlas.AtlasUser{
+				orgID: {
+					teamID: {
+						{
+							EmailAddress: "testuser@mooooongodb.com",
+							FirstName:    "TestName",
+							ID:           "TestID",
+							LastName:     "TestLastName",
+						},
 					},
 				},
 			},
@@ -437,7 +454,7 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 				Spec: atlasV1.TeamSpec{
 					Name:      projectStore.teams[orgID][teamID].Name,
-					Usernames: []atlasV1.TeamUser{atlasV1.TeamUser(projectStore.teams[orgID][teamID].Usernames[0])},
+					Usernames: []atlasV1.TeamUser{atlasV1.TeamUser(projectStore.teamUsers[orgID][teamID][0].Username)},
 				},
 				Status: status.TeamStatus{
 					Common: status.Common{

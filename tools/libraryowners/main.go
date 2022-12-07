@@ -81,12 +81,13 @@ func validateRemovedLibs(libOwners map[string]string, goMod *modfile.File) error
 		for _, dep := range goMod.Require {
 			if library == dep.Mod.Path {
 				found = true
+				break
 			}
 		}
 		if !found {
 			removedLibs = append(removedLibs, library)
-			found = false
 		}
+		found = false
 	}
 	if len(removedLibs) != 0 {
 		return fmt.Errorf("%q are not defined, please remove from %q", removedLibs, libraryOwnersPath)

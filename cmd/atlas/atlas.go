@@ -151,12 +151,8 @@ func trackInitError(e error) {
 }
 
 func initTrack() {
-	if cmd, args, err := atlas.Builder().Find(os.Args[1:]); err == nil {
-		telemetry.StartTrackingCommand(cmd, args)
-		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
-			Err: nil,
-		})
-	}
+	cmd, args, _ := atlas.Builder().Find(os.Args[1:])
+	telemetry.StartTrackingCommand(cmd, args)
 }
 
 func main() {

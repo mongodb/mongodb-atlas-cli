@@ -89,4 +89,5 @@ Examples
 
 .. code-block::
 
-   mongocli atlas snapshot watch snapshotIdSample --clusterName clusterNameSample
+   # Watch for a backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 in the cluster named myDemo to become available:
+   mongocli atlas backups snapshots watch 5f4007f327a3bd7b6f4103c5 --clusterName myDemo

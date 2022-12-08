@@ -145,21 +145,21 @@ func StartBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"automated|download|pointInTimeDesc": "Type of restore job to create. Accepted values include: automated, download, pointInTime.",
 		},
-		Example: fmt.Sprintf(`  # The following example creates an automated restore:
+		Example: fmt.Sprintf(`  # Create an automated restore:
   %[1]s backup restore start automated \
          --clusterName myDemo \
          --snapshotId 5e7e00128f8ce03996a47179 \
          --targetClusterName myDemo2 \
          --targetProjectId 1a2345b67c8e9a12f3456de7
 
-  # The following example creates a point-in-time restore:
+  # Create a point-in-time restore:
   %[1]s backup restore start pointInTime \
          --clusterName myDemo \
          --pointInTimeUTCMillis 1588523147 \
          --targetClusterName myDemo2 \
          --targetProjectId 1a2345b67c8e9a12f3456de7
   
-  # The following example creates a download restore:
+  # Create a download restore:
   %[1]s backup restore start download \
          --clusterName myDemo \
          --snapshotId 5e7e00128f8ce03996a47179`, cli.ExampleAtlasEntryPoint()),

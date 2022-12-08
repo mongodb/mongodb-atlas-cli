@@ -16,6 +16,7 @@ package snapshots
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/commonerrors"
@@ -56,6 +57,8 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Delete a backup snapshot.",
 		Args:    require.ExactArgs(1),
+		Example: fmt.Sprintf(`  # Delete the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the cluster named myDemo:
+  %s backups snapshots delete 5f4007f327a3bd7b6f4103c5 --clusterName myDemo`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"snapshotIdDesc": "Unique identifier of the snapshot you want to delete.",
 		},

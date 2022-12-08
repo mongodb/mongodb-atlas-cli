@@ -92,5 +92,5 @@ Examples
 
 .. code-block::
 
-   # The following example retrieves the continuous backup restore jobs for the cluster Cluster0:
+   # Retrieve the continuous backup restore jobs for the cluster Cluster0:
    mongocli atlas backup restore list Cluster0

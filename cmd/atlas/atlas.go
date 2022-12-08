@@ -22,7 +22,8 @@ import (
 	"path"
 	"strings"
 
-	survey "github.com/AlecAivazis/survey/v2/core"
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/AlecAivazis/survey/v2/core"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/root/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
@@ -80,14 +81,22 @@ func createConfigFromMongoCLIConfig() {
 	}
 	defer in.Close()
 
-	_, _ = fmt.Fprintf(os.Stderr, `Atlas CLI has found an existing MongoDB CLI configuration file, copying its content to: %s
-`, atlasConfigPath)
 	_, err = os.Stat(atlasConfigHomePath) // check if the dir is already there
 	if err != nil {
 		defaultPermissions := 0700
 		if err = os.Mkdir(atlasConfigHomePath, os.FileMode(defaultPermissions)); err != nil {
 			return
 		}
+	}
+
+	var response bool
+	question := &survey.Confirm{
+		Message: fmt.Sprintf("Atlas CLI has found an existing MongoDB CLI configuration file, would you like to copy its content? (destination:%s)", atlasConfigPath),
+		Default: true,
+	}
+
+	if _ = telemetry.TrackAskOne(question, &response); err != nil || !response {
+		return
 	}
 
 	out, err := os.Create(atlasConfigPath)
@@ -131,7 +140,9 @@ func trackInitError(e error) {
 		return
 	}
 	if cmd, args, err := atlas.Builder().Find(os.Args[1:]); err == nil {
-		telemetry.StartTrackingCommand(cmd, args)
+		if !telemetry.StartedTrackingCommand() {
+			telemetry.StartTrackingCommand(cmd, args)
+		}
 		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
 			Err: e,
 		})
@@ -139,12 +150,22 @@ func trackInitError(e error) {
 	log.Fatal(e)
 }
 
+func initTrack() {
+	if cmd, args, err := atlas.Builder().Find(os.Args[1:]); err == nil {
+		telemetry.StartTrackingCommand(cmd, args)
+		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
+			Err: nil,
+		})
+	}
+}
+
 func main() {
 	cobra.EnableCommandSorting = false
 	if term := os.Getenv("TERM"); strings.HasSuffix(term, "-m") {
-		survey.DisableColor = true
+		core.DisableColor = true
 	}
 
+	initTrack()
 	createConfigFromMongoCLIConfig()
 	trackInitError(loadConfig())
 

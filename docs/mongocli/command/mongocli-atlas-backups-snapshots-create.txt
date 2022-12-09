@@ -14,6 +14,8 @@ mongocli atlas backups snapshots create
 
 Create a backup snapshot for your project and cluster.
 
+You can create on-demand backup snapshots for Atlas cluster tiers M10 and larger.
+
 Syntax
 ------
 
@@ -87,3 +89,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Create a backup snapshot for the cluster named myDemo that Atlas retains for 30 days:
+   mongocli atlas backups snapshots create myDemo --desc "Daily snapshot" --retention 30

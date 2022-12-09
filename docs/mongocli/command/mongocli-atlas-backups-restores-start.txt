@@ -112,7 +112,7 @@ Examples
 
 .. code-block::
 
-   # The following example creates an automated restore:
+   # Create an automated restore:
    mongocli atlas backup restore start automated \
           --clusterName myDemo \
           --snapshotId 5e7e00128f8ce03996a47179 \
@@ -122,7 +122,7 @@ Examples
    
 .. code-block::
 
-   # The following example creates a point-in-time restore:
+   # Create a point-in-time restore:
    mongocli atlas backup restore start pointInTime \
           --clusterName myDemo \
           --pointInTimeUTCMillis 1588523147 \
@@ -132,7 +132,7 @@ Examples
    
 .. code-block::
 
-   # The following example creates a download restore:
+   # Create a download restore:
    mongocli atlas backup restore start download \
           --clusterName myDemo \
           --snapshotId 5e7e00128f8ce03996a47179

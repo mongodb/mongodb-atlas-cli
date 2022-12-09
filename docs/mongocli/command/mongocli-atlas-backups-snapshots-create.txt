@@ -95,4 +95,4 @@ Examples
 .. code-block::
 
    # Create a backup snapshot for the cluster named myDemo that Atlas retains for 30 days:
-   mongocli atlas backups snapshots create myDemo --retention 30
+   mongocli atlas backups snapshots create myDemo --desc "Daily snapshot" --retention 30

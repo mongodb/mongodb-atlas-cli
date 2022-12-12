@@ -33,11 +33,12 @@ const (
 
 // atlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.
 type atlasE2ETestGenerator struct {
-	projectID    string
-	projectName  string
-	clusterName  string
-	firstProcess *mongodbatlas.Process
-	t            *testing.T
+	projectID      string
+	projectName    string
+	clusterName    string
+	serverlessName string
+	firstProcess   *mongodbatlas.Process
+	t              *testing.T
 }
 
 // newAtlasE2ETestGenerator creates a new instance of atlasE2ETestGenerator struct.
@@ -97,6 +98,27 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	if !deleted {
 		t.Errorf("we could not delete the project '%s'", projectID)
 	}
+}
+
+func (g *atlasE2ETestGenerator) generateServerlessCluster() {
+	g.t.Helper()
+
+	if g.projectID == "" {
+		g.t.Fatal("unexpected error: project must be generated")
+	}
+
+	var err error
+	g.serverlessName, err = deployServerlessInstanceForProject(g.projectID)
+	if err != nil {
+		g.t.Errorf("unexpected error: %v", err)
+	}
+	g.t.Logf("serverlessName=%s", g.serverlessName)
+
+	g.t.Cleanup(func() {
+		if e := deleteServerlessInstanceForProject(g.projectID, g.serverlessName); e != nil {
+			g.t.Errorf("unexpected error: %v", e)
+		}
+	})
 }
 
 // generateCluster generates a new cluster and also registers it's deletion on test cleanup.

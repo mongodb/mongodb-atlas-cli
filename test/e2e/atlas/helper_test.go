@@ -24,12 +24,9 @@ import (
 	"os"
 	"os/exec"
 	"testing"
-	"time"
 
-	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -91,134 +88,86 @@ const (
 	e2eSharedMDBVer    = "5.0"
 )
 
-const (
-	defaultTimeout   = 30 * time.Minute
-	defaultTick      = 1 * time.Minute
-	ResourceNotFound = "RESOURCE_NOT_FOUND"
-)
-
-type K8SHelper struct {
-	atlasClient *mongodbatlas.Client
-	project     *mongodbatlas.Project
-	clusters    map[string]*mongodbatlas.Cluster
-	orgID       string
-	t           *testing.T
-}
-
-func NewK8sHelper(t *testing.T) *K8SHelper {
-	t.Helper()
-
-	// These ENV variables MUST be set before running the test
-	orgID := os.Getenv("MCLI_ORG_ID")
-	privateKey := os.Getenv("MCLI_PRIVATE_API_KEY")
-	publicKey := os.Getenv("MCLI_PUBLIC_API_KEY")
-	opsManagerURL := os.Getenv("MCLI_OPS_MANAGER_URL")
-	transport := digest.NewTransport(publicKey, privateKey)
-	tClient, err := transport.Client()
-	require.NoError(t, err, "can not create transport for atlas client")
-
-	atlasClient := mongodbatlas.NewClient(tClient)
-	atlasClient.BaseURL, err = url.Parse(opsManagerURL)
-	require.NoError(t, err, "can not create atlas client")
-
-	return &K8SHelper{
-		atlasClient: atlasClient,
-		t:           t,
-		orgID:       orgID,
-		clusters:    map[string]*mongodbatlas.Cluster{},
+func deployServerlessInstanceForProject(projectID string) (string, error) {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return "", err
 	}
+	clusterName, err := RandClusterName()
+	if err != nil {
+		return "", err
+	}
+	region, err := newAvailableRegion(projectID, e2eClusterTier, e2eClusterProvider)
+	if err != nil {
+		return "", err
+	}
+	args := []string{
+		serverlessEntity,
+		"create",
+		clusterName,
+		"--region", region,
+		"--provider", e2eClusterProvider,
+	}
+
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	create := exec.Command(cliPath, args...)
+	create.Env = os.Environ()
+	if resp, err := create.CombinedOutput(); err != nil {
+		return "", fmt.Errorf("error creating serverless instance %w: %s", err, string(resp))
+	}
+
+	watchArgs := []string{
+		serverlessEntity,
+		"watch",
+		clusterName,
+	}
+	if projectID != "" {
+		watchArgs = append(watchArgs, "--projectId", projectID)
+	}
+	watch := exec.Command(cliPath, watchArgs...)
+	watch.Env = os.Environ()
+	if resp, err := watch.CombinedOutput(); err != nil {
+		return "", fmt.Errorf("error watching serverless instance %w: %s", err, string(resp))
+	}
+	return clusterName, nil
 }
 
-func (kh *K8SHelper) NewProject(project *mongodbatlas.Project) {
-	kh.t.Helper()
+func deleteServerlessInstanceForProject(projectID, clusterName string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+	args := []string{
+		serverlessEntity,
+		"delete",
+		clusterName,
+		"--force",
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	deleteCmd := exec.Command(cliPath, args...)
+	deleteCmd.Env = os.Environ()
+	if resp, err := deleteCmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("error deleting serverless instance %w: %s", err, string(resp))
+	}
 
-	createdProject, resp, err := kh.atlasClient.Projects.Create(context.Background(), project, &mongodbatlas.CreateProjectOptions{})
-	require.Nil(kh.t, err, "error while creating project", err, resp.Status)
-	kh.project = createdProject
-
-	assert.Eventually(kh.t, func() bool {
-		_, _, err := kh.atlasClient.Projects.GetOneProject(context.Background(), kh.project.ID)
-		return assert.NoError(kh.t, err, "waiting for project to be created", kh.project.ID)
-	}, defaultTimeout, defaultTick, "project should've been created")
-
-	kh.t.Cleanup(func() {
-		assert.Eventually(kh.t, func() bool {
-			_, err := kh.atlasClient.Projects.Delete(context.Background(), kh.project.ID)
-			if err != nil {
-				var apiError *mongodbatlas.ErrorResponse
-				if errors.As(err, &apiError) && (apiError.ErrorCode == "GROUP_NOT_FOUND" || apiError.ErrorCode == ResourceNotFound) {
-					return true
-				}
-				return false
-			}
-			return true
-		}, defaultTimeout, defaultTick, "project should've been deleted", project.ID)
-	})
-}
-
-func (kh *K8SHelper) NewCluster(cluster *mongodbatlas.Cluster) {
-	kh.t.Helper()
-
-	require.True(kh.t, kh.project != nil, "can not create cluster without a project")
-	createdCluster, _, err := kh.atlasClient.Clusters.Create(context.Background(), kh.project.ID, cluster)
-	require.Nil(kh.t, err, "error while creating cluster")
-
-	kh.clusters[cluster.Name] = createdCluster
-
-	assert.Eventually(kh.t, func() bool {
-		_, _, err := kh.atlasClient.Clusters.Get(context.Background(), kh.project.ID, cluster.Name)
-		return assert.NoError(kh.t, err, "waiting for cluster to be created", cluster.Name)
-	}, defaultTimeout, defaultTick, "cluster should've been created")
-
-	kh.t.Cleanup(func() {
-		assert.Eventually(kh.t, func() bool {
-			_, err := kh.atlasClient.Clusters.Delete(context.Background(), kh.project.ID, cluster.Name)
-			if !assert.NoError(kh.t, err, "can not delete test cluster", cluster.Name) {
-				return false
-			}
-			_, _, err = kh.atlasClient.Clusters.Get(context.Background(), kh.project.ID, cluster.Name)
-			if err != nil {
-				var apiError *mongodbatlas.ErrorResponse
-				if errors.As(err, &apiError) && (apiError.ErrorCode == "CLUSTER_NOT_FOUND" || apiError.ErrorCode == ResourceNotFound) {
-					return true
-				}
-				return false
-			}
-			return true
-		}, defaultTimeout, defaultTick, "cluster should've been deleted", cluster.Name, cluster.ID)
-	})
-}
-
-func (kh *K8SHelper) NewServerlessInstance(instance *mongodbatlas.ServerlessCreateRequestParams) {
-	kh.t.Helper()
-	require.True(kh.t, kh.project != nil, "can not create serverless instance without a project")
-	createdInstance, _, err := kh.atlasClient.ServerlessInstances.Create(context.Background(), kh.project.ID, instance)
-	require.Nil(kh.t, err, "error while creating serverless instance")
-
-	kh.clusters[createdInstance.Name] = createdInstance
-
-	assert.Eventually(kh.t, func() bool {
-		_, _, err := kh.atlasClient.ServerlessInstances.Get(context.Background(), kh.project.ID, createdInstance.Name)
-		return assert.NoError(kh.t, err, "waiting for serverless instance to be created", createdInstance.Name)
-	}, defaultTimeout, defaultTick, "serverless instance should've been created")
-
-	kh.t.Cleanup(func() {
-		assert.Eventually(kh.t, func() bool {
-			_, err := kh.atlasClient.ServerlessInstances.Delete(context.Background(), kh.project.ID, createdInstance.Name)
-			if !assert.NoError(kh.t, err, "can not delete test cluster", createdInstance.Name) {
-				return false
-			}
-			_, _, err = kh.atlasClient.ServerlessInstances.Get(context.Background(), kh.project.ID, createdInstance.Name)
-			if err != nil {
-				var apiError *mongodbatlas.ErrorResponse
-				if errors.As(err, &apiError) && (apiError.ErrorCode == "SERVERLESS_INSTANCE_NOT_FOUND" || apiError.ErrorCode == ResourceNotFound) {
-					return true
-				}
-				return false
-			}
-			return true
-		}, defaultTimeout, defaultTick, "serverless instance should've been deleted", createdInstance.Name, createdInstance.ID)
-	})
+	watchArgs := []string{
+		serverlessEntity,
+		"watch",
+		clusterName,
+	}
+	if projectID != "" {
+		watchArgs = append(watchArgs, "--projectId", projectID)
+	}
+	watchCmd := exec.Command(cliPath, watchArgs...)
+	watchCmd.Env = os.Environ()
+	// this command will fail with 404 once the cluster is deleted
+	// we just need to wait for this to close the project
+	_ = watchCmd.Run()
+	return nil
 }
 
 func deployClusterForProject(projectID string) (string, error) {

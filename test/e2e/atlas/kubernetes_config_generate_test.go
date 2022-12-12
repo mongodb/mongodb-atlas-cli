@@ -24,12 +24,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	k8syaml "k8s.io/apimachinery/pkg/util/yaml"
@@ -65,58 +63,17 @@ func getK8SEntities(data []byte) ([]runtime.Object, error) {
 }
 
 func TestKubernetesConfigGenerate(t *testing.T) {
+	n, err := e2e.RandInt(255)
+	require.NoError(t, err)
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject(fmt.Sprintf("kubernetes-%s", n))
+	g.generateCluster()
+	g.generateServerlessCluster()
+
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
-	n, err := e2e.RandInt(255)
-	require.NoError(t, err)
-
 	targetNamespace := "importer-namespace"
-
-	projectName := fmt.Sprintf("test-project-%s", n)
-	clusterReplicaSetName := fmt.Sprintf("test-cluster-replicaset-%s", n)
-	clusterServerlessName := fmt.Sprintf("test-cluster-serverless-%s", n)
-
-	helper := NewK8sHelper(t)
-	helper.NewProject(&atlas.Project{Name: projectName, OrgID: helper.orgID})
-	helper.NewCluster(&atlas.Cluster{
-		BiConnector: &atlas.BiConnector{
-			Enabled: pointers.MakePtr(true),
-		},
-		ClusterType:           "REPLICASET",
-		DiskSizeGB:            pointers.MakePtr[float64](10),
-		GroupID:               helper.project.ID,
-		Name:                  clusterReplicaSetName,
-		ProviderBackupEnabled: pointers.MakePtr(false),
-		ProviderSettings: &atlas.ProviderSettings{
-			InstanceSizeName: "M10",
-			ProviderName:     "AWS",
-			RegionName:       "US_EAST_1",
-		},
-		ReplicationFactor: pointers.MakePtr[int64](3),
-		ReplicationSpecs: []atlas.ReplicationSpec{
-			{
-				NumShards: pointers.MakePtr[int64](1),
-				ZoneName:  "Zone 1",
-				RegionsConfig: map[string]atlas.RegionsConfig{
-					"US_EAST_1": {
-						Priority:       pointers.MakePtr[int64](7),
-						AnalyticsNodes: pointers.MakePtr[int64](0),
-						ElectableNodes: pointers.MakePtr[int64](3),
-						ReadOnlyNodes:  pointers.MakePtr[int64](0),
-					},
-				},
-			},
-		},
-	})
-	helper.NewServerlessInstance(&atlas.ServerlessCreateRequestParams{
-		Name: clusterServerlessName,
-		ProviderSettings: &atlas.ServerlessProviderSettings{
-			BackingProviderName: "AWS",
-			ProviderName:        "SERVERLESS",
-			RegionName:          "US_EAST_1",
-		},
-	})
 
 	// always register atlas entities
 	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
@@ -127,9 +84,9 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 			"config",
 			"generate",
 			"--projectId",
-			helper.project.ID,
+			g.projectID,
 			"--clusterName",
-			clusterReplicaSetName,
+			g.clusterName,
 			"--targetNamespace",
 			targetNamespace,
 			"--includeSecrets")
@@ -180,7 +137,7 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 				t.Fatal("AtlasDeployment is not found in results")
 			}
 			assert.Equal(t, deployment.Namespace, targetNamespace)
-			assert.Equal(t, deployment.Name, clusterReplicaSetName)
+			assert.Equal(t, deployment.Name, g.clusterName)
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
@@ -207,9 +164,9 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 			"config",
 			"generate",
 			"--projectId",
-			helper.project.ID,
+			g.projectID,
 			"--clusterName",
-			fmt.Sprintf("%s,%s", clusterServerlessName, clusterReplicaSetName),
+			fmt.Sprintf("%s,%s", g.clusterName, g.serverlessName),
 			"--targetNamespace",
 			targetNamespace,
 			"--includeSecrets")
@@ -259,8 +216,8 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 				assert.Equal(t, deployments[i].Namespace, targetNamespace)
 			}
 			clusterNames := []string{deployments[0].Name, deployments[1].Name}
-			assert.Contains(t, clusterNames, clusterReplicaSetName, "result doesn't contain replicaset cluster")
-			assert.Contains(t, clusterNames, clusterServerlessName, "result doesn't contain serverless instance")
+			assert.Contains(t, clusterNames, g.clusterName, "result doesn't contain replicaset cluster")
+			assert.Contains(t, clusterNames, g.serverlessName, "result doesn't contain serverless instance")
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
@@ -287,7 +244,7 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 			"config",
 			"generate",
 			"--projectId",
-			helper.project.ID,
+			g.projectID,
 			"--targetNamespace",
 			targetNamespace,
 			"--includeSecrets")
@@ -337,8 +294,8 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 				assert.Equal(t, deployments[i].Namespace, targetNamespace)
 			}
 			clusterNames := []string{deployments[0].Name, deployments[1].Name}
-			assert.Contains(t, clusterNames, clusterReplicaSetName, "result doesn't contain replicaset cluster")
-			assert.Contains(t, clusterNames, clusterServerlessName, "result doesn't contain serverless instance")
+			assert.Contains(t, clusterNames, g.clusterName, "result doesn't contain replicaset cluster")
+			assert.Contains(t, clusterNames, g.serverlessName, "result doesn't contain serverless instance")
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {

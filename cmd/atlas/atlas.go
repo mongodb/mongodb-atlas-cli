@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/root/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/spf13/cobra"
 )
 
@@ -54,6 +55,25 @@ func loadConfig() error {
 	}
 
 	return nil
+}
+
+func shouldCopyConfig(atlasConfigPath string) bool {
+	// Keep backward compatibility and copy if non-tty
+	if !terminal.IsTerminal(os.Stdout) {
+		return true
+	}
+
+	var response bool
+	question := &survey.Confirm{
+		Message: fmt.Sprintf("Atlas CLI has found an existing MongoDB CLI configuration file, would you like to copy its content? (destination:%s)", atlasConfigPath),
+		Default: true,
+	}
+
+	if err := telemetry.TrackAskOne(question, &response); err != nil {
+		return false
+	}
+
+	return response
 }
 
 // createConfigFromMongoCLIConfig creates the atlasCLI config file from the mongocli config file.
@@ -89,13 +109,7 @@ func createConfigFromMongoCLIConfig() {
 		}
 	}
 
-	var response bool
-	question := &survey.Confirm{
-		Message: fmt.Sprintf("Atlas CLI has found an existing MongoDB CLI configuration file, would you like to copy its content? (destination:%s)", atlasConfigPath),
-		Default: true,
-	}
-
-	if _ = telemetry.TrackAskOne(question, &response); err != nil || !response {
+	if !shouldCopyConfig(atlasConfigPath) {
 		return
 	}
 

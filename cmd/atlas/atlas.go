@@ -60,7 +60,7 @@ func loadConfig() error {
 func shouldCopyConfig(atlasConfigPath string) bool {
 	// Keep backward compatibility and copy if non-tty. If any shows as non-tty, then we can't ask
 	// questions.
-	if !(terminal.IsTerminal(os.Stdout) && terminal.IsTerminal(os.Stderr) && terminal.IsTerminal(os.Stdin)) {
+	if !(terminal.IsTerminal(os.Stdout) && terminal.IsTerminal(os.Stderr) && terminal.IsTerminalInput(os.Stdin)) {
 		return true
 	}
 

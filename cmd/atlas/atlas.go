@@ -22,10 +22,12 @@ import (
 	"path"
 	"strings"
 
-	survey "github.com/AlecAivazis/survey/v2/core"
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/AlecAivazis/survey/v2/core"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/root/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/spf13/cobra"
 )
 
@@ -55,6 +57,26 @@ func loadConfig() error {
 	return nil
 }
 
+func shouldCopyConfig(atlasConfigPath string) bool {
+	// Keep backward compatibility and copy if non-tty. If any shows as non-tty, then we can't ask
+	// questions.
+	if !terminal.IsTerminal(os.Stdout) || !terminal.IsTerminal(os.Stderr) || !terminal.IsTerminalInput(os.Stdin) {
+		return true
+	}
+
+	var response bool
+	question := &survey.Confirm{
+		Message: fmt.Sprintf("Atlas CLI has found an existing MongoDB CLI configuration file, would you like to copy its content? (destination:%s)", atlasConfigPath),
+		Default: true,
+	}
+
+	if err := telemetry.TrackAskOne(question, &response); err != nil {
+		return false
+	}
+
+	return response
+}
+
 // createConfigFromMongoCLIConfig creates the atlasCLI config file from the mongocli config file.
 func createConfigFromMongoCLIConfig() {
 	atlasConfigHomePath, err := config.AtlasCLIConfigHome()
@@ -80,14 +102,16 @@ func createConfigFromMongoCLIConfig() {
 	}
 	defer in.Close()
 
-	_, _ = fmt.Fprintf(os.Stderr, `Atlas CLI has found an existing MongoDB CLI configuration file, copying its content to: %s
-`, atlasConfigPath)
 	_, err = os.Stat(atlasConfigHomePath) // check if the dir is already there
 	if err != nil {
 		defaultPermissions := 0700
 		if err = os.Mkdir(atlasConfigHomePath, os.FileMode(defaultPermissions)); err != nil {
 			return
 		}
+	}
+
+	if !shouldCopyConfig(atlasConfigPath) {
+		return
 	}
 
 	out, err := os.Create(atlasConfigPath)
@@ -131,7 +155,9 @@ func trackInitError(e error) {
 		return
 	}
 	if cmd, args, err := atlas.Builder().Find(os.Args[1:]); err == nil {
-		telemetry.StartTrackingCommand(cmd, args)
+		if !telemetry.StartedTrackingCommand() {
+			telemetry.StartTrackingCommand(cmd, args)
+		}
 		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
 			Err: e,
 		})
@@ -139,12 +165,18 @@ func trackInitError(e error) {
 	log.Fatal(e)
 }
 
+func initTrack() {
+	cmd, args, _ := atlas.Builder().Find(os.Args[1:])
+	telemetry.StartTrackingCommand(cmd, args)
+}
+
 func main() {
 	cobra.EnableCommandSorting = false
 	if term := os.Getenv("TERM"); strings.HasSuffix(term, "-m") {
-		survey.DisableColor = true
+		core.DisableColor = true
 	}
 
+	initTrack()
 	createConfigFromMongoCLIConfig()
 	trackInitError(loadConfig())
 

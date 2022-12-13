@@ -60,7 +60,7 @@ func loadConfig() error {
 func shouldCopyConfig(atlasConfigPath string) bool {
 	// Keep backward compatibility and copy if non-tty. If any shows as non-tty, then we can't ask
 	// questions.
-	if !(terminal.IsTerminal(os.Stdout) && terminal.IsTerminal(os.Stderr) && terminal.IsTerminalInput(os.Stdin)) {
+	if !terminal.IsTerminal(os.Stdout) || !terminal.IsTerminal(os.Stderr) || !terminal.IsTerminalInput(os.Stdin) {
 		return true
 	}
 
@@ -125,7 +125,7 @@ func createConfigFromMongoCLIConfig() {
 		return
 	}
 
-	_, _ = fmt.Fprintf(os.Stdout, `AtlasCLI has copied your MongoCLI configuration to: %s
+	_, _ = fmt.Fprintf(os.Stderr, `AtlasCLI has copied your MongoCLI configuration to: %s
 
 `, atlasConfigPath)
 }

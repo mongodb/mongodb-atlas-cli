@@ -374,4 +374,5 @@ dbName and collection are only required for built-in roles.`
 	ExporterClusterName                       = "One or more comma separated cluster names to import"
 	OperatorIncludeSecrets                    = "Generate kubernetes secrets with data for projects, users, deployments entities" //nolint:gosec //This is just a message, not a credential
 	OperatorTargetNamespace                   = "Namespaces to use for generated kubernetes entities"
+	JobID                                     = "Unique identifier that Atlas assigns to the job"
 )

@@ -31,7 +31,7 @@ type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	clusterName string
-	bucketID    string
+	jobID       string
 	store       store.ExportJobsDescriber
 }
 
@@ -43,12 +43,12 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var describeTemplate = `ID	EXPORT BUCKET ID	STATE	SNAPSHOT ID
-{{.ID}}	{{.ExportBucketID}}	{{.State}}	{{.SnapshotID}}
+var describeTemplate = `ID	EXPORT JOB ID	STATE	SNAPSHOT ID
+{{.ID}}	{{.ExportJobID}}	{{.State}}	{{.SnapshotID}}
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.ExportJob(opts.ConfigProjectID(), opts.clusterName, opts.bucketID)
+	r, err := opts.store.ExportJob(opts.ConfigProjectID(), opts.clusterName, opts.jobID)
 	if err != nil {
 		return err
 	}
@@ -56,16 +56,16 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas backup(s) export(s) job(s) describe --clusterName <clusterName> --bucketID <bucketID> [--projectID <projectID>].
+// atlas backup(s) export(s) job(s) describe --clusterName <clusterName> --jobID <jobID> [--projectID <projectID>].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Aliases: []string{"get"},
-		Short:   "Return one cloud backup export job for your project, cluster and bucket.",
+		Short:   "Return one cloud backup export job for your project, cluster and job.",
 		Args:    require.NoArgs,
-		Example: fmt.Sprintf(`  # The following example describes the continuous backup export job for the cluster Cluster0 and bucket 5df90590f10fab5e33de2305:
-  %s backup exports jobs describe --clusterName Cluster0 --bucketId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # The following example describes the continuous backup export job for the cluster Cluster0 and job 5df90590f10fab5e33de2305:
+  %s backup exports jobs describe --clusterName Cluster0 --jobId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -79,13 +79,16 @@ func DescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.bucketID, flag.BucketID, "", usage.BucketID)
+	cmd.Flags().StringVar(&opts.jobID, flag.JobID, "", usage.JobID)
+	cmd.Flags().StringVar(&opts.jobID, flag.BucketID, "", usage.JobID)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
-	_ = cmd.MarkFlagRequired(flag.BucketID)
+	_ = cmd.MarkFlagRequired(flag.JobID)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.Flags().MarkDeprecated(flag.BucketID, fmt.Sprintf("please use --%s instead", flag.JobID))
 
 	return cmd
 }

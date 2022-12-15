@@ -83,7 +83,6 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.exportJobID, flag.BucketID, "", usage.ExportJobID)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
-	_ = cmd.MarkFlagRequired(flag.ExportJobID)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

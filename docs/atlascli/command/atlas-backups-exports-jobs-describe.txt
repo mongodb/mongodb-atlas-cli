@@ -40,7 +40,7 @@ Options
      - Name of the cluster.
    * - --exportJobId
      - string
-     - true
+     - false
      - Unique identifier that Atlas assigns to the job
    * - -h, --help
      - 

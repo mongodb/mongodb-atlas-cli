@@ -31,7 +31,7 @@ type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	clusterName string
-	jobID       string
+	exportJobID string
 	store       store.ExportJobsDescriber
 }
 
@@ -43,12 +43,12 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var describeTemplate = `ID	EXPORT JOB ID	STATE	SNAPSHOT ID
-{{.ID}}	{{.ExportJobID}}	{{.State}}	{{.SnapshotID}}
+var describeTemplate = `ID	EXPORT BUCKET ID	STATE	SNAPSHOT ID
+{{.ID}}	{{.ExportBucketID}}	{{.State}}	{{.SnapshotID}}
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.ExportJob(opts.ConfigProjectID(), opts.clusterName, opts.jobID)
+	r, err := opts.store.ExportJob(opts.ConfigProjectID(), opts.clusterName, opts.exportJobID)
 	if err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas backup(s) export(s) job(s) describe --clusterName <clusterName> --jobID <jobID> [--projectID <projectID>].
+// atlas backup(s) export(s) job(s) describe --clusterName <clusterName> --exportJobID <exportJobID> [--projectID <projectID>].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
@@ -65,7 +65,7 @@ func DescribeBuilder() *cobra.Command {
 		Short:   "Return one cloud backup export job for your project, cluster and job.",
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # The following example describes the continuous backup export job for the cluster Cluster0 and job 5df90590f10fab5e33de2305:
-  %s backup exports jobs describe --clusterName Cluster0 --jobId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
+  %s backup exports jobs describe --clusterName Cluster0 --exportJobID 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -79,16 +79,16 @@ func DescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.jobID, flag.JobID, "", usage.JobID)
-	cmd.Flags().StringVar(&opts.jobID, flag.BucketID, "", usage.JobID)
+	cmd.Flags().StringVar(&opts.exportJobID, flag.ExportJobID, "", usage.ExportJobID)
+	cmd.Flags().StringVar(&opts.exportJobID, flag.BucketID, "", usage.ExportJobID)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
-	_ = cmd.MarkFlagRequired(flag.JobID)
+	_ = cmd.MarkFlagRequired(flag.ExportJobID)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.Flags().MarkDeprecated(flag.BucketID, fmt.Sprintf("please use --%s instead", flag.JobID))
+	_ = cmd.Flags().MarkDeprecated(flag.BucketID, fmt.Sprintf("please use --%s instead", flag.ExportJobID))
 
 	return cmd
 }

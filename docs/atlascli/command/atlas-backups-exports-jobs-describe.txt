@@ -38,14 +38,14 @@ Options
      - string
      - true
      - Name of the cluster.
+   * - --exportJobId
+     - string
+     - true
+     - Unique identifier that Atlas assigns to the job
    * - -h, --help
      - 
      - false
      - help for describe
-   * - --jobId
-     - string
-     - true
-     - Unique identifier that Atlas assigns to the job
    * - -o, --output
      - string
      - false
@@ -77,4 +77,4 @@ Examples
 .. code-block::
 
    # The following example describes the continuous backup export job for the cluster Cluster0 and job 5df90590f10fab5e33de2305:
-   atlas backup exports jobs describe --clusterName Cluster0 --jobId 5df90590f10fab5e33de2305
+   atlas backup exports jobs describe --clusterName Cluster0 --exportJobID 5df90590f10fab5e33de2305

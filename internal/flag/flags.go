@@ -312,7 +312,7 @@ const (
 	BackupPolicy                              = "policy"                                    // BackupPolicy flag
 	OperatorIncludeSecrets                    = "includeSecrets"                            // OperatorIncludeSecrets flag
 	OperatorTargetNamespace                   = "targetNamespace"                           // OperatorTargetNamespace flag
-	ExportJobID                               = "exportJobId"                               // ExportJobID flag
+	ExportID                                  = "exportId"                                  // ExportID flag
 
 	/* #nosec */
 	KMIPClientCertificatePassword = "kmipClientCertificatePassword" // KMIPClientCertificatePassword flag

@@ -45,7 +45,7 @@ Options
    * - --end
      - string
      - false
-     - Timestamp in the number of milliseconds that have elapsed, since the UNIX Epoch, for the first entry that Atlas returns from the database access logs.
+     - Timestamp in the number of milliseconds that have elapsed, since the UNIX Epoch, for the last entry that Atlas returns from the database access logs.
    * - -h, --help
      - 
      - false

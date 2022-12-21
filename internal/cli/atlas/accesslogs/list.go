@@ -132,8 +132,8 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.hostname, flag.Hostname, "", usage.Hostname)
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.start, flag.Start, "", usage.AccessLogDate)
-	cmd.Flags().StringVar(&opts.end, flag.End, "", usage.AccessLogDate)
+	cmd.Flags().StringVar(&opts.start, flag.Start, "", usage.AccessLogStartDate)
+	cmd.Flags().StringVar(&opts.end, flag.End, "", usage.AccessLogEndDate)
 	cmd.Flags().IntVar(&opts.nLogs, flag.NLog, 0, usage.NLog)
 	cmd.Flags().StringVar(&opts.ipAddresses, flag.IP, "", usage.AccessLogIP)
 	cmd.Flags().StringVar(&opts.authResult, flag.AuthResult, "", usage.AuthResult)

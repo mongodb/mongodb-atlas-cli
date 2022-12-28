@@ -38,6 +38,11 @@ type MockAtlasOperatorClusterStore struct {
 	projectToClusterToSchedule            map[string]map[string]*mongodbatlas.CloudProviderSnapshotBackupPolicy
 	projectToServerlessClusters           map[string]map[string]*mongodbatlas.Cluster
 	projectIDToServerlessPrivateEndpoints map[string]map[string][]mongodbatlas.ServerlessPrivateEndpointConnection
+	projectIDToGlobalCluster              map[string]map[string]*mongodbatlas.GlobalCluster
+}
+
+func (m *MockAtlasOperatorClusterStore) GlobalDeployment(projectID string, instanceName string) (*mongodbatlas.GlobalCluster, error) {
+	return m.projectIDToGlobalCluster[projectID][instanceName], nil
 }
 
 func (m *MockAtlasOperatorClusterStore) ServerlessInstances(projectID string, _ *mongodbatlas.ListOptions) (*mongodbatlas.ClustersResponse, error) {
@@ -101,6 +106,13 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		const projectName = "testProject-1"
 		const clusterName = "testCluster-1"
 		const targetNamespace = "test-namespace-1"
+		const zoneName1 = "us-east-1"
+		const zoneID1 = "TestReplicaID"
+		const (
+			firstLocation  = "CA"
+			secondLocation = "US"
+		)
+
 		clusterStore := &MockAtlasOperatorClusterStore{
 			projectToAdvancedClusters: map[string]map[string]*mongodbatlas.AdvancedCluster{
 				projectName: {
@@ -131,8 +143,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 						ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
 							{
 								NumShards: 3,
-								ID:        "TestReplicaID",
-								ZoneName:  "US_EAST_1",
+								ID:        zoneID1,
+								ZoneName:  zoneName1,
 								RegionConfigs: []*mongodbatlas.AdvancedRegionConfig{
 									{
 										AnalyticsSpecs: &mongodbatlas.Specs{
@@ -226,11 +238,31 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				},
 			},
 			projectToServerlessClusters: nil,
+			projectIDToGlobalCluster: map[string]map[string]*mongodbatlas.GlobalCluster{
+				projectName: {
+					clusterName: &mongodbatlas.GlobalCluster{
+						CustomZoneMapping: map[string]string{
+							secondLocation: zoneID1,
+							firstLocation:  zoneID1,
+						},
+						ManagedNamespaces: []mongodbatlas.ManagedNamespace{
+							{
+								Db:                     "testDB",
+								Collection:             "testCollection",
+								CustomShardKey:         "testShardKey",
+								IsCustomShardKeyHashed: pointers.MakePtr(true),
+								IsShardKeyUnique:       pointers.MakePtr(true),
+							},
+						},
+					},
+				},
+			},
 		}
 
 		cluster := clusterStore.projectToAdvancedClusters[projectName][clusterName]
 		processArgs := clusterStore.projectToClusterToProcessArgs[projectName][clusterName]
 		backupSchedule := clusterStore.projectToClusterToSchedule[projectName][clusterName]
+		managedNamespace := clusterStore.projectIDToGlobalCluster[projectName][clusterName].ManagedNamespaces
 
 		expectCluster := &atlasV1.AtlasDeployment{
 			TypeMeta: v1.TypeMeta{
@@ -249,6 +281,28 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				DeploymentSpec: nil,
 				AdvancedDeploymentSpec: &atlasV1.AdvancedDeploymentSpec{
 					BackupEnabled: cluster.BackupEnabled,
+					CustomZoneMapping: []atlasV1.CustomZoneMapping{
+						{
+							Location: secondLocation,
+							Zone:     cluster.ReplicationSpecs[0].ZoneName,
+						},
+						{
+							Location: firstLocation,
+							Zone:     cluster.ReplicationSpecs[0].ZoneName,
+						},
+					},
+					ManagedNamespaces: []atlasV1.ManagedNamespace{
+						{
+							Db:                     managedNamespace[0].Db,
+							Collection:             managedNamespace[0].Collection,
+							CustomShardKey:         managedNamespace[0].CustomShardKey,
+							IsCustomShardKeyHashed: managedNamespace[0].IsCustomShardKeyHashed,
+							IsShardKeyUnique:       managedNamespace[0].IsShardKeyUnique,
+							// TODO: wait until https://github.com/mongodb/go-client-mongodb-atlas/pull/337 is merged
+							// NumInitialChunks: managedNamespace[0].NumInitialChunks,
+							// PresplitHashedZones: managedNamespace[0].PresplitHashedZones,
+						},
+					},
 					BiConnector: &atlasV1.BiConnectorSpec{
 						Enabled:        cluster.BiConnector.Enabled,
 						ReadPreference: cluster.BiConnector.ReadPreference,

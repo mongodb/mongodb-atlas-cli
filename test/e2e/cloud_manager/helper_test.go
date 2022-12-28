@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || cloudmanager || om44 || om50
+//go:build e2e || cloudmanager || om50 || om60
 
 package cloud_manager_test
 

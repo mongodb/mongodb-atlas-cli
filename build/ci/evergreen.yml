@@ -1073,7 +1073,7 @@ tasks:
         - func: "set-up ops manager"
         - func: "e2e test"
           vars:
-            E2E_TAGS: om50,generic
+            E2E_TAGS: om60,generic
             OM_VERSION: 6.0
   - name: ops_manager_6_0_iam_e2e
     tags: [ "e2e","ops-manager-60" ]
@@ -1094,7 +1094,7 @@ tasks:
       - func: "set-up ops manager"
       - func: "e2e test"
         vars:
-          E2E_TAGS: iam,om50
+          E2E_TAGS: iam,om60
           OM_VERSION: 6.0
   - name: ops_manager_6_0_deploy_replica_set_e2e
     tags: [ "e2e","ops-manager-60" ]
@@ -1116,7 +1116,7 @@ tasks:
       - func: "install automation agent"
       - func: "e2e test"
         vars:
-          E2E_TAGS: om50,remote,replica
+          E2E_TAGS: om60,remote,replica
   - name: ops_manager_6_0_deploy_sharded_cluster_e2e
     tags: [ "e2e","ops-manager-60" ]
     must_have_test_results: true
@@ -1137,7 +1137,7 @@ tasks:
       - func: "install automation agent"
       - func: "e2e test"
         vars:
-          E2E_TAGS: om50,remote,sharded
+          E2E_TAGS: om60,remote,sharded
   # Deploy ops manager 5.0 and test against it
   - name: ops_manager_5_0_generic_e2e
     tags: [ "e2e","ops-manager-50" ]

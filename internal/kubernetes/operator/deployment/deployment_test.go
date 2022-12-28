@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
+///go:build unit
 
 package deployment
 
@@ -41,7 +41,7 @@ type MockAtlasOperatorClusterStore struct {
 	projectIDToGlobalCluster              map[string]map[string]*mongodbatlas.GlobalCluster
 }
 
-func (m *MockAtlasOperatorClusterStore) GlobalCluster(projectID string, instanceName string) (*mongodbatlas.GlobalCluster, error) {
+func (m *MockAtlasOperatorClusterStore) GlobalDeployment(projectID string, instanceName string) (*mongodbatlas.GlobalCluster, error) {
 	return m.projectIDToGlobalCluster[projectID][instanceName], nil
 }
 
@@ -109,7 +109,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		const zoneName1 = "us-east-1"
 		const zoneID1 = "TestReplicaID"
 		const (
-			firstLocation = "CA"
+			firstLocation  = "CA"
+			secondLocation = "US"
 		)
 
 		clusterStore := &MockAtlasOperatorClusterStore{
@@ -241,7 +242,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				projectName: {
 					clusterName: &mongodbatlas.GlobalCluster{
 						CustomZoneMapping: map[string]string{
-							firstLocation: zoneID1,
+							secondLocation: zoneID1,
+							firstLocation:  zoneID1,
 						},
 						ManagedNamespaces: []mongodbatlas.ManagedNamespace{
 							{
@@ -250,8 +252,6 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 								CustomShardKey:         "testShardKey",
 								IsCustomShardKeyHashed: pointers.MakePtr(true),
 								IsShardKeyUnique:       pointers.MakePtr(true),
-								NumInitialChunks:       4,
-								PresplitHashedZones:    pointers.MakePtr(true),
 							},
 						},
 					},
@@ -283,6 +283,10 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					BackupEnabled: cluster.BackupEnabled,
 					CustomZoneMapping: []atlasV1.CustomZoneMapping{
 						{
+							Location: secondLocation,
+							Zone:     cluster.ReplicationSpecs[0].ZoneName,
+						},
+						{
 							Location: firstLocation,
 							Zone:     cluster.ReplicationSpecs[0].ZoneName,
 						},
@@ -294,8 +298,9 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 							CustomShardKey:         managedNamespace[0].CustomShardKey,
 							IsCustomShardKeyHashed: managedNamespace[0].IsCustomShardKeyHashed,
 							IsShardKeyUnique:       managedNamespace[0].IsShardKeyUnique,
-							NumInitialChunks:       managedNamespace[0].NumInitialChunks,
-							PresplitHashedZones:    managedNamespace[0].PresplitHashedZones,
+							// TODO: wait until https://github.com/mongodb/go-client-mongodb-atlas/pull/337 is merged
+							// NumInitialChunks: managedNamespace[0].NumInitialChunks,
+							// PresplitHashedZones: managedNamespace[0].PresplitHashedZones,
 						},
 					},
 					BiConnector: &atlasV1.BiConnectorSpec{
@@ -401,7 +406,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 						},
 					},
 				},
-				Status: status.BackupPolicyStatus{},
+				Status: atlasV1.AtlasBackupPolicyStatus{},
 			},
 		}
 
@@ -430,7 +435,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				UpdateSnapshots:                   *backupSchedule.UpdateSnapshots,
 				UseOrgAndGroupNamesInExportPrefix: *backupSchedule.UseOrgAndGroupNamesInExportPrefix,
 			},
-			Status: status.BackupScheduleStatus{},
+			Status: atlasV1.AtlasBackupScheduleStatus{},
 		}
 
 		expected := &AtlasDeploymentResult{

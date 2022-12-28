@@ -51,8 +51,8 @@ func TestListOpts_Run(t *testing.T) {
 			},
 			InheritedRoles: []mongodbatlas.InheritedRole{
 				{
-					Db:   "test",
-					Role: "test",
+					Db:   "pandas",
+					Role: "dbAdmin",
 				},
 			},
 			RoleName: "Test",
@@ -78,8 +78,9 @@ func TestListOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `NAME   ACTION   DB     COLLECTION   CLUSTER  
-Test   test     test   test         true
+	assert.Equal(t, `NAME   ACTION   INHERITED ROLES   DB       COLLECTION   CLUSTER 
+Test   test     N/A               test     test         true
+Test   N/A      dbAdmin           pandas   N/A          N/A
 `, buf.String())
 	t.Log(buf.String())
 }

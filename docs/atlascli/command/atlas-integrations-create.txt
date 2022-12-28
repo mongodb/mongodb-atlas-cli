@@ -50,7 +50,6 @@ Related Commands
 ----------------
 
 * :ref:`atlas-integrations-create-DATADOG` - Create or update the Datadog integration.
-* :ref:`atlas-integrations-create-NEW_RELIC` - Create or update the New Relic integration.
 * :ref:`atlas-integrations-create-OPS_GENIE` - Create or update the Ops Genie integration.
 * :ref:`atlas-integrations-create-PAGER_DUTY` - Create or update the PagerDuty integration.
 * :ref:`atlas-integrations-create-VICTOR_OPS` - Create or update the VictorOps integrations
@@ -61,7 +60,6 @@ Related Commands
    :titlesonly:
 
    DATADOG </command/atlas-integrations-create-DATADOG>
-   NEW_RELIC </command/atlas-integrations-create-NEW_RELIC>
    OPS_GENIE </command/atlas-integrations-create-OPS_GENIE>
    PAGER_DUTY </command/atlas-integrations-create-PAGER_DUTY>
    VICTOR_OPS </command/atlas-integrations-create-VICTOR_OPS>

@@ -30,7 +30,6 @@ import (
 
 const (
 	datadogEntity   = "DATADOG"
-	newRelicEntity  = "NEW_RELIC"
 	opsGenieEntity  = "OPS_GENIE"
 	pagerDutyEntity = "PAGER_DUTY"
 	victorOpsEntity = "VICTOR_OPS"
@@ -73,34 +72,6 @@ func TestIntegrations(t *testing.T) {
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
 			a.True(integrationExists(datadogEntity, thirdPartyIntegrations))
-		}
-	})
-
-	t.Run("Create NEW_RELIC", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			integrationsEntity,
-			"create",
-			newRelicEntity,
-			"--accountId",
-			key,
-			"--licenceKey",
-			key,
-			"--writeToken",
-			key,
-			"--readToken",
-			key,
-			"--projectId",
-			g.projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
-
-		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
-		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.True(integrationExists(newRelicEntity, thirdPartyIntegrations))
 		}
 	})
 
@@ -227,7 +198,7 @@ func TestIntegrations(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
 			"describe",
-			newRelicEntity,
+			webhookEntity,
 			"--projectId",
 			g.projectID,
 			"-o=json")
@@ -238,7 +209,7 @@ func TestIntegrations(t *testing.T) {
 		a.NoError(err, string(resp))
 		var thirdPartyIntegration mongodbatlas.ThirdPartyIntegration
 		if err := json.Unmarshal(resp, &thirdPartyIntegration); a.NoError(err) {
-			a.Equal(newRelicEntity, thirdPartyIntegration.Type)
+			a.Equal(webhookEntity, thirdPartyIntegration.Type)
 		}
 	})
 
@@ -246,7 +217,7 @@ func TestIntegrations(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
 			"delete",
-			newRelicEntity,
+			webhookEntity,
 			"--force",
 			"--projectId",
 			g.projectID)
@@ -256,7 +227,7 @@ func TestIntegrations(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Integration '%s' deleted\n", newRelicEntity)
+		expected := fmt.Sprintf("Integration '%s' deleted\n", webhookEntity)
 		a.Equal(expected, string(resp))
 	})
 }

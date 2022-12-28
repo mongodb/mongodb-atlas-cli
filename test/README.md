@@ -95,7 +95,6 @@
 | `dbuser update`                             | Y         |           |           | Y         |       |       |
 | `integration create DATADOG`                | Y         |           |           | Y         |       |       |
 | `integration create FLOWDOCK`               | Y         |           |           | Y         |       |       |
-| `integration create NEW_RELIC`              | Y         |           |           | Y         |       |       |
 | `integration create OPS_GENIE`              | Y         |           |           | Y         |       |       |
 | `integration create PAGER_DUTY`             | Y         |           |           | Y         |       |       |
 | `integration create VICTOR_OPS`             | Y         |           |           | Y         |       |       |

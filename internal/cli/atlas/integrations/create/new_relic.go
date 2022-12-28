@@ -67,7 +67,7 @@ func (opts *NewRelicOpts) newNewRelicIntegration() *atlas.ThirdPartyIntegration 
 	}
 }
 
-// mongocli atlas integration(s) create NEW_RELIC --licenceKey licenceKey --accountId accountId --writeToken writeToken --readToken readToken [--projectId projectId].
+// atlas integration(s) create NEW_RELIC --licenceKey licenceKey --accountId accountId --writeToken writeToken --readToken readToken [--projectId projectId].
 func NewRelicBuilder() *cobra.Command {
 	opts := &NewRelicOpts{}
 	cmd := &cobra.Command{
@@ -85,6 +85,7 @@ func NewRelicBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+		Deprecated: "The NEW_RELIC integration is deprecated and no longer supported",
 	}
 
 	cmd.Flags().StringVar(&opts.licenseKey, flag.LicenceKey, "", usage.LicenceKey)

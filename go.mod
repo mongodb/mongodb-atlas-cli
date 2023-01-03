@@ -22,7 +22,7 @@ require (
 	github.com/google/go-github/v42 v42.0.0
 	github.com/hinshun/vt10x v0.0.0-20220119200601-820417d04eec
 	github.com/klauspost/compress v1.15.13
-	github.com/mattn/go-isatty v0.0.16
+	github.com/mattn/go-isatty v0.0.17
 	github.com/mongodb-forks/digest v1.0.4
 	github.com/mongodb-labs/cobra2snooty v0.12.2
 	github.com/mongodb/mongodb-atlas-kubernetes v1.5.1

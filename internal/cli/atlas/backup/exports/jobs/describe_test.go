@@ -38,7 +38,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ExportJob(opts.ProjectID, opts.clusterName, opts.bucketID).
+		ExportJob(opts.ProjectID, opts.clusterName, opts.exportID).
 		Return(expected, nil).
 		Times(1)
 
@@ -48,6 +48,20 @@ func TestDescribeOpts_Run(t *testing.T) {
 }
 
 func TestDescribeBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DescribeBuilder(),
+		0,
+		[]string{
+			flag.ProjectID,
+			flag.ClusterName,
+			flag.ExportID,
+			flag.Output,
+		},
+	)
+}
+
+func TestDescribeBuilderWithBucketId(t *testing.T) {
 	test.CmdValidator(
 		t,
 		DescribeBuilder(),

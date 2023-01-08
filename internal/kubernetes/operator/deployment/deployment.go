@@ -76,7 +76,9 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 	}
 
 	customZoneMapping, ManagedNamespaces, err := buildGlobalDeployment(deployment.ReplicationSpecs, deploymentStore, projectID, clusterID)
-
+	if err != nil {
+		return nil, err
+	}
 	// TODO: DiskSizeGB field skipped on purpose. See https://jira.mongodb.org/browse/CLOUDP-146469
 	advancedSpec = &atlasV1.AdvancedDeploymentSpec{
 		BackupEnabled:            deployment.BackupEnabled,
@@ -161,15 +163,13 @@ func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec,
 
 	var managedNamespace []atlasV1.ManagedNamespace
 	if globalCluster.ManagedNamespaces != nil {
-
-		// TODO: wait until https://github.com/mongodb/go-client-mongodb-atlas/pull/337 is merged
 		for _, ns := range globalCluster.ManagedNamespaces {
 			managedNamespace = append(managedNamespace, atlasV1.ManagedNamespace{
-				Db:             ns.Db,
-				Collection:     ns.Collection,
-				CustomShardKey: ns.CustomShardKey,
-				// NumInitialChunks:       ns.NumInitialChunks,
-				// PresplitHashedZones:    ns.PreSplitHashedZones,
+				Db:                     ns.Db,
+				Collection:             ns.Collection,
+				CustomShardKey:         ns.CustomShardKey,
+				NumInitialChunks:       ns.NumInitialChunks,
+				PresplitHashedZones:    ns.PresplitHashedZones,
 				IsCustomShardKeyHashed: ns.IsCustomShardKeyHashed,
 				IsShardKeyUnique:       ns.IsShardKeyUnique,
 			})
@@ -177,7 +177,6 @@ func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec,
 	}
 
 	return customZoneMapping, managedNamespace, nil
-
 }
 func buildProcessArgs(configOptsProvider store.AtlasClusterConfigurationOptionsDescriber, projectID, clusterName string) (*atlasV1.ProcessArgs, error) {
 	pArgs, err := configOptsProvider.AtlasClusterConfigurationOptions(projectID, clusterName)

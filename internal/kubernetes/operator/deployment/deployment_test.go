@@ -252,6 +252,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 								CustomShardKey:         "testShardKey",
 								IsCustomShardKeyHashed: pointers.MakePtr(true),
 								IsShardKeyUnique:       pointers.MakePtr(true),
+								NumInitialChunks:       4,
+								PresplitHashedZones:    pointers.MakePtr(true),
 							},
 						},
 					},
@@ -298,9 +300,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 							CustomShardKey:         managedNamespace[0].CustomShardKey,
 							IsCustomShardKeyHashed: managedNamespace[0].IsCustomShardKeyHashed,
 							IsShardKeyUnique:       managedNamespace[0].IsShardKeyUnique,
-							// TODO: wait until https://github.com/mongodb/go-client-mongodb-atlas/pull/337 is merged
-							// NumInitialChunks: managedNamespace[0].NumInitialChunks,
-							// PresplitHashedZones: managedNamespace[0].PresplitHashedZones,
+							NumInitialChunks:       managedNamespace[0].NumInitialChunks,
+							PresplitHashedZones:    managedNamespace[0].PresplitHashedZones,
 						},
 					},
 					BiConnector: &atlasV1.BiConnectorSpec{

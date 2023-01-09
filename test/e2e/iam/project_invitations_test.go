@@ -43,16 +43,13 @@ func TestProjectInvitations(t *testing.T) {
 	require.NoError(t, err)
 
 	projectName := fmt.Sprintf("e2e-proj-%v", n)
-	projectID, err := createProject(projectName)
+	projectID, err := e2e.CreateProject(projectName)
 	require.NoError(t, err)
 
 	emailProject := fmt.Sprintf("test-%v@mongodb.com", n)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
+	t.Cleanup(func() {
+		e2e.DeleteProjectWithRetry(t, projectID)
+	})
 
 	t.Run("Invite", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

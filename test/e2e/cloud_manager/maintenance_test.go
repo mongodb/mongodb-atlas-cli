@@ -38,10 +38,10 @@ func TestMaintenanceWindows(t *testing.T) {
 	require.NoError(t, err)
 
 	projectName := fmt.Sprintf("e2e-maintenance-proj-%v", n)
-	projectID, err := createProject(projectName)
+	projectID, err := e2e.CreateProject(projectName)
 	require.NoError(t, err)
 	t.Cleanup(func() {
-		deleteProjectWithRetry(t, projectID)
+		e2e.DeleteProjectWithRetry(t, projectID)
 	})
 
 	startDate := time.Now().Format(time.RFC3339)

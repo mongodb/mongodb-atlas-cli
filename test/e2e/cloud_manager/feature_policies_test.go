@@ -70,9 +70,12 @@ func TestFeaturePolicies(t *testing.T) {
 		var policy *opsmngr.FeaturePolicy
 		err2 := json.Unmarshal(resp, &policy)
 		require.NoError(t, err2, string(resp))
-		assert.Len(t, policy.Policies, 2)
-		assert.Contains(t, policy.Policies, policyExternallyManagedLock)
-		assert.Contains(t, policy.Policies, policyDisableUserManagement)
+		assert.ElementsMatch(t,
+			policy.Policies, []*opsmngr.Policy{
+				{Policy: policyExternallyManagedLock},
+				{Policy: policyDisableUserManagement},
+			},
+		)
 	})
 
 	t.Run("List", func(t *testing.T) {

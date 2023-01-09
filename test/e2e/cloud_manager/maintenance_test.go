@@ -26,31 +26,23 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestMaintenanceWindows(t *testing.T) {
 	n, err := e2e.RandInt(255)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	projectName := fmt.Sprintf("e2e-maintenance-proj-%v", n)
 	projectID, err := createProject(projectName)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
+	require.NoError(t, err)
+	t.Cleanup(func() {
+		deleteProjectWithRetry(t, projectID)
+	})
 
 	startDate := time.Now().Format(time.RFC3339)
 	endDate := time.Now().AddDate(0, 0, 1).Format(time.RFC3339)

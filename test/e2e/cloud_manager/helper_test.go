@@ -406,7 +406,7 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, projectID, e)
 			time.Sleep(sleepTimeInSeconds * time.Second)
 		} else {
-			t.Logf("project '%s' successfully deleted", projectID)
+			t.Logf("project %q successfully deleted", projectID)
 			deleted = true
 			break
 		}

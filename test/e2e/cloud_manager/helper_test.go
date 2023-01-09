@@ -392,3 +392,27 @@ func deleteProject(projectID string) error {
 	cmd.Env = os.Environ()
 	return cmd.Run()
 }
+
+const (
+	maxRetryAttempts   = 10
+	sleepTimeInSeconds = 30
+)
+
+func deleteProjectWithRetry(t *testing.T, projectID string) {
+	t.Helper()
+	deleted := false
+	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
+		if e := deleteProject(projectID); e != nil {
+			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, projectID, e)
+			time.Sleep(sleepTimeInSeconds * time.Second)
+		} else {
+			t.Logf("project '%s' successfully deleted", projectID)
+			deleted = true
+			break
+		}
+	}
+
+	if !deleted {
+		t.Errorf("we could not delete the project %q", projectID)
+	}
+}

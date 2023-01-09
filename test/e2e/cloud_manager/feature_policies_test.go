@@ -24,34 +24,29 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestFeaturePolicies(t *testing.T) {
-	const policyExternallyManagedLock = "EXTERNALLY_MANAGED_LOCK"
-	const policyDisableUserManagement = "DISABLE_USER_MANAGEMENT"
+	const (
+		policyExternallyManagedLock = "EXTERNALLY_MANAGED_LOCK"
+		policyDisableUserManagement = "DISABLE_USER_MANAGEMENT"
+	)
 
 	n, err := e2e.RandInt(255)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	projectName := fmt.Sprintf("e2e-maintenance-proj-%v", n)
 	projectID, err := createProject(projectName)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
+	require.NoError(t, err)
+	t.Cleanup(func() {
+		deleteProjectWithRetry(t, projectID)
+	})
 
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -71,37 +66,13 @@ func TestFeaturePolicies(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
+		require.NoError(t, err, string(resp))
 		var policy *opsmngr.FeaturePolicy
-		if err := json.Unmarshal(resp, &policy); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(policy.Policies) != 2 {
-			t.Error("Policy count mismatch")
-		}
-
-		foundExternalManagedLock := false
-		foundDisableUserManagement := false
-		for _, p := range policy.Policies {
-			if p.Policy == policyExternallyManagedLock {
-				foundExternalManagedLock = true
-			} else if p.Policy == policyDisableUserManagement {
-				foundDisableUserManagement = true
-			}
-		}
-
-		if !foundExternalManagedLock {
-			t.Errorf("policy %s not found", policyExternallyManagedLock)
-		}
-
-		if !foundDisableUserManagement {
-			t.Errorf("policy %s not found", policyDisableUserManagement)
-		}
+		err2 := json.Unmarshal(resp, &policy)
+		require.NoError(t, err2, string(resp))
+		assert.Len(t, policy.Policies, 2)
+		assert.Contains(t, policy.Policies, policyExternallyManagedLock)
+		assert.Contains(t, policy.Policies, policyDisableUserManagement)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -116,18 +87,11 @@ func TestFeaturePolicies(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 
 		var policy *opsmngr.FeaturePolicy
-		if err := json.Unmarshal(resp, &policy); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(policy.Policies) == 0 {
-			t.Error("No policies found")
-		}
+		err2 := json.Unmarshal(resp, &policy)
+		require.NoError(t, err2, string(resp))
+		assert.NotEmpty(t, policy.Policies)
 	})
 }

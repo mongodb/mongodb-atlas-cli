@@ -75,7 +75,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 		return nil, err
 	}
 
-	customZoneMapping, ManagedNamespaces, err := buildGlobalDeployment(deployment.ReplicationSpecs, deploymentStore, projectID, clusterID)
+	customZoneMapping, managedNamespaces, err := buildGlobalDeployment(deployment.ReplicationSpecs, deploymentStore, projectID, clusterID)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 		ReplicationSpecs:         replicationSpec,
 		RootCertType:             deployment.RootCertType,
 		VersionReleaseSystem:     deployment.VersionReleaseSystem,
-		ManagedNamespaces:        ManagedNamespaces,
+		ManagedNamespaces:        managedNamespaces,
 		CustomZoneMapping:        customZoneMapping,
 	}
 
@@ -162,18 +162,20 @@ func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec,
 	}
 
 	var managedNamespace []atlasV1.ManagedNamespace
-	if globalCluster.ManagedNamespaces != nil {
-		for _, ns := range globalCluster.ManagedNamespaces {
-			managedNamespace = append(managedNamespace, atlasV1.ManagedNamespace{
-				Db:                     ns.Db,
-				Collection:             ns.Collection,
-				CustomShardKey:         ns.CustomShardKey,
-				NumInitialChunks:       ns.NumInitialChunks,
-				PresplitHashedZones:    ns.PresplitHashedZones,
-				IsCustomShardKeyHashed: ns.IsCustomShardKeyHashed,
-				IsShardKeyUnique:       ns.IsShardKeyUnique,
-			})
-		}
+	if globalCluster.ManagedNamespaces == nil {
+		return customZoneMapping, nil, nil
+	}
+
+	for _, ns := range globalCluster.ManagedNamespaces {
+		managedNamespace = append(managedNamespace, atlasV1.ManagedNamespace{
+			Db:                     ns.Db,
+			Collection:             ns.Collection,
+			CustomShardKey:         ns.CustomShardKey,
+			NumInitialChunks:       ns.NumInitialChunks,
+			PresplitHashedZones:    ns.PresplitHashedZones,
+			IsCustomShardKeyHashed: ns.IsCustomShardKeyHashed,
+			IsShardKeyUnique:       ns.IsShardKeyUnique,
+		})
 	}
 
 	return customZoneMapping, managedNamespace, nil

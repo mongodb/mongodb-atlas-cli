@@ -48,7 +48,7 @@ func IsTerminalInput(r io.Reader) bool {
 	return false
 }
 
-// IsCygwinTerminal returns true is the current file descriptor is cygwin.
+// IsCygwinTerminalInput returns true is the current file descriptor is cygwin.
 func IsCygwinTerminalInput(r io.Reader) bool {
 	if f, isFile := r.(*os.File); isFile {
 		return isatty.IsCygwinTerminal(f.Fd())

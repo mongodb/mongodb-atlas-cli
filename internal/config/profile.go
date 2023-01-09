@@ -485,7 +485,7 @@ func (p *Profile) Map() map[string]string {
 	settings := viper.GetStringMapString(p.Name())
 	profileSettings := make(map[string]string, len(settings)+1)
 	for k, v := range settings {
-		if k == privateAPIKey || k == publicAPIKey || k == AccessTokenField || k == RefreshTokenField {
+		if k == privateAPIKey || k == AccessTokenField || k == RefreshTokenField {
 			profileSettings[k] = "redacted"
 		} else {
 			profileSettings[k] = v

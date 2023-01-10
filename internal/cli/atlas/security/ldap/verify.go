@@ -91,16 +91,16 @@ func (opts *VerifyOpts) Prompt() error {
 
 func (opts *VerifyOpts) newLDAP() *atlas.LDAP {
 	return &atlas.LDAP{
-		Hostname:           opts.hostname,
-		Port:               opts.port,
-		BindUsername:       opts.bindUsername,
-		BindPassword:       opts.bindPassword,
-		CaCertificate:      opts.caCertificate,
-		AuthzQueryTemplate: opts.authzQueryTemplate,
+		Hostname:           &opts.hostname,
+		Port:               &opts.port,
+		BindUsername:       &opts.bindUsername,
+		BindPassword:       &opts.bindPassword,
+		CaCertificate:      &opts.caCertificate,
+		AuthzQueryTemplate: &opts.authzQueryTemplate,
 	}
 }
 
-// mongocli security atlas ldap verify --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate --authzQueryTemplate authzQueryTemplate [--projectId projectId].
+// VerifyBuilder mongocli security atlas ldap verify --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate --authzQueryTemplate authzQueryTemplate [--projectId projectId].
 func VerifyBuilder() *cobra.Command {
 	opts := &VerifyOpts{}
 	cmd := &cobra.Command{

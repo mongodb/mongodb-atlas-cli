@@ -91,9 +91,6 @@ func (opts *SaveOpts) validate() error {
 		if opts.mappingLdapQuery == "" && opts.mappingSubstitution == "" {
 			return errors.New("must supply either a query or a substitution for userToDNMapping")
 		}
-		if opts.mappingLdapQuery != "" && opts.mappingSubstitution != "" {
-			return errors.New("can't supply both a query and a substitution for userToDNMapping")
-		}
 	}
 
 	return nil
@@ -102,15 +99,15 @@ func (opts *SaveOpts) validate() error {
 func (opts *SaveOpts) newLDAPConfiguration() *atlas.LDAPConfiguration {
 	ldapConfig := &atlas.LDAPConfiguration{
 		LDAP: &atlas.LDAP{
-			AuthenticationEnabled: opts.authenticationEnabled,
-			AuthorizationEnabled:  opts.authorizationEnabled,
-			Hostname:              opts.hostname,
-			Port:                  opts.port,
+			AuthenticationEnabled: &opts.authenticationEnabled,
+			AuthorizationEnabled:  &opts.authorizationEnabled,
+			Hostname:              &opts.hostname,
+			Port:                  &opts.port,
 			UserToDNMapping:       []*atlas.UserToDNMapping{},
-			BindUsername:          opts.bindUsername,
-			BindPassword:          opts.bindPassword,
-			CaCertificate:         opts.caCertificate,
-			AuthzQueryTemplate:    opts.authzQueryTemplate,
+			BindUsername:          &opts.bindUsername,
+			BindPassword:          &opts.bindPassword,
+			CaCertificate:         &opts.caCertificate,
+			AuthzQueryTemplate:    &opts.authzQueryTemplate,
 		},
 	}
 	if opts.mappingMatch != "" {
@@ -119,7 +116,7 @@ func (opts *SaveOpts) newLDAPConfiguration() *atlas.LDAPConfiguration {
 	return ldapConfig
 }
 
-// mongocli atlas security ldap save --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate
+// SaveBuilder mongocli atlas security ldap save --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate
 // --authzQueryTemplate authzQueryTemplate [--mappingMatch mappingMatch (--mappingLdapQuery mappingLdapQuery | --mappingSubstitution mappingSubstitution)]
 // --authenticationEnabled authenticationEnabled --authorizationEnabled authorizationEnabled [--projectId projectId].
 func SaveBuilder() *cobra.Command {
@@ -162,6 +159,8 @@ func SaveBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired(flag.Hostname)
 	_ = cmd.MarkFlagRequired(flag.BindUsername)
+
+	cmd.MarkFlagsMutuallyExclusive(flag.MappingLdapQuery, flag.MappingSubstitution)
 
 	return cmd
 }

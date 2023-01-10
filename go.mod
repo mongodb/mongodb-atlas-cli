@@ -5,7 +5,7 @@ go 1.19
 require (
 	cloud.google.com/go/kms v1.7.0
 	github.com/AlecAivazis/survey/v2 v2.3.6
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.2.0
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.3.0
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.2.0
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys v0.9.0
 	github.com/Masterminds/semver/v3 v3.2.0
@@ -53,7 +53,7 @@ require (
 	cloud.google.com/go/compute v1.13.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.2 // indirect
 	cloud.google.com/go/iam v0.8.0 // indirect
-	github.com/Azure/azure-sdk-for-go/sdk/internal v1.0.0 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/internal v1.1.1 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/internal v0.7.0 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v0.7.0 // indirect
 	github.com/PaesslerAG/gval v1.0.0 // indirect

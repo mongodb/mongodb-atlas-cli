@@ -8,12 +8,12 @@ this document describes some guidelines necessary to participate in the communit
 - [Asking Support Questions](#asking-support-questions)
 - [Feature Requests](#feature-requests)
 - [Reporting Issues](#reporting-issues)
-- [Autoclose stale issues and PRs](#autoclose-stale-issues-and-prs)
+- [Auto-close stale issues and PRs](#auto-close-stale-issues-and-pull-requests)
 - [Submitting Patches](#submitting-patches)
   - [Code Contribution Guidelines](#code-contribution-guidelines)
   - [Development Setup](#development-setup)
   - [Building and Testing](#building-and-testing)
-  - [Adding a New Command](#adding-a-new-commands)
+  - [Adding a New Command](#adding-a-new-command)
   - [Third Party Dependencies](#third-party-dependencies)
 - [Maintainer's Guide](#maintainers-guide)
 
@@ -32,16 +32,15 @@ please head over to our [feedback page](https://feedback.mongodb.com/forums/9308
 Please create a [GitHub issue](https://github.com/mongodb/mongodb-atlas-cli/issues/new?assignees=&labels=&template=bug_report.md) describing the kind of problem you're facing
 with as much detail as possible, including things like operating system or anything else may be relevant to the issue.
 
-## Submitting Patches
-
-The MongoDB CLI project welcomes all contributors and contributions regardless of skill or experience level.
-If you are interested in helping with the project, please follow our [guidelines](#code-contribution-guidelines).
-
-## Autoclose stale issues and PRs
+## Auto-close Stale Issues and Pull Requests
 
 - After 30 days of no activity (no comments or commits on an issue/PR) we automatically tag it as "stale" and add a message: ```This issue/PR has gone 30 days without any activity and meets the project's definition of "stale". This will be auto-closed if there is no new activity over the next 60 days. If the issue is still relevant and active, you can simply comment with a "bump" to keep it open, or add the label "not_stale". Thanks for keeping our repository healthy!```
 - After 60 more days of no activity we automatically close the issue/PR.
 
+## Submitting Patches
+
+The Atlas CLI project welcomes all contributors and contributions regardless of skill or experience level.
+If you are interested in helping with the project, please follow our [guidelines](#code-contribution-guidelines).
 
 ### Code Contribution Guidelines
 
@@ -81,7 +80,7 @@ The following is a short list of commands that can be run in the root of the pro
 - Run `make lint` to validate against our linting rules.
 - Run `E2E_TAGS=e2e,atlas make e2e-test` will run end to end tests against an Atlas instance,
   please make sure to have set `MCLI_*` variables pointing to that instance.
-- Run `E2E_TAGS=cloudmanager,remote,generic make e2e-test` will run end to end tests against an Cloud Manager instance.<br />
+- Run `E2E_TAGS=cloudmanager,remote,generic make e2e-test` will run end-to-end tests against a Cloud Manager instance.<br />
   Please remember to: (a) have a running automation agent, and (b) set MCLI\_\* variables to point to your Cloud Manager instance.
 - Run `make build` to generate a local binary in the `./bin` folder.
 
@@ -92,9 +91,15 @@ We provide a git pre-commit hook to format and check the code, to install it run
 We use [mockgen](https://github.com/golang/mock) to handle mocking in our unit tests.
 If you need a new mock please update or add the `//go:generate` instruction to the appropriate file.
 
+### API Interactions
+
+Atlas CLI and MongoDB CLI use [go-client-mongodb-atlas](https://github.com/mongodb/go-client-mongodb-atlas/) 
+and [o-client-mongodb-ops-manager](https://github.com/mongodb/go-client-mongodb-ops-manager/) to interact with Atlas or Ops Manager/CLoud Manager
+Any new feature should first update the respective client.
+
 ### Adding a New Command
 
-`mongocli` uses [Cobra](https://github.com/spf13/cobra) as a framework for defining commands,
+`atlascli` and `mongocli` use [Cobra](https://github.com/spf13/cobra) as a framework for defining commands,
 in addition to this we have defined a basic structure that should be followed.
 For a `mongocli scope newCommand` command, a file `internal/cli/scope/new_command.go` should implement:
 
@@ -112,7 +117,7 @@ For commands that create or modify complex data structures, the use of configura
 
 Flags are a way to modify the command, also may be called "options". Flags always have a long version with two dashes (--state) but may also have a shortcut with one dash and one letter (-s).
 
-`mongocli` uses the following types of flags:
+`atlascli` uses the following types of flags:
 
 - `--flagName value`: this type of flag passes the value to the command. Examples: `--projectId 5efda6aea3f2ed2e7dd6ce05`
 - `--booleanFlag`: this flag represents a boolean and it sets the related variable to true when the flag is used, false otherwise. Example: `--force`
@@ -122,7 +127,7 @@ Flags are a way to modify the command, also may be called "options". Flags alway
 
 #### Documentation Requirements
 
-If you are adding a brand new command, or updating a command that has no doc annotations, please define the following doc structures for the command. For more information on all command structs, see [Cobra](https://pkg.go.dev/github.com/spf13/cobra#Command).
+If you are adding a brand-new command, or updating a command that has no doc annotations, please define the following doc structures for the command. For more information on all command structs, see [Cobra](https://pkg.go.dev/github.com/spf13/cobra#Command).
 
 - Add `Use` - (Required) Shows the command and arguments if applicable. Will show up in 'help' output.
 - Add `Short` - (Required) Briefly describes the command. Will show up in 'help' output.

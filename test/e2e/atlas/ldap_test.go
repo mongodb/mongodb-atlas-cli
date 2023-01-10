@@ -143,7 +143,7 @@ func TestLDAPWithFlags(t *testing.T) {
 		a := assert.New(t)
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-			a.Equal(ldapHostname, configuration.LDAP.Hostname)
+			a.Equal(ldapHostname, *configuration.LDAP.Hostname)
 			requestID = configuration.RequestID
 		}
 	})

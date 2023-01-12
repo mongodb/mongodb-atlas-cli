@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-///go:build unit
+//go:build unit
 
 package deployment
 
@@ -41,7 +41,7 @@ type MockAtlasOperatorClusterStore struct {
 	projectIDToGlobalCluster              map[string]map[string]*mongodbatlas.GlobalCluster
 }
 
-func (m *MockAtlasOperatorClusterStore) GlobalDeployment(projectID string, instanceName string) (*mongodbatlas.GlobalCluster, error) {
+func (m *MockAtlasOperatorClusterStore) GlobalCluster(projectID string, instanceName string) (*mongodbatlas.GlobalCluster, error) {
 	return m.projectIDToGlobalCluster[projectID][instanceName], nil
 }
 
@@ -109,8 +109,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		const zoneName1 = "us-east-1"
 		const zoneID1 = "TestReplicaID"
 		const (
-			firstLocation  = "CA"
-			secondLocation = "US"
+			firstLocation = "CA"
 		)
 
 		clusterStore := &MockAtlasOperatorClusterStore{
@@ -242,8 +241,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				projectName: {
 					clusterName: &mongodbatlas.GlobalCluster{
 						CustomZoneMapping: map[string]string{
-							secondLocation: zoneID1,
-							firstLocation:  zoneID1,
+							firstLocation: zoneID1,
 						},
 						ManagedNamespaces: []mongodbatlas.ManagedNamespace{
 							{
@@ -284,10 +282,6 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				AdvancedDeploymentSpec: &atlasV1.AdvancedDeploymentSpec{
 					BackupEnabled: cluster.BackupEnabled,
 					CustomZoneMapping: []atlasV1.CustomZoneMapping{
-						{
-							Location: secondLocation,
-							Zone:     cluster.ReplicationSpecs[0].ZoneName,
-						},
 						{
 							Location: firstLocation,
 							Zone:     cluster.ReplicationSpecs[0].ZoneName,
@@ -407,7 +401,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 						},
 					},
 				},
-				Status: atlasV1.AtlasBackupPolicyStatus{},
+				Status: status.BackupPolicyStatus{},
 			},
 		}
 
@@ -436,7 +430,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				UpdateSnapshots:                   *backupSchedule.UpdateSnapshots,
 				UseOrgAndGroupNamesInExportPrefix: *backupSchedule.UseOrgAndGroupNamesInExportPrefix,
 			},
-			Status: atlasV1.AtlasBackupScheduleStatus{},
+			Status: status.BackupScheduleStatus{},
 		}
 
 		expected := &AtlasDeploymentResult{

@@ -139,8 +139,8 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 	return result, nil
 }
 
-func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec, globalDeploymentProvider store.GlobalDeploymentDescriber, projectID, clusterID string) ([]atlasV1.CustomZoneMapping, []atlasV1.ManagedNamespace, error) {
-	globalCluster, err := globalDeploymentProvider.GlobalDeployment(projectID, clusterID)
+func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec, globalDeploymentProvider store.GlobalClusterDescriber, projectID, clusterID string) ([]atlasV1.CustomZoneMapping, []atlasV1.ManagedNamespace, error) {
+	globalCluster, err := globalDeploymentProvider.GlobalCluster(projectID, clusterID)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -230,7 +230,7 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 			Spec: atlasV1.AtlasBackupPolicySpec{
 				Items: items,
 			},
-			Status: atlasV1.AtlasBackupPolicyStatus{},
+			Status: status.BackupPolicyStatus{},
 		})
 	}
 
@@ -262,7 +262,7 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 			UpdateSnapshots:                   pointers.PtrValOrDefault(bs.UpdateSnapshots, false),
 			UseOrgAndGroupNamesInExportPrefix: pointers.PtrValOrDefault(bs.UseOrgAndGroupNamesInExportPrefix, false),
 		},
-		Status: atlasV1.AtlasBackupScheduleStatus{},
+		Status: status.BackupScheduleStatus{},
 	}
 	return schedule, policies
 }

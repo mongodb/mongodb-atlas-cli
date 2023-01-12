@@ -21,13 +21,13 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_global_deployment.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store GlobalDeploymentDescriber
+//go:generate mockgen -destination=../mocks/mock_global_cluster.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store GlobalClusterDescriber
 
-type GlobalDeploymentDescriber interface {
-	GlobalDeployment(string, string) (*atlas.GlobalCluster, error)
+type GlobalClusterDescriber interface {
+	GlobalCluster(string, string) (*atlas.GlobalCluster, error)
 }
 
-func (s *Store) GlobalDeployment(projectID, instanceName string) (*atlas.GlobalCluster, error) {
+func (s *Store) GlobalCluster(projectID, instanceName string) (*atlas.GlobalCluster, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).GlobalClusters.Get(s.ctx, projectID, instanceName)

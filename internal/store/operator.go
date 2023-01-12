@@ -41,7 +41,7 @@ type AtlasOperatorClusterStore interface {
 	ScheduleDescriber
 	ServerlessInstanceDescriber
 	ServerlessPrivateEndpointsLister
-	GlobalDeploymentDescriber
+	GlobalClusterDescriber
 }
 
 type AtlasAllClustersLister interface {

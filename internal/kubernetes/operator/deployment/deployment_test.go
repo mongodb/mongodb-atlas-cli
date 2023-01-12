@@ -41,7 +41,7 @@ type MockAtlasOperatorClusterStore struct {
 	projectIDToGlobalCluster              map[string]map[string]*mongodbatlas.GlobalCluster
 }
 
-func (m *MockAtlasOperatorClusterStore) GlobalDeployment(projectID string, instanceName string) (*mongodbatlas.GlobalCluster, error) {
+func (m *MockAtlasOperatorClusterStore) GlobalCluster(projectID string, instanceName string) (*mongodbatlas.GlobalCluster, error) {
 	return m.projectIDToGlobalCluster[projectID][instanceName], nil
 }
 

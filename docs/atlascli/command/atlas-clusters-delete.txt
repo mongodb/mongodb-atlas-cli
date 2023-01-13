@@ -14,6 +14,12 @@ atlas clusters delete
 
 Delete a cluster from your project.
 
+The command prompts 
+		you to confirm the operation when you run the command 
+		without the --force option. 
+		
+Deleting a cluster also deletes any backup snapshots for that cluster.
+
 Syntax
 ------
 
@@ -79,3 +85,17 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Delete a cluster named myCluster after prompting for a confirmation:
+   atlas clusters delete myCluster
+   Are you sure you want to delete: myCluster Y
+   
+   
+.. code-block::
+
+   # Delete a cluster named myCluster without requiring confirmation:
+   atlas clusters delete myCluster --force

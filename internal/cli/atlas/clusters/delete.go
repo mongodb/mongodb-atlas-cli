@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -55,7 +56,18 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <clusterName>",
 		Aliases: []string{"rm"},
 		Short:   "Delete a cluster from your project.",
-		Args:    require.ExactArgs(1),
+		Long: `The command prompts 
+		you to confirm the operation when you run the command 
+		without the --force option. 
+		
+Deleting a cluster also deletes any backup snapshots for that cluster.`,
+		Example: fmt.Sprintf(`  # Delete a cluster named myCluster after prompting for a confirmation:
+  %[1]s clusters delete myCluster
+  Are you sure you want to delete: myCluster Y
+  
+  # Delete a cluster named myCluster without requiring confirmation:
+  %[1]s clusters delete myCluster --force`, cli.ExampleAtlasEntryPoint()),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to delete.",
 		},

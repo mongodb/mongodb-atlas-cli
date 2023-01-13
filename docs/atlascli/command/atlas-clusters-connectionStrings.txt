@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-clusters-connectionStrings-describe` - Retrieve the SRV connection string of your MongoDB cluster.
+* :ref:`atlas-clusters-connectionStrings-describe` - Return the SRV connection string for the cluster you specify.
 
 
 .. toctree::

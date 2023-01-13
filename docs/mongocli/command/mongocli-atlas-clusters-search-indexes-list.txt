@@ -41,11 +41,11 @@ Options
    * - --collection
      - string
      - true
-     - Collection name.
+     - Name of the collection.
    * - --db
      - string
      - true
-     - Database name.
+     - Name of the database.
    * - -h, --help
      - 
      - false

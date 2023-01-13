@@ -98,8 +98,16 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create an online archive for a cluster.",
-		Args:  require.NoArgs,
+		Short: "Create an online archive for a collection in the cluster you specify.",
+		Long: `You can create an online archive for an M10 or larger cluster.
+		
+		To learn more about online archives, see https://www.mongodb.com/docs/atlas/online-archive/manage-online-archive/.`,
+		Args: require.NoArgs,
+		Example: fmt.Sprintf(`  # Create an online archive for the sample_mflix.movies collection in a cluster named myTestCluster when the current date is greater than the value of released date plus 2 days:
+  %[1]s clusters onlineArchive create --clusterName myTestCluster --db sample_mflix --collection movies --dateField released --archiveAfter 2 --output json
+  
+  # Create an online archive for the sample_mflix.movies collection in a cluster named myTestCluster using a profile named egAtlasProfile when the current date is greater than the value of the released date plus 2 days. Data is partitioned based on the title field, year field, and released field from the documents in the collection:
+  %[1]s clusters onlineArchive create --clusterName myTestCluster --db sample_mflix --collection movies --dateField released --archiveAfter 2 --partition title:string,year:int --output json -P egAtlasProfile `, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(opts.partitions) > maxPartitions {
 				return fmt.Errorf("can only define up to 2 partition fields, got: %d", len(opts.partitions))

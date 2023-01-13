@@ -106,6 +106,12 @@ func CreateBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"indexNameDesc": "Name of the index.",
 		},
+		Example: fmt.Sprintf(`  # Create an index named bedrooms_1 on the listings collection of the realestate database:
+  %[1]s clusters indexes create bedrooms_1 --clusterName Cluster0 --collection listings --db realestate --key bedrooms:1
+  
+  # Create a compound index named property_room_bedrooms on the
+  listings collection of the realestate database:
+  %[1]s clusters indexes create property_room_bedrooms --clusterName Cluster0 --collection listings --db realestate --key property_type:1 --key room_type:1 --key bedrooms:1`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},

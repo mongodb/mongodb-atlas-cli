@@ -12,7 +12,7 @@ mongocli atlas clusters describe
    :depth: 1
    :class: singlecol
 
-Describe a cluster.
+Return the details for the cluster you specify.
 
 Syntax
 ------
@@ -79,3 +79,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return the JSON-formatted details for the cluster named myCluster:
+   mongocli atlas clusters describe myCluster --output json

@@ -54,9 +54,9 @@ Related Commands
 * :ref:`mongocli-atlas-clusters-connectionStrings` - Manage MongoDB cluster connection string.
 * :ref:`mongocli-atlas-clusters-create` - Create one cluster in the specified project.
 * :ref:`mongocli-atlas-clusters-delete` - Delete a cluster from your project.
-* :ref:`mongocli-atlas-clusters-describe` - Describe a cluster.
+* :ref:`mongocli-atlas-clusters-describe` - Return the details for the cluster you specify.
 * :ref:`mongocli-atlas-clusters-indexes` - Manage cluster rolling indexes for your project.
-* :ref:`mongocli-atlas-clusters-list` - List clusters for your project.
+* :ref:`mongocli-atlas-clusters-list` - Return all clusters for the project you specify.
 * :ref:`mongocli-atlas-clusters-loadSampleData` - Load sample data into a MongoDB cluster in Atlas.
 * :ref:`mongocli-atlas-clusters-onlineArchives` - Manage online archives for your cluster.
 * :ref:`mongocli-atlas-clusters-pause` - Pause a running MongoDB cluster in Atlas.

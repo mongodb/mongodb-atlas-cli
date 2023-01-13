@@ -14,9 +14,7 @@ mongocli atlas clusters delete
 
 Delete a cluster from your project.
 
-The command prompts 
-		you to confirm the operation when you run the command 
-		without the --force option. 
+The command prompts you to confirm the operation when you run the command without the --force option. 
 		
 Deleting a cluster also deletes any backup snapshots for that cluster.
 

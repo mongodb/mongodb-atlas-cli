@@ -56,9 +56,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <clusterName>",
 		Aliases: []string{"rm"},
 		Short:   "Delete a cluster from your project.",
-		Long: `The command prompts 
-		you to confirm the operation when you run the command 
-		without the --force option. 
+		Long: `The command prompts you to confirm the operation when you run the command without the --force option. 
 		
 Deleting a cluster also deletes any backup snapshots for that cluster.`,
 		Example: fmt.Sprintf(`  # Delete a cluster named myCluster after prompting for a confirmation:

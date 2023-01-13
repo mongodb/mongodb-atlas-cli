@@ -57,7 +57,7 @@ Options
    * - -f, --file
      - string
      - false
-     - File name to use, optional file with a json cluster configuration. To learn more about configuration files for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/cluster-config-file/. To learn more about configuration files for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/reference/mms-cluster-settings-file/.
+     - Path to an optional JSON configuration file that defines cluster settings. To learn more about configuration files for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/cluster-config-file/. To learn more about configuration files for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/reference/mms-cluster-settings-file/.
    * - -h, --help
      - 
      - false
@@ -65,7 +65,7 @@ Options
    * - --mdbVersion
      - string
      - false
-     - MongoDB version of the cluster.
+     - Major MongoDB version of the cluster.
    * - -o, --output
      - string
      - false

@@ -16,6 +16,7 @@ package connectionstring
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -64,11 +65,13 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <clusterName>",
 		Aliases: []string{"get"},
-		Short:   "Retrieve the SRV connection string of your MongoDB cluster.",
+		Short:   "Return the SRV connection string for the cluster you specify.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve connection strings.",
 		},
+		Example: fmt.Sprintf(`  # Return the JSON-formatted connection strings for the cluster named myCluster:
+  %s clusters connectionStrings describe myCluster --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

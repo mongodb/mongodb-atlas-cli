@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-clusters-onlineArchives-create` - Create an online archive for a cluster.
+* :ref:`mongocli-atlas-clusters-onlineArchives-create` - Create an online archive for a collection in the cluster you specify.
 * :ref:`mongocli-atlas-clusters-onlineArchives-delete` - Delete an online archive from a cluster.
 * :ref:`mongocli-atlas-clusters-onlineArchives-describe` - Describe an online archive for a cluster.
 * :ref:`mongocli-atlas-clusters-onlineArchives-list` - List online archives for a cluster.

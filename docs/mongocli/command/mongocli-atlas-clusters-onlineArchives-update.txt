@@ -53,7 +53,7 @@ Options
    * - --archiveAfter
      - float
      - true
-     - Number of days that specifies the age limit for the data in the live Atlas cluster.
+     - Number of days after which to archive cluster data.
    * - --clusterName
      - string
      - true

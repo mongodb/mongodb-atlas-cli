@@ -57,11 +57,11 @@ Options
    * - --collection
      - string
      - true
-     - Collection name.
+     - Name of the collection.
    * - --db
      - string
      - true
-     - Database name.
+     - Name of the database.
    * - -h, --help
      - 
      - false
@@ -77,7 +77,7 @@ Options
    * - --sparse
      - 
      - false
-     - Flag that indicates whether Atlas should create a sparse index.
+     - Flag that indicates whether Atlas should create a sparse index. To learn more about sparse indexes, see https://www.mongodb.com/docs/manual/core/index-sparse/
 
 Inherited Options
 -----------------
@@ -95,3 +95,17 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Create an index named bedrooms_1 on the listings collection of the realestate database:
+   atlas clusters indexes create bedrooms_1 --clusterName Cluster0 --collection listings --db realestate --key bedrooms:1
+   
+   
+.. code-block::
+
+   # Create a compound index named property_room_bedrooms on the
+   listings collection of the realestate database:
+   atlas clusters indexes create property_room_bedrooms --clusterName Cluster0 --collection listings --db realestate --key property_type:1 --key room_type:1 --key bedrooms:1

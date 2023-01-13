@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-clusters-onlineArchives-create` - Create an online archive for a cluster.
+* :ref:`atlas-clusters-onlineArchives-create` - Create an online archive for a collection in the cluster you specify.
 * :ref:`atlas-clusters-onlineArchives-delete` - Delete an online archive from a cluster.
 * :ref:`atlas-clusters-onlineArchives-describe` - Describe an online archive for a cluster.
 * :ref:`atlas-clusters-onlineArchives-list` - List online archives for a cluster.

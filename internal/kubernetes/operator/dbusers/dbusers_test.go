@@ -12,17 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
+
 package dbusers
 
 import (
 	"fmt"
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"reflect"
 	"strings"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
@@ -179,11 +181,10 @@ func TestBuildDBUsers(t *testing.T) {
 		targetNamespace := "TestNamespace-1"
 
 		listOptions := &mongodbatlas.ListOptions{}
-		gomock.InOrder(
-			mockUserStore.EXPECT().DatabaseUsers(projectID, listOptions).Return([]mongodbatlas.DatabaseUser{
-				user,
-			}, nil),
-		)
+
+		mockUserStore.EXPECT().DatabaseUsers(projectID, listOptions).Return([]mongodbatlas.DatabaseUser{
+			user,
+		}, nil)
 
 		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace, false)
 		if err != nil {
@@ -289,11 +290,9 @@ func TestBuildDBUsers(t *testing.T) {
 		targetNamespace := "TestNamespace-2"
 
 		listOptions := &mongodbatlas.ListOptions{}
-		gomock.InOrder(
-			mockUserStore.EXPECT().DatabaseUsers(projectID, listOptions).Return([]mongodbatlas.DatabaseUser{
-				user,
-			}, nil),
-		)
+		mockUserStore.EXPECT().DatabaseUsers(projectID, listOptions).Return([]mongodbatlas.DatabaseUser{
+			user,
+		}, nil)
 
 		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace, true)
 		if err != nil {

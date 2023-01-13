@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_peering_connections.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store EncryptionAtRestDescriber
+//go:generate mockgen -destination=../mocks/mock_encryption_at_rest.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store EncryptionAtRestDescriber
 
 type EncryptionAtRestDescriber interface {
 	EncryptionAtRest(string) (*atlas.EncryptionAtRest, error)

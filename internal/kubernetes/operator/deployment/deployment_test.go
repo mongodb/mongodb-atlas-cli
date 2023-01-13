@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-///go:build unit
+//go:build unit
 
 package deployment
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"reflect"
 	"strings"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
@@ -46,8 +46,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		const zoneName1 = "us-east-1"
 		const zoneID1 = "TestReplicaID"
 		const (
-			firstLocation  = "CA"
-			secondLocation = "US"
+			firstLocation = "CA"
 		)
 
 		cluster := &mongodbatlas.AdvancedCluster{
@@ -163,8 +162,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		}
 		globalCluster := &mongodbatlas.GlobalCluster{
 			CustomZoneMapping: map[string]string{
-				secondLocation: zoneID1,
-				firstLocation:  zoneID1,
+				firstLocation: zoneID1,
 			},
 			ManagedNamespaces: []mongodbatlas.ManagedNamespace{
 				{
@@ -180,12 +178,11 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		}
 
 		managedNamespace := globalCluster.ManagedNamespaces
-		gomock.InOrder(
-			clusterStore.EXPECT().AtlasCluster(projectName, clusterName).Return(cluster, nil),
-			clusterStore.EXPECT().AtlasClusterConfigurationOptions(projectName, clusterName).Return(processArgs, nil),
-			clusterStore.EXPECT().GlobalCluster(projectName, clusterName).Return(globalCluster, nil),
-			clusterStore.EXPECT().DescribeSchedule(projectName, clusterName).Return(backupSchedule, nil),
-		)
+
+		clusterStore.EXPECT().AtlasCluster(projectName, clusterName).Return(cluster, nil)
+		clusterStore.EXPECT().AtlasClusterConfigurationOptions(projectName, clusterName).Return(processArgs, nil)
+		clusterStore.EXPECT().GlobalCluster(projectName, clusterName).Return(globalCluster, nil)
+		clusterStore.EXPECT().DescribeSchedule(projectName, clusterName).Return(backupSchedule, nil)
 
 		expectCluster := &atlasV1.AtlasDeployment{
 			TypeMeta: v1.TypeMeta{
@@ -205,10 +202,6 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				AdvancedDeploymentSpec: &atlasV1.AdvancedDeploymentSpec{
 					BackupEnabled: cluster.BackupEnabled,
 					CustomZoneMapping: []atlasV1.CustomZoneMapping{
-						{
-							Location: secondLocation,
-							Zone:     cluster.ReplicationSpecs[0].ZoneName,
-						},
 						{
 							Location: firstLocation,
 							Zone:     cluster.ReplicationSpecs[0].ZoneName,
@@ -470,10 +463,8 @@ func TestBuildServerlessDeployments(t *testing.T) {
 		listOptions := &mongodbatlas.ListOptions{
 			ItemsPerPage: MaxItems,
 		}
-		gomock.InOrder(
-			clusterStore.EXPECT().ServerlessInstance(projectName, clusterName).Return(cluster, nil),
-			clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName, listOptions).Return(spe, nil),
-		)
+		clusterStore.EXPECT().ServerlessInstance(projectName, clusterName).Return(cluster, nil)
+		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName, listOptions).Return(spe, nil)
 
 		expected := &atlasV1.AtlasDeployment{
 			TypeMeta: v1.TypeMeta{

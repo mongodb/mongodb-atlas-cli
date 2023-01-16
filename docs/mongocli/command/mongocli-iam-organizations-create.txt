@@ -12,7 +12,7 @@ mongocli iam organizations create
    :depth: 1
    :class: singlecol
 
-Create an organization.
+Create an organization. This command is available only for Ops Manager.
 
 Syntax
 ------

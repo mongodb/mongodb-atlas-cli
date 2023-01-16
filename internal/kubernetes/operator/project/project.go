@@ -402,7 +402,7 @@ func buildNetworkPeering(npProvider store.PeeringConnectionLister, projectID str
 		ProviderName: string(provider.ProviderAWS),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error getting network peering connections for AWS: %s", err)
+		return nil, fmt.Errorf("error getting network peering connections for AWS: %w", err)
 	}
 
 	npListGCP, err := npProvider.PeeringConnections(projectID, &atlas.ContainersListOptions{
@@ -412,7 +412,7 @@ func buildNetworkPeering(npProvider store.PeeringConnectionLister, projectID str
 		ProviderName: string(provider.ProviderGCP),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error getting network peering connections for GCP: %s", err)
+		return nil, fmt.Errorf("error getting network peering connections for GCP: %w", err)
 	}
 
 	npListAzure, err := npProvider.PeeringConnections(projectID, &atlas.ContainersListOptions{
@@ -422,7 +422,7 @@ func buildNetworkPeering(npProvider store.PeeringConnectionLister, projectID str
 		ProviderName: string(provider.ProviderAzure),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error getting network peering connections for Azure: %s", err)
+		return nil, fmt.Errorf("error getting network peering connections for Azure: %w", err)
 	}
 
 	result := make([]atlasV1.NetworkPeer, 0, len(npListAWS)+len(npListGCP)+len(npListAzure))

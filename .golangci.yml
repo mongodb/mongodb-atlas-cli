@@ -1,4 +1,6 @@
 linters-settings:
+  errorlint:
+    comparison: false
   goconst:
     min-len: 2
     min-occurrences: 2
@@ -64,6 +66,7 @@ linters:
     - depguard # Go linter that checks if package imports are in a list of acceptable packages [fast: true, auto-fix: false]
     - dogsled # Checks assignments with too many blank identifiers (e.g. x, _, _, _, := f()) [fast: true, auto-fix: false]
     - errcheck # Errcheck is a program for checking for unchecked errors in go programs. These unchecked errors can be critical bugs in some cases [fast: false, auto-fix: false]
+    - errorlint
     - exhaustive # check exhaustiveness of enum switch statements [fast: false, auto-fix: false]
     - exportloopref # checks for pointers to enclosing loop variables [fast: false, auto-fix: false]
     - gci # Gci controls golang package import order and makes it always deterministic. [fast: true, auto-fix: false]

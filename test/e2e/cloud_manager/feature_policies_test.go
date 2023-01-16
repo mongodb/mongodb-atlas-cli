@@ -29,12 +29,13 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestFeaturePolicies(t *testing.T) {
-	const (
-		policyExternallyManagedLock = "EXTERNALLY_MANAGED_LOCK"
-		policyDisableUserManagement = "DISABLE_USER_MANAGEMENT"
-	)
+const (
+	policyExternallyManagedLock = "EXTERNALLY_MANAGED_LOCK"
+	policyDisableUserManagement = "DISABLE_USER_MANAGEMENT"
+)
 
+func TestFeaturePolicies(t *testing.T) {
+	t.Skip("Skip until clean up works again", "CLOUDP-152484")
 	n, err := e2e.RandInt(255)
 	require.NoError(t, err)
 

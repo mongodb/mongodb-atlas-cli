@@ -24,6 +24,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
@@ -35,10 +37,13 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const resourceVersion = "x.y.z"
+
 func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 	ctl := gomock.NewController(t)
 	clusterStore := mocks.NewMockAtlasOperatorClusterStore(ctl)
 	dictionary := resources.AtlasNameToKubernetesName()
+	featureValidator := mocks.NewMockFeatureValidator(ctl)
 
 	t.Run("Can import Advanced deployment", func(t *testing.T) {
 		const projectName = "testProject-1"
@@ -193,6 +198,9 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			ObjectMeta: v1.ObjectMeta{
 				Name:      strings.ToLower(clusterName),
 				Namespace: targetNamespace,
+				Labels: map[string]string{
+					features.ResourceVersion: resourceVersion,
+				},
 			},
 			Spec: atlasV1.AtlasDeploymentSpec{
 				Project: common.ResourceRefNamespaced{
@@ -311,6 +319,9 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				ObjectMeta: v1.ObjectMeta{
 					Name:      strings.ToLower(fmt.Sprintf("%s-backuppolicy", clusterName)),
 					Namespace: targetNamespace,
+					Labels: map[string]string{
+						features.ResourceVersion: resourceVersion,
+					},
 				},
 				Spec: atlasV1.AtlasBackupPolicySpec{
 					Items: []atlasV1.AtlasBackupPolicyItem{
@@ -334,6 +345,9 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			ObjectMeta: v1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-backupschedule", clusterName)),
 				Namespace: targetNamespace,
+				Labels: map[string]string{
+					features.ResourceVersion: resourceVersion,
+				},
 			},
 			Spec: atlasV1.AtlasBackupScheduleSpec{
 				AutoExportEnabled: *backupSchedule.AutoExportEnabled,
@@ -360,7 +374,11 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			BackupPolicies: expectPolicies,
 		}
 
-		got, err := BuildAtlasAdvancedDeployment(clusterStore, projectName, projectName, clusterName, targetNamespace, dictionary)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasDeployment, featureProcessArgs).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasDeployment, featureBackupSchedule).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasDeployment, featureGlobalDeployments).Return(true)
+
+		got, err := BuildAtlasAdvancedDeployment(clusterStore, featureValidator, projectName, projectName, clusterName, targetNamespace, dictionary, resourceVersion)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
@@ -382,6 +400,8 @@ func TestBuildServerlessDeployments(t *testing.T) {
 	ctl := gomock.NewController(t)
 	clusterStore := mocks.NewMockAtlasOperatorClusterStore(ctl)
 	dictionary := resources.AtlasNameToKubernetesName()
+
+	featureValidator := mocks.NewMockFeatureValidator(ctl)
 
 	t.Run("Can import Serverless deployment", func(t *testing.T) {
 		spe := []mongodbatlas.ServerlessPrivateEndpointConnection{
@@ -475,6 +495,9 @@ func TestBuildServerlessDeployments(t *testing.T) {
 			ObjectMeta: v1.ObjectMeta{
 				Name:      strings.ToLower(cluster.Name),
 				Namespace: targetNamespace,
+				Labels: map[string]string{
+					features.ResourceVersion: resourceVersion,
+				},
 			},
 			Spec: atlasV1.AtlasDeploymentSpec{
 				Project: common.ResourceRefNamespaced{
@@ -521,7 +544,9 @@ func TestBuildServerlessDeployments(t *testing.T) {
 			},
 		}
 
-		got, err := BuildServerlessDeployments(clusterStore, projectName, projectName, clusterName, targetNamespace, dictionary)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasDeployment, featureServerlessPrivateEndpoints).Return(true)
+
+		got, err := BuildServerlessDeployments(clusterStore, featureValidator, projectName, projectName, clusterName, targetNamespace, dictionary, resourceVersion)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}

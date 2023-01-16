@@ -23,6 +23,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
@@ -40,11 +42,12 @@ import (
 const orgID = "TestOrgID"
 const projectID = "TestProjectID"
 const teamID = "TestTeamID"
+const resourceVersion = "x.y.z"
 
 func TestBuildAtlasProject(t *testing.T) {
 	ctl := gomock.NewController(t)
 	projectStore := mocks.NewMockAtlasOperatorProjectStore(ctl)
-
+	featureValidator := mocks.NewMockFeatureValidator(ctl)
 	t.Run("Can convert Project entity with secrets data", func(t *testing.T) {
 		targetNamespace := "test-namespace"
 
@@ -307,8 +310,21 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore.EXPECT().TeamByID(orgID, teamID).Return(teams, nil)
 		projectStore.EXPECT().TeamUsers(orgID, teamID).Return(teamUsers, nil)
 
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureAccessLists).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureMaintenanceWindows).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureIntegrations).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureNetworkPeering).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featurePrivateEndpoints).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureEncryptionAtRest).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureCloudProviderAccessRoles).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureProjectSettings).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureAuditing).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureAlertConfiguration).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureCustomRoles).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureTeams).Return(true)
+
 		dictionary := resources.AtlasNameToKubernetesName()
-		projectResult, err := BuildAtlasProject(projectStore, orgID, projectID, targetNamespace, dictionary)
+		projectResult, err := BuildAtlasProject(projectStore, featureValidator, orgID, projectID, targetNamespace, true, dictionary, resourceVersion)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
@@ -370,6 +386,9 @@ func TestBuildAtlasProject(t *testing.T) {
 				ObjectMeta: v1.ObjectMeta{
 					Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teams.Name)),
 					Namespace: targetNamespace,
+					Labels: map[string]string{
+						features.ResourceVersion: resourceVersion,
+					},
 				},
 				Spec: atlasV1.TeamSpec{
 					Name:      teams.Name,
@@ -390,6 +409,9 @@ func TestBuildAtlasProject(t *testing.T) {
 			ObjectMeta: v1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(p.Name, dictionary),
 				Namespace: targetNamespace,
+				Labels: map[string]string{
+					features.ResourceVersion: resourceVersion,
+				},
 			},
 			Spec: atlasV1.AtlasProjectSpec{
 				Name: p.Name,

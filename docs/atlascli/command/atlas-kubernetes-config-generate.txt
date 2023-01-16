@@ -48,6 +48,10 @@ Options
      - 
      - false
      - Generate kubernetes secrets with data for projects, users, deployments entities
+   * - --operatorVersion
+     - string
+     - false
+     - Version of Atlas Kubernetes Operator to generate resources for. This value defaults to "1.6.0".
    * - --orgId
      - string
      - false
@@ -102,3 +106,9 @@ Examples
 
    # Export Project, DatabaseUsers, and Deployment resources for a specific project including connection and integration secrets to a specific namespace:
    atlas kubernetes config generate --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>
+
+   
+.. code-block::
+
+   # Export resources for a specific version of the Atlas Kubernetes Operator:
+   atlas kubernetes config generate --projectId=<projectId> --targetNamespace=<namespace> --operatorVersion=1.5.1

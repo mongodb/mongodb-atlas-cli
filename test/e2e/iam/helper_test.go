@@ -88,46 +88,6 @@ func deleteOrgAPIKey(id string) error {
 	return cmd.Run()
 }
 
-func createProject(projectName string) (string, error) {
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		return "", err
-	}
-	cmd := exec.Command(cliPath,
-		iamEntity,
-		projectsEntity,
-		"create",
-		projectName,
-		"-o=json")
-	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
-	if err != nil {
-		return "", fmt.Errorf("%w: %s", err, string(resp))
-	}
-
-	var project mongodbatlas.Project
-	if err := json.Unmarshal(resp, &project); err != nil {
-		return "", err
-	}
-
-	return project.ID, nil
-}
-
-func deleteProject(projectID string) error {
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		return err
-	}
-	cmd := exec.Command(cliPath,
-		iamEntity,
-		projectsEntity,
-		"delete",
-		projectID,
-		"--force")
-	cmd.Env = os.Environ()
-	return cmd.Run()
-}
-
 func createTeam(teamName string) (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -179,7 +139,7 @@ var errInvalidIndex = errors.New("invalid index")
 
 // OrgNUser returns the user at the position userIndex.
 // We need to pass the userIndex because the command iam teams users add would not work
-// if the the user is already in the team.
+// if the user is already in the team.
 func OrgNUser(n int) (username, userID string, err error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {

@@ -25,41 +25,32 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestProjectTeams(t *testing.T) {
+	t.Skip("Skip until clean up works again", "CLOUDP-152484")
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	n, err := e2e.RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	projectName := fmt.Sprintf("e2e-proj-%v", n)
-	projectID, err := createProject(projectName)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	projectID, err := e2e.CreateProject(projectName)
+	require.NoError(t, err)
+	t.Cleanup(func() {
+		e2e.DeleteProjectWithRetry(t, projectID)
+	})
 
 	teamName := fmt.Sprintf("e2e-teams-%v", n)
 	teamID, err := createTeam(teamName)
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-		if e := deleteTeam(teamID); e != nil {
-			t.Errorf("error deleting team: %v", e)
-		}
-	}()
+	require.NoError(t, err)
+	t.Cleanup(func() {
+		e := deleteTeam(teamID)
+		require.NoError(t, e)
+	})
 
 	t.Run("Add", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

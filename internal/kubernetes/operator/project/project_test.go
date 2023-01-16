@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
+///go:build unit
 
 package project
 
@@ -105,8 +105,35 @@ func (m *MockAtlasOperatorProjectStore) CloudProviderAccessRoles(projectID strin
 	return m.cpas[projectID], nil
 }
 
-func (m *MockAtlasOperatorProjectStore) PeeringConnections(projectID string, _ *mongodbatlas.ContainersListOptions) ([]mongodbatlas.Peer, error) {
-	return m.peeringConnections[projectID], nil
+func (m *MockAtlasOperatorProjectStore) PeeringConnections(projectID string, listOptions *mongodbatlas.ContainersListOptions) ([]mongodbatlas.Peer, error) {
+	np, ok := m.peeringConnections[projectID]
+	if !ok {
+		return nil, nil
+	}
+	result := make([]mongodbatlas.Peer, 0)
+	if listOptions != nil {
+		switch listOptions.ProviderName {
+		case string(provider.ProviderAWS):
+			for _, p := range np {
+				if p.ProviderName == string(provider.ProviderAWS) {
+					result = append(result, p)
+				}
+			}
+		case string(provider.ProviderAzure):
+			for _, p := range np {
+				if p.ProviderName == string(provider.ProviderAzure) {
+					result = append(result, p)
+				}
+			}
+		case string(provider.ProviderGCP):
+			for _, p := range np {
+				if p.ProviderName == string(provider.ProviderGCP) {
+					result = append(result, p)
+				}
+			}
+		}
+	}
+	return result, nil
 }
 
 func (m *MockAtlasOperatorProjectStore) EncryptionAtRest(projectID string) (*mongodbatlas.EncryptionAtRest, error) {
@@ -1173,8 +1200,35 @@ type MockNetworkPeeringStore struct {
 	peeringConnections map[string][]mongodbatlas.Peer
 }
 
-func (m *MockNetworkPeeringStore) PeeringConnections(projectID string, _ *mongodbatlas.ContainersListOptions) ([]mongodbatlas.Peer, error) {
-	return m.peeringConnections[projectID], nil
+func (m *MockNetworkPeeringStore) PeeringConnections(projectID string, listOptions *mongodbatlas.ContainersListOptions) ([]mongodbatlas.Peer, error) {
+	np, ok := m.peeringConnections[projectID]
+	if !ok {
+		return nil, nil
+	}
+	result := make([]mongodbatlas.Peer, 0)
+	if listOptions != nil {
+		switch listOptions.ProviderName {
+		case string(provider.ProviderAWS):
+			for _, p := range np {
+				if p.ProviderName == string(provider.ProviderAWS) {
+					result = append(result, p)
+				}
+			}
+		case string(provider.ProviderAzure):
+			for _, p := range np {
+				if p.ProviderName == string(provider.ProviderAzure) {
+					result = append(result, p)
+				}
+			}
+		case string(provider.ProviderGCP):
+			for _, p := range np {
+				if p.ProviderName == string(provider.ProviderGCP) {
+					result = append(result, p)
+				}
+			}
+		}
+	}
+	return result, nil
 }
 
 func Test_buildNetworkPeering(t *testing.T) {

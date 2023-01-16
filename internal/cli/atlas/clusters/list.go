@@ -61,10 +61,10 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List clusters for your project.",
+		Short:   "Return all clusters for the project you specify.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
-		Example: fmt.Sprintf(` # The following example returns a JSON-formatted list of clusters in the specified project.
+		Example: fmt.Sprintf(`  # Return a JSON-formatted list of clusters for the project with ID 5e2211c17a3e5a48f5497de3:
   %s clusters list --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

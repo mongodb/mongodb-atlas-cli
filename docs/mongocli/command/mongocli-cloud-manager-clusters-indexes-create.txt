@@ -73,11 +73,11 @@ Options
    * - --collectionName
      - string
      - true
-     - Collection name.
+     - Name of the collection.
    * - --db
      - string
      - true
-     - Database name.
+     - Name of the database.
    * - -h, --help
      - 
      - false
@@ -109,7 +109,7 @@ Options
    * - --sparse
      - 
      - false
-     - Flag that indicates whether Atlas should create a sparse index.
+     - Flag that indicates whether Atlas should create a sparse index. To learn more about sparse indexes, see https://www.mongodb.com/docs/manual/core/index-sparse/
    * - --strength
      - int
      - false

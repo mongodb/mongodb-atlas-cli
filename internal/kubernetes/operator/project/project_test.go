@@ -42,7 +42,6 @@ const teamID = "TestTeamID"
 
 func TestBuildAtlasProject(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
 	projectStore := mocks.NewMockAtlasOperatorProjectStore(ctl)
 
 	t.Run("Can convert Project entity with secrets data", func(t *testing.T) {
@@ -541,7 +540,7 @@ func TestBuildAtlasProject(t *testing.T) {
 
 func TestBuildProjectConnectionSecret(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
+
 	credsProvider := mocks.NewMockCredentialsGetter(ctl)
 	t.Run("Can generate a valid connection secret WITH data", func(t *testing.T) {
 		publicAPIKey := "TestPublicKey"
@@ -613,7 +612,7 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 
 func Test_buildAccessLists(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
+
 	alProvider := mocks.NewMockProjectIPAccessListLister(ctl)
 	t.Run("Can convert Access Lists", func(t *testing.T) {
 		data := &mongodbatlas.ProjectIPAccessLists{
@@ -658,7 +657,7 @@ func Test_buildAccessLists(t *testing.T) {
 
 func Test_buildAuditing(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
+
 	auditingProvider := mocks.NewMockAuditingDescriber(ctl)
 	t.Run("Can convert Auditing", func(t *testing.T) {
 		data := &mongodbatlas.Auditing{
@@ -689,7 +688,7 @@ func Test_buildAuditing(t *testing.T) {
 
 func Test_buildCloudProviderAccessRoles(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
+
 	cpaProvider := mocks.NewMockCloudProviderAccessRoleLister(ctl)
 	t.Run("Can convert CPA roles", func(t *testing.T) {
 		data := &mongodbatlas.CloudProviderAccessRoles{
@@ -729,7 +728,7 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 
 func Test_buildEncryptionAtREST(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
+
 	dataProvider := mocks.NewMockEncryptionAtRestDescriber(ctl)
 	t.Run("Can convert Encryption at REST AWS", func(t *testing.T) {
 		data := &mongodbatlas.EncryptionAtRest{
@@ -852,7 +851,7 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 
 func Test_buildIntegrations(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
+
 	intProvider := mocks.NewMockIntegrationLister(ctl)
 
 	t.Run("Can convert third-party integrations WITH secrets: Prometheus", func(t *testing.T) {
@@ -989,7 +988,7 @@ func Test_buildIntegrations(t *testing.T) {
 
 func Test_buildMaintenanceWindows(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
+
 	mwProvider := mocks.NewMockMaintenanceWindowDescriber(ctl)
 	t.Run("Can convert maintenance window", func(t *testing.T) {
 		mw := &mongodbatlas.MaintenanceWindow{
@@ -1023,7 +1022,7 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 
 func Test_buildNetworkPeering(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
+
 	peerProvider := mocks.NewMockPeeringConnectionLister(ctl)
 	t.Run("Can convert Peering connections", func(t *testing.T) {
 		peeringConnections := []mongodbatlas.Peer{
@@ -1086,7 +1085,7 @@ func Test_buildNetworkPeering(t *testing.T) {
 
 func Test_buildPrivateEndpoints(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
+
 	peProvider := mocks.NewMockPrivateEndpointLister(ctl)
 	t.Run("Can convert PrivateEndpointConnection for AWS", func(t *testing.T) {
 		providerName := provider.ProviderAWS
@@ -1182,7 +1181,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 
 func Test_buildProjectSettings(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
+
 	settingsProvider := mocks.NewMockProjectSettingsDescriber(ctl)
 	t.Run("Can convert project settings", func(t *testing.T) {
 		projectSettings := mongodbatlas.ProjectSettings{
@@ -1213,7 +1212,7 @@ func Test_buildProjectSettings(t *testing.T) {
 
 func Test_buildCustomRoles(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
+
 	rolesProvider := mocks.NewMockDatabaseRoleLister(ctl)
 	t.Run("Can build custom roles", func(t *testing.T) {
 		data := []mongodbatlas.CustomDBRole{

@@ -142,7 +142,6 @@ func Test_buildUserSecret(t *testing.T) {
 
 func TestBuildDBUsers(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
 	mockUserStore := mocks.NewMockDatabaseUserLister(ctl)
 
 	t.Run("Can build AtlasDatabaseUser from AtlasUser WITHOUT credentials", func(t *testing.T) {

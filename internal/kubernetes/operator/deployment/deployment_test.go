@@ -36,7 +36,6 @@ import (
 
 func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
 	clusterStore := mocks.NewMockAtlasOperatorClusterStore(ctl)
 
 	t.Run("Can import Advanced deployment", func(t *testing.T) {
@@ -379,7 +378,6 @@ func TestBuildServerlessDeployments(t *testing.T) {
 	const targetNamespace = "test-namespace-2"
 
 	ctl := gomock.NewController(t)
-	defer ctl.Finish()
 	clusterStore := mocks.NewMockAtlasOperatorClusterStore(ctl)
 
 	t.Run("Can import Serverless deployment", func(t *testing.T) {

@@ -125,15 +125,23 @@ func UpdateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "update [clusterName]",
-		Short: "Update a MongoDB Atlas cluster.",
-		Example: fmt.Sprintf(`  # Update tier for a cluster:
-  %[1]s cluster update <clusterName> --projectId <projectId> --tier M50
+		Short: "Modify the settings for your MongoDB Atlas cluster.",
+		Long: `You can specify modifications in a JSON configuration file with the --file flag.
+		
+You can modify only M10 or larger clusters that are single-region replica sets.
+		
+You can't change the name of the cluster or downgrade the MongoDB version of your cluster.`,
+		Example: fmt.Sprintf(`  # Update the tier for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50
 
-  # Update disk size for a cluster:
-  %[1]s cluster update <clusterName> --projectId <projectId> --diskSizeGB 20
+  # Update the disk size for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --diskSizeGB 20
 
-  # Update MongoDB version for a cluster:
-  %[1]s cluster update <clusterName> --projectId <projectId> --mdbVersion 4.2`,
+  # Update the MongoDB version for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --mdbVersion 4.2
+  
+  # Use a configuration file named cluster-config.json to update a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --file cluster-config.json --output json`,
 			cli.ExampleAtlasEntryPoint()),
 		Args: require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

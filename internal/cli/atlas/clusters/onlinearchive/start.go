@@ -16,6 +16,7 @@ package onlinearchive
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -69,6 +70,8 @@ func StartBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to start.",
 		},
+		Example: fmt.Sprintf(`  # Start a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+  %s clusters start myCluster --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

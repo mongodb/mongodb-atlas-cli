@@ -24,7 +24,7 @@ const (
 	Since                    = "Point in time, specified as milliseconds since the Unix Epoch, from which you want to receive results."
 	HostID                   = "Unique identifier for the host of a MongoDB process."
 	Duration                 = "Length of time from the since parameter, in milliseconds, for which you want to receive results."
-	Tier                     = "Tier for each data-bearing server in the cluster."
+	Tier                     = "Tier for each data-bearing server in the cluster. To learn more about cluster tiers, see https://www.mongodb.com/docs/atlas/manage-clusters/#select-cluster-tier."
 	NLog                     = "Maximum number of log lines to return."
 	SlowQueryNamespaces      = "Namespaces from which to retrieve suggested slow query logs."
 	DiskSizeGB               = "Capacity, in gigabytes, of the host's root volume."

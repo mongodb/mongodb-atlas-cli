@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/commonerrors"
@@ -63,6 +64,8 @@ func PauseBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to pause.",
 		},
+		Example: fmt.Sprintf(`  # Pause the cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+  %s clusters pause myCluster --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

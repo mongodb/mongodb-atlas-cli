@@ -12,7 +12,7 @@ mongocli atlas clusters search indexes update
    :depth: 1
    :class: singlecol
 
-Update a search index for a cluster.
+Modify a search index for a cluster.
 
 Syntax
 ------
@@ -57,7 +57,7 @@ Options
    * - -f, --file
      - string
      - false
-     - File name to use, file with a json index configuration.
+     - Name of the JSON index configuration file to use. To learn about the format for index configuration files, see https://www.mongodb.com/docs/atlas/atlas-search/index-definitions/.
    * - -h, --help
      - 
      - false
@@ -87,3 +87,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Modify the search index with the ID 5f2099cd683fc55fbb30bef6 for the cluster named myCluster:
+   mongocli atlas clusters search indexes update 5f2099cd683fc55fbb30bef6 --clusterName myCluster --output json

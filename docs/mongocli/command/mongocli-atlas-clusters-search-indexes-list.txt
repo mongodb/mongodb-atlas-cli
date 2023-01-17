@@ -12,7 +12,7 @@ mongocli atlas clusters search indexes list
    :depth: 1
    :class: singlecol
 
-List Atlas search indexes for a cluster.
+List all Atlas search indexes for a cluster.
 
 Syntax
 ------
@@ -53,7 +53,7 @@ Options
    * - --limit
      - int
      - false
-     - Number of items per page. This value defaults to 100.
+     - Number of items per page of results. This value defaults to 100.
    * - -o, --output
      - string
      - false
@@ -61,7 +61,7 @@ Options
    * - --page
      - int
      - false
-     - Page number. This value defaults to 1.
+     - Page number that specifies a page of results. This value defaults to 1.
    * - --projectId
      - string
      - false
@@ -83,3 +83,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return the JSON-formatted list of Atlas search indexes on the sample_mflix.movies database in the cluster named myCluster:
+   mongocli atlas clusters search indexes list --clusterName myCluster --db sample_mflix --collection movies --output json

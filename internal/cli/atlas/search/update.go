@@ -16,6 +16,7 @@ package search
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -89,11 +90,13 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "update <indexId>",
-		Short: "Update a search index for a cluster.",
+		Short: "Modify a search index for a cluster.",
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",
 		},
 		Args: require.ExactArgs(1),
+		Example: fmt.Sprintf(`  # Modify the search index with the ID 5f2099cd683fc55fbb30bef6 for the cluster named myCluster:
+  %s clusters search indexes update 5f2099cd683fc55fbb30bef6 --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {
 				_ = cmd.MarkFlagRequired(flag.IndexName)

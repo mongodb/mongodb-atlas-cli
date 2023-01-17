@@ -50,10 +50,10 @@ Related Commands
 ----------------
 
 * :ref:`atlas-clusters-search-indexes-create` - Create a search index for a cluster.
-* :ref:`atlas-clusters-search-indexes-delete` - Delete a search index from a cluster.
-* :ref:`atlas-clusters-search-indexes-describe` - Describe a search index for a cluster.
-* :ref:`atlas-clusters-search-indexes-list` - List Atlas search indexes for a cluster.
-* :ref:`atlas-clusters-search-indexes-update` - Update a search index for a cluster.
+* :ref:`atlas-clusters-search-indexes-delete` - Delete the search index you specify from a cluster.
+* :ref:`atlas-clusters-search-indexes-describe` - Return the details for the search index for a cluster.
+* :ref:`atlas-clusters-search-indexes-list` - List all Atlas search indexes for a cluster.
+* :ref:`atlas-clusters-search-indexes-update` - Modify a search index for a cluster.
 
 
 .. toctree::

@@ -57,7 +57,7 @@ Options
    * - -f, --file
      - string
      - false
-     - File name to use, file with a json index configuration.
+     - Name of the JSON index configuration file to use. To learn about the format for index configuration files, see https://www.mongodb.com/docs/atlas/atlas-search/index-definitions/.
    * - -h, --help
      - 
      - false
@@ -87,3 +87,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Create a search index named myIndex for the cluster named myCluster using a JSON index configuration file named search-config.json:
+   atlas clusters search indexes create myIndex --clusterName myCluster --file search-config.json --output json

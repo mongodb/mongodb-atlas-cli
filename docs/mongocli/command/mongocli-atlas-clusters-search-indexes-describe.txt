@@ -12,7 +12,7 @@ mongocli atlas clusters search indexes describe
    :depth: 1
    :class: singlecol
 
-Describe a search index for a cluster.
+Return the details for the search index for a cluster.
 
 Syntax
 ------
@@ -83,3 +83,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return the JSON-formatted details for the search index with the ID 5f1f40842f2ac35f49190c20 for the cluster named myCluster:
+   mongocli atlas clusters search indexes describe 5f1f40842f2ac35f49190c20 --clusterName myCluster --output json

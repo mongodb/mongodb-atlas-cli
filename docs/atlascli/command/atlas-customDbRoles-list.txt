@@ -41,7 +41,7 @@ Options
    * - --limit
      - int
      - false
-     - Number of items per page.
+     - Number of items per page of results.
    * - -o, --output
      - string
      - false
@@ -49,7 +49,7 @@ Options
    * - --page
      - int
      - false
-     - Page number.
+     - Page number that specifies a page of results.
    * - --projectId
      - string
      - false

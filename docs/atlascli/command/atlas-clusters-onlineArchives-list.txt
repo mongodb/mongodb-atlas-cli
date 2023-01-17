@@ -12,7 +12,7 @@ atlas clusters onlineArchives list
    :depth: 1
    :class: singlecol
 
-List online archives for a cluster.
+List all online archives for a cluster.
 
 Syntax
 ------
@@ -75,3 +75,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return a JSON-formatted list of online archives for the cluster named myCluster:
+   atlas clusters onlineArchives list --clusterName myCluster --output json

@@ -12,7 +12,7 @@ atlas clusters onlineArchives update
    :depth: 1
    :class: singlecol
 
-Update an online archive for a cluster.
+Modify the archiving rule for the online archive for a cluster.
 
 Syntax
 ------
@@ -87,3 +87,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Update the archiving rule to archive after 5 days for the online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
+   atlas clusters onlineArchives update 5f189832e26ec075e10c32d3 --clusterName --archiveAfter 5 myCluster --output json

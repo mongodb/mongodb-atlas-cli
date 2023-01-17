@@ -12,7 +12,7 @@ atlas clusters onlineArchives describe
    :depth: 1
    :class: singlecol
 
-Describe an online archive for a cluster.
+Return the details for one online archive you specify.
 
 Syntax
 ------
@@ -83,3 +83,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return the JSON-formatted details for the online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
+   atlas clusters onlineArchives describe 5f189832e26ec075e10c32d3 --clusterName myCluster --output json

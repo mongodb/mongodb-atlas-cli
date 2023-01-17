@@ -83,3 +83,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Delete an online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
+   mongocli atlas clusters onlineArchives delete 5f189832e26ec075e10c32d3 --clusterName myCluster

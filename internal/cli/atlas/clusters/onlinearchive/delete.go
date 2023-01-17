@@ -16,6 +16,7 @@ package onlinearchive
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -59,6 +60,8 @@ func DeleteBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to delete.",
 		},
+		Example: fmt.Sprintf(`  # Delete an online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
+  %s clusters onlineArchives delete 5f189832e26ec075e10c32d3 --clusterName myCluster`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

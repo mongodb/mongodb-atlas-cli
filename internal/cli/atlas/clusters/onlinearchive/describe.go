@@ -16,6 +16,7 @@ package onlinearchive
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -61,11 +62,13 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <archiveId>",
-		Short: "Describe an online archive for a cluster.",
+		Short: "Return the details for one online archive for a cluster.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to retrieve.",
 		},
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
+  %s clusters onlineArchives describe 5f189832e26ec075e10c32d3 --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

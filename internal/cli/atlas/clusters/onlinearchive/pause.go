@@ -16,6 +16,7 @@ package onlinearchive
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -64,11 +65,13 @@ func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{
 		Use:   "pause <archiveId>",
-		Short: "Pause an online archive from a cluster.",
+		Short: "Pause the online archive for a cluster.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to pause.",
 		},
+		Example: fmt.Sprintf(`  # Pause the online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
+  %s clusters onlineArchives pause 5f189832e26ec075e10c32d3 --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

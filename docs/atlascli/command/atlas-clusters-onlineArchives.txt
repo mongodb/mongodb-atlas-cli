@@ -51,7 +51,7 @@ Related Commands
 
 * :ref:`atlas-clusters-onlineArchives-create` - Create an online archive for a collection in the cluster you specify.
 * :ref:`atlas-clusters-onlineArchives-delete` - Delete an online archive from a cluster.
-* :ref:`atlas-clusters-onlineArchives-describe` - Return the details for one online archive you specify.
+* :ref:`atlas-clusters-onlineArchives-describe` - Return the details for one online archive for a cluster.
 * :ref:`atlas-clusters-onlineArchives-list` - List all online archives for a cluster.
 * :ref:`atlas-clusters-onlineArchives-pause` - Pause the online archive for a cluster.
 * :ref:`atlas-clusters-onlineArchives-start` - Start a paused online archive from a cluster.

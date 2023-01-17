@@ -62,7 +62,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <archiveId>",
-		Short: "Return the details for one online archive you specify.",
+		Short: "Return the details for one online archive for a cluster.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to retrieve.",

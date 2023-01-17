@@ -12,7 +12,7 @@ mongocli atlas clusters onlineArchives describe
    :depth: 1
    :class: singlecol
 
-Return the details for one online archive you specify.
+Return the details for one online archive for a cluster.
 
 Syntax
 ------

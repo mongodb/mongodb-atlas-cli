@@ -57,9 +57,10 @@ func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	opts.Template = createTemplate
 	cmd := &cobra.Command{
-		Use:   "create <name>",
-		Short: "Create an organization.",
-		Args:  require.ExactArgs(1),
+		Use: "create <name>",
+		Short: "Create an organization. This command is not available for Atlas. It's available only" +
+			" for Ops Manager and Cloud Manager.",
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Organization name.",
 		},

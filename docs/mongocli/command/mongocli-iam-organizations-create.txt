@@ -12,7 +12,7 @@ mongocli iam organizations create
    :depth: 1
    :class: singlecol
 
-Create an organization.
+Create an organization. This command is not available for Atlas. It's available only for Ops Manager and Cloud Manager.
 
 Syntax
 ------

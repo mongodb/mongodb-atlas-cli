@@ -51,11 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-dataLakes-create` - Create a new data lake for your project.
-* :ref:`mongocli-atlas-dataLakes-delete` - Delete a data lake from your project.
-* :ref:`mongocli-atlas-dataLakes-describe` - Return a specific data lake.
-* :ref:`mongocli-atlas-dataLakes-list` - List Atlas Data Lakes for your project.
-* :ref:`mongocli-atlas-dataLakes-update` - Update a data lake for your project.
+* :ref:`mongocli-atlas-dataLakes-create` - Create a new federated database instance for your project.
+* :ref:`mongocli-atlas-dataLakes-delete` - Delete a federated database instance from your project.
+* :ref:`mongocli-atlas-dataLakes-describe` - Return the details for the specified federated database instance.
+* :ref:`mongocli-atlas-dataLakes-list` - List all Atlas federated database instances for your project.
+* :ref:`mongocli-atlas-dataLakes-update` - Modify a federated database instance for your project.
 
 
 .. toctree::

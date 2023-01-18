@@ -12,7 +12,9 @@ atlas dataLakes list
    :depth: 1
    :class: singlecol
 
-List Atlas Data Lakes for your project.
+List all Atlas federated database instances for your project.
+
+To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.
 
 Syntax
 ------
@@ -63,3 +65,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return a JSON-formatted list of all federated database instances in the project with the ID 5e2211c17a3e5a48f5497de3:
+   atlas dataLakes list --projectId 5e2211c17a3e5a48f5497de3 --output json

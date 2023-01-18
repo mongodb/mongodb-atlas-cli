@@ -55,7 +55,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <indexId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete the specified search index from the cluster you specify.",
+		Short:   "Delete the specified search index from the specified cluster.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",

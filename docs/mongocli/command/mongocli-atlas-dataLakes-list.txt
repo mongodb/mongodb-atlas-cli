@@ -12,7 +12,7 @@ mongocli atlas dataLakes list
    :depth: 1
    :class: singlecol
 
-List all Atlas federated database instances for your project.
+List all federated database instances for your project.
 
 To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.
 

@@ -93,7 +93,7 @@ func UpdateBuilder() *cobra.Command {
 		Long:  "To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"nameDesc": "Name of the Atlas federated database instance to update.",
+			"nameDesc": "Name of the federated database instance to update.",
 		},
 		Example: fmt.Sprintf(`  # Modify the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3 to route client connections to OREGON_USA:
   %s dataLakes update myFDI --region OREGON_USA --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),

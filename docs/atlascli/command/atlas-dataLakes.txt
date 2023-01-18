@@ -54,7 +54,7 @@ Related Commands
 * :ref:`atlas-dataLakes-create` - Create a new federated database instance for your project.
 * :ref:`atlas-dataLakes-delete` - Delete a federated database instance from your project.
 * :ref:`atlas-dataLakes-describe` - Return the details for the specified federated database instance.
-* :ref:`atlas-dataLakes-list` - List all Atlas federated database instances for your project.
+* :ref:`atlas-dataLakes-list` - List all federated database instances for your project.
 * :ref:`atlas-dataLakes-update` - Modify a federated database instance for your project.
 
 

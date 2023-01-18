@@ -60,7 +60,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List all Atlas federated database instances for your project.",
+		Short:   "List all federated database instances for your project.",
 		Long:    "To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,

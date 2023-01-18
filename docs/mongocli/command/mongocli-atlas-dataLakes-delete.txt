@@ -39,7 +39,7 @@ Arguments
    * - name
      - string
      - true
-     - Name of the Atlas federated database instance to delete.
+     - Name of the federated database instance to delete.
 
 Options
 -------

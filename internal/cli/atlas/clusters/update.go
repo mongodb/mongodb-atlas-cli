@@ -138,7 +138,7 @@ You can't change the name of the cluster or downgrade the MongoDB version of you
   %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --diskSizeGB 20
 
   # Update the MongoDB version for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --mdbVersion 4.2
+  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --mdbVersion 5.0
   
   # Use a configuration file named cluster-config.json to update a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
   %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --file cluster-config.json --output json`,

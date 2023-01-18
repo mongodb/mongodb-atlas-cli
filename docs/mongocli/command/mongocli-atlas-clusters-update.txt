@@ -119,7 +119,7 @@ Examples
 .. code-block::
 
    # Update the MongoDB version for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
-   mongocli atlas cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --mdbVersion 4.2
+   mongocli atlas cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --mdbVersion 5.0
    
    
 .. code-block::

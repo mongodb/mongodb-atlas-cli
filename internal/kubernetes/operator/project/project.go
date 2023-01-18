@@ -394,39 +394,74 @@ func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID str
 }
 
 func buildNetworkPeering(npProvider store.PeeringConnectionLister, projectID string) ([]atlasV1.NetworkPeer, error) {
-	var result []atlasV1.NetworkPeer
-
 	// pagination not required, max 25 entries per provider can be configured via API
-	npList, err := npProvider.PeeringConnections(projectID, &atlas.ContainersListOptions{
+	npListAWS, err := npProvider.PeeringConnections(projectID, &atlas.ContainersListOptions{
 		ListOptions: atlas.ListOptions{
 			ItemsPerPage: MaxItems,
 		},
+		ProviderName: string(provider.ProviderAWS),
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error getting network peering connections for AWS: %w", err)
 	}
 
-	for i := range npList {
-		np := &npList[i]
-		result = append(result, atlasV1.NetworkPeer{
-			AccepterRegionName:  np.AccepterRegionName,
-			ContainerRegion:     "",
-			AWSAccountID:        np.AWSAccountID,
-			ContainerID:         np.ContainerID,
-			ProviderName:        provider.ProviderName(np.ProviderName),
-			RouteTableCIDRBlock: np.RouteTableCIDRBlock,
-			VpcID:               np.VpcID,
-			AtlasCIDRBlock:      np.AtlasCIDRBlock,
-			AzureDirectoryID:    np.AzureDirectoryID,
-			AzureSubscriptionID: np.AzureSubscriptionID,
-			ResourceGroupName:   np.ResourceGroupName,
-			VNetName:            np.VNetName,
-			GCPProjectID:        np.GCPProjectID,
-			NetworkName:         np.NetworkName,
-		})
+	npListGCP, err := npProvider.PeeringConnections(projectID, &atlas.ContainersListOptions{
+		ListOptions: atlas.ListOptions{
+			ItemsPerPage: MaxItems,
+		},
+		ProviderName: string(provider.ProviderGCP),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("error getting network peering connections for GCP: %w", err)
+	}
+
+	npListAzure, err := npProvider.PeeringConnections(projectID, &atlas.ContainersListOptions{
+		ListOptions: atlas.ListOptions{
+			ItemsPerPage: MaxItems,
+		},
+		ProviderName: string(provider.ProviderAzure),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("error getting network peering connections for Azure: %w", err)
+	}
+
+	result := make([]atlasV1.NetworkPeer, 0, len(npListAWS)+len(npListGCP)+len(npListAzure))
+
+	for i := range npListAWS {
+		np := &npListAWS[i]
+		result = append(result, convertNetworkPeer(np, provider.ProviderAWS))
+	}
+
+	for i := range npListGCP {
+		np := &npListGCP[i]
+		result = append(result, convertNetworkPeer(np, provider.ProviderGCP))
+	}
+
+	for i := range npListAzure {
+		np := &npListAzure[i]
+		result = append(result, convertNetworkPeer(np, provider.ProviderAzure))
 	}
 
 	return result, nil
+}
+
+func convertNetworkPeer(np *atlas.Peer, providerName provider.ProviderName) atlasV1.NetworkPeer {
+	return atlasV1.NetworkPeer{
+		AccepterRegionName:  np.AccepterRegionName,
+		ContainerRegion:     "",
+		AWSAccountID:        np.AWSAccountID,
+		ContainerID:         np.ContainerID,
+		ProviderName:        providerName,
+		RouteTableCIDRBlock: np.RouteTableCIDRBlock,
+		VpcID:               np.VpcID,
+		AtlasCIDRBlock:      np.AtlasCIDRBlock,
+		AzureDirectoryID:    np.AzureDirectoryID,
+		AzureSubscriptionID: np.AzureSubscriptionID,
+		ResourceGroupName:   np.ResourceGroupName,
+		VNetName:            np.VNetName,
+		GCPProjectID:        np.GCPProjectID,
+		NetworkName:         np.NetworkName,
+	}
 }
 
 func buildEncryptionAtRest(encProvider store.EncryptionAtRestDescriber, projectID string) (*atlasV1.EncryptionAtRest, error) {

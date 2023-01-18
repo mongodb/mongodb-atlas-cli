@@ -16,6 +16,7 @@ package certs
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -59,7 +60,12 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a new Atlas-managed X.509 certificate for the specified database user.",
-		Args:  require.NoArgs,
+		Long: `You can't use this command to create certificates if you are managing your own Certificate Authority (CA) in self-managed X.509 mode.
+		
+The user you specify must authenticate using X.509 certificates.`,
+		Args: require.NoArgs,
+		Example: fmt.Sprintf(`  # Create an Atlas-managed X.509 certificate that expires in 5 months for a MongoDB user named dbuser for the project with ID 5e2211c17a3e5a48f5497de3:
+  %s dbusers certs create --username dbuser --monthsUntilExpiration 5 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

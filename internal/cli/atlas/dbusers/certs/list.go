@@ -16,6 +16,7 @@ package certs
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -61,11 +62,16 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list <username>",
 		Aliases: []string{"ls"},
-		Short:   "List of all Atlas-managed, unexpired certificates for a database user.",
-		Args:    require.ExactArgs(1),
+		Short:   "Return all Atlas-managed, unexpired certificates for the specified database user.",
+		Long: `You can't use this command to return certificates if you are managing your own Certificate Authority (CA) in self-managed X.509 mode.
+		
+The user you specify must authenticate using X.509 certificates.`,
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"usernameDesc": "Username of the database user for whom you want to list Atlas-managed certificates.",
 		},
+		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all Atlas-managed X.509 certificates for a MongoDB user named dbuser for the project with ID 5e2211c17a3e5a48f5497de3:
+  %s dbusers certs list dbuser --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]
 

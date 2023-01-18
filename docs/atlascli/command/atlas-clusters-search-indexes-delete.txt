@@ -12,7 +12,7 @@ atlas clusters search indexes delete
    :depth: 1
    :class: singlecol
 
-Delete the search index you specify from a cluster.
+Delete the specified search index from the cluster you specify.
 
 Syntax
 ------

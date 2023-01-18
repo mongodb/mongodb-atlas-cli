@@ -45,7 +45,7 @@ Options
    * - --limit
      - int
      - false
-     - Number of items per page of results. This value defaults to 100.
+     - Number of items per results page. This value defaults to 100.
    * - --name
      - string
      - false

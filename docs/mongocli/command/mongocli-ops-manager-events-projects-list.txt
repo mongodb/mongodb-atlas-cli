@@ -43,7 +43,7 @@ Options
    * - --limit
      - int
      - false
-     - Number of items per page of results.
+     - Number of items per results page.
    * - --maxDate
      - string
      - false

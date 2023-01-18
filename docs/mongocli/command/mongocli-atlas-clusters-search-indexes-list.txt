@@ -12,7 +12,7 @@ mongocli atlas clusters search indexes list
    :depth: 1
    :class: singlecol
 
-List all Atlas search indexes for a cluster.
+List all Atlas Search indexes for a cluster.
 
 Syntax
 ------
@@ -53,7 +53,7 @@ Options
    * - --limit
      - int
      - false
-     - Number of items per page of results. This value defaults to 100.
+     - Number of items per results page. This value defaults to 100.
    * - -o, --output
      - string
      - false

@@ -63,7 +63,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List all Atlas search indexes for a cluster.",
+		Short:   "List all Atlas Search indexes for a cluster.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return the JSON-formatted list of Atlas search indexes on the sample_mflix.movies database in the cluster named myCluster:

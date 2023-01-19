@@ -35,7 +35,6 @@ const (
 )
 
 func TestFeaturePolicies(t *testing.T) {
-	t.Skip("Skip until clean up works again", "CLOUDP-152484")
 	n, err := e2e.RandInt(255)
 	require.NoError(t, err)
 

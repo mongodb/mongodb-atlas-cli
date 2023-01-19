@@ -29,7 +29,6 @@ import (
 )
 
 func TestProjects(t *testing.T) {
-	t.Skip("Skip until clean up works again", "CLOUDP-152484")
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

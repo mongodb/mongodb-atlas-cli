@@ -16,6 +16,7 @@ package search
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -61,11 +62,13 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <indexId>",
-		Short: "Describe a search index for a cluster.",
+		Short: "Return the details for the search index for a cluster.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",
 		},
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the search index with the ID 5f1f40842f2ac35f49190c20 for the cluster named myCluster:
+  %s clusters search indexes describe 5f1f40842f2ac35f49190c20 --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -16,6 +16,7 @@ package search
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -54,11 +55,13 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <indexId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a search index from a cluster.",
+		Short:   "Delete the specified search index from the specified cluster.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",
 		},
+		Example: fmt.Sprintf(`  # Delete the search index with the ID 5f2099cd683fc55fbb30bef6 for the cluster named myCluster without requiring confirmation:
+  %s clusters search indexes delete 5f2099cd683fc55fbb30bef6 --clusterName myCluster --force`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

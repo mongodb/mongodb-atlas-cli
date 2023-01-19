@@ -16,6 +16,7 @@ package search
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -62,9 +63,11 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List Atlas search indexes for a cluster.",
+		Short:   "List all Atlas Search indexes for a cluster.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Example: fmt.Sprintf(`  # Return the JSON-formatted list of Atlas search indexes on the sample_mflix.movies database in the cluster named myCluster:
+  %s clusters search indexes list --clusterName myCluster --db sample_mflix --collection movies --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -61,7 +61,7 @@ Options
    * - --iamRoleId
      - string
      - true
-     - Unique identifier of the role that Atlas can use to access the bucket.
+     - Unique identifier that Atlas assigns to the the cloud provider access role for the bucket.
    * - -o, --output
      - string
      - false

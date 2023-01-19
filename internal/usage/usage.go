@@ -80,9 +80,9 @@ The roles format is roleName[@dbName[.collection]].
 roleName can either be a built-in role or a custom role.
 dbName and collection are only required for built-in roles.`
 	Scopes                                    = "Array of clusters and Atlas Data Lakes that this user has access to."
-	DataLakeRole                              = "Amazon Resource Name (ARN) of the role which Atlas Data Lake uses for accessing the data stores."
-	DataLakeRegion                            = "Name of the region to which Atlas Data Lake routes client connections for data processing."
-	DataLakeTestBucket                        = "Name of an Amazon S3 data bucket which Atlas Data Lake uses to validate the provided role."
+	DataLakeRole                              = "Amazon Resource Name (ARN) of the role which Atlas Data Federation uses for accessing the data stores."
+	DataLakeRegion                            = "Name of the region to which Atlas Data Federation routes client connections for data processing."
+	DataLakeTestBucket                        = "Name of an Amazon S3 data bucket which Atlas Data Federation uses to validate the provided role."
 	PrivateEndpointRegion                     = "Cloud provider region in which you want to create the private endpoint connection."
 	PrivateEndpointProvider                   = "Name of the cloud provider you want to create the private endpoint connection for."
 	Comment                                   = "Optional description or comment for the entry."

@@ -12,7 +12,9 @@ mongocli atlas dataLakes update
    :depth: 1
    :class: singlecol
 
-Update a data lake for your project.
+Modify a federated database instance for your project.
+
+To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.
 
 Syntax
 ------
@@ -37,7 +39,7 @@ Arguments
    * - name
      - string
      - true
-     - Name of the Atlas Data Lake to update.
+     - Name of the federated database instance to update.
 
 Options
 -------
@@ -65,15 +67,15 @@ Options
    * - --region
      - string
      - false
-     - Name of the region to which Atlas Data Lake routes client connections for data processing.
+     - Name of the region to which Atlas Data Federation routes client connections for data processing.
    * - --role
      - string
      - false
-     - Amazon Resource Name (ARN) of the role which Atlas Data Lake uses for accessing the data stores.
+     - Amazon Resource Name (ARN) of the role which Atlas Data Federation uses for accessing the data stores.
    * - --testBucket
      - string
      - false
-     - Name of an Amazon S3 data bucket which Atlas Data Lake uses to validate the provided role.
+     - Name of an Amazon S3 data bucket which Atlas Data Federation uses to validate the provided role.
 
 Inherited Options
 -----------------
@@ -91,3 +93,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Modify the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3 to route client connections to OREGON_USA:
+   mongocli atlas dataLakes update myFDI --region OREGON_USA --projectId 5e2211c17a3e5a48f5497de3 --output json

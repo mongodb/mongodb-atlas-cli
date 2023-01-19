@@ -75,10 +75,10 @@ const (
 	Mobile                   = "The user's mobile or cell phone number."
 	Period                   = "Duration in ISO 8601 that specifies how far back in the past to retrieve measurements."
 	Roles                    = "User's roles and the databases or collections on which the roles apply."
-	RolesExtended            = `User's roles and the databases or collections on which the roles apply.
+	RolesExtended            = `Comma-separated list that specifies the user's roles and the databases or collections on which the roles apply.
 The roles format is roleName[@dbName[.collection]].
 roleName can either be a built-in role or a custom role.
-dbName and collection are only required for built-in roles.`
+dbName and collection are required only for built-in roles.`
 	Scopes                                    = "Array of clusters and Atlas Data Lakes that this user has access to."
 	DataLakeRole                              = "Amazon Resource Name (ARN) of the role which Atlas Data Federation uses for accessing the data stores."
 	DataLakeRegion                            = "Name of the region to which Atlas Data Federation routes client connections for data processing."
@@ -191,7 +191,7 @@ dbName and collection are only required for built-in roles.`
 	SnapshotDescription                       = "Description of the on-demand snapshot."
 	Database                                  = "Name of the database."
 	DatabaseUser                              = "Username of a database user."
-	MonthsUntilExpiration                     = "Number of months that the certificate is valid for."
+	MonthsUntilExpiration                     = "Number of months until the X.509 certificate expires."
 	Collection                                = "Name of the collection."
 	Append                                    = "The input action and inheritedRoles that will be appended to the existing role."
 	PrivilegeAction                           = "List of actions per database and collection. If no database or collections are provided, cluster scope is assumed."
@@ -297,9 +297,9 @@ dbName and collection are only required for built-in roles.`
 	Provider                                  = "Name of your cloud service provider. Valid values are AWS, AZURE, or GCP."
 	ClusterTypes                              = "Type of the cluster that you want to create. Valid values are REPLICASET or SHARDED."
 	Region                                    = "Physical location of your MongoDB cluster. For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws. For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure. For a complete list of supported GCP regions, see: https://docs.atlas.mongodb.com/reference/google-gcp/#google-gcp."
-	AWSIAMType                                = "AWS IAM method by which the provided username is authenticated. Valid values are NONE, USER, or ROLE."
-	X509Type                                  = "X.509 method by which the provided username is authenticated.  Valid values are NONE, MANAGED, or CUSTOMER."
-	LDAPType                                  = "LDAP method by which the provided username is authenticated. Valid values are NONE, USER, or GROUP."
+	AWSIAMType                                = "AWS IAM method by which the provided username is authenticated. Valid values are NONE, USER, or ROLE. If you set this to USER or ROLE, the user authenticates with IAM credentials and doesn't need a password. If you set this to USER or ROLE, you can't set --x509Type or --ldapType to any value other than NONE."
+	X509Type                                  = "X.509 method by which the provided username is authenticated.  Valid values are NONE, MANAGED, or CUSTOMER. If you set this to MANAGED the user authenticates with an Atlas-managed X.509 certificate. If you set this to CUSTOMER, the user authenticates with a self-managed X.509 certificate. If you set this to MANAGED or CUSTOMER, you can't set --awsIAMType or --ldapType to any value other than NONE."
+	LDAPType                                  = "LDAP method by which the provided username is authenticated. Valid values are NONE, USER, or GROUP. If you set this to USER or GROUP, the user authenticates with LDAP. If you set this to USER or GROUP, you can't set --x509Type or --awsIAMType to any value other than NONE."
 	DateFormat                                = "Date format for the date field. Valid values are ISODATE, EPOCH_SECONDS, EPOCH_MILLIS, or EPOCH_NANOSECONDS."
 	ServerUsageFormat                         = "Compression format of the resulting report. Valid values are ZIP, TAR, or .GZ."
 	S3AuthMethod                              = "Method used to authorize access to the Amazon S3 bucket specified in s3BucketName. Valid values are KEYS or IAM_ROLE."

@@ -50,7 +50,7 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-dbusers-certs-create` - Create a new Atlas-managed X.509 certificate for the specified database user.
-* :ref:`mongocli-atlas-dbusers-certs-list` - List of all Atlas-managed, unexpired certificates for a database user.
+* :ref:`mongocli-atlas-dbusers-certs-list` - Return all Atlas-managed, unexpired X.509 certificates for the specified database user.
 
 
 .. toctree::

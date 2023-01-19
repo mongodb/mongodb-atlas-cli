@@ -172,18 +172,19 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create [builtInRole]...",
-		Short: "Create a database user for your project.",
-		Example: fmt.Sprintf(`  # Create an Atlas database admin user:
-  %[1]s dbuser create atlasAdmin --username <username>  --projectId <projectId>
+		Short: "Create a database user for the specified project.",
+		Long:  `If you set --ldapType, --x509Type, and --awsIAMType to NONE, Atlas authenticates this user through SCRAM-SHA. To learn more, see https://www.mongodb.com/docs/manual/core/security-scram/.`,
+		Example: fmt.Sprintf(`  # Create an Atlas database admin user named myAdmin for the project with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s dbusers create atlasAdmin --username myAdmin  --projectId 5e2211c17a3e5a48f5497de3
 
-  # Create a database user with read/write access to any database:
-  %[1]s dbuser create readWriteAnyDatabase --username <username> --projectId <projectId>
+  # Create a database user named myUser with read/write access to any database for the project with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s dbusers create readWriteAnyDatabase --username myUser --projectId 5e2211c17a3e5a48f5497de3
 
-  # Create a database user with multiple roles:
-  %[1]s dbuser create --username <username> --role clusterMonitor,backup --projectId <projectId>
+  # Create a database user named myUser with multiple roles for the project with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s dbusers create --username myUser --role clusterMonitor,backup --projectId 5e2211c17a3e5a48f5497de3
 
-  # Create a database user with multiple scopes:
-  %[1]s dbuser create --username <username> --role clusterMonitor --scope <REPLICA-SET ID>,<storeName> --projectId <projectId>`,
+  # Create a database user named myUser with multiple scopes for the project with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s dbusers create --username myUser --role clusterMonitor --scope <REPLICA-SET ID>,<storeName> --projectId 5e2211c17a3e5a48f5497de3`,
 			cli.ExampleAtlasEntryPoint()),
 		Args: cobra.OnlyValidArgs,
 		Annotations: map[string]string{

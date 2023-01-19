@@ -50,7 +50,7 @@ Related Commands
 ----------------
 
 * :ref:`atlas-dbusers-certs-create` - Create a new Atlas-managed X.509 certificate for the specified database user.
-* :ref:`atlas-dbusers-certs-list` - Return all Atlas-managed, unexpired certificates for the specified database user.
+* :ref:`atlas-dbusers-certs-list` - Return all Atlas-managed, unexpired X.509 certificates for the specified database user.
 
 
 .. toctree::

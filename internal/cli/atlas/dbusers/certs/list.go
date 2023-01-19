@@ -62,7 +62,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list <username>",
 		Aliases: []string{"ls"},
-		Short:   "Return all Atlas-managed, unexpired certificates for the specified database user.",
+		Short:   "Return all Atlas-managed, unexpired X.509 certificates for the specified database user.",
 		Long: `You can't use this command to return certificates if you are managing your own Certificate Authority (CA) in self-managed X.509 mode.
 		
 The user you specify must authenticate using X.509 certificates.`,

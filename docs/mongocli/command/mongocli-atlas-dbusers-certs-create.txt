@@ -14,9 +14,7 @@ mongocli atlas dbusers certs create
 
 Create a new Atlas-managed X.509 certificate for the specified database user.
 
-You can't use this command to create certificates if you are managing your own Certificate Authority (CA) in self-managed X.509 mode.
-		
-The user you specify must authenticate using X.509 certificates.
+The user you specify must authenticate using X.509 certificates. You can't use this command to create certificates if you are managing your own Certificate Authority (CA) in self-managed X.509 mode.
 
 Syntax
 ------

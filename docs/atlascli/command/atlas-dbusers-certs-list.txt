@@ -12,7 +12,7 @@ atlas dbusers certs list
    :depth: 1
    :class: singlecol
 
-Return all Atlas-managed, unexpired certificates for the specified database user.
+Return all Atlas-managed, unexpired X.509 certificates for the specified database user.
 
 You can't use this command to return certificates if you are managing your own Certificate Authority (CA) in self-managed X.509 mode.
 		

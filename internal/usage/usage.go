@@ -35,6 +35,7 @@ const (
 	NIndexes                 = "Maximum number of indexes to suggest."
 	MDBVersion               = "Major MongoDB version of the cluster."
 	AuthDB                   = "Authentication database name. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be $external. If the user authenticates with SCRAM-SHA, this value should be admin."
+	MCLIAuthDB               = "Authentication database name."
 	Granularity              = "Duration in ISO 8601 notation that specifies the interval between measurement data points. Only the following subset of ISO 8601-formatted time periods are supported: PT10S, PT1M, PT5M, PT1H, P1D."
 	Page                     = "Page number that specifies a page of results."
 	Forever                  = "Acknowledges an alert 'forever'."

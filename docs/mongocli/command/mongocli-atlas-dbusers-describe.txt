@@ -12,7 +12,7 @@ mongocli atlas dbusers describe
    :depth: 1
    :class: singlecol
 
-Return a single Atlas database user for your project.
+Return the details for the specified database user for your project.
 
 Syntax
 ------
@@ -53,7 +53,7 @@ Options
    * - --authDB
      - string
      - false
-     - Authentication database name. This value defaults to "admin".
+     - Authentication database name. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be $external. If the user authenticates with SCRAM-SHA, this value should be admin. This value defaults to "admin".
    * - -h, --help
      - 
      - false
@@ -88,17 +88,17 @@ Examples
 
 .. code-block::
 
-   # The following example returns a MongoDB database user named myDbUser on an Atlas cluster:
+   # Return the details for the SCRAM SHA-authenticating database user named myDbUser:
    mongocli atlas dbuser describe myDbUser --authDB admin --output json
 
    
 .. code-block::
 
-   # The following example returns a MongoDB database user with X.509 authentication on an Atlas cluster. Prepend $external with \ to escape the special-use character.
+   # Return the details for the X.509-authenticating database user with the RFC 2253 Distinguished Name CN=ellen@example.com,OU=users,DC=example,DC=com:
    mongocli atlas dbuser describe CN=ellen@example.com,OU=users,DC=example,DC=com --authDB \$external --output json
 
    
 .. code-block::
 
-   # The following example returns a MongoDB database user with AWS IAM authentication on an Atlas cluster. Prepend $external with \ to escape the special-use character.
+   # Return the details for the AWS IAM-authenticating database user with the ARN arn:aws:iam::772401394250:user/my-test-user:
    mongocli atlas dbuser describe arn:aws:iam::772401394250:user/my-test-user --authDB \$external --output json

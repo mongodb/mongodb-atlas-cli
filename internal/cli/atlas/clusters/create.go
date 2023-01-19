@@ -188,20 +188,20 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create one cluster in the specified project.",
 		Long: `To get started quickly, specify a name for your cluster, a cloud provider, and a region to deploy a three-member replica set with the latest MongoDB server version.
 For full control of your deployment, or to create multi-cloud clusters, provide a JSON configuration file with the --file flag.`,
-		Example: fmt.Sprintf(`  # Deploy a free cluster:
-  %[1]s cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --tier M0
+		Example: fmt.Sprintf(`  # Deploy a free cluster named myCluster for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %[1]s cluster create myCluster --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region US_EAST_1 --tier M0
 
-  # Deploy a three-member replica set in AWS:
-  %[1]s cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 5.0 --diskSizeGB 10
+  # Deploy a three-member replica set named myRS in AWS for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %[1]s cluster create myRS --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 5.0 --diskSizeGB 10
 
-  # Deploy a three-member replica set in AZURE:
-  %[1]s cluster create <clusterName> --projectId <projectId> --provider AZURE --region US_EAST_2 --members 3 --tier M10  --mdbVersion 5.0 --diskSizeGB 10
+  # Deploy a three-member replica set named myRS in AZURE for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %[1]s cluster create myRS --projectId 5e2211c17a3e5a48f5497de3 --provider AZURE --region US_EAST_2 --members 3 --tier M10  --mdbVersion 5.0 --diskSizeGB 10
   
-  # Deploy a three-member replica set in GCP:
-  %[1]s cluster create <clusterName> --projectId <projectId> --provider GCP --region EASTERN_US --members 3 --tier M10  --mdbVersion 5.0 --diskSizeGB 10
+  # Deploy a three-member replica set named myRS in GCP for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %[1]s cluster create myRS --projectId 5e2211c17a3e5a48f5497de3 --provider GCP --region EASTERN_US --members 3 --tier M10  --mdbVersion 5.0 --diskSizeGB 10
 
-  # Deploy a cluster or a multi-cloud cluster from a JSON configuration file:
-  %[1]s cluster create --projectId <projectId> --file <path/to/file.json>`, cli.ExampleAtlasEntryPoint()),
+  # Deploy a cluster or a multi-cloud cluster from a JSON configuration file named myfile.json for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %[1]s cluster create --projectId <projectId> --file myfile.json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {

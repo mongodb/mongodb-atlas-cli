@@ -78,12 +78,12 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
 		Use:   "update <username>",
-		Short: "Update a database user for your project.",
-		Example: fmt.Sprintf(`  # Update roles for a database user:
-  %[1]s dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>
+		Short: "Modify the details for a database user for your project.",
+		Example: fmt.Sprintf(`  # Update roles for a database user named myUser for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %[1]s dbuser update myUser --role readWriteAnyDatabase --projectId 5e2211c17a3e5a48f5497de3
 
-  # Update scopes for a database user:
-  %[1]s dbuser update <username> --scope resourceName:resourceType --projectId <projectId>`,
+  # Update scopes for a database user named myUser for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %[1]s dbuser update myUser --scope resourceName:resourceType --projectId 5e2211c17a3e5a48f5497de3`,
 			cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{

@@ -12,7 +12,7 @@ atlas events projects list
    :depth: 1
    :class: singlecol
 
-Return all events for a project.
+Return all events for the specified project.
 
 Your API Key must have the Project Read Only role to successfully call this resource.
 
@@ -85,3 +85,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return a JSON-formatted list of events for the project with the ID 5e2211c17a3e5a48f5497de3:
+   atlas events projects list --Id 5e2211c17a3e5a48f5497de3 --output json

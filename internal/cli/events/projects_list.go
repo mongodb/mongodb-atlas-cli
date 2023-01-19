@@ -16,6 +16,7 @@ package events
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -68,10 +69,12 @@ func ProjectListBuilder() *cobra.Command {
 	opts := &projectListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "Return all events for a project.",
+		Short:   "Return all events for the specified project.",
 		Long:    "Your API Key must have the Project Read Only role to successfully call this resource.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Example: fmt.Sprintf(`  # Return a JSON-formatted list of events for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s events projects list --Id 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

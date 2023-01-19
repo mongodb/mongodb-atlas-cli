@@ -62,19 +62,19 @@ func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
 		Use:     "describe <username>",
-		Short:   "Return a single Atlas database user for your project.",
+		Short:   "Return the details for the specified database user for your project.",
 		Args:    require.ExactArgs(1),
 		Aliases: []string{"get"},
 		Annotations: map[string]string{
 			"usernameDesc": "Username to retrieve from the MongoDB database.",
 		},
-		Example: fmt.Sprintf(`  # The following example returns a MongoDB database user named myDbUser on an Atlas cluster:
+		Example: fmt.Sprintf(`  # Return the details for the SCRAM SHA-authenticating database user named myDbUser:
   %[1]s dbuser describe myDbUser --authDB admin --output json
 
-  # The following example returns a MongoDB database user with X.509 authentication on an Atlas cluster. Prepend $external with \ to escape the special-use character.
+  # Return the details for the X.509-authenticating database user with the RFC 2253 Distinguished Name CN=ellen@example.com,OU=users,DC=example,DC=com:
   %[1]s dbuser describe CN=ellen@example.com,OU=users,DC=example,DC=com --authDB \$external --output json
 
-  # The following example returns a MongoDB database user with AWS IAM authentication on an Atlas cluster. Prepend $external with \ to escape the special-use character.
+  # Return the details for the AWS IAM-authenticating database user with the ARN arn:aws:iam::772401394250:user/my-test-user:
   %[1]s dbuser describe arn:aws:iam::772401394250:user/my-test-user --authDB \$external --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]

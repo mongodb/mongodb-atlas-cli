@@ -63,10 +63,10 @@ func DeleteBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # Delete the SCRAM SHA-authenticating database user named dylan for the project with the ID 5e2211c17a3e5a48f5497de3:
   %[1]s dbusers delete dylan --projectId 5e2211c17a3e5a48f5497de3
   
-  # Delete the AWS IAM-authenticating database user with the ARN arn:aws:iam::123456789012:user/sales/enterprise/DylanBloggs for the project with ID 5e2211c17a3e5a48f5497de3:
+  # Delete the AWS IAM-authenticating database user with the ARN arn:aws:iam::123456789012:user/sales/enterprise/DylanBloggs for the project with ID 5e2211c17a3e5a48f5497de3. Prepend $external with \ to escape the special-use character:
   %[1]s dbusers delete arn:aws:iam::123456789012:user/sales/enterprise/DylanBloggs --authDB \$external --projectId 5e2211c17a3e5a48f5497de3
   
-  # Delete the xLDAP-authenticating database user with the RFC 2253 Distinguished Name CN=Dylan Bloggs,OU=Enterprise,OU=Sales,DC=Example,DC=COM for the project with ID 5e2211c17a3e5a48f5497de3:
+  # Delete the xLDAP-authenticating database user with the RFC 2253 Distinguished Name CN=Dylan Bloggs,OU=Enterprise,OU=Sales,DC=Example,DC=COM for the project with ID 5e2211c17a3e5a48f5497de3. Prepend $external with \ to escape the special-use character:
   %[1]s dbusers delete CN=Dylan Bloggs,OU=Enterprise,OU=Sales,DC=Example,DC=COM --authDB \$external --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {

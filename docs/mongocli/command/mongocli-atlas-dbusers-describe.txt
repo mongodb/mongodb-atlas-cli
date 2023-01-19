@@ -94,11 +94,11 @@ Examples
    
 .. code-block::
 
-   # Return the details for the X.509-authenticating database user with the RFC 2253 Distinguished Name CN=ellen@example.com,OU=users,DC=example,DC=com:
+   # Return the details for the X.509-authenticating database user with the RFC 2253 Distinguished Name CN=ellen@example.com,OU=users,DC=example,DC=com. Prepend $external with \ to escape the special-use character:
    mongocli atlas dbuser describe CN=ellen@example.com,OU=users,DC=example,DC=com --authDB \$external --output json
 
    
 .. code-block::
 
-   # Return the details for the AWS IAM-authenticating database user with the ARN arn:aws:iam::772401394250:user/my-test-user:
+   # Return the details for the AWS IAM-authenticating database user with the ARN arn:aws:iam::772401394250:user/my-test-user. Prepend $external with \ to escape the special-use character:
    mongocli atlas dbuser describe arn:aws:iam::772401394250:user/my-test-user --authDB \$external --output json

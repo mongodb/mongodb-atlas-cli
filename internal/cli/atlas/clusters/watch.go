@@ -78,8 +78,9 @@ func WatchBuilder() *cobra.Command {
 Once the cluster reaches the expected state, the command prints "Cluster available."
 If you run the command in the terminal, it blocks the terminal session until the resource state changes to IDLE.
 You can interrupt the command's polling at any time with CTRL-C.`,
-		Example: fmt.Sprintf("  %s cluster watch clusterNameSample", cli.ExampleAtlasEntryPoint()),
-		Args:    require.ExactArgs(1),
+		Example: fmt.Sprintf(`  # Watch for the cluster named myCluster to become available for the project with ID 5e2211c17a3e5a48f5497de3:
+  %s clusters watch myCluster --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to watch.",
 		},

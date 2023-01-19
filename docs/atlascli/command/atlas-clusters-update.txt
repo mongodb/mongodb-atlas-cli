@@ -12,7 +12,13 @@ atlas clusters update
    :depth: 1
    :class: singlecol
 
-Update a MongoDB Atlas cluster.
+Modify the settings for your MongoDB Atlas cluster.
+
+You can specify modifications in a JSON configuration file with the --file flag.
+		
+You can modify only M10 or larger clusters that are single-region replica sets.
+		
+You can't change the name of the cluster or downgrade the MongoDB version of your cluster.
 
 Syntax
 ------
@@ -77,7 +83,7 @@ Options
    * - --tier
      - string
      - false
-     - Tier for each data-bearing server in the cluster.
+     - Tier for each data-bearing server in the cluster. To learn more about cluster tiers, see https://www.mongodb.com/docs/atlas/manage-clusters/#select-cluster-tier.
 
 Inherited Options
 -----------------
@@ -100,17 +106,23 @@ Examples
 
 .. code-block::
 
-   # Update tier for a cluster:
-   atlas cluster update <clusterName> --projectId <projectId> --tier M50
+   # Update the tier for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+   atlas cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50
 
    
 .. code-block::
 
-   # Update disk size for a cluster:
-   atlas cluster update <clusterName> --projectId <projectId> --diskSizeGB 20
+   # Update the disk size for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+   atlas cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --diskSizeGB 20
 
    
 .. code-block::
 
-   # Update MongoDB version for a cluster:
-   atlas cluster update <clusterName> --projectId <projectId> --mdbVersion 4.2
+   # Update the MongoDB version for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+   atlas cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --mdbVersion 5.0
+   
+   
+.. code-block::
+
+   # Use a configuration file named cluster-config.json to update a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+   atlas cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --file cluster-config.json --output json

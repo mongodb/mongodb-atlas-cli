@@ -104,7 +104,7 @@ Options
    * - --tier
      - string
      - false
-     - Tier for each data-bearing server in the cluster. This value defaults to "M2".
+     - Tier for each data-bearing server in the cluster. To learn more about cluster tiers, see https://www.mongodb.com/docs/atlas/manage-clusters/#select-cluster-tier. This value defaults to "M2".
    * - --type
      - string
      - false

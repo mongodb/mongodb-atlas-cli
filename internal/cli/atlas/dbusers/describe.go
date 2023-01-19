@@ -66,16 +66,13 @@ func DescribeBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Aliases: []string{"get"},
 		Annotations: map[string]string{
-			"usernameDesc": "Username to retrieve from the MongoDB database.",
+			"usernameDesc": "Username to retrieve from the MongoDB database. The format of the username depends on the user's method of authentication.",
 		},
 		Example: fmt.Sprintf(`  # Return the details for the SCRAM SHA-authenticating database user named myDbUser:
   %[1]s dbuser describe myDbUser --authDB admin --output json
 
   # Return the details for the X.509-authenticating database user with the RFC 2253 Distinguished Name CN=ellen@example.com,OU=users,DC=example,DC=com. Prepend $external with \ to escape the special-use character:
-  %[1]s dbuser describe CN=ellen@example.com,OU=users,DC=example,DC=com --authDB \$external --output json
-
-  # Return the details for the AWS IAM-authenticating database user with the ARN arn:aws:iam::772401394250:user/my-test-user. Prepend $external with \ to escape the special-use character:
-  %[1]s dbuser describe arn:aws:iam::772401394250:user/my-test-user --authDB \$external --output json`, cli.ExampleAtlasEntryPoint()),
+  %[1]s dbuser describe CN=ellen@example.com,OU=users,DC=example,DC=com --authDB \$external --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]
 
@@ -95,8 +92,8 @@ func DescribeBuilder() *cobra.Command {
 		},
 	}
 
-	if config.BinName() == config.MongoCLI {
-		cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.MCLIAuthDB)
+	if config.BinName() == config.AtlasCLI {
+		cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AtlasAuthDB)
 	} else {
 		cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AuthDB)
 	}

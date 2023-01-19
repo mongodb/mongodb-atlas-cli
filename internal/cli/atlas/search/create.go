@@ -94,8 +94,8 @@ func CreateBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"indexNameDesc": "Name of the index.",
 		},
-		Example: fmt.Sprintf(`  # Create a search index named myIndex for the cluster named myCluster using a JSON index configuration file named search-config.json:
-  %s clusters search indexes create myIndex --clusterName myCluster --file search-config.json --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # Create a search index for the cluster named myCluster using a JSON index configuration file named search-config.json:
+  %s clusters search indexes create --clusterName myCluster --file search-config.json --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {
 				_ = cmd.MarkFlagRequired(flag.Database)

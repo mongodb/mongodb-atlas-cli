@@ -92,5 +92,5 @@ Examples
 
 .. code-block::
 
-   # Create a search index named myIndex for the cluster named myCluster using a JSON index configuration file named search-config.json:
-   mongocli atlas clusters search indexes create myIndex --clusterName myCluster --file search-config.json --output json
+   # Create a search index for the cluster named myCluster using a JSON index configuration file named search-config.json:
+   mongocli atlas clusters search indexes create --clusterName myCluster --file search-config.json --output json

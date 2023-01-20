@@ -86,17 +86,17 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	deleted := false
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
 		if e := deleteProject(projectID); e != nil {
-			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project '%s': %v", attempts, maxRetryAttempts, sleepTimeInSeconds, projectID, e)
+			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, projectID, e)
 			time.Sleep(sleepTimeInSeconds * time.Second)
 		} else {
-			t.Logf("project '%s' successfully deleted", projectID)
+			t.Logf("project %q successfully deleted", projectID)
 			deleted = true
 			break
 		}
 	}
 
 	if !deleted {
-		t.Errorf("we could not delete the project '%s'", projectID)
+		t.Errorf("we could not delete the project %q", projectID)
 	}
 }
 

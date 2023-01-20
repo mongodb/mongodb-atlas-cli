@@ -49,7 +49,7 @@ func TestMongoCLIConfig(t *testing.T) {
 		want := profileString
 
 		if got != want {
-			t.Errorf("want '%s'; got '%s'\n", want, got)
+			t.Errorf("want %q; got %q\n", want, got)
 		}
 	})
 
@@ -63,7 +63,7 @@ func TestMongoCLIConfig(t *testing.T) {
 		got := strings.TrimSpace(string(resp))
 
 		if !strings.HasPrefix(got, errorMessage) {
-			t.Errorf("want '%s'; got '%s'\n", errorMessage, got)
+			t.Errorf("want %q; got %q\n", errorMessage, got)
 		}
 	})
 
@@ -95,7 +95,7 @@ func TestAtlasCLIConfig(t *testing.T) {
 		want := profileString
 
 		if got != want {
-			t.Errorf("want '%s'; got '%s'\n", want, got)
+			t.Errorf("want %q; got %q\n", want, got)
 		}
 	})
 
@@ -109,7 +109,7 @@ func TestAtlasCLIConfig(t *testing.T) {
 		got := strings.TrimSpace(string(resp))
 
 		if !strings.HasPrefix(got, errorMessage) {
-			t.Errorf("want '%s'; got '%s'\n", errorMessage, got)
+			t.Errorf("want %q; got %q\n", errorMessage, got)
 		}
 	})
 

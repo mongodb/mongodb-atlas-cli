@@ -125,7 +125,7 @@ func TestConfig(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 		if !strings.Contains(string(resp), existingProfile) {
-			t.Errorf("expected '%s; to contain '%s'\n", string(resp), existingProfile)
+			t.Errorf("expected %q to contain %q\n", string(resp), existingProfile)
 		}
 	})
 	t.Run("Describe", func(t *testing.T) {

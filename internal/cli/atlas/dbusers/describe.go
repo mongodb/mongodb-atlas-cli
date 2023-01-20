@@ -71,6 +71,9 @@ func DescribeBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # Return the details for the SCRAM SHA-authenticating database user named myDbUser:
   %[1]s dbuser describe myDbUser --authDB admin --output json
 
+  # Return the details for the AWS IAM-authenticating database user with the ARN arn:aws:iam::772401394250:user/my-test-user. Prepend $external with \ to escape the special-use character:
+  %[1]s dbuser describe arn:aws:iam::772401394250:user/my-test-user --authDB \$external --output json
+
   # Return the details for the X.509-authenticating database user with the RFC 2253 Distinguished Name CN=ellen@example.com,OU=users,DC=example,DC=com. Prepend $external with \ to escape the special-use character:
   %[1]s dbuser describe CN=ellen@example.com,OU=users,DC=example,DC=com --authDB \$external --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -92,11 +95,7 @@ func DescribeBuilder() *cobra.Command {
 		},
 	}
 
-	if config.BinName() == config.AtlasCLI {
-		cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AtlasAuthDB)
-	} else {
-		cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AuthDB)
-	}
+	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AtlasAuthDB)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

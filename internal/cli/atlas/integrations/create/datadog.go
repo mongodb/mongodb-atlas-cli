@@ -71,9 +71,11 @@ func DatadogBuilder() *cobra.Command {
 		Use:     datadogType,
 		Aliases: []string{"datadog"},
 		Short:   "Create or update a Datadog integration for your project.",
-		Long: `After you integrate with Datadog, you can send metric data about your project to your Datadog dashboard. To learn more about the metrics available to Datadog, see https://www.mongodb.com/docs/atlas/tutorial/datadog-integration/.
+		Long: `The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Datadog.
+
+After you integrate with Datadog, you can send metric data about your project to your Datadog dashboard. To learn more about the metrics available to Datadog, see https://www.mongodb.com/docs/atlas/tutorial/datadog-integration/.
 		
-		Datadog integration is available only on M10+ clusters.`,
+Datadog integration is available only on M10+ clusters.`,
 		Args: require.NoArgs,
 		Example: fmt.Sprintf(`  # Integrate Datadog with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create DATADOG --apiKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),

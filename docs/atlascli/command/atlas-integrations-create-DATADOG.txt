@@ -12,7 +12,13 @@ atlas integrations create DATADOG
    :depth: 1
    :class: singlecol
 
-Create or update the Datadog integration.
+Create or update a Datadog integration for your project.
+
+The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Datadog.
+
+After you integrate with Datadog, you can send metric data about your project to your Datadog dashboard. To learn more about the metrics available to Datadog, see https://www.mongodb.com/docs/atlas/tutorial/datadog-integration/.
+		
+Datadog integration is available only on M10+ clusters.
 
 Syntax
 ------
@@ -37,7 +43,7 @@ Options
    * - --apiKey
      - string
      - true
-     - Datadog API key. To learn more, see https://docs.datadoghq.com/account_management/api-app-keys/#add-an-api-key-or-client-token.
+     - Datadog API key that allows Atlas to access your Datadog account.
    * - -h, --help
      - 
      - false
@@ -53,7 +59,7 @@ Options
    * - --region
      - string
      - false
-     - API URL region to use. Valid values are US and EU. This value defaults to "US".
+     - Code that indicates which regional URL MongoDB uses to access the Datadog API. Valid values are US, EU, US3, and US5. This value defaults to "US".
 
 Inherited Options
 -----------------

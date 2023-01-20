@@ -16,6 +16,7 @@ package create
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -69,8 +70,11 @@ func OpsGenieBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     opsGenieType,
 		Aliases: []string{"ops_genie", "opsGenie"},
-		Short:   "Create or update the Ops Genie integration.",
-		Args:    require.NoArgs,
+		Short:   "Create or update an Opsgenie integration for your project.",
+		Long:    "The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Opsgenie.",
+		Example: fmt.Sprintf(`  # Integrate Opsgenie with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s integrations create OPS_GENIE --apiKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -84,7 +88,7 @@ func OpsGenieBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.APIRegion)
-	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
+	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.OpsgenieAPIKey)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

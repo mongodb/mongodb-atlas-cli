@@ -37,7 +37,7 @@ Arguments
    * - integrationType
      - string
      - true
-     - Human-readable label that identifies the service integration. Valid values are DATADOG, OPS_GENIE, PAGER_DUTY, VICTOR_OPS, and WEBHOOK.
+     - Human-readable label that identifies the integrated service. Valid values are DATADOG, OPS_GENIE, PAGER_DUTY, VICTOR_OPS, and WEBHOOK.
 
 Options
 -------

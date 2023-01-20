@@ -18,7 +18,7 @@ The requesting API key must have the Organization Owner or Project Owner role to
 
 After you integrate with Datadog, you can send metric data about your project to your Datadog dashboard. To learn more about the metrics available to Datadog, see https://www.mongodb.com/docs/atlas/tutorial/datadog-integration/.
 		
-Datadog integration is available only on M10+ clusters.
+Datadog integration is available only for M10+ clusters.
 
 Syntax
 ------

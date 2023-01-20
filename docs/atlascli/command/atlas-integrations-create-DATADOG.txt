@@ -37,7 +37,7 @@ Options
    * - --apiKey
      - string
      - true
-     - API Key.
+     - Datadog API key. To learn more, see https://docs.datadoghq.com/account_management/api-app-keys/#add-an-api-key-or-client-token.
    * - -h, --help
      - 
      - false
@@ -53,7 +53,7 @@ Options
    * - --region
      - string
      - false
-     - Indicates which API URL to use, either US or EU. The integration service will use US by default. This value defaults to "US".
+     - API URL region to use. Valid values are US and EU. This value defaults to "US".
 
 Inherited Options
 -----------------
@@ -71,3 +71,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Integrate Datadog with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
+   atlas integrations create DATADOG --apiKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json

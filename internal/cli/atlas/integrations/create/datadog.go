@@ -16,6 +16,7 @@ package create
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -69,8 +70,13 @@ func DatadogBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     datadogType,
 		Aliases: []string{"datadog"},
-		Short:   "Create or update the Datadog integration.",
-		Args:    require.NoArgs,
+		Short:   "Create or update a Datadog integration for your project.",
+		Long: `After you integrate with Datadog, you can send metric data about your project to your Datadog dashboard. To learn more about the metrics available to Datadog, see https://www.mongodb.com/docs/atlas/tutorial/datadog-integration/.
+		
+		Datadog integration is available only on M10+ clusters.`,
+		Args: require.NoArgs,
+		Example: fmt.Sprintf(`  # Integrate Datadog with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s integrations create DATADOG --apiKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -83,8 +89,8 @@ func DatadogBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
-	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.APIRegion)
+	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.DatadogAPIKey)
+	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.DatadogAPIRegion)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

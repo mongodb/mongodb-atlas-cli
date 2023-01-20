@@ -16,6 +16,7 @@ package integrations
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -50,13 +51,16 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Integration '%s' deleted\n", "Integration not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:       "delete <integrationType>",
-		Aliases:   []string{"rm"},
-		Short:     "Delete a third party integration",
-		Args:      require.ExactValidArgs(1),
+		Use:     "delete <integrationType>",
+		Aliases: []string{"rm"},
+		Short:   "Remove the specified third-party integration from your project.",
+		Long:    "Deleting an integration from a project removes that integration configuration only for that project. This does not affect any other project or organization's configured integrations.",
+		Args:    require.ExactValidArgs(1),
+		Example: fmt.Sprintf(`  # Remove the Datadog integration for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s integrations delete DATADOG --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		ValidArgs: []string{"PAGER_DUTY", "MICROSOFT_TEAMS", "SLACK", "DATADOG", "NEW_RELIC", "OPS_GENIE", "VICTOR_OPS", "WEBHOOK", "PROMETHEUS"},
 		Annotations: map[string]string{
-			"integrationTypeDesc": "Human-readable label that identifies the service which you want to integrate with.",
+			"integrationTypeDesc": "Human-readable label that identifies the service integration to delete. Valid values are DATADOG, OPS_GENIE, PAGER_DUTY, VICTOR_OPS, and WEBHOOK.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]

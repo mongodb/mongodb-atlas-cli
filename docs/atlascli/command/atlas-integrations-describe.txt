@@ -12,7 +12,7 @@ atlas integrations describe
    :depth: 1
    :class: singlecol
 
-Get a third party integration
+Return the details for the specified third-party integration for your project.
 
 Syntax
 ------
@@ -37,7 +37,7 @@ Arguments
    * - integrationType
      - string
      - true
-     - Human-readable label that identifies the service which you want to integrate with.
+     - Human-readable label that identifies the service integration. Valid values are DATADOG, OPS_GENIE, PAGER_DUTY, VICTOR_OPS, and WEBHOOK.
 
 Options
 -------
@@ -79,3 +79,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return the JSON-formatted details for the Datadog integration for the project with the ID 5e2211c17a3e5a48f5497de3:
+   atlas integrations describe DATADOG --projectId 5e2211c17a3e5a48f5497de3 --output json

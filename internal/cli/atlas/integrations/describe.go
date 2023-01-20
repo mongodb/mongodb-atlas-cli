@@ -16,6 +16,7 @@ package integrations
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -98,12 +99,14 @@ func (opts *DescribeOpts) template() string {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:       "describe <integrationType>",
-		Short:     "Get a third party integration",
-		Args:      require.ExactValidArgs(1),
+		Use:   "describe <integrationType>",
+		Short: "Return the details for the specified third-party integration for your project.",
+		Args:  require.ExactValidArgs(1),
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the Datadog integration for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s integrations describe DATADOG --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		ValidArgs: []string{"PAGER_DUTY", "MICROSOFT_TEAMS", "SLACK", "DATADOG", "NEW_RELIC", "OPS_GENIE", "VICTOR_OPS", "WEBHOOK", "PROMETHEUS"},
 		Annotations: map[string]string{
-			"integrationTypeDesc": "Human-readable label that identifies the service which you want to integrate with.",
+			"integrationTypeDesc": "Human-readable label that identifies the service integration. Valid values are DATADOG, OPS_GENIE, PAGER_DUTY, VICTOR_OPS, and WEBHOOK.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.integrationType = strings.ToUpper(args[0])

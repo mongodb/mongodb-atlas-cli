@@ -89,9 +89,10 @@ func DownloadBuilder() *cobra.Command {
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
 		Use:   "download <hostname> <mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz>",
-		Short: "Download a host mongodb logs.",
-		Long: `Download a gzipped file containing the logs for the selected hostname.
-To find the hostnames for an Atlas project, you can use the process list command.`,
+		Short: "Download a compressed file that contains the MongoDB logs for the specified host.",
+		Long: `This command downloads a file with a .gz extension.
+
+To find the hostnames for an Atlas project, use the process list command.`,
 		Args: cobra.MatchAll(
 			require.ExactArgs(argsN),
 			func(cmd *cobra.Command, args []string) error {
@@ -101,6 +102,8 @@ To find the hostnames for an Atlas project, you can use the process list command
 				return nil
 			},
 		),
+		Example: fmt.Sprintf(`  # Download the mongodb log file from the host atlas-123abc-shard-00-00.111xx.mongodb.net for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s logs download  atlas-123abc-shard-00-00.111xx.mongodb.net mongodb.gz --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"hostnameDesc": "Label that identifies the host that stores the log files that you want to download.",
 			"mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gzDesc": "Log file that you want to return.",

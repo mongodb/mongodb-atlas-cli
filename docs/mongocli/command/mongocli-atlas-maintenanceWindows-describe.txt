@@ -12,7 +12,9 @@ mongocli atlas maintenanceWindows describe
    :depth: 1
    :class: singlecol
 
-Get a maintenance window.
+Return the maintenance window details for your project.
+
+To learn more about maintenance windows, see https://www.mongodb.com/docs/atlas/tutorial/cluster-maintenance-window/.
 
 Syntax
 ------
@@ -63,3 +65,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return the maintenance window for the project with the ID 5e2211c17a3e5a48f5497de3:
+   mongocli atlas maintenanceWindows describe --projectId 5e2211c17a3e5a48f5497de3 --output json

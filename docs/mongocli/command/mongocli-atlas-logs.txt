@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-logs-download` - Download a host mongodb logs.
+* :ref:`mongocli-atlas-logs-download` - Download a compressed file that contains the MongoDB logs for the specified host.
 
 
 .. toctree::

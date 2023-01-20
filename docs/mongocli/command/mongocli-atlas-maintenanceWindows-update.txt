@@ -12,7 +12,9 @@ mongocli atlas maintenanceWindows update
    :depth: 1
    :class: singlecol
 
-Update the maintenance window.
+Update the maintenance window for your project.
+
+To learn more about maintenance windows, see https://www.mongodb.com/docs/atlas/tutorial/cluster-maintenance-window/.
 
 Syntax
 ------
@@ -37,7 +39,7 @@ Options
    * - --dayOfWeek
      - int
      - false
-     - Day of the week that you want the maintenance window to start, as a 1-based integer.
+     - Day of the week that you want the maintenance window to start, as a 1-based integer. Use 1 for Sunday, 2 for Monday, 3 for Tuesday, 4 for Wednesday, 5 for Thursday, 6 for Friday, or 7 for Saturday.
    * - -h, --help
      - 
      - false
@@ -45,7 +47,7 @@ Options
    * - --hourOfDay
      - int
      - false
-     - Hour of the day that you want the maintenance window to start. This parameter uses the 24-hour clock, where midnight is 0 and noon is 12.
+     - Hour of the day that you want the maintenance window to start according to a 24-hour clock. Use 0 for midnight and 12 for noon.
    * - -o, --output
      - string
      - false
@@ -57,7 +59,7 @@ Options
    * - --startASAP
      - 
      - false
-     - Flag that, if specified, indicates to start maintenance immediately upon receiving this request.
+     - Flag that, if specified, indicates to start maintenance immediately upon receiving this request. This flag resets to false after Atlas completes maintenance.
 
 Inherited Options
 -----------------
@@ -75,3 +77,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Update the maintenance window to midnight on Saturdays for the project with the ID 5e2211c17a3e5a48f5497de3:
+   mongocli atlas maintenanceWindows update --dayOfWeek 7 --hourOfDay 0 --projectId 5e2211c17a3e5a48f5497de3 --output json

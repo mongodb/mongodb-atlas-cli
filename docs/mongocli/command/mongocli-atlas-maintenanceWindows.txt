@@ -49,10 +49,10 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-maintenanceWindows-clear` - Clear the previously-specified maintenance window for your project.
+* :ref:`mongocli-atlas-maintenanceWindows-clear` - Clear the current maintenance window setting for your project.
 * :ref:`mongocli-atlas-maintenanceWindows-defer` - Defer scheduled maintenance for your project for one week.
 * :ref:`mongocli-atlas-maintenanceWindows-describe` - Return the maintenance window details for your project.
-* :ref:`mongocli-atlas-maintenanceWindows-update` - Update the maintenance window for your project.
+* :ref:`mongocli-atlas-maintenanceWindows-update` - Modify the maintenance window for your project.
 
 
 .. toctree::

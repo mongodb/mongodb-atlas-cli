@@ -69,10 +69,10 @@ func ClearBuilder() *cobra.Command {
 	opts := &ClearOpts{}
 	cmd := &cobra.Command{
 		Use:     "clear",
-		Short:   "Clear the previously-specified maintenance window for your project.",
+		Short:   "Clear the current maintenance window setting for your project.",
 		Long:    `To learn more about maintenance windows, see https://www.mongodb.com/docs/atlas/tutorial/cluster-maintenance-window/.`,
 		Aliases: []string{"rm", "delete"},
-		Example: fmt.Sprintf(`  # Clear the previously-specified maintenance window for the project with the ID 5e2211c17a3e5a48f5497de3:
+		Example: fmt.Sprintf(`  # Clear the current maintenance window for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s maintenanceWindows clear --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

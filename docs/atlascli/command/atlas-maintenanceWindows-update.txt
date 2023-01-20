@@ -12,7 +12,7 @@ atlas maintenanceWindows update
    :depth: 1
    :class: singlecol
 
-Update the maintenance window for your project.
+Modify the maintenance window for your project.
 
 To learn more about maintenance windows, see https://www.mongodb.com/docs/atlas/tutorial/cluster-maintenance-window/.
 

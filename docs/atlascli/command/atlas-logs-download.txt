@@ -61,7 +61,7 @@ Options
    * - --end
      - string
      - false
-     - End of the period, in UNIX Epoch format, until which to retrieve logs. This value defaults to the current timestamp.
+     - UNIX Epoch-formatted ending date and time for the range of log messages to retrieve. This value defaults to the current timestamp.
    * - --force
      - 
      - false
@@ -81,7 +81,7 @@ Options
    * - --start
      - string
      - false
-     - Beginning of the date and time, in UNIX Epoch format, from which to retrieve logs. This value defaults to 24 hours prior to the current timestamp.
+     - UNIX Epoch-formatted starting date and time for the range of log messages to retrieve. This value defaults to 24 hours prior to the current timestamp.
 
 Inherited Options
 -----------------

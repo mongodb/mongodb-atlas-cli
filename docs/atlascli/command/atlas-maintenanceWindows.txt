@@ -49,10 +49,10 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-maintenanceWindows-clear` - Clear the previously-specified maintenance window for your project.
+* :ref:`atlas-maintenanceWindows-clear` - Clear the current maintenance window setting for your project.
 * :ref:`atlas-maintenanceWindows-defer` - Defer scheduled maintenance for your project for one week.
 * :ref:`atlas-maintenanceWindows-describe` - Return the maintenance window details for your project.
-* :ref:`atlas-maintenanceWindows-update` - Update the maintenance window for your project.
+* :ref:`atlas-maintenanceWindows-update` - Modify the maintenance window for your project.
 
 
 .. toctree::

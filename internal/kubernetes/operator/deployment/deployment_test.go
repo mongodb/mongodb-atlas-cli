@@ -320,7 +320,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 						},
 					},
 				},
-				Status: atlasV1.AtlasBackupPolicyStatus{},
+				Status: status.BackupPolicyStatus{},
 			},
 		}
 
@@ -349,7 +349,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				UpdateSnapshots:                   *backupSchedule.UpdateSnapshots,
 				UseOrgAndGroupNamesInExportPrefix: *backupSchedule.UseOrgAndGroupNamesInExportPrefix,
 			},
-			Status: atlasV1.AtlasBackupScheduleStatus{},
+			Status: status.BackupScheduleStatus{},
 		}
 
 		expected := &AtlasDeploymentResult{

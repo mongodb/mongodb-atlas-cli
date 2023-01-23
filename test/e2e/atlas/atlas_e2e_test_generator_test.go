@@ -44,7 +44,6 @@ type atlasE2ETestGenerator struct {
 // newAtlasE2ETestGenerator creates a new instance of atlasE2ETestGenerator struct.
 func newAtlasE2ETestGenerator(t *testing.T) *atlasE2ETestGenerator {
 	t.Helper()
-
 	return &atlasE2ETestGenerator{t: t}
 }
 
@@ -81,6 +80,38 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	})
 }
 
+func (g *atlasE2ETestGenerator) generateEmptyProject(prefix string) {
+	g.t.Helper()
+
+	if g.projectID != "" {
+		g.t.Fatal("unexpected error: project was already generated")
+	}
+
+	var err error
+	if prefix == "" {
+		g.projectName, err = RandProjectName()
+	} else {
+		g.projectName, err = RandProjectNameWithPrefix(prefix)
+	}
+	if err != nil {
+		g.t.Fatalf("unexpected error: %v", err)
+	}
+
+	g.projectID, err = createProjectWithoutAlertSettings(g.projectName)
+	if err != nil {
+		g.t.Fatalf("unexpected error: %v", err)
+	}
+	g.t.Logf("projectID=%s", g.projectID)
+	g.t.Logf("projectName=%s", g.projectName)
+	if g.projectID == "" {
+		g.t.Fatal("projectID not created")
+	}
+
+	g.t.Cleanup(func() {
+		deleteProjectWithRetry(g.t, g.projectID)
+	})
+}
+
 func deleteProjectWithRetry(t *testing.T, projectID string) {
 	t.Helper()
 	deleted := false
@@ -97,6 +128,26 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 
 	if !deleted {
 		t.Errorf("we could not delete the project '%s'", projectID)
+	}
+}
+
+func deleteNetworkPeering(t *testing.T, projectID, provider string) {
+	t.Helper()
+	err := deleteAllNetworkPeers(projectID, provider)
+	if err != nil {
+		t.Errorf("we could not delete the project network peers '%s'", projectID)
+	} else {
+		t.Logf("project '%s' network peers successfully deleted", projectID)
+	}
+}
+
+func deletePrivateEndpoints(t *testing.T, projectID, provider string) {
+	t.Helper()
+	err := deleteAllPrivateEndpoints(projectID, provider)
+	if err != nil {
+		t.Errorf("we could not delete the project private endpoints '%s'", projectID)
+	} else {
+		t.Logf("project '%s' private endpoints successfully deleted", projectID)
 	}
 }
 

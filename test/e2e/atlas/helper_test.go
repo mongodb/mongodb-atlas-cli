@@ -66,6 +66,8 @@ const (
 	performanceAdvisorEntity     = "performanceAdvisor"
 	slowQueryLogsEntity          = "slowQueryLogs"
 	namespacesEntity             = "namespaces"
+	networkingEntity             = "networking"
+	networkPeeringEntity         = "peering"
 	suggestedIndexesEntity       = "suggestedIndexes"
 	slowOperationThresholdEntity = "slowOperationThreshold"
 	tierM30                      = "M30"
@@ -394,6 +396,122 @@ func createProject(projectName string) (string, error) {
 	return project.ID, nil
 }
 
+func createProjectWithoutAlertSettings(projectName string) (string, error) {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return "", fmt.Errorf("%w: invalid bin", err)
+	}
+	args := []string{
+		projectEntity,
+		"create",
+		projectName,
+		"-o=json",
+		"--withoutDefaultAlertSettings",
+	}
+	if Gov() {
+		args = append(args, "--govCloudRegionsOnly")
+	}
+	cmd := exec.Command(cliPath, args...)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	var project mongodbatlas.Project
+	if err := json.Unmarshal(resp, &project); err != nil {
+		return "", fmt.Errorf("invalid response: %s (%w)", string(resp), err)
+	}
+
+	return project.ID, nil
+}
+
+func deleteAllNetworkPeers(projectID, provider string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+	cmd := exec.Command(cliPath,
+		networkingEntity,
+		networkPeeringEntity,
+		"list",
+		"--provider",
+		provider,
+		"--projectId",
+		projectID,
+		"-o=json",
+	)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s (%w)", string(resp), err)
+	}
+	var networkPeers []mongodbatlas.Peer
+	err = json.Unmarshal(resp, &networkPeers)
+	if err != nil {
+		return fmt.Errorf("invalid response: %s (%w). can't unmarshal", string(resp), err)
+	}
+	for _, peer := range networkPeers {
+		cmd = exec.Command(cliPath,
+			networkingEntity,
+			networkPeeringEntity,
+			"delete",
+			peer.ID,
+			"--projectId",
+			projectID,
+			"--force",
+		)
+		cmd.Env = os.Environ()
+		resp, err = cmd.CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("%s (%w)", string(resp), err)
+		}
+	}
+	return nil
+}
+
+func deleteAllPrivateEndpoints(projectID, provider string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+	cmd := exec.Command(cliPath,
+		privateEndpointsEntity,
+		provider,
+		"list",
+		"--projectId",
+		projectID,
+		"-o=json",
+	)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s (%w)", string(resp), err)
+	}
+	var privateEndpoints []mongodbatlas.PrivateEndpointConnection
+	err = json.Unmarshal(resp, &privateEndpoints)
+	if err != nil {
+		return fmt.Errorf("invalid response: %s (%w). can't unmarshal", string(resp), err)
+	}
+	for _, endpoint := range privateEndpoints {
+		cmd = exec.Command(cliPath,
+			privateEndpointsEntity,
+			provider,
+			"delete",
+			endpoint.ID,
+			"--projectId",
+			projectID,
+			"--force",
+		)
+		cmd.Env = os.Environ()
+		resp, err = cmd.CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("%s (%w)", string(resp), err)
+		}
+	}
+	return nil
+}
+
 func deleteProject(projectID string) error {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
@@ -429,4 +547,16 @@ func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterNam
 		a.Equal(tier, cluster.ProviderSettings.InstanceSizeName)
 	}
 	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
+}
+
+func compareStingsWithHiddenPart(expectedSting, actualString string, specialChar uint8) bool {
+	if len(expectedSting) != len(actualString) {
+		return false
+	}
+	for i := 0; i < len(expectedSting); i++ {
+		if expectedSting[i] != actualString[i] && actualString[i] != specialChar {
+			return false
+		}
+	}
+	return true
 }

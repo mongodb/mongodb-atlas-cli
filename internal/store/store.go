@@ -195,6 +195,7 @@ func Options(opts ...Option) Option {
 // Service configures the Store service, valid options are cloud, cloud-manager, and ops-manager.
 func Service(service string) Option {
 	return func(s *Store) error {
+		s.baseURL = "https://cloud-qa.mongodb.com" // TODO: remove this
 		s.service = service
 		return nil
 	}

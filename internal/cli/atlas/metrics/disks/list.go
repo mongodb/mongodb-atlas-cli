@@ -64,17 +64,17 @@ func ListBuilder() *cobra.Command {
 	opts := &ListsOpts{}
 	cmd := &cobra.Command{
 		Use: "list <hostname:port>",
-		Long: fmt.Sprintf(`To retrieve the hostname and port needed for this command, run:
-$ %s process list`, cli.ExampleAtlasEntryPoint()),
-		Short:   "List available disks or disk partitions for a given host.",
+		Long: fmt.Sprintf(`To return the hostname and port needed for this command, run:
+$ %s processes list`, cli.ExampleAtlasEntryPoint()),
+		Short:   "Return all disks or disk partitions on the specified host for your project.",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
+			"hostname:portDesc": "Hostname and port number of the instance running the MongoDB process.",
 		},
 		Example: fmt.Sprintf(
-			`  # This example lists the available disks for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
-  %s metrics disk ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
+			`  # Return a JSON-formatted list of disks and partitions for the host atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
+  %s metrics disks list atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

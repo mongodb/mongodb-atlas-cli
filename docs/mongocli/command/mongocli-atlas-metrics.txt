@@ -51,7 +51,7 @@ Related Commands
 
 * :ref:`mongocli-atlas-metrics-databases` - List available databases or database metrics for a given host.
 * :ref:`mongocli-atlas-metrics-disks` - List available disks or disk metrics for a given host.
-* :ref:`mongocli-atlas-metrics-processes` - Get MongoDB process metrics for a given host.
+* :ref:`mongocli-atlas-metrics-processes` - Return the process measurements for the specified host.
 
 
 .. toctree::

@@ -49,8 +49,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-metrics-disks-describe` - Describe disk partition metrics for a disk partition on a specified host.
-* :ref:`atlas-metrics-disks-list` - List available disks or disk partitions for a given host.
+* :ref:`atlas-metrics-disks-describe` - Return the measurements of a disk or partition on the specified host.
+* :ref:`atlas-metrics-disks-list` - Return all disks or disk partitions on the specified host for your project.
 
 
 .. toctree::

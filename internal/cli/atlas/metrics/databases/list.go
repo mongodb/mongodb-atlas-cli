@@ -64,16 +64,15 @@ func ListBuilder() *cobra.Command {
 	opts := &ListsOpts{}
 	cmd := &cobra.Command{
 		Use: "list <hostname:port>",
-		Long: fmt.Sprintf(`To retrieve the hostname and port needed for this command, run:
-$ %s process list`, cli.ExampleAtlasEntryPoint()),
-		Short:   "List available databases or database metrics for a given host.",
+		Long: fmt.Sprintf(`To return the hostname and port needed for this command, run
+%s processes list`, cli.ExampleAtlasEntryPoint()),
+		Short:   "Return all databases running on the specified host for your project.",
 		Aliases: []string{"ls"},
 		Annotations: map[string]string{
-			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
+			"hostname:portDesc": "Hostname and port number of the instance running the MongoDB process.",
 		},
-		Example: fmt.Sprintf(
-			`  # This example lists the available databases for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
-  %s metrics database ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`,
+		Example: fmt.Sprintf(`  # Return a JSON-formatted list of available databases for the host atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
+  %s metrics databases list atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 --output json`,
 			cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -16,6 +16,7 @@ package peering
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -69,9 +70,11 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "Retrieve details for all network peering connections in one Atlas project.",
+		Short:   "Return the details for all network peering connections for your project.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for all network peering connections in the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s networking peering list --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

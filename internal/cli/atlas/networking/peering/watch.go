@@ -73,15 +73,16 @@ func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
 		Use:   "watch <peerId>",
-		Short: "Watch for a peering connection to be available.",
+		Short: "Watch the specified peering connection in your project until it becomes available.",
 		Long: `This command checks the peering connection's status periodically until it becomes available. 
 Once it reaches the expected state, the command prints "Network peering changes completed."
 If you run the command in the terminal, it blocks the terminal session until the resource is available.
 You can interrupt the command's polling at any time with CTRL-C.`,
-		Example: fmt.Sprintf(`  %s networking peering watch peeringConnectionSampleId`, cli.ExampleAtlasEntryPoint()),
-		Args:    require.ExactArgs(1),
+		Example: fmt.Sprintf(`  Watch for the network peering connection with the ID 5f621dc701240c5b7c3a888e to become available in the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s networking peering watch 5f621dc701240c5b7c3a888e --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
-			"peerIdDesc": "Network peering connection ID.",
+			"peerIdDesc": "Unique ID of the network peering connection that you want to watch.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

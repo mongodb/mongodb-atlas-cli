@@ -123,10 +123,14 @@ func AzureBuilder() *cobra.Command {
 	opts := &AzureOpts{}
 	cmd := &cobra.Command{
 		Use:   "azure",
-		Short: "Create a connection with Azure.",
-		Example: fmt.Sprintf(`  # The following command creates a peering connection between the Atlas VPC and your Azure VNet for a project using the default profile:
-  %s networking peering create azure --atlasCidrBlock 192.168.0.0/21 --directoryId 56657fdb-ca45-40dc-fr56-77fd8b6d2b37 --subscriptionId 345654f3-77cf-4084-9e06-8943a079ed75 
-  --resourceGroup atlascli-test --region US_EAST_2 --vnet atlascli-test`, cli.ExampleAtlasEntryPoint()),
+		Short: "Create a network peering connection between the Atlas VPC and your Azure VNet.",
+		Long: `Before you create an Azure network peering connection, complete the prerequisites listed here: https://www.mongodb.com/docs/atlas/reference/api/vpc-create-peering-connection/#prerequisites.
+		
+		The network peering create command checks if a VNet exists in the region you specify for your Atlas project. If one exists, this command creates the peering connection between that VNet and your VNet. If an Atlas VNet does not exist, this command creates one and creates a connection between it and your VNet.
+		
+		To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.`,
+		Example: fmt.Sprintf(`  # Create a network peering connection between the Atlas VPC in CIDR block 192.168.0.0/24 and your Azure VNet named atlascli-test in in US_EAST_2:
+  %s networking peering create azure --atlasCidrBlock 192.168.0.0/24 --directoryId 56657fdb-ca45-40dc-fr56-77fd8b6d2b37 --subscriptionId 345654f3-77cf-4084-9e06-8943a079ed75 --resourceGroup atlascli-test --region US_EAST_2 --vnet atlascli-test`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

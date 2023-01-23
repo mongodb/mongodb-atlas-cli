@@ -12,7 +12,7 @@ mongocli atlas networking peering list
    :depth: 1
    :class: singlecol
 
-Retrieve details for all network peering connections in one Atlas project.
+Return the details for all network peering connections for your project.
 
 Syntax
 ------
@@ -75,3 +75,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return the JSON-formatted details for all network peering connections in the project with the ID 5e2211c17a3e5a48f5497de3:
+   mongocli atlas networking peering list --projectId 5e2211c17a3e5a48f5497de3 --output json

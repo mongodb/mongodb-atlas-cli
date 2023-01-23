@@ -50,9 +50,9 @@ Related Commands
 ----------------
 
 * :ref:`atlas-networking-peering-create` - Create a connection with AWS, Azure and Google Cloud.
-* :ref:`atlas-networking-peering-delete` - Delete a peering connection from an Atlas project.
-* :ref:`atlas-networking-peering-list` - Retrieve details for all network peering connections in one Atlas project.
-* :ref:`atlas-networking-peering-watch` - Watch for a peering connection to be available.
+* :ref:`atlas-networking-peering-delete` - Remove the specified peering connection from your project.
+* :ref:`atlas-networking-peering-list` - Return the details for all network peering connections for your project.
+* :ref:`atlas-networking-peering-watch` - Watch the specified peering connection in your project until it becomes available.
 
 
 .. toctree::

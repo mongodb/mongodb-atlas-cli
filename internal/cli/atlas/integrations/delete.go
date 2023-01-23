@@ -60,7 +60,7 @@ func DeleteBuilder() *cobra.Command {
   %s integrations delete DATADOG --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		ValidArgs: []string{"PAGER_DUTY", "MICROSOFT_TEAMS", "SLACK", "DATADOG", "NEW_RELIC", "OPS_GENIE", "VICTOR_OPS", "WEBHOOK", "PROMETHEUS"},
 		Annotations: map[string]string{
-			"integrationTypeDesc": "Human-readable label that identifies the service integration to delete. Valid values are DATADOG, OPS_GENIE, PAGER_DUTY, VICTOR_OPS, and WEBHOOK.",
+			"integrationTypeDesc": "Human-readable label that identifies the service integration to delete. Valid values are PAGER_DUTY, MICROSOFT_TEAMS, SLACK, DATADOG, NEW_RELIC, OPS_GENIE, VICTOR_OPS, WEBHOOK, PROMETHEUS.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]

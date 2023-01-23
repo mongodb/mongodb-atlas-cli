@@ -37,7 +37,7 @@ Arguments
    * - integrationType
      - string
      - true
-     - Human-readable label that identifies the integrated service. Valid values are DATADOG, OPS_GENIE, PAGER_DUTY, PROMETHEUS, VICTOR_OPS, and WEBHOOK.
+     - Human-readable label that identifies the integrated service. Valid values are PAGER_DUTY, MICROSOFT_TEAMS, SLACK, DATADOG, NEW_RELIC, OPS_GENIE, VICTOR_OPS, WEBHOOK, PROMETHEUS.
 
 Options
 -------

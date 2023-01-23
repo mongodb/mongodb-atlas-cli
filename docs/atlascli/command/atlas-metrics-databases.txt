@@ -49,8 +49,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-metrics-databases-describe` - Describe database metrics for a database on a specific host.
-* :ref:`atlas-metrics-databases-list` - List available databases or database metrics for a given host.
+* :ref:`atlas-metrics-databases-describe` - Return the measurements of a database on the specified host.
+* :ref:`atlas-metrics-databases-list` - Return all databases running on the specified host for your project.
 
 
 .. toctree::

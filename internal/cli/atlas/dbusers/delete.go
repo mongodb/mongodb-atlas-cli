@@ -16,6 +16,7 @@ package dbusers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -54,11 +55,19 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <username>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a database user for your project.",
+		Short:   "Remove the specified database user from your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"usernameDesc": "Username to delete from the MongoDB database.",
+			"usernameDesc": "Username to delete from the MongoDB database. The format of the username depends on the user's method of authentication.",
 		},
+		Example: fmt.Sprintf(`  # Delete the SCRAM SHA-authenticating database user named dylan for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %[1]s dbusers delete dylan --projectId 5e2211c17a3e5a48f5497de3
+
+  # Delete the AWS IAM-authenticating database user with the ARN arn:aws:iam::123456789012:user/sales/enterprise/DylanBloggs for the project with ID 5e2211c17a3e5a48f5497de3. Prepend $external with \ to escape the special-use character:
+  %[1]s dbusers delete arn:aws:iam::123456789012:user/sales/enterprise/DylanBloggs --authDB \$external --projectId 5e2211c17a3e5a48f5497de3
+			
+  # Delete the xLDAP-authenticating database user with the RFC 2253 Distinguished Name CN=Dylan Bloggs,OU=Enterprise,OU=Sales,DC=Example,DC=COM for the project with ID 5e2211c17a3e5a48f5497de3. Prepend $external with \ to escape the special-use character:
+  %[1]s dbusers delete CN=Dylan Bloggs,OU=Enterprise,OU=Sales,DC=Example,DC=COM --authDB \$external --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err
@@ -72,7 +81,7 @@ func DeleteBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AuthDB)
+	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AtlasAuthDB)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

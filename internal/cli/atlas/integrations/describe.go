@@ -106,7 +106,7 @@ func DescribeBuilder() *cobra.Command {
   %s integrations describe DATADOG --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		ValidArgs: []string{"PAGER_DUTY", "MICROSOFT_TEAMS", "SLACK", "DATADOG", "NEW_RELIC", "OPS_GENIE", "VICTOR_OPS", "WEBHOOK", "PROMETHEUS"},
 		Annotations: map[string]string{
-			"integrationTypeDesc": "Human-readable label that identifies the integrated service. Valid values are DATADOG, OPS_GENIE, PAGER_DUTY, VICTOR_OPS, and WEBHOOK.",
+			"integrationTypeDesc": "Human-readable label that identifies the integrated service. Valid values are DATADOG, OPS_GENIE, PAGER_DUTY, PROMETHEUS, VICTOR_OPS, and WEBHOOK.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.integrationType = strings.ToUpper(args[0])

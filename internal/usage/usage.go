@@ -139,9 +139,9 @@ dbName and collection are required only for built-in roles.`
 	NotificationsChannelName                  = "Slack channel name. Required for the SLACK notifications type."
 	AlertConfigAPIKey                         = "Datadog API Key, Opsgenie API Key, VictorOps API key." //nolint:gosec // This is just a message not a credential
 	APIKey                                    = "API Key."
-	DatadogAPIKey                             = "Datadog API key that allows Atlas to access your Datadog account."
-	OpsgenieAPIKey                            = "Opsgenie API key that allows Atlas to access your Opsgenie account."
-	VictorOpsAPIKey                           = "Splunk On-Call API key that allows Atlas to access your Splunk On-Call account."
+	DatadogAPIKey                             = "Datadog API key that allows Atlas to access your Datadog account."               //nolint:gosec // This is just a message not a credential
+	OpsgenieAPIKey                            = "Opsgenie API key that allows Atlas to access your Opsgenie account."             //nolint:gosec // This is just a message not a credential
+	VictorOpsAPIKey                           = "Splunk On-Call API key that allows Atlas to access your Splunk On-Call account." //nolint:gosec // This is just a message not a credential
 	RoutingKey                                = "Routing key associated with your Splunk On-Call account."
 	IntegrationAPIToken                       = "Your API Token." //nolint:gosec // This is just a message not a credential
 	OrgName                                   = "Your Flowdock organization's name."
@@ -257,7 +257,7 @@ dbName and collection are required only for built-in roles.`
 	LicenceKey                                = "Your License Key."
 	ServiceKey                                = "Service key associated with your PagerDuty account."
 	URL                                       = "Endpoint web address to which Atlas sends notifications."
-	Secret                                    = "Secret that secures your webhook." //nolint:gosec // This is just a message not a credential
+	Secret                                    = "Secret that secures your webhook."
 	WriteToken                                = "Your Insights Insert Key."
 	DayOfWeek                                 = "Day of the week that you want the maintenance window to start, as a 1-based integer. Use 1 for Sunday, 2 for Monday, 3 for Tuesday, 4 for Wednesday, 5 for Thursday, 6 for Friday, or 7 for Saturday."
 	HourOfDay                                 = "Hour of the day that you want the maintenance window to start according to a 24-hour clock. Use 0 for midnight and 12 for noon."

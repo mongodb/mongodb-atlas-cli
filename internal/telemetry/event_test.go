@@ -410,33 +410,22 @@ func TestWithChoice(t *testing.T) {
 	c := "test choice"
 
 	e := newEvent(withChoice(c))
-
-	a := assert.New(t)
-	a.Equal(c, e.Properties["choice"])
+	assert.Equal(t, c, e.Properties["choice"])
 }
 
 func TestWithDefault(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
-
-	q := true
-
-	e := newEvent(withDefault(q))
-
-	a := assert.New(t)
-	a.Equal(q, e.Properties["default"])
+	e := newEvent(withDefault(true))
+	assert.Equal(t, true, e.Properties["default"])
 }
 
 func TestWithEmpty(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
-	q := true
-
-	e := newEvent(withEmpty(q))
-
-	a := assert.New(t)
-	a.Equal(q, e.Properties["empty"])
+	e := newEvent(withEmpty(true))
+	assert.Equal(t, true, e.Properties["empty"])
 }
 
 func TestWithSignal(t *testing.T) {
@@ -466,8 +455,7 @@ func TestWithHelpCommand(t *testing.T) {
 
 	e := newEvent(withHelpCommand(helpCmd, args))
 
-	a := assert.New(t)
-	a.Equal("root-test", e.Properties["help_command"])
+	assert.Equal(t, "root-test", e.Properties["help_command"])
 }
 
 func TestWithHelpCommand_NotFound(t *testing.T) {
@@ -486,7 +474,6 @@ func TestWithHelpCommand_NotFound(t *testing.T) {
 
 	e := newEvent(withHelpCommand(helpCmd, args))
 
-	a := assert.New(t)
 	_, ok := e.Properties["help_command"]
-	a.False(ok)
+	assert.False(t, ok)
 }

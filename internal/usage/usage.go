@@ -269,7 +269,7 @@ dbName and collection are required only for built-in roles.`
 	DirectoryID                               = "Unique identifier for an Azure AD directory."
 	SubscriptionID                            = "Unique identifier of the Azure subscription in which the VNet resides."
 	GCPProjectID                              = "Unique identifier of the GCP project in which the network peer resides."
-	Network                                   = "Human-readable label in GCP that identifies the network to peer with the Atlas VPS."
+	Network                                   = "Human-readable label in GCP that identifies the network to peer with the Atlas VPC."
 	APIRegion                                 = "Indicates which API URL to use, either US or EU. The integration service will use US by default."
 	SkipMongosh                               = "Indicates whether to skip accessing your deployment with MongoDB Shell."
 	SkipSampleData                            = "Indicates whether to skip loading sample data into your Atlas cluster."

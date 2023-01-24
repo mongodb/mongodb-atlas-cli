@@ -71,11 +71,11 @@ Options
    * - --provider
      - string
      - false
-     - Name of your cloud service provider. Valid values are AWS, AZURE, or GCP. This value defaults to "AWS".
+     - Name of your cloud service provider. Valid values are AWS, AZURE, or GCP.
    * - -r, --region
      - string
      - false
-     - Physical location of your MongoDB cluster. For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws. For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure. For a complete list of supported GCP regions, see: https://docs.atlas.mongodb.com/reference/google-gcp/#google-gcp. This value defaults to "US_EAST_1".
+     - Physical location of your MongoDB cluster. For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws. For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure. For a complete list of supported GCP regions, see: https://docs.atlas.mongodb.com/reference/google-gcp/#google-gcp.
    * - --skipMongosh
      - 
      - false

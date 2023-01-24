@@ -50,9 +50,9 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-integrations-create` - Create operations.
-* :ref:`mongocli-atlas-integrations-delete` - Delete a third party integration
-* :ref:`mongocli-atlas-integrations-describe` - Get a third party integration
-* :ref:`mongocli-atlas-integrations-list` - List third party integrations
+* :ref:`mongocli-atlas-integrations-delete` - Remove the specified third-party integration from your project.
+* :ref:`mongocli-atlas-integrations-describe` - Return the details for the specified third-party integration for your project.
+* :ref:`mongocli-atlas-integrations-list` - Return all active third-party integrations for your project.
 
 
 .. toctree::

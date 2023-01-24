@@ -16,6 +16,7 @@ package create
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -69,8 +70,11 @@ func WebhookBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     webhookIntegrationType,
 		Aliases: []string{"webhook"},
-		Short:   "Create or update the Webhook integration",
-		Args:    require.NoArgs,
+		Short:   "Create or update a webhook integration for your project.",
+		Long:    "The requesting API key must have the Organization Owner or Project Owner role to configure a webhook integration.",
+		Example: fmt.Sprintf(`  # Integrate a webhook with Atlas that uses the secret mySecret for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s integrations create WEBHOOK --url http://9b4ac7aa.abc.io/payload --secret mySecret --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

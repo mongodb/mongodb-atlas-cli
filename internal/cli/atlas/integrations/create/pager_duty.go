@@ -16,6 +16,7 @@ package create
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -67,8 +68,11 @@ func PagerDutyBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     pagerDutyIntegrationType,
 		Aliases: []string{"pager_duty", "pagerDuty"},
-		Short:   "Create or update the PagerDuty integration.",
-		Args:    require.NoArgs,
+		Short:   "Create or update a PagerDuty integration for your project.",
+		Long:    "The requesting API key must have the Organization Owner or Project Owner role to configure an integration with PagerDuty.",
+		Example: fmt.Sprintf(`  # Integrate PagerDuty with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s integrations create PAGER_DUTY --serviceKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

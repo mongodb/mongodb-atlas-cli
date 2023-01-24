@@ -139,7 +139,10 @@ dbName and collection are required only for built-in roles.`
 	NotificationsChannelName                  = "Slack channel name. Required for the SLACK notifications type."
 	AlertConfigAPIKey                         = "Datadog API Key, Opsgenie API Key, VictorOps API key." //nolint:gosec // This is just a message not a credential
 	APIKey                                    = "API Key."
-	RoutingKey                                = "An optional field for your Routing Key."
+	DatadogAPIKey                             = "Datadog API key that allows Atlas to access your Datadog account."               //nolint:gosec // This is just a message not a credential
+	OpsgenieAPIKey                            = "Opsgenie API key that allows Atlas to access your Opsgenie account."             //nolint:gosec // This is just a message not a credential
+	VictorOpsAPIKey                           = "Splunk On-Call API key that allows Atlas to access your Splunk On-Call account." //nolint:gosec // This is just a message not a credential
+	RoutingKey                                = "Routing key associated with your Splunk On-Call account."
 	IntegrationAPIToken                       = "Your API Token." //nolint:gosec // This is just a message not a credential
 	OrgName                                   = "Your Flowdock organization's name."
 	OrgNameFilter                             = "Performs a case-insensitive search for organizations which exactly match the specified name."
@@ -252,9 +255,9 @@ dbName and collection are required only for built-in roles.`
 	AccountID                                 = "Unique twelve-digit AWS account ID that owns the peer VPC."
 	NewRelicAccountID                         = "Unique identifier of your New Relic account."
 	LicenceKey                                = "Your License Key."
-	ServiceKey                                = "Your Service Key."
-	URL                                       = "Your webhook URL."
-	Secret                                    = "An optional field for your webhook secret." //nolint:gosec // This is just a message not a credential
+	ServiceKey                                = "Service key associated with your PagerDuty account."
+	URL                                       = "Endpoint web address to which Atlas sends notifications."
+	Secret                                    = "Secret that secures your webhook."
 	WriteToken                                = "Your Insights Insert Key."
 	DayOfWeek                                 = "Day of the week that you want the maintenance window to start, as a 1-based integer. Use 1 for Sunday, 2 for Monday, 3 for Tuesday, 4 for Wednesday, 5 for Thursday, 6 for Friday, or 7 for Saturday."
 	HourOfDay                                 = "Hour of the day that you want the maintenance window to start according to a 24-hour clock. Use 0 for midnight and 12 for noon."
@@ -269,8 +272,9 @@ dbName and collection are required only for built-in roles.`
 	DirectoryID                               = "Unique identifier for an Azure AD directory."
 	SubscriptionID                            = "Unique identifier of the Azure subscription in which the VNet resides."
 	GCPProjectID                              = "Unique identifier of the GCP project in which the network peer resides."
-	Network                                   = "Human-readable label in GCP that identifies the network to peer with the Atlas VPC."
-	APIRegion                                 = "Indicates which API URL to use, either US or EU. The integration service will use US by default."
+	Network                                   = "Unique identifier of the Network Peering connection in the Atlas project."
+	APIRegion                                 = "Code that indicates which regional URL MongoDB uses to access the third-party API. Valid values are US and EU."
+	DatadogAPIRegion                          = "Code that indicates which regional URL MongoDB uses to access the Datadog API. Valid values are US, EU, US3, and US5."
 	SkipMongosh                               = "Indicates whether to skip accessing your deployment with MongoDB Shell."
 	SkipSampleData                            = "Indicates whether to skip loading sample data into your Atlas cluster."
 	ContainerRegion                           = "Cloud provider region where the VPC that you peered with the Atlas VPC resides."

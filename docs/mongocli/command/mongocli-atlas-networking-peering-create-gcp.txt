@@ -53,7 +53,7 @@ Options
    * - --network
      - string
      - false
-     - Human-readable label in GCP that identifies the network to peer with the Atlas VPC.
+     - Unique identifier of the Network Peering connection in the Atlas project.
    * - -o, --output
      - string
      - false

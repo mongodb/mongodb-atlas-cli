@@ -16,6 +16,7 @@ package create
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -69,8 +70,13 @@ func VictorOpsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     victorOpsIntegrationType,
 		Aliases: []string{"victor_ops", "victorOps"},
-		Short:   "Create or update the VictorOps integrations",
-		Args:    require.NoArgs,
+		Short:   "Create or update a Splunk On-Call integration for your project.",
+		Long: `VictorOps is now Splunk On-Call.
+		
+		The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Splunk On-Call.`,
+		Example: fmt.Sprintf(`  # Integrate Splunk On-Call with Atlas using the routing key operations for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s integrations create VICTOR_OPS --apiKey a1a23bcdef45ghijk6789 --routingKey operations --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -83,7 +89,7 @@ func VictorOpsBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
+	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.VictorOpsAPIKey)
 	cmd.Flags().StringVar(&opts.routingKey, flag.RoutingKey, "", usage.RoutingKey)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

@@ -16,6 +16,7 @@ package containers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -52,11 +53,13 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <containerId>",
 		Aliases: []string{"rm"},
-		Short:   "Remove one network peering container in an Atlas project.",
+		Short:   "Remove the specified network peering container from your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"containerIdDesc": "Network container ID.",
+			"containerIdDesc": "Unique 24-hexadecimal digit string that identifies the network container that you want to remove.",
 		},
+		Example: fmt.Sprintf(`  # Remove the network peering container with the ID 5e44103f8d614b2f0b6530d8 from the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s networking containers delete 5e44103f8d614b2f0b6530d8 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

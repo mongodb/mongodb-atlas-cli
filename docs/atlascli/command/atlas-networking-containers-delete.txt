@@ -12,7 +12,7 @@ atlas networking containers delete
    :depth: 1
    :class: singlecol
 
-Remove one network peering container in an Atlas project.
+Remove the specified network peering container from your project.
 
 Syntax
 ------
@@ -37,7 +37,7 @@ Arguments
    * - containerId
      - string
      - true
-     - Network container ID.
+     - Unique 24-hexadecimal digit string that identifies the network container that you want to remove.
 
 Options
 -------
@@ -79,3 +79,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Remove the network peering container with the ID 5e44103f8d614b2f0b6530d8 from the project with the ID 5e2211c17a3e5a48f5497de3:
+   atlas networking containers delete 5e44103f8d614b2f0b6530d8 --projectId 5e2211c17a3e5a48f5497de3

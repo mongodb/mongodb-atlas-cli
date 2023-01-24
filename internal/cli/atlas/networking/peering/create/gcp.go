@@ -16,6 +16,7 @@ package create
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -108,8 +109,13 @@ func GCPBuilder() *cobra.Command {
 	opts := &GCPOpts{}
 	cmd := &cobra.Command{
 		Use:   "gcp",
-		Short: "Create a connection with GCP.",
-		Args:  require.NoArgs,
+		Short: "Create a network peering connection between the Atlas VPC and your Google Cloud VPC.",
+		Long: `The network peering create command checks if a VPC exists in the region you specify for your Atlas project. If one exists, this command creates the peering connection between that VPC and your VPC. If an Atlas VPC doesn't exist, this command creates one and creates a connection between it and your VPC.
+		
+		To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.`,
+		Example: fmt.Sprintf(`  # Create a network peering connection between the Atlas VPC in CIDR block 192.168.0.0/24 and your GCP VPC with the GCP project ID grandiose-branch-256701 in the network named cli-test:
+  %s networking peering create gcp --atlasCidrBlock 192.168.0.0/24 --gcpProjectId grandiose-branch-256701 --network cli-test --output json`, cli.ExampleAtlasEntryPoint()),
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

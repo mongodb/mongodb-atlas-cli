@@ -8,15 +8,15 @@ however you could deploy a new cluster with the same properties and only change 
 One way to do this with the cli could be:
 
 ```bash
-mongocli atlas cluster describe oldName --output json  > oldcluster.json
-mongocli atlas cluster create newName --file oldcluster.json
-mongocli atlas cluster delete oldName --force
+atlas cluster describe oldName --output json  > oldcluster.json
+atlas cluster create newName --file oldcluster.json
+atlas cluster delete oldName --force
 ```
 
 In case that **zsh** is available to you can even use the following utilities: 
 
 ```zsh
 # ZSH only
-(TMPSUFFIX=.json; mongocli atlas clusters create newName -f =(mongocli atlas clusters describe oldName -o json))
-mongocli atlas cluster delete oldName --force
+(TMPSUFFIX=.json; atlas clusters create newName -f =(atlas clusters describe oldName -o json))
+atlas cluster delete oldName --force
 ```

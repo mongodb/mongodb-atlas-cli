@@ -16,6 +16,7 @@ package customercerts
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -57,8 +58,10 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe",
-		Short: "Get the current customer-managed X.509 configuration details for an Atlas project.",
+		Short: "Return the details for the current customer-managed X.509 configuration for your project.",
 		Args:  require.NoArgs,
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the customer-managed X.509 configuration in the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s security customerCerts describe --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

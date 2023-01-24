@@ -49,10 +49,10 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-security-ldap-delete` - Delete an LDAP configuration userToDNMapping from an LDAP configuration.
-* :ref:`atlas-security-ldap-get` - Get an LDAP configuration.
-* :ref:`atlas-security-ldap-save` - Save an LDAP configuration.
-* :ref:`atlas-security-ldap-verify` - Request verification of an LDAP configuration.
+* :ref:`atlas-security-ldap-delete` - Remove the current LDAP configuration captured in the userToDNMapping document from your project.
+* :ref:`atlas-security-ldap-get` - Return the current LDAP configuration details for your project.
+* :ref:`atlas-security-ldap-save` - Save an LDAP configuration for your project.
+* :ref:`atlas-security-ldap-verify` - Request verification of an LDAP configuration for your project.
 
 
 .. toctree::

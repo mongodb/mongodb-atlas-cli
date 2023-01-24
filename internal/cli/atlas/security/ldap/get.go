@@ -16,6 +16,7 @@ package ldap
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -57,7 +58,9 @@ func GetBuilder() *cobra.Command {
 	opts := &GetOpts{}
 	cmd := &cobra.Command{
 		Use:   "get",
-		Short: "Get an LDAP configuration.",
+		Short: "Return the current LDAP configuration details for your project.",
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details of the current LDAP configuration in the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s security ldap get --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

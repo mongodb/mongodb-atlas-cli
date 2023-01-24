@@ -16,6 +16,7 @@ package namespaces
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -72,11 +73,15 @@ func (opts *ListOpts) newNamespaceOptions() *atlas.NamespaceOptions {
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "Retrieve up to 20 namespaces for collections experiencing slow queries for a specified host.",
-		Long:    "Namespaces appear in the following format: {database}.{collection}.",
+		Use:   "list",
+		Short: "Return up to 20 namespaces for collections experiencing slow queries on the specified host.",
+		Long: `Namespaces appear in the following format: {database}.{collection}.
+		
+If you don't set the duration option or the since option, this command returns data from the last 24 hours.`,
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Example: fmt.Sprintf(`  # Return a JSON-formatted list of namespaces for collections with slow queries for the atlas-111ggi-shard-00-00.111xx.mongodb.net:27017 host in the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s performanceAdvisor namespaces list --processName atlas-111ggi-shard-00-00.111xx.mongodb.net:27017 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -97,5 +102,8 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.ProcessName)
+
 	return cmd
 }

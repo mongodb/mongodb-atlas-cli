@@ -60,10 +60,11 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe <hostname:port>",
-		Short:   "Return the details for the MongoDB process you specify.",
-		Example: fmt.Sprintf(`  %s process describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`, cli.ExampleAtlasEntryPoint()),
-		Args:    require.ExactArgs(1),
+		Use:   "describe <hostname:port>",
+		Short: "Return the details for the specified MongoDB process for your project.",
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the MongoDB process with hostname and port atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
+  %s process describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 --output json`, cli.ExampleAtlasEntryPoint()),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 		},

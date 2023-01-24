@@ -47,7 +47,7 @@ Options
    * - --currentIp
      - 
      - false
-     - Flag that indicates whether to use the IP Address from the host that is currently executing the command.
+     - Flag that indicates whether to add the IP address from the host that is currently executing the command to the access list.
    * - --force
      - 
      - false
@@ -67,7 +67,7 @@ Options
    * - --password
      - string
      - false
-     - User's password.
+     - Password for the database user.
    * - --provider
      - string
      - false

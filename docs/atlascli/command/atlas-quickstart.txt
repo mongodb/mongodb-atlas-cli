@@ -12,9 +12,9 @@ atlas quickstart
    :depth: 1
    :class: singlecol
 
-Create, configure, and connect to an Atlas cluster.
+Create, configure, and connect to an Atlas cluster for your project.
 
-This command creates a new cluster, adds your public IP to the atlas access list and creates a db user to access your new MongoDB instance.
+This command creates a new cluster, adds your public IP to the atlas access list, creates a database user to access your new MongoDB instance, loads sample data, and connects to the new cluster using Mongosh.
 
 Syntax
 ------
@@ -47,7 +47,7 @@ Options
    * - --currentIp
      - 
      - false
-     - Flag that indicates whether to use the IP Address from the host that is currently executing the command.
+     - Flag that indicates whether to add the IP address from the host that is currently executing the command to the access list.
    * - -Y, --default
      - 
      - false
@@ -55,7 +55,7 @@ Options
    * - --force
      - 
      - false
-     - If specified, skips asking for confirmation before proceeding with a requested action.
+     - If specified, skips asking for input and creates a cluster with default settings for any options you don't specify.
    * - -h, --help
      - 
      - false
@@ -63,7 +63,7 @@ Options
    * - --password
      - string
      - false
-     - User's password.
+     - Password for the database user.
    * - --projectId
      - string
      - false
@@ -71,11 +71,11 @@ Options
    * - --provider
      - string
      - false
-     - Name of your cloud service provider. Valid values are AWS, AZURE, or GCP.
+     - Name of your cloud service provider. Valid values are AWS, AZURE, or GCP. This value defaults to "AWS".
    * - -r, --region
      - string
      - false
-     - Physical location of your MongoDB cluster. For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws. For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure. For a complete list of supported GCP regions, see: https://docs.atlas.mongodb.com/reference/google-gcp/#google-gcp.
+     - Physical location of your MongoDB cluster. For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws. For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure. For a complete list of supported GCP regions, see: https://docs.atlas.mongodb.com/reference/google-gcp/#google-gcp. This value defaults to "US_EAST_1".
    * - --skipMongosh
      - 
      - false
@@ -114,6 +114,11 @@ Examples
 
 .. code-block::
 
-   # Skip setting cluster name, provider or database username by using the command options:
+   # Create a Google Cloud cluster named Test with a database user named dbuserTest, add your current IP address to the access list, load sample data, and connect using Mongosh:
+   atlas quickstart --clusterName Test --provider GCP --username dbuserTest --currentIp
+ 		
+   
+.. code-block::
+
+   # Create a cluster with the default provider and settings, randomly generate the cluster name and database username, load sample data, and connect using Mongosh:
    atlas quickstart --force
-   atlas quickstart --clusterName Test --provider GCP --username dbuserTest

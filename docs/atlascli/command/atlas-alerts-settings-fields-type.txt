@@ -12,7 +12,7 @@ atlas alerts settings fields type
    :depth: 1
    :class: singlecol
 
-Lists available field types for your alert configurations.
+Return all available field types that the matcherFieldName option accepts when you create or update an alert configuration.
 
 Syntax
 ------
@@ -59,3 +59,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return a JSON-formatted list of accepted field types for the matchersFieldName option:
+   atlas alerts settings fields type --output json

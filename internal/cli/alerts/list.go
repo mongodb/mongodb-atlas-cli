@@ -73,12 +73,9 @@ func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
 		Use:   "list",
-		Short: "Retrieves all alerts for the specified Atlas project.",
-		Example: fmt.Sprintf(`  # This example uses the "%[1]s alerts list" command to retrieve all alerts that occurred for the specified project. It uses the profile named "myprofile" for accessing Atlas.
-  %[1]s alerts list \
-    --projectId 5df90590f10fab5e33de2305 \
-    -o json \
-    --profile myprofile`, cli.ExampleAtlasEntryPoint()),
+		Short: "Return all alerts for your project.",
+		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all alerts for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s alerts list --projectId 5e2211c17a3e5a48f5497de3 -output json`, cli.ExampleAtlasEntryPoint()),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

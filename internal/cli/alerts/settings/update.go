@@ -16,6 +16,7 @@ package settings
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -63,11 +64,16 @@ func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
 		Use:   "update <alertConfigId>",
-		Short: "Updates one alert configuration in the specified project.",
+		Short: "Modify the details of the specified alert configuration for your project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"alertConfigIdDesc": "Unique identifier of the alert configuration you want to update.",
 		},
+		Example: fmt.Sprintf(`  # Modify the alert configuration with the ID 5d1113b25a115342acc2d1aa so that it notifies a user when they join a group for the project with the ID 5df90590f10fab5e33de2305:
+  %s alerts settings update 5d1113b25a115342acc2d1aa --event JOINED_GROUP --enabled \
+		--notificationType USER --notificationEmailEnabled \
+		--notificationUsername john@example.com \
+		-output json --projectId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -83,7 +89,11 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.event, flag.Event, "", usage.Event)
 	cmd.Flags().BoolVar(&opts.enabled, flag.Enabled, false, usage.Enabled)
-	cmd.Flags().StringVar(&opts.matcherFieldName, flag.MatcherFieldName, "", usage.MatcherFieldName)
+	if config.BinName() == config.MongoCLI {
+		cmd.Flags().StringVar(&opts.matcherFieldName, flag.MatcherFieldName, "", usage.MCLIMatcherFieldName)
+	} else {
+		cmd.Flags().StringVar(&opts.matcherFieldName, flag.MatcherFieldName, "", usage.MatcherFieldName)
+	}
 	cmd.Flags().StringVar(&opts.matcherOperator, flag.MatcherOperator, "", usage.MatcherOperator)
 	cmd.Flags().StringVar(&opts.matcherValue, flag.MatcherValue, "", usage.MatcherValue)
 	cmd.Flags().StringVar(&opts.metricThresholdMetricName, flag.MetricName, "", usage.MetricName)

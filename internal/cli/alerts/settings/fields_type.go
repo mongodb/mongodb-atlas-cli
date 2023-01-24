@@ -16,6 +16,7 @@ package settings
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -56,9 +57,11 @@ func FieldsTypeBuilder() *cobra.Command {
 	opts.Template = matcherFieldsTemplate
 	cmd := &cobra.Command{
 		Use:     "type",
-		Short:   "Lists available field types for your alert configurations.",
+		Short:   "Return all available field types that the matcherFieldName option accepts when you create or update an alert configuration.",
 		Aliases: []string{"types"},
 		Args:    require.NoArgs,
+		Example: fmt.Sprintf(`  # Return a JSON-formatted list of accepted field types for the matchersFieldName option:
+  %s alerts settings fields type --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

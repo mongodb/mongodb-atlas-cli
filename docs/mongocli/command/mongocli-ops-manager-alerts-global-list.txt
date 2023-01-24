@@ -53,7 +53,7 @@ Options
    * - --status
      - string
      - false
-     - Alert's status. The values are TRACKING, OPEN, CLOSED, and CANCELED.
+     - State of this alert. Valid values are TRACKING, OPEN, CLOSED, and CANCELLED.
 
 Inherited Options
 -----------------

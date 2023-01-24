@@ -187,10 +187,12 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 		})
 	}
 
-	export := &atlasV1.AtlasBackupExportSpec{}
+	var export *atlasV1.AtlasBackupExportSpec
 	if bs.Export != nil {
-		export.ExportBucketID = bs.Export.ExportBucketID
-		export.FrequencyType = bs.Export.FrequencyType
+		export = &atlasV1.AtlasBackupExportSpec{
+			ExportBucketID: bs.Export.ExportBucketID,
+			FrequencyType:  bs.Export.FrequencyType,
+		}
 	}
 
 	schedule := &atlasV1.AtlasBackupSchedule{

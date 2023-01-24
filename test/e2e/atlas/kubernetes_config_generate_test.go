@@ -810,6 +810,8 @@ func defaultMaintenanceWindowAlertConfigs() []atlasV1.AlertConfiguration {
 	}
 }
 
+// TODO: add tests for project auditing and encryption at rest
+
 func TestKubernetesConfigGenerate(t *testing.T) {
 	n, err := e2e.RandInt(255)
 	require.NoError(t, err)

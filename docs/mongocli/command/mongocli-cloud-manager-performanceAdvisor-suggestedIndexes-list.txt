@@ -66,7 +66,7 @@ Options
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --processName
      - string
-     - true
+     - false
      - Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}.
    * - --projectId
      - string

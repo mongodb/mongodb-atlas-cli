@@ -77,7 +77,7 @@ Options
    * - --password
      - string
      - false
-     - User's password.
+     - Password for the user.
    * - --projectId
      - string
      - false

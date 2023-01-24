@@ -538,7 +538,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "quickstart",
 		Short: "Create, configure, and connect to an Atlas cluster for your project.",
-		Long:  "This command creates a new cluster, adds your public IP to the atlas access list, creates a database user to access your new MongoDB instance, loads sample data, and connects to the new cluster using Mongosh.",
+		Long:  "This command creates a new cluster, adds your public IP to the Atlas access list, creates a database user to access your new MongoDB instance, loads sample data, and connects to the new cluster using Mongosh.",
 		Example: fmt.Sprintf(`  # Create a Google Cloud cluster named Test with a database user named dbuserTest, add your current IP address to the access list, load sample data, and connect using Mongosh:
   %[1]s quickstart --clusterName Test --provider GCP --username dbuserTest --currentIp
 		
@@ -562,7 +562,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, defaultRegion, usage.Region)
 	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
-	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
+	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.DBUserPassword)
 	cmd.Flags().BoolVar(&opts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
 	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
 	cmd.Flags().BoolVarP(&opts.defaultValue, flag.Default, "Y", false, usage.QuickstartDefault)

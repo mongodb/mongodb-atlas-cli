@@ -49,7 +49,7 @@ Options
    * - -p, --password
      - string
      - false
-     - Password for the database user.
+     - Password for the user.
    * - --projectId
      - string
      - false

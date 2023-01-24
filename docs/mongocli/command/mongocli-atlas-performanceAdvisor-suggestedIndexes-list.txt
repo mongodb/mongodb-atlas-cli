@@ -39,7 +39,7 @@ Options
    * - --duration
      - int
      - false
-     - Length of time in milliseconds from the for which you want to return results. If you set the since option, duration starts at the since date and time. If you don't set the since option, this command returns data from the duration before the current time.
+     - Length of time in milliseconds for which you want to return results. If you set the since option, duration starts at the since date and time. If you don't set the since option, this command returns data from the duration before the current time.
    * - -h, --help
      - 
      - false

@@ -69,7 +69,7 @@ Options
    * - --password
      - string
      - false
-     - Password for the database user.
+     - Password for the user.
    * - --projectRole
      - strings
      - false

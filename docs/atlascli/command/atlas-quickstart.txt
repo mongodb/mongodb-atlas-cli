@@ -14,7 +14,7 @@ atlas quickstart
 
 Create, configure, and connect to an Atlas cluster for your project.
 
-This command creates a new cluster, adds your public IP to the atlas access list, creates a database user to access your new MongoDB instance, loads sample data, and connects to the new cluster using Mongosh.
+This command creates a new cluster, adds your public IP to the Atlas access list, creates a database user to access your new MongoDB instance, loads sample data, and connects to the new cluster using Mongosh.
 
 Syntax
 ------

@@ -73,11 +73,11 @@ Options
    * - --matcherOperator
      - string
      - false
-     - Comparison operator to apply when checking the current metric against matcherValue. Valid values are EQUALS, CONTAINS, STARTS_WITH, ENDS_WITH, NOT_EQUALS, NOT_CONTAINS, REGEX.
+     - Comparison operator to apply when checking the current metric against matcherValue. Valid values are CONTAINS, ENDS_WITH, EQUALS, NOT_CONTAINS, NOT_EQUALS, REGEX, STARTS_WITH.
    * - --matcherValue
      - string
      - false
-     - Value to test with the specified operator. If matcherFieldName is set to TYPE_NAME, you can match on the following values: PRIMARY, SECONDARY, STANDALONE, CONFIG, MONGOS.
+     - Value to test with the specified operator. If matcherFieldName is set to TYPE_NAME, you can match on the following values: CONFIG, MONGOS, PRIMARY, SECONDARY, STANDALONE.
    * - --metricMode
      - string
      - false
@@ -97,7 +97,7 @@ Options
    * - --metricUnits
      - string
      - false
-     - Units for the threshold value. Value values are BITS, BYTES, DAYS, GIGABITS, GIGABYTES, HOURS, KILOBITS, KILOBYTES, MEGABITS, MEGABYTES, MILLISECONDS, MINUTES, PETABYTES, RAW, SECONDS, TERABYTES.
+     - Units for the threshold value. Valid values are BITS, BYTES, DAYS, GIGABITS, GIGABYTES, HOURS, KILOBITS, KILOBYTES, MEGABITS, MEGABYTES, MILLISECONDS, MINUTES, PETABYTES, RAW, SECONDS, TERABYTES.
    * - --notificationChannelName
      - string
      - false

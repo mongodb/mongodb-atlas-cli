@@ -49,12 +49,12 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-privateEndpoints-azure-create` - Create a new Azure Private Endpoint for your project.
-* :ref:`atlas-privateEndpoints-azure-delete` - Delete a specific Azure Private Endpoint for your project.
-* :ref:`atlas-privateEndpoints-azure-describe` - Return a specific Azure Private Endpoints for your project.
+* :ref:`atlas-privateEndpoints-azure-create` - Create a new Azure private endpoint for your project.
+* :ref:`atlas-privateEndpoints-azure-delete` - Remove the specified Azure private endpoint from your project.
+* :ref:`atlas-privateEndpoints-azure-describe` - Return the details for the specified Azure private endpoint for your project.
 * :ref:`atlas-privateEndpoints-azure-interfaces` - Manage Atlas Azure private endpoint interfaces.
-* :ref:`atlas-privateEndpoints-azure-list` - List Azure Private Endpoints for your project.
-* :ref:`atlas-privateEndpoints-azure-watch` - Watch for a specific Azure Private Endpoint to be available.
+* :ref:`atlas-privateEndpoints-azure-list` - Return all Azure private endpoints for your project.
+* :ref:`atlas-privateEndpoints-azure-watch` - Watch the specified Azure private endpoint in your project until it becomes available.
 
 
 .. toctree::

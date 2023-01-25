@@ -57,7 +57,7 @@ Options
    * - --endpointServiceId
      - string
      - true
-     - Unique identifier of the private endpoint service for which you want to retrieve a private endpoint.
+     - Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.
    * - --gcpProjectId
      - string
      - true

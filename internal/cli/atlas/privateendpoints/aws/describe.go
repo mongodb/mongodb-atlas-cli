@@ -68,12 +68,12 @@ func DescribeBuilder() *cobra.Command {
 		Args: cobra.MatchAll(require.ExactArgs(1), func(cmd *cobra.Command, args []string) error {
 			return validate.ObjectID(args[0])
 		}),
-		Short: "Return a specific AWS Private Endpoints for your project.",
+		Short: "Return the details for the specified AWS private endpoints for your project.",
 		Annotations: map[string]string{
-			"privateEndpointIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint.",
+			"privateEndpointIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.",
 		},
-		Example: fmt.Sprintf(`  # This example uses the profile named "myprofile" for accessing Atlas.
-  %s privateendpoints aws describe 0123456789abcdefghijklmn -P myprofile`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the AWS private endpoint connection with the ID 5f4fc81c1f03a835c2728ff7 for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s privateEndpoints aws describe 5f4fc81c1f03a835c2728ff7 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.privateEndpointID = args[0]
 			return opts.PreRunE(

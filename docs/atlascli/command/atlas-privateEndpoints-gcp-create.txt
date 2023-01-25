@@ -49,7 +49,7 @@ Options
    * - --region
      - string
      - true
-     - Cloud provider region in which you want to create the private endpoint connection.
+     - Cloud provider region in which you want to create the private endpoint connection. For a complete list of supported AWS regions, see: https://www.mongodb.com/docs/atlas/reference/amazon-aws/. For a complete list of supported Azure regions, see: https://www.mongodb.com/docs/atlas/reference/microsoft-azure/#microsoft-azure. For a complete list of supported GCP regions, see: https://www.mongodb.com/docs/atlas/reference/google-gcp/.
 
 Inherited Options
 -----------------

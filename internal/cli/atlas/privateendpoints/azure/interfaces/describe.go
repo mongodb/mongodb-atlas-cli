@@ -16,6 +16,7 @@ package interfaces
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -63,10 +64,12 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <privateEndpointResourceId>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
-		Short:   "Return a specific Azure private endpoint interface for your project.",
+		Short:   "Return the details for the specified Azure private endpoint interface for your project.",
 		Annotations: map[string]string{
-			"privateEndpointResourceIdDesc": "Unique identifier of the private endpoint you want to retrieve.",
+			"privateEndpointResourceIdDesc": "Unique string that identifies the Azure private endpoint interface in Azure.",
 		},
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details of the Azure private endpoint interface with the ID /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/providers/Microsoft.Network/privateEndpoints/cli-test in Azure for an AWS private endpoint with the ID 5f4fc14da2b47835a58c63a2 in Atlas:
+  %s privateEndpoints azure interfaces describe /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/providers/Microsoft.Network/privateEndpoints/cli-test --endpointServiceId 5f4fc14da2b47835a58c63a2`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.privateEndpointID = args[0]
 			return opts.PreRunE(

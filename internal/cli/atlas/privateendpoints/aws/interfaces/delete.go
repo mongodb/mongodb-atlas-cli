@@ -16,6 +16,7 @@ package interfaces
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -53,11 +54,13 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <interfaceEndpointId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a specific AWS private endpoint interface and the related endpoint service for your project.",
+		Short:   "Remove the specified AWS private endpoint interface and related service from your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"interfaceEndpointIdDesc": "Unique identifier of the private endpoint you want to delete.",
+			"interfaceEndpointIdDesc": "Unique string that identifies the AWS private endpoint interface in AWS.",
 		},
+		Example: fmt.Sprintf(`  # Remove the AWS private endpoint interface with the ID vpce-00713b5e644e830a3 in AWS from the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s privateEndpoints aws interfaces delete vpce-00713b5e644e830a3 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},

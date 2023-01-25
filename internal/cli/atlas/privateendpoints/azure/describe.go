@@ -16,6 +16,7 @@ package azure
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -62,10 +63,12 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <privateEndpointId>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
-		Short:   "Return a specific Azure Private Endpoints for your project.",
+		Short:   "Return the details for the specified Azure private endpoint for your project.",
 		Annotations: map[string]string{
-			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+			"privateEndpointIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.",
 		},
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the Azure private endpoint connection with the ID 5f4fc81c1f03a835c2728ff7 for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s privateEndpoints azure describe 5f4fc81c1f03a835c2728ff7 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.PreRunE(

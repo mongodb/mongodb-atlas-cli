@@ -12,7 +12,7 @@ mongocli atlas privateEndpoints azure watch
    :depth: 1
    :class: singlecol
 
-Watch for a specific Azure Private Endpoint to be available.
+Watch the specified Azure private endpoint in your project until it becomes available.
 
 This command checks the endpoint's state periodically until the endpoint reaches an AVAILABLE or FAILED state. 
 Once the endpoint reaches the expected state, the command prints "Private endpoint changes completed."
@@ -42,7 +42,7 @@ Arguments
    * - privateEndpointId
      - string
      - true
-     - Unique 22-character alphanumeric string that identifies the private endpoint.
+     - Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.
 
 Options
 -------
@@ -85,4 +85,5 @@ Examples
 
 .. code-block::
 
-   mongocli atlas privateEndpoint azure watch vpce-abcdefg0123456789
+   # Watch for the Azure private endpoint with the ID 5f4fc14da2b47835a58c63a2 to become available in the project with the ID 5e2211c17a3e5a48f5497de3:
+   mongocli atlas privateEndpoints azure watch 5f4fc14da2b47835a58c63a2 --projectId 5e2211c17a3e5a48f5497de3

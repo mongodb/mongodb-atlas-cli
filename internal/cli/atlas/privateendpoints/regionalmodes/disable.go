@@ -16,6 +16,7 @@ package regionalmodes
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -54,7 +55,10 @@ func DisableBuilder() *cobra.Command {
 	opts := &DisableOpts{}
 	cmd := &cobra.Command{
 		Use:   "disable",
-		Short: "Disable the regionalized private endpoint setting for your Atlas project.",
+		Short: "Disable the regionalized private endpoint setting for your project.",
+		Long:  "This disables the ability to create multiple private resources per region in all cloud service providers for this project.",
+		Example: fmt.Sprintf(`  # Disable the regionalied private endpoint setting in the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s privateEndpoints regionalModes disable --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -1299,6 +1299,7 @@ tasks:
   - name: atlas_cleanup_e2e
     tags: [ "e2e","cleanup", "foliage_infrequent_task" ]
     must_have_test_results: true
+    stepback: false
     depends_on:
       - name: compile
         variant: "code_health"
@@ -1318,6 +1319,7 @@ tasks:
   - name: atlas_gov_cleanup_e2e
     tags: [ "e2e","cleanup" ]
     must_have_test_results: true
+    stepback: false
     depends_on:
       - name: compile
         variant: "code_health"

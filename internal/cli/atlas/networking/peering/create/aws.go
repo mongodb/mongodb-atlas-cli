@@ -123,10 +123,13 @@ func AwsBuilder() *cobra.Command {
 	opts := &AWSOpts{}
 	cmd := &cobra.Command{
 		Use:   "aws",
-		Short: "Create a connection with AWS.",
-		Args:  require.NoArgs,
-		Example: fmt.Sprintf(`  # The following command creates a peering connection between the Atlas VPC and your AWS VPC for a project using the default profile.
-  %s networking peering create aws --accountId <aws-account-id> --atlasCidrBlock 192.168.0.0/24 --region us-east-1 --routeTableCidrBlock 10.0.0.0/24 --vpcId vpc-078ac381aa90e1e63`, cli.ExampleAtlasEntryPoint()),
+		Short: "Create a network peering connection between the Atlas VPC and your AWS VPC.",
+		Long: `The network peering create command checks if a VPC exists in the region you specify for your Atlas project. If one exists, this command creates the peering connection between that VPC and your VPC. If an Atlas VPC doesn't exist, this command creates one and creates a connection between it and your VPC.
+		
+		To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.`,
+		Args: require.NoArgs,
+		Example: fmt.Sprintf(`  # Create a network peering connection between the Atlas VPC in CIDR block 192.168.0.0/24 and your AWS VPC in CIDR block 10.0.0.0/24 for AWS account number 854333054055:
+  %s networking peering create aws --accountId 854333054055 --atlasCidrBlock 192.168.0.0/24 --region us-east-1 --routeTableCidrBlock 10.0.0.0/24 --vpcId vpc-078ac381aa90e1e63`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

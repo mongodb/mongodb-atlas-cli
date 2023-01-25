@@ -11,7 +11,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.0
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
 	github.com/PaesslerAG/jsonpath v0.1.1
-	github.com/aws/aws-sdk-go v1.44.180
+	github.com/aws/aws-sdk-go v1.44.185
 	github.com/briandowns/spinner v1.20.0
 	github.com/creack/pty v1.1.18
 	github.com/evergreen-ci/shrub v0.0.0-20220520145438-44fbdf0045c8
@@ -25,7 +25,7 @@ require (
 	github.com/mattn/go-isatty v0.0.17
 	github.com/mongodb-forks/digest v1.0.4
 	github.com/mongodb-labs/cobra2snooty v0.12.2
-	github.com/mongodb/mongodb-atlas-kubernetes v1.5.1
+	github.com/mongodb/mongodb-atlas-kubernetes v1.6.0
 	github.com/openlyinc/pointy v1.2.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4
@@ -41,11 +41,11 @@ require (
 	go.mongodb.org/ops-manager v0.46.0
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
 	golang.org/x/mod v0.7.0
-	google.golang.org/api v0.107.0
+	google.golang.org/api v0.108.0
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.26.0
-	k8s.io/apimachinery v0.26.0
+	k8s.io/apimachinery v0.26.1
 	k8s.io/client-go v0.26.0
 )
 

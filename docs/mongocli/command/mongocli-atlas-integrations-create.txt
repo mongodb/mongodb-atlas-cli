@@ -49,11 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-integrations-create-DATADOG` - Create or update the Datadog integration.
-* :ref:`mongocli-atlas-integrations-create-OPS_GENIE` - Create or update the Ops Genie integration.
-* :ref:`mongocli-atlas-integrations-create-PAGER_DUTY` - Create or update the PagerDuty integration.
-* :ref:`mongocli-atlas-integrations-create-VICTOR_OPS` - Create or update the VictorOps integrations
-* :ref:`mongocli-atlas-integrations-create-WEBHOOK` - Create or update the Webhook integration
+* :ref:`mongocli-atlas-integrations-create-DATADOG` - Create or update a Datadog integration for your project.
+* :ref:`mongocli-atlas-integrations-create-OPS_GENIE` - Create or update an Opsgenie integration for your project.
+* :ref:`mongocli-atlas-integrations-create-PAGER_DUTY` - Create or update a PagerDuty integration for your project.
+* :ref:`mongocli-atlas-integrations-create-VICTOR_OPS` - Create or update a Splunk On-Call integration for your project.
+* :ref:`mongocli-atlas-integrations-create-WEBHOOK` - Create or update a webhook integration for your project.
 
 
 .. toctree::

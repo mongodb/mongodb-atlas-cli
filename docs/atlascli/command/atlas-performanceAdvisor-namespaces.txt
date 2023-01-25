@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-performanceAdvisor-namespaces-list` - Retrieve up to 20 namespaces for collections experiencing slow queries for a specified host.
+* :ref:`atlas-performanceAdvisor-namespaces-list` - Return up to 20 namespaces for collections experiencing slow queries on the specified host.
 
 
 .. toctree::

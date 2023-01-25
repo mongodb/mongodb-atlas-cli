@@ -55,10 +55,10 @@ Related Commands
 
 * :ref:`mongocli-atlas-dbusers-certs` - Manage Atlas x509 certificates for your database users.
 * :ref:`mongocli-atlas-dbusers-create` - Create a database user for the specified project.
-* :ref:`mongocli-atlas-dbusers-delete` - Delete a database user for your project.
-* :ref:`mongocli-atlas-dbusers-describe` - Return a single Atlas database user for your project.
-* :ref:`mongocli-atlas-dbusers-list` - List Atlas database users for your project.
-* :ref:`mongocli-atlas-dbusers-update` - Update a database user for your project.
+* :ref:`mongocli-atlas-dbusers-delete` - Remove the specified database user from your project.
+* :ref:`mongocli-atlas-dbusers-describe` - Return the details for the specified database user for your project.
+* :ref:`mongocli-atlas-dbusers-list` - Return all database users for your project.
+* :ref:`mongocli-atlas-dbusers-update` - Modify the details for a database user for your project.
 
 
 .. toctree::

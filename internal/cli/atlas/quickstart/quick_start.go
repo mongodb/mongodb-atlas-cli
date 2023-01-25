@@ -537,11 +537,13 @@ func Builder() *cobra.Command {
 	opts := NewQuickstartOpts(auth.NewLoginOpts())
 	cmd := &cobra.Command{
 		Use:   "quickstart",
-		Short: "Create, configure, and connect to an Atlas cluster.",
-		Long:  "This command creates a new cluster, adds your public IP to the atlas access list and creates a db user to access your new MongoDB instance.",
-		Example: fmt.Sprintf(`  # Skip setting cluster name, provider or database username by using the command options:
-  %[1]s quickstart --force
-  %[1]s quickstart --clusterName Test --provider GCP --username dbuserTest`, cli.ExampleAtlasEntryPoint()),
+		Short: "Create, configure, and connect to an Atlas cluster for your project.",
+		Long:  "This command creates a new cluster, adds your public IP to the Atlas access list, creates a database user to access your new MongoDB instance, loads sample data, and connects to the new cluster using Mongosh.",
+		Example: fmt.Sprintf(`  # Create a Google Cloud cluster named Test with a database user named dbuserTest, add your current IP address to the access list, load sample data, and connect using Mongosh:
+  %[1]s quickstart --clusterName Test --provider GCP --username dbuserTest --currentIp
+		
+  # Create a cluster with the default provider and settings, randomly generate the cluster name and database username, load sample data, and connect using Mongosh:
+  %[1]s quickstart --force`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRun(cmd.Context(), cmd.OutOrStdout()); err != nil {
 				return err
@@ -560,11 +562,11 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
 	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
-	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
+	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.DBUserPassword)
 	cmd.Flags().BoolVar(&opts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
 	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
 	cmd.Flags().BoolVarP(&opts.defaultValue, flag.Default, "Y", false, usage.QuickstartDefault)
-	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.ForceQuickstart)
 	cmd.Flags().BoolVar(&opts.CurrentIP, flag.CurrentIP, false, usage.CurrentIPSimplified)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

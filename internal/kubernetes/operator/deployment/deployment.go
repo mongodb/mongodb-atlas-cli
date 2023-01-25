@@ -75,6 +75,10 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 		return nil, err
 	}
 
+	customZoneMapping, managedNamespaces, err := buildGlobalDeployment(deployment.ReplicationSpecs, deploymentStore, projectID, clusterID)
+	if err != nil {
+		return nil, err
+	}
 	// TODO: DiskSizeGB field skipped on purpose. See https://jira.mongodb.org/browse/CLOUDP-146469
 	advancedSpec = &atlasV1.AdvancedDeploymentSpec{
 		BackupEnabled:            deployment.BackupEnabled,
@@ -88,6 +92,8 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 		ReplicationSpecs:         replicationSpec,
 		RootCertType:             deployment.RootCertType,
 		VersionReleaseSystem:     deployment.VersionReleaseSystem,
+		ManagedNamespaces:        managedNamespaces,
+		CustomZoneMapping:        customZoneMapping,
 	}
 
 	var backupScheduleRef common.ResourceRefNamespaced
@@ -133,6 +139,47 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 	return result, nil
 }
 
+func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec, globalDeploymentProvider store.GlobalClusterDescriber, projectID, clusterID string) ([]atlasV1.CustomZoneMapping, []atlasV1.ManagedNamespace, error) {
+	globalCluster, err := globalDeploymentProvider.GlobalCluster(projectID, clusterID)
+	if err != nil {
+		return nil, nil, err
+	}
+	var customZoneMapping []atlasV1.CustomZoneMapping
+	if globalCluster.CustomZoneMapping != nil {
+		// create map ID -> Name for zones
+		zoneMap := make(map[string]string, len(atlasRepSpec))
+		for _, rc := range atlasRepSpec {
+			zoneMap[rc.ID] = rc.ZoneName
+		}
+
+		customZoneMapping = make([]atlasV1.CustomZoneMapping, 0, len(globalCluster.CustomZoneMapping))
+		for location, zoneID := range globalCluster.CustomZoneMapping {
+			customZoneMapping = append(customZoneMapping, atlasV1.CustomZoneMapping{
+				Zone:     zoneMap[zoneID],
+				Location: location,
+			})
+		}
+	}
+
+	var managedNamespace []atlasV1.ManagedNamespace
+	if globalCluster.ManagedNamespaces == nil {
+		return customZoneMapping, nil, nil
+	}
+
+	for _, ns := range globalCluster.ManagedNamespaces {
+		managedNamespace = append(managedNamespace, atlasV1.ManagedNamespace{
+			Db:                     ns.Db,
+			Collection:             ns.Collection,
+			CustomShardKey:         ns.CustomShardKey,
+			NumInitialChunks:       ns.NumInitialChunks,
+			PresplitHashedZones:    ns.PresplitHashedZones,
+			IsCustomShardKeyHashed: ns.IsCustomShardKeyHashed,
+			IsShardKeyUnique:       ns.IsShardKeyUnique,
+		})
+	}
+
+	return customZoneMapping, managedNamespace, nil
+}
 func buildProcessArgs(configOptsProvider store.AtlasClusterConfigurationOptionsDescriber, projectID, clusterName string) (*atlasV1.ProcessArgs, error) {
 	pArgs, err := configOptsProvider.AtlasClusterConfigurationOptions(projectID, clusterName)
 	if err != nil {
@@ -183,7 +230,7 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 			Spec: atlasV1.AtlasBackupPolicySpec{
 				Items: items,
 			},
-			Status: atlasV1.AtlasBackupPolicyStatus{},
+			Status: status.BackupPolicyStatus{},
 		})
 	}
 
@@ -217,7 +264,7 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 			UpdateSnapshots:                   pointers.PtrValOrDefault(bs.UpdateSnapshots, false),
 			UseOrgAndGroupNamesInExportPrefix: pointers.PtrValOrDefault(bs.UseOrgAndGroupNamesInExportPrefix, false),
 		},
-		Status: atlasV1.AtlasBackupScheduleStatus{},
+		Status: status.BackupScheduleStatus{},
 	}
 	return schedule, policies
 }

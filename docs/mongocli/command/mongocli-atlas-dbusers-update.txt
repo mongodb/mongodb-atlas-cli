@@ -12,7 +12,7 @@ mongocli atlas dbusers update
    :depth: 1
    :class: singlecol
 
-Update a database user for your project.
+Modify the details for a database user for your project.
 
 Syntax
 ------
@@ -61,7 +61,7 @@ Options
    * - -p, --password
      - string
      - false
-     - User's password.
+     - Password for the user.
    * - --projectId
      - string
      - false
@@ -100,11 +100,11 @@ Examples
 
 .. code-block::
 
-   # Update roles for a database user:
-   mongocli atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>
+   # Update roles for a database user named myUser for the project with the ID 5e2211c17a3e5a48f5497de3:
+   mongocli atlas dbuser update myUser --role readWriteAnyDatabase --projectId 5e2211c17a3e5a48f5497de3
 
    
 .. code-block::
 
-   # Update scopes for a database user:
-   mongocli atlas dbuser update <username> --scope resourceName:resourceType --projectId <projectId>
+   # Update scopes for a database user named myUser for the project with the ID 5e2211c17a3e5a48f5497de3:
+   mongocli atlas dbuser update myUser --scope resourceName:resourceType --projectId 5e2211c17a3e5a48f5497de3

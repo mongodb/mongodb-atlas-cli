@@ -12,7 +12,7 @@ mongocli atlas security ldap get
    :depth: 1
    :class: singlecol
 
-Get an LDAP configuration.
+Return the current LDAP configuration details for your project.
 
 Syntax
 ------
@@ -63,3 +63,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return the JSON-formatted details of the current LDAP configuration in the project with the ID 5e2211c17a3e5a48f5497de3:
+   mongocli atlas security ldap get --projectId 5e2211c17a3e5a48f5497de3 --output json

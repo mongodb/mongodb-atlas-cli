@@ -50,9 +50,9 @@ Related Commands
 ----------------
 
 * :ref:`atlas-integrations-create` - Create operations.
-* :ref:`atlas-integrations-delete` - Delete a third party integration
-* :ref:`atlas-integrations-describe` - Get a third party integration
-* :ref:`atlas-integrations-list` - List third party integrations
+* :ref:`atlas-integrations-delete` - Remove the specified third-party integration from your project.
+* :ref:`atlas-integrations-describe` - Return the details for the specified third-party integration for your project.
+* :ref:`atlas-integrations-list` - Return all active third-party integrations for your project.
 
 
 .. toctree::

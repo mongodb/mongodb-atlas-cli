@@ -12,7 +12,9 @@ mongocli atlas integrations create WEBHOOK
    :depth: 1
    :class: singlecol
 
-Create or update the Webhook integration
+Create or update a webhook integration for your project.
+
+The requesting API key must have the Organization Owner or Project Owner role to configure a webhook integration.
 
 Syntax
 ------
@@ -49,11 +51,11 @@ Options
    * - --secret
      - string
      - true
-     - An optional field for your webhook secret.
+     - Secret that secures your webhook.
    * - --url
      - string
      - true
-     - Your webhook URL.
+     - Endpoint web address to which Atlas sends notifications.
 
 Inherited Options
 -----------------
@@ -71,3 +73,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Integrate a webhook with Atlas that uses the secret mySecret for the project with the ID 5e2211c17a3e5a48f5497de3:
+   mongocli atlas integrations create WEBHOOK --url http://9b4ac7aa.abc.io/payload --secret mySecret --projectId 5e2211c17a3e5a48f5497de3 --output json

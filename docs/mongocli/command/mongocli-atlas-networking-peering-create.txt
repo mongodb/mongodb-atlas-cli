@@ -49,9 +49,9 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-networking-peering-create-aws` - Create a connection with AWS.
-* :ref:`mongocli-atlas-networking-peering-create-azure` - Create a connection with Azure.
-* :ref:`mongocli-atlas-networking-peering-create-gcp` - Create a connection with GCP.
+* :ref:`mongocli-atlas-networking-peering-create-aws` - Create a network peering connection between the Atlas VPC and your AWS VPC.
+* :ref:`mongocli-atlas-networking-peering-create-azure` - Create a network peering connection between the Atlas VPC and your Azure VNet.
+* :ref:`mongocli-atlas-networking-peering-create-gcp` - Create a network peering connection between the Atlas VPC and your Google Cloud VPC.
 
 
 .. toctree::

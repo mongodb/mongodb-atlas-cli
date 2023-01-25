@@ -66,16 +66,16 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use: "describe <hostname:port> <diskName>",
-		Long: fmt.Sprintf(`To retrieve the hostname and port needed for this command, run:
-$ %s process list`, cli.ExampleAtlasEntryPoint()),
-		Short: "Describe disk partition metrics for a disk partition on a specified host.",
+		Long: fmt.Sprintf(`To return the hostname and port needed for this command, run
+%s processes list`, cli.ExampleAtlasEntryPoint()),
+		Short: "Return the measurements of a disk or partition on the specified host.",
 		Args:  require.ExactArgs(argsN),
 		Annotations: map[string]string{
-			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
+			"hostname:portDesc": "Hostname and port number of the instance running the MongoDB process.",
 			"diskNameDesc":      "Label that identifies the disk or partition from which you want to retrieve metrics.",
 		},
-		Example: fmt.Sprintf(`  # This example retrieves disks metrics for the database "testDB" in the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
-  %s metrics disk describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # Return the JSON-formatted disk metrics from the last 36 hours with 5-minute granularity for the database named testDB in the host atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
+  %s metrics disks describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

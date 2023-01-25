@@ -12,7 +12,9 @@ mongocli atlas security customerCerts create
    :depth: 1
    :class: singlecol
 
-Saves a customer-managed X.509 configuration for an Atlas project.
+Saves a customer-managed X.509 configuration for your project.
+
+Saving a customer-managed X.509 configuration triggers a rolling restart.
 
 Syntax
 ------
@@ -67,3 +69,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Save the file named ca.pem stored in the files directory to the project with the ID 5e2211c17a3e5a48f5497de3:
+   mongocli atlas security customerCerts create --casFile files/ca.pem --projectId 5e2211c17a3e5a48f5497de3 --output json

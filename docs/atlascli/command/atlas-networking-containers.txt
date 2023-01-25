@@ -49,8 +49,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-networking-containers-delete` - Remove one network peering container in an Atlas project.
-* :ref:`atlas-networking-containers-list` - List network peering containers in an Atlas project.
+* :ref:`atlas-networking-containers-delete` - Remove the specified network peering container from your project.
+* :ref:`atlas-networking-containers-list` - Return all network peering containers for your project.
 
 
 .. toctree::

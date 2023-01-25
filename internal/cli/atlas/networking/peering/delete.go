@@ -16,6 +16,7 @@ package peering
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -52,10 +53,12 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <peerId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a peering connection from an Atlas project.",
+		Short:   "Remove the specified peering connection from your project.",
 		Args:    require.ExactArgs(1),
+		Example: fmt.Sprintf(`  # Remove the network peering connection with the ID 5f60c5bd0948295c093565ba in the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s networking peering delete 5f60c5bd0948295c093565ba --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
-			"peerIdDesc": "Network peering connection ID.",
+			"peerIdDesc": "Unique ID of the network peering connection that you want to delete.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {

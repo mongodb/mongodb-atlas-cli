@@ -12,7 +12,7 @@ mongocli atlas processes describe
    :depth: 1
    :class: singlecol
 
-Return the details for the MongoDB process you specify.
+Return the details for the specified MongoDB process for your project.
 
 Syntax
 ------
@@ -84,4 +84,5 @@ Examples
 
 .. code-block::
 
-   mongocli atlas process describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
+   # Return the JSON-formatted details for the MongoDB process with hostname and port atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
+   mongocli atlas process describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 --output json

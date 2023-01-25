@@ -16,6 +16,7 @@ package maintenance
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -54,7 +55,10 @@ func DeferBuilder() *cobra.Command {
 	opts := &DeferOpts{}
 	cmd := &cobra.Command{
 		Use:   "defer",
-		Short: "Defer the maintenance window.",
+		Short: "Defer scheduled maintenance for your project for one week.",
+		Long:  `To learn more about maintenance windows, see https://www.mongodb.com/docs/atlas/tutorial/cluster-maintenance-window/.`,
+		Example: fmt.Sprintf(`  # Defer scheduled maintenance for one week for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s maintenanceWindows defer --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

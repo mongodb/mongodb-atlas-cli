@@ -44,20 +44,21 @@ const (
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	name        string
-	provider    string
-	region      string
-	tier        string
-	members     int
-	shards      int
-	clusterType string
-	diskSizeGB  float64
-	backup      bool
-	biConnector bool
-	mdbVersion  string
-	filename    string
-	fs          afero.Fs
-	store       store.ClusterCreator
+	name               string
+	provider           string
+	region             string
+	tier               string
+	members            int
+	shards             int
+	clusterType        string
+	diskSizeGB         float64
+	backup             bool
+	biConnector        bool
+	terminationProtect bool
+	mdbVersion         string
+	filename           string
+	fs                 afero.Fs
+	store              store.ClusterCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -116,6 +117,9 @@ func (opts *CreateOpts) applyOpts(out *atlas.AdvancedCluster) {
 	}
 	if opts.biConnector {
 		out.BiConnector = &atlas.BiConnector{Enabled: &opts.biConnector}
+	}
+	if opts.terminationProtect {
+		out.TerminationProtectionEnabled = &opts.terminationProtect
 	}
 	out.ClusterType = opts.clusterType
 
@@ -246,6 +250,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.ClusterFilename)
 	cmd.Flags().StringVar(&opts.clusterType, flag.TypeFlag, replicaSet, usage.ClusterTypes)
 	cmd.Flags().IntVarP(&opts.shards, flag.Shards, flag.ShardsShort, defaultShardSize, usage.Shards)
+	cmd.Flags().BoolVar(&opts.terminationProtect, flag.TerminationProtect, false, usage.TerminationProtect)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

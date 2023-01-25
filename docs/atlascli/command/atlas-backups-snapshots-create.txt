@@ -87,7 +87,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------
@@ -95,4 +95,4 @@ Examples
 .. code-block::
 
    # Create a backup snapshot for the cluster named myDemo that Atlas retains for 30 days:
-   atlas backups snapshots create myDemo --desc "Daily snapshot" --retention 30
+   atlas backups snapshots create myDemo --desc "test" --retention 30

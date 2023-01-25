@@ -12,7 +12,7 @@ atlas clusters watch
    :depth: 1
    :class: singlecol
 
-Watch for a cluster to be available.
+Watch the specified cluster in your project until it becomes available.
 
 This command checks the cluster's status periodically until it reaches an IDLE state. 
 Once the cluster reaches the expected state, the command prints "Cluster available."
@@ -78,7 +78,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------

@@ -72,7 +72,7 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
 		Use:   "update <archiveId>",
-		Short: "Modify the archiving rule for the online archive for a cluster.",
+		Short: "Modify the archiving rule for the specified online archive for a cluster.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to update.",

@@ -12,7 +12,7 @@ atlas clusters update
    :depth: 1
    :class: singlecol
 
-Modify the settings for your MongoDB Atlas cluster.
+Modify the settings of the specified cluster.
 
 You can specify modifications in a JSON configuration file with the --file flag.
 		
@@ -99,7 +99,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------

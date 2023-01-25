@@ -12,7 +12,7 @@ atlas clusters create
    :depth: 1
    :class: singlecol
 
-Create one cluster in the specified project.
+Create a cluster for your project.
 
 To get started quickly, specify a name for your cluster, a cloud provider, and a region to deploy a three-member replica set with the latest MongoDB server version.
 For full control of your deployment, or to create multi-cloud clusters, provide a JSON configuration file with the --file flag.
@@ -56,11 +56,11 @@ Options
    * - --backup
      - 
      - false
-     - If true, enables Continuous Cloud Backup for your deployment. This option is unavailable for clusters smaller than M10.
+     - Flag that enables Continuous Cloud Backup for your deployment. This option is unavailable for clusters smaller than M10.
    * - --biConnector
      - 
      - false
-     - If true, enables BI Connector for Atlas on the deployment.
+     - Flag that enables BI Connector for Atlas on the deployment.
    * - --diskSizeGB
      - float
      - false
@@ -124,7 +124,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------

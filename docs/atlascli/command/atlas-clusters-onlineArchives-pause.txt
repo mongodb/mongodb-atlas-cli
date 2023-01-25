@@ -12,7 +12,7 @@ atlas clusters onlineArchives pause
    :depth: 1
    :class: singlecol
 
-Pause the online archive for a cluster.
+Pause the specfied online archive for your cluster.
 
 Syntax
 ------
@@ -81,7 +81,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------

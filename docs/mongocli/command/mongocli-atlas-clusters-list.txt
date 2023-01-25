@@ -12,7 +12,7 @@ mongocli atlas clusters list
    :depth: 1
    :class: singlecol
 
-Return all clusters for the project you specify.
+Return all clusters for your project.
 
 Syntax
 ------
@@ -69,12 +69,12 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------
 
 .. code-block::
 
-   # Return a JSON-formatted list of clusters for the project with ID 5e2211c17a3e5a48f5497de3:
+   # Return a JSON-formatted list of all clusters for the project with ID 5e2211c17a3e5a48f5497de3:
    mongocli atlas clusters list --projectId 5e2211c17a3e5a48f5497de3 --output json

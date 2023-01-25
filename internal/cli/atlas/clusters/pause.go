@@ -59,7 +59,7 @@ func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{
 		Use:   "pause <clusterName>",
-		Short: "Pause a running MongoDB cluster in Atlas.",
+		Short: "Pause the specified running MongoDB cluster.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to pause.",

@@ -55,9 +55,9 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <snapshotId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a backup snapshot.",
+		Short:   "Remove the specified backup snapshot.",
 		Args:    require.ExactArgs(1),
-		Example: fmt.Sprintf(`  # Delete the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the cluster named myDemo:
+		Example: fmt.Sprintf(`  # Remove the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the cluster named myDemo:
   %s backups snapshots delete 5f4007f327a3bd7b6f4103c5 --clusterName myDemo`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"snapshotIdDesc": "Unique identifier of the snapshot you want to delete.",

@@ -57,7 +57,7 @@ Options
    * - --enabled
      - 
      - false
-     - If set to true, the alert configuration is enabled.
+     - Enables the alert configuration.
    * - --event
      - string
      - false
@@ -113,7 +113,7 @@ Options
    * - --notificationEmailEnabled
      - 
      - false
-     - Flag indicating whether email notifications should be sent. Configurable for GROUP and USER notification types.
+     - Flag that enables email notifications. Configurable for GROUP and USER notification types.
    * - --notificationFlowName
      - string
      - false
@@ -141,7 +141,7 @@ Options
    * - --notificationSmsEnabled
      - 
      - false
-     - Flag indicating whether text message notifications should be sent.
+     - Flag that enables text message notifications.
    * - --notificationTeamId
      - string
      - false
@@ -185,7 +185,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------

@@ -62,7 +62,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List all online archives for a cluster.",
+		Short:   "Return all online archives for your cluster.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of online archives for the cluster named myCluster:

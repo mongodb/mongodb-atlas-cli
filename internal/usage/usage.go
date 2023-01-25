@@ -39,7 +39,7 @@ const (
 	Granularity              = "ISO 8601-formatted duration that specifies the interval between measurement data points. Only the following subset of ISO 8601-formatted time periods are supported: PT10S, PT1M, PT5M, PT1H, P1D. When you specify granularity, you must specify either period or start and end."
 	Page                     = "Page number that specifies a page of results."
 	Forever                  = "Acknowledges an alert 'forever'. You can't set both forever and until in the same command."
-	Status                   = "State of this alert. Valid values are TRACKING, OPEN, CLOSED, and CANCELLED."
+	Status                   = "State of this alert. Valid values are TRACKING, OPEN, CLOSED, and CANCELLED." //nolint:gospell
 	Until                    = "ISO 8601-formatted time until which the alert has been acknowledged. This command returns this value if a MongoDB user previously acknowledged this alert. After this date, the alert becomes unacknowledged."
 	ConnectionStringType     = "When set to 'private', retrieves the connection string for the network peering endpoint."
 	Limit                    = "Number of items per results page."

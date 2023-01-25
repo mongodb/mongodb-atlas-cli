@@ -75,7 +75,7 @@ func ListBuilder() *cobra.Command {
 		Use:   "list",
 		Short: "Return all alerts for your project.",
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all alerts for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s alerts list --projectId 5e2211c17a3e5a48f5497de3 -output json`, cli.ExampleAtlasEntryPoint()),
+  %s alerts list --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

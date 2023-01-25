@@ -24,6 +24,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
@@ -306,7 +307,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore.EXPECT().TeamByID(orgID, teamID).Return(teams, nil)
 		projectStore.EXPECT().TeamUsers(orgID, teamID).Return(teamUsers, nil)
 
-		projectResult, err := BuildAtlasProject(projectStore, orgID, projectID, targetNamespace, true)
+		projectResult, err := BuildAtlasProject(projectStore, orgID, projectID, targetNamespace)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
@@ -386,13 +387,13 @@ func TestBuildAtlasProject(t *testing.T) {
 				APIVersion: "atlas.mongodb.com/v1",
 			},
 			ObjectMeta: v1.ObjectMeta{
-				Name:      strings.ToLower(p.Name),
+				Name:      resources.NormalizeAtlasResourceName(p.Name),
 				Namespace: targetNamespace,
 			},
 			Spec: atlasV1.AtlasProjectSpec{
 				Name: p.Name,
 				ConnectionSecret: &common.ResourceRef{
-					Name: fmt.Sprintf(credSecretFormat, p.Name),
+					Name: resources.NormalizeAtlasResourceName(fmt.Sprintf(credSecretFormat, p.Name)),
 				},
 				ProjectIPAccessList: []project.IPAccessList{
 					{

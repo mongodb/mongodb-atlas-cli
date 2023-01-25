@@ -114,7 +114,7 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 	var resources []runtime.Object
 
 	// Project
-	projectData, err := project.BuildAtlasProject(e.dataProvider, e.orgID, e.projectID, e.targetNamespace, e.includeSecretsData)
+	projectData, err := project.BuildAtlasProject(e.dataProvider, e.orgID, e.projectID, e.targetNamespace)
 	if err != nil {
 		return nil, "", err
 	}
@@ -134,7 +134,7 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		projectData.Project.Namespace, e.orgID, e.includeSecretsData))
 
 	// DB users
-	usersData, relatedSecrets, err := dbusers.BuildDBUsers(e.dataProvider, e.projectID, projectData.Project.Name, e.targetNamespace, e.includeSecretsData)
+	usersData, relatedSecrets, err := dbusers.BuildDBUsers(e.dataProvider, e.projectID, projectData.Project.Name, e.targetNamespace)
 	if err != nil {
 		return nil, "", err
 	}

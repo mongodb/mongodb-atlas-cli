@@ -20,6 +20,7 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
@@ -49,7 +50,7 @@ type AtlasProjectResult struct {
 	Teams   []*atlasV1.AtlasTeam
 }
 
-func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, orgID, projectID, targetNamespace string, includeSecret bool) (*AtlasProjectResult, error) {
+func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, orgID, projectID, targetNamespace string) (*AtlasProjectResult, error) {
 	data, err := projectStore.Project(projectID)
 	if err != nil {
 		return nil, err
@@ -70,9 +71,8 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, orgID, proj
 		return nil, err
 	}
 
-	secretRef := &common.ResourceRef{}
-	if includeSecret {
-		secretRef.Name = fmt.Sprintf(credSecretFormat, project.Name)
+	secretRef := &common.ResourceRef{
+		Name: resources.NormalizeAtlasResourceName(fmt.Sprintf(credSecretFormat, project.Name)),
 	}
 
 	integrations, intSecrets, err := buildIntegrations(projectStore, projectID, targetNamespace, true)
@@ -131,7 +131,7 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, orgID, proj
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      strings.ToLower(project.Name),
+			Name:      resources.NormalizeAtlasResourceName(project.Name),
 			Namespace: targetNamespace,
 		},
 		Spec: atlasV1.AtlasProjectSpec{
@@ -284,7 +284,7 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 			Type: list.Type,
 		}
 		secretRef := common.ResourceRefNamespaced{
-			Name:      secret.Name,
+			Name:      resources.NormalizeAtlasResourceName(secret.Name),
 			Namespace: targetNamespace,
 		}
 		switch list.Type {
@@ -704,7 +704,7 @@ func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, p
 				teamRef.TeamID, projectName, projectID, err)
 		}
 
-		crName := fmt.Sprintf("%s-team-%s", strings.ToLower(projectName), strings.ToLower(team.Name))
+		crName := fmt.Sprintf("%s-team-%s", resources.NormalizeAtlasResourceName(projectName), resources.NormalizeAtlasResourceName(team.Name))
 		teamsRefs = append(teamsRefs, atlasV1.Team{
 			TeamRef: common.ResourceRefNamespaced{
 				Name:      crName,

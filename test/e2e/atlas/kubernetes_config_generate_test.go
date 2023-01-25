@@ -28,6 +28,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
@@ -88,7 +89,7 @@ func InitialSetup(t *testing.T) KubernetesConfigGenerateProjectSuite {
 		t: t,
 	}
 	s.generator = newAtlasE2ETestGenerator(s.t)
-	s.generator.generateEmptyProject(fmt.Sprintf("kubernetes-%s", s.generator.projectName))
+	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
 	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace)
 
 	cliPath, err := e2e.AtlasCLIBin()
@@ -727,7 +728,7 @@ func referenceProject(name, namespace string) *atlasV1.AtlasProject {
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      name,
+			Name:      resources.NormalizeAtlasResourceName(name),
 			Namespace: namespace,
 		},
 		Status: status.AtlasProjectStatus{
@@ -738,7 +739,7 @@ func referenceProject(name, namespace string) *atlasV1.AtlasProject {
 		Spec: atlasV1.AtlasProjectSpec{
 			Name: name,
 			ConnectionSecret: &common.ResourceRef{
-				Name: fmt.Sprintf("%s-credentials", name),
+				Name: fmt.Sprintf("%s-credentials", resources.NormalizeAtlasResourceName(name)),
 			},
 			Settings: &atlasV1.ProjectSettings{
 				IsCollectDatabaseSpecificsStatisticsEnabled: pointers.MakePtr(true),

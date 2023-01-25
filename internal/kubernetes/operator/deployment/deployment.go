@@ -16,9 +16,9 @@ package deployment
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
@@ -109,12 +109,12 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      strings.ToLower(clusterID),
+			Name:      resources.NormalizeAtlasResourceName(clusterID),
 			Namespace: targetNamespace,
 		},
 		Spec: atlasV1.AtlasDeploymentSpec{
 			Project: common.ResourceRefNamespaced{
-				Name:      strings.ToLower(projectName),
+				Name:      resources.NormalizeAtlasResourceName(projectName),
 				Namespace: targetNamespace,
 			},
 			DeploymentSpec:         nil,
@@ -224,7 +224,7 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 				APIVersion: "atlas.mongodb.com/v1",
 			},
 			ObjectMeta: v1.ObjectMeta{
-				Name:      strings.ToLower(fmt.Sprintf("%s-backuppolicy", clusterName)),
+				Name:      resources.NormalizeAtlasResourceName(fmt.Sprintf("%s-backuppolicy", clusterName)),
 				Namespace: targetNamespace,
 			},
 			Spec: atlasV1.AtlasBackupPolicySpec{
@@ -248,14 +248,14 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      strings.ToLower(fmt.Sprintf("%s-backupschedule", clusterName)),
+			Name:      resources.NormalizeAtlasResourceName(fmt.Sprintf("%s-backupschedule", clusterName)),
 			Namespace: targetNamespace,
 		},
 		Spec: atlasV1.AtlasBackupScheduleSpec{
 			AutoExportEnabled: pointers.PtrValOrDefault(bs.AutoExportEnabled, false),
 			Export:            export,
 			PolicyRef: common.ResourceRefNamespaced{
-				Name:      policies[0].Name,
+				Name:      resources.NormalizeAtlasResourceName(policies[0].Name),
 				Namespace: policies[0].Namespace,
 			},
 			ReferenceHourOfDay:                pointers.PtrValOrDefault(bs.ReferenceHourOfDay, 0),
@@ -419,12 +419,12 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      strings.ToLower(deployment.Name),
+			Name:      resources.NormalizeAtlasResourceName(deployment.Name),
 			Namespace: targetNamespace,
 		},
 		Spec: atlasV1.AtlasDeploymentSpec{
 			Project: common.ResourceRefNamespaced{
-				Name:      strings.ToLower(projectName),
+				Name:      resources.NormalizeAtlasResourceName(projectName),
 				Namespace: targetNamespace,
 			},
 			BackupScheduleRef: common.ResourceRefNamespaced{},

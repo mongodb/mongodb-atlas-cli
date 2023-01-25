@@ -252,5 +252,15 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 
 	_ = cmd.MarkFlagFilename(flag.File)
 
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tier)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Provider)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Members)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Region)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DiskSizeGB)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.MDBVersion)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.BIConnector)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.TypeFlag)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Shards)
+
 	return cmd
 }

@@ -52,7 +52,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <roleName>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a custom database role for your project.",
+		Short:   "Remove the specified custom database role from your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"roleNameDesc": "Name of the custom role to delete.",

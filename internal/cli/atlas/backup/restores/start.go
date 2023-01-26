@@ -140,10 +140,11 @@ func StartBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:       fmt.Sprintf("start <%s|%s|%s>", automatedRestore, downloadRestore, pointInTimeRestore),
 		Short:     "Start a restore job for your project and cluster.",
+		Long:      "If you create an automated or pointInTime restore job, Atlas removes all existing data on the target cluster prior to the restore.",
 		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, downloadRestore, pointInTimeRestore},
 		Annotations: map[string]string{
-			"automated|download|pointInTimeDesc": "Type of restore job to create. Accepted values include: automated, download, pointInTime.",
+			"automated|download|pointInTimeDesc": "Type of restore job to create. Valid values include: automated, download, pointInTime. To learn more about types of restore jobs, see https://www.mongodb.com/docs/atlas/backup-restore-cluster/.",
 		},
 		Example: fmt.Sprintf(`  # Create an automated restore:
   %[1]s backup restore start automated \

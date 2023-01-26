@@ -12,7 +12,7 @@ atlas clusters delete
    :depth: 1
    :class: singlecol
 
-Delete a cluster from your project.
+Remove the specified cluster from your project.
 
 The command prompts you to confirm the operation when you run the command without the --force option. 
 		
@@ -81,19 +81,18 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------
 
 .. code-block::
 
-   # Delete a cluster named myCluster after prompting for a confirmation:
+   # Remove a cluster named myCluster after prompting for a confirmation:
    atlas clusters delete myCluster
-   Are you sure you want to delete: myCluster Y
    
    
 .. code-block::
 
-   # Delete a cluster named myCluster without requiring confirmation:
+   # Remove a cluster named myCluster without requiring confirmation:
    atlas clusters delete myCluster --force

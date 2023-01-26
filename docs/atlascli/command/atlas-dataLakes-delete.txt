@@ -12,7 +12,7 @@ atlas dataLakes delete
    :depth: 1
    :class: singlecol
 
-Delete a federated database instance from your project.
+Remove a federated database instance from your project.
 
 To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.
 
@@ -79,12 +79,12 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------
 
 .. code-block::
 
-   # Delete the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
+   # Remove the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
    atlas dataLakes delete myFDI --projectId 5e2211c17a3e5a48f5497de3

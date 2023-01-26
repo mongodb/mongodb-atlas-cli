@@ -64,12 +64,12 @@ func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
 		Use:   "watch <snapshotId>",
-		Short: "Watch for a snapshot to be available.",
+		Short: "Watch the specified snapshot in your project until it becomes available.",
 		Long: `This command checks the snapshot's status periodically until it reaches a completed or failed status. 
 Once the snapshot reaches the expected status, the command prints "Snapshot changes completed."
 If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
 You can interrupt the command's polling at any time with CTRL-C.`,
-		Example: fmt.Sprintf(`  # Watch for a backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 in the cluster named myDemo to become available:
+		Example: fmt.Sprintf(`  # Watch the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 in the cluster named myDemo until it becomes available:
   %s backups snapshots watch 5f4007f327a3bd7b6f4103c5 --clusterName myDemo`, cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{

@@ -348,9 +348,13 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "update",
 		Aliases: []string{"updates"},
-		Short:   "Update snapshot backup policies for a cluster.",
-		Example: fmt.Sprintf(`  # Update a snapshot backup policy for a cluster named Cluster0:
-  %s backup schedule update --clusterName Cluster0 --updateSnapshots --exportBucketId 62c569f85b7a381c093cc539 --exportFrequencyType monthly --policy 62da8faac84a2721e448d767,62da8faac84a2721e448d768,hourly,6,days,7`, cli.ExampleAtlasEntryPoint()),
+		Short:   "Modify the backup schedule for the specified cluster for your project.",
+		Long:    "The backup schedule defines when MongoDB takes scheduled snapshots and how long it stores those snapshots.",
+		Example: fmt.Sprintf(`  # Update a snapshot backup policy for a cluster named Cluster0 to back up snapshots every 6 hours and, retain for 7 days, and update retention of previously-taken snapshots:
+  %[1]s backup schedule update --clusterName Cluster0 --updateSnapshots --policy 62da8faac84a2721e448d767,62da8faac84a2721e448d768,hourly,6,days,7
+  
+  # Update a snapshot backup policy for a cluster named Cluster0 to export snapshots monthly to an S3 bucket:
+  %[1]s backup schedule update --clusterName Cluster0 --exportBucketId 62c569f85b7a381c093cc539 --exportFrequencyType monthly`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

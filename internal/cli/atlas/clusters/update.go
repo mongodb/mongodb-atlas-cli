@@ -125,7 +125,7 @@ func UpdateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "update [clusterName]",
-		Short: "Modify the settings for your MongoDB Atlas cluster.",
+		Short: "Modify the settings of the specified cluster.",
 		Long: `You can specify modifications in a JSON configuration file with the --file flag.
 		
 You can modify only M10 or larger clusters that are single-region replica sets.

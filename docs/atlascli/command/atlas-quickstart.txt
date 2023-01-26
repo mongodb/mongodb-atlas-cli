@@ -47,11 +47,11 @@ Options
    * - --currentIp
      - 
      - false
-     - Flag that indicates whether to add the IP address from the host that is currently executing the command to the access list.
+     - Flag that adds the IP address from the host that is currently executing the command to the access list.
    * - -Y, --default
      - 
      - false
-     - Flag that indicates whether to run the Quickstart command with all the auto-generated values to deploy and access an Atlas cluster.
+     - Flag that runs the Quickstart command with all default and auto-generated values to deploy and access an Atlas cluster.
    * - --force
      - 
      - false
@@ -107,7 +107,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------

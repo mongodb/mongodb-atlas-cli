@@ -48,13 +48,13 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-dbusers-certs` - Manage Atlas x509 certificates for your database users.
-* :ref:`mongocli-atlas-dbusers-create` - Create a database user for the specified project.
+* :ref:`mongocli-atlas-dbusers-create` - Create a database user for your project.
 * :ref:`mongocli-atlas-dbusers-delete` - Remove the specified database user from your project.
 * :ref:`mongocli-atlas-dbusers-describe` - Return the details for the specified database user for your project.
 * :ref:`mongocli-atlas-dbusers-list` - Return all database users for your project.

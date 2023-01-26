@@ -65,7 +65,7 @@ Options
      - float
      - false
      - Capacity, in gigabytes, of the host's root volume. This value defaults to 2.
-   * - --enabletTerminationProtection
+   * - --enableTerminationProtection
      - 
      - false
      - Enables termination protection for your cluster. You can't delete a cluster with termination protection enabled.

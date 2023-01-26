@@ -30,7 +30,7 @@ const (
 	DiskSizeGB               = "Capacity, in gigabytes, of the host's root volume."
 	Backup                   = "If true, enables Continuous Cloud Backup for your deployment. This option is unavailable for clusters smaller than M10."
 	BIConnector              = "If true, enables BI Connector for Atlas on the deployment."
-	TerminationProtect       = "If true, enable termination protection for your cluster. You can't delete the cluster with termination protection enabled."
+	TerminationProtect       = "Enables termination protection for your cluster. You can't delete the cluster with termination protection enabled."
 	SuggestedIndexNamespaces = "Namespaces from which to retrieve suggested indexes."
 	NExamples                = "Maximum number of example queries to provide that will be improved by a suggested index."
 	NIndexes                 = "Maximum number of indexes to suggest."

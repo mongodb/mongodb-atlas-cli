@@ -104,7 +104,7 @@ Options
    * - --terminationProtect
      - 
      - false
-     - If true, enable termination protection for your cluster. You can't delete the cluster with termination protection enabled.
+     - Enables termination protection for your cluster. You can't delete the cluster with termination protection enabled.
    * - --tier
      - string
      - false

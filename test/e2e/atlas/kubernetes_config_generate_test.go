@@ -740,7 +740,7 @@ func referenceProject(name, namespace string) *atlasV1.AtlasProject {
 		Spec: atlasV1.AtlasProjectSpec{
 			Name: name,
 			ConnectionSecret: &common.ResourceRef{
-				Name: fmt.Sprintf("%s-credentials", resources.NormalizeAtlasName(name, dictionary)),
+				Name: resources.NormalizeAtlasName(fmt.Sprintf("%s-credentials", name), dictionary),
 			},
 			Settings: &atlasV1.ProjectSettings{
 				IsCollectDatabaseSpecificsStatisticsEnabled: pointers.MakePtr(true),

@@ -66,12 +66,12 @@ func CreateBuilder() *cobra.Command {
 	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Creates one alert configuration in the specified project.",
-		Example: fmt.Sprintf(`  # This example uses the "%[1]s alerts settings create" command to create one alert configuration in the specified project. It uses the default profile to access the Atlas project:
-  %[1]s alert settings create --event JOINED_GROUP --enabled \
+		Short: "Create an alert configuration for your project.",
+		Example: fmt.Sprintf(`  # Create an alert configuration that notifies a user when they join a group for the project with the ID 5df90590f10fab5e33de2305:
+  %s alerts settings create --event JOINED_GROUP --enabled \
   --notificationType USER --notificationEmailEnabled \
   --notificationUsername john@example.com \
-  -o json --projectId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
+  --output json --projectId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -86,7 +86,11 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.event, flag.Event, "", usage.Event)
 	cmd.Flags().BoolVar(&opts.enabled, flag.Enabled, false, usage.Enabled)
-	cmd.Flags().StringVar(&opts.matcherFieldName, flag.MatcherFieldName, "", usage.MatcherFieldName)
+	if config.BinName() == config.MongoCLI {
+		cmd.Flags().StringVar(&opts.matcherFieldName, flag.MatcherFieldName, "", usage.MCLIMatcherFieldName)
+	} else {
+		cmd.Flags().StringVar(&opts.matcherFieldName, flag.MatcherFieldName, "", usage.MatcherFieldName)
+	}
 	cmd.Flags().StringVar(&opts.matcherOperator, flag.MatcherOperator, "", usage.MatcherOperator)
 	cmd.Flags().StringVar(&opts.matcherValue, flag.MatcherValue, "", usage.MatcherValue)
 	cmd.Flags().StringVar(&opts.metricThresholdMetricName, flag.MetricName, "", usage.MetricName)

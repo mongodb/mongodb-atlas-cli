@@ -49,11 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-alerts-acknowledge` - Acknowledges one alert for the specified project.
-* :ref:`atlas-alerts-describe` - Retrieves one alert for the specified project.
-* :ref:`atlas-alerts-list` - Retrieves all alerts for the specified Atlas project.
+* :ref:`atlas-alerts-acknowledge` - Acknowledges the specified alert for your project.
+* :ref:`atlas-alerts-describe` - Return the details for the specified alert for your project.
+* :ref:`atlas-alerts-list` - Return all alerts for your project.
 * :ref:`atlas-alerts-settings` - Manages alerts configuration for your project.
-* :ref:`atlas-alerts-unacknowledge` - Unacknowledges one alert for the specified project.
+* :ref:`atlas-alerts-unacknowledge` - Unacknowledge the specified alert for your project.
 
 
 .. toctree::

@@ -51,13 +51,13 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-alerts-settings-create` - Creates one alert configuration in the specified project.
-* :ref:`atlas-alerts-settings-delete` - Deletes the specified alert configuration in a specified project.
+* :ref:`atlas-alerts-settings-create` - Create an alert configuration for your project.
+* :ref:`atlas-alerts-settings-delete` - Remove the specified alert configuration for your project.
 * :ref:`atlas-alerts-settings-disable` - Disables one alert configuration for the specified project.
 * :ref:`atlas-alerts-settings-enable` - Enables one alert configuration for the specified project.
 * :ref:`atlas-alerts-settings-fields` - Manages alert configuration fields for your project.
-* :ref:`atlas-alerts-settings-list` - Returns alert configurations for the specified project.
-* :ref:`atlas-alerts-settings-update` - Updates one alert configuration in the specified project.
+* :ref:`atlas-alerts-settings-list` - Returns all alert configurations for your project.
+* :ref:`atlas-alerts-settings-update` - Modify the details of the specified alert configuration for your project.
 
 
 .. toctree::

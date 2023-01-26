@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-alerts-settings-fields-type` - Lists available field types for your alert configurations.
+* :ref:`atlas-alerts-settings-fields-type` - Return all available field types that the matcherFieldName option accepts when you create or update an alert configuration.
 
 
 .. toctree::

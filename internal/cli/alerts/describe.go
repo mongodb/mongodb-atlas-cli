@@ -16,6 +16,7 @@ package alerts
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -61,11 +62,13 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <alertId>",
 		Aliases: []string{"get"},
-		Short:   "Retrieves one alert for the specified project.",
+		Short:   "Return the details for the specified alert for your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"alertIdDesc": "Unique identifier of the alert you want to describe.",
 		},
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the alert with the ID 5d1113b25a115342acc2d1aa in the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s alerts describe 5d1113b25a115342acc2d1aa --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -19,13 +19,13 @@ package deployment
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"reflect"
 	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"

@@ -63,12 +63,12 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list <clusterName>",
 		Aliases: []string{"ls"},
-		Short:   "List cloud backup restore jobs for your project and cluster.",
+		Short:   "Return all cloud backup restore jobs for your project and cluster.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve restore jobs.",
 		},
-		Example: fmt.Sprintf(`  # Retrieve the continuous backup restore jobs for the cluster Cluster0:
+		Example: fmt.Sprintf(`  # Return all continuous backup restore jobs for the cluster Cluster0:
   %s backup restore list Cluster0`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

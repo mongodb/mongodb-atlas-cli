@@ -12,7 +12,9 @@ atlas clusters upgrade
    :depth: 1
    :class: singlecol
 
-Upgrade a MongoDB Atlas cluster's tier, disk size, and/or MongoDB version.
+Upgrade a shared cluster's tier, disk size, and/or MongoDB version.
+
+This command is unavailable for dedicated clusters.
 
 Syntax
 ------
@@ -93,12 +95,12 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------
 
 .. code-block::
 
-   # The following example upgrades the tier, disk size, and MongoDB version for a cluster:
-   atlas cluster upgrade <clusterName> --projectId <projectId> --tier M50 --diskSizeGB 20 --mdbVersion 4.2
+   # Upgrade the tier, disk size, and MongoDB version for the shared cluster named myCluster in the project with the ID 5e2211c17a3e5a48f5497de3:
+   atlas cluster upgrade myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50 --diskSizeGB 20 --mdbVersion 4.2

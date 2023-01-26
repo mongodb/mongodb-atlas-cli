@@ -73,7 +73,7 @@ func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
 		Use:   "watch <clusterName>",
-		Short: "Watch for a cluster to be available.",
+		Short: "Watch the specified cluster in your project until it becomes available.",
 		Long: `This command checks the cluster's status periodically until it reaches an IDLE state. 
 Once the cluster reaches the expected state, the command prints "Cluster available."
 If you run the command in the terminal, it blocks the terminal session until the resource state changes to IDLE.

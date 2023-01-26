@@ -12,7 +12,7 @@ atlas backups restores list
    :depth: 1
    :class: singlecol
 
-List cloud backup restore jobs for your project and cluster.
+Return all cloud backup restore jobs for your project and cluster.
 
 Syntax
 ------
@@ -85,12 +85,12 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------
 
 .. code-block::
 
-   # Retrieve the continuous backup restore jobs for the cluster Cluster0:
+   # Return all continuous backup restore jobs for the cluster Cluster0:
    atlas backup restore list Cluster0

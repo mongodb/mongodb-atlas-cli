@@ -62,7 +62,7 @@ func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
 		Use:     "list <clusterName>",
-		Short:   "List cloud backup snapshots for your project and cluster.",
+		Short:   "Return all cloud backup snapshots for your project and cluster.",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{

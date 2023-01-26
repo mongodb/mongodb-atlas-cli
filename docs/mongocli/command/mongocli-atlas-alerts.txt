@@ -44,17 +44,17 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-alerts-acknowledge` - Acknowledges one alert for the specified project.
-* :ref:`mongocli-atlas-alerts-describe` - Retrieves one alert for the specified project.
+* :ref:`mongocli-atlas-alerts-acknowledge` - Acknowledges the specified alert for your project.
+* :ref:`mongocli-atlas-alerts-describe` - Return the details for the specified alert for your project.
 * :ref:`mongocli-atlas-alerts-global` - Retrieves all the global alerts for the specified Ops Manager project.
-* :ref:`mongocli-atlas-alerts-list` - Retrieves all alerts for the specified Atlas project.
+* :ref:`mongocli-atlas-alerts-list` - Return all alerts for your project.
 * :ref:`mongocli-atlas-alerts-settings` - Manages alerts configuration for your project.
-* :ref:`mongocli-atlas-alerts-unacknowledge` - Unacknowledges one alert for the specified project.
+* :ref:`mongocli-atlas-alerts-unacknowledge` - Unacknowledge the specified alert for your project.
 
 
 .. toctree::

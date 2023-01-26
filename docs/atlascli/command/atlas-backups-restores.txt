@@ -44,13 +44,13 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Related Commands
 ----------------
 
 * :ref:`atlas-backups-restores-describe` - Describe a cloud backup restore job.
-* :ref:`atlas-backups-restores-list` - List cloud backup restore jobs for your project and cluster.
+* :ref:`atlas-backups-restores-list` - Return all cloud backup restore jobs for your project and cluster.
 * :ref:`atlas-backups-restores-start` - Start a restore job for your project and cluster.
 * :ref:`atlas-backups-restores-watch` - Watch for a restore job to complete.
 

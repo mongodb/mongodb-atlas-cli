@@ -12,7 +12,7 @@ mongocli atlas backups snapshots delete
    :depth: 1
    :class: singlecol
 
-Delete a backup snapshot.
+Remove the specified backup snapshot.
 
 Syntax
 ------
@@ -81,12 +81,12 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------
 
 .. code-block::
 
-   # Delete the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the cluster named myDemo:
+   # Remove the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the cluster named myDemo:
    mongocli atlas backups snapshots delete 5f4007f327a3bd7b6f4103c5 --clusterName myDemo

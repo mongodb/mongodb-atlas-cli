@@ -40,7 +40,8 @@ func TestShardedCluster(t *testing.T) {
 	shardedClusterName, err := RandClusterName()
 	req.NoError(err)
 
-	region, err := g.newAvailableRegion(tierM30, e2eClusterProvider)
+	tier := e2eTier()
+	region, err := g.newAvailableRegion(tier, e2eClusterProvider)
 	req.NoError(err)
 
 	t.Run("Create sharded cluster", func(t *testing.T) {
@@ -52,9 +53,9 @@ func TestShardedCluster(t *testing.T) {
 			"--type=SHARDED",
 			"--shards=2",
 			"--members=3",
-			"--tier", tierM30,
+			"--tier", tier,
 			"--provider", e2eClusterProvider,
-			"--mdbVersion=4.2",
+			"--mdbVersion", e2eMDBVer,
 			"--diskSizeGB", diskSizeGB30,
 			"--projectId", g.projectID,
 			"-o=json")
@@ -67,7 +68,7 @@ func TestShardedCluster(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, shardedClusterName, "4.2", 30)
+		ensureCluster(t, &cluster, shardedClusterName, e2eMDBVer, 30)
 	})
 
 	t.Run("Delete sharded cluster", func(t *testing.T) {

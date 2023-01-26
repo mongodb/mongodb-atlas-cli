@@ -57,7 +57,7 @@ func LoadSampleDataBuilder() *cobra.Command {
 	opts := &LoadSampleDataOpts{}
 	cmd := &cobra.Command{
 		Use:   "loadSampleData <clusterName>",
-		Short: "Load sample data into a MongoDB cluster in Atlas.",
+		Short: "Load sample data into the specified cluster for your project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster for which you want to load sample data.",

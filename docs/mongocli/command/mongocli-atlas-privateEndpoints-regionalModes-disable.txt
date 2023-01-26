@@ -12,7 +12,9 @@ mongocli atlas privateEndpoints regionalModes disable
    :depth: 1
    :class: singlecol
 
-Disable the regionalized private endpoint setting for your Atlas project.
+Disable the regionalized private endpoint setting for your project.
+
+This disables the ability to create multiple private resources per region in all cloud service providers for this project.
 
 Syntax
 ------
@@ -61,5 +63,12 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
+Examples
+--------
+
+.. code-block::
+
+   # Disable the regionalied private endpoint setting in the project with the ID 5e2211c17a3e5a48f5497de3:
+   mongocli atlas privateEndpoints regionalModes disable --projectId 5e2211c17a3e5a48f5497de3 --output json

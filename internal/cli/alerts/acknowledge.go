@@ -78,7 +78,7 @@ func AcknowledgeBuilder() *cobra.Command {
 	opts.Template = ackTemplate
 	cmd := &cobra.Command{
 		Use:     "acknowledge <alertId>",
-		Short:   "Acknowledges one alert for the specified project.",
+		Short:   "Acknowledges the specified alert for your project.",
 		Aliases: []string{"ack"},
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -92,8 +92,10 @@ func AcknowledgeBuilder() *cobra.Command {
 			)
 		},
 		Annotations: map[string]string{
-			"alertIdDesc": "ID of the alert you want to acknowledge or un-acknowledge.",
+			"alertIdDesc": "ID of the alert you want to acknowledge or unacknowledge.",
 		},
+		Example: fmt.Sprintf(`  # Acknowledge an alert with the ID 5d1113b25a115342acc2d1aa in the project with the ID 5e2211c17a3e5a48f5497de3 until January 1 2028:
+  %s alerts acknowledge 5d1113b25a115342acc2d1aa --until 2028-01-01T20:24:26Z --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.alertID = args[0]
 			return opts.Run()

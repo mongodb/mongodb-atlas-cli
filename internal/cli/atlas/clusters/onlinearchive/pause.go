@@ -65,7 +65,7 @@ func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{
 		Use:   "pause <archiveId>",
-		Short: "Pause the online archive for a cluster.",
+		Short: "Pause the specfied online archive for your cluster.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to pause.",

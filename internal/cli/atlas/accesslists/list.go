@@ -61,7 +61,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List Atlas IP access list entries for your project.",
+		Short:   "Return all IP access list entries for your project.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: `  # Return a JSON-formatted list of all access list entries for the project with ID 5e1234c17a3e5a48f5497de3:		

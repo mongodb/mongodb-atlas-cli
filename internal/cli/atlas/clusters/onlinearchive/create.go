@@ -98,7 +98,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create an online archive for a collection in the cluster you specify.",
+		Short: "Create an online archive for a collection in the specified cluster.",
 		Long: `You can create an online archive for an M10 or larger cluster.
 		
 To learn more about online archives, see https://www.mongodb.com/docs/atlas/online-archive/manage-online-archive/.`,

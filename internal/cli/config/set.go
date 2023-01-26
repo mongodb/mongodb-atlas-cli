@@ -71,8 +71,7 @@ func (opts *SetOpts) Run() error {
 
 func mongoCLIExample() string {
 	if config.BinName() == config.MongoCLI {
-		return fmt.Sprintf(`
-  Set Ops Manager Base URL in the profile myProfile:
+		return fmt.Sprintf(`  # Set Ops Manager Base URL in the profile myProfile:
   %s config set ops_manager_url http://localhost:30700/ -P myProfile
 `, config.BinName())
 	}

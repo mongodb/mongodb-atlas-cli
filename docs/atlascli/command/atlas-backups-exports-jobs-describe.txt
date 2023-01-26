@@ -76,5 +76,5 @@ Examples
 
 .. code-block::
 
-   # Return the details for the continuous backup export job with the ID 5df90590f10fab5e33de2305 for the cluster Cluster0:
+   # Return the details for the continuous backup export job with the ID 5df90590f10fab5e33de2305 for the cluster named Cluster0:
    atlas backup exports jobs describe --clusterName Cluster0 --exportID 5df90590f10fab5e33de2305

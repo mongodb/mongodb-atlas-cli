@@ -285,7 +285,7 @@ dbName and collection are required only for built-in roles.`
 	ProjectOwnerID                            = "Unique 24-hexadecimal digit string that identifies the Atlas user account to be granted the Project Owner role on the specified project."
 	GovCloudRegionsOnly                       = "Only for AtlasGov projects. If specified, designates that the project uses only the AWS GovCloud region. If unspecified, the project uses only the AWS Standard region. You can't deploy clusters across AWS GovCloud and AWS Standard regions in the same project."
 	ReclaimFreeSpaceTimestamp                 = "Timestamp in ISO 8601 format when the service reclaims the space. If not set, defaults to the current timestamp."
-	QuickstartDefault                         = "Flag runs the Quickstart command with all default and auto-generated values to deploy and access an Atlas cluster."
+	QuickstartDefault                         = "Flag that runs the Quickstart command with all default and auto-generated values to deploy and access an Atlas cluster."
 	ServerlessProvider                        = "Cloud service provider that applies to the provisioned serverless instance."
 	ServerlessRegion                          = "Human-readable label that identifies the physical location of your MongoDB serverless instance. The region you choose can affect network latency for clients accessing your databases."
 	WithoutDefaultAlertSettings               = "Flag that creates the new project without the default alert settings enabled. This flag defaults to false. This is useful if you create projects programmatically and want to create your own alerts instead of using the default alert settings."

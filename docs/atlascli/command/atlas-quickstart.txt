@@ -51,7 +51,7 @@ Options
    * - -Y, --default
      - 
      - false
-     - Flag runs the Quickstart command with all default and auto-generated values to deploy and access an Atlas cluster.
+     - Flag that runs the Quickstart command with all default and auto-generated values to deploy and access an Atlas cluster.
    * - --force
      - 
      - false

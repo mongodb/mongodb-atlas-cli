@@ -58,7 +58,7 @@ const (
 	Backup                                    = "backup"                                    // Backup flag
 	BIConnector                               = "biConnector"                               // BIConnector flag
 	ID                                        = "id"                                        // ID flag
-	TerminationProtect                        = "terminationProtect"                        // TerminationProtect flag
+	EnableTerminationProtection               = "enabletTerminationProtection"              // EnableTerminationProtection flag
 	Username                                  = "username"                                  // Username flag
 	StorageEngine                             = "storageEngine"                             // StorageEngine flag
 	AuthMechanism                             = "authMechanism"                             // AuthMechanism flag

@@ -65,6 +65,10 @@ Options
      - float
      - false
      - Capacity, in gigabytes, of the host's root volume. This value defaults to 2.
+   * - --enabletTerminationProtection
+     - 
+     - false
+     - Enables termination protection for your cluster. You can't delete a cluster with termination protection enabled.
    * - -f, --file
      - string
      - false
@@ -101,10 +105,6 @@ Options
      - int
      - false
      - Number of shards in the cluster. This value defaults to 1.
-   * - --terminationProtect
-     - 
-     - false
-     - Enables termination protection for your cluster. You can't delete the cluster with termination protection enabled.
    * - --tier
      - string
      - false

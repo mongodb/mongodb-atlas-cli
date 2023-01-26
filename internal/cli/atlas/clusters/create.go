@@ -118,9 +118,7 @@ func (opts *CreateOpts) applyOpts(out *atlas.AdvancedCluster) {
 	if opts.biConnector {
 		out.BiConnector = &atlas.BiConnector{Enabled: &opts.biConnector}
 	}
-	if opts.terminationProtect {
-		out.TerminationProtectionEnabled = &opts.terminationProtect
-	}
+	out.TerminationProtectionEnabled = &opts.terminationProtect
 	out.ClusterType = opts.clusterType
 
 	if !opts.isTenant() {

@@ -49,9 +49,9 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-privateEndpoints-regionalModes-describe` - Get the regionalized private endpoint setting for your Atlas project.
-* :ref:`atlas-privateEndpoints-regionalModes-disable` - Disable the regionalized private endpoint setting for your Atlas project.
-* :ref:`atlas-privateEndpoints-regionalModes-enable` - Enable the regionalized private endpoint setting for your Atlas project.
+* :ref:`atlas-privateEndpoints-regionalModes-describe` - Return the regionalized private endpoint setting for your project.
+* :ref:`atlas-privateEndpoints-regionalModes-disable` - Disable the regionalized private endpoint setting for your project.
+* :ref:`atlas-privateEndpoints-regionalModes-enable` - Enable the regionalized private endpoint setting for your project.
 
 
 .. toctree::

@@ -49,9 +49,9 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-privateEndpoints-aws-interfaces-create` - Add a new interface to a AWS private endpoint.
-* :ref:`mongocli-atlas-privateEndpoints-aws-interfaces-delete` - Delete a specific AWS private endpoint interface and the related endpoint service for your project.
-* :ref:`mongocli-atlas-privateEndpoints-aws-interfaces-describe` - Return a specific AWS private endpoint interface for your project.
+* :ref:`mongocli-atlas-privateEndpoints-aws-interfaces-create` - Create a new interface for the specified AWS private endpoint.
+* :ref:`mongocli-atlas-privateEndpoints-aws-interfaces-delete` - Remove the specified AWS private endpoint interface and related service from your project.
+* :ref:`mongocli-atlas-privateEndpoints-aws-interfaces-describe` - Return the details for the specified AWS private endpoint interface for your project.
 
 
 .. toctree::

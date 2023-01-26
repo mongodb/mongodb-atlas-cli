@@ -16,6 +16,7 @@ package regionalmodes
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -59,7 +60,10 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Aliases: []string{"get"},
-		Short:   "Get the regionalized private endpoint setting for your Atlas project.",
+		Short:   "Return the regionalized private endpoint setting for your project.",
+		Long:    "Use this command to check whether you can create multiple private resources per region.",
+		Example: fmt.Sprintf(`  # Return the regionalized private endpoint setting for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s privateEndpoints regionalModes describe --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

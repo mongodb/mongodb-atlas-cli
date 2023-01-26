@@ -12,7 +12,9 @@ atlas privateEndpoints regionalModes describe
    :depth: 1
    :class: singlecol
 
-Get the regionalized private endpoint setting for your Atlas project.
+Return the regionalized private endpoint setting for your project.
+
+Use this command to check whether you can create multiple private resources per region.
 
 Syntax
 ------
@@ -63,3 +65,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return the regionalized private endpoint setting for the project with the ID 5e2211c17a3e5a48f5497de3:
+   atlas privateEndpoints regionalModes describe --projectId 5e2211c17a3e5a48f5497de3 --output json

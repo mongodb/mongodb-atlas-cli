@@ -49,9 +49,9 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-privateEndpoints-azure-interfaces-create` - Add a new Azure interface to a private endpoint.
-* :ref:`atlas-privateEndpoints-azure-interfaces-delete` - Delete a specific Azure private endpoint interface and related service for your project.
-* :ref:`atlas-privateEndpoints-azure-interfaces-describe` - Return a specific Azure private endpoint interface for your project.
+* :ref:`atlas-privateEndpoints-azure-interfaces-create` - Create a new interface for the specified Azure private endpoint.
+* :ref:`atlas-privateEndpoints-azure-interfaces-delete` - Remove the specified Azure private endpoint interface and related service from your project.
+* :ref:`atlas-privateEndpoints-azure-interfaces-describe` - Return the details for the specified Azure private endpoint interface for your project.
 
 
 .. toctree::

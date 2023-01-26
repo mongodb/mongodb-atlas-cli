@@ -12,7 +12,7 @@ mongocli atlas privateEndpoints azure list
    :depth: 1
    :class: singlecol
 
-List Azure Private Endpoints for your project.
+Return all Azure private endpoints for your project.
 
 Syntax
 ------
@@ -71,3 +71,10 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return a JSON-formatted list of all Azure private endpoints for the project with the ID 5e2211c17a3e5a48f5497de3:
+   mongocli atlas privateEndpoints azure list --projectId 5e2211c17a3e5a48f5497de3 --output json

@@ -32,6 +32,7 @@ func AtlasNameToKubernetesName() map[string]string {
 		":": "colon",
 		",": "comma",
 		"'": "single-quote",
+		"_": "lowline",
 	}
 }
 

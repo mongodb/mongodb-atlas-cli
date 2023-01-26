@@ -67,7 +67,7 @@ func FuzzNormalizeAtlasName(f *testing.F) {
 	f.Fuzz(func(t *testing.T, input string) {
 		d := AtlasNameToKubernetesName()
 		// Atlas project name can only contain letters, numbers, spaces, and the following symbols: ( ) @ & + : . _ - ' ,
-		var atlasNameRegex = regexp.MustCompile(`[^a-zA-Z0-9.@()&+:,'\-]+`)
+		var atlasNameRegex = regexp.MustCompile(`[^a-zA-Z0-9_.@()&+:,'\-]+`)
 		input = atlasNameRegex.ReplaceAllString(input, "")
 		if input != "" {
 			got := NormalizeAtlasName(input, d)

@@ -101,6 +101,10 @@ Options
      - int
      - false
      - Number of shards in the cluster. This value defaults to 1.
+   * - --terminationProtect
+     - 
+     - false
+     - If true, enable termination protection for your cluster.
    * - --tier
      - string
      - false

@@ -20,10 +20,8 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation"
 )
 
-// NormalizeAtlasResourceName normalizes the name to be used as a resource name in Kubernetes
-// Run fuzzing test if you want to change this function!
-func NormalizeAtlasResourceName(name string) string {
-	dictionary := map[string]string{
+func AtlasNameToKubernetesName() map[string]string {
+	return map[string]string{
 		" ": "-",
 		".": "dot",
 		"@": "at",
@@ -35,6 +33,11 @@ func NormalizeAtlasResourceName(name string) string {
 		",": "comma",
 		"'": "single-quote",
 	}
+}
+
+// NormalizeAtlasName normalizes the name to be used as a resource name in Kubernetes
+// Run fuzzing test if you want to change this function!
+func NormalizeAtlasName(name string, dictionary map[string]string) string {
 
 	for k, v := range dictionary {
 		name = strings.ReplaceAll(name, k, v)

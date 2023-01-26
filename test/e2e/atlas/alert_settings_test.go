@@ -28,13 +28,6 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	group         = "GROUP"
-	eventTypeName = "NO_PRIMARY"
-	intervalMin   = 5
-	delayMin      = 0
-)
-
 func TestAlertConfig(t *testing.T) {
 	var alertID string
 

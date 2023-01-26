@@ -36,13 +36,14 @@ const (
 )
 
 type ConfigExporter struct {
-	dataProvider       store.AtlasOperatorGenericStore
-	credsProvider      store.CredentialsGetter
-	projectID          string
-	clusters           []string
-	targetNamespace    string
-	includeSecretsData bool
-	orgID              string
+	dataProvider            store.AtlasOperatorGenericStore
+	credsProvider           store.CredentialsGetter
+	projectID               string
+	clusters                []string
+	targetNamespace         string
+	includeSecretsData      bool
+	orgID                   string
+	dictionaryForAtlasNames map[string]string
 }
 
 var (
@@ -60,6 +61,18 @@ func NewConfigExporter(dataProvider store.AtlasOperatorGenericStore, credsProvid
 		targetNamespace:    "",
 		includeSecretsData: false,
 		orgID:              orgID,
+		dictionaryForAtlasNames: map[string]string{
+			" ": "-",
+			".": "dot",
+			"@": "at",
+			"(": "left-parenthesis",
+			")": "right-parenthesis",
+			"&": "and",
+			"+": "plus",
+			":": "colon",
+			",": "comma",
+			"'": "single-quote",
+		},
 	}
 }
 
@@ -114,7 +127,7 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 	var resources []runtime.Object
 
 	// Project
-	projectData, err := project.BuildAtlasProject(e.dataProvider, e.orgID, e.projectID, e.targetNamespace)
+	projectData, err := project.BuildAtlasProject(e.dataProvider, e.orgID, e.projectID, e.targetNamespace, e.dictionaryForAtlasNames)
 	if err != nil {
 		return nil, "", err
 	}
@@ -131,10 +144,10 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 	// Project secret with credentials
 	resources = append(resources, project.BuildProjectConnectionSecret(e.credsProvider,
 		projectData.Project.Name,
-		projectData.Project.Namespace, e.orgID, e.includeSecretsData))
+		projectData.Project.Namespace, e.orgID, e.includeSecretsData, e.dictionaryForAtlasNames))
 
 	// DB users
-	usersData, relatedSecrets, err := dbusers.BuildDBUsers(e.dataProvider, e.projectID, projectData.Project.Name, e.targetNamespace)
+	usersData, relatedSecrets, err := dbusers.BuildDBUsers(e.dataProvider, e.projectID, projectData.Project.Name, e.targetNamespace, e.dictionaryForAtlasNames)
 	if err != nil {
 		return nil, "", err
 	}
@@ -161,7 +174,7 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 
 	for _, deploymentName := range e.clusters {
 		// Try advanced cluster first
-		if advancedCluster, err := deployment.BuildAtlasAdvancedDeployment(e.dataProvider, e.projectID, projectName, deploymentName, e.targetNamespace); err == nil {
+		if advancedCluster, err := deployment.BuildAtlasAdvancedDeployment(e.dataProvider, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames); err == nil {
 			// Append deployment to result
 			result = append(result, advancedCluster.Deployment)
 			// Append backup schedule
@@ -178,7 +191,7 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 		}
 
 		// Try serverless cluster next
-		if serverlessCluster, err := deployment.BuildServerlessDeployments(e.dataProvider, e.projectID, projectName, deploymentName, e.targetNamespace); err == nil {
+		if serverlessCluster, err := deployment.BuildServerlessDeployments(e.dataProvider, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames); err == nil {
 			result = append(result, serverlessCluster)
 			continue
 		}

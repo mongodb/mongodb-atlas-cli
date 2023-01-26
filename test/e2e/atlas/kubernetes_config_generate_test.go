@@ -722,13 +722,14 @@ func checkProject(t *testing.T, output []runtime.Object, expected *atlasV1.Atlas
 }
 
 func referenceProject(name, namespace string) *atlasV1.AtlasProject {
+	dictionary := resources.AtlasNameToKubernetesName()
 	return &atlasV1.AtlasProject{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AtlasProject",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasResourceName(name),
+			Name:      resources.NormalizeAtlasName(name, dictionary),
 			Namespace: namespace,
 		},
 		Status: status.AtlasProjectStatus{
@@ -739,7 +740,7 @@ func referenceProject(name, namespace string) *atlasV1.AtlasProject {
 		Spec: atlasV1.AtlasProjectSpec{
 			Name: name,
 			ConnectionSecret: &common.ResourceRef{
-				Name: fmt.Sprintf("%s-credentials", resources.NormalizeAtlasResourceName(name)),
+				Name: fmt.Sprintf("%s-credentials", resources.NormalizeAtlasName(name, dictionary)),
 			},
 			Settings: &atlasV1.ProjectSettings{
 				IsCollectDatabaseSpecificsStatisticsEnabled: pointers.MakePtr(true),

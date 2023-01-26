@@ -28,9 +28,9 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectName, targetNamespace string) ([]*atlasV1.AtlasDatabaseUser, []*corev1.Secret, error) {
+func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectName, targetNamespace string, dictionary map[string]string) ([]*atlasV1.AtlasDatabaseUser, []*corev1.Secret, error) {
 	users, err := provider.DatabaseUsers(projectID, &mongodbatlas.ListOptions{})
-	// TODO: add validator for similar user names
+	// TODO: add validator for similar user names. CLOUDP-155373
 	if err != nil {
 		return nil, nil, err
 	}
@@ -51,7 +51,7 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 		}
 		scopes := convertUserScopes(user)
 
-		secret := buildUserSecret(projectName, user, targetNamespace)
+		secret := buildUserSecret(projectName, user, targetNamespace, dictionary)
 		relatedSecrets = append(relatedSecrets, secret)
 
 		result = append(result, &atlasV1.AtlasDatabaseUser{
@@ -60,12 +60,12 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 				APIVersion: "atlas.mongodb.com/v1",
 			},
 			ObjectMeta: v1.ObjectMeta{
-				Name:      resources.NormalizeAtlasResourceName(fmt.Sprintf("%s-%s", projectName, user.Username)),
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, user.Username), dictionary),
 				Namespace: targetNamespace,
 			},
 			Spec: atlasV1.AtlasDatabaseUserSpec{
 				Project: common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasResourceName(projectName),
+					Name:      resources.NormalizeAtlasName(projectName, dictionary),
 					Namespace: targetNamespace,
 				},
 				DatabaseName:    user.DatabaseName,
@@ -74,7 +74,7 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 				Roles:           roles,
 				Scopes:          scopes,
 				PasswordSecret: &common.ResourceRef{
-					Name: resources.NormalizeAtlasResourceName(secret.Name),
+					Name: resources.NormalizeAtlasName(secret.Name, dictionary),
 				},
 				Username: user.Username,
 				X509Type: user.X509Type,
@@ -90,10 +90,10 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 	return result, relatedSecrets, nil
 }
 
-func buildUserSecret(projectName string, user *mongodbatlas.DatabaseUser, targetNamespace string) *corev1.Secret {
+func buildUserSecret(projectName string, user *mongodbatlas.DatabaseUser, targetNamespace string, dictionary map[string]string) *corev1.Secret {
 	secret := secrets.NewAtlasSecret(fmt.Sprintf("%s-%s", projectName, user.Username), targetNamespace, map[string][]byte{
 		secrets.PasswordField: []byte(""),
-	})
+	}, dictionary)
 	return secret
 }
 

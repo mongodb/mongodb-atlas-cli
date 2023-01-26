@@ -29,14 +29,14 @@ const (
 	CredOrgID         = "orgId"
 )
 
-func NewAtlasSecret(name, namespace string, data map[string][]byte) *corev1.Secret {
+func NewAtlasSecret(name, namespace string, data map[string][]byte, dictionary map[string]string) *corev1.Secret {
 	return &corev1.Secret{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "Secret",
 			APIVersion: "v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasResourceName(name),
+			Name:      resources.NormalizeAtlasName(name, dictionary),
 			Namespace: namespace,
 			Labels: map[string]string{
 				TypeLabelKey: CredLabelVal,

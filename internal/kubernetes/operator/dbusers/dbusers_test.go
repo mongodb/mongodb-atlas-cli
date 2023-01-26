@@ -84,6 +84,7 @@ func Test_convertUserRoles(t *testing.T) {
 }
 
 func Test_buildUserSecret(t *testing.T) {
+	dictionary := resources.AtlasNameToKubernetesName()
 	t.Run("Can build user secret WITHOUT credentials", func(t *testing.T) {
 		projectName := "TestProject-1"
 		atlasUser := &mongodbatlas.DatabaseUser{
@@ -107,7 +108,7 @@ func Test_buildUserSecret(t *testing.T) {
 				secrets.PasswordField: []byte(""),
 			},
 		}
-		if got := buildUserSecret(projectName, atlasUser, "TestNamespace"); !reflect.DeepEqual(got, expectedSecret) {
+		if got := buildUserSecret(projectName, atlasUser, "TestNamespace", dictionary); !reflect.DeepEqual(got, expectedSecret) {
 			t.Errorf("buildUserSecret(); \r\n got:%v;s\r\n want:%v", got, expectedSecret)
 		}
 	})
@@ -116,7 +117,7 @@ func Test_buildUserSecret(t *testing.T) {
 func TestBuildDBUsers(t *testing.T) {
 	ctl := gomock.NewController(t)
 	mockUserStore := mocks.NewMockDatabaseUserLister(ctl)
-
+	dictionary := resources.AtlasNameToKubernetesName()
 	t.Run("Can build AtlasDatabaseUser from AtlasUser WITHOUT credentials", func(t *testing.T) {
 		user := mongodbatlas.DatabaseUser{
 			DatabaseName:    "TestDB",
@@ -158,7 +159,7 @@ func TestBuildDBUsers(t *testing.T) {
 			user,
 		}, nil)
 
-		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace)
+		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace, dictionary)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
@@ -169,12 +170,12 @@ func TestBuildDBUsers(t *testing.T) {
 				APIVersion: "atlas.mongodb.com/v1",
 			},
 			ObjectMeta: v1.ObjectMeta{
-				Name:      resources.NormalizeAtlasResourceName(fmt.Sprintf("%s-%s", projectName, user.Username)),
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, user.Username), dictionary),
 				Namespace: targetNamespace,
 			},
 			Spec: atlasV1.AtlasDatabaseUserSpec{
 				Project: common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasResourceName(projectName),
+					Name:      resources.NormalizeAtlasName(projectName, dictionary),
 					Namespace: targetNamespace,
 				},
 				DatabaseName:    user.DatabaseName,
@@ -220,7 +221,7 @@ func TestBuildDBUsers(t *testing.T) {
 			targetNamespace,
 			map[string][]byte{
 				secrets.PasswordField: []byte(""),
-			})
+			}, dictionary)
 		if !reflect.DeepEqual(relatedSecrets[0], expectedSecret) {
 			t.Fatalf("Secret result doesn't match.\r\nexpected: %v\r\ngot %v\r\n", expectedSecret, relatedSecrets[0])
 		}

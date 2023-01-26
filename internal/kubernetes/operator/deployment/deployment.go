@@ -38,7 +38,7 @@ type AtlasDeploymentResult struct {
 	BackupPolicies []*atlasV1.AtlasBackupPolicy
 }
 
-func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStore, projectID, projectName, clusterID, targetNamespace string) (*AtlasDeploymentResult, error) {
+func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStore, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string) (*AtlasDeploymentResult, error) {
 	deployment, err := deploymentStore.AtlasCluster(projectID, clusterID)
 	if err != nil {
 		return nil, err
@@ -97,7 +97,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 	}
 
 	var backupScheduleRef common.ResourceRefNamespaced
-	backupSchedule, backupPolicies := buildBackups(deploymentStore, projectID, clusterID, targetNamespace)
+	backupSchedule, backupPolicies := buildBackups(deploymentStore, projectID, clusterID, targetNamespace, dictionary)
 	if backupSchedule != nil {
 		backupScheduleRef.Name = backupSchedule.Name
 		backupScheduleRef.Namespace = backupSchedule.Namespace
@@ -109,12 +109,12 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasResourceName(clusterID),
+			Name:      resources.NormalizeAtlasName(clusterID, dictionary),
 			Namespace: targetNamespace,
 		},
 		Spec: atlasV1.AtlasDeploymentSpec{
 			Project: common.ResourceRefNamespaced{
-				Name:      resources.NormalizeAtlasResourceName(projectName),
+				Name:      resources.NormalizeAtlasName(projectName, dictionary),
 				Namespace: targetNamespace,
 			},
 			DeploymentSpec:         nil,
@@ -200,7 +200,7 @@ func buildProcessArgs(configOptsProvider store.AtlasClusterConfigurationOptionsD
 	}, nil
 }
 
-func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterName, targetNamespace string) (*atlasV1.AtlasBackupSchedule, []*atlasV1.AtlasBackupPolicy) {
+func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterName, targetNamespace string, dictionary map[string]string) (*atlasV1.AtlasBackupSchedule, []*atlasV1.AtlasBackupPolicy) {
 	bs, err := backupsProvider.DescribeSchedule(projectID, clusterName)
 	if err != nil {
 		return nil, nil
@@ -224,7 +224,7 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 				APIVersion: "atlas.mongodb.com/v1",
 			},
 			ObjectMeta: v1.ObjectMeta{
-				Name:      resources.NormalizeAtlasResourceName(fmt.Sprintf("%s-backuppolicy", clusterName)),
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backuppolicy", clusterName), dictionary),
 				Namespace: targetNamespace,
 			},
 			Spec: atlasV1.AtlasBackupPolicySpec{
@@ -248,14 +248,14 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasResourceName(fmt.Sprintf("%s-backupschedule", clusterName)),
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backupschedule", clusterName), dictionary),
 			Namespace: targetNamespace,
 		},
 		Spec: atlasV1.AtlasBackupScheduleSpec{
 			AutoExportEnabled: pointers.PtrValOrDefault(bs.AutoExportEnabled, false),
 			Export:            export,
 			PolicyRef: common.ResourceRefNamespaced{
-				Name:      resources.NormalizeAtlasResourceName(policies[0].Name),
+				Name:      resources.NormalizeAtlasName(policies[0].Name, dictionary),
 				Namespace: policies[0].Namespace,
 			},
 			ReferenceHourOfDay:                pointers.PtrValOrDefault(bs.ReferenceHourOfDay, 0),
@@ -360,7 +360,7 @@ func buildReplicationSpec(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec) 
 	return result
 }
 
-func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore, projectID, projectName, clusterID, targetNamespace string) (*atlasV1.AtlasDeployment, error) {
+func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string) (*atlasV1.AtlasDeployment, error) {
 	deployment, err := deploymentStore.ServerlessInstance(projectID, clusterID)
 	if err != nil {
 		return nil, err
@@ -419,12 +419,12 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasResourceName(deployment.Name),
+			Name:      resources.NormalizeAtlasName(deployment.Name, dictionary),
 			Namespace: targetNamespace,
 		},
 		Spec: atlasV1.AtlasDeploymentSpec{
 			Project: common.ResourceRefNamespaced{
-				Name:      resources.NormalizeAtlasResourceName(projectName),
+				Name:      resources.NormalizeAtlasName(projectName, dictionary),
 				Namespace: targetNamespace,
 			},
 			BackupScheduleRef: common.ResourceRefNamespaced{},

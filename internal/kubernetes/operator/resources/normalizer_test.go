@@ -23,7 +23,8 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation"
 )
 
-func TestNormalizeResourceName(t *testing.T) {
+func TestNormalizeAtlasName(t *testing.T) {
+	d := AtlasNameToKubernetesName()
 	testCases := []struct {
 		name           string
 		expectedOutput string
@@ -55,20 +56,21 @@ func TestNormalizeResourceName(t *testing.T) {
 	})
 
 	for _, tc := range testCases {
-		got := NormalizeAtlasResourceName(tc.name)
+		got := NormalizeAtlasName(tc.name, d)
 		if got != tc.expectedOutput {
-			t.Errorf("NormalizeAtlasResourceName() = %v, want %v", got, tc.expectedOutput)
+			t.Errorf("NormalizeAtlasName() = %v, want %v", got, tc.expectedOutput)
 		}
 	}
 }
 
-func FuzzNormalizeResourceName(f *testing.F) {
+func FuzzNormalizeAtlasName(f *testing.F) {
 	f.Fuzz(func(t *testing.T, input string) {
+		d := AtlasNameToKubernetesName()
 		// Atlas project name can only contain letters, numbers, spaces, and the following symbols: ( ) @ & + : . _ - ' ,
 		var atlasNameRegex = regexp.MustCompile(`[^a-zA-Z0-9.@()&+:,'\-]+`)
 		input = atlasNameRegex.ReplaceAllString(input, "")
 		if input != "" {
-			got := NormalizeAtlasResourceName(input)
+			got := NormalizeAtlasName(input, d)
 			if errs := validation.IsDNS1123Label(got); len(errs) > 0 {
 				t.Errorf("output should be DNS-1123 compliant, got:%s. errors: %v", got, errs)
 			}

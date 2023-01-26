@@ -82,6 +82,24 @@ const (
 	bucketsEntity                = "buckets"
 )
 
+// AlertConfig constants.
+const (
+	group         = "GROUP"
+	eventTypeName = "NO_PRIMARY"
+	intervalMin   = 5
+	delayMin      = 0
+)
+
+// Integration constants.
+
+const (
+	datadogEntity   = "DATADOG"
+	opsGenieEntity  = "OPS_GENIE"
+	pagerDutyEntity = "PAGER_DUTY"
+	victorOpsEntity = "VICTOR_OPS"
+	webhookEntity   = "WEBHOOK"
+)
+
 // Cluster settings.
 const (
 	e2eClusterTier     = "M30"

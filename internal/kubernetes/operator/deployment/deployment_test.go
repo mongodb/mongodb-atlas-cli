@@ -19,6 +19,7 @@ package deployment
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"reflect"
 	"strings"
 	"testing"
@@ -37,6 +38,7 @@ import (
 func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 	ctl := gomock.NewController(t)
 	clusterStore := mocks.NewMockAtlasOperatorClusterStore(ctl)
+	dictionary := resources.AtlasNameToKubernetesName()
 
 	t.Run("Can import Advanced deployment", func(t *testing.T) {
 		const projectName = "testProject-1"
@@ -358,7 +360,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			BackupPolicies: expectPolicies,
 		}
 
-		got, err := BuildAtlasAdvancedDeployment(clusterStore, projectName, projectName, clusterName, targetNamespace)
+		got, err := BuildAtlasAdvancedDeployment(clusterStore, projectName, projectName, clusterName, targetNamespace, dictionary)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
@@ -379,6 +381,7 @@ func TestBuildServerlessDeployments(t *testing.T) {
 
 	ctl := gomock.NewController(t)
 	clusterStore := mocks.NewMockAtlasOperatorClusterStore(ctl)
+	dictionary := resources.AtlasNameToKubernetesName()
 
 	t.Run("Can import Serverless deployment", func(t *testing.T) {
 		spe := []mongodbatlas.ServerlessPrivateEndpointConnection{
@@ -518,7 +521,7 @@ func TestBuildServerlessDeployments(t *testing.T) {
 			},
 		}
 
-		got, err := BuildServerlessDeployments(clusterStore, projectName, projectName, clusterName, targetNamespace)
+		got, err := BuildServerlessDeployments(clusterStore, projectName, projectName, clusterName, targetNamespace, dictionary)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}

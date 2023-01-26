@@ -307,7 +307,8 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore.EXPECT().TeamByID(orgID, teamID).Return(teams, nil)
 		projectStore.EXPECT().TeamUsers(orgID, teamID).Return(teamUsers, nil)
 
-		projectResult, err := BuildAtlasProject(projectStore, orgID, projectID, targetNamespace)
+		dictionary := resources.AtlasNameToKubernetesName()
+		projectResult, err := BuildAtlasProject(projectStore, orgID, projectID, targetNamespace, dictionary)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
@@ -387,13 +388,13 @@ func TestBuildAtlasProject(t *testing.T) {
 				APIVersion: "atlas.mongodb.com/v1",
 			},
 			ObjectMeta: v1.ObjectMeta{
-				Name:      resources.NormalizeAtlasResourceName(p.Name),
+				Name:      resources.NormalizeAtlasName(p.Name, dictionary),
 				Namespace: targetNamespace,
 			},
 			Spec: atlasV1.AtlasProjectSpec{
 				Name: p.Name,
 				ConnectionSecret: &common.ResourceRef{
-					Name: resources.NormalizeAtlasResourceName(fmt.Sprintf(credSecretFormat, p.Name)),
+					Name: resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, p.Name), dictionary),
 				},
 				ProjectIPAccessList: []project.IPAccessList{
 					{
@@ -545,7 +546,7 @@ func TestBuildAtlasProject(t *testing.T) {
 
 func TestBuildProjectConnectionSecret(t *testing.T) {
 	ctl := gomock.NewController(t)
-
+	dictionary := resources.AtlasNameToKubernetesName()
 	credsProvider := mocks.NewMockCredentialsGetter(ctl)
 	t.Run("Can generate a valid connection secret WITH data", func(t *testing.T) {
 		publicAPIKey := "TestPublicKey"
@@ -558,7 +559,7 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 		credsProvider.EXPECT().PrivateAPIKey().Return(privateAPIKey)
 
 		got := BuildProjectConnectionSecret(credsProvider, name, namespace,
-			orgID, true)
+			orgID, true, dictionary)
 
 		expected := &corev1.Secret{
 			TypeMeta: v1.TypeMeta{
@@ -588,7 +589,7 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 		namespace := "TestNamespace"
 
 		got := BuildProjectConnectionSecret(credsProvider, name, namespace,
-			orgID, false)
+			orgID, false, dictionary)
 
 		expected := &corev1.Secret{
 			TypeMeta: v1.TypeMeta{
@@ -858,6 +859,7 @@ func Test_buildIntegrations(t *testing.T) {
 	ctl := gomock.NewController(t)
 
 	intProvider := mocks.NewMockIntegrationLister(ctl)
+	dictionary := resources.AtlasNameToKubernetesName()
 
 	t.Run("Can convert third-party integrations WITH secrets: Prometheus", func(t *testing.T) {
 		const targetNamespace = "test-namespace-3"
@@ -877,7 +879,7 @@ func Test_buildIntegrations(t *testing.T) {
 
 		intProvider.EXPECT().Integrations(projectID).Return(ints, nil)
 
-		got, intSecrets, err := buildIntegrations(intProvider, projectID, targetNamespace, includeSecrets)
+		got, intSecrets, err := buildIntegrations(intProvider, projectID, targetNamespace, includeSecrets, dictionary)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
@@ -941,7 +943,7 @@ func Test_buildIntegrations(t *testing.T) {
 			TotalCount: 0,
 		}
 		intProvider.EXPECT().Integrations(projectID).Return(ints, nil)
-		got, intSecrets, err := buildIntegrations(intProvider, projectID, targetNamespace, includeSecrets)
+		got, intSecrets, err := buildIntegrations(intProvider, projectID, targetNamespace, includeSecrets, dictionary)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}

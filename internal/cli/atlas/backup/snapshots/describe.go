@@ -60,9 +60,9 @@ func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
 		Use:   "describe <snapshotId>",
-		Short: "Get a specific snapshot for your project.",
+		Short: "Return the details for the specified snapshot for your project.",
 		Args:  require.ExactArgs(1),
-		Example: fmt.Sprintf(`  # Return the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the cluster named myDemo:
+		Example: fmt.Sprintf(`  # Return the details for the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the cluster named myDemo:
   %s backups snapshots describe 5f4007f327a3bd7b6f4103c5 --clusterName myDemo`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"snapshotIdDesc": "Unique identifier of the snapshot you want to retrieve.",

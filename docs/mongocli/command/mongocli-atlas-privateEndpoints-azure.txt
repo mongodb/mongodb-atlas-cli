@@ -44,17 +44,17 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-privateEndpoints-azure-create` - Create a new Azure Private Endpoint for your project.
-* :ref:`mongocli-atlas-privateEndpoints-azure-delete` - Delete a specific Azure Private Endpoint for your project.
-* :ref:`mongocli-atlas-privateEndpoints-azure-describe` - Return a specific Azure Private Endpoints for your project.
+* :ref:`mongocli-atlas-privateEndpoints-azure-create` - Create a new Azure private endpoint for your project.
+* :ref:`mongocli-atlas-privateEndpoints-azure-delete` - Remove the specified Azure private endpoint from your project.
+* :ref:`mongocli-atlas-privateEndpoints-azure-describe` - Return the details for the specified Azure private endpoint for your project.
 * :ref:`mongocli-atlas-privateEndpoints-azure-interfaces` - Manage Atlas Azure private endpoint interfaces.
-* :ref:`mongocli-atlas-privateEndpoints-azure-list` - List Azure Private Endpoints for your project.
-* :ref:`mongocli-atlas-privateEndpoints-azure-watch` - Watch for a specific Azure Private Endpoint to be available.
+* :ref:`mongocli-atlas-privateEndpoints-azure-list` - Return all Azure private endpoints for your project.
+* :ref:`mongocli-atlas-privateEndpoints-azure-watch` - Watch the specified Azure private endpoint in your project until it becomes available.
 
 
 .. toctree::

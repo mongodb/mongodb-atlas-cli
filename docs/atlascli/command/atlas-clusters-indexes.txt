@@ -44,12 +44,12 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Related Commands
 ----------------
 
-* :ref:`atlas-clusters-indexes-create` - Create a rolling index for your MongoDB cluster.
+* :ref:`atlas-clusters-indexes-create` - Create a rolling index for the specified cluster for your project.
 
 
 .. toctree::

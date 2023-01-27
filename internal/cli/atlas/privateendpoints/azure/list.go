@@ -16,6 +16,7 @@ package azure
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -61,8 +62,10 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "List Azure Private Endpoints for your project.",
+		Short:   "Return all Azure private endpoints for your project.",
 		Args:    require.NoArgs,
+		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all Azure private endpoints for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s privateEndpoints azure list --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -16,6 +16,7 @@ package alerts
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -67,12 +68,14 @@ func UnacknowledgeBuilder() *cobra.Command {
 	opts := new(UnacknowledgeOpts)
 	cmd := &cobra.Command{
 		Use:     "unacknowledge <alertId>",
-		Short:   "Unacknowledges one alert for the specified project.",
+		Short:   "Unacknowledge the specified alert for your project.",
 		Aliases: []string{"unack"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"alertIdDesc": "ID of the alert you want to unacknowledge.",
+			"alertIdDesc": "Unique ID of the alert you want to unacknowledge.",
 		},
+		Example: fmt.Sprintf(`  # Unacknowledge the alert with the ID 5d1113b25a115342acc2d1aa in the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s alerts unacknowledge 5d1113b25a115342acc2d1aa --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

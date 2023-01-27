@@ -16,6 +16,7 @@ package settings
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -53,11 +54,13 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <alertConfigId>",
 		Aliases: []string{"rm"},
-		Short:   "Deletes the specified alert configuration in a specified project.",
+		Short:   "Remove the specified alert configuration for your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"alertConfigIdDesc": "Unique identifier of the alert configuration to delete.",
 		},
+		Example: fmt.Sprintf(`  # Remove the alert configuration with the ID 5d1113b25a115342acc2d1aa in the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s alerts settings delete 5d1113b25a115342acc2d1aa --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

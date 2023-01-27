@@ -12,7 +12,7 @@ mongocli atlas clusters onlineArchives delete
    :depth: 1
    :class: singlecol
 
-Delete an online archive from a cluster.
+Remove the specified online archive from your cluster.
 
 Syntax
 ------
@@ -81,12 +81,12 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------
 
 .. code-block::
 
-   # Delete an online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
+   # Remove an online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
    mongocli atlas clusters onlineArchives delete 5f189832e26ec075e10c32d3 --clusterName myCluster

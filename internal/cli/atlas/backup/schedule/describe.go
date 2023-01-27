@@ -69,7 +69,7 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"clusterNameDesc": "Human-readable label for the cluster.",
 		},
-		Example: fmt.Sprintf(`  # The following example describes the cloud backup schedule for the cluster Cluster0:
+		Example: fmt.Sprintf(`  # Return the cloud backup schedule for the cluster named Cluster0:
   %s backup schedule describe Cluster0`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

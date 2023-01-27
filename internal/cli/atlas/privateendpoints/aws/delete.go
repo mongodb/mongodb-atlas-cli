@@ -53,12 +53,13 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <privateEndpointId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a specific AWS Private Endpoint for your project.",
+		Short:   "Remove the specified AWS private endpoint from your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+			"privateEndpointIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.",
 		},
-		Example: fmt.Sprintf(`  %s privateEndpoint aws delete vpce-0fcd9d80bbafe1607 --force`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # Remove the AWS private endpoint with the ID 5f4fc14da2b47835a58c63a2 from the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s privateEndpoints aws delete 5f4fc14da2b47835a58c63a2 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

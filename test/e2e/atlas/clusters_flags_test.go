@@ -41,7 +41,8 @@ func TestClustersFlags(t *testing.T) {
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
-	region, err := g.newAvailableRegion(tierM30, e2eClusterProvider)
+	tier := e2eTier()
+	region, err := g.newAvailableRegion(tier, e2eClusterProvider)
 	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {
@@ -51,7 +52,7 @@ func TestClustersFlags(t *testing.T) {
 			clusterName,
 			"--region", region,
 			"--members=3",
-			"--tier", tierM30,
+			"--tier", tier,
 			"--provider", e2eClusterProvider,
 			"--mdbVersion", e2eMDBVer,
 			"--diskSizeGB", diskSizeGB30,

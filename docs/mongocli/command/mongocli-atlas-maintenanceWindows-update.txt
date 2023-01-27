@@ -59,7 +59,7 @@ Options
    * - --startASAP
      - 
      - false
-     - Flag that, if specified, indicates to start maintenance immediately upon receiving this request. This flag resets to false after Atlas completes maintenance.
+     - Flag that starts maintenance immediately upon receiving this request. This flag resets to false after Atlas completes maintenance.
 
 Inherited Options
 -----------------
@@ -75,7 +75,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------

@@ -60,7 +60,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <clusterName>",
 		Aliases: []string{"get"},
-		Short:   "Return the details for the cluster you specify.",
+		Short:   "Return the details for the specified cluster for your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to retrieve.",

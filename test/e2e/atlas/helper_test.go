@@ -70,7 +70,6 @@ const (
 	networkPeeringEntity         = "peering"
 	suggestedIndexesEntity       = "suggestedIndexes"
 	slowOperationThresholdEntity = "slowOperationThreshold"
-	tierM30                      = "M30"
 	tierM10                      = "M10"
 	tierM2                       = "M2"
 	diskSizeGB40                 = "40"
@@ -102,7 +101,8 @@ const (
 
 // Cluster settings.
 const (
-	e2eClusterTier     = "M30"
+	e2eClusterTier     = "M10"
+	e2eGovClusterTier  = "M20"
 	e2eClusterProvider = "AWS" // e2eClusterProvider preferred provider for e2e testing.
 	e2eMDBVer          = "4.4"
 	e2eSharedMDBVer    = "5.0"
@@ -117,7 +117,8 @@ func deployServerlessInstanceForProject(projectID string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	region, err := newAvailableRegion(projectID, e2eClusterTier, e2eClusterProvider)
+	tier := e2eTier()
+	region, err := newAvailableRegion(projectID, tier, e2eClusterProvider)
 	if err != nil {
 		return "", err
 	}
@@ -199,7 +200,8 @@ func deployClusterForProject(projectID string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	region, err := newAvailableRegion(projectID, e2eClusterTier, e2eClusterProvider)
+	tier := e2eTier()
+	region, err := newAvailableRegion(projectID, tier, e2eClusterProvider)
 	if err != nil {
 		return "", err
 	}
@@ -209,7 +211,7 @@ func deployClusterForProject(projectID string) (string, error) {
 		clusterName,
 		"--mdbVersion", e2eMDBVer,
 		"--region", region,
-		"--tier", e2eClusterTier,
+		"--tier", tier,
 		"--provider", e2eClusterProvider,
 		"--diskSizeGB=30",
 	}
@@ -236,6 +238,14 @@ func deployClusterForProject(projectID string) (string, error) {
 		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
 	}
 	return clusterName, nil
+}
+
+func e2eTier() string {
+	tier := e2eClusterTier
+	if IsGov() {
+		tier = e2eGovClusterTier
+	}
+	return tier
 }
 
 func deleteClusterForProject(projectID, clusterName string) error {
@@ -381,7 +391,7 @@ func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPar
 	return false
 }
 
-func Gov() bool {
+func IsGov() bool {
 	return os.Getenv("MCLI_SERVICE") == "cloudgov"
 }
 
@@ -396,7 +406,7 @@ func createProject(projectName string) (string, error) {
 		projectName,
 		"-o=json",
 	}
-	if Gov() {
+	if IsGov() {
 		args = append(args, "--govCloudRegionsOnly")
 	}
 	cmd := exec.Command(cliPath, args...)

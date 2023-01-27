@@ -101,7 +101,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create [indexName]",
-		Short: "Create a rolling index for your MongoDB cluster.",
+		Short: "Create a rolling index for the specified cluster for your project.",
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"indexNameDesc": "Name of the index.",

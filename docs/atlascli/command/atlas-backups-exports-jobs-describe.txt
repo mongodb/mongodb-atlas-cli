@@ -69,12 +69,12 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------
 
 .. code-block::
 
-   # The following example describes the continuous backup export job for the cluster Cluster0 and export job 5df90590f10fab5e33de2305:
+   # Return the details for the continuous backup export job with the ID 5df90590f10fab5e33de2305 for the cluster named Cluster0:
    atlas backup exports jobs describe --clusterName Cluster0 --exportID 5df90590f10fab5e33de2305

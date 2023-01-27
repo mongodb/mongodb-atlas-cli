@@ -5,7 +5,7 @@
   "mongoDBMajorVersion":"4.4",
   "providerSettings":{
     "providerName":"GCP",
-    "instanceSizeName":"M30"
+    "instanceSizeName":"M10"
   },
   "clusterType":"REPLICASET",
   "replicationSpecs":[

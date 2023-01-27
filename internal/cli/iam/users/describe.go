@@ -84,8 +84,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Aliases: []string{"get"},
-		Example: `  
-  # Describe a user by ID
+		Example: `  # Describe a user by ID
   mongocli iam users describe --id <id>
 
   # Describe a user by username

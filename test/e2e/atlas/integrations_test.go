@@ -43,7 +43,7 @@ func TestIntegrations(t *testing.T) {
 		n, err := e2e.RandInt(9)
 		require.NoError(t, err)
 		datadogKey := "000000000000000000000000000000" + n.String() + n.String()
-		if Gov() {
+		if IsGov() {
 			t.Skip("Skipping DATADOG integration test, cloudgov does not have an available datadog region")
 		}
 		cmd := exec.Command(cliPath,

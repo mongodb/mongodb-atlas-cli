@@ -53,15 +53,15 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <entry>",
 		Aliases: []string{"rm"},
-		Short:   "Delete an IP access list from your project.",
-		Long:    "The command prompts you to confirm the operation when you run the command without the --force option.",
+		Short:   "Remove the specified IP access list entry from your project.",
+		Long:    "The command prompts you to confirm the operation when you run the command without the force option.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to delete.",
+			"entryDesc": "The IP address, CIDR address, or AWS security group ID that you want to remove from the access list.",
 		},
-		Example: fmt.Sprintf(`  # Delete the IP address 192.0.2.0 from the access list for the project with ID 5e2211c17a3e5a48f5497de3 after prompting for a confirmation:
+		Example: fmt.Sprintf(`  # Remove the IP address 192.0.2.0 from the access list for the project with the ID 5e2211c17a3e5a48f5497de3 after prompting for a confirmation:
   %[1]s accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3
-  # Use the --force option to delete the IP address 192.0.2.0 from the access list for the project with ID 5e2211c17a3e5a48f5497de3 without confirmation:
+  # Remove the IP address 192.0.2.0 from the access list for the project with the ID 5e2211c17a3e5a48f5497de3 without requiring confirmation:
   %[1]s accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3 --force`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {

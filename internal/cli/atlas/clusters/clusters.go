@@ -128,9 +128,23 @@ func RemoveReadOnlyAttributes(out *atlas.AdvancedCluster) {
 	out.StateName = ""
 	out.MongoDBVersion = ""
 	out.ConnectionStrings = nil
-
+	isTenant := false
 	for _, spec := range out.ReplicationSpecs {
 		spec.ID = ""
+		for _, c := range spec.RegionConfigs {
+			if c.ProviderName == tenant {
+				isTenant = true
+				break
+			}
+		}
+	}
+	if isTenant {
+		out.BiConnector = nil
+		out.EncryptionAtRestProvider = ""
+		out.DiskSizeGB = nil
+		out.MongoDBMajorVersion = ""
+		out.PitEnabled = nil
+		out.BackupEnabled = nil
 	}
 }
 

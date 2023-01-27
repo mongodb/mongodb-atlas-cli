@@ -53,13 +53,13 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <name>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a federated database instance from your project.",
+		Short:   "Remove a federated database instance from your project.",
 		Long:    "To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Name of the federated database instance to delete.",
 		},
-		Example: fmt.Sprintf(`  # Delete the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
+		Example: fmt.Sprintf(`  # Remove the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s dataLakes delete myFDI --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {

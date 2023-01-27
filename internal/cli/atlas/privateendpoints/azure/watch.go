@@ -63,15 +63,16 @@ func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
 		Use:   "watch <privateEndpointId>",
-		Short: "Watch for a specific Azure Private Endpoint to be available.",
+		Short: "Watch the specified Azure private endpoint in your project until it becomes available.",
 		Long: `This command checks the endpoint's state periodically until the endpoint reaches an AVAILABLE or FAILED state. 
 Once the endpoint reaches the expected state, the command prints "Private endpoint changes completed."
 If you run the command in the terminal, it blocks the terminal session until the resource becomes available or fails.
 You can interrupt the command's polling at any time with CTRL-C.`,
-		Example: fmt.Sprintf(`  %s privateEndpoint azure watch vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
-		Args:    require.ExactArgs(1),
+		Example: fmt.Sprintf(`  # Watch for the Azure private endpoint with the ID 5f4fc14da2b47835a58c63a2 to become available in the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s privateEndpoints azure watch 5f4fc14da2b47835a58c63a2 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
-			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+			"privateEndpointIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

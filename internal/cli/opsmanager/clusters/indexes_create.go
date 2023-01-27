@@ -168,7 +168,7 @@ func IndexesCreateBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"indexNameDesc": "Name of the index to create.",
 		},
-		Example: `  # The following example creates an index named bedrooms_1 on the listings collection of the realestate database on the replica set repl1. 
+		Example: `  # Create an index named bedrooms_1 on the listings collection of the realestate database on the replica set repl1. 
   The command uses the default profile.
 
   mongocli om clusters indexes create bedrooms_1 \

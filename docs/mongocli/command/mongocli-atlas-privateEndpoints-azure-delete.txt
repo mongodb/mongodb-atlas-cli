@@ -12,7 +12,7 @@ mongocli atlas privateEndpoints azure delete
    :depth: 1
    :class: singlecol
 
-Delete a specific Azure Private Endpoint for your project.
+Remove the specified Azure private endpoint from your project.
 
 Syntax
 ------
@@ -37,7 +37,7 @@ Arguments
    * - privateEndpointId
      - string
      - true
-     - Unique 22-character alphanumeric string that identifies the private endpoint.
+     - Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.
 
 Options
 -------
@@ -77,11 +77,12 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Profile to use from your configuration file.
+     - Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/.
 
 Examples
 --------
 
 .. code-block::
 
-   mongocli atlas privateEndpoint azure delete 0fcd9d80bbafe1607 --force
+   # Remove the Azure private endpoint with the ID 5f4fc14da2b47835a58c63a2 from the project with the ID 5e2211c17a3e5a48f5497de3:
+   mongocli atlas privateEndpoints azure delete 5f4fc14da2b47835a58c63a2 --projectId 5e2211c17a3e5a48f5497de3

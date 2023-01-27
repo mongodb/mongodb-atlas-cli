@@ -436,7 +436,7 @@ func createProjectWithoutAlertSettings(projectName string) (string, error) {
 		"-o=json",
 		"--withoutDefaultAlertSettings",
 	}
-	if Gov() {
+	if IsGov() {
 		args = append(args, "--govCloudRegionsOnly")
 	}
 	cmd := exec.Command(cliPath, args...)

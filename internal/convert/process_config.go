@@ -228,6 +228,21 @@ func newReplicaSetProcessConfig(rs *opsmngr.Member, p *opsmngr.Process) *Process
 	if p.Args26.Security != nil {
 		pc.Security = p.Args26.Security
 	}
+	if p.DefaultRWConcern != nil {
+		pc.DefaultRWConcern = &DefaultRWConcern{}
+		if pc.DefaultRWConcern.DefaultReadConcern != nil {
+			pc.DefaultRWConcern.DefaultReadConcern = &DefaultReadConcern{
+				Level: pc.DefaultRWConcern.DefaultReadConcern.Level,
+			}
+		}
+		if pc.DefaultRWConcern.DefaultWriteConcern != nil {
+			pc.DefaultRWConcern.DefaultWriteConcern = &DefaultWriteConcern{
+				W:        pc.DefaultRWConcern.DefaultWriteConcern.W,
+				J:        pc.DefaultRWConcern.DefaultWriteConcern.J,
+				Wtimeout: pc.DefaultRWConcern.DefaultWriteConcern.Wtimeout,
+			}
+		}
+	}
 	return pc
 }
 

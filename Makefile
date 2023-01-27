@@ -80,7 +80,7 @@ fmt-all: ### Format all go files with goimports and gofmt
 	find . -name "*.go" -not -path "./vendor/*" -not -path "./internal/mocks" -exec goimports -l -w "{}" \;
 
 .PHONY: test
-test: unit-test integration-test
+test: unit-test integration-test fuzz-normalizer-test
 
 .PHONY: lint
 lint: ## Run linter
@@ -155,10 +155,15 @@ integration-test: ## Run integration tests
 	@echo "==> Running integration tests..."
 	$(TEST_CMD) --tags="$(INTEGRATION_TAGS)" -count=1 ./internal...
 
+.PHONY: fuzz-normalizer-test
+fuzz-normalizer-test: ## Run fuzz test
+	@echo "==> Running fuzz test..."
+	$(TEST_CMD) -fuzz=Fuzz -fuzztime 50s --tags="$(UNIT_TAGS)" -race ./internal/kubernetes/operator/resources
+
 .PHONY: unit-test
 unit-test: ## Run unit-tests
 	@echo "==> Running unit tests..."
-	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./...
+	$(TEST_CMD)  --tags="$(UNIT_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./...
 
 .PHONY: install
 install: install-mongocli install-atlascli ## Install binaries in $GOPATH/bin for both CLIs

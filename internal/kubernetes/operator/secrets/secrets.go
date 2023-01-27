@@ -15,8 +15,7 @@
 package secrets
 
 import (
-	"strings"
-
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -30,14 +29,14 @@ const (
 	CredOrgID         = "orgId"
 )
 
-func NewAtlasSecret(name, namespace string, data map[string][]byte) *corev1.Secret {
+func NewAtlasSecret(name, namespace string, data map[string][]byte, dictionary map[string]string) *corev1.Secret {
 	return &corev1.Secret{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "Secret",
 			APIVersion: "v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      strings.ToLower(name),
+			Name:      resources.NormalizeAtlasName(name, dictionary),
 			Namespace: namespace,
 			Labels: map[string]string{
 				TypeLabelKey: CredLabelVal,

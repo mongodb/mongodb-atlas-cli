@@ -28,14 +28,6 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	datadogEntity   = "DATADOG"
-	opsGenieEntity  = "OPS_GENIE"
-	pagerDutyEntity = "PAGER_DUTY"
-	victorOpsEntity = "VICTOR_OPS"
-	webhookEntity   = "WEBHOOK"
-)
-
 func TestIntegrations(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("integrations")

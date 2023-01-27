@@ -38,13 +38,15 @@ const (
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	name       string
-	tier       string
-	diskSizeGB float64
-	mdbVersion string
-	filename   string
-	fs         afero.Fs
-	store      store.AtlasClusterGetterUpdater
+	name                         string
+	tier                         string
+	diskSizeGB                   float64
+	mdbVersion                   string
+	enableTerminationProtection  bool
+	disableTerminationProtection bool
+	filename                     string
+	fs                           afero.Fs
+	store                        store.AtlasClusterGetterUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -98,6 +100,7 @@ func (opts *UpdateOpts) patchOpts(out *atlas.AdvancedCluster) {
 	if opts.tier != "" {
 		opts.addTierToAdvancedCluster(out)
 	}
+	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection)
 
 	AddLabel(out, NewCLILabel())
 }
@@ -166,6 +169,10 @@ You can't change the name of the cluster or downgrade the MongoDB version of you
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, 0, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, "", usage.MDBVersion)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.ClusterFilename)
+
+	cmd.Flags().BoolVar(&opts.enableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
+	cmd.Flags().BoolVar(&opts.disableTerminationProtection, flag.DisableTerminationProtection, false, usage.EnableTerminationProtection)
+	cmd.MarkFlagsMutuallyExclusive(flag.EnableTerminationProtection, flag.DisableTerminationProtection)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

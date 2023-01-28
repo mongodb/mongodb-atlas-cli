@@ -42,7 +42,14 @@ func newClusterProviderQuestion() *survey.Question {
 			Help:    usage.Provider,
 			Options: []string{"AWS", "GCP", "AZURE"},
 		},
-		Validate: survey.Required,
+	}
+}
+
+func newClusterTerminationProtectionQuestion() survey.Prompt {
+	return &survey.Confirm{
+		Message: "Cluster Termination Protection",
+		Help:    usage.EnableTerminationProtection,
+		Default: false,
 	}
 }
 

@@ -41,7 +41,7 @@ func TestBuilder(t *testing.T) {
 		t,
 		Builder(),
 		0,
-		[]string{flag.ProjectID, flag.Region, flag.ClusterName, flag.Provider, flag.AccessListIP, flag.Username, flag.Password, flag.SkipMongosh, flag.SkipSampleData},
+		[]string{flag.ProjectID, flag.Region, flag.ClusterName, flag.Provider, flag.AccessListIP, flag.Username, flag.Password, flag.EnableTerminationProtection, flag.SkipMongosh, flag.SkipSampleData},
 	)
 }
 
@@ -224,16 +224,17 @@ func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 	var expectedProjectAccessLists *mongodbatlas.ProjectIPAccessLists
 
 	opts := &Opts{
-		ClusterName:    "ProjectBar",
-		Region:         "US",
-		store:          mockStore,
-		IPAddresses:    []string{"0.0.0.0"},
-		DBUsername:     "user",
-		DBUserPassword: "test",
-		Provider:       "AWS",
-		SkipMongosh:    true,
-		SkipSampleData: true,
-		Confirm:        true,
+		ClusterName:                 "ProjectBar",
+		Region:                      "US",
+		store:                       mockStore,
+		IPAddresses:                 []string{"0.0.0.0"},
+		DBUsername:                  "user",
+		DBUserPassword:              "test",
+		Provider:                    "AWS",
+		EnableTerminationProtection: true,
+		SkipMongosh:                 true,
+		SkipSampleData:              true,
+		Confirm:                     true,
 	}
 
 	projectIPAccessList := opts.newProjectIPAccessList()
@@ -276,6 +277,7 @@ func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 	assert.False(t, opts.shouldAskForValue(flag.Region))
 	assert.False(t, opts.shouldAskForValue(flag.Username))
 	assert.False(t, opts.shouldAskForValue(flag.Password))
+	assert.False(t, opts.shouldAskForValue(flag.EnableTerminationProtection))
 }
 
 func setConfig() func(ctx context.Context) error {

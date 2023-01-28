@@ -66,7 +66,18 @@ func (opts *Opts) askClusterOptions() error {
 	if opts.shouldAskForValue(flag.Region) {
 		return opts.askClusterRegion()
 	}
+
+	if opts.shouldAskForValue(flag.EnableTerminationProtection) {
+		return opts.askClusterTerminationProtection()
+	}
 	return nil
+}
+
+func (opts *Opts) askClusterTerminationProtection() error {
+	return telemetry.TrackAskOne(
+		newClusterTerminationProtectionQuestion(),
+		&opts.EnableTerminationProtection,
+		survey.WithValidator(survey.Required))
 }
 
 func (opts *Opts) askClusterRegion() error {
@@ -107,6 +118,7 @@ func (opts *Opts) newCluster() *atlas.AdvancedCluster {
 				Value: opts.LabelValue,
 			},
 		},
+		TerminationProtectionEnabled: &opts.EnableTerminationProtection,
 	}
 
 	if opts.providerName() != tenant {

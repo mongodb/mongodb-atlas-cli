@@ -52,6 +52,10 @@ Options
      - 
      - false
      - Flag that runs the Quickstart command with all default and auto-generated values to deploy and access an Atlas cluster.
+   * - --enableTerminationProtection
+     - 
+     - false
+     - Enables termination protection for your cluster. You can't delete a cluster with termination protection enabled.
    * - --force
      - 
      - false

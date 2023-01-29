@@ -64,7 +64,9 @@ func (opts *Opts) askClusterOptions() error {
 
 	// We need the provider to ask for the region
 	if opts.shouldAskForValue(flag.Region) {
-		return opts.askClusterRegion()
+		if err := opts.askClusterRegion(); err != nil {
+			return err
+		}
 	}
 
 	if opts.shouldAskForValue(flag.EnableTerminationProtection) {

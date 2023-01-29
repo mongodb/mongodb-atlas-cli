@@ -53,12 +53,14 @@ Cluster Disk Size (GiB):		%.1f`, opts.Tier, diskSize)
 [Confirm cluster settings]
 Cluster Name:				%s%s
 Cloud Provider and Region:		%s
+Cluster Termination Protection:		%t
 Database User Username:			%s%s
 Allow connections from (IP Address):	%s
 `,
 		opts.ClusterName,
 		clusterTier,
 		opts.Provider+" - "+opts.Region,
+		opts.EnableTerminationProtection,
 		opts.DBUsername,
 		loadSampleData,
 		strings.Join(opts.IPAddresses, ", "),

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,11 +26,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
-func TestDelete_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterDeleter(ctrl)
+func TestFailoverBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		FailoverBuilder(),
+		0,
+		[]string{flag.Force, flag.ProjectID},
+	)
+}
 
-	deleteOpts := &DeleteOpts{
+func TestFailoverOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterTester(ctrl)
+
+	deleteOpts := &FailoverOpts{
 		DeleteOpts: &cli.DeleteOpts{
 			Confirm: true,
 			Entry:   "test",
@@ -40,20 +49,11 @@ func TestDelete_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeleteCluster(deleteOpts.ProjectID, deleteOpts.Entry).
+		TestClusterFailover(deleteOpts.ProjectID, deleteOpts.Entry).
 		Return(nil).
 		Times(1)
 
 	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestDeleteBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DeleteBuilder(),
-		0,
-		[]string{flag.Force, flag.ProjectID},
-	)
 }

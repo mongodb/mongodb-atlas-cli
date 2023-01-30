@@ -56,10 +56,18 @@ Options
      - Type
      - Required
      - Description
+   * - --disableTerminationProtection
+     - 
+     - false
+     - Disables termination protection for your cluster. Users can delete a cluster with termination protection disabled.
    * - --diskSizeGB
      - float
      - false
      - Capacity, in gigabytes, of the host's root volume.
+   * - --enableTerminationProtection
+     - 
+     - false
+     - Enables termination protection for your cluster. Users can't delete a cluster with termination protection enabled.
    * - -f, --file
      - string
      - false

@@ -61,7 +61,7 @@ func TestClustersFile(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 30)
+		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 30, false)
 	})
 
 	t.Run("Watch", func(t *testing.T) {
@@ -95,7 +95,7 @@ func TestClustersFile(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 40)
+		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 40, false)
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {

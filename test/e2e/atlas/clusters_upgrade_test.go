@@ -61,7 +61,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureSharedCluster(t, cluster, clusterName, e2eSharedMDBVer, tierM2, 2)
+		ensureSharedCluster(t, cluster, clusterName, e2eSharedMDBVer, tierM2, 2, false)
 	})
 
 	t.Run("Watch create", func(t *testing.T) {
@@ -117,7 +117,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		err = json.Unmarshal(resp, &clusterResponse)
 		req.NoError(err)
 
-		ensureSharedCluster(t, clusterResponse.Results[0], clusterName, "6.0", tierM10, 40)
+		ensureSharedCluster(t, clusterResponse.Results[0], clusterName, "6.0", tierM10, 40, false)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

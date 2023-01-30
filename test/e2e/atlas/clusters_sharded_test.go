@@ -68,7 +68,7 @@ func TestShardedCluster(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, shardedClusterName, e2eMDBVer, 30)
+		ensureCluster(t, &cluster, shardedClusterName, e2eMDBVer, 30, false)
 	})
 
 	t.Run("Delete sharded cluster", func(t *testing.T) {

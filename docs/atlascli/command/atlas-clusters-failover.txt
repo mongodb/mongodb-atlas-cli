@@ -39,7 +39,7 @@ Arguments
    * - clusterName
      - string
      - true
-     - Name of the cluster to start a failover test.
+     - Human-readable label that identifies the cluster to start a failover test for.
 
 Options
 -------

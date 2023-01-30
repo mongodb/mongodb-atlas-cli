@@ -26,7 +26,7 @@ const loadSampleDataMsg = `
 Load sample data:			Yes`
 
 const enableTerminationProtectionMsg = `
-Cluster Termination Protection Enabled:		%t`
+Cluster Termination Protection Enabled:	Yes`
 
 var ErrUserAborted = errors.New("user-aborted. Not creating cluster")
 
@@ -41,7 +41,7 @@ func (opts *Opts) askConfirmConfigQuestion() error {
 	}
 
 	enableTerminationProtection := ""
-	if !opts.EnableTerminationProtection {
+	if opts.EnableTerminationProtection {
 		enableTerminationProtection = enableTerminationProtectionMsg
 	}
 

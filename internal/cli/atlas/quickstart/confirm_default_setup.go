@@ -33,7 +33,7 @@ func (opts *Opts) askConfirmDefaultQuestion(values *quickstart) error {
 	}
 
 	enableTerminationProtection := ""
-	if !opts.EnableTerminationProtection {
+	if opts.EnableTerminationProtection {
 		enableTerminationProtection = enableTerminationProtectionMsg
 	}
 

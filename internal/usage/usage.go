@@ -15,7 +15,7 @@
 package usage
 
 const (
-	ProjectID                    = "Project ID to use. Overrides the settings in the configuration file or environment variable."
+	ProjectID                    = "Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable."
 	OrgID                        = "Organization ID to use. Overrides the settings in the configuration file or environment variable."
 	Profile                      = "Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file."
 	Members                      = "Number of members in the replica set."
@@ -245,7 +245,7 @@ dbName and collection are required only for built-in roles.`
 	DateField                                 = "Name of an already indexed date field from the documents."
 	PartitionFields                           = "Fields to use to partition data. You can specify up to two frequently queried fields, separated by a comma, in the following format: <fieldname>:<datatype>. The data type must match the data type of the field in the document."
 	ArchiveAfter                              = "Number of days after which to archive cluster data."
-	TargetProjectID                           = "Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable."
+	TargetProjectID                           = "Unique identifier of the project that contains the destination cluster for the restore job. You must specify a targetProjectId for automated restores."
 	APIAccessListIPEntry                      = "IP address to be allowed for a given API key."
 	NetworkAccessListIPEntry                  = "IP address to be allowed to access the deployment."
 	AccessListCIDREntry                       = "Access list entry in CIDR notation to be added for a given API key."

@@ -25,9 +25,6 @@ import (
 const loadSampleDataMsg = `
 Load sample data:			Yes`
 
-const enableTerminationProtectionMsg = `
-Cluster Termination Protection Enabled:	Yes`
-
 var ErrUserAborted = errors.New("user-aborted. Not creating cluster")
 
 func (opts *Opts) askConfirmConfigQuestion() error {
@@ -38,11 +35,6 @@ func (opts *Opts) askConfirmConfigQuestion() error {
 	loadSampleData := ""
 	if !opts.SkipSampleData {
 		loadSampleData = loadSampleDataMsg
-	}
-
-	enableTerminationProtection := ""
-	if opts.EnableTerminationProtection {
-		enableTerminationProtection = enableTerminationProtectionMsg
 	}
 
 	clusterTier := ""
@@ -60,14 +52,13 @@ Cluster Disk Size (GiB):		%.1f`, opts.Tier, diskSize)
 	fmt.Printf(`
 [Confirm cluster settings]
 Cluster Name:				%s%s
-Cloud Provider and Region:		%s%s
+Cloud Provider and Region:		%s
 Database User Username:			%s%s
 Allow connections from (IP Address):	%s
 `,
 		opts.ClusterName,
 		clusterTier,
 		opts.Provider+" - "+opts.Region,
-		enableTerminationProtection,
 		opts.DBUsername,
 		loadSampleData,
 		strings.Join(opts.IPAddresses, ", "),

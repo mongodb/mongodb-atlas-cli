@@ -68,7 +68,7 @@ Options
    * - --enableTerminationProtection
      - 
      - false
-     - Enables termination protection for your cluster. Users can't delete a cluster with termination protection enabled.
+     - Enables termination protection for your cluster. You can't delete a cluster with termination protection enabled.
    * - -f, --file
      - string
      - false

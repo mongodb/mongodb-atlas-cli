@@ -32,11 +32,6 @@ func (opts *Opts) askConfirmDefaultQuestion(values *quickstart) error {
 		loadSampleData = loadSampleDataMsg
 	}
 
-	enableTerminationProtection := ""
-	if opts.EnableTerminationProtection {
-		enableTerminationProtection = enableTerminationProtectionMsg
-	}
-
 	clusterTier := ""
 	if opts.Tier != DefaultAtlasTier {
 		diskSize := defaultDiskSizeGB(values.providerName(), opts.Tier)
@@ -49,14 +44,13 @@ Cluster Disk Size (GiB):		%.1f`, opts.Tier, diskSize)
 	fmt.Printf(`
 [Default Settings]
 Cluster Name:				%s%s
-Cloud Provider and Region:		%s%s
+Cloud Provider and Region:		%s
 Database User Username:			%s%s
 Allow connections from (IP Address):	%s
 `,
 		values.ClusterName,
 		clusterTier,
 		values.Provider+" - "+values.Region,
-		enableTerminationProtection,
 		values.DBUsername,
 		loadSampleData,
 		strings.Join(values.IPAddresses, ", "),

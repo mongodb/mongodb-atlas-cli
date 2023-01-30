@@ -64,22 +64,9 @@ func (opts *Opts) askClusterOptions() error {
 
 	// We need the provider to ask for the region
 	if opts.shouldAskForValue(flag.Region) {
-		if err := opts.askClusterRegion(); err != nil {
-			return err
-		}
-	}
-
-	if opts.shouldAskForValue(flag.EnableTerminationProtection) {
-		return opts.askClusterTerminationProtection()
+		return opts.askClusterRegion()
 	}
 	return nil
-}
-
-func (opts *Opts) askClusterTerminationProtection() error {
-	return telemetry.TrackAskOne(
-		newClusterTerminationProtectionQuestion(),
-		&opts.EnableTerminationProtection,
-		survey.WithValidator(survey.Required))
 }
 
 func (opts *Opts) askClusterRegion() error {

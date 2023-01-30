@@ -65,7 +65,7 @@ func TestClustersM0Flags(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, cluster, clusterName, mongoDBMajorVersion, 0.5)
+		ensureCluster(t, cluster, clusterName, mongoDBMajorVersion, 0.5, false)
 	})
 
 	t.Run("Watch", func(t *testing.T) {

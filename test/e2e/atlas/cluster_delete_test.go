@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && clusters && file)
+//go:build e2e || (atlas && clusters && terminationProtection)
 
 package atlas_test
 
@@ -22,37 +22,42 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClustersFile(t *testing.T) {
+func TestClusterDeletion(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
-	g.generateProject("clustersFile")
+	g.generateProject("clusterDeletion")
 
 	cliPath, err := e2e.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterFileName, err := RandClusterName()
+	clusterName, err := RandClusterName()
 	req.NoError(err)
 
-	clusterFile := "create_cluster_test.json"
-	if service := os.Getenv("MCLI_SERVICE"); service == config.CloudGovService {
-		clusterFile = "create_cluster_gov_test.json"
-	}
+	tier := e2eTier()
+	region, err := g.newAvailableRegion(tier, e2eClusterProvider)
+	req.NoError(err)
 
-	t.Run("Create via file", func(t *testing.T) {
+	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
-			clusterFileName,
-			"--file", clusterFile,
+			clusterName,
+			"--region", region,
+			"--members=3",
+			"--tier", tier,
+			"--provider", e2eClusterProvider,
+			"--mdbVersion", e2eMDBVer,
+			"--diskSizeGB", diskSizeGB30,
+			"--enableTerminationProtection",
 			"--projectId", g.projectID,
 			"-o=json")
+
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
@@ -61,16 +66,16 @@ func TestClustersFile(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 30, false)
+		ensureCluster(t, &cluster, clusterName, e2eMDBVer, 30, true)
 	})
 
-	t.Run("Watch", func(t *testing.T) {
+	t.Run("Watch creation", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"watch",
-			"--projectId", g.projectID,
-			clusterFileName,
-		)
+			clusterName,
+			"--projectId", g.projectID)
+
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
@@ -79,14 +84,14 @@ func TestClustersFile(t *testing.T) {
 		a.Contains(string(resp), "Cluster available")
 	})
 
-	t.Run("Update via file", func(t *testing.T) {
+	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
-			"update",
-			clusterFileName,
-			"--file=update_cluster_test.json",
+			"describe",
+			clusterName,
 			"--projectId", g.projectID,
 			"-o=json")
+
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
@@ -95,16 +100,57 @@ func TestClustersFile(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 40, false)
+		a := assert.New(t)
+		a.NotEmpty(cluster.TerminationProtectionEnabled)
+		a.Equal(*cluster.TerminationProtectionEnabled, true)
 	})
 
-	t.Run("Delete file creation", func(t *testing.T) {
-		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterFileName, "--projectId", g.projectID, "--force")
+	t.Run("Delete with fail", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"delete",
+			clusterName,
+			"--force",
+			"--projectId", g.projectID)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.Error(err, string(resp))
+	})
+
+	t.Run("Update termination protection", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"update",
+			clusterName,
+			"--disableTerminationProtection",
+			"--projectId", g.projectID,
+			"-o=json")
+
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterFileName)
+		var cluster mongodbatlas.AdvancedCluster
+		err = json.Unmarshal(resp, &cluster)
+		req.NoError(err)
+
+		ensureCluster(t, &cluster, clusterName, e2eMDBVer, 30, false)
+	})
+
+	t.Run("Delete with success", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"delete",
+			clusterName,
+			"--force",
+			"--projectId", g.projectID)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.Error(err)
+
+		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})
@@ -113,7 +159,7 @@ func TestClustersFile(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"watch",
-			clusterFileName,
+			clusterName,
 			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()

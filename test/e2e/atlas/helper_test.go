@@ -558,15 +558,16 @@ func deleteProject(projectID string) error {
 	return nil
 }
 
-func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterName, version string, diskSizeGB float64) {
+func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.Name)
 	a.Equal(version, cluster.MongoDBMajorVersion)
 	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
+	a.Equal(terminationProtection, *cluster.TerminationProtectionEnabled)
 }
 
-func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, version, tier string, diskSizeGB float64) {
+func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, version, tier string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.Name)
@@ -575,6 +576,7 @@ func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterNam
 		a.Equal(tier, cluster.ProviderSettings.InstanceSizeName)
 	}
 	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
+	a.Equal(terminationProtection, *cluster.TerminationProtectionEnabled)
 }
 
 func compareStingsWithHiddenPart(expectedSting, actualString string, specialChar uint8) bool {

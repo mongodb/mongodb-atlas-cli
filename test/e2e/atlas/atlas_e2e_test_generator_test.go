@@ -203,7 +203,7 @@ func (g *atlasE2ETestGenerator) generateProjectAndCluster(prefix string) {
 }
 
 // newAvailableRegion returns the first region for the provider/tier.
-func (g *atlasE2ETestGenerator) newAvailableRegion(tier, provider string) (string, error) {
+func (g *atlasE2ETestGenerator) newAvailableRegion(tier, provider string) (string, error) { //nolint:unparam
 	g.t.Helper()
 
 	if g.projectID == "" {

@@ -36,7 +36,7 @@ require (
 	github.com/stretchr/testify v1.8.1
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
-	go.mongodb.org/atlas v0.21.0
+	go.mongodb.org/atlas v0.22.0
 	go.mongodb.org/mongo-driver v1.11.1
 	go.mongodb.org/ops-manager v0.46.0
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
@@ -124,4 +124,8 @@ require (
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
+)
+
+replace (
+	go.mongodb.org/atlas => /Users/gustavobazan/Projects/go-client-mongodb-atlas
 )

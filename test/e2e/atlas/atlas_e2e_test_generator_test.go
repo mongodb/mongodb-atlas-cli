@@ -37,6 +37,11 @@ type atlasE2ETestGenerator struct {
 	projectName    string
 	clusterName    string
 	serverlessName string
+	teamName       string
+	teamID         string
+	teamUser       string
+	tier           string
+	enableBackup   bool
 	firstProcess   *mongodbatlas.Process
 	t              *testing.T
 }
@@ -45,6 +50,41 @@ type atlasE2ETestGenerator struct {
 func newAtlasE2ETestGenerator(t *testing.T) *atlasE2ETestGenerator {
 	t.Helper()
 	return &atlasE2ETestGenerator{t: t}
+}
+
+func (g *atlasE2ETestGenerator) generateTeam(prefix string) {
+	g.t.Helper()
+
+	if g.teamID != "" {
+		g.t.Fatal("unexpected error: team was already generated")
+	}
+
+	var err error
+	if prefix == "" {
+		g.teamName, err = RandTeamName()
+	} else {
+		g.teamName, err = RandTeamNameWithPrefix(prefix)
+	}
+	if err != nil {
+		g.t.Fatalf("unexpected error: %v", err)
+	}
+
+	g.teamUser, err = getFirstOrgUser()
+	if err != nil {
+		g.t.Fatalf("unexpected error: %v", err)
+	}
+	g.teamID, err = createTeam(g.teamName, g.teamUser)
+	if err != nil {
+		g.t.Fatalf("unexpected error: %v", err)
+	}
+	g.t.Logf("teamID=%s", g.teamID)
+	g.t.Logf("teamName=%s", g.teamName)
+	if g.teamID == "" {
+		g.t.Fatal("teamID not created")
+	}
+	g.t.Cleanup(func() {
+		deleteTeamWithRetry(g.t, g.teamID)
+	})
 }
 
 // generateProject generates a new project and also registers it's deletion on test cleanup.
@@ -110,6 +150,25 @@ func (g *atlasE2ETestGenerator) generateEmptyProject(prefix string) {
 	g.t.Cleanup(func() {
 		deleteProjectWithRetry(g.t, g.projectID)
 	})
+}
+
+func deleteTeamWithRetry(t *testing.T, teamID string) {
+	t.Helper()
+	deleted := false
+	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
+		if e := deleteTeam(teamID); e != nil {
+			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the team %q: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, teamID, e)
+			time.Sleep(sleepTimeInSeconds * time.Second)
+		} else {
+			t.Logf("team %q successfully deleted", teamID)
+			deleted = true
+			break
+		}
+	}
+
+	if !deleted {
+		t.Errorf("we could not delete the team %q", teamID)
+	}
 }
 
 func deleteProjectWithRetry(t *testing.T, projectID string) {
@@ -181,7 +240,11 @@ func (g *atlasE2ETestGenerator) generateCluster() {
 	}
 
 	var err error
-	g.clusterName, err = deployClusterForProject(g.projectID)
+	if g.tier == "" {
+		g.tier = e2eTier()
+	}
+
+	g.clusterName, err = deployClusterForProject(g.projectID, g.tier, g.enableBackup)
 	if err != nil {
 		g.t.Errorf("unexpected error: %v", err)
 	}

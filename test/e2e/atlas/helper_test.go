@@ -79,6 +79,7 @@ const (
 	backupsEntity                = "backups"
 	exportsEntity                = "exports"
 	bucketsEntity                = "buckets"
+	teamsEntity                  = "teams"
 )
 
 // AlertConfig constants.
@@ -101,11 +102,12 @@ const (
 
 // Cluster settings.
 const (
-	e2eClusterTier     = "M10"
-	e2eGovClusterTier  = "M20"
-	e2eClusterProvider = "AWS" // e2eClusterProvider preferred provider for e2e testing.
-	e2eMDBVer          = "4.4"
-	e2eSharedMDBVer    = "5.0"
+	e2eClusterTier       = "M10"
+	e2eGovClusterTier    = "M20"
+	e2eSharedClusterTier = "M2"
+	e2eClusterProvider   = "AWS" // e2eClusterProvider preferred provider for e2e testing.
+	e2eMDBVer            = "4.4"
+	e2eSharedMDBVer      = "5.0"
 )
 
 func deployServerlessInstanceForProject(projectID string) (string, error) {
@@ -191,7 +193,7 @@ func deleteServerlessInstanceForProject(projectID, clusterName string) error {
 	return nil
 }
 
-func deployClusterForProject(projectID string) (string, error) {
+func deployClusterForProject(projectID, tier string, enableBackup bool) (string, error) {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return "", err
@@ -200,7 +202,6 @@ func deployClusterForProject(projectID string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	tier := e2eTier()
 	region, err := newAvailableRegion(projectID, tier, e2eClusterProvider)
 	if err != nil {
 		return "", err
@@ -214,6 +215,9 @@ func deployClusterForProject(projectID string) (string, error) {
 		"--tier", tier,
 		"--provider", e2eClusterProvider,
 		"--diskSizeGB=30",
+	}
+	if enableBackup {
+		args = append(args, "--backup")
 	}
 	if projectID != "" {
 		args = append(args, "--projectId", projectID)
@@ -334,6 +338,17 @@ func RandClusterName() (string, error) {
 	return fmt.Sprintf("cluster-%v", n), nil
 }
 
+func RandTeamName() (string, error) {
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	if revision, ok := os.LookupEnv("revision"); ok {
+		return fmt.Sprintf("team-%v-%s", n, revision), nil
+	}
+	return fmt.Sprintf("team-%v", n), nil
+}
+
 func RandProjectName() (string, error) {
 	n, err := e2e.RandInt(1000)
 	if err != nil {
@@ -351,6 +366,18 @@ func RandUsername() (string, error) {
 		return "", err
 	}
 	return fmt.Sprintf("user-%v", n), nil
+}
+
+func RandTeamNameWithPrefix(prefix string) (string, error) {
+	name, err := RandTeamName()
+	if err != nil {
+		return "", err
+	}
+	prefixedName := fmt.Sprintf("%s-%s", prefix, name)
+	if len(prefixedName) > 64 {
+		return prefixedName[:64], nil
+	}
+	return prefixedName, nil
 }
 
 func RandProjectNameWithPrefix(prefix string) (string, error) {
@@ -393,6 +420,63 @@ func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPar
 
 func IsGov() bool {
 	return os.Getenv("MCLI_SERVICE") == "cloudgov"
+}
+
+func getFirstOrgUser() (string, error) {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return "", err
+	}
+	args := []string{
+		orgEntity,
+		"users",
+		"list",
+		"-o=json",
+	}
+	cmd := exec.Command(cliPath, args...)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	var users mongodbatlas.AtlasUsersResponse
+	if err := json.Unmarshal(resp, &users); err != nil {
+		return "", fmt.Errorf("%w: %s", err, string(resp))
+	}
+	if len(users.Results) == 0 {
+		return "", fmt.Errorf("no users found")
+	}
+
+	return users.Results[0].Username, nil
+}
+
+func createTeam(teamName, userName string) (string, error) {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return "", fmt.Errorf("%w: invalid bin", err)
+	}
+	args := []string{
+		teamsEntity,
+		"create",
+		teamName,
+		"--username",
+		userName,
+		"-o=json",
+	}
+	cmd := exec.Command(cliPath, args...)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	var team mongodbatlas.Team
+	if err := json.Unmarshal(resp, &team); err != nil {
+		return "", fmt.Errorf("%w: %s", err, string(resp))
+	}
+
+	return team.ID, nil
 }
 
 func createProject(projectName string) (string, error) {
@@ -536,6 +620,24 @@ func deleteAllPrivateEndpoints(projectID, provider string) error {
 		if err != nil {
 			return fmt.Errorf("%s (%w)", string(resp), err)
 		}
+	}
+	return nil
+}
+
+func deleteTeam(teamID string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+	cmd := exec.Command(cliPath,
+		teamsEntity,
+		"delete",
+		teamID,
+		"--force")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s (%w)", string(resp), err)
 	}
 	return nil
 }

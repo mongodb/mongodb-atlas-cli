@@ -182,6 +182,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&qsOpts.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)
 	cmd.Flags().StringVar(&qsOpts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&qsOpts.DBUserPassword, flag.Password, "", usage.Password)
+	cmd.Flags().BoolVar(&qsOpts.EnableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
 	cmd.Flags().BoolVar(&qsOpts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
 	cmd.Flags().BoolVar(&qsOpts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
 	cmd.Flags().BoolVar(&qsOpts.Confirm, flag.Force, false, usage.Force)

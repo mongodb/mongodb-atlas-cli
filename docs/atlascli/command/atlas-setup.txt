@@ -48,6 +48,10 @@ Options
      - 
      - false
      - Flag that adds the IP address from the host that is currently executing the command to the access list.
+   * - --enableTerminationProtection
+     - 
+     - false
+     - Enables termination protection for your cluster. You can't delete a cluster with termination protection enabled.
    * - --force
      - 
      - false

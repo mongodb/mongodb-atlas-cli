@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"io"
 	"os"
 	"os/exec"
@@ -1145,13 +1146,15 @@ func checkClustersData(t *testing.T, deployments []*atlasV1.AtlasDeployment, clu
 	var entries []string
 	for _, deployment := range deployments {
 		if deployment.Spec.ServerlessSpec != nil {
-			if ok, name := find(clusterNames, deployment.Spec.ServerlessSpec.Name); ok {
+			if ok := search.StringInSlice(clusterNames, deployment.Spec.ServerlessSpec.Name); ok {
+				name := deployment.Spec.ServerlessSpec.Name
 				expectedDeployment := referenceServerless(name, namespace, projectName)
 				assert.Equal(t, expectedDeployment, deployment)
 				entries = append(entries, name)
 			}
 		} else if deployment.Spec.AdvancedDeploymentSpec != nil {
-			if ok, name := find(clusterNames, deployment.Spec.AdvancedDeploymentSpec.Name); ok {
+			if ok := search.StringInSlice(clusterNames, deployment.Spec.AdvancedDeploymentSpec.Name); ok {
+				name := deployment.Spec.AdvancedDeploymentSpec.Name
 				expectedDeployment := referenceAdvancedCluster(name, namespace, projectName)
 				assert.Equal(t, expectedDeployment, deployment)
 				entries = append(entries, name)
@@ -1160,15 +1163,6 @@ func checkClustersData(t *testing.T, deployments []*atlasV1.AtlasDeployment, clu
 	}
 	assert.Len(t, entries, len(clusterNames))
 	assert.ElementsMatch(t, clusterNames, entries)
-}
-
-func find(list []string, elem string) (bool, string) {
-	for _, e := range list {
-		if e == elem {
-			return true, e
-		}
-	}
-	return false, ""
 }
 
 // TODO: add tests for project auditing and encryption at rest
@@ -1237,7 +1231,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
 			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NotEmpty(t, objects, "result should not be empty")
 		})
 
 		t.Run("Project present with valid name", func(t *testing.T) {

@@ -83,6 +83,7 @@ func Builder() *cobra.Command {
 		DeleteBuilder(),
 		LoadSampleDataBuilder(),
 		UpgradeBuilder(),
+		FailoverBuilder(),
 		indexes.Builder(),
 		search.Builder(),
 		onlinearchive.Builder(),

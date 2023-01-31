@@ -15,9 +15,9 @@
 package usage
 
 const (
-	ProjectID                    = "Project ID to use. Overrides the settings in the configuration file or environment variable."
+	ProjectID                    = "Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable."
 	OrgID                        = "Organization ID to use. Overrides the settings in the configuration file or environment variable."
-	Profile                      = "Profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-save-connection-settings/. To learn about profiles for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/configure/configuration-file/."
+	Profile                      = "Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file."
 	Members                      = "Number of members in the replica set."
 	Shards                       = "Number of shards in the cluster."
 	ProcessName                  = "Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}."
@@ -93,7 +93,7 @@ dbName and collection are required only for built-in roles.`
 	AccessListsDeleteAfter                    = "ISO-8601-formatted UTC date after which Atlas removes the entry from the access list."
 	BDUsersDeleteAfter                        = "Timestamp in ISO 8601 in UTC after which Atlas deletes the user."
 	ForceVersionManifest                      = "If specified, skips Ops Manager version check."
-	Force                                     = "If specified, skips asking for confirmation before proceeding with a requested action."
+	Force                                     = "Flag that indicates whether to skip the confirmation prompt before proceeding with the requested action."
 	ForceQuickstart                           = "If specified, skips asking for input and creates a cluster with default settings for any options you don't specify."
 	ForceFile                                 = "Overwrites the destination file."
 	Email                                     = "User's email address."

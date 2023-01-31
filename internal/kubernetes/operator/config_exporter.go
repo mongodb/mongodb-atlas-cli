@@ -175,16 +175,18 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 	for _, deploymentName := range e.clusters {
 		// Try advanced cluster first
 		if advancedCluster, err := deployment.BuildAtlasAdvancedDeployment(e.dataProvider, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames); err == nil {
-			// Append deployment to result
-			result = append(result, advancedCluster.Deployment)
-			// Append backup schedule
-			if advancedCluster.BackupSchedule != nil {
-				result = append(result, advancedCluster.BackupSchedule)
-			}
-			// Append backup policies (one)
-			for _, policy := range advancedCluster.BackupPolicies {
-				if policy != nil {
-					result = append(result, policy)
+			if advancedCluster != nil {
+				// Append deployment to result
+				result = append(result, advancedCluster.Deployment)
+				// Append backup schedule
+				if advancedCluster.BackupSchedule != nil {
+					result = append(result, advancedCluster.BackupSchedule)
+				}
+				// Append backup policies (one)
+				for _, policy := range advancedCluster.BackupPolicies {
+					if policy != nil {
+						result = append(result, policy)
+					}
 				}
 			}
 			continue
@@ -192,7 +194,9 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 
 		// Try serverless cluster next
 		if serverlessCluster, err := deployment.BuildServerlessDeployments(e.dataProvider, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames); err == nil {
-			result = append(result, serverlessCluster)
+			if serverlessCluster != nil {
+				result = append(result, serverlessCluster)
+			}
 			continue
 		}
 		return nil, fmt.Errorf("%w: %s(%s)", ErrClusterNotFound, deploymentName, e.projectID)

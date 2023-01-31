@@ -29,7 +29,9 @@ import (
 )
 
 const (
-	MaxItems = 500
+	MaxItems      = 500
+	DeletingState = "DELETING"
+	DeletedState  = "DELETED"
 )
 
 type AtlasDeploymentResult struct {
@@ -42,6 +44,10 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 	deployment, err := deploymentStore.AtlasCluster(projectID, clusterID)
 	if err != nil {
 		return nil, err
+	}
+
+	if !isAdvancedDeploymentExportable(deployment) {
+		return nil, nil
 	}
 
 	var advancedSpec *atlasV1.AdvancedDeploymentSpec
@@ -198,6 +204,20 @@ func buildProcessArgs(configOptsProvider store.AtlasClusterConfigurationOptionsD
 		SampleSizeBIConnector:            pArgs.SampleSizeBIConnector,
 		SampleRefreshIntervalBIConnector: pArgs.SampleRefreshIntervalBIConnector,
 	}, nil
+}
+
+func isAdvancedDeploymentExportable(deployments *mongodbatlas.AdvancedCluster) bool {
+	if deployments.StateName == DeletingState || deployments.StateName == DeletedState {
+		return false
+	}
+	return true
+}
+
+func isServerlessExportable(deployment *mongodbatlas.Cluster) bool {
+	if deployment.StateName == DeletingState || deployment.StateName == DeletedState {
+		return false
+	}
+	return true
 }
 
 func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterName, targetNamespace string, dictionary map[string]string) (*atlasV1.AtlasBackupSchedule, []*atlasV1.AtlasBackupPolicy) {
@@ -364,6 +384,10 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 	deployment, err := deploymentStore.ServerlessInstance(projectID, clusterID)
 	if err != nil {
 		return nil, err
+	}
+
+	if !isServerlessExportable(deployment) {
+		return nil, nil
 	}
 
 	privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, deployment.Name)

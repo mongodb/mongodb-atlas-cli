@@ -107,6 +107,7 @@ func (opts *Opts) newCluster() *atlas.AdvancedCluster {
 				Value: opts.LabelValue,
 			},
 		},
+		TerminationProtectionEnabled: &opts.EnableTerminationProtection,
 	}
 
 	if opts.providerName() != tenant {

@@ -99,41 +99,43 @@ const (
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	login               auth.LoginFlow
-	loginOpts           *auth.LoginOpts
-	defaultName         string
-	ClusterName         string
-	Tier                string
-	Provider            string
-	Region              string
-	IPAddresses         []string
-	IPAddressesResponse string
-	DBUsername          string
-	DBUserPassword      string
-	SampleDataJobID     string
-	LabelKey            string
-	LabelValue          string
-	SkipSampleData      bool
-	SkipMongosh         bool
-	defaultValue        bool
-	Confirm             bool
-	CurrentIP           bool
-	store               store.AtlasClusterQuickStarter
-	shouldRunLogin      bool
-	flags               *pflag.FlagSet
-	flagSet             map[string]struct{}
+	login                       auth.LoginFlow
+	loginOpts                   *auth.LoginOpts
+	defaultName                 string
+	ClusterName                 string
+	Tier                        string
+	Provider                    string
+	Region                      string
+	IPAddresses                 []string
+	IPAddressesResponse         string
+	DBUsername                  string
+	DBUserPassword              string
+	SampleDataJobID             string
+	LabelKey                    string
+	LabelValue                  string
+	SkipSampleData              bool
+	SkipMongosh                 bool
+	defaultValue                bool
+	Confirm                     bool
+	CurrentIP                   bool
+	EnableTerminationProtection bool
+	store                       store.AtlasClusterQuickStarter
+	shouldRunLogin              bool
+	flags                       *pflag.FlagSet
+	flagSet                     map[string]struct{}
 }
 
 type quickstart struct {
-	ClusterName    string
-	Provider       string
-	Region         string
-	Tier           string
-	DBUsername     string
-	DBUserPassword string
-	IPAddresses    []string
-	SkipSampleData bool
-	SkipMongosh    bool
+	ClusterName                 string
+	Provider                    string
+	Region                      string
+	Tier                        string
+	DBUsername                  string
+	DBUserPassword              string
+	IPAddresses                 []string
+	EnableTerminationProtection bool
+	SkipSampleData              bool
+	SkipMongosh                 bool
 }
 
 type Flow interface {
@@ -461,6 +463,7 @@ func (opts *Opts) newDefaultValues() (*quickstart, error) {
 	}
 
 	values.Tier = opts.Tier
+	values.EnableTerminationProtection = opts.EnableTerminationProtection
 
 	return values, nil
 }
@@ -490,6 +493,7 @@ func (opts *Opts) replaceWithDefaultSettings(values *quickstart) {
 		opts.IPAddresses = values.IPAddresses
 	}
 
+	opts.EnableTerminationProtection = values.EnableTerminationProtection
 	opts.SkipSampleData = values.SkipSampleData
 	opts.SkipMongosh = values.SkipMongosh
 }
@@ -568,6 +572,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().BoolVarP(&opts.defaultValue, flag.Default, "Y", false, usage.QuickstartDefault)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.ForceQuickstart)
 	cmd.Flags().BoolVar(&opts.CurrentIP, flag.CurrentIP, false, usage.CurrentIPSimplified)
+	cmd.Flags().BoolVar(&opts.EnableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

@@ -296,8 +296,8 @@ github.com/mongodb-forks/digest v1.0.4 h1:9FrGTc7MGAchgaQBcXBnEwUM/Oo8obW7OGWxns
 github.com/mongodb-forks/digest v1.0.4/go.mod h1:eHRfgovT+dvSFfltrOa27hy1oR/rcwyDdp5H1ZQxEMA=
 github.com/mongodb-labs/cobra2snooty v0.12.2 h1:elp0tRGcOHixj00+vAvscsGelDVLjeWKBJMwDdpg7bg=
 github.com/mongodb-labs/cobra2snooty v0.12.2/go.mod h1:35BYcRwKG+Lu+bKidg7lw1RT8W4K3zLsExyMLyTZB7U=
-github.com/mongodb/mongodb-atlas-kubernetes v1.6.0 h1:nu5sfE79Yg7560B0RvpJzHzjLiGMufIvlBkYg1ZgZRQ=
-github.com/mongodb/mongodb-atlas-kubernetes v1.6.0/go.mod h1:Xr55jVGTlGiD0jpyxzZk7OVZLI51vLW4v9zMZcZJCO8=
+github.com/mongodb/mongodb-atlas-kubernetes v1.6.1 h1:BlvvCsVBK6+BcL5sHLep6b3Mcv7vR7R27sfu7UdkAvY=
+github.com/mongodb/mongodb-atlas-kubernetes v1.6.1/go.mod h1:AMsM1HTofYNJlx47BXZK6ngRqMRY2Dl+q55iqSsU9D0=
 github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe/go.mod h1:wL8QJuTMNUDYhXwkmfOly8iTdp5TEcJFWZD2D7SIkUc=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq1c1nUAm88MOHcQC9l5mIlSMApZMrHA=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=

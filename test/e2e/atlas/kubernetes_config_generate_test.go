@@ -29,6 +29,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
@@ -81,6 +82,27 @@ type KubernetesConfigGenerateProjectSuite struct {
 	generator       *atlasE2ETestGenerator
 	expectedProject *atlasV1.AtlasProject
 	cliPath         string
+}
+
+func InitialSetupWithTeam(t *testing.T) KubernetesConfigGenerateProjectSuite {
+	t.Helper()
+	s := KubernetesConfigGenerateProjectSuite{
+		t: t,
+	}
+	s.generator = newAtlasE2ETestGenerator(s.t)
+	s.generator.generateTeam("Kubernetes")
+	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
+	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace)
+
+	cliPath, err := e2e.AtlasCLIBin()
+	require.NoError(s.t, err)
+	s.cliPath = cliPath
+
+	s.assertions = assert.New(t)
+
+	// always register atlas entities
+	require.NoError(s.t, atlasV1.AddToScheme(scheme.Scheme))
+	return s
 }
 
 func InitialSetup(t *testing.T) KubernetesConfigGenerateProjectSuite {
@@ -701,6 +723,103 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 	})
 }
 
+func TestProjectAndTeams(t *testing.T) {
+	s := InitialSetupWithTeam(t)
+	cliPath := s.cliPath
+	generator := s.generator
+	expectedProject := s.expectedProject
+	assertions := s.assertions
+
+	teamRole := "GROUP_OWNER"
+
+	t.Run("Add team to project", func(t *testing.T) {
+		expectedTeam := referenceTeam(generator.teamName, targetNamespace, []atlasV1.TeamUser{
+			atlasV1.TeamUser(generator.teamUser),
+		}, generator.projectName)
+
+		expectedProject.Spec.Teams = []atlasV1.Team{
+			{
+				TeamRef: common.ResourceRefNamespaced{
+					Namespace: targetNamespace,
+					Name:      expectedTeam.Name,
+				},
+				Roles: []atlasV1.TeamRole{
+					atlasV1.TeamRole(teamRole),
+				},
+			},
+		}
+
+		cmd := exec.Command(cliPath,
+			projectsEntity,
+			teamsEntity,
+			"add",
+			generator.teamID,
+			"--role",
+			teamRole,
+			"--projectId",
+			generator.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+
+		cmd = exec.Command(cliPath,
+			"kubernetes",
+			"config",
+			"generate",
+			"--projectId",
+			generator.projectID,
+			"--targetNamespace",
+			targetNamespace,
+			"--includeSecrets")
+		cmd.Env = os.Environ()
+
+		resp, err = cmd.CombinedOutput()
+		t.Log(string(resp))
+		assertions.NoError(err, string(resp))
+
+		var objects []runtime.Object
+		t.Run("Output can be decoded", func(t *testing.T) {
+			objects, err = getK8SEntities(resp)
+			require.NoError(t, err, "should not fail on decode")
+			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+		})
+
+		checkProject(t, objects, expectedProject, assertions)
+		t.Run("Team is created", func(t *testing.T) {
+			for _, obj := range objects {
+				if team, ok := obj.(*atlasV1.AtlasTeam); ok {
+					assertions.Equal(expectedTeam, team)
+				}
+			}
+		})
+	})
+}
+
+func referenceTeam(name, namespace string, users []atlasV1.TeamUser, projectName string) *atlasV1.AtlasTeam {
+	dictionary := resources.AtlasNameToKubernetesName()
+
+	return &atlasV1.AtlasTeam{
+		TypeMeta: v1.TypeMeta{
+			Kind:       "AtlasTeam",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: v1.ObjectMeta{
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-team-%s", projectName, name), dictionary),
+			Namespace: namespace,
+		},
+		Spec: atlasV1.TeamSpec{
+			Name:      name,
+			Usernames: users,
+		},
+		Status: status.TeamStatus{
+			Common: status.Common{
+				Conditions: []status.Condition{},
+			},
+		},
+	}
+}
+
 func checkProject(t *testing.T, output []runtime.Object, expected *atlasV1.AtlasProject, asserts *assert.Assertions) {
 	t.Helper()
 	t.Run("Project presents with expected data", func(t *testing.T) {
@@ -769,6 +888,150 @@ func referenceProject(name, namespace string) *atlasV1.AtlasProject {
 	}
 }
 
+func referenceAdvancedCluster(name, namespace, projectName string) *atlasV1.AtlasDeployment {
+	dictionary := resources.AtlasNameToKubernetesName()
+	return &atlasV1.AtlasDeployment{
+		TypeMeta: v1.TypeMeta{
+			Kind:       "AtlasDeployment",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: v1.ObjectMeta{
+			Name:      resources.NormalizeAtlasName(name, dictionary),
+			Namespace: namespace,
+		},
+		Spec: atlasV1.AtlasDeploymentSpec{
+			Project: common.ResourceRefNamespaced{
+				Name:      resources.NormalizeAtlasName(projectName, dictionary),
+				Namespace: namespace,
+			},
+			BackupScheduleRef: common.ResourceRefNamespaced{
+				Namespace: targetNamespace,
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backupschedule", name), dictionary),
+			},
+			AdvancedDeploymentSpec: &atlasV1.AdvancedDeploymentSpec{
+				BackupEnabled: pointers.MakePtr(true),
+				BiConnector: &atlasV1.BiConnectorSpec{
+					Enabled:        pointers.MakePtr(false),
+					ReadPreference: "secondary",
+				},
+				ClusterType:              string(atlasV1.TypeReplicaSet),
+				DiskSizeGB:               nil,
+				EncryptionAtRestProvider: "NONE",
+				Labels: []common.LabelSpec{
+					{
+						Key:   "Infrastructure Tool",
+						Value: "Atlas CLI",
+					},
+				},
+				Name:       name,
+				Paused:     pointers.MakePtr(false),
+				PitEnabled: pointers.MakePtr(true),
+				ReplicationSpecs: []*atlasV1.AdvancedReplicationSpec{
+					{
+						NumShards: 1,
+						ZoneName:  "Zone 1",
+						RegionConfigs: []*atlasV1.AdvancedRegionConfig{
+							{
+								AnalyticsSpecs: &atlasV1.Specs{
+									DiskIOPS:      pointers.MakePtr(int64(3000)),
+									EbsVolumeType: "STANDARD",
+									InstanceSize:  e2eClusterTier,
+									NodeCount:     pointers.MakePtr(0),
+								},
+								ElectableSpecs: &atlasV1.Specs{
+									DiskIOPS:      pointers.MakePtr(int64(3000)),
+									EbsVolumeType: "STANDARD",
+									InstanceSize:  e2eClusterTier,
+									NodeCount:     pointers.MakePtr(3),
+								},
+								ReadOnlySpecs: &atlasV1.Specs{
+									DiskIOPS:      pointers.MakePtr(int64(3000)),
+									EbsVolumeType: "STANDARD",
+									InstanceSize:  e2eClusterTier,
+									NodeCount:     pointers.MakePtr(0),
+								},
+								AutoScaling: &atlasV1.AdvancedAutoScalingSpec{
+									DiskGB: &atlasV1.DiskGB{
+										Enabled: pointers.MakePtr(false),
+									},
+									Compute: &atlasV1.ComputeSpec{
+										Enabled:          pointers.MakePtr(false),
+										ScaleDownEnabled: pointers.MakePtr(false),
+									},
+								},
+								Priority:     pointers.MakePtr(7),
+								ProviderName: string(provider.ProviderAWS),
+								RegionName:   "US_EAST_1",
+							},
+						},
+					},
+				},
+				RootCertType:         "ISRGROOTX1",
+				VersionReleaseSystem: "LTS",
+			},
+			ProcessArgs: &atlasV1.ProcessArgs{
+				MinimumEnabledTLSProtocol: "TLS1_2",
+				JavascriptEnabled:         pointers.MakePtr(true),
+				NoTableScan:               pointers.MakePtr(false),
+			},
+		},
+		Status: status.AtlasDeploymentStatus{
+			Common: status.Common{
+				Conditions: []status.Condition{},
+			},
+		},
+	}
+}
+
+func referenceServerless(name, namespace, projectName string) *atlasV1.AtlasDeployment {
+	dictionary := resources.AtlasNameToKubernetesName()
+	return &atlasV1.AtlasDeployment{
+		TypeMeta: v1.TypeMeta{
+			Kind:       "AtlasDeployment",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: v1.ObjectMeta{
+			Name:      resources.NormalizeAtlasName(name, dictionary),
+			Namespace: namespace,
+		},
+		Spec: atlasV1.AtlasDeploymentSpec{
+			Project: common.ResourceRefNamespaced{
+				Name:      resources.NormalizeAtlasName(projectName, dictionary),
+				Namespace: namespace,
+			},
+			ServerlessSpec: &atlasV1.ServerlessSpec{
+				Name: name,
+				ProviderSettings: &atlasV1.ProviderSettingsSpec{
+					BackingProviderName: string(provider.ProviderAWS),
+					ProviderName:        provider.ProviderServerless,
+					RegionName:          "US_EAST_1",
+				},
+			},
+		},
+		Status: status.AtlasDeploymentStatus{
+			Common: status.Common{
+				Conditions: []status.Condition{},
+			},
+		},
+	}
+}
+
+func referenceSharedCluster(name, namespace, projectName string) *atlasV1.AtlasDeployment {
+	cluster := referenceAdvancedCluster(name, namespace, projectName)
+	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs = &atlasV1.Specs{
+		InstanceSize: e2eSharedClusterTier,
+	}
+	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs = nil
+	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs = nil
+	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].AutoScaling = nil
+	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].BackingProviderName = string(provider.ProviderAWS)
+	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ProviderName = string(provider.ProviderTenant)
+
+	cluster.Spec.AdvancedDeploymentSpec.PitEnabled = pointers.MakePtr(false)
+	cluster.Spec.BackupScheduleRef = common.ResourceRefNamespaced{}
+	return cluster
+}
+
 func defaultMaintenanceWindowAlertConfigs() []atlasV1.AlertConfiguration {
 	ownerNotifications := []atlasV1.Notification{
 		{
@@ -812,21 +1075,137 @@ func defaultMaintenanceWindowAlertConfigs() []atlasV1.AlertConfiguration {
 	}
 }
 
+func referenceBackupSchedule(namespace, clusterName string) *atlasV1.AtlasBackupSchedule {
+	dictionary := resources.AtlasNameToKubernetesName()
+	return &atlasV1.AtlasBackupSchedule{
+		TypeMeta: v1.TypeMeta{
+			Kind:       "AtlasBackupSchedule",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: v1.ObjectMeta{
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backupschedule", clusterName), dictionary),
+			Namespace: namespace,
+		},
+		Spec: atlasV1.AtlasBackupScheduleSpec{
+			PolicyRef: common.ResourceRefNamespaced{
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backuppolicy", clusterName), dictionary),
+				Namespace: namespace,
+			},
+			ReferenceHourOfDay:    1,
+			ReferenceMinuteOfHour: 0,
+			RestoreWindowDays:     7,
+		},
+	}
+}
+
+func referenceBackupPolicy(namespace, clusterName string) *atlasV1.AtlasBackupPolicy {
+	dictionary := resources.AtlasNameToKubernetesName()
+	return &atlasV1.AtlasBackupPolicy{
+		TypeMeta: v1.TypeMeta{
+			Kind:       "AtlasBackupPolicy",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: v1.ObjectMeta{
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backuppolicy", clusterName), dictionary),
+			Namespace: namespace,
+		},
+		Spec: atlasV1.AtlasBackupPolicySpec{
+			Items: []atlasV1.AtlasBackupPolicyItem{
+				{
+					FrequencyType:     "hourly",
+					FrequencyInterval: 6,
+					RetentionUnit:     "days",
+					RetentionValue:    7,
+				},
+				{
+					FrequencyType:     "daily",
+					FrequencyInterval: 1,
+					RetentionUnit:     "days",
+					RetentionValue:    7,
+				},
+				{
+					FrequencyType:     "weekly",
+					FrequencyInterval: 6,
+					RetentionUnit:     "weeks",
+					RetentionValue:    4,
+				},
+				{
+					FrequencyType:     "monthly",
+					FrequencyInterval: 40,
+					RetentionUnit:     "months",
+					RetentionValue:    12,
+				},
+			},
+		},
+	}
+}
+
+func checkClustersData(t *testing.T, deployments []*atlasV1.AtlasDeployment, clusterNames []string, namespace, projectName string) {
+	t.Helper()
+	assert.Len(t, deployments, len(clusterNames))
+	var entries []string
+	for _, deployment := range deployments {
+		if deployment.Spec.ServerlessSpec != nil {
+			if ok := search.StringInSlice(clusterNames, deployment.Spec.ServerlessSpec.Name); ok {
+				name := deployment.Spec.ServerlessSpec.Name
+				expectedDeployment := referenceServerless(name, namespace, projectName)
+				assert.Equal(t, expectedDeployment, deployment)
+				entries = append(entries, name)
+			}
+		} else if deployment.Spec.AdvancedDeploymentSpec != nil {
+			if ok := search.StringInSlice(clusterNames, deployment.Spec.AdvancedDeploymentSpec.Name); ok {
+				name := deployment.Spec.AdvancedDeploymentSpec.Name
+				expectedDeployment := referenceAdvancedCluster(name, namespace, projectName)
+				assert.Equal(t, expectedDeployment, deployment)
+				entries = append(entries, name)
+			}
+		}
+	}
+	assert.Len(t, entries, len(clusterNames))
+	assert.ElementsMatch(t, clusterNames, entries)
+}
+
 // TODO: add tests for project auditing and encryption at rest
 
-func TestKubernetesConfigGenerate(t *testing.T) {
+func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 	n, err := e2e.RandInt(255)
 	require.NoError(t, err)
 	g := newAtlasE2ETestGenerator(t)
+	g.enableBackup = true
 	g.generateProject(fmt.Sprintf("kubernetes-%s", n))
 	g.generateCluster()
 	g.generateServerlessCluster()
+
+	expectedDeployment := referenceAdvancedCluster(g.clusterName, targetNamespace, g.projectName)
+	expectedBackupSchedule := referenceBackupSchedule(targetNamespace, g.clusterName)
+	expectedBackupPolicy := referenceBackupPolicy(targetNamespace, g.clusterName)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	// always register atlas entities
 	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
+
+	t.Run("Update backup schedule", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			"schedule",
+			"update",
+			"--referenceHourOfDay",
+			strconv.FormatInt(expectedBackupSchedule.Spec.ReferenceHourOfDay, 10),
+			"--referenceMinuteOfHour",
+			strconv.FormatInt(expectedBackupSchedule.Spec.ReferenceMinuteOfHour, 10),
+			"--projectId",
+			g.projectID,
+			"--clusterName",
+			g.clusterName)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		t.Log(string(resp))
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+	})
 
 	t.Run("Generate valid resources of ONE project and ONE cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -852,7 +1231,7 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
 			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NotEmpty(t, objects, "result should not be empty")
 		})
 
 		t.Run("Project present with valid name", func(t *testing.T) {
@@ -872,7 +1251,7 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 			assert.Equal(t, project.Namespace, targetNamespace)
 		})
 
-		t.Run("Deployment present with valid name", func(t *testing.T) {
+		t.Run("Deployment present with valid data", func(t *testing.T) {
 			found := false
 			var deployment *atlasV1.AtlasDeployment
 			var ok bool
@@ -886,8 +1265,7 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 			if !found {
 				t.Fatal("AtlasDeployment is not found in results")
 			}
-			assert.Equal(t, deployment.Namespace, targetNamespace)
-			assert.Equal(t, deployment.Name, g.clusterName)
+			a.Equal(expectedDeployment, deployment)
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
@@ -905,6 +1283,40 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 				t.Fatal("Secret is not found in results")
 			}
 			assert.Equal(t, secret.Namespace, targetNamespace)
+		})
+
+		t.Run("Backup Schedule present with valid data", func(t *testing.T) {
+			found := false
+			var schedule *atlasV1.AtlasBackupSchedule
+			var ok bool
+			for i := range objects {
+				schedule, ok = objects[i].(*atlasV1.AtlasBackupSchedule)
+				if ok {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Fatal("AtlasBackupSchedule is not found in results")
+			}
+			assert.Equal(t, expectedBackupSchedule, schedule)
+		})
+
+		t.Run("Backup policy present with valid data", func(t *testing.T) {
+			found := false
+			var policy *atlasV1.AtlasBackupPolicy
+			var ok bool
+			for i := range objects {
+				policy, ok = objects[i].(*atlasV1.AtlasBackupPolicy)
+				if ok {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Fatal("AtlasBackupSchedule is not found in results")
+			}
+			a.Equal(expectedBackupPolicy, policy)
 		})
 	})
 
@@ -952,7 +1364,7 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 			assert.Equal(t, project.Namespace, targetNamespace)
 		})
 
-		t.Run("Deployments present with valid names", func(t *testing.T) {
+		t.Run("Deployments present with valid data", func(t *testing.T) {
 			var deployments []*atlasV1.AtlasDeployment
 			for i := range objects {
 				deployment, ok := objects[i].(*atlasV1.AtlasDeployment)
@@ -962,12 +1374,7 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 			}
 			clustersCount := len(deployments)
 			require.True(t, clustersCount == 2, "result should contain two clusters. actual: ", clustersCount)
-			for i := range deployments {
-				assert.Equal(t, deployments[i].Namespace, targetNamespace)
-			}
-			clusterNames := []string{deployments[0].Name, deployments[1].Name}
-			assert.Contains(t, clusterNames, g.clusterName, "result doesn't contain replicaset cluster")
-			assert.Contains(t, clusterNames, g.serverlessName, "result doesn't contain serverless instance")
+			checkClustersData(t, deployments, []string{g.clusterName, g.serverlessName}, targetNamespace, g.projectName)
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
@@ -1030,7 +1437,7 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 			assert.Equal(t, project.Namespace, targetNamespace)
 		})
 
-		t.Run("Deployments present with valid names", func(t *testing.T) {
+		t.Run("Deployments present with valid data", func(t *testing.T) {
 			var deployments []*atlasV1.AtlasDeployment
 			for i := range objects {
 				deployment, ok := objects[i].(*atlasV1.AtlasDeployment)
@@ -1038,14 +1445,96 @@ func TestKubernetesConfigGenerate(t *testing.T) {
 					deployments = append(deployments, deployment)
 				}
 			}
-			clustersCount := len(deployments)
-			require.True(t, clustersCount == 2, "result should contain two clusters. actual: ", clustersCount)
-			for i := range deployments {
-				assert.Equal(t, deployments[i].Namespace, targetNamespace)
+			checkClustersData(t, deployments, []string{g.clusterName, g.serverlessName}, targetNamespace, g.projectName)
+		})
+
+		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
+			found := false
+			var secret *corev1.Secret
+			var ok bool
+			for i := range objects {
+				secret, ok = objects[i].(*corev1.Secret)
+				if ok {
+					found = true
+					break
+				}
 			}
-			clusterNames := []string{deployments[0].Name, deployments[1].Name}
-			assert.Contains(t, clusterNames, g.clusterName, "result doesn't contain replicaset cluster")
-			assert.Contains(t, clusterNames, g.serverlessName, "result doesn't contain serverless instance")
+			if !found {
+				t.Fatal("Secret is not found in results")
+			}
+			assert.Equal(t, secret.Namespace, targetNamespace)
+		})
+	})
+}
+
+func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
+	n, err := e2e.RandInt(255)
+	require.NoError(t, err)
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject(fmt.Sprintf("kubernetes-%s", n))
+	g.tier = e2eSharedClusterTier
+	g.generateCluster()
+
+	expectedDeployment := referenceSharedCluster(g.clusterName, targetNamespace, g.projectName)
+
+	cliPath, err := e2e.AtlasCLIBin()
+	require.NoError(t, err)
+
+	// always register atlas entities
+	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
+
+	t.Run("Generate valid resources of ONE project and TWO clusters without listing clusters", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			"kubernetes",
+			"config",
+			"generate",
+			"--projectId",
+			g.projectID,
+			"--targetNamespace",
+			targetNamespace,
+			"--includeSecrets")
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		t.Log(string(resp))
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var objects []runtime.Object
+		t.Run("Output can be decoded", func(t *testing.T) {
+			objects, err = getK8SEntities(resp)
+			require.NoError(t, err, "should not fail on decode")
+			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+		})
+
+		t.Run("Project present with valid name", func(t *testing.T) {
+			found := false
+			var project *atlasV1.AtlasProject
+			var ok bool
+			for i := range objects {
+				project, ok = objects[i].(*atlasV1.AtlasProject)
+				if ok {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Fatal("AtlasProject is not found in results")
+			}
+			assert.Equal(t, project.Namespace, targetNamespace)
+		})
+
+		t.Run("Deployment present with valid data", func(t *testing.T) {
+			var deployments []*atlasV1.AtlasDeployment
+			for i := range objects {
+				deployment, ok := objects[i].(*atlasV1.AtlasDeployment)
+				if ok {
+					deployments = append(deployments, deployment)
+				}
+			}
+			a.Len(deployments, 1)
+			a.Equal(expectedDeployment, deployments[0])
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {

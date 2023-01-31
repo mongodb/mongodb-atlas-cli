@@ -48,6 +48,7 @@ func TestSetup(t *testing.T) {
 			"setup",
 			"--clusterName", clusterName,
 			"--username", dbUserUsername,
+			"--enableTerminationProtection",
 			"--skipMongosh",
 			"--skipSampleData",
 			"--projectId", g.projectID,
@@ -96,6 +97,37 @@ func TestSetup(t *testing.T) {
 		if user.Username != dbUserUsername {
 			t.Fatalf("expected username to match %v, got %v", dbUserUsername, user.Username)
 		}
+	})
+
+	t.Run("Delete with fail", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"delete",
+			clusterName,
+			"--force",
+			"--projectId", g.projectID,
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.Error(err, string(resp))
+	})
+
+	t.Run("Update Termination Protection", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"update",
+			clusterName,
+			"--disableTerminationProtection",
+			"--projectId", g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var cluster mongodbatlas.AdvancedCluster
+		err = json.Unmarshal(resp, &cluster)
+		req.NoError(err)
 	})
 
 	t.Run("DeleteCluster", func(t *testing.T) {

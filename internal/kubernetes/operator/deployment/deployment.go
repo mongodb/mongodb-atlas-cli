@@ -16,6 +16,7 @@ package deployment
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
@@ -40,7 +41,15 @@ type AtlasDeploymentResult struct {
 	BackupPolicies []*atlasV1.AtlasBackupPolicy
 }
 
-func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStore, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string) (*AtlasDeploymentResult, error) {
+func BuildAtlasAdvancedDeployment(
+	deploymentStore store.AtlasOperatorClusterStore,
+	projectID,
+	projectName,
+	clusterID,
+	targetNamespace string,
+	indexFrom []string,
+	dictionary map[string]string,
+) (*AtlasDeploymentResult, error) {
 	deployment, err := deploymentStore.AtlasCluster(projectID, clusterID)
 	if err != nil {
 		return nil, err
@@ -85,6 +94,12 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 	if err != nil {
 		return nil, err
 	}
+
+	atlasSearch, err := buildAtlasSearch(deploymentStore, projectID, clusterID, indexFrom)
+	if err != nil {
+		return nil, err
+	}
+
 	// TODO: DiskSizeGB field skipped on purpose. See https://jira.mongodb.org/browse/CLOUDP-146469
 	advancedSpec = &atlasV1.AdvancedDeploymentSpec{
 		BackupEnabled:            deployment.BackupEnabled,
@@ -100,6 +115,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 		VersionReleaseSystem:     deployment.VersionReleaseSystem,
 		ManagedNamespaces:        managedNamespaces,
 		CustomZoneMapping:        customZoneMapping,
+		AtlasSearch:              atlasSearch,
 	}
 
 	var backupScheduleRef common.ResourceRefNamespaced
@@ -481,4 +497,118 @@ func buildServerlessPrivateEndpoints(deploymentStore store.ServerlessPrivateEndp
 		})
 	}
 	return result, nil
+}
+
+func buildAtlasSearch(searchStore store.AtlasOperatorSearchStore, projectID, clusterName string, indexFrom []string) (*atlasV1.AtlasSearch, error) {
+	analyzers, err := searchStore.SearchAnalyzers(projectID, clusterName, &mongodbatlas.ListOptions{ItemsPerPage: MaxItems})
+	if err != nil {
+		return nil, err
+	}
+
+	indexesMap := map[string]map[string][]atlasV1.SearchIndex{}
+
+	for _, indexPath := range indexFrom {
+		if !strings.HasPrefix(indexPath, fmt.Sprintf("%s.", clusterName)) {
+			continue
+		}
+
+		splitPath := strings.Split(indexPath, ".")
+
+		indexes, err := searchStore.SearchIndexes(projectID, clusterName, splitPath[1], splitPath[2], &mongodbatlas.ListOptions{ItemsPerPage: MaxItems})
+		if err != nil {
+			return nil, err
+		}
+
+		if len(indexes) == 0 {
+			continue
+		}
+
+		for _, index := range indexes {
+			atlasIndex := atlasV1.SearchIndex{
+				Name: index.Name,
+				Mappings: atlasV1.IndexMapping{
+					Dynamic: index.Mappings.Dynamic,
+				},
+				Analyzer:       index.Analyzer,
+				SearchAnalyzer: index.SearchAnalyzer,
+				Synonyms:       nil,
+			}
+
+			if index.Mappings.Fields != nil {
+				atlasIndex.Mappings.Fields = (*atlasV1.FieldMapping)(index.Mappings.Fields)
+			}
+
+			if index.Synonyms != nil {
+				atlasIndex.Synonyms = make([]atlasV1.AtlasSearchSynonym, 0, len(index.Synonyms))
+
+				for _, synonym := range index.Synonyms {
+					atlasIndex.Synonyms = append(
+						atlasIndex.Synonyms,
+						atlasV1.AtlasSearchSynonym{
+							Name:     synonym["name"].(string),
+							Analyzer: synonym["analyzer"].(string),
+							Source: atlasV1.SynonymSource{
+								Collection: synonym["source"].(map[string]interface{})["collection"].(string),
+							},
+						})
+				}
+			}
+
+			if _, ok := indexesMap[splitPath[1]]; !ok {
+				indexesMap[splitPath[1]] = map[string][]atlasV1.SearchIndex{}
+			}
+
+			if _, ok := indexesMap[splitPath[1]][splitPath[2]]; !ok {
+				indexesMap[splitPath[1]][splitPath[2]] = []atlasV1.SearchIndex{}
+			}
+
+			indexesMap[splitPath[1]][splitPath[2]] = append(indexesMap[splitPath[1]][splitPath[2]], atlasIndex)
+		}
+	}
+
+	if len(indexesMap) == 0 {
+		return nil, nil
+	}
+
+	searchSpec := &atlasV1.AtlasSearch{
+		Databases: make([]atlasV1.AtlasSearchDatabase, 0, len(indexesMap)),
+	}
+
+	if len(analyzers) > 0 {
+		searchSpec.CustomAnalyzers = make([]atlasV1.CustomAnalyzer, 0, len(analyzers))
+
+		for _, analyzer := range analyzers {
+			searchSpec.CustomAnalyzers = append(
+				searchSpec.CustomAnalyzers,
+				atlasV1.CustomAnalyzer{
+					Name:             analyzer.Name,
+					BaseAnalyzer:     analyzer.BaseAnalyzer,
+					IgnoreCase:       analyzer.IgnoreCase,
+					MaxTokenLength:   analyzer.MaxTokenLength,
+					StemExclusionSet: analyzer.StemExclusionSet,
+					Stopwords:        analyzer.Stopwords,
+				},
+			)
+		}
+	}
+
+	for database, collections := range indexesMap {
+		atlasDB := atlasV1.AtlasSearchDatabase{
+			Database:    database,
+			Collections: make([]atlasV1.AtlasSearchCollection, 0, len(indexesMap[database])),
+		}
+
+		for collection, mappedIndexes := range collections {
+			atlasCollection := atlasV1.AtlasSearchCollection{
+				CollectionName: collection,
+				Indexes:        mappedIndexes,
+			}
+
+			atlasDB.Collections = append(atlasDB.Collections, atlasCollection)
+		}
+
+		searchSpec.Databases = append(searchSpec.Databases, atlasDB)
+	}
+
+	return searchSpec, nil
 }

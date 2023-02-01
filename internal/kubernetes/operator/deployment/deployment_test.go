@@ -39,15 +39,18 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 	ctl := gomock.NewController(t)
 	clusterStore := mocks.NewMockAtlasOperatorClusterStore(ctl)
 	dictionary := resources.AtlasNameToKubernetesName()
+	indexFrom := []string{"testCluster-1.sample_mflix.movies"}
 
 	t.Run("Can import Advanced deployment", func(t *testing.T) {
-		const projectName = "testProject-1"
-		const clusterName = "testCluster-1"
-		const targetNamespace = "test-namespace-1"
-		const zoneName1 = "us-east-1"
-		const zoneID1 = "TestReplicaID"
 		const (
-			firstLocation = "CA"
+			projectName     = "testProject-1"
+			clusterName     = "testCluster-1"
+			targetNamespace = "test-namespace-1"
+			zoneName1       = "us-east-1"
+			zoneID1         = "TestReplicaID"
+			firstLocation   = "CA"
+			database        = "sample_mflix"
+			collection      = "movies"
 		)
 
 		cluster := &mongodbatlas.AdvancedCluster{
@@ -177,14 +180,167 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				},
 			},
 		}
+		atlasSearchIndexes := []*mongodbatlas.SearchIndex{
+			{
+				CollectionName: "movies",
+				Database:       "sample_mflix",
+				IndexID:        "5d114a3587d9d65de99e7371",
+				Mappings: &mongodbatlas.IndexMapping{
+					Dynamic: true,
+				},
+				Name:     "default",
+				Analyzer: "my_new_analyzer",
+				Synonyms: []map[string]interface{}{
+					{
+						"analyzer": "lucene.english",
+						"name":     "mySynonyms",
+						"source": map[string]interface{}{
+							"collection": "synonyms",
+						},
+					},
+				},
+			},
+			{
+				CollectionName: "movies",
+				Database:       "sample_mflix",
+				IndexID:        "5d1268a980eef518dac0cf41",
+				Mappings: &mongodbatlas.IndexMapping{
+					Dynamic: false,
+					Fields: &map[string]interface{}{
+						"genres": map[string]interface{}{
+							"analyzer": "lucene.standard",
+							"type":     "string",
+						},
+						"plot": map[string]interface{}{
+							"analyzer": "lucene.standard",
+							"type":     "string",
+						},
+						"title": []interface{}{
+							map[string]interface{}{
+								"analyzer":       "lucene.keyword",
+								"searchAnalyzer": "lucene.keyword",
+								"type":           "string",
+							},
+							map[string]interface{}{
+								"type": "autocomplete",
+							},
+						},
+					},
+				},
+				Name: "SearchIndex1",
+				Synonyms: []map[string]interface{}{
+					{
+						"analyzer": "my_new_analyzer2",
+						"name":     "mySynonyms",
+						"source": map[string]interface{}{
+							"collection": "synonyms",
+						},
+					},
+				},
+			},
+		}
+		atlasSearchAnalyzers := []*mongodbatlas.SearchAnalyzer{
+			{
+				BaseAnalyzer:   "lucene.standard",
+				MaxTokenLength: pointers.MakePtr[int](32),
+				Name:           "my_new_analyzer",
+			},
+			{
+				BaseAnalyzer: "lucene.english",
+				Name:         "my_new_analyzer2",
+				Stopwords:    []string{"first", "second", "third", "etc"},
+			},
+		}
 
 		managedNamespace := globalCluster.ManagedNamespaces
 
+		listOptions := &mongodbatlas.ListOptions{
+			ItemsPerPage: MaxItems,
+		}
 		clusterStore.EXPECT().AtlasCluster(projectName, clusterName).Return(cluster, nil)
 		clusterStore.EXPECT().AtlasClusterConfigurationOptions(projectName, clusterName).Return(processArgs, nil)
 		clusterStore.EXPECT().GlobalCluster(projectName, clusterName).Return(globalCluster, nil)
 		clusterStore.EXPECT().DescribeSchedule(projectName, clusterName).Return(backupSchedule, nil)
+		clusterStore.EXPECT().SearchAnalyzers(projectName, clusterName, listOptions).Return(atlasSearchAnalyzers, nil)
+		clusterStore.EXPECT().SearchIndexes(projectName, clusterName, database, collection, listOptions).Return(atlasSearchIndexes, nil)
 
+		expectSearch := &atlasV1.AtlasSearch{
+			Databases: []atlasV1.AtlasSearchDatabase{
+				{
+					Database: database,
+					Collections: []atlasV1.AtlasSearchCollection{
+						{
+							CollectionName: collection,
+							Indexes: []atlasV1.SearchIndex{
+								{
+									Name:     "default",
+									Analyzer: "my_new_analyzer",
+									Mappings: atlasV1.IndexMapping{
+										Dynamic: true,
+									},
+									Synonyms: []atlasV1.AtlasSearchSynonym{
+										{
+											Name:     "mySynonyms",
+											Analyzer: "lucene.english",
+											Source: atlasV1.SynonymSource{
+												Collection: "synonyms",
+											},
+										},
+									},
+								},
+								{
+									Name: "SearchIndex1",
+									Mappings: atlasV1.IndexMapping{
+										Dynamic: false,
+										Fields: &atlasV1.FieldMapping{
+											"genres": map[string]interface{}{
+												"analyzer": "lucene.standard",
+												"type":     "string",
+											},
+											"plot": map[string]interface{}{
+												"analyzer": "lucene.standard",
+												"type":     "string",
+											},
+											"title": []interface{}{
+												map[string]interface{}{
+													"analyzer":       "lucene.keyword",
+													"searchAnalyzer": "lucene.keyword",
+													"type":           "string",
+												},
+												map[string]interface{}{
+													"type": "autocomplete",
+												},
+											},
+										},
+									},
+									Synonyms: []atlasV1.AtlasSearchSynonym{
+										{
+											Name:     "mySynonyms",
+											Analyzer: "my_new_analyzer2",
+											Source: atlasV1.SynonymSource{
+												Collection: "synonyms",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			CustomAnalyzers: []atlasV1.CustomAnalyzer{
+				{
+					Name:           "my_new_analyzer",
+					BaseAnalyzer:   "lucene.standard",
+					MaxTokenLength: pointers.MakePtr[int](32),
+				},
+				{
+					Name:         "my_new_analyzer2",
+					BaseAnalyzer: "lucene.english",
+					Stopwords:    []string{"first", "second", "third", "etc"},
+				},
+			},
+		}
 		expectCluster := &atlasV1.AtlasDeployment{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AtlasDeployment",
@@ -277,6 +433,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					},
 					RootCertType:         cluster.RootCertType,
 					VersionReleaseSystem: cluster.VersionReleaseSystem,
+					AtlasSearch:          expectSearch,
 				},
 				BackupScheduleRef: common.ResourceRefNamespaced{
 					Name:      strings.ToLower(fmt.Sprintf("%s-backupschedule", clusterName)),
@@ -301,7 +458,6 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				},
 			},
 		}
-
 		expectPolicies := []*atlasV1.AtlasBackupPolicy{
 			{
 				TypeMeta: v1.TypeMeta{
@@ -325,7 +481,6 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				Status: status.BackupPolicyStatus{},
 			},
 		}
-
 		expectSchedule := &atlasV1.AtlasBackupSchedule{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AtlasBackupSchedule",
@@ -360,7 +515,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			BackupPolicies: expectPolicies,
 		}
 
-		got, err := BuildAtlasAdvancedDeployment(clusterStore, projectName, projectName, clusterName, targetNamespace, dictionary)
+		got, err := BuildAtlasAdvancedDeployment(clusterStore, projectName, projectName, clusterName, targetNamespace, indexFrom, dictionary)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}

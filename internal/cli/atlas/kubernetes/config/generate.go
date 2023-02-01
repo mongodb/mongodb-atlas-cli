@@ -17,6 +17,7 @@ package config
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -29,12 +30,15 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation"
 )
 
+const indexPathSize = 3
+
 type GenerateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	clusterName     []string
 	includeSecrets  bool
 	targetNamespace string
+	indexFrom       []string
 	store           store.AtlasOperatorGenericStore
 	credsStore      store.CredentialsGetter
 }
@@ -43,6 +47,28 @@ func (opts *GenerateOpts) ValidateTargetNamespace() error {
 	if errs := validation.IsDNS1123Label(opts.targetNamespace); len(errs) != 0 {
 		return fmt.Errorf("%s parameter is invalid: %v", flag.OperatorTargetNamespace, errs)
 	}
+	return nil
+}
+
+func (opts *GenerateOpts) ValidateIndexFrom() error {
+	clusterNameMap := map[string]struct{}{}
+
+	for _, name := range opts.clusterName {
+		clusterNameMap[name] = struct{}{}
+	}
+
+	for _, indexPath := range opts.indexFrom {
+		splitPath := strings.Split(indexPath, ".")
+
+		if len(splitPath) != indexPathSize {
+			return fmt.Errorf("one of %s parameters is invalid: %s. The format should be <clusterName>.<database>.<collection>", flag.OperatorIndexFrom, indexPath)
+		}
+
+		if _, ok := clusterNameMap[splitPath[0]]; !ok {
+			return fmt.Errorf("%s parameter references a cluster which is not being exported: %s", flag.OperatorIndexFrom, indexPath)
+		}
+	}
+
 	return nil
 }
 
@@ -66,6 +92,7 @@ func (opts *GenerateOpts) Run() error {
 		WithClustersNames(opts.clusterName).
 		WithTargetNamespace(opts.targetNamespace).
 		WithSecretsData(opts.includeSecrets).
+		WithIndexFrom(opts.indexFrom).
 		Run()
 	if err != nil {
 		return err
@@ -96,12 +123,16 @@ func GenerateBuilder() *cobra.Command {
   atlas kubernetes config generate --projectId=<projectId> --includeSecrets --targetNamespace=<namespace>
   
   # Export Project, DatabaseUsers, and Deployment resources for a specific project including connection and integration secrets to a specific namespace:
-  atlas kubernetes config generate --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>`,
+  atlas kubernetes config generate --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>
+
+  # Export Project, DatabaseUsers resources for a specific project including indexes:
+  atlas kubernetes config generate --projectId=<projectId> --includeSecrets --targetNamespace=<namespace> --indexFrom=<db1>.<collection1>,<db2>.<collection2>`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.ValidateOrgID,
 				opts.ValidateTargetNamespace,
+				opts.ValidateIndexFrom,
 				opts.initStores(cmd.Context()),
 			)
 		},
@@ -115,6 +146,7 @@ func GenerateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.clusterName, flag.ClusterName, []string{}, usage.ExporterClusterName)
 	cmd.Flags().BoolVar(&opts.includeSecrets, flag.OperatorIncludeSecrets, false, usage.OperatorIncludeSecrets)
 	cmd.Flags().StringVar(&opts.targetNamespace, flag.OperatorTargetNamespace, "", usage.OperatorTargetNamespace)
+	cmd.Flags().StringSliceVar(&opts.indexFrom, flag.OperatorIndexFrom, []string{}, usage.OperatorIndexFrom)
 
 	return cmd
 }

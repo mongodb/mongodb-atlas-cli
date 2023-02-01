@@ -109,6 +109,36 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) ProjectClusters(arg0, arg1 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectClusters", reflect.TypeOf((*MockAtlasOperatorClusterStore)(nil).ProjectClusters), arg0, arg1)
 }
 
+// SearchAnalyzers mocks base method.
+func (m *MockAtlasOperatorClusterStore) SearchAnalyzers(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) ([]*mongodbatlas.SearchAnalyzer, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchAnalyzers", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]*mongodbatlas.SearchAnalyzer)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchAnalyzers indicates an expected call of SearchAnalyzers.
+func (mr *MockAtlasOperatorClusterStoreMockRecorder) SearchAnalyzers(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchAnalyzers", reflect.TypeOf((*MockAtlasOperatorClusterStore)(nil).SearchAnalyzers), arg0, arg1, arg2)
+}
+
+// SearchIndexes mocks base method.
+func (m *MockAtlasOperatorClusterStore) SearchIndexes(arg0, arg1, arg2, arg3 string, arg4 *mongodbatlas.ListOptions) ([]*mongodbatlas.SearchIndex, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchIndexes", arg0, arg1, arg2, arg3, arg4)
+	ret0, _ := ret[0].([]*mongodbatlas.SearchIndex)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchIndexes indicates an expected call of SearchIndexes.
+func (mr *MockAtlasOperatorClusterStoreMockRecorder) SearchIndexes(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndexes", reflect.TypeOf((*MockAtlasOperatorClusterStore)(nil).SearchIndexes), arg0, arg1, arg2, arg3, arg4)
+}
+
 // ServerlessInstance mocks base method.
 func (m *MockAtlasOperatorClusterStore) ServerlessInstance(arg0, arg1 string) (*mongodbatlas.Cluster, error) {
 	m.ctrl.T.Helper()

@@ -43,6 +43,10 @@ type SearchIndexDeleter interface {
 	DeleteSearchIndex(string, string, string) error
 }
 
+type SearchAnalyzerLister interface {
+	SearchAnalyzers(string, string, *atlas.ListOptions) ([]*atlas.SearchAnalyzer, error)
+}
+
 // SearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string, opts *atlas.ListOptions) ([]*atlas.SearchIndex, error) {
 	switch s.service {
@@ -95,5 +99,15 @@ func (s *Store) DeleteSearchIndex(projectID, clusterName, indexID string) error 
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+func (s *Store) SearchAnalyzers(projectID, clusterName string, opts *atlas.ListOptions) ([]*atlas.SearchAnalyzer, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).Search.ListAnalyzers(s.ctx, projectID, clusterName, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

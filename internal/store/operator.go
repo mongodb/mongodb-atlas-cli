@@ -45,6 +45,7 @@ type AtlasOperatorClusterStore interface {
 	ServerlessInstanceDescriber
 	ServerlessPrivateEndpointsLister
 	GlobalClusterDescriber
+	AtlasSearchDescriber
 }
 
 type AtlasAllClustersLister interface {
@@ -52,10 +53,20 @@ type AtlasAllClustersLister interface {
 	ServerlessInstanceLister
 }
 
+type AtlasSearchDescriber interface {
+	SearchIndexLister
+	SearchAnalyzerLister
+}
+
 type AtlasOperatorTeamsStore interface {
 	TeamDescriber
 	ProjectTeamLister
 	TeamUserLister
+}
+
+type AtlasOperatorSearchStore interface {
+	SearchIndexLister
+	SearchAnalyzerLister
 }
 
 type AtlasOperatorGenericStore interface {

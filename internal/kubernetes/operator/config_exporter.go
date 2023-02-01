@@ -42,6 +42,7 @@ type ConfigExporter struct {
 	clusters                []string
 	targetNamespace         string
 	includeSecretsData      bool
+	indexFrom               []string
 	orgID                   string
 	dictionaryForAtlasNames map[string]string
 }
@@ -88,6 +89,11 @@ func (e *ConfigExporter) WithTargetNamespace(namespace string) *ConfigExporter {
 
 func (e *ConfigExporter) WithSecretsData(enabled bool) *ConfigExporter {
 	e.includeSecretsData = enabled
+	return e
+}
+
+func (e *ConfigExporter) WithIndexFrom(indexFrom []string) *ConfigExporter {
+	e.indexFrom = indexFrom
 	return e
 }
 
@@ -174,7 +180,15 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 
 	for _, deploymentName := range e.clusters {
 		// Try advanced cluster first
-		if advancedCluster, err := deployment.BuildAtlasAdvancedDeployment(e.dataProvider, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames); err == nil {
+		if advancedCluster, err := deployment.BuildAtlasAdvancedDeployment(
+			e.dataProvider,
+			e.projectID,
+			projectName,
+			deploymentName,
+			e.targetNamespace,
+			e.indexFrom,
+			e.dictionaryForAtlasNames,
+		); err == nil {
 			if advancedCluster != nil {
 				// Append deployment to result
 				result = append(result, advancedCluster.Deployment)

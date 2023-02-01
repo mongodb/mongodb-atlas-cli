@@ -31,5 +31,6 @@ func TestGenerateBuilder(t *testing.T) {
 			flag.ClusterName,
 			flag.OperatorIncludeSecrets,
 			flag.OperatorTargetNamespace,
+			flag.OperatorIndexFrom,
 		})
 }

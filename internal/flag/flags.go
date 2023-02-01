@@ -314,6 +314,7 @@ const (
 	BackupPolicy                              = "policy"                                    // BackupPolicy flag
 	OperatorIncludeSecrets                    = "includeSecrets"                            // OperatorIncludeSecrets flag
 	OperatorTargetNamespace                   = "targetNamespace"                           // OperatorTargetNamespace flag
+	OperatorIndexFrom                         = "indexFrom"                                 // OperatorIndexFrom flag
 	ExportID                                  = "exportId"                                  // ExportID flag
 
 	/* #nosec */

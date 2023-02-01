@@ -223,10 +223,6 @@ func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
 	opts.shouldRunLogin = false
 	opts.setTier()
 
-	if opts.CurrentIP && len(opts.IPAddresses) > 0 {
-		return fmt.Errorf("cannot use %s and %s, please use only one of the flags", flag.CurrentIP, flag.AccessListIP)
-	}
-
 	return opts.PreRunE(
 		opts.initStore(ctx),
 		opts.InitOutput(outWriter, ""),
@@ -576,5 +572,6 @@ func Builder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
+	cmd.MarkFlagsMutuallyExclusive(flag.CurrentIP, flag.AccessListIP)
 	return cmd
 }

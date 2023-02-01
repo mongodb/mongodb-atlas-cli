@@ -35,7 +35,7 @@ const (
 	labelValue     = "Atlas CLI Setup"
 )
 
-var errNeedsOrgAndProject = errors.New("please make sure to select or add an org and project to the profile: %s")
+var errNeedsOrgAndProject = errors.New("please make sure to select or add an organization and project to the profile")
 
 type Opts struct {
 	cli.GlobalOpts
@@ -77,7 +77,7 @@ This command will help you
 	}
 
 	if config.ProjectID() == "" || config.OrgID() == "" {
-		return fmt.Errorf(errNeedsOrgAndProject.Error(), config.Default().Name())
+		return fmt.Errorf("%w: %s", errNeedsOrgAndProject, config.Default().Name())
 	}
 
 	return opts.quickstart.Run()
@@ -190,6 +190,8 @@ func Builder() *cobra.Command {
 
 	cmd.Flags().StringVar(&qsOpts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	_ = cmd.Flags().MarkHidden(flag.ProjectID)
+
+	cmd.MarkFlagsMutuallyExclusive(flag.CurrentIP, flag.AccessListIP)
 
 	return cmd
 }

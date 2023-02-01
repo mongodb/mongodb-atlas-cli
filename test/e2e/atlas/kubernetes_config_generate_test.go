@@ -309,7 +309,6 @@ func TestProjectWithAccessList(t *testing.T) {
 	newIPAccess := project.IPAccessList{
 		IPAddress: entry,
 		Comment:   "test",
-		CIDRBlock: fmt.Sprintf("%s/32", entry),
 	}
 	expectedProject.Spec.ProjectIPAccessList = []project.IPAccessList{
 		newIPAccess,

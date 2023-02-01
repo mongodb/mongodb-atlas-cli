@@ -36,6 +36,7 @@ import (
 const (
 	credSecretFormat = "%s-credentials"
 	MaxItems         = 500
+	cidrException    = "/32"
 )
 
 var (
@@ -243,6 +244,9 @@ func buildAccessLists(accessListProvider store.ProjectIPAccessListLister, projec
 
 	var result []operatorProject.IPAccessList
 	for _, list := range accessLists.Results {
+		if strings.HasSuffix(list.CIDRBlock, cidrException) && list.IPAddress != "" {
+			list.CIDRBlock = ""
+		}
 		result = append(result, operatorProject.IPAccessList{
 			AwsSecurityGroup: list.AwsSecurityGroup,
 			CIDRBlock:        list.CIDRBlock,

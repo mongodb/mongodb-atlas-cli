@@ -16,6 +16,7 @@ package e2e
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -43,12 +44,12 @@ func CreateProject(projectName string) (string, error) {
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
 	var project mongodbatlas.Project
 	if err := json.Unmarshal(resp, &project); err != nil {
-		return "", err
+		return "", fmt.Errorf("%w: %s", err, resp)
 	}
 
 	return project.ID, nil

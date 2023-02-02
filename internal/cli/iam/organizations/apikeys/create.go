@@ -16,6 +16,7 @@ package apikeys
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -70,8 +71,10 @@ func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create an Organization API Key.",
+		Short: "Create an API Key for your organization.",
 		Args:  require.NoArgs,
+		Example: fmt.Sprintf(`  # Create an organization API key with organization owner access in the organization with the ID 5a1b39eec902201990f12345:
+  %s organizations apiKeys create --role ORG_OWNER --desc "My API Key" --orgId 5a1b39eec902201990f12345 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

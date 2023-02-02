@@ -37,11 +37,11 @@ Options
    * - --cidr
      - string
      - true
-     - Access list entry in CIDR notation to be added for a given API key.
+     - Access list entry in CIDR notation to be added for your API key. To add more than one entry, you can specify each entry with a separate cidr flag or specify the entries in a comma-separated list with one cidr flag. You can't set both cidr and ip in the same command.
    * - --desc
      - string
      - true
-     - IP address to be allowed for a given API key.
+     - IP address that you want to add to the access list for your API key. To add more than one IP address, you can specify each address with a separate ip flag or specify the addresses in a comma-separated list with one ip flag. You can't set both cidr and ip in the same command.
    * - -h, --help
      - 
      - false

@@ -49,9 +49,9 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-organizations-apiKeys-accessLists-create` - Create an IP access list for your API Key.
-* :ref:`atlas-organizations-apiKeys-accessLists-delete` - Delete an IP access list from your API Key.
-* :ref:`atlas-organizations-apiKeys-accessLists-list` - List IP access list entries for your API Key.
+* :ref:`atlas-organizations-apiKeys-accessLists-create` - Create an IP access list entry for your API Key.
+* :ref:`atlas-organizations-apiKeys-accessLists-delete` - Remove the specified IP access list entry from your API Key.
+* :ref:`atlas-organizations-apiKeys-accessLists-list` - Return all IP access list entries for your API Key.
 
 
 .. toctree::

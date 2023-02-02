@@ -49,7 +49,7 @@ Options
    * - --role
      - strings
      - true
-     - List of roles for the API key.
+     - Role or roles that you want to assign to the API key. To assign more than one, you can specify each role with a separate role flag or specify the roles in a comma-separated list with one role flag. Valid values are ORG_OWNER, ORG_MEMBER, ORG_GROUP_CREATOR, ORG_BILLING_ADMIN, and ORG_READ_ONLY.
 
 Inherited Options
 -----------------

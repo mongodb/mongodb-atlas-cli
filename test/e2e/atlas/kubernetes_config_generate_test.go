@@ -26,6 +26,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
@@ -982,6 +983,32 @@ func referenceAdvancedCluster(name, namespace, projectName string) *atlasV1.Atla
 	}
 }
 
+func referenceAdvancedClusterWithSearch(name, namespace, projectName, collectionName, indexName string) *atlasV1.AtlasDeployment {
+	deployment := referenceAdvancedCluster(name, namespace, projectName)
+	deployment.Spec.AdvancedDeploymentSpec.AtlasSearch = &atlasV1.AtlasSearch{
+		Databases: []atlasV1.AtlasSearchDatabase{
+			{
+				Database: "test",
+				Collections: []atlasV1.AtlasSearchCollection{
+					{
+						CollectionName: collectionName,
+						Indexes: []atlasV1.SearchIndex{
+							{
+								Name: indexName,
+								Mappings: atlasV1.IndexMapping{
+									Dynamic: true,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	return deployment
+}
+
 func referenceServerless(name, namespace, projectName string) *atlasV1.AtlasDeployment {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &atlasV1.AtlasDeployment{
@@ -1534,6 +1561,232 @@ func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
 			}
 			a.Len(deployments, 1)
 			a.Equal(expectedDeployment, deployments[0])
+		})
+
+		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
+			found := false
+			var secret *corev1.Secret
+			var ok bool
+			for i := range objects {
+				secret, ok = objects[i].(*corev1.Secret)
+				if ok {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Fatal("Secret is not found in results")
+			}
+			assert.Equal(t, secret.Namespace, targetNamespace)
+		})
+	})
+}
+
+func TestKubernetesConfigGenerate_ClustersWithAtlasSearch(t *testing.T) {
+	n, err := e2e.RandInt(255)
+	require.NoError(t, err)
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProjectAndCluster(fmt.Sprintf("k8s-atlas-search-%s", n))
+	indexName := fmt.Sprintf("index-%v", n)
+	collectionName := fmt.Sprintf("collection-%v", n)
+
+	expectedDeployment := referenceAdvancedClusterWithSearch(g.clusterName, targetNamespace, g.projectName, collectionName, indexName)
+
+	cliPath, err := e2e.AtlasCLIBin()
+	require.NoError(t, err)
+
+	// always register atlas entities
+	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
+
+	t.Run("Create index", func(t *testing.T) {
+		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
+
+		file, err := os.Create(fileName)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		defer func() {
+			if e := os.Remove(fileName); e != nil {
+				t.Errorf("error deleting file '%v': %v", fileName, e)
+			}
+		}()
+
+		tpl := template.Must(template.New("").Parse(`
+{
+	"collectionName": "{{ .collectionName }}",
+	"database": "test",
+	"name": "{{ .indexName }}",
+	"mappings": {
+		"dynamic": true
+	}
+}`))
+		err = tpl.Execute(file, map[string]string{
+			"collectionName": collectionName,
+			"indexName":      indexName,
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			searchEntity,
+			indexEntity,
+			"create",
+			"--clusterName", g.clusterName,
+			"--file",
+			fileName,
+			"--projectId", g.projectID,
+			"-o=json")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+	})
+
+	t.Run("Generate valid resources of ONE project and ONE cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			"kubernetes",
+			"config",
+			"generate",
+			"--projectId",
+			g.projectID,
+			"--clusterName",
+			g.clusterName,
+			"--targetNamespace",
+			targetNamespace,
+			"--includeSecrets",
+			"--indexFrom",
+			fmt.Sprintf("%s.test.%s", g.clusterName, collectionName))
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		t.Log(string(resp))
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var objects []runtime.Object
+		t.Run("Output can be decoded", func(t *testing.T) {
+			objects, err = getK8SEntities(resp)
+			require.NoError(t, err, "should not fail on decode")
+			require.NotEmpty(t, objects, "result should not be empty")
+		})
+
+		t.Run("Project present with valid name", func(t *testing.T) {
+			found := false
+			var project *atlasV1.AtlasProject
+			var ok bool
+			for i := range objects {
+				project, ok = objects[i].(*atlasV1.AtlasProject)
+				if ok {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Fatal("AtlasProject is not found in results")
+			}
+			assert.Equal(t, project.Namespace, targetNamespace)
+		})
+
+		t.Run("Deployment present with valid data", func(t *testing.T) {
+			found := false
+			var deployment *atlasV1.AtlasDeployment
+			var ok bool
+			for i := range objects {
+				deployment, ok = objects[i].(*atlasV1.AtlasDeployment)
+				if ok {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Fatal("AtlasDeployment is not found in results")
+			}
+			a.Equal(expectedDeployment, deployment)
+		})
+
+		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
+			found := false
+			var secret *corev1.Secret
+			var ok bool
+			for i := range objects {
+				secret, ok = objects[i].(*corev1.Secret)
+				if ok {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Fatal("Secret is not found in results")
+			}
+			assert.Equal(t, secret.Namespace, targetNamespace)
+		})
+	})
+
+	t.Run("Generate valid resources of ONE project and ONE cluster without listing the cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			"kubernetes",
+			"config",
+			"generate",
+			"--projectId",
+			g.projectID,
+			"--targetNamespace",
+			targetNamespace,
+			"--includeSecrets",
+			"--indexFrom",
+			fmt.Sprintf("%s.test.%s", g.clusterName, collectionName))
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		t.Log(string(resp))
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var objects []runtime.Object
+		t.Run("Output can be decoded", func(t *testing.T) {
+			objects, err = getK8SEntities(resp)
+			require.NoError(t, err, "should not fail on decode")
+			require.NotEmpty(t, objects, "result should not be empty")
+		})
+
+		t.Run("Project present with valid name", func(t *testing.T) {
+			found := false
+			var project *atlasV1.AtlasProject
+			var ok bool
+			for i := range objects {
+				project, ok = objects[i].(*atlasV1.AtlasProject)
+				if ok {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Fatal("AtlasProject is not found in results")
+			}
+			assert.Equal(t, project.Namespace, targetNamespace)
+		})
+
+		t.Run("Deployment present with valid data", func(t *testing.T) {
+			found := false
+			var deployment *atlasV1.AtlasDeployment
+			var ok bool
+			for i := range objects {
+				deployment, ok = objects[i].(*atlasV1.AtlasDeployment)
+				if ok {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Fatal("AtlasDeployment is not found in results")
+			}
+			a.Equal(expectedDeployment, deployment)
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {

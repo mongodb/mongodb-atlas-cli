@@ -156,14 +156,16 @@ func deleteTeamWithRetry(t *testing.T, teamID string) {
 	t.Helper()
 	deleted := false
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
-		if e := deleteTeam(teamID); e != nil {
-			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the team %q: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, teamID, e)
-			time.Sleep(sleepTimeInSeconds * time.Second)
-		} else {
+		e := deleteTeam(teamID)
+
+		if e == nil {
 			t.Logf("team %q successfully deleted", teamID)
 			deleted = true
 			break
 		}
+
+		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the team %q: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, teamID, e)
+		time.Sleep(sleepTimeInSeconds * time.Second)
 	}
 
 	if !deleted {
@@ -175,14 +177,16 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	t.Helper()
 	deleted := false
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
-		if e := deleteProject(projectID); e != nil {
-			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, projectID, e)
-			time.Sleep(sleepTimeInSeconds * time.Second)
-		} else {
+		e := deleteProject(projectID)
+
+		if e == nil {
 			t.Logf("project %q successfully deleted", projectID)
 			deleted = true
 			break
 		}
+
+		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, projectID, e)
+		time.Sleep(sleepTimeInSeconds * time.Second)
 	}
 
 	if !deleted {

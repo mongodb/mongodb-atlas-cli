@@ -48,6 +48,10 @@ Options
      - 
      - false
      - Generate kubernetes secrets with data for projects, users, deployments entities
+   * - --indexFrom
+     - strings
+     - false
+     - Comma-separated list of cluster, database and collection to import index(es) in the following format: <clusterName>.<database>.<collection>.
    * - --orgId
      - string
      - false
@@ -102,3 +106,9 @@ Examples
 
    # Export Project, DatabaseUsers, and Deployment resources for a specific project including connection and integration secrets to a specific namespace:
    atlas kubernetes config generate --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>
+
+   
+.. code-block::
+
+   # Export Project, DatabaseUsers resources for a specific project including indexes:
+   atlas kubernetes config generate --projectId=<projectId> --includeSecrets --targetNamespace=<namespace> --indexFrom=<db1>.<collection1>,<db2>.<collection2>

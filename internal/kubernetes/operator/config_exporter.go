@@ -19,6 +19,10 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
+
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/deployment"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/project"
@@ -36,11 +40,13 @@ const (
 )
 
 type ConfigExporter struct {
+	featureValidator        features.FeatureValidator
 	dataProvider            store.AtlasOperatorGenericStore
 	credsProvider           store.CredentialsGetter
 	projectID               string
 	clusters                []string
 	targetNamespace         string
+	operatorVersion         string
 	includeSecretsData      bool
 	orgID                   string
 	dictionaryForAtlasNames map[string]string
@@ -48,31 +54,19 @@ type ConfigExporter struct {
 
 var (
 	ErrClusterNotFound        = errors.New("cluster not found")
-	ErrNoOpsManagerClusters   = errors.New("can not get 'clusters' object")
 	ErrNoCloudManagerClusters = errors.New("can not get 'advanced clusters' object")
 )
 
 func NewConfigExporter(dataProvider store.AtlasOperatorGenericStore, credsProvider store.CredentialsGetter, projectID, orgID string) *ConfigExporter {
 	return &ConfigExporter{
-		dataProvider:       dataProvider,
-		credsProvider:      credsProvider,
-		projectID:          projectID,
-		clusters:           []string{},
-		targetNamespace:    "",
-		includeSecretsData: false,
-		orgID:              orgID,
-		dictionaryForAtlasNames: map[string]string{
-			" ": "-",
-			".": "dot",
-			"@": "at",
-			"(": "left-parenthesis",
-			")": "right-parenthesis",
-			"&": "and",
-			"+": "plus",
-			":": "colon",
-			",": "comma",
-			"'": "single-quote",
-		},
+		dataProvider:            dataProvider,
+		credsProvider:           credsProvider,
+		projectID:               projectID,
+		clusters:                []string{},
+		targetNamespace:         "",
+		includeSecretsData:      false,
+		orgID:                   orgID,
+		dictionaryForAtlasNames: resources.AtlasNameToKubernetesName(),
 	}
 }
 
@@ -88,6 +82,16 @@ func (e *ConfigExporter) WithTargetNamespace(namespace string) *ConfigExporter {
 
 func (e *ConfigExporter) WithSecretsData(enabled bool) *ConfigExporter {
 	e.includeSecretsData = enabled
+	return e
+}
+
+func (e *ConfigExporter) WithTargetOperatorVersion(version string) *ConfigExporter {
+	e.operatorVersion = version
+	return e
+}
+
+func (e *ConfigExporter) WithFeatureValidator(validator features.FeatureValidator) *ConfigExporter {
+	e.featureValidator = validator
 	return e
 }
 
@@ -127,7 +131,7 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 	var resources []runtime.Object
 
 	// Project
-	projectData, err := project.BuildAtlasProject(e.dataProvider, e.orgID, e.projectID, e.targetNamespace, e.dictionaryForAtlasNames)
+	projectData, err := project.BuildAtlasProject(e.dataProvider, e.featureValidator, e.orgID, e.projectID, e.targetNamespace, e.includeSecretsData, e.dictionaryForAtlasNames, e.operatorVersion)
 	if err != nil {
 		return nil, "", err
 	}
@@ -147,7 +151,7 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		projectData.Project.Namespace, e.orgID, e.includeSecretsData, e.dictionaryForAtlasNames))
 
 	// DB users
-	usersData, relatedSecrets, err := dbusers.BuildDBUsers(e.dataProvider, e.projectID, projectData.Project.Name, e.targetNamespace, e.dictionaryForAtlasNames)
+	usersData, relatedSecrets, err := dbusers.BuildDBUsers(e.dataProvider, e.projectID, projectData.Project.Name, e.targetNamespace, e.dictionaryForAtlasNames, e.operatorVersion)
 	if err != nil {
 		return nil, "", err
 	}
@@ -174,7 +178,7 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 
 	for _, deploymentName := range e.clusters {
 		// Try advanced cluster first
-		if advancedCluster, err := deployment.BuildAtlasAdvancedDeployment(e.dataProvider, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames); err == nil {
+		if advancedCluster, err := deployment.BuildAtlasAdvancedDeployment(e.dataProvider, e.featureValidator, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames, e.operatorVersion); err == nil {
 			if advancedCluster != nil {
 				// Append deployment to result
 				result = append(result, advancedCluster.Deployment)
@@ -193,7 +197,7 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 		}
 
 		// Try serverless cluster next
-		if serverlessCluster, err := deployment.BuildServerlessDeployments(e.dataProvider, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames); err == nil {
+		if serverlessCluster, err := deployment.BuildServerlessDeployments(e.dataProvider, e.featureValidator, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames, e.operatorVersion); err == nil {
 			if serverlessCluster != nil {
 				result = append(result, serverlessCluster)
 			}

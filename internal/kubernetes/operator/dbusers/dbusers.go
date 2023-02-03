@@ -17,6 +17,8 @@ package dbusers
 import (
 	"fmt"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
@@ -28,7 +30,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectName, targetNamespace string, dictionary map[string]string) ([]*atlasV1.AtlasDatabaseUser, []*corev1.Secret, error) {
+func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectName, targetNamespace string, dictionary map[string]string, version string) ([]*atlasV1.AtlasDatabaseUser, []*corev1.Secret, error) {
 	users, err := provider.DatabaseUsers(projectID, &mongodbatlas.ListOptions{})
 	// TODO: add validator for similar user names. CLOUDP-155373
 	if err != nil {
@@ -62,6 +64,9 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 			ObjectMeta: v1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, user.Username), dictionary),
 				Namespace: targetNamespace,
+				Labels: map[string]string{
+					features.ResourceVersion: version,
+				},
 			},
 			Spec: atlasV1.AtlasDatabaseUserSpec{
 				Project: common.ResourceRefNamespaced{

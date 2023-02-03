@@ -385,5 +385,6 @@ dbName and collection are required only for built-in roles.`
 	ExporterClusterName                       = "One or more comma separated cluster names to import"
 	OperatorIncludeSecrets                    = "Generate kubernetes secrets with data for projects, users, deployments entities" //nolint:gosec //This is just a message, not a credential
 	OperatorTargetNamespace                   = "Namespaces to use for generated kubernetes entities"
+	OperatorVersion                           = "Version of Atlas Kubernetes Operator to generate resources for."
 	ExportID                                  = "Unique string that identifies the AWS S3 bucket to which you export your snapshots."
 )

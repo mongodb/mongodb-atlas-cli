@@ -214,7 +214,7 @@ func TestClustersFlags(t *testing.T) {
 		req.NoError(err, string(resp))
 	})
 
-	t.Run("Delete with fail", func(t *testing.T) {
+	t.Run("Fail Delete for Termination Protection enabled", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"delete",

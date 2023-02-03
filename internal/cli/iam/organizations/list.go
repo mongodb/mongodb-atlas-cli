@@ -16,6 +16,7 @@ package organizations
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -70,8 +71,13 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "List organizations.",
+		Short:   "Return all organizations.",
 		Args:    require.NoArgs,
+		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all organizations:
+  %[1]s organizations list --output json
+  
+  # Return a JSON-formatted list that includes the organizations named org1 and Org1, but doesn't return org123:
+  %[1]s organizations list --name org1 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

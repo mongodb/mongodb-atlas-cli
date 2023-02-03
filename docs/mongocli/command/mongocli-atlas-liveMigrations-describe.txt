@@ -12,7 +12,7 @@ mongocli atlas liveMigrations describe
    :depth: 1
    :class: singlecol
 
-Return one migration job.
+Return a push live migration job.
 
 Your API Key must have the Organization Owner role to successfully run this command.
 

@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-iam-organizations-users-list` - List users in a organization.
+* :ref:`mongocli-iam-organizations-users-list` - Return all users for an organization.
 
 
 .. toctree::

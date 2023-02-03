@@ -12,7 +12,9 @@ atlas organizations delete
    :depth: 1
    :class: singlecol
 
-Delete an organization.
+Remove the specified organization.
+
+Organizations with active projects can't be removed.
 
 Syntax
 ------
@@ -37,7 +39,7 @@ Arguments
    * - ID
      - string
      - true
-     - Organization identifier.
+     - Unique 24-digit string that identifies the organization.
 
 Options
 -------
@@ -75,3 +77,10 @@ Inherited Options
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Remove the organization with the ID 5e2211c17a3e5a48f5497de3:
+   atlas organizations delete 5e2211c17a3e5a48f5497de3

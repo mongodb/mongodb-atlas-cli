@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-liveMigrations-link-create` - Create one new link-token.
+* :ref:`atlas-liveMigrations-link-create` - Create a new link-token for a push live migration.
 * :ref:`atlas-liveMigrations-link-delete` - Delete one link-token.
 
 

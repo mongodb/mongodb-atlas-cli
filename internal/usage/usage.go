@@ -150,8 +150,8 @@ dbName and collection are required only for built-in roles.`
 	RoutingKey                                = "Routing key associated with your Splunk On-Call account."
 	IntegrationAPIToken                       = "Your API Token." //nolint:gosec // This is just a message not a credential
 	OrgName                                   = "Your Flowdock organization's name."
-	OrgNameFilter                             = "Performs a case-insensitive search for organizations which exactly match the specified name."
-	OrgIncludeDeleted                         = "If specified, Atlas includes the deleted organizations."
+	OrgNameFilter                             = "Performs a case-insensitive search for organizations that exactly match the specified organization name."
+	OrgIncludeDeleted                         = "If specified, includes deleted organizations in the list. This option applies only to Ops Manager organizations. You can't return deleted Atlas or Cloud Manager organizations."
 	FlowName                                  = "Flowdock Flow name."
 	BlockstoreAssignment                      = "Flag indicating whether this blockstore can be assigned backup jobs."
 	OplogAssignment                           = "Flag indicating whether this oplog can be assigned backup jobs."

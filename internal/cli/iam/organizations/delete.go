@@ -16,6 +16,7 @@ package organizations
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -51,11 +52,14 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
-		Short:   "Delete an organization.",
+		Short:   "Remove the specified organization.",
+		Long:    "Organizations with active projects can't be removed.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"IDDesc": "Organization identifier.",
+			"IDDesc": "Unique 24-digit string that identifies the organization.",
 		},
+		Example: fmt.Sprintf(`  # Remove the organization with the ID 5e2211c17a3e5a48f5497de3:
+  %s organizations delete 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.initStore(cmd.Context())(); err != nil {
 				return err

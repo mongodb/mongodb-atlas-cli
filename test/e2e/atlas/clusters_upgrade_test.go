@@ -51,6 +51,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 			"--tier", tierM2,
 			"--provider", e2eClusterProvider,
 			"--mdbVersion", e2eSharedMDBVer,
+			"--enableTerminationProtection",
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -61,7 +62,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureSharedCluster(t, cluster, clusterName, e2eSharedMDBVer, tierM2, 2, false)
+		ensureSharedCluster(t, cluster, clusterName, e2eSharedMDBVer, tierM2, 2, true)
 	})
 
 	t.Run("Watch create", func(t *testing.T) {
@@ -76,6 +77,19 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		t.Log(string(resp))
 	})
 
+	t.Run("Fail Delete for Termination Protection", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"delete",
+			clusterName,
+			"--force",
+			"--projectId", g.projectID)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.Error(err, string(resp))
+	})
+
 	t.Run("Upgrade", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -84,6 +98,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 			"--tier", tierM10,
 			"--diskSizeGB", diskSizeGB40,
 			"--mdbVersion=6.0",
+			"--disableTerminationProtection",
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()

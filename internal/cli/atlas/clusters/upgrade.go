@@ -35,13 +35,15 @@ const upgradeTemplate = "Upgrading cluster '{{.Name}}'.\n"
 type UpgradeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	name       string
-	mdbVersion string
-	diskSizeGB float64
-	tier       string
-	filename   string
-	fs         afero.Fs
-	store      store.AtlasSharedClusterGetterUpgrader
+	name                         string
+	mdbVersion                   string
+	diskSizeGB                   float64
+	tier                         string
+	filename                     string
+	enableTerminationProtection  bool
+	disableTerminationProtection bool
+	fs                           afero.Fs
+	store                        store.AtlasSharedClusterGetterUpgrader
 }
 
 func (opts *UpgradeOpts) initStore(ctx context.Context) func() error {
@@ -101,6 +103,7 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 			}
 		}
 	}
+	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection)
 
 	AddLabelSharedCluster(out, NewCLILabel())
 }
@@ -140,6 +143,10 @@ func UpgradeBuilder() *cobra.Command {
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, 0, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, "", usage.MDBVersion)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.ClusterFilename)
+
+	cmd.Flags().BoolVar(&opts.enableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
+	cmd.Flags().BoolVar(&opts.disableTerminationProtection, flag.DisableTerminationProtection, false, usage.DisableTerminationProtection)
+	cmd.MarkFlagsMutuallyExclusive(flag.EnableTerminationProtection, flag.DisableTerminationProtection)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

@@ -39,7 +39,7 @@ Arguments
    * - ID
      - string
      - true
-     - Unique 24-digit string that identifies your API key.
+     - Unique 24-digit string that identifies the organization's API key.
 
 Options
 -------
@@ -86,5 +86,5 @@ Examples
 
 .. code-block::
 
-   # Remove the organization API key with the ID 5f24084d8dbffa3ad3f21234 in the organization with the ID 5a1b39eec902201990f12345:
+   # Remove the organization API key with the ID 5f24084d8dbffa3ad3f21234 for the organization with the ID 5a1b39eec902201990f12345:
    atlas organizations apiKeys delete 5f24084d8dbffa3ad3f21234 --orgId 5a1b39eec902201990f12345

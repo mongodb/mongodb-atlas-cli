@@ -50,7 +50,7 @@ Related Commands
 ----------------
 
 * :ref:`atlas-organizations-apiKeys-accessLists` - Manage the IP access list for your API Key.
-* :ref:`atlas-organizations-apiKeys-assign` - Modify the roles or description for your API Key.
+* :ref:`atlas-organizations-apiKeys-assign` - Modify the roles or description for the specified organization API key.
 * :ref:`atlas-organizations-apiKeys-create` - Create an API Key for your organization.
 * :ref:`atlas-organizations-apiKeys-delete` - Remove the specified API key for your organization.
 * :ref:`atlas-organizations-apiKeys-describe` - Return the details for the specified API key for your organization.

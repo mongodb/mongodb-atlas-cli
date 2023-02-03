@@ -58,9 +58,9 @@ func DeleteBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(`To view possible values for the ID argument, run %s organizations apiKeys list.`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"IDDesc": "Unique 24-digit string that identifies your API key.",
+			"IDDesc": "Unique 24-digit string that identifies the organization's API key.",
 		},
-		Example: fmt.Sprintf(`  # Remove the organization API key with the ID 5f24084d8dbffa3ad3f21234 in the organization with the ID 5a1b39eec902201990f12345:
+		Example: fmt.Sprintf(`  # Remove the organization API key with the ID 5f24084d8dbffa3ad3f21234 for the organization with the ID 5a1b39eec902201990f12345:
   %s organizations apiKeys delete 5f24084d8dbffa3ad3f21234 --orgId 5a1b39eec902201990f12345`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateOrgID, opts.initStore(cmd.Context())); err != nil {

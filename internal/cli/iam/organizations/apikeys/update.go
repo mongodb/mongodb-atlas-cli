@@ -70,12 +70,14 @@ func UpdateBuilder() *cobra.Command {
 		Use:     "assign <apiKeyId>",
 		Aliases: []string{"updates"},
 		Args:    require.ExactArgs(1),
-		Short:   "Modify the roles or description for your API Key.",
-		Long:    fmt.Sprintf(`To view possible values for the apiKeyId argument, run %s organizations apiKeys list.`, cli.ExampleAtlasEntryPoint()),
+		Short:   "Modify the roles or description for the specified organization API key.",
+		Long: fmt.Sprintf(`When you modify the roles for an organization API key with this command, the values you specify overwrite the existing roles assigned to the API key.
+		
+To view possible values for the apiKeyId argument, run %s organizations apiKeys list.`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"apiKeyIdDesc": "Unique 24-digit string that identifies your API key.",
 		},
-		Example: fmt.Sprintf(`  # Modify the role and description for the API key with the ID 5f24084d8dbffa3ad3f21234 in the organization with the ID 5a1b39eec902201990f12345:
+		Example: fmt.Sprintf(`  # Modify the role and description for the API key with the ID 5f24084d8dbffa3ad3f21234 for the organization with the ID 5a1b39eec902201990f12345:
   %s organizations apiKeys assign 5f24084d8dbffa3ad3f21234 --role ORG_MEMBER --desc "User1 Member Key" --orgId 5a1b39eec902201990f12345 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

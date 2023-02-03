@@ -12,8 +12,10 @@ atlas organizations apiKeys assign
    :depth: 1
    :class: singlecol
 
-Modify the roles or description for your API Key.
+Modify the roles or description for the specified organization API key.
 
+When you modify the roles for an organization API key with this command, the values you specify overwrite the existing roles assigned to the API key.
+		
 To view possible values for the apiKeyId argument, run atlas organizations apiKeys list.
 
 Syntax
@@ -71,7 +73,7 @@ Options
    * - --role
      - strings
      - false
-     - Role or roles that you want to assign to the API key. To assign more than one, you can specify each role with a separate role flag or specify the roles in a comma-separated list with one role flag. Valid values are ORG_OWNER, ORG_MEMBER, ORG_GROUP_CREATOR, ORG_BILLING_ADMIN, and ORG_READ_ONLY.
+     - Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are ORG_OWNER, ORG_MEMBER, ORG_GROUP_CREATOR, ORG_BILLING_ADMIN, and ORG_READ_ONLY.
 
 Inherited Options
 -----------------
@@ -94,5 +96,5 @@ Examples
 
 .. code-block::
 
-   # Modify the role and description for the API key with the ID 5f24084d8dbffa3ad3f21234 in the organization with the ID 5a1b39eec902201990f12345:
+   # Modify the role and description for the API key with the ID 5f24084d8dbffa3ad3f21234 for the organization with the ID 5a1b39eec902201990f12345:
    atlas organizations apiKeys assign 5f24084d8dbffa3ad3f21234 --role ORG_MEMBER --desc "User1 Member Key" --orgId 5a1b39eec902201990f12345 --output json

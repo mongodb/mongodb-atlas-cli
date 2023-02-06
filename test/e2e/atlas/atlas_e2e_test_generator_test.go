@@ -36,6 +36,7 @@ type atlasE2ETestGenerator struct {
 	projectID      string
 	projectName    string
 	clusterName    string
+	clusterRegion  string
 	serverlessName string
 	teamName       string
 	teamID         string
@@ -244,7 +245,7 @@ func (g *atlasE2ETestGenerator) generateCluster() {
 		g.tier = e2eTier()
 	}
 
-	g.clusterName, err = deployClusterForProject(g.projectID, g.tier, g.enableBackup)
+	g.clusterName, g.clusterRegion, err = deployClusterForProject(g.projectID, g.tier, g.enableBackup)
 	if err != nil {
 		g.t.Errorf("unexpected error: %v", err)
 	}

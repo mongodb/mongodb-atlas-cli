@@ -24,6 +24,7 @@ import (
 )
 
 const (
+	LatestOperatorVersion       = "1.6.0"
 	maxDepth                    = 100
 	ResourceVersion             = "app.kubernetes.io/version"
 	ResourceAtlasProject        = "atlasprojects"

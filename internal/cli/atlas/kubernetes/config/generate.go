@@ -137,13 +137,12 @@ func GenerateBuilder() *cobra.Command {
 		},
 	}
 
-	supportedVersions := features.SupportedVersions()
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringSliceVar(&opts.clusterName, flag.ClusterName, []string{}, usage.ExporterClusterName)
 	cmd.Flags().BoolVar(&opts.includeSecrets, flag.OperatorIncludeSecrets, false, usage.OperatorIncludeSecrets)
 	cmd.Flags().StringVar(&opts.targetNamespace, flag.OperatorTargetNamespace, "", usage.OperatorTargetNamespace)
-	cmd.Flags().StringVar(&opts.operatorVersion, flag.OperatorVersion, supportedVersions[len(supportedVersions)-1], usage.OperatorVersion)
+	cmd.Flags().StringVar(&opts.operatorVersion, flag.OperatorVersion, features.LatestOperatorVersion, usage.OperatorVersion)
 
 	return cmd
 }

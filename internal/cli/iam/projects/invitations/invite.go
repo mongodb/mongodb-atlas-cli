@@ -16,6 +16,7 @@ package invitations
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -70,12 +71,14 @@ func InviteBuilder() *cobra.Command {
 	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:     "invite <email>",
-		Short:   "Invites one user to the project that you specify.",
+		Short:   "Invite the specified MongoDB user to your project.",
 		Aliases: []string{"create"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"emailDesc": "Email of the user being invited to the project.",
+			"emailDesc": "Email address that belongs to the user that you want to invite to the project.",
 		},
+		Example: fmt.Sprintf(`  # Invite the MongoDB user with the email user@example.com to the project with the ID 5f71e5255afec75a3d0f96dc with GROUP_READ_ONLY access:
+  %s projects invitations invite user@example.com --projectId 5f71e5255afec75a3d0f96dc --role GROUP_READ_ONLY --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()
@@ -87,9 +90,9 @@ func InviteBuilder() *cobra.Command {
 	}
 
 	if config.BinName() == config.MongoCLI {
-		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.MCLIOrgRole)
+		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.MCLIProjectRole)
 	} else {
-		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
+		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.ProjectRole)
 	}
 	cmd.Flags().StringSliceVar(&opts.teamIds, flag.TeamID, []string{}, usage.TeamID)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

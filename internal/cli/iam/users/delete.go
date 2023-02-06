@@ -51,11 +51,13 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <userId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete an Ops Manager user.",
+		Short:   "Remove the specified Ops Manager user.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"userIdDesc": "User identifier.",
+			"userIdDesc": "Unique 24-digit string that identifies the user in Ops Manager.",
 		},
+		Example: `  # Remove the Ops Manager user with the ID 5e44445ef10fab20b49c0f31:
+  mongocli iam users delete 5e44445ef10fab20b49c0f31`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.initStore(cmd.Context())(); err != nil {
 				return err

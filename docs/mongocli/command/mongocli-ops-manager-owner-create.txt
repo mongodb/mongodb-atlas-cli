@@ -43,11 +43,11 @@ Options
    * - --email
      - string
      - true
-     - User's email address.
+     - Email address for the user.
    * - --firstName
      - string
      - true
-     - User's first name.
+     - First or given name for the user.
    * - -h, --help
      - 
      - false
@@ -55,7 +55,7 @@ Options
    * - --lastName
      - string
      - true
-     - User's last name.
+     - Last name, family name, or surname for the user.
    * - -o, --output
      - string
      - false

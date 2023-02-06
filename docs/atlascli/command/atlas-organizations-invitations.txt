@@ -51,11 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-organizations-invitations-delete` - Deletes one pending invitation to the specified organization.
-* :ref:`atlas-organizations-invitations-describe` - Retrieve details for one pending invitation to the specified organization.
-* :ref:`atlas-organizations-invitations-invite` - Invites one user to the organization that you specify.
-* :ref:`atlas-organizations-invitations-list` - Retrieves all pending invitations to the specified organization.
-* :ref:`atlas-organizations-invitations-update` - Updates one pending invitation by invitationId or email to the project that you specify.
+* :ref:`atlas-organizations-invitations-delete` - Remove the specified pending invitation to your organization.
+* :ref:`atlas-organizations-invitations-describe` - Return the details for the specified pending invitation to your organization.
+* :ref:`atlas-organizations-invitations-invite` - Invite the specified MongoDB user to your organization.
+* :ref:`atlas-organizations-invitations-list` - Return all pending invitations to your organization.
+* :ref:`atlas-organizations-invitations-update` - Modifies the details of the specified pending invitation to your organization.
 
 
 .. toctree::

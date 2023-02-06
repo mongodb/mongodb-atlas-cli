@@ -16,6 +16,7 @@ package apikeys
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -53,11 +54,16 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
-		Short:   "Delete an API Key for your project.",
-		Args:    require.ExactArgs(1),
+		Short:   "Remove the specified organization API key from your project.",
+		Long: fmt.Sprintf(`The API key still exists at the organization level. To reassign the organization API key to a project, run the  %[1]s projects apiKeys assign command.
+		
+To view possible values for the ID argument, run %[1]s organizations apiKeys list.`, cli.ExampleAtlasEntryPoint()),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
-			"IDDesc": "API key identifier.",
+			"IDDesc": "Unique 24-digit string that identifies your API key.",
 		},
+		Example: fmt.Sprintf(`  # Remove an organization API key with the ID 5f46ae53d58b421fe3edc115 from the project with ID 5e2211c17a3e5a48f5497de3:
+  %s projects apiKeys delete 5f46ae53d58b421fe3edc115 --projectId 5e1234c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

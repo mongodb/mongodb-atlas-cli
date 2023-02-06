@@ -16,6 +16,7 @@ package apikeys
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -62,8 +63,10 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "List API Keys for your project.",
+		Short:   "Return all organization API keys assigned to your project.",
 		Args:    require.NoArgs,
+		Example: fmt.Sprintf(`  # Return a JSON-formatted list of organization API keys assigned to the project with ID 5e2211c17a3e5a48f5497de3:
+  %s projects apiKeys list --projectId 5e1234c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

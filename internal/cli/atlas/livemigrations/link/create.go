@@ -65,8 +65,10 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create one new link-token.",
-		Long:  "Your API Key must have the Organization Owner role to successfully run this command.",
+		Short: "Create a new link-token for a push live migration.",
+		Long: `To migrate using scripts, use mongomirror instead of the Atlas CLI. To learn more about mongomirror, see https://www.mongodb.com/docs/atlas/reference/mongomirror/.
+		
+Your API Key must have the Organization Owner role to successfully run this command.`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

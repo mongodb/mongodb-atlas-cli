@@ -56,8 +56,10 @@ func CutoverBuilder() *cobra.Command {
 	opts := &CutoverOpts{}
 	cmd := &cobra.Command{
 		Use:   "cutover",
-		Short: "Start the cutover and confirm when the cutover completes. When the cutover completes, the application completes the live migration process and stops synchronizing with the source cluster.",
-		Long:  "Your API Key must have the Organization Owner role to successfully run this command.",
+		Short: "Start the cutover for a push live migration and confirm when the cutover completes. When the cutover completes, the application completes the live migration process and stops synchronizing with the source cluster.",
+		Long: `To migrate using scripts, use mongomirror instead of the Atlas CLI. To learn more about mongomirror, see https://www.mongodb.com/docs/atlas/reference/mongomirror/.
+		
+Your API Key must have the Organization Owner role to successfully run this command.`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

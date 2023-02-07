@@ -52,11 +52,11 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-iam-organizations-apiKeys` - Organization API Keys operations.
-* :ref:`mongocli-iam-organizations-create` - Create an organization. This command is not available for Atlas. It's available only for Ops Manager and Cloud Manager.
-* :ref:`mongocli-iam-organizations-delete` - Delete an organization.
-* :ref:`mongocli-iam-organizations-describe` - Describe an organizations.
+* :ref:`mongocli-iam-organizations-create` - Create an Ops Manager or Cloud Manager organization. This command is unavailable for Atlas.
+* :ref:`mongocli-iam-organizations-delete` - Remove the specified organization.
+* :ref:`mongocli-iam-organizations-describe` - Return the details for the specified organizations.
 * :ref:`mongocli-iam-organizations-invitations` - Invitation operations.
-* :ref:`mongocli-iam-organizations-list` - List organizations.
+* :ref:`mongocli-iam-organizations-list` - Return all organizations.
 * :ref:`mongocli-iam-organizations-users` - Manage your Ops Manager or Cloud Manager users.
 
 

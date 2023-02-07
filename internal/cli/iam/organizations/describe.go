@@ -16,6 +16,7 @@ package organizations
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -61,10 +62,12 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <ID>",
 		Aliases: []string{"show"},
 		Args:    require.ExactArgs(1),
-		Short:   "Describe an organizations.",
+		Short:   "Return the details for the specified organizations.",
 		Annotations: map[string]string{
-			"IDDesc": "Organization identifier.",
+			"IDDesc": "Unique 24-digit string that identifies the organization.",
 		},
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the organization with the ID 5e2211c17a3e5a48f5497de3:
+  %s organizations describe 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

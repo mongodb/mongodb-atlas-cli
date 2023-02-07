@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-liveMigrations-link-create` - Create one new link-token.
+* :ref:`mongocli-atlas-liveMigrations-link-create` - Create a new link-token for a push live migration.
 * :ref:`mongocli-atlas-liveMigrations-link-delete` - Delete one link-token.
 
 

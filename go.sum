@@ -74,8 +74,8 @@ github.com/PaesslerAG/jsonpath v0.1.1/go.mod h1:lVboNxFGal/VwW6d9JzIy56bUsYAP6tH
 github.com/ansel1/merry v1.5.0/go.mod h1:wUy/yW0JX0ix9GYvUbciq+bi3jW/vlKPlbpI7qdZpOw=
 github.com/ansel1/merry v1.5.1 h1:/MlZd3Irx2HQsUlOcXTTYev7N1t1Rsdnxwg6xkOVJp4=
 github.com/ansel1/merry v1.5.1/go.mod h1:wUy/yW0JX0ix9GYvUbciq+bi3jW/vlKPlbpI7qdZpOw=
-github.com/aws/aws-sdk-go v1.44.190 h1:QC+Pf/Ooj7Waf2obOPZbIQOqr00hy4h54j3ZK9mvHcc=
-github.com/aws/aws-sdk-go v1.44.190/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
+github.com/aws/aws-sdk-go v1.44.195 h1:d5xFL0N83Fpsq2LFiHgtBUHknCRUPGHdOlCWt/jtOJs=
+github.com/aws/aws-sdk-go v1.44.195/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
 github.com/benbjohnson/clock v1.1.0 h1:Q92kusRqC1XV2MjkWETPvjJVqKetz1OzxZB7mHJLju8=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/briandowns/spinner v1.20.0 h1:GQq1Yf1KyzYT8CY19GzWrDKP6hYOFB6J72Ks7d8aO1U=

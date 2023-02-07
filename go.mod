@@ -11,7 +11,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.0
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
 	github.com/PaesslerAG/jsonpath v0.1.1
-	github.com/aws/aws-sdk-go v1.44.190
+	github.com/aws/aws-sdk-go v1.44.195
 	github.com/briandowns/spinner v1.20.0
 	github.com/creack/pty v1.1.18
 	github.com/evergreen-ci/shrub v0.0.0-20220520145438-44fbdf0045c8
@@ -47,8 +47,8 @@ require (
 	k8s.io/api v0.26.1
 	k8s.io/apiextensions-apiserver v0.25.0
 	k8s.io/apimachinery v0.26.1
-	sigs.k8s.io/yaml v1.3.0
 	k8s.io/client-go v0.26.1
+	sigs.k8s.io/yaml v1.3.0
 )
 
 require (

@@ -49,10 +49,10 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-iam-projects-teams-add` - Add team to a project.
-* :ref:`mongocli-iam-projects-teams-delete` - Delete team from a project.
-* :ref:`mongocli-iam-projects-teams-list` - Get all teams in a project.
-* :ref:`mongocli-iam-projects-teams-update` - Update roles for a team in a project.
+* :ref:`mongocli-iam-projects-teams-add` - Add the specified team to your project.
+* :ref:`mongocli-iam-projects-teams-delete` - Remove the specified team from your project.
+* :ref:`mongocli-iam-projects-teams-list` - Return all teams for a project.
+* :ref:`mongocli-iam-projects-teams-update` - Modify the roles for the specified team for your project.
 
 
 .. toctree::

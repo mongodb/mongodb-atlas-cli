@@ -49,8 +49,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-projects-users-delete` - Delete user from a project.
-* :ref:`atlas-projects-users-list` - List all users for a project.
+* :ref:`atlas-projects-users-delete` - Remove the specified user from your project.
+* :ref:`atlas-projects-users-list` - Return all users for a project.
 
 
 .. toctree::

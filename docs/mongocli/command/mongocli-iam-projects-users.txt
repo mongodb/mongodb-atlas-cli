@@ -49,8 +49,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-iam-projects-users-delete` - Delete user from a project.
-* :ref:`mongocli-iam-projects-users-list` - List all users for a project.
+* :ref:`mongocli-iam-projects-users-delete` - Remove the specified user from your project.
+* :ref:`mongocli-iam-projects-users-list` - Return all users for a project.
 
 
 .. toctree::

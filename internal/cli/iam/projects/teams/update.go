@@ -16,6 +16,7 @@ package teams
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -67,10 +68,12 @@ func UpdateBuilder() *cobra.Command {
 		Use:     "update <teamId>",
 		Aliases: []string{"updates"},
 		Args:    require.ExactArgs(1),
-		Short:   "Update roles for a team in a project.",
+		Short:   "Modify the roles for the specified team for your project.",
 		Annotations: map[string]string{
-			"teamIdDesc": "Team identifier.",
+			"teamIdDesc": "Unique 24-digit string that identifies the team.",
 		},
+		Example: fmt.Sprintf(`  # Modify the roles for the team with the ID 5dd56c847a3e5a1f363d424d to grant GROUP_READ_ONLY access to the project with the ID 5f71e5255afec75a3d0f96dc:
+  %s projects teams update 5dd56c847a3e5a1f363d424d --projectId 5f71e5255afec75a3d0f96dc --role GROUP_READ_ONLY --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.teamID = args[0]
 			return opts.PreRunE(

@@ -271,11 +271,12 @@ func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName st
 }
 
 func (s *Store) TestClusterFailover(projectID, clusterName string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).AdvancedClusters.TestFailover(s.ctx, projectID, clusterName)
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	// switch s.service {
+	// case config.CloudService, config.CloudGovService:
+	// 	//_, err := s.client.(*atlas.Client).AdvancedClusters.TestFailover(s.ctx, projectID, clusterName)
+	// 	//return err
+	// default:
+	// 	return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	// }
+	return nil
 }

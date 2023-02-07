@@ -31,6 +31,7 @@ import (
 	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	apiv2 "go.mongodb.org/atlas/api/v2"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
@@ -279,6 +280,29 @@ func (s *Store) setAtlasClient(client *http.Client) error {
 	if err != nil {
 		return err
 	}
+	// New client example
+	modifiers := []apiv2.ClientModifier{apiv2.UseHTTPClient(client)}
+	// TODO set user agent: CLOUDP-157231
+	// TODO move to separate store?
+	// TODO turn off always debug
+	//if log.IsDebugLevel() {
+	modifiers = append(modifiers, apiv2.UseDebug(true))
+	//}
+	log.Warning("API s.baseURL", s.baseURL)
+
+	// if s.baseURL != "" {
+	// 	modifiers = append(modifiers, apiv2.UseBaseURL(s.baseURL))
+	// }
+	v2client, err := apiv2.NewClient(modifiers...)
+	if err != nil {
+		return err
+	}
+
+	orgs, _, err := v2client.OrganizationsApi.ListOrganizations(context.TODO()).Execute()
+	if err != nil {
+		return err
+	}
+	log.Warning("API test", orgs)
 	c.OnResponseProcessed(func(resp *atlas.Response) {
 		respHeaders := ""
 		for key, value := range resp.Header {

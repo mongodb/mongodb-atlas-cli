@@ -193,18 +193,18 @@ func deleteServerlessInstanceForProject(projectID, clusterName string) error {
 	return nil
 }
 
-func deployClusterForProject(projectID, tier string, enableBackup bool) (string, error) {
+func deployClusterForProject(projectID, tier string, enableBackup bool) (string, string, error) {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	clusterName, err := RandClusterName()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	region, err := newAvailableRegion(projectID, tier, e2eClusterProvider)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	args := []string{
 		clustersEntity,
@@ -225,7 +225,7 @@ func deployClusterForProject(projectID, tier string, enableBackup bool) (string,
 	create := exec.Command(cliPath, args...)
 	create.Env = os.Environ()
 	if resp, err := create.CombinedOutput(); err != nil {
-		return "", fmt.Errorf("error creating cluster %w: %s", err, string(resp))
+		return "", "", fmt.Errorf("error creating cluster %w: %s", err, string(resp))
 	}
 
 	watchArgs := []string{
@@ -239,9 +239,9 @@ func deployClusterForProject(projectID, tier string, enableBackup bool) (string,
 	watch := exec.Command(cliPath, watchArgs...)
 	watch.Env = os.Environ()
 	if resp, err := watch.CombinedOutput(); err != nil {
-		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
+		return "", "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
 	}
-	return clusterName, nil
+	return clusterName, region, nil
 }
 
 func e2eTier() string {

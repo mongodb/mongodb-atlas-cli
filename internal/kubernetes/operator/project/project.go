@@ -19,6 +19,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
@@ -34,8 +36,21 @@ import (
 )
 
 const (
-	credSecretFormat = "%s-credentials"
-	MaxItems         = 500
+	credSecretFormat                = "%s-credentials"
+	MaxItems                        = 500
+	featureAccessLists              = "projectIpAccessList"
+	featureMaintenanceWindows       = "maintenanceWindow"
+	featureIntegrations             = "integrations"
+	featureNetworkPeering           = "networkPeers"
+	featurePrivateEndpoints         = "privateEndpoints"
+	featureEncryptionAtRest         = "encryptionAtRest"
+	featureCloudProviderAccessRoles = "cloudProviderAccessRoles"
+	featureProjectSettings          = "settings"
+	featureAuditing                 = "auditing"
+	featureAlertConfiguration       = "alertConfigurations"
+	featureCustomRoles              = "customRoles"
+	featureTeams                    = "teams"
+	cidrException                   = "/32"
 )
 
 var (
@@ -50,7 +65,7 @@ type AtlasProjectResult struct {
 	Teams   []*atlasV1.AtlasTeam
 }
 
-func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, orgID, projectID, targetNamespace string, dictionary map[string]string) (*AtlasProjectResult, error) {
+func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, validator features.FeatureValidator, orgID, projectID, targetNamespace string, includeSecret bool, dictionary map[string]string, version string) (*AtlasProjectResult, error) {
 	data, err := projectStore.Project(projectID)
 	if err != nil {
 		return nil, err
@@ -61,70 +76,6 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, orgID, proj
 		return nil, ErrAtlasProject
 	}
 
-	ipAccessList, err := buildAccessLists(projectStore, projectID)
-	if err != nil {
-		return nil, err
-	}
-
-	maintenanceWindows, err := buildMaintenanceWindows(projectStore, projectID)
-	if err != nil {
-		return nil, err
-	}
-
-	secretRef := &common.ResourceRef{
-		Name: resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, project.Name), dictionary),
-	}
-
-	integrations, intSecrets, err := buildIntegrations(projectStore, projectID, targetNamespace, true, dictionary)
-	if err != nil {
-		return nil, err
-	}
-
-	networkPeering, err := buildNetworkPeering(projectStore, projectID)
-	if err != nil {
-		return nil, err
-	}
-
-	privateEndpoints, err := buildPrivateEndpoints(projectStore, projectID)
-	if err != nil {
-		return nil, err
-	}
-
-	encryptionAtRest, err := buildEncryptionAtRest(projectStore, projectID)
-	if err != nil {
-		return nil, err
-	}
-
-	cpa, err := buildCloudProviderAccessRoles(projectStore, projectID)
-	if err != nil {
-		return nil, err
-	}
-
-	projectSettings, err := buildProjectSettings(projectStore, projectID)
-	if err != nil {
-		return nil, err
-	}
-
-	auditing, err := buildAuditing(projectStore, projectID)
-	if err != nil {
-		return nil, err
-	}
-
-	alertConfigurations, err := buildAlertConfigurations(projectStore, projectID)
-	if err != nil {
-		return nil, err
-	}
-
-	customRoles, err := buildCustomRoles(projectStore, projectID)
-	if err != nil {
-		return nil, err
-	}
-
-	teamsRefs, teams, err := buildTeams(projectStore, orgID, projectID, project.Name, targetNamespace, dictionary)
-	if err != nil {
-		return nil, err
-	}
-
 	projectResult := &atlasV1.AtlasProject{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AtlasProject",
@@ -133,25 +84,27 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, orgID, proj
 		ObjectMeta: v1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(project.Name, dictionary),
 			Namespace: targetNamespace,
+			Labels: map[string]string{
+				features.ResourceVersion: version,
+			},
 		},
 		Spec: atlasV1.AtlasProjectSpec{
 			Name:                          project.Name,
-			ConnectionSecret:              secretRef,
-			ProjectIPAccessList:           ipAccessList,
-			MaintenanceWindow:             maintenanceWindows,
-			PrivateEndpoints:              privateEndpoints,
-			CloudProviderAccessRoles:      cpa,
-			AlertConfigurations:           alertConfigurations,
+			ConnectionSecret:              nil,
+			ProjectIPAccessList:           nil,
+			PrivateEndpoints:              nil,
+			CloudProviderAccessRoles:      nil,
+			AlertConfigurations:           nil,
 			AlertConfigurationSyncEnabled: false,
-			NetworkPeers:                  networkPeering,
+			NetworkPeers:                  nil,
 			WithDefaultAlertsSettings:     pointers.PtrValOrDefault[bool](project.WithDefaultAlertsSettings, false),
-			X509CertRef:                   nil, // not supported to be imported
-			Integrations:                  integrations,
-			EncryptionAtRest:              encryptionAtRest,
-			Auditing:                      auditing,
-			Settings:                      projectSettings,
-			CustomRoles:                   customRoles,
-			Teams:                         teamsRefs,
+			X509CertRef:                   nil, // not available for import
+			Integrations:                  nil,
+			EncryptionAtRest:              nil,
+			Auditing:                      nil,
+			Settings:                      nil,
+			CustomRoles:                   nil,
+			Teams:                         nil,
 		},
 		Status: status.AtlasProjectStatus{
 			Common: status.Common{
@@ -160,11 +113,117 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, orgID, proj
 		},
 	}
 
-	return &AtlasProjectResult{
+	result := &AtlasProjectResult{
 		Project: projectResult,
-		Secrets: intSecrets,
-		Teams:   teams,
-	}, err
+		Secrets: nil,
+		Teams:   nil,
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasProject, featureAccessLists) {
+		ipAccessList, ferr := buildAccessLists(projectStore, projectID)
+		if ferr != nil {
+			return nil, ferr
+		}
+		projectResult.Spec.ProjectIPAccessList = ipAccessList
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasProject, featureMaintenanceWindows) {
+		maintenanceWindows, ferr := buildMaintenanceWindows(projectStore, projectID)
+		if ferr != nil {
+			return nil, ferr
+		}
+		projectResult.Spec.MaintenanceWindow = maintenanceWindows
+	}
+
+	secretRef := &common.ResourceRef{}
+	if includeSecret {
+		secretRef.Name = resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, project.Name), dictionary)
+	}
+	projectResult.Spec.ConnectionSecret = secretRef
+
+	if validator.FeatureExist(features.ResourceAtlasProject, featureIntegrations) {
+		integrations, intSecrets, ferr := buildIntegrations(projectStore, projectID, targetNamespace, true, dictionary)
+		if ferr != nil {
+			return nil, ferr
+		}
+		projectResult.Spec.Integrations = integrations
+		result.Secrets = intSecrets
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasProject, featureNetworkPeering) {
+		networkPeering, ferr := buildNetworkPeering(projectStore, projectID)
+		if ferr != nil {
+			return nil, ferr
+		}
+		projectResult.Spec.NetworkPeers = networkPeering
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasProject, featurePrivateEndpoints) {
+		privateEndpoints, ferr := buildPrivateEndpoints(projectStore, projectID)
+		if ferr != nil {
+			return nil, ferr
+		}
+		projectResult.Spec.PrivateEndpoints = privateEndpoints
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasProject, featureEncryptionAtRest) {
+		encryptionAtRest, ferr := buildEncryptionAtRest(projectStore, projectID)
+		if ferr != nil {
+			return nil, ferr
+		}
+		projectResult.Spec.EncryptionAtRest = encryptionAtRest
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasProject, featureCloudProviderAccessRoles) {
+		cpa, ferr := buildCloudProviderAccessRoles(projectStore, projectID)
+		if ferr != nil {
+			return nil, ferr
+		}
+		projectResult.Spec.CloudProviderAccessRoles = cpa
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasProject, featureProjectSettings) {
+		projectSettings, ferr := buildProjectSettings(projectStore, projectID)
+		if ferr != nil {
+			return nil, ferr
+		}
+		projectResult.Spec.Settings = projectSettings
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasProject, featureAuditing) {
+		auditing, ferr := buildAuditing(projectStore, projectID)
+		if ferr != nil {
+			return nil, ferr
+		}
+		projectResult.Spec.Auditing = auditing
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasProject, featureAlertConfiguration) {
+		alertConfigurations, ferr := buildAlertConfigurations(projectStore, projectID)
+		if ferr != nil {
+			return nil, ferr
+		}
+		projectResult.Spec.AlertConfigurations = alertConfigurations
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasProject, featureCustomRoles) {
+		customRoles, ferr := buildCustomRoles(projectStore, projectID)
+		if ferr != nil {
+			return nil, ferr
+		}
+		projectResult.Spec.CustomRoles = customRoles
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasProject, featureTeams) {
+		teamsRefs, teams, ferr := buildTeams(projectStore, orgID, projectID, project.Name, targetNamespace, version, dictionary)
+		if ferr != nil {
+			return nil, ferr
+		}
+		projectResult.Spec.Teams = teamsRefs
+		result.Teams = teams
+	}
+
+	return result, err
 }
 
 func BuildProjectConnectionSecret(credsProvider store.CredentialsGetter, name, namespace, orgID string, includeCreds bool, dictionary map[string]string) *corev1.Secret {
@@ -243,6 +302,9 @@ func buildAccessLists(accessListProvider store.ProjectIPAccessListLister, projec
 
 	var result []operatorProject.IPAccessList
 	for _, list := range accessLists.Results {
+		if strings.HasSuffix(list.CIDRBlock, cidrException) && list.IPAddress != "" {
+			list.CIDRBlock = ""
+		}
 		result = append(result, operatorProject.IPAccessList{
 			AwsSecurityGroup: list.AwsSecurityGroup,
 			CIDRBlock:        list.CIDRBlock,
@@ -640,7 +702,7 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 	return result, nil
 }
 
-func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, projectName, targetNamespace string, dictionary map[string]string) ([]atlasV1.Team, []*atlasV1.AtlasTeam, error) {
+func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, projectName, targetNamespace, version string, dictionary map[string]string) ([]atlasV1.Team, []*atlasV1.AtlasTeam, error) {
 	pt, err := teamsProvider.ProjectTeams(projectID)
 	if err != nil {
 		return nil, nil, err
@@ -728,6 +790,9 @@ func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, p
 			ObjectMeta: v1.ObjectMeta{
 				Name:      crName,
 				Namespace: targetNamespace,
+				Labels: map[string]string{
+					features.ResourceVersion: version,
+				},
 			},
 			Spec: atlasV1.TeamSpec{
 				Name:      team.Name,

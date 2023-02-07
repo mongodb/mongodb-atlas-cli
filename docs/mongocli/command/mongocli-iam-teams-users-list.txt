@@ -49,7 +49,7 @@ Options
    * - --teamId
      - string
      - true
-     - Unique identification of the team.
+     - Unique 24-digit string that identifies the team.
 
 Inherited Options
 -----------------

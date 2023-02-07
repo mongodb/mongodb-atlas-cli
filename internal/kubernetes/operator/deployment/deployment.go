@@ -17,6 +17,8 @@ package deployment
 import (
 	"fmt"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
@@ -29,7 +31,13 @@ import (
 )
 
 const (
-	MaxItems = 500
+	MaxItems                          = 500
+	featureProcessArgs                = "processArgs"
+	featureBackupSchedule             = "backupRef"
+	featureServerlessPrivateEndpoints = "serverlessSpec.privateEndpoints"
+	featureGlobalDeployments          = "advancedDeploymentSpec.customZoneMapping"
+	DeletingState                     = "DELETING"
+	DeletedState                      = "DELETED"
 )
 
 type AtlasDeploymentResult struct {
@@ -38,10 +46,14 @@ type AtlasDeploymentResult struct {
 	BackupPolicies []*atlasV1.AtlasBackupPolicy
 }
 
-func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStore, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string) (*AtlasDeploymentResult, error) {
+func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*AtlasDeploymentResult, error) {
 	deployment, err := deploymentStore.AtlasCluster(projectID, clusterID)
 	if err != nil {
 		return nil, err
+	}
+
+	if !isAdvancedDeploymentExportable(deployment) {
+		return nil, nil
 	}
 
 	var advancedSpec *atlasV1.AdvancedDeploymentSpec
@@ -70,15 +82,6 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 
 	replicationSpec := buildReplicationSpec(deployment.ReplicationSpecs)
 
-	processArgs, err := buildProcessArgs(deploymentStore, projectID, clusterID)
-	if err != nil {
-		return nil, err
-	}
-
-	customZoneMapping, managedNamespaces, err := buildGlobalDeployment(deployment.ReplicationSpecs, deploymentStore, projectID, clusterID)
-	if err != nil {
-		return nil, err
-	}
 	// TODO: DiskSizeGB field skipped on purpose. See https://jira.mongodb.org/browse/CLOUDP-146469
 	advancedSpec = &atlasV1.AdvancedDeploymentSpec{
 		BackupEnabled:            deployment.BackupEnabled,
@@ -92,15 +95,6 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 		ReplicationSpecs:         replicationSpec,
 		RootCertType:             deployment.RootCertType,
 		VersionReleaseSystem:     deployment.VersionReleaseSystem,
-		ManagedNamespaces:        managedNamespaces,
-		CustomZoneMapping:        customZoneMapping,
-	}
-
-	var backupScheduleRef common.ResourceRefNamespaced
-	backupSchedule, backupPolicies := buildBackups(deploymentStore, projectID, clusterID, targetNamespace, dictionary)
-	if backupSchedule != nil {
-		backupScheduleRef.Name = backupSchedule.Name
-		backupScheduleRef.Namespace = backupSchedule.Namespace
 	}
 
 	atlasDeployment := &atlasV1.AtlasDeployment{
@@ -111,6 +105,9 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 		ObjectMeta: v1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(clusterID, dictionary),
 			Namespace: targetNamespace,
+			Labels: map[string]string{
+				features.ResourceVersion: version,
+			},
 		},
 		Spec: atlasV1.AtlasDeploymentSpec{
 			Project: common.ResourceRefNamespaced{
@@ -120,8 +117,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 			DeploymentSpec:         nil,
 			AdvancedDeploymentSpec: advancedSpec,
 			ServerlessSpec:         nil,
-			ProcessArgs:            processArgs,
-			BackupScheduleRef:      backupScheduleRef,
+			ProcessArgs:            nil,
 		},
 		Status: status.AtlasDeploymentStatus{
 			Common: status.Common{
@@ -130,13 +126,42 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 		},
 	}
 
-	result := &AtlasDeploymentResult{
+	deploymentResult := &AtlasDeploymentResult{
 		Deployment:     atlasDeployment,
-		BackupSchedule: backupSchedule,
-		BackupPolicies: backupPolicies,
+		BackupSchedule: nil,
+		BackupPolicies: nil,
 	}
 
-	return result, nil
+	if validator.FeatureExist(features.ResourceAtlasDeployment, featureProcessArgs) {
+		processArgs, err := buildProcessArgs(deploymentStore, projectID, clusterID)
+		if err != nil {
+			return nil, err
+		}
+		atlasDeployment.Spec.ProcessArgs = processArgs
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasDeployment, featureBackupSchedule) {
+		var backupScheduleRef common.ResourceRefNamespaced
+		backupSchedule, backupPolicies := buildBackups(deploymentStore, projectID, clusterID, targetNamespace, version, dictionary)
+		if backupSchedule != nil {
+			backupScheduleRef.Name = backupSchedule.Name
+			backupScheduleRef.Namespace = backupSchedule.Namespace
+		}
+		deploymentResult.BackupSchedule = backupSchedule
+		deploymentResult.BackupPolicies = backupPolicies
+		atlasDeployment.Spec.BackupScheduleRef = backupScheduleRef
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasDeployment, featureGlobalDeployments) {
+		customZoneMapping, managedNamespaces, err := buildGlobalDeployment(deployment.ReplicationSpecs, deploymentStore, projectID, clusterID)
+		if err != nil {
+			return nil, err
+		}
+		advancedSpec.CustomZoneMapping = customZoneMapping
+		advancedSpec.ManagedNamespaces = managedNamespaces
+	}
+
+	return deploymentResult, nil
 }
 
 func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec, globalDeploymentProvider store.GlobalClusterDescriber, projectID, clusterID string) ([]atlasV1.CustomZoneMapping, []atlasV1.ManagedNamespace, error) {
@@ -200,7 +225,21 @@ func buildProcessArgs(configOptsProvider store.AtlasClusterConfigurationOptionsD
 	}, nil
 }
 
-func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterName, targetNamespace string, dictionary map[string]string) (*atlasV1.AtlasBackupSchedule, []*atlasV1.AtlasBackupPolicy) {
+func isAdvancedDeploymentExportable(deployments *mongodbatlas.AdvancedCluster) bool {
+	if deployments.StateName == DeletingState || deployments.StateName == DeletedState {
+		return false
+	}
+	return true
+}
+
+func isServerlessExportable(deployment *mongodbatlas.Cluster) bool {
+	if deployment.StateName == DeletingState || deployment.StateName == DeletedState {
+		return false
+	}
+	return true
+}
+
+func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterName, targetNamespace, version string, dictionary map[string]string) (*atlasV1.AtlasBackupSchedule, []*atlasV1.AtlasBackupPolicy) {
 	bs, err := backupsProvider.DescribeSchedule(projectID, clusterName)
 	if err != nil {
 		return nil, nil
@@ -226,6 +265,9 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 			ObjectMeta: v1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backuppolicy", clusterName), dictionary),
 				Namespace: targetNamespace,
+				Labels: map[string]string{
+					features.ResourceVersion: version,
+				},
 			},
 			Spec: atlasV1.AtlasBackupPolicySpec{
 				Items: items,
@@ -250,6 +292,9 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 		ObjectMeta: v1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backupschedule", clusterName), dictionary),
 			Namespace: targetNamespace,
+			Labels: map[string]string{
+				features.ResourceVersion: version,
+			},
 		},
 		Spec: atlasV1.AtlasBackupScheduleSpec{
 			AutoExportEnabled: pointers.PtrValOrDefault(bs.AutoExportEnabled, false),
@@ -360,15 +405,14 @@ func buildReplicationSpec(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec) 
 	return result
 }
 
-func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string) (*atlasV1.AtlasDeployment, error) {
+func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*atlasV1.AtlasDeployment, error) {
 	deployment, err := deploymentStore.ServerlessInstance(projectID, clusterID)
 	if err != nil {
 		return nil, err
 	}
 
-	privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, deployment.Name)
-	if err != nil {
-		return nil, err
+	if !isServerlessExportable(deployment) {
+		return nil, nil
 	}
 
 	var providerSettings *atlasV1.ProviderSettingsSpec
@@ -410,7 +454,6 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 	serverlessSpec := &atlasV1.ServerlessSpec{
 		Name:             deployment.Name,
 		ProviderSettings: providerSettings,
-		PrivateEndpoints: privateEndpoints,
 	}
 
 	atlasDeployment := &atlasV1.AtlasDeployment{
@@ -421,6 +464,9 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 		ObjectMeta: v1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(deployment.Name, dictionary),
 			Namespace: targetNamespace,
+			Labels: map[string]string{
+				features.ResourceVersion: version,
+			},
 		},
 		Spec: atlasV1.AtlasDeploymentSpec{
 			Project: common.ResourceRefNamespaced{
@@ -436,6 +482,14 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 				Conditions: []status.Condition{},
 			},
 		},
+	}
+
+	if validator.FeatureExist(features.ResourceAtlasDeployment, featureServerlessPrivateEndpoints) {
+		privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, deployment.Name)
+		if err != nil {
+			return nil, err
+		}
+		atlasDeployment.Spec.ServerlessSpec.PrivateEndpoints = privateEndpoints
 	}
 
 	return atlasDeployment, nil

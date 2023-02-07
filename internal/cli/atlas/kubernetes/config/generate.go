@@ -23,11 +23,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/crds"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/util/validation"
 )
+
+var ErrUnsupportedOperatorVersionFmt = "version %q is not supported. Supported versions: %v"
 
 type GenerateOpts struct {
 	cli.GlobalOpts
@@ -35,8 +39,10 @@ type GenerateOpts struct {
 	clusterName     []string
 	includeSecrets  bool
 	targetNamespace string
+	operatorVersion string
 	store           store.AtlasOperatorGenericStore
 	credsStore      store.CredentialsGetter
+	crdsProvider    crds.AtlasOperatorCRDProvider
 }
 
 func (opts *GenerateOpts) ValidateTargetNamespace() error {
@@ -44,6 +50,15 @@ func (opts *GenerateOpts) ValidateTargetNamespace() error {
 		return fmt.Errorf("%s parameter is invalid: %v", flag.OperatorTargetNamespace, errs)
 	}
 	return nil
+}
+
+func (opts *GenerateOpts) ValidateOperatorVersion() error {
+	for k := range features.VersionsToResourcesMap {
+		if opts.operatorVersion == k {
+			return nil
+		}
+	}
+	return fmt.Errorf(ErrUnsupportedOperatorVersionFmt, opts.operatorVersion, features.SupportedVersions())
 }
 
 func (opts *GenerateOpts) initStores(ctx context.Context) func() error {
@@ -57,15 +72,23 @@ func (opts *GenerateOpts) initStores(ctx context.Context) func() error {
 		}
 		opts.credsStore = profile
 
+		opts.crdsProvider = crds.NewGithubAtlasCRDProvider()
+
 		return nil
 	}
 }
 
 func (opts *GenerateOpts) Run() error {
+	featureValidator, err := features.NewAtlasCRDs(opts.crdsProvider, opts.operatorVersion)
+	if err != nil {
+		return err
+	}
 	result, err := operator.NewConfigExporter(opts.store, opts.credsStore, opts.ProjectID, opts.OrgID).
 		WithClustersNames(opts.clusterName).
 		WithTargetNamespace(opts.targetNamespace).
 		WithSecretsData(opts.includeSecrets).
+		WithTargetOperatorVersion(opts.operatorVersion).
+		WithFeatureValidator(featureValidator).
 		Run()
 	if err != nil {
 		return err
@@ -96,12 +119,16 @@ func GenerateBuilder() *cobra.Command {
   atlas kubernetes config generate --projectId=<projectId> --includeSecrets --targetNamespace=<namespace>
   
   # Export Project, DatabaseUsers, and Deployment resources for a specific project including connection and integration secrets to a specific namespace:
-  atlas kubernetes config generate --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>`,
+  atlas kubernetes config generate --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>
+
+  # Export resources for a specific version of the Atlas Kubernetes Operator:
+  atlas kubernetes config generate --projectId=<projectId> --targetNamespace=<namespace> --operatorVersion=1.5.1`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.ValidateOrgID,
 				opts.ValidateTargetNamespace,
+				opts.ValidateOperatorVersion,
 				opts.initStores(cmd.Context()),
 			)
 		},
@@ -115,6 +142,7 @@ func GenerateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.clusterName, flag.ClusterName, []string{}, usage.ExporterClusterName)
 	cmd.Flags().BoolVar(&opts.includeSecrets, flag.OperatorIncludeSecrets, false, usage.OperatorIncludeSecrets)
 	cmd.Flags().StringVar(&opts.targetNamespace, flag.OperatorTargetNamespace, "", usage.OperatorTargetNamespace)
+	cmd.Flags().StringVar(&opts.operatorVersion, flag.OperatorVersion, features.LatestOperatorVersion, usage.OperatorVersion)
 
 	return cmd
 }

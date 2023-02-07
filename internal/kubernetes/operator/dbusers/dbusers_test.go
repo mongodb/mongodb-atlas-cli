@@ -17,13 +17,16 @@
 package dbusers
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
@@ -33,6 +36,8 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
+
+const resourceVersion = "x.y.z"
 
 func Test_convertUserLabels(t *testing.T) {
 	t.Run("Can convert user labels from Atlas to the Operator format", func(t *testing.T) {
@@ -159,7 +164,7 @@ func TestBuildDBUsers(t *testing.T) {
 			user,
 		}, nil)
 
-		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace, dictionary)
+		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace, dictionary, resourceVersion)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
@@ -172,6 +177,9 @@ func TestBuildDBUsers(t *testing.T) {
 			ObjectMeta: v1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, user.Username), dictionary),
 				Namespace: targetNamespace,
+				Labels: map[string]string{
+					features.ResourceVersion: resourceVersion,
+				},
 			},
 			Spec: atlasV1.AtlasDatabaseUserSpec{
 				Project: common.ResourceRefNamespaced{
@@ -213,7 +221,15 @@ func TestBuildDBUsers(t *testing.T) {
 		}
 
 		if !reflect.DeepEqual(users[0], expectedUser) {
-			t.Fatalf("User result doesn't match.\r\nexpected: %v,\r\ngot: %v\r\n", expectedUser, users[0])
+			ed, err := json.MarshalIndent(expectedUser, "", " ")
+			if err != nil {
+				t.Fatal(err)
+			}
+			gd, err := json.MarshalIndent(users[0], "", " ")
+			if err != nil {
+				t.Fatal(err)
+			}
+			t.Fatalf("User result doesn't match.\r\nexpected: %v,\r\ngot: %v\r\n", string(ed), string(gd))
 		}
 
 		expectedSecret := secrets.NewAtlasSecret(

@@ -51,8 +51,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-users-describe` - Get a user by username or id.
-* :ref:`atlas-users-invite` - Invite a user.
+* :ref:`atlas-users-describe` - Return the details for the specified MongoDB user.
+* :ref:`atlas-users-invite` - Create a MongoDB user for your MongoDB application and invite the MongoDB user to your organizations and projects.
 
 
 .. toctree::

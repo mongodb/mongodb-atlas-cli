@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-organizations-users-list` - List users in a organization.
+* :ref:`atlas-organizations-users-list` - Return all users for an organization.
 
 
 .. toctree::

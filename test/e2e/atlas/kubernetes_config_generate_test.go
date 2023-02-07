@@ -27,6 +27,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
@@ -47,6 +48,10 @@ import (
 )
 
 const targetNamespace = "importer-namespace"
+
+var expectedLabels = map[string]string{
+	features.ResourceVersion: features.LatestOperatorVersion,
+}
 
 func getK8SEntities(data []byte) ([]runtime.Object, error) {
 	b := bufio.NewReader(bytes.NewReader(data))
@@ -92,7 +97,7 @@ func InitialSetupWithTeam(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	s.generator = newAtlasE2ETestGenerator(s.t)
 	s.generator.generateTeam("Kubernetes")
 	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
-	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace)
+	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(s.t, err)
@@ -112,7 +117,7 @@ func InitialSetup(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	}
 	s.generator = newAtlasE2ETestGenerator(s.t)
 	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
-	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace)
+	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(s.t, err)
@@ -309,7 +314,6 @@ func TestProjectWithAccessList(t *testing.T) {
 	newIPAccess := project.IPAccessList{
 		IPAddress: entry,
 		Comment:   "test",
-		CIDRBlock: fmt.Sprintf("%s/32", entry),
 	}
 	expectedProject.Spec.ProjectIPAccessList = []project.IPAccessList{
 		newIPAccess,
@@ -735,7 +739,7 @@ func TestProjectAndTeams(t *testing.T) {
 	t.Run("Add team to project", func(t *testing.T) {
 		expectedTeam := referenceTeam(generator.teamName, targetNamespace, []atlasV1.TeamUser{
 			atlasV1.TeamUser(generator.teamUser),
-		}, generator.projectName)
+		}, generator.projectName, expectedLabels)
 
 		expectedProject.Spec.Teams = []atlasV1.Team{
 			{
@@ -796,7 +800,7 @@ func TestProjectAndTeams(t *testing.T) {
 	})
 }
 
-func referenceTeam(name, namespace string, users []atlasV1.TeamUser, projectName string) *atlasV1.AtlasTeam {
+func referenceTeam(name, namespace string, users []atlasV1.TeamUser, projectName string, labels map[string]string) *atlasV1.AtlasTeam {
 	dictionary := resources.AtlasNameToKubernetesName()
 
 	return &atlasV1.AtlasTeam{
@@ -807,6 +811,7 @@ func referenceTeam(name, namespace string, users []atlasV1.TeamUser, projectName
 		ObjectMeta: v1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-team-%s", projectName, name), dictionary),
 			Namespace: namespace,
+			Labels:    labels,
 		},
 		Spec: atlasV1.TeamSpec{
 			Name:      name,
@@ -840,7 +845,7 @@ func checkProject(t *testing.T, output []runtime.Object, expected *atlasV1.Atlas
 	})
 }
 
-func referenceProject(name, namespace string) *atlasV1.AtlasProject {
+func referenceProject(name, namespace string, labels map[string]string) *atlasV1.AtlasProject {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &atlasV1.AtlasProject{
 		TypeMeta: v1.TypeMeta{
@@ -850,6 +855,7 @@ func referenceProject(name, namespace string) *atlasV1.AtlasProject {
 		ObjectMeta: v1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(name, dictionary),
 			Namespace: namespace,
+			Labels:    labels,
 		},
 		Status: status.AtlasProjectStatus{
 			Common: status.Common{
@@ -888,7 +894,7 @@ func referenceProject(name, namespace string) *atlasV1.AtlasProject {
 	}
 }
 
-func referenceAdvancedCluster(name, namespace, projectName string) *atlasV1.AtlasDeployment {
+func referenceAdvancedCluster(name, region, namespace, projectName string, labels map[string]string) *atlasV1.AtlasDeployment {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &atlasV1.AtlasDeployment{
 		TypeMeta: v1.TypeMeta{
@@ -898,6 +904,7 @@ func referenceAdvancedCluster(name, namespace, projectName string) *atlasV1.Atla
 		ObjectMeta: v1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(name, dictionary),
 			Namespace: namespace,
+			Labels:    labels,
 		},
 		Spec: atlasV1.AtlasDeploymentSpec{
 			Project: common.ResourceRefNamespaced{
@@ -961,7 +968,7 @@ func referenceAdvancedCluster(name, namespace, projectName string) *atlasV1.Atla
 								},
 								Priority:     pointers.MakePtr(7),
 								ProviderName: string(provider.ProviderAWS),
-								RegionName:   "US_EAST_1",
+								RegionName:   region,
 							},
 						},
 					},
@@ -983,7 +990,7 @@ func referenceAdvancedCluster(name, namespace, projectName string) *atlasV1.Atla
 	}
 }
 
-func referenceServerless(name, namespace, projectName string) *atlasV1.AtlasDeployment {
+func referenceServerless(name, region, namespace, projectName string, labels map[string]string) *atlasV1.AtlasDeployment {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &atlasV1.AtlasDeployment{
 		TypeMeta: v1.TypeMeta{
@@ -993,6 +1000,7 @@ func referenceServerless(name, namespace, projectName string) *atlasV1.AtlasDepl
 		ObjectMeta: v1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(name, dictionary),
 			Namespace: namespace,
+			Labels:    labels,
 		},
 		Spec: atlasV1.AtlasDeploymentSpec{
 			Project: common.ResourceRefNamespaced{
@@ -1004,7 +1012,7 @@ func referenceServerless(name, namespace, projectName string) *atlasV1.AtlasDepl
 				ProviderSettings: &atlasV1.ProviderSettingsSpec{
 					BackingProviderName: string(provider.ProviderAWS),
 					ProviderName:        provider.ProviderServerless,
-					RegionName:          "US_EAST_1",
+					RegionName:          region,
 				},
 			},
 		},
@@ -1016,8 +1024,8 @@ func referenceServerless(name, namespace, projectName string) *atlasV1.AtlasDepl
 	}
 }
 
-func referenceSharedCluster(name, namespace, projectName string) *atlasV1.AtlasDeployment {
-	cluster := referenceAdvancedCluster(name, namespace, projectName)
+func referenceSharedCluster(name, region, namespace, projectName string, labels map[string]string) *atlasV1.AtlasDeployment {
+	cluster := referenceAdvancedCluster(name, region, namespace, projectName, labels)
 	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs = &atlasV1.Specs{
 		InstanceSize: e2eSharedClusterTier,
 	}
@@ -1075,7 +1083,7 @@ func defaultMaintenanceWindowAlertConfigs() []atlasV1.AlertConfiguration {
 	}
 }
 
-func referenceBackupSchedule(namespace, clusterName string) *atlasV1.AtlasBackupSchedule {
+func referenceBackupSchedule(namespace, clusterName string, labels map[string]string) *atlasV1.AtlasBackupSchedule {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &atlasV1.AtlasBackupSchedule{
 		TypeMeta: v1.TypeMeta{
@@ -1085,6 +1093,7 @@ func referenceBackupSchedule(namespace, clusterName string) *atlasV1.AtlasBackup
 		ObjectMeta: v1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backupschedule", clusterName), dictionary),
 			Namespace: namespace,
+			Labels:    labels,
 		},
 		Spec: atlasV1.AtlasBackupScheduleSpec{
 			PolicyRef: common.ResourceRefNamespaced{
@@ -1098,7 +1107,7 @@ func referenceBackupSchedule(namespace, clusterName string) *atlasV1.AtlasBackup
 	}
 }
 
-func referenceBackupPolicy(namespace, clusterName string) *atlasV1.AtlasBackupPolicy {
+func referenceBackupPolicy(namespace, clusterName string, labels map[string]string) *atlasV1.AtlasBackupPolicy {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &atlasV1.AtlasBackupPolicy{
 		TypeMeta: v1.TypeMeta{
@@ -1108,6 +1117,7 @@ func referenceBackupPolicy(namespace, clusterName string) *atlasV1.AtlasBackupPo
 		ObjectMeta: v1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backuppolicy", clusterName), dictionary),
 			Namespace: namespace,
+			Labels:    labels,
 		},
 		Spec: atlasV1.AtlasBackupPolicySpec{
 			Items: []atlasV1.AtlasBackupPolicyItem{
@@ -1140,7 +1150,7 @@ func referenceBackupPolicy(namespace, clusterName string) *atlasV1.AtlasBackupPo
 	}
 }
 
-func checkClustersData(t *testing.T, deployments []*atlasV1.AtlasDeployment, clusterNames []string, namespace, projectName string) {
+func checkClustersData(t *testing.T, deployments []*atlasV1.AtlasDeployment, clusterNames []string, region, namespace, projectName string) {
 	t.Helper()
 	assert.Len(t, deployments, len(clusterNames))
 	var entries []string
@@ -1148,14 +1158,14 @@ func checkClustersData(t *testing.T, deployments []*atlasV1.AtlasDeployment, clu
 		if deployment.Spec.ServerlessSpec != nil {
 			if ok := search.StringInSlice(clusterNames, deployment.Spec.ServerlessSpec.Name); ok {
 				name := deployment.Spec.ServerlessSpec.Name
-				expectedDeployment := referenceServerless(name, namespace, projectName)
+				expectedDeployment := referenceServerless(name, region, namespace, projectName, expectedLabels)
 				assert.Equal(t, expectedDeployment, deployment)
 				entries = append(entries, name)
 			}
 		} else if deployment.Spec.AdvancedDeploymentSpec != nil {
 			if ok := search.StringInSlice(clusterNames, deployment.Spec.AdvancedDeploymentSpec.Name); ok {
 				name := deployment.Spec.AdvancedDeploymentSpec.Name
-				expectedDeployment := referenceAdvancedCluster(name, namespace, projectName)
+				expectedDeployment := referenceAdvancedCluster(name, region, namespace, projectName, expectedLabels)
 				assert.Equal(t, expectedDeployment, deployment)
 				entries = append(entries, name)
 			}
@@ -1176,9 +1186,9 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 	g.generateCluster()
 	g.generateServerlessCluster()
 
-	expectedDeployment := referenceAdvancedCluster(g.clusterName, targetNamespace, g.projectName)
-	expectedBackupSchedule := referenceBackupSchedule(targetNamespace, g.clusterName)
-	expectedBackupPolicy := referenceBackupPolicy(targetNamespace, g.clusterName)
+	expectedDeployment := referenceAdvancedCluster(g.clusterName, g.clusterRegion, targetNamespace, g.projectName, expectedLabels)
+	expectedBackupSchedule := referenceBackupSchedule(targetNamespace, g.clusterName, expectedLabels)
+	expectedBackupPolicy := referenceBackupPolicy(targetNamespace, g.clusterName, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
@@ -1374,7 +1384,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 			}
 			clustersCount := len(deployments)
 			require.True(t, clustersCount == 2, "result should contain two clusters. actual: ", clustersCount)
-			checkClustersData(t, deployments, []string{g.clusterName, g.serverlessName}, targetNamespace, g.projectName)
+			checkClustersData(t, deployments, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
@@ -1445,7 +1455,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 					deployments = append(deployments, deployment)
 				}
 			}
-			checkClustersData(t, deployments, []string{g.clusterName, g.serverlessName}, targetNamespace, g.projectName)
+			checkClustersData(t, deployments, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
@@ -1475,7 +1485,7 @@ func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
 	g.tier = e2eSharedClusterTier
 	g.generateCluster()
 
-	expectedDeployment := referenceSharedCluster(g.clusterName, targetNamespace, g.projectName)
+	expectedDeployment := referenceSharedCluster(g.clusterName, g.clusterRegion, targetNamespace, g.projectName, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)

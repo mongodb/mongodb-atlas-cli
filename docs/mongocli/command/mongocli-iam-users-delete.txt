@@ -12,7 +12,7 @@ mongocli iam users delete
    :depth: 1
    :class: singlecol
 
-Delete an Ops Manager user.
+Remove the specified Ops Manager user.
 
 Syntax
 ------
@@ -37,7 +37,7 @@ Arguments
    * - userId
      - string
      - true
-     - User identifier.
+     - Unique 24-digit string that identifies the user in Ops Manager.
 
 Options
 -------
@@ -75,3 +75,10 @@ Inherited Options
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Remove the Ops Manager user with the ID 5e44445ef10fab20b49c0f31:
+   mongocli iam users delete 5e44445ef10fab20b49c0f31

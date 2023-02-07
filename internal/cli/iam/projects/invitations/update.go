@@ -17,6 +17,7 @@ package invitations
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -76,10 +77,16 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "update [invitationId]",
 		Aliases: []string{"updates"},
-		Short:   "Updates one pending invitation by invitationId or email to the project that you specify.",
+		Short:   "Modifies the details of the specified pending invitation to your project.",
+		Long:    "You can use either the invitation ID or the user's email address to specify the invitation.",
 		Annotations: map[string]string{
-			"invitationIdDesc": "Unique 24-hexadecimal digit string that identifies the invitation.",
+			"invitationIdDesc": "Unique 24-digit string that identifies the invitation.",
 		},
+		Example: fmt.Sprintf(`  # Modify the pending invitation with the ID 5dd56c847a3e5a1f363d424d to grant GROUP_READ_ONLY access the project with the ID 5f71e5255afec75a3d0f96dc:
+  %[1]s projects invitations update 5dd56c847a3e5a1f363d424d --projectId 5f71e5255afec75a3d0f96dc --role GROUP_READ_ONLY --output json
+  
+  # Modify the invitation for the user with the email address user@example.com to grant GROUP_READ_ONLY access the project with the ID 5f71e5255afec75a3d0f96dc:
+  %[1]s projects invitations update --email user@example.com --projectId 5f71e5255afec75a3d0f96dc --role GROUP_READ_ONLY --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
 				opts.invitationID = args[0]

@@ -41,7 +41,7 @@ Options
    * - --id
      - string
      - false
-     - Unique identification of the team.
+     - Unique 24-digit string that identifies the team.
    * - --name
      - string
      - false

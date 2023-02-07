@@ -244,8 +244,14 @@ func InviteBuilder() *cobra.Command {
 	opts.Template = inviteTemplate
 	cmd := &cobra.Command{
 		Use:   "invite",
-		Short: "Invite a user.",
+		Short: "Create a MongoDB user for your MongoDB application and invite the MongoDB user to your organizations and projects.",
+		Long:  fmt.Sprintf(`A MongoDB user account grants access only to the the MongoDB application. To grant database access, create a database user with %s dbusers create.`, cli.ExampleAtlasEntryPoint()),
 		Args:  require.NoArgs,
+		Example: fmt.Sprintf(`  # Create the MongoDB user with the username user@example.com and invite them to the organization with the ID 5dd56c847a3e5a1f363d424d with ORG_OWNER access:
+  %[1]s users invite --email user@example.com --username user@example.com --orgRole 5dd56c847a3e5a1f363d424d:ORG_OWNER --firstName Example --lastName User --country US --output json
+  
+  # Create the MongoDB user with the username user@example.com and invite them to the project with the ID 5f71e5255afec75a3d0f96dc with GROUP_READ_ONLY access:
+  %[1]s users invite --email user@example.com --username user@example.com --projectRole 5f71e5255afec75a3d0f96dc:GROUP_READ_ONLY --firstName Example --lastName User --country US --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if config.Service() != config.OpsManagerService {
 				_ = cmd.MarkFlagRequired(flag.Country)
@@ -269,11 +275,11 @@ func InviteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.firstName, flag.FirstName, "", usage.FirstName)
 	cmd.Flags().StringVar(&opts.lastName, flag.LastName, "", usage.LastName)
 	if config.BinName() == config.MongoCLI {
-		cmd.Flags().StringSliceVar(&opts.orgRoles, flag.OrgRole, []string{}, usage.MCLIOrgRole)
-		cmd.Flags().StringSliceVar(&opts.projectRoles, flag.ProjectRole, []string{}, usage.MCLIProjectRole)
+		cmd.Flags().StringSliceVar(&opts.orgRoles, flag.OrgRole, []string{}, usage.MCLIUserOrgRole)
+		cmd.Flags().StringSliceVar(&opts.projectRoles, flag.ProjectRole, []string{}, usage.MCLIUserProjectRole)
 	} else {
-		cmd.Flags().StringSliceVar(&opts.orgRoles, flag.OrgRole, []string{}, usage.OrgRole)
-		cmd.Flags().StringSliceVar(&opts.projectRoles, flag.ProjectRole, []string{}, usage.ProjectRole)
+		cmd.Flags().StringSliceVar(&opts.orgRoles, flag.OrgRole, []string{}, usage.UserOrgRole)
+		cmd.Flags().StringSliceVar(&opts.projectRoles, flag.ProjectRole, []string{}, usage.UserProjectRole)
 	}
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

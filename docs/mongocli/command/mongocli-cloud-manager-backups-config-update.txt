@@ -105,7 +105,7 @@ Options
    * - --username
      - string
      - false
-     - Username of the user.
+     - Username that identifies the user. This value must be a valid email address.
 
 Inherited Options
 -----------------

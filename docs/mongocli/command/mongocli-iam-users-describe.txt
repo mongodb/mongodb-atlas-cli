@@ -12,7 +12,9 @@ mongocli iam users describe
    :depth: 1
    :class: singlecol
 
-Get a user by username or id.
+Return the details for the specified MongoDB user.
+
+You can specify either the unique 24-digit ID that identifies the MongoDB user or the username for the MongoDB user.
 
 Syntax
 ------
@@ -41,7 +43,7 @@ Options
    * - --id
      - string
      - false
-     - Unique identifier of the user.
+     - Unique 24-digit identifier of the user.
    * - -o, --output
      - string
      - false
@@ -49,7 +51,7 @@ Options
    * - --username
      - string
      - false
-     - Username of the user.
+     - Username that identifies the user. This value must be a valid email address.
 
 Inherited Options
 -----------------
@@ -72,12 +74,11 @@ Examples
 
 .. code-block::
 
-   # Describe a user by ID
-   mongocli iam users describe --id <id>
-
+   # Return the JSON-formatted details for the MongoDB user with the ID 5dd56c847a3e5a1f363d424d:
+   mongocli users describe --id 5dd56c847a3e5a1f363d424d --output json
+   
    
 .. code-block::
 
-   # Describe a user by username
-   mongocli iam users describe --username <username>
-
+   # Return the JSON-formatted details for the MongoDB user with the username myUser:
+   mongocli users describe --username myUser --output json

@@ -16,6 +16,7 @@ package invitations
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -70,12 +71,14 @@ func InviteBuilder() *cobra.Command {
 	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:     "invite <email>",
-		Short:   "Invites one user to the organization that you specify.",
+		Short:   "Invite the specified MongoDB user to your organization.",
 		Aliases: []string{"create"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"emailDesc": "Email of the user being invited to the organization.",
+			"emailDesc": "Email address that belongs to the user that you want to invite to the organization.",
 		},
+		Example: fmt.Sprintf(`  # Invite the MongoDB user with the email user@example.com to the organization with the ID 5f71e5255afec75a3d0f96dc with ORG_OWNER access:
+  %s organizations invitations invite user@example.com --orgId 5f71e5255afec75a3d0f96dc --role ORG_OWNER --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

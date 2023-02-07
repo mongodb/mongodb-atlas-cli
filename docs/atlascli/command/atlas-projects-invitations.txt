@@ -51,11 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-projects-invitations-delete` - Deletes one pending invitation to the specified project.
-* :ref:`atlas-projects-invitations-describe` - Retrieve details for one pending invitation to the specified project.
-* :ref:`atlas-projects-invitations-invite` - Invites one user to the project that you specify.
-* :ref:`atlas-projects-invitations-list` - Retrieves all pending invitations to the specified project.
-* :ref:`atlas-projects-invitations-update` - Updates one pending invitation by invitationId or email to the project that you specify.
+* :ref:`atlas-projects-invitations-delete` - Remove the specified pending invitation to your project.
+* :ref:`atlas-projects-invitations-describe` - Return the details for the specified pending invitation to your project.
+* :ref:`atlas-projects-invitations-invite` - Invite the specified MongoDB user to your project.
+* :ref:`atlas-projects-invitations-list` - Return all pending invitations to your project.
+* :ref:`atlas-projects-invitations-update` - Modifies the details of the specified pending invitation to your project.
 
 
 .. toctree::

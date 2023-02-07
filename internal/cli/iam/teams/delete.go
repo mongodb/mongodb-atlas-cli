@@ -16,6 +16,7 @@ package teams
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -52,11 +53,13 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <teamId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a team from an organization.",
+		Short:   "Remove the specified team from your organization.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"teamIdDesc": "Team identifier.",
+			"teamIdDesc": "Unique 24-digit string that identifies the team.",
 		},
+		Example: fmt.Sprintf(`  # Remove the team with the ID 5e44445ef10fab20b49c0f31 from the organization with ID 5e2211c17a3e5a48f5497de3:
+  %s teams delete 5e44445ef10fab20b49c0f31 --orgId 5e1234c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]
 			return opts.PreRunE(

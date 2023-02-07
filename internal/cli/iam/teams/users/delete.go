@@ -16,6 +16,7 @@ package users
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -53,10 +54,12 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <userId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete user from a team.",
+		Short:   "Remove the specified user from a team for your organization.",
 		Args:    require.ExactArgs(1),
+		Example: fmt.Sprintf(`  # Remove the user with the ID 5dd58c647a3e5a6c5bce46c7 from the team with the ID 5f6a5c6c713184005d72fe6e for the organization with ID 5e2211c17a3e5a48f5497de3:
+  %s teams users delete 5dd58c647a3e5a6c5bce46c7 --teamId 5f6a5c6c713184005d72fe6e --orgId 5e1234c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
-			"userIdDesc": "User identifier.",
+			"userIdDesc": "Unique 24-digit string that identifies the user.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]

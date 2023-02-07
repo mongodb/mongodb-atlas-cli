@@ -51,9 +51,9 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-iam-teams-users-add` - Add a user to a team.
-* :ref:`mongocli-iam-teams-users-delete` - Delete user from a team.
-* :ref:`mongocli-iam-teams-users-list` - List users of a team.
+* :ref:`mongocli-iam-teams-users-add` - Add the specified MongoDB user to a team for your organization.
+* :ref:`mongocli-iam-teams-users-delete` - Remove the specified user from a team for your organization.
+* :ref:`mongocli-iam-teams-users-list` - Return all users for a team.
 
 
 .. toctree::

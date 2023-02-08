@@ -196,8 +196,9 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	// Initialize the text to be displayed if users are asked to select orgs or projects
 	opts.OnMultipleOrgsOrProjects = func() {
 		if !opts.AskedOrgsOrProjects {
-			_, _ = fmt.Fprintln(opts.OutWriter, "Now set your default organization and project.")
-			_, _ = fmt.Fprintf(opts.OutWriter, "\nYou have multiple organizations or projects, select one to proceed.\n")
+			_, _ = fmt.Fprintln(opts.OutWriter, `Now set your default organization and project.
+
+You have multiple organizations or projects, select one to proceed.`)
 		}
 	}
 
@@ -226,8 +227,10 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 			return ErrOrgIDNotFound
 		}
 
-		_, _ = fmt.Fprint(opts.OutWriter, "\nYour profile is now configured.\n")
-		_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.BinName())
+		_, _ = fmt.Fprintf(opts.OutWriter, `
+Your profile is now configured.
+You can use [%s config set] to change these settings at a later time.
+`, config.BinName())
 	}
 
 	return opts.config.Save()

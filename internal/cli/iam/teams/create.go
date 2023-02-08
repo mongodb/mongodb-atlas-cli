@@ -16,6 +16,7 @@ package teams
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -65,11 +66,13 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: "Create a team in an organization.",
+		Short: "Create a team for your organization.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"nameDesc": "Team name.",
+			"nameDesc": "Label that identifies the team.",
 		},
+		Example: fmt.Sprintf(`  # Create a team named myTeam in the organization with ID 5e2211c17a3e5a48f5497de3:
+  %s teams create myTeam --username user1@example.com,user2@example.com --orgId 5e1234c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

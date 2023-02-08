@@ -17,6 +17,7 @@ package teams
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -84,14 +85,13 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Aliases: []string{"get"},
-		Example: `  
-  # Describe a team by ID
-  mongocli iam team(s) describe --id teamId --orgId <orgId>
-
-  # Describe a team by Name
-  mongocli iam team(s) describe --name teamName --orgId <orgId>
-`,
-		Short: "Get a team in an organization.",
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the the team with the ID 5e44445ef10fab20b49c0f31 in the organization with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s teams describe --id 5e44445ef10fab20b49c0f31 --projectId 5e1234c17a3e5a48f5497de3 --output json
+  
+  # Return the JSON-formatted details for the the team with the name myTeam in the organization with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s teams describe --name myTeam --projectId 5e1234c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Short: "Return the details for the specified team for your organization.",
+		Long:  "You can return the details for a team using the team's ID or the team's name. You must specify either the id option or the name option.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

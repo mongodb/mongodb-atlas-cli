@@ -51,9 +51,9 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-teams-users-add` - Add a user to a team.
-* :ref:`atlas-teams-users-delete` - Delete user from a team.
-* :ref:`atlas-teams-users-list` - List users of a team.
+* :ref:`atlas-teams-users-add` - Add the specified MongoDB user to a team for your organization.
+* :ref:`atlas-teams-users-delete` - Remove the specified user from a team for your organization.
+* :ref:`atlas-teams-users-list` - Return all users for a team.
 
 
 .. toctree::

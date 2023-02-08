@@ -49,11 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-iam-globalApiKeys-create` - Create a Global API Key.
-* :ref:`mongocli-iam-globalApiKeys-delete` - Delete a Global API Key.
-* :ref:`mongocli-iam-globalApiKeys-describe` - Get a specific Global API Key.
-* :ref:`mongocli-iam-globalApiKeys-list` - List Global API Keys.
-* :ref:`mongocli-iam-globalApiKeys-update` - Update a Global API Key.
+* :ref:`mongocli-iam-globalApiKeys-create` - Create a global API key for your Ops Manager instance.
+* :ref:`mongocli-iam-globalApiKeys-delete` - Remove the specified global API key from your Ops Manager instance.
+* :ref:`mongocli-iam-globalApiKeys-describe` - Return the details for the specified global API key for your Ops Manager instance.
+* :ref:`mongocli-iam-globalApiKeys-list` - Return all global API keys for your Ops Manager instance.
+* :ref:`mongocli-iam-globalApiKeys-update` - Modify the roles and description for a global API key.
 
 
 .. toctree::

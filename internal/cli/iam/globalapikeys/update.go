@@ -68,10 +68,12 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <ID>",
 		Args:  require.ExactArgs(1),
-		Short: "Update a Global API Key.",
+		Short: "Modify the roles and description for a global API key.",
 		Annotations: map[string]string{
-			"IDDesc": "Access list identifier.",
+			"IDDesc": "Unique 24-digit string that identifies the global API key.",
 		},
+		Example: `  # Modify the roles and description for the global API key with the ID 5f5bad7a57aef32b04ed0210:
+  mongocli iam globalApiKeys update 5f5bad7a57aef32b04ed0210 --desc "My Sample Global API Key" --role GLOBAL_MONITORING_ADMIN --output json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

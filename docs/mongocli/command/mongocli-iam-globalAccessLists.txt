@@ -49,10 +49,10 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-iam-globalAccessLists-create` - Create an IP access list for Global API Key.
-* :ref:`mongocli-iam-globalAccessLists-delete` - Delete an IP access list from Global API Key.
-* :ref:`mongocli-iam-globalAccessLists-describe` - Return one Global IP access list entry.
-* :ref:`mongocli-iam-globalAccessLists-list` - List Atlas IP access list entries for Global API Key.
+* :ref:`mongocli-iam-globalAccessLists-create` - Create an IP access list entry for your global API key.
+* :ref:`mongocli-iam-globalAccessLists-delete` - Remove the specified IP access list entry for your global API key.
+* :ref:`mongocli-iam-globalAccessLists-describe` - Return the details for the specified access list entry for your global API key.
+* :ref:`mongocli-iam-globalAccessLists-list` - Return all IP access list entries for your global API key.
 
 
 .. toctree::

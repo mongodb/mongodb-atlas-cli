@@ -12,7 +12,7 @@ mongocli iam globalApiKeys create
    :depth: 1
    :class: singlecol
 
-Create a Global API Key.
+Create a global API key for your Ops Manager instance.
 
 Syntax
 ------
@@ -67,3 +67,10 @@ Inherited Options
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Create a global API key that grants GLOBAL_READ_ONLY and GLOBAL_USER_ADMIN access for your Ops Manager instance:
+   mongocli iam globalApiKeys create --desc "My Global API key" --role "GLOBAL_READ_ONLY","GLOBAL_USER_ADMIN" --output json

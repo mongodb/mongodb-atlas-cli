@@ -61,10 +61,12 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <ID>",
 		Aliases: []string{"show"},
 		Args:    require.ExactArgs(1),
-		Short:   "Return one Global IP access list entry.",
+		Short:   "Return the details for the specified access list entry for your global API key.",
 		Annotations: map[string]string{
-			"IDDesc": "Access list identifier.",
+			"IDDesc": "Unique 24-digit string that identifies the access list entry.",
 		},
+		Example: `  # Return the JSON-formatted details for the access list entry with the ID 5f5bad7a57aef32b04ed0210 from the access list for the global API key:
+  mongocli iam globalAccessLists describe 5f5bad7a57aef32b04ed0210 --output json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

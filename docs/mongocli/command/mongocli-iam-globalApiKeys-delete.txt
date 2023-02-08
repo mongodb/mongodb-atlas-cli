@@ -12,7 +12,7 @@ mongocli iam globalApiKeys delete
    :depth: 1
    :class: singlecol
 
-Delete a Global API Key.
+Remove the specified global API key from your Ops Manager instance.
 
 Syntax
 ------
@@ -37,7 +37,7 @@ Arguments
    * - ID
      - string
      - true
-     - Access list identifier.
+     - Unique 24-digit string that identifies the global API key.
 
 Options
 -------
@@ -75,3 +75,10 @@ Inherited Options
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Remove the global API key with the ID 5f5bad7a57aef32b04ed0210 from your Ops Manager instance:
+   mongocli iam globalApiKeys delete 5f5bad7a57aef32b04ed0210

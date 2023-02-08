@@ -147,10 +147,10 @@ dbName and collection are required only for built-in roles.`
 	NotificationToken                         = "Slack API token, Bot token, or Flowdock personal API token." //nolint:gosec // This is just a message not a password
 	NotificationsChannelName                  = "Slack channel name. Required for the SLACK notifications type."
 	AlertConfigAPIKey                         = "Datadog API Key, Opsgenie API Key, or VictorOps API key. Required if the notificationType is DATADOG, OPS_GENIE, or VICTOR_OPS, respectively." //nolint:gosec // This is just a message not a credential
-	APIKey                                    = "API Key."
-	DatadogAPIKey                             = "Datadog API key that allows Atlas to access your Datadog account."               //nolint:gosec // This is just a message not a credential
-	OpsgenieAPIKey                            = "Opsgenie API key that allows Atlas to access your Opsgenie account."             //nolint:gosec // This is just a message not a credential
-	VictorOpsAPIKey                           = "Splunk On-Call API key that allows Atlas to access your Splunk On-Call account." //nolint:gosec // This is just a message not a credential
+	APIKey                                    = "Unique 24-digit string that identifies your API key."                                                                                          //nolint:gosec // This is just a message not a credential
+	DatadogAPIKey                             = "Datadog API key that allows Atlas to access your Datadog account."                                                                             //nolint:gosec // This is just a message not a credential
+	OpsgenieAPIKey                            = "Opsgenie API key that allows Atlas to access your Opsgenie account."                                                                           //nolint:gosec // This is just a message not a credential
+	VictorOpsAPIKey                           = "Splunk On-Call API key that allows Atlas to access your Splunk On-Call account."                                                               //nolint:gosec // This is just a message not a credential
 	RoutingKey                                = "Routing key associated with your Splunk On-Call account."
 	IntegrationAPIToken                       = "Your API Token." //nolint:gosec // This is just a message not a credential
 	OrgName                                   = "Your Flowdock organization's name."
@@ -185,7 +185,9 @@ dbName and collection are required only for built-in roles.`
 	SSEEnabled                                = "Flag indicating whether this Amazon S3 blockstore enables server-side encryption."
 	PathStyleAccessEnabled                    = "Flag indicating the style of this endpoint."
 	APIKeyDescription                         = "Description of the API key."
-	APIKeyRoles                               = "List of roles for the API key." //nolint:gosec // This is just a message not a credential
+	APIKeyRoles                               = "Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are ORG_OWNER, ORG_MEMBER, ORG_GROUP_CREATOR, ORG_BILLING_ADMIN, and ORG_READ_ONLY."                                                                                         //nolint:gosec // This is just a message not a credential
+	ProjectAPIKeyRoles                        = "Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are GROUP_CLUSTER_MANAGER, GROUP_DATA_ACCESS_ADMIN, GROUP_DATA_ACCESS_READ_ONLY, GROUP_DATA_ACCESS_READ_WRITE, GROUP_SEARCH_INDEX_EDITOR, GROUP_OWNER, and GROUP_READ_ONLY." //nolint:gosec // This is just a message not a credential
+	GlobalAPIKeyRoles                         = "Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are GLOBAL_AUTOMATION_ADMIN, GLOBAL_BACKUP_ADMIN GLOBAL_MONITORING_ADMIN, GLOBAL_OWNER, GLOBAL_READ_ONLY,GLOBAL_USER_ADMIN."                                                 //nolint:gosec // This is just a message not a credential
 	NotificationRegion                        = "Region that indicates which API URL to use."
 	NotificationDelayMin                      = "Number of minutes to wait after an alert condition is detected before sending out the first notification."
 	NotificationEmailAddress                  = "Email address to which alert notifications are sent."
@@ -250,9 +252,9 @@ dbName and collection are required only for built-in roles.`
 	PartitionFields                           = "Fields to use to partition data. You can specify up to two frequently queried fields, separated by a comma, in the following format: <fieldname>:<datatype>. The data type must match the data type of the field in the document."
 	ArchiveAfter                              = "Number of days after which to archive cluster data."
 	TargetProjectID                           = "Unique identifier of the project that contains the destination cluster for the restore job. You must specify a targetProjectId for automated restores."
-	APIAccessListIPEntry                      = "IP address to be allowed for a given API key."
+	APIAccessListIPEntry                      = "IP address that you want to add to the access list for your API key. To add more than one IP address, you can specify each address with a separate ip flag or specify the all addresses as a comma-separated list using one ip flag. You can't set both ip and cidr in the same command."
 	NetworkAccessListIPEntry                  = "IP address to be allowed to access the deployment."
-	AccessListCIDREntry                       = "Access list entry in CIDR notation to be added for a given API key."
+	AccessListCIDREntry                       = "Access list entry in CIDR notation to be added for your API key. To add more than one entry, you can specify each entry with a separate cidr flag or specify all the entries as a comma-separated list using one cidr flag. You can't set both cidr and ip in the same command."
 	LinkTokenAccessListCIDREntries            = "IP address access list entries that are associated with the link-token." //nolint:gosec // This is just a message not a credential
 	LinkToken                                 = "Link-token generated by Atlas."                                          //nolint:gosec // This is just a message not a credential
 	LiveMigrationID                           = "Unique 24-hexadecimal digit string that identifies the live migration job."

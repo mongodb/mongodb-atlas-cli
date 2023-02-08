@@ -16,6 +16,7 @@ package apikeys
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -66,10 +67,15 @@ func AssignBuilder() *cobra.Command {
 		Use:     "assign <ID>",
 		Aliases: []string{"update"},
 		Args:    require.ExactArgs(1),
-		Short:   "Assign an API Key to a project.",
+		Short:   "Assign the specified organization API key to your project and modify the API key's roles for the project.",
+		Long: fmt.Sprintf(`When you modify the roles for an organization API key with this command, the values you specify overwrite the existing roles assigned to the API key.
+		
+To view possible values for the ID argument, run %s organizations apiKeys list.`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
-			"IDDesc": "API key identifier.",
+			"IDDesc": "Unique 24-digit string that identifies your API key.",
 		},
+		Example: fmt.Sprintf(`  # Assign an organization API key with the ID 5f46ae53d58b421fe3edc115 and grant the GROUP_DATA_ACCESS_READ_WRITE role for the project with ID 5e2211c17a3e5a48f5497de3:
+  %s projects apiKeys assign 5f46ae53d58b421fe3edc115 --projectId 5e1234c17a3e5a48f5497de3 --role GROUP_DATA_ACCESS_READ_WRITE --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.PreRunE(
@@ -84,7 +90,7 @@ func AssignBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.ProjectAPIKeyRoles)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

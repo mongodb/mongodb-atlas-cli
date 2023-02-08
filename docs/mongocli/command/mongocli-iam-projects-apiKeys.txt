@@ -49,10 +49,10 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-iam-projects-apiKeys-assign` - Assign an API Key to a project.
-* :ref:`mongocli-iam-projects-apiKeys-create` - Create an API Key for your project.
-* :ref:`mongocli-iam-projects-apiKeys-delete` - Delete an API Key for your project.
-* :ref:`mongocli-iam-projects-apiKeys-list` - List API Keys for your project.
+* :ref:`mongocli-iam-projects-apiKeys-assign` - Assign the specified organization API key to your project and modify the API key's roles for the project.
+* :ref:`mongocli-iam-projects-apiKeys-create` - Create an organization API key and assign it to your project.
+* :ref:`mongocli-iam-projects-apiKeys-delete` - Remove the specified organization API key from your project.
+* :ref:`mongocli-iam-projects-apiKeys-list` - Return all organization API keys assigned to your project.
 
 
 .. toctree::

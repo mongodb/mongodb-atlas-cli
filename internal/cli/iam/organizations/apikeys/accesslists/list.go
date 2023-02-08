@@ -16,6 +16,7 @@ package accesslists
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -61,10 +62,13 @@ func ListBuilder() *cobra.Command {
 		Use:     "list <apiKeyID>",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
-		Short:   "List IP access list entries for your API Key.",
+		Short:   "Return all IP access list entries for your API Key.",
+		Long:    fmt.Sprintf(`To view possible values for the apiKeyID argument, run %s organizations apiKeys list.`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
-			"apiKeyIDDesc": "API key identifier.",
+			"apiKeyIDDesc": "Unique 24-digit string that identifies your API key.",
 		},
+		Example: fmt.Sprintf(`  # Return a JSON-formatted list of access list entries for the API key with the ID 5f24084d8dbffa3ad3f21234 in the organization with the ID 5a1b39eec902201990f12345:
+  %s organizations apiKeys accessLists list --apiKey 5f24084d8dbffa3ad3f21234 --orgId 5a1b39eec902201990f12345 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

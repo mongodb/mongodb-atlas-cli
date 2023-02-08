@@ -50,11 +50,11 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-iam-organizations-apiKeys-accessLists` - Manage the IP access list for your API Key.
-* :ref:`mongocli-iam-organizations-apiKeys-assign` - Update an Organization API Key.
-* :ref:`mongocli-iam-organizations-apiKeys-create` - Create an Organization API Key.
-* :ref:`mongocli-iam-organizations-apiKeys-delete` - Delete an Organization API Key.
-* :ref:`mongocli-iam-organizations-apiKeys-describe` - Get a specific Organization API Key.
-* :ref:`mongocli-iam-organizations-apiKeys-list` - List API Keys for your organization.
+* :ref:`mongocli-iam-organizations-apiKeys-assign` - Modify the roles or description for the specified organization API key.
+* :ref:`mongocli-iam-organizations-apiKeys-create` - Create an API Key for your organization.
+* :ref:`mongocli-iam-organizations-apiKeys-delete` - Remove the specified API key for your organization.
+* :ref:`mongocli-iam-organizations-apiKeys-describe` - Return the details for the specified API key for your organization.
+* :ref:`mongocli-iam-organizations-apiKeys-list` - Return all API keys for your organization.
 
 
 .. toctree::

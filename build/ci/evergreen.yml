@@ -504,8 +504,8 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters,m0
-  - name: atlas_clusters_e2e_kubernetes
-    tags: ["e2e","clusters","atlas","kubernetes"]
+  - name: atlas_kubernetes_e2e
+    tags: ["e2e","clusters","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernates_atlas"]
     must_have_test_results: true
     depends_on:
       - name: compile

@@ -16,6 +16,7 @@ package projects
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -51,11 +52,13 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a project.",
+		Short:   "Remove the specified project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"IDDesc": "Project identifier.",
+			"IDDesc": "Unique 24-digit string that identifies the project.",
 		},
+		Example: fmt.Sprintf(`  # Remove the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s projects delete 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.initStore(cmd.Context())(); err != nil {
 				return err

@@ -52,11 +52,11 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-iam-projects-apiKeys` - Manage API Keys for your project.
-* :ref:`mongocli-iam-projects-create` - Create a project.
-* :ref:`mongocli-iam-projects-delete` - Delete a project.
-* :ref:`mongocli-iam-projects-describe` - Describe a project.
+* :ref:`mongocli-iam-projects-create` - Create a project in your organization.
+* :ref:`mongocli-iam-projects-delete` - Remove the specified project.
+* :ref:`mongocli-iam-projects-describe` - Return the details for the specified project.
 * :ref:`mongocli-iam-projects-invitations` - Invitation operations.
-* :ref:`mongocli-iam-projects-list` - List projects.
+* :ref:`mongocli-iam-projects-list` - Return all projects.
 * :ref:`mongocli-iam-projects-teams` - Manage your Ops Manager or Cloud Manager teams.
 * :ref:`mongocli-iam-projects-users` - Manage users for a project.
 

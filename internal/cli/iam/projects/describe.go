@@ -16,6 +16,7 @@ package projects
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -61,10 +62,12 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <ID>",
 		Aliases: []string{"show", "get"},
 		Args:    require.ExactArgs(1),
-		Short:   "Describe a project.",
+		Short:   "Return the details for the specified project.",
 		Annotations: map[string]string{
-			"IDDesc": "Project identifier.",
+			"IDDesc": "Unique 24-digit string that identifies the project.",
 		},
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s projects describe 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

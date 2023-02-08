@@ -52,11 +52,11 @@ Related Commands
 ----------------
 
 * :ref:`atlas-projects-apiKeys` - Manage API Keys for your project.
-* :ref:`atlas-projects-create` - Create a project.
-* :ref:`atlas-projects-delete` - Delete a project.
-* :ref:`atlas-projects-describe` - Describe a project.
+* :ref:`atlas-projects-create` - Create a project in your organization.
+* :ref:`atlas-projects-delete` - Remove the specified project.
+* :ref:`atlas-projects-describe` - Return the details for the specified project.
 * :ref:`atlas-projects-invitations` - Invitation operations.
-* :ref:`atlas-projects-list` - List projects.
+* :ref:`atlas-projects-list` - Return all projects.
 * :ref:`atlas-projects-settings` - Settings operations.
 * :ref:`atlas-projects-teams` - Manage your Atlas teams.
 * :ref:`atlas-projects-users` - Manage users for a project.

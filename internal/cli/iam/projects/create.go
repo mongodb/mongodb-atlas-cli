@@ -144,11 +144,14 @@ func CreateBuilder() *cobra.Command {
 	opts.Template = atlasCreateTemplate
 	cmd := &cobra.Command{
 		Use:   "create <projectName>",
-		Short: "Create a project.",
+		Short: "Create a project in your organization.",
+		Long:  "Projects group clusters into logical collections that support an application environment, workload, or both. Each project can have its own users, teams, security, and alert settings.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"projectNameDesc": "Name of the project.",
+			"projectNameDesc": "Label that identifies the project.",
 		},
+		Example: fmt.Sprintf(`  # Create a project in the organization with the ID 5e2211c17a3e5a48f5497de3 using default alert settings:
+  %s projects create --orgId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			if !config.IsCloud() {

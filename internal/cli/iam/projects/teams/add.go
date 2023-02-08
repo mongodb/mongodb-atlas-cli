@@ -16,6 +16,7 @@ package teams
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -69,10 +70,13 @@ func AddBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add <teamId>",
 		Args:  require.ExactArgs(1),
-		Short: "Add team to a project.",
+		Short: "Add the specified team to your project.",
+		Long:  "All members of the team share the same project access.",
 		Annotations: map[string]string{
-			"teamIdDesc": "Team identifier.",
+			"teamIdDesc": "Unique 24-digit string that identifies the team.",
 		},
+		Example: fmt.Sprintf(`  # Add the team with the ID 5dd58c647a3e5a6c5bce46c7 to the project with the ID 5e2211c17a3e5a48f5497de3 with GROUP_READ_ONLY project access:
+  %s projects teams add 5dd58c647a3e5a6c5bce46c7 --projectId 5e2211c17a3e5a48f5497de3 --role GROUP_READ_ONLY`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.teamID = args[0]
 			return opts.PreRunE(

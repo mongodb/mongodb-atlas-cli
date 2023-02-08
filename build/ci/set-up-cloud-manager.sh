@@ -19,7 +19,7 @@ set -euo pipefail
 export MCLI_SERVICE="${cloud_manager_service:?}"
 
 mkdir "${XDG_CONFIG_HOME}/mongocli"
-cat <<EOF > "${XDG_CONFIG_HOME}/mongocli/config.toml"
+cat <<EOF >"${XDG_CONFIG_HOME}/mongocli/config.toml"
 skip_update_check = true
 [default]
   service = "${MCLI_SERVICE}"
@@ -30,10 +30,9 @@ skip_update_check = true
 
 EOF
 
-
 echo "create project"
 
-cat <<EOF > project.tmpl
+cat <<EOF >project.tmpl
 #!/bin/bash
 
 set -euo pipefail
@@ -45,7 +44,7 @@ EOF
 
 # shellcheck disable=SC2154
 GROUP_NAME="cloudManager-e2e-$((1 + RANDOM % 1000))-$revision"
-mongocli iam projects create "$GROUP_NAME" -o="go-template-file=project.tmpl" > project.sh
+mongocli iam projects create "$GROUP_NAME" -o="go-template-file=project.tmpl" >project.sh
 
 chmod +x project.sh
 
@@ -54,7 +53,7 @@ source project.sh
 
 mongocli config set project_id "$MCLI_PROJECT_ID"
 
-cat <<EOF > automation_agent_settings.sh
+cat <<EOF >automation_agent_settings.sh
 export BASE_URL=${MCLI_OPS_MANAGER_URL}
 export LC_AGENT_KEY=${AGENT_API_KEY}
 export LC_GROUP_ID=${MCLI_PROJECT_ID}

@@ -17,10 +17,10 @@
 set -Eeou pipefail
 
 docker build \
-  --build-arg server_version="${server_version-}" \
-  --build-arg package="${package-}" \
-  --build-arg entrypoint="${entrypoint-}" \
-  --build-arg mongo_package="${mongo_package-}" \
-  --build-arg mongo_repo="${mongo_repo-}" \
-  -t "${entrypoint-}-${image-}" \
-  -f "${image-}.Dockerfile" .
+	--build-arg server_version="${server_version-}" \
+	--build-arg package="${package-}" \
+	--build-arg entrypoint="${entrypoint-}" \
+	--build-arg mongo_package="${mongo_package-}" \
+	--build-arg mongo_repo="${mongo_repo-}" \
+	-t "${entrypoint-}-${image-}" \
+	-f "${image-}.Dockerfile" .

@@ -19,7 +19,7 @@ VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut 
 
 PACKAGE_NAME=mongocli_"${VERSION}"_windows_x86_64.msi
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-  PACKAGE_NAME=mongodb-atlas-cli_${VERSION}_windows_x86_64.msi
+	PACKAGE_NAME=mongodb-atlas-cli_${VERSION}_windows_x86_64.msi
 fi
 
 pushd bin

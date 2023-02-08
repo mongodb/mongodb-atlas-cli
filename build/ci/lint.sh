@@ -22,4 +22,4 @@ mkdir golangci-lint-cache
 GOLANGCI_LINT_CACHE="$(pwd)/golangci-lint-cache"
 export GOLANGCI_LINT_CACHE
 
-golangci-lint run --out-format junit-xml > lint-tests.xml
+golangci-lint run --out-format junit-xml >lint-tests.xml

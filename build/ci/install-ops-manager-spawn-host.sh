@@ -14,23 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 set -euo pipefail
 
 _print_usage() {
-    echo
-    echo '  -i <keyfile>                SSH identity file'
-    echo '  -u <user>                   Username on the remote host'
-    echo '  -h <hostsFile>              Output of Evergreen host.list'
+	echo
+	echo '  -i <keyfile>                SSH identity file'
+	echo '  -u <user>                   Username on the remote host'
+	echo '  -h <hostsFile>              Output of Evergreen host.list'
 }
 
 while getopts 'i:h:g:u:a:b:' opt; do
-  case ${opt} in
-  i) keyfile="${OPTARG}" ;; # SSH identity file
-  u) user="${OPTARG}" ;; # Username on the remote host
-  h) hostsFile="${OPTARG}" ;; # Output of Evergreen host.list
-  *) echo "invalid option for install-ops-manager-spawn-host $1" ; _print_usage "$@" ; exit 1 ;;
-  esac
+	case ${opt} in
+	i) keyfile="${OPTARG}" ;;   # SSH identity file
+	u) user="${OPTARG}" ;;      # Username on the remote host
+	h) hostsFile="${OPTARG}" ;; # Output of Evergreen host.list
+	*)
+		echo "invalid option for install-ops-manager-spawn-host $1"
+		_print_usage "$@"
+		exit 1
+		;;
+	esac
 done
 
 # Install ego
@@ -40,7 +43,7 @@ export EGO_DEBUG=1
 export SSH_OPTS="-i ${keyfile} -o SendEnv=LC_GROUP_ID -o SendEnv=LC_AGENT_KEY"
 
 hosts=$(
-  cat <<EOF | python - "${hostsFile}"
+	cat <<EOF | python - "${hostsFile}"
 import sys
 import json
 with open(sys.argv[1]) as hostsfile:
@@ -51,7 +54,7 @@ EOF
 )
 
 for host in ${hosts}; do
-ssh -i "$keyfile" -o ConnectTimeout=10  -o StrictHostKeyChecking=no -tt "${user}@${host}" ARCHIVE="${ARCHIVE:?}" 'bash -s' <<'ENDSSH'
+	ssh -i "$keyfile" -o ConnectTimeout=10 -o StrictHostKeyChecking=no -tt "${user}@${host}" ARCHIVE="${ARCHIVE:?}" 'bash -s' <<'ENDSSH'
   # commands to run on remote host
 
   #install ego

@@ -31,8 +31,8 @@ echo "${PYKMIP_HOME}/venv created"
 pip install pykmip
 echo "PyKMIP package installed"
 
-echo "${KMIP_CA}" | base64 --decode > "${PYKMIP_HOME}/tls-rootCA.pem"
-echo "${KMIP_CERT}" | base64 --decode > "${PYKMIP_HOME}/tls-localhost.pem"
+echo "${KMIP_CA}" | base64 --decode >"${PYKMIP_HOME}/tls-rootCA.pem"
+echo "${KMIP_CERT}" | base64 --decode >"${PYKMIP_HOME}/tls-localhost.pem"
 echo "CA and server cert copied to ${PYKMIP_HOME}"
 
 mv kmip.db "${PYKMIP_HOME}/kmip.db"
@@ -41,7 +41,7 @@ echo "KMIP db moved to ${PYKMIP_HOME}/kmip.db"
 mv start.py "${PYKMIP_HOME}/start.py"
 echo "start KMIP script moved to ${PYKMIP_HOME}/start.py"
 
-cat << EOF > "${PYKMIP_HOME}/pykmip.service"
+cat <<EOF >"${PYKMIP_HOME}/pykmip.service"
 [Unit]
 Description=PyKMIP service
 

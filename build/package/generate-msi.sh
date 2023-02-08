@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 set -Eeou pipefail
 
 GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")"
@@ -23,7 +22,6 @@ export CGO_ENABLED
 export NOTARY_SIGNING_KEY
 
 go-msi check-env
-
 
 VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
@@ -37,22 +35,22 @@ WIX_MANIFEST_FILE="./build/package/wix/${TOOL_NAME:?}.json"
 NOTARY_SIGNING_KEY=${NOTARY_SIGNING_KEY_MONGOCLI:?}
 
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-  NOTARY_SIGNING_KEY=${NOTARY_SIGNING_KEY_ATLASCLI:?}
-  SOURCE_FILES=./cmd/atlas
-  PACKAGE_NAME=mongodb-atlas-cli_${VERSION}_windows_x86_64.msi
-  OUTPUT=./bin/atlas.exe
+	NOTARY_SIGNING_KEY=${NOTARY_SIGNING_KEY_ATLASCLI:?}
+	SOURCE_FILES=./cmd/atlas
+	PACKAGE_NAME=mongodb-atlas-cli_${VERSION}_windows_x86_64.msi
+	OUTPUT=./bin/atlas.exe
 fi
 
 env GOOS=windows GOARCH=amd64 go build \
-  -ldflags "${LINKER_FLAGS}" -o ${OUTPUT} "${SOURCE_FILES}"
+	-ldflags "${LINKER_FLAGS}" -o ${OUTPUT} "${SOURCE_FILES}"
 
-go-msi make --path "${WIX_MANIFEST_FILE}"  --msi "dist/${PACKAGE_NAME}" --version "${VERSION}"
+go-msi make --path "${WIX_MANIFEST_FILE}" --msi "dist/${PACKAGE_NAME}" --version "${VERSION}"
 
 go run ./tools/sign -file "dist/${PACKAGE_NAME}"
 
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-  go run ./tools/chocolateypkg/main.go --srcPath "build/package/chocolatey" --version "${VERSION}" --url https://fastdl.mongodb.org/mongocli/"${PACKAGE_NAME}"
-  if [[ "${RELEASING:?}" == true ]]; then
-      go run ./tools/chocolateyupdate/main.go --path "build/package/chocolatey/temp/mongodb-atlas.${VERSION}.nupkg"
-  fi
+	go run ./tools/chocolateypkg/main.go --srcPath "build/package/chocolatey" --version "${VERSION}" --url https://fastdl.mongodb.org/mongocli/"${PACKAGE_NAME}"
+	if [[ "${RELEASING:?}" == true ]]; then
+		go run ./tools/chocolateyupdate/main.go --path "build/package/chocolatey/temp/mongodb-atlas.${VERSION}.nupkg"
+	fi
 fi

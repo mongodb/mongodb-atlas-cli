@@ -20,19 +20,18 @@ VERSION="$(git tag --list "${tool_name:?}/v*" --sort=taggerdate | tail -1 | cut 
 
 FILE_EXT=deb
 if [[ "${image-}" =~ "rpm" ]]; then
-  FILE_EXT=rpm
+	FILE_EXT=rpm
 fi
-
 
 URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision-}_${created_at-}/mongocli_${VERSION}-next_linux_x86_64.${FILE_EXT}
 ENTRYPOINT=mongocli
 if [[ "${tool_name:?}" == atlascli ]]; then
-  URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision-}_${created_at-}/mongodb-atlas-cli_${VERSION}-next_linux_x86_64.${FILE_EXT}
-  ENTRYPOINT=atlas
+	URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision-}_${created_at-}/mongodb-atlas-cli_${VERSION}-next_linux_x86_64.${FILE_EXT}
+	ENTRYPOINT=atlas
 fi
 
 docker build \
-  --build-arg url="${URL-}" \
-  --build-arg entrypoint="${ENTRYPOINT-}" \
-  -t "${tool_name-}-${image-}" \
-  -f "${image-}.Dockerfile" .
+	--build-arg url="${URL-}" \
+	--build-arg entrypoint="${ENTRYPOINT-}" \
+	-t "${tool_name-}-${image-}" \
+	-f "${image-}.Dockerfile" .

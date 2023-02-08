@@ -18,7 +18,7 @@ set -Eeou pipefail
 
 FILE="dist/windows_windows_amd64_v1/bin/mongocli.exe"
 if [[ -f "$FILE" ]]; then
-  echo "notarizing windows binaries"
-  export NOTARY_SIGNING_KEY=$NOTARY_SIGNING_KEY_MONGOCLI
-  go run ./tools/sign -file "$FILE"
+	echo "notarizing windows binaries"
+	export NOTARY_SIGNING_KEY=$NOTARY_SIGNING_KEY_MONGOCLI
+	go run ./tools/sign -file "$FILE"
 fi

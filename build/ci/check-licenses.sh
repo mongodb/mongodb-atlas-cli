@@ -14,19 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 set -Eeou pipefail
 
 find_files() {
-  find . -not \( \
-    \( \
-      -wholename '*mock*' \
-      -o -wholename '*third_party*' \
-    \) -prune \
-  \) \
-  \( -name '*.go' -o -name '*.sh' \)
+	find . -not \( \
+		\( \
+		-wholename '*mock*' \
+		-o -wholename '*third_party*' \
+		\) -prune \
+		\) \
+		\( -name '*.go' -o -name '*.sh' \)
 }
 
 for FILE in $(find_files); do
-    addlicense -c "MongoDB Inc" -check "${FILE}"
+	addlicense -c "MongoDB Inc" -check "${FILE}"
 done

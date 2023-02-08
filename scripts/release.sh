@@ -14,25 +14,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 set -euo pipefail
 
 VERSION="${1-}"
 
 if [[ -z "${VERSION}" ]]; then
-    echo "Please provide a tag version in the format 'mongocli/vX.Y.Z' or 'atlascli/vX.Y.Z'"
-    exit 1
+	echo "Please provide a tag version in the format 'mongocli/vX.Y.Z' or 'atlascli/vX.Y.Z'"
+	exit 1
 fi
 
 if [[ "${VERSION}" != mongocli/v* ]] && [[ "${VERSION}" != atlascli/v* ]]; then
-    echo "Please provide a tag version in the format 'mongocli/vX.Y.Z' or 'atlascli/vX.Y.Z'"
-    exit 1
+	echo "Please provide a tag version in the format 'mongocli/vX.Y.Z' or 'atlascli/vX.Y.Z'"
+	exit 1
 fi
 
 read -p "Are you sure to release ${VERSION}? " -n 1 -r
-echo    # (optional) move to a new line
+echo # (optional) move to a new line
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    exit 1
+	exit 1
 fi
 
 git tag -a -s "${VERSION}" -m "${VERSION}"

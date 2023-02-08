@@ -17,23 +17,23 @@
 set -Eeou pipefail
 
 if [[ "${tool_name:?}" != atlascli ]]; then
-  echo "invalid tool '${tool_name:?}' expected 'atlascli'"
-  exit 1
+	echo "invalid tool '${tool_name:?}' expected 'atlascli'"
+	exit 1
 fi
 
 VERSION="$(git tag --list "${tool_name:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
 FILE_EXT=deb
 if [[ "${image-}" =~ "rpm" ]]; then
-  FILE_EXT=rpm
+	FILE_EXT=rpm
 fi
 
 URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision-}_${created_at-}/mongodb-atlas_${VERSION}-next_linux_x86_64.${FILE_EXT}
 ENTRYPOINT=atlas
 
 docker build \
-  --build-arg url="${URL-}" \
-  --build-arg entrypoint="${ENTRYPOINT-}" \
-  --build-arg server_version="5.0" \
-  -t "${tool_name-}-${image-}" \
-  -f "${image-}.Dockerfile" .
+	--build-arg url="${URL-}" \
+	--build-arg entrypoint="${ENTRYPOINT-}" \
+	--build-arg server_version="5.0" \
+	-t "${tool_name-}-${image-}" \
+	-f "${image-}.Dockerfile" .

@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (atlas && generic)
 
 package atlas_test
@@ -22,9 +23,9 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/go-test/deep"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -32,9 +33,8 @@ func TestAlertConfig(t *testing.T) {
 	var alertID string
 
 	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
+
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
@@ -119,8 +119,7 @@ func TestAlertConfig(t *testing.T) {
 		cmd := exec.Command(cliPath, alertsEntity, configEntity, "delete", alertID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("List Matcher Fields", func(t *testing.T) {
@@ -132,10 +131,7 @@ func TestAlertConfig(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err)
 
 		var fields []string
 		if err := json.Unmarshal(resp, &fields); err != nil {
@@ -152,8 +148,6 @@ func TestAlertConfig(t *testing.T) {
 			"CLUSTER_NAME",
 			"APPLICATION_ID",
 		}
-		if diff := deep.Equal(fields, expected); diff != nil {
-			t.Error(diff)
-		}
+		assert.ElementsMatch(t, fields, expected)
 	})
 }

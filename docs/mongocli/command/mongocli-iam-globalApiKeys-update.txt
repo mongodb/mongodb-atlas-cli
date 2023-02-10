@@ -12,7 +12,7 @@ mongocli iam globalApiKeys update
    :depth: 1
    :class: singlecol
 
-Update a Global API Key.
+Modify the roles and description for a global API key.
 
 Syntax
 ------
@@ -37,7 +37,7 @@ Arguments
    * - ID
      - string
      - true
-     - Access list identifier.
+     - Unique 24-digit string that identifies the global API key.
 
 Options
 -------
@@ -83,3 +83,10 @@ Inherited Options
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Modify the roles and description for the global API key with the ID 5f5bad7a57aef32b04ed0210:
+   mongocli iam globalApiKeys update 5f5bad7a57aef32b04ed0210 --desc "My Sample Global API Key" --role GLOBAL_MONITORING_ADMIN --output json

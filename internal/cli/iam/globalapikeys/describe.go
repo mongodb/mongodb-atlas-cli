@@ -59,12 +59,14 @@ func DescribeBuilder() *cobra.Command {
 	opts.Template = describeTemplate
 	cmd := &cobra.Command{
 		Use:     "describe <ID>",
-		Short:   "Get a specific Global API Key.",
+		Short:   "Return the details for the specified global API key for your Ops Manager instance.",
 		Aliases: []string{"show"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"IDDesc": "Access list identifier.",
+			"IDDesc": "Unique 24-digit string that identifies the global API key.",
 		},
+		Example: `  # Return the JSON-formatted details for the global API key with the ID 5f5bad7a57aef32b04ed0210:
+  mongocli iam globalApiKeys describe 5f5bad7a57aef32b04ed0210 --output json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

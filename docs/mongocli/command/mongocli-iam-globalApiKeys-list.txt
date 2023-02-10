@@ -12,7 +12,7 @@ mongocli iam globalApiKeys list
    :depth: 1
    :class: singlecol
 
-List Global API Keys.
+Return all global API keys for your Ops Manager instance.
 
 Syntax
 ------
@@ -67,3 +67,10 @@ Inherited Options
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return a JSON-formatted list of global API keys:
+   mongocli iam globalApiKeys list --output json

@@ -52,11 +52,13 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a Global API Key.",
+		Short:   "Remove the specified global API key from your Ops Manager instance.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"IDDesc": "Access list identifier.",
+			"IDDesc": "Unique 24-digit string that identifies the global API key.",
 		},
+		Example: `  # Remove the global API key with the ID 5f5bad7a57aef32b04ed0210 from your Ops Manager instance:
+  mongocli iam globalApiKeys delete 5f5bad7a57aef32b04ed0210`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.initStore(cmd.Context())(); err != nil {
 				return err

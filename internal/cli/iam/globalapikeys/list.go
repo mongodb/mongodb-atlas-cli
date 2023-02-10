@@ -61,8 +61,10 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "List Global API Keys.",
-		Args:    require.NoArgs,
+		Short:   "Return all global API keys for your Ops Manager instance.",
+		Example: `  # Return a JSON-formatted list of global API keys:
+  mongocli iam globalApiKeys list --output json`,
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

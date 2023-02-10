@@ -12,7 +12,7 @@ mongocli iam globalApiKeys describe
    :depth: 1
    :class: singlecol
 
-Get a specific Global API Key.
+Return the details for the specified global API key for your Ops Manager instance.
 
 Syntax
 ------
@@ -37,7 +37,7 @@ Arguments
    * - ID
      - string
      - true
-     - Access list identifier.
+     - Unique 24-digit string that identifies the global API key.
 
 Options
 -------
@@ -75,3 +75,10 @@ Inherited Options
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return the JSON-formatted details for the global API key with the ID 5f5bad7a57aef32b04ed0210:
+   mongocli iam globalApiKeys describe 5f5bad7a57aef32b04ed0210 --output json

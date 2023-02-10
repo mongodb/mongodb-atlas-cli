@@ -69,7 +69,9 @@ func CreateBuilder() *cobra.Command {
 	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create a Global API Key.",
+		Short: "Create a global API key for your Ops Manager instance.",
+		Example: `  # Create a global API key that grants GLOBAL_READ_ONLY and GLOBAL_USER_ADMIN access for your Ops Manager instance:
+  mongocli iam globalApiKeys create --desc "My Global API key" --role "GLOBAL_READ_ONLY","GLOBAL_USER_ADMIN" --output json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

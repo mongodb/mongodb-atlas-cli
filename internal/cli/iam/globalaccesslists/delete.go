@@ -52,11 +52,13 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
-		Short:   "Delete an IP access list from Global API Key.",
+		Short:   "Remove the specified IP access list entry for your global API key.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"IDDesc": "Access list identifier.",
+			"IDDesc": "Unique 24-digit string that identifies the access list entry.",
 		},
+		Example: `  # Remove the IP access list entry with the ID 5f5bad7a57aef32b04ed0210 from the access list for the global API key:
+  mongocli iam globalAccessLists delete 5f5bad7a57aef32b04ed0210`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.initStore(cmd.Context())(); err != nil {
 				return err

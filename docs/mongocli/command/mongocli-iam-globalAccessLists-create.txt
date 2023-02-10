@@ -12,7 +12,7 @@ mongocli iam globalAccessLists create
    :depth: 1
    :class: singlecol
 
-Create an IP access list for Global API Key.
+Create an IP access list entry for your global API key.
 
 Syntax
 ------
@@ -67,3 +67,10 @@ Inherited Options
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Create an access list entry for your global API key to allow access from 192.0.2.0/24:
+   mongocli iam globalAccessLists create --cidr 192.0.2.0/24 --desc "My Global IP" --output json

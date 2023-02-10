@@ -68,7 +68,9 @@ func CreateBuilder() *cobra.Command {
 	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create an IP access list for Global API Key.",
+		Short: "Create an IP access list entry for your global API key.",
+		Example: `  # Create an access list entry for your global API key to allow access from 192.0.2.0/24:
+  mongocli iam globalAccessLists create --cidr 192.0.2.0/24 --desc "My Global IP" --output json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

@@ -41,12 +41,9 @@ Examples
 
 .. code-block::
 
-   #
-   
-.. code-block::
-
-   # Display the help menu for the config command
+   # Display the help menu for the config command:
    mongocli config --help
+
 Related Commands
 ----------------
 

@@ -32,6 +32,7 @@ import (
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -113,7 +114,9 @@ func Test_buildUserSecret(t *testing.T) {
 				secrets.PasswordField: []byte(""),
 			},
 		}
-		if got := buildUserSecret(projectName, atlasUser, "TestNamespace", dictionary); !reflect.DeepEqual(got, expectedSecret) {
+
+		got := buildUserSecret(resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, atlasUser.Username), dictionary), "TestNamespace", dictionary)
+		if !reflect.DeepEqual(got, expectedSecret) {
 			t.Errorf("buildUserSecret(); \r\n got:%v;s\r\n want:%v", got, expectedSecret)
 		}
 	})
@@ -123,6 +126,11 @@ func TestBuildDBUsers(t *testing.T) {
 	ctl := gomock.NewController(t)
 	mockUserStore := mocks.NewMockDatabaseUserLister(ctl)
 	dictionary := resources.AtlasNameToKubernetesName()
+
+	projectID := "0"
+	projectName := "projectName-1"
+	targetNamespace := "TestNamespace-1"
+
 	t.Run("Can build AtlasDatabaseUser from AtlasUser WITHOUT credentials", func(t *testing.T) {
 		user := mongodbatlas.DatabaseUser{
 			DatabaseName:    "TestDB",
@@ -154,12 +162,7 @@ func TestBuildDBUsers(t *testing.T) {
 			Username: "TestUsername",
 		}
 
-		projectID := "0"
-		projectName := "projectName-1"
-		targetNamespace := "TestNamespace-1"
-
 		listOptions := &mongodbatlas.ListOptions{}
-
 		mockUserStore.EXPECT().DatabaseUsers(projectID, listOptions).Return([]mongodbatlas.DatabaseUser{
 			user,
 		}, nil)
@@ -241,5 +244,80 @@ func TestBuildDBUsers(t *testing.T) {
 		if !reflect.DeepEqual(relatedSecrets[0], expectedSecret) {
 			t.Fatalf("Secret result doesn't match.\r\nexpected: %v\r\ngot %v\r\n", expectedSecret, relatedSecrets[0])
 		}
+	})
+
+	t.Run("Can build AtlasDatabaseUser when k8s resource name conflicts", func(t *testing.T) {
+		atlasUsers := []mongodbatlas.DatabaseUser{
+			{
+				DatabaseName:    "TestDB",
+				DeleteAfterDate: "2022",
+				Labels: []mongodbatlas.Label{
+					{
+						Key:   "TestLabelKey",
+						Value: "TestLabelValue",
+					},
+				},
+				LDAPAuthType: "TestType",
+				X509Type:     "TestX509",
+				AWSIAMType:   "TestAWSIAMType",
+				GroupID:      "0",
+				Roles: []mongodbatlas.Role{
+					{
+						RoleName:       "TestRoleName",
+						DatabaseName:   "TestRoleDatabaseName",
+						CollectionName: "TestCollectionName",
+					},
+				},
+				Scopes: []mongodbatlas.Scope{
+					{
+						Name: "TestScopeName",
+						Type: "CLUSTER",
+					},
+				},
+				Password: "TestPassword",
+				Username: "TestUsername",
+			},
+			{
+				DatabaseName:    "TestDB",
+				DeleteAfterDate: "2022",
+				Labels: []mongodbatlas.Label{
+					{
+						Key:   "TestLabelKey",
+						Value: "TestLabelValue",
+					},
+				},
+				LDAPAuthType: "TestType",
+				X509Type:     "TestX509",
+				AWSIAMType:   "TestAWSIAMType",
+				GroupID:      "0",
+				Roles: []mongodbatlas.Role{
+					{
+						RoleName:       "TestRoleName",
+						DatabaseName:   "TestRoleDatabaseName",
+						CollectionName: "TestCollectionName",
+					},
+				},
+				Scopes: []mongodbatlas.Scope{
+					{
+						Name: "TestScopeName",
+						Type: "CLUSTER",
+					},
+				},
+				Password: "TestPassword",
+				Username: "testUsername",
+			},
+		}
+
+		listOptions := &mongodbatlas.ListOptions{}
+
+		mockUserStore.EXPECT().DatabaseUsers(projectID, listOptions).Return(atlasUsers, nil)
+
+		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace, dictionary, resourceVersion)
+		if err != nil {
+			t.Fatalf("%v", err)
+		}
+
+		assert.NotEqual(t, users[0].Name, users[1].Name)
+		assert.NotEqual(t, relatedSecrets[0].Name, relatedSecrets[1].Name)
 	})
 }

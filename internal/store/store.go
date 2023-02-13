@@ -307,7 +307,7 @@ response:
 }
 
 /**
-* Creates client for v2 generated API
+* Creates client for v2 generated API.
  */
 func (s *Store) createV2Client(client *http.Client) error {
 	modifiers := []apiv2.ClientModifier{

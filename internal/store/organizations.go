@@ -59,10 +59,12 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Orga
 func (s *Store) Organization(id string) (*v1alpha.ApiOrganizationView, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
+		result, res, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
+		defer res.Body.Close()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
+		result, res, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
+		defer res.Body.Close()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

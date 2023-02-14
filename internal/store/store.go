@@ -310,19 +310,19 @@ response:
 * Creates client for v2 generated API.
  */
 func (s *Store) createV2Client(client *http.Client) error {
-	modifiers := []atlasv2.ClientModifier{
+	opts := []atlasv2.ClientModifier{
 		atlasv2.UseHTTPClient(client),
 		atlasv2.UseUserAgent(config.UserAgent),
 		atlasv2.UseDebug(log.IsDebugLevel())}
 
 	if s.baseURL != "" {
-		modifiers = append(modifiers, atlasv2.UseBaseURL(s.baseURL))
+		opts = append(opts, atlasv2.UseBaseURL(s.baseURL))
 	}
-	newClient, err := atlasv2.NewClient(modifiers...)
+	c, err := atlasv2.NewClient(opts...)
 	if err != nil {
 		return err
 	}
-	s.clientv2 = newClient
+	s.clientv2 = c
 	return nil
 }
 

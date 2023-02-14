@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	atlasv2 "go.mongodb.org/atlas/api/v1alpha"
+	v1alpha "go.mongodb.org/atlas/api/v1alpha"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -149,10 +149,10 @@ func (m *MockOrganizationDescriber) EXPECT() *MockOrganizationDescriberMockRecor
 }
 
 // Organization mocks base method.
-func (m *MockOrganizationDescriber) Organization(arg0 string) (*atlasv2.ApiOrganizationView, error) {
+func (m *MockOrganizationDescriber) Organization(arg0 string) (*v1alpha.ApiOrganizationView, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organization", arg0)
-	ret0, _ := ret[0].(*atlasv2.ApiOrganizationView)
+	ret0, _ := ret[0].(*v1alpha.ApiOrganizationView)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

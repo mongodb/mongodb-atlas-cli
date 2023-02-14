@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"go.mongodb.org/atlas/api/v1alpha"
+	atlasv2 "go.mongodb.org/atlas/api/v1alpha"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -30,7 +30,7 @@ type OrganizationLister interface {
 }
 
 type OrganizationDescriber interface {
-	Organization(string) (*v1alpha.ApiOrganizationView, error)
+	Organization(string) (*atlasv2.ApiOrganizationView, error)
 }
 
 type OrganizationCreator interface {
@@ -56,7 +56,7 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Orga
 }
 
 // Organization encapsulate the logic to manage different cloud providers.
-func (s *Store) Organization(id string) (*v1alpha.ApiOrganizationView, error) {
+func (s *Store) Organization(id string) (*atlasv2.ApiOrganizationView, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, res, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()

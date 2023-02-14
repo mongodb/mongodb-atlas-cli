@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
-	"go.mongodb.org/atlas/api/v1alpha"
+	atlasv2 "go.mongodb.org/atlas/api/v1alpha"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -37,7 +37,7 @@ import (
 type ProjectOrgsLister interface {
 	Project(id string) (interface{}, error)
 	Projects(*atlas.ListOptions) (interface{}, error)
-	Organization(id string) (*v1alpha.ApiOrganizationView, error)
+	Organization(id string) (*atlasv2.ApiOrganizationView, error)
 	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
 	GetOrgProjects(string, *atlas.ProjectsListOptions) (interface{}, error)
 }

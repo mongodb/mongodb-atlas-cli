@@ -56,12 +56,8 @@ func FailoverBuilder() *cobra.Command {
 		Use:   "failover <clusterName>",
 		Short: "Starts a failover test for the specified cluster in the specified project.",
 		Long:  `Clusters contain a group of hosts that maintain the same data set. A failover test checks how MongoDB Cloud handles the failure of the cluster's primary node. During the test, MongoDB Cloud shuts down the primary node and elects a new primary.`,
-		Example: fmt.Sprintf(`  # Delete a cluster named myCluster after prompting for a confirmation:
-  %[1]s clusters delete myCluster
-  Are you sure you want to delete: myCluster Y
-  
-  # Delete a cluster named myCluster without requiring confirmation:
-  %[1]s clusters delete myCluster --force`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # Test failover for a cluster named myCluster:
+  %s clusters failover myCluster`, cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Human-readable label that identifies the cluster to start a failover test for.",

@@ -370,7 +370,7 @@ func (opts *Opts) askSampleDataQuestion() error {
 		return nil
 	}
 
-	q := newSampleDataQuestion(opts.ClusterName)
+	q := newSampleDataQuestion()
 	var addSampleData bool
 	if err := telemetry.TrackAskOne(q, &addSampleData); err != nil {
 		return err

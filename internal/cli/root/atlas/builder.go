@@ -103,8 +103,10 @@ func initProfile(profile string) {
 
 // Builder conditionally adds children commands as needed.
 func Builder() *cobra.Command {
-	var profile string
-	var debugLevel bool
+	var (
+		profile    string
+		debugLevel bool
+	)
 
 	rootCmd := &cobra.Command{
 		Version: version.Version,

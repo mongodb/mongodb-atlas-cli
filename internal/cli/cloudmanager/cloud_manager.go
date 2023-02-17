@@ -15,8 +15,6 @@
 package cloudmanager
 
 import (
-	"log"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/events"
@@ -36,20 +34,25 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/servers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	opts := &cli.RefresherOpts{}
-	const use = "cloud-manager"
+	var debugLevel bool
 	cmd := &cobra.Command{
-		Use:     use,
+		Use:     "cloud-manager",
 		Aliases: []string{"cm"},
 		Short:   "MongoDB Cloud Manager operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			log.SetOutput(cmd.ErrOrStderr())
-
+			if debugLevel {
+				log.SetLevel(log.DebugLevel)
+			}
 			if err := opts.InitFlow(); err != nil {
 				return err
 			}
@@ -82,6 +85,9 @@ func Builder() *cobra.Command {
 		performanceadvisor.Builder(),
 		featurepolicies.Builder(),
 		livemigrations.Builder())
+
+	cmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
+	_ = cmd.PersistentFlags().MarkHidden(flag.Debug)
 
 	return cmd
 }

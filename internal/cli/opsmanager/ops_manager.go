@@ -15,8 +15,6 @@
 package opsmanager
 
 import (
-	"log"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/events"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/admin"
@@ -41,18 +39,24 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/versionmanifest"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "ops-manager"
+	var debugLevel bool
 	cmd := &cobra.Command{
-		Use:     use,
+		Use:     "ops-manager",
 		Aliases: []string{"om"},
 		Short:   "MongoDB Ops Manager operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			log.SetOutput(cmd.ErrOrStderr())
+			if debugLevel {
+				log.SetLevel(log.DebugLevel)
+			}
 
 			config.SetService(config.OpsManagerService)
 			// do not validate to create an owner
@@ -90,5 +94,9 @@ func Builder() *cobra.Command {
 		featurepolicies.Builder(),
 		serverusage.Builder(),
 		livemigrations.Builder())
+
+	cmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
+	_ = cmd.PersistentFlags().MarkHidden(flag.Debug)
+
 	return cmd
 }

@@ -18,7 +18,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/google/go-github/v42/github"
+	"github.com/google/go-github/v50/github"
 )
 
 //go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/version ReleaseVersionDescriber
@@ -41,22 +41,24 @@ type releaseVersionFetcher struct {
 	ctx context.Context
 }
 
+const (
+	owner   = "mongodb"
+	project = "mongodb-atlas-cli"
+)
+
 // LatestWithCriteria retrieves the first release version that matches the criteria. We assume that ListReleases returns releases sorted by created_at value.
 func (s *releaseVersionFetcher) LatestWithCriteria(n int, matchCriteria Criteria, toolName string) (*github.RepositoryRelease, error) {
-	var pageSize = n
-
 	startTime := time.Now()
 	client := github.NewClient(nil)
 
-	opt := &github.ListOptions{PerPage: pageSize}
+	opt := &github.ListOptions{PerPage: n}
 
 	if matchCriteria == nil {
 		matchCriteria = func(tag, tool string) bool {
 			return true
 		}
 	}
-	const owner = "mongodb"
-	const project = "mongodb-atlas-cli"
+
 	for {
 		releases, resp, err := client.Repositories.ListReleases(s.ctx, owner, project, opt)
 		if err != nil {

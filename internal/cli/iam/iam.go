@@ -15,8 +15,6 @@
 package iam
 
 import (
-	"log"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/globalaccesslists"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/globalapikeys"
@@ -25,16 +23,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/users"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	opts := &cli.RefresherOpts{}
+	var debugLevel bool
 	cmd := &cobra.Command{
 		Use: "iam",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			log.SetOutput(cmd.ErrOrStderr())
+			if debugLevel {
+				log.SetLevel(log.DebugLevel)
+			}
 
 			if err := opts.InitFlow(); err != nil {
 				return err
@@ -61,6 +66,9 @@ func Builder() *cobra.Command {
 		users.Builder(),
 		teams.Builder(),
 	)
+
+	cmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
+	_ = cmd.PersistentFlags().MarkHidden(flag.Debug)
 
 	return cmd
 }

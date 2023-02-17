@@ -75,7 +75,20 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 }
 
 func (t *tracker) defaultCommandOptions() []eventOpt {
-	return []eventOpt{withCommandPath(t.cmd), withHelpCommand(t.cmd, t.args), withFlags(t.cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(t.cmd), withOrgID(t.cmd), withTerminal(), withInstaller(t.installer)}
+	return []eventOpt{
+		withCommandPath(t.cmd),
+		withHelpCommand(t.cmd, t.args),
+		withFlags(t.cmd),
+		withProfile(),
+		withVersion(),
+		withOS(),
+		withAuthMethod(),
+		withService(),
+		withProjectID(t.cmd),
+		withOrgID(t.cmd),
+		withTerminal(),
+		withInstaller(t.installer),
+	}
 }
 
 func (t *tracker) trackCommand(data TrackOptions) error {

@@ -311,6 +311,20 @@ func (s *Store) setOpsManagerClient(client *http.Client) error {
 		return err
 	}
 
+	c.OnResponseProcessed(func(resp *atlas.Response) {
+		respHeaders := ""
+		for key, value := range resp.Header {
+			respHeaders += fmt.Sprintf("%v: %v\n", key, strings.Join(value, " "))
+		}
+
+		_, _ = log.Debugf(`request:
+%v %v
+response:
+%v %v
+%v
+%v
+`, resp.Request.Method, resp.Request.URL.String(), resp.Proto, resp.Status, respHeaders, string(resp.Raw))
+	})
 	s.client = c
 	return nil
 }

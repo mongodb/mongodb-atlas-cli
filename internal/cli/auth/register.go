@@ -39,19 +39,15 @@ type registerOpts struct {
 	login *LoginOpts
 }
 
-func newRegisterOpts(l *LoginOpts) *registerOpts {
-	return &registerOpts{
-		login: l,
-	}
-}
-
 type RegisterFlow interface {
 	Run(ctx context.Context) error
 	PreRun(outWriter io.Writer) error
 }
 
 func NewRegisterFlow(l *LoginOpts) RegisterFlow {
-	return newRegisterOpts(l)
+	return &registerOpts{
+		login: l,
+	}
 }
 
 func (opts *registerOpts) Run(ctx context.Context) error {
@@ -127,14 +123,14 @@ func (opts *registerOpts) PreRun(outWriter io.Writer) error {
 
 func registerPreRun() error {
 	if hasUserProgrammaticKeys() {
-		msg := fmt.Sprintf(AlreadyAuthenticatedError, config.PublicAPIKey())
+		msg := fmt.Sprintf(alreadyAuthenticatedError, config.PublicAPIKey())
 		return fmt.Errorf(`%s
 
 %s`, msg, WithProfileMsg)
 	}
 
 	if account, err := AccountWithAccessToken(); err == nil {
-		msg := fmt.Sprintf(AlreadyAuthenticatedEmailError, account)
+		msg := fmt.Sprintf(alreadyAuthenticatedEmailError, account)
 		return fmt.Errorf(`%s
 
 %s`, msg, WithProfileMsg)
@@ -143,7 +139,9 @@ func registerPreRun() error {
 }
 
 func RegisterBuilder() *cobra.Command {
-	opts := newRegisterOpts(NewLoginOpts())
+	opts := &registerOpts{
+		login: NewLoginOpts(),
+	}
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",

@@ -54,10 +54,9 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 		var target *atlas.ErrorResponse
 		if errors.As(err, &target) && target.ErrorCode == "INVALID_REFRESH_TOKEN" {
 			return fmt.Errorf(
-				"%w\n\nTo login, run: %s %s",
+				"%w\n\nTo login, run: %s auth login",
 				ErrInvalidRefreshToken,
-				config.BinName(),
-				"auth login")
+				config.BinName())
 		}
 		return err
 	}

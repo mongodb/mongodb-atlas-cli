@@ -48,12 +48,12 @@ type LoginConfig interface {
 }
 
 const (
-	AlreadyAuthenticatedError      = "you are already authenticated with an API key (Public key: %s)"
+	alreadyAuthenticatedError      = "you are already authenticated with an API key (Public key: %s)"
 	AlreadyAuthenticatedMsg        = "You are already authenticated with an API key (Public key: %s)."
-	AlreadyAuthenticatedEmailError = "you are already authenticated with an account (%s)"
+	alreadyAuthenticatedEmailError = "you are already authenticated with an account (%s)"
 	AlreadyAuthenticatedEmailMsg   = "You are already authenticated with an account (%s)."
-	LoginWithProfileMsg            = `run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile`
-	LogoutToLoginAccountMsg        = `run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile`
+	loginWithProfileMsg            = `run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile`
+	logoutToLoginAccountMsg        = `run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile`
 )
 
 var (
@@ -104,10 +104,6 @@ func (c *confirmPrompt) confirm() (response bool, err error) {
 type LoginFlow interface {
 	Run(ctx context.Context) error
 	PreRun() error
-}
-
-func NewLoginFlow(opts *LoginOpts) LoginFlow {
-	return opts
 }
 
 func (opts *LoginOpts) initFlow() error {
@@ -309,18 +305,18 @@ func hasUserProgrammaticKeys() bool {
 
 func loginPreRun(ctx context.Context) error {
 	if hasUserProgrammaticKeys() {
-		msg := fmt.Sprintf(AlreadyAuthenticatedError, config.PublicAPIKey())
+		msg := fmt.Sprintf(alreadyAuthenticatedError, config.PublicAPIKey())
 		return fmt.Errorf(`%s
 
-%s`, msg, LoginWithProfileMsg)
+%s`, msg, loginWithProfileMsg)
 	}
 
 	if account, err := AccountWithAccessToken(); err == nil {
 		if err := cli.RefreshToken(ctx); err == nil && validate.Token() == nil {
-			msg := fmt.Sprintf(AlreadyAuthenticatedEmailError, account)
+			msg := fmt.Sprintf(alreadyAuthenticatedEmailError, account)
 			return fmt.Errorf(`%s
 
-%s`, msg, LogoutToLoginAccountMsg)
+%s`, msg, logoutToLoginAccountMsg)
 		}
 	}
 	return nil
@@ -334,7 +330,7 @@ func (opts *LoginOpts) PreRun() error {
 	return opts.initFlow()
 }
 
-func Tool() string {
+func tool() string {
 	if config.ToolName == config.MongoCLI {
 		return "Atlas or Cloud Manager"
 	}
@@ -349,7 +345,7 @@ func LoginBuilder() *cobra.Command {
 		Short: "Authenticate with MongoDB Atlas.",
 		Example: fmt.Sprintf(`  # To start the interactive login for your MongoDB %s account:
   %s auth login
-`, Tool(), config.BinName()),
+`, tool(), config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			if err := loginPreRun(cmd.Context()); err != nil {

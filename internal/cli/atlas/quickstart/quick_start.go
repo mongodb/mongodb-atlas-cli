@@ -143,10 +143,6 @@ type Flow interface {
 	Run() error
 }
 
-func NewQuickstartFlow(qsOpts *Opts) Flow {
-	return qsOpts
-}
-
 func NewQuickstartOpts(loginOpts *auth.LoginOpts) *Opts {
 	labelValue := atlasCLILabelValue
 	if config.ToolName == config.MongoCLI {
@@ -154,7 +150,7 @@ func NewQuickstartOpts(loginOpts *auth.LoginOpts) *Opts {
 	}
 	return &Opts{
 		loginOpts:  loginOpts,
-		login:      auth.NewLoginFlow(loginOpts),
+		login:      loginOpts, // FIXME: CLOUDP-162860 two logins?
 		LabelKey:   labelKey,
 		LabelValue: labelValue,
 	}

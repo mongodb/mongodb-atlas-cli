@@ -83,7 +83,7 @@ This command will help you
 	return opts.quickstart.Run()
 }
 
-func (opts *Opts) PreRun(ctx context.Context) error {
+func (opts *Opts) PreRun(ctx context.Context) {
 	opts.skipRegister = true
 	opts.skipLogin = true
 
@@ -109,8 +109,6 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 		opts.skipRegister = false
 	default:
 	}
-
-	return nil
 }
 
 // Builder
@@ -129,8 +127,8 @@ func Builder() *cobra.Command {
 	qsOpts.LabelValue = labelValue
 	opts := &Opts{
 		register:   auth.NewRegisterFlow(loginOpts),
-		login:      auth.NewLoginFlow(loginOpts),
-		quickstart: quickstart.NewQuickstartFlow(qsOpts),
+		login:      loginOpts,
+		quickstart: qsOpts,
 	}
 
 	cmd := &cobra.Command{
@@ -144,9 +142,7 @@ func Builder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			// setup pre run
-			if err := opts.PreRun(cmd.Context()); err != nil {
-				return err
-			}
+			opts.PreRun(cmd.Context())
 
 			// registration pre run if applicable
 			if !opts.skipRegister {

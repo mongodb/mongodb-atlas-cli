@@ -79,14 +79,14 @@ func (t *tracker) defaultCommandOptions() []eventOpt {
 		withCommandPath(t.cmd),
 		withHelpCommand(t.cmd, t.args),
 		withFlags(t.cmd),
-		withProfile(),
+		withProfile(config.Default()),
 		withVersion(),
 		withOS(),
-		withAuthMethod(),
-		withService(),
-		withProjectID(t.cmd),
-		withOrgID(t.cmd),
-		withTerminal(),
+		withAuthMethod(config.Default()),
+		withService(config.Default()),
+		withProjectID(t.cmd, config.Default()),
+		withOrgID(t.cmd, config.Default()),
+		withTerminal(t.cmd),
 		withInstaller(t.installer),
 	}
 }
@@ -108,6 +108,7 @@ func (t *tracker) trackCommand(data TrackOptions) error {
 		_, _ = log.Debugf("telemetry: failed to read cache: %v\n", err)
 	}
 	events = append(events, event)
+	_, _ = log.Debugf("telemetry: events: %v\n", events)
 	err = t.store.SendEvents(events)
 	if err != nil {
 		return t.save(event)

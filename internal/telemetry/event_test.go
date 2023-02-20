@@ -66,13 +66,13 @@ func TestWithCommandPathAndAlias(t *testing.T) {
 func TestWithProfile(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 	t.Run("default", func(t *testing.T) {
-		e := newEvent(withProfile(&ConfigMock{name: config.DefaultProfile}))
+		e := newEvent(withProfile(&configMock{name: config.DefaultProfile}))
 		assert.Equal(t, config.DefaultProfile, e.Properties["profile"])
 	})
 	t.Run("named", func(t *testing.T) {
 		const profile = "test"
 
-		e := newEvent(withProfile(&ConfigMock{name: profile}))
+		e := newEvent(withProfile(&configMock{name: profile}))
 
 		a := assert.New(t)
 		a.NotEqual(e.Properties["profile"], config.DefaultProfile)
@@ -139,7 +139,7 @@ func TestWithOS(t *testing.T) {
 func TestWithAuthMethod(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 	t.Run("api key", func(t *testing.T) {
-		c := &ConfigMock{
+		c := &configMock{
 			publicKey:  "test-public",
 			privateKey: "test-private",
 		}
@@ -147,7 +147,7 @@ func TestWithAuthMethod(t *testing.T) {
 		assert.Equal(t, e.Properties["auth_method"], "api_key")
 	})
 	t.Run("Oauth", func(t *testing.T) {
-		e := newEvent(withAuthMethod(&ConfigMock{}))
+		e := newEvent(withAuthMethod(&configMock{}))
 		assert.Equal(t, e.Properties["auth_method"], "oauth")
 	})
 }
@@ -155,7 +155,7 @@ func TestWithAuthMethod(t *testing.T) {
 func TestWithService(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 	const url = "http://host.test"
-	c := &ConfigMock{
+	c := &configMock{
 		service: config.CloudService,
 		url:     url,
 	}
@@ -178,20 +178,20 @@ func TestWithProjectID(t *testing.T) {
 	t.Run("From Flag", func(t *testing.T) {
 		require.NoError(t, cmd.Flags().Set(flag.ProjectID, projectID))
 		require.NoError(t, cmd.ExecuteContext(NewContext()))
-		e := newEvent(withProjectID(cmd, &ConfigMock{}))
+		e := newEvent(withProjectID(cmd, &configMock{}))
 
 		assert.Equal(t, projectID, e.Properties["project_id"])
 	})
 	t.Run("From Config", func(t *testing.T) {
 		require.NoError(t, cmd.Flags().Set(flag.ProjectID, ""))
 		require.NoError(t, cmd.ExecuteContext(NewContext()))
-		c := &ConfigMock{project: projectID}
+		c := &configMock{project: projectID}
 		e := newEvent(withProjectID(cmd, c))
 		assert.Equal(t, projectID, e.Properties["project_id"])
 	})
 	t.Run("no value", func(t *testing.T) {
 		require.NoError(t, cmd.Flags().Set(flag.ProjectID, ""))
-		e := newEvent(withProjectID(cmd, &ConfigMock{}))
+		e := newEvent(withProjectID(cmd, &configMock{}))
 		require.NoError(t, cmd.ExecuteContext(NewContext()))
 		_, ok := e.Properties["project_id"]
 		assert.False(t, ok)
@@ -213,19 +213,19 @@ func TestWithOrgID(t *testing.T) {
 		require.NoError(t, cmd.Flags().Set(flag.OrgID, orgID))
 		require.NoError(t, cmd.ExecuteContext(NewContext()))
 
-		e := newEvent(withOrgID(cmd, &ConfigMock{}))
+		e := newEvent(withOrgID(cmd, &configMock{}))
 		assert.Equal(t, orgID, e.Properties["org_id"])
 	})
 	t.Run("From Config", func(t *testing.T) {
 		require.NoError(t, cmd.Flags().Set(flag.OrgID, ""))
 		require.NoError(t, cmd.ExecuteContext(NewContext()))
-		c := &ConfigMock{org: orgID}
+		c := &configMock{org: orgID}
 		e := newEvent(withOrgID(cmd, c))
 		assert.Equal(t, orgID, e.Properties["org_id"])
 	})
 	t.Run("no value", func(t *testing.T) {
 		require.NoError(t, cmd.Flags().Set(flag.OrgID, ""))
-		e := newEvent(withOrgID(cmd, &ConfigMock{}))
+		e := newEvent(withOrgID(cmd, &configMock{}))
 		require.NoError(t, cmd.ExecuteContext(NewContext()))
 		_, ok := e.Properties["org_id"]
 		assert.False(t, ok)
@@ -374,7 +374,7 @@ func TestWithHelpCommand_NotFound(t *testing.T) {
 	assert.False(t, ok)
 }
 
-type ConfigMock struct {
+type configMock struct {
 	name       string
 	publicKey  string
 	privateKey string
@@ -384,30 +384,30 @@ type ConfigMock struct {
 	org        string
 }
 
-func (c ConfigMock) Name() string {
+func (c configMock) Name() string {
 	return c.name
 }
 
-func (c ConfigMock) OrgID() string {
+func (c configMock) OrgID() string {
 	return c.org
 }
 
-func (c ConfigMock) ProjectID() string {
+func (c configMock) ProjectID() string {
 	return c.project
 }
 
-func (c ConfigMock) Service() string {
+func (c configMock) Service() string {
 	return c.service
 }
 
-func (c ConfigMock) OpsManagerURL() string {
+func (c configMock) OpsManagerURL() string {
 	return c.url
 }
 
-func (c ConfigMock) PublicAPIKey() string {
+func (c configMock) PublicAPIKey() string {
 	return c.publicKey
 }
 
-func (c ConfigMock) PrivateAPIKey() string {
+func (c configMock) PrivateAPIKey() string {
 	return c.privateKey
 }

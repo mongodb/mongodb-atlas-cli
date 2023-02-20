@@ -17,7 +17,7 @@ package telemetry
 import (
 	"crypto/sha256"
 	"encoding/base64"
-	"os"
+	"io"
 	"regexp"
 	"runtime"
 	"strings"
@@ -56,9 +56,13 @@ func withHelpCommand(cmd *cobra.Command, args []string) eventOpt {
 	}
 }
 
-func withProfile() eventOpt { // either "default" or base64 hash
+type ConfigNameGetter interface {
+	Name() string
+}
+
+func withProfile(c ConfigNameGetter) eventOpt { // either "default" or base64 hash
 	return func(event Event) {
-		if config.Name() == config.DefaultProfile {
+		if c.Name() == config.DefaultProfile {
 			event.Properties["profile"] = config.DefaultProfile
 			return
 		}
@@ -82,13 +86,13 @@ func withChoice(c string) eventOpt {
 }
 
 func sanitizeSelectOption(v string) string {
-	parenthesesRegex := regexp.MustCompile(`^.*\(([^\(\)]*)\)$`)
+	parenthesesRegex := regexp.MustCompile(`^.*\(([^()]*)\)$`)
 
 	return parenthesesRegex.ReplaceAllString(v, "$1")
 }
 
 func sanitizePrompt(q string) string {
-	bracketsRegex := regexp.MustCompile(`\[[^\]\[]*\]`)
+	bracketsRegex := regexp.MustCompile(`\[[^]\[]*]`)
 
 	return bracketsRegex.ReplaceAllString(q, "[]")
 }
@@ -105,7 +109,12 @@ func withEmpty(e bool) eventOpt {
 	}
 }
 
-func withCommandPath(cmd *cobra.Command) eventOpt {
+type CmdName interface {
+	CommandPath() string
+	CalledAs() string
+}
+
+func withCommandPath(cmd CmdName) eventOpt {
 	return func(event Event) {
 		cmdPath := cmd.CommandPath()
 		event.Properties["command"] = strings.ReplaceAll(cmdPath, " ", "-")
@@ -132,7 +141,11 @@ func withDuration(cmd *cobra.Command) eventOpt {
 	}
 }
 
-func withFlags(cmd *cobra.Command) eventOpt {
+type CmdFlags interface {
+	Flags() *pflag.FlagSet
+}
+
+func withFlags(cmd CmdFlags) eventOpt {
 	return func(event Event) {
 		setFlags := make([]string, 0, cmd.Flags().NFlag())
 		cmd.Flags().Visit(func(f *pflag.Flag) {
@@ -159,9 +172,14 @@ func withOS() eventOpt {
 	}
 }
 
-func withAuthMethod() eventOpt {
+type Authenticator interface {
+	PublicAPIKey() string
+	PrivateAPIKey() string
+}
+
+func withAuthMethod(c Authenticator) eventOpt {
 	return func(event Event) {
-		if config.PublicAPIKey() != "" && config.PrivateAPIKey() != "" {
+		if c.PublicAPIKey() != "" && c.PrivateAPIKey() != "" {
 			event.Properties["auth_method"] = "api_key"
 			return
 		}
@@ -170,16 +188,25 @@ func withAuthMethod() eventOpt {
 	}
 }
 
-func withService() eventOpt {
+type ServiceGetter interface {
+	Service() string
+	OpsManagerURL() string
+}
+
+func withService(c ServiceGetter) eventOpt {
 	return func(event Event) {
-		event.Properties["service"] = config.Service()
-		if config.OpsManagerURL() != "" {
-			event.Properties["ops_manager_url"] = config.OpsManagerURL()
+		event.Properties["service"] = c.Service()
+		if c.OpsManagerURL() != "" {
+			event.Properties["ops_manager_url"] = c.OpsManagerURL()
 		}
 	}
 }
 
-func withProjectID(cmd *cobra.Command) eventOpt {
+type ProjectIDGetter interface {
+	ProjectID() string
+}
+
+func withProjectID(cmd CmdFlags, c ProjectIDGetter) eventOpt {
 	return func(event Event) {
 		fromFlag, _ := cmd.Flags().GetString(flag.ProjectID)
 
@@ -188,13 +215,17 @@ func withProjectID(cmd *cobra.Command) eventOpt {
 			return
 		}
 
-		if config.ProjectID() != "" {
-			event.Properties["project_id"] = config.ProjectID()
+		if c.ProjectID() != "" {
+			event.Properties["project_id"] = c.ProjectID()
 		}
 	}
 }
 
-func withOrgID(cmd *cobra.Command) eventOpt {
+type OrgIDGetter interface {
+	OrgID() string
+}
+
+func withOrgID(cmd CmdFlags, c OrgIDGetter) eventOpt {
 	return func(event Event) {
 		fromFlag, _ := cmd.Flags().GetString(flag.OrgID)
 
@@ -203,19 +234,23 @@ func withOrgID(cmd *cobra.Command) eventOpt {
 			return
 		}
 
-		if config.OrgID() != "" {
-			event.Properties["org_id"] = config.OrgID()
+		if c.OrgID() != "" {
+			event.Properties["org_id"] = c.OrgID()
 		}
 	}
 }
 
-func withTerminal() eventOpt {
+type Printer interface {
+	OutOrStdout() io.Writer
+}
+
+func withTerminal(cmd Printer) eventOpt {
 	return func(event Event) {
-		if terminal.IsCygwinTerminal(os.Stdout) {
+		if terminal.IsCygwinTerminal(cmd.OutOrStdout()) {
 			event.Properties["terminal"] = "cygwin"
 		}
 
-		if terminal.IsTerminal(os.Stdout) {
+		if terminal.IsTerminal(cmd.OutOrStdout()) {
 			event.Properties["terminal"] = "tty"
 			return
 		}

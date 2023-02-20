@@ -24,14 +24,13 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/mongodb/mongodb-atlas-cli/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestWithCommandPath(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 	testCmd := &cobra.Command{
 		Use: "test",
@@ -46,7 +45,6 @@ func TestWithCommandPath(t *testing.T) {
 }
 
 func TestWithCommandPathAndAlias(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 	rootCmd := &cobra.Command{
 		Use: "root",
@@ -65,30 +63,24 @@ func TestWithCommandPathAndAlias(t *testing.T) {
 	a.Equal("t", e.Properties["alias"])
 }
 
-func TestWithProfileDefault(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
+func TestWithProfile(t *testing.T) {
 	config.ToolName = config.AtlasCLI
+	t.Run("default", func(t *testing.T) {
+		e := newEvent(withProfile(&configMock{name: config.DefaultProfile}))
+		assert.Equal(t, config.DefaultProfile, e.Properties["profile"])
+	})
+	t.Run("named", func(t *testing.T) {
+		const profile = "test"
 
-	e := newEvent(withProfile())
-	assert.Equal(t, config.DefaultProfile, e.Properties["profile"])
-}
+		e := newEvent(withProfile(&configMock{name: profile}))
 
-func TestWithProfileCustom(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
-	config.ToolName = config.AtlasCLI
-
-	const profile = "test"
-	config.SetName(profile)
-
-	e := newEvent(withProfile())
-
-	a := assert.New(t)
-	a.NotEqual(e.Properties["profile"], config.DefaultProfile)
-	a.NotEqual(e.Properties["profile"], profile) // should be a base64
+		a := assert.New(t)
+		a.NotEqual(e.Properties["profile"], config.DefaultProfile)
+		a.NotEqual(e.Properties["profile"], profile) // should be a base64
+	})
 }
 
 func TestWithDuration(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -104,7 +96,6 @@ func TestWithDuration(t *testing.T) {
 }
 
 func TestWithFlags(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
@@ -123,7 +114,6 @@ func TestWithFlags(t *testing.T) {
 }
 
 func TestWithVersion(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	version.Version = "vTest"
@@ -137,7 +127,6 @@ func TestWithVersion(t *testing.T) {
 }
 
 func TestWithOS(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withOS())
@@ -147,167 +136,103 @@ func TestWithOS(t *testing.T) {
 	a.Equal(e.Properties["arch"], runtime.GOARCH)
 }
 
-func TestWithAuthMethod_apiKey(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
+func TestWithAuthMethod(t *testing.T) {
 	config.ToolName = config.AtlasCLI
-
-	config.SetPublicAPIKey("test-public")
-	config.SetPrivateAPIKey("test-private")
-
-	e := newEvent(withAuthMethod())
-	assert.Equal(t, e.Properties["auth_method"], "api_key")
-}
-
-func TestWithAuthMethod_oauth(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
-	config.ToolName = config.AtlasCLI
-
-	config.SetPublicAPIKey("")
-	config.SetPrivateAPIKey("")
-
-	e := newEvent(withAuthMethod())
-	assert.Equal(t, e.Properties["auth_method"], "oauth")
+	t.Run("api key", func(t *testing.T) {
+		c := &configMock{
+			publicKey:  "test-public",
+			privateKey: "test-private",
+		}
+		e := newEvent(withAuthMethod(c))
+		assert.Equal(t, e.Properties["auth_method"], "api_key")
+	})
+	t.Run("Oauth", func(t *testing.T) {
+		e := newEvent(withAuthMethod(&configMock{}))
+		assert.Equal(t, e.Properties["auth_method"], "oauth")
+	})
 }
 
 func TestWithService(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
-
 	const url = "http://host.test"
-	config.SetService(config.CloudService)
-	config.SetOpsManagerURL(url)
-
-	e := newEvent(withService())
+	c := &configMock{
+		service: config.CloudService,
+		url:     url,
+	}
+	e := newEvent(withService(c))
 
 	a := assert.New(t)
 	a.Equal(config.CloudService, e.Properties["service"])
 	a.Equal(url, e.Properties["ops_manager_url"])
 }
 
-func TestWithProjectID_Flag(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
+func TestWithProjectID(t *testing.T) {
 	config.ToolName = config.AtlasCLI
-
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(cmd *cobra.Command, args []string) {
-			time.Sleep(10 * time.Millisecond)
-		},
+		Run: func(cmd *cobra.Command, args []string) {},
 	}
-
-	const projectID = "test"
 	var p string
 	cmd.Flags().StringVarP(&p, flag.ProjectID, "", "", "")
-	_ = cmd.ParseFlags([]string{"--" + flag.ProjectID, projectID})
-	_ = cmd.ExecuteContext(NewContext())
-
-	e := newEvent(withProjectID(cmd))
-	assert.Equal(t, projectID, e.Properties["project_id"])
-}
-
-func TestWithProjectID_Config(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
-	config.ToolName = config.AtlasCLI
-
-	cmd := &cobra.Command{
-		Use: "test-command",
-		Run: func(cmd *cobra.Command, args []string) {
-			time.Sleep(10 * time.Millisecond)
-		},
-	}
-
 	const projectID = "test"
-	config.SetProjectID(projectID)
-	var p string
-	cmd.Flags().StringVarP(&p, flag.ProjectID, "", "", "")
-	_ = cmd.ExecuteContext(NewContext())
+	t.Run("From Flag", func(t *testing.T) {
+		require.NoError(t, cmd.Flags().Set(flag.ProjectID, projectID))
+		require.NoError(t, cmd.ExecuteContext(NewContext()))
+		e := newEvent(withProjectID(cmd, &configMock{}))
 
-	e := newEvent(withProjectID(cmd))
-	assert.Equal(t, projectID, e.Properties["project_id"])
+		assert.Equal(t, projectID, e.Properties["project_id"])
+	})
+	t.Run("From Config", func(t *testing.T) {
+		require.NoError(t, cmd.Flags().Set(flag.ProjectID, ""))
+		require.NoError(t, cmd.ExecuteContext(NewContext()))
+		c := &configMock{project: projectID}
+		e := newEvent(withProjectID(cmd, c))
+		assert.Equal(t, projectID, e.Properties["project_id"])
+	})
+	t.Run("no value", func(t *testing.T) {
+		require.NoError(t, cmd.Flags().Set(flag.ProjectID, ""))
+		e := newEvent(withProjectID(cmd, &configMock{}))
+		require.NoError(t, cmd.ExecuteContext(NewContext()))
+		_, ok := e.Properties["project_id"]
+		assert.False(t, ok)
+	})
 }
 
-func TestWithProjectID_NoFlagOrConfig(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
+func TestWithOrgID(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(cmd *cobra.Command, args []string) {
-			time.Sleep(10 * time.Millisecond)
-		},
-	}
-
-	config.SetProjectID("")
-	_ = cmd.ExecuteContext(NewContext())
-
-	e := newEvent(withProjectID(cmd))
-	_, ok := e.Properties["project_id"]
-	assert.False(t, ok)
-}
-
-func TestWithOrgID_Flag(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
-	config.ToolName = config.AtlasCLI
-
-	cmd := &cobra.Command{
-		Use: "test-command",
-		Run: func(cmd *cobra.Command, args []string) {
-			time.Sleep(10 * time.Millisecond)
-		},
+		Run: func(cmd *cobra.Command, args []string) {},
 	}
 
 	const orgID = "test"
 	var p string
 	cmd.Flags().StringVarP(&p, flag.OrgID, "", "", "")
-	_ = cmd.ParseFlags([]string{"--" + flag.OrgID, orgID})
-	_ = cmd.ExecuteContext(NewContext())
+	t.Run("From Flag", func(t *testing.T) {
+		require.NoError(t, cmd.Flags().Set(flag.OrgID, orgID))
+		require.NoError(t, cmd.ExecuteContext(NewContext()))
 
-	e := newEvent(withOrgID(cmd))
-	assert.Equal(t, orgID, e.Properties["org_id"])
-}
-
-func TestWithOrgID_Config(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
-	config.ToolName = config.AtlasCLI
-
-	cmd := &cobra.Command{
-		Use: "test-command",
-		Run: func(cmd *cobra.Command, args []string) {
-			time.Sleep(10 * time.Millisecond)
-		},
-	}
-
-	const orgID = "test"
-	config.SetOrgID(orgID)
-	var p string
-	cmd.Flags().StringVarP(&p, flag.OrgID, "", "", "")
-	_ = cmd.ExecuteContext(NewContext())
-
-	e := newEvent(withOrgID(cmd))
-	assert.Equal(t, orgID, e.Properties["org_id"])
-}
-
-func TestWithOrgID_NoFlagOrConfig(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
-	config.ToolName = config.AtlasCLI
-
-	cmd := &cobra.Command{
-		Use: "test-command",
-		Run: func(cmd *cobra.Command, args []string) {
-			time.Sleep(10 * time.Millisecond)
-		},
-	}
-
-	config.SetOrgID("")
-	_ = cmd.ExecuteContext(NewContext())
-
-	e := newEvent(withOrgID(cmd))
-	_, ok := e.Properties["org_id"]
-	assert.False(t, false, ok)
+		e := newEvent(withOrgID(cmd, &configMock{}))
+		assert.Equal(t, orgID, e.Properties["org_id"])
+	})
+	t.Run("From Config", func(t *testing.T) {
+		require.NoError(t, cmd.Flags().Set(flag.OrgID, ""))
+		require.NoError(t, cmd.ExecuteContext(NewContext()))
+		c := &configMock{org: orgID}
+		e := newEvent(withOrgID(cmd, c))
+		assert.Equal(t, orgID, e.Properties["org_id"])
+	})
+	t.Run("no value", func(t *testing.T) {
+		require.NoError(t, cmd.Flags().Set(flag.OrgID, ""))
+		e := newEvent(withOrgID(cmd, &configMock{}))
+		require.NoError(t, cmd.ExecuteContext(NewContext()))
+		_, ok := e.Properties["org_id"]
+		assert.False(t, ok)
+	})
 }
 
 func TestWithError(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withError(errors.New("test")))
@@ -368,7 +293,6 @@ func TestSanitizeSelectOption(t *testing.T) {
 }
 
 func TestWithPrompt(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	q := "random question"
@@ -382,7 +306,6 @@ func TestWithPrompt(t *testing.T) {
 }
 
 func TestWithChoice(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	c := "test choice"
@@ -392,14 +315,12 @@ func TestWithChoice(t *testing.T) {
 }
 
 func TestWithDefault(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 	e := newEvent(withDefault(true))
 	assert.Equal(t, true, e.Properties["default"])
 }
 
 func TestWithEmpty(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withEmpty(true))
@@ -451,4 +372,42 @@ func TestWithHelpCommand_NotFound(t *testing.T) {
 
 	_, ok := e.Properties["help_command"]
 	assert.False(t, ok)
+}
+
+type configMock struct {
+	name       string
+	publicKey  string
+	privateKey string
+	service    string
+	url        string
+	project    string
+	org        string
+}
+
+func (c configMock) Name() string {
+	return c.name
+}
+
+func (c configMock) OrgID() string {
+	return c.org
+}
+
+func (c configMock) ProjectID() string {
+	return c.project
+}
+
+func (c configMock) Service() string {
+	return c.service
+}
+
+func (c configMock) OpsManagerURL() string {
+	return c.url
+}
+
+func (c configMock) PublicAPIKey() string {
+	return c.publicKey
+}
+
+func (c configMock) PrivateAPIKey() string {
+	return c.privateKey
 }

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
+
 package telemetry
 
 import (
@@ -40,9 +42,7 @@ func TestWithCommandPath(t *testing.T) {
 	rootCmd.AddCommand(testCmd)
 
 	e := newEvent(withCommandPath(testCmd))
-
-	a := assert.New(t)
-	a.Equal("root-test", e.Properties["command"])
+	assert.Equal(t, "root-test", e.Properties["command"])
 }
 
 func TestWithCommandPathAndAlias(t *testing.T) {
@@ -70,9 +70,7 @@ func TestWithProfileDefault(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withProfile())
-
-	a := assert.New(t)
-	a.Equal(config.DefaultProfile, e.Properties["profile"])
+	assert.Equal(t, config.DefaultProfile, e.Properties["profile"])
 }
 
 func TestWithProfileCustom(t *testing.T) {
@@ -102,9 +100,7 @@ func TestWithDuration(t *testing.T) {
 	_ = cmd.ExecuteContext(NewContext())
 
 	e := newEvent(withDuration(cmd))
-
-	a := assert.New(t)
-	a.GreaterOrEqual(e.Properties["duration"], int64(10))
+	assert.GreaterOrEqual(t, e.Properties["duration"], int64(10))
 }
 
 func TestWithFlags(t *testing.T) {
@@ -123,9 +119,7 @@ func TestWithFlags(t *testing.T) {
 	_ = cmd.ExecuteContext(NewContext())
 
 	e := newEvent(withFlags(cmd))
-
-	a := assert.New(t)
-	a.Equal(e.Properties["flags"], []string{"test"})
+	assert.Equal(t, e.Properties["flags"], []string{"test"})
 }
 
 func TestWithVersion(t *testing.T) {
@@ -161,9 +155,7 @@ func TestWithAuthMethod_apiKey(t *testing.T) {
 	config.SetPrivateAPIKey("test-private")
 
 	e := newEvent(withAuthMethod())
-
-	a := assert.New(t)
-	a.Equal(e.Properties["auth_method"], "api_key")
+	assert.Equal(t, e.Properties["auth_method"], "api_key")
 }
 
 func TestWithAuthMethod_oauth(t *testing.T) {
@@ -174,9 +166,7 @@ func TestWithAuthMethod_oauth(t *testing.T) {
 	config.SetPrivateAPIKey("")
 
 	e := newEvent(withAuthMethod())
-
-	a := assert.New(t)
-	a.Equal(e.Properties["auth_method"], "oauth")
+	assert.Equal(t, e.Properties["auth_method"], "oauth")
 }
 
 func TestWithService(t *testing.T) {
@@ -212,9 +202,7 @@ func TestWithProjectID_Flag(t *testing.T) {
 	_ = cmd.ExecuteContext(NewContext())
 
 	e := newEvent(withProjectID(cmd))
-
-	a := assert.New(t)
-	a.Equal(projectID, e.Properties["project_id"])
+	assert.Equal(t, projectID, e.Properties["project_id"])
 }
 
 func TestWithProjectID_Config(t *testing.T) {
@@ -235,9 +223,7 @@ func TestWithProjectID_Config(t *testing.T) {
 	_ = cmd.ExecuteContext(NewContext())
 
 	e := newEvent(withProjectID(cmd))
-
-	a := assert.New(t)
-	a.Equal(projectID, e.Properties["project_id"])
+	assert.Equal(t, projectID, e.Properties["project_id"])
 }
 
 func TestWithProjectID_NoFlagOrConfig(t *testing.T) {
@@ -255,10 +241,8 @@ func TestWithProjectID_NoFlagOrConfig(t *testing.T) {
 	_ = cmd.ExecuteContext(NewContext())
 
 	e := newEvent(withProjectID(cmd))
-
-	a := assert.New(t)
 	_, ok := e.Properties["project_id"]
-	a.Equal(false, ok)
+	assert.False(t, ok)
 }
 
 func TestWithOrgID_Flag(t *testing.T) {
@@ -279,9 +263,7 @@ func TestWithOrgID_Flag(t *testing.T) {
 	_ = cmd.ExecuteContext(NewContext())
 
 	e := newEvent(withOrgID(cmd))
-
-	a := assert.New(t)
-	a.Equal(orgID, e.Properties["org_id"])
+	assert.Equal(t, orgID, e.Properties["org_id"])
 }
 
 func TestWithOrgID_Config(t *testing.T) {
@@ -302,9 +284,7 @@ func TestWithOrgID_Config(t *testing.T) {
 	_ = cmd.ExecuteContext(NewContext())
 
 	e := newEvent(withOrgID(cmd))
-
-	a := assert.New(t)
-	a.Equal(orgID, e.Properties["org_id"])
+	assert.Equal(t, orgID, e.Properties["org_id"])
 }
 
 func TestWithOrgID_NoFlagOrConfig(t *testing.T) {
@@ -322,10 +302,8 @@ func TestWithOrgID_NoFlagOrConfig(t *testing.T) {
 	_ = cmd.ExecuteContext(NewContext())
 
 	e := newEvent(withOrgID(cmd))
-
-	a := assert.New(t)
 	_, ok := e.Properties["org_id"]
-	a.Equal(false, ok)
+	assert.False(t, false, ok)
 }
 
 func TestWithError(t *testing.T) {
@@ -432,11 +410,8 @@ func TestWithSignal(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	q := "interrupt"
-
 	e := newEvent(withSignal(q))
-
-	a := assert.New(t)
-	a.Equal(q, e.Properties["signal"])
+	assert.Equal(t, q, e.Properties["signal"])
 }
 
 func TestWithHelpCommand(t *testing.T) {

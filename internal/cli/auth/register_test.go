@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package auth
 
@@ -34,12 +33,14 @@ import (
 )
 
 func TestRegisterBuilder(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	test.CmdValidator(
 		t,
 		RegisterBuilder(),
 		0,
-		[]string{"gov", "noBrowser"},
+		[]string{
+			"gov",
+			"noBrowser",
+		},
 	)
 }
 

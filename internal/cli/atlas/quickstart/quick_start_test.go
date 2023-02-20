@@ -36,12 +36,22 @@ import (
 )
 
 func TestBuilder(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	test.CmdValidator(
 		t,
 		Builder(),
 		0,
-		[]string{flag.ProjectID, flag.Region, flag.ClusterName, flag.Provider, flag.AccessListIP, flag.Username, flag.Password, flag.EnableTerminationProtection, flag.SkipMongosh, flag.SkipSampleData},
+		[]string{
+			flag.ProjectID,
+			flag.Region,
+			flag.ClusterName,
+			flag.Provider,
+			flag.AccessListIP,
+			flag.Username,
+			flag.Password,
+			flag.EnableTerminationProtection,
+			flag.SkipMongosh,
+			flag.SkipSampleData,
+		},
 	)
 }
 

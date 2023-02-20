@@ -33,17 +33,24 @@ import (
 )
 
 func TestBuilder(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	test.CmdValidator(
 		t,
 		Builder(),
 		0,
-		[]string{flag.Region, flag.ClusterName, flag.Provider, flag.AccessListIP, flag.Username, flag.Password, flag.SkipMongosh, flag.SkipSampleData},
+		[]string{
+			flag.Region,
+			flag.ClusterName,
+			flag.Provider,
+			flag.AccessListIP,
+			flag.Username,
+			flag.Password,
+			flag.SkipMongosh,
+			flag.SkipSampleData,
+		},
 	)
 }
 
 func Test_setupOpts_Run(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
@@ -123,7 +130,6 @@ Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on
 }
 
 func Test_setupOpts_RunSkipRegister(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)

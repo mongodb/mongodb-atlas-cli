@@ -119,7 +119,7 @@ func sign(notaryURL, filePath, notarySigningKey, notarySigningComment, notaryAut
 	}
 
 	downloadURL := jsonResponse["permalink"].(string)
-	os.TempDir()
+
 	tmpDir := os.TempDir()
 	if err != nil {
 		return err

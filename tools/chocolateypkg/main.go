@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/sha256"
+	_ "embed"
 	"encoding/hex"
 	"flag"
 	"io"
@@ -40,16 +41,7 @@ type InstallScriptDetails struct {
 
 func createDirectory(dir, name string) error {
 	dirLocation := path.Join(dir, name)
-	err := os.MkdirAll(dirLocation, os.ModePerm)
-	return err
-}
-
-func createFile(name string) (f *os.File, err error) {
-	f, err = os.Create(name)
-	if err != nil {
-		return nil, err
-	}
-	return f, nil
+	return os.MkdirAll(dirLocation, os.ModePerm)
 }
 
 func checkError(err error) {
@@ -58,15 +50,12 @@ func checkError(err error) {
 	}
 }
 
-func replaceNuspec(dir, version string) error {
-	nuspecPath := path.Join(dir, "mongodb-atlas.nuspec")
-	newVersion := NuspecDetails{version}
+//go:embed mongodb-atlas.nuspec
+var atlasNuSpec string
 
-	p, err := os.ReadFile(nuspecPath)
-	if err != nil {
-		return err
-	}
-	tmpl, err := template.New("NuspecTemplate").Parse(string(p))
+func replaceNuspec(dir, version string) error {
+	newVersion := NuspecDetails{version}
+	tmpl, err := template.New("NuspecTemplate").Parse(atlasNuSpec)
 	if err != nil {
 		return err
 	}
@@ -77,7 +66,7 @@ func replaceNuspec(dir, version string) error {
 	}
 
 	filePath := path.Join(dir, "temp", "mongodb-atlas.nuspec")
-	f, err := createFile(filePath)
+	f, err := os.Create(filePath)
 	if err != nil {
 		return err
 	}
@@ -110,9 +99,10 @@ func generateSha256(url string) (string, error) {
 	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
-func replaceInstallScript(dir, url string) error {
-	scriptPath := path.Join(dir, "tools", "chocolateyinstall.ps1")
+//go:embed chocolateyinstall.ps1
+var installScript string
 
+func replaceInstallScript(dir, url string) error {
 	checkSum, err := generateSha256(url)
 	if err != nil {
 		return err
@@ -122,11 +112,7 @@ func replaceInstallScript(dir, url string) error {
 		CheckSum: checkSum,
 	}
 
-	p, err := os.ReadFile(scriptPath)
-	if err != nil {
-		return err
-	}
-	tmpl, err := template.New("InstallScriptTemplate").Parse(string(p))
+	tmpl, err := template.New("InstallScriptTemplate").Parse(installScript)
 	if err != nil {
 		return err
 	}
@@ -143,7 +129,7 @@ func replaceInstallScript(dir, url string) error {
 	}
 
 	filePath := path.Join(dir, "temp", "tools", "chocolateyinstall.ps1")
-	f, err := createFile(filePath)
+	f, err := os.Create(filePath)
 	if err != nil {
 		return err
 	}
@@ -154,15 +140,16 @@ func replaceInstallScript(dir, url string) error {
 		}
 	}(f)
 	_, err = f.Write(generatedScript.Bytes())
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 }
 
 func main() {
-	var version, downloadURL, srcPath string
+	var (
+		version     string
+		downloadURL string
+		srcPath     string
+	)
 
 	flag.StringVar(&version, "version", "", "Atlas CLI version")
 	flag.StringVar(&srcPath, "srcPath", "", "Path to templates")
@@ -185,8 +172,7 @@ func main() {
 	err = replaceInstallScript(srcPath, downloadURL)
 	checkError(err)
 
-	const chocoCommand = "pack"
-	cmd := exec.Command("choco", chocoCommand)
+	cmd := exec.Command("choco", "pack")
 	cmd.Dir = path.Join(srcPath, "temp")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

@@ -66,12 +66,12 @@ func (opts *UpdateOpts) newSnapshotSchedule() *opsmngr.SnapshotSchedule {
 		ClusterID:                      opts.clusterID,
 		GroupID:                        opts.ConfigProjectID(),
 		ReferenceTimeZoneOffset:        opts.referenceTimeZoneOffset,
-		DailySnapshotRetentionDays:     opts.dailySnapshotRetentionDays,
+		DailySnapshotRetentionDays:     &opts.dailySnapshotRetentionDays,
 		ClusterCheckpointIntervalMin:   opts.clusterCheckpointIntervalMin,
-		MonthlySnapshotRetentionMonths: opts.monthlySnapshotRetentionMonths,
+		MonthlySnapshotRetentionMonths: &opts.monthlySnapshotRetentionMonths,
 		SnapshotIntervalHours:          opts.snapshotIntervalHours,
 		SnapshotRetentionDays:          opts.snapshotRetentionDays,
-		WeeklySnapshotRetentionWeeks:   opts.weeklySnapshotRetentionWeeks,
+		WeeklySnapshotRetentionWeeks:   &opts.weeklySnapshotRetentionWeeks,
 	}
 
 	if opts.pointInTimeWindowHours >= 0 {

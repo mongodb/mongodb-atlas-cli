@@ -12,6 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/*
+chocolateypkg generates chocolatey package information.
+
+Usage:
+
+	chocolateypkg [flags]
+
+The flags are:
+
+	-version
+		CLI version
+	-srcPath
+		output path
+	-url
+		download center url
+*/
 package main
 
 import (
@@ -25,7 +41,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/exec"
 	"path"
 	"text/template"
 )
@@ -144,6 +159,7 @@ func replaceInstallScript(dir, url string) error {
 	return err
 }
 
+// go run ./tools/chocolateypkg/chocolateypkg.go --srcPath "build/package/chocolatey" -version 1.5.1 -url https://fastdl.mongodb.org/mongocli/mongodb-atlas-cli_1.5.1_windows_x86_64.msi
 func main() {
 	var (
 		version     string
@@ -171,11 +187,5 @@ func main() {
 
 	err = replaceInstallScript(srcPath, downloadURL)
 	checkError(err)
-
-	cmd := exec.Command("choco", "pack")
-	cmd.Dir = path.Join(srcPath, "temp")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
-	checkError(err)
+	log.Println("Success!")
 }

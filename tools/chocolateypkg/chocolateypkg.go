@@ -22,11 +22,11 @@ Usage:
 The flags are:
 
 	-version
-		CLI version
-	-srcPath
-		output path
+		Atlas CLI version to package
+	-out
+		Output folder for files
 	-url
-		download center url
+		Atlas CLI installer URL to download
 */
 package main
 
@@ -75,12 +75,11 @@ func replaceNuspec(dir, version string) error {
 		return err
 	}
 	var generatedNuspec bytes.Buffer
-	err = tmpl.Execute(&generatedNuspec, newVersion)
-	if err != nil {
+	if err = tmpl.Execute(&generatedNuspec, newVersion); err != nil {
 		return err
 	}
 
-	filePath := path.Join(dir, "temp", "mongodb-atlas.nuspec")
+	filePath := path.Join(dir, "mongodb-atlas.nuspec")
 	f, err := os.Create(filePath)
 	if err != nil {
 		return err
@@ -132,18 +131,15 @@ func replaceInstallScript(dir, url string) error {
 		return err
 	}
 	var generatedScript bytes.Buffer
-	err = tmpl.Execute(&generatedScript, newInstallDetails)
-	if err != nil {
+	if err = tmpl.Execute(&generatedScript, newInstallDetails); err != nil {
 		return err
 	}
 
-	newDirectoryPath := path.Join(dir, "temp")
-	err = createDirectory(newDirectoryPath, "tools")
-	if err != nil {
+	if err = createDirectory(dir, "tools"); err != nil {
 		return err
 	}
 
-	filePath := path.Join(dir, "temp", "tools", "chocolateyinstall.ps1")
+	filePath := path.Join(dir, "tools", "chocolateyinstall.ps1")
 	f, err := os.Create(filePath)
 	if err != nil {
 		return err
@@ -159,17 +155,16 @@ func replaceInstallScript(dir, url string) error {
 	return err
 }
 
-// go run ./tools/chocolateypkg/chocolateypkg.go --srcPath "build/package/chocolatey" -version 1.5.1 -url https://fastdl.mongodb.org/mongocli/mongodb-atlas-cli_1.5.1_windows_x86_64.msi
 func main() {
 	var (
 		version     string
 		downloadURL string
-		srcPath     string
+		outPath     string
 	)
 
-	flag.StringVar(&version, "version", "", "Atlas CLI version")
-	flag.StringVar(&srcPath, "srcPath", "", "Path to templates")
-	flag.StringVar(&downloadURL, "url", "", "URL to download Atlas CLI installer")
+	flag.StringVar(&version, "version", "", "Atlas CLI version to package")
+	flag.StringVar(&outPath, "out", "dist", "Output folder for files")
+	flag.StringVar(&downloadURL, "url", "", "Atlas CLI installer URL to download")
 	flag.Parse()
 
 	if version == "" {
@@ -179,13 +174,10 @@ func main() {
 		log.Fatalln("You must specify download URL")
 	}
 
-	err := createDirectory(srcPath, "temp")
+	err := replaceNuspec(outPath, version)
 	checkError(err)
 
-	err = replaceNuspec(srcPath, version)
-	checkError(err)
-
-	err = replaceInstallScript(srcPath, downloadURL)
+	err = replaceInstallScript(outPath, downloadURL)
 	checkError(err)
 	log.Println("Success!")
 }

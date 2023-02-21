@@ -620,7 +620,7 @@ tasks:
           aws_secret: ${aws_secret}
           local_files_include_filter:
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
-            - src/github.com/mongodb/mongodb-atlas-cli/build/package/chocolatey/temp/*.nupkg
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.nupkg
           remote_file: ${project}/dist/${revision}_${created_at}/
           bucket: mongodb-mongocli-build
           permissions: public-read
@@ -630,7 +630,7 @@ tasks:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
           local_files_include_filter:
-            - src/github.com/mongodb/mongodb-atlas-cli/build/package/chocolatey/temp/*.nuspec
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.nuspec
           remote_file: ${project}/dist/${revision}_${created_at}/
           bucket: mongodb-mongocli-build
           permissions: public-read
@@ -640,7 +640,7 @@ tasks:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
           local_files_include_filter:
-            - src/github.com/mongodb/mongodb-atlas-cli/build/package/chocolatey/temp/tools/*.ps1
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.ps1
           remote_file: ${project}/dist/${revision}_${created_at}/
           bucket: mongodb-mongocli-build
           permissions: public-read

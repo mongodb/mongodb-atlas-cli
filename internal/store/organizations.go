@@ -29,7 +29,7 @@ type OrganizationLister interface {
 }
 
 type OrganizationDescriber interface {
-	Organization(string) (*atlas.Organization, error)
+	Organization(string) (interface{}, error)
 }
 
 type OrganizationCreator interface {
@@ -59,10 +59,11 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Orga
 }
 
 // Organization encapsulate the logic to manage different cloud providers.
-func (s *Store) Organization(id string) (*atlas.Organization, error) {
+func (s *Store) Organization(id string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Organizations.Get(s.ctx, id)
+		result, res, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
+		defer res.Body.Close()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Get(s.ctx, id)

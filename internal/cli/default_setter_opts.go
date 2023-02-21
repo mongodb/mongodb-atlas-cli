@@ -36,7 +36,7 @@ import (
 type ProjectOrgsLister interface {
 	Project(id string) (interface{}, error)
 	Projects(*atlas.ListOptions) (interface{}, error)
-	Organization(id string) (*atlas.Organization, error)
+	Organization(id string) (interface{}, error)
 	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
 	GetOrgProjects(string, *atlas.ProjectsListOptions) (interface{}, error)
 }

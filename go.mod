@@ -39,7 +39,7 @@ require (
 	github.com/stretchr/testify v1.8.2
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
-	go.mongodb.org/atlas v0.23.1
+	go.mongodb.org/atlas v0.23.2-0.20230323083450-19965fe766ed
 	go.mongodb.org/mongo-driver v1.11.2
 	go.mongodb.org/ops-manager v0.48.0
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
@@ -105,7 +105,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
-	github.com/openlyinc/pointy v1.2.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

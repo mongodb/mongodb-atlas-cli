@@ -51,5 +51,5 @@ go run ./tools/sign -file "dist/${PACKAGE_NAME}"
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
 	go run ./tools/chocolateypkg/chocolateypkg.go --srcPath "build/package/chocolatey" -version "${VERSION}" -url https://fastdl.mongodb.org/mongocli/"${PACKAGE_NAME}"
 	pushd build/package/chocolatey/temp
-	choco pack
+	choco pack -dv
 fi

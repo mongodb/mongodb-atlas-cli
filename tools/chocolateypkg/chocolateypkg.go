@@ -12,19 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/*
+chocolateypkg generates chocolatey package information.
+
+Usage:
+
+	chocolateypkg [flags]
+
+The flags are:
+
+	-version
+		Atlas CLI version to package
+	-out
+		Output folder for files
+	-url
+		Atlas CLI installer URL to download
+*/
 package main
 
 import (
 	"bytes"
 	"context"
 	"crypto/sha256"
+	_ "embed"
 	"encoding/hex"
 	"flag"
 	"io"
 	"log"
 	"net/http"
 	"os"
-	"os/exec"
 	"path"
 	"text/template"
 )
@@ -40,16 +56,7 @@ type InstallScriptDetails struct {
 
 func createDirectory(dir, name string) error {
 	dirLocation := path.Join(dir, name)
-	err := os.MkdirAll(dirLocation, os.ModePerm)
-	return err
-}
-
-func createFile(name string) (f *os.File, err error) {
-	f, err = os.Create(name)
-	if err != nil {
-		return nil, err
-	}
-	return f, nil
+	return os.MkdirAll(dirLocation, os.ModePerm)
 }
 
 func checkError(err error) {
@@ -58,26 +65,22 @@ func checkError(err error) {
 	}
 }
 
-func replaceNuspec(dir, version string) error {
-	nuspecPath := path.Join(dir, "mongodb-atlas.nuspec")
-	newVersion := NuspecDetails{version}
+//go:embed mongodb-atlas.nuspec
+var atlasNuSpec string
 
-	p, err := os.ReadFile(nuspecPath)
-	if err != nil {
-		return err
-	}
-	tmpl, err := template.New("NuspecTemplate").Parse(string(p))
+func replaceNuspec(dir, version string) error {
+	newVersion := NuspecDetails{version}
+	tmpl, err := template.New("NuspecTemplate").Parse(atlasNuSpec)
 	if err != nil {
 		return err
 	}
 	var generatedNuspec bytes.Buffer
-	err = tmpl.Execute(&generatedNuspec, newVersion)
-	if err != nil {
+	if err = tmpl.Execute(&generatedNuspec, newVersion); err != nil {
 		return err
 	}
 
-	filePath := path.Join(dir, "temp", "mongodb-atlas.nuspec")
-	f, err := createFile(filePath)
+	filePath := path.Join(dir, "mongodb-atlas.nuspec")
+	f, err := os.Create(filePath)
 	if err != nil {
 		return err
 	}
@@ -110,9 +113,10 @@ func generateSha256(url string) (string, error) {
 	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
-func replaceInstallScript(dir, url string) error {
-	scriptPath := path.Join(dir, "tools", "chocolateyinstall.ps1")
+//go:embed chocolateyinstall.ps1
+var installScript string
 
+func replaceInstallScript(dir, url string) error {
 	checkSum, err := generateSha256(url)
 	if err != nil {
 		return err
@@ -122,28 +126,21 @@ func replaceInstallScript(dir, url string) error {
 		CheckSum: checkSum,
 	}
 
-	p, err := os.ReadFile(scriptPath)
-	if err != nil {
-		return err
-	}
-	tmpl, err := template.New("InstallScriptTemplate").Parse(string(p))
+	tmpl, err := template.New("InstallScriptTemplate").Parse(installScript)
 	if err != nil {
 		return err
 	}
 	var generatedScript bytes.Buffer
-	err = tmpl.Execute(&generatedScript, newInstallDetails)
-	if err != nil {
+	if err = tmpl.Execute(&generatedScript, newInstallDetails); err != nil {
 		return err
 	}
 
-	newDirectoryPath := path.Join(dir, "temp")
-	err = createDirectory(newDirectoryPath, "tools")
-	if err != nil {
+	if err = createDirectory(dir, "tools"); err != nil {
 		return err
 	}
 
-	filePath := path.Join(dir, "temp", "tools", "chocolateyinstall.ps1")
-	f, err := createFile(filePath)
+	filePath := path.Join(dir, "tools", "chocolateyinstall.ps1")
+	f, err := os.Create(filePath)
 	if err != nil {
 		return err
 	}
@@ -154,19 +151,20 @@ func replaceInstallScript(dir, url string) error {
 		}
 	}(f)
 	_, err = f.Write(generatedScript.Bytes())
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 }
 
 func main() {
-	var version, downloadURL, srcPath string
+	var (
+		version     string
+		downloadURL string
+		outPath     string
+	)
 
-	flag.StringVar(&version, "version", "", "Atlas CLI version")
-	flag.StringVar(&srcPath, "srcPath", "", "Path to templates")
-	flag.StringVar(&downloadURL, "url", "", "URL to download Atlas CLI installer")
+	flag.StringVar(&version, "version", "", "Atlas CLI version to package")
+	flag.StringVar(&outPath, "out", "dist", "Output folder for files")
+	flag.StringVar(&downloadURL, "url", "", "Atlas CLI installer URL to download")
 	flag.Parse()
 
 	if version == "" {
@@ -176,20 +174,10 @@ func main() {
 		log.Fatalln("You must specify download URL")
 	}
 
-	err := createDirectory(srcPath, "temp")
+	err := replaceNuspec(outPath, version)
 	checkError(err)
 
-	err = replaceNuspec(srcPath, version)
+	err = replaceInstallScript(outPath, downloadURL)
 	checkError(err)
-
-	err = replaceInstallScript(srcPath, downloadURL)
-	checkError(err)
-
-	const chocoCommand = "pack"
-	cmd := exec.Command("choco", chocoCommand)
-	cmd.Dir = path.Join(srcPath, "temp")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
-	checkError(err)
+	log.Println("Success!")
 }

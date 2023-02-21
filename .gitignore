@@ -33,5 +33,3 @@ gon_arm64.json
 # Tool generated files
 *.idea
 
-# msi generated files
-build/package/chocolatey/temp/

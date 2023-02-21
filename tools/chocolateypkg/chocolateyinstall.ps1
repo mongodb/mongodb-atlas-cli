@@ -1,4 +1,5 @@
-﻿$ErrorActionPreference = 'Stop';
+﻿{{- /*gotype: github.com/mongodb/mongodb-atlas-cli/tools/chocolateypkg/main.InstallScriptDetails */ -}}
+$ErrorActionPreference = 'Stop';
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $url        = "{{.URL}}"
 $installDir = "$(Join-Path "$env:ProgramFiles` `(x86`)" 'MongoDB Atlas CLI')"

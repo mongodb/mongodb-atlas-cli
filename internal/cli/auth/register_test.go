@@ -139,5 +139,5 @@ func TestRegisterPreRun(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	config.SetPublicAPIKey("public")
 	config.SetPrivateAPIKey("private")
-	require.ErrorContains(t, registerPreRun(), fmt.Sprintf(AlreadyAuthenticatedError, "public"), WithProfileMsg)
+	require.ErrorContains(t, registerPreRun(), fmt.Sprintf(alreadyAuthenticatedError, "public"), WithProfileMsg)
 }

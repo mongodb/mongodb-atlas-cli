@@ -50,10 +50,10 @@ func (mr *MockProjectOrgsListerMockRecorder) GetOrgProjects(arg0, arg1 interface
 }
 
 // Organization mocks base method.
-func (m *MockProjectOrgsLister) Organization(arg0 string) (*mongodbatlas.Organization, error) {
+func (m *MockProjectOrgsLister) Organization(arg0 string) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organization", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.Organization)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

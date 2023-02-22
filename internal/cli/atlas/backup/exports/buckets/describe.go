@@ -61,6 +61,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe",
 		Aliases: []string{"get"},
 		Short:   "Return one snapshot export bucket.",
+		Long:    fmt.Sprintf(`%v %v %v`, usage.RequiredRoleIntro, "Project Read Only", usage.RequiredRoleClose),
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return the details for the continuous backup export bucket with the ID dbdb00ca12345678f901a234:
   %s backup exports buckets describe dbdb00ca12345678f901a234`, cli.ExampleAtlasEntryPoint()),

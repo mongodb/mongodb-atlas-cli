@@ -16,11 +16,8 @@
 
 set -Eeou pipefail
 
-VERSION="$(git tag --list "${tool_name:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION="$(git describe --match "${tool_name:?}/v*" | cut -d "v" -f 2)"
 
-if [[ "${unstable-}" == "-unstable" ]]; then
-	VERSION="${VERSION}-next"
-fi
 FILENAME="${package_name-}_${VERSION}_linux_x86_64"
 FILENAME_ARM="${package_name-}_${VERSION}_linux_arm64"
 META_FILENAME="${meta_package_name-}_${VERSION}_linux_x86_64"

@@ -101,8 +101,6 @@ functions:
       type: test
       params:
         <<: *go_options
-        include_expansions_in_env:
-          - unstable
         add_to_path:
           - ${go_bin}
           - ${go_base_path}${workdir}/bin
@@ -118,6 +116,7 @@ functions:
           NOTARY_AUTH_TOKEN: ${signing_auth_token_50}
           NOTARY_URL: ${notary_service_notary_url}
           SECRET_API_KEY: ${chocolatey_api_key}
+          unstable: ${unstable}
         command: bash.exe -c build/package/generate-msi.sh
   "update choco":
     - command: subprocess.exec

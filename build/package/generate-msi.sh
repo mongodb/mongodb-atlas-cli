@@ -49,6 +49,6 @@ go-msi make --path "${WIX_MANIFEST_FILE}" --msi "dist/${PACKAGE_NAME}" --version
 go run ./tools/sign -file "dist/${PACKAGE_NAME}"
 
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-	go run ./tools/chocolateypkg/chocolateypkg.go -version "${VERSION}" -url "https://fastdl.mongodb.org/mongocli/${PACKAGE_NAME}"
+	go run ./tools/chocolateypkg/chocolateypkg.go -version "${VERSION}"
 	choco pack dist/mongodb-atlas.nuspec --outputdirectory dist -dv
 fi

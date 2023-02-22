@@ -32,14 +32,13 @@ package main
 
 import (
 	"bytes"
-	"context"
 	"crypto/sha256"
 	_ "embed"
 	"encoding/hex"
 	"flag"
+	"fmt"
 	"io"
 	"log"
-	"net/http"
 	"os"
 	"path"
 	"text/template"
@@ -94,33 +93,35 @@ func replaceNuspec(dir, version string) error {
 	return err
 }
 
-func generateSha256(url string) (string, error) {
-	r, err := http.NewRequestWithContext(context.Background(), http.MethodGet, url, http.NoBody)
+func sha256sum(path string) (string, error) {
+	f, err := os.Open(path)
 	if err != nil {
 		return "", err
 	}
-	resp, err := http.DefaultClient.Do(r)
-	if err != nil {
-		return "", err
-	}
-
-	defer resp.Body.Close()
+	defer f.Close()
 
 	h := sha256.New()
-	if _, err := io.Copy(h, resp.Body); err != nil {
+	if _, err := io.Copy(h, f); err != nil {
 		return "", err
 	}
+
+	if _, err := f.Stat(); err != nil {
+		return "", err
+	}
+
 	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
 //go:embed chocolateyinstall.ps1
 var installScript string
 
-func replaceInstallScript(dir, url string) error {
-	checkSum, err := generateSha256(url)
+func replaceInstallScript(dir, version string) error {
+	file := fmt.Sprintf("mongodb-atlas-cli_%s_windows_x86_64.msi", version)
+	checkSum, err := sha256sum(path.Join(dir, file))
 	if err != nil {
 		return err
 	}
+	url := fmt.Sprintf("https://fastdl.mongodb.org/mongocli/mongodb-atlas-cli_%s_windows_x86_64.msi", version)
 	newInstallDetails := InstallScriptDetails{
 		URL:      url,
 		CheckSum: checkSum,
@@ -157,27 +158,22 @@ func replaceInstallScript(dir, url string) error {
 
 func main() {
 	var (
-		version     string
-		downloadURL string
-		outPath     string
+		version string
+		outPath string
 	)
 
 	flag.StringVar(&version, "version", "", "Atlas CLI version to package")
-	flag.StringVar(&outPath, "out", "dist", "Output folder for files")
-	flag.StringVar(&downloadURL, "url", "", "Atlas CLI installer URL to download")
+	flag.StringVar(&outPath, "out", "dist", "Output folder for choco files")
 	flag.Parse()
 
 	if version == "" {
 		log.Fatalln("You must specify Atlas CLI version")
 	}
-	if downloadURL == "" {
-		log.Fatalln("You must specify download URL")
-	}
 
 	err := replaceNuspec(outPath, version)
 	checkError(err)
 
-	err = replaceInstallScript(outPath, downloadURL)
+	err = replaceInstallScript(outPath, version)
 	checkError(err)
 	log.Println("Success!")
 }

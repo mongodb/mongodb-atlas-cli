@@ -41,7 +41,6 @@ import (
 	"log"
 	"os"
 	"path"
-	"strings"
 	"text/template"
 )
 
@@ -122,10 +121,8 @@ func generateInstallScript(dir, version string) error {
 	if err != nil {
 		return err
 	}
-	var url string
-	if !strings.HasSuffix(version, "-next") {
-		url = fmt.Sprintf("https://fastdl.mongodb.org/mongocli/mongodb-atlas-cli_%s_windows_x86_64.msi", version)
-	}
+	// For previews this link will be invalid
+	url := fmt.Sprintf("https://fastdl.mongodb.org/mongocli/mongodb-atlas-cli_%s_windows_x86_64.msi", version)
 
 	newInstallDetails := InstallScriptDetails{
 		URL:      url,

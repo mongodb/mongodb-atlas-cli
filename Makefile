@@ -5,7 +5,7 @@ COVERAGE=coverage.out
 
 MCLI_SOURCE_FILES?=./cmd/mongocli
 MCLI_BINARY_NAME=mongocli
-MCLI_VERSION?=$(shell git tag --list 'mongocli/v*' --sort=taggerdate | tail -1 | cut -d "v" -f 2 )
+MCLI_VERSION?=$(shell git describe --match "mongocli/v*" | cut -d "v" -f 2)
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
 MCLI_DESTINATION=./bin/$(MCLI_BINARY_NAME)
 MCLI_INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
@@ -13,15 +13,9 @@ MCLI_E2E_BINARY?=../../../bin/${MCLI_BINARY_NAME}
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
 ATLAS_BINARY_NAME=atlas
-ATLAS_VERSION?=$(shell git tag --list 'atlascli/v*' --sort=taggerdate | tail -1 | cut -d "v" -f 2 )
+ATLAS_VERSION?=$(shell git describe --match "atlascli/v*" | cut -d "v" -f 2)
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
 ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
-
-REF=$(shell git describe --always --tags | grep '-')
-ifneq (,$(findstring -,$(REF))) # if the tag doesn't point to the commit, we add -next to the version
-	MCLI_VERSION:="$(MCLI_VERSION)-next"
-	ATLAS_VERSION:="$(ATLAS_VERSION)-next"
-endif
 
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit=${MCLI_GIT_SHA}
 MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=$(MCLI_BINARY_NAME) -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${MCLI_VERSION}
@@ -164,7 +158,7 @@ fuzz-normalizer-test: ## Run fuzz test
 .PHONY: unit-test
 unit-test: ## Run unit-tests
 	@echo "==> Running unit tests..."
-	$(TEST_CMD)  --tags="$(UNIT_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./...
+	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./...
 
 .PHONY: install
 install: install-mongocli install-atlascli ## Install binaries in $GOPATH/bin for both CLIs

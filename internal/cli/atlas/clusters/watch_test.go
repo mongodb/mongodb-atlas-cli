@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package clusters
 
@@ -30,7 +29,6 @@ import (
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AdvancedCluster{StateName: "IDLE"}
 
@@ -38,6 +36,7 @@ func TestWatch_Run(t *testing.T) {
 		name:  "test",
 		store: mockStore,
 	}
+	opts.Goal = []string{"IDLE"}
 
 	mockStore.
 		EXPECT().

@@ -55,6 +55,10 @@ Options
      - Type
      - Required
      - Description
+   * - --goal
+     - strings
+     - false
+     - Goal state to watch for. This value defaults to [IDLE].
    * - -h, --help
      - 
      - false

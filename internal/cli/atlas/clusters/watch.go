@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -57,7 +58,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if result.StateName == "UPDATING" {
 		opts.IsRetryableErr = isRetryable
 	}
-	return result.StateName == "IDLE", nil
+	return search.StringInSlice(opts.Goal, result.StateName), nil
 }
 
 func (opts *WatchOpts) Run() error {
@@ -88,7 +89,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nCluster available.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), "\nCluster reached goal state.\n"),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -98,6 +99,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringSliceVar(&opts.Goal, flag.Goal, []string{"IDLE"}, "Goal state to watch for.")
 
 	return cmd
 }

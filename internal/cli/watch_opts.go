@@ -26,6 +26,7 @@ type WatchOpts struct {
 	OutputOpts
 	s              *spinner.Spinner
 	IsRetryableErr func(err error) bool
+	Goal           []string
 }
 
 const (

@@ -116,7 +116,6 @@ functions:
           NOTARY_AUTH_TOKEN: ${signing_auth_token_50}
           NOTARY_URL: ${notary_service_notary_url}
           SECRET_API_KEY: ${chocolatey_api_key}
-          unstable: ${unstable}
         command: bash.exe -c build/package/generate-msi.sh
   "update choco":
     - command: subprocess.exec
@@ -306,7 +305,6 @@ tasks:
       - func: "generate msi"
         vars:
           TOOL_NAME: ${tool_name}
-          unstable: -unstable
       - func: "uninstall go-msi"
       - command: s3.put
         params:

@@ -101,6 +101,8 @@ functions:
       type: test
       params:
         <<: *go_options
+        include_expansions_in_env:
+          - unstable
         add_to_path:
           - ${go_bin}
           - ${go_base_path}${workdir}/bin
@@ -305,6 +307,7 @@ tasks:
       - func: "generate msi"
         vars:
           TOOL_NAME: ${tool_name}
+          unstable: -unstable
       - func: "uninstall go-msi"
       - command: s3.put
         params:

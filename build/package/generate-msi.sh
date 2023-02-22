@@ -24,7 +24,9 @@ export NOTARY_SIGNING_KEY
 go-msi check-env
 
 VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
-
+if [[ "${unstable-}" == "-unstable" ]]; then
+  VERSION="${VERSION}-next"
+fi
 COMMIT=$(git log -n1 --format=format:"%H")
 
 SOURCE_FILES=./cmd/mongocli

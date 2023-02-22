@@ -16,7 +16,7 @@
 
 set -Eeou pipefail
 
-VERSION="$(git describe --match "${tool_name:?}/v*" --abbrev=0 | cut -d "v" -f 2)"
+VERSION="$(git tag --list "${tool_name:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
 if [[ "${unstable-}" == "-unstable" ]]; then
   VERSION="${VERSION}-next"

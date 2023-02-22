@@ -67,7 +67,7 @@ func checkError(err error) {
 //go:embed mongodb-atlas.nuspec
 var atlasNuSpec string
 
-func replaceNuspec(dir, version string) error {
+func generateNuspec(dir, version string) error {
 	newVersion := NuspecDetails{version}
 	tmpl, err := template.New("NuspecTemplate").Parse(atlasNuSpec)
 	if err != nil {
@@ -115,7 +115,7 @@ func sha256sum(path string) (string, error) {
 //go:embed chocolateyinstall.ps1
 var installScript string
 
-func replaceInstallScript(dir, version string) error {
+func generateInstallScript(dir, version string) error {
 	file := fmt.Sprintf("mongodb-atlas-cli_%s_windows_x86_64.msi", version)
 	checkSum, err := sha256sum(path.Join(dir, file))
 	if err != nil {
@@ -170,10 +170,10 @@ func main() {
 		log.Fatalln("You must specify Atlas CLI version")
 	}
 
-	err := replaceNuspec(outPath, version)
+	err := generateNuspec(outPath, version)
 	checkError(err)
 
-	err = replaceInstallScript(outPath, version)
+	err = generateInstallScript(outPath, version)
 	checkError(err)
 	log.Println("Success!")
 }

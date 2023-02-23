@@ -19,8 +19,6 @@ package auth
 import (
 	"bytes"
 	"context"
-	"fmt"
-	"io"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -32,19 +30,6 @@ import (
 	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
-
-type confirmPromptMock struct {
-	message   string
-	nbOfCalls int
-	responses []bool
-	outWriter io.Writer
-}
-
-func (c *confirmPromptMock) confirm() (bool, error) {
-	c.nbOfCalls++
-	_, _ = fmt.Fprintf(c.outWriter, "? "+c.message+" (Y/n)\n")
-	return c.responses[c.nbOfCalls-1], nil
-}
 
 func TestBuilder(t *testing.T) {
 	test.CmdValidator(
@@ -221,7 +206,7 @@ To continue, go to http://localhost
 		defer ctrl.Finish()
 		buf := new(bytes.Buffer)
 		ctx := context.TODO()
-		//regenerateCodePromptMock := &confirmPromptMock{
+		// regenerateCodePromptMock := &confirmPromptMock{
 		//	message:   "Your one-time verification code is expired. Would you like to generate a new one?",
 		//	nbOfCalls: 0,
 		//	responses: []bool{true, false},

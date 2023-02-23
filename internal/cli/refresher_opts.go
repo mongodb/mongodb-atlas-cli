@@ -44,7 +44,7 @@ func (opts *RefresherOpts) InitFlow(c oauth.ServiceGetter) func() error {
 	}
 }
 
-// WithFlow set a flow for testing
+// WithFlow set a flow for testing.
 func (opts *RefresherOpts) WithFlow(f Refresher) {
 	opts.flow = f
 }
@@ -77,14 +77,13 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 
 func (opts *RefresherOpts) PollToken(c context.Context, d *atlasauth.DeviceCode) (*atlasauth.Token, *atlas.Response, error) {
 	return opts.flow.PollToken(c, d)
-
 }
 
 func (opts *RefresherOpts) RequestCode(c context.Context) (*atlasauth.DeviceCode, *atlas.Response, error) {
 	return opts.flow.RequestCode(c)
 }
 
-//func (opts *RefresherOpts) oauthFlow(ctx context.Context) error {
+// func (opts *RefresherOpts) oauthFlow(ctx context.Context) error {
 //	askedToOpenBrowser := false
 //	for {
 //		code, _, err := opts.RequestCode(ctx)

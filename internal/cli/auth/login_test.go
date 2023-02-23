@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package auth
 
@@ -84,17 +83,18 @@ func TestLoginBuilder(t *testing.T) {
 
 func Test_loginOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockFlow := mocks.NewMockAuthenticator(ctrl)
+	mockFlow := mocks.NewMockRefresher(ctrl)
 	mockConfig := mocks.NewMockLoginConfig(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 	defer ctrl.Finish()
 	buf := new(bytes.Buffer)
 
 	opts := &LoginOpts{
-		flow:      mockFlow,
 		config:    mockConfig,
 		NoBrowser: true,
 	}
+	opts.WithFlow(mockFlow)
+
 	opts.OutWriter = buf
 	opts.Store = mockStore
 	expectedCode := &auth.DeviceCode{
@@ -144,7 +144,7 @@ func Test_loginOpts_Run(t *testing.T) {
 		},
 	}
 	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
-	require.NoError(t, opts.Run(ctx))
+	require.NoError(t, opts.LoginRun(ctx))
 	assert.Equal(t, `
 To verify your account, copy your one-time verification code:
 1234-5678
@@ -156,30 +156,20 @@ Successfully logged in as test@10gen.com.
 `, buf.String())
 }
 
-func TestLoginPreRun(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
-	ctx := context.TODO()
-	config.SetPublicAPIKey("public")
-	config.SetPrivateAPIKey("private")
-	require.ErrorContains(t, loginPreRun(ctx), fmt.Sprintf(alreadyAuthenticatedError, "public"), loginWithProfileMsg)
-}
-
 func Test_loginOpts_oauthFlow(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	t.Run("updates accessToken and refreshToken after code is verified", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		mockFlow := mocks.NewMockAuthenticator(ctrl)
+		mockFlow := mocks.NewMockRefresher(ctrl)
 		mockConfig := mocks.NewMockLoginConfig(ctrl)
 		defer ctrl.Finish()
 		buf := new(bytes.Buffer)
 		ctx := context.TODO()
 
 		opts := &LoginOpts{
-			flow:                 mockFlow,
-			config:               mockConfig,
-			NoBrowser:            true,
-			regenerateCodePrompt: nil,
+			config:    mockConfig,
+			NoBrowser: true,
 		}
+		opts.WithFlow(mockFlow)
 
 		opts.OutWriter = buf
 
@@ -224,26 +214,25 @@ To continue, go to http://localhost
 `, buf.String())
 	})
 
-	t.Run("returns ErrTimeout is user choses not to regenerate device code", func(t *testing.T) {
+	t.Run("returns ErrTimeout is user chooses not to regenerate device code", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		mockFlow := mocks.NewMockAuthenticator(ctrl)
+		mockFlow := mocks.NewMockRefresher(ctrl)
 		mockConfig := mocks.NewMockLoginConfig(ctrl)
 		defer ctrl.Finish()
 		buf := new(bytes.Buffer)
 		ctx := context.TODO()
-		regenerateCodePromptMock := &confirmPromptMock{
-			message:   "Your one-time verification code is expired. Would you like to generate a new one?",
-			nbOfCalls: 0,
-			responses: []bool{true, false},
-			outWriter: buf,
-		}
+		//regenerateCodePromptMock := &confirmPromptMock{
+		//	message:   "Your one-time verification code is expired. Would you like to generate a new one?",
+		//	nbOfCalls: 0,
+		//	responses: []bool{true, false},
+		//	outWriter: buf,
+		//}
 
 		opts := &LoginOpts{
-			flow:                 mockFlow,
-			config:               mockConfig,
-			NoBrowser:            true,
-			regenerateCodePrompt: regenerateCodePromptMock,
+			config:    mockConfig,
+			NoBrowser: true,
 		}
+		opts.WithFlow(mockFlow)
 
 		opts.OutWriter = buf
 

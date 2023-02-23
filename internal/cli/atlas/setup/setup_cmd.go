@@ -26,13 +26,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
 const (
-	withProfileMsg = `Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.`
-	labelKey       = "Infrastructure Tool"
-	labelValue     = "Atlas CLI Setup"
+	labelKey   = "Infrastructure Tool"
+	labelValue = "Atlas CLI Setup"
 )
 
 var errNeedsOrgAndProject = errors.New("please make sure to select or add an organization and project to the profile")
@@ -40,12 +40,8 @@ var errNeedsOrgAndProject = errors.New("please make sure to select or add an org
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	// quickstart
 	quickstart quickstart.Flow
-	// register
-	register auth.RegisterFlow
-	// login
-	login auth.LoginFlow
+	register   auth.RegisterOpts
 	// control
 	skipRegister bool
 	skipLogin    bool
@@ -58,7 +54,7 @@ This command will help you
 1. Create and verify your MongoDB Atlas account in your browser.
 2. Return to the terminal to create your first free MongoDB database in Atlas.
 `)
-		if err := opts.register.Run(ctx); err != nil {
+		if err := opts.register.RegisterRun(ctx); err != nil {
 			return err
 		}
 	} else if !opts.skipLogin {
@@ -67,7 +63,7 @@ This command will help you
 2. Return to the terminal to create your first free MongoDB database in Atlas.
 `)
 
-		if err := opts.login.Run(ctx); err != nil {
+		if err := opts.register.LoginRun(ctx); err != nil {
 			return err
 		}
 	}
@@ -83,32 +79,34 @@ This command will help you
 	return opts.quickstart.Run()
 }
 
-func (opts *Opts) PreRun(ctx context.Context) {
+func (opts *Opts) PreRun(ctx context.Context) error {
 	opts.skipRegister = true
 	opts.skipLogin = true
 
-	status, _ := auth.GetStatus(ctx)
-	switch status {
-	case auth.LoggedInWithAPIKeys:
-		msg := fmt.Sprintf(auth.AlreadyAuthenticatedMsg, config.PublicAPIKey())
+	if err := validate.NoAPIKeys(); err != nil {
+		fmt.Println("HERE 1", err)
 		_, _ = fmt.Fprintf(opts.OutWriter, `
-%s
+You are already authenticated with an API key (Public key: %s).
 
-%s
-`, msg, withProfileMsg)
-	case auth.LoggedInWithValidToken:
-		account, _ := auth.AccountWithAccessToken()
-		msg := fmt.Sprintf(auth.AlreadyAuthenticatedEmailMsg, account)
-		_, _ = fmt.Fprintf(opts.OutWriter, `%s
-
-%s
-`, msg, withProfileMsg)
-	case auth.LoggedInWithInvalidToken:
-		opts.skipLogin = false
-	case auth.NotLoggedIn:
-		opts.skipRegister = false
-	default:
+Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.
+`, config.PublicAPIKey())
+		return nil
 	}
+	if err := opts.register.RefreshAccessToken(ctx); err != nil && errors.Is(err, cli.ErrInvalidRefreshToken) {
+		fmt.Println("HERE 2", err)
+		opts.skipLogin = false
+		return nil
+	}
+	if account, err := auth.AccountWithAccessToken(); err == nil {
+		fmt.Println("HERE 3", err)
+		_, _ = fmt.Fprintf(opts.OutWriter, `You are already authenticated with an account (%s).
+	
+Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.
+`, account)
+		return nil
+	}
+	opts.skipRegister = false
+	return nil
 }
 
 // Builder
@@ -121,13 +119,10 @@ func (opts *Opts) PreRun(ctx context.Context) {
 //	[--password password]
 //	[--skipMongosh skipMongosh]
 func Builder() *cobra.Command {
-	loginOpts := auth.NewLoginOpts()
-	qsOpts := quickstart.NewQuickstartOpts(loginOpts)
+	qsOpts := quickstart.NewQuickstartOpts()
 	qsOpts.LabelKey = labelKey
 	qsOpts.LabelValue = labelValue
 	opts := &Opts{
-		register:   auth.NewRegisterFlow(loginOpts),
-		login:      loginOpts,
 		quickstart: qsOpts,
 	}
 
@@ -142,23 +137,27 @@ func Builder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			// setup pre run
-			opts.PreRun(cmd.Context())
+			if err := opts.PreRun(cmd.Context()); err != nil {
+				return nil
+			}
 
 			// registration pre run if applicable
 			if !opts.skipRegister {
-				if err := opts.register.PreRun(opts.OutWriter); err != nil {
+				if err := opts.register.LoginPreRun(); err != nil {
 					return err
 				}
 			}
 
 			if !opts.skipLogin {
-				loginOpts.OutWriter = opts.OutWriter
-				if err := opts.login.PreRun(); err != nil {
+				qsOpts.LoginOpts.OutWriter = opts.OutWriter
+				qsOpts.DefaultSetterOpts.OutWriter = opts.OutWriter
+				if err := opts.register.LoginPreRun(); err != nil {
 					return err
 				}
 			}
 
 			return opts.PreRunE(
+				opts.register.InitFlow(config.Default()),
 				opts.InitOutput(opts.OutWriter, ""),
 			)
 		},
@@ -168,8 +167,8 @@ func Builder() *cobra.Command {
 	}
 
 	// Register and login related
-	cmd.Flags().BoolVar(&loginOpts.IsGov, "gov", false, "Register with Atlas for Government.")
-	cmd.Flags().BoolVar(&loginOpts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&qsOpts.IsGov, "gov", false, "Register with Atlas for Government.")
+	cmd.Flags().BoolVar(&qsOpts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	// Quickstart related
 	cmd.Flags().StringVar(&qsOpts.ClusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&qsOpts.Tier, flag.Tier, quickstart.DefaultAtlasTier, usage.Tier)

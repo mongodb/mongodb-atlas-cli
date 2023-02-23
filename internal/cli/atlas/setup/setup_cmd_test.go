@@ -22,7 +22,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
@@ -51,26 +50,18 @@ func TestBuilder(t *testing.T) {
 
 func Test_setupOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
-	defer ctrl.Finish()
+	mockFlow := mocks.NewMockRefresher(ctrl)
+
 	ctx := context.TODO()
 	buf := new(bytes.Buffer)
 
 	opts := &Opts{
-		register:   mockRegFlow,
-		login:      auth.NewLoginOpts(),
 		quickstart: mockQuickstartFlow,
 		skipLogin:  true,
 	}
-
+	opts.register.WithFlow(mockFlow)
 	opts.OutWriter = buf
-
-	mockRegFlow.
-		EXPECT().
-		Run(ctx).
-		DoAndReturn(setConfig()).
-		Times(1)
 
 	mockQuickstartFlow.
 		EXPECT().
@@ -87,41 +78,25 @@ func Test_setupOpts_Run(t *testing.T) {
 	require.NoError(t, opts.Run(ctx))
 }
 
-func Test_setupOpts_RunWithAPIKeys(t *testing.T) {
+func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
-	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
-	defer ctrl.Finish()
+	mockFlow := mocks.NewMockRefresher(ctrl)
+
 	ctx := context.TODO()
 	buf := new(bytes.Buffer)
 
 	opts := &Opts{
-		register:   mockRegFlow,
-		login:      auth.NewLoginOpts(),
 		quickstart: mockQuickstartFlow,
 	}
+	opts.register.WithFlow(mockFlow)
 
 	config.SetPublicAPIKey("publicKey")
 	config.SetPrivateAPIKey("privateKey")
-	_ = setConfig()(ctx)
-
 	opts.OutWriter = buf
-	mockQuickstartFlow.
-		EXPECT().
-		PreRun(ctx, buf).
-		Return(nil).
-		Times(1)
 
-	mockQuickstartFlow.
-		EXPECT().
-		Run().
-		Return(nil).
-		Times(1)
-
-	// FIXME: CLOUDP-162860 side effect dependant test
-	opts.PreRun(ctx)
-	require.NoError(t, opts.Run(ctx))
+	require.NoError(t, opts.PreRun(ctx))
 	assert.Equal(t, `
 You are already authenticated with an API key (Public key: publicKey).
 
@@ -131,53 +106,22 @@ Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on
 
 func Test_setupOpts_RunSkipRegister(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
-	mockLoginFlow := mocks.NewMockLoginFlow(ctrl)
-	defer ctrl.Finish()
+	mockFlow := mocks.NewMockRefresher(ctrl)
+
 	ctx := context.TODO()
 
 	buf := new(bytes.Buffer)
 
 	opts := &Opts{
-		register:   mockRegFlow,
-		login:      mockLoginFlow,
 		quickstart: mockQuickstartFlow,
 		skipLogin:  true,
 	}
+	opts.register.WithFlow(mockFlow)
 
 	config.SetAccessToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ")
 
 	opts.OutWriter = buf
-
-	mockLoginFlow.
-		EXPECT().
-		Run(ctx).
-		DoAndReturn(setConfig()).
-		Times(1)
-
-	mockQuickstartFlow.
-		EXPECT().
-		Run().
-		Return(nil).
-		Times(1)
-
-	mockQuickstartFlow.
-		EXPECT().
-		PreRun(ctx, buf).
-		Return(nil).
-		Times(1)
-
-	// FIXME: CLOUDP-162860 side effect dependant test
-	opts.PreRun(ctx)
-	assert.Equal(t, opts.skipRegister, true)
-	require.NoError(t, opts.Run(ctx))
-}
-
-func setConfig() func(ctx context.Context) error {
-	return func(ctx context.Context) error {
-		config.SetOrgID("a")
-		config.SetProjectID("b")
-		return nil
-	}
+	require.NoError(t, opts.PreRun(ctx))
+	assert.True(t, opts.skipRegister)
 }

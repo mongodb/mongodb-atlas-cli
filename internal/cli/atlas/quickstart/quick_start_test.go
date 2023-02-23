@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package quickstart
 
@@ -23,7 +22,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
@@ -59,7 +57,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
-	defer ctrl.Finish()
+	mockFlow := mocks.NewMockRefresher(ctrl)
 
 	expectedCluster := &mongodbatlas.AdvancedCluster{
 		StateName: "IDLE",
@@ -84,6 +82,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		SkipSampleData: true,
 		Confirm:        true,
 	}
+	opts.WithFlow(mockFlow)
 
 	projectIPAccessList := opts.newProjectIPAccessList()
 
@@ -116,7 +115,8 @@ func TestQuickstartOpts_Run_NotLoggedIn(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
-	defer ctrl.Finish()
+	mockFlow := mocks.NewMockRefresher(ctrl)
+
 	buf := new(bytes.Buffer)
 	ctx := context.TODO()
 	opts := &Opts{
@@ -131,6 +131,7 @@ func TestQuickstartOpts_Run_NotLoggedIn(t *testing.T) {
 		SkipSampleData: true,
 		Confirm:        true,
 	}
+	opts.WithFlow(mockFlow)
 
 	require.Error(t, validate.ErrMissingCredentials, opts.quickstartPreRun(ctx, buf))
 }
@@ -139,8 +140,7 @@ func TestQuickstartOpts_Run_NeedLogin_ForceAfterLogin(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
-	mockLoginFlow := mocks.NewMockLoginFlow(ctrl)
-	defer ctrl.Finish()
+	mockFlow := mocks.NewMockRefresher(ctrl)
 
 	ctx := context.TODO()
 	buf := new(bytes.Buffer)
@@ -167,24 +167,11 @@ func TestQuickstartOpts_Run_NeedLogin_ForceAfterLogin(t *testing.T) {
 		SkipMongosh:    true,
 		SkipSampleData: true,
 		Confirm:        false,
-		login:          mockLoginFlow,
-		loginOpts:      auth.NewLoginOpts(),
 	}
+	opts.WithFlow(mockFlow)
 
 	setConfig()
 	projectIPAccessList := opts.newProjectIPAccessList()
-
-	mockLoginFlow.
-		EXPECT().
-		PreRun().
-		Return(nil).
-		Times(1)
-
-	mockLoginFlow.
-		EXPECT().
-		Run(ctx).
-		Return(nil).
-		Times(1)
 
 	mockStore.
 		EXPECT().
@@ -220,6 +207,7 @@ func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
+	mockFlow := mocks.NewMockRefresher(ctrl)
 	defer ctrl.Finish()
 
 	expectedCluster := &mongodbatlas.AdvancedCluster{
@@ -246,6 +234,7 @@ func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 		SkipSampleData:              true,
 		Confirm:                     true,
 	}
+	opts.WithFlow(mockFlow)
 
 	projectIPAccessList := opts.newProjectIPAccessList()
 

@@ -99,8 +99,7 @@ const (
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	login                       auth.LoginFlow
-	loginOpts                   *auth.LoginOpts
+	auth.LoginOpts
 	defaultName                 string
 	ClusterName                 string
 	Tier                        string
@@ -143,14 +142,12 @@ type Flow interface {
 	Run() error
 }
 
-func NewQuickstartOpts(loginOpts *auth.LoginOpts) *Opts {
+func NewQuickstartOpts() *Opts {
 	labelValue := atlasCLILabelValue
 	if config.ToolName == config.MongoCLI {
 		labelValue = mongoCLILabelValue
 	}
 	return &Opts{
-		loginOpts:  loginOpts,
-		login:      loginOpts, // FIXME: CLOUDP-162860 two logins?
 		LabelKey:   labelKey,
 		LabelValue: labelValue,
 	}
@@ -166,11 +163,11 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 
 func (opts *Opts) quickstartPreRun(ctx context.Context, outWriter io.Writer) error {
 	opts.shouldRunLogin = false
-	opts.OutWriter = outWriter
+	opts.LoginOpts.OutWriter = outWriter
+	opts.DefaultSetterOpts.OutWriter = outWriter
 
 	// Get authentication status to define whether login should be run
-	status, _ := auth.GetStatus(ctx)
-	if status == auth.LoggedInWithValidToken || status == auth.LoggedInWithAPIKeys {
+	if err := validate.Credentials(); err == nil {
 		return opts.PreRunE(
 			opts.ValidateProjectID,
 		)
@@ -187,15 +184,14 @@ func (opts *Opts) quickstartPreRun(ctx context.Context, outWriter io.Writer) err
 		)
 	}
 
-	opts.loginOpts.OutWriter = opts.OutWriter
-	if err := opts.login.PreRun(); err != nil {
+	if err := opts.LoginPreRun(); err != nil {
 		return err
 	}
 
 	opts.shouldRunLogin = true
-	_, _ = fmt.Fprintf(opts.OutWriter, `This action requires authentication.
+	_, _ = fmt.Fprintf(opts.DefaultSetterOpts.OutWriter, `This action requires authentication.
 `)
-	return opts.login.Run(ctx)
+	return opts.LoginRun(ctx)
 }
 
 func (opts *Opts) shouldAskForValue(f string) bool {
@@ -530,7 +526,7 @@ func (opts *Opts) interactiveSetup() error {
 //	[--skipMongosh skipMongosh]
 //	[--default]
 func Builder() *cobra.Command {
-	opts := NewQuickstartOpts(auth.NewLoginOpts())
+	opts := NewQuickstartOpts()
 	cmd := &cobra.Command{
 		Use:   "quickstart",
 		Short: "Create, configure, and connect to an Atlas cluster for your project.",

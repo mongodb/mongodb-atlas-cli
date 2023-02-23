@@ -26,35 +26,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/oauth"
+	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth Authenticator,LoginConfig,LoginFlow
-
-type Authenticator interface {
-	RequestCode(context.Context) (*auth.DeviceCode, *atlas.Response, error)
-	PollToken(context.Context, *auth.DeviceCode) (*auth.Token, *atlas.Response, error)
-}
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth LoginConfig,LoginFlow
 
 type LoginConfig interface {
 	config.SetSaver
 	AccessTokenSubject() (string, error)
 }
-
-const (
-	alreadyAuthenticatedError      = "you are already authenticated with an API key (Public key: %s)"
-	AlreadyAuthenticatedMsg        = "You are already authenticated with an API key (Public key: %s)."
-	alreadyAuthenticatedEmailError = "you are already authenticated with an account (%s)"
-	AlreadyAuthenticatedEmailMsg   = "You are already authenticated with an account (%s)."
-	loginWithProfileMsg            = `run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile`
-	logoutToLoginAccountMsg        = `run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile`
-)
 
 var (
 	ErrProjectIDNotFound = errors.New("you don't have access to this or it doesn't exist")
@@ -63,53 +48,19 @@ var (
 
 type LoginOpts struct {
 	cli.DefaultSetterOpts
-	AccessToken          string
-	RefreshToken         string
-	IsGov                bool
-	isCloudManager       bool
-	NoBrowser            bool
-	SkipConfig           bool
-	config               LoginConfig
-	flow                 Authenticator
-	regenerateCodePrompt userSurvey
-}
-
-func NewLoginOpts() *LoginOpts {
-	return &LoginOpts{
-		regenerateCodePrompt: &confirmPrompt{
-			message:         "Your one-time verification code is expired. Would you like to generate a new one?",
-			defaultResponse: true,
-		},
-	}
-}
-
-type userSurvey interface {
-	confirm() (response bool, err error)
-}
-
-type confirmPrompt struct {
-	message         string
-	defaultResponse bool
-}
-
-func (c *confirmPrompt) confirm() (response bool, err error) {
-	p := &survey.Confirm{
-		Message: c.message,
-		Default: c.defaultResponse,
-	}
-	err = telemetry.TrackAskOne(p, &response)
-	return response, err
+	cli.RefresherOpts
+	AccessToken    string
+	RefreshToken   string
+	IsGov          bool
+	isCloudManager bool
+	NoBrowser      bool
+	SkipConfig     bool
+	config         LoginConfig
 }
 
 type LoginFlow interface {
-	Run(ctx context.Context) error
-	PreRun() error
-}
-
-func (opts *LoginOpts) initFlow() error {
-	var err error
-	opts.flow, err = oauth.FlowWithConfig(config.Default())
-	return err
+	LoginRun(ctx context.Context) error
+	LoginPreRun() error
 }
 
 func (opts *LoginOpts) SetUpOAuthAccess() {
@@ -137,7 +88,7 @@ func (opts *LoginOpts) SetUpOAuthAccess() {
 	}
 }
 
-func (opts *LoginOpts) Run(ctx context.Context) error {
+func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 	if err := opts.oauthFlow(ctx); err != nil {
 		return err
 	}
@@ -263,7 +214,7 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 	askedToOpenBrowser := false
 	for {
-		code, _, err := opts.flow.RequestCode(ctx)
+		code, _, err := opts.RequestCode(ctx)
 		if err != nil {
 			return err
 		}
@@ -274,8 +225,8 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 			askedToOpenBrowser = true
 		}
 
-		accessToken, _, err := opts.flow.PollToken(ctx, code)
-		if retry, errRetry := opts.shouldRetryAuthenticate(err); errRetry != nil {
+		accessToken, _, err := opts.PollToken(ctx, code)
+		if retry, errRetry := shouldRetryAuthenticate(err); errRetry != nil {
 			return errRetry
 		} else if retry {
 			continue
@@ -291,43 +242,24 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 	}
 }
 
-func (opts *LoginOpts) shouldRetryAuthenticate(err error) (retry bool, errSurvey error) {
+func shouldRetryAuthenticate(err error) (retry bool, errSurvey error) {
 	if err == nil || !auth.IsTimeoutErr(err) {
 		return false, nil
 	}
-
-	return opts.regenerateCodePrompt.confirm()
-}
-
-func hasUserProgrammaticKeys() bool {
-	return config.PublicAPIKey() != "" && config.PrivateAPIKey() != ""
-}
-
-func loginPreRun(ctx context.Context) error {
-	if hasUserProgrammaticKeys() {
-		msg := fmt.Sprintf(alreadyAuthenticatedError, config.PublicAPIKey())
-		return fmt.Errorf(`%s
-
-%s`, msg, loginWithProfileMsg)
+	p := &survey.Confirm{
+		Message: "Your one-time verification code is expired. Would you like to generate a new one?",
+		Default: true,
 	}
-
-	if account, err := AccountWithAccessToken(); err == nil {
-		if err := cli.RefreshToken(ctx); err == nil && validate.Token() == nil {
-			msg := fmt.Sprintf(alreadyAuthenticatedEmailError, account)
-			return fmt.Errorf(`%s
-
-%s`, msg, logoutToLoginAccountMsg)
-		}
-	}
-	return nil
+	err = telemetry.TrackAskOne(p, &retry)
+	return retry, err
 }
 
-func (opts *LoginOpts) PreRun() error {
+func (opts *LoginOpts) LoginPreRun() error {
 	opts.config = config.Default()
 	if config.OpsManagerURL() != "" {
 		opts.OpsManagerURL = config.OpsManagerURL()
 	}
-	return opts.initFlow()
+	return nil
 }
 
 func tool() string {
@@ -338,7 +270,7 @@ func tool() string {
 }
 
 func LoginBuilder() *cobra.Command {
-	opts := NewLoginOpts()
+	opts := &LoginOpts{}
 
 	cmd := &cobra.Command{
 		Use:   "login",
@@ -348,13 +280,15 @@ func LoginBuilder() *cobra.Command {
 `, tool(), config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			if err := loginPreRun(cmd.Context()); err != nil {
-				return err
-			}
-			return opts.PreRun()
+			return prerun.ExecuteE(
+				opts.LoginPreRun,
+				opts.InitFlow(config.Default()),
+				validate.NoAPIKeys,
+				validate.NoAccessToken,
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.LoginRun(cmd.Context())
 		},
 		Args: require.NoArgs,
 	}

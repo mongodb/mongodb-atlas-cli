@@ -107,7 +107,7 @@ func Builder() *cobra.Command {
 		profile    string
 		debugLevel bool
 	)
-
+	opts := &cli.RefresherOpts{}
 	rootCmd := &cobra.Command{
 		Version: version.Version,
 		Use:     atlas,
@@ -136,12 +136,15 @@ func Builder() *cobra.Command {
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
 			}
-
-			if shouldCheckCredentials(cmd) {
-				err := cli.RefreshToken(cmd.Context())
-				if err != nil {
+			if shouldRefreshToken(cmd) {
+				if err := opts.InitFlow(config.Default())(); err != nil {
 					return err
 				}
+				if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
+					return err
+				}
+			}
+			if shouldCheckCredentials(cmd) {
 				return validate.Credentials()
 			}
 
@@ -249,6 +252,29 @@ func shouldSetService(cmd *cobra.Command) bool {
 		return false
 	}
 
+	return true
+}
+
+func shouldRefreshToken(cmd *cobra.Command) bool {
+	searchByName := []string{
+		"__complete",
+		"help",
+		figautocomplete.CmdUse,
+	}
+	for _, n := range searchByName {
+		if cmd.Name() == n {
+			return false
+		}
+	}
+	searchByPath := []string{
+		fmt.Sprintf("%s %s", atlas, "completion"), // completion commands do not require credentials
+		fmt.Sprintf("%s %s", atlas, "config"),     // user wants to set credentials
+	}
+	for _, p := range searchByPath {
+		if strings.HasPrefix(cmd.CommandPath(), p) {
+			return false
+		}
+	}
 	return true
 }
 

@@ -92,7 +92,7 @@ func TestOrgAPIKeyAccessList(t *testing.T) {
 	})
 
 	t.Run("Create Current IP", func(t *testing.T) {
-		t.Skip("400 (request \"CANNOT_REMOVE_CALLER_FROM_ACCESS_LIST\") Cannot remove caller's IP address 44.213.71.46 from access list")
+		t.Skip("400 (request \"CANNOT_REMOVE_CALLER_FROM_ACCESS_LIST\") Cannot remove caller's IP address from access list")
 		cmd := exec.Command(cliPath, iamEntity,
 			orgEntity,
 			apiKeysEntity,
@@ -115,7 +115,7 @@ func TestOrgAPIKeyAccessList(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		t.Skip("400 (request \"CANNOT_REMOVE_CALLER_FROM_ACCESS_LIST\") Cannot remove caller's IP address 44.213.71.46 from access list")
+		t.Skip("400 (request \"CANNOT_REMOVE_CALLER_FROM_ACCESS_LIST\") Cannot remove caller's IP address from access list")
 		deleteAccessListEntry(t, cliPath, entry, apiKeyID)
 	})
 }

@@ -53,7 +53,6 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete",
 		Aliases: []string{"rm"},
 		Short:   "Delete one link-token.",
-		Long:    "Your API Key must have the Organization Owner role to successfully run this command.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

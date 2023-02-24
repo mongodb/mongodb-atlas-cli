@@ -25,7 +25,7 @@ func Builder() *cobra.Command {
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage Atlas Data Lakes for your project.",
-		Long:    "The datalakes command provides access to your project data lakes. You can create, edit, and delete data lakes.",
+		Long:    `The datalakes command provides access to your project data lakes. You can create, edit, and delete data lakes.`,
 	}
 
 	cmd.AddCommand(

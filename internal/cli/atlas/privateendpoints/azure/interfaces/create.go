@@ -70,7 +70,7 @@ func CreateBuilder() *cobra.Command {
 		Use:     "create <endpointServiceId>",
 		Aliases: []string{"add"},
 		Short:   "Create a new interface for the specified Azure private endpoint.",
-		Long:    "To learn more about how to set up private endpoints with the Atlas CLI, see the tutorial on the Atlas CLI tab here: https://www.mongodb.com/docs/atlas/security-cluster-private-endpoint/.",
+		Long:    `To learn more about how to set up private endpoints with the Atlas CLI, see the tutorial on the Atlas CLI tab here: https://www.mongodb.com/docs/atlas/security-cluster-private-endpoint/.`,
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"endpointServiceIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.",

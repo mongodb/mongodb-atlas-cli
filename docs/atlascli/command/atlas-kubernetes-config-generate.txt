@@ -14,9 +14,7 @@ atlas kubernetes config generate
 
 Generate Kubernetes configuration resources.
 
-This command provides your Kubernetes configuration access to Atlas.
-		
-		You can generate Atlas Operator resources for Atlas objects, including Projects, Deployments, and Users.
+This command provides your Kubernetes configuration access to Atlas. You can generate Atlas Operator resources for Atlas objects, including Projects, Deployments, and Users.
 
 Syntax
 ------

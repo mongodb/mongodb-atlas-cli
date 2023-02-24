@@ -54,7 +54,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <teamId>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified team from your project.",
-		Long:    "After you remove a team from your project, the team still exists in the organization in which it was created.",
+		Long:    `After you remove a team from your project, the team still exists in the organization in which it was created.`,
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"teamIdDesc": "Unique 24-digit string that identifies the team.",

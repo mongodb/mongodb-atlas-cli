@@ -77,7 +77,6 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create <instanceName>",
 		Short: "Creates one serverless instance in the specified project.",
-		Long:  "Your API Key must have the Organization Owner or Project Owner role to successfully call this resource.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",

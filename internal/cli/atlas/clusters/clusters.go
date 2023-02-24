@@ -41,7 +41,7 @@ func MongoCLIBuilder() *cobra.Command {
 		Aliases:    cli.GenerateAliases(use),
 		SuggestFor: []string{"replicasets"},
 		Short:      "Manage clusters for your project.",
-		Long:       "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters.",
+		Long:       `The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters.`,
 	}
 	cmd.AddCommand(
 		ListBuilder(),
@@ -69,7 +69,7 @@ func Builder() *cobra.Command {
 		Aliases:    cli.GenerateAliases(use),
 		SuggestFor: []string{"replicasets"},
 		Short:      "Manage clusters for your project.",
-		Long:       "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters.",
+		Long:       `The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters.`,
 	}
 	cmd.AddCommand(
 		ListBuilder(),

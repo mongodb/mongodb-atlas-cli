@@ -56,7 +56,7 @@ func DisableBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "disable",
 		Short: "Disable the regionalized private endpoint setting for your project.",
-		Long:  "This disables the ability to create multiple private resources per region in all cloud service providers for this project.",
+		Long:  `This disables the ability to create multiple private resources per region in all cloud service providers for this project.`,
 		Example: fmt.Sprintf(`  # Disable the regionalied private endpoint setting in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s privateEndpoints regionalModes disable --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

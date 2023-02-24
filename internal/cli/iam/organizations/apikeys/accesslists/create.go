@@ -51,7 +51,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 func (opts *CreateOpts) newAccessListAPIKeysReq() ([]*atlas.AccessListAPIKeysReq, error) {
 	req := make([]*atlas.AccessListAPIKeysReq, 0, len(opts.ips)+len(opts.cidrs))
 	if len(opts.ips) == 0 && len(opts.cidrs) == 0 {
-		return nil, fmt.Errorf("either --, --cidr must be set")
+		return nil, fmt.Errorf("either --%s, --%s must be set", flag.IP, flag.CIDR)
 	}
 	for _, v := range opts.ips {
 		entry := &atlas.AccessListAPIKeysReq{

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package organizations
 
@@ -21,20 +20,21 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Organization{}
 
 	mockStore.
 		EXPECT().
-		CreateOrganization(gomock.Eq("Org 0")).Return(expected, nil).
+		CreateOrganization("Org 0").Return(expected, nil).
 		Times(1)
 
 	createOpts := &CreateOpts{
@@ -44,4 +44,13 @@ func TestCreate_Run(t *testing.T) {
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestCreateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{flag.Output},
+	)
 }

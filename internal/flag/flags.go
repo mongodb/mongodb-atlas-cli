@@ -130,10 +130,8 @@ const (
 	NotificationToken                         = "notificationToken"                         // NotificationToken flag
 	NotificationChannelName                   = "notificationChannelName"                   // NotificationChannelName flag
 	APIKey                                    = "apiKey"                                    // APIKey flag
-	APIToken                                  = "apiToken"                                  // APIToken flag
+	APIKeyRole                                = "apiKeyRole"                                // APIKeyRole flag
 	RoutingKey                                = "routingKey"                                // RoutingKey flag
-	OrgName                                   = "orgName"                                   // OrgName flag
-	FlowName                                  = "flowName"                                  // FlowName flag
 	NotificationRegion                        = "notificationRegion"                        // NotificationRegion flag
 	NotificationDelayMin                      = "notificationDelayMin"                      // NotificationDelayMin flag
 	NotificationEmailAddress                  = "notificationEmailAddress"                  // NotificationEmailAddress flag
@@ -316,18 +314,15 @@ const (
 	OperatorTargetNamespace                   = "targetNamespace"                           // OperatorTargetNamespace flag
 	OperatorVersion                           = "operatorVersion"                           // OperatorVersion flag
 	ExportID                                  = "exportId"                                  // ExportID flag
-
-	/* #nosec */
-	KMIPClientCertificatePassword = "kmipClientCertificatePassword" // KMIPClientCertificatePassword flag
-	KMIPUsername                  = "kmipUsername"                  // KMIPUsername flag
-	KMIPPassword                  = "kmipPassword"                  // KMIPPassword flag
-	GCPServiceAccountKey          = "gcpServiceAccountKey"          // GCPServiceAccountKey flag
-	AzureClientID                 = "azureClientId"                 // AzureClientID flag
-	AzureTenantID                 = "azureTenantId"                 // AzureTenantID flag
-	AzureSecret                   = "azureSecret"                   // AzureSecret flag
-	AWSSessionToken               = "awsSessionToken"               // AWSSessionToken flag
-
-	Debug      = "debug" // Debug flag to set debug log level
-	DebugShort = "D"     // DebugShort flag to set debug log level
-
+	Debug                                     = "debug"                                     // Debug flag to set debug log level
+	DebugShort                                = "D"                                         // DebugShort flag to set debug log level
+	KMIPClientCertificatePassword             = "kmipClientCertificatePassword"             //nolint:gosec // KMIPClientCertificatePassword flag
+	KMIPUsername                              = "kmipUsername"                              // KMIPUsername flag
+	KMIPPassword                              = "kmipPassword"                              // KMIPPassword flag
+	GCPServiceAccountKey                      = "gcpServiceAccountKey"                      // GCPServiceAccountKey flag
+	AzureClientID                             = "azureClientId"                             // AzureClientID flag
+	AzureTenantID                             = "azureTenantId"                             // AzureTenantID flag
+	AzureSecret                               = "azureSecret"                               // AzureSecret flag
+	AWSSessionToken                           = "awsSessionToken"                           // AWSSessionToken flag
+	APIKeyDescription                         = "apiKeyDescription"                         //nolint:gosec // APIKeyDescription flag
 )

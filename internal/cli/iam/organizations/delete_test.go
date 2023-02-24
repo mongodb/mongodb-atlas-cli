@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package organizations
 
@@ -22,7 +21,9 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
 func TestDelete_Run(t *testing.T) {
@@ -46,4 +47,13 @@ func TestDelete_Run(t *testing.T) {
 	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestDeleteBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DeleteBuilder(),
+		0,
+		[]string{flag.Force},
+	)
 }

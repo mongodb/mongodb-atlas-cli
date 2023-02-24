@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -52,10 +53,9 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam organization(s) create <name>.
+// CreateBuilder mongocli iam organization(s) create <name>.
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
-	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create <name>",
 		Short: "Create an Ops Manager or Cloud Manager organization. This command is unavailable for Atlas.",
@@ -66,8 +66,10 @@ func CreateBuilder() *cobra.Command {
 		Example: `  # Create an Ops Manager organization with the name myOrg:
   mongocli iam organizations create myOrg --output json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore(cmd.Context())()
+			return prerun.ExecuteE(
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.initStore(cmd.Context()),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

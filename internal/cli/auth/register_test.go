@@ -36,7 +36,6 @@ func TestRegisterBuilder(t *testing.T) {
 		RegisterBuilder(),
 		0,
 		[]string{
-			"gov",
 			"noBrowser",
 		},
 	)
@@ -83,6 +82,11 @@ func Test_registerOpts_Run(t *testing.T) {
 	}
 	mockFlow.
 		EXPECT().
+		RegistrationConfig(ctx).
+		Return(&auth.RegistrationConfig{RegistrationURL: "https://localhost/account/register/cli"}, nil, nil).
+		Times(1)
+	mockFlow.
+		EXPECT().
 		PollToken(ctx, expectedCode).
 		Return(expectedToken, nil, nil).
 		Times(1)
@@ -114,7 +118,7 @@ To verify your account, copy your one-time verification code:
 
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-To continue, go to https://account.mongodb.com/account/register/cli
+To continue, go to https://localhost/account/register/cli
 Successfully logged in as test@10gen.com.
 `, buf.String())
 }

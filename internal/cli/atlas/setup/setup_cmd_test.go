@@ -52,16 +52,31 @@ func Test_setupOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
 	mockFlow := mocks.NewMockRefresher(ctrl)
+	mockConfig := mocks.NewMockProfileReader(ctrl)
 
 	ctx := context.TODO()
 	buf := new(bytes.Buffer)
 
 	opts := &Opts{
-		quickstart: mockQuickstartFlow,
-		skipLogin:  true,
+		quickstart:   mockQuickstartFlow,
+		config:       mockConfig,
+		skipLogin:    true,
+		skipRegister: true,
 	}
 	opts.register.WithFlow(mockFlow)
 	opts.OutWriter = buf
+
+	mockConfig.
+		EXPECT().
+		OrgID().
+		Return("1").
+		Times(1)
+
+	mockConfig.
+		EXPECT().
+		ProjectID().
+		Return("1").
+		Times(1)
 
 	mockQuickstartFlow.
 		EXPECT().

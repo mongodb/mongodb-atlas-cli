@@ -184,12 +184,14 @@ func (opts *Opts) quickstartPreRun(ctx context.Context, outWriter io.Writer) err
 		)
 	}
 
-	if err := opts.LoginPreRun(); err != nil {
+	if err := opts.LoginPreRun(config.Default())(); err != nil {
 		return err
 	}
 
 	opts.shouldRunLogin = true
-	_, _ = fmt.Fprintf(opts.DefaultSetterOpts.OutWriter, `This action requires authentication.
+	_, _ = fmt.Fprintf(
+		opts.DefaultSetterOpts.OutWriter,
+		`This action requires authentication.
 `)
 	return opts.LoginRun(ctx)
 }

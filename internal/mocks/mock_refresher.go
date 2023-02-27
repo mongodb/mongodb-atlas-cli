@@ -68,6 +68,22 @@ func (mr *MockRefresherMockRecorder) RefreshToken(arg0, arg1 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RefreshToken", reflect.TypeOf((*MockRefresher)(nil).RefreshToken), arg0, arg1)
 }
 
+// RegistrationConfig mocks base method.
+func (m *MockRefresher) RegistrationConfig(arg0 context.Context) (*auth.RegistrationConfig, *mongodbatlas.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegistrationConfig", arg0)
+	ret0, _ := ret[0].(*auth.RegistrationConfig)
+	ret1, _ := ret[1].(*mongodbatlas.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// RegistrationConfig indicates an expected call of RegistrationConfig.
+func (mr *MockRefresherMockRecorder) RegistrationConfig(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegistrationConfig", reflect.TypeOf((*MockRefresher)(nil).RegistrationConfig), arg0)
+}
+
 // RequestCode mocks base method.
 func (m *MockRefresher) RequestCode(arg0 context.Context) (*auth.DeviceCode, *mongodbatlas.Response, error) {
 	m.ctrl.T.Helper()

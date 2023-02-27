@@ -256,12 +256,14 @@ func newRegenerationPrompt() survey.Prompt {
 	}
 }
 
-func (opts *LoginOpts) LoginPreRun() error {
-	opts.config = config.Default()
-	if config.OpsManagerURL() != "" {
-		opts.OpsManagerURL = config.OpsManagerURL()
+func (opts *LoginOpts) LoginPreRun(c LoginConfig) func() error {
+	return func() error {
+		opts.config = c
+		if config.OpsManagerURL() != "" {
+			opts.OpsManagerURL = config.OpsManagerURL()
+		}
+		return nil
 	}
-	return nil
 }
 
 func tool() string {
@@ -283,7 +285,7 @@ func LoginBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return prerun.ExecuteE(
-				opts.LoginPreRun,
+				opts.LoginPreRun(config.Default()),
 				opts.InitFlow(config.Default()),
 				validate.NoAPIKeys,
 				validate.NoAccessToken,

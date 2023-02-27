@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
@@ -37,11 +38,19 @@ const (
 
 var errNeedsOrgAndProject = errors.New("please make sure to select or add an organization and project to the profile")
 
+//go:generate mockgen -destination=../../../mocks/mock_setup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup ProfileReader
+
+type ProfileReader interface {
+	ProjectID() string
+	OrgID() string
+}
+
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	quickstart quickstart.Flow
 	register   auth.RegisterOpts
+	config     ProfileReader
 	// control
 	skipRegister bool
 	skipLogin    bool
@@ -72,7 +81,7 @@ This command will help you
 		return err
 	}
 
-	if config.ProjectID() == "" || config.OrgID() == "" {
+	if opts.config.ProjectID() == "" || opts.config.OrgID() == "" {
 		return fmt.Errorf("%w: %s", errNeedsOrgAndProject, config.Default().Name())
 	}
 
@@ -84,7 +93,6 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 	opts.skipLogin = true
 
 	if err := validate.NoAPIKeys(); err != nil {
-		fmt.Println("HERE 1", err)
 		_, _ = fmt.Fprintf(opts.OutWriter, `
 You are already authenticated with an API key (Public key: %s).
 
@@ -93,12 +101,10 @@ Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on
 		return nil
 	}
 	if err := opts.register.RefreshAccessToken(ctx); err != nil && errors.Is(err, cli.ErrInvalidRefreshToken) {
-		fmt.Println("HERE 2", err)
 		opts.skipLogin = false
 		return nil
 	}
 	if account, err := auth.AccountWithAccessToken(); err == nil {
-		fmt.Println("HERE 3", err)
 		_, _ = fmt.Fprintf(opts.OutWriter, `You are already authenticated with an account (%s).
 	
 Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.
@@ -135,31 +141,32 @@ func Builder() *cobra.Command {
 		Hidden: false,
 		Args:   require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.config = config.Default()
 			opts.OutWriter = cmd.OutOrStdout()
+			qsOpts.LoginOpts.OutWriter = opts.OutWriter
+			qsOpts.DefaultSetterOpts.OutWriter = opts.OutWriter
 			// setup pre run
 			if err := opts.PreRun(cmd.Context()); err != nil {
 				return nil
 			}
-
+			preRun := []prerun.CmdOpt{
+				opts.register.InitFlow(config.Default()),
+				opts.InitOutput(opts.OutWriter, ""),
+			}
 			// registration pre run if applicable
 			if !opts.skipRegister {
-				if err := opts.register.LoginPreRun(); err != nil {
-					return err
-				}
+				preRun = append(preRun,
+					opts.register.LoginPreRun(config.Default()),
+					validate.NoAPIKeys,
+					validate.NoAccessToken,
+				)
 			}
 
 			if !opts.skipLogin {
-				qsOpts.LoginOpts.OutWriter = opts.OutWriter
-				qsOpts.DefaultSetterOpts.OutWriter = opts.OutWriter
-				if err := opts.register.LoginPreRun(); err != nil {
-					return err
-				}
+				preRun = append(preRun, opts.register.LoginPreRun(config.Default()))
 			}
 
-			return opts.PreRunE(
-				opts.register.InitFlow(config.Default()),
-				opts.InitOutput(opts.OutWriter, ""),
-			)
+			return opts.PreRunE(preRun...)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

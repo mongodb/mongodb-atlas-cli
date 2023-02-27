@@ -34,6 +34,7 @@ type Refresher interface {
 	RequestCode(context.Context) (*atlasauth.DeviceCode, *atlas.Response, error)
 	PollToken(context.Context, *atlasauth.DeviceCode) (*atlasauth.Token, *atlas.Response, error)
 	RefreshToken(context.Context, string) (*atlasauth.Token, *atlas.Response, error)
+	RegistrationConfig(ctx context.Context) (*atlasauth.RegistrationConfig, *atlas.Response, error)
 }
 
 func (opts *RefresherOpts) InitFlow(c oauth.ServiceGetter) func() error {
@@ -83,33 +84,6 @@ func (opts *RefresherOpts) RequestCode(c context.Context) (*atlasauth.DeviceCode
 	return opts.flow.RequestCode(c)
 }
 
-// func (opts *RefresherOpts) oauthFlow(ctx context.Context) error {
-//	askedToOpenBrowser := false
-//	for {
-//		code, _, err := opts.RequestCode(ctx)
-//		if err != nil {
-//			return err
-//		}
-//
-//		opts.printAuthInstructions(code)
-//		if !askedToOpenBrowser {
-//			opts.handleBrowser(code.VerificationURI)
-//			askedToOpenBrowser = true
-//		}
-//
-//		accessToken, _, err := opts.PollToken(ctx, code)
-//		if retry, errRetry := opts.shouldRetryAuthenticate(err); errRetry != nil {
-//			return errRetry
-//		} else if retry {
-//			continue
-//		}
-//
-//		if err != nil {
-//			return err
-//		}
-//
-//		opts.AccessToken = accessToken.AccessToken
-//		opts.RefreshToken = accessToken.RefreshToken
-//		return nil
-//	}
-//}
+func (opts *RefresherOpts) RegistrationConfig(c context.Context) (*atlasauth.RegistrationConfig, *atlas.Response, error) {
+	return opts.flow.RegistrationConfig(c)
+}

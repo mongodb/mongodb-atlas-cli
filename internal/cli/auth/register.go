@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
+	atlasauth "go.mongodb.org/atlas/auth"
 )
 
 type RegisterOpts struct {
@@ -30,7 +31,11 @@ type RegisterOpts struct {
 }
 
 func (opts *RegisterOpts) RegisterRun(ctx context.Context) error {
-	if err := opts.oauthFlow(ctx); err != nil {
+	c, _, err := opts.RegistrationConfig(ctx)
+	if err != nil {
+		return err
+	}
+	if err = opts.registerFlow(ctx, c); err != nil {
 		return err
 	}
 
@@ -52,20 +57,50 @@ func (opts *RegisterOpts) RegisterRun(ctx context.Context) error {
 	return opts.setUpProfile(ctx)
 }
 
+func (opts *LoginOpts) registerFlow(ctx context.Context, conf *atlasauth.RegistrationConfig) error {
+	askedToOpenBrowser := false
+	for {
+		code, _, err := opts.RequestCode(ctx)
+		code.VerificationURI = conf.RegistrationURL
+		if err != nil {
+			return err
+		}
+
+		opts.printAuthInstructions(code)
+		if !askedToOpenBrowser {
+			opts.handleBrowser(code.VerificationURI)
+			askedToOpenBrowser = true
+		}
+
+		accessToken, _, err := opts.PollToken(ctx, code)
+		if retry, errRetry := shouldRetryAuthenticate(err, newRegenerationPrompt()); errRetry != nil {
+			return errRetry
+		} else if retry {
+			continue
+		}
+		if err != nil {
+			return err
+		}
+
+		opts.AccessToken = accessToken.AccessToken
+		opts.RefreshToken = accessToken.RefreshToken
+		return nil
+	}
+}
+
 func RegisterBuilder() *cobra.Command {
 	opts := &RegisterOpts{}
 
 	cmd := &cobra.Command{
-		Use:    "register",
-		Short:  "Register with MongoDB Atlas.",
-		Hidden: false,
+		Use:   "register",
+		Short: "Register with MongoDB Atlas.",
 		Example: fmt.Sprintf(`  # To start the interactive setup:
   %s auth register
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return prerun.ExecuteE(
-				opts.LoginPreRun,
+				opts.LoginPreRun(config.Default()),
 				opts.InitFlow(config.Default()),
 				validate.NoAPIKeys,
 				validate.NoAccessToken)
@@ -78,7 +113,6 @@ func RegisterBuilder() *cobra.Command {
 		Args: require.NoArgs,
 	}
 
-	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Register with Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 
 	return cmd

@@ -226,12 +226,11 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 		}
 
 		accessToken, _, err := opts.PollToken(ctx, code)
-		if retry, errRetry := shouldRetryAuthenticate(err); errRetry != nil {
+		if retry, errRetry := shouldRetryAuthenticate(err, newRegenerationPrompt()); errRetry != nil {
 			return errRetry
 		} else if retry {
 			continue
 		}
-
 		if err != nil {
 			return err
 		}
@@ -242,16 +241,19 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 	}
 }
 
-func shouldRetryAuthenticate(err error) (retry bool, errSurvey error) {
+func shouldRetryAuthenticate(err error, p survey.Prompt) (retry bool, errSurvey error) {
 	if err == nil || !auth.IsTimeoutErr(err) {
 		return false, nil
 	}
-	p := &survey.Confirm{
+	err = telemetry.TrackAskOne(p, &retry)
+	return retry, err
+}
+
+func newRegenerationPrompt() survey.Prompt {
+	return &survey.Confirm{
 		Message: "Your one-time verification code is expired. Would you like to generate a new one?",
 		Default: true,
 	}
-	err = telemetry.TrackAskOne(p, &retry)
-	return retry, err
 }
 
 func (opts *LoginOpts) LoginPreRun() error {

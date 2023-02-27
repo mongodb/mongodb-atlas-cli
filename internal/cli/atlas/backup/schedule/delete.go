@@ -57,6 +57,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <clusterName>",
 		Aliases: []string{"rm"},
 		Short:   "Delete all backup schedules of a cluster.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster.",

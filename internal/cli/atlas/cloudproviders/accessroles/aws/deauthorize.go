@@ -16,6 +16,7 @@ package aws
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -77,6 +78,7 @@ func DeauthorizeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "deauthorize <roleId>",
 		Short: "Deauthorize an AWS IAM role.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"roleIdDesc": "Unique ID of the role to authorize.",

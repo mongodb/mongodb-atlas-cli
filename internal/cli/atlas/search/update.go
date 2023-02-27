@@ -91,6 +91,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <indexId>",
 		Short: "Modify a search index for a cluster.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",
 		},

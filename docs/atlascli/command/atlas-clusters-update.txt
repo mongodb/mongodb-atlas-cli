@@ -20,6 +20,8 @@ You can modify only M10 or larger clusters that are single-region replica sets.
 		
 You can't change the name of the cluster or downgrade the MongoDB version of your cluster.
 
+To use this command, you must authenticate with a user account or an API key that has the Project Cluster Manager role.
+
 Syntax
 ------
 

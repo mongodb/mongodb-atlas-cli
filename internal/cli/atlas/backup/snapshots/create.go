@@ -74,8 +74,10 @@ func CreateBuilder() *cobra.Command {
 		Use:     "create <clusterName>",
 		Aliases: []string{"take"},
 		Short:   "Create a backup snapshot for your project and cluster.",
-		Long:    `You can create on-demand backup snapshots for Atlas cluster tiers M10 and larger.`,
-		Args:    require.ExactArgs(1),
+		Long: `You can create on-demand backup snapshots for Atlas cluster tiers M10 and larger.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Args: require.ExactArgs(1),
 		Example: fmt.Sprintf(`  # Create a backup snapshot for the cluster named myDemo that Atlas retains for 30 days:
   %s backups snapshots create myDemo --desc "test" --retention 30`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{

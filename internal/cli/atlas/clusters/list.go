@@ -48,12 +48,12 @@ var listTemplate = `ID	NAME	MDB VER	STATE{{range .Results}}
 
 func (opts *ListOpts) Run() error {
 	listOpts := opts.NewListOptions()
-	r, err := opts.store.ProjectClusters(opts.ConfigProjectID(), listOpts)
+	r1, r2, err := opts.store.ProjectClusters(opts.ConfigProjectID(), listOpts)
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	return opts.PrintFirst(r1, r2)
 }
 
 // mongocli atlas cluster(s) list --projectId projectId [--page N] [--limit N].

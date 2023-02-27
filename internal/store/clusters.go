@@ -25,7 +25,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterConfigurationOptionsDescriber,AtlasSharedClusterDescriber,ClusterUpgrader,AtlasSharedClusterGetterUpgrader,AtlasClusterConfigurationOptionsUpdater,ClusterTester
 
 type ClusterLister interface {
-	ProjectClusters(string, *atlas.ListOptions) (interface{}, error)
+	ProjectClusters(string, *atlas.ListOptions) (*atlas.AdvancedClustersResponse, *opsmngr.Clusters, error)
 }
 
 type AtlasClusterDescriber interface {
@@ -202,16 +202,16 @@ func (s *Store) UpgradeCluster(projectID string, cluster *atlas.Cluster) (*atlas
 }
 
 // ProjectClusters encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (interface{}, error) {
+func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (*atlas.AdvancedClustersResponse, *opsmngr.Clusters, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AdvancedClusters.List(s.ctx, projectID, opts)
-		return result, err
+		return result, nil, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Clusters.List(s.ctx, projectID, opts)
-		return result, err
+		return nil, result, err
 	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+		return nil, nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 

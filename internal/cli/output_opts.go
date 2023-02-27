@@ -106,6 +106,16 @@ func (opts *OutputOpts) Print(o interface{}) error {
 	return err
 }
 
+// Print first non nil object from objectsToPrint array.
+func (opts *OutputOpts) PrintFirst(objectsToPrint ...interface{}) error {
+	for _, printerObj := range objectsToPrint {
+		if printerObj != nil {
+			return opts.Print(printerObj)
+		}
+	}
+	return nil
+}
+
 // outputTypeAndValue returns the output type and the associated value
 // Current available output types are:
 // "go-template=Template string",

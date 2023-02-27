@@ -244,6 +244,15 @@ func (opts *Opts) Run() error {
 		return dErr
 	}
 
+	r1, r2, err := opts.store.ProjectClusters(opts.ConfigProjectID(), &atlas.ListOptions{
+		PageNum: 1, ItemsPerPage: 1, IncludeCount: true})
+	if err != nil {
+		return err
+	}
+	if (r1 != nil && r1.TotalCount > 0) || (r2 != nil && r2.TotalCount > 0) {
+		fmt.Print("TODO: warn users about account having multiple clusters ")
+	}
+
 	if err := opts.askConfirmDefaultQuestion(values); err != nil || !opts.Confirm {
 		fmt.Print(quickstartTemplateIntro)
 

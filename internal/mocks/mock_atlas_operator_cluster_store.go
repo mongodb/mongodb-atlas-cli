@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockAtlasOperatorClusterStore is a mock of AtlasOperatorClusterStore interface.
@@ -95,12 +96,13 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) GlobalCluster(arg0, arg1 in
 }
 
 // ProjectClusters mocks base method.
-func (m *MockAtlasOperatorClusterStore) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
+func (m *MockAtlasOperatorClusterStore) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlas.AdvancedClustersResponse, *opsmngr.Clusters, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectClusters", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(*mongodbatlas.AdvancedClustersResponse)
+	ret1, _ := ret[1].(*opsmngr.Clusters)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // ProjectClusters indicates an expected call of ProjectClusters.

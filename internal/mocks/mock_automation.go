@@ -231,12 +231,13 @@ func (mr *MockCloudManagerClustersListerMockRecorder) ListAllProjectClusters() *
 }
 
 // ProjectClusters mocks base method.
-func (m *MockCloudManagerClustersLister) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
+func (m *MockCloudManagerClustersLister) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlas.AdvancedClustersResponse, *opsmngr.Clusters, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectClusters", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(*mongodbatlas.AdvancedClustersResponse)
+	ret1, _ := ret[1].(*opsmngr.Clusters)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // ProjectClusters indicates an expected call of ProjectClusters.

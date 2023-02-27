@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (atlas && cluster && kubernetes)
 
 package atlas_test
@@ -176,7 +177,7 @@ func TestEmptyProject(t *testing.T) {
 			if !found {
 				t.Fatal("Secret is not found in results")
 			}
-			assert.Equal(t, secret.Namespace, targetNamespace)
+			assert.Equal(t, targetNamespace, secret.Namespace)
 		})
 	})
 }
@@ -829,10 +830,10 @@ func checkProject(t *testing.T, output []runtime.Object, expected *atlasV1.Atlas
 	t.Helper()
 	t.Run("Project presents with expected data", func(t *testing.T) {
 		found := false
-		var project *atlasV1.AtlasProject
+		var p *atlasV1.AtlasProject
 		var ok bool
 		for i := range output {
-			project, ok = output[i].(*atlasV1.AtlasProject)
+			p, ok = output[i].(*atlasV1.AtlasProject)
 			if ok {
 				found = true
 				break
@@ -841,7 +842,7 @@ func checkProject(t *testing.T, output []runtime.Object, expected *atlasV1.Atlas
 		if !found {
 			t.Fatal("AtlasProject is not found in results")
 		}
-		asserts.Equal(expected, project)
+		asserts.Equal(expected, p)
 	})
 }
 
@@ -1245,20 +1246,11 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		})
 
 		t.Run("Project present with valid name", func(t *testing.T) {
-			found := false
-			var project *atlasV1.AtlasProject
-			var ok bool
-			for i := range objects {
-				project, ok = objects[i].(*atlasV1.AtlasProject)
-				if ok {
-					found = true
-					break
-				}
-			}
+			p, found := findAtlasProject(objects)
 			if !found {
 				t.Fatal("AtlasProject is not found in results")
 			}
-			assert.Equal(t, project.Namespace, targetNamespace)
+			assert.Equal(t, p.Namespace, targetNamespace)
 		})
 
 		t.Run("Deployment present with valid data", func(t *testing.T) {
@@ -1279,16 +1271,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			found := false
-			var secret *corev1.Secret
-			var ok bool
-			for i := range objects {
-				secret, ok = objects[i].(*corev1.Secret)
-				if ok {
-					found = true
-					break
-				}
-			}
+			secret, found := findSecret(objects)
 			if !found {
 				t.Fatal("Secret is not found in results")
 			}
@@ -1296,16 +1279,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		})
 
 		t.Run("Backup Schedule present with valid data", func(t *testing.T) {
-			found := false
-			var schedule *atlasV1.AtlasBackupSchedule
-			var ok bool
-			for i := range objects {
-				schedule, ok = objects[i].(*atlasV1.AtlasBackupSchedule)
-				if ok {
-					found = true
-					break
-				}
-			}
+			schedule, found := atlasBackupSchedule(objects)
 			if !found {
 				t.Fatal("AtlasBackupSchedule is not found in results")
 			}
@@ -1313,16 +1287,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		})
 
 		t.Run("Backup policy present with valid data", func(t *testing.T) {
-			found := false
-			var policy *atlasV1.AtlasBackupPolicy
-			var ok bool
-			for i := range objects {
-				policy, ok = objects[i].(*atlasV1.AtlasBackupPolicy)
-				if ok {
-					found = true
-					break
-				}
-			}
+			policy, found := atlasBackupPolicy(objects)
 			if !found {
 				t.Fatal("AtlasBackupSchedule is not found in results")
 			}
@@ -1358,50 +1323,25 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		})
 
 		t.Run("Project present with valid name", func(t *testing.T) {
-			found := false
-			var project *atlasV1.AtlasProject
-			var ok bool
-			for i := range objects {
-				project, ok = objects[i].(*atlasV1.AtlasProject)
-				if ok {
-					found = true
-					break
-				}
-			}
+			p, found := findAtlasProject(objects)
 			if !found {
 				t.Fatal("AtlasProject is not found in results")
 			}
-			assert.Equal(t, project.Namespace, targetNamespace)
+			assert.Equal(t, targetNamespace, p.Namespace)
 		})
 
 		t.Run("Deployments present with valid data", func(t *testing.T) {
-			var deployments []*atlasV1.AtlasDeployment
-			for i := range objects {
-				deployment, ok := objects[i].(*atlasV1.AtlasDeployment)
-				if ok {
-					deployments = append(deployments, deployment)
-				}
-			}
-			clustersCount := len(deployments)
-			require.True(t, clustersCount == 2, "result should contain two clusters. actual: ", clustersCount)
-			checkClustersData(t, deployments, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
+			ds := atlasDeployments(objects)
+			require.Len(t, ds, 2)
+			checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			found := false
-			var secret *corev1.Secret
-			var ok bool
-			for i := range objects {
-				secret, ok = objects[i].(*corev1.Secret)
-				if ok {
-					found = true
-					break
-				}
-			}
+			secret, found := findSecret(objects)
 			if !found {
 				t.Fatal("Secret is not found in results")
 			}
-			assert.Equal(t, secret.Namespace, targetNamespace)
+			assert.Equal(t, targetNamespace, secret.Namespace)
 		})
 	})
 
@@ -1419,9 +1359,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
@@ -1431,50 +1369,35 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		})
 
 		t.Run("Project present with valid name", func(t *testing.T) {
-			found := false
-			var project *atlasV1.AtlasProject
-			var ok bool
-			for i := range objects {
-				project, ok = objects[i].(*atlasV1.AtlasProject)
-				if ok {
-					found = true
-					break
-				}
-			}
+			p, found := findAtlasProject(objects)
 			if !found {
 				t.Fatal("AtlasProject is not found in results")
 			}
-			assert.Equal(t, project.Namespace, targetNamespace)
+			assert.Equal(t, targetNamespace, p.Namespace)
 		})
 
 		t.Run("Deployments present with valid data", func(t *testing.T) {
-			var deployments []*atlasV1.AtlasDeployment
-			for i := range objects {
-				deployment, ok := objects[i].(*atlasV1.AtlasDeployment)
-				if ok {
-					deployments = append(deployments, deployment)
-				}
-			}
-			checkClustersData(t, deployments, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
+			ds := atlasDeployments(objects)
+			checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			found := false
-			var secret *corev1.Secret
-			var ok bool
-			for i := range objects {
-				secret, ok = objects[i].(*corev1.Secret)
-				if ok {
-					found = true
-					break
-				}
-			}
+			secret, found := findSecret(objects)
 			if !found {
 				t.Fatal("Secret is not found in results")
 			}
 			assert.Equal(t, secret.Namespace, targetNamespace)
 		})
 	})
+}
+
+func atlasBackupPolicy(objects []runtime.Object) (*atlasV1.AtlasBackupPolicy, bool) {
+	for i := range objects {
+		if policy, ok := objects[i].(*atlasV1.AtlasBackupPolicy); ok {
+			return policy, ok
+		}
+	}
+	return nil, false
 }
 
 func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
@@ -1507,61 +1430,72 @@ func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
-
+		require.NoError(t, err, string(resp))
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
 			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NotEmpty(t, objects)
 		})
 
 		t.Run("Project present with valid name", func(t *testing.T) {
-			found := false
-			var project *atlasV1.AtlasProject
-			var ok bool
-			for i := range objects {
-				project, ok = objects[i].(*atlasV1.AtlasProject)
-				if ok {
-					found = true
-					break
-				}
-			}
+			p, found := findAtlasProject(objects)
 			if !found {
 				t.Fatal("AtlasProject is not found in results")
 			}
-			assert.Equal(t, project.Namespace, targetNamespace)
+			assert.Equal(t, p.Namespace, targetNamespace)
 		})
 
 		t.Run("Deployment present with valid data", func(t *testing.T) {
-			var deployments []*atlasV1.AtlasDeployment
-			for i := range objects {
-				deployment, ok := objects[i].(*atlasV1.AtlasDeployment)
-				if ok {
-					deployments = append(deployments, deployment)
-				}
-			}
-			a.Len(deployments, 1)
-			a.Equal(expectedDeployment, deployments[0])
+			ds := atlasDeployments(objects)
+			assert.Len(t, ds, 1)
+			assert.Equal(t, expectedDeployment, ds[0])
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			found := false
-			var secret *corev1.Secret
-			var ok bool
-			for i := range objects {
-				secret, ok = objects[i].(*corev1.Secret)
-				if ok {
-					found = true
-					break
-				}
-			}
+			secret, found := findSecret(objects)
 			if !found {
 				t.Fatal("Secret is not found in results")
 			}
-			assert.Equal(t, secret.Namespace, targetNamespace)
+			assert.Equal(t, targetNamespace, secret.Namespace)
 		})
 	})
+}
+
+func atlasDeployments(objects []runtime.Object) []*atlasV1.AtlasDeployment {
+	var ds []*atlasV1.AtlasDeployment
+	for i := range objects {
+		d, ok := objects[i].(*atlasV1.AtlasDeployment)
+		if ok {
+			ds = append(ds, d)
+		}
+	}
+	return ds
+}
+
+func findAtlasProject(objects []runtime.Object) (*atlasV1.AtlasProject, bool) {
+	for i := range objects {
+		if p, ok := objects[i].(*atlasV1.AtlasProject); ok {
+			return p, ok
+		}
+	}
+	return nil, false
+}
+
+func findSecret(objects []runtime.Object) (*corev1.Secret, bool) {
+	for i := range objects {
+		if secret, ok := objects[i].(*corev1.Secret); ok {
+			return secret, ok
+		}
+	}
+	return nil, false
+}
+
+func atlasBackupSchedule(objects []runtime.Object) (*atlasV1.AtlasBackupSchedule, bool) {
+	for i := range objects {
+		if schedule, ok := objects[i].(*atlasV1.AtlasBackupSchedule); ok {
+			return schedule, ok
+		}
+	}
+	return nil, false
 }

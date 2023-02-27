@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   atlas organizations apiKeys accessLists delete <ID> [options]
+   atlas organizations apiKeys accessLists delete <entry> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -34,7 +34,7 @@ Arguments
      - Type
      - Required
      - Description
-   * - ID
+   * - entry
      - string
      - true
      - IP or CIDR address that you want to remove from the access list. If the entry includes a subnet mask, such as 192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.

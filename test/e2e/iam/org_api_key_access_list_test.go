@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || iam
 
 package iam_test
@@ -24,25 +25,20 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestOrgAPIKeyAccessList(t *testing.T) {
 	cliPath, er := e2e.Bin()
-	if er != nil {
-		t.Fatalf("unexpected error: %v", er)
-	}
+	require.NoError(t, er)
 
 	apiKeyID, e := createOrgAPIKey()
-	if e != nil {
-		t.Fatalf("unexpected error: %v", e)
-	}
+	require.NoError(t, e)
 
-	defer func() {
-		if e := deleteOrgAPIKey(apiKeyID); e != nil {
-			t.Errorf("error deleting test apikey: %v", e)
-		}
-	}()
+	t.Cleanup(func() {
+		require.NoError(t, deleteOrgAPIKey(apiKeyID))
+	})
 
 	n, err := e2e.RandInt(255)
 	if err != nil {
@@ -92,21 +88,54 @@ func TestOrgAPIKeyAccessList(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			iamEntity,
+		deleteAccessListEntry(t, cliPath, entry, apiKeyID)
+	})
+
+	t.Run("Create Current IP", func(t *testing.T) {
+		t.Skip("400 (request \"CANNOT_REMOVE_CALLER_FROM_ACCESS_LIST\") Cannot remove caller's IP address from access list")
+		cmd := exec.Command(cliPath, iamEntity,
 			orgEntity,
 			apiKeysEntity,
 			apiKeyAccessListEntity,
-			"rm",
-			entry,
+			"create",
 			"--apiKey",
 			apiKeyID,
-			"--force")
+			"--currentIp",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		if assert.NoError(t, err, string(resp)) {
-			expected := fmt.Sprintf("Access list entry '%s' deleted\n", entry)
-			assert.Equal(t, string(resp), expected)
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			var key mongodbatlas.AccessListAPIKeys
+			if err := json.Unmarshal(resp, &key); a.NoError(err) {
+				a.NotEmpty(key.Results)
+				entry = key.Results[0].IPAddress
+			}
 		}
 	})
+
+	t.Run("Delete", func(t *testing.T) {
+		t.Skip("400 (request \"CANNOT_REMOVE_CALLER_FROM_ACCESS_LIST\") Cannot remove caller's IP address from access list")
+		deleteAccessListEntry(t, cliPath, entry, apiKeyID)
+	})
+}
+
+func deleteAccessListEntry(t *testing.T, cliPath, entry, apiKeyID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		iamEntity,
+		orgEntity,
+		apiKeysEntity,
+		apiKeyAccessListEntity,
+		"rm",
+		entry,
+		"--apiKey",
+		apiKeyID,
+		"--force")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if assert.NoError(t, err, string(resp)) {
+		expected := fmt.Sprintf("Access list entry '%s' deleted\n", entry)
+		assert.Equal(t, string(resp), expected)
+	}
 }

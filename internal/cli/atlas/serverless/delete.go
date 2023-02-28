@@ -53,7 +53,6 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <instanceName>",
 		Aliases: []string{"rm"},
 		Short:   "Remove a serverless instance from your project.",
-		Long:    "Your API Key must have the Organization Owner or Project Owner role to successfully call this resource.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"instanceNameDesc": "Name of the instance to delete.",

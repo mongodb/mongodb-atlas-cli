@@ -59,7 +59,6 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe",
 		Aliases: []string{"get"},
 		Short:   "Return a push live migration job.",
-		Long:    "Your API Key must have the Organization Owner role to successfully run this command.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore(cmd.Context()),

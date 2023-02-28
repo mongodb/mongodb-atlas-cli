@@ -63,6 +63,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe <archiveId>",
 		Short: "Return the details for the specified online archive for your cluster.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to retrieve.",

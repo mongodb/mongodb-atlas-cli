@@ -63,6 +63,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "List cloud backup restore buckets for your project and cluster.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return all continuous backup export buckets for your project:
   %s backup exports buckets list`, cli.ExampleAtlasEntryPoint()),

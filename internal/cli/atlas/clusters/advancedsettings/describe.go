@@ -61,6 +61,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <clusterName>",
 		Aliases: []string{"get"},
 		Short:   "Retrieve advanced configuration settings for one cluster.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve configuration settings.",

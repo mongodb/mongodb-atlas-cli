@@ -73,6 +73,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <archiveId>",
 		Short: "Modify the archiving rule for the specified online archive for a cluster.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to update.",

@@ -60,6 +60,7 @@ func PauseBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "pause <clusterName>",
 		Short: "Pause the specified running MongoDB cluster.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to pause.",

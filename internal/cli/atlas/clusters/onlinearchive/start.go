@@ -16,6 +16,7 @@ package onlinearchive
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -65,6 +66,7 @@ func StartBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "start <archiveId>",
 		Short: "Start a paused online archive from a cluster.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to start.",

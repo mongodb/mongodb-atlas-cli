@@ -64,6 +64,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list <clusterName>",
 		Aliases: []string{"ls"},
 		Short:   "Return all cloud backup restore jobs for your project and cluster.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve restore jobs.",

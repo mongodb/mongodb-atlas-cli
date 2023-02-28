@@ -135,7 +135,7 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, validator f
 		projectResult.Spec.MaintenanceWindow = maintenanceWindows
 	}
 
-	secretRef := &common.ResourceRef{}
+	secretRef := &common.ResourceRefNamespaced{}
 	if includeSecret {
 		secretRef.Name = resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, project.Name), dictionary)
 	}

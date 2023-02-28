@@ -90,6 +90,7 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create [indexName]",
 		Short: "Create a search index for a cluster.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"indexNameDesc": "Name of the index.",

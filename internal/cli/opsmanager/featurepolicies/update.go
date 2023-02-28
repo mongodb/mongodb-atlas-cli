@@ -96,7 +96,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update",
 		Short: "Update feature control policies for your project.",
-		Long:  "Feature Control Policies allow you to enable or disable certain MongoDB features based on your site-specific needs.",
+		Long:  `Feature Control Policies allow you to enable or disable certain MongoDB features based on your site-specific needs.`,
 		Example: `  # Disable user management for a project:
   mongocli ops-manager featurePolicies update --projectId <projectId> --name Operator --policy DISABLE_USER_MANAGEMENT
 

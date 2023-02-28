@@ -78,7 +78,7 @@ func UpdateBuilder() *cobra.Command {
 		Use:     "update [invitationId]",
 		Aliases: []string{"updates"},
 		Short:   "Modifies the details of the specified pending invitation to your project.",
-		Long:    "You can use either the invitation ID or the user's email address to specify the invitation.",
+		Long:    `You can use either the invitation ID or the user's email address to specify the invitation.`,
 		Annotations: map[string]string{
 			"invitationIdDesc": "Unique 24-digit string that identifies the invitation.",
 		},

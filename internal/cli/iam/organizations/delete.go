@@ -53,7 +53,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified organization.",
-		Long:    "Organizations with active projects can't be removed.",
+		Long:    `Organizations with active projects can't be removed.`,
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies the organization.",

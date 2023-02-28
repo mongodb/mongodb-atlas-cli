@@ -311,6 +311,26 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 		},
 		Status: status.BackupScheduleStatus{},
 	}
+
+	if len(bs.CopySettings) > 0 {
+		copySettings := make([]atlasV1.CopySetting, 0, len(bs.CopySettings))
+
+		for _, copySetting := range bs.CopySettings {
+			copySettings = append(
+				copySettings,
+				atlasV1.CopySetting{
+					CloudProvider:     copySetting.CloudProvider,
+					RegionName:        copySetting.RegionName,
+					ReplicationSpecID: copySetting.ReplicationSpecID,
+					ShouldCopyOplogs:  copySetting.ShouldCopyOplogs,
+					Frequencies:       copySetting.Frequencies,
+				},
+			)
+		}
+
+		schedule.Spec.CopySettings = copySettings
+	}
+
 	return schedule, policies
 }
 

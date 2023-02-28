@@ -101,7 +101,9 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create an online archive for a collection in the specified cluster.",
 		Long: `You can create an online archive for an M10 or larger cluster.
 		
-To learn more about online archives, see https://www.mongodb.com/docs/atlas/online-archive/manage-online-archive/.`,
+To learn more about online archives, see https://www.mongodb.com/docs/atlas/online-archive/manage-online-archive/.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
 		Args: require.NoArgs,
 		Example: fmt.Sprintf(`  # Create an online archive for the sample_mflix.movies collection in a cluster named myTestCluster when the current date is greater than the value of released date plus 2 days:
   %[1]s clusters onlineArchive create --clusterName myTestCluster --db sample_mflix --collection movies --dateField released --archiveAfter 2 --output json

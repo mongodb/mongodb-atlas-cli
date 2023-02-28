@@ -70,7 +70,6 @@ func ProjectListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   "Return all events for the specified project.",
-		Long:    "Your API Key must have the Project Read Only role to successfully call this resource.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of events for the project with the ID 5e2211c17a3e5a48f5497de3:

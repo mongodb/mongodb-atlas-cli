@@ -76,7 +76,7 @@ func UnmanageBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "unmanage <name>",
 		Short: "Stop managing a cluster via automation.",
-		Long:  "This commands only removes entries from the automation config but does not actually remove a cluster.",
+		Long:  `This commands only removes entries from the automation config but does not actually remove a cluster.`,
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Name of the cluster for which you want to un-manage.",

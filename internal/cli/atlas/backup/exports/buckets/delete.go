@@ -59,6 +59,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete",
 		Aliases: []string{"rm"},
 		Short:   "Delete a snapshot export bucket.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # The following deletes the continuous backup export bucket specified by ID:
   %s backup exports buckets delete --bucketId dbdb00ca12345678f901a234`, cli.ExampleAtlasEntryPoint()),

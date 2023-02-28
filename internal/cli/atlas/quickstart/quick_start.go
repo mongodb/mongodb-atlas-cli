@@ -534,7 +534,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "quickstart",
 		Short: "Create, configure, and connect to an Atlas cluster for your project.",
-		Long:  "This command creates a new cluster, adds your public IP to the Atlas access list, creates a database user to access your new MongoDB instance, loads sample data, and connects to the new cluster using Mongosh.",
+		Long:  `This command creates a new cluster, adds your public IP to the Atlas access list, creates a database user to access your new MongoDB instance, loads sample data, and connects to the new cluster using Mongosh.`,
 		Example: fmt.Sprintf(`  # Create a Google Cloud cluster named Test with a database user named dbuserTest, add your current IP address to the access list, load sample data, and connect using Mongosh:
   %[1]s quickstart --clusterName Test --provider GCP --username dbuserTest --currentIp
 		

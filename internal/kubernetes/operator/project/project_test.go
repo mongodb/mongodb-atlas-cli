@@ -415,7 +415,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 			Spec: atlasV1.AtlasProjectSpec{
 				Name: p.Name,
-				ConnectionSecret: &common.ResourceRef{
+				ConnectionSecret: &common.ResourceRefNamespaced{
 					Name: resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, p.Name), dictionary),
 				},
 				ProjectIPAccessList: []project.IPAccessList{

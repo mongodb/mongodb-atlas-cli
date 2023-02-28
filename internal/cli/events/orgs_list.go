@@ -70,7 +70,6 @@ func OrgListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   "Return all events for the specified organization.",
-		Long:    "Your API Key must have the Org Member role to successfully call this resource.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of events for the organization with the ID 5dd5a6b6f10fab1d71a58495:

@@ -14,8 +14,6 @@ mongocli cloud-manager liveMigrations link delete
 
 Delete one link-token.
 
-Your API Key must have the Organization Owner role to successfully run this command.
-
 Syntax
 ------
 

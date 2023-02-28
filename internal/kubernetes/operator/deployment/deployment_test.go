@@ -23,6 +23,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 
@@ -165,6 +167,15 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				FrequencyType:  "TestFreqType",
 			},
 			UseOrgAndGroupNamesInExportPrefix: pointers.MakePtr(true),
+			CopySettings: []mongodbatlas.CopySetting{
+				{
+					CloudProvider:     toptr.MakePtr("AWS"),
+					RegionName:        toptr.MakePtr("US_EAST_1"),
+					ReplicationSpecID: toptr.MakePtr("123456"),
+					ShouldCopyOplogs:  toptr.MakePtr(false),
+					Frequencies:       []string{"DAILY"},
+				},
+			},
 		}
 		globalCluster := &mongodbatlas.GlobalCluster{
 			CustomZoneMapping: map[string]string{
@@ -364,6 +375,15 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				RestoreWindowDays:                 *backupSchedule.RestoreWindowDays,
 				UpdateSnapshots:                   *backupSchedule.UpdateSnapshots,
 				UseOrgAndGroupNamesInExportPrefix: *backupSchedule.UseOrgAndGroupNamesInExportPrefix,
+				CopySettings: []atlasV1.CopySetting{
+					{
+						CloudProvider:     toptr.MakePtr("AWS"),
+						RegionName:        toptr.MakePtr("US_EAST_1"),
+						ReplicationSpecID: toptr.MakePtr("123456"),
+						ShouldCopyOplogs:  toptr.MakePtr(false),
+						Frequencies:       []string{"DAILY"},
+					},
+				},
 			},
 			Status: status.BackupScheduleStatus{},
 		}

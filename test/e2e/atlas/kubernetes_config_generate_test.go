@@ -864,7 +864,7 @@ func referenceProject(name, namespace string, labels map[string]string) *atlasV1
 		},
 		Spec: atlasV1.AtlasProjectSpec{
 			Name: name,
-			ConnectionSecret: &common.ResourceRef{
+			ConnectionSecret: &common.ResourceRefNamespaced{
 				Name: resources.NormalizeAtlasName(fmt.Sprintf("%s-credentials", name), dictionary),
 			},
 			Settings: &atlasV1.ProjectSettings{

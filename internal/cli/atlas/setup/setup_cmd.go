@@ -129,7 +129,7 @@ func Builder() *cobra.Command {
 	qsOpts.LabelKey = labelKey
 	qsOpts.LabelValue = labelValue
 	opts := &Opts{
-		quickstart: quickstart.NewQuickstartOpts(),
+		quickstart: qsOpts,
 	}
 
 	cmd := &cobra.Command{
@@ -175,8 +175,8 @@ func Builder() *cobra.Command {
 	}
 
 	// Register and login related
-	cmd.Flags().BoolVar(&qsOpts.IsGov, "gov", false, "Register with Atlas for Government.")
-	cmd.Flags().BoolVar(&qsOpts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.register.IsGov, "gov", false, "Register with Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.register.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	// Quickstart related
 	cmd.Flags().StringVar(&qsOpts.ClusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&qsOpts.Tier, flag.Tier, quickstart.DefaultAtlasTier, usage.Tier)

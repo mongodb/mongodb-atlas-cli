@@ -16,6 +16,7 @@ package aws
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -55,6 +56,7 @@ func DisableBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "disable",
 		Short: "Disable the custom DNS configuration of an Atlas project’s cluster deployed to AWS.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

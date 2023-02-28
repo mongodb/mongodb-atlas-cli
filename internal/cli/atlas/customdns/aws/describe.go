@@ -16,6 +16,7 @@ package aws
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -57,6 +58,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Short:   "Describe the custom DNS configuration of an Atlas project’s cluster deployed to AWS.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

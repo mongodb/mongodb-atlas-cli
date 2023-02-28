@@ -61,8 +61,10 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe <name>",
 		Short: "Return the details for the specified federated database instance.",
-		Long:  `To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.`,
-		Args:  require.ExactArgs(1),
+		Long: `To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Name of the federated database instance to retrieve.",
 		},

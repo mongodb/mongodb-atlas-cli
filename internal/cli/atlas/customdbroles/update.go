@@ -17,6 +17,7 @@ package customdbroles
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -94,6 +95,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <roleName>",
 		Short: "Update a custom database role for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"roleNameDesc": "Name of the custom role to update.",
 		},

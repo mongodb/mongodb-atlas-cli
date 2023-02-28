@@ -129,7 +129,7 @@ func Builder() *cobra.Command {
 	qsOpts.LabelKey = labelKey
 	qsOpts.LabelValue = labelValue
 	opts := &Opts{
-		quickstart: qsOpts,
+		quickstart: quickstart.NewQuickstartOpts(),
 	}
 
 	cmd := &cobra.Command{
@@ -143,27 +143,28 @@ func Builder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.config = config.Default()
 			opts.OutWriter = cmd.OutOrStdout()
+			opts.register.OutWriter = opts.OutWriter
+
 			qsOpts.LoginOpts.OutWriter = opts.OutWriter
 			qsOpts.DefaultSetterOpts.OutWriter = opts.OutWriter
-			// setup pre run
+			if err := opts.register.InitFlow(config.Default())(); err != nil {
+				return err
+			}
 			if err := opts.PreRun(cmd.Context()); err != nil {
 				return nil
 			}
-			preRun := []prerun.CmdOpt{
-				opts.register.InitFlow(config.Default()),
-				opts.InitOutput(opts.OutWriter, ""),
-			}
+			var preRun []prerun.CmdOpt
 			// registration pre run if applicable
 			if !opts.skipRegister {
 				preRun = append(preRun,
-					opts.register.LoginPreRun(config.Default()),
+					opts.register.LoginPreRun(cmd.Context(), config.Default()),
 					validate.NoAPIKeys,
 					validate.NoAccessToken,
 				)
 			}
 
 			if !opts.skipLogin {
-				preRun = append(preRun, opts.register.LoginPreRun(config.Default()))
+				preRun = append(preRun, opts.register.LoginPreRun(cmd.Context(), config.Default()))
 			}
 
 			return opts.PreRunE(preRun...)

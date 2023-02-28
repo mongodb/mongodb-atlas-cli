@@ -98,7 +98,6 @@ func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
 	mockFlow := mocks.NewMockRefresher(ctrl)
-
 	ctx := context.TODO()
 	buf := new(bytes.Buffer)
 
@@ -123,9 +122,7 @@ func Test_setupOpts_RunSkipRegister(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
 	mockFlow := mocks.NewMockRefresher(ctrl)
-
 	ctx := context.TODO()
-
 	buf := new(bytes.Buffer)
 
 	opts := &Opts{

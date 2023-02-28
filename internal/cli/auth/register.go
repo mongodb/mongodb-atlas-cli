@@ -45,7 +45,7 @@ func (opts *RegisterOpts) RegisterRun(ctx context.Context) error {
 		return err
 	}
 
-	if err := opts.CheckProfile(ctx); err != nil {
+	if err := opts.checkProfile(ctx); err != nil {
 		return err
 	}
 
@@ -100,8 +100,8 @@ func RegisterBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return prerun.ExecuteE(
-				opts.LoginPreRun(config.Default()),
 				opts.InitFlow(config.Default()),
+				opts.LoginPreRun(cmd.Context(), config.Default()),
 				validate.NoAPIKeys,
 				validate.NoAccessToken)
 		},

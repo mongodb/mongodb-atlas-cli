@@ -184,7 +184,7 @@ func (opts *Opts) quickstartPreRun(ctx context.Context, outWriter io.Writer) err
 		)
 	}
 
-	if err := opts.LoginPreRun(config.Default())(); err != nil {
+	if err := opts.LoginPreRun(ctx, config.Default())(); err != nil {
 		return err
 	}
 

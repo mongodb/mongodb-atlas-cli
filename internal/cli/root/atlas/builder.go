@@ -62,6 +62,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
@@ -136,16 +137,14 @@ func Builder() *cobra.Command {
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
 			}
-			if shouldRefreshToken(cmd) {
-				if err := opts.InitFlow(config.Default())(); err != nil {
-					return err
-				}
-				if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
-					return err
-				}
-			}
 			if shouldCheckCredentials(cmd) {
-				return validate.Credentials()
+				return prerun.ExecuteE(
+					opts.InitFlow(config.Default()),
+					func() error {
+						return opts.RefreshAccessToken(cmd.Context())
+					},
+					validate.Credentials,
+				)
 			}
 
 			return nil
@@ -255,29 +254,6 @@ func shouldSetService(cmd *cobra.Command) bool {
 	return true
 }
 
-func shouldRefreshToken(cmd *cobra.Command) bool {
-	searchByName := []string{
-		"__complete",
-		"help",
-		figautocomplete.CmdUse,
-	}
-	for _, n := range searchByName {
-		if cmd.Name() == n {
-			return false
-		}
-	}
-	searchByPath := []string{
-		fmt.Sprintf("%s %s", atlas, "completion"), // completion commands do not require credentials
-		fmt.Sprintf("%s %s", atlas, "config"),     // user wants to set credentials
-	}
-	for _, p := range searchByPath {
-		if strings.HasPrefix(cmd.CommandPath(), p) {
-			return false
-		}
-	}
-	return true
-}
-
 func shouldCheckCredentials(cmd *cobra.Command) bool {
 	searchByName := []string{
 		"__complete",
@@ -289,7 +265,7 @@ func shouldCheckCredentials(cmd *cobra.Command) bool {
 			return false
 		}
 	}
-	searchByPath := []string{
+	skipFor := []string{
 		fmt.Sprintf("%s %s", atlas, "completion"), // completion commands do not require credentials
 		fmt.Sprintf("%s %s", atlas, "config"),     // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "auth"),       // user wants to set credentials
@@ -298,7 +274,7 @@ func shouldCheckCredentials(cmd *cobra.Command) bool {
 		fmt.Sprintf("%s %s", atlas, "register"),   // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "quickstart"), // command supports login
 	}
-	for _, p := range searchByPath {
+	for _, p := range skipFor {
 		if strings.HasPrefix(cmd.CommandPath(), p) {
 			return false
 		}

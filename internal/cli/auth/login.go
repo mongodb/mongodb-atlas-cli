@@ -98,7 +98,7 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 		return err
 	}
 
-	if err := opts.CheckProfile(ctx); err != nil {
+	if err := opts.checkProfile(ctx); err != nil {
 		return err
 	}
 
@@ -122,16 +122,16 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 	return nil
 }
 
-func (opts *LoginOpts) CheckProfile(ctx context.Context) error {
+func (opts *LoginOpts) checkProfile(ctx context.Context) error {
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
 	if config.OrgID() != "" && !opts.OrgExists(config.OrgID()) {
-		config.SetOrgID("")
+		opts.config.Set("org_id", "")
 	}
 
 	if config.ProjectID() != "" && !opts.ProjectExists(config.ProjectID()) {
-		config.SetProjectID("")
+		opts.config.Set("project_id", "")
 	}
 	return nil
 }
@@ -256,12 +256,18 @@ func newRegenerationPrompt() survey.Prompt {
 	}
 }
 
-func (opts *LoginOpts) LoginPreRun(c LoginConfig) func() error {
+func (opts *LoginOpts) LoginPreRun(ctx context.Context, c LoginConfig) func() error {
 	return func() error {
 		opts.config = c
 		if config.OpsManagerURL() != "" {
 			opts.OpsManagerURL = config.OpsManagerURL()
 		}
+		// ignore expired tokens since logging in
+		if err := opts.RefreshAccessToken(ctx); err != nil && !errors.Is(err, cli.ErrInvalidRefreshToken) {
+			return err
+		}
+		// clean up any expired tokens
+		opts.config.Set(config.AccessTokenField, "")
 		return nil
 	}
 }
@@ -285,8 +291,8 @@ func LoginBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return prerun.ExecuteE(
-				opts.LoginPreRun(config.Default()),
 				opts.InitFlow(config.Default()),
+				opts.LoginPreRun(cmd.Context(), config.Default()),
 				validate.NoAPIKeys,
 				validate.NoAccessToken,
 			)

@@ -56,6 +56,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <archiveId>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified online archive from your cluster.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to delete.",

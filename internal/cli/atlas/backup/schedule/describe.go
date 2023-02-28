@@ -65,6 +65,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <clusterName>",
 		Aliases: []string{"get"},
 		Short:   "Describe a cloud backup schedule for the cluster you specify.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Human-readable label for the cluster.",

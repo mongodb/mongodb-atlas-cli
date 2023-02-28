@@ -133,7 +133,9 @@ func UpdateBuilder() *cobra.Command {
 		
 You can modify only M10 or larger clusters that are single-region replica sets.
 		
-You can't change the name of the cluster or downgrade the MongoDB version of your cluster.`,
+You can't change the name of the cluster or downgrade the MongoDB version of your cluster.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"),
 		Example: fmt.Sprintf(`  # Update the tier for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
   %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50
 

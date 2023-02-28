@@ -62,6 +62,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe <restoreJobId>",
 		Short: "Describe a cloud backup restore job.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"restoreJobIdDesc": "ID of the restore job.",

@@ -70,7 +70,9 @@ func WatchBuilder() *cobra.Command {
 		Long: `This command checks the archive's status periodically until it reaches a state different from PENDING or PAUSING. 
 Once the archive reaches the expected status, the command prints "Online archive available."
 If you run the command in the terminal, it blocks the terminal session until the resource status changes to the expected status.
-You can interrupt the command's polling at any time with CTRL-C.`,
+You can interrupt the command's polling at any time with CTRL-C.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Example: fmt.Sprintf(`  %s cluster onlineArchive watch archiveIdSample --clusterName clusterNameSample`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{

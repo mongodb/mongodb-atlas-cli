@@ -61,6 +61,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <clusterName>",
 		Aliases: []string{"get"},
 		Short:   "Return the details for the specified cluster for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to retrieve.",

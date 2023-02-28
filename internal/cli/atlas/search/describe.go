@@ -63,6 +63,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe <indexId>",
 		Short: "Return the details for the search index for a cluster.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",

@@ -66,6 +66,7 @@ func PauseBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "pause <archiveId>",
 		Short: "Pause the specfied online archive for your cluster.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to pause.",

@@ -75,6 +75,9 @@ func (opts *CreateAtlasOpts) validateAPIKeyRequirements() error {
 	if len(opts.apiKeyRole) == 0 {
 		required = append(required, flag.APIKeyRole)
 	}
+	if opts.apiKeyDescription == "" {
+		required = append(required, flag.APIKeyDescription)
+	}
 	if opts.ownerID == "" {
 		required = append(required, flag.OwnerID)
 	}
@@ -133,8 +136,8 @@ func CreateAtlasBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(opts.apiKeyRole) > 0 {
 				createAtlasTemplate += `API Key '{{.APIKey.ID}}' created.
-Public API Key {{.APIKey.PublicKey}}
-Private API Key {{.APIKey.PrivateKey}}
+Public API Key '{{.APIKey.PublicKey}}'
+Private API Key '{{.APIKey.PrivateKey}}'
 `
 			}
 			return prerun.ExecuteE(

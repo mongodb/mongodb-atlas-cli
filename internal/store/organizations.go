@@ -87,7 +87,7 @@ func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 // CreateAtlasOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateAtlasOrganization(o *atlas.CreateOrganizationRequest) (*atlas.CreateOrganizationResponse, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Organizations.Create(s.ctx, o)
 		return result, err
 	default:

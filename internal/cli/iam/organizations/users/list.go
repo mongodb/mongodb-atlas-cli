@@ -57,7 +57,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam organizations(s) users list --orgId orgId.
+// ListBuilder mongocli iam organizations(s) users list --orgId orgId.
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 
@@ -87,6 +87,21 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+
+	return cmd
+}
+
+func Builder() *cobra.Command {
+	const use = "users"
+	cmd := &cobra.Command{
+		Use:     use,
+		Short:   fmt.Sprintf("Manage your %s users.", cli.DescriptionServiceName()),
+		Aliases: cli.GenerateAliases(use),
+	}
+
+	cmd.AddCommand(
+		ListBuilder(),
+	)
 
 	return cmd
 }

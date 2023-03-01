@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/openlyinc/pointy"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -50,6 +51,51 @@ func TestUpdateOpts_Run(t *testing.T) {
 		noUpdateSnapshots:                   false,
 		useOrgAndGroupNamesInExportPrefix:   true,
 		noUseOrgAndGroupNamesInExportPrefix: false,
+		filename:                            "",
+		fs:                                  afero.NewMemMapFs(),
+	}
+
+	expected := &atlas.CloudProviderSnapshotBackupPolicy{}
+	cmd := &cobra.Command{}
+
+	mockStore.
+		EXPECT().
+		UpdateSchedule(opts.ProjectID, opts.clusterName, gomock.Any()).
+		Return(expected, nil).
+		Times(1)
+
+	err := opts.Run(cmd)
+	assert.NoError(t, err)
+}
+
+func TestUpdateOpts_RunWithFile(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockScheduleDescriberUpdater(ctrl)
+	fs := afero.NewMemMapFs()
+
+	fileContents := `
+{
+  "autoExportEnabled": true,
+  "export": {
+    "exportBucketId": "604f6322dc786a5341d4f7fb",
+    "frequencyType": "monthly"
+  },
+  "policies": [],
+  "referenceHourOfDay": 12,
+  "referenceMinuteOfHour": 30,
+  "restoreWindowDays": 5,
+  "updateSnapshots": true,
+  "useOrgAndGroupNamesInExportPrefix": true
+}`
+
+	fileName := "test.json"
+	assert.NoError(t, afero.WriteFile(fs, fileName, []byte(fileContents), 0600))
+
+	opts := &UpdateOpts{
+		store:       mockStore,
+		clusterName: "Test",
+		filename:    fileName,
+		fs:          fs,
 	}
 
 	expected := &atlas.CloudProviderSnapshotBackupPolicy{}

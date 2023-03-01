@@ -24,9 +24,11 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -58,6 +60,8 @@ type UpdateOpts struct {
 	useOrgAndGroupNamesInExportPrefix   bool
 	noUseOrgAndGroupNamesInExportPrefix bool
 	store                               store.ScheduleDescriberUpdater
+	filename                            string
+	fs                                  afero.Fs
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -84,6 +88,14 @@ func (opts *UpdateOpts) Run(cmd *cobra.Command) error {
 
 func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) (*atlas.CloudProviderSnapshotBackupPolicy, error) {
 	out := new(atlas.CloudProviderSnapshotBackupPolicy)
+
+	if opts.filename != "" {
+		if err := file.Load(opts.fs, opts.filename, out); err != nil {
+			return nil, err
+		}
+		out.ClusterName = clusterName
+		return out, nil
+	}
 
 	out.ClusterName = clusterName
 
@@ -344,7 +356,9 @@ func checkForExport(out *atlas.CloudProviderSnapshotBackupPolicy) {
 
 // atlas backup(s) schedule update --clusterName clusterName [--projectId projectId] [--exportBucketId exportBucketID].
 func UpdateBuilder() *cobra.Command {
-	opts := &UpdateOpts{}
+	opts := &UpdateOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:     "update",
 		Aliases: []string{"updates"},
@@ -399,7 +413,24 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.BackupFilename)
+
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
+
+	_ = cmd.MarkFlagFilename(flag.File)
+
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.ExportBucketID)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.ExportFrequencyType)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.ReferenceHourOfDay)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.ReferenceMinuteOfHour)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.RestoreWindowDays)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.AutoExport)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.NoAutoExport)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.UpdateSnapshots)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.NoUpdateSnapshots)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.UseOrgAndGroupNamesInExportPrefix)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.NoUseOrgAndGroupNamesInExportPrefix)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.BackupPolicy)
 
 	return cmd
 }

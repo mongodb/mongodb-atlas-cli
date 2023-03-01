@@ -54,6 +54,10 @@ Options
      - string
      - false
      - Frequency associated with the export policy. Value can be daily, weekly, or monthly.
+   * - -f, --file
+     - string
+     - false
+     - Path to an optional JSON configuration file that defines backup schedule settings.
    * - -h, --help
      - 
      - false

@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2020 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,22 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-// +build unit
-
-package serverless
+package snapshots
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		6,
-		[]string{},
+func Builder() *cobra.Command {
+	const use = "snapshots"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage cloud backup snapshots for your project.",
+	}
+
+	cmd.AddCommand(
+		ListBuilder(),
 	)
+
+	return cmd
 }

@@ -51,6 +51,7 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`atlas-serverless-backups` - Manage cloud backups for your project.
 * :ref:`atlas-serverless-create` - Creates one serverless instance in the specified project.
 * :ref:`atlas-serverless-delete` - Remove a serverless instance from your project.
 * :ref:`atlas-serverless-describe` - Return one serverless instance in the specified project.
@@ -61,6 +62,7 @@ Related Commands
 .. toctree::
    :titlesonly:
 
+   backups </command/atlas-serverless-backups>
    create </command/atlas-serverless-create>
    delete </command/atlas-serverless-delete>
    describe </command/atlas-serverless-describe>

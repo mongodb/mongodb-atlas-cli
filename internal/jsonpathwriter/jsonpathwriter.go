@@ -17,10 +17,10 @@ package jsonpathwriter
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 
 	"github.com/PaesslerAG/jsonpath"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 )
 
 var ErrEmptyPath = errors.New("empty jsonpath")
@@ -44,7 +44,5 @@ func Print(w io.Writer, path string, obj interface{}) error {
 	if err != nil {
 		return err
 	}
-
-	_, err = fmt.Fprintln(w, v)
-	return err
+	return jsonwriter.Print(w, v)
 }

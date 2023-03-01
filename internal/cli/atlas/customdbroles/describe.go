@@ -15,6 +15,7 @@ package customdbroles
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -60,6 +61,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe <roleName>",
 		Short: "Return a single custom database role for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"roleNameDesc": "Name of the custom role to retrieve.",

@@ -78,7 +78,19 @@ var (
 	oidD3DESCBC       = asn1.ObjectIdentifier{1, 2, 840, 113549, 3, 7}
 )
 
-//nolint
+const (
+	oidAES128CBCKeyLen = 16
+	oidAES196CBCKeyLen = 24
+	oidAES256CBCKeyLen = 32
+	oidDESCBCKeyLen    = 8
+	oidD3DESCBCKeyLen  = 24
+)
+
+var ErrUnsupportedPEM = errors.New("unsupported encrypted PEM")
+
+// DecryptPKCS8PrivateKey
+//
+//nolint:gocyclo
 func DecryptPKCS8PrivateKey(data, password []byte) ([]byte, error) {
 	var pki encryptedPrivateKeyInfo
 	if _, err := asn1.Unmarshal(data, &pki); err != nil {
@@ -106,29 +118,31 @@ func DecryptPKCS8PrivateKey(data, password []byte) ([]byte, error) {
 		keyHash = sha256.New
 	}
 
-	var symkey []byte
-	var block cipher.Block
-	var err error
+	var (
+		symkey []byte
+		block  cipher.Block
+		err    error
+	)
 	switch {
 	// AES-128-CBC, AES-192-CBC, AES-256-CBC
 	case encParam.EncryAlgo.Equal(oidAES128CBC):
-		symkey = pbkdf2.Key(password, salt, iter, 16, keyHash)
+		symkey = pbkdf2.Key(password, salt, iter, oidAES128CBCKeyLen, keyHash)
 		block, err = aes.NewCipher(symkey)
 	case encParam.EncryAlgo.Equal(oidAES196CBC):
-		symkey = pbkdf2.Key(password, salt, iter, 24, keyHash)
+		symkey = pbkdf2.Key(password, salt, iter, oidAES196CBCKeyLen, keyHash)
 		block, err = aes.NewCipher(symkey)
 	case encParam.EncryAlgo.Equal(oidAES256CBC):
-		symkey = pbkdf2.Key(password, salt, iter, 32, keyHash)
+		symkey = pbkdf2.Key(password, salt, iter, oidAES256CBCKeyLen, keyHash)
 		block, err = aes.NewCipher(symkey)
 	// DES, TripleDES
 	case encParam.EncryAlgo.Equal(oidDESCBC):
-		symkey = pbkdf2.Key(password, salt, iter, 8, keyHash)
-		block, err = des.NewCipher(symkey)
+		symkey = pbkdf2.Key(password, salt, iter, oidDESCBCKeyLen, keyHash)
+		block, err = des.NewCipher(symkey) //nolint:gosec
 	case encParam.EncryAlgo.Equal(oidD3DESCBC):
-		symkey = pbkdf2.Key(password, salt, iter, 24, keyHash)
-		block, err = des.NewTripleDESCipher(symkey)
+		symkey = pbkdf2.Key(password, salt, iter, oidD3DESCBCKeyLen, keyHash)
+		block, err = des.NewTripleDESCipher(symkey) //nolint:gosec
 	default:
-		return nil, fmt.Errorf("unsupported encrypted PEM: unknown algorithm %v", encParam.EncryAlgo)
+		return nil, fmt.Errorf("%w: unknown algorithm %v", ErrUnsupportedPEM, encParam.EncryAlgo)
 	}
 	if err != nil {
 		return nil, err

@@ -312,12 +312,13 @@ func (p *Profile) SetRefreshToken(v string) {
 type AuthMechanism int
 
 const (
-	APIKeys AuthMechanism = iota // ignore first value by assigning to blank identifier
+	APIKeys AuthMechanism = iota
 
 	OAuth
 	NotLoggedIn
 )
 
+// AuthType returns the type of authentication used in the profile.
 func AuthType() AuthMechanism { return Default().AuthType() }
 func (p *Profile) AuthType() AuthMechanism {
 	if p.PublicAPIKey() != "" && p.PrivateAPIKey() != "" {

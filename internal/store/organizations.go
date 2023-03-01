@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber
+//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber,AtlasOrganizationCreator
 
 type OrganizationLister interface {
 	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
@@ -34,6 +34,10 @@ type OrganizationDescriber interface {
 
 type OrganizationCreator interface {
 	CreateOrganization(string) (*atlas.Organization, error)
+}
+
+type AtlasOrganizationCreator interface {
+	CreateAtlasOrganization(*atlas.CreateOrganizationRequest) (*atlas.CreateOrganizationResponse, error)
 }
 
 type OrganizationDeleter interface {
@@ -74,6 +78,17 @@ func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 	case config.CloudManagerService, config.OpsManagerService:
 		org := &atlas.Organization{Name: name}
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Create(s.ctx, org)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// CreateAtlasOrganization encapsulate the logic to manage different cloud providers.
+func (s *Store) CreateAtlasOrganization(o *atlas.CreateOrganizationRequest) (*atlas.CreateOrganizationResponse, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Organizations.Create(s.ctx, o)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

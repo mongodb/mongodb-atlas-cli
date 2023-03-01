@@ -11,7 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || iam
+
+//go:build e2e || (iam && !atlas)
 
 package iam_test
 
@@ -23,14 +24,13 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestOrgs(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	var orgID string
 
@@ -43,15 +43,12 @@ func TestOrgs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var orgs mongodbatlas.Organizations
-			if err := json.Unmarshal(resp, &orgs); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			a.NotEmpty(orgs.Results)
-			orgID = orgs.Results[0].ID
-		}
+		require.NoError(t, err, string(resp))
+		var orgs mongodbatlas.Organizations
+		err = json.Unmarshal(resp, &orgs)
+		require.NoError(t, err, string(resp))
+		assert.NotEmpty(t, orgs.Results)
+		orgID = orgs.Results[0].ID
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -66,7 +63,7 @@ func TestOrgs(t *testing.T) {
 		assert.NoError(t, err, string(resp))
 	})
 
-	t.Run("Users", func(t *testing.T) {
+	t.Run("List Org Users", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
 			orgEntity,

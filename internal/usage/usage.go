@@ -292,6 +292,7 @@ dbName and collection are required only for built-in roles.`
 	ContainerRegion                           = "Cloud provider region where the VPC that you peered with the Atlas VPC resides."
 	ContainerRegions                          = "List of Atlas regions where the container resides."
 	ProjectOwnerID                            = "Unique 24-digit string that identifies the Atlas user to be granted the Project Owner role on the specified project. If unspecified, this value defaults to the user ID of the oldest Organization Owner."
+	OrgOwnerID                                = "Unique 24-digit string that identifies the Atlas user to be granted the Org Owner role on the specified organization. Required if using API keys."
 	GovCloudRegionsOnly                       = "Flag that designates that the project uses only the AWS GovCloud region. Use this option only for Atlas for Government projects. If unspecified, the project uses only the AWS Standard region for AWS deployments. You can't deploy clusters across AWS GovCloud and AWS Standard regions in the same project."
 	ReclaimFreeSpaceTimestamp                 = "Timestamp in ISO 8601 format when the service reclaims the space. If not set, defaults to the current timestamp."
 	QuickstartDefault                         = "Flag that runs the Quickstart command with all default and auto-generated values to deploy and access an Atlas cluster."

@@ -1,0 +1,133 @@
+// Copyright 2020 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+//go:build e2e || (iam && atlas)
+
+package iam_test
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"os/exec"
+	"testing"
+
+	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"go.mongodb.org/atlas/mongodbatlas"
+)
+
+func TestAtlasOrgs(t *testing.T) {
+	cliPath, err := e2e.AtlasCLIBin()
+	require.NoError(t, err)
+
+	var orgID string
+	// This test must run first to grab the ID of the org to later describe
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			orgEntity,
+			"ls",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err2 := cmd.CombinedOutput()
+		require.NoError(t, err2, string(resp))
+		var orgs mongodbatlas.Organizations
+		err = json.Unmarshal(resp, &orgs)
+		require.NoError(t, err, string(resp))
+		assert.NotEmpty(t, orgs.Results)
+		orgID = orgs.Results[0].ID
+	})
+	require.NotEmpty(t, orgID)
+
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			orgEntity,
+			"describe",
+			orgID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err2 := cmd.CombinedOutput()
+		assert.NoError(t, err2, string(resp))
+	})
+
+	var userID string
+	t.Run("List Org Users", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			orgEntity,
+			usersEntity,
+			"ls",
+			"--orgId",
+			orgID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err2 := cmd.CombinedOutput()
+		assert.NoError(t, err2, string(resp))
+		var users mongodbatlas.AtlasUsersResponse
+		err = json.Unmarshal(resp, &users)
+		require.NoError(t, err, string(resp))
+		assert.NotEmpty(t, users.Results)
+		userID = users.Results[0].ID
+	})
+	require.NotEmpty(t, userID)
+
+	n, err := e2e.RandInt(255)
+	require.NoError(t, err)
+	orgName := fmt.Sprintf("e2e-org-%v", n)
+	var (
+		publicAPIKey  string
+		privateAPIKey string
+	)
+	t.Run("Create", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			orgEntity,
+			"create",
+			orgName,
+			"--ownerId",
+			userID,
+			"--apiKeyRole",
+			"ORG_OWNER",
+			"--apiKeyDescription",
+			"test",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+		var org mongodbatlas.CreateOrganizationResponse
+		err = json.Unmarshal(resp, &org)
+		require.NoError(t, err, string(resp))
+		orgID = org.Organization.ID
+		publicAPIKey = org.APIKey.PublicKey
+		privateAPIKey = org.APIKey.PrivateKey
+	})
+	require.NotEmpty(t, publicAPIKey)
+	require.NotEmpty(t, privateAPIKey)
+
+	t.Run("Delete", func(t *testing.T) {
+		if os.Getenv("MCLI_SERVICE") == "cloudgov" {
+			t.Skip("not available for gov")
+		}
+		t.Setenv("MCLI_PUBLIC_API_KEY", publicAPIKey)
+		t.Setenv("MCLI_PRIVATE_API_KEY", privateAPIKey)
+		cmd := exec.Command(cliPath,
+			orgEntity,
+			"delete",
+			orgID,
+			"--force",
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+	})
+}

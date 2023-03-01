@@ -162,7 +162,7 @@ func List() []string {
 			keys = append(keys, k)
 		}
 	}
-	// keys in maps are non deterministic, trying to give users a consistent output
+	// keys in maps are non-deterministic, trying to give users a consistent output
 	sort.Strings(keys)
 	return keys
 }
@@ -307,6 +307,27 @@ func (p *Profile) RefreshToken() string {
 func SetRefreshToken(v string) { Default().SetRefreshToken(v) }
 func (p *Profile) SetRefreshToken(v string) {
 	p.Set(RefreshTokenField, v)
+}
+
+type AuthMechanism int
+
+const (
+	APIKeys AuthMechanism = iota
+
+	OAuth
+	NotLoggedIn
+)
+
+// AuthType returns the type of authentication used in the profile.
+func AuthType() AuthMechanism { return Default().AuthType() }
+func (p *Profile) AuthType() AuthMechanism {
+	if p.PublicAPIKey() != "" && p.PrivateAPIKey() != "" {
+		return APIKeys
+	}
+	if p.AccessToken() != "" {
+		return OAuth
+	}
+	return NotLoggedIn
 }
 
 // Token gets configured auth.Token.

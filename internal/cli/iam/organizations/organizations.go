@@ -24,8 +24,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const use = "organizations"
+
 func Builder() *cobra.Command {
-	const use = "organizations"
 	cmd := &cobra.Command{
 		Use:     use,
 		Short:   fmt.Sprintf("Manage your %s organizations.", cli.DescriptionServiceName()),
@@ -45,7 +46,6 @@ func Builder() *cobra.Command {
 }
 
 func AtlasCLIBuilder() *cobra.Command {
-	const use = "organizations"
 	cmd := &cobra.Command{
 		Use:     use,
 		Short:   fmt.Sprintf("Manage your %s organizations.", cli.DescriptionServiceName()),
@@ -53,6 +53,7 @@ func AtlasCLIBuilder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use, "orgs", "org"),
 	}
 	cmd.AddCommand(
+		CreateAtlasBuilder(),
 		ListBuilder(),
 		DescribeBuilder(),
 		DeleteBuilder(),

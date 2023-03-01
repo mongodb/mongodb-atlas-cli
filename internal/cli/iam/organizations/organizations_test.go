@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package organizations
 
@@ -36,7 +35,7 @@ func TestAtlasBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		AtlasCLIBuilder(),
-		6,
+		7,
 		[]string{},
 	)
 }

@@ -16,6 +16,7 @@ package create
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -74,6 +75,7 @@ func NewRelicBuilder() *cobra.Command {
 		Use:     "NEW_RELIC",
 		Aliases: []string{"new_relic", "newRelic"},
 		Short:   "Create or update the New Relic integration.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

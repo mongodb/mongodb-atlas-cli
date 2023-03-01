@@ -114,7 +114,7 @@ func (opts *CreateAtlasOpts) validateAuthType() error {
 	case config.OAuth:
 		return opts.validateOAuthRequirements()
 	case config.NotLoggedIn:
-		return nil
+		return nil // should not happen
 	default:
 		return nil
 	}

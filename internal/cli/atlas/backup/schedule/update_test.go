@@ -78,7 +78,7 @@ func TestUpdateOpts_RunWithFile(t *testing.T) {
   "autoExportEnabled": true,
   "export": {
     "exportBucketId": "604f6322dc786a5341d4f7fb",
-    "frequencyType": "monthly",
+    "frequencyType": "monthly"
   },
   "policies": [],
   "referenceHourOfDay": 12,
@@ -89,7 +89,7 @@ func TestUpdateOpts_RunWithFile(t *testing.T) {
 }`
 
 	fileName := "test.json"
-	_ = afero.WriteFile(fs, fileName, []byte(fileContents), 0600)
+	assert.NoError(t, afero.WriteFile(fs, fileName, []byte(fileContents), 0600))
 
 	opts := &UpdateOpts{
 		store:       mockStore,

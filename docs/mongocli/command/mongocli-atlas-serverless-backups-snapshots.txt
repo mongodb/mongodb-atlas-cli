@@ -49,11 +49,13 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`mongocli-atlas-serverless-backups-snapshots-describe` - Return the details for the specified snapshot for your project.
 * :ref:`mongocli-atlas-serverless-backups-snapshots-list` - Return all cloud backup snapshots for the specified serverless instance in your project.
 
 
 .. toctree::
    :titlesonly:
 
+   describe </command/mongocli-atlas-serverless-backups-snapshots-describe>
    list </command/mongocli-atlas-serverless-backups-snapshots-list>
 

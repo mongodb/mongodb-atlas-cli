@@ -15,6 +15,7 @@
 package serverless
 
 import (
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless/backup"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +32,9 @@ func Builder() *cobra.Command {
 		DescribeBuilder(),
 		DeleteBuilder(),
 		CreateBuilder(),
-		WatchBuilder())
+		WatchBuilder(),
+		backup.Builder(),
+	)
 
 	return cmd
 }

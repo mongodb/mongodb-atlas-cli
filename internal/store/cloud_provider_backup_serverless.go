@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ func (s *Store) ServerlessSnapshots(projectID, clusterName string, opts *atlas.L
 		InstanceName: clusterName,
 	}
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetAllServerlessSnapshots(s.ctx, o, opts)
 		return result, err
 	default:

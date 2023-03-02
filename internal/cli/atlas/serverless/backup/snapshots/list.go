@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -69,8 +69,8 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas serverless instance that contains the snapshots you want to retrieve.",
 		},
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of snapshots for the cluster named myDemo 
-  %s backups snapshots list myDemo --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # Return a JSON-formatted list of snapshots for the instance named myDemo 
+  %s serverless backups snapshots list myDemo --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

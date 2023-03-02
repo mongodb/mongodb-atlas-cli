@@ -49,11 +49,13 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`atlas-serverless-backups-snapshots-describe` - Return the details for the specified snapshot for your project.
 * :ref:`atlas-serverless-backups-snapshots-list` - Return all cloud backup snapshots for the specified serverless instance in your project.
 
 
 .. toctree::
    :titlesonly:
 
+   describe </command/atlas-serverless-backups-snapshots-describe>
    list </command/atlas-serverless-backups-snapshots-list>
 

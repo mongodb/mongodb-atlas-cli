@@ -1,8 +1,8 @@
-.. _mongocli-atlas-serverless-backups-snapshots-list:
+.. _atlas-serverless-backups-snapshots-describe:
 
-================================================
-mongocli atlas serverless backups snapshots list
-================================================
+===========================================
+atlas serverless backups snapshots describe
+===========================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ mongocli atlas serverless backups snapshots list
    :depth: 1
    :class: singlecol
 
-Return all cloud backup snapshots for the specified serverless instance in your project.
+Return the details for the specified snapshot for your project.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 
@@ -21,25 +21,9 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas serverless backups snapshots list <clusterName> [options]
+   atlas serverless backups snapshots describe [options]
 
 .. Code end marker, please don't delete this comment
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - clusterName
-     - string
-     - true
-     - Label that identifies the Atlas serverless instance that contains the snapshots you want to return.
 
 Options
 -------
@@ -52,26 +36,26 @@ Options
      - Type
      - Required
      - Description
+   * - --clusterName
+     - string
+     - true
+     - Name of the cluster.
    * - -h, --help
      - 
      - false
-     - help for list
-   * - --limit
-     - int
-     - false
-     - Number of items per results page. This value defaults to 100.
+     - help for describe
    * - -o, --output
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
-   * - --page
-     - int
-     - false
-     - Page number that specifies a page of results. This value defaults to 1.
    * - --projectId
      - string
      - false
      - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
+   * - --snapshotId
+     - string
+     - true
+     - Unique identifier of the snapshot to restore. You must specify a snapshotId for automated restores.
 
 Inherited Options
 -----------------
@@ -94,5 +78,5 @@ Examples
 
 .. code-block::
 
-   # Return a JSON-formatted list of snapshots for the instance named myDemo 
-   mongocli atlas serverless backups snapshots list myDemo --output json
+   # Return the details for the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the instance named myDemo:
+   atlas serverless backups snapshots describe --snapshotId 5f4007f327a3bd7b6f4103c5 --clusterName myDemo

@@ -21,6 +21,7 @@ variables:
   - &go_env
       XDG_CONFIG_HOME: ${go_base_path}${workdir}
       GO111MODULE: "on"
+      MCLI_DEBUG: true
       GOROOT: ${go_root}
       GOPATH: ${go_base_path}${workdir}
       ADD_PATH: "${go_bin}:${go_base_path}${workdir}/bin:${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"

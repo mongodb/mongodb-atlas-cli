@@ -219,6 +219,7 @@ func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
 
 	return opts.PreRunE(
 		opts.initStore(ctx),
+		opts.InitFlow(config.Default()),
 		opts.InitOutput(outWriter, ""),
 	)
 }

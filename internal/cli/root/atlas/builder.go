@@ -210,7 +210,7 @@ func Builder() *cobra.Command {
 		maintenance.Builder(),
 		customdns.Builder(),
 		cloudproviders.Builder(),
-		serverless.Builder(),
+		serverless.AtlasCLIBuilder(),
 		livemigrations.Builder(),
 		accesslogs.Builder(),
 		loginCmd,

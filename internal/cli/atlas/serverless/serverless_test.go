@@ -27,6 +27,15 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
+		5,
+		[]string{},
+	)
+}
+
+func TestAtlasCLIBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		AtlasCLIBuilder(),
 		6,
 		[]string{},
 	)

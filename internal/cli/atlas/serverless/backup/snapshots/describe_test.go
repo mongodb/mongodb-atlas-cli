@@ -13,20 +13,36 @@
 // limitations under the License.
 
 //go:build unit
+// +build unit
 
 package snapshots
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		2,
-		[]string{},
-	)
+func TestDescribe_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockServerlessSnapshotsDescriber(ctrl)
+	defer ctrl.Finish()
+
+	var expected mongodbatlas.CloudProviderSnapshot
+
+	describeOpts := &DescribeOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		ServerlessSnapshot(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.snapshot).
+		Return(&expected, nil).
+		Times(1)
+
+	if err := describeOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

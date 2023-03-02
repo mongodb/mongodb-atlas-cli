@@ -33,6 +33,25 @@ func Builder() *cobra.Command {
 		DeleteBuilder(),
 		CreateBuilder(),
 		WatchBuilder(),
+	)
+
+	return cmd
+}
+
+func AtlasCLIBuilder() *cobra.Command {
+	const use = "serverless"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: []string{"sl"},
+		Short:   "Manage serverless instances for your project.",
+		Long:    `The serverless command provides access to your serverless instance configurations. You can create, edit, and delete serverless instances.`,
+	}
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		DeleteBuilder(),
+		CreateBuilder(),
+		WatchBuilder(),
 		backup.Builder(),
 	)
 

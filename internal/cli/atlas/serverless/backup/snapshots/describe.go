@@ -4,14 +4,13 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 package snapshots
 
 import (
@@ -27,15 +26,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ListOpts struct {
+const describeTemplate = `ID	SNAPSHOT TYPE	TYPE	DESCRIPTION	EXPIRES AT
+{{.ID}}	{{.SnapshotType}}	{{.Type}}	{{.Description}}	{{.ExpiresAt}}
+`
+
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.ListOpts
+	store       store.ServerlessSnapshotsDescriber
+	snapshot    string
 	clusterName string
-	store       store.ServerlessSnapshotsLister
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -43,13 +46,8 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	TYPE	STATUS	CREATED AT	EXPIRES AT{{range .Results}}
-{{.ID}}	{{.SnapshotType}}	{{.Status}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
-`
-
-func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.ServerlessSnapshots(opts.ConfigProjectID(), opts.clusterName, listOpts)
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.ServerlessSnapshot(opts.ConfigProjectID(), opts.clusterName, opts.snapshot)
 	if err != nil {
 		return err
 	}
@@ -57,39 +55,35 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas serverless backups snapshots list <clusterName> [--projectId projectId] [--page N] [--limit N].
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+// atlas backup snapshots describe --snapshotId snapshotId --clusterName clusterName --projectId projectId.
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "list <clusterName>",
-		Short:   "Return all cloud backup snapshots for the specified serverless instance in your project.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
-		Aliases: []string{"ls"},
-		Args:    require.ExactArgs(1),
-		Annotations: map[string]string{
-			"clusterNameDesc": "Label that identifies the Atlas serverless instance that contains the snapshots you want to return.",
-		},
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of snapshots for the instance named myDemo 
-  %s serverless backups snapshots list myDemo --output json`, cli.ExampleAtlasEntryPoint()),
+		Use:   "describe",
+		Short: "Return the details for the specified snapshot for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+		Args:  require.NoArgs,
+		Example: fmt.Sprintf(`  # Return the details for the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the instance named myDemo:
+  %s serverless backups snapshots describe --snapshotId 5f4007f327a3bd7b6f4103c5 --clusterName myDemo`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
-
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.snapshot, flag.SnapshotID, "", usage.SnapshotID)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
+	_ = cmd.MarkFlagRequired(flag.SnapshotID)
 	return cmd
 }

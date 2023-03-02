@@ -62,12 +62,12 @@ func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
 		Use:     "list <clusterName>",
-		Short:   "Return all cloud backup snapshots for your project and serverless instance.",
+		Short:   "Return all cloud backup snapshots for the specified serverless instance in your project.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"clusterNameDesc": "Name of the Atlas serverless instance that contains the snapshots you want to retrieve.",
+			"clusterNameDesc": "Label that identifies the Atlas serverless instance that contains the snapshots you want to return.",
 		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of snapshots for the instance named myDemo 
   %s serverless backups snapshots list myDemo --output json`, cli.ExampleAtlasEntryPoint()),

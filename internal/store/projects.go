@@ -98,7 +98,8 @@ func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (i
 func (s *Store) Project(id string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetOneProject(s.ctx, id)
+		result, res, err := s.clientv2.ProjectsApi.GetProjectByName(s.ctx, id).Execute()
+		defer res.Body.Close()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Projects.Get(s.ctx, id)
@@ -128,7 +129,8 @@ func (s *Store) CreateProject(name, orgID, regionUsageRestrictions string, defau
 func (s *Store) DeleteProject(projectID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Projects.Delete(s.ctx, projectID)
+		res, err := s.clientv2.ProjectsApi.DeleteProject(s.ctx, projectID).Execute()
+		defer res.Body.Close()
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Projects.Delete(s.ctx, projectID)

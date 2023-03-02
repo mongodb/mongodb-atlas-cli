@@ -12,7 +12,7 @@ mongocli atlas serverless backups snapshots list
    :depth: 1
    :class: singlecol
 
-Return all cloud backup snapshots for your project and serverless instance.
+Return all cloud backup snapshots for the specified serverless instance in your project.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 
@@ -39,7 +39,7 @@ Arguments
    * - clusterName
      - string
      - true
-     - Name of the Atlas serverless instance that contains the snapshots you want to retrieve.
+     - Label that identifies the Atlas serverless instance that contains the snapshots you want to return.
 
 Options
 -------

@@ -12,33 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package restores
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/restores"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless/backup/snapshots"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
-func baseCommand() *cobra.Command {
-	const use = "backups"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage cloud backups for your project.",
-	}
-
-	return cmd
-}
-
-func Builder() *cobra.Command {
-	cmd := baseCommand()
-
-	cmd.AddCommand(
-		snapshots.Builder(),
-		restores.Builder(),
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		1,
+		[]string{},
 	)
-
-	return cmd
 }

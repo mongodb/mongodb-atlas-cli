@@ -21,10 +21,14 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup_serverless.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServerlessSnapshotsLister
+//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup_serverless.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServerlessSnapshotsLister,ServerlessRestoreJobsLister
 
 type ServerlessSnapshotsLister interface {
 	ServerlessSnapshots(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshots, error)
+}
+
+type ServerlessRestoreJobsLister interface {
+	ServerlessRestoreJobs(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error)
 }
 
 // ServerlessSnapshots encapsulates the logic to manage different cloud providers.
@@ -36,6 +40,17 @@ func (s *Store) ServerlessSnapshots(projectID, clusterName string, opts *atlas.L
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetAllServerlessSnapshots(s.ctx, o, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// ServerlessRestoreJobs encapsulates the logic to manage different cloud providers.
+func (s *Store) ServerlessRestoreJobs(projectID, instanceName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.ListForServerlessBackupRestore(s.ctx, projectID, instanceName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

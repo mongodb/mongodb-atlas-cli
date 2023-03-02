@@ -49,11 +49,13 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`mongocli-atlas-serverless-backups-restores` - Manage cloud backup restore jobs for your project.
 * :ref:`mongocli-atlas-serverless-backups-snapshots` - Manage cloud backup snapshots for your project.
 
 
 .. toctree::
    :titlesonly:
 
+   restores </command/mongocli-atlas-serverless-backups-restores>
    snapshots </command/mongocli-atlas-serverless-backups-snapshots>
 

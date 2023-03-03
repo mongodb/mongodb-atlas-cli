@@ -98,7 +98,7 @@ func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (i
 func (s *Store) Project(id string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, res, err := s.clientv2.ProjectsApi.GetProjectByName(s.ctx, id).Execute()
+		result, res, err := s.clientv2.ProjectsApi.GetProject(s.ctx, id).Execute()
 		defer res.Body.Close()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:

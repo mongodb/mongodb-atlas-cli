@@ -27,7 +27,6 @@ import (
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockExportJobsCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.CloudProviderSnapshotExportJob{}
 

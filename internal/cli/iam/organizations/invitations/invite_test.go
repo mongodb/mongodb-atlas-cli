@@ -30,7 +30,6 @@ import (
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationInviter(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Invitation{}
 	opts := &InviteOpts{

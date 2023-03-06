@@ -30,7 +30,6 @@ import (
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOnlineArchiveDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.OnlineArchive{State: "IDLE"}
 

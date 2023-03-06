@@ -29,8 +29,6 @@ func TestCreateBuilder(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDBUserCertificateCreator(ctrl)
 
-	defer ctrl.Finish()
-
 	var expected = &mongodbatlas.UserCertificate{}
 
 	username := "to_create"

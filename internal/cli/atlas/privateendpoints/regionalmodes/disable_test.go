@@ -30,7 +30,6 @@ import (
 func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockRegionalizedPrivateEndpointSettingUpdater(ctrl)
-	defer ctrl.Finish()
 
 	expected := &atlas.RegionalizedPrivateEndpointSetting{
 		Enabled: true,

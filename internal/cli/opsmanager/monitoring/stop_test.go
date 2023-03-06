@@ -39,7 +39,6 @@ func TestStopBuilder(t *testing.T) {
 func TestStopOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockMonitoringStopper(ctrl)
-	defer ctrl.Finish()
 
 	opts := &StopOpts{
 		store: mockStore,

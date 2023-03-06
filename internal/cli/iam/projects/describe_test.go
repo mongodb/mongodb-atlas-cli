@@ -28,7 +28,6 @@ import (
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectDescriber(ctrl)
-	defer ctrl.Finish()
 
 	mockStore.
 		EXPECT().

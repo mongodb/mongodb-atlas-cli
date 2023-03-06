@@ -28,7 +28,6 @@ import (
 func TestRestoresListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockContinuousJobLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.ContinuousJobs{}
 	clusterID := "5ec2ac941271767f21cbaeff"

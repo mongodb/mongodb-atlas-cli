@@ -28,7 +28,6 @@ import (
 func TestDeferOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockMaintenanceWindowDeferrer(ctrl)
-	defer ctrl.Finish()
 
 	updateOpts := &DeferOpts{
 		store: mockStore,

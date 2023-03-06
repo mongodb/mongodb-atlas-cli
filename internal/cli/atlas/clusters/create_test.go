@@ -31,7 +31,6 @@ import (
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AdvancedCluster{}
 

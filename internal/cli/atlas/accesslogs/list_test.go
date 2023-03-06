@@ -34,7 +34,6 @@ import (
 func TestAccessLogListClusterName_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAccessLogsLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AccessLogSettings{
 		AccessLogs: []*mongodbatlas.AccessLogs{
@@ -82,7 +81,6 @@ test test   test           true          test
 func TestAccessLogListHostname_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAccessLogsLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AccessLogSettings{}
 

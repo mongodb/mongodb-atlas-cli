@@ -29,7 +29,6 @@ import (
 func TestNamespacesList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPerformanceAdvisorNamespacesLister(ctrl)
-	defer ctrl.Finish()
 
 	var expected *mongodbatlas.Namespaces
 

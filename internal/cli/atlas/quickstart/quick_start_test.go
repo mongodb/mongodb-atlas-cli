@@ -59,7 +59,6 @@ func TestQuickstartOpts_Run(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
-	defer ctrl.Finish()
 
 	expectedCluster := &mongodbatlas.AdvancedCluster{
 		StateName: "IDLE",
@@ -116,7 +115,7 @@ func TestQuickstartOpts_Run_NotLoggedIn(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
-	defer ctrl.Finish()
+
 	buf := new(bytes.Buffer)
 	ctx := context.TODO()
 	opts := &Opts{
@@ -140,7 +139,6 @@ func TestQuickstartOpts_Run_NeedLogin_ForceAfterLogin(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
 	mockLoginFlow := mocks.NewMockLoginFlow(ctrl)
-	defer ctrl.Finish()
 
 	ctx := context.TODO()
 	buf := new(bytes.Buffer)
@@ -220,7 +218,6 @@ func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
-	defer ctrl.Finish()
 
 	expectedCluster := &mongodbatlas.AdvancedCluster{
 		StateName: "IDLE",

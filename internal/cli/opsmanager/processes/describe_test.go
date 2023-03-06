@@ -28,7 +28,6 @@ import (
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockHostDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.Host{}
 

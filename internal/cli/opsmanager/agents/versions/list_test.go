@@ -30,7 +30,6 @@ import (
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAgentProjectVersionsLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.AgentVersions{}
 

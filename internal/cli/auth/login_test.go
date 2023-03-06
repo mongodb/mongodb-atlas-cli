@@ -87,7 +87,7 @@ func Test_loginOpts_Run(t *testing.T) {
 	mockFlow := mocks.NewMockAuthenticator(ctrl)
 	mockConfig := mocks.NewMockLoginConfig(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
-	defer ctrl.Finish()
+
 	buf := new(bytes.Buffer)
 
 	opts := &LoginOpts{
@@ -170,7 +170,7 @@ func Test_loginOpts_oauthFlow(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		mockFlow := mocks.NewMockAuthenticator(ctrl)
 		mockConfig := mocks.NewMockLoginConfig(ctrl)
-		defer ctrl.Finish()
+
 		buf := new(bytes.Buffer)
 		ctx := context.TODO()
 
@@ -228,7 +228,7 @@ To continue, go to http://localhost
 		ctrl := gomock.NewController(t)
 		mockFlow := mocks.NewMockAuthenticator(ctrl)
 		mockConfig := mocks.NewMockLoginConfig(ctrl)
-		defer ctrl.Finish()
+
 		buf := new(bytes.Buffer)
 		ctx := context.TODO()
 		regenerateCodePromptMock := &confirmPromptMock{

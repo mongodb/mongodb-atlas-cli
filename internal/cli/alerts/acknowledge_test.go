@@ -47,7 +47,6 @@ func TestAcknowledgeBuilder(t *testing.T) {
 func TestAcknowledgeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertAcknowledger(ctrl)
-	defer ctrl.Finish()
 
 	tests := []struct {
 		name    string

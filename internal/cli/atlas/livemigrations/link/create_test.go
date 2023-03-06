@@ -29,7 +29,6 @@ import (
 func TestLinkTokenCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLinkTokenCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.LinkToken{}
 

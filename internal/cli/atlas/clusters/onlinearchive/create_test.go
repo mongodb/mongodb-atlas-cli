@@ -49,7 +49,6 @@ func TestCreateBuilder(t *testing.T) {
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOnlineArchiveCreator(ctrl)
-	defer ctrl.Finish()
 
 	opts := &CreateOpts{
 		store: mockStore,

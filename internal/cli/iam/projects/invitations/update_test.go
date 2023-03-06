@@ -31,7 +31,6 @@ import (
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectInvitationUpdater(ctrl)
-	defer ctrl.Finish()
 
 	expected := &atlas.Invitation{}
 

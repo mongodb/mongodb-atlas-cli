@@ -28,7 +28,6 @@ import (
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockGlobalAPIKeyWhitelistDeleter(ctrl)
-	defer ctrl.Finish()
 
 	deleteOpts := &DeleteOpts{
 		store: mockStore,

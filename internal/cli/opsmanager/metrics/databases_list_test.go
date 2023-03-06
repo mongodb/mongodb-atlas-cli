@@ -28,7 +28,6 @@ import (
 func TestDatabasesListsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockHostDatabaseLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.ProcessDatabasesResponse{}
 

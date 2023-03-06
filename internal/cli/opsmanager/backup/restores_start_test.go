@@ -28,7 +28,6 @@ import (
 func TestRestoresStart_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockContinuousJobCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.ContinuousJobs{}
 

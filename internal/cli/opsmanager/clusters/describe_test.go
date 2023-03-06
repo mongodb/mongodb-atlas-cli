@@ -30,7 +30,6 @@ import (
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudManagerClustersDescriber(ctrl)
-	defer ctrl.Finish()
 
 	t.Run("describe cluster simplified", func(t *testing.T) {
 		descOpts := &DescribeOpts{

@@ -53,7 +53,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	}
 	mockConfig := mocks.NewMockLoginConfig(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
-	defer ctrl.Finish()
+
 	buf := new(bytes.Buffer)
 	ctx := context.TODO()
 	loginOpts := &LoginOpts{

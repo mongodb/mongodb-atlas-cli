@@ -28,7 +28,6 @@ import (
 func TestUnacknowledge_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertAcknowledger(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Alert{}
 

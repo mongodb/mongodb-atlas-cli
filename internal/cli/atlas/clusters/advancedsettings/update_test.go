@@ -31,7 +31,7 @@ import (
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterConfigurationOptionsUpdater(ctrl)
-	defer ctrl.Finish()
+
 	expected := &mongodbatlas.ProcessArgs{
 		DefaultReadConcern:               "",
 		DefaultWriteConcern:              "",

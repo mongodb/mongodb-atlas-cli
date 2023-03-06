@@ -43,7 +43,6 @@ func TestPauseBuilder(t *testing.T) {
 func TestPause_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOnlineArchiveUpdater(ctrl)
-	defer ctrl.Finish()
 
 	updateOpts := &PauseOpts{
 		id:    "1",

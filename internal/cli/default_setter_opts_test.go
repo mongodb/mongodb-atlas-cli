@@ -77,7 +77,7 @@ func TestDefaultOpts_DefaultQuestions(t *testing.T) {
 func TestDefaultOpts_Projects(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
-	defer ctrl.Finish()
+
 	opts := &DefaultSetterOpts{
 		Service: "cloud",
 		Store:   mockStore,
@@ -109,7 +109,7 @@ func TestDefaultOpts_Projects(t *testing.T) {
 func TestDefaultOpts_Orgs(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
-	defer ctrl.Finish()
+
 	opts := &DefaultSetterOpts{
 		Service: "cloud",
 		Store:   mockStore,

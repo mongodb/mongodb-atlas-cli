@@ -30,7 +30,6 @@ import (
 func TestDownloadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLogJobsDownloader(ctrl)
-	defer ctrl.Finish()
 
 	opts := &JobsDownloadOpts{
 		id:    "1",

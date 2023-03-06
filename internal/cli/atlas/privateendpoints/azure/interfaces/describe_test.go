@@ -31,7 +31,6 @@ import (
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockInterfaceEndpointDescriber(ctrl)
-	defer ctrl.Finish()
 
 	opts := &DescribeOpts{
 		store:                    mockStore,

@@ -34,7 +34,6 @@ import (
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseRoleLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &[]mongodbatlas.CustomDBRole{
 		{

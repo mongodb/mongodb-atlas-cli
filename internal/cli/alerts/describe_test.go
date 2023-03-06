@@ -46,7 +46,7 @@ func TestDescribeBuilder(t *testing.T) {
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertDescriber(ctrl)
-	defer ctrl.Finish()
+
 	expected := &mongodbatlas.Alert{
 		ID:            "test",
 		EventTypeName: "test",

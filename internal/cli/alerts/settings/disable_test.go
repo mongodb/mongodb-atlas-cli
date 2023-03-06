@@ -44,7 +44,6 @@ func TestDisableBuilder(t *testing.T) {
 func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationDisabler(ctrl)
-	defer ctrl.Finish()
 
 	opts := &DisableOpts{
 		alertID: "alertID",

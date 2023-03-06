@@ -29,7 +29,6 @@ import (
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockS3BlockstoresCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.S3Blockstore{}
 

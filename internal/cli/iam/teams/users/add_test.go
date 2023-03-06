@@ -28,7 +28,6 @@ import (
 func TestAdd_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockTeamAdder(ctrl)
-	defer ctrl.Finish()
 
 	var expected []mongodbatlas.Team
 

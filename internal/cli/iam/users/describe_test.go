@@ -27,7 +27,6 @@ import (
 func TestDescribe_Run_ByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserDescriber(ctrl)
-	defer ctrl.Finish()
 
 	var expected mongodbatlas.AtlasUser
 
@@ -50,7 +49,6 @@ func TestDescribe_Run_ByID(t *testing.T) {
 func TestDescribe_Run_ByName(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserDescriber(ctrl)
-	defer ctrl.Finish()
 
 	var expected mongodbatlas.AtlasUser
 

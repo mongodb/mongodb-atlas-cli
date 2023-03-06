@@ -30,7 +30,6 @@ import (
 func TestGCPOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockGCPPeeringConnectionCreator(ctrl)
-	defer ctrl.Finish()
 
 	opts := &GCPOpts{
 		store:   mockStore,

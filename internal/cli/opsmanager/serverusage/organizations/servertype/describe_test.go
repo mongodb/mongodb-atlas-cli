@@ -30,7 +30,6 @@ import (
 func TestGetOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationServerTypeGetter(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.ServerType{}
 

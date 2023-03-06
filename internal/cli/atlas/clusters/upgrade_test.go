@@ -33,7 +33,7 @@ const atlasM10 = "M10"
 func TestUpgrade_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasSharedClusterGetterUpgrader(ctrl)
-	defer ctrl.Finish()
+
 	expected := &mongodbatlas.Cluster{}
 
 	t.Run("flags run", func(t *testing.T) {

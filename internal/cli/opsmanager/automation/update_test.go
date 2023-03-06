@@ -29,7 +29,6 @@ import (
 func TestAutomationUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationUpdater(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.AutomationConfig{
 		Version: 1,

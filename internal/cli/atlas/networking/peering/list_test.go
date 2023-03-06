@@ -28,7 +28,6 @@ import (
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPeeringConnectionLister(ctrl)
-	defer ctrl.Finish()
 
 	t.Run("no provider", func(t *testing.T) {
 		listOpts := &ListOpts{

@@ -30,7 +30,6 @@ import (
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockFileSystemsDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.FileSystemStoreConfiguration{}
 

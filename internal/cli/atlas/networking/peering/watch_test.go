@@ -56,7 +56,7 @@ func TestWatchOpts_Run(t *testing.T) {
 
 			ctrl := gomock.NewController(t)
 			mockStore := mocks.NewMockPeeringConnectionDescriber(ctrl)
-			defer ctrl.Finish()
+
 			describeOpts := &WatchOpts{
 				id:    "test",
 				store: mockStore,

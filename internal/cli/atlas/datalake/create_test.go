@@ -28,7 +28,6 @@ import (
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDataLakeCreator(ctrl)
-	defer ctrl.Finish()
 
 	createOpts := &CreateOpts{
 		store: mockStore,

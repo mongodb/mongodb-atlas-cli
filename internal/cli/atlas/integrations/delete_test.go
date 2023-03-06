@@ -29,7 +29,6 @@ import (
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIntegrationDeleter(ctrl)
-	defer ctrl.Finish()
 
 	opts := &DeleteOpts{
 		store: mockStore,

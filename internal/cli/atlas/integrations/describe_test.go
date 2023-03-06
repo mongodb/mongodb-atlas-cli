@@ -29,7 +29,6 @@ import (
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIntegrationDescriber(ctrl)
-	defer ctrl.Finish()
 
 	describeOpts := &DescribeOpts{
 		store:           mockStore,

@@ -29,7 +29,6 @@ import (
 func TestClearOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockMaintenanceWindowClearer(ctrl)
-	defer ctrl.Finish()
 
 	updateOpts := &ClearOpts{
 		store: mockStore,

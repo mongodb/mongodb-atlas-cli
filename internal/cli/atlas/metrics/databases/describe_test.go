@@ -29,7 +29,6 @@ import (
 func TestDatabasesDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessDatabaseMeasurementsLister(ctrl)
-	defer ctrl.Finish()
 
 	listOpts := &DescribeOpts{
 		host:  "hard-00-00.mongodb.net",

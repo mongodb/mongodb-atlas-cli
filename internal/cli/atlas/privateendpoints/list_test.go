@@ -31,7 +31,6 @@ import (
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPrivateEndpointListerDeprecated(ctrl)
-	defer ctrl.Finish()
 
 	var expected []mongodbatlas.PrivateEndpointConnectionDeprecated
 

@@ -28,7 +28,6 @@ import (
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockGlobalAPIKeyCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.APIKey{
 		ID: "1",

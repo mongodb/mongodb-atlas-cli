@@ -34,6 +34,7 @@ import (
 )
 
 var updateTemplate = "Snapshot backup policy for cluster '{{.ClusterName}}' updated.\n"
+var ErrFrequencyIntervalNumber = errors.New("invalid frequencyIntervalNumber")
 
 const (
 	daily              = "daily"
@@ -268,7 +269,7 @@ func validateFrequencyIntervalNumber(frequencyIntervalNumber string) error {
 		return nil
 	}
 
-	return errors.New("frequencyIntervalNumber invalid")
+	return fmt.Errorf("%w: %d", ErrFrequencyIntervalNumber, intervalNumber)
 }
 
 func validateRetentionType(retentionType string) error {

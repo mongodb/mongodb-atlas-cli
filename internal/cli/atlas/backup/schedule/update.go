@@ -215,7 +215,7 @@ func (opts *UpdateOpts) validateBackupPolicy(cmd *cobra.Command) func() error {
 				if err != nil {
 					return err
 				}
-				err = validateFrequencyIntervalNumber(policyItems[2], policyItems[3])
+				err = validateFrequencyIntervalNumber(policyItems[3])
 				if err != nil {
 					return err
 				}
@@ -258,37 +258,17 @@ func validateFrequencyType(frequencyType string) error {
 	return nil
 }
 
-func validateFrequencyIntervalNumber(frequencyType, frequencyIntervalNumber string) error {
+func validateFrequencyIntervalNumber(frequencyIntervalNumber string) error {
 	intervalNumber, err := strconv.Atoi(frequencyIntervalNumber)
 	if err != nil {
 		return errors.New("frequencyIntervalNumber was provided in an incorrect format. It must be an integer")
 	}
 
-	hourlyAllowedValues := []int{1, 2, 4, 6, 8, 12}
-	dailyAllowedValues := []int{1}
-	weeklyAllowedValues := []int{1, 7}
-	monthlyAllowedValues := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 40}
-
-	switch frequencyType {
-	case hourly:
-		if !intInSlice(intervalNumber, hourlyAllowedValues) {
-			return errors.New("frequencyIntervalNumber was provided in an incorrect format for 'hourly' frequencyType")
-		}
-	case daily:
-		if !intInSlice(intervalNumber, dailyAllowedValues) {
-			return errors.New("frequencyIntervalNumber was provided in an incorrect format for 'daily' frequencyType")
-		}
-	case weekly:
-		if !intInSlice(intervalNumber, weeklyAllowedValues) {
-			return errors.New("frequencyIntervalNumber was provided in an incorrect format for 'weekly' frequencyType")
-		}
-	case monthly:
-		if !intInSlice(intervalNumber, monthlyAllowedValues) {
-			return errors.New("frequencyIntervalNumber was provided in an incorrect format for 'monthly' frequencyType")
-		}
+	if (intervalNumber >= 1 && intervalNumber <= 28) || intervalNumber == 40 {
+		return nil
 	}
 
-	return nil
+	return errors.New("frequencyIntervalNumber invalid")
 }
 
 func validateRetentionType(retentionType string) error {
@@ -304,15 +284,6 @@ func validateRetentionValue(retentionValue string) error {
 		return errors.New("retentionValue was provided in an incorrect format. It must be an integer")
 	}
 	return nil
-}
-
-func intInSlice(a int, list []int) bool {
-	for _, b := range list {
-		if b == a {
-			return true
-		}
-	}
-	return false
 }
 
 func (opts *UpdateOpts) verifyReferenceHourOfDay(cmd *cobra.Command) func() error {

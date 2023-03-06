@@ -29,7 +29,6 @@ import (
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockRestoreJobsDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.CloudProviderSnapshotRestoreJob{}
 

@@ -29,7 +29,6 @@ import (
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIndexCreator(ctrl)
-	defer ctrl.Finish()
 
 	createOpts := &CreateOpts{
 		name:        "ProjectBar",

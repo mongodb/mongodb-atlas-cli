@@ -29,7 +29,6 @@ import (
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockFileSystemsUpdater(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.FileSystemStoreConfiguration{}
 

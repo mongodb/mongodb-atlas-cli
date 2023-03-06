@@ -31,7 +31,6 @@ import (
 func TestLinkDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationsDescriber(ctrl)
-	defer ctrl.Finish()
 
 	describeOpts := &DescribeOpts{
 		GlobalOpts: cli.GlobalOpts{OrgID: "1"},

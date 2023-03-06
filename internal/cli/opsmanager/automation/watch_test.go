@@ -28,7 +28,6 @@ import (
 func TestAutomationWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationStatusGetter(ctrl)
-	defer ctrl.Finish()
 
 	expected := fixture.AutomationStatus()
 

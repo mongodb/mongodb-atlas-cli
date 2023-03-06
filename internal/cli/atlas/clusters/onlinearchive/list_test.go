@@ -45,7 +45,6 @@ func TestListBuilder(t *testing.T) {
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOnlineArchiveLister(ctrl)
-	defer ctrl.Finish()
 
 	listOpts := &ListOpts{
 		store: mockStore,

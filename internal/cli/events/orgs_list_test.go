@@ -27,7 +27,6 @@ import (
 func Test_orgListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationEventLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.EventResponse{}
 	listOpts := &orgListOpts{

@@ -28,7 +28,6 @@ import (
 func TestDBUserCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseUserCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.DatabaseUser{}
 

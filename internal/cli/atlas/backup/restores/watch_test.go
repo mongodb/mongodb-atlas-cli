@@ -43,7 +43,6 @@ func TestWatchBuilder(t *testing.T) {
 func TestWatchOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockRestoreJobsDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.CloudProviderSnapshotRestoreJob{
 		Failed: pointy.Bool(true),

@@ -143,7 +143,6 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 
 			ctrl := gomock.NewController(t)
 			mockDescriber := mocks.NewMockReleaseVersionDescriber(ctrl)
-			defer ctrl.Finish()
 
 			mockDescriber.
 				EXPECT().

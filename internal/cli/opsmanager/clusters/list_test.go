@@ -30,7 +30,6 @@ import (
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudManagerClustersLister(ctrl)
-	defer ctrl.Finish()
 
 	t.Run("clusters for project simple view", func(t *testing.T) {
 		expected := &opsmngr.Clusters{}

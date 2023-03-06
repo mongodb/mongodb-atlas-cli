@@ -28,7 +28,6 @@ import (
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockMaintenanceWindowUpdater(ctrl)
-	defer ctrl.Finish()
 
 	updateOpts := &UpdateOpts{
 		store:     mockStore,

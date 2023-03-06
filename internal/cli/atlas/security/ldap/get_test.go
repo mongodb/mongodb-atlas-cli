@@ -30,7 +30,6 @@ import (
 func TestGet_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLDAPConfigurationGetter(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.LDAPConfiguration{}
 

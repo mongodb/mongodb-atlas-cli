@@ -30,7 +30,6 @@ import (
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationInvitationDescriber(ctrl)
-	defer ctrl.Finish()
 
 	opts := &DescribeOpts{
 		store: mockStore,

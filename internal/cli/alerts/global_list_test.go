@@ -28,7 +28,6 @@ import (
 func TestGlobalList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockGlobalAlertLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.GlobalAlerts{}
 

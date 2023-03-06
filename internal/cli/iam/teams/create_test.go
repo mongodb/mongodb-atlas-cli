@@ -27,7 +27,6 @@ import (
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockTeamCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Team{}
 

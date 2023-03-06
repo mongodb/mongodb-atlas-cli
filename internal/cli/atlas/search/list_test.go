@@ -28,7 +28,6 @@ import (
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSearchIndexLister(ctrl)
-	defer ctrl.Finish()
 
 	listOpts := &ListOpts{
 		store: mockStore,

@@ -30,7 +30,6 @@ import (
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectCreator(ctrl)
-	defer ctrl.Finish()
 
 	opts := CreateOpts{}
 	expected := &mongodbatlas.Project{}

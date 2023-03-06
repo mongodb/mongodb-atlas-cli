@@ -28,7 +28,6 @@ import (
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationAPIKeyUpdater(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.APIKey{
 		ID: "1",

@@ -29,7 +29,6 @@ import (
 func TestPagerDutyOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIntegrationCreator(ctrl)
-	defer ctrl.Finish()
 
 	opts := &PagerDutyOpts{
 		store: mockStore,

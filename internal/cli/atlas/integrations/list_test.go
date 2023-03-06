@@ -29,7 +29,6 @@ import (
 func TestDBUserList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIntegrationLister(ctrl)
-	defer ctrl.Finish()
 
 	var expected *mongodbatlas.ThirdPartyIntegrations
 

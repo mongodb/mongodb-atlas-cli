@@ -30,7 +30,6 @@ import (
 func TestLinkTokenDeleteOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLinkTokenDeleter(ctrl)
-	defer ctrl.Finish()
 
 	deleteOpts := &DeleteOpts{
 		GlobalOpts: cli.GlobalOpts{OrgID: "1"},

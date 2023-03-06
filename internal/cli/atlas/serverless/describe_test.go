@@ -30,7 +30,6 @@ import (
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockServerlessInstanceDescriber(ctrl)
-	defer ctrl.Finish()
 
 	var expected mongodbatlas.Cluster
 

@@ -43,7 +43,7 @@ func Test_logoutOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRevoker(ctrl)
 	mockConfig := mocks.NewMockConfigDeleter(ctrl)
-	defer ctrl.Finish()
+
 	buf := new(bytes.Buffer)
 
 	opts := logoutOpts{
@@ -72,7 +72,7 @@ func Test_logoutOpts_Run_Keep(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRevoker(ctrl)
 	mockConfig := mocks.NewMockConfigDeleter(ctrl)
-	defer ctrl.Finish()
+
 	buf := new(bytes.Buffer)
 
 	opts := logoutOpts{

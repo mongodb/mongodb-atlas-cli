@@ -30,7 +30,6 @@ import (
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockFeatureControlPoliciesUpdater(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.FeaturePolicy{}
 

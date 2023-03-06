@@ -31,7 +31,6 @@ import (
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPrivateEndpointDeleter(ctrl)
-	defer ctrl.Finish()
 
 	deleteOpts := &DeleteOpts{
 		DeleteOpts: &cli.DeleteOpts{

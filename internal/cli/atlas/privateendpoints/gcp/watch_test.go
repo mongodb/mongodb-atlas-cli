@@ -30,7 +30,6 @@ import (
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPrivateEndpointDescriber(ctrl)
-	defer ctrl.Finish()
 
 	describeOpts := &WatchOpts{
 		id:    "test",

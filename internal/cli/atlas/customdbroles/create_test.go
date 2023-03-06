@@ -30,7 +30,6 @@ import (
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseRoleCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.CustomDBRole{}
 

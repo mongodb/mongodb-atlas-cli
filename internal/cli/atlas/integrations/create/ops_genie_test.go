@@ -29,7 +29,6 @@ import (
 func TestOpsGenieOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIntegrationCreator(ctrl)
-	defer ctrl.Finish()
 
 	opts := &OpsGenieOpts{
 		store: mockStore,

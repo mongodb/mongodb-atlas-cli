@@ -30,7 +30,6 @@ import (
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockServerlessInstanceDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Cluster{StateName: "IDLE"}
 

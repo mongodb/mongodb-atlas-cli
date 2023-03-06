@@ -33,7 +33,6 @@ import (
 func TestInvite_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AtlasUser{
 		Username: "testUser",

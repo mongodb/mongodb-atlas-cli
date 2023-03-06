@@ -39,7 +39,6 @@ func TestEnableBuilder(t *testing.T) {
 func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCustomDNSEnabler(ctrl)
-	defer ctrl.Finish()
 
 	expected := &atlas.AWSCustomDNSSetting{
 		Enabled: true,

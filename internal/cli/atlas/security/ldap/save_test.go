@@ -30,7 +30,6 @@ import (
 func TestSave_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLDAPConfigurationSaver(ctrl)
-	defer ctrl.Finish()
 
 	var expected *mongodbatlas.LDAPConfiguration
 

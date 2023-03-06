@@ -53,7 +53,7 @@ func Test_setupOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
-	defer ctrl.Finish()
+
 	ctx := context.TODO()
 	buf := new(bytes.Buffer)
 
@@ -92,7 +92,7 @@ func Test_setupOpts_RunWithAPIKeys(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
-	defer ctrl.Finish()
+
 	ctx := context.TODO()
 	buf := new(bytes.Buffer)
 
@@ -134,7 +134,7 @@ func Test_setupOpts_RunSkipRegister(t *testing.T) {
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
 	mockLoginFlow := mocks.NewMockLoginFlow(ctrl)
-	defer ctrl.Finish()
+
 	ctx := context.TODO()
 
 	buf := new(bytes.Buffer)

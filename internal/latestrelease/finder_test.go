@@ -125,7 +125,6 @@ func TestOutputOpts_Find_NoCache(t *testing.T) {
 		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.release.GetTagName()), func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			mockDescriber := mocks.NewMockReleaseVersionDescriber(ctrl)
-			defer ctrl.Finish()
 
 			mockDescriber.
 				EXPECT().

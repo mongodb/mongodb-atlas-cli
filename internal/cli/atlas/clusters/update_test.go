@@ -31,7 +31,7 @@ import (
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterGetterUpdater(ctrl)
-	defer ctrl.Finish()
+
 	expected := &mongodbatlas.AdvancedCluster{}
 
 	t.Run("flags run", func(t *testing.T) {

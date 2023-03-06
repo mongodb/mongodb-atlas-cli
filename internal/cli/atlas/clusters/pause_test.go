@@ -31,8 +31,6 @@ func TestPause_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterPauser(ctrl)
 
-	defer ctrl.Finish()
-
 	updateOpts := &PauseOpts{
 		name:  "ProjectBar",
 		store: mockStore,

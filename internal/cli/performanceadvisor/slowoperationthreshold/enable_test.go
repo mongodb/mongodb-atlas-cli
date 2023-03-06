@@ -28,7 +28,6 @@ import (
 func TestEnable_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPerformanceAdvisorSlowOperationThresholdEnabler(ctrl)
-	defer ctrl.Finish()
 
 	opts := &EnableOpts{
 		store: mockStore,

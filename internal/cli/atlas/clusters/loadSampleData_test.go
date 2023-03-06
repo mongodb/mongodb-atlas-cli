@@ -30,7 +30,6 @@ import (
 func TestLoadSampleDataOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSampleDataAdder(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.SampleDatasetJob{}
 

@@ -30,7 +30,6 @@ import (
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOplogsDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.BackupStore{}
 

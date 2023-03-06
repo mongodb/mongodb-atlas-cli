@@ -30,7 +30,6 @@ import (
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectHostAssignmentLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.HostAssignments{}
 

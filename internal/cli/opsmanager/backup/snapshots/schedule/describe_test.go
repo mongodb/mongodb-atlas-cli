@@ -29,7 +29,6 @@ import (
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSnapshotScheduleDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.SnapshotSchedule{}
 

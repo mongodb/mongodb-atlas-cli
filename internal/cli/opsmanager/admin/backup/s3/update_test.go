@@ -29,7 +29,6 @@ import (
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockS3BlockstoresUpdater(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.S3Blockstore{}
 

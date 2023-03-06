@@ -28,7 +28,6 @@ import (
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationAPIKeyDescriber(ctrl)
-	defer ctrl.Finish()
 
 	opts := &DescribeOpts{
 		store: mockStore,

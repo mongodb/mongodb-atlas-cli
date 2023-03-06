@@ -29,7 +29,6 @@ import (
 func TestSetOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectServerTypeUpdater(ctrl)
-	defer ctrl.Finish()
 
 	opts := &SetOpts{
 		store: mockStore,

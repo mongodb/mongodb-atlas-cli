@@ -29,7 +29,6 @@ import (
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationAPIKeyAccessListLister(ctrl)
-	defer ctrl.Finish()
 
 	opts := &ListOpts{
 		store: mockStore,

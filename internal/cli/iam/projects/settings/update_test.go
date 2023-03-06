@@ -33,7 +33,6 @@ import (
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectSettingsUpdater(ctrl)
-	defer ctrl.Finish()
 
 	opts := &UpdateOpts{
 		store:                                    mockStore,

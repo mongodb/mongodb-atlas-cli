@@ -59,7 +59,7 @@ func (ki *GCPKeyIdentifier) ValidateCredentials() error {
 `, ki.Location, ki.ProjectID, ki.KeyRing, ki.KeyName)
 
 		var json string
-		json, err = provideInput("Provide service account key JSON filename:", "")
+		json, err = provideInput("Provide service account key JSON filename:")
 		if err != nil {
 			return err
 		}

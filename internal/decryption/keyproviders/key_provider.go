@@ -16,7 +16,6 @@ package keyproviders
 
 import (
 	"os"
-	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
@@ -41,15 +40,15 @@ type KeyStoreIdentifier struct {
 	Provider KeyStoreProvider
 }
 
-func provideInput(prompt, defaultInput string) (string, error) {
-	if strings.TrimSpace(strings.ToLower(os.Getenv("CI"))) == "true" {
-		return defaultInput, nil
+func provideInput(prompt string) (string, error) {
+	if _, ok := os.LookupEnv("CI"); ok {
+		return "", nil
 	}
 
 	var input string
 	err := telemetry.TrackAskOne(&survey.Input{
 		Message: prompt,
-		Default: defaultInput,
+		Default: "",
 	}, &input)
 	if err != nil {
 		return "", err

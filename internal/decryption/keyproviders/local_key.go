@@ -41,7 +41,7 @@ func (ki *LocalKeyIdentifier) ValidateCredentials() error {
 		_, _ = log.Warningf(`No credentials found for resource: LocalKey filename="%v"
 `, ki.HeaderFilename)
 
-		f, err := provideInput("Provide key filename:", "")
+		f, err := provideInput("Provide key filename:")
 		if err != nil {
 			return err
 		}

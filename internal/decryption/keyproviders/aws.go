@@ -21,6 +21,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/credentials/endpointcreds"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 )
@@ -48,6 +49,7 @@ func (ki *AWSKeyIdentifier) ValidateCredentials() error {
 	ctx := context.Background()
 	cfg, err := config.LoadDefaultConfig(
 		ctx,
+		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(ki.AccessKey, ki.SecretAccessKey, ki.SessionToken)),
 		config.WithRegion(ki.Region),
 		config.WithEndpointCredentialOptions(func(options *endpointcreds.Options) {
 			options.Endpoint = ki.Endpoint

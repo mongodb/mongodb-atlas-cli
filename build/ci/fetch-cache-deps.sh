@@ -39,8 +39,3 @@ popd
 cat <<EOF >"sha_expansion.yaml"
 dep_sha: "${SHA}"
 EOF
-
-echo "update expansions"
-pwd
-ls -alfh
-cat sha_expansion.yaml

@@ -17,13 +17,13 @@
 set -Eeou pipefail
 
 SHA=$(shasum -a256 go.sum | awk '{print $1}')
-
+FILE="gomod-${SHA}.tgz"
 
 pushd "${GOMODCACHE}"
-tar -zcvf "gomod-${SHA}.tgz" .
+tar -zcvf "${FILE}" .
 popd
-mv "${GOMODCACHE}/gomod-${SHA}.tgz" .
+mv "${GOMODCACHE}/${FILE}" .
 
-cat <<EOF >"sha_expansion.yaml"
-dep_sha: "${SHA}"
-EOF
+#cat <<EOF >"sha_expansion.yaml"
+#dep_sha: "${SHA}"
+#EOF

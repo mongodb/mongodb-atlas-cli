@@ -20,8 +20,8 @@ SHA=$(shasum -a256 go.sum | awk '{print $1}')
 FILE="gomod-${SHA}.tar.xz"
 CACHE_URL="https://s3.amazonaws.com/mongodb-mongocli-build/dependencies/go/${FILE}"
 echo "${CACHE_URL}"
-mkdir -p "${GOMODCACHE}"
-pushd "${GOMODCACHE}"
+mkdir -p "${GOPATH}"
+pushd "${GOPATH}"
 
 echo "start"
 ls -alfh
@@ -30,7 +30,7 @@ curl -sLf "${CACHE_URL}" -o "${FILE}"
 set -e
 if [[ -f "${FILE}" ]]; then
   echo "file exists start"
-  tar zx "${FILE}"
+  tar -xf "${FILE}"
   ls -alfh
   rm "${FILE}"
 fi

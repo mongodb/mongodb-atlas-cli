@@ -24,6 +24,7 @@ FILE="gomod-${SHA}.tar.xz"
 
 echo "create cache"
 export XZ_OPT=-9
-tar -Jcvf "${FILE}" "${GOMODCACHE}"
+pushd "${GOPATH}"
+tar -Jcf "${FILE}" "pkg/mod"
 
 ls -alfh

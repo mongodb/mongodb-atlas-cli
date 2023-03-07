@@ -121,7 +121,7 @@ func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlas.AdvancedCluster) {
 	}
 }
 
-// mongocli atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].
+// UpdateBuilder atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{
 		fs: afero.NewOsFs(),
@@ -130,8 +130,6 @@ func UpdateBuilder() *cobra.Command {
 		Use:   "update [clusterName]",
 		Short: "Modify the settings of the specified cluster.",
 		Long: `You can specify modifications in a JSON configuration file with the --file flag.
-		
-You can modify only M10 or larger clusters that are single-region replica sets.
 		
 You can't change the name of the cluster or downgrade the MongoDB version of your cluster.
 

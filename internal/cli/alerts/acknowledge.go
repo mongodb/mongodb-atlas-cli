@@ -79,6 +79,7 @@ func AcknowledgeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "acknowledge <alertId>",
 		Short:   "Acknowledges the specified alert for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Aliases: []string{"ack"},
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

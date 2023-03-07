@@ -55,6 +55,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <alertConfigId>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified alert configuration for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"alertConfigIdDesc": "Unique identifier of the alert configuration to delete.",

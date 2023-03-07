@@ -62,6 +62,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <entry>",
 		Aliases: []string{"get"},
 		Short:   "Return the details for the specified IP access list entry.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to return.",

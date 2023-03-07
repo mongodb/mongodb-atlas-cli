@@ -63,6 +63,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <username>",
 		Short:   "Return the details for the specified database user for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:    require.ExactArgs(1),
 		Aliases: []string{"get"},
 		Annotations: map[string]string{

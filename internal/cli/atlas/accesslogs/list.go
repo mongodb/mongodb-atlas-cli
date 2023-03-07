@@ -117,6 +117,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "Retrieve the access logs of a cluster identified by the cluster's name or hostname.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Monitoring Admin"),
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

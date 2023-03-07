@@ -56,6 +56,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <username>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified database user from your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"usernameDesc": "Username to delete from the MongoDB database. The format of the username depends on the user's method of authentication.",

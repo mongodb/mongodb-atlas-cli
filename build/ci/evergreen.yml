@@ -74,7 +74,7 @@ functions:
         binary: build/ci/fetch-cache-deps.sh
     - command: expansions.update
       params:
-        file: sha_expansion.yaml
+        file: src/github.com/mongodb/mongodb-atlas-cli/sha_expansion.yaml
   "save deps cache":
     - command: subprocess.exec
       type: setup
@@ -83,7 +83,7 @@ functions:
         binary: build/ci/save-cache-deps.sh
     - command: expansions.update
       params:
-        file: sha_expansion.yaml
+        file: src/github.com/mongodb/mongodb-atlas-cli/sha_expansion.yaml
     - command: s3.put
       params:
         aws_key: ${aws_key}

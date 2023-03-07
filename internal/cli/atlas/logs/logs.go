@@ -42,15 +42,10 @@ func Builder() *cobra.Command {
 		Short:   "Download host logs for your project.",
 	}
 
-	keyProvidersCmd := decryption.KeyProvidersBuilder()
-	keyProvidersCmd.Hidden = true
-	decryptCmd := DecryptBuilder()
-	decryptCmd.Hidden = true
-
 	cmd.AddCommand(
 		DownloadBuilder(),
-		keyProvidersCmd,
-		decryptCmd,
+		decryption.KeyProvidersBuilder(),
+		DecryptBuilder(),
 	)
 
 	return cmd

@@ -22,6 +22,7 @@ import (
 func KeyProvidersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "keyProviders",
+		Hidden:  true,
 		Aliases: cli.GenerateAliases("keyProviders", "keys"),
 		Short:   "Manage your key collections.",
 	}

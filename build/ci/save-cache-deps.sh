@@ -16,14 +16,14 @@
 
 set -Eeou pipefail
 
+echo "start"
+pwd
+ls -alfh
 SHA=$(shasum -a256 go.sum | awk '{print $1}')
-FILE="gomod-${SHA}.tgz"
+FILE="gomod-${SHA}.tar.xz"
 
-pushd "${GOMODCACHE}"
-tar -zcvf "${FILE}" .
-popd
-mv "${GOMODCACHE}/${FILE}" .
+echo "create cache"
+export XZ_OPT=-9
+tar -Jcvf "${FILE}" "${GOMODCACHE}"
 
-#cat <<EOF >"sha_expansion.yaml"
-#dep_sha: "${SHA}"
-#EOF
+ls -alfh

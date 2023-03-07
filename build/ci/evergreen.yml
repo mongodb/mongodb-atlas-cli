@@ -76,26 +76,17 @@ functions:
       params:
         file: src/github.com/mongodb/mongodb-atlas-cli/sha_expansion.yaml
   "save deps cache":
-#    - command: subprocess.exec
-#      type: setup
-#      params:
-#        <<: *go_options
-#        binary: build/ci/save-cache-deps.sh
-    - command: archive.targz_pack
+    - command: subprocess.exec
+      type: setup
       params:
-        target: "gomod-${dep_sha}.tgz"
-        source_dir: ${go_base_path}${workdir}/pkg/mod/
-        include:
-          - "**/*"
-#    - command: expansions.update
-#      params:
-#        file: src/github.com/mongodb/mongodb-atlas-cli/sha_expansion.yaml
+        <<: *go_options
+        binary: build/ci/save-cache-deps.sh
     - command: s3.put
       params:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: gomod-${dep_sha}.tgz
-        remote_file: dependencies/go/gomod-${dep_sha}.tgz
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/gomod-${dep_sha}.tar.xz
+        remote_file: dependencies/go/gomod-${dep_sha}.tar.xz
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/x-gzip}

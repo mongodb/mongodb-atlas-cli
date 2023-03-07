@@ -17,7 +17,7 @@
 set -Eeou pipefail
 
 SHA=$(shasum -a256 go.sum | awk '{print $1}')
-FILE="gomod-${SHA}.tgz"
+FILE="gomod-${SHA}.tar.xz"
 CACHE_URL="https://s3.amazonaws.com/mongodb-mongocli-build/dependencies/go/${FILE}"
 echo "${CACHE_URL}"
 mkdir -p "${GOMODCACHE}"

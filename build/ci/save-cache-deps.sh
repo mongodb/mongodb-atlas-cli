@@ -17,14 +17,14 @@
 set -Eeou pipefail
 
 echo "start"
-pwd
-ls -alfh
+
 SHA=$(shasum -a256 go.sum | awk '{print $1}')
 FILE="gomod-${SHA}.tar.xz"
 
 echo "create cache"
 export XZ_OPT=-9
 pushd "${GOPATH}"
-tar -Jcf "${FILE}" "pkg/mod"
+
+tar -Jvcf "${FILE}" "pkg/mod"
 
 ls -alfh

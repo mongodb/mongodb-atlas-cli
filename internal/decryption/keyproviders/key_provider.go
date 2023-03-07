@@ -40,15 +40,15 @@ type KeyStoreIdentifier struct {
 	Provider KeyStoreProvider
 }
 
-func provideInput(prompt string) (string, error) {
+func provideInput(m, d string) (string, error) {
 	if _, ok := os.LookupEnv("CI"); ok {
 		return "", nil
 	}
 
 	var input string
 	err := telemetry.TrackAskOne(&survey.Input{
-		Message: prompt,
-		Default: "",
+		Message: m,
+		Default: d,
 	}, &input)
 	if err != nil {
 		return "", err

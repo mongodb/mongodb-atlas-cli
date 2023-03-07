@@ -67,7 +67,9 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "describe <hostname:port> <diskName>",
 		Long: fmt.Sprintf(`To return the hostname and port needed for this command, run
-%s processes list`, cli.ExampleAtlasEntryPoint()),
+%s processes list
+
+`, cli.ExampleAtlasEntryPoint()) + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Short: "Return the measurements of a disk or partition on the specified host.",
 		Args:  require.ExactArgs(argsN),
 		Annotations: map[string]string{

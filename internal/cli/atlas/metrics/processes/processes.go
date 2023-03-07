@@ -66,7 +66,9 @@ func Builder() *cobra.Command {
 		Use:   "processes <hostname:port>",
 		Short: "Return the process measurements for the specified host.",
 		Long: fmt.Sprintf(`To return the hostname and port needed for this command, run
-%s processes list`, cli.ExampleAtlasEntryPoint()),
+%s processes list
+
+`, cli.ExampleAtlasEntryPoint()) + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"process"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{

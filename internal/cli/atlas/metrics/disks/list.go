@@ -65,7 +65,9 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "list <hostname:port>",
 		Long: fmt.Sprintf(`To return the hostname and port needed for this command, run:
-$ %s processes list`, cli.ExampleAtlasEntryPoint()),
+$ %s processes list
+
+`, cli.ExampleAtlasEntryPoint()) + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Short:   "Return all disks or disk partitions on the specified host for your project.",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),

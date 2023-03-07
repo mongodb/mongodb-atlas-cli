@@ -92,7 +92,9 @@ func DownloadBuilder() *cobra.Command {
 		Short: "Download a compressed file that contains the MongoDB logs for the specified host.",
 		Long: `This command downloads a file with a .gz extension.
 
-To find the hostnames for an Atlas project, use the process list command.`,
+To find the hostnames for an Atlas project, use the process list command.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
 		Args: cobra.MatchAll(
 			require.ExactArgs(argsN),
 			func(cmd *cobra.Command, args []string) error {

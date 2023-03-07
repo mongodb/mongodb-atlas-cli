@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/openlyinc/pointy"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -85,43 +84,36 @@ func (opts *UpdateOpts) newProcessArgs() *atlas.ProcessArgs {
 	}
 
 	if opts.sampleSizeBIConnector != -1 {
-		args.SampleSizeBIConnector = pointy.Int64(opts.sampleSizeBIConnector)
+		args.SampleSizeBIConnector = &opts.sampleSizeBIConnector
 	}
 
 	if opts.sampleRefreshIntervalBIConnector != -1 {
-		args.SampleRefreshIntervalBIConnector = pointy.Int64(opts.sampleRefreshIntervalBIConnector)
+		args.SampleRefreshIntervalBIConnector = &opts.sampleRefreshIntervalBIConnector
 	}
 
 	if opts.disableTableScan {
-		args.NoTableScan = pointy.Bool(opts.disableTableScan)
+		args.NoTableScan = &opts.disableTableScan
 	}
 
 	if opts.enableTableScan {
-		args.NoTableScan = pointy.Bool(!opts.enableTableScan)
+		noTableScan := !opts.enableTableScan
+		args.NoTableScan = &noTableScan
 	}
 
-	if opts.disableJavascript {
-		args.JavascriptEnabled = pointy.Bool(false)
+	if opts.disableJavascript || opts.enableJavascript {
+		args.JavascriptEnabled = &opts.enableJavascript
 	}
 
-	if opts.enableJavascript {
-		args.JavascriptEnabled = pointy.Bool(true)
-	}
-
-	if opts.disableFailIndexKeyTooLong {
-		args.FailIndexKeyTooLong = pointy.Bool(false)
-	}
-
-	if opts.enableFailIndexKeyTooLong {
-		args.FailIndexKeyTooLong = pointy.Bool(true)
+	if opts.disableFailIndexKeyTooLong || opts.enableFailIndexKeyTooLong {
+		args.FailIndexKeyTooLong = &opts.enableFailIndexKeyTooLong
 	}
 
 	if opts.oplogSizeMB != 0 {
-		args.OplogSizeMB = pointy.Int64(opts.oplogSizeMB)
+		args.OplogSizeMB = &opts.oplogSizeMB
 	}
 
 	if opts.oplogMinRetentionHours != 0 {
-		args.OplogMinRetentionHours = pointy.Float64(opts.oplogMinRetentionHours)
+		args.OplogMinRetentionHours = &opts.oplogMinRetentionHours
 	}
 
 	return args

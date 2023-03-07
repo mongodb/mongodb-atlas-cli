@@ -81,8 +81,8 @@ functions:
       params:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.html
-        remote_file: dependencies/go/${SHA}.tgz
+        local_file: pkg/mod/{dep_sha}.tgz
+        remote_file: dependencies/go/${dep_sha}.tgz
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/x-gzip}

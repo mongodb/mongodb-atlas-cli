@@ -19,7 +19,7 @@ set -Eeou pipefail
 SHA=$(shasum -a256 go.sum | awk '{print $1}')
 CACHE_URL="https://s3.amazonaws.com/mongodb-mongocli-build/dependencies/go/${SHA}.tgz"
 echo "${CACHE_URL}"
-
+mkdir -p "${GOPATH}/pkg/mod"
 pushd "${GOPATH}/pkg/mod"
 ls -alfh
 curl -sL "${CACHE_URL}"

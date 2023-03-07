@@ -17,22 +17,25 @@
 set -Eeou pipefail
 
 SHA=$(shasum -a256 go.sum | awk '{print $1}')
-CACHE_URL="https://s3.amazonaws.com/mongodb-mongocli-build/dependencies/go/gomod-${SHA}.tgz"
+FILE="gomod-${SHA}.tgz"
+CACHE_URL="https://s3.amazonaws.com/mongodb-mongocli-build/dependencies/go/${FILE}"
 echo "${CACHE_URL}"
 mkdir -p "${GOMODCACHE}"
 pushd "${GOMODCACHE}"
 
 echo "start"
 ls -alfh
-curl -sL "${CACHE_URL}"
-if [[ -f "${SHA}.tgz" ]]; then
+set +e # ignore get errors
+curl -sLf "${CACHE_URL}" -o "${FILE}"
+set -e
+if [[ -f "${FILE}" ]]; then
   echo "file exists start"
-  tar zx "${SHA}.tgz"
+  tar zx "${FILE}"
   ls -alfh
-  popd
-  rm "${SHA}.tgz"
+  rm "${FILE}"
 fi
 
+popd
 cat <<EOF >"sha_expansion.yaml"
 dep_sha: "${SHA}"
 EOF

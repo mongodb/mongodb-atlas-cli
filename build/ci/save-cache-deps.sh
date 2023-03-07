@@ -22,11 +22,11 @@ SHA=$(shasum -a256 go.sum | awk '{print $1}')
 FILE="gomod-${SHA}.tar.xz"
 
 echo "create cache"
-export XZ_OPT=-9
+
 pushd "${GOPATH}"
 
-tar -Jvcf "${FILE}" "pkg/mod"
+export XZ_OPT=-9
+tar -Jcf "${FILE}" "pkg/mod"
 popd
 
 mv "${GOPATH}/${FILE}" .
-ls -alfh

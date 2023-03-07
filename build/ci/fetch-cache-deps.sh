@@ -23,14 +23,12 @@ echo "${CACHE_URL}"
 mkdir -p "${GOPATH}"
 pushd "${GOPATH}"
 
-echo "start"
-ls -alfh
 set +e # ignore get errors
 curl -sLf "${CACHE_URL}" -o "${FILE}"
 set -e
 if [[ -f "${FILE}" ]]; then
   echo "file exists start"
-  tar -xf "${FILE}"
+  tar -xvf "${FILE}"
   ls -alfh
   rm "${FILE}"
 fi

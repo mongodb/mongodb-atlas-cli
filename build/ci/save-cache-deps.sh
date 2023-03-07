@@ -16,12 +16,12 @@
 
 set -Eeou pipefail
 
-echo "start"
-
-SHA=$(shasum -a256 go.sum | awk '{print $1}')
-FILE="gomod-${SHA}.tar.xz"
-
-echo "create cache"
+# shellcheck disable=SC2154
+if [[ "${go_dep_cache_exists}" == "yes" ]]; then
+  exit 0
+fi
+# shellcheck disable=SC2154
+FILE="gomod-${go_dep_sha}.tar.xz"
 
 pushd "${GOPATH}"
 

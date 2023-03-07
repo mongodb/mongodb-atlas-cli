@@ -26,5 +26,7 @@ export XZ_OPT=-9
 pushd "${GOPATH}"
 
 tar -Jvcf "${FILE}" "pkg/mod"
+popd
 
+mv "${GOPATH}/${FILE}" .
 ls -alfh

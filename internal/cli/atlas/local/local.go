@@ -15,8 +15,12 @@
 package local
 
 import (
+	"errors"
+
 	"github.com/spf13/cobra"
 )
+
+var ErrInstanceNotFound = errors.New("Instance not found")
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
@@ -28,6 +32,7 @@ func Builder() *cobra.Command {
 		CreateBuilder(),
 		ListBuilder(),
 		DeleteBuilder(),
+		ConnectBuilder(),
 	)
 
 	return cmd

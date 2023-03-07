@@ -16,6 +16,7 @@ package local
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -23,15 +24,20 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/spf13/cobra"
 )
 
-type DeleteOpts struct {
+type ConnectOpts struct {
 	cli.OutputOpts
 	name string
 }
 
-func (opts *DeleteOpts) Run(ctx context.Context) error {
+func (opts *ConnectOpts) Run(ctx context.Context) error {
+	if !mongosh.Detect() {
+		return errors.New("mongosh not detected")
+	}
+
 	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
 		return err
@@ -41,30 +47,30 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	foundID := ""
+	var found *types.Container
 	for _, c := range containers {
 		for _, n := range c.Names {
 			if strings.EqualFold(n, fmt.Sprintf("/%s", opts.name)) {
-				foundID = c.ID
+				found = &c
 			}
 		}
 	}
 
-	if foundID == "" {
+	if found == nil {
 		return fmt.Errorf("%w: %s", ErrInstanceNotFound, opts.name)
 	}
 
-	return cli.ContainerRemove(ctx, foundID, types.ContainerRemoveOptions{Force: true})
+	uri := fmt.Sprintf("mongodb://localhost:%v", found.Ports[0].PublicPort)
+	return mongosh.RunWithoutPassword(uri)
 }
 
-// atlas local delete <instanceName>.
-func DeleteBuilder() *cobra.Command {
-	opts := &DeleteOpts{}
+// atlas local connect <instanceName>.
+func ConnectBuilder() *cobra.Command {
+	opts := &ConnectOpts{}
 	cmd := &cobra.Command{
-		Use:     "delete <instanceName>",
-		Aliases: []string{"rm"},
-		Short:   "Deletes an instance.",
-		Args:    require.ExactArgs(1),
+		Use:   "connect <instanceName>",
+		Short: "Connects to an instance via mongosh.",
+		Args:  require.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.Run(cmd.Context())

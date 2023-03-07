@@ -131,8 +131,6 @@ func UpdateBuilder() *cobra.Command {
 		Short: "Modify the settings of the specified cluster.",
 		Long: `You can specify modifications in a JSON configuration file with the --file flag.
 		
-You can modify only M10 or larger clusters that are single-region replica sets.
-		
 You can't change the name of the cluster or downgrade the MongoDB version of your cluster.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"),

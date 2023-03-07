@@ -121,7 +121,7 @@ func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlas.AdvancedCluster) {
 	}
 }
 
-// mongocli atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].
+// UpdateBuilder atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{
 		fs: afero.NewOsFs(),

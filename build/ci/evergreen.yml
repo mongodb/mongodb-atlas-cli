@@ -300,6 +300,7 @@ functions:
           KMIP_CA: ${logs_decrypt_kmip_ca}
           KMIP_CERT: ${logs_decrypt_kmip_cert}
 pre:
+  - func: "clone"
   - func: "fetch deps cache"
 post:
   - command: subprocess.exec
@@ -317,23 +318,19 @@ tasks:
   - name: compile
     tags: ["code_health"]
     commands:
-      - func: "clone"
       - func: "build"
   - name: compile_mongocli
     tags: [ "code_health" ]
     commands:
-      - func: "clone"
       - func: "build mongocli"
   - name: compile_atlascli
     tags: [ "code_health" ]
     commands:
-      - func: "clone"
       - func: "build atlascli"
   - name: unit_test
     tags: ["code_health"]
     must_have_test_results: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "unit-test"
       - func: "generate html coverage"
@@ -342,25 +339,21 @@ tasks:
     tags: ["code_health"]
     must_have_test_results: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "integration-test"
   - name: lint
     tags: ["code_health"]
     commands:
-      - func: "clone"
       - func: "install dev tools"
       - func: "lint"
   - name: snyk_scan
     tags: ["snyk"]
     commands:
-      - func: "clone"
       - func: "install snyk"
       - func: "snyk scan"
   - name: license_check
     tags: ["code_health"]
     commands:
-      - func: "clone"
       - func: "install dev tools"
       - func: "check license header"
   - name: config_e2e
@@ -371,7 +364,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - command: shell.exec
         type: test
@@ -398,7 +390,6 @@ tasks:
   - name: library_owners_check
     tags: ["code_health"]
     commands:
-      - func: "clone"
       - func: "check library_owners.json"
   - name: brew_e2e
     tags: ["e2e","required"]
@@ -407,7 +398,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -417,11 +407,9 @@ tasks:
     tags: ["e2e","generic","atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -440,7 +428,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -460,7 +447,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -479,7 +465,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -498,7 +483,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -517,7 +501,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -536,7 +519,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -555,7 +537,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -574,7 +555,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -593,7 +573,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -612,7 +591,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -631,7 +609,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -650,7 +627,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -670,7 +646,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -690,7 +665,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -709,7 +683,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -729,7 +702,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -748,7 +720,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -768,7 +739,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -787,7 +757,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -807,7 +776,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -827,7 +795,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -846,7 +813,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -866,7 +832,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -885,7 +850,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -905,7 +869,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -925,7 +888,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -947,7 +909,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -966,7 +927,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -986,7 +946,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -1006,7 +965,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -1025,7 +983,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -1045,7 +1002,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1067,7 +1023,6 @@ tasks:
         variant: "e2e_cloud_manager_remote"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1086,7 +1041,6 @@ tasks:
           variant: "code_health"
           patch_optional: true
     commands:
-        - func: "clone"
         - func: "install gotestsum"
         - func: "build mongocli"
         - func: "deploy spawn host"
@@ -1107,7 +1061,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1128,7 +1081,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1149,7 +1101,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1171,7 +1122,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1192,7 +1142,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1213,7 +1162,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1235,7 +1183,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1256,7 +1203,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "install pykmip"
@@ -1280,7 +1226,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "e2e test"
@@ -1307,7 +1252,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -1329,7 +1273,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -1349,7 +1292,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:

@@ -300,7 +300,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install go-msi"
       - func: "generate msi"
         vars:
@@ -344,7 +343,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -395,7 +393,6 @@ tasks:
     patchable: false
     stepback: false
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: mongocli
@@ -404,7 +401,6 @@ tasks:
     patchable: false
     stepback: false
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: atlascli
@@ -413,7 +409,6 @@ tasks:
     git_tag_only: true
     stepback: false
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: mongocli
@@ -422,7 +417,6 @@ tasks:
     git_tag_only: true
     stepback: false
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: atlascli
@@ -430,7 +424,6 @@ tasks:
   - name: pkg_test_mongocli_generate
     tags: [ "smoke-test", "mongocli", "pkg" ]
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: mongocli
@@ -438,7 +431,6 @@ tasks:
   - name: pkg_test_atlascli_generate
     tags: [ "smoke-test", "atlascli", "pkg" ]
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: atlascli
@@ -452,7 +444,6 @@ tasks:
       - name: release_msi
         variant: "release_mongocli_msi"
     commands:
-      - func: "clone"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -529,7 +520,6 @@ tasks:
       - name: release_msi
         variant: "release_atlascli_msi"
     commands:
-      - func: "clone"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -605,7 +595,6 @@ tasks:
       - name: compile
         variant: "code_health"
     commands:
-      - func: "clone"
       - func: "install go-msi"
       - func: "generate msi"
         vars:
@@ -664,7 +653,6 @@ tasks:
           variant: "release_atlascli_github"
     tags: [ "smoke-test", "generate", "repo", "atlascli" ]
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: atlascli
@@ -677,7 +665,6 @@ tasks:
           variant: "release_mongocli_github"
     tags: [ "smoke-test", "generate", "repo", "mongocli" ]
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: mongocli
@@ -688,7 +675,6 @@ tasks:
       - name: package_msi
         variant: go_atlascli_msi_snapshot
     commands:
-      - func: "clone"
       - func: "powershell build"
         vars:
           file: windows_post_package_test

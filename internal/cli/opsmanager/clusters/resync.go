@@ -90,10 +90,14 @@ func ResyncBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "resync <clusterName>",
 		Short: "Start an initial sync for a cluster or process.",
-		Long: `The MongoDB Agent checks whether the specified timestamp is later than the time of the last resync, and if confirmed, starts init sync on the secondary nodes in a rolling fashion.
-The MongoDB Agent waits until you ask the primary node to become the secondary with the rs.stepDown() method, and then starts init sync on this node.
-Warning: Use this method with caution. During initial sync, Automation removes the entire contents of the node’s dbPath directory. 
-See also: https://docs.mongodb.com/manual/tutorial/resync-replica-set-member/`,
+		Long: `The MongoDB Agent checks whether the specified timestamp is later than the time of the last resync, and if confirmed, the MongoDB Agent:
+1. Starts the initial sync on the secondary nodes in a rolling fashion
+2. Waits until you ask the primary node to become the secondary with the rs.stepDown() method 
+3. Starts the initial sync on the primary node
+
+Warning: Use this method with caution. During initial sync, Automation removes the entire contents of the node’s dbPath directory.
+
+To learn more, see: https://docs.mongodb.com/manual/tutorial/resync-replica-set-member/`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster for which you want to start a resync.",

@@ -1,5 +1,5 @@
 ---
-name: Check Docs
+name: Test Andrea Action
 on:
   push:
     branches:
@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: foo
-        uses: andreaangiolillo/atlasCLI-gitHub-action@v0.0.1
+        uses: andreaangiolillo/atlasCLI-gitHub-action@v0.0.2
         with:
           who-to-greet: 'Mona the Octocat'
       - run: echo random-number ${{ steps.foo.outputs.random-number }}

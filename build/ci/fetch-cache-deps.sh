@@ -22,9 +22,11 @@ echo "${CACHE_URL}"
 mkdir -p "${GOMODCACHE}"
 pushd "${GOMODCACHE}"
 
+echo "start"
 ls -alfh
 curl -sL "${CACHE_URL}"
 if [[ -f "${SHA}.tgz" ]]; then
+  echo "file exists start"
   tar zx "${SHA}.tgz"
   ls -alfh
   popd
@@ -34,3 +36,8 @@ fi
 cat <<EOF >"sha_expansion.yaml"
 dep_sha: "${SHA}"
 EOF
+
+echo "update expansions"
+pwd
+ls -alfh
+cat sha_expansion.yaml

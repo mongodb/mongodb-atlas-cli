@@ -91,8 +91,10 @@ func DescribeBuilder() *cobra.Command {
   # Return the JSON-formatted details for the MongoDB user with the username myUser:
   %[1]s users describe --username myUser --output json`, cli.ExampleAtlasEntryPoint()),
 		Short: "Return the details for the specified MongoDB user.",
-		Long:  `You can specify either the unique 24-digit ID that identifies the MongoDB user or the username for the MongoDB user.`,
-		Args:  require.NoArgs,
+		Long: `You can specify either the unique 24-digit ID that identifies the MongoDB user or the username for the MongoDB user.
+		
+User accounts and API keys with any role can run this command.`,
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return prerun.ExecuteE(
 				opts.initStore(cmd.Context()),

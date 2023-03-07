@@ -70,8 +70,10 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Saves a customer-managed X.509 configuration for your project.",
-		Long:  `Saving a customer-managed X.509 configuration triggers a rolling restart.`,
-		Args:  require.NoArgs,
+		Long: `Saving a customer-managed X.509 configuration triggers a rolling restart.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Args: require.NoArgs,
 		Example: fmt.Sprintf(`  # Save the file named ca.pem stored in the files directory to the project with the ID 5e2211c17a3e5a48f5497de3:
   %s security customerCerts create --casFile files/ca.pem --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

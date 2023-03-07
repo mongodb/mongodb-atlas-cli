@@ -64,6 +64,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "Return all users for a project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all users for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s projects users list --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),

@@ -57,7 +57,9 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Remove the specified organization API key from your project.",
 		Long: fmt.Sprintf(`The API key still exists at the organization level. To reassign the organization API key to a project, run the  %[1]s projects apiKeys assign command.
 		
-To view possible values for the ID argument, run %[1]s organizations apiKeys list.`, cli.ExampleAtlasEntryPoint()),
+To view possible values for the ID argument, run %[1]s organizations apiKeys list.
+
+`+fmt.Sprintf(usage.RequiredRole, "Project User Admin"), cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies your API key.",

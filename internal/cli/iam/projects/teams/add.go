@@ -71,7 +71,9 @@ func AddBuilder() *cobra.Command {
 		Use:   "add <teamId>",
 		Args:  require.ExactArgs(1),
 		Short: "Add the specified team to your project.",
-		Long:  `All members of the team share the same project access.`,
+		Long: `All members of the team share the same project access.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"teamIdDesc": "Unique 24-digit string that identifies the team.",
 		},

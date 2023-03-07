@@ -69,6 +69,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   "Return all MongoDB processes for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all MongoDB processes in the project with the ID 5e2211c17a3e5a48f5497de3:

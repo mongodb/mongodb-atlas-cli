@@ -72,8 +72,10 @@ func DisableBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "disable",
 		Short: "Clear customer-managed X.509 settings on a project, including the uploaded Certificate Authority, and disable self-managed X.509.",
-		Long:  `Disabling customer-managed X.509 triggers a rolling restart.`,
-		Args:  require.NoArgs,
+		Long: `Disabling customer-managed X.509 triggers a rolling restart.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Args: require.NoArgs,
 		Example: fmt.Sprintf(`  # Disable the customer-managed X.509 configuration in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s security customerCerts disable --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

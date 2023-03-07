@@ -407,6 +407,7 @@ tasks:
     tags: ["e2e","generic","atlas"]
     must_have_test_results: true
     depends_on:
+      - name: compile
         variant: "code_health"
         patch_optional: true
     commands:

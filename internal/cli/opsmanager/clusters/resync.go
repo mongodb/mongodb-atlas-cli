@@ -91,6 +91,7 @@ func ResyncBuilder() *cobra.Command {
 		Use:   "resync <clusterName>",
 		Short: "Start an initial sync for a cluster or process.",
 		Long: `The MongoDB Agent checks whether the specified timestamp is later than the time of the last resync, and if confirmed, the MongoDB Agent:
+
 1. Starts the initial sync on the secondary nodes in a rolling fashion
 2. Waits until you ask the primary node to become the secondary with the rs.stepDown() method 
 3. Starts the initial sync on the primary node

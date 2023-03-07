@@ -1,8 +1,8 @@
-.. _mongocli-ops-manager-logs:
+.. _mongocli-cloud-manager-logs-keyProviders-list:
 
-=========================
-mongocli ops-manager logs
-=========================
+=============================================
+mongocli cloud-manager logs keyProviders list
+=============================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,16 @@ mongocli ops-manager logs
    :depth: 1
    :class: singlecol
 
-Manage log collection jobs for your project.
+Lists all key provider configurations found in the encrypted audit log file.
+
+Syntax
+------
+
+.. code-block::
+
+   mongocli cloud-manager logs keyProviders list [options]
+
+.. Code end marker, please don't delete this comment
 
 Options
 -------
@@ -25,10 +34,18 @@ Options
      - Type
      - Required
      - Description
+   * - -f, --file
+     - string
+     - true
+     - Path to the file that contains encrypted audit logs.
    * - -h, --help
      - 
      - false
-     - help for logs
+     - help for list
+   * - -o, --output
+     - string
+     - false
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
 
 Inherited Options
 -----------------
@@ -46,18 +63,10 @@ Inherited Options
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
-Related Commands
-----------------
+Examples
+--------
 
-* :ref:`mongocli-ops-manager-logs-decrypt` - Decrypts an audit log file with the provided local key file or with a server that supports KMIP.
-* :ref:`mongocli-ops-manager-logs-jobs` - Manage log collection jobs for your project.
-* :ref:`mongocli-ops-manager-logs-keyProviders` - Manage your key collections.
+.. code-block::
 
-
-.. toctree::
-   :titlesonly:
-
-   decrypt </command/mongocli-ops-manager-logs-decrypt>
-   jobs </command/mongocli-ops-manager-logs-jobs>
-   keyProviders </command/mongocli-ops-manager-logs-keyProviders>
-
+  
+   mongocli ops-manager listKeyProvider --file log.gz

@@ -54,8 +54,10 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <entry>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified IP access list entry from your project.",
-		Long:    `The command prompts you to confirm the operation when you run the command without the force option.`,
-		Args:    require.ExactArgs(1),
+		Long: `The command prompts you to confirm the operation when you run the command without the force option.
+
+` + fmt.Sprintf(usage.RequiredRole, "Read Write"),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID that you want to remove from the access list.",
 		},

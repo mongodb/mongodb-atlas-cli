@@ -23,6 +23,7 @@ variables:
       GO111MODULE: "on"
       GOROOT: ${go_root}
       GOPATH: ${go_base_path}${workdir}
+      GOMODCACHE: ${go_base_path}${workdir}/pkg/mod
       ADD_PATH: "${go_bin}:${go_base_path}${workdir}/bin:${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
   - &go_options
     add_to_path:
@@ -71,18 +72,24 @@ functions:
       params:
         <<: *go_options
         binary: build/ci/fetch-cache-deps.sh
+    - command: expansions.update
+      params:
+        file: sha_expansion.yaml
   "save deps cache":
     - command: subprocess.exec
       type: setup
       params:
         <<: *go_options
         binary: build/ci/save-cache-deps.sh
+    - command: expansions.update
+      params:
+        file: sha_expansion.yaml
     - command: s3.put
       params:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_file: pkg/mod/{dep_sha}.tgz
-        remote_file: dependencies/go/${dep_sha}.tgz
+        remote_file: dependencies/go/gomod-${dep_sha}.tgz
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/x-gzip}
@@ -302,10 +309,6 @@ functions:
 pre:
   - func: "clone"
   - func: "fetch deps cache"
-  - command: expansions.update
-    params:
-      ignore_missing_file: true
-      file: sha_expansion.yaml
 post:
   - command: subprocess.exec
     type: setup

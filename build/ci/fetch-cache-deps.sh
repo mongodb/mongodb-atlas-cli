@@ -17,10 +17,11 @@
 set -Eeou pipefail
 
 SHA=$(shasum -a256 go.sum | awk '{print $1}')
-CACHE_URL="https://s3.amazonaws.com/mongodb-mongocli-build/dependencies/go/${SHA}.tgz"
+CACHE_URL="https://s3.amazonaws.com/mongodb-mongocli-build/dependencies/go/gomod-${SHA}.tgz"
 echo "${CACHE_URL}"
-mkdir -p "${GOPATH}/pkg/mod"
-pushd "${GOPATH}/pkg/mod"
+mkdir -p "${GOMODCACHE}"
+pushd "${GOMODCACHE}"
+
 ls -alfh
 curl -sL "${CACHE_URL}"
 if [[ -f "${SHA}.tgz" ]]; then

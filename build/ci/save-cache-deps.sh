@@ -19,8 +19,11 @@ set -Eeou pipefail
 SHA=$(shasum -a256 go.sum | awk '{print $1}')
 
 
-pushd "${GOPATH}/pkg/mod"
-tar -zcvf ../"${SHA}".tgz .
+pushd "${GOMODCACHE}"
+tar -zcvf "gomod-${SHA}.tgz" .
 popd
+mv "${GOMODCACHE}/gomod-${SHA}.tgz" .
 
-ls -alfh
+cat <<EOF >"sha_expansion.yaml"
+dep_sha: "${SHA}"
+EOF

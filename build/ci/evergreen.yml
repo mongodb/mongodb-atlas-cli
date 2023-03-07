@@ -65,6 +65,28 @@ functions:
       params:
         <<: *go_options
         command: make check-library-owners
+  "fetch deps cache":
+    - command: subprocess.exec
+      type: setup
+      params:
+        <<: *go_options
+        binary: build/ci/fetch-cache-deps.sh
+  "save deps cache":
+    - command: subprocess.exec
+      type: setup
+      params:
+        <<: *go_options
+        binary: build/ci/save-cache-deps.sh
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.html
+        remote_file: dependencies/go/${SHA}.tgz
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/x-gzip}
+        display_name: deps
   "unit-test":
     - command: subprocess.exec
       type: test
@@ -277,6 +299,8 @@ functions:
           <<: *go_env
           KMIP_CA: ${logs_decrypt_kmip_ca}
           KMIP_CERT: ${logs_decrypt_kmip_cert}
+pre:
+  - func: "fetch deps cache"
 post:
   - command: subprocess.exec
     type: setup
@@ -288,7 +312,7 @@ post:
   - command: attach.xunit_results
     params:
       files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
-
+  - func: "save deps cache"
 tasks:
   - name: compile
     tags: ["code_health"]

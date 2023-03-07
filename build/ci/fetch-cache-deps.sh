@@ -22,5 +22,14 @@ echo "${CACHE_URL}"
 
 pushd "${GOPATH}/pkg/mod"
 ls -alfh
-curl -sfL "${CACHE_URL}" | tar zx
-ls -alfh
+curl -sL "${CACHE_URL}"
+if [[ -f "${SHA}.tgz}" ]]; then
+  tar zx "${SHA}.tgz"
+  ls -alfh
+  popd
+  rm "${SHA}.tgz"
+fi
+
+cat <<EOF >"sha_expansion.yaml"
+dep_sha: "${SHA}"
+EOF

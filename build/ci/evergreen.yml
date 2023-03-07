@@ -302,6 +302,10 @@ functions:
 pre:
   - func: "clone"
   - func: "fetch deps cache"
+  - command: expansions.update
+    params:
+      ignore_missing_file: true
+      file: sha_expansion.yaml
 post:
   - command: subprocess.exec
     type: setup

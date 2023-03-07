@@ -39,7 +39,7 @@ require (
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
 	go.mongodb.org/atlas v0.23.1
 	go.mongodb.org/mongo-driver v1.11.2
-	go.mongodb.org/ops-manager v0.47.0
+	go.mongodb.org/ops-manager v0.48.0
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
 	golang.org/x/mod v0.8.0
 	google.golang.org/api v0.110.0

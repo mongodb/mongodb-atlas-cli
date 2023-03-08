@@ -63,7 +63,9 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return all IP access list entries for your API Key.",
-		Long:    fmt.Sprintf(`To view possible values for the apiKeyID argument, run %s organizations apiKeys list.`, cli.ExampleAtlasEntryPoint()),
+		Long: fmt.Sprintf(`To view possible values for the apiKeyID argument, run %s organizations apiKeys list.
+
+`+fmt.Sprintf(usage.RequiredRole, "Organization Member"), cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"apiKeyIDDesc": "Unique 24-digit string that identifies your API key.",
 		},

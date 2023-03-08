@@ -54,6 +54,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <privateEndpointId>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified Azure private endpoint from your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"privateEndpointIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.",

@@ -55,6 +55,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <privateEndpointResourceId>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified Azure private endpoint interface and related service from your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"privateEndpointResourceIdDesc": "Unique string that identifies the Azure private endpoint interface in Azure.",

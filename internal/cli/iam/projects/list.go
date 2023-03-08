@@ -71,6 +71,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "Return all projects.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all projects:
   %s projects list --output json`, cli.ExampleAtlasEntryPoint()),

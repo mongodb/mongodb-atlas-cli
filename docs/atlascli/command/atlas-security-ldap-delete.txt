@@ -14,6 +14,8 @@ atlas security ldap delete
 
 Remove the current LDAP configuration captured in the userToDNMapping document from your project.
 
+To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+
 Syntax
 ------
 

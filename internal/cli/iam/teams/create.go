@@ -67,6 +67,7 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create <name>",
 		Short: "Create a team for your organization.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Organization Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Label that identifies the team.",

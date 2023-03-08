@@ -67,7 +67,9 @@ func WatchBuilder() *cobra.Command {
 		Long: `This command checks the serverless instance's state periodically until the instance reaches an IDLE state. 
 Once the instance reaches the expected state, the command prints "Instance available."
 If you run the command in the terminal, it blocks the terminal session until the resource becomes idle.
-You can interrupt the command's polling at any time with CTRL-C.`,
+You can interrupt the command's polling at any time with CTRL-C.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  %s serverless watch instanceNameSample`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{

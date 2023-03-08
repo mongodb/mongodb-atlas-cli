@@ -72,6 +72,7 @@ func InviteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "invite <email>",
 		Short:   "Invite the specified MongoDB user to your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project User Admin"),
 		Aliases: []string{"create"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{

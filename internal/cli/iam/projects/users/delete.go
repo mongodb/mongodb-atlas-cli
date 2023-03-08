@@ -54,8 +54,10 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified user from your project.",
-		Long:    `After you remove a user from your project, the user still exists in the organization in which it was created.`,
-		Args:    require.ExactArgs(1),
+		Long: `After you remove a user from your project, the user still exists in the organization in which it was created.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project User Admin"),
+		Args: require.ExactArgs(1),
 		Example: fmt.Sprintf(`  # Remove the user with the ID 5dd58c647a3e5a6c5bce46c7 from the project with the ID 5e2211c17a3e5a48f5497de3:
   %s projects users delete 5dd58c647a3e5a6c5bce46c7 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{

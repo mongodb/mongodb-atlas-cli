@@ -69,6 +69,7 @@ func UpdateBuilder() *cobra.Command {
 		Aliases: []string{"updates"},
 		Args:    require.ExactArgs(1),
 		Short:   "Modify the roles for the specified team for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project User Admin"),
 		Annotations: map[string]string{
 			"teamIdDesc": "Unique 24-digit string that identifies the team.",
 		},

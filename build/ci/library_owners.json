@@ -19,7 +19,6 @@
 	"github.com/mattn/go-isatty": "mongocli",
 	"github.com/mongodb-forks/digest": "mongocli",
 	"github.com/mongodb-labs/cobra2snooty": "mongocli",
-	"github.com/openlyinc/pointy": "mongocli",
 	"github.com/pelletier/go-toml": "mongocli",
 	"github.com/Netflix/go-expect": "mongocli",
 	"github.com/creack/pty": "mongocli",

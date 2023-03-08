@@ -19,7 +19,7 @@ package convert
 import (
 	"testing"
 
-	"github.com/openlyinc/pointy"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -44,11 +44,11 @@ func Test_newReplicaSetProcessConfig(t *testing.T) {
 			},
 			Replication: &opsmngr.Replication{
 				ReplSetName: "myReplicaSet",
-				OplogSizeMB: pointy.Int(10),
+				OplogSizeMB: pointer.Get(10),
 			},
 			Storage: &opsmngr.Storage{
 				DBPath:         "/data/db",
-				DirectoryPerDB: pointy.Bool(true),
+				DirectoryPerDB: pointer.Get(true),
 				WiredTiger: &map[string]interface{}{
 					"collectionConfig": map[string]interface{}{},
 					"engineConfig": map[string]interface{}{
@@ -95,25 +95,25 @@ func Test_newReplicaSetProcessConfig(t *testing.T) {
 		AuditLogDestination:         "file",
 		AuditLogFormat:              "JSON",
 		AuditLogFilter:              "{ atype: { $in: [ \"createCollection\", \"dropCollection\" ] } }",
-		BuildIndexes:                pointy.Bool(true),
+		BuildIndexes:                pointer.Get(true),
 		DBPath:                      "/data/db",
-		DirectoryPerDB:              pointy.Bool(true),
+		DirectoryPerDB:              pointer.Get(true),
 		FeatureCompatibilityVersion: "4.4",
 		Hostname:                    "n1.omansible.int",
 		LogDestination:              "file",
 		LogPath:                     "/data/log/mongodb.log",
 		Name:                        "myReplicaSet_1",
-		OplogSizeMB:                 pointy.Int(10),
+		OplogSizeMB:                 pointer.Get(10),
 		Port:                        27017,
-		Priority:                    pointy.Float64(1),
+		Priority:                    pointer.Get[float64](1),
 		ProcessType:                 "mongod",
-		SlaveDelay:                  pointy.Float64(0),
-		SecondaryDelaySecs:          pointy.Float64(0),
+		SlaveDelay:                  pointer.Get[float64](0),
+		SecondaryDelaySecs:          pointer.Get[float64](0),
 		Version:                     "4.4.1-ent",
-		Votes:                       pointy.Float64(1),
-		ArbiterOnly:                 pointy.Bool(false),
+		Votes:                       pointer.Get[float64](1),
+		ArbiterOnly:                 pointer.Get(false),
 		Disabled:                    false,
-		Hidden:                      pointy.Bool(false),
+		Hidden:                      pointer.Get(false),
 		TLS: &TLS{
 			Mode:     "disabled",
 			FIPSMode: &fipsMode,
@@ -140,24 +140,24 @@ func Test_newConfigRSProcess(t *testing.T) {
 		AuditLogDestination:         "file",
 		AuditLogFormat:              "JSON",
 		AuditLogFilter:              "{ atype: { $in: [ \"createCollection\", \"dropCollection\" ] } }",
-		BuildIndexes:                pointy.Bool(true),
+		BuildIndexes:                pointer.Get(true),
 		DBPath:                      "/data/db",
-		DirectoryPerDB:              pointy.Bool(true),
+		DirectoryPerDB:              pointer.Get(true),
 		FeatureCompatibilityVersion: "4.4",
 		Hostname:                    "n1.omansible.int",
 		LogDestination:              "file",
 		LogPath:                     "/data/log/mongodb.log",
 		Name:                        "myReplicaSet_1",
 		Port:                        27017,
-		Priority:                    pointy.Float64(1),
+		Priority:                    pointer.Get[float64](1),
 		ProcessType:                 "mongod",
-		SlaveDelay:                  pointy.Float64(0),
-		SecondaryDelaySecs:          pointy.Float64(0),
+		SlaveDelay:                  pointer.Get[float64](0),
+		SecondaryDelaySecs:          pointer.Get[float64](0),
 		Version:                     "4.4.1-ent",
-		Votes:                       pointy.Float64(1),
-		ArbiterOnly:                 pointy.Bool(false),
+		Votes:                       pointer.Get[float64](1),
+		ArbiterOnly:                 pointer.Get(false),
 		Disabled:                    false,
-		Hidden:                      pointy.Bool(false),
+		Hidden:                      pointer.Get(false),
 		TLS:                         &TLS{Mode: "disabled"},
 		WiredTiger: &map[string]interface{}{
 			"collectionConfig": map[string]interface{}{},
@@ -188,7 +188,7 @@ func Test_newConfigRSProcess(t *testing.T) {
 			},
 			Storage: &opsmngr.Storage{
 				DBPath:         "/data/db",
-				DirectoryPerDB: pointy.Bool(true),
+				DirectoryPerDB: pointer.Get(true),
 				WiredTiger: &map[string]interface{}{
 					"collectionConfig": map[string]interface{}{},
 					"engineConfig": map[string]interface{}{
@@ -226,23 +226,23 @@ func Test_newConfigRSProcess(t *testing.T) {
 func Test_newConfigRSProcess_audit(t *testing.T) {
 	p := &ProcessConfig{
 		AuditLogDestination:         "sysfile",
-		BuildIndexes:                pointy.Bool(true),
+		BuildIndexes:                pointer.Get(true),
 		DBPath:                      "/data/db",
-		DirectoryPerDB:              pointy.Bool(true),
+		DirectoryPerDB:              pointer.Get(true),
 		FeatureCompatibilityVersion: "4.4",
 		Hostname:                    "n1.omansible.int",
 		LogDestination:              "file",
 		LogPath:                     "/data/log/mongodb.log",
 		Name:                        "myReplicaSet_1",
 		Port:                        27017,
-		Priority:                    pointy.Float64(1),
+		Priority:                    pointer.Get[float64](1),
 		ProcessType:                 "mongod",
-		SlaveDelay:                  pointy.Float64(0),
+		SlaveDelay:                  pointer.Get[float64](0),
 		Version:                     "4.4.1-ent",
-		Votes:                       pointy.Float64(1),
-		ArbiterOnly:                 pointy.Bool(false),
+		Votes:                       pointer.Get[float64](1),
+		ArbiterOnly:                 pointer.Get(false),
 		Disabled:                    false,
-		Hidden:                      pointy.Bool(false),
+		Hidden:                      pointer.Get(false),
 		TLS:                         &TLS{Mode: "disabled"},
 		WiredTiger: &map[string]interface{}{
 			"collectionConfig": map[string]interface{}{},
@@ -270,7 +270,7 @@ func Test_newConfigRSProcess_audit(t *testing.T) {
 			},
 			Storage: &opsmngr.Storage{
 				DBPath:         "/data/db",
-				DirectoryPerDB: pointy.Bool(true),
+				DirectoryPerDB: pointer.Get(true),
 				WiredTiger: &map[string]interface{}{
 					"collectionConfig": map[string]interface{}{},
 					"engineConfig": map[string]interface{}{
@@ -311,23 +311,23 @@ func Test_newReplicaSetProcess(t *testing.T) {
 		AuditLogDestination:         "file",
 		AuditLogFormat:              "JSON",
 		AuditLogFilter:              "{ atype: { $in: [ \"createCollection\", \"dropCollection\" ] } }",
-		BuildIndexes:                pointy.Bool(true),
+		BuildIndexes:                pointer.Get(true),
 		DBPath:                      "/data/db",
-		DirectoryPerDB:              pointy.Bool(true),
+		DirectoryPerDB:              pointer.Get(true),
 		FeatureCompatibilityVersion: "4.4",
 		Hostname:                    "n1.omansible.int",
 		LogDestination:              "file",
 		LogPath:                     "/data/log/mongodb.log",
 		Name:                        "myReplicaSet_1",
 		Port:                        27017,
-		Priority:                    pointy.Float64(1),
+		Priority:                    pointer.Get[float64](1),
 		ProcessType:                 "mongod",
-		SlaveDelay:                  pointy.Float64(0),
+		SlaveDelay:                  pointer.Get[float64](0),
 		Version:                     "4.4.1-ent",
-		Votes:                       pointy.Float64(1),
-		ArbiterOnly:                 pointy.Bool(false),
+		Votes:                       pointer.Get[float64](1),
+		ArbiterOnly:                 pointer.Get(false),
 		Disabled:                    false,
-		Hidden:                      pointy.Bool(false),
+		Hidden:                      pointer.Get(false),
 		TLS:                         &TLS{Mode: "disabled"},
 		WiredTiger: &map[string]interface{}{
 			"collectionConfig": map[string]interface{}{},
@@ -359,7 +359,7 @@ func Test_newReplicaSetProcess(t *testing.T) {
 			},
 			Storage: &opsmngr.Storage{
 				DBPath:         "/data/db",
-				DirectoryPerDB: pointy.Bool(true),
+				DirectoryPerDB: pointer.Get(true),
 				WiredTiger: &map[string]interface{}{
 					"collectionConfig": map[string]interface{}{},
 					"engineConfig": map[string]interface{}{

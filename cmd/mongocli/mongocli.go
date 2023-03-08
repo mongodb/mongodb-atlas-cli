@@ -38,6 +38,10 @@ var (
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute(ctx context.Context) {
 	rootCmd := mongocli.Builder(&profile, os.Args[1:])
+	// append here to avoid a recursive link on generated docs
+	rootCmd.Long += `
+
+For more information, refer to the docs: https://www.mongodb.com/docs/mongocli/stable/`
 	if err := rootCmd.ExecuteContext(ctx); err != nil {
 		os.Exit(1)
 	}

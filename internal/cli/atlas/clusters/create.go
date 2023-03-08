@@ -305,7 +305,7 @@ func (opts *CreateOpts) autocompleteTier() func(cmd *cobra.Command, args []strin
 
 		providers := make([]*string, 0, 1)
 		if provider := cmd.Flag(flag.Provider).Value.String(); provider != "" {
-			providers[0] = &provider
+			providers = append(providers, &provider)
 		}
 
 		result, err := l.CloudProviderRegions(opts.ConfigProjectID(), "", providers)
@@ -317,9 +317,7 @@ func (opts *CreateOpts) autocompleteTier() func(cmd *cobra.Command, args []strin
 		availableTiers := map[string]bool{}
 		for _, p := range result.Results {
 			for _, i := range p.InstanceSizes {
-				cobra.CompDebugln(fmt.Sprintf("%#v", i), true)
-
-				if _, ok := availableTiers[i.Name]; !ok {
+				if _, ok := availableTiers[i.Name]; !ok && strings.HasPrefix(i.Name, strings.ToUpper(toComplete)) {
 					availableTiers[i.Name] = true
 				}
 			}
@@ -359,7 +357,7 @@ func (opts *CreateOpts) autocompleteRegion() func(cmd *cobra.Command, args []str
 
 		providers := make([]*string, 0, 1)
 		if provider := cmd.Flag(flag.Provider).Value.String(); provider != "" {
-			providers[0] = &provider
+			providers = append(providers, &provider)
 		}
 
 		tier := cmd.Flag(flag.Tier).Value.String()
@@ -372,7 +370,7 @@ func (opts *CreateOpts) autocompleteRegion() func(cmd *cobra.Command, args []str
 		for _, p := range result.Results {
 			for _, i := range p.InstanceSizes {
 				for _, r := range i.AvailableRegions {
-					if _, ok := availableRegions[r.Name]; !ok {
+					if _, ok := availableRegions[r.Name]; !ok && strings.HasPrefix(r.Name, strings.ToUpper(toComplete)) {
 						availableRegions[r.Name] = true
 					}
 				}

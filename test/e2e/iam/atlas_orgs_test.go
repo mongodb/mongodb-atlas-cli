@@ -111,9 +111,10 @@ func TestAtlasOrgs(t *testing.T) {
 		orgID = org.Organization.ID
 		publicAPIKey = org.APIKey.PublicKey
 		privateAPIKey = org.APIKey.PrivateKey
+
+		require.NotEmpty(t, publicAPIKey)
+		require.NotEmpty(t, privateAPIKey)
 	})
-	require.NotEmpty(t, publicAPIKey)
-	require.NotEmpty(t, privateAPIKey)
 
 	t.Run("Delete", func(t *testing.T) {
 		t.Skip("Skipping delete org e2e test, exceeded max number of linked orgs. Will reenable post cleanup")

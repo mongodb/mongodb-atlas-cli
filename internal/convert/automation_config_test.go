@@ -20,8 +20,8 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
-	"github.com/openlyinc/pointy"
 )
 
 func TestFromAutomationConfig(t *testing.T) {
@@ -36,26 +36,26 @@ func TestFromAutomationConfig(t *testing.T) {
 					Name: name,
 					Processes: []*ProcessConfig{
 						{
-							ArbiterOnly:                 pointy.Bool(false),
-							BuildIndexes:                pointy.Bool(true),
+							ArbiterOnly:                 pointer.Get(false),
+							BuildIndexes:                pointer.Get(true),
 							DBPath:                      "/data/db/",
 							Disabled:                    false,
-							Hidden:                      pointy.Bool(false),
+							Hidden:                      pointer.Get(false),
 							Hostname:                    "host0",
 							LogPath:                     "/data/db/mongodb.log",
 							LogDestination:              file,
 							AuditLogDestination:         file,
 							AuditLogPath:                "/data/db/audit.log",
 							Port:                        27017,
-							Priority:                    pointy.Float64(1),
+							Priority:                    pointer.Get[float64](1),
 							ProcessType:                 mongod,
-							SlaveDelay:                  pointy.Float64(1),
-							SecondaryDelaySecs:          pointy.Float64(1),
-							Votes:                       pointy.Float64(1),
+							SlaveDelay:                  pointer.Get[float64](1),
+							SecondaryDelaySecs:          pointer.Get[float64](1),
+							Votes:                       pointer.Get[float64](1),
 							FeatureCompatibilityVersion: "4.2",
 							Version:                     "4.2.2",
 							Name:                        name + "_0",
-							OplogSizeMB:                 pointy.Int(10),
+							OplogSizeMB:                 pointer.Get(10),
 							TLS: &TLS{
 								CAFile:                     "CAFile",
 								CertificateKeyFile:         "CertificateKeyFile",
@@ -99,20 +99,20 @@ func TestFromAutomationConfig(t *testing.T) {
 						Name: "myShard_0",
 						Processes: []*ProcessConfig{
 							{
-								ArbiterOnly:                 pointy.Bool(false),
-								BuildIndexes:                pointy.Bool(true),
+								ArbiterOnly:                 pointer.Get(false),
+								BuildIndexes:                pointer.Get(true),
 								DBPath:                      "/data/myShard_0",
 								Disabled:                    false,
-								Hidden:                      pointy.Bool(false),
+								Hidden:                      pointer.Get(false),
 								Hostname:                    "example",
 								LogPath:                     "/log/myShard_0",
 								LogDestination:              file,
 								Port:                        1,
-								Priority:                    pointy.Float64(1),
+								Priority:                    pointer.Get[float64](1),
 								ProcessType:                 mongod,
-								SlaveDelay:                  pointy.Float64(1),
-								SecondaryDelaySecs:          pointy.Float64(1),
-								Votes:                       pointy.Float64(1),
+								SlaveDelay:                  pointer.Get[float64](1),
+								SecondaryDelaySecs:          pointer.Get[float64](1),
+								Votes:                       pointer.Get[float64](1),
 								FeatureCompatibilityVersion: "4.2",
 								Version:                     "4.2.2",
 								Name:                        name + "_myShard_0_0",
@@ -124,20 +124,20 @@ func TestFromAutomationConfig(t *testing.T) {
 					Name: "configRS",
 					Processes: []*ProcessConfig{
 						{
-							ArbiterOnly:                 pointy.Bool(false),
-							BuildIndexes:                pointy.Bool(true),
+							ArbiterOnly:                 pointer.Get(false),
+							BuildIndexes:                pointer.Get(true),
 							DBPath:                      "/data/configRS",
 							Disabled:                    false,
-							Hidden:                      pointy.Bool(false),
+							Hidden:                      pointer.Get(false),
 							Hostname:                    "example",
 							LogPath:                     "/log/configRS",
 							LogDestination:              file,
 							Port:                        2,
-							Priority:                    pointy.Float64(1),
+							Priority:                    pointer.Get[float64](1),
 							ProcessType:                 mongod,
-							SlaveDelay:                  pointy.Float64(1),
-							SecondaryDelaySecs:          pointy.Float64(1),
-							Votes:                       pointy.Float64(1),
+							SlaveDelay:                  pointer.Get[float64](1),
+							SecondaryDelaySecs:          pointer.Get[float64](1),
+							Votes:                       pointer.Get[float64](1),
 							FeatureCompatibilityVersion: "4.2",
 							Version:                     "4.2.2",
 							Name:                        name + "_configRS_1",

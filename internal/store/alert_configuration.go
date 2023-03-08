@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/openlyinc/pointy"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -126,10 +126,10 @@ func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) 
 func (s *Store) EnableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointy.Bool(true))
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(true))
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointy.Bool(true))
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(true))
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -140,10 +140,10 @@ func (s *Store) EnableAlertConfiguration(projectID, id string) (*atlas.AlertConf
 func (s *Store) DisableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointy.Bool(false))
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(false))
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointy.Bool(false))
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(false))
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

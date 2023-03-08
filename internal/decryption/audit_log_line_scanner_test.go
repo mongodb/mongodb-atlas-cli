@@ -24,7 +24,7 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/keyproviders"
-	"github.com/openlyinc/pointy"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 )
 
 func buildExpectedLog() []*AuditLogLine {
@@ -38,8 +38,8 @@ func buildExpectedLog() []*AuditLogLine {
 	return []*AuditLogLine{
 		{
 			TS:              &ts,
-			Version:         pointy.String("0.0"),
-			CompressionMode: pointy.String("zstd"),
+			Version:         pointer.Get("0.0"),
+			CompressionMode: pointer.Get("zstd"),
 			KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 				Provider: &provider,
 				Filename: "localKey",
@@ -51,7 +51,7 @@ func buildExpectedLog() []*AuditLogLine {
 		{
 			TS:              &tsLog,
 			AuditRecordType: recordTypeLog,
-			Log:             pointy.String("0QjwufYIydvNuDXTAQAAAAEAAAAAAAAAUZaMkB7yYllyHE8zES4A+BK5HODkhWjTBT9Yq/vwG3Tv8W4kEgED40aDMp8LLQbWzO/gTC+MzGSnHFqer6DgW9T1a7g4GqLlZBmP9WJhYxM+2yDURVsKuoghKlWlosXVGgd1GPD7PexRk8gytjVeFFxYTolPOwbLeek3feaMT1vThflfkAefc+VhUSfxkctX8NKvtY1CLLjrOyzXEG0OOBainbXiybCAyszDC9WdL0Cg8wx5kn4LXQHshFjCWA8GMIWQ8MNU7dmhx1mcEoKGrpdVeP/yQNOxSjkKDrC2o1P0wXigOZ8zRz/W"),
+			Log:             pointer.Get("0QjwufYIydvNuDXTAQAAAAEAAAAAAAAAUZaMkB7yYllyHE8zES4A+BK5HODkhWjTBT9Yq/vwG3Tv8W4kEgED40aDMp8LLQbWzO/gTC+MzGSnHFqer6DgW9T1a7g4GqLlZBmP9WJhYxM+2yDURVsKuoghKlWlosXVGgd1GPD7PexRk8gytjVeFFxYTolPOwbLeek3feaMT1vThflfkAefc+VhUSfxkctX8NKvtY1CLLjrOyzXEG0OOBainbXiybCAyszDC9WdL0Cg8wx5kn4LXQHshFjCWA8GMIWQ8MNU7dmhx1mcEoKGrpdVeP/yQNOxSjkKDrC2o1P0wXigOZ8zRz/W"),
 		},
 	}
 }

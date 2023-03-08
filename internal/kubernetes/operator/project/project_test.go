@@ -24,11 +24,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
@@ -59,7 +58,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			Created:                   "",
 			RegionUsageRestrictions:   "",
 			Links:                     nil,
-			WithDefaultAlertsSettings: pointers.MakePtr(false),
+			WithDefaultAlertsSettings: pointer.Get(false),
 		}
 
 		ipAccessLists := &mongodbatlas.ProjectIPAccessLists{
@@ -78,10 +77,10 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 
 		auditing := &mongodbatlas.Auditing{
-			AuditAuthorizationSuccess: pointers.MakePtr(true),
+			AuditAuthorizationSuccess: pointer.Get(true),
 			AuditFilter:               "TestFilter",
 			ConfigurationType:         "TestConfigType",
-			Enabled:                   pointers.MakePtr(true),
+			Enabled:                   pointer.Get(true),
 		}
 
 		cpas := &mongodbatlas.CloudProviderAccessRoles{
@@ -104,7 +103,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			AwsKms:        mongodbatlas.AwsKms{},
 			AzureKeyVault: mongodbatlas.AzureKeyVault{},
 			GoogleCloudKms: mongodbatlas.GoogleCloudKms{
-				Enabled:              pointers.MakePtr(true),
+				Enabled:              pointer.Get(true),
 				ServiceAccountKey:    "TestServiceAccountKey",
 				KeyVersionResourceID: "TestKeyVersionResourceID",
 			},
@@ -125,10 +124,10 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		mw := &mongodbatlas.MaintenanceWindow{
 			DayOfWeek:            1,
-			HourOfDay:            pointers.MakePtr(10),
-			StartASAP:            pointers.MakePtr(false),
+			HourOfDay:            pointer.Get(10),
+			StartASAP:            pointer.Get(false),
 			NumberOfDeferrals:    0,
-			AutoDeferOnceEnabled: pointers.MakePtr(false),
+			AutoDeferOnceEnabled: pointer.Get(false),
 		}
 
 		peeringConnections := []mongodbatlas.Peer{
@@ -178,7 +177,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		alertConfigs := []mongodbatlas.AlertConfiguration{
 			{
 				EventTypeName: "TestEventTypeName",
-				Enabled:       pointers.MakePtr(true),
+				Enabled:       pointer.Get(true),
 				Matchers: []mongodbatlas.Matcher{
 					{
 						FieldName: "TestFieldName",
@@ -204,9 +203,9 @@ func TestBuildAtlasProject(t *testing.T) {
 						ChannelName:         "TestChannelName",
 						DatadogAPIKey:       "TestDatadogAPIKey",
 						DatadogRegion:       "TestDatadogRegion",
-						DelayMin:            pointers.MakePtr(5),
+						DelayMin:            pointer.Get(5),
 						EmailAddress:        "TestEmail@mongodb.com",
-						EmailEnabled:        pointers.MakePtr(true),
+						EmailEnabled:        pointer.Get(true),
 						FlowdockAPIToken:    "TestFlowDockApiToken",
 						FlowName:            "TestFlowName",
 						IntervalMin:         0,
@@ -215,7 +214,7 @@ func TestBuildAtlasProject(t *testing.T) {
 						OpsGenieRegion:      "TestGenieRegion",
 						OrgName:             "TestOrgName",
 						ServiceKey:          "TestServiceKey",
-						SMSEnabled:          pointers.MakePtr(true),
+						SMSEnabled:          pointer.Get(true),
 						TeamID:              "TestTeamID",
 						TeamName:            "TestTeamName",
 						TypeName:            "TestTypeName",
@@ -229,11 +228,11 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 
 		projectSettings := &mongodbatlas.ProjectSettings{
-			IsCollectDatabaseSpecificsStatisticsEnabled: pointers.MakePtr(true),
-			IsDataExplorerEnabled:                       pointers.MakePtr(true),
-			IsPerformanceAdvisorEnabled:                 pointers.MakePtr(true),
-			IsRealtimePerformancePanelEnabled:           pointers.MakePtr(true),
-			IsSchemaAdvisorEnabled:                      pointers.MakePtr(true),
+			IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
+			IsDataExplorerEnabled:                       pointer.Get(true),
+			IsPerformanceAdvisorEnabled:                 pointer.Get(true),
+			IsRealtimePerformancePanelEnabled:           pointer.Get(true),
+			IsSchemaAdvisorEnabled:                      pointer.Get(true),
 		}
 
 		customRoles := []mongodbatlas.CustomDBRole{
@@ -243,9 +242,9 @@ func TestBuildAtlasProject(t *testing.T) {
 						Action: "Action-1",
 						Resources: []mongodbatlas.Resource{
 							{
-								Collection: pointers.MakePtr("Collection-1"),
-								DB:         pointers.MakePtr("DB-1"),
-								Cluster:    pointers.MakePtr(true),
+								Collection: pointer.Get("Collection-1"),
+								DB:         pointer.Get("DB-1"),
+								Cluster:    pointer.Get(true),
 							},
 						},
 					},
@@ -429,9 +428,9 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 				MaintenanceWindow: project.MaintenanceWindow{
 					DayOfWeek: mw.DayOfWeek,
-					HourOfDay: pointers.PtrValOrDefault(mw.HourOfDay, 0),
-					AutoDefer: pointers.PtrValOrDefault(mw.AutoDeferOnceEnabled, false),
-					StartASAP: pointers.PtrValOrDefault(mw.StartASAP, false),
+					HourOfDay: pointer.GetOrDefault(mw.HourOfDay, 0),
+					AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
+					StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
 					Defer:     false,
 				},
 				PrivateEndpoints: []atlasV1.PrivateEndpoint{
@@ -689,10 +688,10 @@ func Test_buildAuditing(t *testing.T) {
 	auditingProvider := mocks.NewMockAuditingDescriber(ctl)
 	t.Run("Can convert Auditing", func(t *testing.T) {
 		data := &mongodbatlas.Auditing{
-			AuditAuthorizationSuccess: pointers.MakePtr(true),
+			AuditAuthorizationSuccess: pointer.Get(true),
 			AuditFilter:               "TestFilter",
 			ConfigurationType:         "TestType",
-			Enabled:                   pointers.MakePtr(true),
+			Enabled:                   pointer.Get(true),
 		}
 
 		auditingProvider.EXPECT().Auditing(projectID).Return(data, nil)
@@ -762,13 +761,13 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 		data := &mongodbatlas.EncryptionAtRest{
 			GroupID: "TestGroupID",
 			AwsKms: mongodbatlas.AwsKms{
-				Enabled:             pointers.MakePtr(true),
+				Enabled:             pointer.Get(true),
 				AccessKeyID:         "TestAccessKey",
 				SecretAccessKey:     "TestSecretAccessKey",
 				CustomerMasterKeyID: "TestCustomerMasterKeyID",
 				Region:              "US_EAST_1",
 				RoleID:              "TestRoleID",
-				Valid:               pointers.MakePtr(true),
+				Valid:               pointer.Get(true),
 			},
 			AzureKeyVault:  mongodbatlas.AzureKeyVault{},
 			GoogleCloudKms: mongodbatlas.GoogleCloudKms{},
@@ -805,7 +804,7 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 			AwsKms:        mongodbatlas.AwsKms{},
 			AzureKeyVault: mongodbatlas.AzureKeyVault{},
 			GoogleCloudKms: mongodbatlas.GoogleCloudKms{
-				Enabled:              pointers.MakePtr(true),
+				Enabled:              pointer.Get(true),
 				ServiceAccountKey:    "TestServiceAccountKey",
 				KeyVersionResourceID: "TestVersionResourceID",
 			},
@@ -836,7 +835,7 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 			GroupID: "TestGroupID",
 			AwsKms:  mongodbatlas.AwsKms{},
 			AzureKeyVault: mongodbatlas.AzureKeyVault{
-				Enabled:           pointers.MakePtr(true),
+				Enabled:           pointer.Get(true),
 				ClientID:          "TestClientID",
 				AzureEnvironment:  "TestAzureEnv",
 				SubscriptionID:    "TestSubID",
@@ -1022,10 +1021,10 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 	t.Run("Can convert maintenance window", func(t *testing.T) {
 		mw := &mongodbatlas.MaintenanceWindow{
 			DayOfWeek:            3,
-			HourOfDay:            pointers.MakePtr(10),
-			StartASAP:            pointers.MakePtr(false),
+			HourOfDay:            pointer.Get(10),
+			StartASAP:            pointer.Get(false),
 			NumberOfDeferrals:    0,
-			AutoDeferOnceEnabled: pointers.MakePtr(false),
+			AutoDeferOnceEnabled: pointer.Get(false),
 		}
 
 		mwProvider.EXPECT().MaintenanceWindow(projectID).Return(mw, nil)
@@ -1221,11 +1220,11 @@ func Test_buildProjectSettings(t *testing.T) {
 	settingsProvider := mocks.NewMockProjectSettingsDescriber(ctl)
 	t.Run("Can convert project settings", func(t *testing.T) {
 		projectSettings := mongodbatlas.ProjectSettings{
-			IsCollectDatabaseSpecificsStatisticsEnabled: pointers.MakePtr(true),
-			IsDataExplorerEnabled:                       pointers.MakePtr(true),
-			IsPerformanceAdvisorEnabled:                 pointers.MakePtr(true),
-			IsRealtimePerformancePanelEnabled:           pointers.MakePtr(true),
-			IsSchemaAdvisorEnabled:                      pointers.MakePtr(true),
+			IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
+			IsDataExplorerEnabled:                       pointer.Get(true),
+			IsPerformanceAdvisorEnabled:                 pointer.Get(true),
+			IsRealtimePerformancePanelEnabled:           pointer.Get(true),
+			IsSchemaAdvisorEnabled:                      pointer.Get(true),
 		}
 		settingsProvider.EXPECT().ProjectSettings(projectID).Return(&projectSettings, nil)
 
@@ -1258,9 +1257,9 @@ func Test_buildCustomRoles(t *testing.T) {
 						Action: "TestAction",
 						Resources: []mongodbatlas.Resource{
 							{
-								Collection: pointers.MakePtr("TestCollection"),
-								DB:         pointers.MakePtr("TestDB"),
-								Cluster:    pointers.MakePtr(true),
+								Collection: pointer.Get("TestCollection"),
+								DB:         pointer.Get("TestDB"),
+								Cluster:    pointer.Get(true),
 							},
 						},
 					},

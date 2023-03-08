@@ -23,7 +23,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/openlyinc/pointy"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -50,12 +50,12 @@ func TestConfigList_Run(t *testing.T) {
 			HostID:                 "test",
 			ReplicaSetName:         "test",
 			MetricName:             "test",
-			Enabled:                pointy.Bool(true),
+			Enabled:                pointer.Get(true),
 			ClusterID:              "test",
 			ClusterName:            "test",
 			SourceTypeName:         "test",
 			CurrentValue: &mongodbatlas.CurrentValue{
-				Number: pointy.Float64(1.2),
+				Number: pointer.Get(1.2),
 				Units:  "test",
 			},
 			Matchers:        nil,

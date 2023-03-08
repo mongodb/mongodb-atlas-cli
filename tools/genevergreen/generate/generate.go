@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	runOn    = "ubuntu1804-small"
+	runOn    = "ubuntu2004-small"
 	atlascli = "atlascli"
 	mongocli = "mongocli"
 )

@@ -15,7 +15,7 @@
 package fixture
 
 import (
-	"github.com/openlyinc/pointy"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -134,8 +134,8 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 						Hidden:             false,
 						Host:               "myReplicaSet_1",
 						Priority:           1,
-						SlaveDelay:         pointy.Float64(1),
-						SecondaryDelaySecs: pointy.Float64(1),
+						SlaveDelay:         pointer.Get[float64](1),
+						SecondaryDelaySecs: pointer.Get[float64](1),
 						Votes:              1,
 					},
 					{
@@ -145,8 +145,8 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 						Hidden:             false,
 						Host:               "myReplicaSet_2",
 						Priority:           1,
-						SlaveDelay:         pointy.Float64(1),
-						SecondaryDelaySecs: pointy.Float64(1),
+						SlaveDelay:         pointer.Get[float64](1),
+						SecondaryDelaySecs: pointer.Get[float64](1),
 						Votes:              1,
 					},
 					{
@@ -156,8 +156,8 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 						Hidden:             false,
 						Host:               "myReplicaSet_3",
 						Priority:           1,
-						SlaveDelay:         pointy.Float64(1),
-						SecondaryDelaySecs: pointy.Float64(1),
+						SlaveDelay:         pointer.Get[float64](1),
+						SecondaryDelaySecs: pointer.Get[float64](1),
 						Votes:              1,
 					},
 				},
@@ -214,7 +214,7 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 					},
 					Replication: &opsmngr.Replication{
 						ReplSetName: name,
-						OplogSizeMB: pointy.Int(10),
+						OplogSizeMB: pointer.Get(10),
 					},
 					Sharding: nil,
 					Storage: &opsmngr.Storage{
@@ -256,8 +256,8 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 						Hidden:             false,
 						Host:               name + "_0",
 						Priority:           1,
-						SlaveDelay:         pointy.Float64(1),
-						SecondaryDelaySecs: pointy.Float64(1),
+						SlaveDelay:         pointer.Get[float64](1),
+						SecondaryDelaySecs: pointer.Get[float64](1),
 						Votes:              1,
 					},
 				},
@@ -362,8 +362,8 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 						Hidden:             false,
 						Host:               name + "_myShard_0_0",
 						Priority:           1,
-						SlaveDelay:         pointy.Float64(1),
-						SecondaryDelaySecs: pointy.Float64(1),
+						SlaveDelay:         pointer.Get[float64](1),
+						SecondaryDelaySecs: pointer.Get[float64](1),
 						Votes:              1,
 					},
 				},
@@ -379,8 +379,8 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 						Hidden:             false,
 						Host:               name + "_configRS_1",
 						Priority:           1,
-						SlaveDelay:         pointy.Float64(1),
-						SecondaryDelaySecs: pointy.Float64(1),
+						SlaveDelay:         pointer.Get[float64](1),
+						SecondaryDelaySecs: pointer.Get[float64](1),
 						Votes:              1,
 					},
 				},

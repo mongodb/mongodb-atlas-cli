@@ -41,7 +41,7 @@ func Execute(ctx context.Context) {
 	// append here to avoid a recursive link on generated docs
 	rootCmd.Long += `
 
-For more information, refer to the docs: https://www.mongodb.com/docs/mongocli/stable/`
+To learn more, see our documentation: https://www.mongodb.com/docs/mongocli/stable/`
 	if err := rootCmd.ExecuteContext(ctx); err != nil {
 		os.Exit(1)
 	}

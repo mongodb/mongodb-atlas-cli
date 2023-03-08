@@ -110,7 +110,7 @@ var cipherSuites = []uint16{
 	tls.TLS_RSA_WITH_AES_128_CBC_SHA256,
 }
 
-// Client client used to communicate with a KMIP speaking server.
+// Client is used to communicate with a KMIP speaking server.
 type Client struct {
 	version       Version
 	tlsConfig     tls.Config

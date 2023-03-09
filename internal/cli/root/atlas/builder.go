@@ -57,6 +57,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/users"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/performanceadvisor"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
@@ -219,6 +220,7 @@ func Builder() *cobra.Command {
 		registerCmd,
 		figautocomplete.Builder(),
 		kubernetes.Builder(),
+		plugin.Builder(),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)

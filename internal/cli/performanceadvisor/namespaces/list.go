@@ -77,7 +77,9 @@ func ListBuilder() *cobra.Command {
 		Short: "Return up to 20 namespaces for collections experiencing slow queries on the specified host.",
 		Long: `Namespaces appear in the following format: {database}.{collection}.
 		
-If you don't set the duration option or the since option, this command returns data from the last 24 hours.`,
+If you don't set the duration option or the since option, this command returns data from the last 24 hours.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of namespaces for collections with slow queries for the atlas-111ggi-shard-00-00.111xx.mongodb.net:27017 host in the project with the ID 5e2211c17a3e5a48f5497de3:

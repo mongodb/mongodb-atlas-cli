@@ -65,6 +65,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "Return all users for an organization.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all users for the organization with the ID 5e2211c17a3e5a48f5497de3:
   %s organizations users list --orgId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
@@ -94,8 +95,9 @@ func ListBuilder() *cobra.Command {
 func Builder() *cobra.Command {
 	const use = "users"
 	cmd := &cobra.Command{
-		Use:     use,
-		Short:   fmt.Sprintf("Manage your %s users.", cli.DescriptionServiceName()),
+		Use: use,
+		Short: fmt.Sprintf("Manage your %s users.",
+			cli.DescriptionServiceName()),
 		Aliases: cli.GenerateAliases(use),
 	}
 

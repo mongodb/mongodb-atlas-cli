@@ -69,6 +69,7 @@ func DescribeBuilder() *cobra.Command {
 			return validate.ObjectID(args[0])
 		}),
 		Short: "Return the details for the specified AWS private endpoints for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"privateEndpointIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.",
 		},

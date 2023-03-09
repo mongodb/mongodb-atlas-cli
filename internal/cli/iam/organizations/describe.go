@@ -63,6 +63,7 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"show"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return the details for the specified organizations.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies the organization.",
 		},

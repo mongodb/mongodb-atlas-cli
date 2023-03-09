@@ -95,6 +95,7 @@ func CreateBuilder() *cobra.Command {
 		Use:     "create <endpointGroupId>",
 		Aliases: []string{"add"},
 		Short:   "Create a GCP private endpoint interface.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",

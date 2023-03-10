@@ -230,16 +230,16 @@ func newReplicaSetProcessConfig(rs *opsmngr.Member, p *opsmngr.Process) *Process
 	}
 	if p.DefaultRWConcern != nil {
 		pc.DefaultRWConcern = &DefaultRWConcern{}
-		if pc.DefaultRWConcern.DefaultReadConcern != nil {
+		if p.DefaultRWConcern.DefaultReadConcern != nil {
 			pc.DefaultRWConcern.DefaultReadConcern = &DefaultReadConcern{
-				Level: pc.DefaultRWConcern.DefaultReadConcern.Level,
+				Level: p.DefaultRWConcern.DefaultReadConcern.Level,
 			}
 		}
-		if pc.DefaultRWConcern.DefaultWriteConcern != nil {
+		if p.DefaultRWConcern.DefaultWriteConcern != nil {
 			pc.DefaultRWConcern.DefaultWriteConcern = &DefaultWriteConcern{
-				W:        pc.DefaultRWConcern.DefaultWriteConcern.W,
-				J:        pc.DefaultRWConcern.DefaultWriteConcern.J,
-				Wtimeout: pc.DefaultRWConcern.DefaultWriteConcern.Wtimeout,
+				W:        p.DefaultRWConcern.DefaultWriteConcern.W,
+				J:        p.DefaultRWConcern.DefaultWriteConcern.J,
+				Wtimeout: p.DefaultRWConcern.DefaultWriteConcern.Wtimeout,
 			}
 		}
 	}
@@ -267,16 +267,16 @@ func newMongosProcessConfig(p *opsmngr.Process) *ProcessConfig {
 	}
 	if p.DefaultRWConcern != nil {
 		pc.DefaultRWConcern = &DefaultRWConcern{}
-		if pc.DefaultRWConcern.DefaultReadConcern != nil {
+		if p.DefaultRWConcern.DefaultReadConcern != nil {
 			pc.DefaultRWConcern.DefaultReadConcern = &DefaultReadConcern{
-				Level: pc.DefaultRWConcern.DefaultReadConcern.Level,
+				Level: p.DefaultRWConcern.DefaultReadConcern.Level,
 			}
 		}
-		if pc.DefaultRWConcern.DefaultWriteConcern != nil {
+		if p.DefaultRWConcern.DefaultWriteConcern != nil {
 			pc.DefaultRWConcern.DefaultWriteConcern = &DefaultWriteConcern{
-				W:        pc.DefaultRWConcern.DefaultWriteConcern.W,
-				J:        pc.DefaultRWConcern.DefaultWriteConcern.J,
-				Wtimeout: pc.DefaultRWConcern.DefaultWriteConcern.Wtimeout,
+				W:        p.DefaultRWConcern.DefaultWriteConcern.W,
+				J:        p.DefaultRWConcern.DefaultWriteConcern.J,
+				Wtimeout: p.DefaultRWConcern.DefaultWriteConcern.Wtimeout,
 			}
 		}
 	}
@@ -485,6 +485,7 @@ func (p *ProcessConfig) process() *opsmngr.Process {
 	process := &opsmngr.Process{
 		AuthSchemaVersion:                authSchemaVersion,
 		BackupRestoreCheckpointTimestamp: p.BackupRestoreCheckpointTimestamp,
+		DefaultRWConcern:                 p.defaultRW(),
 		Disabled:                         p.Disabled,
 		ManualMode:                       false,
 		ProcessType:                      p.ProcessType,

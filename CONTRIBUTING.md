@@ -151,3 +151,31 @@ Reviewers, please ensure that the CLA has been signed by referring to [the contr
 
 For changes that involve user facing copy please include `docs-cloud-team` as a reviewer.
 
+
+## Debugging in VSCode
+
+To debut in VSCode you need to create an debug configuration for the command with required arguments.
+Run following commands to 
+
+```
+touch .vscode/launch.json
+```
+Then put following configuration into the file.
+Review and replace command name and arguments depending on the command you are using.
+{
+    "configurations": [
+        {
+            "name": "Login Command",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/atlas",
+            "env": {},
+            "args": [
+              "login"
+            ]
+      },
+    ]
+} 
+```
+

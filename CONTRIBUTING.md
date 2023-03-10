@@ -162,6 +162,8 @@ touch .vscode/launch.json
 ```
 Then put following configuration into the file.
 Review and replace command name and arguments depending on the command you are using.
+
+```json
 {
     "configurations": [
         {
@@ -176,6 +178,7 @@ Review and replace command name and arguments depending on the command you are u
             ]
       },
     ]
-} 
+} ```
+
 ```
 

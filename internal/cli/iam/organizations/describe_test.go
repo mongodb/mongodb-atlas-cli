@@ -31,7 +31,7 @@ func TestDescribe_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		Organization(gomock.Eq("5a0a1e7e0f2912c554080adc")).
-		Return(&atlasv2.ApiOrganizationView{}, nil).
+		Return(&atlasv2.Organization{}, nil).
 		Times(1)
 
 	opts := &DescribeOpts{

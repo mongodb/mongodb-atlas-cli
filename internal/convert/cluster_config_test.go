@@ -27,6 +27,7 @@ import (
 
 func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 	fipsMode := true
+	defaultWriteConcernJ := true
 	testCases := map[string]struct {
 		current  *opsmngr.AutomationConfig
 		expected *opsmngr.AutomationConfig
@@ -497,6 +498,146 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							SystemLog: opsmngr.SystemLog{
 								Destination: file,
 								Path:        "/data/db/mongodb.log",
+							},
+						},
+						LogRotate: &opsmngr.LogRotate{
+							SizeThresholdMB:  1000,
+							TimeThresholdHrs: 24,
+						},
+						AuthSchemaVersion:           5,
+						Name:                        "replica_set_1_1",
+						Disabled:                    false,
+						FeatureCompatibilityVersion: "4.2",
+						Hostname:                    "host1",
+						ManualMode:                  false,
+						ProcessType:                 "mongod",
+						Version:                     "4.2.2",
+					},
+				},
+				ReplicaSets: []*opsmngr.ReplicaSet{
+					// New
+					{
+						ID:              "replica_set_1",
+						ProtocolVersion: "1",
+						Members: []opsmngr.Member{
+							{
+								ID:           1,
+								ArbiterOnly:  false,
+								BuildIndexes: true,
+								Hidden:       false,
+								Host:         "replica_set_1_1",
+								Priority:     1,
+								Votes:        1,
+							},
+						},
+					},
+				},
+			},
+		},
+		"update defaultRWConcern on an existing replica set process": {
+			current: fixture.AutomationConfigWithOneReplicaSet("replica_set_1", false),
+			changes: &ClusterConfig{
+				RSConfig: RSConfig{
+					FeatureCompatibilityVersion: "4.2",
+					Name:                        "replica_set_1",
+					Version:                     "4.2.2",
+					Processes: []*ProcessConfig{
+						{
+							DBPath:   "/data/db/",
+							Hostname: "host1",
+							LogPath:  "/data/db/mongodb.log",
+							Port:     27017,
+							DefaultRWConcern: &DefaultRWConcern{
+								DefaultReadConcern: &DefaultReadConcern{
+									Level: "minority",
+								},
+								DefaultWriteConcern: &DefaultWriteConcern{
+									W:        1,
+									J:        &defaultWriteConcernJ,
+									Wtimeout: 1,
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: &opsmngr.AutomationConfig{
+				Auth: opsmngr.Auth{
+					DeploymentAuthMechanisms: []string{},
+				},
+				Processes: []*opsmngr.Process{
+					// Old
+					{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{
+								Port: 27017,
+								TLS: &opsmngr.TLS{
+									CAFile:                     "CAFile",
+									CertificateKeyFile:         "CertificateKeyFile",
+									CertificateKeyFilePassword: "CertificateKeyFilePassword",
+									CertificateSelector:        "CertificateSelector",
+									ClusterCertificateSelector: "ClusterCertificateSelector",
+									ClusterFile:                "ClusterFile",
+									ClusterPassword:            "ClusterPassword",
+									CRLFile:                    "CRLFile",
+									DisabledProtocols:          "DisabledProtocols",
+									FIPSMode:                   &fipsMode,
+									Mode:                       "Mode",
+									PEMKeyFile:                 "PEMKeyFile",
+								},
+							},
+							Replication: &opsmngr.Replication{},
+							Storage: &opsmngr.Storage{
+								DBPath: "/data/db/",
+							},
+							SystemLog: opsmngr.SystemLog{
+								Destination: file,
+								Path:        "/data/db/mongodb.log",
+							},
+							AuditLog: &opsmngr.AuditLog{
+								Destination: file,
+								Path:        "/data/db/audit.log",
+							},
+							Security: &map[string]interface{}{
+								"test": "test",
+							},
+						},
+						LogRotate: &opsmngr.LogRotate{
+							SizeThresholdMB:  1000,
+							TimeThresholdHrs: 24,
+						},
+						AuthSchemaVersion:           5,
+						Name:                        "replica_set_1_0",
+						Disabled:                    true,
+						FeatureCompatibilityVersion: "4.2",
+						Hostname:                    "host0",
+						ManualMode:                  false,
+						ProcessType:                 "mongod",
+						Version:                     "4.2.2",
+					},
+					// New
+					{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 27017},
+							Replication: &opsmngr.Replication{
+								ReplSetName: "replica_set_1",
+							},
+							Storage: &opsmngr.Storage{
+								DBPath: "/data/db/",
+							},
+							SystemLog: opsmngr.SystemLog{
+								Destination: file,
+								Path:        "/data/db/mongodb.log",
+							},
+						},
+						DefaultRWConcern: &opsmngr.DefaultRWConcern{
+							DefaultReadConcern: &opsmngr.DefaultReadConcern{
+								Level: "minority",
+							},
+							DefaultWriteConcern: &opsmngr.DefaultWriteConcern{
+								W:        1,
+								J:        &defaultWriteConcernJ,
+								Wtimeout: 1,
 							},
 						},
 						LogRotate: &opsmngr.LogRotate{

@@ -63,6 +63,7 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"show", "get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return the details for the specified project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies the project.",
 		},

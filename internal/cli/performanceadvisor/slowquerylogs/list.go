@@ -84,7 +84,9 @@ func ListBuilder() *cobra.Command {
 		Short: "Return log lines for slow queries that the Performance Advisor and Query Profiler identified.",
 		Long: `The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. The threshold for slow queries varies based on the average time of operations on your cluster to provide recommendations pertinent to your workload.
 		
-If you don't set the duration option or the since option, this command returns data from the last 24 hours.`,
+If you don't set the duration option or the since option, this command returns data from the last 24 hours.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of log lines for collections with slow queries for the atlas-111ggi-shard-00-00.111xx.mongodb.net:27017 host in the project with the ID 5e2211c17a3e5a48f5497de3:

@@ -16,6 +16,7 @@ package ldap
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -61,6 +62,7 @@ func StatusBuilder() *cobra.Command {
 		Use:   "status <requestId>",
 		Args:  require.ExactValidArgs(1),
 		Short: "Get the status of an LDAP configuration request.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"requestIdDesc": "ID of the request to verify an LDAP configuration.",
 		},

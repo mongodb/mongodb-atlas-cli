@@ -36,6 +36,10 @@ import (
 func Execute() {
 	ctx := telemetry.NewContext()
 	rootCmd := atlas.Builder()
+	// append here to avoid a recursive link on generated docs
+	rootCmd.Long += `
+
+To learn more, see our documentation: https://www.mongodb.com/docs/atlas/cli/stable/`
 	if cmd, err := rootCmd.ExecuteContextC(ctx); err != nil {
 		if !telemetry.StartedTrackingCommand() {
 			telemetry.StartTrackingCommand(cmd, os.Args[1:])

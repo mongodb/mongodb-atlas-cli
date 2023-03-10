@@ -54,6 +54,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <invitationId>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified pending invitation to your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project User Admin"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"invitationIdDesc": "Unique 24-digit string that identifies the invitation.",

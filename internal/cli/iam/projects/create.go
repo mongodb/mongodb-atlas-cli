@@ -145,8 +145,10 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create <projectName>",
 		Short: "Create a project in your organization.",
-		Long:  `Projects group clusters into logical collections that support an application environment, workload, or both. Each project can have its own users, teams, security, and alert settings.`,
-		Args:  require.ExactArgs(1),
+		Long: `Projects group clusters into logical collections that support an application environment, workload, or both. Each project can have its own users, teams, security, and alert settings.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"projectNameDesc": "Label that identifies the project.",
 		},

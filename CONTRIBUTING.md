@@ -91,6 +91,36 @@ We provide a git pre-commit hook to format and check the code, to install it run
 We use [mockgen](https://github.com/golang/mock) to handle mocking in our unit tests.
 If you need a new mock please update or add the `//go:generate` instruction to the appropriate file.
 
+#### Debugging in VSCode
+
+To debut in VSCode you need to create an debug configuration for the command with required arguments.
+Run following commands to 
+
+```
+touch .vscode/launch.json
+```
+Then put following configuration into the file.
+Review and replace command name and arguments depending on the command you are using.
+
+```json
+{
+    "configurations": [
+        {
+            "name": "Login Command",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/atlas",
+            "env": {},
+            "args": [
+              "login"
+            ]
+      },
+    ]
+} 
+
+```
+
 ### API Interactions
 
 Atlas CLI and MongoDB CLI use [go-client-mongodb-atlas](https://github.com/mongodb/go-client-mongodb-atlas/) 
@@ -150,35 +180,4 @@ To run Snyk locally please follow their [CLI reference](https://support.snyk.io/
 Reviewers, please ensure that the CLA has been signed by referring to [the contributors tool](https://contributors.corp.mongodb.com/) (internal link).
 
 For changes that involve user facing copy please include `docs-cloud-team` as a reviewer.
-
-
-## Debugging in VSCode
-
-To debut in VSCode you need to create an debug configuration for the command with required arguments.
-Run following commands to 
-
-```
-touch .vscode/launch.json
-```
-Then put following configuration into the file.
-Review and replace command name and arguments depending on the command you are using.
-
-```json
-{
-    "configurations": [
-        {
-            "name": "Login Command",
-            "type": "go",
-            "request": "launch",
-            "mode": "auto",
-            "program": "${workspaceFolder}/cmd/atlas",
-            "env": {},
-            "args": [
-              "login"
-            ]
-      },
-    ]
-} 
-
-```
 

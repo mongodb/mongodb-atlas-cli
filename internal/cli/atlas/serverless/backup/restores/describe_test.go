@@ -17,12 +17,15 @@
 package restores
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -36,7 +39,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		TargetClusterName: "ClusterTest",
 		DeliveryType:      "test type",
 		ExpiresAt:         "2023-01-01",
-		DeliveryURL:       string[]{"test url"},
+		DeliveryURL:       []string{"test url"},
 	}
 
 	buf := new(bytes.Buffer)
@@ -59,8 +62,8 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	assert.NoError(t, describeOpts.Run())
 
-	assert.Equal(t, `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT	URLs
-test	test2	ClusterTest	test type	2023-01-01	test url
+	assert.Equal(t, `ID     SNAPSHOT   CLUSTER       TYPE        EXPIRES AT   URLs
+test   test2      ClusterTest   test type   2023-01-01   test url
 `, buf.String())
 }
 

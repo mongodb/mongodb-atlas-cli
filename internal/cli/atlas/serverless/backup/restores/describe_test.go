@@ -40,7 +40,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		NewMockServerlessRestoreJobsDescriber(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.id).
+		ServerlessRestoreJob(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.id).
 		Return(expected, nil).
 		Times(1)
 

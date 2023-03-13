@@ -188,15 +188,18 @@ func generateRSConfigUpdate(filename string) error {
 		return err
 	}
 
-	cluster.Processes[0].DefaultRWConcern = &convert.DefaultRWConcern{
-		DefaultReadConcern: &convert.DefaultReadConcern{
-			Level: "minority",
-		},
-		DefaultWriteConcern: &convert.DefaultWriteConcern{
-			W:        1,
-			Wtimeout: 0,
-		},
+	for i := 0; i < len(cluster.Processes); i++ {
+		cluster.Processes[i].DefaultRWConcern = &convert.DefaultRWConcern{
+			DefaultReadConcern: &convert.DefaultReadConcern{
+				Level: "minority",
+			},
+			DefaultWriteConcern: &convert.DefaultWriteConcern{
+				W:        1,
+				Wtimeout: 0,
+			},
+		}
 	}
+
 	out, err := os.Create(filename)
 	if err != nil {
 		return err

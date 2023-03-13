@@ -62,8 +62,7 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Orga
 func (s *Store) Organization(id string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, res, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
-		defer res.Body.Close()
+		result, _, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Get(s.ctx, id)

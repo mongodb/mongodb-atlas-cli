@@ -35,6 +35,10 @@ type ServerlessRestoreJobsLister interface {
 	ServerlessRestoreJobs(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error)
 }
 
+type ServerlessRestoreJobsDescriber interface {
+	ServerlessRestoreJob(string, string, string) (*atlas.CloudProviderSnapshotRestoreJob, error)
+}
+
 // ServerlessSnapshots encapsulates the logic to manage different cloud providers.
 func (s *Store) ServerlessSnapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshots, error) {
 	o := &atlas.SnapshotReqPathParameters{
@@ -71,6 +75,17 @@ func (s *Store) ServerlessRestoreJobs(projectID, instanceName string, opts *atla
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.ListForServerlessBackupRestore(s.ctx, projectID, instanceName, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// ServerlessRestoreJob encapsulates the logic to manage different cloud providers.
+func (s *Store) ServerlessRestoreJob(projectID, instanceName string, jobId string) (*atlas.CloudProviderSnapshotRestoreJob, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.GetForServerlessBackupRestore(s.ctx, projectID, instanceName, jobId)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

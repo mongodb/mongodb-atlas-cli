@@ -325,4 +325,5 @@ const (
 	AzureSecret                               = "azureSecret"                               // AzureSecret flag
 	AWSSessionToken                           = "awsSessionToken"                           // AWSSessionToken flag
 	APIKeyDescription                         = "apiKeyDescription"                         //nolint:gosec // APIKeyDescription flag
+	RestoreJobId                              = "restoreJobId"                              // ID of the Restore Job
 )

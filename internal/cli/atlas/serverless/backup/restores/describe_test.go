@@ -30,12 +30,25 @@ func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockServerlessRestoreJobsDescriber(ctrl)
 
-	expected := &mongodbatlas.CloudProviderSnapshotRestoreJob{}
+	expected := &mongodbatlas.CloudProviderSnapshotRestoreJob{
+		ID:                "test",
+		SnapshotID:        "test2",
+		TargetClusterName: "ClusterTest",
+		DeliveryType:      "test type",
+		ExpiresAt:         "2023-01-01",
+		DeliveryURL:       string[]{"test url"},
+	}
+
+	buf := new(bytes.Buffer)
 
 	describeOpts := &DescribeOpts{
 		store:       mockStore,
 		clusterName: "Cluster0",
 		id:          "1",
+		OutputOpts: cli.OutputOpts{
+			Template:  restoreDescribeTemplate,
+			OutWriter: buf,
+		},
 	}
 
 	mockStore.
@@ -44,9 +57,11 @@ func TestDescribeOpts_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := describeOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	assert.NoError(t, describeOpts.Run())
+
+	assert.Equal(t, `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT	URLs
+test	test2	ClusterTest	test type	2023-01-01	test url
+`, buf.String())
 }
 
 func TestDescribeBuilder(t *testing.T) {

@@ -196,11 +196,9 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.SnapshotID)
-	// Atlas uses cluster name
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.deliveryType, flag.DeliveryType, "", usage.DeliveryType)
 	cmd.Flags().StringVar(&opts.targetProjectID, flag.TargetProjectID, "", usage.TargetProjectID)
-	// Atlas uses cluster name
 	cmd.Flags().StringVar(&opts.targetClusterName, flag.TargetClusterName, "", usage.TargetClusterName)
 	cmd.Flags().Int64Var(&opts.oplogTS, flag.OplogTS, 0, usage.OplogTS)
 	cmd.Flags().Int64Var(&opts.oplogInc, flag.OplogInc, 0, usage.OplogInc)

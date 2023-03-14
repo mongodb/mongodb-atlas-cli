@@ -86,6 +86,27 @@ The following is a short list of commands that can be run in the root of the pro
 
 We provide a git pre-commit hook to format and check the code, to install it run `make link-git-hooks`.
 
+#### Debugging e2e in VSCode
+
+To debug e2e tests we can use following run configuration.
+
+
+```
+    "configurations": [
+      {
+          "name": "Run e2e test",
+          "type": "go",
+
+          "request": "launch",
+          "mode": "auto",
+          "program": "${workspaceRoot}/test/e2e/iam/project_api_keys_test.go",
+          "showLog": true,
+          "env": {},
+          "buildFlags": "-tags e2e"
+      } 
+    ]
+```
+
 #### Generating Mocks
 
 We use [mockgen](https://github.com/golang/mock) to handle mocking in our unit tests.

@@ -121,7 +121,7 @@ Review and replace command name and arguments depending on the command you are u
 
 #### Debugging e2e in VSCode
 
-To debug e2e tests we can use following run configuration:
+To debug e2e tests we can use following run configuration
 
 ```json
       {
@@ -137,6 +137,9 @@ To debug e2e tests we can use following run configuration:
           "buildFlags": "-tags e2e"
       } 
 ```
+
+Before running command makesure you run `make build-all` and adjusted program to run your desired e2e test
+
 
 ### API Interactions
 

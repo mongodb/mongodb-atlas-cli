@@ -126,6 +126,9 @@ To debug e2e tests we can use following run configuration.
           "request": "launch",
           "mode": "auto",
           "program": "${workspaceRoot}/test/e2e/iam/project_api_keys_test.go",
+          "env": {
+                "MCLI_E2E_BINARY": "${workspaceRoot}/bin/atlas"
+          },
           "showLog": true,
           "buildFlags": "-tags e2e"
       } 

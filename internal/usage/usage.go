@@ -397,4 +397,5 @@ dbName and collection are required only for built-in roles.`
 	OperatorVersion                           = "Version of Atlas Kubernetes Operator to generate resources for."
 	ExportID                                  = "Unique string that identifies the AWS S3 bucket to which you export your snapshots."
 	RequiredRole                              = "To use this command, you must authenticate with a user account or an API key that has the %s role."
+	RestoreJobID                              = "Unique identifier that identifies the Restore Job."
 )

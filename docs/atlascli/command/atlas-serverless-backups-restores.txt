@@ -49,11 +49,13 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`atlas-serverless-backups-restores-describe` - Describe a cloud backup restore job.
 * :ref:`atlas-serverless-backups-restores-list` - Return all cloud backup restore jobs for the specified serverless instance in your project.
 
 
 .. toctree::
    :titlesonly:
 
+   describe </command/atlas-serverless-backups-restores-describe>
    list </command/atlas-serverless-backups-restores-list>
 

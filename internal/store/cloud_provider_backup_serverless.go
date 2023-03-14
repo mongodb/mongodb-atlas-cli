@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup_serverless.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServerlessSnapshotsLister,ServerlessSnapshotsDescriber,ServerlessRestoreJobsLister,ServerlessRestoreJobsDescriber
+//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup_serverless.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServerlessSnapshotsLister,ServerlessSnapshotsDescriber,ServerlessRestoreJobsLister,ServerlessRestoreJobsDescriber,ServerlessRestoreJobsCreator
 
 type ServerlessSnapshotsLister interface {
 	ServerlessSnapshots(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshots, error)
@@ -37,6 +37,10 @@ type ServerlessRestoreJobsLister interface {
 
 type ServerlessRestoreJobsDescriber interface {
 	ServerlessRestoreJob(string, string, string) (*atlas.CloudProviderSnapshotRestoreJob, error)
+}
+
+type ServerlessRestoreJobsCreator interface {
+	ServerlessCreateRestoreJobs(string, string, *atlas.CloudProviderSnapshotRestoreJob) (*atlas.CloudProviderSnapshotRestoreJob, error)
 }
 
 // ServerlessSnapshots encapsulates the logic to manage different cloud providers.
@@ -86,6 +90,17 @@ func (s *Store) ServerlessRestoreJob(projectID, instanceName string, jobID strin
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.GetForServerlessBackupRestore(s.ctx, projectID, instanceName, jobID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// CreateRestoreJobs encapsulates the logic to manage different cloud providers.
+func (s *Store) ServerlessCreateRestoreJobs(projectID, clusterName string, request *atlas.CloudProviderSnapshotRestoreJob) (*atlas.CloudProviderSnapshotRestoreJob, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.CreateForServerlessBackupRestore(s.ctx, projectID, clusterName, request)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

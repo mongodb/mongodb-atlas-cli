@@ -117,8 +117,10 @@ Review and replace command name and arguments depending on the command you are u
             ]
       },
     ]
-    
+```    
+
 #### Debugging e2e in VSCode
+
 To debug e2e tests we can use following run configuration:
 
 ```json
@@ -129,7 +131,7 @@ To debug e2e tests we can use following run configuration:
           "mode": "auto",
           "program": "${workspaceRoot}/test/e2e/iam/project_api_keys_test.go",
           "env": {
-                "MCLI_E2E_BINARY": "${workspaceRoot}/bin/atlas"
+                "MCLI_E2E_BINARY": "${workspaceRoot}/bin/mongodbcli"
           },
           "showLog": true,
           "buildFlags": "-tags e2e"

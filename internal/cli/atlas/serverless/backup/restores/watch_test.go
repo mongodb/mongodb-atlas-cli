@@ -42,7 +42,7 @@ func TestWatchBuilder(t *testing.T) {
 
 func TestWatchOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockRestoreJobsDescriber(ctrl)
+	mockStore := mocks.NewMockServerlessRestoreJobsDescriber(ctrl)
 
 	expected := &mongodbatlas.CloudProviderSnapshotRestoreJob{
 		Failed: pointer.Get(true),
@@ -56,7 +56,7 @@ func TestWatchOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		RestoreJob(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.id).
+		ServerlessRestoreJob(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.id).
 		Return(expected, nil).
 		Times(1)
 

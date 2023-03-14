@@ -117,6 +117,7 @@ Review and replace command name and arguments depending on the command you are u
             ]
       },
     ]
+}
 ```    
 
 #### Debugging e2e in VSCode

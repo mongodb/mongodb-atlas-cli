@@ -116,10 +116,12 @@ Review and replace command name and arguments depending on the command you are u
               "login"
             ]
       },
-    ]#### Debugging e2e in VSCode
+    ]
+    
+#### Debugging e2e in VSCode
+To debug e2e tests we can use following run configuration:
 
-To debug e2e tests we can use following run configuration.
-```
+```json
       {
           "name": "Run e2e test",
           "type": "go",

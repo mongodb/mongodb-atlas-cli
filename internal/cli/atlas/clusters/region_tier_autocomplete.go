@@ -41,21 +41,21 @@ func (opts *autoCompleteOpts) autocompleteTier() autoFunc {
 		opts.parseFlags(cmd)
 		if err := validate.Credentials(); err != nil {
 			cobra.CompErrorln("no credentials")
-			return []string{}, cobra.ShellCompDirectiveError
+			return nil, cobra.ShellCompDirectiveError
 		}
 		if err := opts.ValidateProjectID(); err != nil {
 			cobra.CompErrorln("no project ID")
-			return []string{}, cobra.ShellCompDirectiveError
+			return nil, cobra.ShellCompDirectiveError
 		}
 		if err := opts.initStore(cmd.Context()); err != nil {
 			cobra.CompErrorln("store error: " + err.Error())
-			return []string{}, cobra.ShellCompDirectiveError
+			return nil, cobra.ShellCompDirectiveError
 		}
 
 		suggestions, err := opts.tierSuggestions(toComplete)
 		if err != nil {
 			cobra.CompErrorln("error fetching: " + err.Error())
-			return []string{}, cobra.ShellCompDirectiveError
+			return nil, cobra.ShellCompDirectiveError
 		}
 		return suggestions, cobra.ShellCompDirectiveDefault
 	}
@@ -89,20 +89,20 @@ func (opts *autoCompleteOpts) autocompleteRegion() autoFunc {
 		opts.parseFlags(cmd)
 		if err := validate.Credentials(); err != nil {
 			cobra.CompErrorln("no credentials")
-			return []string{}, cobra.ShellCompDirectiveError
+			return nil, cobra.ShellCompDirectiveError
 		}
 		if err := opts.ValidateProjectID(); err != nil {
 			cobra.CompErrorln("no project ID")
-			return []string{}, cobra.ShellCompDirectiveError
+			return nil, cobra.ShellCompDirectiveError
 		}
 		if err := opts.initStore(cmd.Context()); err != nil {
 			cobra.CompErrorln("store error: " + err.Error())
-			return []string{}, cobra.ShellCompDirectiveError
+			return nil, cobra.ShellCompDirectiveError
 		}
 		suggestions, err := opts.regionSuggestions(toComplete)
 		if err != nil {
 			cobra.CompErrorln("error fetching: " + err.Error())
-			return []string{}, cobra.ShellCompDirectiveError
+			return nil, cobra.ShellCompDirectiveError
 		}
 		return suggestions, cobra.ShellCompDirectiveDefault
 	}

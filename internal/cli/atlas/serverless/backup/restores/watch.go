@@ -64,11 +64,12 @@ func WatchBuilder() *cobra.Command {
 	opts := new(WatchOpts)
 	cmd := &cobra.Command{
 		Use:   "watch",
-		Short: "Watch for a backup restore job to complete.",
+		Short: "Watch the specified backup restore job until it completes..",
 		Long: `This command checks the restore job's status periodically until it reaches a completed, failed or canceled status. 
 Command finishes once one of the expected statuses are reached.
 If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
-You can interrupt the command's polling at any time with CTRL-C.`,
+You can interrupt the command's polling at any time with CTRL-C.
+` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args: require.NoArgs,
 		Example: fmt.Sprintf(`  # Watch the continuous backup restore job with the ID 507f1f77bcf86cd799439011 for the cluster named Cluster0 until it becomes available:
   %s serverless backup restore watch --restoreJobId 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),

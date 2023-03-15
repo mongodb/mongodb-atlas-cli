@@ -12,13 +12,12 @@ atlas serverless backups snapshots watch
    :depth: 1
    :class: singlecol
 
-Watch the specified snapshot in your project until it becomes available.
+Watch the specified snapshot in your project until it reaches a completed or failed status.
 
 This command checks the snapshot's status periodically until it reaches a completed or failed status. 
-Once the snapshot reaches the expected status, the command prints "Snapshot changes completed."
+Command finishes once one of the expected statuses are reached.
 If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
 You can interrupt the command's polling at any time with CTRL-C.
-
 To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 
 Syntax

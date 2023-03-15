@@ -12,7 +12,7 @@ atlas serverless backups restores watch
    :depth: 1
    :class: singlecol
 
-Watch the specified backup restore job until it completes..
+Watch the specified backup restore job until it completes.
 
 This command checks the restore job's status periodically until it reaches a completed, failed or canceled status. 
 Command finishes once one of the expected statuses are reached.

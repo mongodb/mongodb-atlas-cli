@@ -64,7 +64,7 @@ func WatchBuilder() *cobra.Command {
 	opts := new(WatchOpts)
 	cmd := &cobra.Command{
 		Use:   "watch",
-		Short: "Watch the specified backup restore job until it completes..",
+		Short: "Watch the specified backup restore job until it completes.",
 		Long: `This command checks the restore job's status periodically until it reaches a completed, failed or canceled status. 
 Command finishes once one of the expected statuses are reached.
 If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.

@@ -206,6 +206,7 @@ func generateRSConfigUpdate(filename string) error {
 	if err != nil {
 		return err
 	}
+	defer out.Close()
 	jsonEncoder := json.NewEncoder(out)
 	jsonEncoder.SetIndent("", "  ")
 	return jsonEncoder.Encode(cluster)

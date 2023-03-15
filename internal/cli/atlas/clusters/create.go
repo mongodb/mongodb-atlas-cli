@@ -268,5 +268,17 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.TypeFlag)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Shards)
 
+	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"REPLICASET", "SHARDED", "GEOSHARDED"}, cobra.ShellCompDirectiveDefault
+	})
+
+	_ = cmd.RegisterFlagCompletionFunc(flag.Provider, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"AWS", "AZURE", "GCP"}, cobra.ShellCompDirectiveDefault
+	})
+
+	autocomplete := &autoCompleteOpts{}
+	_ = cmd.RegisterFlagCompletionFunc(flag.Tier, autocomplete.autocompleteTier())
+	_ = cmd.RegisterFlagCompletionFunc(flag.Region, autocomplete.autocompleteRegion())
+
 	return cmd
 }

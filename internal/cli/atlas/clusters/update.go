@@ -179,5 +179,8 @@ You can't change the name of the cluster or downgrade the MongoDB version of you
 
 	_ = cmd.MarkFlagFilename(flag.File)
 
+	autocomplete := &autoCompleteOpts{}
+	_ = cmd.RegisterFlagCompletionFunc(flag.Tier, autocomplete.autocompleteTier())
+
 	return cmd
 }

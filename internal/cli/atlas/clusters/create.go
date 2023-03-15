@@ -18,7 +18,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"sort"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -28,7 +27,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -278,122 +276,9 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 		return []string{"AWS", "AZURE", "GCP"}, cobra.ShellCompDirectiveDefault
 	})
 
-	_ = cmd.RegisterFlagCompletionFunc(flag.Tier, opts.autocompleteTier())
-
-	_ = cmd.RegisterFlagCompletionFunc(flag.Region, opts.autocompleteRegion())
+	autocomplete := &autoCompleteOpts{}
+	_ = cmd.RegisterFlagCompletionFunc(flag.Tier, autocomplete.autocompleteTier())
+	_ = cmd.RegisterFlagCompletionFunc(flag.Region, autocomplete.autocompleteRegion())
 
 	return cmd
-}
-
-func (opts *CreateOpts) autocompleteTier() func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-	return func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		initProfile(cmd)
-		if err := validate.Credentials(); err != nil {
-			cobra.CompErrorln("no credentials")
-			return []string{}, cobra.ShellCompDirectiveError
-		}
-		if err := opts.ValidateProjectID(); err != nil {
-			cobra.CompErrorln("no project ID")
-			return []string{}, cobra.ShellCompDirectiveError
-		}
-
-		l, err := initAutoCompleteStore(cmd.Context())
-		if err != nil {
-			cobra.CompErrorln("store error: " + err.Error())
-			return []string{}, cobra.ShellCompDirectiveError
-		}
-
-		providers := make([]*string, 0, 1)
-		if provider := cmd.Flag(flag.Provider).Value.String(); provider != "" {
-			providers = append(providers, &provider)
-		}
-
-		result, err := l.CloudProviderRegions(opts.ConfigProjectID(), "", providers)
-		cobra.CompDebugln(fmt.Sprintf("%#v", result), true)
-		if err != nil {
-			cobra.CompErrorln("error fetching: " + err.Error())
-			return []string{}, cobra.ShellCompDirectiveError
-		}
-		availableTiers := map[string]bool{}
-		for _, p := range result.Results {
-			for _, i := range p.InstanceSizes {
-				if _, ok := availableTiers[i.Name]; !ok && strings.HasPrefix(i.Name, strings.ToUpper(toComplete)) {
-					availableTiers[i.Name] = true
-				}
-			}
-		}
-		suggestion := make([]string, len(availableTiers))
-		i := 0
-		for k := range availableTiers {
-			suggestion[i] = k
-			i++
-		}
-		sort.Strings(suggestion)
-		return suggestion, cobra.ShellCompDirectiveDefault
-	}
-}
-
-func initAutoCompleteStore(ctx context.Context) (store.CloudProviderRegionsLister, error) {
-	return store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
-}
-
-func (opts *CreateOpts) autocompleteRegion() func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-	return func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		initProfile(cmd)
-		if err := validate.Credentials(); err != nil {
-			cobra.CompErrorln("no credentials")
-			return []string{}, cobra.ShellCompDirectiveError
-		}
-		if err := opts.ValidateProjectID(); err != nil {
-			cobra.CompErrorln("no project ID")
-			return []string{}, cobra.ShellCompDirectiveError
-		}
-
-		l, err := initAutoCompleteStore(cmd.Context())
-		if err != nil {
-			cobra.CompErrorln("store error: " + err.Error())
-			return []string{}, cobra.ShellCompDirectiveError
-		}
-
-		providers := make([]*string, 0, 1)
-		if provider := cmd.Flag(flag.Provider).Value.String(); provider != "" {
-			providers = append(providers, &provider)
-		}
-
-		tier := cmd.Flag(flag.Tier).Value.String()
-		result, err := l.CloudProviderRegions(opts.ConfigProjectID(), tier, providers)
-		if err != nil {
-			cobra.CompErrorln("error fetching: " + err.Error())
-			return []string{}, cobra.ShellCompDirectiveError
-		}
-		availableRegions := map[string]bool{}
-		for _, p := range result.Results {
-			for _, i := range p.InstanceSizes {
-				for _, r := range i.AvailableRegions {
-					if _, ok := availableRegions[r.Name]; !ok && strings.HasPrefix(r.Name, strings.ToUpper(toComplete)) {
-						availableRegions[r.Name] = true
-					}
-				}
-			}
-		}
-		suggestion := make([]string, len(availableRegions))
-		i := 0
-		for k := range availableRegions {
-			suggestion[i] = k
-			i++
-		}
-		sort.Strings(suggestion)
-		return suggestion, cobra.ShellCompDirectiveDefault
-	}
-}
-
-func initProfile(cmd *cobra.Command) {
-	profile := cmd.Flag(flag.Profile).Value.String()
-	if profile != "" {
-		config.SetName(profile)
-	} else if profile = config.GetString(flag.Profile); profile != "" {
-		config.SetName(profile)
-	} else if availableProfiles := config.List(); len(availableProfiles) == 1 {
-		config.SetName(availableProfiles[0])
-	}
 }

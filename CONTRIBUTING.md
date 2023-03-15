@@ -139,8 +139,12 @@ To debug e2e tests we can use following run configuration
       } 
 ```
 
-Before running command makesure you run `make build-all` and adjusted program to run your desired e2e test
+In following snippet:
+1. Adjust program to the test you want to run
+2. Review MCLI_E2E_BINARY to point to mongodbcli or atlas depending on what CLI you want to test.
+3. Run `make build-all` to ensure that latest binary files are used in tests.
 
+> NOTE: Debugging works only for e2e automation. Commands cannot be debugged during that process. 
 
 ### API Interactions
 

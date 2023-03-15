@@ -148,6 +148,7 @@ func (opts *LiveMigrationsOpts) GenerateFlags(cmd *cobra.Command) {
 	cmd.Flags().BoolVar(&opts.DestinationDropEnabled, flag.LiveMigrationDropCollections, false, usage.LiveMigrationDropCollections)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.Force)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	cmd.MarkFlagsMutuallyExclusive(flag.LiveMigrationSourceManagedAuthentication, flag.LiveMigrationSourceUsername)
 

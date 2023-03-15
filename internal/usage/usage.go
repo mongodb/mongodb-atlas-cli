@@ -106,6 +106,7 @@ dbName and collection are required only for built-in roles.`
 	MeasurementStart                          = "ISO 8601-formatted date and time that specifies when to start retrieving measurements. You can't set this parameter and period in the same request."
 	MeasurementEnd                            = "ISO 8601-formatted date and time that specifies when to stop retrieving measurements. You can't set this parameter and period in the same request."
 	MeasurementType                           = "Measurements to return. If this is not specified, all measurements are returned. Valid values are DATABASE_AVERAGE_OBJECT_SIZE, DATABASE_COLLECTION_COUNT, DATABASE_DATA_SIZE, DATABASE_STORAGE_SIZE, DATABASE_INDEX_SIZE, DATABASE_INDEX_COUNT, DATABASE_EXTENT_COUNT, DATABASE_OBJECT_COUNT, and DATABASE_VIEW_COUNT"
+	MetricsMeasurementType                    = "Measurements to return. If this is not specified, all measurements are returned. To learn which values the CLI accepts, see the Items Enum for m in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/#tag/Monitoring-and-Logs/operation/getHostMeasurements/."
 	FirstName                                 = "First or given name for the user."
 	LastName                                  = "Last name, family name, or surname for the user."
 	OrgRole                                   = "User's roles for the associated organization. Valid values include ORG_OWNER, ORG_MEMBER, ORG_GROUP_CREATOR, ORG_BILLING_ADMIN, and ORG_READ_ONLY."

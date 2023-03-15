@@ -325,4 +325,6 @@ const (
 	AzureSecret                               = "azureSecret"                               // AzureSecret flag
 	AWSSessionToken                           = "awsSessionToken"                           // AWSSessionToken flag
 	APIKeyDescription                         = "apiKeyDescription"                         //nolint:gosec // APIKeyDescription flag
+	RestoreJobID                              = "restoreJobId"                              // ID of the Restore Job
+	DeliveryType                              = "deliveryType"                              // Type of the backup restore delivery
 )

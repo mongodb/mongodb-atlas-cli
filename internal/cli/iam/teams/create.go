@@ -67,6 +67,7 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create <name>",
 		Short: "Create a team for your organization.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Organization Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Label that identifies the team.",
@@ -90,6 +91,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Username)
 

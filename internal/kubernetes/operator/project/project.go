@@ -20,10 +20,9 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
@@ -97,7 +96,7 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, validator f
 			AlertConfigurations:           nil,
 			AlertConfigurationSyncEnabled: false,
 			NetworkPeers:                  nil,
-			WithDefaultAlertsSettings:     pointers.PtrValOrDefault[bool](project.WithDefaultAlertsSettings, false),
+			WithDefaultAlertsSettings:     pointer.GetOrDefault[bool](project.WithDefaultAlertsSettings, false),
 			X509CertRef:                   nil, // not available for import
 			Integrations:                  nil,
 			EncryptionAtRest:              nil,
@@ -324,9 +323,9 @@ func buildMaintenanceWindows(mwProvider store.MaintenanceWindowDescriber, projec
 
 	return operatorProject.MaintenanceWindow{
 		DayOfWeek: mw.DayOfWeek,
-		HourOfDay: pointers.PtrValOrDefault(mw.HourOfDay, 0),
-		AutoDefer: pointers.PtrValOrDefault(mw.AutoDeferOnceEnabled, false),
-		StartASAP: pointers.PtrValOrDefault(mw.StartASAP, false),
+		HourOfDay: pointer.GetOrDefault(mw.HourOfDay, 0),
+		AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
+		StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
 		Defer:     false,
 	}, nil
 }
@@ -691,7 +690,7 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 		alertConfig := &data[i]
 		result = append(result, atlasV1.AlertConfiguration{
 			EventTypeName:   alertConfig.EventTypeName,
-			Enabled:         pointers.PtrValOrDefault(alertConfig.Enabled, false),
+			Enabled:         pointer.GetOrDefault(alertConfig.Enabled, false),
 			Matchers:        convertMatchers(alertConfig.Matchers),
 			MetricThreshold: convertMetricThreshold(alertConfig.MetricThreshold),
 			Threshold:       convertThreshold(alertConfig.Threshold),

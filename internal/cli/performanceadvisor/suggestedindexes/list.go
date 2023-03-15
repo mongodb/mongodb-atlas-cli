@@ -81,9 +81,11 @@ func (opts *ListOpts) newSuggestedIndexOptions() *atlas.SuggestedIndexOptions {
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "Return the suggested indexes for collections experiencing slow queries.",
-		Long:    `The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance.`,
+		Use:   "list",
+		Short: "Return the suggested indexes for collections experiencing slow queries.",
+		Long: `The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of suggested indexes for the atlas-111ggi-shard-00-00.111xx.mongodb.net:27017 host in the project with the ID 5e2211c17a3e5a48f5497de3:
@@ -111,6 +113,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

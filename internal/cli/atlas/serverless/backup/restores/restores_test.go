@@ -24,7 +24,7 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
-		1,
+		4,
 		[]string{},
 	)
 }

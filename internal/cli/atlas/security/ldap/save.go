@@ -124,6 +124,7 @@ func SaveBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "save",
 		Short: "Save an LDAP configuration for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  # Save an LDAP server configuration to authenticate and authorize MongoDB users for the host atlas-ldaps-01.ldap.myteam.com: 
   %s security ldap save --authenticationEnabled --authorizationEnabled 
   --hostname atlas-ldaps-01.ldap.myteam.com --bindUsername 
@@ -156,6 +157,7 @@ func SaveBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Hostname)
 	_ = cmd.MarkFlagRequired(flag.BindUsername)

@@ -65,7 +65,9 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "list <hostname:port>",
 		Long: fmt.Sprintf(`To return the hostname and port needed for this command, run
-%s processes list`, cli.ExampleAtlasEntryPoint()),
+%s processes list
+
+`, cli.ExampleAtlasEntryPoint()) + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Short:   "Return all databases running on the specified host for your project.",
 		Aliases: []string{"ls"},
 		Annotations: map[string]string{
@@ -96,6 +98,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

@@ -55,8 +55,10 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified API key for your organization.",
-		Long:    fmt.Sprintf(`To view possible values for the ID argument, run %s organizations apiKeys list.`, cli.ExampleAtlasEntryPoint()),
-		Args:    require.ExactArgs(1),
+		Long: fmt.Sprintf(`To view possible values for the ID argument, run %s organizations apiKeys list.
+
+`+fmt.Sprintf(usage.RequiredRole, "Organization User Admin"), cli.ExampleAtlasEntryPoint()),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies the organization's API key.",
 		},

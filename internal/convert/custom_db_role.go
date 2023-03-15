@@ -11,12 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package convert
 
 import (
 	"strings"
 
-	"github.com/openlyinc/pointy"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -59,7 +60,7 @@ func BuildAtlasActions(a []string) []atlas.Action {
 				resourceStruct.Collection = &resource[1]
 			}
 		} else {
-			resourceStruct.Cluster = pointy.Bool(true)
+			resourceStruct.Cluster = pointer.Get(true)
 		}
 
 		actions[i] = atlas.Action{

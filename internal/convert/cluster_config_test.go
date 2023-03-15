@@ -20,13 +20,14 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
-	"github.com/openlyinc/pointy"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 	fipsMode := true
+	defaultWriteConcernJ := true
 	testCases := map[string]struct {
 		current  *opsmngr.AutomationConfig
 		expected *opsmngr.AutomationConfig
@@ -45,8 +46,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname:     "example",
 							LogPath:      "/log",
 							Port:         1,
-							Priority:     pointy.Float64(1),
-							Votes:        pointy.Float64(1),
+							Priority:     pointer.Get[float64](1),
+							Votes:        pointer.Get[float64](1),
 							AuditLogPath: "/audit",
 						},
 					},
@@ -137,8 +138,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Mode:                       "Mode",
 								PEMKeyFile:                 "PEMKeyFile",
 							},
-							Priority: pointy.Float64(1),
-							Votes:    pointy.Float64(1),
+							Priority: pointer.Get[float64](1),
+							Votes:    pointer.Get[float64](1),
 						},
 					},
 				},
@@ -170,7 +171,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							},
 							Replication: &opsmngr.Replication{
 								ReplSetName: "replica_set_1",
-								OplogSizeMB: pointy.Int(10),
+								OplogSizeMB: pointer.Get(10),
 							},
 							Storage: &opsmngr.Storage{
 								DBPath: "/data/db/",
@@ -258,8 +259,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Host:               "replica_set_1_0",
 								Priority:           1,
 								Votes:              1,
-								SlaveDelay:         pointy.Float64(1),
-								SecondaryDelaySecs: pointy.Float64(1),
+								SlaveDelay:         pointer.Get[float64](1),
+								SecondaryDelaySecs: pointer.Get[float64](1),
 							},
 						},
 					},
@@ -294,15 +295,15 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname: "host0",
 							LogPath:  "/data/db/mongodb.log",
 							Port:     27017,
-							Priority: pointy.Float64(1),
-							Votes:    pointy.Float64(1),
+							Priority: pointer.Get[float64](1),
+							Votes:    pointer.Get[float64](1),
 						}, {
 							DBPath:   "/data/db/",
 							Hostname: "host1",
 							LogPath:  "/data/db/mongodb.log",
 							Port:     27017,
-							Priority: pointy.Float64(1),
-							Votes:    pointy.Float64(1),
+							Priority: pointer.Get[float64](1),
+							Votes:    pointer.Get[float64](1),
 							Security: &map[string]interface{}{
 								"test": "test",
 							},
@@ -424,8 +425,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname: "host1",
 							LogPath:  "/data/db/mongodb.log",
 							Port:     27017,
-							Priority: pointy.Float64(1),
-							Votes:    pointy.Float64(1),
+							Priority: pointer.Get[float64](1),
+							Votes:    pointer.Get[float64](1),
 						},
 					},
 				},
@@ -533,6 +534,146 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 				},
 			},
 		},
+		"update defaultRWConcern on an existing replica set process": {
+			current: fixture.AutomationConfigWithOneReplicaSet("replica_set_1", false),
+			changes: &ClusterConfig{
+				RSConfig: RSConfig{
+					FeatureCompatibilityVersion: "4.2",
+					Name:                        "replica_set_1",
+					Version:                     "4.2.2",
+					Processes: []*ProcessConfig{
+						{
+							DBPath:   "/data/db/",
+							Hostname: "host1",
+							LogPath:  "/data/db/mongodb.log",
+							Port:     27017,
+							DefaultRWConcern: &DefaultRWConcern{
+								DefaultReadConcern: &DefaultReadConcern{
+									Level: "minority",
+								},
+								DefaultWriteConcern: &DefaultWriteConcern{
+									W:        1,
+									J:        &defaultWriteConcernJ,
+									Wtimeout: 1,
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: &opsmngr.AutomationConfig{
+				Auth: opsmngr.Auth{
+					DeploymentAuthMechanisms: []string{},
+				},
+				Processes: []*opsmngr.Process{
+					// Old
+					{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{
+								Port: 27017,
+								TLS: &opsmngr.TLS{
+									CAFile:                     "CAFile",
+									CertificateKeyFile:         "CertificateKeyFile",
+									CertificateKeyFilePassword: "CertificateKeyFilePassword",
+									CertificateSelector:        "CertificateSelector",
+									ClusterCertificateSelector: "ClusterCertificateSelector",
+									ClusterFile:                "ClusterFile",
+									ClusterPassword:            "ClusterPassword",
+									CRLFile:                    "CRLFile",
+									DisabledProtocols:          "DisabledProtocols",
+									FIPSMode:                   &fipsMode,
+									Mode:                       "Mode",
+									PEMKeyFile:                 "PEMKeyFile",
+								},
+							},
+							Replication: &opsmngr.Replication{},
+							Storage: &opsmngr.Storage{
+								DBPath: "/data/db/",
+							},
+							SystemLog: opsmngr.SystemLog{
+								Destination: file,
+								Path:        "/data/db/mongodb.log",
+							},
+							AuditLog: &opsmngr.AuditLog{
+								Destination: file,
+								Path:        "/data/db/audit.log",
+							},
+							Security: &map[string]interface{}{
+								"test": "test",
+							},
+						},
+						LogRotate: &opsmngr.LogRotate{
+							SizeThresholdMB:  1000,
+							TimeThresholdHrs: 24,
+						},
+						AuthSchemaVersion:           5,
+						Name:                        "replica_set_1_0",
+						Disabled:                    true,
+						FeatureCompatibilityVersion: "4.2",
+						Hostname:                    "host0",
+						ManualMode:                  false,
+						ProcessType:                 "mongod",
+						Version:                     "4.2.2",
+					},
+					// New
+					{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 27017},
+							Replication: &opsmngr.Replication{
+								ReplSetName: "replica_set_1",
+							},
+							Storage: &opsmngr.Storage{
+								DBPath: "/data/db/",
+							},
+							SystemLog: opsmngr.SystemLog{
+								Destination: file,
+								Path:        "/data/db/mongodb.log",
+							},
+						},
+						DefaultRWConcern: &opsmngr.DefaultRWConcern{
+							DefaultReadConcern: &opsmngr.DefaultReadConcern{
+								Level: "minority",
+							},
+							DefaultWriteConcern: &opsmngr.DefaultWriteConcern{
+								W:        1,
+								J:        &defaultWriteConcernJ,
+								Wtimeout: 1,
+							},
+						},
+						LogRotate: &opsmngr.LogRotate{
+							SizeThresholdMB:  1000,
+							TimeThresholdHrs: 24,
+						},
+						AuthSchemaVersion:           5,
+						Name:                        "replica_set_1_1",
+						Disabled:                    false,
+						FeatureCompatibilityVersion: "4.2",
+						Hostname:                    "host1",
+						ManualMode:                  false,
+						ProcessType:                 "mongod",
+						Version:                     "4.2.2",
+					},
+				},
+				ReplicaSets: []*opsmngr.ReplicaSet{
+					// New
+					{
+						ID:              "replica_set_1",
+						ProtocolVersion: "1",
+						Members: []opsmngr.Member{
+							{
+								ID:           1,
+								ArbiterOnly:  false,
+								BuildIndexes: true,
+								Hidden:       false,
+								Host:         "replica_set_1_1",
+								Priority:     1,
+								Votes:        1,
+							},
+						},
+					},
+				},
+			},
+		},
 		"add a sharded cluster set to an empty config": {
 			current: fixture.EmptyAutomationConfig(),
 			changes: &ClusterConfig{
@@ -550,8 +691,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hostname: "example",
 								LogPath:  "/log/myShard_0",
 								Port:     1,
-								Priority: pointy.Float64(1),
-								Votes:    pointy.Float64(1),
+								Priority: pointer.Get[float64](1),
+								Votes:    pointer.Get[float64](1),
 							},
 						},
 					},
@@ -564,8 +705,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname: "example",
 							LogPath:  "/log/configRS",
 							Port:     2,
-							Priority: pointy.Float64(1),
-							Votes:    pointy.Float64(1),
+							Priority: pointer.Get[float64](1),
+							Votes:    pointer.Get[float64](1),
 						},
 					},
 				},
@@ -728,8 +869,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hostname: "example",
 								LogPath:  "/log/myShard_0",
 								Port:     1,
-								Priority: pointy.Float64(1),
-								Votes:    pointy.Float64(1),
+								Priority: pointer.Get[float64](1),
+								Votes:    pointer.Get[float64](1),
 							},
 						},
 					},
@@ -742,8 +883,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hostname: "example",
 								LogPath:  "/log/myShard_1",
 								Port:     4,
-								Priority: pointy.Float64(1),
-								Votes:    pointy.Float64(1),
+								Priority: pointer.Get[float64](1),
+								Votes:    pointer.Get[float64](1),
 							},
 						},
 					},
@@ -756,8 +897,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname: "example",
 							LogPath:  "/log/configRS",
 							Port:     2,
-							Priority: pointy.Float64(1),
-							Votes:    pointy.Float64(1),
+							Priority: pointer.Get[float64](1),
+							Votes:    pointer.Get[float64](1),
 						},
 					},
 				},

@@ -91,7 +91,9 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create an IP access list entry for your API Key.",
-		Long:  fmt.Sprintf(`To view possible values for the apiKey option, run %s organizations apiKeys list.`, cli.ExampleAtlasEntryPoint()),
+		Long: fmt.Sprintf(`To view possible values for the apiKey option, run %s organizations apiKeys list.
+
+`+fmt.Sprintf(usage.RequiredRole, "Read Write"), cli.ExampleAtlasEntryPoint()),
 		Example: fmt.Sprintf(`  # Create access list entries for two IP addresses for the API key with the ID 5f24084d8dbffa3ad3f21234 in the organization with the ID 5a1b39eec902201990f12345:
   %s organizations apiKeys accessLists create --apiKey 5f24084d8dbffa3ad3f21234 --cidr 192.0.2.0/24,198.51.100.0/24 --orgId 5a1b39eec902201990f12345 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -119,6 +121,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	cmd.Flags().BoolVar(&opts.currentIP, flag.CurrentIP, false, usage.CurrentIP)
 

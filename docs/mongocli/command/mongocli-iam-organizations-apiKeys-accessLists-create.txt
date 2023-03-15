@@ -16,6 +16,8 @@ Create an IP access list entry for your API Key.
 
 To view possible values for the apiKey option, run mongocli organizations apiKeys list.
 
+To use this command, you must authenticate with a user account or an API key that has the Read Write role.
+
 Syntax
 ------
 

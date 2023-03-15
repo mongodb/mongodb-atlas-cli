@@ -128,7 +128,9 @@ func AzureBuilder() *cobra.Command {
 		
 The network peering create command checks if a VNet exists in the region you specify for your Atlas project. If one exists, this command creates the peering connection between that VNet and your VPC. If an Atlas VPC does not exist, this command creates one and creates a connection between it and your VNet.
 		
-To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.`,
+To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  # Create a network peering connection between the Atlas VPC in CIDR block 192.168.0.0/24 and your Azure VNet named atlascli-test in in US_EAST_2:
   %s networking peering create azure --atlasCidrBlock 192.168.0.0/24 --directoryId 56657fdb-ca45-40dc-fr56-77fd8b6d2b37 --subscriptionId 345654f3-77cf-4084-9e06-8943a079ed75 --resourceGroup atlascli-test --region US_EAST_2 --vnet atlascli-test`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
@@ -153,6 +155,7 @@ To learn more about network peering connections, see https://www.mongodb.com/doc
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.DirectoryID)
 	_ = cmd.MarkFlagRequired(flag.SubscriptionID)

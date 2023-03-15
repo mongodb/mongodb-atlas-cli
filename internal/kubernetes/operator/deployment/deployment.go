@@ -18,9 +18,8 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
@@ -297,17 +296,17 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 			},
 		},
 		Spec: atlasV1.AtlasBackupScheduleSpec{
-			AutoExportEnabled: pointers.PtrValOrDefault(bs.AutoExportEnabled, false),
+			AutoExportEnabled: pointer.GetOrDefault(bs.AutoExportEnabled, false),
 			Export:            export,
 			PolicyRef: common.ResourceRefNamespaced{
 				Name:      resources.NormalizeAtlasName(policies[0].Name, dictionary),
 				Namespace: policies[0].Namespace,
 			},
-			ReferenceHourOfDay:                pointers.PtrValOrDefault(bs.ReferenceHourOfDay, 0),
-			ReferenceMinuteOfHour:             pointers.PtrValOrDefault(bs.ReferenceMinuteOfHour, 0),
-			RestoreWindowDays:                 pointers.PtrValOrDefault(bs.RestoreWindowDays, 0),
-			UpdateSnapshots:                   pointers.PtrValOrDefault(bs.UpdateSnapshots, false),
-			UseOrgAndGroupNamesInExportPrefix: pointers.PtrValOrDefault(bs.UseOrgAndGroupNamesInExportPrefix, false),
+			ReferenceHourOfDay:                pointer.GetOrDefault(bs.ReferenceHourOfDay, 0),
+			ReferenceMinuteOfHour:             pointer.GetOrDefault(bs.ReferenceMinuteOfHour, 0),
+			RestoreWindowDays:                 pointer.GetOrDefault(bs.RestoreWindowDays, 0),
+			UpdateSnapshots:                   pointer.GetOrDefault(bs.UpdateSnapshots, false),
+			UseOrgAndGroupNamesInExportPrefix: pointer.GetOrDefault(bs.UseOrgAndGroupNamesInExportPrefix, false),
 		},
 		Status: status.BackupScheduleStatus{},
 	}

@@ -49,11 +49,17 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`atlas-serverless-backups-restores-create` - Start a restore job for your serverless instance.
+* :ref:`atlas-serverless-backups-restores-describe` - Describe a cloud backup restore job.
 * :ref:`atlas-serverless-backups-restores-list` - Return all cloud backup restore jobs for the specified serverless instance in your project.
+* :ref:`atlas-serverless-backups-restores-watch` - Watch the specified backup restore job until it completes.
 
 
 .. toctree::
    :titlesonly:
 
+   create </command/atlas-serverless-backups-restores-create>
+   describe </command/atlas-serverless-backups-restores-describe>
    list </command/atlas-serverless-backups-restores-list>
+   watch </command/atlas-serverless-backups-restores-watch>
 

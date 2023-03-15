@@ -44,13 +44,10 @@ func Builder() *cobra.Command {
 
 	keyProvidersCmd := decryption.KeyProvidersBuilder()
 	keyProvidersCmd.Hidden = true
-	decryptCmd := DecryptBuilder()
-	decryptCmd.Hidden = true
-
 	cmd.AddCommand(
 		DownloadBuilder(),
 		keyProvidersCmd,
-		decryptCmd,
+		DecryptBuilder(),
 	)
 
 	return cmd

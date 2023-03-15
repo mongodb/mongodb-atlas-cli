@@ -137,6 +137,8 @@ func TestDeployReplicaSet(t *testing.T) {
 		}
 	})
 
+	t.Run("Watch", watchAutomation(cliPath))
+
 	t.Run("Reclaim free space", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,

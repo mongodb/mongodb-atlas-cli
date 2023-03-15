@@ -177,6 +177,7 @@ func generateRSConfig(filename, hostname, clusterName, version, fcVersion string
 }
 
 func generateRSConfigUpdate(filename string) error {
+	defaultWriteConcernJ := true
 	jsonData, err := os.ReadFile(filename)
 	if err != nil {
 		return err
@@ -191,10 +192,11 @@ func generateRSConfigUpdate(filename string) error {
 	for i := 0; i < len(cluster.Processes); i++ {
 		cluster.Processes[i].DefaultRWConcern = &convert.DefaultRWConcern{
 			DefaultReadConcern: &convert.DefaultReadConcern{
-				Level: "minority",
+				Level: "majority",
 			},
 			DefaultWriteConcern: &convert.DefaultWriteConcern{
 				W:        1,
+				J:        &defaultWriteConcernJ,
 				Wtimeout: 0,
 			},
 		}

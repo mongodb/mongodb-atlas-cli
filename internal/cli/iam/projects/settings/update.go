@@ -118,6 +118,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.MarkFlagsMutuallyExclusive(flag.EnableRealtimePerformancePanel, flag.DisableRealtimePerformancePanel)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

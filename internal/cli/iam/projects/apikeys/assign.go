@@ -97,6 +97,7 @@ To view possible values for the ID argument, run %s organizations apiKeys list.`
 	_ = cmd.MarkFlagRequired(flag.Role)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

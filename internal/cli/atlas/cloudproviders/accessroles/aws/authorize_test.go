@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package aws
 
@@ -30,7 +29,6 @@ import (
 func TestAuthorizeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderAccessRoleAuthorizer(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AWSIAMRole{}
 

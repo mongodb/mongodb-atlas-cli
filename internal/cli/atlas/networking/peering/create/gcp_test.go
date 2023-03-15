@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package create
 
@@ -30,7 +29,6 @@ import (
 func TestGCPOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockGCPPeeringConnectionCreator(ctrl)
-	defer ctrl.Finish()
 
 	opts := &GCPOpts{
 		store:   mockStore,

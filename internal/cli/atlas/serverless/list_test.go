@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package serverless
 
@@ -39,7 +38,6 @@ func TestListBuilder(t *testing.T) {
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockServerlessInstanceLister(ctrl)
-	defer ctrl.Finish()
 
 	var expected *mongodbatlas.ClustersResponse
 

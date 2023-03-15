@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package accesslists
 
@@ -33,7 +32,6 @@ import (
 func TestWhitelistDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectIPAccessListDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.ProjectIPAccessList{
 		AwsSecurityGroup: "test",

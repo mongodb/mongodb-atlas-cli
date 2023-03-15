@@ -73,7 +73,9 @@ func VictorOpsBuilder() *cobra.Command {
 		Short:   "Create or update a Splunk On-Call integration for your project.",
 		Long: `VictorOps is now Splunk On-Call.
 		
-The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Splunk On-Call.`,
+The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Splunk On-Call.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  # Integrate Splunk On-Call with Atlas using the routing key operations for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create VICTOR_OPS --apiKey a1a23bcdef45ghijk6789 --routingKey operations --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
@@ -94,6 +96,7 @@ The requesting API key must have the Organization Owner or Project Owner role to
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.APIKey)
 	_ = cmd.MarkFlagRequired(flag.RoutingKey)

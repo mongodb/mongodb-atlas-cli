@@ -16,6 +16,7 @@ package serverless
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -53,6 +54,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <instanceName>",
 		Aliases: []string{"rm"},
 		Short:   "Remove a serverless instance from your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"instanceNameDesc": "Name of the instance to delete.",

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package versionmanifest
 
@@ -31,7 +30,6 @@ func TestVersionManifestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockVersionManifestUpdaterServiceVersionDescriber(ctrl)
 	mockStoreStaticPath := mocks.NewMockVersionManifestGetter(ctrl)
-	defer ctrl.Finish()
 
 	tests := []struct {
 		name            string

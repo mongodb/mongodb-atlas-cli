@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package alerts
 
@@ -46,7 +45,7 @@ func TestDescribeBuilder(t *testing.T) {
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertDescriber(ctrl)
-	defer ctrl.Finish()
+
 	expected := &mongodbatlas.Alert{
 		ID:            "test",
 		EventTypeName: "test",

@@ -58,6 +58,7 @@ func FieldsTypeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "type",
 		Short:   "Return all available field types that the matcherFieldName option accepts when you create or update an alert configuration.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"types"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of accepted field types for the matchersFieldName option:
@@ -72,6 +73,7 @@ func FieldsTypeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

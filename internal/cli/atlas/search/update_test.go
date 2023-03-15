@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package search
 
@@ -30,8 +29,6 @@ import (
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSearchIndexUpdater(ctrl)
-
-	defer ctrl.Finish()
 
 	t.Run("flags run", func(t *testing.T) {
 		updateOpts := &UpdateOpts{

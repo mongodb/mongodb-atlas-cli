@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package livemigrations
 
@@ -30,7 +29,6 @@ import (
 func TestLiveMigrationDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLiveMigrationDescriber(ctrl)
-	defer ctrl.Finish()
 
 	opts := &DescribeOpts{
 		liveMigrationID: "1",

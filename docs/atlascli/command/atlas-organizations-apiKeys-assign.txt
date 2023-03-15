@@ -18,6 +18,8 @@ When you modify the roles for an organization API key with this command, the val
 		
 To view possible values for the apiKeyId argument, run atlas organizations apiKeys list.
 
+To use this command, you must authenticate with a user account or an API key that has the Organization User Admin role.
+
 Syntax
 ------
 

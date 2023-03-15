@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package projects
 
@@ -28,7 +27,6 @@ import (
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectDeleter(ctrl)
-	defer ctrl.Finish()
 
 	mockStore.
 		EXPECT().

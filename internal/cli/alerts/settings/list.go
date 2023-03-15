@@ -62,6 +62,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "Returns all alert configurations for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all alert configurations for the project with the ID 5df90590f10fab5e33de2305:
   %s alerts settings list --projectId 5df90590f10fab5e33de2305 --output json`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{},
@@ -84,6 +85,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

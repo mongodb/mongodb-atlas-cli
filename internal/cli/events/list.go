@@ -100,6 +100,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "Return all events for an organization or project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Deprecated: `  
   To return project events prefer
   mongocli atlas|ops-manager|cloud-manager events projects list [--projectId <projectId>]
@@ -134,6 +135,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.orgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

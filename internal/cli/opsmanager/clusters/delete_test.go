@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package clusters
 
@@ -32,8 +31,6 @@ import (
 func TestDeleteReplicaSet_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudManagerClustersDeleter(ctrl)
-
-	defer ctrl.Finish()
 
 	expected := fixture.AutomationConfig()
 	watchExpected := fixture.AutomationStatus()
@@ -109,8 +106,6 @@ func TestDeleteReplicaSet_Run(t *testing.T) {
 func TestDeleteShardedCluster_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudManagerClustersDeleter(ctrl)
-
-	defer ctrl.Finish()
 
 	expected := fixture.AutomationConfigWithOneShardedCluster("MyCluster", false)
 	watchExpected := fixture.AutomationStatus()

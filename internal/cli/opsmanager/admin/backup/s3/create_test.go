@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //go:build unit
-// +build unit
 
 package s3
 
@@ -29,7 +28,6 @@ import (
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockS3BlockstoresCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.S3Blockstore{}
 

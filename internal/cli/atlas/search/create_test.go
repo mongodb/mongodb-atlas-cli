@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package search
 
@@ -32,7 +31,6 @@ const testJSON = `{"name":"default"}`
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSearchIndexCreator(ctrl)
-	defer ctrl.Finish()
 
 	t.Run("flags run", func(t *testing.T) {
 		opts := &CreateOpts{

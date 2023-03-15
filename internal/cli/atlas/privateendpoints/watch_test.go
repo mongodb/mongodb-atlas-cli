@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package privateendpoints
 
@@ -30,7 +29,6 @@ import (
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPrivateEndpointDescriberDeprecated(ctrl)
-	defer ctrl.Finish()
 
 	describeOpts := &WatchOpts{
 		id:    "test",

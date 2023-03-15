@@ -63,6 +63,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <alertId>",
 		Aliases: []string{"get"},
 		Short:   "Return the details for the specified alert for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"alertIdDesc": "Unique identifier of the alert you want to describe.",
@@ -84,6 +85,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

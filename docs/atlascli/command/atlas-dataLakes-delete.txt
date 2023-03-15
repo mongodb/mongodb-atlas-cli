@@ -16,8 +16,6 @@ Remove a federated database instance from your project.
 
 To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
-
 Syntax
 ------
 

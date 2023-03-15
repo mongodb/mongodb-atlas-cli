@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package gcp
 
@@ -31,7 +30,6 @@ import (
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPrivateEndpointLister(ctrl)
-	defer ctrl.Finish()
 
 	var expected []mongodbatlas.PrivateEndpointConnection
 

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package alerts
 
@@ -28,7 +27,6 @@ import (
 func TestGlobalList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockGlobalAlertLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.GlobalAlerts{}
 

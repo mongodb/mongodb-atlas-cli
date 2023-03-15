@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package automation
 
@@ -28,7 +27,6 @@ import (
 func TestAutomationWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationStatusGetter(ctrl)
-	defer ctrl.Finish()
 
 	expected := fixture.AutomationStatus()
 

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package settings
 
@@ -27,7 +26,6 @@ import (
 func TestFieldsType_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockMatcherFieldsLister(ctrl)
-	defer ctrl.Finish()
 
 	var expected []string
 

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package datalake
 
@@ -28,7 +27,6 @@ import (
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDataLakeUpdater(ctrl)
-	defer ctrl.Finish()
 
 	expected := mongodbatlas.DataLake{}
 

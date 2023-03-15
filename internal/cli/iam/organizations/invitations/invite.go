@@ -72,6 +72,7 @@ func InviteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "invite <email>",
 		Short:   "Invite the specified MongoDB user to your organization.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
 		Aliases: []string{"create"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
@@ -98,6 +99,7 @@ func InviteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Role)
 

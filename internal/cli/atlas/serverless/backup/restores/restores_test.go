@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,15 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package pointers
+package restores
 
-func PtrValOrDefault[T any](ptr *T, defaultValue T) T {
-	if ptr != nil {
-		return *ptr
-	}
-	return defaultValue
-}
+import (
+	"testing"
 
-func MakePtr[T any](val T) *T {
-	return &val
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+)
+
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		4,
+		[]string{},
+	)
 }

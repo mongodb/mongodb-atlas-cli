@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //go:build unit
-// +build unit
 
 package users
 
@@ -27,7 +26,6 @@ import (
 func TestDescribe_Run_ByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserDescriber(ctrl)
-	defer ctrl.Finish()
 
 	var expected mongodbatlas.AtlasUser
 
@@ -50,7 +48,6 @@ func TestDescribe_Run_ByID(t *testing.T) {
 func TestDescribe_Run_ByName(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserDescriber(ctrl)
-	defer ctrl.Finish()
 
 	var expected mongodbatlas.AtlasUser
 

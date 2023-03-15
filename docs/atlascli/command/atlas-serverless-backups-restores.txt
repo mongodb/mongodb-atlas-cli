@@ -1,7 +1,7 @@
-.. _mongocli-atlas-serverless-backups:
+.. _atlas-serverless-backups-restores:
 
 =================================
-mongocli atlas serverless backups
+atlas serverless backups restores
 =================================
 
 .. default-domain:: mongodb
@@ -12,7 +12,7 @@ mongocli atlas serverless backups
    :depth: 1
    :class: singlecol
 
-Manage cloud backups for your project.
+Manage cloud backup restore jobs for your project.
 
 Options
 -------
@@ -28,7 +28,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for backups
+     - help for restores
 
 Inherited Options
 -----------------
@@ -49,11 +49,17 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-serverless-backups-snapshots` - Manage cloud backup snapshots for your project.
+* :ref:`atlas-serverless-backups-restores-create` - Start a restore job for your serverless instance.
+* :ref:`atlas-serverless-backups-restores-describe` - Describe a cloud backup restore job.
+* :ref:`atlas-serverless-backups-restores-list` - Return all cloud backup restore jobs for the specified serverless instance in your project.
+* :ref:`atlas-serverless-backups-restores-watch` - Watch the specified backup restore job until it completes.
 
 
 .. toctree::
    :titlesonly:
 
-   snapshots </command/mongocli-atlas-serverless-backups-snapshots>
+   create </command/atlas-serverless-backups-restores-create>
+   describe </command/atlas-serverless-backups-restores-describe>
+   list </command/atlas-serverless-backups-restores-list>
+   watch </command/atlas-serverless-backups-restores-watch>
 

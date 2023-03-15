@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package create
 
@@ -30,7 +29,6 @@ import (
 func TestAzureOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAzurePeeringConnectionCreator(ctrl)
-	defer ctrl.Finish()
 
 	opts := &AzureOpts{
 		store:  mockStore,

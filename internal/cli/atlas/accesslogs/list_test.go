@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package accesslogs
 
@@ -25,8 +24,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/openlyinc/pointy"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -34,7 +33,6 @@ import (
 func TestAccessLogListClusterName_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAccessLogsLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AccessLogSettings{
 		AccessLogs: []*mongodbatlas.AccessLogs{
@@ -43,7 +41,7 @@ func TestAccessLogListClusterName_Run(t *testing.T) {
 				Hostname:      "test",
 				ClusterName:   "test",
 				IPAddress:     "test",
-				AuthResult:    pointy.Bool(true),
+				AuthResult:    pointer.Get(true),
 				LogLine:       "test",
 				Timestamp:     "test",
 				Username:      "test",
@@ -82,7 +80,6 @@ test test   test           true          test
 func TestAccessLogListHostname_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAccessLogsLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AccessLogSettings{}
 

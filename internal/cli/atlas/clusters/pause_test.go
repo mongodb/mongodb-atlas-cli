@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package clusters
 
@@ -30,8 +29,6 @@ import (
 func TestPause_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterPauser(ctrl)
-
-	defer ctrl.Finish()
 
 	updateOpts := &PauseOpts{
 		name:  "ProjectBar",

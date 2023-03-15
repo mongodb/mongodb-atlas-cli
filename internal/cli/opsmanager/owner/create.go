@@ -129,6 +129,7 @@ func CreateBuilder() *cobra.Command {
 	_ = cmd.Flags().MarkDeprecated(flag.WhitelistIP, fmt.Sprintf("please use --%s instead", flag.AccessListIP))
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Email)
 	_ = cmd.MarkFlagRequired(flag.FirstName)

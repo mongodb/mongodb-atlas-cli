@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package customdbroles
 
@@ -30,7 +29,6 @@ import (
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseRoleUpdater(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.CustomDBRole{}
 

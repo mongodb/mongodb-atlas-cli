@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package availableregions
 
@@ -30,7 +29,6 @@ import (
 func TestList_Run_NoFlags(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderRegionsLister(ctrl)
-	defer ctrl.Finish()
 
 	var expected *mongodbatlas.CloudProviders
 	var empty []*string
@@ -53,7 +51,6 @@ func TestList_Run_NoFlags(t *testing.T) {
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderRegionsLister(ctrl)
-	defer ctrl.Finish()
 
 	var expected *mongodbatlas.CloudProviders
 

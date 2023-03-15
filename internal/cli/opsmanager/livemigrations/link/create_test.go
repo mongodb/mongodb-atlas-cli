@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package link
 
@@ -32,7 +31,6 @@ import (
 func TestLinkCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationsConnector(ctrl)
-	defer ctrl.Finish()
 
 	createOpts := &CreateOpts{
 		GlobalOpts: cli.GlobalOpts{OrgID: "1"},

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package clusters
 
@@ -30,7 +29,6 @@ import (
 func TestStart_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterStarter(ctrl)
-	defer ctrl.Finish()
 
 	updateOpts := &StartOpts{
 		name:  "ProjectBar",

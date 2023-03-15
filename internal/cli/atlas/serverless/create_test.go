@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package serverless
 
@@ -30,7 +29,6 @@ import (
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockServerlessInstanceCreator(ctrl)
-	defer ctrl.Finish()
 
 	opts := &CreateOpts{
 		store: mockStore,

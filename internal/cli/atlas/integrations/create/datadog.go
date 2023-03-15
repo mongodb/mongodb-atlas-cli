@@ -75,7 +75,9 @@ func DatadogBuilder() *cobra.Command {
 
 After you integrate with Datadog, you can send metric data about your project to your Datadog dashboard. To learn more about the metrics available to Datadog, see https://www.mongodb.com/docs/atlas/tutorial/datadog-integration/.
 		
-Datadog integration is available only for M10+ clusters.`,
+Datadog integration is available only for M10+ clusters.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args: require.NoArgs,
 		Example: fmt.Sprintf(`  # Integrate Datadog with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create DATADOG --apiKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
@@ -96,6 +98,7 @@ Datadog integration is available only for M10+ clusters.`,
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.APIKey)
 

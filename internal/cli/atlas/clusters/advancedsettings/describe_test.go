@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package advancedsettings
 
@@ -31,7 +30,6 @@ import (
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterConfigurationOptionsDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.ProcessArgs{}
 

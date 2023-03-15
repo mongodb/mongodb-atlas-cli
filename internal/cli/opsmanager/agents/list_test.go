@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package agents
 
@@ -32,7 +31,6 @@ import (
 func TestAgentsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAgentLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.Agents{}
 

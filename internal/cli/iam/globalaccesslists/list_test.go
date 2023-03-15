@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package globalaccesslists
 
@@ -28,7 +27,6 @@ import (
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockGlobalAPIKeyWhitelistLister(ctrl)
-	defer ctrl.Finish()
 
 	var expected = &opsmngr.GlobalWhitelistAPIKeys{
 		Results: []*opsmngr.GlobalWhitelistAPIKey{},

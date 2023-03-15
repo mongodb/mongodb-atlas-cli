@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package settings
 
@@ -44,7 +43,6 @@ func TestEnableBuilder(t *testing.T) {
 func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationEnabler(ctrl)
-	defer ctrl.Finish()
 
 	opts := &EnableOpts{
 		alertID: "alertID",

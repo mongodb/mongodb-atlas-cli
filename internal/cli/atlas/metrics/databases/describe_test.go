@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build unit
-// +build unit
 
 package databases
 
@@ -29,7 +29,6 @@ import (
 func TestDatabasesDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessDatabaseMeasurementsLister(ctrl)
-	defer ctrl.Finish()
 
 	listOpts := &DescribeOpts{
 		host:  "hard-00-00.mongodb.net",

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package hosts
 
@@ -30,7 +29,6 @@ import (
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationHostAssignmentLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.HostAssignments{}
 

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package customercerts
 
@@ -28,7 +27,6 @@ import (
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockX509CertificateConfDescriber(ctrl)
-	defer ctrl.Finish()
 
 	describeOpts := &DescribeOpts{
 		store: mockStore,

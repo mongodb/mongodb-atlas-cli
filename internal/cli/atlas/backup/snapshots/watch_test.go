@@ -27,7 +27,6 @@ import (
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSnapshotsDescriber(ctrl)
-	defer ctrl.Finish()
 
 	watchOpts := &WatchOpts{
 		id:          "test",

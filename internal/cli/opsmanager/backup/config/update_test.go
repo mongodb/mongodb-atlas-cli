@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package config
 
@@ -30,7 +29,6 @@ import (
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockBackupConfigUpdater(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.BackupConfig{}
 

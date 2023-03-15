@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package serverusage
 
@@ -28,7 +27,6 @@ import (
 func TestCapture_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSnapshotGenerator(ctrl)
-	defer ctrl.Finish()
 
 	opts := CaptureOpts{
 		store: mockStore,

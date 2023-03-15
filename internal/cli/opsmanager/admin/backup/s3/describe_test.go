@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package s3
 
@@ -30,7 +29,6 @@ import (
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockS3BlockstoresDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.S3Blockstore{}
 

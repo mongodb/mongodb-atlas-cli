@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package apikeys
 
@@ -30,7 +29,6 @@ import (
 func TestAgentsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAgentAPIKeyLister(ctrl)
-	defer ctrl.Finish()
 
 	listOpts := ListOpts{
 		store: mockStore,

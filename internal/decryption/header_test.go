@@ -22,7 +22,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/keyproviders"
-	"github.com/openlyinc/pointy"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 )
 
 func Test_validateMAC(t *testing.T) {
@@ -110,13 +110,13 @@ func Test_validateHeaderFields(t *testing.T) {
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				Version:         pointy.String("0.0"),
-				CompressionMode: pointy.String("none"),
+				Version:         pointer.Get("0.0"),
+				CompressionMode: pointer.Get("none"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
 				EncryptedKey:    encryptedKey,
-				MAC:             pointy.String("mac"),
+				MAC:             pointer.Get("mac"),
 				AuditRecordType: AuditHeaderRecord,
 			},
 			expectErr: false,
@@ -124,21 +124,21 @@ func Test_validateHeaderFields(t *testing.T) {
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				Version:         pointy.String("0.0"),
-				CompressionMode: pointy.String("none"),
+				Version:         pointer.Get("0.0"),
+				CompressionMode: pointer.Get("none"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
 				EncryptedKey: encryptedKey,
-				MAC:          pointy.String("mac"),
+				MAC:          pointer.Get("mac"),
 			},
 			expectErr: true,
 		},
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				Version:         pointy.String("0.0"),
-				CompressionMode: pointy.String("none"),
+				Version:         pointer.Get("0.0"),
+				CompressionMode: pointer.Get("none"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
@@ -150,12 +150,12 @@ func Test_validateHeaderFields(t *testing.T) {
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				Version:         pointy.String("0.0"),
-				CompressionMode: pointy.String("none"),
+				Version:         pointer.Get("0.0"),
+				CompressionMode: pointer.Get("none"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
-				MAC:             pointy.String("mac"),
+				MAC:             pointer.Get("mac"),
 				AuditRecordType: AuditHeaderRecord,
 			},
 			expectErr: true,
@@ -163,9 +163,9 @@ func Test_validateHeaderFields(t *testing.T) {
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				Version:         pointy.String("0.0"),
-				CompressionMode: pointy.String("none"),
-				MAC:             pointy.String("mac"),
+				Version:         pointer.Get("0.0"),
+				CompressionMode: pointer.Get("none"),
+				MAC:             pointer.Get("mac"),
 				EncryptedKey:    encryptedKey,
 				AuditRecordType: AuditHeaderRecord,
 			},
@@ -174,11 +174,11 @@ func Test_validateHeaderFields(t *testing.T) {
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				CompressionMode: pointy.String("none"),
+				CompressionMode: pointer.Get("none"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
-				MAC:             pointy.String("mac"),
+				MAC:             pointer.Get("mac"),
 				EncryptedKey:    encryptedKey,
 				AuditRecordType: AuditHeaderRecord,
 			},
@@ -186,12 +186,12 @@ func Test_validateHeaderFields(t *testing.T) {
 		},
 		{
 			input: AuditLogLine{
-				Version:         pointy.String("0.0"),
-				CompressionMode: pointy.String("none"),
+				Version:         pointer.Get("0.0"),
+				CompressionMode: pointer.Get("none"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
-				MAC:             pointy.String("mac"),
+				MAC:             pointer.Get("mac"),
 				EncryptedKey:    encryptedKey,
 				AuditRecordType: AuditHeaderRecord,
 			},
@@ -200,12 +200,12 @@ func Test_validateHeaderFields(t *testing.T) {
 		{
 			input: AuditLogLine{
 				TS:      &ts,
-				Version: pointy.String("0.0"),
+				Version: pointer.Get("0.0"),
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
 				EncryptedKey:    encryptedKey,
-				MAC:             pointy.String("mac"),
+				MAC:             pointer.Get("mac"),
 				AuditRecordType: AuditHeaderRecord,
 			},
 			expectErr: true,
@@ -213,12 +213,12 @@ func Test_validateHeaderFields(t *testing.T) {
 		{
 			input: AuditLogLine{
 				TS:              &ts,
-				Version:         pointy.String("0.0"),
+				Version:         pointer.Get("0.0"),
 				CompressionMode: &invalidCompressionMode,
 				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 					Provider: &provider,
 				},
-				MAC:             pointy.String("mac"),
+				MAC:             pointer.Get("mac"),
 				EncryptedKey:    encryptedKey,
 				AuditRecordType: AuditHeaderRecord,
 			},

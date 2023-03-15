@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package settings
 
@@ -24,8 +23,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/openlyinc/pointy"
 	"github.com/stretchr/testify/assert"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -33,7 +32,6 @@ import (
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectSettingsUpdater(ctrl)
-	defer ctrl.Finish()
 
 	opts := &UpdateOpts{
 		store:                                    mockStore,
@@ -87,13 +85,13 @@ func TestReturnMockValueForSetting(t *testing.T) {
 			name:             "enable only",
 			inputEnableFlag:  true,
 			inputDisableFlag: false,
-			want:             pointy.Bool(true),
+			want:             pointer.Get(true),
 		},
 		{
 			name:             "disable only",
 			inputEnableFlag:  false,
 			inputDisableFlag: true,
-			want:             pointy.Bool(false),
+			want:             pointer.Get(false),
 		},
 		{
 			name:             "both false",

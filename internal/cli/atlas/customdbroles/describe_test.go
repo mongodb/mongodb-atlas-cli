@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package customdbroles
 
@@ -25,8 +24,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/openlyinc/pointy"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -34,7 +33,6 @@ import (
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseRoleDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := mongodbatlas.CustomDBRole{
 		Actions: []mongodbatlas.Action{
@@ -42,9 +40,9 @@ func TestDescribeOpts_Run(t *testing.T) {
 				Action: "test",
 				Resources: []mongodbatlas.Resource{
 					{
-						Collection: pointy.String("test"),
-						DB:         pointy.String("test"),
-						Cluster:    pointy.Bool(true)},
+						Collection: pointer.Get("test"),
+						DB:         pointer.Get("test"),
+						Cluster:    pointer.Get(true)},
 				},
 			},
 		},

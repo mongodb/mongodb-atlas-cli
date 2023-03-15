@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package events
 
 import (
@@ -48,7 +49,6 @@ func (opts *orgListOpts) Run() error {
 	var r *atlas.EventResponse
 	var err error
 	r, err = opts.store.OrganizationEvents(opts.ConfigOrgID(), listOpts)
-
 	if err != nil {
 		return err
 	}
@@ -95,6 +95,7 @@ func OrgListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

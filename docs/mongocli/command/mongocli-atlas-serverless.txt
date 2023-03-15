@@ -51,7 +51,6 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-serverless-backups` - Manage cloud backups for your project.
 * :ref:`mongocli-atlas-serverless-create` - Creates one serverless instance in the specified project.
 * :ref:`mongocli-atlas-serverless-delete` - Remove a serverless instance from your project.
 * :ref:`mongocli-atlas-serverless-describe` - Return one serverless instance in the specified project.
@@ -62,7 +61,6 @@ Related Commands
 .. toctree::
    :titlesonly:
 
-   backups </command/mongocli-atlas-serverless-backups>
    create </command/mongocli-atlas-serverless-create>
    delete </command/mongocli-atlas-serverless-delete>
    describe </command/mongocli-atlas-serverless-describe>

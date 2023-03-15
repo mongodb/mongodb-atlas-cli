@@ -31,7 +31,6 @@ import (
 func TestLiveMigrationValidationCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLiveMigrationValidationsCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := mongodbatlas.Validation{}
 

@@ -69,6 +69,7 @@ func UnacknowledgeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "unacknowledge <alertId>",
 		Short:   "Unacknowledge the specified alert for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Aliases: []string{"unack"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
@@ -93,6 +94,7 @@ func UnacknowledgeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

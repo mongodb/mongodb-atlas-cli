@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package servertype
 
@@ -30,7 +29,6 @@ import (
 func TestGetOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectServerTypeGetter(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.ServerType{}
 

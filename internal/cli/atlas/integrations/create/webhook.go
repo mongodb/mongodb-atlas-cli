@@ -71,7 +71,9 @@ func WebhookBuilder() *cobra.Command {
 		Use:     webhookIntegrationType,
 		Aliases: []string{"webhook"},
 		Short:   "Create or update a webhook integration for your project.",
-		Long:    `The requesting API key must have the Organization Owner or Project Owner role to configure a webhook integration.`,
+		Long: `The requesting API key must have the Organization Owner or Project Owner role to configure a webhook integration.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  # Integrate a webhook with Atlas that uses the secret mySecret for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create WEBHOOK --url http://9b4ac7aa.abc.io/payload --secret mySecret --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
@@ -92,6 +94,7 @@ func WebhookBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.URL)
 	_ = cmd.MarkFlagRequired(flag.Secret)

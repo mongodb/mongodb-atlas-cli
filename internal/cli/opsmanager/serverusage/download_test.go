@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package serverusage
 
@@ -30,7 +29,6 @@ import (
 func TestLogsDownloadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockServerUsageReportDownloader(ctrl)
-	defer ctrl.Finish()
 
 	opts := &DownloadOpts{
 		store: mockStore,

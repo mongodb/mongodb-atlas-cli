@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package invitations
 
@@ -31,7 +30,6 @@ import (
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationInvitationUpdater(ctrl)
-	defer ctrl.Finish()
 
 	expected := &atlas.Invitation{}
 

@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build unit
-// +build unit
 
 package latestrelease
 
@@ -125,7 +125,6 @@ func TestOutputOpts_Find_NoCache(t *testing.T) {
 		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.release.GetTagName()), func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			mockDescriber := mocks.NewMockReleaseVersionDescriber(ctrl)
-			defer ctrl.Finish()
 
 			mockDescriber.
 				EXPECT().

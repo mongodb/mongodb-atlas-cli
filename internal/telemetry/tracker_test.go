@@ -34,7 +34,6 @@ import (
 func TestTrackCommand(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventsSender(ctrl)
-	defer ctrl.Finish()
 
 	config.ToolName = config.AtlasCLI
 
@@ -68,7 +67,6 @@ func TestTrackCommand(t *testing.T) {
 func TestTrackCommandWithError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventsSender(ctrl)
-	defer ctrl.Finish()
 
 	config.ToolName = config.AtlasCLI
 
@@ -109,7 +107,6 @@ func TestTrackCommandWithError(t *testing.T) {
 func TestTrackCommandWithSendError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventsSender(ctrl)
-	defer ctrl.Finish()
 
 	config.ToolName = config.AtlasCLI
 

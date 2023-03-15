@@ -96,8 +96,9 @@ func DecryptBuilder() *cobra.Command {
 	opts := &DecryptOpts{}
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
-		Use:   "decrypt",
-		Short: "Decrypts an audit log file with the provided AWS, GCP or Azure key management services.",
+		Use:    "decrypt",
+		Hidden: true,
+		Short:  "Decrypts an audit log file with the provided AWS, GCP or Azure key management services.",
 		Example: `  # Decrypt using AWS credentials:
   atlas logs decrypt --file /path/to/logFile.json --awsAccessKey <accessKey> --awsSecretAccessKey <secretKey> --awsSessionToken <sessionToken>
   # Decrypt using GCP credentials:

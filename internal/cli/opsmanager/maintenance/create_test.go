@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package maintenance
 
@@ -30,7 +29,6 @@ import (
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOpsManagerMaintenanceWindowCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.MaintenanceWindow{}
 

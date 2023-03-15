@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package onlinearchive
 
@@ -44,7 +43,6 @@ func TestUpdateBuilder(t *testing.T) {
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOnlineArchiveUpdater(ctrl)
-	defer ctrl.Finish()
 
 	updateOpts := &UpdateOpts{
 		id:    "1",

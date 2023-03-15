@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -58,6 +59,7 @@ func LoadSampleDataBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "loadSampleData <clusterName>",
 		Short: "Load sample data into the specified cluster for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster for which you want to load sample data.",
@@ -77,6 +79,7 @@ func LoadSampleDataBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

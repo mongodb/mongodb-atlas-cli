@@ -55,6 +55,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <interfaceEndpointId>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified AWS private endpoint interface and related service from your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"interfaceEndpointIdDesc": "Unique string that identifies the AWS private endpoint interface in AWS.",

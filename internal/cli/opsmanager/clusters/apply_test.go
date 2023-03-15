@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package clusters
 
@@ -29,7 +28,6 @@ import (
 func TestApply_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationPatcher(ctrl)
-	defer ctrl.Finish()
 
 	expected := fixture.AutomationConfig()
 	appFS := afero.NewMemMapFs()

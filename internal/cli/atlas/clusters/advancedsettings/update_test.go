@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package advancedsettings
 
@@ -23,22 +22,22 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/openlyinc/pointy"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterConfigurationOptionsUpdater(ctrl)
-	defer ctrl.Finish()
+
 	expected := &mongodbatlas.ProcessArgs{
 		DefaultReadConcern:               "",
 		DefaultWriteConcern:              "",
 		MinimumEnabledTLSProtocol:        "",
-		SampleSizeBIConnector:            pointy.Int64(1000),
-		SampleRefreshIntervalBIConnector: pointy.Int64(0),
-		NoTableScan:                      pointy.Bool(false),
+		SampleSizeBIConnector:            pointer.Get[int64](1000),
+		SampleRefreshIntervalBIConnector: pointer.Get[int64](0),
+		NoTableScan:                      pointer.Get(false),
 	}
 
 	t.Run("flags run", func(t *testing.T) {

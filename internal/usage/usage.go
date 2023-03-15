@@ -106,6 +106,7 @@ dbName and collection are required only for built-in roles.`
 	MeasurementStart                          = "ISO 8601-formatted date and time that specifies when to start retrieving measurements. You can't set this parameter and period in the same request."
 	MeasurementEnd                            = "ISO 8601-formatted date and time that specifies when to stop retrieving measurements. You can't set this parameter and period in the same request."
 	MeasurementType                           = "Measurements to return. If this is not specified, all measurements are returned. Valid values are DATABASE_AVERAGE_OBJECT_SIZE, DATABASE_COLLECTION_COUNT, DATABASE_DATA_SIZE, DATABASE_STORAGE_SIZE, DATABASE_INDEX_SIZE, DATABASE_INDEX_COUNT, DATABASE_EXTENT_COUNT, DATABASE_OBJECT_COUNT, and DATABASE_VIEW_COUNT"
+	MetricsMeasurementType                    = "Measurements to return. If this is not specified, all measurements are returned. To learn which values the CLI accepts, see the Items Enum for m in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/#tag/Monitoring-and-Logs/operation/getHostMeasurements/."
 	FirstName                                 = "First or given name for the user."
 	LastName                                  = "Last name, family name, or surname for the user."
 	OrgRole                                   = "User's roles for the associated organization. Valid values include ORG_OWNER, ORG_MEMBER, ORG_GROUP_CREATOR, ORG_BILLING_ADMIN, and ORG_READ_ONLY."
@@ -295,6 +296,7 @@ dbName and collection are required only for built-in roles.`
 	OrgOwnerID                                = "Unique 24-digit string that identifies the Atlas user to be granted the Org Owner role on the specified organization. Required if using API keys."
 	GovCloudRegionsOnly                       = "Flag that designates that the project uses only the AWS GovCloud region. Use this option only for Atlas for Government projects. If unspecified, the project uses only the AWS Standard region for AWS deployments. You can't deploy clusters across AWS GovCloud and AWS Standard regions in the same project."
 	ReclaimFreeSpaceTimestamp                 = "Timestamp in ISO 8601 format when the service reclaims the space. If not set, defaults to the current timestamp."
+	ResyncTimestamp                           = "Timestamp in ISO 8601 format when the sync starts. If not set, defaults to the current timestamp."
 	QuickstartDefault                         = "Flag that runs the Quickstart command with all default and auto-generated values to deploy and access an Atlas cluster."
 	ServerlessProvider                        = "Cloud service provider that applies to the provisioned serverless instance."
 	ServerlessRegion                          = "Human-readable label that identifies the physical location of your MongoDB serverless instance. The region you choose can affect network latency for clients accessing your databases."
@@ -396,4 +398,6 @@ dbName and collection are required only for built-in roles.`
 	OperatorVersion                           = "Version of Atlas Kubernetes Operator to generate resources for."
 	ExportID                                  = "Unique string that identifies the AWS S3 bucket to which you export your snapshots."
 	RequiredRole                              = "To use this command, you must authenticate with a user account or an API key that has the %s role."
+	RestoreJobID                              = "Unique identifier that identifies the Restore Job."
+	DeliveryType                              = "Type of restore job to create. Valid values include: automated, download, pointInTime. To learn more about types of restore jobs, see https://www.mongodb.com/docs/atlas/backup-restore-cluster/."
 )

@@ -56,6 +56,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <entry>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified IP access list entry from your API Key.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Read Write"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"entryDesc": "IP or CIDR address that you want to remove from the access list. If the entry includes a subnet mask, such as 192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.",

@@ -69,7 +69,9 @@ func PagerDutyBuilder() *cobra.Command {
 		Use:     pagerDutyIntegrationType,
 		Aliases: []string{"pager_duty", "pagerDuty"},
 		Short:   "Create or update a PagerDuty integration for your project.",
-		Long:    `The requesting API key must have the Organization Owner or Project Owner role to configure an integration with PagerDuty.`,
+		Long: `The requesting API key must have the Organization Owner or Project Owner role to configure an integration with PagerDuty.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  # Integrate PagerDuty with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create PAGER_DUTY --serviceKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
@@ -89,6 +91,7 @@ func PagerDutyBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.ServiceKey)
 

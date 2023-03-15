@@ -112,7 +112,9 @@ func GCPBuilder() *cobra.Command {
 		Short: "Create a network peering connection between the Atlas VPC and your Google Cloud VPC.",
 		Long: `The network peering create command checks if a VPC exists in the region you specify for your Atlas project. If one exists, this command creates the peering connection between that VPC and your VPC. If an Atlas VPC doesn't exist, this command creates one and creates a connection between it and your VPC.
 		
-To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.`,
+To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  # Create a network peering connection between the Atlas VPC in CIDR block 192.168.0.0/24 and your GCP VPC with the GCP project ID grandiose-branch-256701 in the network named cli-test:
   %s networking peering create gcp --atlasCidrBlock 192.168.0.0/24 --gcpProjectId grandiose-branch-256701 --network cli-test --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
@@ -135,6 +137,7 @@ To learn more about network peering connections, see https://www.mongodb.com/doc
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.AtlasCIDRBlock)
 

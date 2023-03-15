@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package aws
 
@@ -39,7 +38,6 @@ func TestDisableBuilder(t *testing.T) {
 func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCustomDNSDisabler(ctrl)
-	defer ctrl.Finish()
 
 	expected := &atlas.AWSCustomDNSSetting{
 		Enabled: false,

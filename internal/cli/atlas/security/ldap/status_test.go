@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package ldap
 
@@ -30,7 +29,6 @@ import (
 func TestVerifyStatus_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLDAPConfigurationDescriber(ctrl)
-	defer ctrl.Finish()
 
 	var expected *mongodbatlas.LDAPConfiguration
 

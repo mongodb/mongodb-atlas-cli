@@ -54,8 +54,10 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <integrationType>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified third-party integration from your project.",
-		Long:    `Deleting an integration from a project removes that integration configuration only for that project. This does not affect any other project or organization's configured integrations.`,
-		Args:    require.ExactValidArgs(1),
+		Long: `Deleting an integration from a project removes that integration configuration only for that project. This does not affect any other project or organization's configured integrations.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Args: require.ExactValidArgs(1),
 		Example: fmt.Sprintf(`  # Remove the Datadog integration for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations delete DATADOG --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		ValidArgs: []string{"PAGER_DUTY", "MICROSOFT_TEAMS", "SLACK", "DATADOG", "NEW_RELIC", "OPS_GENIE", "VICTOR_OPS", "WEBHOOK", "PROMETHEUS"},

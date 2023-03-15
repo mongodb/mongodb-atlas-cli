@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package clusters
 
@@ -30,7 +29,6 @@ import (
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AdvancedCluster{}
 

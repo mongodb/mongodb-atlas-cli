@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //go:build unit
-// +build unit
 
 package sync
 
@@ -29,7 +28,6 @@ import (
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSyncsUpdater(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.BackupStore{}
 

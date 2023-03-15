@@ -212,7 +212,7 @@ func Builder() *cobra.Command {
 		maintenance.Builder(),
 		customdns.Builder(),
 		cloudproviders.Builder(),
-		serverless.Builder(),
+		serverless.AtlasCLIBuilder(),
 		livemigrations.Builder(),
 		accesslogs.Builder(),
 		loginCmd,
@@ -227,6 +227,9 @@ func Builder() *cobra.Command {
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
 	_ = rootCmd.PersistentFlags().MarkHidden(flag.Debug)
 
+	_ = rootCmd.RegisterFlagCompletionFunc(flag.Profile, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return config.List(), cobra.ShellCompDirectiveDefault
+	})
 	return rootCmd
 }
 

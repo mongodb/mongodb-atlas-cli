@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package dbusers
 
@@ -29,7 +28,6 @@ import (
 func TestDBUserDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseUserDescriber(ctrl)
-	defer ctrl.Finish()
 
 	var expected mongodbatlas.DatabaseUser
 

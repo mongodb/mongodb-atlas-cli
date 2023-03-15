@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package snapshots
 
@@ -30,7 +29,6 @@ import (
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockContinuousSnapshotsLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.ContinuousSnapshots{}
 	clusterID := "5ec2ac941271767f21cbaefe"

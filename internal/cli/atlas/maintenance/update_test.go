@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build unit
-// +build unit
 
 package maintenance
 
@@ -28,7 +28,6 @@ import (
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockMaintenanceWindowUpdater(ctrl)
-	defer ctrl.Finish()
 
 	updateOpts := &UpdateOpts{
 		store:     mockStore,

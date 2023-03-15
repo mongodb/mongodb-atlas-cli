@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package aws
 
@@ -31,7 +30,6 @@ import (
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDataLakePrivateEndpointDescriber(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.PrivateLinkEndpointDataLake{}
 

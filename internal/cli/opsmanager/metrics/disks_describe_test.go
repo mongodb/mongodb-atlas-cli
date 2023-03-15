@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package metrics
 
@@ -28,7 +27,6 @@ import (
 func TestDisksDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockHostDiskMeasurementsLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.ProcessDiskMeasurements{
 		ProcessMeasurements: &mongodbatlas.ProcessMeasurements{

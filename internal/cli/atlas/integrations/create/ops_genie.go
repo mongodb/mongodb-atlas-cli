@@ -71,7 +71,9 @@ func OpsGenieBuilder() *cobra.Command {
 		Use:     opsGenieType,
 		Aliases: []string{"ops_genie", "opsGenie"},
 		Short:   "Create or update an Opsgenie integration for your project.",
-		Long:    `The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Opsgenie.`,
+		Long: `The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Opsgenie.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  # Integrate Opsgenie with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create OPS_GENIE --apiKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
@@ -92,6 +94,7 @@ func OpsGenieBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.APIKey)
 

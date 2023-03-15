@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package livemigrations
 
@@ -32,7 +31,6 @@ import (
 func TestLiveMigrationCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLiveMigrationCreator(ctrl)
-	defer ctrl.Finish()
 
 	expected := mongodbatlas.LiveMigration{}
 

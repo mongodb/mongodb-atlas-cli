@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package logs
 
@@ -28,7 +27,6 @@ import (
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLogJobLister(ctrl)
-	defer ctrl.Finish()
 
 	expected := &opsmngr.LogCollectionJobs{}
 

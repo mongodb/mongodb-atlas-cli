@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package customercerts
 
@@ -27,7 +26,6 @@ import (
 func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockX509CertificateConfDisabler(ctrl)
-	defer ctrl.Finish()
 
 	saveOpts := &DisableOpts{
 		store:   mockStore,

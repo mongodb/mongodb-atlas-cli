@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package datalake
 
@@ -28,7 +27,6 @@ import (
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDataLakeCreator(ctrl)
-	defer ctrl.Finish()
 
 	createOpts := &CreateOpts{
 		store: mockStore,

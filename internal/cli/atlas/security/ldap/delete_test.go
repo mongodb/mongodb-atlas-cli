@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //go:build unit
-// +build unit
 
 package ldap
 
@@ -29,7 +28,6 @@ import (
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLDAPConfigurationDeleter(ctrl)
-	defer ctrl.Finish()
 
 	opts := &DeleteOpts{
 		store: mockStore,

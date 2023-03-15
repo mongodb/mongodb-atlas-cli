@@ -13,7 +13,6 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
 package settings
 
@@ -28,7 +27,6 @@ import (
 func TestUpdates_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationUpdater(ctrl)
-	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AlertConfiguration{}
 

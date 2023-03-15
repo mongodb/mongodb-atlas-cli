@@ -76,10 +76,8 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create <name>",
 		Short: "Create a new federated database instance for your project.",
-		Long: `To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.
-
-` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Args: require.ExactArgs(1),
+		Long:  `To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.`,
+		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Name of the federated database instance to create.",
 		},
@@ -103,6 +101,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Role)
 	_ = cmd.MarkFlagRequired(flag.TestBucket)

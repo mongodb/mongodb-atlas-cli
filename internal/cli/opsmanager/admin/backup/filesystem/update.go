@@ -96,6 +96,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.storePath, flag.StorePath, "", usage.StorePath)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.StorePath)
 	_ = cmd.MarkFlagRequired(flag.MMAPV1CompressionSetting)

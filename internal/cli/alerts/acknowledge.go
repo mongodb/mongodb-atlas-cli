@@ -62,7 +62,7 @@ func (opts *AcknowledgeOpts) Run() error {
 func (opts *AcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
 	if opts.forever {
 		// To acknowledge an alert “forever”, set the field value to 100 years in the future.
-		years := 100
+		const years = 100
 		opts.until = time.Now().AddDate(years, 1, 1).Format(time.RFC3339)
 	}
 
@@ -109,6 +109,7 @@ func AcknowledgeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

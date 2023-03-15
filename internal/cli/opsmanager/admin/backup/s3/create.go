@@ -117,6 +117,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.pathStyleAccessEnabled, flag.PathStyleAccessEnabled, false, usage.PathStyleAccessEnabled)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Name)
 	_ = cmd.MarkFlagRequired(flag.URI)

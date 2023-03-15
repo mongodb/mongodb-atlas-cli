@@ -111,6 +111,7 @@ User accounts and API keys with any role can run this command.`,
 	cmd.Flags().StringVar(&opts.id, flag.ID, "", usage.UserID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

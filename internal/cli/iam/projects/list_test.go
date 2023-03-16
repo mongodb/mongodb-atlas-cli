@@ -22,6 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	atlasv2 "go.mongodb.org/atlas/api/v1alpha"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -30,7 +31,8 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.Projects{}
+	// expected := &mongodbatlas.Projects{}
+	expected := &atlasv2.Group{}
 
 	t.Run("No ConfigOrgID is given", func(t *testing.T) {
 		listOpts := &ListOpts{

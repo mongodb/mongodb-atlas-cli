@@ -30,7 +30,7 @@ import (
 )
 
 const (
-	atlasCreateTemplate = "Project '{{.ID}}' created.\n"
+	atlasCreateTemplate = "Project '{{.Id}}' created.\n"
 	govRegionOnly       = "GOV_REGIONS_ONLY"
 )
 
@@ -64,8 +64,7 @@ func (opts *CreateOpts) Run() error {
 		defaultAlertSettings = &f
 	}
 
-	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(),
-		opts.newRegionUsageRestrictions(), defaultAlertSettings, opts.newCreateProjectOptions())
+	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(), defaultAlertSettings, opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err

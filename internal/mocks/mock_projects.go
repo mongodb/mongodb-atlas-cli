@@ -126,9 +126,9 @@ func (m *MockProjectCreator) EXPECT() *MockProjectCreatorMockRecorder {
 }
 
 // CreateProject mocks base method.
-func (m *MockProjectCreator) CreateProject(arg0, arg1, arg2 string, arg3 *bool, arg4 *mongodbatlas.CreateProjectOptions) (interface{}, error) {
+func (m *MockProjectCreator) CreateProject(arg0, arg1 string, arg3 *bool, arg4 *mongodbatlas.CreateProjectOptions) (interface{}, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateProject", arg0, arg1, arg2, arg3, arg4)
+	ret := m.ctrl.Call(m, "CreateProject", arg0, arg1, arg3, arg4)
 	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1

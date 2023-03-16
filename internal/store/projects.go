@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas/api/v1alpha"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -34,7 +35,7 @@ type OrgProjectLister interface {
 }
 
 type ProjectCreator interface {
-	CreateProject(string, string, string, *bool, *atlas.CreateProjectOptions) (interface{}, error)
+	CreateProject(string, string, *bool, *atlas.CreateProjectOptions) (interface{}, error)
 	ServiceVersionDescriber
 }
 
@@ -84,7 +85,7 @@ func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Organizations.Projects(s.ctx, orgID, opts)
+		result, _, err := s.clientv2.OrganizationsApi.ListOrganizationProjects(s.ctx, orgID).IncludeCount(opts.IncludeCount).ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum)).Execute()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Projects(s.ctx, orgID, opts)
@@ -98,7 +99,7 @@ func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (i
 func (s *Store) Project(id string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetOneProject(s.ctx, id)
+		result, _, err := s.clientv2.ProjectsApi.GetProject(s.ctx, id).Execute()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Projects.Get(s.ctx, id)
@@ -109,11 +110,11 @@ func (s *Store) Project(id string) (interface{}, error) {
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateProject(name, orgID, regionUsageRestrictions string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (interface{}, error) {
+func (s *Store) CreateProject(name, orgID string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		project := &atlas.Project{Name: name, OrgID: orgID, RegionUsageRestrictions: regionUsageRestrictions, WithDefaultAlertsSettings: defaultAlertSettings}
-		result, _, err := s.client.(*atlas.Client).Projects.Create(s.ctx, project, opts)
+		group := &atlasv2.Group{Name: name, OrgId: orgID, WithDefaultAlertsSettings: defaultAlertSettings}
+		result, _, err := s.clientv2.ProjectsApi.CreateProject(s.ctx).Group(*group).ProjectOwnerId(opts.ProjectOwnerID).Execute()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		project := &opsmngr.Project{Name: name, OrgID: orgID, WithDefaultAlertsSettings: defaultAlertSettings}

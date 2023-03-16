@@ -15,6 +15,7 @@
 package store
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -61,8 +62,8 @@ func (s *Store) Organization(id string) (*atlas.Organization, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
-		newOrg := atlas.Organization{ID: *result.Id, IsDeleted: result.IsDeleted, Name: result.Name, Links: mapLinks(result.Links)}
-		return &newOrg, err
+		newOrg, err := mapOrganizationResult(result, err)
+		return newOrg, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Get(s.ctx, id)
 		return result, err
@@ -97,6 +98,22 @@ func (s *Store) DeleteOrganization(id string) error {
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+}
+
+func mapOrganizationResult(result *atlasv2.Organization, err error) (*atlas.Organization, error) {
+	if err != nil {
+		return nil, err
+	}
+	if result == nil {
+		return nil, errors.New("GetOrganization response empty")
+	}
+	newOrg := atlas.Organization{
+		ID:        *result.Id,
+		IsDeleted: result.IsDeleted,
+		Name:      result.Name,
+		Links:     mapLinks(result.Links),
+	}
+	return &newOrg, nil
 }
 
 func mapLinks(v2Links []atlasv2.Link) []*atlas.Link {

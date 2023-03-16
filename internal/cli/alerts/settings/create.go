@@ -68,6 +68,9 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create",
 		Short: "Create an alert configuration for your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		Example: fmt.Sprintf(`  # Create an alert configuration that notifies a user when they join a group for the project with the ID 5df90590f10fab5e33de2305:
   %s alerts settings create --event JOINED_GROUP --enabled \
   --notificationType USER --notificationEmailEnabled \

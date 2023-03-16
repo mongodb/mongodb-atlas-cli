@@ -46,7 +46,7 @@ type OrganizationDeleter interface {
 func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Organizations, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		//TODO: Migrate once OrganizationsListOptions.IncludeDeletedOrgs property is generated
+		//TODO: Migrate once OrganizationsListOptions.IncludeDeletedOrgs property is generated CLOUDP-166105
 		result, _, err := s.client.(*atlas.Client).Organizations.List(s.ctx, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
@@ -88,7 +88,7 @@ func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 func (s *Store) DeleteOrganization(id string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		// TODO: migrate once 406 response is fixed
+		// TODO: migrate once 406 response is fixed CLOUDP-166120
 		// _, err := s.clientv2.OrganizationsApi.DeleteOrganization(s.ctx, id).Execute()
 		_, err := s.client.(*atlas.Client).Organizations.Delete(s.ctx, id)
 		return err

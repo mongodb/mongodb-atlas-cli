@@ -57,7 +57,7 @@
 | `cluster list`                              | Y         |           |           | Y         |       |       |
 | `cluster start`                             | N         |           |           | Y         |       |       |
 | `cluster pause`                             | N         |           |           | Y         |       |       |
-| `cluster update`                            | Y         |           |           | Y         |       |       |
+| `cluster update`                            | Y         | Y         | Y         | Y         | Y     | Y     |
 | `cluster watch`                             | Y         |           |           | Y         |       |       |
 | `cluster onlineArchive create`              | Y         |           |           | Y         | N     | N     |
 | `cluster onlineArchive delete`              | Y         |           |           | Y         | N     | N     |

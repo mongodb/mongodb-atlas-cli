@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -29,7 +30,7 @@ type OrganizationLister interface {
 }
 
 type OrganizationDescriber interface {
-	Organization(string) (interface{}, error)
+	Organization(string) (*atlas.Organization, error)
 }
 
 type OrganizationCreator interface {
@@ -44,6 +45,7 @@ type OrganizationDeleter interface {
 func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Organizations, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
+		//TODO: Migrate once OrganizationsListOptions.IncludeDeletedOrgs property is generated
 		result, _, err := s.client.(*atlas.Client).Organizations.List(s.ctx, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
@@ -55,11 +57,12 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Orga
 }
 
 // Organization encapsulate the logic to manage different cloud providers.
-func (s *Store) Organization(id string) (interface{}, error) {
+func (s *Store) Organization(id string) (*atlas.Organization, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
-		return result, err
+		newOrg := atlas.Organization{ID: *result.Id, IsDeleted: result.IsDeleted, Name: result.Name, Links: mapLinks(result.Links)}
+		return &newOrg, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Get(s.ctx, id)
 		return result, err
@@ -84,6 +87,8 @@ func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 func (s *Store) DeleteOrganization(id string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
+		// TODO: migrate once 406 response is fixed
+		// _, err := s.clientv2.OrganizationsApi.DeleteOrganization(s.ctx, id).Execute()
 		_, err := s.client.(*atlas.Client).Organizations.Delete(s.ctx, id)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
@@ -92,4 +97,12 @@ func (s *Store) DeleteOrganization(id string) error {
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+}
+
+func mapLinks(v2Links []atlasv2.Link) []*atlas.Link {
+	atlasLinks := make([]*atlas.Link, len(v2Links))
+	for i, v2Link := range v2Links {
+		atlasLinks[i] = &atlas.Link{Rel: *v2Link.Rel, Href: *v2Link.Href}
+	}
+	return atlasLinks
 }

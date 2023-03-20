@@ -237,7 +237,7 @@ func TestExportJobs(t *testing.T) {
 			exportsEntity,
 			jobsEntity,
 			"create",
-			"--bucketId",
+			"--exportId",
 			bucketID,
 			"--clusterName",
 			clusterName,
@@ -275,7 +275,7 @@ func TestExportJobs(t *testing.T) {
 			"describe",
 			"--clusterName",
 			clusterName,
-			"--bucketId",
+			"--exportId",
 			bucketID,
 			"-o=json")
 		cmd.Env = os.Environ()

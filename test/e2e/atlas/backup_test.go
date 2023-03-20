@@ -221,7 +221,6 @@ func TestExportJobs(t *testing.T) {
 	t.Run("watch snapshot creation", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
-			exportsEntity,
 			snapshotsEntity,
 			"watch",
 			snapshotID)
@@ -310,7 +309,6 @@ func TestExportJobs(t *testing.T) {
 	t.Run("Delete snapshot", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
-			exportsEntity,
 			snapshotsEntity,
 			"delete",
 			snapshotID,
@@ -331,7 +329,6 @@ func TestExportJobs(t *testing.T) {
 	t.Run("watch snapshot deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
-			exportsEntity,
 			snapshotsEntity,
 			"watch",
 			snapshotID)

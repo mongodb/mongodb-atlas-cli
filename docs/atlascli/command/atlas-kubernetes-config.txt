@@ -15,7 +15,6 @@ atlas kubernetes config
 Manage Kubernetes configuration resources.
 
 This command provides your Kubernetes configuration access to Atlas.
-
 Options
 -------
 
@@ -47,6 +46,7 @@ Inherited Options
      - string
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+
 
 Related Commands
 ----------------

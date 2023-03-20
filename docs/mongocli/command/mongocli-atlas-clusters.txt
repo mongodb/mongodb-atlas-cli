@@ -15,7 +15,6 @@ mongocli atlas clusters
 Manage clusters for your project.
 
 The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters.
-
 Options
 -------
 
@@ -47,6 +46,7 @@ Inherited Options
      - string
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+
 
 Related Commands
 ----------------

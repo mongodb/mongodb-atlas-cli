@@ -16,7 +16,6 @@ List clusters for your project.
 
 When listing clusters with no output format the information provided is defined by monitoring.
 When using an output format the information will be provided by automation.
-
 Syntax
 ------
 
@@ -65,4 +64,5 @@ Inherited Options
      - string
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+
 

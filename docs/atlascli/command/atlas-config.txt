@@ -20,7 +20,6 @@ $ atlas config set --help
 
 You can also use environment variables (MONGODB_ATLAS_*) when running the tool.
 To find out more, see the documentation: https://dochub.mongodb.org/core/atlas-cli-env-variables.
-
 Options
 -------
 
@@ -52,6 +51,7 @@ Inherited Options
      - string
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+
 
 Related Commands
 ----------------

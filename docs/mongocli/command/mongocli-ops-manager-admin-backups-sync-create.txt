@@ -13,7 +13,6 @@ mongocli ops-manager admin backups sync create
    :class: singlecol
 
 Create a backup sync configuration.
-
 Syntax
 ------
 
@@ -94,4 +93,5 @@ Inherited Options
      - string
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+
 

@@ -15,7 +15,6 @@ mongocli ops-manager clusters unmanage
 Stop managing a cluster via automation.
 
 This commands only removes entries from the automation config but does not actually remove a cluster.
-
 Syntax
 ------
 
@@ -80,4 +79,5 @@ Inherited Options
      - string
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+
 

@@ -17,7 +17,6 @@ Generate the autocompletion script for the specified shell
 Generate the autocompletion script for atlas for the specified shell.
 See each sub-command's help for details on how to use the generated script.
 
-
 Options
 -------
 
@@ -49,6 +48,7 @@ Inherited Options
      - string
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+
 
 Related Commands
 ----------------

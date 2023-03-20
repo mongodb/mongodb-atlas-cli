@@ -23,7 +23,6 @@ The MongoDB Agent checks whether the specified timestamp is later than the time 
 Warning: Use this method with caution. During initial sync, Automation removes the entire contents of the node’s dbPath directory.
 
 To learn more, see: https://docs.mongodb.com/manual/tutorial/resync-replica-set-member/
-
 Syntax
 ------
 
@@ -96,4 +95,5 @@ Inherited Options
      - string
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+
 

@@ -115,6 +115,30 @@ func TestDeployReplicaSet(t *testing.T) {
 		}
 	})
 
+	t.Run("Update", func(t *testing.T) {
+		if err := generateRSConfigUpdate(testFile); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		cmd := exec.Command(cliPath,
+			entity,
+			clustersEntity,
+			"update",
+			clusterName,
+			"-f",
+			testFile,
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+	})
+
+	t.Run("Watch", watchAutomation(cliPath))
+
 	t.Run("Reclaim free space", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,

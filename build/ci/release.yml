@@ -613,6 +613,7 @@ tasks:
       - func: "update choco"
         vars:
           TOOL_NAME: ${tool_name}
+          SECRET_API_KEY: ${chocolatey_api_key}
       - func: "uninstall go-msi"
       - command: s3.put
         params:

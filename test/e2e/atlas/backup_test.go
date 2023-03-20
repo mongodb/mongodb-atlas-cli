@@ -17,14 +17,16 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
-	"os/exec"
 	"testing"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	exec "golang.org/x/sys/execabs"
 )
 
 func TestExportBuckets(t *testing.T) {
@@ -117,5 +119,252 @@ func TestExportBuckets(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		r.NoError(err, string(resp))
+	})
+}
+
+func TestExportJobs(t *testing.T) {
+	cliPath, err := e2e.AtlasCLIBin()
+	r := require.New(t)
+	r.NoError(err)
+
+	clusterName, err := RandClusterName()
+	fmt.Println(clusterName)
+	r.NoError(err)
+
+	const cloudProvider = "AWS"
+	iamRoleID := os.Getenv("E2E_CLOUD_ROLE_ID")
+	bucketName := os.Getenv("E2E_TEST_BUCKET")
+	r.NotEmpty(iamRoleID)
+	r.NotEmpty(bucketName)
+	var bucketID string
+	var snapshotID string
+
+	t.Run("Create cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"create",
+			clusterName,
+			"--backup",
+			"--tier", tierM10,
+			"--region=US_EAST_1",
+			"--provider", e2eClusterProvider,
+			"--mdbVersion", e2eSharedMDBVer,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		r.NoError(err, string(resp))
+
+		var cluster *atlas.Cluster
+		err = json.Unmarshal(resp, &cluster)
+		r.NoError(err)
+
+		ensureSharedCluster(t, cluster, clusterName, e2eSharedMDBVer, tierM10, 2)
+	})
+
+	t.Run("Watch create cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			clusterName,
+		)
+		cmd.Env = os.Environ()
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
+	})
+
+	t.Run("Create bucket", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			exportsEntity,
+			bucketsEntity,
+			"create",
+			bucketName,
+			"--cloudProvider",
+			cloudProvider,
+			"--iamRoleId",
+			iamRoleID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		r.NoError(err, string(resp))
+
+		a := assert.New(t)
+		var exportBucket atlas.CloudProviderSnapshotExportBucket
+		if err = json.Unmarshal(resp, &exportBucket); a.NoError(err) {
+			a.Equal(bucketName, exportBucket.BucketName)
+		}
+		bucketID = exportBucket.ID
+	})
+
+	t.Run("Create snapshot", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			snapshotsEntity,
+			"create",
+			clusterName,
+			"--desc",
+			"test-snapshot",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		r.NoError(err, string(resp))
+
+		a := assert.New(t)
+		var snapshot atlas.CloudProviderSnapshot
+		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
+			a.Equal("test-snapshot", snapshot.Description)
+		}
+		snapshotID = snapshot.ID
+	})
+
+	t.Run("watch snapshot creation", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			exportsEntity,
+			snapshotsEntity,
+			"watch",
+			snapshotID)
+		cmd.Env = os.Environ()
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
+	})
+
+	t.Run("Create job", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			exportsEntity,
+			jobsEntity,
+			"create",
+			"--bucketId",
+			bucketID,
+			"--clusterName",
+			clusterName,
+			"--snapshotId",
+			snapshotID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		r.NoError(err, string(resp))
+
+		a := assert.New(t)
+		var job atlas.CloudProviderSnapshotExportJob
+		if err = json.Unmarshal(resp, &job); a.NoError(err) {
+			a.Equal(job.ExportBucketID, bucketID)
+		}
+	})
+
+	t.Run("Watch create job", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			clusterName,
+		)
+		cmd.Env = os.Environ()
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
+	})
+
+	t.Run("Describe job", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			exportsEntity,
+			jobsEntity,
+			"describe",
+			"--clusterName",
+			clusterName,
+			"--bucketId",
+			bucketID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		r.NoError(err, string(resp))
+
+		a := assert.New(t)
+		var job atlas.CloudProviderSnapshotExportJob
+		if err = json.Unmarshal(resp, &job); a.NoError(err) {
+			a.Equal(job.ExportBucketID, bucketID)
+		}
+	})
+
+	t.Run("List jobs", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			exportsEntity,
+			jobsEntity,
+			"ls",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		r.NoError(err, string(resp))
+
+		var r []atlas.CloudProviderSnapshotExportJob
+		a := assert.New(t)
+		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			a.NotEmpty(r)
+		}
+	})
+
+	t.Run("Delete snapshot", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			exportsEntity,
+			snapshotsEntity,
+			"delete",
+			snapshotID,
+			"--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		r.NoError(err, string(resp))
+
+		a := assert.New(t)
+		var snapshot atlas.CloudProviderSnapshot
+		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
+			a.Equal("Test snapshot", snapshot.Description)
+		}
+		snapshotID = snapshot.ID
+	})
+
+	t.Run("watch snapshot deletion", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			exportsEntity,
+			snapshotsEntity,
+			"watch",
+			snapshotID)
+		cmd.Env = os.Environ()
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
+	})
+
+	t.Run("Delete cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"delete",
+			clusterName,
+			"--force",
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		r.NoError(err, string(resp))
+
+		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
+		a := assert.New(t)
+		a.Equal(expected, string(resp))
+	})
+
+	t.Run("Watch delete cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			clusterName,
+		)
+		cmd.Env = os.Environ()
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
 	})
 }

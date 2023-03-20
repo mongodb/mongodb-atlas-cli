@@ -223,7 +223,9 @@ func TestExportJobs(t *testing.T) {
 			backupsEntity,
 			snapshotsEntity,
 			"watch",
-			snapshotID)
+			snapshotID,
+			"--clusterName",
+			clusterName)
 		cmd.Env = os.Environ()
 		resp, _ := cmd.CombinedOutput()
 		t.Log(string(resp))
@@ -331,7 +333,9 @@ func TestExportJobs(t *testing.T) {
 			backupsEntity,
 			snapshotsEntity,
 			"watch",
-			snapshotID)
+			snapshotID,
+			"--clusterName",
+			clusterName)
 		cmd.Env = os.Environ()
 		resp, _ := cmd.CombinedOutput()
 		t.Log(string(resp))

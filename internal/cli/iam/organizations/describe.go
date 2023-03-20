@@ -32,7 +32,7 @@ const (
 {{.Id}}	{{.Name}}
 `
 	describeTemplateOnPrem = `ID	NAME
-{{.Id}}	{{.Name}}
+{{.ID}}	{{.Name}}
 `
 )
 
@@ -63,7 +63,6 @@ func (opts *DescribeOpts) Run() error {
 // mongocli iam organizations(s) describe <ID>.
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
-	// opts.Template = describeTemplate
 	cmd := &cobra.Command{
 		Use:     "describe <ID>",
 		Aliases: []string{"show"},

@@ -44,7 +44,7 @@ type OrganizationDeleter interface {
 func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Organizations, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		//TODO: Migrate once OrganizationsListOptions.IncludeDeletedOrgs property is generated CLOUDP-166105
+		//TODO: Migrate after CLOUDP-167160 (List property TotalCount always set to 0)
 		result, _, err := s.client.(*atlas.Client).Organizations.List(s.ctx, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:

@@ -55,15 +55,12 @@ func (opts *OutputOpts) InitOutput(w io.Writer, t string) func() error {
 
 // InitOutput allow to init the OutputOpts in a functional way.
 func (opts *OutputOpts) InitConditionalOutput(w io.Writer, cloudTemplate string, onPremTemplate string) func() error {
-	if config.IsCloud() {
-		return func() error {
-			opts.Template = cloudTemplate
-			opts.OutWriter = w
-			return nil
-		}
-	}
 	return func() error {
-		opts.Template = onPremTemplate
+		if config.IsCloud() {
+			opts.Template = cloudTemplate
+		} else {
+			opts.Template = onPremTemplate
+		}
 		opts.OutWriter = w
 		return nil
 	}

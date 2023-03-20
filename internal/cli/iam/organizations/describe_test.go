@@ -50,7 +50,7 @@ func TestDescribe_Run(t *testing.T) {
 		store: mockStore,
 		id:    "5a0a1e7e0f2912c554080adc",
 		OutputOpts: cli.OutputOpts{
-			Template:  describeTemplateOnPrem,
+			Template:  describeTemplateCloud,
 			OutWriter: buf,
 		},
 	}

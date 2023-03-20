@@ -15,6 +15,11 @@
 
 set -Eeou pipefail
 
+if [[ "${TOOL_NAME:?}" != "atlascli" ]]; then
+    echo "Skipping chocopudate.sh"
+    exit 0
+fi
+
 GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")"
 CGO_ENABLED=0
 export GOCACHE

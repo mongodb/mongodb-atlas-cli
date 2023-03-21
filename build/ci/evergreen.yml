@@ -508,7 +508,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters,m0
   - name: atlas_kubernetes_e2e
-    tags: ["e2e","clusters","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernates_atlas"]
+    tags: ["e2e","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernates_atlas"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -1465,7 +1465,7 @@ buildvariants:
       go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
-      - name: "atlas_kubernetes_e2e"
+      - name: ".e2e .atlas .kubernetes"
   - name: e2e_decryption
     display_name: "E2E Decryption Tests"
     run_on:

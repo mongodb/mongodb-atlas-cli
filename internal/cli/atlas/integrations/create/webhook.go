@@ -74,6 +74,9 @@ func WebhookBuilder() *cobra.Command {
 		Long: `The requesting API key must have the Organization Owner or Project Owner role to configure a webhook integration.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplateWebhook,
+		},
 		Example: fmt.Sprintf(`  # Integrate a webhook with Atlas that uses the secret mySecret for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create WEBHOOK --url http://9b4ac7aa.abc.io/payload --secret mySecret --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,

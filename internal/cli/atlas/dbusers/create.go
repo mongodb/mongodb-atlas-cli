@@ -191,6 +191,7 @@ func CreateBuilder() *cobra.Command {
 		Args: cobra.OnlyValidArgs,
 		Annotations: map[string]string{
 			"builtInRoleDesc": "Atlas built-in role that you want to assign to the user.",
+			"output":          createTemplate,
 		},
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

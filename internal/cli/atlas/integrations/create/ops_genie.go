@@ -74,6 +74,9 @@ func OpsGenieBuilder() *cobra.Command {
 		Long: `The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Opsgenie.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplateOpsGenie,
+		},
 		Example: fmt.Sprintf(`  # Integrate Opsgenie with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create OPS_GENIE --apiKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,

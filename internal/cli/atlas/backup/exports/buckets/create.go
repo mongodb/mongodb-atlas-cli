@@ -80,6 +80,7 @@ func CreateBuilder() *cobra.Command {
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"bucketNameDesc": "Name of the existing S3 bucket that the provided role ID is authorized to access.",
+			"output":         createTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

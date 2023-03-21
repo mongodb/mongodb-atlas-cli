@@ -78,6 +78,9 @@ func CreateBuilder() *cobra.Command {
 Your API key must have the GROUP_ATLAS_ADMIN (Project Owner) role to create a private endpoint.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

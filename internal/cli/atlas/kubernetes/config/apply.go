@@ -65,12 +65,11 @@ func (opts *ApplyOpts) autoDetectParams(k8sClient client.Client) error {
 	}
 
 	if opts.operatorVersion == "" {
-		operatorVersion, found := strings.CutPrefix(operatorDeployment.Spec.Template.Spec.Containers[0].Image, fmt.Sprintf("%s:", containerImage))
-		if !found {
+		if !strings.HasPrefix(operatorDeployment.Spec.Template.Spec.Containers[0].Image, fmt.Sprintf("%s:", containerImage)) {
 			return fmt.Errorf("unable to auto detect operator version. you should explicitly set operator version if you are running an openshift certified installation")
 		}
 
-		opts.operatorVersion = operatorVersion
+		opts.operatorVersion = strings.Trim(operatorDeployment.Spec.Template.Spec.Containers[0].Image, fmt.Sprintf("%s:", containerImage))
 	}
 
 	return nil

@@ -130,6 +130,7 @@ functions:
           - AZURE_TENANT_ID
           - AZURE_CLIENT_ID
           - AZURE_CLIENT_SECRET
+          - E2E_TIMEOUT
           - revision
         env:
           <<: *go_env
@@ -1296,6 +1297,7 @@ tasks:
           E2E_TAGS: atlas,backup
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_TIMEOUT: 5h
   - name: atlas_cleanup_e2e
     tags: [ "e2e","cleanup", "foliage_infrequent_task" ]
     must_have_test_results: true

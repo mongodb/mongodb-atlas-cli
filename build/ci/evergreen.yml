@@ -1457,7 +1457,7 @@ buildvariants:
     tasks:
       - name: ".e2e .clusters .atlas"
   - name: e2e_atlas_kubernetes
-    display_name: "E2E Atlas Cluster Tests"
+    display_name: "E2E Atlas Kubernetes Tests"
     run_on:
       - ubuntu2204-small
     expansions:
@@ -1465,7 +1465,7 @@ buildvariants:
       go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     tasks:
-      - name: ".e2e .clusters .atlas .kubernetes"
+      - name: "atlas_kubernetes_e2e"
   - name: e2e_decryption
     display_name: "E2E Decryption Tests"
     run_on:

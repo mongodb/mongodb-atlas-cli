@@ -69,7 +69,10 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Short:   "List available regions that Atlas supports for new deployments.",
 		Aliases: []string{"ls"},
-		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
+		Args: require.NoArgs,
 		Example: `  # List available regions for a given cloud provider and tier:
   atlas cluster availableRegions --provider AWS --tier M50
 

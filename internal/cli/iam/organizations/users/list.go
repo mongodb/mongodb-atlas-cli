@@ -67,6 +67,9 @@ func ListBuilder() *cobra.Command {
 		Short:   "Return all users for an organization.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all users for the organization with the ID 5e2211c17a3e5a48f5497de3:
   %s organizations users list --orgId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

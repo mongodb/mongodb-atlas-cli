@@ -110,6 +110,9 @@ func ListBuilder() *cobra.Command {
 `,
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.orgID != "" && opts.projectID != "" {
 				return fmt.Errorf("both --%s and --%s set", flag.ProjectID, flag.OrgID)

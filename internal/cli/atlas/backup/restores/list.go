@@ -68,6 +68,7 @@ func ListBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve restore jobs.",
+			"output":          restoreListTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return all continuous backup restore jobs for the cluster Cluster0:
   %s backup restore list Cluster0`, cli.ExampleAtlasEntryPoint()),

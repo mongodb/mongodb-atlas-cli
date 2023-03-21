@@ -78,6 +78,9 @@ func ListBuilder() *cobra.Command {
 		Short:   "Return all organizations.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all organizations:
   %[1]s organizations list --output json
   

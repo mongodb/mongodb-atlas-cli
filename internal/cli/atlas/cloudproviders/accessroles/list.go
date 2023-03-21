@@ -63,6 +63,9 @@ func ListBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

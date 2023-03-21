@@ -72,6 +72,7 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Annotations: map[string]string{
 			"hostname:portDesc": "Hostname and port number of the instance running the MongoDB process.",
+			"output":            databasesListTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of available databases for the host atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
   %s metrics databases list atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 --output json`,

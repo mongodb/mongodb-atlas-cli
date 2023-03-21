@@ -64,6 +64,9 @@ func ListBuilder() *cobra.Command {
 		Long:    `To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.`,
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all federated database instances in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s dataLakes list --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

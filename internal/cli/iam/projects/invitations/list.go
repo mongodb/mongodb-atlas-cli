@@ -71,6 +71,9 @@ func ListBuilder() *cobra.Command {
 		Short:   "Return all pending invitations to your project.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project User Admin"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of pending invitations to the project with the ID 5f71e5255afec75a3d0f96dc:
   %s projects invitations list --projectId 5f71e5255afec75a3d0f96dc --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

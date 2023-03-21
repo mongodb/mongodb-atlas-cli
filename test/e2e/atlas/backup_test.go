@@ -308,7 +308,7 @@ func TestExportJobs(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		r.NoError(err, string(resp))
 
-		var r []atlas.CloudProviderSnapshotExportJob
+		var r atlas.CloudProviderSnapshotExportJobs
 		a := assert.New(t)
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)

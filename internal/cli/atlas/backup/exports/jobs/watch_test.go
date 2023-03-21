@@ -44,7 +44,7 @@ func TestWatchOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockExportJobsDescriber(ctrl)
 
 	expected := &mongodbatlas.CloudProviderSnapshotExportJob{
-		State: "Completed",
+		State: "Successful",
 	}
 
 	watchOpts := &WatchOpts{

@@ -53,7 +53,7 @@ func Builder() *cobra.Command {
 			if debugLevel {
 				log.SetLevel(log.DebugLevel)
 			}
-			if err := opts.InitFlow(); err != nil {
+			if err := opts.InitFlow(config.Default())(); err != nil {
 				return err
 			}
 			if err := opts.RefreshAccessToken(cmd.Context()); err != nil {

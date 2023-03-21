@@ -61,7 +61,7 @@ func Builder() *cobra.Command {
 			log.SetOutput(cmd.ErrOrStderr())
 
 			_, _ = log.Warning(deprecatedMessage)
-			if err := opts.InitFlow(); err != nil {
+			if err := opts.InitFlow(config.Default())(); err != nil {
 				return err
 			}
 			if err := opts.RefreshAccessToken(cmd.Context()); err != nil {

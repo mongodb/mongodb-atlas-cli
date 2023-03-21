@@ -219,7 +219,7 @@ func TestExportJobs(t *testing.T) {
 		snapshotID = snapshot.ID
 	})
 
-	t.Run("watch snapshot creation", func(t *testing.T) {
+	t.Run("Watch snapshot creation", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -321,6 +321,8 @@ func TestExportJobs(t *testing.T) {
 			snapshotsEntity,
 			"delete",
 			snapshotID,
+			"--clusterName",
+			clusterName,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -494,6 +496,19 @@ func TestSnapshots(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		r.NoError(err, string(resp))
+	})
+
+	t.Run("Watch deletion", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			snapshotsEntity,
+			"watch",
+			snapshotID,
+			"--clusterName",
+			clusterName)
+		cmd.Env = os.Environ()
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
 	})
 
 	t.Run("Delete cluster", func(t *testing.T) {

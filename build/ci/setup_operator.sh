@@ -2,8 +2,9 @@
 
 set -o errexit
 
+workdir=$(pwd)
 os=$(uname | tr '[:upper:]' '[:lower:]')
-arch=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
+arch=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n "$(uname -m)" ;; esac)
 
 if ! [ -x "$(command -v "$workdir"/bin/kind)" ]; then
     echo "Kind is not installed. Installing Kind"
@@ -53,7 +54,7 @@ if [ "$("$workdir"/bin/kubectl get pods --namespace mongodb-atlas-system --selec
   echo "waiting until operator is ready"
   checkCmd="while ! ${workdir}/bin/kubectl --namespace mongodb-atlas-system get pods --selector app.kubernetes.io/instance=mongodb-atlas-kubernetes-operator --output jsonpath={.items[0].status.phase} 2>/dev/null | grep -q Running ; do printf .; sleep 1; done"
   timeout --foreground 1m bash -c "${checkCmd}" || true
-  if [ "$("$workdir"/bin/kubectl --namespace mongodb-atlas-system get pods --selector app.kubernetes.io/instance=mongodb-atlas-kubernetes-operator --output jsonpath={.items[0].status.phase} | grep -q Running)" = 0 ]; then
+  if [ "$("$workdir"/bin/kubectl --namespace mongodb-atlas-system get pods --selector app.kubernetes.io/instance=mongodb-atlas-kubernetes-operator --output jsonpath='{.items[0].status.phase}' | grep -q Running)" = 0 ]; then
       echo "Operator hasn't reached RUNNING state after 1 minute. The full yaml configuration for the pod is:"
       kubectl --namespace mongodb-atlas-system get pods --selector app.kubernetes.io/instance=mongodb-atlas-kubernetes-operator --output yaml#
 

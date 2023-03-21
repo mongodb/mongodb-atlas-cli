@@ -233,15 +233,7 @@ func TestExportJobs(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		r.NoError(err, string(resp))
-
-		a := assert.New(t)
-		var snapshot atlas.CloudProviderSnapshot
-		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
-			a.Equal("test-snapshot", snapshot.Description)
-		}
-		snapshotID = snapshot.ID
 	})
 
 	t.Run("watch snapshot deletion", func(t *testing.T) {

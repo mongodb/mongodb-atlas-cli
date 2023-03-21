@@ -663,6 +663,28 @@ func deleteProject(projectID string) error {
 	return nil
 }
 
+func createDBUserWithCert(projectID, username string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+
+	cmd := exec.Command(cliPath,
+		dbusersEntity,
+		"create",
+		"readAnyDatabase",
+		"--username", username,
+		"--x509Type", "MANAGED",
+		"--projectId", projectID)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return nil
+}
+
 func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)

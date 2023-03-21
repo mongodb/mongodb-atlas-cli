@@ -41,6 +41,7 @@ type atlasE2ETestGenerator struct {
 	teamName       string
 	teamID         string
 	teamUser       string
+	dbUser         string
 	tier           string
 	enableBackup   bool
 	firstProcess   *mongodbatlas.Process
@@ -151,6 +152,35 @@ func (g *atlasE2ETestGenerator) generateEmptyProject(prefix string) {
 	g.t.Cleanup(func() {
 		deleteProjectWithRetry(g.t, g.projectID)
 	})
+}
+
+func (g *atlasE2ETestGenerator) generateDBUser(prefix string) {
+	g.t.Helper()
+
+	if g.projectID == "" {
+		g.t.Fatal("unexpected error: project must be generated")
+	}
+
+	if g.dbUser != "" {
+		g.t.Fatal("unexpected error: DBUser was already generated")
+	}
+
+	var err error
+	if prefix == "" {
+		g.dbUser, err = RandTeamName()
+	} else {
+		g.dbUser, err = RandTeamNameWithPrefix(prefix)
+	}
+	if err != nil {
+		g.t.Fatalf("unexpected error: %v", err)
+	}
+
+	err = createDBUserWithCert(g.projectID, g.dbUser)
+	if err != nil {
+		g.dbUser = ""
+		g.t.Fatalf("unexpected error: %v", err)
+	}
+	g.t.Logf("dbUser=%s", g.dbUser)
 }
 
 func deleteTeamWithRetry(t *testing.T, teamID string) {

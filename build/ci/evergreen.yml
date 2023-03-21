@@ -282,6 +282,20 @@ functions:
           <<: *go_env
           KMIP_CA: ${logs_decrypt_kmip_ca}
           KMIP_CERT: ${logs_decrypt_kmip_cert}
+  setup operator:
+    command: subprocess.exec
+    type: setup
+    params:
+      working_dir: src/github.com/mongodb/mongodb-atlas-cli
+      env:
+        MCLI_ORG_ID: ${atlas_org_id}
+        MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+        MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+        MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+      include_expansions_in_env:
+        - workdir
+      binary: ./build/ci/setup_operator.sh
+
 pre:
   - func: "clone"
 post:
@@ -502,6 +516,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
+      - func: "setup operator"
       - func: "e2e test"
         vars:
           MCLI_ORG_ID: ${atlas_org_id}

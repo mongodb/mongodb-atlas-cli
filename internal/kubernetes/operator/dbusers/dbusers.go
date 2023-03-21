@@ -54,9 +54,6 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 		}
 		scopes := convertUserScopes(user)
 
-		secret := buildUserSecret(resourceName, targetNamespace, dictionary)
-		relatedSecrets = append(relatedSecrets, secret)
-
 		mappedUsers[resourceName] = &atlasV1.AtlasDatabaseUser{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AtlasDatabaseUser",
@@ -79,17 +76,23 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 				Labels:          labels,
 				Roles:           roles,
 				Scopes:          scopes,
-				PasswordSecret: &common.ResourceRef{
-					Name: resources.NormalizeAtlasName(secret.Name, dictionary),
-				},
-				Username: user.Username,
-				X509Type: user.X509Type,
+				Username:        user.Username,
+				X509Type:        user.X509Type,
 			},
 			Status: status.AtlasDatabaseUserStatus{
 				Common: status.Common{
 					Conditions: []status.Condition{},
 				},
 			},
+		}
+
+		if user.X509Type != "MANAGED" {
+			secret := buildUserSecret(resourceName, targetNamespace, dictionary)
+			relatedSecrets = append(relatedSecrets, secret)
+
+			mappedUsers[resourceName].Spec.PasswordSecret = &common.ResourceRef{
+				Name: resources.NormalizeAtlasName(secret.Name, dictionary),
+			}
 		}
 	}
 

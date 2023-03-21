@@ -136,6 +136,7 @@ func TestExportJobs(t *testing.T) {
 	r.NotEmpty(iamRoleID)
 	r.NotEmpty(bucketName)
 	var bucketID string
+	var exportJobID string
 	var snapshotID string
 
 	t.Run("Create cluster", func(t *testing.T) {
@@ -253,15 +254,20 @@ func TestExportJobs(t *testing.T) {
 		var job atlas.CloudProviderSnapshotExportJob
 		if err = json.Unmarshal(resp, &job); a.NoError(err) {
 			a.Equal(job.ExportBucketID, bucketID)
+
+			exportJobID = job.ID
 		}
 	})
 
 	t.Run("Watch create job", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			clustersEntity,
+			backupsEntity,
+			exportsEntity,
+			jobsEntity,
 			"watch",
-			clusterName,
-		)
+			exportJobID,
+			"--clusterName",
+			clusterName)
 		cmd.Env = os.Environ()
 		resp, _ := cmd.CombinedOutput()
 		t.Log(string(resp))

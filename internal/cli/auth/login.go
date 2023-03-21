@@ -276,10 +276,10 @@ func (opts *LoginOpts) LoginPreRun(ctx context.Context) func() error {
 	return func() error {
 		// ignore expired tokens since logging in
 		if err := opts.RefreshAccessToken(ctx); err != nil && !errors.Is(err, cli.ErrInvalidRefreshToken) {
+			// clean up any expired or invalid tokens
+			opts.config.Set(config.AccessTokenField, "")
 			return err
 		}
-		// clean up any expired tokens
-		opts.config.Set(config.AccessTokenField, "")
 		return nil
 	}
 }

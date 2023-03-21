@@ -282,7 +282,7 @@ func TestExportJobs(t *testing.T) {
 			"--clusterName",
 			clusterName,
 			"--exportId",
-			bucketID,
+			exportJobID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -345,6 +345,154 @@ func TestExportJobs(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, _ := cmd.CombinedOutput()
 		t.Log(string(resp))
+	})
+
+	t.Run("Delete cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"delete",
+			clusterName,
+			"--force",
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		r.NoError(err, string(resp))
+
+		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
+		a := assert.New(t)
+		a.Equal(expected, string(resp))
+	})
+
+	t.Run("Watch delete cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			clusterName,
+		)
+		cmd.Env = os.Environ()
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
+	})
+}
+
+func TestSnapshots(t *testing.T) {
+	cliPath, err := e2e.AtlasCLIBin()
+	r := require.New(t)
+	r.NoError(err)
+
+	clusterName, err := RandClusterName()
+	r.NoError(err)
+	fmt.Println(clusterName)
+
+	var snapshotID string
+
+	t.Run("Create cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"create",
+			clusterName,
+			"--backup",
+			"--tier", tierM10,
+			"--region=US_EAST_1",
+			"--provider", e2eClusterProvider,
+			"--mdbVersion", e2eSharedMDBVer,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		r.NoError(err, string(resp))
+
+		var cluster *atlas.Cluster
+		err = json.Unmarshal(resp, &cluster)
+		r.NoError(err)
+
+		ensureSharedCluster(t, cluster, clusterName, e2eSharedMDBVer, tierM10, 10, false)
+	})
+
+	t.Run("Watch create cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			clusterName,
+		)
+		cmd.Env = os.Environ()
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
+	})
+
+	t.Run("Create snapshot", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			snapshotsEntity,
+			"create",
+			clusterName,
+			"--desc",
+			"test-snapshot",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		r.NoError(err, string(resp))
+
+		a := assert.New(t)
+		var snapshot atlas.CloudProviderSnapshot
+		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
+			a.Equal("test-snapshot", snapshot.Description)
+		}
+		snapshotID = snapshot.ID
+	})
+
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			snapshotsEntity,
+			"list",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		r.NoError(err, string(resp))
+
+		var r atlas.CloudProviderSnapshots
+		a := assert.New(t)
+		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			a.NotEmpty(r)
+		}
+	})
+
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			snapshotsEntity,
+			"list",
+			snapshotID,
+			"--clusterName",
+			clusterName,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		r.NoError(err, string(resp))
+
+		a := assert.New(t)
+		var result atlas.CloudProviderSnapshot
+		if err = json.Unmarshal(resp, &result); a.NoError(err) {
+			a.Equal(snapshotID, result.ID)
+		}
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			snapshotsEntity,
+			"delete",
+			snapshotID,
+			"--clusterName",
+			clusterName,
+			"--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		r.NoError(err, string(resp))
 	})
 
 	t.Run("Delete cluster", func(t *testing.T) {

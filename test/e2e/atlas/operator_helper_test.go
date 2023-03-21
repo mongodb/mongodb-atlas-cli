@@ -175,7 +175,7 @@ func (oh *operatorHelper) restoreOperatorImage() {
 	}
 
 	container := deployment.Spec.Template.Spec.Containers[0]
-	container.Image, _ = strings.CutPrefix(container.Image, "quay.io/")
+	container.Image = strings.Trim(container.Image, "quay.io/")
 	deployment.Spec.Template.Spec.Containers[0] = container
 
 	err = oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})

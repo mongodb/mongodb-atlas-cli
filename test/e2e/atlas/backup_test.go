@@ -302,6 +302,7 @@ func TestExportJobs(t *testing.T) {
 			exportsEntity,
 			jobsEntity,
 			"ls",
+			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -329,7 +330,7 @@ func TestExportJobs(t *testing.T) {
 		a := assert.New(t)
 		var snapshot atlas.CloudProviderSnapshot
 		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
-			a.Equal("Test snapshot", snapshot.Description)
+			a.Equal("test-snapshot", snapshot.Description)
 		}
 		snapshotID = snapshot.ID
 	})

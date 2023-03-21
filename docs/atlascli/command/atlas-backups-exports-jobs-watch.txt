@@ -24,7 +24,7 @@ Syntax
 
 .. code-block::
 
-   atlas backups exports jobs watch <exportId> [options]
+   atlas backups exports jobs watch <bucketId> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -39,7 +39,7 @@ Arguments
      - Type
      - Required
      - Description
-   * - exportId
+   * - bucketId
      - string
      - true
      - Unique string that identifies the AWS S3 bucket to which you export your snapshots.

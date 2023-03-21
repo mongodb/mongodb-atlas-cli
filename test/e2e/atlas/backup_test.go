@@ -19,13 +19,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	exec "golang.org/x/sys/execabs"
 )
 
 func TestExportBuckets(t *testing.T) {
@@ -237,7 +237,7 @@ func TestExportJobs(t *testing.T) {
 			exportsEntity,
 			jobsEntity,
 			"create",
-			"--exportId",
+			"--bucketId",
 			bucketID,
 			"--clusterName",
 			clusterName,

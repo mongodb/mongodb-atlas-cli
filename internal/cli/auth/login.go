@@ -275,11 +275,15 @@ func newRegenerationPrompt() survey.Prompt {
 func (opts *LoginOpts) LoginPreRun(ctx context.Context) func() error {
 	return func() error {
 		// ignore expired tokens since logging in
-		if err := opts.RefreshAccessToken(ctx); err != nil && !errors.Is(err, cli.ErrInvalidRefreshToken) {
+		if err := opts.RefreshAccessToken(ctx); err != nil {
 			// clean up any expired or invalid tokens
 			opts.config.Set(config.AccessTokenField, "")
-			return err
+
+			if !errors.Is(err, cli.ErrInvalidRefreshToken) {
+				return err
+			}
 		}
+
 		return nil
 	}
 }

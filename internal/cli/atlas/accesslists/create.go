@@ -142,6 +142,7 @@ The command doesn't overwrite existing entries in the access list. Instead, it a
 		Args: require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"entryDesc": "IP address, CIDR address, or AWS security group ID that you want to add to the access list.",
+			"output":    createTemplate,
 		},
 		Example: fmt.Sprintf(`  # Create an IP access list entry using the current IP address:
   %[1]s accessList create --currentIp

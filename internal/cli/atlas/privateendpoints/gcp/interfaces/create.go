@@ -99,6 +99,7 @@ func CreateBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",
+			"output":              createTemplate,
 		},
 		Example: fmt.Sprintf(
 			`  %s privateEndpoints gcp interfaces create endpoint-1 \

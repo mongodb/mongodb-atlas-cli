@@ -82,6 +82,7 @@ func CreateBuilder() *cobra.Command {
   %s backups snapshots create myDemo --desc "test" --retention 30`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas cluster whose snapshot you want to restore.",
+			"output":          createTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

@@ -22,8 +22,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
@@ -58,6 +56,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
+	mockFlow := mocks.NewMockRefresher(ctrl)
 
 	expectedCluster := &mongodbatlas.AdvancedCluster{
 		StateName: "IDLE",
@@ -82,6 +81,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		SkipSampleData: true,
 		Confirm:        true,
 	}
+	opts.WithFlow(mockFlow)
 
 	projectIPAccessList := opts.newProjectIPAccessList()
 
@@ -114,6 +114,7 @@ func TestQuickstartOpts_Run_NotLoggedIn(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
+	mockFlow := mocks.NewMockRefresher(ctrl)
 
 	buf := new(bytes.Buffer)
 	ctx := context.TODO()
@@ -129,94 +130,17 @@ func TestQuickstartOpts_Run_NotLoggedIn(t *testing.T) {
 		SkipSampleData: true,
 		Confirm:        true,
 	}
+	opts.WithFlow(mockFlow)
 
 	require.Error(t, validate.ErrMissingCredentials, opts.quickstartPreRun(ctx, buf))
-}
-
-func TestQuickstartOpts_Run_NeedLogin_ForceAfterLogin(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
-	mockLoginFlow := mocks.NewMockLoginFlow(ctrl)
-
-	ctx := context.TODO()
-	buf := new(bytes.Buffer)
-
-	expectedCluster := &mongodbatlas.AdvancedCluster{
-		StateName: "IDLE",
-		ConnectionStrings: &mongodbatlas.ConnectionStrings{
-			StandardSrv: "",
-		},
-	}
-
-	expectedDBUser := &mongodbatlas.DatabaseUser{}
-
-	var expectedProjectAccessLists *mongodbatlas.ProjectIPAccessLists
-
-	opts := &Opts{
-		ClusterName:    "ProjectBar",
-		Region:         "US",
-		store:          mockStore,
-		IPAddresses:    []string{"0.0.0.0"},
-		DBUsername:     "user",
-		DBUserPassword: "test",
-		Provider:       "AWS",
-		SkipMongosh:    true,
-		SkipSampleData: true,
-		Confirm:        false,
-		login:          mockLoginFlow,
-		loginOpts:      auth.NewLoginOpts(),
-	}
-
-	setConfig()
-	projectIPAccessList := opts.newProjectIPAccessList()
-
-	mockLoginFlow.
-		EXPECT().
-		PreRun().
-		Return(nil).
-		Times(1)
-
-	mockLoginFlow.
-		EXPECT().
-		Run(ctx).
-		Return(nil).
-		Times(1)
-
-	mockStore.
-		EXPECT().
-		CreateCluster(opts.newCluster()).Return(expectedCluster, nil).
-		Times(1)
-
-	mockStore.
-		EXPECT().
-		CreateProjectIPAccessList(projectIPAccessList).Return(expectedProjectAccessLists, nil).
-		Times(1)
-
-	mockStore.
-		EXPECT().
-		AtlasCluster(opts.ConfigProjectID(), opts.ClusterName).Return(expectedCluster, nil).
-		Times(2)
-
-	mockStore.
-		EXPECT().
-		CreateDatabaseUser(opts.newDatabaseUser()).Return(expectedDBUser, nil).
-		Times(1)
-
-	if err := opts.quickstartPreRun(ctx, buf); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-	opts.Confirm = true
-
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
 }
 
 func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
+	mockFlow := mocks.NewMockRefresher(ctrl)
+	defer ctrl.Finish()
 
 	expectedCluster := &mongodbatlas.AdvancedCluster{
 		StateName: "IDLE",
@@ -242,6 +166,7 @@ func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 		SkipSampleData:              true,
 		Confirm:                     true,
 	}
+	opts.WithFlow(mockFlow)
 
 	projectIPAccessList := opts.newProjectIPAccessList()
 
@@ -284,13 +209,4 @@ func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 	assert.False(t, opts.shouldAskForValue(flag.Username))
 	assert.False(t, opts.shouldAskForValue(flag.Password))
 	assert.False(t, opts.shouldAskForValue(flag.EnableTerminationProtection))
-}
-
-func setConfig() func(ctx context.Context) error {
-	return func(ctx context.Context) error {
-		config.SetOrgID("a")
-		config.SetProjectID("b")
-		config.SetService("cloud")
-		return nil
-	}
 }

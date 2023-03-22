@@ -65,7 +65,10 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create",
 		Short: "Create an AWS IAM role.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Args:  require.NoArgs,
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

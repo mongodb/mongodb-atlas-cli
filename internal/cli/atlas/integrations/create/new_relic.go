@@ -77,6 +77,9 @@ func NewRelicBuilder() *cobra.Command {
 		Short:   "Create or update the New Relic integration.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": createTemplateNewRelic,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

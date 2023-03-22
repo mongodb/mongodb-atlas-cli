@@ -19,11 +19,9 @@ package auth
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -38,7 +36,6 @@ func TestRegisterBuilder(t *testing.T) {
 		RegisterBuilder(),
 		0,
 		[]string{
-			"gov",
 			"noBrowser",
 		},
 	)
@@ -47,28 +44,19 @@ func TestRegisterBuilder(t *testing.T) {
 func Test_registerOpts_Run(t *testing.T) {
 	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
-	mockFlow := mocks.NewMockRegisterAuthenticator(ctrl)
-	mockRegisterFlow := &registerAuthenticatorWrapper{
-		authenticator: mockFlow,
-	}
+	mockFlow := mocks.NewMockRefresher(ctrl)
 	mockConfig := mocks.NewMockLoginConfig(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 
 	buf := new(bytes.Buffer)
 	ctx := context.TODO()
-	loginOpts := &LoginOpts{
-		flow:      mockRegisterFlow,
-		config:    mockConfig,
-		NoBrowser: true,
-	}
 
-	opts := &registerOpts{
-		login: loginOpts,
-	}
-
+	opts := &RegisterOpts{}
+	opts.NoBrowser = true
+	opts.config = mockConfig
 	opts.OutWriter = buf
-	opts.login.OutWriter = buf
-	opts.login.Store = mockStore
+	opts.Store = mockStore
+	opts.WithFlow(mockFlow)
 
 	expectedCode := &auth.DeviceCode{
 		UserCode:        "12345678",
@@ -83,11 +71,6 @@ func Test_registerOpts_Run(t *testing.T) {
 		RequestCode(ctx).
 		Return(expectedCode, nil, nil).
 		Times(1)
-	mockFlow.
-		EXPECT().
-		RegistrationConfig(ctx).
-		Return(&auth.RegistrationConfig{RegistrationURL: "https://account.mongodb.com/account/register/cli"}, nil, nil).
-		Times(1)
 
 	expectedToken := &auth.Token{
 		AccessToken:  "asdf",
@@ -97,6 +80,11 @@ func Test_registerOpts_Run(t *testing.T) {
 		TokenType:    "Bearer",
 		ExpiresIn:    3600,
 	}
+	mockFlow.
+		EXPECT().
+		RegistrationConfig(ctx).
+		Return(&auth.RegistrationConfig{RegistrationURL: "https://localhost/account/register/cli"}, nil, nil).
+		Times(1)
 	mockFlow.
 		EXPECT().
 		PollToken(ctx, expectedCode).
@@ -123,21 +111,14 @@ func Test_registerOpts_Run(t *testing.T) {
 	}
 	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
 
-	require.NoError(t, opts.Run(ctx))
+	require.NoError(t, opts.RegisterRun(ctx))
 	assert.Equal(t, `
 To verify your account, copy your one-time verification code:
 1234-5678
 
 Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
 
-To continue, go to https://account.mongodb.com/account/register/cli
+To continue, go to https://localhost/account/register/cli
 Successfully logged in as test@10gen.com.
 `, buf.String())
-}
-
-func TestRegisterPreRun(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
-	config.SetPublicAPIKey("public")
-	config.SetPrivateAPIKey("private")
-	require.ErrorContains(t, registerPreRun(), fmt.Sprintf(alreadyAuthenticatedError, "public"), WithProfileMsg)
 }

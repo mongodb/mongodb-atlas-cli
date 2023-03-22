@@ -117,6 +117,39 @@ func Credentials() error {
 	)
 }
 
+var ErrAlreadyAuthenticatedAPIKeys = errors.New("already authenticated with an API key")
+
+// NoAPIKeys there are no API keys in the profile, used for login/register/setup commands.
+func NoAPIKeys() error {
+	if config.PrivateAPIKey() == "" && config.PublicAPIKey() == "" {
+		return nil
+	}
+	return fmt.Errorf(`%w (%s)
+
+To authenticate using your Atlas username and password on a new profile, run: %s auth login --profile <profile_name>`,
+		ErrAlreadyAuthenticatedAPIKeys,
+		config.PublicAPIKey(),
+		config.BinName(),
+	)
+}
+
+var ErrAlreadyAuthenticatedToken = errors.New("already authenticated with an account")
+
+// NoAccessToken there is no access token in the profile, used for login/register/setup commands.
+func NoAccessToken() error {
+	if config.AccessToken() == "" {
+		return nil
+	}
+	subject, _ := config.AccessTokenSubject()
+	return fmt.Errorf(`%w (%s)
+
+To log out, run: %s auth logout`,
+		ErrAlreadyAuthenticatedToken,
+		subject,
+		config.BinName(),
+	)
+}
+
 func Token() error {
 	if t, err := config.Token(); t != nil {
 		return err

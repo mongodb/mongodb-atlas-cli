@@ -76,6 +76,9 @@ func VictorOpsBuilder() *cobra.Command {
 The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Splunk On-Call.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplateVictorOps,
+		},
 		Example: fmt.Sprintf(`  # Integrate Splunk On-Call with Atlas using the routing key operations for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create VICTOR_OPS --apiKey a1a23bcdef45ghijk6789 --routingKey operations --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,

@@ -70,7 +70,10 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a new private endpoint for your project.",
-		Args:  require.NoArgs,
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -76,6 +76,9 @@ func CreateBuilder() *cobra.Command {
 
 ` + fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
 		Args: require.NoArgs,
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		Example: fmt.Sprintf(`  # Create an organization API key with organization owner access in the organization with the ID 5a1b39eec902201990f12345:
   %s organizations apiKeys create --role ORG_OWNER --desc "My API Key" --orgId 5a1b39eec902201990f12345 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

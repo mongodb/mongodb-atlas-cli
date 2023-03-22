@@ -62,6 +62,7 @@ func CreateBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Label that identifies the organization.",
+			"output":   createTemplate,
 		},
 		Example: `  # Create an Ops Manager organization with the name myOrg:
   mongocli iam organizations create myOrg --output json`,

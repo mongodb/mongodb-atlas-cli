@@ -72,6 +72,9 @@ func PagerDutyBuilder() *cobra.Command {
 		Long: `The requesting API key must have the Organization Owner or Project Owner role to configure an integration with PagerDuty.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplatePagerDuty,
+		},
 		Example: fmt.Sprintf(`  # Integrate PagerDuty with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create PAGER_DUTY --serviceKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,

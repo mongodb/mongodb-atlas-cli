@@ -96,6 +96,9 @@ func CreateBuilder() *cobra.Command {
 `+fmt.Sprintf(usage.RequiredRole, "Read Write"), cli.ExampleAtlasEntryPoint()),
 		Example: fmt.Sprintf(`  # Create access list entries for two IP addresses for the API key with the ID 5f24084d8dbffa3ad3f21234 in the organization with the ID 5a1b39eec902201990f12345:
   %s organizations apiKeys accessLists create --apiKey 5f24084d8dbffa3ad3f21234 --cidr 192.0.2.0/24,198.51.100.0/24 --orgId 5a1b39eec902201990f12345 --output json`, cli.ExampleAtlasEntryPoint()),
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

@@ -28,11 +28,11 @@ require (
 	github.com/klauspost/compress v1.16.0
 	github.com/mattn/go-isatty v0.0.17
 	github.com/mongodb-forks/digest v1.0.4
-	github.com/mongodb-labs/cobra2snooty v0.13.0
+	github.com/mongodb-labs/cobra2snooty v0.14.1
 	github.com/mongodb/mongodb-atlas-kubernetes v1.7.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4
-	github.com/spf13/afero v1.9.4
+	github.com/spf13/afero v1.9.5
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.15.0

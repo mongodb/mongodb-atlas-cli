@@ -176,6 +176,42 @@ func generateRSConfig(filename, hostname, clusterName, version, fcVersion string
 	return jsonEncoder.Encode(cluster)
 }
 
+func generateRSConfigUpdate(filename string) error {
+	defaultWriteConcernJ := true
+	jsonData, err := os.ReadFile(filename)
+	if err != nil {
+		return err
+	}
+
+	var cluster convert.ClusterConfig
+	err = json.Unmarshal(jsonData, &cluster)
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < len(cluster.Processes); i++ {
+		cluster.Processes[i].DefaultRWConcern = &convert.DefaultRWConcern{
+			DefaultReadConcern: &convert.DefaultReadConcern{
+				Level: "majority",
+			},
+			DefaultWriteConcern: &convert.DefaultWriteConcern{
+				W:        1,
+				J:        &defaultWriteConcernJ,
+				Wtimeout: 0,
+			},
+		}
+	}
+
+	out, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+	jsonEncoder := json.NewEncoder(out)
+	jsonEncoder.SetIndent("", "  ")
+	return jsonEncoder.Encode(cluster)
+}
+
 func generateShardedConfig(filename, hostname, clusterName, version, fcVersion string) error {
 	configFile, err := os.Create(filename)
 	if err != nil {

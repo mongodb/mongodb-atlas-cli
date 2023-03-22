@@ -238,6 +238,7 @@ functions:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         script: |
+          #!/bin/bash
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx

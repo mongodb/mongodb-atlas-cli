@@ -60,6 +60,7 @@ func DeleteBuilder() *cobra.Command {
   %s networking peering delete 5f60c5bd0948295c093565ba --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"peerIdDesc": "Unique ID of the network peering connection that you want to delete.",
+			"output":     opts.SuccessMessage(),
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {

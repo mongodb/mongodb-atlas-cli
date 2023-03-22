@@ -60,6 +60,7 @@ func DeleteBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to delete.",
+			"output":        opts.SuccessMessage(),
 		},
 		Example: fmt.Sprintf(`  # Remove an online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
   %s clusters onlineArchives delete 5f189832e26ec075e10c32d3 --clusterName myCluster`, cli.ExampleAtlasEntryPoint()),

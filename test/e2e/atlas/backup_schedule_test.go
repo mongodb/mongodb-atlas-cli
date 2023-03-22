@@ -109,6 +109,18 @@ func TestSchedules(t *testing.T) {
 		r.Equal(clusterName, policy.ClusterName)
 	})
 
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			"schedule",
+			"delete",
+			clusterName,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		r.NoError(err, string(resp))
+	})
+
 	t.Run("Delete cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,

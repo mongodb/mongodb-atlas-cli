@@ -18,6 +18,7 @@ package atlas_test
 
 import (
 	"fmt"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"os"
 	"os/exec"
 	"strings"
@@ -229,7 +230,7 @@ func referenceExportedProject(projectName, teamName string) *akov1.AtlasProject 
 		Spec: akov1.AtlasProjectSpec{
 			Name: projectName,
 			ConnectionSecret: &common.ResourceRefNamespaced{
-				Name: strings.ToLower(fmt.Sprintf("%s-credentials", projectName)),
+				Name: prepareK8sName(fmt.Sprintf("%s-credentials", projectName)),
 			},
 			WithDefaultAlertsSettings: true,
 			Settings: &akov1.ProjectSettings{
@@ -259,7 +260,7 @@ func referenceExportedProject(projectName, teamName string) *akov1.AtlasProject 
 				{
 					TeamRef: common.ResourceRefNamespaced{
 						Namespace: "mongodb-atlas-system",
-						Name:      strings.ToLower(fmt.Sprintf("%s-team-%s", projectName, teamName)),
+						Name:      prepareK8sName(fmt.Sprintf("%s-team-%s", projectName, teamName)),
 					},
 					Roles: []akov1.TeamRole{
 						"GROUP_OWNER",
@@ -274,7 +275,7 @@ func referenceExportedDBUser(projectName, dbUser string) *akov1.AtlasDatabaseUse
 	return &akov1.AtlasDatabaseUser{
 		Spec: akov1.AtlasDatabaseUserSpec{
 			Project: common.ResourceRefNamespaced{
-				Name:      strings.ToLower(projectName),
+				Name:      prepareK8sName(projectName),
 				Namespace: "mongodb-atlas-system",
 			},
 			Roles: []akov1.RoleSpec{
@@ -305,7 +306,7 @@ func referenceExportedBackupSchedule(clusterName string, refHour, refMin int64) 
 	return &akov1.AtlasBackupSchedule{
 		Spec: akov1.AtlasBackupScheduleSpec{
 			PolicyRef: common.ResourceRefNamespaced{
-				Name:      strings.ToLower(fmt.Sprintf("%s-backuppolicy", clusterName)),
+				Name:      prepareK8sName(fmt.Sprintf("%s-backuppolicy", clusterName)),
 				Namespace: "mongodb-atlas-system",
 			},
 			AutoExportEnabled:     false,
@@ -353,15 +354,15 @@ func referenceExportedDeployment(projectName, clusterName string) *akov1.AtlasDe
 	return &akov1.AtlasDeployment{
 		Spec: akov1.AtlasDeploymentSpec{
 			Project: common.ResourceRefNamespaced{
-				Name:      strings.ToLower(projectName),
+				Name:      prepareK8sName(projectName),
 				Namespace: "mongodb-atlas-system",
 			},
 			BackupScheduleRef: common.ResourceRefNamespaced{
-				Name:      strings.ToLower(fmt.Sprintf("%s-backupschedule", clusterName)),
+				Name:      prepareK8sName(fmt.Sprintf("%s-backupschedule", clusterName)),
 				Namespace: "mongodb-atlas-system",
 			},
 			AdvancedDeploymentSpec: &akov1.AdvancedDeploymentSpec{
-				Name:          strings.ToLower(clusterName),
+				Name:          clusterName,
 				BackupEnabled: toptr.MakePtr(true),
 				BiConnector: &akov1.BiConnectorSpec{
 					Enabled:        toptr.MakePtr(false),
@@ -445,4 +446,8 @@ func deleteTeamFromProject(t *testing.T, cliPath, projectID, teamID string) {
 	if err != nil {
 		t.Errorf("%s (%v)", string(resp), err)
 	}
+}
+
+func prepareK8sName(pattern string) string {
+	return resources.NormalizeAtlasName(pattern, resources.AtlasNameToKubernetesName())
 }

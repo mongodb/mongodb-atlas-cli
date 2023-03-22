@@ -91,6 +91,8 @@ functions:
         <<: *go_options
         script: |
           set -Eeou pipefail
+          echo "*****************"
+          echo $GOPROXY
           export PATH="$ADD_PATH:$PATH"
           go tool cover -html=coverage.out -o coverage.html
   "upload html coverage":

@@ -23,7 +23,6 @@ variables:
       GO111MODULE: "on"
       GOROOT: ${go_root}
       GOPATH: ${go_base_path}${workdir}
-      GOMODCACHE: ${go_base_path}${workdir}/pkg/mod
       ADD_PATH: "${go_bin}:${go_base_path}${workdir}/bin:${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
       GOPROXY: ${go_proxy}
   - &go_options
@@ -35,8 +34,6 @@ variables:
       - go_base_path
       - go_proxy
       - workdir
-      - go_dep_sha
-      - go_dep_cache_exists
     working_dir: src/github.com/mongodb/mongodb-atlas-cli
     env:
       <<: *go_env
@@ -70,33 +67,6 @@ functions:
       params:
         <<: *go_options
         command: make check-library-owners
-  "fetch deps cache":
-    - command: subprocess.exec
-      type: setup
-      params:
-        <<: *go_options
-        binary: build/ci/fetch-cache-deps.sh
-    - command: expansions.update
-      params:
-        file: src/github.com/mongodb/mongodb-atlas-cli/sha_expansion.yaml
-  "save deps cache":
-    - command: subprocess.exec
-      type: setup
-      params:
-        <<: *go_options
-        binary: build/ci/save-cache-deps.sh
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: src/github.com/mongodb/mongodb-atlas-cli/gomod-${go_dep_sha}.tar.xz
-        remote_file: dependencies/go/gomod-${go_dep_sha}.tar.xz
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: ${content_type|application/x-gzip}
-        display_name: gomod-deps-cache
-        optional: true
-        skip_existing: true
   "unit-test":
     - command: subprocess.exec
       type: test
@@ -311,7 +281,6 @@ functions:
           KMIP_CERT: ${logs_decrypt_kmip_cert}
 pre:
   - func: "clone"
-  - func: "fetch deps cache"
 post:
   - command: subprocess.exec
     type: setup
@@ -323,7 +292,6 @@ post:
   - command: attach.xunit_results
     params:
       files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
-  - func: "save deps cache"
 tasks:
   - name: compile
     tags: ["code_health"]

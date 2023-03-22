@@ -25,7 +25,7 @@
 
 #### Inventory
 
- Command                                     | E2E Atlas | E2E OM    | E2E CM    | Atlas     | OM    | CM    |
+| Command                                     | E2E Atlas | E2E OM    | E2E CM    | Atlas     | OM    | CM    |
 |:--------------------------------------------| :---:     | :---:     | :---:     | :---:     | :---: | :---: |
 | `alerts config create`                      | Y         | N         | N         | Y         | Y     | Y     |
 | `alerts config delete`                      | Y         | N         | N         | Y         | Y     | Y     |
@@ -39,12 +39,24 @@
 | `accessList create`                         | Y         |           |           | Y         |       |       |
 | `accessList delete`                         | Y         |           |           | Y         |       |       |
 | `accessList list`                           | Y         |           |           | Y         |       |       |
-| `backup snapshots create`                   | N         |           |           | Y         |       |       |
-| `backup snapshots delete`                   | N         |           |           | Y         |       |       |
-| `backup snapshots describe`                 | N         |           |           | Y         |       |       |
-| `backup snapshots watch`                    | N         |           |           | Y         |       |       |
-| `backup restore list`                       | N         |           |           | Y         |       |       |
-| `backup restore start`                      | N         |           |           | Y         |       |       |
+| `backup snapshots create`                   | Y         |           |           | Y         |       |       |
+| `backup snapshots delete`                   | Y         |           |           | Y         |       |       |
+| `backup snapshots describe`                 | Y         |           |           | Y         |       |       |
+| `backup snapshots list`                     | Y         |           |           | Y         |       |       |
+| `backup snapshots watch`                    | Y         |           |           | Y         |       |       |
+| `backup exports buckets create`             | Y         |           |           | Y         |       |       |
+| `backup exports buckets list`               | Y         |           |           | Y         |       |       |
+| `backup exports buckets describe`           | Y         |           |           | Y         |       |       |
+| `backup exports buckets delete`             | Y         |           |           | Y         |       |       |
+| `backup exports jobs create`                | Y         |           |           | Y         |       |       |
+| `backup exports jobs list`                  | Y         |           |           | Y         |       |       |
+| `backup exports jobs describe`              | Y         |           |           | Y         |       |       |
+| `backup exports jobs delete`                | Y         |           |           | Y         |       |       |
+| `backup exports jobs watch`                 | Y         |           |           | Y         |       |       |
+| `backup restores list`                      | N         |           |           | Y         |       |       |
+| `backup restores describe`                  | N         |           |           | Y         |       |       |
+| `backup restores start`                     | N         |           |           | Y         |       |       |
+| `backup restores watch`                     | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles authorize`   | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles deauthorize` | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles create`      | Y         |           |           | Y         |       |       |

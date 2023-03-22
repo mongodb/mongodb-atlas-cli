@@ -52,7 +52,7 @@ Related Commands
 * :ref:`atlas-backups-exports-jobs-create` - Export one backup snapshot for an M10 or higher Atlas cluster to an existing AWS S3 bucket.
 * :ref:`atlas-backups-exports-jobs-describe` - Return one cloud backup export job for your project, cluster and job.
 * :ref:`atlas-backups-exports-jobs-list` - Return all cloud backup export jobs for your project and cluster.
-* :ref:`atlas-backups-exports-jobs-watch` - Watch for an export job to complete.
+* :ref:`atlas-backups-exports-jobs-watch` - Watch for the specified export job to complete.
 
 
 .. toctree::

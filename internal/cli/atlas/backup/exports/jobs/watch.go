@@ -64,11 +64,12 @@ func WatchBuilder() *cobra.Command {
 	opts := new(WatchOpts)
 	cmd := &cobra.Command{
 		Use:   "watch <bucketId>",
-		Short: "Watch for an export job to complete.",
+		Short: "Watch for the specified export job to complete.",
 		Long: `This command checks the export job's status periodically until it reaches a completed, cancelled or failed status. 
 Once the export reaches the expected status, the command prints "Export completed."
 If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
-You can interrupt the command's polling at any time with CTRL-C.`,
+You can interrupt the command's polling at any time with CTRL-C.
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"bucketIdDesc": "Unique string that identifies the AWS S3 bucket to which you export your snapshots.",

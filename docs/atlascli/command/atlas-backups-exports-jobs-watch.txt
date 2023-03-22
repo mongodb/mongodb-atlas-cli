@@ -12,12 +12,13 @@ atlas backups exports jobs watch
    :depth: 1
    :class: singlecol
 
-Watch for an export job to complete.
+Watch for the specified export job to complete.
 
 This command checks the export job's status periodically until it reaches a completed, cancelled or failed status. 
 Once the export reaches the expected status, the command prints "Export completed."
 If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
 You can interrupt the command's polling at any time with CTRL-C.
+To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------

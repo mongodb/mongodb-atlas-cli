@@ -96,6 +96,7 @@ func TestSchedules(t *testing.T) {
 			"schedule",
 			"update",
 			clusterName,
+			"--useOrgAndGroupNamesInExportPrefix",
 			"-o=json",
 		)
 		cmd.Env = os.Environ()

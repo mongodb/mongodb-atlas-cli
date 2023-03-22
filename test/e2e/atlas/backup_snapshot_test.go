@@ -112,6 +112,7 @@ func TestSnapshots(t *testing.T) {
 			backupsEntity,
 			snapshotsEntity,
 			"list",
+			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

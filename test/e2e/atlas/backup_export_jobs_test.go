@@ -236,7 +236,7 @@ func TestExportJobs(t *testing.T) {
 		r.NoError(err, string(resp))
 	})
 
-	t.Run("watch snapshot deletion", func(t *testing.T) {
+	t.Run("Watch snapshot deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,

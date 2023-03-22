@@ -27,11 +27,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `ID	NAME
+const (
+	describeTemplateCloud = `ID	NAME
+{{.Id}}	{{.Name}}
+`
+	describeTemplateOnPrem = `ID	NAME
 {{.ID}}	{{.Name}}
 `
+)
 
 type DescribeOpts struct {
+	cli.GlobalOpts
 	cli.OutputOpts
 	id    string
 	store store.OrganizationDescriber
@@ -57,7 +63,6 @@ func (opts *DescribeOpts) Run() error {
 // mongocli iam organizations(s) describe <ID>.
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
-	opts.Template = describeTemplate
 	cmd := &cobra.Command{
 		Use:     "describe <ID>",
 		Aliases: []string{"show"},
@@ -70,8 +75,10 @@ func DescribeBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the organization with the ID 5e2211c17a3e5a48f5497de3:
   %s organizations describe 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore(cmd.Context())()
+			return opts.PreRunE(
+				opts.initStore(cmd.Context()),
+				opts.InitConditionalOutput(cmd.OutOrStdout(), describeTemplateCloud, describeTemplateOnPrem),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]

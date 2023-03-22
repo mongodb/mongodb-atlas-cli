@@ -16,8 +16,10 @@ package store
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas/api/v1alpha"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -32,15 +34,17 @@ type AccessLogsListerByHostname interface {
 }
 
 type AccessLogsLister interface {
-	AccessLogsByHostname(string, string, *atlas.AccessLogOptions) (*atlas.AccessLogSettings, error)
-	AccessLogsByClusterName(string, string, *atlas.AccessLogOptions) (*atlas.AccessLogSettings, error)
+	AccessLogsByHostname(string, string, *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error)
+	AccessLogsByClusterName(string, string, *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error)
 }
 
 // AccessLogsByHostname encapsulates the logic to manage different cloud providers.
-func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.AccessLogOptions) (*atlas.AccessLogSettings, error) {
+func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AccessTracking.ListByHostname(s.ctx, groupID, hostname, opts)
+		startTime, _ := time.Parse(time.RFC3339, opts.Start)
+		endTime, _ := time.Parse(time.RFC3339, opts.End)
+		result, _, err := s.clientv2.AccessTrackingApi.ListAccessLogsByHostname(s.ctx, groupID, hostname).Start(startTime).End(endTime).NLogs(int32(opts.NLogs)).IpAddress(opts.IPAddress).AuthResult(*opts.AuthResult).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -48,10 +52,11 @@ func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.Acces
 }
 
 // AccessLogsByClusterName encapsulates the logic to manage different cloud providers.
-func (s *Store) AccessLogsByClusterName(groupID, clusterName string, opts *atlas.AccessLogOptions) (*atlas.AccessLogSettings, error) {
+func (s *Store) AccessLogsByClusterName(groupID, clusterName string, opts *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AccessTracking.ListByCluster(s.ctx, groupID, clusterName, opts)
+		startTime, _ := time.Parse(time.RFC3339, opts.Start)
+		result, _, err := s.clientv2.AccessTrackingApi.ListAccessLogsByClusterName(s.ctx, groupID, clusterName).Start(startTime).End(opts.End).NLogs(int64(opts.NLogs)).IpAddress(opts.IPAddress).AuthResult(*opts.AuthResult).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

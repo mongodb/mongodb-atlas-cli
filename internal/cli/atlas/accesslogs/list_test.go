@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/openlyinc/pointy"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/api/v1alpha"
 )
 
 func TestAccessLogListClusterName_Run(t *testing.T) {
@@ -36,19 +36,18 @@ func TestAccessLogListClusterName_Run(t *testing.T) {
 	mockStore := mocks.NewMockAccessLogsLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.AccessLogSettings{
-		AccessLogs: []*mongodbatlas.AccessLogs{
+	expected := &atlasv2.MongoDBAccessLogsList{
+		AccessLogs: []atlasv2.MongoDBAccessLogs{
 			{
-				GroupID:       "test",
-				Hostname:      "test",
-				ClusterName:   "test",
-				IPAddress:     "test",
+				GroupId:       pointy.String("test"),
+				Hostname:      pointy.String("test"),
+				IpAddress:     pointy.String("test"),
 				AuthResult:    pointy.Bool(true),
-				LogLine:       "test",
-				Timestamp:     "test",
-				Username:      "test",
-				FailureReason: "test",
-				AuthSource:    "test",
+				LogLine:       pointy.String("test"),
+				Timestamp:     pointy.String("test"),
+				Username:      pointy.String("test"),
+				FailureReason: pointy.String("test"),
+				AuthSource:    pointy.String("test"),
 			},
 		},
 	}
@@ -73,8 +72,8 @@ func TestAccessLogListClusterName_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `HOSTNAME    CLUSTER NAME   AUTH RESULT   LOG LINE 
-test test   test           true          test
+	assert.Equal(t, `HOSTNAME    AUTH RESULT   LOG LINE 
+test test   true          test
 `, buf.String())
 	t.Log(buf.String())
 }
@@ -84,7 +83,7 @@ func TestAccessLogListHostname_Run(t *testing.T) {
 	mockStore := mocks.NewMockAccessLogsLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.AccessLogSettings{}
+	expected := &atlasv2.MongoDBAccessLogsList{}
 
 	describeOpts := &ListOpts{
 		store:    mockStore,

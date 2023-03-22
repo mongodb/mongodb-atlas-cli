@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
@@ -128,7 +127,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		namespace := "mongodb-atlas-system"
 		akoProject := akov1.AtlasProject{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: strings.ToLower(g.projectName), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(g.projectName), Namespace: namespace},
 			&akoProject,
 			true,
 		)
@@ -140,7 +139,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		// Assert Database User
 		akoDBUser := akov1.AtlasDatabaseUser{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: strings.ToLower(fmt.Sprintf("%s-%s", g.projectName, g.dbUser)), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.dbUser)), Namespace: namespace},
 			&akoDBUser,
 			true,
 		)
@@ -150,7 +149,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		// Assert Team
 		akoTeam := akov1.AtlasTeam{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: strings.ToLower(fmt.Sprintf("%s-team-%s", g.projectName, g.teamName)), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-team-%s", g.projectName, g.teamName)), Namespace: namespace},
 			&akoTeam,
 			true,
 		)
@@ -160,7 +159,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		// Assert Backup Policy
 		akoBkpPolicy := akov1.AtlasBackupPolicy{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: strings.ToLower(fmt.Sprintf("%s-backuppolicy", g.clusterName)), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-backuppolicy", g.clusterName)), Namespace: namespace},
 			&akoBkpPolicy,
 			true,
 		)
@@ -170,7 +169,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		// Assert Backup Schedule
 		akoBkpSchedule := akov1.AtlasBackupSchedule{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: strings.ToLower(fmt.Sprintf("%s-backupschedule", g.clusterName)), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-backupschedule", g.clusterName)), Namespace: namespace},
 			&akoBkpSchedule,
 			true,
 		)
@@ -183,7 +182,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		// Assert Deployment
 		akoDeployment := akov1.AtlasDeployment{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: strings.ToLower(g.clusterName), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(g.clusterName), Namespace: namespace},
 			&akoDeployment,
 			true,
 		)

@@ -18,12 +18,12 @@ package atlas_test
 
 import (
 	"fmt"
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"os"
 	"os/exec"
 	"strings"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"

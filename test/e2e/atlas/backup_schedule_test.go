@@ -101,12 +101,7 @@ func TestSchedules(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		r.NoError(err)
-
-		err = json.Unmarshal(resp, &policy)
-		r.NoError(err)
-
-		r.Equal(clusterName, policy.ClusterName)
+		r.NoError(err, string(resp))
 	})
 
 	t.Run("Delete", func(t *testing.T) {

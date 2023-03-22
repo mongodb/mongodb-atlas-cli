@@ -24,6 +24,7 @@ variables:
       GOROOT: ${go_root}
       GOPATH: ${go_base_path}${workdir}
       ADD_PATH: "${go_bin}:${go_base_path}${workdir}/bin:${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
+      GOPROXY: https://:@artifactory.corp.mongodb.com/artifactory/api/go/go-wrong-path
   - &go_options
     add_to_path:
       - ${go_bin}

@@ -453,8 +453,8 @@ tasks:
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -472,8 +472,8 @@ tasks:
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -491,8 +491,8 @@ tasks:
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -510,8 +510,8 @@ tasks:
     tags: ["e2e","clusters","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernates_atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -529,8 +529,8 @@ tasks:
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -567,8 +567,8 @@ tasks:
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -605,8 +605,8 @@ tasks:
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_gov_clusters_flags_e2e
+        variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -624,8 +624,8 @@ tasks:
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_gov_clusters_flags_e2e
+        variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -644,8 +644,8 @@ tasks:
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -664,8 +664,8 @@ tasks:
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -683,8 +683,8 @@ tasks:
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_gov_clusters_flags_e2e
+        variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -703,8 +703,8 @@ tasks:
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -722,8 +722,8 @@ tasks:
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_gov_clusters_flags_e2e
+        variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -742,8 +742,8 @@ tasks:
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -761,8 +761,8 @@ tasks:
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_gov_clusters_flags_e2e
+        variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -781,8 +781,8 @@ tasks:
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -801,8 +801,8 @@ tasks:
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -820,8 +820,8 @@ tasks:
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_gov_clusters_flags_e2e
+        variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -840,8 +840,8 @@ tasks:
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
       - func: "clone"
@@ -859,8 +859,8 @@ tasks:
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
     depends_on:
-      - name: compile
-        variant: "code_health"
+      - name: atlas_gov_clusters_flags_e2e
+        variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
       - func: "clone"

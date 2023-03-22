@@ -1,0 +1,33 @@
+name: Build CLI Docker image
+
+on:
+  release:
+    types: [published]
+  push:
+    branches:
+      - "test_dockerfile"
+
+jobs:
+  push_to_registry:
+    name: Publish docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3 
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.golang }}
+      - name: Build
+        run: make build-all                      
+      - name: Build Image
+        run: docker build -t quay.io/mongodb/atlas-cli  .
+      ## Disabled for now
+      # - name: Login
+      #   run: docker login -u="${{secrets.CONTAINER_USER}}" -p="${{secrets.CONTAINER_SECRET}}" quay.io
+      # - name: Push To quay.io
+      #   id: push-to-quay
+      #   run: docker push quay.io/mongodb/atlas-cli
+      
+      
+ 

@@ -94,6 +94,19 @@ func TestSnapshots(t *testing.T) {
 		snapshotID = snapshot.ID
 	})
 
+	t.Run("Watch creation", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			snapshotsEntity,
+			"watch",
+			snapshotID,
+			"--clusterName",
+			clusterName)
+		cmd.Env = os.Environ()
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
+	})
+
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
@@ -116,7 +129,7 @@ func TestSnapshots(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
-			"list",
+			"describe",
 			snapshotID,
 			"--clusterName",
 			clusterName,

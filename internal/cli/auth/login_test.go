@@ -69,41 +69,43 @@ func TestLoginBuilder(t *testing.T) {
 	)
 }
 
-func Test_loginOpts_SyncWithOAuthAccessProfile_DefaultService(t *testing.T) {
+func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockConfig := mocks.NewMockLoginConfig(ctrl)
 
-	opts := &LoginOpts{
-		NoBrowser:    true,
-		AccessToken:  "at",
-		RefreshToken: "rt",
-	}
-	opts.OutWriter = new(bytes.Buffer)
+	t.Run("cloud service run", func(t *testing.T) {
+		mockConfig := mocks.NewMockLoginConfig(ctrl)
+		opts := &LoginOpts{
+			NoBrowser:    true,
+			AccessToken:  "at",
+			RefreshToken: "rt",
+		}
+		opts.OutWriter = new(bytes.Buffer)
 
-	mockConfig.EXPECT().Set("service", "cloud").Times(1)
-	mockConfig.EXPECT().Set("access_token", opts.AccessToken).Times(1)
-	mockConfig.EXPECT().Set("refresh_token", opts.RefreshToken).Times(1)
-	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
-	require.NoError(t, opts.SyncWithOAuthAccessProfile(mockConfig)())
-}
+		mockConfig.EXPECT().Set("service", "cloud").Times(1)
+		mockConfig.EXPECT().Set("access_token", opts.AccessToken).Times(1)
+		mockConfig.EXPECT().Set("refresh_token", opts.RefreshToken).Times(1)
+		mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
 
-func Test_loginOpts_SyncWithOAuthAccessProfile_GovService(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockConfig := mocks.NewMockLoginConfig(ctrl)
+		require.NoError(t, opts.SyncWithOAuthAccessProfile(mockConfig)())
+	})
 
-	opts := &LoginOpts{
-		NoBrowser:    true,
-		AccessToken:  "at",
-		RefreshToken: "rt",
-		IsGov:        true,
-	}
-	opts.OutWriter = new(bytes.Buffer)
+	t.Run("cloudgov service run", func(t *testing.T) {
+		mockConfig := mocks.NewMockLoginConfig(ctrl)
+		opts := &LoginOpts{
+			NoBrowser:    true,
+			AccessToken:  "at",
+			RefreshToken: "rt",
+			IsGov:        true,
+		}
+		opts.OutWriter = new(bytes.Buffer)
 
-	mockConfig.EXPECT().Set("service", "cloudgov").Times(1)
-	mockConfig.EXPECT().Set("access_token", opts.AccessToken).Times(1)
-	mockConfig.EXPECT().Set("refresh_token", opts.RefreshToken).Times(1)
-	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
-	require.NoError(t, opts.SyncWithOAuthAccessProfile(mockConfig)())
+		mockConfig.EXPECT().Set("service", "cloudgov").Times(1)
+		mockConfig.EXPECT().Set("access_token", opts.AccessToken).Times(1)
+		mockConfig.EXPECT().Set("refresh_token", opts.RefreshToken).Times(1)
+		mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
+
+		require.NoError(t, opts.SyncWithOAuthAccessProfile(mockConfig)())
+	})
 }
 
 func Test_loginOpts_Run(t *testing.T) {

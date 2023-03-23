@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/openlyinc/pointy"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas/api/v1alpha"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAccessLogListClusterName_Run(t *testing.T) {

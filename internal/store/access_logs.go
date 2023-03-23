@@ -19,8 +19,8 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas/api/v1alpha"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_access_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AccessLogsListerByClusterName,AccessLogsListerByHostname,AccessLogsLister
@@ -42,10 +42,34 @@ type AccessLogsLister interface {
 func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		startTime, _ := time.Parse(time.RFC3339, opts.Start)
-		endTime, _ := time.Parse(time.RFC3339, opts.End)
-		result, _, err := s.clientv2.AccessTrackingApi.ListAccessLogsByHostname(s.ctx, groupID, hostname).Start(startTime).End(endTime).NLogs(int32(opts.NLogs)).IpAddress(opts.IPAddress).AuthResult(*opts.AuthResult).Execute()
-		return result, err
+		result := s.clientv2.AccessTrackingApi.ListAccessLogsByHostname(s.ctx, groupID, hostname)
+
+		if opts != nil {
+			if opts.Start != "" {
+				startTime, _ := time.Parse(time.RFC3339, opts.Start)
+				result = result.Start(startTime)
+			}
+			if opts.End != "" {
+				endTime, _ := time.Parse(time.RFC3339, opts.End)
+				result = result.End(endTime)
+			}
+
+			if opts.NLogs > 0 {
+				result = result.NLogs(int32(opts.NLogs))
+			}
+
+			if opts.IPAddress != "" {
+				result = result.IpAddress(opts.IPAddress)
+			}
+
+			if opts.AuthResult != nil {
+				result = result.AuthResult(*opts.AuthResult)
+			}
+		}
+
+		res, _, err := result.Execute()
+
+		return res, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -55,9 +79,32 @@ func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.Acces
 func (s *Store) AccessLogsByClusterName(groupID, clusterName string, opts *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		startTime, _ := time.Parse(time.RFC3339, opts.Start)
-		result, _, err := s.clientv2.AccessTrackingApi.ListAccessLogsByClusterName(s.ctx, groupID, clusterName).Start(startTime).End(opts.End).NLogs(int64(opts.NLogs)).IpAddress(opts.IPAddress).AuthResult(*opts.AuthResult).Execute()
-		return result, err
+		result := s.clientv2.AccessTrackingApi.ListAccessLogsByClusterName(s.ctx, groupID, clusterName)
+
+		if opts != nil {
+			if opts.Start != "" {
+				startTime, _ := time.Parse(time.RFC3339, opts.Start)
+				result = result.Start(startTime)
+			}
+			if opts.End != "" {
+				result = result.End(opts.End)
+			}
+
+			if opts.NLogs > 0 {
+				result = result.NLogs(int64(opts.NLogs))
+			}
+
+			if opts.IPAddress != "" {
+				result = result.IpAddress(opts.IPAddress)
+			}
+
+			if opts.AuthResult != nil {
+				result = result.AuthResult(*opts.AuthResult)
+			}
+		}
+		res, _, err := result.Execute()
+
+		return res, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

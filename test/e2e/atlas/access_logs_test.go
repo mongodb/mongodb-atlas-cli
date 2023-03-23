@@ -23,7 +23,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas/api/v1alpha"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAccessLogs(t *testing.T) {

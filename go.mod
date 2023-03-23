@@ -30,6 +30,7 @@ require (
 	github.com/mongodb-forks/digest v1.0.4
 	github.com/mongodb-labs/cobra2snooty v0.14.1
 	github.com/mongodb/mongodb-atlas-kubernetes v1.7.0
+	github.com/openlyinc/pointy v1.2.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4
 	github.com/spf13/afero v1.9.5

@@ -79,6 +79,9 @@ func UpdateBuilder() *cobra.Command {
 		Use:     "update",
 		Aliases: []string{"updates"},
 		Short:   "Updates settings for a project.",
+		Annotations: map[string]string{
+			"output": updateTemplate,
+		},
 		Example: fmt.Sprintf(`  # This example uses the profile named "myprofile" for accessing Atlas.
   %s projects settings update --disableCollectDatabaseSpecificsStatistics -P myprofile`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

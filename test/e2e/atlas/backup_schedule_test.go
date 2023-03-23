@@ -32,6 +32,7 @@ func TestSchedule(t *testing.T) {
 	r.NoError(err)
 
 	g := newAtlasE2ETestGenerator(t)
+	g.enableBackup = true
 	g.generateProjectAndCluster("backupSchedule")
 
 	var policy *atlas.CloudProviderSnapshotBackupPolicy
@@ -42,6 +43,8 @@ func TestSchedule(t *testing.T) {
 			"schedule",
 			"describe",
 			g.clusterName,
+			"--projectId",
+			g.projectID,
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
@@ -62,6 +65,8 @@ func TestSchedule(t *testing.T) {
 			"--clusterName",
 			g.clusterName,
 			"--useOrgAndGroupNamesInExportPrefix",
+			"--projectId",
+			g.projectID,
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
@@ -75,6 +80,8 @@ func TestSchedule(t *testing.T) {
 			"schedule",
 			"delete",
 			g.clusterName,
+			"--projectId",
+			g.projectID,
 			"--force",
 		)
 		cmd.Env = os.Environ()

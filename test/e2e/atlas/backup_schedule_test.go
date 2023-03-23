@@ -95,6 +95,7 @@ func TestSchedules(t *testing.T) {
 			backupsEntity,
 			"schedule",
 			"update",
+			"--clusterName",
 			clusterName,
 			"--useOrgAndGroupNamesInExportPrefix",
 			"-o=json",

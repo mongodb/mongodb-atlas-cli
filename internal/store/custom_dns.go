@@ -20,29 +20,29 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type CustomDNSEnabler interface {
-	EnableCustomDNS(string) (*atlas.AWSCustomDNSSetting, error)
+	EnableCustomDNS(string) (*atlas.AWSCustomDNSEnabled, error)
 }
 
 type CustomDNSDisabler interface {
-	DisableCustomDNS(string) (*atlas.AWSCustomDNSSetting, error)
+	DisableCustomDNS(string) (*atlas.AWSCustomDNSEnabled, error)
 }
 
 type CustomDNSDescriber interface {
-	DescribeCustomDNS(string) (*atlas.AWSCustomDNSSetting, error)
+	DescribeCustomDNS(string) (*atlas.AWSCustomDNSEnabled, error)
 }
 
 // EnableCustomDNS encapsulates the logic to manage different cloud providers.
-func (s *Store) EnableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
+func (s *Store) EnableCustomDNS(projectID string) (*atlas.AWSCustomDNSEnabled, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		customDNSSetting := &atlas.AWSCustomDNSSetting{
+		customDNSSetting := &atlas.AWSCustomDNSEnabled{
 			Enabled: true,
 		}
-		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(s.ctx, projectID, customDNSSetting)
+		result, _, err := s.clientv2.AWSClustersDNSApi.ToggleAWSCustomDNS(s.ctx, projectID).AWSCustomDNSEnabled(*customDNSSetting).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -50,13 +50,13 @@ func (s *Store) EnableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, e
 }
 
 // DisableCustomDNS encapsulates the logic to manage different cloud providers.
-func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
+func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSEnabled, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		customDNSSetting := &atlas.AWSCustomDNSSetting{
+		customDNSSetting := &atlas.AWSCustomDNSEnabled{
 			Enabled: false,
 		}
-		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(s.ctx, projectID, customDNSSetting)
+		result, _, err := s.clientv2.AWSClustersDNSApi.ToggleAWSCustomDNS(s.ctx, projectID).AWSCustomDNSEnabled(*customDNSSetting).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -64,10 +64,10 @@ func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, 
 }
 
 // DescribeCustomDNS encapsulates the logic to manage different cloud providers.
-func (s *Store) DescribeCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
+func (s *Store) DescribeCustomDNS(projectID string) (*atlas.AWSCustomDNSEnabled, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Get(s.ctx, projectID)
+		result, _, err := s.clientv2.AWSClustersDNSApi.GetAWSCustomDNS(s.ctx, projectID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

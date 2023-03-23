@@ -34,7 +34,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	"github.com/openlyinc/pointy"
 	"go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	corev1 "k8s.io/api/core/v1"
@@ -92,14 +91,14 @@ func TestBuildAtlasProject(t *testing.T) {
 		cpas := &atlasv2.CloudProviderAccess{
 			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
 				{
-					AtlasAWSAccountArn:         pointy.String("TestARN"),
-					AtlasAssumedRoleExternalId: pointy.String("TestExternalRoleID"),
+					AtlasAWSAccountArn:         pointer.Get("TestARN"),
+					AtlasAssumedRoleExternalId: pointer.Get("TestExternalRoleID"),
 					AuthorizedDate:             &authDate,
 					CreatedDate:                &createDate,
 					FeatureUsages:              nil,
-					IamAssumedRoleArn:          pointy.String("TestRoleARN"),
+					IamAssumedRoleArn:          pointer.Get("TestRoleARN"),
 					ProviderName:               string(provider.ProviderAWS),
-					RoleId:                     pointy.String("TestRoleID"),
+					RoleId:                     pointer.Get("TestRoleID"),
 				},
 			},
 		}
@@ -727,14 +726,14 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 		data := &atlasv2.CloudProviderAccess{
 			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
 				{
-					AtlasAWSAccountArn:         pointy.String("TestARN"),
-					AtlasAssumedRoleExternalId: pointy.String("TestRoleID"),
+					AtlasAWSAccountArn:         pointer.Get("TestARN"),
+					AtlasAssumedRoleExternalId: pointer.Get("TestRoleID"),
 					AuthorizedDate:             &time.Time{},
 					CreatedDate:                &time.Time{},
 					FeatureUsages:              nil,
-					IamAssumedRoleArn:          pointy.String("TestAssumedRoleARN"),
+					IamAssumedRoleArn:          pointer.Get("TestAssumedRoleARN"),
 					ProviderName:               string(provider.ProviderAWS),
-					RoleId:                     pointy.String("TestRoleID"),
+					RoleId:                     pointer.Get("TestRoleID"),
 				},
 			},
 		}

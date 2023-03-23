@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && backup)
+//go:build e2e || (atlas && backup && serverless)
 
 package atlas_test
 
@@ -61,6 +61,7 @@ func TestServerlessBackup(t *testing.T) {
 
 	t.Run("Snapshot Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
+			serverlessEntity,
 			backupsEntity,
 			snapshotsEntity,
 			"describe",

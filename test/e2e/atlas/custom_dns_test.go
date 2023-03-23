@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestCustomDNS(t *testing.T) {
@@ -48,7 +48,7 @@ func TestCustomDNS(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var dns atlas.AWSCustomDNSEnabled
+		var dns atlasv2.AWSCustomDNSEnabled
 		if err := json.Unmarshal(resp, &dns); a.NoError(err) {
 			a.True(dns.Enabled)
 		}
@@ -68,7 +68,7 @@ func TestCustomDNS(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var dns atlas.AWSCustomDNSEnabled
+		var dns atlasv2.AWSCustomDNSEnabled
 		if err := json.Unmarshal(resp, &dns); a.NoError(err) {
 			a.True(dns.Enabled)
 		}
@@ -88,7 +88,7 @@ func TestCustomDNS(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var dns atlas.AWSCustomDNSEnabled
+		var dns atlasv2.AWSCustomDNSEnabled
 		if err := json.Unmarshal(resp, &dns); a.NoError(err) {
 			a.False(dns.Enabled)
 		}

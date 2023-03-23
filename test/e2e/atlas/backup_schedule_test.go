@@ -111,6 +111,7 @@ func TestSchedules(t *testing.T) {
 			"schedule",
 			"delete",
 			clusterName,
+			"--force",
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

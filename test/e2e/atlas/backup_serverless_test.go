@@ -35,7 +35,7 @@ func TestServerlessBackup(t *testing.T) {
 	clusterName := os.Getenv("E2E_SERVERLESS_INSTANCE_NAME")
 	r.NotEmpty(clusterName)
 
-	var snapshotID string
+	var snapshotID, restoreJobID string
 
 	t.Run("Snapshot List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -79,6 +79,90 @@ func TestServerlessBackup(t *testing.T) {
 		var result atlas.CloudProviderSnapshot
 		if err = json.Unmarshal(resp, &result); a.NoError(err) {
 			a.Equal(snapshotID, result.ID)
+		}
+	})
+
+	t.Run("Restores Create", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			serverlessEntity,
+			backupsEntity,
+			restoresEntity,
+			"create",
+			"--deliveryType",
+			"download",
+			"--clusterName",
+			clusterName,
+			"--snapshotId",
+			snapshotID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		r.NoError(err, string(resp))
+		a := assert.New(t)
+		var result atlas.CloudProviderSnapshotRestoreJob
+		if err = json.Unmarshal(resp, &result); a.NoError(err) {
+			restoreJobID = result.ID
+		}
+	})
+
+	t.Run("Restores Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			serverlessEntity,
+			backupsEntity,
+			restoresEntity,
+			"watch",
+			"--restoreJobId",
+			restoreJobID,
+			"--clusterName",
+			clusterName,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		r.NoError(err, string(resp))
+	})
+
+	t.Run("Restores List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			serverlessEntity,
+			backupsEntity,
+			restoresEntity,
+			"list",
+			clusterName,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		r.NoError(err, string(resp))
+
+		a := assert.New(t)
+		var result atlas.CloudProviderSnapshotRestoreJobs
+		if err = json.Unmarshal(resp, &result); a.NoError(err) {
+			a.NotEmpty(result)
+		}
+	})
+
+	t.Run("Restores Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			serverlessEntity,
+			backupsEntity,
+			restoresEntity,
+			"describe",
+			"--restoreJobId",
+			restoreJobID,
+			"--clusterName",
+			clusterName,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		r.NoError(err, string(resp))
+
+		a := assert.New(t)
+		var result atlas.CloudProviderSnapshotRestoreJob
+		if err = json.Unmarshal(resp, &result); a.NoError(err) {
+			a.NotEmpty(result)
 		}
 	})
 }

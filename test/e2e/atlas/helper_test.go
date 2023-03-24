@@ -81,6 +81,7 @@ const (
 	bucketsEntity                = "buckets"
 	jobsEntity                   = "jobs"
 	snapshotsEntity              = "snapshots"
+	restoresEntity               = "restores"
 	teamsEntity                  = "teams"
 )
 

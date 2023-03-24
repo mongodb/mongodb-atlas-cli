@@ -28,7 +28,10 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const updateTemplate = "Invitation {{.ID}} updated.\n"
+const (
+	updateTemplateCloud  = "Invitation {{.Id}} updated.\n"
+	updateTemplateOnPrem = "Invitation {{.ID}} updated.\n"
+)
 
 type UpdateOpts struct {
 	cli.GlobalOpts
@@ -98,7 +101,7 @@ func UpdateBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				opts.validate,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
+				opts.InitConditionalOutput(cmd.OutOrStdout(), updateTemplateCloud, updateTemplateOnPrem),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

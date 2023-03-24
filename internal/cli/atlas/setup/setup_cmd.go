@@ -141,13 +141,18 @@ func Builder() *cobra.Command {
 		Hidden: false,
 		Args:   require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.config = config.Default()
+			defaultProfile := config.Default()
+			opts.config = defaultProfile
 			opts.OutWriter = cmd.OutOrStdout()
 			opts.register.OutWriter = opts.OutWriter
 
 			qsOpts.LoginOpts.OutWriter = opts.OutWriter
 			qsOpts.DefaultSetterOpts.OutWriter = opts.OutWriter
-			if err := opts.register.InitFlow(config.Default())(); err != nil {
+
+			if err := opts.register.SyncWithOAuthAccessProfile(defaultProfile)(); err != nil {
+				return err
+			}
+			if err := opts.register.InitFlow(defaultProfile)(); err != nil {
 				return err
 			}
 			if err := opts.PreRun(cmd.Context()); err != nil {
@@ -157,14 +162,14 @@ func Builder() *cobra.Command {
 			// registration pre run if applicable
 			if !opts.skipRegister {
 				preRun = append(preRun,
-					opts.register.LoginPreRun(cmd.Context(), config.Default()),
+					opts.register.LoginPreRun(cmd.Context()),
 					validate.NoAPIKeys,
 					validate.NoAccessToken,
 				)
 			}
 
-			if !opts.skipLogin {
-				preRun = append(preRun, opts.register.LoginPreRun(cmd.Context(), config.Default()))
+			if !opts.skipLogin && opts.skipRegister {
+				preRun = append(preRun, opts.register.LoginPreRun(cmd.Context()))
 			}
 
 			return opts.PreRunE(preRun...)

@@ -22,7 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/spf13/afero"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const testName = "default"
@@ -42,7 +42,7 @@ func TestCreateOpts_Run(t *testing.T) {
 		if err != nil {
 			t.Fatalf("newSearchIndex() unexpected error: %v", err)
 		}
-		expected := &mongodbatlas.SearchIndex{}
+		expected := &atasv2.FTSIndex{}
 		mockStore.
 			EXPECT().
 			CreateSearchIndexes(opts.ProjectID, opts.clusterName, request).
@@ -66,7 +66,7 @@ func TestCreateOpts_Run(t *testing.T) {
 		opts.filename = fileName
 		opts.fs = appFS
 
-		expected := &mongodbatlas.SearchIndex{}
+		expected := &atasv2.FTSIndex{}
 		request, err := opts.newSearchIndex()
 		if err != nil {
 			t.Fatalf("newSearchIndex() unexpected error: %v", err)

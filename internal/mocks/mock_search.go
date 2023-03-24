@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockSearchIndexLister is a mock of SearchIndexLister interface.
@@ -35,10 +36,10 @@ func (m *MockSearchIndexLister) EXPECT() *MockSearchIndexListerMockRecorder {
 }
 
 // SearchIndexes mocks base method.
-func (m *MockSearchIndexLister) SearchIndexes(arg0, arg1, arg2, arg3 string, arg4 *mongodbatlas.ListOptions) ([]*mongodbatlas.SearchIndex, error) {
+func (m *MockSearchIndexLister) SearchIndexes(arg0, arg1, arg2, arg3 string, arg4 *mongodbatlas.ListOptions) ([]mongodbatlasv2.FTSIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchIndexes", arg0, arg1, arg2, arg3, arg4)
-	ret0, _ := ret[0].([]*mongodbatlas.SearchIndex)
+	ret0, _ := ret[0].([]mongodbatlasv2.FTSIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +74,10 @@ func (m *MockSearchIndexCreator) EXPECT() *MockSearchIndexCreatorMockRecorder {
 }
 
 // CreateSearchIndexes mocks base method.
-func (m *MockSearchIndexCreator) CreateSearchIndexes(arg0, arg1 string, arg2 *mongodbatlas.SearchIndex) (*mongodbatlas.SearchIndex, error) {
+func (m *MockSearchIndexCreator) CreateSearchIndexes(arg0, arg1 string, arg2 *mongodbatlasv2.FTSIndex) (*mongodbatlasv2.FTSIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateSearchIndexes", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.SearchIndex)
+	ret0, _ := ret[0].(*mongodbatlasv2.FTSIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +112,10 @@ func (m *MockSearchIndexDescriber) EXPECT() *MockSearchIndexDescriberMockRecorde
 }
 
 // SearchIndex mocks base method.
-func (m *MockSearchIndexDescriber) SearchIndex(arg0, arg1, arg2 string) (*mongodbatlas.SearchIndex, error) {
+func (m *MockSearchIndexDescriber) SearchIndex(arg0, arg1, arg2 string) (*mongodbatlasv2.FTSIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchIndex", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.SearchIndex)
+	ret0, _ := ret[0].(*mongodbatlasv2.FTSIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -149,10 +150,10 @@ func (m *MockSearchIndexUpdater) EXPECT() *MockSearchIndexUpdaterMockRecorder {
 }
 
 // UpdateSearchIndexes mocks base method.
-func (m *MockSearchIndexUpdater) UpdateSearchIndexes(arg0, arg1, arg2 string, arg3 *mongodbatlas.SearchIndex) (*mongodbatlas.SearchIndex, error) {
+func (m *MockSearchIndexUpdater) UpdateSearchIndexes(arg0, arg1, arg2 string, arg3 *mongodbatlasv2.FTSIndex) (*mongodbatlasv2.FTSIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateSearchIndexes", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(*mongodbatlas.SearchIndex)
+	ret0, _ := ret[0].(*mongodbatlasv2.FTSIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

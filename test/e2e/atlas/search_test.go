@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestSearch(t *testing.T) {
@@ -89,10 +89,10 @@ func TestSearch(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var index mongodbatlas.SearchIndex
+		var index atlasv2.FTSIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
-			assert.Equal(t, index.Name, indexName)
-			indexID = index.IndexID
+			assert.Equal(t, index.GetName(), indexName)
+			indexID = index.GetIndexID()
 		}
 	})
 
@@ -115,7 +115,7 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var indexes []mongodbatlas.SearchIndex
+		var indexes []atlasv2.FTSIndex
 		if err := json.Unmarshal(resp, &indexes); assert.NoError(t, err) {
 			assert.NotEmpty(t, indexes)
 		}
@@ -138,9 +138,9 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var index mongodbatlas.SearchIndex
+		var index atlasv2.FTSIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
-			assert.Equal(t, indexID, index.IndexID)
+			assert.Equal(t, indexID, index.GetIndexID())
 		}
 	})
 
@@ -195,11 +195,11 @@ func TestSearch(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var index mongodbatlas.SearchIndex
+		var index atlasv2.FTSIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			a := assert.New(t)
-			a.Equal(indexID, index.IndexID)
-			a.Equal(analyzer, index.Analyzer)
+			a.Equal(indexID, index.GetIndexID())
+			a.Equal(analyzer, index.GetAnalyzer())
 		}
 	})
 

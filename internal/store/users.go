@@ -117,6 +117,8 @@ func (s *Store) DeleteUser(userID string) error {
 func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
+		//TODO: Migrate once CLOUDP-168256 is unblocked
+		// result, _, err := s.clientv2.OrganizationsApi.ListOrganizationUsers(s.ctx, organizationID).Execute()
 		result, _, err := s.client.(*atlas.Client).Organizations.Users(s.ctx, organizationID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:

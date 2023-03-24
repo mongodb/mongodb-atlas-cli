@@ -65,6 +65,7 @@ func TestServerlessBackup(t *testing.T) {
 			backupsEntity,
 			snapshotsEntity,
 			"describe",
+			"--snapshotId",
 			snapshotID,
 			"--clusterName",
 			clusterName,

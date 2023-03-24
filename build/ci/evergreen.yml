@@ -1225,7 +1225,7 @@ tasks:
           AZURE_CLIENT_SECRET: ${logs_decrypt_azure_client_secret}
           E2E_TAGS: atlas,decrypt
   - name: atlas_backups_snapshots_e2e
-    tags: [ "e2e","backup","atlas","snapshot" ]
+    tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -1246,7 +1246,7 @@ tasks:
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_TIMEOUT: 3h
   - name: atlas_backups_exports_buckets_e2e
-    tags: [ "e2e","backup","atlas","exports","buckets" ]
+    tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -1267,7 +1267,7 @@ tasks:
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_TIMEOUT: 3h
   - name: atlas_backups_exports_jobs_e2e
-    tags: [ "e2e","backup","atlas","exports","jobs" ]
+    tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -1288,7 +1288,7 @@ tasks:
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_TIMEOUT: 3h
   - name: atlas_backups_serverless_e2e
-    tags: [ "e2e","backup","atlas","serverless" ]
+    tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
     depends_on:
       - name: compile

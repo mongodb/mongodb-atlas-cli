@@ -129,7 +129,7 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 }
 
 // Orgs fetches organizations, filtering by name.
-func (opts *DefaultSetterOpts) orgs(filter string) (results interface{}, error error) {
+func (opts *DefaultSetterOpts) orgs(filter string) (results interface{}, err error) {
 	spin := newSpinner()
 	spin.Start()
 	defer spin.Stop()
@@ -163,7 +163,6 @@ func (opts *DefaultSetterOpts) orgs(filter string) (results interface{}, error e
 		results = r.Results
 	}
 	return results, nil
-
 }
 
 // ProjectExists checks if the project exists and the current user has access to it.

@@ -28,7 +28,7 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationLister(ctrl)
 
-	expected := &atlasv2.Organizations{}
+	expected := &atlasv2.PaginatedOrganization{}
 
 	listOpts := &ListOpts{store: mockStore}
 

@@ -129,7 +129,7 @@ func NewOrgSelect(options []atlasv2.Organization) survey.Prompt {
 	}
 }
 
-// NewOrgSelect create a prompt to choice the organization.
+// NewOnPremOrgSelect create a prompt to choice the organization.
 func NewOnPremOrgSelect(options []*atlas.Organization) survey.Prompt {
 	opt := make([]string, len(options))
 	for i, o := range options {

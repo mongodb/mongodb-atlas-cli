@@ -49,7 +49,7 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (interface{}
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.OrganizationsApi.ListOrganizations(s.ctx).
-			Name(opts.Name).PageNum(int32(opts.PageNum)).IncludeCount(opts.IncludeCount).Execute()
+			Name(opts.Name).PageNum(int32(opts.PageNum)).IncludeCount(true).Execute()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.List(s.ctx, opts)

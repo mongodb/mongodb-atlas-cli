@@ -563,7 +563,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,serverless
+          E2E_TAGS: atlas,serverless,instance
   - name: atlas_gov_clusters_flags_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true

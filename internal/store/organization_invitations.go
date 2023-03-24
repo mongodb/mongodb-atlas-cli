@@ -76,8 +76,6 @@ func (s *Store) OrganizationInvitation(orgID, invitationID string) (interface{},
 func (s *Store) DeleteInvitation(orgID, invitationID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		// TODO: migrate once 406 response is fixed CLOUDP-166120
-		// _, err := s.clientv2.OrganizationsApi.DeleteOrganizationInvitation(s.ctx, orgID, invitationID).Execute()
 		_, err := s.client.(*atlas.Client).Organizations.DeleteInvitation(s.ctx, orgID, invitationID)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:

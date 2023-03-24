@@ -73,6 +73,7 @@ functions:
       params:
         <<: *go_options
         env:
+          <<: *go_env
           TEST_CMD: gotestsum --junitfile unit-tests.xml --
         command: make unit-test
   "integration-test":

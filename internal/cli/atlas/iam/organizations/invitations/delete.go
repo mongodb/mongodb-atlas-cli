@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,18 +27,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT
-{{.ID}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}
-`
-
-type DescribeOpts struct {
-	cli.OutputOpts
+type DeleteOpts struct {
+	*cli.DeleteOpts
 	cli.GlobalOpts
-	id    string
-	store store.OrganizationInvitationDescriber
+	store store.OrganizationInvitationDeleter
 }
 
-func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -46,45 +41,40 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.OrganizationInvitation(opts.ConfigOrgID(), opts.id)
-	if err != nil {
-		return err
-	}
-
-	return opts.Print(r)
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeleteInvitation, opts.ConfigOrgID())
 }
 
-// mongocli iam organizations(s) invitations describe|get <ID> [--orgId orgId].
-func DescribeBuilder() *cobra.Command {
-	opts := new(DescribeOpts)
+// atlas iam organization(s) invitation(s) delete <invitationId> [--force] [--orgId orgId].
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("Invitation '%s' deleted\n", "Invitation not deleted"),
+	}
 	cmd := &cobra.Command{
-		Use:     "describe <invitationId>",
-		Aliases: []string{"get"},
-		Args:    require.ExactArgs(1),
-		Short:   "Return the details for the specified pending invitation to your organization.",
+		Use:     "delete <invitationId>",
+		Aliases: []string{"rm"},
+		Short:   "Remove the specified pending invitation to your organization.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
+		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"invitationIdDesc": "Unique 24-digit string that identifies the invitation.",
 		},
-		Example: fmt.Sprintf(`  # Return the JSON-formatted details of the pending invitation with the ID 5dd56c847a3e5a1f363d424d for the organization with the ID 5f71e5255afec75a3d0f96dc:
-  %s organizations invitations describe 5dd56c847a3e5a1f363d424d --orgId 5f71e5255afec75a3d0f96dc --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # Remove the pending invitation with the ID 5dd56c847a3e5a1f363d424d from the organization with the ID 5f71e5255afec75a3d0f96dc:
+  %s organizations invitations delete 5dd56c847a3e5a1f363d424d --orgId 5f71e5255afec75a3d0f96dc`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
-			)
+			if err := opts.initStore(cmd.Context())(); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.id = args[0]
 			return opts.Run()
 		},
 	}
 
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
-
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

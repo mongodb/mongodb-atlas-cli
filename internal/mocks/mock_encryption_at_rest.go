@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockEncryptionAtRestDescriber is a mock of EncryptionAtRestDescriber interface.
@@ -35,10 +35,10 @@ func (m *MockEncryptionAtRestDescriber) EXPECT() *MockEncryptionAtRestDescriberM
 }
 
 // EncryptionAtRest mocks base method.
-func (m *MockEncryptionAtRestDescriber) EncryptionAtRest(arg0 string) (*mongodbatlas.EncryptionAtRest, error) {
+func (m *MockEncryptionAtRestDescriber) EncryptionAtRest(arg0 string) (*atlasv2.EncryptionAtRest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "EncryptionAtRest", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.EncryptionAtRest)
+	ret0, _ := ret[0].(*atlasv2.EncryptionAtRest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

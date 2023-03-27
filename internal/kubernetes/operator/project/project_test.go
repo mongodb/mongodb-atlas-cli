@@ -103,14 +103,14 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 		}
 
-		encryptionAtRest := &mongodbatlas.EncryptionAtRest{
-			GroupID:       "TestGroupID",
-			AwsKms:        mongodbatlas.AwsKms{},
-			AzureKeyVault: mongodbatlas.AzureKeyVault{},
-			GoogleCloudKms: mongodbatlas.GoogleCloudKms{
+		encryptionAtRest := &atlasv2.EncryptionAtRest{
+			//GroupID:       "TestGroupID",
+			AwsKms:        &atlasv2.AWSKMS{},
+			AzureKeyVault: &atlasv2.AzureKeyVault{},
+			GoogleCloudKms: &atlasv2.GoogleCloudKMS{
 				Enabled:              pointer.Get(true),
-				ServiceAccountKey:    "TestServiceAccountKey",
-				KeyVersionResourceID: "TestKeyVersionResourceID",
+				ServiceAccountKey:    pointer.Get("TestServiceAccountKey"),
+				KeyVersionResourceID: pointer.Get("TestKeyVersionResourceID"),
 			},
 		}
 
@@ -504,8 +504,8 @@ func TestBuildAtlasProject(t *testing.T) {
 					AzureKeyVault: atlasV1.AzureKeyVault{},
 					GoogleCloudKms: atlasV1.GoogleCloudKms{
 						Enabled:              encryptionAtRest.GoogleCloudKms.Enabled,
-						ServiceAccountKey:    encryptionAtRest.GoogleCloudKms.ServiceAccountKey,
-						KeyVersionResourceID: encryptionAtRest.GoogleCloudKms.KeyVersionResourceID,
+						ServiceAccountKey:    encryptionAtRest.GoogleCloudKms.GetServiceAccountKey(),
+						KeyVersionResourceID: encryptionAtRest.GoogleCloudKms.GetKeyVersionResourceID(),
 					},
 				},
 				Auditing: &atlasV1.Auditing{
@@ -763,19 +763,18 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 
 	dataProvider := mocks.NewMockEncryptionAtRestDescriber(ctl)
 	t.Run("Can convert Encryption at REST AWS", func(t *testing.T) {
-		data := &mongodbatlas.EncryptionAtRest{
-			GroupID: "TestGroupID",
-			AwsKms: mongodbatlas.AwsKms{
+		data := &atlasv2.EncryptionAtRest{
+			AwsKms: &atlasv2.AWSKMS{
 				Enabled:             pointer.Get(true),
-				AccessKeyID:         "TestAccessKey",
-				SecretAccessKey:     "TestSecretAccessKey",
-				CustomerMasterKeyID: "TestCustomerMasterKeyID",
-				Region:              "US_EAST_1",
-				RoleID:              "TestRoleID",
+				AccessKeyID:         pointer.Get("TestAccessKey"),
+				SecretAccessKey:     pointer.Get("TestSecretAccessKey"),
+				CustomerMasterKeyID: pointer.Get("TestCustomerMasterKeyID"),
+				Region:              pointer.Get("US_EAST_1"),
+				RoleId:              pointer.Get("TestRoleID"),
 				Valid:               pointer.Get(true),
 			},
-			AzureKeyVault:  mongodbatlas.AzureKeyVault{},
-			GoogleCloudKms: mongodbatlas.GoogleCloudKms{},
+			AzureKeyVault:  &atlasv2.AzureKeyVault{},
+			GoogleCloudKms: &atlasv2.GoogleCloudKMS{},
 		}
 
 		dataProvider.EXPECT().EncryptionAtRest(projectID).Return(data, nil)

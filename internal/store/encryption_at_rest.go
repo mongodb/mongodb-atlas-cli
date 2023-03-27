@@ -18,19 +18,19 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_encryption_at_rest.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store EncryptionAtRestDescriber
 
 type EncryptionAtRestDescriber interface {
-	EncryptionAtRest(string) (*atlas.EncryptionAtRest, error)
+	EncryptionAtRest(string) (*atlasv2.EncryptionAtRest, error)
 }
 
-func (s *Store) EncryptionAtRest(projectID string) (*atlas.EncryptionAtRest, error) {
+func (s *Store) EncryptionAtRest(projectID string) (*atlasv2.EncryptionAtRest, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).EncryptionsAtRest.Get(s.ctx, projectID)
+		result, _, err := s.clientv2.EncryptionAtRestUsingCustomerKeyManagementApi.ReturnOneConfigurationForEncryptionAtRestUsingCustomerManagedKeysForOneProject(s.ctx, projectID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

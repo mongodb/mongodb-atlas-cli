@@ -28,18 +28,18 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range .}}
-{{.Id}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
-`
+const createTemplate = "User '{{.Username}}' invited.\n"
 
-type ListOpts struct {
-	cli.GlobalOpts
+type InviteOpts struct {
 	cli.OutputOpts
-	store    store.OrganizationInvitationLister
+	cli.GlobalOpts
 	username string
+	roles    []string
+	teamIds  []string
+	store    store.OrganizationInviter
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *InviteOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -47,47 +47,61 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.OrganizationInvitations(opts.ConfigOrgID(), opts.newInvitationOptions())
+func (opts *InviteOpts) Run() error {
+	r, err := opts.store.InviteUser(opts.ConfigOrgID(), opts.newInvitation())
+
 	if err != nil {
 		return err
 	}
+
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newInvitationOptions() *atlas.InvitationOptions {
-	return &atlas.InvitationOptions{
+func (opts *InviteOpts) newInvitation() *atlas.Invitation {
+	return &atlas.Invitation{
 		Username: opts.username,
+		Roles:    opts.roles,
+		TeamIDs:  opts.teamIds,
 	}
 }
 
-// mongocli iam organizations(s) invitations list [--email email]  [--orgId orgId].
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+// mongocli iam organization(s) invitation(s) invite|create <email> --role role [--teamId teamId] [--orgId orgId].
+func InviteBuilder() *cobra.Command {
+	opts := new(InviteOpts)
+	opts.Template = createTemplate
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   "Return all pending invitations to your organization.",
+		Use:     "invite <email>",
+		Short:   "Invite the specified MongoDB user to your organization.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
-		Args:    require.NoArgs,
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of pending invitations to the organization with the ID 5f71e5255afec75a3d0f96dc:
-  %s organizations invitations list --orgId 5f71e5255afec75a3d0f96dc --output json`, cli.ExampleAtlasEntryPoint()),
+		Aliases: []string{"create"},
+		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"emailDesc": "Email address that belongs to the user that you want to invite to the organization.",
+		},
+		Example: fmt.Sprintf(`  # Invite the MongoDB user with the email user@example.com to the organization with the ID 5f71e5255afec75a3d0f96dc with ORG_OWNER access:
+  %s organizations invitations invite user@example.com --orgId 5f71e5255afec75a3d0f96dc --role ORG_OWNER --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-			)
+			opts.OutWriter = cmd.OutOrStdout()
+			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.username = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.username, flag.Email, "", usage.Email)
+	if config.BinName() == config.MongoCLI {
+		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.MCLIOrgRole)
+	} else {
+		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
+	}
+	cmd.Flags().StringSliceVar(&opts.teamIds, flag.TeamID, []string{}, usage.TeamID)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired(flag.Role)
 
 	return cmd
 }

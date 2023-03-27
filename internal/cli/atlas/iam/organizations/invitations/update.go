@@ -28,7 +28,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const updateTemplate = "Invitation {{.ID}} updated.\n"
+const updateTemplate = "Invitation {{.Id}} updated.\n"
 
 type UpdateOpts struct {
 	cli.GlobalOpts

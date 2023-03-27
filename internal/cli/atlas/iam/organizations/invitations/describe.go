@@ -25,21 +25,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range .}}
-{{.Id}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
+const describeTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT
+{{.Id}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}
 `
 
-type ListOpts struct {
-	cli.GlobalOpts
+type DescribeOpts struct {
 	cli.OutputOpts
-	store    store.OrganizationInvitationLister
-	username string
+	cli.GlobalOpts
+	id    string
+	store store.OrganizationInvitationDescriber
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -47,43 +46,41 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.OrganizationInvitations(opts.ConfigOrgID(), opts.newInvitationOptions())
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.OrganizationInvitation(opts.ConfigOrgID(), opts.id)
 	if err != nil {
 		return err
 	}
+
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newInvitationOptions() *atlas.InvitationOptions {
-	return &atlas.InvitationOptions{
-		Username: opts.username,
-	}
-}
-
-// mongocli iam organizations(s) invitations list [--email email]  [--orgId orgId].
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+// mongocli iam organizations(s) invitations describe|get <ID> [--orgId orgId].
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   "Return all pending invitations to your organization.",
+		Use:     "describe <invitationId>",
+		Aliases: []string{"get"},
+		Args:    require.ExactArgs(1),
+		Short:   "Return the details for the specified pending invitation to your organization.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
-		Args:    require.NoArgs,
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of pending invitations to the organization with the ID 5f71e5255afec75a3d0f96dc:
-  %s organizations invitations list --orgId 5f71e5255afec75a3d0f96dc --output json`, cli.ExampleAtlasEntryPoint()),
+		Annotations: map[string]string{
+			"invitationIdDesc": "Unique 24-digit string that identifies the invitation.",
+		},
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details of the pending invitation with the ID 5dd56c847a3e5a1f363d424d for the organization with the ID 5f71e5255afec75a3d0f96dc:
+  %s organizations invitations describe 5dd56c847a3e5a1f363d424d --orgId 5f71e5255afec75a3d0f96dc --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.username, flag.Email, "", usage.Email)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

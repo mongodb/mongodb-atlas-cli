@@ -35,6 +35,7 @@ func TestRestores(t *testing.T) {
 	var snapshotID, restoreJobID string
 
 	g := newAtlasE2ETestGenerator(t)
+	g.enableBackup = true
 	g.generateProjectAndCluster("backupRestores")
 
 	t.Run("Create snapshot", func(t *testing.T) {

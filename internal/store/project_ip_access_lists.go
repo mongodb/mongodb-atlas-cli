@@ -17,10 +17,11 @@ package store
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
-	"time"
 )
 
 //go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectIPAccessListDescriber,ProjectIPAccessListLister,ProjectIPAccessListCreator,ProjectIPAccessListDeleter
@@ -107,7 +108,6 @@ func mapProjectIPAccessList(entries []*atlas.ProjectIPAccessList) []atlasv2.Netw
 		if entry.AwsSecurityGroup != "" {
 			networkPermissionEntry[i].AwsSecurityGroup = &entry.AwsSecurityGroup
 		}
-
 	}
 	return networkPermissionEntry
 }

@@ -19,27 +19,29 @@ package accesslists
 import (
 	"bytes"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestWhitelistDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectIPAccessListDescriber(ctrl)
 
-	expected := &mongodbatlas.ProjectIPAccessList{
-		AwsSecurityGroup: "test",
-		CIDRBlock:        "test",
-		Comment:          "test",
-		DeleteAfterDate:  "test",
-		GroupID:          "test",
-		IPAddress:        "test",
+	expected := &atlasv2.NetworkPermissionEntry{
+		AwsSecurityGroup: pointer.Get("test"),
+		CidrBlock:        pointer.Get("test"),
+		Comment:          pointer.Get("test"),
+		DeleteAfterDate:  &time.Time{},
+		GroupId:          pointer.Get("test"),
+		IpAddress:        pointer.Get("test"),
 	}
 
 	buf := new(bytes.Buffer)

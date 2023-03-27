@@ -301,15 +301,15 @@ func buildAccessLists(accessListProvider store.ProjectIPAccessListLister, projec
 
 	var result []operatorProject.IPAccessList
 	for _, list := range accessLists.Results {
-		if strings.HasSuffix(list.CIDRBlock, cidrException) && list.IPAddress != "" {
-			list.CIDRBlock = ""
+		if strings.HasSuffix(list.GetCidrBlock(), cidrException) && list.GetIpAddress() != "" {
+			list.CidrBlock = pointer.Get("")
 		}
 		result = append(result, operatorProject.IPAccessList{
-			AwsSecurityGroup: list.AwsSecurityGroup,
-			CIDRBlock:        list.CIDRBlock,
-			Comment:          list.Comment,
-			DeleteAfterDate:  list.DeleteAfterDate,
-			IPAddress:        list.IPAddress,
+			AwsSecurityGroup: list.GetAwsSecurityGroup(),
+			CIDRBlock:        list.GetCidrBlock(),
+			Comment:          list.GetComment(),
+			DeleteAfterDate:  list.GetDeleteAfterDate().String(),
+			IPAddress:        list.GetIpAddress(),
 		})
 	}
 	return result, nil

@@ -38,7 +38,8 @@ func TestServerlessBackup(t *testing.T) {
 	var snapshotID, restoreJobID string
 
 	g := newAtlasE2ETestGenerator(t)
-	g.generateProjectAndCluster("serverlessBackup")
+	g.generateProject("serverlessBackup")
+	g.generateServerlessCluster()
 
 	t.Run("Snapshot List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -98,7 +99,7 @@ func TestServerlessBackup(t *testing.T) {
 			"--snapshotId",
 			snapshotID,
 			"--targetClusterName",
-			g.clusterName,
+			g.serverlessName,
 			"--targetProjectId",
 			g.projectID,
 			"-o=json")

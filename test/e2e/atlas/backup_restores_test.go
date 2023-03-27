@@ -79,7 +79,6 @@ func TestRestores(t *testing.T) {
 
 	t.Run("Restores Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			serverlessEntity,
 			backupsEntity,
 			restoresEntity,
 			"start",

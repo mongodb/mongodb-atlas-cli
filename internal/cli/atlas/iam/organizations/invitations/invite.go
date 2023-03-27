@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ func (opts *InviteOpts) newInvitation() *atlas.Invitation {
 	}
 }
 
-// mongocli iam organization(s) invitation(s) invite|create <email> --role role [--teamId teamId] [--orgId orgId].
+// atlas iam organization(s) invitation(s) invite|create <email> --role role [--teamId teamId] [--orgId orgId].
 func InviteBuilder() *cobra.Command {
 	opts := new(InviteOpts)
 	opts.Template = createTemplate
@@ -90,11 +90,7 @@ func InviteBuilder() *cobra.Command {
 		},
 	}
 
-	if config.BinName() == config.MongoCLI {
-		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.MCLIOrgRole)
-	} else {
-		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
-	}
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
 	cmd.Flags().StringSliceVar(&opts.teamIds, flag.TeamID, []string{}, usage.TeamID)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 

@@ -47,7 +47,7 @@ func (opts *ListOpts) newInvitationOptions() *atlas.InvitationOptions {
 	}
 }
 
-// mongocli iam organizations(s) invitations list [--email email]  [--orgId orgId].
+// atlas iam organizations(s) invitations list [--email email]  [--orgId orgId].
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{

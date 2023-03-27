@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ func (opts *UpdateOpts) validate() error {
 	return nil
 }
 
-// mongocli iam organization(s) invitation(s) updates [invitationId] --role role  [--orgId orgId] [--email email].
+// atlas iam organization(s) invitation(s) updates [invitationId] --role role  [--orgId orgId] [--email email].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
@@ -107,11 +107,7 @@ func UpdateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.username, flag.Email, "", usage.Email)
-	if config.BinName() == config.MongoCLI {
-		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.MCLIOrgRole)
-	} else {
-		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
-	}
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())

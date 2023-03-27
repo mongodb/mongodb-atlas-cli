@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteInvitation, opts.ConfigOrgID())
 }
 
-// mongocli iam organization(s) invitation(s) delete <invitationId> [--force] [--orgId orgId].
+// atlas iam organization(s) invitation(s) delete <invitationId> [--force] [--orgId orgId].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Invitation '%s' deleted\n", "Invitation not deleted"),

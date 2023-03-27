@@ -86,7 +86,7 @@ func (s *Store) DeleteInvitation(orgID, invitationID string) error {
 	}
 }
 
-// UpdateOrganizationInvitation encapsulate the logic to manage different cloud providers.
+// UpdateOrganizationInvitation encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitation *atlas.Invitation) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
@@ -116,7 +116,7 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 	}
 }
 
-// InviteUser encapsulate the logic to manage different cloud providers.
+// InviteUser encapsulates the logic to manage different cloud providers.
 func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:

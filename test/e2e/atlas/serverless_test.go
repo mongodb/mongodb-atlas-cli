@@ -56,7 +56,6 @@ func TestServerless(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		t.Helper()
 		a := assert.New(t)
 		a.Equal(clusterName, cluster.Name)
 	})
@@ -74,6 +73,26 @@ func TestServerless(t *testing.T) {
 
 		a := assert.New(t)
 		a.Contains(string(resp), "Instance available")
+	})
+
+	t.Run("Update", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			serverlessEntity,
+			"update",
+			clusterName,
+			"--disableTerminationProtection",
+			"--projectId", g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var cluster *mongodbatlas.Cluster
+		err = json.Unmarshal(resp, &cluster)
+		req.NoError(err)
+
+		a := assert.New(t)
+		a.Equal(clusterName, cluster.Name)
 	})
 
 	t.Run("List", func(t *testing.T) {

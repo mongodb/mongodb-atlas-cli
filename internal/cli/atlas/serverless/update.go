@@ -16,7 +16,6 @@ package serverless
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -52,10 +51,7 @@ var updateTemplate = "Serverless instance {{.Name}} updated.\n"
 
 func (opts *UpdateOpts) Run() error {
 	r, err := opts.store.UpdateServerlessInstance(opts.ConfigProjectID(), opts.instanceName, opts.newServerlessUpdateRequestParams())
-	var target *atlas.ErrorResponse
-	if errors.As(err, &target) && target.ErrorCode == "INVALID_REGION" {
-		return cli.ErrNoRegionExistsTryCommand
-	} else if err != nil {
+	if err != nil {
 		return err
 	}
 	return opts.Print(r)

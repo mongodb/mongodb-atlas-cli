@@ -58,12 +58,18 @@ func (opts *UpdateOpts) Run() error {
 }
 
 func (opts *UpdateOpts) newServerlessUpdateRequestParams() *atlas.ServerlessUpdateRequestParams {
-	return &atlas.ServerlessUpdateRequestParams{
-		ServerlessBackupOptions: &atlas.ServerlessBackupOptions{
-			ServerlessContinuousBackupEnabled: cli.ReturnValueForSetting(opts.enableServerlessContinuousBackup, opts.disableServerlessContinuousBackup),
-		},
+	params := &atlas.ServerlessUpdateRequestParams{
 		TerminationProtectionEnabled: cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection),
 	}
+
+	serverlessContinuousBackupEnabled := cli.ReturnValueForSetting(opts.enableServerlessContinuousBackup, opts.disableServerlessContinuousBackup)
+	if serverlessContinuousBackupEnabled != nil {
+		params.ServerlessBackupOptions = &atlas.ServerlessBackupOptions{
+			ServerlessContinuousBackupEnabled: serverlessContinuousBackupEnabled,
+		}
+	}
+
+	return params
 }
 
 // atlas serverless|sl update <instanceName> [--projectId projectId].

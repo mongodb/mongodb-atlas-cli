@@ -341,6 +341,7 @@
 | `serverless describe`                       | Y         |           |           | Y         |       |       |
 | `serverless list`                           | Y         |           |           | Y         |       |       |
 | `serverless watch`                          | Y         |           |           | Y         |       |       |
+| `serverless update`                         | Y         |           |           | Y         |       |       |
 | `serverless backup snapshots list`          | Y         |           |           | Y         |       |       |
 | `serverless backup snapshots describe`      | Y         |           |           | Y         |       |       |
 | `serverless backup snapshots watch`         | Y         |           |           | Y         |       |       |

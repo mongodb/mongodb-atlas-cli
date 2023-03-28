@@ -1,8 +1,8 @@
-.. _mongocli-atlas-serverless-update:
+.. _atlas-serverless-update:
 
-================================
-mongocli atlas serverless update
-================================
+=======================
+atlas serverless update
+=======================
 
 .. default-domain:: mongodb
 
@@ -21,7 +21,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas serverless update <instanceName> [options]
+   atlas serverless update <instanceName> [options]
 
 .. Code end marker, please don't delete this comment
 

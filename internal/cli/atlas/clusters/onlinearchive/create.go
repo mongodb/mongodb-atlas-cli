@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type CreateOpts struct {
@@ -49,7 +50,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Online archive '{{.ID}}' created.\n"
+var createTemplate = "Online archive '{{.Id}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	archive := opts.newOnlineArchive()
@@ -62,16 +63,18 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newOnlineArchive() *atlas.OnlineArchive {
+func (opts *CreateOpts) newOnlineArchive() *atlasv2.OnlineArchive {
 	partitions := opts.partitionFields()
-	a := &atlas.OnlineArchive{
-		CollName: opts.collection,
-		Criteria: &atlas.OnlineArchiveCriteria{
-			DateField:       opts.dateField,
-			DateFormat:      opts.dateFormat,
-			ExpireAfterDays: &opts.archiveAfter,
+	a := &atlasv2.OnlineArchive{
+		CollName: &opts.collection,
+		Criteria: atlasv2.Criteria{
+			DateCriteria: &atlasv2.DateCriteria{
+				DateField:       &opts.dateField,
+				DateFormat:      &opts.dateFormat,
+				ExpireAfterDays: pointer.Get(int32(opts.archiveAfter)),
+			},
 		},
-		DBName:          opts.dbName,
+		DbName:          &opts.dbName,
 		PartitionFields: partitions,
 	}
 	return a
@@ -81,13 +84,13 @@ const (
 	maxPartitions = 2
 )
 
-func (opts *CreateOpts) partitionFields() []*atlas.PartitionFields {
-	fields := make([]*atlas.PartitionFields, len(opts.partitions))
+func (opts *CreateOpts) partitionFields() []atlasv2.PartitionField {
+	fields := make([]atlasv2.PartitionField, len(opts.partitions))
 	for i, p := range opts.partitions {
 		order := float64(i)
-		fields[i] = &atlas.PartitionFields{
+		fields[i] = atlasv2.PartitionField{
 			FieldName: p,
-			Order:     &order,
+			Order:     int32(order),
 		}
 	}
 	return fields

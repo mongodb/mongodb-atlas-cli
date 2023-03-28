@@ -45,7 +45,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplate = `ID	CLUSTER	DATABASE	COLLECTION	STATE
-{{.ID}}	{{.ClusterName}}	{{.DBName}}	{{.CollName}}	{{.State}}
+{{.Id}}	{{.ClusterName}}	{{.DbName}}	{{.CollName}}	{{.State}}
 `
 
 func (opts *DescribeOpts) Run() error {

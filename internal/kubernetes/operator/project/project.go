@@ -243,7 +243,7 @@ func BuildProjectConnectionSecret(credsProvider store.CredentialsGetter, name, n
 }
 
 func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]atlasV1.CustomRole, error) {
-	dbRoles, err := crProvider.DatabaseRoles(projectID, &atlas.ListOptions{ItemsPerPage: MaxItems})
+	dbRoles, err := crProvider.DatabaseRoles(projectID)
 	if err != nil {
 		return nil, err
 	}

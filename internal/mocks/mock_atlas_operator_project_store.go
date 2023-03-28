@@ -81,18 +81,18 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) CloudProviderAccessRoles(ar
 }
 
 // DatabaseRoles mocks base method.
-func (m *MockAtlasOperatorProjectStore) DatabaseRoles(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlasv2.CustomDBRole, error) {
+func (m *MockAtlasOperatorProjectStore) DatabaseRoles(arg0 string) ([]mongodbatlasv2.CustomDBRole, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DatabaseRoles", arg0, arg1)
+	ret := m.ctrl.Call(m, "DatabaseRoles", arg0)
 	ret0, _ := ret[0].([]mongodbatlasv2.CustomDBRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // DatabaseRoles indicates an expected call of DatabaseRoles.
-func (mr *MockAtlasOperatorProjectStoreMockRecorder) DatabaseRoles(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockAtlasOperatorProjectStoreMockRecorder) DatabaseRoles(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseRoles", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).DatabaseRoles), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseRoles", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).DatabaseRoles), arg0)
 }
 
 // EncryptionAtRest mocks base method.

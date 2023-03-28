@@ -68,7 +68,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DatabaseRoles(listOpts.ProjectID, listOpts.NewListOptions()).
+		DatabaseRoles(listOpts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 

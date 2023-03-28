@@ -18,14 +18,13 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_database_roles.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store DatabaseRoleLister,DatabaseRoleCreator,DatabaseRoleDeleter,DatabaseRoleUpdater,DatabaseRoleDescriber
 
 type DatabaseRoleLister interface {
-	DatabaseRoles(string, *atlas.ListOptions) ([]atlasv2.CustomDBRole, error)
+	DatabaseRoles(string) ([]atlasv2.CustomDBRole, error)
 }
 
 type DatabaseRoleCreator interface {
@@ -68,7 +67,7 @@ func (s *Store) DeleteDatabaseRole(groupID, roleName string) error {
 }
 
 // DatabaseRoles encapsulate the logic to manage different cloud providers.
-func (s *Store) DatabaseRoles(projectID string, _ *atlas.ListOptions) ([]atlasv2.CustomDBRole, error) {
+func (s *Store) DatabaseRoles(projectID string) ([]atlasv2.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.CustomDatabaseRolesApi.ListCustomDatabaseRoles(s.ctx, projectID).Execute()

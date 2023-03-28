@@ -305,7 +305,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore.EXPECT().ProjectSettings(projectID).Return(projectSettings, nil)
 		projectStore.EXPECT().Auditing(projectID).Return(auditing, nil)
 		projectStore.EXPECT().AlertConfigurations(projectID, listOption).Return(alertConfigs, nil)
-		projectStore.EXPECT().DatabaseRoles(projectID, listOption).Return(customRoles, nil)
+		projectStore.EXPECT().DatabaseRoles(projectID).Return(customRoles, nil)
 		projectStore.EXPECT().ProjectTeams(projectID).Return(projectTeams, nil)
 		projectStore.EXPECT().TeamByID(orgID, teamID).Return(teams, nil)
 		projectStore.EXPECT().TeamUsers(orgID, teamID).Return(teamUsers, nil)
@@ -1275,8 +1275,7 @@ func Test_buildCustomRoles(t *testing.T) {
 			},
 		}
 
-		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
-		rolesProvider.EXPECT().DatabaseRoles(projectID, listOptions).Return(data, nil)
+		rolesProvider.EXPECT().DatabaseRoles(projectID).Return(data, nil)
 
 		role := data[0]
 		expected := []atlasV1.CustomRole{

@@ -49,8 +49,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.DatabaseRoles(opts.ConfigProjectID(), listOpts)
+	r, err := opts.store.DatabaseRoles(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}

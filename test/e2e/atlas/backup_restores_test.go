@@ -19,7 +19,6 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
-	"sync"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
@@ -37,20 +36,10 @@ func TestRestores(t *testing.T) {
 
 	g := newAtlasE2ETestGenerator(t)
 	g.enableBackup = true
-	g2 := newAtlasE2ETestGenerator(t)
+	g.generateProjectAndCluster("backupRestores")
 
-	// creating projects/clusters in parallel since it takes too long
-	wg := sync.WaitGroup{}
-	wg.Add(2)
-	go func() {
-		g.generateProjectAndCluster("backupRestores")
-		wg.Done()
-	}()
-	go func() {
-		g2.generateProjectAndCluster("backupRestores")
-		wg.Done()
-	}()
-	wg.Wait()
+	g2 := newAtlasE2ETestGenerator(t)
+	g2.generateProjectAndCluster("backupRestores")
 
 	t.Run("Create snapshot", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

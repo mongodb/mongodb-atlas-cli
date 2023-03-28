@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockAtlasOperatorProjectStore is a mock of AtlasOperatorProjectStore interface.
@@ -80,10 +81,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) CloudProviderAccessRoles(ar
 }
 
 // DatabaseRoles mocks base method.
-func (m *MockAtlasOperatorProjectStore) DatabaseRoles(arg0 string, arg1 *mongodbatlas.ListOptions) (*[]mongodbatlas.CustomDBRole, error) {
+func (m *MockAtlasOperatorProjectStore) DatabaseRoles(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlasv2.CustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseRoles", arg0, arg1)
-	ret0, _ := ret[0].(*[]mongodbatlas.CustomDBRole)
+	ret0, _ := ret[0].([]mongodbatlasv2.CustomDBRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

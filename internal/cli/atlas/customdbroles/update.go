@@ -98,6 +98,7 @@ func UpdateBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"roleNameDesc": "Name of the custom role to update.",
+			"output":       updateTemplate,
 		},
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

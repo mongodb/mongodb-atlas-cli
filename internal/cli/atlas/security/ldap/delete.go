@@ -54,6 +54,9 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Remove the current LDAP configuration captured in the userToDNMapping document from your project.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": opts.SuccessMessage(),
+		},
 		Example: fmt.Sprintf(`  # Remove the current LDAP configuration in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s security ldap delete --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

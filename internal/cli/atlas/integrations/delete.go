@@ -63,6 +63,7 @@ func DeleteBuilder() *cobra.Command {
 		ValidArgs: []string{"PAGER_DUTY", "MICROSOFT_TEAMS", "SLACK", "DATADOG", "NEW_RELIC", "OPS_GENIE", "VICTOR_OPS", "WEBHOOK", "PROMETHEUS"},
 		Annotations: map[string]string{
 			"integrationTypeDesc": "Human-readable label that identifies the service integration to delete. Valid values are PAGER_DUTY, MICROSOFT_TEAMS, SLACK, DATADOG, NEW_RELIC, OPS_GENIE, VICTOR_OPS, WEBHOOK, PROMETHEUS.",
+			"output":              opts.SuccessMessage(),
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]

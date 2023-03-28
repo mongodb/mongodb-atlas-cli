@@ -38,6 +38,9 @@ func TestRestores(t *testing.T) {
 	g.enableBackup = true
 	g.generateProjectAndCluster("backupRestores")
 
+	g2 := newAtlasE2ETestGenerator(t)
+	g2.generateProjectAndCluster("backupRestores")
+
 	t.Run("Create snapshot", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
@@ -82,13 +85,17 @@ func TestRestores(t *testing.T) {
 			backupsEntity,
 			restoresEntity,
 			"start",
-			"download",
+			"automated",
 			"--clusterName",
 			g.clusterName,
 			"--snapshotId",
 			snapshotID,
 			"--projectId",
 			g.projectID,
+			"--targetProjectId",
+			g2.projectID,
+			"--targetClusterName",
+			g2.clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

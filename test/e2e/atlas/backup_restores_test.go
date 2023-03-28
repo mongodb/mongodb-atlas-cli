@@ -39,7 +39,7 @@ func TestRestores(t *testing.T) {
 	g.enableBackup = true
 	g2 := newAtlasE2ETestGenerator(t)
 
-	//creating projects/clusters in parallel since it takes too long
+	// creating projects/clusters in parallel since it takes too long
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 	go func() {

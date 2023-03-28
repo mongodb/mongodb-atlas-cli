@@ -33,7 +33,6 @@ func Builder() *cobra.Command {
 		DeleteBuilder(),
 		CreateBuilder(),
 		WatchBuilder(),
-		UpdateBuilder(),
 	)
 
 	return cmd
@@ -54,6 +53,7 @@ func AtlasCLIBuilder() *cobra.Command {
 		CreateBuilder(),
 		WatchBuilder(),
 		backup.Builder(),
+		UpdateBuilder(),
 	)
 
 	return cmd

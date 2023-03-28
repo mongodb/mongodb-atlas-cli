@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ package config
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -80,7 +81,7 @@ func (opts *ApplyOpts) autoDetectParams(k8sClient client.Client) error {
 
 	if opts.operatorVersion == "" {
 		if !strings.HasPrefix(operatorDeployment.Spec.Template.Spec.Containers[0].Image, fmt.Sprintf("%s:", containerImage)) {
-			return fmt.Errorf("unable to auto detect operator version. you should explicitly set operator version if you are running an openshift certified installation")
+			return errors.New("unable to auto detect operator version. you should explicitly set operator version if you are running an openshift certified installation")
 		}
 
 		opts.operatorVersion = strings.Trim(operatorDeployment.Spec.Template.Spec.Containers[0].Image, fmt.Sprintf("%s:", containerImage))
@@ -255,5 +256,5 @@ func findOperatorInstallation(k8sClient client.Client) (*appsv1.Deployment, erro
 		}
 	}
 
-	return nil, fmt.Errorf("couldn't to find operator installed in any accessible namespace")
+	return nil, errors.New("couldn't to find operator installed in any accessible namespace")
 }

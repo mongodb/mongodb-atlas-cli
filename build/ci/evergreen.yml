@@ -283,7 +283,7 @@ functions:
           <<: *go_env
           KMIP_CA: ${logs_decrypt_kmip_ca}
           KMIP_CERT: ${logs_decrypt_kmip_cert}
-  setup operator:
+  "setup operator":
     command: subprocess.exec
     type: setup
     params:

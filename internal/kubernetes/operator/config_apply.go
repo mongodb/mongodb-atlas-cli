@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ package operator
 
 import (
 	"context"
-	"fmt"
+	"errors"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
@@ -24,8 +24,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
-
-const numberOfExistingResources = 7
 
 type ConfigApply struct {
 	OrgID        string
@@ -89,13 +87,13 @@ func (apply *ConfigApply) Run() error {
 		return err
 	}
 
-	sortedResources := sortResources(ProjectResources, DeploymentResources)
+	sortedResources := sortResources(ProjectResources, DeploymentResources, apply.Version)
 
 	for _, objects := range sortedResources {
 		for _, object := range objects {
 			ctrlObj, ok := object.(client.Object)
 			if !ok {
-				return fmt.Errorf("unable to apply resource")
+				return errors.New("unable to apply resource")
 			}
 
 			err = apply.k8sClientSet.Create(context.Background(), ctrlObj, &client.CreateOptions{})
@@ -108,8 +106,8 @@ func (apply *ConfigApply) Run() error {
 	return nil
 }
 
-func sortResources(projectResources, deploymentResources []runtime.Object) [][]runtime.Object {
-	sortedResources := make([][]runtime.Object, numberOfExistingResources)
+func sortResources(projectResources, deploymentResources []runtime.Object, version string) [][]runtime.Object {
+	sortedResources := make([][]runtime.Object, len(features.VersionsToResourcesMap[version])+1)
 
 	for _, resource := range projectResources {
 		if _, ok := resource.(*corev1.Secret); ok {

@@ -53,10 +53,10 @@
 | `backup exports jobs describe`              | Y         |           |           | Y         |       |       |
 | `backup exports jobs delete`                | Y         |           |           | Y         |       |       |
 | `backup exports jobs watch`                 | Y         |           |           | Y         |       |       |
-| `backup restores list`                      | N         |           |           | Y         |       |       |
-| `backup restores describe`                  | N         |           |           | Y         |       |       |
-| `backup restores start`                     | N         |           |           | Y         |       |       |
-| `backup restores watch`                     | N         |           |           | Y         |       |       |
+| `backup restores list`                      | Y         |           |           | Y         |       |       |
+| `backup restores describe`                  | Y         |           |           | Y         |       |       |
+| `backup restores start`                     | Y         |           |           | Y         |       |       |
+| `backup restores watch`                     | Y         |           |           | Y         |       |       |
 | `backup schedule describe`                  | Y         |           |           | Y         |       |       |
 | `backup schedule delete`                    | Y         |           |           | Y         |       |       |
 | `backup schedule update`                    | Y         |           |           | Y         |       |       |

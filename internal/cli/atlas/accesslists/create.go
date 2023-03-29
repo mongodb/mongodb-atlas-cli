@@ -76,7 +76,6 @@ func (opts *CreateOpts) newProjectIPAccessList() []*atlasv2.NetworkPermissionEnt
 	if opts.deleteAfter != "" {
 		deleteAfterDate, _ := time.Parse(time.RFC3339, opts.deleteAfter)
 		entry.DeleteAfterDate = &deleteAfterDate
-
 	}
 	switch opts.entryType {
 	case cidrBlock:

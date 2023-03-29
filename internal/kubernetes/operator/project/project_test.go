@@ -18,6 +18,7 @@ package project
 
 import (
 	"fmt"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"reflect"
 	"strings"
 	"testing"
@@ -113,17 +114,19 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 		}
 
-		thirdPartyIntegrations := &mongodbatlas.ThirdPartyIntegrations{
+		thirdPartyIntegrations := &atlasv2.GroupPaginatedIntegration{
 			Links: nil,
-			Results: []*mongodbatlas.ThirdPartyIntegration{
+			Results: []atlasv2.IntegrationViewForNdsGroup{
 				{
-					Type:             "PROMETHEUS",
-					UserName:         "TestPrometheusUserName",
-					Password:         "TestPrometheusPassword",
-					ServiceDiscovery: "TestPrometheusServiceDiscovery",
+					Prometheus: &atlasv2.Prometheus{
+						Type:             pointer.Get("PROMETHEUS"),
+						Username:         "TestPrometheusUserName",
+						Password:         pointer.Get("TestPrometheusPassword"),
+						ServiceDiscovery: "TestPrometheusServiceDiscovery",
+					},
 				},
 			},
-			TotalCount: 1,
+			TotalCount: pointer.Get(int32(1)),
 		}
 
 		mw := &atlasv2.GroupMaintenanceWindow{
@@ -486,15 +489,15 @@ func TestBuildAtlasProject(t *testing.T) {
 				X509CertRef:               nil,
 				Integrations: []project.Integration{
 					{
-						Type:     thirdPartyIntegrations.Results[0].Type,
-						UserName: thirdPartyIntegrations.Results[0].UserName,
+						Type:     thirdPartyIntegrations.Results[0].Prometheus.GetType(),
+						UserName: thirdPartyIntegrations.Results[0].Prometheus.GetUsername(),
 						PasswordRef: common.ResourceRefNamespaced{
 							Name: fmt.Sprintf("%s-integration-%s",
 								strings.ToLower(projectID),
-								strings.ToLower(thirdPartyIntegrations.Results[0].Type)),
+								strings.ToLower(thirdPartyIntegrations.Results[0].Prometheus.GetType())),
 							Namespace: targetNamespace,
 						},
-						ServiceDiscovery: thirdPartyIntegrations.Results[0].ServiceDiscovery,
+						ServiceDiscovery: thirdPartyIntegrations.Results[0].Prometheus.ServiceDiscovery,
 					},
 				},
 				EncryptionAtRest: &atlasV1.EncryptionAtRest{
@@ -885,17 +888,19 @@ func Test_buildIntegrations(t *testing.T) {
 	t.Run("Can convert third-party integrations WITH secrets: Prometheus", func(t *testing.T) {
 		const targetNamespace = "test-namespace-3"
 		const includeSecrets = true
-		ints := &mongodbatlas.ThirdPartyIntegrations{
+		ints := &atlasv2.GroupPaginatedIntegration{
 			Links: nil,
-			Results: []*mongodbatlas.ThirdPartyIntegration{
+			Results: []atlasv2.IntegrationViewForNdsGroup{
 				{
-					Type:             "PROMETHEUS",
-					Password:         "PrometheusTestPassword",
-					UserName:         "PrometheusTestUserName",
-					ServiceDiscovery: "TestServiceDiscovery",
+					Prometheus: &atlasv2.Prometheus{
+						Type:             pointer.Get("PROMETHEUS"),
+						Password:         pointer.Get("PrometheusTestPassword"),
+						Username:         "PrometheusTestUserName",
+						ServiceDiscovery: "TestServiceDiscovery",
+					},
 				},
 			},
-			TotalCount: 0,
+			TotalCount: pointer.Get(int32(0)),
 		}
 
 		intProvider.EXPECT().Integrations(projectID).Return(ints, nil)
@@ -907,13 +912,13 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expected := []project.Integration{
 			{
-				Type:             ints.Results[0].Type,
-				ServiceDiscovery: ints.Results[0].ServiceDiscovery,
-				UserName:         ints.Results[0].UserName,
+				Type:             ints.Results[0].Prometheus.GetType(),
+				ServiceDiscovery: ints.Results[0].Prometheus.ServiceDiscovery,
+				UserName:         ints.Results[0].Prometheus.Username,
 				PasswordRef: common.ResourceRefNamespaced{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Type)),
+						strings.ToLower(ints.Results[0].Prometheus.GetType())),
 					Namespace: targetNamespace,
 				},
 			},
@@ -928,14 +933,14 @@ func Test_buildIntegrations(t *testing.T) {
 				ObjectMeta: v1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Type)),
+						strings.ToLower(ints.Results[0].Prometheus.GetType())),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
 						secrets.TypeLabelKey: secrets.CredLabelVal,
 					},
 				},
 				Data: map[string][]byte{
-					secrets.PasswordField: []byte(ints.Results[0].Password),
+					secrets.PasswordField: []byte(ints.Results[0].Prometheus.GetPassword()),
 				},
 			},
 		}
@@ -951,17 +956,19 @@ func Test_buildIntegrations(t *testing.T) {
 	t.Run("Can convert third-party integrations WITHOUT secrets: Prometheus", func(t *testing.T) {
 		const targetNamespace = "test-namespace-4"
 		const includeSecrets = false
-		ints := &mongodbatlas.ThirdPartyIntegrations{
+		ints := &atlasv2.GroupPaginatedIntegration{
 			Links: nil,
-			Results: []*mongodbatlas.ThirdPartyIntegration{
+			Results: []atlasv2.IntegrationViewForNdsGroup{
 				{
-					Type:             "PROMETHEUS",
-					Password:         "PrometheusTestPassword",
-					UserName:         "PrometheusTestUserName",
-					ServiceDiscovery: "TestServiceDiscovery",
+					Prometheus: &atlasv2.Prometheus{
+						Type:             pointer.Get("PROMETHEUS"),
+						Password:         pointer.Get("PrometheusTestPassword"),
+						Username:         "PrometheusTestUserName",
+						ServiceDiscovery: "TestServiceDiscovery",
+					},
 				},
 			},
-			TotalCount: 0,
+			TotalCount: pointer.Get(int32(0)),
 		}
 		intProvider.EXPECT().Integrations(projectID).Return(ints, nil)
 		got, intSecrets, err := buildIntegrations(intProvider, projectID, targetNamespace, includeSecrets, dictionary)
@@ -971,13 +978,13 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expected := []project.Integration{
 			{
-				Type:             ints.Results[0].Type,
-				ServiceDiscovery: ints.Results[0].ServiceDiscovery,
-				UserName:         ints.Results[0].UserName,
+				Type:             ints.Results[0].Prometheus.GetType(),
+				ServiceDiscovery: ints.Results[0].Prometheus.ServiceDiscovery,
+				UserName:         ints.Results[0].Prometheus.Username,
 				PasswordRef: common.ResourceRefNamespaced{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Type)),
+						strings.ToLower(ints.Results[0].Prometheus.GetType())),
 					Namespace: targetNamespace,
 				},
 			},
@@ -992,7 +999,7 @@ func Test_buildIntegrations(t *testing.T) {
 				ObjectMeta: v1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Type)),
+						strings.ToLower(ints.Results[0].Prometheus.GetType())),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
 						secrets.TypeLabelKey: secrets.CredLabelVal,

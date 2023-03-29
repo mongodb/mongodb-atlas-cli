@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestIntegrations(t *testing.T) {
@@ -61,9 +61,9 @@ func TestIntegrations(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		var thirdPartyIntegrations atlasv2.GroupPaginatedIntegration
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.True(integrationExists(datadogEntity, thirdPartyIntegrations))
+			a.Equal(datadogEntity, thirdPartyIntegrations.Results[0].Datadog.GetType())
 		}
 	})
 
@@ -86,9 +86,9 @@ func TestIntegrations(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		var thirdPartyIntegrations atlasv2.GroupPaginatedIntegration
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.True(integrationExists(opsGenieEntity, thirdPartyIntegrations))
+			a.Equal(opsGenieEntity, thirdPartyIntegrations.Results[0].OpsGenie.GetType())
 		}
 	})
 
@@ -111,9 +111,9 @@ func TestIntegrations(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		var thirdPartyIntegrations atlasv2.GroupPaginatedIntegration
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.True(integrationExists(pagerDutyEntity, thirdPartyIntegrations))
+			a.Equal(pagerDutyEntity, thirdPartyIntegrations.Results[0].PagerDuty.GetType())
 		}
 	})
 
@@ -138,9 +138,9 @@ func TestIntegrations(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		var thirdPartyIntegrations atlasv2.GroupPaginatedIntegration
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.True(integrationExists(victorOpsEntity, thirdPartyIntegrations))
+			a.Equal(victorOpsEntity, thirdPartyIntegrations.Results[0].VictorOps.GetType())
 		}
 	})
 
@@ -162,9 +162,9 @@ func TestIntegrations(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		var thirdPartyIntegrations atlasv2.GroupPaginatedIntegration
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.True(integrationExists(webhookEntity, thirdPartyIntegrations))
+			a.Equal(webhookEntity, thirdPartyIntegrations.Results[0].Webhook.GetType())
 		}
 	})
 
@@ -180,7 +180,7 @@ func TestIntegrations(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		var thirdPartyIntegrations atlasv2.GroupPaginatedIntegration
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
 			a.NotEmpty(thirdPartyIntegrations.Results)
 		}
@@ -199,9 +199,9 @@ func TestIntegrations(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var thirdPartyIntegration mongodbatlas.ThirdPartyIntegration
+		var thirdPartyIntegration atlasv2.IntegrationViewForNdsGroup
 		if err := json.Unmarshal(resp, &thirdPartyIntegration); a.NoError(err) {
-			a.Equal(webhookEntity, thirdPartyIntegration.Type)
+			a.Equal(webhookEntity, thirdPartyIntegration.Webhook.GetType())
 		}
 	})
 

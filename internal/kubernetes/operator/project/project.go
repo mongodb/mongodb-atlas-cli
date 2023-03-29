@@ -17,6 +17,7 @@ package project
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
@@ -343,87 +344,92 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	var intSecrets []*corev1.Secret
 
 	for _, list := range integrations.Results {
-		secret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s", projectID, strings.ToLower(list.Type)),
+		iType := getIntegrationType(reflect.ValueOf(list))
+		secret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s", projectID, strings.ToLower(iType)),
 			targetNamespace, map[string][]byte{secrets.PasswordField: []byte("")}, dictionary)
 
 		integration := operatorProject.Integration{
-			Type: list.Type,
+			Type: iType,
 		}
 		secretRef := common.ResourceRefNamespaced{
 			Name:      resources.NormalizeAtlasName(secret.Name, dictionary),
 			Namespace: targetNamespace,
 		}
-		switch list.Type {
+		switch iType {
 		case "PAGER_DUTY":
 			integration.ServiceKeyRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.ServiceKey)
+				secret.Data[secrets.PasswordField] = []byte(list.PagerDuty.ServiceKey)
 			}
 		case "SLACK":
-			integration.TeamName = list.TeamName
+			integration.TeamName = list.Slack.GetTeamName()
 			integration.APITokenRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.APIToken)
+				secret.Data[secrets.PasswordField] = []byte(list.Slack.ApiToken)
 			}
-		case "DATADOG", "OPS_GENIE":
-			integration.Region = list.Region
+		case "DATADOG":
+			integration.Region = list.Datadog.GetRegion()
 			integration.APIKeyRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.APIKey)
+				secret.Data[secrets.PasswordField] = []byte(list.Datadog.ApiKey)
 			}
-		case "FLOWDOCK":
-			integration.FlowName = list.FlowName
-			integration.OrgName = list.OrgName
-			integration.APITokenRef = secretRef
+		case "OPS_GENIE":
+			integration.Region = list.OpsGenie.GetRegion()
+			integration.APIKeyRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.APIToken)
+				secret.Data[secrets.PasswordField] = []byte(list.OpsGenie.ApiKey)
 			}
+		//case "FLOWDOCK":
+		//	integration.FlowName = list.FlowName
+		//	integration.OrgName = list.OrgName
+		//	integration.APITokenRef = secretRef
+		//	if includeSecrets {
+		//		secret.Data[secrets.PasswordField] = []byte(list.APIToken)
+		//	}
 		case "WEBHOOK":
-			integration.URL = list.URL
+			integration.URL = list.Webhook.Url
 			integration.SecretRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.Secret)
+				secret.Data[secrets.PasswordField] = []byte(list.Webhook.GetSecret())
 			}
 		case "MICROSOFT_TEAMS":
-			integration.MicrosoftTeamsWebhookURL = list.MicrosoftTeamsWebhookURL
+			integration.MicrosoftTeamsWebhookURL = list.MicrosoftTeams.MicrosoftTeamsWebhookUrl
 		case "PROMETHEUS":
-			integration.UserName = list.UserName
+			integration.UserName = list.Prometheus.Username
 			integration.PasswordRef = secretRef
-			integration.ServiceDiscovery = list.ServiceDiscovery
-			integration.Enabled = list.Enabled
+			integration.ServiceDiscovery = list.Prometheus.ServiceDiscovery
+			integration.Enabled = list.Prometheus.Enabled
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.Password)
+				secret.Data[secrets.PasswordField] = []byte(list.Prometheus.GetPassword())
 			}
 		case "VICTOR_OPS": // One more secret required
-			integration.Region = list.Region
 			integration.APIKeyRef = secretRef
-			secret.Data[secrets.PasswordField] = []byte(list.APIKey)
+			secret.Data[secrets.PasswordField] = []byte(list.VictorOps.ApiKey)
 
 			var routingKeyData string
 			if includeSecrets {
-				routingKeyData = list.RoutingKey
+				routingKeyData = list.VictorOps.GetRoutingKey()
 			}
-			if list.RoutingKey != "" {
+			if list.VictorOps.GetRoutingKey() != "" {
 				// Secret with routing key
-				routingSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(list.Type)),
+				routingSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
 					targetNamespace,
 					map[string][]byte{secrets.PasswordField: []byte(routingKeyData)}, dictionary)
 				intSecrets = append(intSecrets, routingSecret)
 			}
 		case "NEW_RELIC":
-			integration.Region = list.Region
 			integration.LicenseKeyRef = secretRef
-			secret.Data[secrets.PasswordField] = []byte(list.LicenseKey)
+			secret.Data[secrets.PasswordField] = []byte(list.NewRelic.LicenseKey)
 			// Secrets with write and read tokens
 			var writeToken, readToken string
 			if includeSecrets {
-				writeToken = list.WriteToken
-				readToken = list.ReadToken
+				writeToken = list.NewRelic.WriteToken
+				readToken = list.NewRelic.ReadToken
 			}
-			writeTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(list.Type)),
+			writeTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
 				targetNamespace,
 				map[string][]byte{secrets.PasswordField: []byte(writeToken)}, dictionary)
-			readTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(list.Type)),
+			readTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
 				targetNamespace,
 				map[string][]byte{secrets.PasswordField: []byte(readToken)},
 				dictionary,
@@ -435,6 +441,17 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	}
 
 	return result, intSecrets, nil
+}
+
+func getIntegrationType(val reflect.Value) string {
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Field(i)
+		if !field.IsNil() {
+			nameField := field.Elem().FieldByName("Type")
+			return fmt.Sprintf("%s", *nameField.Interface().(*string))
+		}
+	}
+	return ""
 }
 
 func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID string) ([]atlasV1.PrivateEndpoint, error) {

@@ -412,15 +412,15 @@ func MongoDBMajorVersion() (string, error) {
 	return version, nil
 }
 
-func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations) bool {
-	services := thirdPartyIntegrations.Results
-	for i := range services {
-		if services[i].Type == name {
-			return true
-		}
-	}
-	return false
-}
+//func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations) bool {
+//	services := thirdPartyIntegrations.Results
+//	for i := range services {
+//		if services[i].Type == name {
+//			return true
+//		}
+//	}
+//	return false
+//}
 
 func IsGov() bool {
 	return os.Getenv("MCLI_SERVICE") == "cloudgov"

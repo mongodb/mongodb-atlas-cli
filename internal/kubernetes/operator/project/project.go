@@ -304,11 +304,15 @@ func buildAccessLists(accessListProvider store.ProjectIPAccessListLister, projec
 		if strings.HasSuffix(list.GetCidrBlock(), cidrException) && list.GetIpAddress() != "" {
 			list.CidrBlock = pointer.Get("")
 		}
+		deleteAfterDate := ""
+		if !list.GetDeleteAfterDate().IsZero() {
+			deleteAfterDate = list.GetDeleteAfterDate().String()
+		}
 		result = append(result, operatorProject.IPAccessList{
 			AwsSecurityGroup: list.GetAwsSecurityGroup(),
 			CIDRBlock:        list.GetCidrBlock(),
 			Comment:          list.GetComment(),
-			DeleteAfterDate:  list.GetDeleteAfterDate().String(),
+			DeleteAfterDate:  deleteAfterDate,
 			IPAddress:        list.GetIpAddress(),
 		})
 	}

@@ -17,7 +17,6 @@ package store
 import (
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -34,7 +33,7 @@ type ProjectIPAccessListLister interface {
 }
 
 type ProjectIPAccessListCreator interface {
-	CreateProjectIPAccessList([]*atlas.ProjectIPAccessList) (*atlasv2.PaginatedNetworkAccess, error)
+	CreateProjectIPAccessList([]*atlasv2.NetworkPermissionEntry) (*atlasv2.PaginatedNetworkAccess, error)
 }
 
 type ProjectIPAccessListDeleter interface {
@@ -42,13 +41,18 @@ type ProjectIPAccessListDeleter interface {
 }
 
 // CreateProjectIPAccessList encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateProjectIPAccessList(entries []*atlas.ProjectIPAccessList) (*atlasv2.PaginatedNetworkAccess, error) {
+func (s *Store) CreateProjectIPAccessList(entries []*atlasv2.NetworkPermissionEntry) (*atlasv2.PaginatedNetworkAccess, error) {
 	if len(entries) == 0 {
 		return nil, errors.New("no entries")
 	}
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.ProjectIPAccessListApi.CreateProjectIpAccessList(s.ctx, entries[0].GroupID).NetworkPermissionEntry(mapProjectIPAccessList(entries)).Execute()
+		entry := make([]atlasv2.NetworkPermissionEntry, len(entries))
+		for i, ptr := range entries {
+			entry[i] = *ptr
+		}
+
+		result, _, err := s.clientv2.ProjectIPAccessListApi.CreateProjectIpAccessList(s.ctx, entries[0].GetGroupId()).NetworkPermissionEntry(entry).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -86,28 +90,4 @@ func (s *Store) IPAccessList(projectID, name string) (*atlasv2.NetworkPermission
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-}
-
-func mapProjectIPAccessList(entries []*atlas.ProjectIPAccessList) []atlasv2.NetworkPermissionEntry {
-	networkPermissionEntry := make([]atlasv2.NetworkPermissionEntry, len(entries))
-	for i, entry := range entries {
-		networkPermissionEntry[i] = atlasv2.NetworkPermissionEntry{
-			Comment: &entry.Comment,
-			GroupId: &entry.GroupID,
-		}
-		if entry.DeleteAfterDate != "" {
-			date, _ := time.Parse(time.RFC3339, entry.DeleteAfterDate)
-			networkPermissionEntry[i].DeleteAfterDate = &date
-		}
-		if entry.CIDRBlock != "" {
-			networkPermissionEntry[i].CidrBlock = &entry.CIDRBlock
-		}
-		if entry.IPAddress != "" {
-			networkPermissionEntry[i].IpAddress = &entry.IPAddress
-		}
-		if entry.AwsSecurityGroup != "" {
-			networkPermissionEntry[i].AwsSecurityGroup = &entry.AwsSecurityGroup
-		}
-	}
-	return networkPermissionEntry
 }

@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -36,18 +35,18 @@ func (m *MockSearchIndexLister) EXPECT() *MockSearchIndexListerMockRecorder {
 }
 
 // SearchIndexes mocks base method.
-func (m *MockSearchIndexLister) SearchIndexes(arg0, arg1, arg2, arg3 string, arg4 *mongodbatlas.ListOptions) ([]mongodbatlasv2.FTSIndex, error) {
+func (m *MockSearchIndexLister) SearchIndexes(arg0, arg1, arg2, arg3 string) ([]mongodbatlasv2.FTSIndex, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchIndexes", arg0, arg1, arg2, arg3, arg4)
+	ret := m.ctrl.Call(m, "SearchIndexes", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].([]mongodbatlasv2.FTSIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SearchIndexes indicates an expected call of SearchIndexes.
-func (mr *MockSearchIndexListerMockRecorder) SearchIndexes(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+func (mr *MockSearchIndexListerMockRecorder) SearchIndexes(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndexes", reflect.TypeOf((*MockSearchIndexLister)(nil).SearchIndexes), arg0, arg1, arg2, arg3, arg4)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndexes", reflect.TypeOf((*MockSearchIndexLister)(nil).SearchIndexes), arg0, arg1, arg2, arg3)
 }
 
 // MockSearchIndexCreator is a mock of SearchIndexCreator interface.

@@ -18,14 +18,13 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_search.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store SearchIndexLister,SearchIndexCreator,SearchIndexDescriber,SearchIndexUpdater,SearchIndexDeleter
 
 type SearchIndexLister interface {
-	SearchIndexes(string, string, string, string, *atlas.ListOptions) ([]atlasv2.FTSIndex, error)
+	SearchIndexes(string, string, string, string) ([]atlasv2.FTSIndex, error)
 }
 
 type SearchIndexCreator interface {
@@ -45,7 +44,7 @@ type SearchIndexDeleter interface {
 }
 
 // SearchIndexes encapsulate the logic to manage different cloud providers.
-func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string, _ *atlas.ListOptions) ([]atlasv2.FTSIndex, error) {
+func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string) ([]atlasv2.FTSIndex, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.AtlasSearchApi.ListAtlasSearchIndexes(s.ctx, projectID, clusterName, collName, dbName).Execute()

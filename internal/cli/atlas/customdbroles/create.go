@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const createTemplate = "Custom database role '{{.RoleName}}' successfully created.\n"
@@ -60,8 +60,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCustomDBRole() *atlas.CustomDBRole {
-	return &atlas.CustomDBRole{
+func (opts *CreateOpts) newCustomDBRole() *atlasv2.CustomDBRole {
+	return &atlasv2.CustomDBRole{
 		RoleName:       opts.roleName,
 		Actions:        joinActions(convert.BuildAtlasActions(opts.action)),
 		InheritedRoles: convert.BuildAtlasInheritedRoles(opts.inheritedRoles),

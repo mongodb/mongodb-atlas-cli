@@ -33,6 +33,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas/mongodbatlasv2"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -421,17 +422,20 @@ func TestBuildServerlessDeployments(t *testing.T) {
 	featureValidator := mocks.NewMockFeatureValidator(ctl)
 
 	t.Run("Can import Serverless deployment", func(t *testing.T) {
-		spe := []mongodbatlas.ServerlessPrivateEndpointConnection{
-			{ID: "TestPEId",
-				CloudProviderEndpointID:      "TestCloudProviderID",
-				Comment:                      "TestPEName",
-				EndpointServiceName:          "",
-				ErrorMessage:                 "",
-				Status:                       "",
-				ProviderName:                 "",
-				PrivateEndpointIPAddress:     "",
-				PrivateLinkServiceResourceID: "",
-			},
+		speID := "TestPEId"
+		speCloudProviderEndpointID := "TestCloudProviderID"
+		speComment := "TestPEName"
+		spePrivateEndpointIPAddress := ""
+
+		spe := []mongodbatlasv2.ServerlessTenantEndpoint{
+			mongodbatlasv2.ServerlessAzureTenantEndpointAsServerlessTenantEndpoint(
+				&mongodbatlasv2.ServerlessAzureTenantEndpoint{
+					Id:                       &speID,
+					CloudProviderEndpointId:  &speCloudProviderEndpointID,
+					Comment:                  &speComment,
+					PrivateEndpointIpAddress: &spePrivateEndpointIPAddress,
+				},
+			),
 		}
 
 		cluster := &mongodbatlas.Cluster{
@@ -498,11 +502,8 @@ func TestBuildServerlessDeployments(t *testing.T) {
 			VersionReleaseSystem:    "",
 		}
 
-		listOptions := &mongodbatlas.ListOptions{
-			ItemsPerPage: MaxItems,
-		}
 		clusterStore.EXPECT().ServerlessInstance(projectName, clusterName).Return(cluster, nil)
-		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName, listOptions).Return(spe, nil)
+		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName).Return(spe, nil)
 
 		expected := &atlasV1.AtlasDeployment{
 			TypeMeta: v1.TypeMeta{
@@ -546,9 +547,9 @@ func TestBuildServerlessDeployments(t *testing.T) {
 					},
 					PrivateEndpoints: []atlasV1.ServerlessPrivateEndpoint{
 						{
-							Name:                     spe[0].Comment,
-							CloudProviderEndpointID:  spe[0].CloudProviderEndpointID,
-							PrivateEndpointIPAddress: spe[0].PrivateEndpointIPAddress,
+							Name:                     speComment,
+							CloudProviderEndpointID:  speCloudProviderEndpointID,
+							PrivateEndpointIPAddress: spePrivateEndpointIPAddress,
 						},
 					},
 				},

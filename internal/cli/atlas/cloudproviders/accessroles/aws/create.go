@@ -68,7 +68,8 @@ func CreateBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": `AWS IAM role '{{.RoleID}}' successfully created.
 Atlas AWS Account ARN: {{.AtlasAWSAccountARN}}
-Unique External ID: {{.AtlasAssumedRoleExternalID}}`,
+Unique External ID: {{.AtlasAssumedRoleExternalID}}
+`,
 		},
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

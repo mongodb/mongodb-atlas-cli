@@ -396,6 +396,8 @@ dbName and collection are required only for built-in roles.`
 	OperatorIncludeSecrets                    = "Generate kubernetes secrets with data for projects, users, deployments entities" //nolint:gosec //This is just a message, not a credential
 	OperatorTargetNamespace                   = "Namespaces to use for generated kubernetes entities"
 	OperatorVersion                           = "Version of Atlas Kubernetes Operator to generate resources for."
+	KubernetesClusterConfig                   = "Path to the kubeconfig file to use for CLI requests."
+	KubernetesClusterContext                  = "The name of the kubeconfig context to use."
 	ExportID                                  = "Unique string that identifies the AWS S3 bucket to which you export your snapshots."
 	RequiredRole                              = "To use this command, you must authenticate with a user account or an API key that has the %s role."
 	RestoreJobID                              = "Unique identifier that identifies the Restore Job."

@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,19 +15,20 @@
 package config
 
 import (
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
-func Builder() *cobra.Command {
-	const use = "config"
-	cmd := &cobra.Command{
-		Use:   use,
-		Short: "Manage Kubernetes configuration resources.",
-		Long:  `This command provides your Kubernetes configuration access to Atlas.`,
-	}
-
-	cmd.AddCommand(GenerateBuilder())
-	cmd.AddCommand(ApplyBuilder())
-
-	return cmd
+func TestApplyBuilder(t *testing.T) {
+	test.CmdValidator(t,
+		ApplyBuilder(),
+		0,
+		[]string{
+			flag.ProjectID,
+			flag.OrgID,
+			flag.OperatorTargetNamespace,
+			flag.OperatorVersion,
+		})
 }

@@ -57,6 +57,7 @@ func DeleteBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies the project.",
+			"output": opts.SuccessMessage(),
 		},
 		Example: fmt.Sprintf(`  # Remove the project with the ID 5e2211c17a3e5a48f5497de3:
   %s projects delete 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),

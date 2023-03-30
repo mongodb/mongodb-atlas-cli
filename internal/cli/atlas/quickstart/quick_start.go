@@ -184,7 +184,7 @@ func (opts *Opts) quickstartPreRun(ctx context.Context, outWriter io.Writer) err
 		)
 	}
 
-	if err := opts.LoginPreRun(ctx, config.Default())(); err != nil {
+	if err := opts.LoginPreRun(ctx)(); err != nil {
 		return err
 	}
 
@@ -217,9 +217,11 @@ func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
 	opts.shouldRunLogin = false
 	opts.setTier()
 
+	defaultProfile := config.Default()
 	return opts.PreRunE(
 		opts.initStore(ctx),
-		opts.InitFlow(config.Default()),
+		opts.SyncWithOAuthAccessProfile(defaultProfile),
+		opts.InitFlow(defaultProfile),
 		opts.InitOutput(outWriter, ""),
 	)
 }

@@ -63,6 +63,7 @@ To view possible values for the ID argument, run %[1]s organizations apiKeys lis
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies your API key.",
+			"output": opts.SuccessMessage(),
 		},
 		Example: fmt.Sprintf(`  # Remove an organization API key with the ID 5f46ae53d58b421fe3edc115 from the project with ID 5e2211c17a3e5a48f5497de3:
   %s projects apiKeys delete 5f46ae53d58b421fe3edc115 --projectId 5e1234c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),

@@ -1,8 +1,8 @@
-.. _atlas-privateEndpoints-azure-interfaces-delete:
+.. _atlas-serverless-update:
 
-==============================================
-atlas privateEndpoints azure interfaces delete
-==============================================
+=======================
+atlas serverless update
+=======================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ atlas privateEndpoints azure interfaces delete
    :depth: 1
    :class: singlecol
 
-Remove the specified Azure private endpoint interface and related service from your project.
+Updates one serverless instance in the specified project.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
@@ -21,7 +21,7 @@ Syntax
 
 .. code-block::
 
-   atlas privateEndpoints azure interfaces delete <privateEndpointResourceId> [options]
+   atlas serverless update <instanceName> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -36,10 +36,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - privateEndpointResourceId
+   * - instanceName
      - string
      - true
-     - Unique string that identifies the Azure private endpoint interface in Azure.
+     - Human-readable label that identifies your serverless instance.
 
 Options
 -------
@@ -52,18 +52,30 @@ Options
      - Type
      - Required
      - Description
-   * - --endpointServiceId
-     - string
-     - false
-     - Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.
-   * - --force
+   * - --disableServerlessContinuousBackup
      - 
      - false
-     - Flag that indicates whether to skip the confirmation prompt before proceeding with the requested action.
+     - Disables Serverless Continuous Backup for your serverless instance. If disabled the serverless instance uses Basic Backup.
+   * - --disableTerminationProtection
+     - 
+     - false
+     - Disables termination protection for your cluster. You can delete a cluster with termination protection disabled.
+   * - --enableServerlessContinuousBackup
+     - 
+     - false
+     - Enables Serverless Continuous Backup for your serverless instance. If enabled the serverless instance does not use Basic Backup.
+   * - --enableTerminationProtection
+     - 
+     - false
+     - Enables termination protection for your cluster. You can't delete a cluster with termination protection enabled.
    * - -h, --help
      - 
      - false
-     - help for delete
+     - help for update
+   * - -o, --output
+     - string
+     - false
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --projectId
      - string
      - false
@@ -92,13 +104,6 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   Interface endpoint '<Name>' deleted
+   Serverless instance <Name> updated.
    
 
-Examples
---------
-
-.. code-block::
-
-   # Remove the Azure private endpoint interface with the ID /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/providers/Microsoft.Network/privateEndpoints/cli-test in Azure from the project with the ID 5e2211c17a3e5a48f5497de3:
-   atlas privateEndpoints azure interfaces delete /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/providers/Microsoft.Network/privateEndpoints/cli-test --projectId 5e2211c17a3e5a48f5497de3

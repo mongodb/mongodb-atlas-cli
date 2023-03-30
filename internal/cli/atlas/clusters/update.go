@@ -162,6 +162,7 @@ You can't change the name of the cluster or downgrade the MongoDB version of you
 		},
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to update.",
+			"output":          updateTmpl,
 		},
 	}
 

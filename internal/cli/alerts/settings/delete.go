@@ -59,6 +59,7 @@ func DeleteBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"alertConfigIdDesc": "Unique identifier of the alert configuration to delete.",
+			"output":            opts.SuccessMessage(),
 		},
 		Example: fmt.Sprintf(`  # Remove the alert configuration with the ID 5d1113b25a115342acc2d1aa in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s alerts settings delete 5d1113b25a115342acc2d1aa --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),

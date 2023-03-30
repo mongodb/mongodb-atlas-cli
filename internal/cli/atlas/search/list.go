@@ -50,7 +50,7 @@ var listTemplate = `ID	NAME	DATABASE	COLLECTION{{range .}}
 `
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.SearchIndexes(opts.ConfigProjectID(), opts.clusterName, opts.dbName, opts.collName, opts.NewListOptions())
+	r, err := opts.store.SearchIndexes(opts.ConfigProjectID(), opts.clusterName, opts.dbName, opts.collName)
 	if err != nil {
 		return err
 	}

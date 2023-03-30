@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServerlessInstanceLister,ServerlessInstanceDescriber,ServerlessInstanceDeleter,ServerlessInstanceCreator
+//go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServerlessInstanceLister,ServerlessInstanceDescriber,ServerlessInstanceDeleter,ServerlessInstanceCreator,ServerlessInstanceUpdater
 
 type ServerlessInstanceLister interface {
 	ServerlessInstances(string, *atlas.ListOptions) (*atlas.ClustersResponse, error)
@@ -37,6 +37,10 @@ type ServerlessInstanceDeleter interface {
 
 type ServerlessInstanceCreator interface {
 	CreateServerlessInstance(string, *atlas.ServerlessCreateRequestParams) (*atlas.Cluster, error)
+}
+
+type ServerlessInstanceUpdater interface {
+	UpdateServerlessInstance(string, string, *atlas.ServerlessUpdateRequestParams) (*atlas.Cluster, error)
 }
 
 // ServerlessInstances encapsulates the logic to manage different cloud providers.
@@ -77,6 +81,17 @@ func (s *Store) CreateServerlessInstance(projectID string, cluster *atlas.Server
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ServerlessInstances.Create(s.ctx, projectID, cluster)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// UpdateServerlessInstance encapsulate the logic to manage different cloud providers.
+func (s *Store) UpdateServerlessInstance(projectID string, instanceName string, req *atlas.ServerlessUpdateRequestParams) (*atlas.Cluster, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).ServerlessInstances.Update(s.ctx, projectID, instanceName, req)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

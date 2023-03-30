@@ -69,6 +69,7 @@ func UpdateBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"alertConfigIdDesc": "Unique identifier of the alert configuration you want to update.",
+			"output":            updateTemplate,
 		},
 		Example: fmt.Sprintf(`  # Modify the alert configuration with the ID 5d1113b25a115342acc2d1aa so that it notifies a user when they join a group for the project with the ID 5df90590f10fab5e33de2305:
   %s alerts settings update 5d1113b25a115342acc2d1aa --event JOINED_GROUP --enabled \

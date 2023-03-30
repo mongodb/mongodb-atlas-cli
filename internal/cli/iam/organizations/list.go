@@ -28,11 +28,16 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID	NAME{{range .Results}}
+const listTemplateCloud = `ID	NAME{{range .Results}}
+{{.Id}}	{{.Name}}{{end}}
+`
+
+const listTemplateOnPrem = `ID	NAME{{range .Results}}
 {{.ID}}	{{.Name}}{{end}}
 `
 
 type ListOpts struct {
+	cli.GlobalOpts
 	cli.ListOpts
 	cli.OutputOpts
 	store              store.OrganizationLister
@@ -67,7 +72,6 @@ func (opts *ListOpts) newOrganizationListOptions() *atlas.OrganizationsListOptio
 // mongocli iam organizations(s) list --name --includeDeletedOrgs.
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
-	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
@@ -80,8 +84,10 @@ func ListBuilder() *cobra.Command {
   # Return a JSON-formatted list that includes the organizations named org1 and Org1, but doesn't return org123:
   %[1]s organizations list --name org1 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore(cmd.Context())()
+			return opts.PreRunE(
+				opts.initStore(cmd.Context()),
+				opts.InitConditionalOutput(cmd.OutOrStdout(), listTemplateCloud, listTemplateOnPrem),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

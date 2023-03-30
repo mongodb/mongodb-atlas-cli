@@ -55,6 +55,7 @@ func DeleteBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"userIdDesc": "Unique 24-digit string that identifies the user in Ops Manager.",
+			"output":     opts.SuccessMessage(),
 		},
 		Example: `  # Remove the Ops Manager user with the ID 5e44445ef10fab20b49c0f31:
   mongocli iam users delete 5e44445ef10fab20b49c0f31`,

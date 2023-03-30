@@ -60,6 +60,7 @@ func DeleteBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",
+			"output":      opts.SuccessMessage(),
 		},
 		Example: fmt.Sprintf(`  # Delete the search index with the ID 5f2099cd683fc55fbb30bef6 for the cluster named myCluster without requiring confirmation:
   %s clusters search indexes delete 5f2099cd683fc55fbb30bef6 --clusterName myCluster --force`, cli.ExampleAtlasEntryPoint()),

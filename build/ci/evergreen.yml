@@ -73,6 +73,7 @@ functions:
       params:
         <<: *go_options
         env:
+          <<: *go_env
           TEST_CMD: gotestsum --junitfile unit-tests.xml --
         command: make unit-test
   "integration-test":
@@ -132,6 +133,8 @@ functions:
           - AZURE_TENANT_ID
           - AZURE_CLIENT_ID
           - AZURE_CLIENT_SECRET
+          - E2E_TIMEOUT
+          - E2E_SERVERLESS_INSTANCE_NAME
           - revision
         env:
           <<: *go_env
@@ -279,6 +282,8 @@ functions:
           <<: *go_env
           KMIP_CA: ${logs_decrypt_kmip_ca}
           KMIP_CERT: ${logs_decrypt_kmip_cert}
+pre:
+  - func: "clone"
 post:
   - command: subprocess.exec
     type: setup
@@ -290,28 +295,23 @@ post:
   - command: attach.xunit_results
     params:
       files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
-
 tasks:
   - name: compile
     tags: ["code_health"]
     commands:
-      - func: "clone"
       - func: "build"
   - name: compile_mongocli
     tags: [ "code_health" ]
     commands:
-      - func: "clone"
       - func: "build mongocli"
   - name: compile_atlascli
     tags: [ "code_health" ]
     commands:
-      - func: "clone"
       - func: "build atlascli"
   - name: unit_test
     tags: ["code_health"]
     must_have_test_results: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "unit-test"
       - func: "generate html coverage"
@@ -320,25 +320,21 @@ tasks:
     tags: ["code_health"]
     must_have_test_results: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "integration-test"
   - name: lint
     tags: ["code_health"]
     commands:
-      - func: "clone"
       - func: "install dev tools"
       - func: "lint"
   - name: snyk_scan
     tags: ["snyk"]
     commands:
-      - func: "clone"
       - func: "install snyk"
       - func: "snyk scan"
   - name: license_check
     tags: ["code_health"]
     commands:
-      - func: "clone"
       - func: "install dev tools"
       - func: "check license header"
   - name: config_e2e
@@ -349,7 +345,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - command: shell.exec
         type: test
@@ -376,7 +371,6 @@ tasks:
   - name: library_owners_check
     tags: ["code_health"]
     commands:
-      - func: "clone"
       - func: "check library_owners.json"
   - name: brew_e2e
     tags: ["e2e","required"]
@@ -385,7 +379,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -399,7 +392,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -418,7 +410,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -438,7 +429,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -457,7 +447,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -476,7 +465,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -495,7 +483,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -514,7 +501,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -533,7 +519,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -552,7 +537,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -571,7 +555,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -581,7 +564,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,serverless
+          E2E_TAGS: atlas,serverless,instance
   - name: atlas_gov_clusters_flags_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -590,7 +573,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -609,7 +591,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -628,7 +609,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -648,7 +628,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -668,7 +647,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -687,7 +665,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -707,7 +684,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -726,7 +702,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -746,7 +721,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -765,7 +739,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -785,7 +758,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -805,7 +777,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -824,7 +795,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -844,7 +814,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -863,7 +832,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -883,7 +851,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -903,7 +870,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -925,7 +891,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -944,7 +909,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -964,7 +928,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -984,7 +947,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -1003,7 +965,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -1023,7 +984,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1045,7 +1005,6 @@ tasks:
         variant: "e2e_cloud_manager_remote"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1064,7 +1023,6 @@ tasks:
           variant: "code_health"
           patch_optional: true
     commands:
-        - func: "clone"
         - func: "install gotestsum"
         - func: "build mongocli"
         - func: "deploy spawn host"
@@ -1085,7 +1043,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1106,7 +1063,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1127,7 +1083,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1149,7 +1104,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1170,7 +1124,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1191,7 +1144,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1213,7 +1165,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "deploy spawn host"
@@ -1234,7 +1185,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "install pykmip"
@@ -1258,7 +1208,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
       - func: "e2e test"
@@ -1276,8 +1225,7 @@ tasks:
           AZURE_CLIENT_ID: ${logs_decrypt_azure_client_id}
           AZURE_CLIENT_SECRET: ${logs_decrypt_azure_client_secret}
           E2E_TAGS: atlas,decrypt
-  # export buckets require cloud provider role authentication and a s3 bucket created
-  - name: atlas_backups_e2e
+  - name: atlas_backups_snapshots_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
     depends_on:
@@ -1285,7 +1233,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -1295,9 +1242,116 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,backup
+          E2E_TAGS: atlas,backup,snapshot
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_TIMEOUT: 3h
+  - name: atlas_backups_schedule_e2e
+    tags: [ "e2e","backup","atlas" ]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,backup,schedule
+          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_TIMEOUT: 3h
+  - name: atlas_backups_exports_buckets_e2e
+    tags: [ "e2e","backup","atlas" ]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,backup,exports,buckets
+          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_TIMEOUT: 3h
+  - name: atlas_backups_exports_jobs_e2e
+    tags: [ "e2e","backup","atlas" ]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,backup,exports,jobs
+          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_TIMEOUT: 3h
+  - name: atlas_backups_serverless_e2e
+    tags: [ "e2e","backup","atlas" ]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,backup,serverless
+          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_SERVERLESS_INSTANCE_NAME: ${e2e_serverless_instance_name}
+          E2E_TIMEOUT: 3h
+  - name: atlas_backups_restores_e2e
+    tags: [ "e2e","backup","atlas" ]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,backup,restores
+          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_TIMEOUT: 3h
   - name: atlas_cleanup_e2e
     tags: [ "e2e","cleanup", "foliage_infrequent_task" ]
     must_have_test_results: true
@@ -1307,7 +1361,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:
@@ -1327,7 +1380,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:

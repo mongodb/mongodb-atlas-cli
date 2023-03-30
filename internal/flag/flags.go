@@ -327,4 +327,6 @@ const (
 	APIKeyDescription                         = "apiKeyDescription"                         //nolint:gosec // APIKeyDescription flag
 	RestoreJobID                              = "restoreJobId"                              // ID of the Restore Job
 	DeliveryType                              = "deliveryType"                              // Type of the backup restore delivery
+	EnableServerlessContinuousBackup          = "enableServerlessContinuousBackup"          // EnableServerlessContinuousBackup flag
+	DisableServerlessContinuousBackup         = "disableServerlessContinuousBackup"         // DisableServerlessContinuousBackup flag
 )

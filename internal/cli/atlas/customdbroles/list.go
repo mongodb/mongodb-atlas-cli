@@ -29,7 +29,7 @@ import (
 
 const listTemplate = `NAME	ACTION	INHERITED ROLES	DB	COLLECTION	CLUSTER{{range .}}{{- $roleName := .RoleName }} {{range .Actions}} 
 {{- $actionName := .Action }} {{- range .Resources}}
-{{ $roleName }}	{{ $actionName }}	N/A{{if .DB }}	{{ .DB }}{{else}}	N/A{{end}}{{if .Collection }}	{{ .Collection }}{{else if .Cluster}}	N/A{{else}}	ALL COLLECTIONS{{end}}{{if .Cluster}}	{{ .Cluster }}{{else}}	N/A	{{end}}{{end}}{{end}}{{range .InheritedRoles}}
+{{ $roleName }}	{{ $actionName }}	N/A{{if .Db }}	{{ .Db }}{{else}}	N/A{{end}}{{if .Collection }}	{{ .Collection }}{{else if .Cluster}}	N/A{{else}}	ALL COLLECTIONS{{end}}{{if .Cluster}}	{{ .Cluster }}{{else}}	N/A	{{end}}{{end}}{{end}}{{range .InheritedRoles}}
 {{ $roleName }}	N/A	{{ .Role }}	{{ .Db}}	N/A	N/A{{end}}{{end}}
 `
 
@@ -49,8 +49,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.DatabaseRoles(opts.ConfigProjectID(), listOpts)
+	r, err := opts.store.DatabaseRoles(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}

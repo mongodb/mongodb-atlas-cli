@@ -57,6 +57,7 @@ func DeleteBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+			"output":                opts.SuccessMessage(),
 		},
 		Example: fmt.Sprintf(`  %s privateEndpoint dataLake aws delete vpce-0fcd9d80bbafe1607 --force`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),

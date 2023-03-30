@@ -79,6 +79,9 @@ const (
 	backupsEntity                = "backups"
 	exportsEntity                = "exports"
 	bucketsEntity                = "buckets"
+	jobsEntity                   = "jobs"
+	snapshotsEntity              = "snapshots"
+	restoresEntity               = "restores"
 	teamsEntity                  = "teams"
 )
 

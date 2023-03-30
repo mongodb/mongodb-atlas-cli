@@ -3,7 +3,7 @@ module github.com/mongodb/mongodb-atlas-cli
 go 1.19
 
 require (
-	cloud.google.com/go/kms v1.9.0
+	cloud.google.com/go/kms v1.10.0
 	github.com/AlecAivazis/survey/v2 v2.3.6
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.3.1
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.2.1
@@ -11,7 +11,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.0
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
 	github.com/PaesslerAG/jsonpath v0.1.1
-	github.com/aws/aws-sdk-go-v2 v1.17.6
+	github.com/aws/aws-sdk-go-v2 v1.17.7
 	github.com/aws/aws-sdk-go-v2/config v1.18.15
 	github.com/aws/aws-sdk-go-v2/credentials v1.13.15
 	github.com/aws/aws-sdk-go-v2/service/kms v1.20.6
@@ -25,7 +25,7 @@ require (
 	github.com/google/go-github/v50 v50.1.0
 	github.com/google/uuid v1.3.0
 	github.com/hinshun/vt10x v0.0.0-20220119200601-820417d04eec
-	github.com/klauspost/compress v1.16.0
+	github.com/klauspost/compress v1.16.3
 	github.com/mattn/go-isatty v0.0.17
 	github.com/mongodb-forks/digest v1.0.4
 	github.com/mongodb-labs/cobra2snooty v0.14.1
@@ -39,12 +39,12 @@ require (
 	github.com/stretchr/testify v1.8.2
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
-	go.mongodb.org/atlas v0.23.2-0.20230323121922-76f1516f3ff9
+	go.mongodb.org/atlas v0.23.2-0.20230328111225-e40463c98c4e
 	go.mongodb.org/mongo-driver v1.11.2
 	go.mongodb.org/ops-manager v0.48.0
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
 	golang.org/x/mod v0.8.0
-	google.golang.org/api v0.110.0
+	google.golang.org/api v0.111.0
 	google.golang.org/protobuf v1.29.1
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.26.1
@@ -124,7 +124,7 @@ require (
 	golang.org/x/time v0.1.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20230222225845-10f96fb3dbec // indirect
+	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4 // indirect
 	google.golang.org/grpc v1.53.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect

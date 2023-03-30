@@ -59,6 +59,8 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 
 var createTemplate = "Restore job '{{.ID}}' successfully started\n"
 
+var ErrInvalidDeliveryType = fmt.Errorf("delivery type invalid, choose 'automated', 'download' or 'pointInTime'")
+
 func (opts *CreateOpts) Run() error {
 	request := opts.newCloudProviderSnapshotRestoreJob()
 	r, err := opts.store.ServerlessCreateRestoreJobs(opts.ConfigProjectID(), opts.clusterName, request)
@@ -166,22 +168,31 @@ func CreateBuilder() *cobra.Command {
          --clusterName myDemo \
          --snapshotId 5e7e00128f8ce03996a47179`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			set := false
+
 			if opts.isAutomatedRestore() {
+				set = true
 				if err := markRequiredAutomatedRestoreFlags(cmd); err != nil {
 					return err
 				}
 			}
 
 			if opts.isPointInTimeRestore() {
+				set = true
 				if err := markRequiredPointInTimeRestoreFlags(cmd); err != nil {
 					return err
 				}
 			}
 
 			if opts.isDownloadRestore() {
+				set = true
 				if err := cmd.MarkFlagRequired(flag.SnapshotID); err != nil {
 					return err
 				}
+			}
+
+			if !set {
+				return ErrInvalidDeliveryType
 			}
 
 			return opts.PreRunE(

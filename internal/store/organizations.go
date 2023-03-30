@@ -25,7 +25,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber,AtlasOrganizationCreator
 
 type OrganizationLister interface {
-	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
+	Organizations(*atlas.OrganizationsListOptions) (interface{}, error)
 }
 
 type OrganizationDescriber interface {
@@ -45,11 +45,11 @@ type OrganizationDeleter interface {
 }
 
 // Organizations encapsulate the logic to manage different cloud providers.
-func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Organizations, error) {
+func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		//TODO: Migrate after CLOUDP-167160 (List property TotalCount always set to 0)
-		result, _, err := s.client.(*atlas.Client).Organizations.List(s.ctx, opts)
+		result, _, err := s.clientv2.OrganizationsApi.ListOrganizations(s.ctx).
+			Name(opts.Name).PageNum(int32(opts.PageNum)).IncludeCount(true).Execute()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.List(s.ctx, opts)
@@ -100,8 +100,6 @@ func (s *Store) CreateAtlasOrganization(o *atlas.CreateOrganizationRequest) (*at
 func (s *Store) DeleteOrganization(id string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		// TODO: migrate once 406 response is fixed CLOUDP-166120
-		// _, err := s.clientv2.OrganizationsApi.DeleteOrganization(s.ctx, id).Execute()
 		_, err := s.client.(*atlas.Client).Organizations.Delete(s.ctx, id)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:

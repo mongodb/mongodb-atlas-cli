@@ -63,28 +63,39 @@ type LoginFlow interface {
 	LoginPreRun() error
 }
 
-func (opts *LoginOpts) SetUpOAuthAccess() {
-	switch {
-	case opts.IsGov:
-		opts.Service = config.CloudGovService
-	case opts.isCloudManager:
-		opts.Service = config.CloudManagerService
-	default:
-		opts.Service = config.CloudService
-	}
-	opts.config.Set("service", opts.Service)
+// SyncWithOAuthAccessProfile returns a function that is synchronizing the oauth settings
+// from a login config profile with the provided command opts.
+func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
+	return func() error {
+		opts.config = c
 
-	if opts.AccessToken != "" {
-		opts.config.Set(config.AccessTokenField, opts.AccessToken)
-	}
-	if opts.RefreshToken != "" {
-		opts.config.Set(config.RefreshTokenField, opts.RefreshToken)
-	}
-	if opts.OpsManagerURL != "" {
-		opts.config.Set(config.OpsManagerURLField, opts.OpsManagerURL)
-	}
-	if config.ClientID() != "" {
-		opts.config.Set(config.ClientIDField, config.ClientID())
+		switch {
+		case opts.IsGov:
+			opts.Service = config.CloudGovService
+		case opts.isCloudManager:
+			opts.Service = config.CloudManagerService
+		default:
+			opts.Service = config.CloudService
+		}
+		opts.config.Set("service", opts.Service)
+
+		if opts.AccessToken != "" {
+			opts.config.Set(config.AccessTokenField, opts.AccessToken)
+		}
+		if opts.RefreshToken != "" {
+			opts.config.Set(config.RefreshTokenField, opts.RefreshToken)
+		}
+
+		// sync OpsManagerURL from command opts (higher priority)
+		// and OpsManagerURL from default profile
+		if opts.OpsManagerURL != "" {
+			opts.config.Set(config.OpsManagerURLField, opts.OpsManagerURL)
+		}
+		if config.OpsManagerURL() != "" {
+			opts.OpsManagerURL = config.OpsManagerURL()
+		}
+
+		return nil
 	}
 }
 
@@ -92,7 +103,12 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 	if err := opts.oauthFlow(ctx); err != nil {
 		return err
 	}
-	opts.SetUpOAuthAccess()
+	// oauth config might have changed,
+	// re-sync config profile with login opts
+	if err := opts.SyncWithOAuthAccessProfile(opts.config)(); err != nil {
+		return err
+	}
+
 	s, err := opts.config.AccessTokenSubject()
 	if err != nil {
 		return err
@@ -256,18 +272,18 @@ func newRegenerationPrompt() survey.Prompt {
 	}
 }
 
-func (opts *LoginOpts) LoginPreRun(ctx context.Context, c LoginConfig) func() error {
+func (opts *LoginOpts) LoginPreRun(ctx context.Context) func() error {
 	return func() error {
-		opts.config = c
-		if config.OpsManagerURL() != "" {
-			opts.OpsManagerURL = config.OpsManagerURL()
-		}
 		// ignore expired tokens since logging in
-		if err := opts.RefreshAccessToken(ctx); err != nil && !errors.Is(err, cli.ErrInvalidRefreshToken) {
-			return err
+		if err := opts.RefreshAccessToken(ctx); err != nil {
+			// clean up any expired or invalid tokens
+			opts.config.Set(config.AccessTokenField, "")
+
+			if !errors.Is(err, cli.ErrInvalidRefreshToken) {
+				return err
+			}
 		}
-		// clean up any expired tokens
-		opts.config.Set(config.AccessTokenField, "")
+
 		return nil
 	}
 }
@@ -290,9 +306,11 @@ func LoginBuilder() *cobra.Command {
 `, tool(), config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
+			defaultProfile := config.Default()
 			return prerun.ExecuteE(
-				opts.InitFlow(config.Default()),
-				opts.LoginPreRun(cmd.Context(), config.Default()),
+				opts.SyncWithOAuthAccessProfile(defaultProfile),
+				opts.InitFlow(defaultProfile),
+				opts.LoginPreRun(cmd.Context()),
 				validate.NoAPIKeys,
 				validate.NoAccessToken,
 			)

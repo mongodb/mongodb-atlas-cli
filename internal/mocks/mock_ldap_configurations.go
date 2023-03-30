@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockLDAPConfigurationVerifier is a mock of LDAPConfigurationVerifier interface.
@@ -35,10 +35,10 @@ func (m *MockLDAPConfigurationVerifier) EXPECT() *MockLDAPConfigurationVerifierM
 }
 
 // VerifyLDAPConfiguration mocks base method.
-func (m *MockLDAPConfigurationVerifier) VerifyLDAPConfiguration(arg0 string, arg1 *mongodbatlas.LDAP) (*mongodbatlas.LDAPConfiguration, error) {
+func (m *MockLDAPConfigurationVerifier) VerifyLDAPConfiguration(arg0 string, arg1 *mongodbatlasv2.NDSLDAPVerifyConnectivityJobRequestParams) (*mongodbatlasv2.NDSLDAPVerifyConnectivityJobRequest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VerifyLDAPConfiguration", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.LDAPConfiguration)
+	ret0, _ := ret[0].(*mongodbatlasv2.NDSLDAPVerifyConnectivityJobRequest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockLDAPConfigurationDescriber) EXPECT() *MockLDAPConfigurationDescribe
 }
 
 // GetStatusLDAPConfiguration mocks base method.
-func (m *MockLDAPConfigurationDescriber) GetStatusLDAPConfiguration(arg0, arg1 string) (*mongodbatlas.LDAPConfiguration, error) {
+func (m *MockLDAPConfigurationDescriber) GetStatusLDAPConfiguration(arg0, arg1 string) (*mongodbatlasv2.NDSLDAPVerifyConnectivityJobRequest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetStatusLDAPConfiguration", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.LDAPConfiguration)
+	ret0, _ := ret[0].(*mongodbatlasv2.NDSLDAPVerifyConnectivityJobRequest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockLDAPConfigurationSaver) EXPECT() *MockLDAPConfigurationSaverMockRec
 }
 
 // SaveLDAPConfiguration mocks base method.
-func (m *MockLDAPConfigurationSaver) SaveLDAPConfiguration(arg0 string, arg1 *mongodbatlas.LDAPConfiguration) (*mongodbatlas.LDAPConfiguration, error) {
+func (m *MockLDAPConfigurationSaver) SaveLDAPConfiguration(arg0 string, arg1 *mongodbatlasv2.UserSecurity) (*mongodbatlasv2.UserSecurity, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveLDAPConfiguration", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.LDAPConfiguration)
+	ret0, _ := ret[0].(*mongodbatlasv2.UserSecurity)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -186,10 +186,10 @@ func (m *MockLDAPConfigurationGetter) EXPECT() *MockLDAPConfigurationGetterMockR
 }
 
 // GetLDAPConfiguration mocks base method.
-func (m *MockLDAPConfigurationGetter) GetLDAPConfiguration(arg0 string) (*mongodbatlas.LDAPConfiguration, error) {
+func (m *MockLDAPConfigurationGetter) GetLDAPConfiguration(arg0 string) (*mongodbatlasv2.UserSecurity, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetLDAPConfiguration", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.LDAPConfiguration)
+	ret0, _ := ret[0].(*mongodbatlasv2.UserSecurity)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

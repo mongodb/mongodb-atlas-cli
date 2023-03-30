@@ -24,31 +24,30 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseRoleLister(ctrl)
 
-	expected := &[]mongodbatlas.CustomDBRole{
+	expected := []atlasv2.CustomDBRole{
 		{
-			Actions: []mongodbatlas.Action{
+			Actions: []atlasv2.DBAction{
 				{
 					Action: "test",
-					Resources: []mongodbatlas.Resource{
+					Resources: []atlasv2.DBResource{
 						{
-							Collection: pointer.Get("test"),
-							DB:         pointer.Get("test"),
-							Cluster:    pointer.Get(true),
+							Collection: "test",
+							Db:         "test",
+							Cluster:    true,
 						},
 					},
 				},
 			},
-			InheritedRoles: []mongodbatlas.InheritedRole{
+			InheritedRoles: []atlasv2.InheritedRole{
 				{
 					Db:   "pandas",
 					Role: "dbAdmin",
@@ -69,7 +68,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DatabaseRoles(listOpts.ProjectID, listOpts.NewListOptions()).
+		DatabaseRoles(listOpts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 

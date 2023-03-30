@@ -55,6 +55,9 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Delete a private endpoint interface from your project.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"output": opts.SuccessMessage(),
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},

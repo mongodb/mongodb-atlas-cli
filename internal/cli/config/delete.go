@@ -58,6 +58,7 @@ func DeleteBuilder() *cobra.Command {
   atlas config delete default --force`,
 		Annotations: map[string]string{
 			"nameDesc": "Name of the profile.",
+			"output":   opts.SuccessMessage(),
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]

@@ -62,6 +62,7 @@ func DeleteBuilder() *cobra.Command {
   %s backups snapshots delete 5f4007f327a3bd7b6f4103c5 --clusterName myDemo`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"snapshotIdDesc": "Unique identifier of the snapshot you want to delete.",
+			"output":         opts.SuccessMessage(),
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))

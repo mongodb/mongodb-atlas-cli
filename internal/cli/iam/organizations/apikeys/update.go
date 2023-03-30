@@ -78,6 +78,7 @@ To view possible values for the apiKeyId argument, run %s organizations apiKeys 
 `+fmt.Sprintf(usage.RequiredRole, "Organization User Admin"), cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"apiKeyIdDesc": "Unique 24-digit string that identifies your API key.",
+			"output":       updateTemplate,
 		},
 		Example: fmt.Sprintf(`  # Modify the role and description for the API key with the ID 5f24084d8dbffa3ad3f21234 for the organization with the ID 5a1b39eec902201990f12345:
   %s organizations apiKeys assign 5f24084d8dbffa3ad3f21234 --role ORG_MEMBER --desc "User1 Member Key" --orgId 5a1b39eec902201990f12345 --output json`, cli.ExampleAtlasEntryPoint()),

@@ -131,6 +131,7 @@ functions:
         env:
           <<: *go_env
           TOOL_NAME: ${TOOL_NAME}
+          SECRET_API_KEY: ${chocolatey_api_key}
         command: bash.exe -c build/package/chocoupdate.sh
   "rename pkg":
     - command: subprocess.exec
@@ -602,7 +603,6 @@ tasks:
       - func: "update choco"
         vars:
           TOOL_NAME: ${tool_name}
-          SECRET_API_KEY: ${chocolatey_api_key}
       - func: "uninstall go-msi"
       - command: s3.put
         params:

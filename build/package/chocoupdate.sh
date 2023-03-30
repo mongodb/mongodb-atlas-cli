@@ -29,4 +29,4 @@ go-msi check-env
 
 VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
-go run ./tools/chocolateyupdate/main.go --path "build/package/chocolatey/temp/mongodb-atlas.${VERSION}.nupkg"
+go run ./tools/chocolateyupdate/main.go --path "dist/mongodb-atlas.${VERSION}.nupkg"

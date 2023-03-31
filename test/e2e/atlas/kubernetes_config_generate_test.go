@@ -428,7 +428,9 @@ func TestProjectWithCustomRole(t *testing.T) {
 				Name: "FIND",
 				Resources: []atlasV1.Resource{
 					{
-						Database: pointer.Get("test-db"),
+						Database:   pointer.Get("test-db	"),
+						Collection: pointer.Get(""),
+						Cluster:    pointer.Get(false),
 					},
 				},
 			},

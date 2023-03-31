@@ -89,6 +89,7 @@ func UpdateBuilder() *cobra.Command {
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"usernameDesc": "Username to update in the MongoDB database.",
+			"output":       updateTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

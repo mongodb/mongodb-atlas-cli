@@ -41,8 +41,8 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	PROVIDER	ATLAS AWS ACCOUNT ARN	UNIQUE EXTERNAL ID{{range .AWSIAMRoles}}
-{{.RoleID}}	{{.ProviderName}}	{{.AtlasAWSAccountARN}}	{{.AtlasAssumedRoleExternalID}}{{end}}
+var listTemplate = `ID	PROVIDER	ATLAS AWS ACCOUNT ARN	UNIQUE EXTERNAL ID{{range .AwsIamRoles}}
+{{.RoleId}}	{{.ProviderName}}	{{.AtlasAWSAccountArn}}	{{.AtlasAssumedRoleExternalId}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

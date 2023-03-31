@@ -27,7 +27,7 @@ import (
 )
 
 var getTemplate = `HOSTNAME	PORT	AUTHENTICATION	AUTHORIZATION
-{{.LDAP.Hostname}}	{{.LDAP.Port}}	{{.LDAP.AuthenticationEnabled}}	{{.LDAP.AuthorizationEnabled}}
+{{.Ldap.Hostname}}	{{.Ldap.Port}}	{{.Ldap.AuthenticationEnabled}}	{{.Ldap.AuthorizationEnabled}}
 `
 
 type GetOpts struct {

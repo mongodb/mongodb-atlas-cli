@@ -400,4 +400,6 @@ dbName and collection are required only for built-in roles.`
 	RequiredRole                              = "To use this command, you must authenticate with a user account or an API key that has the %s role."
 	RestoreJobID                              = "Unique identifier that identifies the Restore Job."
 	DeliveryType                              = "Type of restore job to create. Valid values include: automated, download, pointInTime. To learn more about types of restore jobs, see https://www.mongodb.com/docs/atlas/backup-restore-cluster/."
+	EnableServerlessContinuousBackup          = "Enables Serverless Continuous Backup for your serverless instance. If enabled the serverless instance does not use Basic Backup."
+	DisableServerlessContinuousBackup         = "Disables Serverless Continuous Backup for your serverless instance. If disabled the serverless instance uses Basic Backup."
 )

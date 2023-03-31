@@ -39,7 +39,12 @@ func (opts *RegisterOpts) RegisterRun(ctx context.Context) error {
 		return err
 	}
 
-	opts.SetUpOAuthAccess()
+	// oauth config might have changed,
+	// re-sync config profile with login opts
+	if err = opts.SyncWithOAuthAccessProfile(opts.config)(); err != nil {
+		return err
+	}
+
 	s, err := opts.config.AccessTokenSubject()
 	if err != nil {
 		return err
@@ -99,9 +104,11 @@ func RegisterBuilder() *cobra.Command {
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
+			defaultProfile := config.Default()
 			return prerun.ExecuteE(
-				opts.InitFlow(config.Default()),
-				opts.LoginPreRun(cmd.Context(), config.Default()),
+				opts.SyncWithOAuthAccessProfile(defaultProfile),
+				opts.InitFlow(defaultProfile),
+				opts.LoginPreRun(cmd.Context()),
 				validate.NoAPIKeys,
 				validate.NoAccessToken)
 		},

@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockServerlessPrivateEndpointsLister is a mock of ServerlessPrivateEndpointsLister interface.
@@ -35,16 +35,16 @@ func (m *MockServerlessPrivateEndpointsLister) EXPECT() *MockServerlessPrivateEn
 }
 
 // ServerlessPrivateEndpoints mocks base method.
-func (m *MockServerlessPrivateEndpointsLister) ServerlessPrivateEndpoints(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) ([]mongodbatlas.ServerlessPrivateEndpointConnection, error) {
+func (m *MockServerlessPrivateEndpointsLister) ServerlessPrivateEndpoints(arg0, arg1 string) ([]mongodbatlasv2.ServerlessTenantEndpoint, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ServerlessPrivateEndpoints", arg0, arg1, arg2)
-	ret0, _ := ret[0].([]mongodbatlas.ServerlessPrivateEndpointConnection)
+	ret := m.ctrl.Call(m, "ServerlessPrivateEndpoints", arg0, arg1)
+	ret0, _ := ret[0].([]mongodbatlasv2.ServerlessTenantEndpoint)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ServerlessPrivateEndpoints indicates an expected call of ServerlessPrivateEndpoints.
-func (mr *MockServerlessPrivateEndpointsListerMockRecorder) ServerlessPrivateEndpoints(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockServerlessPrivateEndpointsListerMockRecorder) ServerlessPrivateEndpoints(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServerlessPrivateEndpoints", reflect.TypeOf((*MockServerlessPrivateEndpointsLister)(nil).ServerlessPrivateEndpoints), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServerlessPrivateEndpoints", reflect.TypeOf((*MockServerlessPrivateEndpointsLister)(nil).ServerlessPrivateEndpoints), arg0, arg1)
 }

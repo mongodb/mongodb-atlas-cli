@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas/mongodbatlasv2"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -515,7 +516,7 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 }
 
 func buildServerlessPrivateEndpoints(deploymentStore store.ServerlessPrivateEndpointsLister, projectID, clusterName string) ([]atlasV1.ServerlessPrivateEndpoint, error) {
-	endpoints, err := deploymentStore.ServerlessPrivateEndpoints(projectID, clusterName, &mongodbatlas.ListOptions{ItemsPerPage: MaxItems})
+	endpoints, err := deploymentStore.ServerlessPrivateEndpoints(projectID, clusterName)
 	if err != nil {
 		return nil, err
 	}
@@ -523,11 +524,22 @@ func buildServerlessPrivateEndpoints(deploymentStore store.ServerlessPrivateEndp
 	result := make([]atlasV1.ServerlessPrivateEndpoint, 0, len(endpoints))
 
 	for i := range endpoints {
-		result = append(result, atlasV1.ServerlessPrivateEndpoint{
-			Name:                     endpoints[i].Comment,
-			CloudProviderEndpointID:  endpoints[i].CloudProviderEndpointID,
-			PrivateEndpointIPAddress: endpoints[i].PrivateEndpointIPAddress,
-		})
+		endpoint := endpoints[i].GetActualInstance()
+
+		switch v := endpoint.(type) {
+		case *mongodbatlasv2.ServerlessAWSTenantEndpoint:
+			result = append(result, atlasV1.ServerlessPrivateEndpoint{
+				Name:                     *v.Comment,
+				CloudProviderEndpointID:  *v.CloudProviderEndpointId,
+				PrivateEndpointIPAddress: "",
+			})
+		case *mongodbatlasv2.ServerlessAzureTenantEndpoint:
+			result = append(result, atlasV1.ServerlessPrivateEndpoint{
+				Name:                     *v.Comment,
+				CloudProviderEndpointID:  *v.CloudProviderEndpointId,
+				PrivateEndpointIPAddress: *v.PrivateEndpointIpAddress,
+			})
+		}
 	}
 	return result, nil
 }

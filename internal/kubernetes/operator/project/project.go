@@ -243,7 +243,7 @@ func BuildProjectConnectionSecret(credsProvider store.CredentialsGetter, name, n
 }
 
 func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]atlasV1.CustomRole, error) {
-	dbRoles, err := crProvider.DatabaseRoles(projectID, &atlas.ListOptions{ItemsPerPage: MaxItems})
+	dbRoles, err := crProvider.DatabaseRoles(projectID)
 	if err != nil {
 		return nil, err
 	}
@@ -251,8 +251,8 @@ func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]
 		return nil, nil
 	}
 
-	result := make([]atlasV1.CustomRole, 0, len(*dbRoles))
-	roles := *dbRoles
+	result := make([]atlasV1.CustomRole, 0, len(dbRoles))
+	roles := dbRoles
 	for rIdx := range roles {
 		role := &roles[rIdx]
 
@@ -273,9 +273,9 @@ func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]
 			for resIdx := range action.Resources {
 				res := &action.Resources[resIdx]
 				resources = append(resources, atlasV1.Resource{
-					Cluster:    res.Cluster,
-					Database:   res.DB,
-					Collection: res.Collection,
+					Cluster:    &res.Cluster,
+					Database:   &res.Db,
+					Collection: &res.Collection,
 				})
 			}
 			actions = append(actions, atlasV1.Action{
@@ -573,11 +573,11 @@ func buildCloudProviderAccessRoles(cpaProvider store.CloudProviderAccessRoleList
 	}
 
 	var result []atlasV1.CloudProviderAccessRole
-	for i := range data.AWSIAMRoles {
-		cpa := &data.AWSIAMRoles[i]
+	for i := range data.AwsIamRoles {
+		cpa := &data.AwsIamRoles[i]
 		result = append(result, atlasV1.CloudProviderAccessRole{
 			ProviderName:      cpa.ProviderName,
-			IamAssumedRoleArn: cpa.IAMAssumedRoleARN,
+			IamAssumedRoleArn: *cpa.IamAssumedRoleArn,
 		})
 	}
 

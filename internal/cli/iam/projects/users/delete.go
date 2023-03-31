@@ -62,6 +62,7 @@ func DeleteBuilder() *cobra.Command {
   %s projects users delete 5dd58c647a3e5a6c5bce46c7 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies the user.",
+			"output": opts.SuccessMessage(),
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.initStore(cmd.Context())(); err != nil {

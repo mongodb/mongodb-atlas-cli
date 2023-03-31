@@ -59,6 +59,7 @@ func DeleteBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"idDesc": "Unique identifier for the endpoint group.",
+			"output": opts.SuccessMessage(),
 		},
 		Example: fmt.Sprintf(
 			`  %s privateEndpoints gcp interfaces delete endpoint-1 \

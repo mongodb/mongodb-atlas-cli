@@ -53,10 +53,13 @@
 | `backup exports jobs describe`              | Y         |           |           | Y         |       |       |
 | `backup exports jobs delete`                | Y         |           |           | Y         |       |       |
 | `backup exports jobs watch`                 | Y         |           |           | Y         |       |       |
-| `backup restores list`                      | N         |           |           | Y         |       |       |
-| `backup restores describe`                  | N         |           |           | Y         |       |       |
-| `backup restores start`                     | N         |           |           | Y         |       |       |
-| `backup restores watch`                     | N         |           |           | Y         |       |       |
+| `backup restores list`                      | Y         |           |           | Y         |       |       |
+| `backup restores describe`                  | Y         |           |           | Y         |       |       |
+| `backup restores start`                     | Y         |           |           | Y         |       |       |
+| `backup restores watch`                     | Y         |           |           | Y         |       |       |
+| `backup schedule describe`                  | Y         |           |           | Y         |       |       |
+| `backup schedule delete`                    | Y         |           |           | Y         |       |       |
+| `backup schedule update`                    | Y         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles authorize`   | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles deauthorize` | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles create`      | Y         |           |           | Y         |       |       |
@@ -277,17 +280,6 @@
 | `automation status`                         |           | N         | N         |           | Y     | Y     |
 | `automation update`                         |           | N         | N         |           | Y     | Y     |
 | `automation watch`                          |           | N         | N         |           | Y     | Y     |
-| `backup config describe`                    |           | N         | N         |           | Y     | Y     |
-| `backup config list`                        |           | N         | N         |           | Y     | Y     |
-| `backup config update`                      |           | N         | N         |           | Y     | Y     |
-| `backup snapshots schedule describe`        |           | N         | N         |           | Y     | Y     |
-| `backup snapshots schedule update`          |           | N         | N         |           | Y     | Y     |
-| `backup snapshots list`                     |           | N         | N         |           | Y     | Y     |
-| `backup checkpoint list`                    |           | N         | N         |           | Y     | Y     |
-| `backup restore start`                      | N         | N         | N         | Y         | Y     | Y     |
-| `backup restore list`                       | N         | N         | N         | Y         | Y     | Y     |
-| `backup  enable`                            |           | N         | N         |           | Y     | Y     |
-| `backup  disable`                           |           | N         | Y         |           | Y     | Y     |
 | `cluster  apply`                            |           | Y         | Y         |           | Y     | Y     |
 | `cluster  create`                           |           | Y         | Y         |           | Y     | Y     |
 | `cluster  delete`                           |           | Y         | Y         |           | Y     | Y     |
@@ -349,6 +341,10 @@
 | `serverless describe`                       | Y         |           |           | Y         |       |       |
 | `serverless list`                           | Y         |           |           | Y         |       |       |
 | `serverless watch`                          | Y         |           |           | Y         |       |       |
+| `serverless update`                         | Y         |           |           | Y         |       |       |
+| `serverless backup snapshots list`          | Y         |           |           | Y         |       |       |
+| `serverless backup snapshots describe`      | Y         |           |           | Y         |       |       |
+| `serverless backup snapshots watch`         | Y         |           |           | Y         |       |       |
 | `livemigrations link create`                | Y         |           |           | Y         | N     | N     |
 | `livemigrations link delete`                | Y         |           |           | Y         | Y     | Y     |
 | `livemigrations validation create`          |           |           |           | Y         |       |       |

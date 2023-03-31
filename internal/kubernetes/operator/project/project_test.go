@@ -85,17 +85,20 @@ func TestBuildAtlasProject(t *testing.T) {
 			Enabled:                   pointer.Get(true),
 		}
 
-		cpas := &mongodbatlas.CloudProviderAccessRoles{
-			AWSIAMRoles: []mongodbatlas.AWSIAMRole{
+		authDate, _ := time.Parse(time.RFC3339, "01-01-2001")
+		createDate, _ := time.Parse(time.RFC3339, "01-02-2001")
+
+		cpas := &atlasv2.CloudProviderAccess{
+			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
 				{
-					AtlasAWSAccountARN:         "TestARN",
-					AtlasAssumedRoleExternalID: "TestExternalRoleID",
-					AuthorizedDate:             "01-01-2001",
-					CreatedDate:                "01-02-2001",
+					AtlasAWSAccountArn:         pointer.Get("TestARN"),
+					AtlasAssumedRoleExternalId: pointer.Get("TestExternalRoleID"),
+					AuthorizedDate:             &authDate,
+					CreatedDate:                &createDate,
 					FeatureUsages:              nil,
-					IAMAssumedRoleARN:          "TestRoleARN",
+					IamAssumedRoleArn:          pointer.Get("TestRoleARN"),
 					ProviderName:               string(provider.ProviderAWS),
-					RoleID:                     "TestRoleID",
+					RoleId:                     pointer.Get("TestRoleID"),
 				},
 			},
 		}
@@ -237,21 +240,21 @@ func TestBuildAtlasProject(t *testing.T) {
 			IsSchemaAdvisorEnabled:                      pointer.Get(true),
 		}
 
-		customRoles := []mongodbatlas.CustomDBRole{
+		customRoles := []atlasv2.CustomDBRole{
 			{
-				Actions: []mongodbatlas.Action{
+				Actions: []atlasv2.DBAction{
 					{
 						Action: "Action-1",
-						Resources: []mongodbatlas.Resource{
+						Resources: []atlasv2.DBResource{
 							{
-								Collection: pointer.Get("Collection-1"),
-								DB:         pointer.Get("DB-1"),
-								Cluster:    pointer.Get(true),
+								Collection: "Collection-1",
+								Db:         "DB-1",
+								Cluster:    true,
 							},
 						},
 					},
 				},
-				InheritedRoles: []mongodbatlas.InheritedRole{
+				InheritedRoles: []atlasv2.InheritedRole{
 					{
 						Db:   "Inherited-DB",
 						Role: "Inherited-ROLE",
@@ -306,7 +309,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore.EXPECT().ProjectSettings(projectID).Return(projectSettings, nil)
 		projectStore.EXPECT().Auditing(projectID).Return(auditing, nil)
 		projectStore.EXPECT().AlertConfigurations(projectID, listOption).Return(alertConfigs, nil)
-		projectStore.EXPECT().DatabaseRoles(projectID, listOption).Return(&customRoles, nil)
+		projectStore.EXPECT().DatabaseRoles(projectID).Return(customRoles, nil)
 		projectStore.EXPECT().ProjectTeams(projectID).Return(projectTeams, nil)
 		projectStore.EXPECT().TeamByID(orgID, teamID).Return(teams, nil)
 		projectStore.EXPECT().TeamUsers(orgID, teamID).Return(teamUsers, nil)
@@ -448,8 +451,8 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 				CloudProviderAccessRoles: []atlasV1.CloudProviderAccessRole{
 					{
-						ProviderName:      cpas.AWSIAMRoles[0].ProviderName,
-						IamAssumedRoleArn: cpas.AWSIAMRoles[0].IAMAssumedRoleARN,
+						ProviderName:      cpas.AwsIamRoles[0].ProviderName,
+						IamAssumedRoleArn: *cpas.AwsIamRoles[0].IamAssumedRoleArn,
 					},
 				},
 				AlertConfigurations: []atlasV1.AlertConfiguration{
@@ -531,9 +534,9 @@ func TestBuildAtlasProject(t *testing.T) {
 								Name: customRoles[0].Actions[0].Action,
 								Resources: []atlasV1.Resource{
 									{
-										Cluster:    customRoles[0].Actions[0].Resources[0].Cluster,
-										Database:   customRoles[0].Actions[0].Resources[0].DB,
-										Collection: customRoles[0].Actions[0].Resources[0].Collection,
+										Cluster:    &customRoles[0].Actions[0].Resources[0].Cluster,
+										Database:   &customRoles[0].Actions[0].Resources[0].Db,
+										Collection: &customRoles[0].Actions[0].Resources[0].Collection,
 									},
 								},
 							},
@@ -720,17 +723,17 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 
 	cpaProvider := mocks.NewMockCloudProviderAccessRoleLister(ctl)
 	t.Run("Can convert CPA roles", func(t *testing.T) {
-		data := &mongodbatlas.CloudProviderAccessRoles{
-			AWSIAMRoles: []mongodbatlas.AWSIAMRole{
+		data := &atlasv2.CloudProviderAccess{
+			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
 				{
-					AtlasAWSAccountARN:         "TestARN",
-					AtlasAssumedRoleExternalID: "TestRoleID",
-					AuthorizedDate:             "TestAuthDate",
-					CreatedDate:                "TestCreatedDate",
+					AtlasAWSAccountArn:         pointer.Get("TestARN"),
+					AtlasAssumedRoleExternalId: pointer.Get("TestRoleID"),
+					AuthorizedDate:             &time.Time{},
+					CreatedDate:                &time.Time{},
 					FeatureUsages:              nil,
-					IAMAssumedRoleARN:          "TestAssumedRoleARN",
+					IamAssumedRoleArn:          pointer.Get("TestAssumedRoleARN"),
 					ProviderName:               string(provider.ProviderAWS),
-					RoleID:                     "TestRoleID",
+					RoleId:                     pointer.Get("TestRoleID"),
 				},
 			},
 		}
@@ -744,8 +747,8 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 
 		expected := []atlasV1.CloudProviderAccessRole{
 			{
-				ProviderName:      data.AWSIAMRoles[0].ProviderName,
-				IamAssumedRoleArn: data.AWSIAMRoles[0].IAMAssumedRoleARN,
+				ProviderName:      data.AwsIamRoles[0].ProviderName,
+				IamAssumedRoleArn: *data.AwsIamRoles[0].IamAssumedRoleArn,
 			},
 		}
 
@@ -1252,21 +1255,21 @@ func Test_buildCustomRoles(t *testing.T) {
 
 	rolesProvider := mocks.NewMockDatabaseRoleLister(ctl)
 	t.Run("Can build custom roles", func(t *testing.T) {
-		data := []mongodbatlas.CustomDBRole{
+		data := []atlasv2.CustomDBRole{
 			{
-				Actions: []mongodbatlas.Action{
+				Actions: []atlasv2.DBAction{
 					{
 						Action: "TestAction",
-						Resources: []mongodbatlas.Resource{
+						Resources: []atlasv2.DBResource{
 							{
-								Collection: pointer.Get("TestCollection"),
-								DB:         pointer.Get("TestDB"),
-								Cluster:    pointer.Get(true),
+								Collection: "TestCollection",
+								Db:         "TestDB",
+								Cluster:    true,
 							},
 						},
 					},
 				},
-				InheritedRoles: []mongodbatlas.InheritedRole{
+				InheritedRoles: []atlasv2.InheritedRole{
 					{
 						Db:   "TestDBMAIN",
 						Role: "ADMIN",
@@ -1276,8 +1279,7 @@ func Test_buildCustomRoles(t *testing.T) {
 			},
 		}
 
-		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
-		rolesProvider.EXPECT().DatabaseRoles(projectID, listOptions).Return(&data, nil)
+		rolesProvider.EXPECT().DatabaseRoles(projectID).Return(data, nil)
 
 		role := data[0]
 		expected := []atlasV1.CustomRole{
@@ -1294,9 +1296,9 @@ func Test_buildCustomRoles(t *testing.T) {
 						Name: role.Actions[0].Action,
 						Resources: []atlasV1.Resource{
 							{
-								Cluster:    role.Actions[0].Resources[0].Cluster,
-								Database:   role.Actions[0].Resources[0].DB,
-								Collection: role.Actions[0].Resources[0].Collection,
+								Cluster:    &role.Actions[0].Resources[0].Cluster,
+								Database:   &role.Actions[0].Resources[0].Db,
+								Collection: &role.Actions[0].Resources[0].Collection,
 							},
 						},
 					},

@@ -569,11 +569,11 @@ func buildCloudProviderAccessRoles(cpaProvider store.CloudProviderAccessRoleList
 	}
 
 	var result []atlasV1.CloudProviderAccessRole
-	for i := range data.AWSIAMRoles {
-		cpa := &data.AWSIAMRoles[i]
+	for i := range data.AwsIamRoles {
+		cpa := &data.AwsIamRoles[i]
 		result = append(result, atlasV1.CloudProviderAccessRole{
 			ProviderName:      cpa.ProviderName,
-			IamAssumedRoleArn: cpa.IAMAssumedRoleARN,
+			IamAssumedRoleArn: *cpa.IamAssumedRoleArn,
 		})
 	}
 

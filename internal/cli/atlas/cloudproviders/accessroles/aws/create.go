@@ -29,9 +29,9 @@ import (
 
 const (
 	provider       = "AWS"
-	createTemplate = `AWS IAM role '{{.RoleID}}' successfully created.
-Atlas AWS Account ARN: {{.AtlasAWSAccountARN}}
-Unique External ID: {{.AtlasAssumedRoleExternalID}}
+	createTemplate = `AWS IAM role '{{.CloudProviderAccessAWSIAMRole.RoleId}}' successfully created.
+Atlas AWS Account ARN: {{.CloudProviderAccessAWSIAMRole.AtlasAWSAccountArn}}
+Unique External ID: {{.CloudProviderAccessAWSIAMRole.AtlasAssumedRoleExternalId}}
 `
 )
 
@@ -66,7 +66,10 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create an AWS IAM role.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
-			"output": createTemplate,
+			"output": `AWS IAM role '{{.RoleID}}' successfully created.
+Atlas AWS Account ARN: {{.AtlasAWSAccountARN}}
+Unique External ID: {{.AtlasAssumedRoleExternalID}}
+`,
 		},
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

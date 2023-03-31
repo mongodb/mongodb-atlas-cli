@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
@@ -84,17 +85,20 @@ func TestBuildAtlasProject(t *testing.T) {
 			Enabled:                   pointer.Get(true),
 		}
 
-		cpas := &mongodbatlas.CloudProviderAccessRoles{
-			AWSIAMRoles: []mongodbatlas.AWSIAMRole{
+		authDate, _ := time.Parse(time.RFC3339, "01-01-2001")
+		createDate, _ := time.Parse(time.RFC3339, "01-02-2001")
+
+		cpas := &atlasv2.CloudProviderAccess{
+			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
 				{
-					AtlasAWSAccountARN:         "TestARN",
-					AtlasAssumedRoleExternalID: "TestExternalRoleID",
-					AuthorizedDate:             "01-01-2001",
-					CreatedDate:                "01-02-2001",
+					AtlasAWSAccountArn:         pointer.Get("TestARN"),
+					AtlasAssumedRoleExternalId: pointer.Get("TestExternalRoleID"),
+					AuthorizedDate:             &authDate,
+					CreatedDate:                &createDate,
 					FeatureUsages:              nil,
-					IAMAssumedRoleARN:          "TestRoleARN",
+					IamAssumedRoleArn:          pointer.Get("TestRoleARN"),
 					ProviderName:               string(provider.ProviderAWS),
-					RoleID:                     "TestRoleID",
+					RoleId:                     pointer.Get("TestRoleID"),
 				},
 			},
 		}
@@ -447,8 +451,8 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 				CloudProviderAccessRoles: []atlasV1.CloudProviderAccessRole{
 					{
-						ProviderName:      cpas.AWSIAMRoles[0].ProviderName,
-						IamAssumedRoleArn: cpas.AWSIAMRoles[0].IAMAssumedRoleARN,
+						ProviderName:      cpas.AwsIamRoles[0].ProviderName,
+						IamAssumedRoleArn: *cpas.AwsIamRoles[0].IamAssumedRoleArn,
 					},
 				},
 				AlertConfigurations: []atlasV1.AlertConfiguration{
@@ -719,17 +723,17 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 
 	cpaProvider := mocks.NewMockCloudProviderAccessRoleLister(ctl)
 	t.Run("Can convert CPA roles", func(t *testing.T) {
-		data := &mongodbatlas.CloudProviderAccessRoles{
-			AWSIAMRoles: []mongodbatlas.AWSIAMRole{
+		data := &atlasv2.CloudProviderAccess{
+			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
 				{
-					AtlasAWSAccountARN:         "TestARN",
-					AtlasAssumedRoleExternalID: "TestRoleID",
-					AuthorizedDate:             "TestAuthDate",
-					CreatedDate:                "TestCreatedDate",
+					AtlasAWSAccountArn:         pointer.Get("TestARN"),
+					AtlasAssumedRoleExternalId: pointer.Get("TestRoleID"),
+					AuthorizedDate:             &time.Time{},
+					CreatedDate:                &time.Time{},
 					FeatureUsages:              nil,
-					IAMAssumedRoleARN:          "TestAssumedRoleARN",
+					IamAssumedRoleArn:          pointer.Get("TestAssumedRoleARN"),
 					ProviderName:               string(provider.ProviderAWS),
-					RoleID:                     "TestRoleID",
+					RoleId:                     pointer.Get("TestRoleID"),
 				},
 			},
 		}
@@ -743,8 +747,8 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 
 		expected := []atlasV1.CloudProviderAccessRole{
 			{
-				ProviderName:      data.AWSIAMRoles[0].ProviderName,
-				IamAssumedRoleArn: data.AWSIAMRoles[0].IAMAssumedRoleARN,
+				ProviderName:      data.AwsIamRoles[0].ProviderName,
+				IamAssumedRoleArn: *data.AwsIamRoles[0].IamAssumedRoleArn,
 			},
 		}
 

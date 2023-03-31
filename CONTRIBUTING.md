@@ -19,7 +19,7 @@ this document describes some guidelines necessary to participate in the communit
 
 ## Asking Support Questions
 
-MongoDB support is provided under MongoDB Atlas or Enterprise Advance [support plans](https://support.mongodb.com/welcome).
+MongoDB support is provided under MongoDB Atlas or Enterprise Advanced [support plans](https://support.mongodb.com/welcome).
 Please don't use the GitHub issue tracker to ask questions.
 
 ## Feature Requests
@@ -124,7 +124,7 @@ Review and replace command name and arguments depending on the command you are u
 ### API Interactions
 
 Atlas CLI and MongoDB CLI use [go-client-mongodb-atlas](https://github.com/mongodb/go-client-mongodb-atlas/) 
-and [o-client-mongodb-ops-manager](https://github.com/mongodb/go-client-mongodb-ops-manager/) to interact with Atlas or Ops Manager/CLoud Manager
+and [go-client-mongodb-ops-manager](https://github.com/mongodb/go-client-mongodb-ops-manager/) to interact with Atlas or Ops Manager/Cloud Manager.
 Any new feature should first update the respective client.
 
 ### Adding a New Command

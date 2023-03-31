@@ -186,10 +186,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) Project(arg0 interface{}) *
 }
 
 // ProjectIPAccessLists mocks base method.
-func (m *MockAtlasOperatorProjectStore) ProjectIPAccessLists(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlas.ProjectIPAccessLists, error) {
+func (m *MockAtlasOperatorProjectStore) ProjectIPAccessLists(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedNetworkAccess, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectIPAccessLists", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.ProjectIPAccessLists)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedNetworkAccess)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

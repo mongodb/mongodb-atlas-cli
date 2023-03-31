@@ -63,19 +63,19 @@ func TestBuildAtlasProject(t *testing.T) {
 			WithDefaultAlertsSettings: pointer.Get(false),
 		}
 
-		ipAccessLists := &mongodbatlas.ProjectIPAccessLists{
+		ipAccessLists := &atlasv2.PaginatedNetworkAccess{
 			Links: nil,
-			Results: []mongodbatlas.ProjectIPAccessList{
+			Results: []atlasv2.NetworkPermissionEntry{
 				{
-					AwsSecurityGroup: "TestSecurity group",
-					CIDRBlock:        "0.0.0.0/0",
-					Comment:          "Allow everyone",
-					DeleteAfterDate:  "",
-					GroupID:          "TestGroupID",
-					IPAddress:        "0.0.0.0",
+					AwsSecurityGroup: pointer.Get("TestSecurity group"),
+					CidrBlock:        pointer.Get("0.0.0.0/0"),
+					Comment:          pointer.Get("Allow everyone"),
+					DeleteAfterDate:  pointer.Get(time.Now()),
+					GroupId:          pointer.Get("TestGroupID"),
+					IpAddress:        pointer.Get("0.0.0.0"),
 				},
 			},
-			TotalCount: 1,
+			TotalCount: pointer.Get(int32(1)),
 		}
 
 		auditing := &mongodbatlas.Auditing{
@@ -424,11 +424,11 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 				ProjectIPAccessList: []project.IPAccessList{
 					{
-						AwsSecurityGroup: ipAccessLists.Results[0].AwsSecurityGroup,
-						CIDRBlock:        ipAccessLists.Results[0].CIDRBlock,
-						Comment:          ipAccessLists.Results[0].Comment,
-						DeleteAfterDate:  ipAccessLists.Results[0].DeleteAfterDate,
-						IPAddress:        ipAccessLists.Results[0].IPAddress,
+						AwsSecurityGroup: ipAccessLists.Results[0].GetAwsSecurityGroup(),
+						CIDRBlock:        ipAccessLists.Results[0].GetCidrBlock(),
+						Comment:          ipAccessLists.Results[0].GetComment(),
+						DeleteAfterDate:  ipAccessLists.Results[0].GetDeleteAfterDate().String(),
+						IPAddress:        ipAccessLists.Results[0].GetIpAddress(),
 					},
 				},
 				MaintenanceWindow: project.MaintenanceWindow{
@@ -647,19 +647,19 @@ func Test_buildAccessLists(t *testing.T) {
 
 	alProvider := mocks.NewMockProjectIPAccessListLister(ctl)
 	t.Run("Can convert Access Lists", func(t *testing.T) {
-		data := &mongodbatlas.ProjectIPAccessLists{
+		data := &atlasv2.PaginatedNetworkAccess{
 			Links: nil,
-			Results: []mongodbatlas.ProjectIPAccessList{
+			Results: []atlasv2.NetworkPermissionEntry{
 				{
-					AwsSecurityGroup: "TestSecGroup",
-					CIDRBlock:        "0.0.0.0/0",
-					Comment:          "TestComment",
-					DeleteAfterDate:  "TestDate",
-					GroupID:          "TestGroupID",
-					IPAddress:        "0.0.0.0",
+					AwsSecurityGroup: pointer.Get("TestSecGroup"),
+					CidrBlock:        pointer.Get("0.0.0.0/0"),
+					Comment:          pointer.Get("TestComment"),
+					DeleteAfterDate:  pointer.Get(time.Now()),
+					GroupId:          pointer.Get("TestGroupID"),
+					IpAddress:        pointer.Get("0.0.0.0"),
 				},
 			},
-			TotalCount: 1,
+			TotalCount: pointer.Get(int32(1)),
 		}
 
 		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
@@ -673,11 +673,11 @@ func Test_buildAccessLists(t *testing.T) {
 
 		expected := []project.IPAccessList{
 			{
-				AwsSecurityGroup: data.Results[0].AwsSecurityGroup,
-				CIDRBlock:        data.Results[0].CIDRBlock,
-				Comment:          data.Results[0].Comment,
-				DeleteAfterDate:  data.Results[0].DeleteAfterDate,
-				IPAddress:        data.Results[0].IPAddress,
+				AwsSecurityGroup: data.Results[0].GetAwsSecurityGroup(),
+				CIDRBlock:        data.Results[0].GetCidrBlock(),
+				Comment:          data.Results[0].GetComment(),
+				DeleteAfterDate:  data.Results[0].GetDeleteAfterDate().String(),
+				IPAddress:        data.Results[0].GetIpAddress(),
 			},
 		}
 

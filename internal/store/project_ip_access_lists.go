@@ -20,19 +20,20 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectIPAccessListDescriber,ProjectIPAccessListLister,ProjectIPAccessListCreator,ProjectIPAccessListDeleter
 
 type ProjectIPAccessListDescriber interface {
-	IPAccessList(string, string) (*atlas.ProjectIPAccessList, error)
+	IPAccessList(string, string) (*atlasv2.NetworkPermissionEntry, error)
 }
 type ProjectIPAccessListLister interface {
-	ProjectIPAccessLists(string, *atlas.ListOptions) (*atlas.ProjectIPAccessLists, error)
+	ProjectIPAccessLists(string, *atlas.ListOptions) (*atlasv2.PaginatedNetworkAccess, error)
 }
 
 type ProjectIPAccessListCreator interface {
-	CreateProjectIPAccessList([]*atlas.ProjectIPAccessList) (*atlas.ProjectIPAccessLists, error)
+	CreateProjectIPAccessList([]*atlasv2.NetworkPermissionEntry) (*atlasv2.PaginatedNetworkAccess, error)
 }
 
 type ProjectIPAccessListDeleter interface {
@@ -40,13 +41,18 @@ type ProjectIPAccessListDeleter interface {
 }
 
 // CreateProjectIPAccessList encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateProjectIPAccessList(entries []*atlas.ProjectIPAccessList) (*atlas.ProjectIPAccessLists, error) {
+func (s *Store) CreateProjectIPAccessList(entries []*atlasv2.NetworkPermissionEntry) (*atlasv2.PaginatedNetworkAccess, error) {
 	if len(entries) == 0 {
 		return nil, errors.New("no entries")
 	}
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Create(s.ctx, entries[0].GroupID, entries)
+		entry := make([]atlasv2.NetworkPermissionEntry, len(entries))
+		for i, ptr := range entries {
+			entry[i] = *ptr
+		}
+
+		result, _, err := s.clientv2.ProjectIPAccessListApi.CreateProjectIpAccessList(s.ctx, entries[0].GetGroupId()).NetworkPermissionEntry(entry).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -57,7 +63,7 @@ func (s *Store) CreateProjectIPAccessList(entries []*atlas.ProjectIPAccessList) 
 func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).ProjectIPAccessList.Delete(s.ctx, projectID, entry)
+		_, err := s.clientv2.ProjectIPAccessListApi.DeleteProjectIpAccessList(s.ctx, projectID, entry).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -65,10 +71,10 @@ func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 }
 
 // ProjectIPAccessLists encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) (*atlas.ProjectIPAccessLists, error) {
+func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedNetworkAccess, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.List(s.ctx, projectID, opts)
+		result, _, err := s.clientv2.ProjectIPAccessListApi.ListProjectIpAccessLists(s.ctx, projectID).PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -76,10 +82,10 @@ func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) 
 }
 
 // IPAccessList encapsulate the logic to manage different cloud providers.
-func (s *Store) IPAccessList(projectID, name string) (*atlas.ProjectIPAccessList, error) {
+func (s *Store) IPAccessList(projectID, name string) (*atlasv2.NetworkPermissionEntry, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Get(s.ctx, projectID, name)
+		result, _, err := s.clientv2.ProjectIPAccessListApi.GetProjectIpList(s.ctx, projectID, name).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

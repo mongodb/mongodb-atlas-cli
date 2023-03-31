@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestWhitelistCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
 
-	var expected *mongodbatlas.ProjectIPAccessLists
+	var expected *atlasv2.PaginatedNetworkAccess
 
 	createOpts := &CreateOpts{
 		entry:     "37.228.254.100",

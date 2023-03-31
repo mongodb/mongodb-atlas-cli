@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -467,10 +468,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) CreateDatabaseUser(arg0 inte
 }
 
 // CreateProjectIPAccessList mocks base method.
-func (m *MockAtlasClusterQuickStarter) CreateProjectIPAccessList(arg0 []*mongodbatlas.ProjectIPAccessList) (*mongodbatlas.ProjectIPAccessLists, error) {
+func (m *MockAtlasClusterQuickStarter) CreateProjectIPAccessList(arg0 []*mongodbatlasv2.NetworkPermissionEntry) (*mongodbatlasv2.PaginatedNetworkAccess, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProjectIPAccessList", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.ProjectIPAccessLists)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedNetworkAccess)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

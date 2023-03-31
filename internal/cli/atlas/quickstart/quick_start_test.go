@@ -30,6 +30,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestBuilder(t *testing.T) {
@@ -67,7 +68,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 
 	expectedDBUser := &mongodbatlas.DatabaseUser{}
 
-	var expectedProjectAccessLists *mongodbatlas.ProjectIPAccessLists
+	var expectedProjectAccessLists *atlasv2.PaginatedNetworkAccess
 
 	opts := &Opts{
 		ClusterName:    "ProjectBar",
@@ -151,7 +152,7 @@ func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 
 	expectedDBUser := &mongodbatlas.DatabaseUser{}
 
-	var expectedProjectAccessLists *mongodbatlas.ProjectIPAccessLists
+	var expectedProjectAccessLists *atlasv2.PaginatedNetworkAccess
 
 	opts := &Opts{
 		ClusterName:                 "ProjectBar",

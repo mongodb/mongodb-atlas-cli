@@ -301,15 +301,19 @@ func buildAccessLists(accessListProvider store.ProjectIPAccessListLister, projec
 
 	var result []operatorProject.IPAccessList
 	for _, list := range accessLists.Results {
-		if strings.HasSuffix(list.CIDRBlock, cidrException) && list.IPAddress != "" {
-			list.CIDRBlock = ""
+		if strings.HasSuffix(list.GetCidrBlock(), cidrException) && list.GetIpAddress() != "" {
+			list.CidrBlock = pointer.Get("")
+		}
+		deleteAfterDate := ""
+		if !list.GetDeleteAfterDate().IsZero() {
+			deleteAfterDate = list.GetDeleteAfterDate().String()
 		}
 		result = append(result, operatorProject.IPAccessList{
-			AwsSecurityGroup: list.AwsSecurityGroup,
-			CIDRBlock:        list.CIDRBlock,
-			Comment:          list.Comment,
-			DeleteAfterDate:  list.DeleteAfterDate,
-			IPAddress:        list.IPAddress,
+			AwsSecurityGroup: list.GetAwsSecurityGroup(),
+			CIDRBlock:        list.GetCidrBlock(),
+			Comment:          list.GetComment(),
+			DeleteAfterDate:  deleteAfterDate,
+			IPAddress:        list.GetIpAddress(),
 		})
 	}
 	return result, nil
@@ -573,7 +577,7 @@ func buildCloudProviderAccessRoles(cpaProvider store.CloudProviderAccessRoleList
 		cpa := &data.AwsIamRoles[i]
 		result = append(result, atlasV1.CloudProviderAccessRole{
 			ProviderName:      cpa.ProviderName,
-			IamAssumedRoleArn: *cpa.IamAssumedRoleArn,
+			IamAssumedRoleArn: cpa.GetIamAssumedRoleArn(),
 		})
 	}
 

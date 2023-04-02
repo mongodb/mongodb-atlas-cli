@@ -45,11 +45,11 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	PROVIDER	REGION	ATLAS CIDR	PROVISIONED{{range .}}
-{{.ID}}	{{.ProviderName}}	{{if .RegionName}}{{.RegionName}}{{else}}{{.Region}}{{end}}	{{.AtlasCIDRBlock}}	{{.Provisioned}}{{end}}
+{{.Id}}	{{.ProviderName}}	{{if .RegionName}}{{.RegionName}}{{else}}{{.Region}}{{end}}	{{.AtlasCidrBlock}}	{{.Provisioned}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
-	var r []atlas.Container
+	var r []interface{}
 	var err error
 	if opts.provider == "" {
 		r, err = opts.store.AllContainers(opts.ConfigProjectID(), opts.NewListOptions())

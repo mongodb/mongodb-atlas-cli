@@ -23,10 +23,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type AWSOpts struct {
@@ -57,19 +59,20 @@ func (opts *AWSOpts) Run() error {
 
 	if container == nil {
 		var err2 error
-		container, err2 = opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		r, err2 := opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		container = r.(*atlasv2.AWSCloudProviderContainer)
 		if err2 != nil {
 			return err2
 		}
 	}
-	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(container.ID))
+	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(*container.Id))
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *AWSOpts) containerExists() (*atlas.Container, error) {
+func (opts *AWSOpts) containerExists() (*atlasv2.AWSCloudProviderContainer, error) {
 	r, err := opts.store.AWSContainers(opts.ConfigProjectID())
 	if err != nil {
 		return nil, err
@@ -82,13 +85,18 @@ func (opts *AWSOpts) containerExists() (*atlas.Container, error) {
 	return nil, nil
 }
 
-func (opts *AWSOpts) newContainer() *atlas.Container {
-	c := &atlas.Container{
-		AtlasCIDRBlock: opts.atlasCIDRBlock,
+func (opts *AWSOpts) newAWSContainer() *atlasv2.AWSCloudProviderContainer {
+	c := &atlasv2.AWSCloudProviderContainer{
+		AtlasCidrBlock: &opts.atlasCIDRBlock,
 		RegionName:     opts.region,
-		ProviderName:   "AWS",
+		ProviderName:   pointer.Get("AWS"),
 	}
 	return c
+}
+
+func (opts *AWSOpts) newContainer() *atlasv2.CloudProviderContainer {
+	w := atlasv2.AWSCloudProviderContainerAsCloudProviderContainer(opts.newAWSContainer())
+	return &w
 }
 
 func normalizeAtlasRegion(region string) string {

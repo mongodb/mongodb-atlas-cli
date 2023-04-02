@@ -22,10 +22,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type GCPOpts struct {
@@ -54,19 +56,20 @@ func (opts *GCPOpts) Run() error {
 
 	if container == nil {
 		var err2 error
-		container, err2 = opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		r, err2 := opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		container = r.(*atlasv2.GCPCloudProviderContainer)
 		if err2 != nil {
 			return err2
 		}
 	}
-	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(container.ID))
+	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(*container.Id))
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *GCPOpts) containerExists() (*atlas.Container, error) {
+func (opts *GCPOpts) containerExists() (*atlasv2.GCPCloudProviderContainer, error) {
 	r, err := opts.store.GCPContainers(opts.ConfigProjectID())
 	if err != nil {
 		return nil, err
@@ -77,13 +80,18 @@ func (opts *GCPOpts) containerExists() (*atlas.Container, error) {
 	return nil, nil
 }
 
-func (opts *GCPOpts) newContainer() *atlas.Container {
-	c := &atlas.Container{
-		AtlasCIDRBlock: opts.atlasCIDRBlock,
+func (opts *GCPOpts) newGCPContainer() *atlasv2.GCPCloudProviderContainer {
+	c := &atlasv2.GCPCloudProviderContainer{
+		AtlasCidrBlock: opts.atlasCIDRBlock,
 		Regions:        opts.regions,
-		ProviderName:   "GCP",
+		ProviderName:   pointer.Get("GCP"),
 	}
 	return c
+}
+
+func (opts *GCPOpts) newContainer() *atlasv2.CloudProviderContainer {
+	w := atlasv2.GCPCloudProviderContainerAsCloudProviderContainer(opts.newGCPContainer())
+	return &w
 }
 
 func (opts *GCPOpts) newPeer(containerID string) *atlas.Peer {

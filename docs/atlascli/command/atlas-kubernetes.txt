@@ -12,9 +12,9 @@ atlas kubernetes
    :depth: 1
    :class: singlecol
 
-Manage kubernetes resources.
+Manage Kubernetes resources.
 
-The kubernetes command provides access to kubernetes features of the atlas.
+This command provides access to Kubernetes features within Atlas.
 
 Options
 -------

@@ -51,11 +51,13 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`atlas-kubernetes-config-apply` - Apply Kubernetes configuration resources to a cluster.
 * :ref:`atlas-kubernetes-config-generate` - Generate Kubernetes configuration resources.
 
 
 .. toctree::
    :titlesonly:
 
+   apply </command/atlas-kubernetes-config-apply>
    generate </command/atlas-kubernetes-config-generate>
 

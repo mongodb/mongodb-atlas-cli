@@ -696,7 +696,7 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err)
-		t.Cleanup(func() {
+		s.t.Cleanup(func() {
 			deletePrivateEndpoints(t, generator.projectID, azureEntity)
 		})
 		var createdNetworkPeer mongodbatlas.PrivateEndpointConnection

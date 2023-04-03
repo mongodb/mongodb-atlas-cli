@@ -313,6 +313,8 @@ const (
 	OperatorIncludeSecrets                    = "includeSecrets"                            // OperatorIncludeSecrets flag
 	OperatorTargetNamespace                   = "targetNamespace"                           // OperatorTargetNamespace flag
 	OperatorVersion                           = "operatorVersion"                           // OperatorVersion flag
+	KubernetesClusterConfig                   = "kubeconfig"                                // Kubeconfig flag
+	KubernetesClusterContext                  = "kubeContext"                               // KubeContext flag
 	ExportID                                  = "exportId"                                  // ExportID flag
 	Debug                                     = "debug"                                     // Debug flag to set debug log level
 	DebugShort                                = "D"                                         // DebugShort flag to set debug log level

@@ -23,8 +23,8 @@ func Builder() *cobra.Command {
 	const use = "kubernetes"
 	cmd := &cobra.Command{
 		Use:   use,
-		Short: "Manage kubernetes resources.",
-		Long:  `The kubernetes command provides access to kubernetes features of the atlas.`,
+		Short: "Manage Kubernetes resources.",
+		Long:  `This command provides access to Kubernetes features within Atlas.`,
 	}
 
 	cmd.AddCommand(config.Builder())

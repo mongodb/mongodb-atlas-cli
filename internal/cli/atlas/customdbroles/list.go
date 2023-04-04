@@ -33,6 +33,8 @@ const listTemplate = `NAME	ACTION	INHERITED ROLES	DB	COLLECTION	CLUSTER{{range .
 {{ $roleName }}	N/A	{{ .Role }}	{{ .Db}}	N/A	N/A{{end}}{{end}}
 `
 
+const deprecatedFlagMessage = "--pageNum and --ItemsPerPage are not supported by customdbroles list"
+
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -78,8 +80,8 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+	_ = cmd.Flags().MarkDeprecated(flag.Page, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.Limit, deprecatedFlagMessage)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

@@ -15,6 +15,7 @@ mongocli atlas backups snapshots delete
 Remove the specified backup snapshot.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+This command is supported only for M10+ clusters.
 
 Syntax
 ------

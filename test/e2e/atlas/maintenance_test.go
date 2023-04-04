@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestMaintenanceWindows(t *testing.T) {
@@ -68,10 +68,10 @@ func TestMaintenanceWindows(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var maintenanceWindow mongodbatlas.MaintenanceWindow
+		var maintenanceWindow atlasv2.GroupMaintenanceWindow
 		if err := json.Unmarshal(resp, &maintenanceWindow); a.NoError(err) {
-			a.Equal(1, maintenanceWindow.DayOfWeek)
-			a.Equal(1, *maintenanceWindow.HourOfDay)
+			a.Equal(int32(1), maintenanceWindow.DayOfWeek)
+			a.Equal(int32(1), maintenanceWindow.HourOfDay)
 		}
 	})
 

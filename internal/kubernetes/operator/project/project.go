@@ -326,8 +326,8 @@ func buildMaintenanceWindows(mwProvider store.MaintenanceWindowDescriber, projec
 	}
 
 	return operatorProject.MaintenanceWindow{
-		DayOfWeek: mw.DayOfWeek,
-		HourOfDay: pointer.GetOrDefault(mw.HourOfDay, 0),
+		DayOfWeek: int(mw.DayOfWeek),
+		HourOfDay: int(mw.HourOfDay),
 		AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
 		StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
 		Defer:     false,

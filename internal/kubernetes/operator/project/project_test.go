@@ -127,11 +127,10 @@ func TestBuildAtlasProject(t *testing.T) {
 			TotalCount: 1,
 		}
 
-		mw := &mongodbatlas.MaintenanceWindow{
+		mw := &atlasv2.GroupMaintenanceWindow{
 			DayOfWeek:            1,
-			HourOfDay:            pointer.Get(10),
+			HourOfDay:            10,
 			StartASAP:            pointer.Get(false),
-			NumberOfDeferrals:    0,
 			AutoDeferOnceEnabled: pointer.Get(false),
 		}
 
@@ -432,8 +431,8 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 				MaintenanceWindow: project.MaintenanceWindow{
-					DayOfWeek: mw.DayOfWeek,
-					HourOfDay: pointer.GetOrDefault(mw.HourOfDay, 0),
+					DayOfWeek: int(mw.DayOfWeek),
+					HourOfDay: int(mw.HourOfDay),
 					AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
 					StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
 					Defer:     false,
@@ -1024,11 +1023,10 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 
 	mwProvider := mocks.NewMockMaintenanceWindowDescriber(ctl)
 	t.Run("Can convert maintenance window", func(t *testing.T) {
-		mw := &mongodbatlas.MaintenanceWindow{
+		mw := &atlasv2.GroupMaintenanceWindow{
 			DayOfWeek:            3,
-			HourOfDay:            pointer.Get(10),
+			HourOfDay:            10,
 			StartASAP:            pointer.Get(false),
-			NumberOfDeferrals:    0,
 			AutoDeferOnceEnabled: pointer.Get(false),
 		}
 
@@ -1040,8 +1038,8 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 		}
 
 		expected := project.MaintenanceWindow{
-			DayOfWeek: mw.DayOfWeek,
-			HourOfDay: *mw.HourOfDay,
+			DayOfWeek: int(mw.DayOfWeek),
+			HourOfDay: int(mw.HourOfDay),
 			AutoDefer: *mw.AutoDeferOnceEnabled,
 			StartASAP: *mw.StartASAP,
 			Defer:     false,

@@ -144,8 +144,7 @@ func CreateBuilder() *cobra.Command {
 		Short: "Start a restore job for your serverless instance.",
 		Long: `If you create an automated or pointInTime restore job, Atlas removes all existing data on the target cluster prior to the restore.
 
-This command is supported only for M10+ clusters.
-` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Owner"), "This command is supported only for M10+ clusters."),
 		Args: require.NoArgs,
 		Example: fmt.Sprintf(`  # Create an automated restore:
   %[1]s serverless backup restore create \

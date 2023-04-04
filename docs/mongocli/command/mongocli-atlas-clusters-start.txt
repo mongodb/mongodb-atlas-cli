@@ -12,7 +12,7 @@ mongocli atlas clusters start
    :depth: 1
    :class: singlecol
 
-Start the specified paused MongoDB cluster
+Start the specified paused MongoDB cluster.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Cluster Manager role.
 This command is supported only for M10+ clusters.

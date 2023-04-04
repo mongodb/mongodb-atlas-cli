@@ -129,7 +129,6 @@ func UpdateBuilder() *cobra.Command {
 		Use:   "update <clusterName>",
 		Short: "Update advanced configuration settings for one cluster.",
 		Long: `Updates the advanced configuration details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index and oplog limits, and other database settings.
-
 This command is supported only for M10+ clusters.
 `,
 		Example: fmt.Sprintf(`  # Update the minimum oplog size for a cluster:

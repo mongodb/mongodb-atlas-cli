@@ -41,6 +41,7 @@ func TestSearch(t *testing.T) {
 	indexName := fmt.Sprintf("index-%v", n)
 	collectionName := fmt.Sprintf("collection-%v", n)
 	var indexID string
+
 	t.Run("Create via file", func(t *testing.T) {
 		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
 
@@ -391,5 +392,4 @@ func TestSearch(t *testing.T) {
 			assert.Equal(t, index.Name, indexName)
 		}
 	})
-
 }

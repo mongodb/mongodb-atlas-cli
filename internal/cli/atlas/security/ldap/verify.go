@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type VerifyOpts struct {
@@ -35,7 +35,7 @@ type VerifyOpts struct {
 	cli.OutputOpts
 	cli.InputOpts
 	hostname           string
-	port               int32
+	port               int
 	bindUsername       string
 	bindPassword       string
 	caCertificate      string
@@ -52,7 +52,7 @@ func (opts *VerifyOpts) initStore(ctx context.Context) func() error {
 }
 
 var verifyTemplate = `REQUEST ID	PROJECT ID	STATUS
-{{.RequestId}}	{{.GroupId}}	{{.Status}}
+{{.RequestID}}	{{.GroupID}}	{{.Status}}
 `
 
 func (opts *VerifyOpts) Run() error {
@@ -89,12 +89,12 @@ func (opts *VerifyOpts) Prompt() error {
 	return nil
 }
 
-func (opts *VerifyOpts) newLDAP() *atlasv2.NDSLDAPVerifyConnectivityJobRequestParams {
-	return &atlasv2.NDSLDAPVerifyConnectivityJobRequestParams{
-		Hostname:           opts.hostname,
-		Port:               opts.port,
-		BindUsername:       opts.bindUsername,
-		BindPassword:       opts.bindPassword,
+func (opts *VerifyOpts) newLDAP() *atlas.LDAP {
+	return &atlas.LDAP{
+		Hostname:           &opts.hostname,
+		Port:               &opts.port,
+		BindUsername:       &opts.bindUsername,
+		BindPassword:       &opts.bindPassword,
 		CaCertificate:      &opts.caCertificate,
 		AuthzQueryTemplate: &opts.authzQueryTemplate,
 	}
@@ -126,7 +126,7 @@ func VerifyBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.hostname, flag.Hostname, "", usage.LDAPHostname)
-	cmd.Flags().Int32Var(&opts.port, flag.Port, defaultLDAPPort, usage.LDAPPort)
+	cmd.Flags().IntVar(&opts.port, flag.Port, defaultLDAPPort, usage.LDAPPort)
 	cmd.Flags().StringVar(&opts.bindUsername, flag.BindUsername, "", usage.BindUsername)
 	cmd.Flags().StringVar(&opts.bindPassword, flag.BindPassword, "", usage.BindPassword)
 	cmd.Flags().StringVar(&opts.caCertificate, flag.CaCertificate, "", usage.CaCertificate)

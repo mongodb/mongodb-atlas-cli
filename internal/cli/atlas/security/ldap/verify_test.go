@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestVerify_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLDAPConfigurationVerifier(ctrl)
 
-	var expected *atlasv2.NDSLDAPVerifyConnectivityJobRequest
+	var expected *mongodbatlas.LDAPConfiguration
 
 	opts := &VerifyOpts{
 		store: mockStore,

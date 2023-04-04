@@ -27,11 +27,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	statusSuccess = "SUCCESS"
-	statusFailed  = "FAILED"
-)
-
 type WatchOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
@@ -52,8 +47,8 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	status := *result.Status
-	return status == statusFailed || status == statusSuccess, nil
+	status := result.Status
+	return status == "FAILED" || status == "SUCCESS", nil
 }
 
 func (opts *WatchOpts) Run() error {

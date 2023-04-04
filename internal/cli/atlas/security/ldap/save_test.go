@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestSave_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLDAPConfigurationSaver(ctrl)
 
-	var expected *atlasv2.UserSecurity
+	var expected *mongodbatlas.LDAPConfiguration
 
 	opts := &SaveOpts{
 		store: mockStore,

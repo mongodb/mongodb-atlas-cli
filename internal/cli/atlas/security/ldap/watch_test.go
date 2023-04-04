@@ -23,15 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLDAPConfigurationDescriber(ctrl)
 
-	status := statusSuccess
-	expected := &atlasv2.NDSLDAPVerifyConnectivityJobRequest{Status: &status}
+	expected := &mongodbatlas.LDAPConfiguration{Status: "SUCCESS"}
 
 	opts := &WatchOpts{
 		id:    "213122131232132",

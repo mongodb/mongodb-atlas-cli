@@ -109,7 +109,6 @@ func (opts *SaveOpts) newLDAPConfiguration() *atlasv2.UserSecurity {
 			CaCertificate:         &opts.caCertificate,
 			AuthzQueryTemplate:    &opts.authzQueryTemplate,
 		},
-		CustomerX509: &atlasv2.CustomerX509{},
 	}
 	if opts.mappingMatch != "" {
 		ldapConfig.Ldap.UserToDNMapping = append(

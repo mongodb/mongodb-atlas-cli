@@ -21,7 +21,7 @@ import (
 )
 
 var (
-	errClusterUnsupported = errors.New("the command supports only M10+ cluster. You can upgrade your cluster by running the 'atlas cluster upgrade' command")
+	errClusterUnsupported = errors.New("the command supports only M10+ clusters. You can upgrade your cluster by running the 'atlas cluster upgrade' command")
 )
 
 func Check(err error) error {

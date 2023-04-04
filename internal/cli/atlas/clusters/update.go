@@ -133,7 +133,7 @@ func UpdateBuilder() *cobra.Command {
 		
 You can't change the name of the cluster or downgrade the MongoDB version of your cluster.
 
-` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"), "This command is supported only for M10+ clusters"),
+` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"), "Atlas supports this command only for M10+ clusters"),
 		Example: fmt.Sprintf(`  # Update the tier for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
   %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50
 

@@ -142,7 +142,7 @@ func StartBuilder() *cobra.Command {
 		Short: "Start a restore job for your project and cluster.",
 		Long: `If you create an automated or pointInTime restore job, Atlas removes all existing data on the target cluster prior to the restore.
 
-` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Owner"), "This command is supported only for M10+ clusters."),
+` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Owner"), "Atlas supports this command only for M10+ clusters."),
 		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, downloadRestore, pointInTimeRestore},
 		Annotations: map[string]string{

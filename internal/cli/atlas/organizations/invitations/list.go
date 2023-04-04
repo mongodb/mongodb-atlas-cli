@@ -61,7 +61,7 @@ func (opts *ListOpts) newInvitationOptions() *atlas.InvitationOptions {
 	}
 }
 
-// atlas iam organizations(s) invitations list [--email email]  [--orgId orgId].
+// atlas organizations(s) invitations list [--email email]  [--orgId orgId].
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
@@ -74,6 +74,7 @@ func ListBuilder() *cobra.Command {
   %s organizations invitations list --orgId 5f71e5255afec75a3d0f96dc --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
+				opts.ValidateOrgID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)

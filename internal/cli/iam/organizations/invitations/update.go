@@ -97,6 +97,7 @@ func UpdateBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.ValidateProjectID,
+				opts.ValidateOrgID,
 				opts.validate,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),

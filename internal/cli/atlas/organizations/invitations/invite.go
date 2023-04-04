@@ -65,7 +65,7 @@ func (opts *InviteOpts) newInvitation() *atlas.Invitation {
 	}
 }
 
-// atlas iam organization(s) invitation(s) invite|create <email> --role role [--teamId teamId] [--orgId orgId].
+// atlas organization(s) invitation(s) invite|create <email> --role role [--teamId teamId] [--orgId orgId].
 func InviteBuilder() *cobra.Command {
 	opts := new(InviteOpts)
 	opts.Template = createTemplate
@@ -82,7 +82,7 @@ func InviteBuilder() *cobra.Command {
   %s organizations invitations invite user@example.com --orgId 5f71e5255afec75a3d0f96dc --role ORG_OWNER --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore(cmd.Context())()
+			return opts.PreRunE(opts.ValidateOrgID, opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]

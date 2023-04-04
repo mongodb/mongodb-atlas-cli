@@ -60,7 +60,7 @@ func StartBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "start <clusterName>",
 		Short: "Start the specified paused MongoDB cluster",
-		Long:  fmt.Sprintf("%s \n%s", fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"), "This command is supported only for M10+ clusters."),
+		Long:  fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"), "This command is supported only for M10+ clusters."),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to start.",

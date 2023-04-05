@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,19 +14,33 @@
 
 //go:build unit
 
-package projects
+package teams
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		8,
-		[]string{},
-	)
+func TestList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectTeamLister(ctrl)
+
+	var expected []mongodbatlas.Team
+
+	listOpts := &ListOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		ProjectTeams(listOpts.ProjectID).
+		Return(expected, nil).
+		Times(1)
+
+	if err := listOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

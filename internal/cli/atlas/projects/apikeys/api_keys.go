@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,36 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package projects
+package apikeys
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects/apikeys"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects/invitations"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects/teams"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects/users"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "projects"
+	const use = "apiKeys"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   fmt.Sprintf("Manage your %s projects.", cli.DescriptionServiceName()),
-		Long:    "Create, list and manage your MongoDB projects.",
+		Short:   "Manage API Keys for your project.",
 		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		ListBuilder(),
 		CreateBuilder(),
 		DeleteBuilder(),
-		DescribeBuilder(),
-		apikeys.Builder(),
-		users.Builder(),
-		teams.Builder(),
-		invitations.Builder(),
+		AssignBuilder(),
 	)
 
 	return cmd

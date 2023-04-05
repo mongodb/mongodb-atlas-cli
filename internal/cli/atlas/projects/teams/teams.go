@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,23 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package settings
+package teams
 
 import (
+	"fmt"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "settings"
+	const use = "teams"
 	cmd := &cobra.Command{
 		Use:     use,
+		Short:   fmt.Sprintf("Manage your %s teams.", cli.DescriptionServiceName()),
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Settings operations.",
-		Long:    "Manage your project settings.",
 	}
+
 	cmd.AddCommand(
-		DescribeBuilder(),
+		ListBuilder(),
+		AddBuilder(),
+		DeleteBuilder(),
 		UpdateBuilder(),
 	)
 

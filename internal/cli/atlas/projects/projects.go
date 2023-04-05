@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects/apikeys"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects/invitations"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects/teams"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects/users"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects/apikeys"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects/invitations"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects/settings"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects/teams"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects/users"
 	"github.com/spf13/cobra"
 )
 
@@ -42,6 +43,7 @@ func Builder() *cobra.Command {
 		users.Builder(),
 		teams.Builder(),
 		invitations.Builder(),
+		settings.Builder(),
 	)
 
 	return cmd

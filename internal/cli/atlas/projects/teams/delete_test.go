@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,44 +14,38 @@
 
 //go:build unit
 
-package settings
+package teams
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDescribeOpts_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectSettingsDescriber(ctrl)
+	mockStore := mocks.NewMockProjectTeamDeleter(ctrl)
 
-	opts := &DescribeOpts{
+	opts := &DeleteOpts{
 		store: mockStore,
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "6a0a1e7e0f2912c554080adc",
+		},
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "5a0a1e7e0f2912c554080adc",
+			Confirm: true,
+		},
 	}
-
-	expected := &mongodbatlas.ProjectSettings{}
 
 	mockStore.
 		EXPECT().
-		ProjectSettings(opts.ProjectID).
-		Return(expected, nil).
+		DeleteTeamFromProject(opts.ProjectID, opts.Entry).
+		Return(nil).
 		Times(1)
 
-	err := opts.Run()
-	assert.NoError(t, err)
-}
-
-func TestDescribeBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DescribeBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.Output},
-	)
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

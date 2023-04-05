@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,19 +14,32 @@
 
 //go:build unit
 
-package projects
+package apikeys
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		8,
-		[]string{},
-	)
+func TestUpdateOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectAPIKeyAssigner(ctrl)
+
+	opts := &AssignOpts{
+		store: mockStore,
+		id:    "1",
+		roles: []string{"ORG_OWNER"},
+	}
+
+	mockStore.
+		EXPECT().
+		AssignProjectAPIKey(opts.OrgID, opts.id, opts.newAssignAPIKey()).
+		Return(nil).
+		Times(1)
+
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

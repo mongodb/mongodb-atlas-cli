@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,14 +19,26 @@ package projects
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		8,
-		[]string{},
-	)
+func TestDescribe_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectDescriber(ctrl)
+
+	mockStore.
+		EXPECT().
+		Project(gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		Return(&opsmngr.Project{}, nil).
+		Times(1)
+
+	opts := &DescribeOpts{
+		store: mockStore,
+		id:    "5a0a1e7e0f2912c554080adc",
+	}
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

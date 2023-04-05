@@ -70,9 +70,6 @@ func ListBuilder() *cobra.Command {
 		Short:   "Return all pending invitations to your organization.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
 		Args:    require.NoArgs,
-		Annotations: map[string]string{
-			"output": listTemplate,
-		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of pending invitations to the organization with the ID 5f71e5255afec75a3d0f96dc:
   %s organizations invitations list --orgId 5f71e5255afec75a3d0f96dc --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

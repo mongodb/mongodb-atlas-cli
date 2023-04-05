@@ -65,9 +65,6 @@ func ListBuilder() *cobra.Command {
 		Example: `  # Return a JSON-formatted list of global API keys:
   mongocli iam globalApiKeys list --output json`,
 		Args: require.NoArgs,
-		Annotations: map[string]string{
-			"output": listTemplate,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

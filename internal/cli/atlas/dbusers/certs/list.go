@@ -69,7 +69,6 @@ The user you specify must authenticate using X.509 certificates.`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"usernameDesc": "Username of the database user for whom you want to list Atlas-managed certificates.",
-			"output":       listTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all Atlas-managed X.509 certificates for a MongoDB user named dbuser for the project with ID 5e2211c17a3e5a48f5497de3:
   %s dbusers certs list dbuser --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),

@@ -66,10 +66,7 @@ func ListBuilder() *cobra.Command {
 		Short:   "List all Atlas Search indexes for a cluster.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
 		Aliases: []string{"ls"},
-		Annotations: map[string]string{
-			"output": listTemplate,
-		},
-		Args: require.NoArgs,
+		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return the JSON-formatted list of Atlas search indexes on the sample_mflix.movies database in the cluster named myCluster:
   %s clusters search indexes list --clusterName myCluster --db sample_mflix --collection movies --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

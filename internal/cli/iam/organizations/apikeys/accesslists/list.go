@@ -68,7 +68,6 @@ func ListBuilder() *cobra.Command {
 `+fmt.Sprintf(usage.RequiredRole, "Organization Member"), cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"apiKeyIDDesc": "Unique 24-digit string that identifies your API key.",
-			"output":       listTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of access list entries for the API key with the ID 5f24084d8dbffa3ad3f21234 in the organization with the ID 5a1b39eec902201990f12345:
   %s organizations apiKeys accessLists list --apiKey 5f24084d8dbffa3ad3f21234 --orgId 5a1b39eec902201990f12345 --output json`, cli.ExampleAtlasEntryPoint()),

@@ -66,9 +66,6 @@ func ListBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Example: fmt.Sprintf(`  %s privateEndpoint gcp ls`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.NoArgs,
-		Annotations: map[string]string{
-			"output": listTemplate,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

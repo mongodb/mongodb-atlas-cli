@@ -65,6 +65,9 @@ func DescribeBuilder() *cobra.Command {
 		Short:   "Return one cloud backup export job for your project, cluster and job.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": describeTemplate,
+		},
 		Example: fmt.Sprintf(`  # Return the details for the continuous backup export job with the ID 5df90590f10fab5e33de2305 for the cluster named Cluster0:
   %s backup exports jobs describe --clusterName Cluster0 --exportID 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

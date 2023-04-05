@@ -67,6 +67,7 @@ func DescribeBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",
+			"output":      describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the search index with the ID 5f1f40842f2ac35f49190c20 for the cluster named myCluster:
   %s clusters search indexes describe 5f1f40842f2ac35f49190c20 --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),

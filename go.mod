@@ -39,7 +39,7 @@ require (
 	github.com/stretchr/testify v1.8.2
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
-	go.mongodb.org/atlas v0.24.0
+	go.mongodb.org/atlas v0.24.1-0.20230404142033-705e57164e12
 	go.mongodb.org/mongo-driver v1.11.3
 	go.mongodb.org/ops-manager v0.48.0
 	golang.org/x/crypto v0.7.0

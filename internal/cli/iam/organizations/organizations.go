@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	invitationsAtlas "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/organizations/invitations"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations/apikeys"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations/invitations"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations/users"
@@ -59,7 +60,7 @@ func AtlasCLIBuilder() *cobra.Command {
 		DeleteBuilder(),
 		apikeys.Builder(),
 		users.Builder(),
-		invitations.Builder(),
+		invitationsAtlas.Builder(),
 	)
 	return cmd
 }

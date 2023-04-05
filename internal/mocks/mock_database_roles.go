@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockDatabaseRoleLister is a mock of DatabaseRoleLister interface.
@@ -35,18 +35,18 @@ func (m *MockDatabaseRoleLister) EXPECT() *MockDatabaseRoleListerMockRecorder {
 }
 
 // DatabaseRoles mocks base method.
-func (m *MockDatabaseRoleLister) DatabaseRoles(arg0 string, arg1 *mongodbatlas.ListOptions) (*[]mongodbatlas.CustomDBRole, error) {
+func (m *MockDatabaseRoleLister) DatabaseRoles(arg0 string) ([]mongodbatlasv2.CustomDBRole, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DatabaseRoles", arg0, arg1)
-	ret0, _ := ret[0].(*[]mongodbatlas.CustomDBRole)
+	ret := m.ctrl.Call(m, "DatabaseRoles", arg0)
+	ret0, _ := ret[0].([]mongodbatlasv2.CustomDBRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // DatabaseRoles indicates an expected call of DatabaseRoles.
-func (mr *MockDatabaseRoleListerMockRecorder) DatabaseRoles(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockDatabaseRoleListerMockRecorder) DatabaseRoles(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseRoles", reflect.TypeOf((*MockDatabaseRoleLister)(nil).DatabaseRoles), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseRoles", reflect.TypeOf((*MockDatabaseRoleLister)(nil).DatabaseRoles), arg0)
 }
 
 // MockDatabaseRoleCreator is a mock of DatabaseRoleCreator interface.
@@ -73,10 +73,10 @@ func (m *MockDatabaseRoleCreator) EXPECT() *MockDatabaseRoleCreatorMockRecorder 
 }
 
 // CreateDatabaseRole mocks base method.
-func (m *MockDatabaseRoleCreator) CreateDatabaseRole(arg0 string, arg1 *mongodbatlas.CustomDBRole) (*mongodbatlas.CustomDBRole, error) {
+func (m *MockDatabaseRoleCreator) CreateDatabaseRole(arg0 string, arg1 *mongodbatlasv2.CustomDBRole) (*mongodbatlasv2.CustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDatabaseRole", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.CustomDBRole)
+	ret0, _ := ret[0].(*mongodbatlasv2.CustomDBRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -148,10 +148,10 @@ func (m *MockDatabaseRoleUpdater) EXPECT() *MockDatabaseRoleUpdaterMockRecorder 
 }
 
 // DatabaseRole mocks base method.
-func (m *MockDatabaseRoleUpdater) DatabaseRole(arg0, arg1 string) (*mongodbatlas.CustomDBRole, error) {
+func (m *MockDatabaseRoleUpdater) DatabaseRole(arg0, arg1 string) (*mongodbatlasv2.CustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseRole", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.CustomDBRole)
+	ret0, _ := ret[0].(*mongodbatlasv2.CustomDBRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -163,10 +163,10 @@ func (mr *MockDatabaseRoleUpdaterMockRecorder) DatabaseRole(arg0, arg1 interface
 }
 
 // UpdateDatabaseRole mocks base method.
-func (m *MockDatabaseRoleUpdater) UpdateDatabaseRole(arg0, arg1 string, arg2 *mongodbatlas.CustomDBRole) (*mongodbatlas.CustomDBRole, error) {
+func (m *MockDatabaseRoleUpdater) UpdateDatabaseRole(arg0, arg1 string, arg2 *mongodbatlasv2.CustomDBRole) (*mongodbatlasv2.CustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateDatabaseRole", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CustomDBRole)
+	ret0, _ := ret[0].(*mongodbatlasv2.CustomDBRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -201,10 +201,10 @@ func (m *MockDatabaseRoleDescriber) EXPECT() *MockDatabaseRoleDescriberMockRecor
 }
 
 // DatabaseRole mocks base method.
-func (m *MockDatabaseRoleDescriber) DatabaseRole(arg0, arg1 string) (*mongodbatlas.CustomDBRole, error) {
+func (m *MockDatabaseRoleDescriber) DatabaseRole(arg0, arg1 string) (*mongodbatlasv2.CustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseRole", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.CustomDBRole)
+	ret0, _ := ret[0].(*mongodbatlasv2.CustomDBRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

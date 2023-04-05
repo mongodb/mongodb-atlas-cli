@@ -63,7 +63,7 @@ func DeleteBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # Remove the pending invitation with the ID 5dd56c847a3e5a1f363d424d from the organization with the ID 5f71e5255afec75a3d0f96dc:
   %s organizations invitations delete 5dd56c847a3e5a1f363d424d --orgId 5f71e5255afec75a3d0f96dc`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.initStore(cmd.Context())(); err != nil {
+			if err := opts.PreRunE(opts.ValidateOrgID, opts.initStore(cmd.Context())); err != nil {
 				return err
 			}
 			opts.Entry = args[0]

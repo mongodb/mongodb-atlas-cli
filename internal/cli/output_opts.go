@@ -60,6 +60,19 @@ func (*OutputOpts) AutoCompleteOutputFlag() func(cmd *cobra.Command, args []stri
 	}
 }
 
+// InitOutput allow to init the OutputOpts in a functional way.
+func (opts *OutputOpts) InitConditionalOutput(w io.Writer, cloudTemplate string, onPremTemplate string) func() error {
+	return func() error {
+		if config.IsCloud() {
+			opts.Template = cloudTemplate
+		} else {
+			opts.Template = onPremTemplate
+		}
+		opts.OutWriter = w
+		return nil
+	}
+}
+
 // ConfigOutput returns the output format.
 // If the format is empty, it caches it after querying config.
 func (opts *OutputOpts) ConfigOutput() string {

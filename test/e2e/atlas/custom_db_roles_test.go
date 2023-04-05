@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const (
@@ -57,7 +57,7 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var role mongodbatlas.CustomDBRole
+		var role atlasv2.CustomDBRole
 		require.NoError(t, json.Unmarshal(resp, &role))
 
 		a := assert.New(t)
@@ -77,7 +77,7 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var roles []mongodbatlas.CustomDBRole
+		var roles []atlasv2.CustomDBRole
 		require.NoError(t, json.Unmarshal(resp, &roles))
 
 		assert.NotEmpty(t, roles)
@@ -93,7 +93,7 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var role mongodbatlas.CustomDBRole
+		var role atlasv2.CustomDBRole
 		require.NoError(t, json.Unmarshal(resp, &role))
 
 		a := assert.New(t)
@@ -117,7 +117,7 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var role mongodbatlas.CustomDBRole
+		var role atlasv2.CustomDBRole
 		require.NoError(t, json.Unmarshal(resp, &role))
 
 		a := assert.New(t)
@@ -141,7 +141,7 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var role mongodbatlas.CustomDBRole
+		var role atlasv2.CustomDBRole
 		require.NoError(t, json.Unmarshal(resp, &role))
 
 		a := assert.New(t)

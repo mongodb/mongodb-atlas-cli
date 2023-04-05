@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const aws = "AWS"
@@ -51,9 +51,9 @@ func TestAccessRoles(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var iamRole mongodbatlas.AWSIAMRole
+		var iamRole atlasv2.CloudProviderAccessRole
 		if err := json.Unmarshal(resp, &iamRole); a.NoError(err) {
-			a.Equal(aws, iamRole.ProviderName)
+			a.Equal(aws, iamRole.CloudProviderAccessAWSIAMRole.ProviderName)
 		}
 	})
 
@@ -71,9 +71,9 @@ func TestAccessRoles(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var roles mongodbatlas.CloudProviderAccessRoles
+		var roles atlasv2.CloudProviderAccess
 		if err := json.Unmarshal(resp, &roles); a.NoError(err) {
-			a.Len(roles.AWSIAMRoles, 1)
+			a.Len(roles.AwsIamRoles, 1)
 		}
 	})
 }

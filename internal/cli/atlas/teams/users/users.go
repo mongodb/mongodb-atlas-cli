@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,32 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package teams
+package users
 
 import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams/users"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	description := "Create, list and manage your Cloud Manager or Ops Manager teams."
-
-	const use = "teams"
+	const use = "users"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   fmt.Sprintf("Manage your %s teams.", cli.DescriptionServiceName()),
-		Long:    description,
+		Short:   fmt.Sprintf("Manage your %s users.", cli.DescriptionServiceName()),
+		Long:    "Create, list and manage your users.",
 		Aliases: cli.GenerateAliases(use),
 	}
 
 	cmd.AddCommand(
 		ListBuilder(),
-		DescribeBuilder(),
-		CreateBuilder(),
-		users.Builder(),
+		AddBuilder(),
 		DeleteBuilder(),
 	)
 

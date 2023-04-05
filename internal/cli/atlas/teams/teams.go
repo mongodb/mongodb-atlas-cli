@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams/users"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/teams/users"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	description := "Create, list and manage your Cloud Manager or Ops Manager teams."
+	description := "Create, list and manage your Atlas teams."
 
 	const use = "teams"
 	cmd := &cobra.Command{

@@ -12,33 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package teams
+package users
 
 import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams/users"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	description := "Create, list and manage your Cloud Manager or Ops Manager teams."
+	description := "Create, list and manage your Atlas users."
 
-	const use = "teams"
+	const use = "users"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   fmt.Sprintf("Manage your %s teams.", cli.DescriptionServiceName()),
+		Short:   fmt.Sprintf("Manage your %s users.", cli.DescriptionServiceName()),
 		Long:    description,
 		Aliases: cli.GenerateAliases(use),
 	}
 
 	cmd.AddCommand(
-		ListBuilder(),
+		InviteBuilder(),
 		DescribeBuilder(),
-		CreateBuilder(),
-		users.Builder(),
-		DeleteBuilder(),
 	)
 
 	return cmd

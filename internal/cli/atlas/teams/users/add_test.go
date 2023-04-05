@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,31 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
+
 package users
 
 import (
-	"fmt"
+	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/spf13/cobra"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func Builder() *cobra.Command {
-	description := "Create, list and manage your Cloud Manager or Ops Manager users."
+func TestAdd_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockTeamAdder(ctrl)
 
-	const use = "users"
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   fmt.Sprintf("Manage your %s users.", cli.DescriptionServiceName()),
-		Long:    description,
-		Aliases: cli.GenerateAliases(use),
+	var expected []mongodbatlas.Team
+
+	listOpts := &AddOpts{
+		store: mockStore,
 	}
 
-	cmd.AddCommand(
-		InviteBuilder(),
-		DescribeBuilder(),
-		DeleteBuilder(),
-	)
+	mockStore.
+		EXPECT().
+		AddUsersToTeam(listOpts.OrgID, listOpts.teamID, listOpts.users).
+		Return(expected, nil).
+		Times(1)
 
-	return cmd
+	if err := listOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

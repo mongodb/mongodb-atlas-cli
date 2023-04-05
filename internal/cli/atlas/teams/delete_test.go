@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,34 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
+
 package teams
 
 import (
-	"fmt"
+	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams/users"
-	"github.com/spf13/cobra"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 )
 
-func Builder() *cobra.Command {
-	description := "Create, list and manage your Cloud Manager or Ops Manager teams."
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockTeamDeleter(ctrl)
 
-	const use = "teams"
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   fmt.Sprintf("Manage your %s teams.", cli.DescriptionServiceName()),
-		Long:    description,
-		Aliases: cli.GenerateAliases(use),
+	opts := &DeleteOpts{
+		store: mockStore,
+		GlobalOpts: cli.GlobalOpts{
+			OrgID: "6a0a1e7e0f2912c554080adc",
+		},
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "5a0a1e7e0f2912c554080adc",
+			Confirm: true,
+		},
 	}
 
-	cmd.AddCommand(
-		ListBuilder(),
-		DescribeBuilder(),
-		CreateBuilder(),
-		users.Builder(),
-		DeleteBuilder(),
-	)
+	mockStore.
+		EXPECT().
+		DeleteTeam(opts.OrgID, opts.Entry).
+		Return(nil).
+		Times(1)
 
-	return cmd
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

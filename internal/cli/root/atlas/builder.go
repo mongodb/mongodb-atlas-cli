@@ -43,6 +43,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/maintenance"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/metrics"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/networking"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/organizations"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/processes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart"
@@ -52,7 +53,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/events"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/figautocomplete"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/users"
@@ -190,7 +190,7 @@ func Builder() *cobra.Command {
 		quickstart.Builder(),
 		setup.Builder(),
 		projects.AtlasCLIBuilder(),
-		organizations.AtlasCLIBuilder(),
+		organizations.Builder(),
 		users.Builder(),
 		teams.Builder(),
 		clusters.Builder(),

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations/apikeys"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations/invitations"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations/users"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/organizations/apikeys"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/organizations/invitations"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/organizations/users"
 	"github.com/spf13/cobra"
 )
 
@@ -34,9 +34,9 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use, "orgs", "org"),
 	}
 	cmd.AddCommand(
+		CreateAtlasBuilder(),
 		ListBuilder(),
 		DescribeBuilder(),
-		CreateBuilder(),
 		DeleteBuilder(),
 		apikeys.Builder(),
 		users.Builder(),

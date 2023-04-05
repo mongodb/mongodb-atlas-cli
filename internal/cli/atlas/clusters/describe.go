@@ -65,6 +65,7 @@ func DescribeBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to retrieve.",
+			"output":          describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the cluster named myCluster:
   %s clusters describe myCluster --output json`, cli.ExampleAtlasEntryPoint()),

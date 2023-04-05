@@ -60,6 +60,9 @@ func DescribeBuilder() *cobra.Command {
 		Short:   "Describe the custom DNS configuration of an Atlas project’s cluster deployed to AWS.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"get"},
+		Annotations: map[string]string{
+			"output": describeTemplate,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

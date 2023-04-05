@@ -67,6 +67,7 @@ func DescribeBuilder() *cobra.Command {
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
+			"output":            describeTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

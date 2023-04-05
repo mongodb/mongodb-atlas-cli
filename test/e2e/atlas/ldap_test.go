@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const (
@@ -97,9 +97,9 @@ func TestLDAPWithFlags(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		var configuration mongodbatlas.LDAPConfiguration
+		var configuration atlasv2.NDSLDAPVerifyConnectivityJobRequest
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-			a.Equal(requestID, configuration.RequestID)
+			a.Equal(requestID, *configuration.RequestId)
 		}
 	})
 
@@ -141,10 +141,9 @@ func TestLDAPWithFlags(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		var configuration mongodbatlas.LDAPConfiguration
+		var configuration atlasv2.UserSecurity
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-			a.Equal(ldapHostname, *configuration.LDAP.Hostname)
-			requestID = configuration.RequestID
+			a.Equal(ldapHostname, *configuration.Ldap.Hostname)
 		}
 	})
 
@@ -239,10 +238,10 @@ func testLDAPVerifyCmd(t *testing.T, cmd *exec.Cmd) string {
 	require.NoError(t, err, string(resp))
 
 	a := assert.New(t)
-	var configuration mongodbatlas.LDAPConfiguration
+	var configuration atlasv2.NDSLDAPVerifyConnectivityJobRequest
 	if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-		a.Equal(pending, configuration.Status)
-		return configuration.RequestID
+		a.Equal(pending, *configuration.Status)
+		return *configuration.RequestId
 	}
 
 	return ""
@@ -256,8 +255,8 @@ func testLDAPSaveCmd(t *testing.T, cmd *exec.Cmd) {
 	require.NoError(t, err, string(resp))
 
 	a := assert.New(t)
-	var configuration mongodbatlas.LDAPConfiguration
+	var configuration atlasv2.UserSecurity
 	if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-		a.Equal(ldapHostname, *configuration.LDAP.Hostname)
+		a.Equal(ldapHostname, *configuration.Ldap.Hostname)
 	}
 }

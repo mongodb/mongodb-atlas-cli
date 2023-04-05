@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type SaveOpts struct {
@@ -35,7 +35,7 @@ type SaveOpts struct {
 	cli.OutputOpts
 	cli.InputOpts
 	hostname              string
-	port                  int
+	port                  int32
 	bindUsername          string
 	bindPassword          string
 	caCertificate         string
@@ -57,7 +57,7 @@ func (opts *SaveOpts) initStore(ctx context.Context) func() error {
 }
 
 var saveTemplate = `HOSTNAME	PORT	AUTHENTICATION	AUTHORIZATION
-{{.LDAP.Hostname}}	{{.LDAP.Port}}	{{.LDAP.AuthenticationEnabled}}	{{.LDAP.AuthorizationEnabled}}
+{{.Ldap.Hostname}}	{{.Ldap.Port}}	{{.Ldap.AuthenticationEnabled}}	{{.Ldap.AuthorizationEnabled}}
 `
 
 func (opts *SaveOpts) Run() error {
@@ -96,14 +96,14 @@ func (opts *SaveOpts) validate() error {
 	return nil
 }
 
-func (opts *SaveOpts) newLDAPConfiguration() *atlas.LDAPConfiguration {
-	ldapConfig := &atlas.LDAPConfiguration{
-		LDAP: &atlas.LDAP{
+func (opts *SaveOpts) newLDAPConfiguration() *atlasv2.UserSecurity {
+	ldapConfig := &atlasv2.UserSecurity{
+		Ldap: &atlasv2.NDSLDAP{
 			AuthenticationEnabled: &opts.authenticationEnabled,
 			AuthorizationEnabled:  &opts.authorizationEnabled,
 			Hostname:              &opts.hostname,
 			Port:                  &opts.port,
-			UserToDNMapping:       []*atlas.UserToDNMapping{},
+			UserToDNMapping:       []atlasv2.NDSUserToDNMapping{},
 			BindUsername:          &opts.bindUsername,
 			BindPassword:          &opts.bindPassword,
 			CaCertificate:         &opts.caCertificate,
@@ -111,7 +111,7 @@ func (opts *SaveOpts) newLDAPConfiguration() *atlas.LDAPConfiguration {
 		},
 	}
 	if opts.mappingMatch != "" {
-		ldapConfig.LDAP.UserToDNMapping = append(ldapConfig.LDAP.UserToDNMapping, &atlas.UserToDNMapping{Match: opts.mappingMatch, LDAPQuery: opts.mappingLdapQuery, Substitution: opts.mappingSubstitution})
+		ldapConfig.Ldap.UserToDNMapping = append(ldapConfig.Ldap.UserToDNMapping, atlasv2.NDSUserToDNMapping{Match: opts.mappingMatch, LdapQuery: opts.mappingLdapQuery, Substitution: opts.mappingSubstitution})
 	}
 	return ldapConfig
 }
@@ -144,7 +144,7 @@ func SaveBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.hostname, flag.Hostname, "", usage.LDAPHostname)
-	cmd.Flags().IntVar(&opts.port, flag.Port, defaultLDAPPort, usage.LDAPPort)
+	cmd.Flags().Int32Var(&opts.port, flag.Port, defaultLDAPPort, usage.LDAPPort)
 	cmd.Flags().StringVar(&opts.bindUsername, flag.BindUsername, "", usage.BindUsername)
 	cmd.Flags().StringVar(&opts.bindPassword, flag.BindPassword, "", usage.BindPassword)
 	cmd.Flags().StringVar(&opts.caCertificate, flag.CaCertificate, "", usage.CaCertificate)

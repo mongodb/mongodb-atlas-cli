@@ -47,7 +47,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	status := result.Status
+	status := *result.Status
 	return status == "FAILED" || status == "SUCCESS", nil
 }
 

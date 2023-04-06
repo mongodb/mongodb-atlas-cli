@@ -30,7 +30,7 @@ type EncryptionAtRestDescriber interface {
 func (s *Store) EncryptionAtRest(projectID string) (*atlasv2.EncryptionAtRest, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.EncryptionAtRestUsingCustomerKeyManagementApi.ReturnOneConfigurationForEncryptionAtRestUsingCustomerManagedKeysForOneProject(s.ctx, projectID).Execute()
+		result, _, err := s.clientv2.EncryptionAtRestUsingCustomerKeyManagementApi.GetEncryptionAtRest(s.ctx, projectID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

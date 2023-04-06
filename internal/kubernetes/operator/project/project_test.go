@@ -104,7 +104,6 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 
 		encryptionAtRest := &atlasv2.EncryptionAtRest{
-			//GroupID:       "TestGroupID",
 			AwsKms:        &atlasv2.AWSKMS{},
 			AzureKeyVault: &atlasv2.AzureKeyVault{},
 			GoogleCloudKms: &atlasv2.GoogleCloudKMS{

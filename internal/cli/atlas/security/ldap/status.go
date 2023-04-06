@@ -43,7 +43,7 @@ func (opts *StatusOpts) initStore(ctx context.Context) func() error {
 }
 
 var verifyStatusTemplate = `REQUEST ID	PROJECT ID	STATUS
-{{.RequestID}}	{{.GroupID}}	{{.Status}}
+{{.RequestId}}	{{.GroupId}}	{{.Status}}
 `
 
 func (opts *StatusOpts) Run() error {

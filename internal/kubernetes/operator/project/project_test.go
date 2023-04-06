@@ -103,14 +103,13 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 		}
 
-		encryptionAtRest := &mongodbatlas.EncryptionAtRest{
-			GroupID:       "TestGroupID",
-			AwsKms:        mongodbatlas.AwsKms{},
-			AzureKeyVault: mongodbatlas.AzureKeyVault{},
-			GoogleCloudKms: mongodbatlas.GoogleCloudKms{
+		encryptionAtRest := &atlasv2.EncryptionAtRest{
+			AwsKms:        &atlasv2.AWSKMS{},
+			AzureKeyVault: &atlasv2.AzureKeyVault{},
+			GoogleCloudKms: &atlasv2.GoogleCloudKMS{
 				Enabled:              pointer.Get(true),
-				ServiceAccountKey:    "TestServiceAccountKey",
-				KeyVersionResourceID: "TestKeyVersionResourceID",
+				ServiceAccountKey:    pointer.Get("TestServiceAccountKey"),
+				KeyVersionResourceID: pointer.Get("TestKeyVersionResourceID"),
 			},
 		}
 
@@ -503,8 +502,8 @@ func TestBuildAtlasProject(t *testing.T) {
 					AzureKeyVault: atlasV1.AzureKeyVault{},
 					GoogleCloudKms: atlasV1.GoogleCloudKms{
 						Enabled:              encryptionAtRest.GoogleCloudKms.Enabled,
-						ServiceAccountKey:    encryptionAtRest.GoogleCloudKms.ServiceAccountKey,
-						KeyVersionResourceID: encryptionAtRest.GoogleCloudKms.KeyVersionResourceID,
+						ServiceAccountKey:    encryptionAtRest.GoogleCloudKms.GetServiceAccountKey(),
+						KeyVersionResourceID: encryptionAtRest.GoogleCloudKms.GetKeyVersionResourceID(),
 					},
 				},
 				Auditing: &atlasV1.Auditing{
@@ -762,19 +761,18 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 
 	dataProvider := mocks.NewMockEncryptionAtRestDescriber(ctl)
 	t.Run("Can convert Encryption at REST AWS", func(t *testing.T) {
-		data := &mongodbatlas.EncryptionAtRest{
-			GroupID: "TestGroupID",
-			AwsKms: mongodbatlas.AwsKms{
+		data := &atlasv2.EncryptionAtRest{
+			AwsKms: &atlasv2.AWSKMS{
 				Enabled:             pointer.Get(true),
-				AccessKeyID:         "TestAccessKey",
-				SecretAccessKey:     "TestSecretAccessKey",
-				CustomerMasterKeyID: "TestCustomerMasterKeyID",
-				Region:              "US_EAST_1",
-				RoleID:              "TestRoleID",
+				AccessKeyID:         pointer.Get("TestAccessKey"),
+				SecretAccessKey:     pointer.Get("TestSecretAccessKey"),
+				CustomerMasterKeyID: pointer.Get("TestCustomerMasterKeyID"),
+				Region:              pointer.Get("US_EAST_1"),
+				RoleId:              pointer.Get("TestRoleID"),
 				Valid:               pointer.Get(true),
 			},
-			AzureKeyVault:  mongodbatlas.AzureKeyVault{},
-			GoogleCloudKms: mongodbatlas.GoogleCloudKms{},
+			AzureKeyVault:  &atlasv2.AzureKeyVault{},
+			GoogleCloudKms: &atlasv2.GoogleCloudKMS{},
 		}
 
 		dataProvider.EXPECT().EncryptionAtRest(projectID).Return(data, nil)
@@ -787,11 +785,11 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 		expected := &atlasV1.EncryptionAtRest{
 			AwsKms: atlasV1.AwsKms{
 				Enabled:             data.AwsKms.Enabled,
-				AccessKeyID:         data.AwsKms.AccessKeyID,
-				SecretAccessKey:     data.AwsKms.SecretAccessKey,
-				CustomerMasterKeyID: data.AwsKms.CustomerMasterKeyID,
-				Region:              data.AwsKms.Region,
-				RoleID:              data.AwsKms.RoleID,
+				AccessKeyID:         data.AwsKms.GetAccessKeyID(),
+				SecretAccessKey:     data.AwsKms.GetSecretAccessKey(),
+				CustomerMasterKeyID: data.AwsKms.GetCustomerMasterKeyID(),
+				Region:              data.AwsKms.GetRegion(),
+				RoleID:              data.AwsKms.GetRoleId(),
 				Valid:               data.AwsKms.Valid,
 			},
 			AzureKeyVault:  atlasV1.AzureKeyVault{},
@@ -803,14 +801,13 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 		}
 	})
 	t.Run("Can convert Encryption at REST GCP", func(t *testing.T) {
-		data := &mongodbatlas.EncryptionAtRest{
-			GroupID:       "TestGroupID",
-			AwsKms:        mongodbatlas.AwsKms{},
-			AzureKeyVault: mongodbatlas.AzureKeyVault{},
-			GoogleCloudKms: mongodbatlas.GoogleCloudKms{
+		data := &atlasv2.EncryptionAtRest{
+			AwsKms:        &atlasv2.AWSKMS{},
+			AzureKeyVault: &atlasv2.AzureKeyVault{},
+			GoogleCloudKms: &atlasv2.GoogleCloudKMS{
 				Enabled:              pointer.Get(true),
-				ServiceAccountKey:    "TestServiceAccountKey",
-				KeyVersionResourceID: "TestVersionResourceID",
+				ServiceAccountKey:    pointer.Get("TestServiceAccountKey"),
+				KeyVersionResourceID: pointer.Get("TestVersionResourceID"),
 			},
 		}
 
@@ -825,8 +822,8 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 			AzureKeyVault: atlasV1.AzureKeyVault{},
 			GoogleCloudKms: atlasV1.GoogleCloudKms{
 				Enabled:              data.GoogleCloudKms.Enabled,
-				ServiceAccountKey:    data.GoogleCloudKms.ServiceAccountKey,
-				KeyVersionResourceID: data.GoogleCloudKms.KeyVersionResourceID,
+				ServiceAccountKey:    data.GoogleCloudKms.GetServiceAccountKey(),
+				KeyVersionResourceID: data.GoogleCloudKms.GetKeyVersionResourceID(),
 			},
 		}
 
@@ -835,21 +832,20 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 		}
 	})
 	t.Run("Can convert Encryption at REST Azure", func(t *testing.T) {
-		data := mongodbatlas.EncryptionAtRest{
-			GroupID: "TestGroupID",
-			AwsKms:  mongodbatlas.AwsKms{},
-			AzureKeyVault: mongodbatlas.AzureKeyVault{
+		data := atlasv2.EncryptionAtRest{
+			AwsKms: &atlasv2.AWSKMS{},
+			AzureKeyVault: &atlasv2.AzureKeyVault{
 				Enabled:           pointer.Get(true),
-				ClientID:          "TestClientID",
-				AzureEnvironment:  "TestAzureEnv",
-				SubscriptionID:    "TestSubID",
-				ResourceGroupName: "TestResourceGroupName",
-				KeyVaultName:      "TestKeyVaultName",
-				KeyIdentifier:     "TestKeyIdentifier",
-				Secret:            "TestSecret",
-				TenantID:          "TestTenantID",
+				ClientID:          pointer.Get("TestClientID"),
+				AzureEnvironment:  pointer.Get("TestAzureEnv"),
+				SubscriptionID:    pointer.Get("TestSubID"),
+				ResourceGroupName: pointer.Get("TestResourceGroupName"),
+				KeyVaultName:      pointer.Get("TestKeyVaultName"),
+				KeyIdentifier:     pointer.Get("TestKeyIdentifier"),
+				Secret:            pointer.Get("TestSecret"),
+				TenantID:          pointer.Get("TestTenantID"),
 			},
-			GoogleCloudKms: mongodbatlas.GoogleCloudKms{},
+			GoogleCloudKms: &atlasv2.GoogleCloudKMS{},
 		}
 
 		dataProvider.EXPECT().EncryptionAtRest(projectID).Return(&data, nil)
@@ -862,14 +858,14 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 			AwsKms: atlasV1.AwsKms{},
 			AzureKeyVault: atlasV1.AzureKeyVault{
 				Enabled:           data.AzureKeyVault.Enabled,
-				ClientID:          data.AzureKeyVault.ClientID,
-				AzureEnvironment:  data.AzureKeyVault.AzureEnvironment,
-				SubscriptionID:    data.AzureKeyVault.SubscriptionID,
-				ResourceGroupName: data.AzureKeyVault.ResourceGroupName,
-				KeyVaultName:      data.AzureKeyVault.KeyVaultName,
-				KeyIdentifier:     data.AzureKeyVault.KeyIdentifier,
-				Secret:            data.AzureKeyVault.Secret,
-				TenantID:          data.AzureKeyVault.TenantID,
+				ClientID:          data.AzureKeyVault.GetClientID(),
+				AzureEnvironment:  data.AzureKeyVault.GetAzureEnvironment(),
+				SubscriptionID:    data.AzureKeyVault.GetSubscriptionID(),
+				ResourceGroupName: data.AzureKeyVault.GetResourceGroupName(),
+				KeyVaultName:      data.AzureKeyVault.GetKeyVaultName(),
+				KeyIdentifier:     data.AzureKeyVault.GetKeyIdentifier(),
+				Secret:            data.AzureKeyVault.GetSecret(),
+				TenantID:          data.AzureKeyVault.GetTenantID(),
 			},
 			GoogleCloudKms: atlasV1.GoogleCloudKms{},
 		}

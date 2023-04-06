@@ -96,10 +96,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) DatabaseRoles(arg0 interfac
 }
 
 // EncryptionAtRest mocks base method.
-func (m *MockAtlasOperatorProjectStore) EncryptionAtRest(arg0 string) (*mongodbatlas.EncryptionAtRest, error) {
+func (m *MockAtlasOperatorProjectStore) EncryptionAtRest(arg0 string) (*mongodbatlasv2.EncryptionAtRest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "EncryptionAtRest", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.EncryptionAtRest)
+	ret0, _ := ret[0].(*mongodbatlasv2.EncryptionAtRest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

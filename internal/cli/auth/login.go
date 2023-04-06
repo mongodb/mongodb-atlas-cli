@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -122,6 +123,9 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 		return err
 	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
+	if strings.Contains(s, "@mongodb.com") {
+		_, _ = fmt.Fprint(opts.OutWriter, "If you're a MongoDB employee, please ensure you are on the VPN.\n\n")
+	}
 
 	if opts.SkipConfig {
 		return nil

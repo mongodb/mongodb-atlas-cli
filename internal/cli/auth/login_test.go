@@ -177,6 +177,83 @@ Successfully logged in as test@10gen.com.
 `, buf.String())
 }
 
+func Test_loginOptsMongoDBEmployee_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := mocks.NewMockRefresher(ctrl)
+	mockConfig := mocks.NewMockLoginConfig(ctrl)
+	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+
+	buf := new(bytes.Buffer)
+
+	opts := &LoginOpts{
+		config:    mockConfig,
+		NoBrowser: true,
+	}
+	opts.WithFlow(mockFlow)
+
+	opts.OutWriter = buf
+	opts.Store = mockStore
+	expectedCode := &auth.DeviceCode{
+		UserCode:        "12345678",
+		VerificationURI: "http://localhost",
+		DeviceCode:      "123",
+		ExpiresIn:       300,
+		Interval:        10,
+	}
+	ctx := context.TODO()
+	mockFlow.
+		EXPECT().
+		RequestCode(ctx).
+		Return(expectedCode, nil, nil).
+		Times(1)
+
+	expectedToken := &auth.Token{
+		AccessToken:  "asdf",
+		RefreshToken: "querty",
+		Scope:        "openid",
+		IDToken:      "1",
+		TokenType:    "Bearer",
+		ExpiresIn:    3600,
+	}
+	mockFlow.
+		EXPECT().
+		PollToken(ctx, expectedCode).
+		Return(expectedToken, nil, nil).
+		Times(1)
+
+	mockConfig.EXPECT().Set("service", "cloud").Times(1)
+	mockConfig.EXPECT().Set("access_token", "asdf").Times(1)
+	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
+	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
+	mockConfig.EXPECT().AccessTokenSubject().Return("test@mongodb.com", nil).Times(1)
+	mockConfig.EXPECT().Save().Return(nil).Times(2)
+	expectedOrgs := &atlas.Organizations{
+		TotalCount: 1,
+		Results: []*atlas.Organization{
+			{ID: "o1", Name: "Org1"},
+		},
+	}
+	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
+	expectedProjects := &atlas.Projects{TotalCount: 1,
+		Results: []*atlas.Project{
+			{ID: "p1", Name: "Project1"},
+		},
+	}
+	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
+	require.NoError(t, opts.LoginRun(ctx))
+	assert.Equal(t, `
+To verify your account, copy your one-time verification code:
+1234-5678
+
+Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
+
+To continue, go to http://localhost
+Successfully logged in as test@mongodb.com.
+If you're a MongoDB employee, please ensure you are on the VPN.
+
+`, buf.String())
+}
+
 type confirmMock struct{}
 
 func (confirmMock) Prompt(_ *survey.PromptConfig) (interface{}, error) {

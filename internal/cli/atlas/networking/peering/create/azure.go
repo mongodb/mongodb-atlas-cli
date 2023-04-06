@@ -23,10 +23,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type AzureOpts struct {
@@ -62,38 +64,44 @@ func (opts *AzureOpts) Run() error {
 
 	if container == nil {
 		var err2 error
-		container, err2 = opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		r, err2 := opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		container = r.(*atlasv2.AzureCloudProviderContainer)
 		if err2 != nil {
 			return err2
 		}
 	}
-	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(container.ID))
+	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(*container.Id))
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *AzureOpts) containerExists() (*atlas.Container, error) {
+func (opts *AzureOpts) containerExists() (*atlasv2.AzureCloudProviderContainer, error) {
 	r, err := opts.store.AzureContainers(opts.ConfigProjectID())
 	if err != nil {
 		return nil, err
 	}
 	for i := range r {
 		if r[i].Region == opts.region {
-			return &r[i], nil
+			return r[i], nil
 		}
 	}
 	return nil, nil
 }
 
-func (opts *AzureOpts) newContainer() *atlas.Container {
-	c := &atlas.Container{
-		AtlasCIDRBlock: opts.atlasCIDRBlock,
-		ProviderName:   "AZURE",
+func (opts *AzureOpts) newAzureContainer() *atlasv2.AzureCloudProviderContainer {
+	c := &atlasv2.AzureCloudProviderContainer{
+		AtlasCidrBlock: opts.atlasCIDRBlock,
+		ProviderName:   pointer.Get("AZURE"),
 		Region:         opts.region,
 	}
 	return c
+}
+
+func (opts *AzureOpts) newContainer() *atlasv2.CloudProviderContainer {
+	w := atlasv2.AzureCloudProviderContainerAsCloudProviderContainer(opts.newAzureContainer())
+	return &w
 }
 
 func (opts *AzureOpts) newPeer(containerID string) *atlas.Peer {

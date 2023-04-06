@@ -19,13 +19,14 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_containers.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ContainersLister,ContainersDeleter
 
 type ContainersLister interface {
-	ContainersByProvider(string, *atlas.ContainersListOptions) ([]atlas.Container, error)
-	AllContainers(string, *atlas.ListOptions) ([]atlas.Container, error)
+	ContainersByProvider(string, *atlas.ContainersListOptions) ([]interface{}, error)
+	AllContainers(string, *atlas.ListOptions) ([]interface{}, error)
 }
 
 type ContainersDeleter interface {
@@ -33,11 +34,22 @@ type ContainersDeleter interface {
 }
 
 // ContainersByProvider encapsulates the logic to manage different cloud providers.
-func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersListOptions) ([]atlas.Container, error) {
+func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersListOptions) ([]interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Containers.List(s.ctx, projectID, opts)
-		return result, err
+		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
+			IncludeCount(opts.IncludeCount).
+			PageNum(int32(opts.PageNum)).
+			ItemsPerPage(int32(opts.ItemsPerPage)).
+			ProviderName(opts.ProviderName).
+			Execute()
+
+		containers := make([]interface{}, len(result.Results))
+		for i, container := range result.Results {
+			containers[i] = container.GetActualInstance()
+		}
+
+		return containers, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -46,65 +58,80 @@ func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersLis
 const maxPerPage = 100
 
 // AzureContainers encapsulates the logic to manage different cloud providers.
-func (s *Store) AzureContainers(projectID string) ([]atlas.Container, error) {
+func (s *Store) AzureContainers(projectID string) ([]*atlasv2.AzureCloudProviderContainer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		opts := &atlas.ContainersListOptions{
-			ProviderName: "Azure",
-			ListOptions: atlas.ListOptions{
-				PageNum:      0,
-				ItemsPerPage: maxPerPage,
-			},
+		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
+			PageNum(0).
+			ItemsPerPage(maxPerPage).
+			ProviderName("Azure").
+			Execute()
+
+		containers := make([]*atlasv2.AzureCloudProviderContainer, len(result.Results))
+		for i, container := range result.Results {
+			containers[i] = container.GetActualInstance().(*atlasv2.AzureCloudProviderContainer)
 		}
-		result, _, err := s.client.(*atlas.Client).Containers.List(s.ctx, projectID, opts)
-		return result, err
+		return containers, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
 // AWSContainers encapsulates the logic to manage different cloud providers.
-func (s *Store) AWSContainers(projectID string) ([]atlas.Container, error) {
+func (s *Store) AWSContainers(projectID string) ([]*atlasv2.AWSCloudProviderContainer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		opts := &atlas.ContainersListOptions{
-			ProviderName: "AWS",
-			ListOptions: atlas.ListOptions{
-				PageNum:      0,
-				ItemsPerPage: maxPerPage,
-			},
+		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
+			PageNum(0).
+			ItemsPerPage(maxPerPage).
+			ProviderName("AWS").
+			Execute()
+
+		containers := make([]*atlasv2.AWSCloudProviderContainer, len(result.Results))
+		for i, container := range result.Results {
+			containers[i] = container.GetActualInstance().(*atlasv2.AWSCloudProviderContainer)
 		}
-		result, _, err := s.client.(*atlas.Client).Containers.List(s.ctx, projectID, opts)
-		return result, err
+		return containers, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
 // GCPContainers encapsulates the logic to manage different cloud providers.
-func (s *Store) GCPContainers(projectID string) ([]atlas.Container, error) {
+func (s *Store) GCPContainers(projectID string) ([]*atlasv2.GCPCloudProviderContainer, error) {
 	switch s.service {
 	case config.CloudService:
-		opts := &atlas.ContainersListOptions{
-			ProviderName: "GCP",
-			ListOptions: atlas.ListOptions{
-				PageNum:      0,
-				ItemsPerPage: maxPerPage,
-			},
+		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
+			PageNum(0).
+			ItemsPerPage(maxPerPage).
+			ProviderName("GCP").
+			Execute()
+
+		containers := make([]*atlasv2.GCPCloudProviderContainer, len(result.Results))
+		for i, container := range result.Results {
+			containers[i] = container.GetActualInstance().(*atlasv2.GCPCloudProviderContainer)
 		}
-		result, _, err := s.client.(*atlas.Client).Containers.List(s.ctx, projectID, opts)
-		return result, err
+		return containers, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
 // AllContainers encapsulates the logic to manage different cloud providers.
-func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atlas.Container, error) {
+func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Containers.ListAll(s.ctx, projectID, opts)
-		return result, err
+		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainers(s.ctx, projectID).
+			IncludeCount(opts.IncludeCount).
+			PageNum(int32(opts.PageNum)).
+			ItemsPerPage(int32(opts.ItemsPerPage)).
+			Execute()
+
+		containers := make([]interface{}, len(result.Results))
+		for i, container := range result.Results {
+			containers[i] = container.GetActualInstance()
+		}
+		return containers, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -114,7 +141,7 @@ func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atla
 func (s *Store) DeleteContainer(projectID, containerID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Containers.Delete(s.ctx, projectID, containerID)
+		_, err := s.clientv2.NetworkPeeringApi.DeletePeeringContainer(s.ctx, projectID, containerID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -122,22 +149,22 @@ func (s *Store) DeleteContainer(projectID, containerID string) error {
 }
 
 // Container encapsulates the logic to manage different cloud providers.
-func (s *Store) Container(projectID, containerID string) (*atlas.Container, error) {
+func (s *Store) Container(projectID, containerID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Containers.Get(s.ctx, projectID, containerID)
-		return result, err
+		result, _, err := s.clientv2.NetworkPeeringApi.GetPeeringContainer(s.ctx, projectID, containerID).Execute()
+		return result.GetActualInstance(), err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
 // CreateContainer encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateContainer(projectID string, container *atlas.Container) (*atlas.Container, error) {
+func (s *Store) CreateContainer(projectID string, container *atlasv2.CloudProviderContainer) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Containers.Create(s.ctx, projectID, container)
-		return result, err
+		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringContainer(s.ctx, projectID).CloudProviderContainer(*container).Execute()
+		return result.GetActualInstance(), err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

@@ -79,7 +79,7 @@ func (opts *AWSOpts) containerExists() (*atlasv2.AWSCloudProviderContainer, erro
 	}
 	for i := range r {
 		if r[i].RegionName == opts.region {
-			return &r[i], nil
+			return r[i], nil
 		}
 	}
 	return nil, nil

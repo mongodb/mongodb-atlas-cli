@@ -84,7 +84,7 @@ func (opts *AzureOpts) containerExists() (*atlasv2.AzureCloudProviderContainer, 
 	}
 	for i := range r {
 		if r[i].Region == opts.region {
-			return &r[i], nil
+			return r[i], nil
 		}
 	}
 	return nil, nil

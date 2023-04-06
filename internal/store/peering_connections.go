@@ -38,17 +38,17 @@ type PeeringConnectionCreator interface {
 }
 
 type AzurePeeringConnectionCreator interface {
-	AzureContainers(string) ([]atlasv2.AzureCloudProviderContainer, error)
+	AzureContainers(string) ([]*atlasv2.AzureCloudProviderContainer, error)
 	PeeringConnectionCreator
 }
 
 type AWSPeeringConnectionCreator interface {
-	AWSContainers(string) ([]atlasv2.AWSCloudProviderContainer, error)
+	AWSContainers(string) ([]*atlasv2.AWSCloudProviderContainer, error)
 	PeeringConnectionCreator
 }
 
 type GCPPeeringConnectionCreator interface {
-	GCPContainers(string) ([]atlasv2.GCPCloudProviderContainer, error)
+	GCPContainers(string) ([]*atlasv2.GCPCloudProviderContainer, error)
 	PeeringConnectionCreator
 }
 

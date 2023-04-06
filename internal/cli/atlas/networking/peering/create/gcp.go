@@ -75,7 +75,7 @@ func (opts *GCPOpts) containerExists() (*atlasv2.GCPCloudProviderContainer, erro
 		return nil, err
 	}
 	if len(r) > 0 {
-		return &r[0], nil
+		return r[0], nil
 	}
 	return nil, nil
 }

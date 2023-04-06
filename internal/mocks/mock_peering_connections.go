@@ -149,10 +149,10 @@ func (m *MockAzurePeeringConnectionCreator) EXPECT() *MockAzurePeeringConnection
 }
 
 // AzureContainers mocks base method.
-func (m *MockAzurePeeringConnectionCreator) AzureContainers(arg0 string) ([]mongodbatlasv2.AzureCloudProviderContainer, error) {
+func (m *MockAzurePeeringConnectionCreator) AzureContainers(arg0 string) ([]*mongodbatlasv2.AzureCloudProviderContainer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AzureContainers", arg0)
-	ret0, _ := ret[0].([]mongodbatlasv2.AzureCloudProviderContainer)
+	ret0, _ := ret[0].([]*mongodbatlasv2.AzureCloudProviderContainer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -217,10 +217,10 @@ func (m *MockAWSPeeringConnectionCreator) EXPECT() *MockAWSPeeringConnectionCrea
 }
 
 // AWSContainers mocks base method.
-func (m *MockAWSPeeringConnectionCreator) AWSContainers(arg0 string) ([]mongodbatlasv2.AWSCloudProviderContainer, error) {
+func (m *MockAWSPeeringConnectionCreator) AWSContainers(arg0 string) ([]*mongodbatlasv2.AWSCloudProviderContainer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AWSContainers", arg0)
-	ret0, _ := ret[0].([]mongodbatlasv2.AWSCloudProviderContainer)
+	ret0, _ := ret[0].([]*mongodbatlasv2.AWSCloudProviderContainer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -315,10 +315,10 @@ func (mr *MockGCPPeeringConnectionCreatorMockRecorder) CreatePeeringConnection(a
 }
 
 // GCPContainers mocks base method.
-func (m *MockGCPPeeringConnectionCreator) GCPContainers(arg0 string) ([]mongodbatlasv2.GCPCloudProviderContainer, error) {
+func (m *MockGCPPeeringConnectionCreator) GCPContainers(arg0 string) ([]*mongodbatlasv2.GCPCloudProviderContainer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GCPContainers", arg0)
-	ret0, _ := ret[0].([]mongodbatlasv2.GCPCloudProviderContainer)
+	ret0, _ := ret[0].([]*mongodbatlasv2.GCPCloudProviderContainer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

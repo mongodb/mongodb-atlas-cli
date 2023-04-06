@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,29 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package serverless
+package backup
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless/backup"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless/backup/restores"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless/backup/snapshots"
 	"github.com/spf13/cobra"
 )
 
-func Builder() *cobra.Command {
-	const use = "serverless"
+func baseCommand() *cobra.Command {
+	const use = "backups"
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: []string{"sl"},
-		Short:   "Manage serverless instances for your project.",
-		Long:    `The serverless command provides access to your serverless instance configurations. You can create, edit, and delete serverless instances.`,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage cloud backups for your project.",
 	}
+
+	return cmd
+}
+
+func Builder() *cobra.Command {
+	cmd := baseCommand()
+
 	cmd.AddCommand(
-		ListBuilder(),
-		DescribeBuilder(),
-		DeleteBuilder(),
-		CreateBuilder(),
-		WatchBuilder(),
-		backup.Builder(),
-		UpdateBuilder(),
+		snapshots.Builder(),
+		restores.Builder(),
 	)
 
 	return cmd

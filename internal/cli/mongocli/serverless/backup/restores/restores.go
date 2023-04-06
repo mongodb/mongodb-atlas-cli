@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,21 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
-package serverless
+package restores
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		7,
-		[]string{},
+func Builder() *cobra.Command {
+	const use = "restores"
+	cmd := &cobra.Command{
+		Use:     use,
+		Short:   "Manage cloud backup restore jobs for your project.",
+		Aliases: cli.GenerateAliases(use),
+	}
+
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		WatchBuilder(),
+		CreateBuilder(),
 	)
+
+	return cmd
 }

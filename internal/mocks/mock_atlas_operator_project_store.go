@@ -126,10 +126,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) Integrations(arg0 interface
 }
 
 // MaintenanceWindow mocks base method.
-func (m *MockAtlasOperatorProjectStore) MaintenanceWindow(arg0 string) (*mongodbatlas.MaintenanceWindow, error) {
+func (m *MockAtlasOperatorProjectStore) MaintenanceWindow(arg0 string) (*mongodbatlasv2.GroupMaintenanceWindow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MaintenanceWindow", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.MaintenanceWindow)
+	ret0, _ := ret[0].(*mongodbatlasv2.GroupMaintenanceWindow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

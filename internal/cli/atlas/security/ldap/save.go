@@ -111,7 +111,7 @@ func (opts *SaveOpts) newLDAPConfiguration() *atlasv2.UserSecurity {
 		},
 	}
 	if opts.mappingMatch != "" {
-		ldapConfig.Ldap.UserToDNMapping = append(ldapConfig.Ldap.UserToDNMapping, atlasv2.NDSUserToDNMapping{Match: opts.mappingMatch, LdapQuery: opts.mappingLdapQuery, Substitution: opts.mappingSubstitution})
+		ldapConfig.Ldap.UserToDNMapping = append(ldapConfig.Ldap.UserToDNMapping, atlasv2.NDSUserToDNMapping{Match: opts.mappingMatch, LdapQuery: &opts.mappingLdapQuery, Substitution: &opts.mappingSubstitution})
 	}
 	return ldapConfig
 }

@@ -64,7 +64,10 @@ func ListBuilder() *cobra.Command {
 		Short:   "Return all serverless instances in the specified project.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
-		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

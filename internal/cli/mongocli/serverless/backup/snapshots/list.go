@@ -68,6 +68,7 @@ func ListBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Label that identifies the Atlas serverless instance that contains the snapshots you want to return.",
+			"output":          listTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of snapshots for the instance named myDemo 
   %s serverless backups snapshots list myDemo --output json`, cli.ExampleAtlasEntryPoint()),

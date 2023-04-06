@@ -68,6 +68,7 @@ func ListBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Label that identifies the Atlas serverless instance for which you want to return restore jobs.",
+			"output":          restoreListTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return all continuous backup restore jobs for the serverless instance Instance0:
   %s serverless backup restore list Instance0`, cli.ExampleAtlasEntryPoint()),

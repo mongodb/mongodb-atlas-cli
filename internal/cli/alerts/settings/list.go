@@ -65,9 +65,8 @@ func ListBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all alert configurations for the project with the ID 5df90590f10fab5e33de2305:
   %s alerts settings list --projectId 5df90590f10fab5e33de2305 --output json`, cli.ExampleAtlasEntryPoint()),
-		Annotations: map[string]string{},
-		Aliases:     []string{"ls"},
-		Args:        require.NoArgs,
+		Aliases: []string{"ls"},
+		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

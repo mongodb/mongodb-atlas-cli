@@ -63,6 +63,9 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "List Atlas Private Endpoints for your project.",
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

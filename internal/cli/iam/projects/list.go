@@ -73,6 +73,9 @@ func ListBuilder() *cobra.Command {
 		Short:   "Return all projects.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all projects:
   %s projects list --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

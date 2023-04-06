@@ -15,8 +15,8 @@
 package opsmanager
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/events"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/agents"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/automation"

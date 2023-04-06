@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslogs"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup"
@@ -40,6 +39,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/events"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"

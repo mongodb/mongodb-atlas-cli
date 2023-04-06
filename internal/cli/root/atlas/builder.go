@@ -25,9 +25,9 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslogs"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/cloudproviders"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters"

@@ -40,7 +40,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/events"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/alerts"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/performanceadvisor"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/performanceadvisor"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"

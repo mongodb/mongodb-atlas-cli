@@ -78,11 +78,11 @@ func TestBuildAtlasProject(t *testing.T) {
 			TotalCount: pointer.Get(int32(1)),
 		}
 
-		auditing := &mongodbatlas.Auditing{
-			AuditAuthorizationSuccess: pointer.Get(true),
+		auditing := &atlasv2.AuditLog{
+			AuditAuthorizationSuccess: true,
 			AuditFilter:               "TestFilter",
-			ConfigurationType:         "TestConfigType",
-			Enabled:                   pointer.Get(true),
+			ConfigurationType:         pointer.Get("TestConfigType"),
+			Enabled:                   true,
 		}
 
 		authDate, _ := time.Parse(time.RFC3339, "01-01-2001")
@@ -509,9 +509,9 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 				Auditing: &atlasV1.Auditing{
-					AuditAuthorizationSuccess: auditing.AuditAuthorizationSuccess,
+					AuditAuthorizationSuccess: &auditing.AuditAuthorizationSuccess,
 					AuditFilter:               auditing.AuditFilter,
-					Enabled:                   auditing.Enabled,
+					Enabled:                   &auditing.Enabled,
 				},
 				Settings: &atlasV1.ProjectSettings{
 					IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
@@ -692,11 +692,11 @@ func Test_buildAuditing(t *testing.T) {
 
 	auditingProvider := mocks.NewMockAuditingDescriber(ctl)
 	t.Run("Can convert Auditing", func(t *testing.T) {
-		data := &mongodbatlas.Auditing{
-			AuditAuthorizationSuccess: pointer.Get(true),
+		data := &atlasv2.AuditLog{
+			AuditAuthorizationSuccess: true,
 			AuditFilter:               "TestFilter",
-			ConfigurationType:         "TestType",
-			Enabled:                   pointer.Get(true),
+			ConfigurationType:         pointer.Get("TestType"),
+			Enabled:                   true,
 		}
 
 		auditingProvider.EXPECT().Auditing(projectID).Return(data, nil)
@@ -707,9 +707,9 @@ func Test_buildAuditing(t *testing.T) {
 		}
 
 		expected := &atlasV1.Auditing{
-			AuditAuthorizationSuccess: data.AuditAuthorizationSuccess,
+			AuditAuthorizationSuccess: &data.AuditAuthorizationSuccess,
 			AuditFilter:               data.AuditFilter,
-			Enabled:                   data.Enabled,
+			Enabled:                   &data.Enabled,
 		}
 
 		if !reflect.DeepEqual(expected, got) {

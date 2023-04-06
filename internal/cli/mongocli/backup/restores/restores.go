@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,8 +30,6 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		ListBuilder(),
 		StartBuilder(),
-		DescribeBuilder(),
-		WatchBuilder(),
 	)
 
 	return cmd

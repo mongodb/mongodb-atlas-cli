@@ -199,7 +199,7 @@ func Builder() *cobra.Command {
 		accesslists.Builder(),
 		datalake.Builder(),
 		alerts.Builder(),
-		backup.AtlasCLIBuilder(),
+		backup.Builder(),
 		events.Builder(),
 		metrics.Builder(),
 		performanceadvisor.Builder(),

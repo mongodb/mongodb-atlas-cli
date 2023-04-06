@@ -12,33 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+//go:build unit
+
+package snapshots
 
 import (
+	"testing"
+
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/serverless/backup/restores"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/serverless/backup/snapshots"
-	"github.com/spf13/cobra"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 )
 
-func baseCommand() *cobra.Command {
-	const use = "backups"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage cloud backups for your project.",
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockSnapshotsDeleter(ctrl)
+
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "test",
+		},
+		clusterName: "cluster",
+		store:       mockStore,
 	}
 
-	return cmd
-}
+	mockStore.
+		EXPECT().
+		DeleteSnapshot(deleteOpts.ConfigProjectID(), deleteOpts.clusterName, deleteOpts.Entry).
+		Return(nil).
+		Times(1)
 
-func Builder() *cobra.Command {
-	cmd := baseCommand()
-
-	cmd.AddCommand(
-		snapshots.Builder(),
-		restores.Builder(),
-	)
-
-	return cmd
+	if err := deleteOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

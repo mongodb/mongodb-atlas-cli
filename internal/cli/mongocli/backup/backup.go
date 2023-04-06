@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,26 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package restores
+package backup
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/backup/restores"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/backup/snapshots"
 	"github.com/spf13/cobra"
 )
 
-func Builder() *cobra.Command {
-	const use = "restores"
+func baseCommand() *cobra.Command {
+	const use = "backups"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   "Manage cloud backup restore jobs for your project.",
 		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage cloud backups for your project.",
 	}
 
+	return cmd
+}
+
+func Builder() *cobra.Command {
+	cmd := baseCommand()
+
 	cmd.AddCommand(
-		ListBuilder(),
-		StartBuilder(),
-		DescribeBuilder(),
-		WatchBuilder(),
+		snapshots.Builder(),
+		restores.Builder(),
 	)
 
 	return cmd

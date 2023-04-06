@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
 package events
 
 import (
@@ -26,60 +24,48 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestList_Run(t *testing.T) {
+func Test_projectListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockEventLister(ctrl)
+	mockStore := mocks.NewMockProjectEventLister(ctrl)
 
 	expected := &mongodbatlas.EventResponse{}
+	listOpts := &projectListOpts{
+		store: mockStore,
+	}
+	listOpts.ProjectID = "1"
 
-	t.Run("for a project", func(t *testing.T) {
-		listOpts := &ListOpts{
-			store: mockStore,
-		}
-		listOpts.orgID = "1"
+	mockStore.
+		EXPECT().ProjectEvents(listOpts.ProjectID, listOpts.newEventListOptions()).
+		Return(expected, nil).
+		Times(1)
 
-		mockStore.
-			EXPECT().OrganizationEvents(listOpts.orgID, listOpts.newEventListOptions()).
-			Return(expected, nil).
-			Times(1)
-
-		err := listOpts.Run()
-		if err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
-	t.Run("for an org", func(t *testing.T) {
-		listOpts := &ListOpts{
-			store: mockStore,
-		}
-
-		listOpts.projectID = "1"
-		mockStore.
-			EXPECT().ProjectEvents(listOpts.projectID, listOpts.newEventListOptions()).
-			Return(expected, nil).
-			Times(1)
-
-		err := listOpts.Run()
-		if err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
+	if err := listOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }
 
-func TestListBuilder(t *testing.T) {
+func TestProjectListBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		ListBuilder(),
+		ProjectListBuilder(),
 		0,
 		[]string{
 			flag.Limit,
 			flag.Page,
 			flag.Output,
 			flag.ProjectID,
-			flag.OrgID,
 			flag.TypeFlag,
 			flag.MaxDate,
 			flag.MinDate,
 		},
+	)
+}
+
+func TestProjectsBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		ProjectsBuilder(),
+		1,
+		[]string{},
 	)
 }

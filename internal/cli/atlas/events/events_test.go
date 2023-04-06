@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,23 +15,16 @@
 package events
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
-func Builder() *cobra.Command {
-	const use = "events"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage events for your organization or project.",
-	}
-
-	cmd.AddCommand(
-		ListBuilder(),
-		OrgsBuilder(),
-		ProjectsBuilder(),
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		3,
+		[]string{},
 	)
-
-	return cmd
 }

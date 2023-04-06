@@ -1,16 +1,17 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//	http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package events
 
 import (
@@ -27,34 +28,14 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type EventListOpts struct {
-	cli.ListOpts
-	EventType []string
-	MinDate   string
-	MaxDate   string
-}
-
-func (opts *EventListOpts) newEventListOptions() *atlas.EventListOptions {
-	return &atlas.EventListOptions{
-		ListOptions: atlas.ListOptions{
-			PageNum:      opts.PageNum,
-			ItemsPerPage: opts.ItemsPerPage,
-		},
-		EventType: opts.EventType,
-		MinDate:   opts.MinDate,
-		MaxDate:   opts.MaxDate,
-	}
-}
-
-type ListOpts struct {
+type projectListOpts struct {
 	EventListOpts
+	cli.GlobalOpts
 	cli.OutputOpts
-	orgID     string
-	projectID string
-	store     store.EventLister
+	store store.ProjectEventLister
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *projectListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -62,21 +43,13 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	TYPE	CREATED{{range .Results}}
-{{.ID}}	{{.EventTypeName}}	{{.Created}}{{end}}
-`
-
-func (opts *ListOpts) Run() error {
+func (opts *projectListOpts) Run() error {
 	listOpts := opts.newEventListOptions()
 
 	var r *atlas.EventResponse
 	var err error
+	r, err = opts.store.ProjectEvents(opts.ConfigProjectID(), listOpts)
 
-	if opts.orgID != "" {
-		r, err = opts.store.OrganizationEvents(opts.orgID, listOpts)
-	} else if opts.projectID != "" {
-		r, err = opts.store.ProjectEvents(opts.projectID, listOpts)
-	}
 	if err != nil {
 		return err
 	}
@@ -84,44 +57,29 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// ListBuilder
+// ProjectListBuilder
 //
 //	mongocli atlas event(s) list
 //
-// [--projectId projectId]
-// [--orgId orgId]
 // [--page N]
 // [--limit N]
 // [--minDate minDate]
 // [--maxDate maxDate].
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
-	opts.Template = listTemplate
+func ProjectListBuilder() *cobra.Command {
+	opts := &projectListOpts{}
 	cmd := &cobra.Command{
-		Use:   "list",
-		Short: "Return all events for an organization or project.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
-		Deprecated: `  
-  To return project events prefer
-  mongocli atlas|ops-manager|cloud-manager events projects list [--projectId <projectId>]
-
-  To return organization events prefer
-  mongocli atlas|ops-manager|cloud-manager events organizations list [--orgId <orgId>]
-`,
+		Use:     "list",
+		Short:   "Return all events for the specified project.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
-		Annotations: map[string]string{
-			"output": listTemplate,
-		},
+		Example: fmt.Sprintf(`  # Return a JSON-formatted list of events for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s events projects list --Id 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if opts.orgID != "" && opts.projectID != "" {
-				return fmt.Errorf("both --%s and --%s set", flag.ProjectID, flag.OrgID)
-			}
-			if opts.orgID == "" && opts.projectID == "" {
-				return fmt.Errorf("--%s or --%s must be set", flag.ProjectID, flag.OrgID)
-			}
-			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore(cmd.Context())()
+			return opts.PreRunE(
+				opts.ValidateProjectID,
+				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -135,10 +93,24 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.MaxDate, flag.MaxDate, "", usage.MaxDate)
 	cmd.Flags().StringVar(&opts.MinDate, flag.MinDate, "", usage.MinDate)
 
-	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVar(&opts.orgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	return cmd
+}
+
+func ProjectsBuilder() *cobra.Command {
+	const use = "projects"
+	cmd := &cobra.Command{
+		Use:     use,
+		Short:   "Project operations.",
+		Long:    "List projects events.",
+		Aliases: cli.GenerateAliases(use),
+	}
+	cmd.AddCommand(
+		ProjectListBuilder(),
+	)
 
 	return cmd
 }

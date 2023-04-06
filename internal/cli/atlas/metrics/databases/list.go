@@ -45,7 +45,7 @@ func (opts *ListsOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var databasesListTemplate = `{{range .Results}}
+var databasesListTemplate = `DATABASE NAME{{range .Results}}
 {{.DatabaseName}}{{end}}
 `
 

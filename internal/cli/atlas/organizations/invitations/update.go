@@ -71,7 +71,7 @@ func (opts *UpdateOpts) validate() error {
 	return nil
 }
 
-// atlas iam organization(s) invitation(s) updates [invitationId] --role role  [--orgId orgId] [--email email].
+// atlas organization(s) invitation(s) updates [invitationId] --role role  [--orgId orgId] [--email email].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
@@ -96,6 +96,7 @@ func UpdateBuilder() *cobra.Command {
 			}
 
 			return opts.PreRunE(
+				opts.ValidateOrgID,
 				opts.ValidateProjectID,
 				opts.validate,
 				opts.initStore(cmd.Context()),

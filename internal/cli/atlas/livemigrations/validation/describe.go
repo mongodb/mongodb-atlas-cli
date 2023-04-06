@@ -58,9 +58,10 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe",
-		Aliases: []string{"get"},
-		Short:   "Return one validation job.",
+		Use:         "describe",
+		Aliases:     []string{"get"},
+		Short:       "Return one validation job.",
+		Annotations: map[string]string{"output": describeTemplate},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

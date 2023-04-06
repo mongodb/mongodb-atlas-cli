@@ -64,6 +64,7 @@ func DescribeBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",
+			"output":           describeTemplate,
 		},
 		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

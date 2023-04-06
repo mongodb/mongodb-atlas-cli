@@ -63,6 +63,9 @@ func DescribeBuilder() *cobra.Command {
 		Short:   "Return one snapshot export bucket.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": describeTemplate,
+		},
 		Example: fmt.Sprintf(`  # Return the details for the continuous backup export bucket with the ID dbdb00ca12345678f901a234:
   %s backup exports buckets describe dbdb00ca12345678f901a234`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

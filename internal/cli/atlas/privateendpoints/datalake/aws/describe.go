@@ -65,6 +65,7 @@ func DescribeBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+			"output":                describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # This example uses the profile named "myprofile" for accessing Atlas.
   %s privateEndpoint dataLake aws describe vpce-abcdefg0123456789 -P myprofile`, cli.ExampleAtlasEntryPoint()),

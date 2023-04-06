@@ -1,11 +1,15 @@
 package main
 
 import (
+	"flag"
 	"log"
 )
 
 func main() {
-	cli, err := newCli()
+	overwrite := flag.Bool("overwrite", false, "regenerate files")
+	flag.Parse()
+
+	cli, err := newCli(*overwrite)
 	if err != nil {
 		log.Fatal(err)
 	}

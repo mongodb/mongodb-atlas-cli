@@ -68,6 +68,7 @@ func DescribeBuilder() *cobra.Command {
 `+fmt.Sprintf(usage.RequiredRole, "Organization Member"), cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies your API key.",
+			"output": describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the organization API key with the ID 5f24084d8dbffa3ad3f21234 for the organization with the ID 5a1b39eec902201990f12345:
   %s organizations apiKeys describe 5f24084d8dbffa3ad3f21234 --orgId 5a1b39eec902201990f12345 -output json`, cli.ExampleAtlasEntryPoint()),

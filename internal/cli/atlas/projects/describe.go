@@ -66,6 +66,7 @@ func DescribeBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies the project.",
+			"output": describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s projects describe 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),

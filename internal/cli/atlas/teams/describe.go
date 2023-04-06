@@ -83,8 +83,9 @@ func (opts *DescribeOpts) validate() error {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe",
-		Aliases: []string{"get"},
+		Use:         "describe",
+		Aliases:     []string{"get"},
+		Annotations: map[string]string{"output": describeTemplate},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the the team with the ID 5e44445ef10fab20b49c0f31 in the organization with ID 5e2211c17a3e5a48f5497de3:
   %[1]s teams describe --id 5e44445ef10fab20b49c0f31 --projectId 5e1234c17a3e5a48f5497de3 --output json
   

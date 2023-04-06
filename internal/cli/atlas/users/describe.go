@@ -83,8 +83,9 @@ func (opts *DescribeOpts) validate() error {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe",
-		Aliases: []string{"get"},
+		Use:         "describe",
+		Aliases:     []string{"get"},
+		Annotations: map[string]string{"output": describeTemplate},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the MongoDB user with the ID 5dd56c847a3e5a1f363d424d:
   %[1]s users describe --id 5dd56c847a3e5a1f363d424d --output json
   

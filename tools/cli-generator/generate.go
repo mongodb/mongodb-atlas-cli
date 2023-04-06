@@ -50,6 +50,7 @@ type CLI struct {
 	Commands []Command
 	Stores   []Store
 
+	overwrite               bool
 	basePath                string
 	commandListTemplate     *template.Template
 	commandDescribeTemplate *template.Template
@@ -159,8 +160,18 @@ func (c *Command) FileName(basePath string) string {
 
 }
 
+func fileExists(f string) bool {
+	_, err := os.Stat(f)
+	return !os.IsNotExist(err)
+}
+
 func (cli *CLI) generateStore(store *Store) error {
 	storeFile := filepath.Join(cli.basePath, "internal", "store", store.BaseFileName+".go")
+
+	if !cli.overwrite && fileExists(storeFile) {
+		fmt.Printf("File '%s' already present in disk, skipping\n", storeFile)
+		return nil
+	}
 
 	err := os.MkdirAll(filepath.Dir(storeFile), os.ModePerm)
 	if err != nil {
@@ -202,31 +213,35 @@ func (cli *CLI) template(cmd *Command) *template.Template {
 func (cli *CLI) generateCommand(cmd *Command) error {
 	commandFile := cmd.FileName(cli.basePath)
 
-	err := os.MkdirAll(filepath.Dir(commandFile), os.ModePerm)
-	if err != nil {
-		return err
-	}
+	if !cli.overwrite && fileExists(commandFile) {
+		fmt.Printf("File '%s' already present in disk, skipping\n", commandFile)
+	} else {
+		err := os.MkdirAll(filepath.Dir(commandFile), os.ModePerm)
+		if err != nil {
+			return err
+		}
 
-	f, err := os.Create(commandFile)
-	if err != nil {
-		return err
-	}
+		f, err := os.Create(commandFile)
+		if err != nil {
+			return err
+		}
 
-	defer f.Close()
+		defer f.Close()
 
-	tpl := cli.template(cmd)
-	err = tpl.Execute(f, cmd)
-	if err != nil {
-		return err
-	}
+		tpl := cli.template(cmd)
+		err = tpl.Execute(f, cmd)
+		if err != nil {
+			return err
+		}
 
-	err = cleanupFile(commandFile, false)
-	if err != nil {
-		return err
+		err = cleanupFile(commandFile, false)
+		if err != nil {
+			return err
+		}
 	}
 
 	for _, childCmd := range cmd.SubCommands {
-		err = cli.generateCommand(&childCmd)
+		err := cli.generateCommand(&childCmd)
 		if err != nil {
 			return err
 		}
@@ -266,8 +281,8 @@ func runMake() error {
 	return err
 }
 
-func newCli() (*CLI, error) {
-	var cli CLI
+func newCli(overwrite bool) (*CLI, error) {
+	cli := CLI{overwrite: overwrite}
 	err := yaml.Unmarshal(spec, &cli)
 	if err != nil {
 		return nil, err

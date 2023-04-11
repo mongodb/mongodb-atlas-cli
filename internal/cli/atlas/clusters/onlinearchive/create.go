@@ -67,7 +67,7 @@ func (opts *CreateOpts) newOnlineArchive() *atlasv2.OnlineArchive {
 	partitions := opts.partitionFields()
 	a := &atlasv2.OnlineArchive{
 		CollName: &opts.collection,
-		Criteria: atlasv2.Criteria{
+		Criteria: &atlasv2.Criteria{
 			DateCriteria: &atlasv2.DateCriteria{
 				DateField:       &opts.dateField,
 				DateFormat:      &opts.dateFormat,

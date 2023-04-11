@@ -61,7 +61,7 @@ func (opts *UpdateOpts) Run() error {
 func (opts *UpdateOpts) newOnlineArchive() *atlasv2.OnlineArchive {
 	archive := &atlasv2.OnlineArchive{
 		Id: &opts.id,
-		Criteria: atlasv2.Criteria{
+		Criteria: &atlasv2.Criteria{
 			DateCriteria: &atlasv2.DateCriteria{
 				ExpireAfterDays: pointer.Get(int32(opts.archiveAfter)),
 			},

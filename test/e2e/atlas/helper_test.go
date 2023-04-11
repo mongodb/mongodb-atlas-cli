@@ -25,6 +25,7 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -110,8 +111,9 @@ const (
 	e2eSharedClusterTier = "M2"
 	e2eClusterProvider   = "AWS" // e2eClusterProvider preferred provider for e2e testing.
 	e2eMDBVer            = "4.4"
-	e2eSharedMDBVer      = "5.0"
 )
+
+var e2eSharedMDBVer, _ = cli.DefaultMongoDBMajorVersion()
 
 func deployServerlessInstanceForProject(projectID string) (string, error) {
 	cliPath, err := e2e.AtlasCLIBin()

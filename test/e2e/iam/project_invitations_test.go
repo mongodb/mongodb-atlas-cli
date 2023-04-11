@@ -28,13 +28,8 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	roleNameAtlas1 = "GROUP_READ_ONLY_ATLAS"
-	roleNameAtlas2 = "GROUP_DATA_ACCESS_READ_ONLY_ATLAS"
-)
-
 func TestProjectInvitations(t *testing.T) {
-	cliPath, err := e2e.AtlasCLIBin()
+	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
 
 	var invitationID string
@@ -123,9 +118,9 @@ func TestProjectInvitations(t *testing.T) {
 			"--email",
 			emailProject,
 			"--role",
-			roleNameAtlas1,
+			roleName1,
 			"--role",
-			roleNameAtlas2,
+			roleName2,
 			"--projectId",
 			projectID,
 			"-o=json")
@@ -137,7 +132,7 @@ func TestProjectInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(emailProject, invitation.Username)
-			a.ElementsMatch([]string{roleNameAtlas1, roleNameAtlas2}, invitation.Roles)
+			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
 		}
 	})
 
@@ -148,9 +143,9 @@ func TestProjectInvitations(t *testing.T) {
 			"update",
 			invitationID,
 			"--role",
-			roleNameAtlas1,
+			roleName1,
 			"--role",
-			roleNameAtlas2,
+			roleName2,
 			"--projectId",
 			projectID,
 			"-o=json")
@@ -162,7 +157,7 @@ func TestProjectInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(emailProject, invitation.Username)
-			a.ElementsMatch([]string{roleNameAtlas1, roleNameAtlas2}, invitation.Roles)
+			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
 		}
 	})
 

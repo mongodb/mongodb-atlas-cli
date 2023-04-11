@@ -28,11 +28,6 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	roleName1 = "GROUP_READ_ONLY"
-	roleName2 = "GROUP_DATA_ACCESS_READ_ONLY"
-)
-
 func TestAtlasProjectInvitations(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)

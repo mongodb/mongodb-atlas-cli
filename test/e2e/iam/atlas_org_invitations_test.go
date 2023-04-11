@@ -28,10 +28,6 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	roleNameOrgAtlas = "ATLAS_ORG_READ_ONLY"
-)
-
 func TestAtlasOrgInvitations(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
@@ -112,7 +108,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"--email",
 			emailOrg,
 			"--role",
-			roleNameOrgAtlas,
+			roleNameOrg,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -123,7 +119,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(emailOrg, invitation.Username)
-			a.ElementsMatch([]string{roleNameOrgAtlas}, invitation.Roles)
+			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
 		}
 	})
 
@@ -134,7 +130,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"update",
 			orgInvitationID,
 			"--role",
-			roleNameOrgAtlas,
+			roleNameOrg,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -144,7 +140,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(emailOrg, invitation.Username)
-			a.ElementsMatch([]string{roleNameOrgAtlas}, invitation.Roles)
+			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
 		}
 	})
 

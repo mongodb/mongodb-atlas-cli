@@ -45,7 +45,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			"create",
 			"--desc",
 			desc,
-			"--role=GROUP_READ_ONLY_ATLAS",
+			"--role=GROUP_READ_ONLY",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

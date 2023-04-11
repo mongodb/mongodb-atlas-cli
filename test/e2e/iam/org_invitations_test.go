@@ -28,10 +28,6 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	roleNameOrg = "ORG_READ_ONLY"
-)
-
 func TestOrgInvitations(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {

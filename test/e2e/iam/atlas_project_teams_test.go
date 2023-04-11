@@ -81,17 +81,15 @@ func TestAtlasProjectTeams(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		roleNameAtlas1 := "GROUP_READ_ONLY_ATLAS"
-		roleNameAtlas2 := "GROUP_DATA_ACCESS_READ_ONLY_ATLAS"
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			teamsEntity,
 			"update",
 			teamID,
 			"--role",
-			roleNameAtlas1,
+			roleName1,
 			"--role",
-			roleNameAtlas2,
+			roleName2,
 			"--projectId",
 			projectID,
 			"-o=json")
@@ -107,7 +105,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 			role := roles[0]
 			a.Equal(teamID, role.TeamID)
 			a.Len(role.RoleNames, 2)
-			a.ElementsMatch([]string{roleNameAtlas1, roleNameAtlas2}, role.RoleNames)
+			a.ElementsMatch([]string{roleName1, roleName2}, role.RoleNames)
 		}
 	})
 

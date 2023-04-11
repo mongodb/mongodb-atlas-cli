@@ -120,7 +120,6 @@ func (c *Command) FileName(basePath string) string {
 	}
 
 	return filepath.Join(basePath, "internal", "cli", filepath.Join(c.CommandPaths()...)+".go")
-
 }
 
 func fileExists(f string) bool {
@@ -186,8 +185,7 @@ func (cli *CLI) generateCommand(cmd *Command) error {
 	}
 
 	for _, childCmd := range cmd.SubCommands {
-		err := cli.generateCommand(&childCmd)
-		if err != nil {
+		if err := cli.generateCommand(&childCmd); err != nil {
 			return err
 		}
 	}
@@ -247,15 +245,13 @@ func newCli(overwrite bool) (*CLI, error) {
 
 func (cli *CLI) generateCli() error {
 	for _, store := range cli.Stores {
-		err := cli.generateStore(&store)
-		if err != nil {
+		if err := cli.generateStore(&store); err != nil {
 			return fmt.Errorf("%w: %s", ErrGenerateCli, err)
 		}
 	}
 
 	for _, cmd := range cli.Commands {
-		err := cli.generateCommand(&cmd)
-		if err != nil {
+		if err := cli.generateCommand(&cmd); err != nil {
 			return fmt.Errorf("%w: %s", ErrGenerateCli, err)
 		}
 	}

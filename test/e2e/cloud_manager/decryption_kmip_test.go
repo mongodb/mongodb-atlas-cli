@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (decrypt && (cloudmanager || om50 || om60))
 
 package cloud_manager_test
@@ -55,11 +56,11 @@ func dumpCertsToTemp(tmpDir string) (caFile, certFile string, err error) {
 	caFile = path.Join(tmpDir, "tls-rootCA.pem")
 	certFile = path.Join(tmpDir, "tls-localhost.pem")
 
-	if err := decodeAndWriteToPath(os.Getenv("KMIP_CA"), caFile); err != nil {
+	if err = decodeAndWriteToPath(os.Getenv("KMIP_CA"), caFile); err != nil {
 		return "", "", err
 	}
 
-	if err := decodeAndWriteToPath(os.Getenv("KMIP_CERT"), certFile); err != nil {
+	if err = decodeAndWriteToPath(os.Getenv("KMIP_CERT"), certFile); err != nil {
 		return "", "", err
 	}
 
@@ -105,10 +106,7 @@ func TestDecryptWithKMIP(t *testing.T) {
 
 			gotContents, err := cmd.CombinedOutput()
 			req.NoError(err, string(gotContents))
-
-			equal, err := decryption.LogsAreEqual(expectedContents, gotContents)
-			req.NoError(err)
-			req.True(equal, "expected %v, got %v", string(expectedContents), string(gotContents))
+			decryption.LogsAreEqual(t, expectedContents, gotContents)
 		})
 	}
 }

@@ -23,15 +23,18 @@ import (
 	"io/fs"
 	"os"
 	"path"
-	"reflect"
+	"testing"
+
+	"github.com/go-test/deep"
+	"github.com/stretchr/testify/require"
 )
 
 func GenerateFileName(dir, suffix string) string {
-	return path.Join(dir, fmt.Sprintf("test-%v", suffix))
+	return path.Join(dir, fmt.Sprintf("test-%s", suffix))
 }
 
 func GenerateFileNameCase(dir string, i int, suffix string) string {
-	return path.Join(dir, fmt.Sprintf("test%v-%v", i, suffix))
+	return path.Join(dir, fmt.Sprintf("test%d-%s", i, suffix))
 }
 
 func DumpToTemp(files embed.FS, srcFile, destFile string) error {
@@ -44,7 +47,7 @@ func DumpToTemp(files embed.FS, srcFile, destFile string) error {
 }
 
 func parseJSON(contents []byte) ([]map[string]interface{}, error) {
-	res := []map[string]interface{}{}
+	var res []map[string]interface{}
 
 	s := bufio.NewScanner(bytes.NewReader(contents))
 	for s.Scan() {
@@ -61,16 +64,17 @@ func parseJSON(contents []byte) ([]map[string]interface{}, error) {
 	return res, nil
 }
 
-func LogsAreEqual(expected, got []byte) (bool, error) {
+func LogsAreEqual(t *testing.T, expected, got []byte) {
+	t.Helper()
 	expectedLines, err := parseJSON(expected)
-	if err != nil {
-		return false, err
-	}
+	require.NoError(t, err)
 
 	gotLines, err := parseJSON(got)
-	if err != nil {
-		return false, err
-	}
+	require.NoError(t, err)
 
-	return reflect.DeepEqual(expectedLines, gotLines), nil
+	if diff := deep.Equal(expectedLines, gotLines); diff != nil {
+		t.Logf("expectedLines: %q\n", expectedLines)
+		t.Logf("gotLines: %q\n", gotLines)
+		t.Error(diff)
+	}
 }

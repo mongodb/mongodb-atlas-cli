@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (atlas && decrypt)
 
 package atlas_test
@@ -62,7 +63,5 @@ func TestDecryptWithLocalKey(t *testing.T) {
 	gotContents, err := cmd.CombinedOutput()
 	req.NoError(err, string(gotContents))
 
-	equal, err := decryption.LogsAreEqual(expectedContents, gotContents)
-	req.NoError(err)
-	req.True(equal, "expected %v, got %v", string(expectedContents), string(gotContents))
+	decryption.LogsAreEqual(t, expectedContents, gotContents)
 }

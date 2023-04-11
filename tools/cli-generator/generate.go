@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "embed"
+	"embed"
 	"errors"
 	"fmt"
 	"os"
@@ -17,20 +17,8 @@ import (
 var (
 	//go:embed spec.yaml
 	spec []byte
-	//go:embed commandListTemplate.txt
-	commandListTemplateContent string
-	//go:embed commandDescribeTemplate.txt
-	commandDescribeTemplateContent string
-	//go:embed commandDeleteTemplate.txt
-	commandDeleteTemplateContent string
-	//go:embed commandCreateTemplate.txt
-	commandCreateTemplateContent string
-	//go:embed commandUpdateTemplate.txt
-	commandUpdateTemplateContent string
-	//go:embed commandParentTemplate.txt
-	commandParentTemplateContent string
-	//go:embed store.txt
-	storeTemplateContent string
+	//go:embed templates/*.txt
+	templateFolder embed.FS
 
 	templateFuncs = template.FuncMap{
 		"Year": func() int {
@@ -42,46 +30,49 @@ var (
 		"Join": strings.Join,
 	}
 
-	ErrGenerateCli        = errors.New("error generating cli")
-	ErrCommandTypeUnknown = errors.New("command type is unknown")
+	ErrGenerateCli = errors.New("error generating cli")
 )
 
 type CLI struct {
 	Commands []Command
 	Stores   []Store
 
-	overwrite               bool
-	basePath                string
-	commandListTemplate     *template.Template
-	commandDescribeTemplate *template.Template
-	commandDeleteTemplate   *template.Template
-	commandCreateTemplate   *template.Template
-	commandUpdateTemplate   *template.Template
-	commandParentTemplate   *template.Template
-	storeTemplate           *template.Template
+	overwrite bool
+	basePath  string
+	templates *template.Template
 }
 
 type Command struct {
-	CommandPath   string    `yaml:"command_path,omitempty"`
-	PackageName   string    `yaml:"package_name,omitempty"`
-	Template      string    `yaml:"template,omitempty"`
-	Description   string    `yaml:"description,omitempty"`
-	StoreName     string    `yaml:"store_name,omitempty"`
-	StoreMethod   string    `yaml:"store_method,omitempty"`
-	IDDescription string    `yaml:"id_description,omitempty"`
-	IDName        string    `yaml:"id_name,omitempty"`
-	Example       string    `yaml:"example,omitempty"`
-	RequestType   string    `yaml:"request_type,omitempty"`
-	SubCommands   []Command `yaml:"sub_commands,omitempty"`
+	CommandPath    string    `yaml:"command_path,omitempty"`
+	PackageName    string    `yaml:"package_name,omitempty"`
+	OutputTemplate string    `yaml:"output_template,omitempty"`
+	Description    string    `yaml:"description,omitempty"`
+	StoreName      string    `yaml:"store_name,omitempty"`
+	StoreMethod    string    `yaml:"store_method,omitempty"`
+	Template       string    `yaml:"template,omitempty"`
+	IDDescription  string    `yaml:"id_description,omitempty"`
+	IDName         string    `yaml:"id_name,omitempty"`
+	Example        string    `yaml:"example,omitempty"`
+	RequestType    string    `yaml:"request_type,omitempty"`
+	SubCommands    []Command `yaml:"sub_commands,omitempty"`
+}
+
+func (c *Command) TemplateFile() string {
+	return c.Template + ".txt"
 }
 
 type Store struct {
 	BaseFileName string          `yaml:"base_file_name,omitempty"`
+	Template     string          `yaml:"template,omitempty"`
 	Lister       *StoreInterface `yaml:"lister,omitempty"`
 	Describer    *StoreInterface `yaml:"describer,omitempty"`
 	Creator      *StoreInterface `yaml:"creator,omitempty"`
 	Updater      *StoreInterface `yaml:"updater,omitempty"`
 	Deleter      *StoreInterface `yaml:"deleter,omitempty"`
+}
+
+func (s *Store) TemplateFile() string {
+	return s.Template + ".txt"
 }
 
 func (s *Store) InterfaceNames() string {
@@ -113,17 +104,6 @@ type StoreInterface struct {
 	ReturnType string `yaml:"return_type,omitempty"`
 }
 
-type CommandType int
-
-const (
-	CommandTypeList CommandType = iota
-	CommandTypeDescribe
-	CommandTypeDelete
-	CommandTypeCreate
-	CommandTypeUpdate
-	CommandTypeParent
-)
-
 func (c *Command) CommandPaths() []string {
 	return strings.Split(c.CommandPath, " ")
 }
@@ -134,25 +114,8 @@ func (c *Command) LastCommandPath() string {
 	return commandPaths[len(commandPaths)-1]
 }
 
-func (c *Command) CommandType() CommandType {
-	switch c.LastCommandPath() {
-	case "list":
-		return CommandTypeList
-	case "describe":
-		return CommandTypeDescribe
-	case "delete":
-		return CommandTypeDelete
-	case "create":
-		return CommandTypeCreate
-	case "update":
-		return CommandTypeUpdate
-	}
-
-	return CommandTypeParent
-}
-
 func (c *Command) FileName(basePath string) string {
-	if c.CommandType() == CommandTypeParent {
+	if len(c.SubCommands) > 0 {
 		return filepath.Join(basePath, "internal", "cli", filepath.Join(c.CommandPaths()...), c.LastCommandPath()+".go")
 	}
 
@@ -185,29 +148,12 @@ func (cli *CLI) generateStore(store *Store) error {
 
 	defer f.Close()
 
-	err = cli.storeTemplate.Execute(f, store)
+	err = cli.templates.ExecuteTemplate(f, store.TemplateFile(), store)
 	if err != nil {
 		return err
 	}
 
 	return cleanupFile(storeFile, true)
-}
-
-func (cli *CLI) template(cmd *Command) *template.Template {
-	switch cmd.CommandType() {
-	case CommandTypeList:
-		return cli.commandListTemplate
-	case CommandTypeDescribe:
-		return cli.commandDescribeTemplate
-	case CommandTypeDelete:
-		return cli.commandDeleteTemplate
-	case CommandTypeCreate:
-		return cli.commandCreateTemplate
-	case CommandTypeUpdate:
-		return cli.commandUpdateTemplate
-	default:
-		return cli.commandParentTemplate
-	}
 }
 
 func (cli *CLI) generateCommand(cmd *Command) error {
@@ -228,8 +174,7 @@ func (cli *CLI) generateCommand(cmd *Command) error {
 
 		defer f.Close()
 
-		tpl := cli.template(cmd)
-		err = tpl.Execute(f, cmd)
+		err = cli.templates.ExecuteTemplate(f, cmd.TemplateFile(), cmd)
 		if err != nil {
 			return err
 		}
@@ -292,37 +237,7 @@ func newCli(overwrite bool) (*CLI, error) {
 		return nil, err
 	}
 
-	cli.commandListTemplate, err = template.New("").Funcs(templateFuncs).Parse(commandListTemplateContent)
-	if err != nil {
-		return nil, err
-	}
-
-	cli.commandDescribeTemplate, err = template.New("").Funcs(templateFuncs).Parse(commandDescribeTemplateContent)
-	if err != nil {
-		return nil, err
-	}
-
-	cli.commandDeleteTemplate, err = template.New("").Funcs(templateFuncs).Parse(commandDeleteTemplateContent)
-	if err != nil {
-		return nil, err
-	}
-
-	cli.commandCreateTemplate, err = template.New("").Funcs(templateFuncs).Parse(commandCreateTemplateContent)
-	if err != nil {
-		return nil, err
-	}
-
-	cli.commandUpdateTemplate, err = template.New("").Funcs(templateFuncs).Parse(commandUpdateTemplateContent)
-	if err != nil {
-		return nil, err
-	}
-
-	cli.commandParentTemplate, err = template.New("").Funcs(templateFuncs).Parse(commandParentTemplateContent)
-	if err != nil {
-		return nil, err
-	}
-
-	cli.storeTemplate, err = template.New("").Funcs(templateFuncs).Parse(storeTemplateContent)
+	cli.templates, err = template.New("root").Funcs(templateFuncs).ParseFS(templateFolder, "templates/*.txt")
 	if err != nil {
 		return nil, err
 	}

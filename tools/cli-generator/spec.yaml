@@ -2,13 +2,15 @@ commands:
   - command_path: atlas dataLake pipeline
     package_name: pipeline
     description: Data Lake Pipelines.
+    template: parent
     sub_commands:
       - command_path: atlas dataLake pipeline list
         package_name: pipeline
         store_name: PipelineLister
         store_method: Pipelines
         description: Returns a list of Data Lake Pipelines. To use this resource, the requesting API Key must have the Project Read Only role.
-        template: |
+        template: list
+        output_template: |
           ID	NAME	STATE{{range .}}
           {{.ID}}	{{.Name}}	{{.State}}
           {{end}}
@@ -17,15 +19,17 @@ commands:
         store_name: PipelineDescriber
         store_method: Pipeline
         description: Describes the Data Lake Pipeline. To use this resource, the requesting API Key must have the Project Read Only role.
+        template: describe
         id_name: pipelineName
         id_description: Name of the pipeline
-        template: |
+        output_template: |
           ID	NAME	STATE
           {{.ID}}	{{.Name}}	{{.State}}
       - command_path: atlas dataLake pipeline delete
         package_name: pipeline
         store_name: PipelineDeleter
         store_method: DeletePipeline
+        template: delete
         description: Deletes the Data Lake Pipeline. To use this resource, the requesting API Key must have the Project Read Only role.
         id_name: pipelineName
         id_description: Name of the pipeline
@@ -33,22 +37,25 @@ commands:
         package_name: pipeline
         store_name: PipelineCreator
         store_method: CreatePipeline
+        template: create
         description: Creates a new Data Lake Pipeline. To use this resource, the requesting API Key must have the Project Owner role.
         id_name: pipelineName
         id_description: Name of the pipeline
-        template: Pipeline {{ .Name }} created.
+        output_template: Pipeline {{ .Name }} created.
         request_type: 'atlasv2.IngestionPipeline'
       - command_path: atlas dataLake pipeline update
         package_name: pipeline
         store_name: PipelineUpdater
         store_method: UpdatePipeline
+        template: update
         description: Updates a Data Lake Pipeline. To use this resource, the requesting API Key must have the Project Owner role.
         id_name: pipelineName
         id_description: Name of the pipeline
-        template: Pipeline {{ .Name }} updated.
+        output_template: Pipeline {{ .Name }} updated.
         request_type: 'atlasv2.IngestionPipeline'
 stores:
   - base_file_name: data_lake_pipeline
+    template: store
     lister:
       name: PipelineLister
       method: Pipelines

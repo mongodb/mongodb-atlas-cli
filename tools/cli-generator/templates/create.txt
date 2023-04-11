@@ -43,7 +43,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = `{{ .Template }}`
+var createTemplate = `{{ .OutputTemplate }}`
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newCreateRequest()

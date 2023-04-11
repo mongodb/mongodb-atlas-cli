@@ -40,7 +40,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var describeTemplate = `{{ .Template }}`
+var describeTemplate = `{{ .OutputTemplate }}`
 
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.{{ .StoreMethod }}(opts.ConfigProjectID(), opts.id)

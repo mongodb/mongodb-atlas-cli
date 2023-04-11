@@ -49,11 +49,6 @@ func TestDecryptWithGCP(t *testing.T) {
 	req.NoError(err)
 	t.Setenv("GOOGLE_APPLICATION_CREDENTIALS", GCPCredentialsFile)
 
-	t.Cleanup(func() {
-		err = os.RemoveAll(tmpDir)
-		req.NoError(err)
-	})
-
 	inputFile := decryption.GenerateFileName(tmpDir, "input")
 	err = decryption.DumpToTemp(filesGCP, decryption.GenerateFileName(gcpTestsInputDir, "input"), inputFile)
 	req.NoError(err)

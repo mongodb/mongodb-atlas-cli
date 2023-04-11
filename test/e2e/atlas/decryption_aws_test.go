@@ -39,12 +39,6 @@ func TestDecryptWithAWS(t *testing.T) {
 	req.NoError(err)
 
 	tmpDir := t.TempDir()
-
-	t.Cleanup(func() {
-		err = os.RemoveAll(tmpDir)
-		req.NoError(err)
-	})
-
 	inputFile := decryption.GenerateFileName(tmpDir, "input")
 	err = decryption.DumpToTemp(filesAWS, decryption.GenerateFileName(awsTestsInputDir, "input"), inputFile)
 	req.NoError(err)

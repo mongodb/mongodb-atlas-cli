@@ -39,12 +39,6 @@ func TestDecryptWithLocalKey(t *testing.T) {
 	req.NoError(err)
 
 	tmpDir := t.TempDir()
-
-	t.Cleanup(func() {
-		err = os.RemoveAll(tmpDir)
-		req.NoError(err)
-	})
-
 	inputFile := decryption.GenerateFileName(tmpDir, "input")
 	err = decryption.DumpToTemp(filesLocalKey, decryption.GenerateFileName(localKeyTestsInputDir, "input"), inputFile)
 	req.NoError(err)

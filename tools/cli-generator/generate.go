@@ -184,8 +184,8 @@ func (cli *CLI) generateCommand(cmd *Command) error {
 		}
 	}
 
-	for _, childCmd := range cmd.SubCommands {
-		if err := cli.generateCommand(&childCmd); err != nil {
+	for i := range cmd.SubCommands {
+		if err := cli.generateCommand(&cmd.SubCommands[i]); err != nil {
 			return err
 		}
 	}
@@ -244,21 +244,19 @@ func newCli(overwrite bool) (*CLI, error) {
 }
 
 func (cli *CLI) generateCli() error {
-	var err error
-
-	for _, store := range cli.Stores {
-		if err = cli.generateStore(&store); err != nil {
+	for i := range cli.Stores {
+		if err := cli.generateStore(&cli.Stores[i]); err != nil {
 			return fmt.Errorf("%w: %s", ErrGenerateCli, err)
 		}
 	}
 
-	for _, cmd := range cli.Commands {
-		if err = cli.generateCommand(&cmd); err != nil {
+	for i := range cli.Commands {
+		if err := cli.generateCommand(&cli.Commands[i]); err != nil {
 			return fmt.Errorf("%w: %s", ErrGenerateCli, err)
 		}
 	}
 
-	if err = runMake(); err != nil {
+	if err := runMake(); err != nil {
 		return fmt.Errorf("%w: %s", ErrGenerateCli, err)
 	}
 

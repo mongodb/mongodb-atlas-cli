@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
+//go:generate mockgen -destination=../mocks/api/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
 
 type OrganizationAPIKeyAccessListLister interface {
 	OrganizationAPIKeyAccessLists(string, string, *atlas.ListOptions) (*atlas.AccessListAPIKeys, error)
@@ -38,30 +38,14 @@ type OrganizationAPIKeyAccessListCreator interface {
 
 // CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.Create(s.ctx, orgID, apiKeyID, opts)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Create(s.ctx, orgID, apiKeyID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.Create(s.ctx, orgID, apiKeyID, opts)
+	return result, err
 }
 
 // DeleteOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).AccessListAPIKeys.Delete(s.ctx, orgID, apiKeyID, ipAddress)
-		return err
-	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Delete(s.ctx, orgID, apiKeyID, ipAddress)
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, err := s.client.(*atlas.Client).AccessListAPIKeys.Delete(s.ctx, orgID, apiKeyID, ipAddress)
+	return err
 }
 
 // OrganizationAPIKeyAccessLists encapsulates the logic to manage different cloud providers.

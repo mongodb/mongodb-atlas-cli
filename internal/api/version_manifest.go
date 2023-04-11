@@ -21,7 +21,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_version_manifest.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store VersionManifestUpdater,VersionManifestGetter,VersionManifestUpdaterServiceVersionDescriber
+//go:generate mockgen -destination=../mocks/api/mock_version_manifest.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api VersionManifestUpdater,VersionManifestGetter,VersionManifestUpdaterServiceVersionDescriber
 
 type VersionManifestUpdater interface {
 	UpdateVersionManifest(*opsmngr.VersionManifest) (*opsmngr.VersionManifest, error)

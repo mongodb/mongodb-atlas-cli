@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration_link_tokens.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LinkTokenCreator,LinkTokenDeleter
+//go:generate mockgen -destination=../mocks/api/mock_live_migration_link_tokens.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api LinkTokenCreator,LinkTokenDeleter
 
 type LinkTokenCreator interface {
 	CreateLinkToken(string, *atlas.TokenCreateRequest) (*atlas.LinkToken, error)

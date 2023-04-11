@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_file_systems.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store FileSystemsLister,FileSystemsDescriber,FileSystemsDeleter,FileSystemsCreator,FileSystemsUpdater
+//go:generate mockgen -destination=../mocks/api/mock_backup_file_systems.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api FileSystemsLister,FileSystemsDescriber,FileSystemsDeleter,FileSystemsCreator,FileSystemsUpdater
 
 type FileSystemsLister interface {
 	ListFileSystems(*atlas.ListOptions) (*opsmngr.FileSystemStoreConfigurations, error)

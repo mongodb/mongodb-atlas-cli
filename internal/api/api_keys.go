@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_api_keys.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectAPIKeyLister,ProjectAPIKeyCreator,OrganizationAPIKeyLister,OrganizationAPIKeyDescriber,OrganizationAPIKeyUpdater,OrganizationAPIKeyCreator,OrganizationAPIKeyDeleter,ProjectAPIKeyDeleter,ProjectAPIKeyAssigner
+//go:generate mockgen -destination=../mocks/api/mock_api_keys.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api ProjectAPIKeyLister,ProjectAPIKeyCreator,OrganizationAPIKeyLister,OrganizationAPIKeyDescriber,OrganizationAPIKeyUpdater,OrganizationAPIKeyCreator,OrganizationAPIKeyDeleter,ProjectAPIKeyDeleter,ProjectAPIKeyAssigner
 
 type ProjectAPIKeyLister interface {
 	ProjectAPIKeys(string, *atlas.ListOptions) ([]atlas.APIKey, error)
@@ -62,100 +62,48 @@ type OrganizationAPIKeyDeleter interface {
 
 // OrganizationAPIKeys encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).APIKeys.List(s.ctx, orgID, opts)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.List(s.ctx, orgID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.client.(*atlas.Client).APIKeys.List(s.ctx, orgID, opts)
+	return result, err
 }
 
 // OrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlas.APIKey, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).APIKeys.Get(s.ctx, orgID, apiKeyID)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Get(s.ctx, orgID, apiKeyID)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.client.(*atlas.Client).APIKeys.Get(s.ctx, orgID, apiKeyID)
+	return result, err
 }
 
 // UpdateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).APIKeys.Update(s.ctx, orgID, apiKeyID, input)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Update(s.ctx, orgID, apiKeyID, input)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+
+	result, _, err := s.client.(*atlas.Client).APIKeys.Update(s.ctx, orgID, apiKeyID, input)
+	return result, err
+
 }
 
 // CreateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).APIKeys.Create(s.ctx, orgID, input)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Create(s.ctx, orgID, input)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.client.(*atlas.Client).APIKeys.Create(s.ctx, orgID, input)
+	return result, err
+
 }
 
 // DeleteOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).APIKeys.Delete(s.ctx, orgID, id)
-		return err
-	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Delete(s.ctx, orgID, id)
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, err := s.client.(*atlas.Client).APIKeys.Delete(s.ctx, orgID, id)
+	return err
+
 }
 
 // ProjectAPIKeys returns the API Keys for a specific project.
 func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.List(s.ctx, projectID, opts)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ProjectAPIKeys.List(s.ctx, projectID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.List(s.ctx, projectID, opts)
+	return result, err
 }
 
 // CreateProjectAPIKey creates an API Keys for a project.
 func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlas.APIKeyInput) (*atlas.APIKey, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.Create(s.ctx, projectID, apiKeyInput)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Create(s.ctx, projectID, apiKeyInput)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.Create(s.ctx, projectID, apiKeyInput)
+	return result, err
 }
 
 // AssignProjectAPIKey encapsulates the logic to manage different cloud providers.

@@ -15,24 +15,16 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-//go:generate mockgen -destination=../mocks/mock_auditing.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AuditingDescriber
+//go:generate mockgen -destination=../mocks/api/mock_auditing.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api AuditingDescriber
 
 type AuditingDescriber interface {
 	Auditing(string) (*atlasv2.AuditLog, error)
 }
 
 func (s *Store) Auditing(projectID string) (*atlasv2.AuditLog, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.AuditingApi.GetAuditingConfiguration(s.ctx, projectID).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.AuditingApi.GetAuditingConfiguration(s.ctx, projectID).Execute()
+	return result, err
 }

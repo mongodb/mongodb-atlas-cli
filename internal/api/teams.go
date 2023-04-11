@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store TeamLister,TeamDescriber,TeamCreator,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
+//go:generate mockgen -destination=../mocks/api/mock_teams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api TeamLister,TeamDescriber,TeamCreator,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
 
 type TeamLister interface {
 	Teams(string, *atlas.ListOptions) ([]atlas.Team, error)

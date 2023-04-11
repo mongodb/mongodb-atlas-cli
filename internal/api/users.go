@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store UserCreator,UserDescriber,UserDeleter,UserLister,TeamUserLister
+//go:generate mockgen -destination=../mocks/api/mock_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api UserCreator,UserDescriber,UserDeleter,UserLister,TeamUserLister
 
 type UserCreator interface {
 	CreateUser(*UserRequest) (interface{}, error)

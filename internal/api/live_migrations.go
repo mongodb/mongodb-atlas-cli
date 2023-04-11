@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LiveMigrationCreator,LiveMigrationDescriber
+//go:generate mockgen -destination=../mocks/api/mock_live_migrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api LiveMigrationCreator,LiveMigrationDescriber
 
 type LiveMigrationCreator interface {
 	LiveMigrationCreate(string, *atlas.LiveMigration) (*atlas.LiveMigration, error)

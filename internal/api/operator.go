@@ -14,8 +14,8 @@
 
 package store
 
-//go:generate mockgen -destination=../mocks/mock_atlas_operator_cluster_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AtlasOperatorClusterStore
-//go:generate mockgen -destination=../mocks/mock_atlas_operator_project_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AtlasOperatorProjectStore
+//go:generate mockgen -destination=../mocks/api/mock_atlas_operator_cluster_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api AtlasOperatorClusterStore
+//go:generate mockgen -destination=../mocks/api/mock_atlas_operator_project_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api AtlasOperatorProjectStore
 
 type AtlasOperatorProjectStore interface {
 	AtlasOperatorTeamsStore

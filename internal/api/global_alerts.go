@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen  -destination=../mocks/mock_global_alerts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store GlobalAlertLister
+//go:generate mockgen  -destination=../mocks/api/mock_global_alerts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api GlobalAlertLister
 
 type GlobalAlertLister interface {
 	GlobalAlerts(*atlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error)

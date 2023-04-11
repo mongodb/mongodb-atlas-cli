@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_blockstores.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store BlockstoresLister,BlockstoresDescriber,BlockstoresCreator,BlockstoresUpdater,BlockstoresDeleter
+//go:generate mockgen -destination=../mocks/api/mock_backup_blockstores.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api BlockstoresLister,BlockstoresDescriber,BlockstoresCreator,BlockstoresUpdater,BlockstoresDeleter
 
 type BlockstoresLister interface {
 	ListBlockstores(*atlas.ListOptions) (*opsmngr.BackupStores, error)

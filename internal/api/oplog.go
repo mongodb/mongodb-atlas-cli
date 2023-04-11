@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_oplogs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OplogsLister,OplogsDescriber,OplogsCreator,OplogsUpdater,OplogsDeleter
+//go:generate mockgen -destination=../mocks/api/mock_backup_oplogs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api OplogsLister,OplogsDescriber,OplogsCreator,OplogsUpdater,OplogsDeleter
 
 type OplogsLister interface {
 	ListOplogs(*atlas.ListOptions) (*opsmngr.BackupStores, error)

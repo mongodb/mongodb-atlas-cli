@@ -14,7 +14,7 @@
 
 package store
 
-//go:generate mockgen -destination=../mocks/mock_custom_dns.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store CustomDNSEnabler,CustomDNSDisabler,CustomDNSDescriber
+//go:generate mockgen -destination=../mocks/api/mock_custom_dns.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api CustomDNSEnabler,CustomDNSDisabler,CustomDNSDescriber
 
 import (
 	"fmt"

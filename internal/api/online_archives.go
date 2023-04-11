@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_online_archives.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OnlineArchiveLister,OnlineArchiveDescriber,OnlineArchiveCreator,OnlineArchiveUpdater,OnlineArchiveDeleter
+//go:generate mockgen -destination=../mocks/api/mock_online_archives.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api OnlineArchiveLister,OnlineArchiveDescriber,OnlineArchiveCreator,OnlineArchiveUpdater,OnlineArchiveDeleter
 
 type OnlineArchiveLister interface {
 	OnlineArchives(string, string, *atlas.ListOptions) (*atlas.OnlineArchives, error)

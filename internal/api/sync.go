@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_sync.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store SyncsLister,SyncsDescriber,SyncsCreator,SyncsUpdater,SyncsDeleter
+//go:generate mockgen -destination=../mocks/api/mock_backup_sync.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api SyncsLister,SyncsDescriber,SyncsCreator,SyncsUpdater,SyncsDeleter
 
 type SyncsLister interface {
 	ListSyncs(*atlas.ListOptions) (*opsmngr.BackupStores, error)

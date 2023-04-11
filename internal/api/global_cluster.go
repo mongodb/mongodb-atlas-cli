@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_global_cluster.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store GlobalClusterDescriber
+//go:generate mockgen -destination=../mocks/api/mock_global_cluster.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api GlobalClusterDescriber
 
 type GlobalClusterDescriber interface {
 	GlobalCluster(string, string) (*atlas.GlobalCluster, error)

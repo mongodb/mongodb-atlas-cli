@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_project_settings.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectSettingsDescriber,ProjectSettingsUpdater
+//go:generate mockgen -destination=../mocks/api/mock_project_settings.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api ProjectSettingsDescriber,ProjectSettingsUpdater
 
 type ProjectSettingsDescriber interface {
 	ProjectSettings(string) (*atlas.ProjectSettings, error)

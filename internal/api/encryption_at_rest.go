@@ -21,7 +21,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-//go:generate mockgen -destination=../mocks/mock_encryption_at_rest.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store EncryptionAtRestDescriber
+//go:generate mockgen -destination=../mocks/api/mock_encryption_at_rest.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api EncryptionAtRestDescriber
 
 type EncryptionAtRestDescriber interface {
 	EncryptionAtRest(string) (*atlasv2.EncryptionAtRest, error)

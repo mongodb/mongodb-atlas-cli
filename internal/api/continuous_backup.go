@@ -15,14 +15,10 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_continuous_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store CheckpointsLister,ContinuousJobLister,ContinuousJobCreator,ContinuousSnapshotsLister
+//go:generate mockgen -destination=../mocks/api/mock_continuous_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api CheckpointsLister,ContinuousJobLister,ContinuousJobCreator,ContinuousSnapshotsLister
 
 type CheckpointsLister interface {
 	Checkpoints(string, string, *atlas.ListOptions) (*atlas.Checkpoints, error)
@@ -42,56 +38,24 @@ type ContinuousSnapshotsLister interface {
 
 // Checkpoints encapsulate the logic to manage different cloud providers.
 func (s *Store) Checkpoints(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.Checkpoints, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Checkpoints.List(s.ctx, projectID, clusterID, opts)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Checkpoints.List(s.ctx, projectID, clusterID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.client.(*atlas.Client).Checkpoints.List(s.ctx, projectID, clusterID, opts)
+	return result, err
 }
 
 // ContinuousRestoreJobs encapsulate the logic to manage different cloud providers.
 func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousJobs, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ContinuousRestoreJobs.List(s.ctx, projectID, clusterID, opts)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ContinuousRestoreJobs.List(s.ctx, projectID, clusterID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.client.(*atlas.Client).ContinuousRestoreJobs.List(s.ctx, projectID, clusterID, opts)
+	return result, err
 }
 
 // CreateContinuousRestoreJob encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request *atlas.ContinuousJobRequest) (*atlas.ContinuousJobs, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ContinuousRestoreJobs.Create(s.ctx, projectID, clusterID, request)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ContinuousRestoreJobs.Create(s.ctx, projectID, clusterID, request)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.client.(*atlas.Client).ContinuousRestoreJobs.Create(s.ctx, projectID, clusterID, request)
+	return result, err
 }
 
 // ContinuousSnapshots encapsulate the logic to manage different cloud providers.
 func (s *Store) ContinuousSnapshots(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousSnapshots, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ContinuousSnapshots.List(s.ctx, projectID, clusterID, opts)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ContinuousSnapshots.List(s.ctx, projectID, clusterID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.client.(*atlas.Client).ContinuousSnapshots.List(s.ctx, projectID, clusterID, opts)
+	return result, err
 }

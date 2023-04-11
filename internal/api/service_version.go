@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_service_version.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServiceVersionDescriber
+//go:generate mockgen -destination=../mocks/api/mock_service_version.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api ServiceVersionDescriber
 
 type ServiceVersionDescriber interface {
 	ServiceVersion() (*opsmngr.ServiceVersion, error)

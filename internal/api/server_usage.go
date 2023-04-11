@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_server_usage.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectServerTypeGetter,ProjectServerTypeUpdater,OrganizationServerTypeGetter,OrganizationServerTypeUpdater,ProjectHostAssignmentLister,OrganizationHostAssignmentLister,SnapshotGenerator,ServerUsageReportDownloader
+//go:generate mockgen -destination=../mocks/api/mock_server_usage.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api ProjectServerTypeGetter,ProjectServerTypeUpdater,OrganizationServerTypeGetter,OrganizationServerTypeUpdater,ProjectHostAssignmentLister,OrganizationHostAssignmentLister,SnapshotGenerator,ServerUsageReportDownloader
 
 type ProjectServerTypeGetter interface {
 	ProjectServerType(string) (*opsmngr.ServerType, error)

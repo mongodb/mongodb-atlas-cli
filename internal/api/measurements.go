@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_measurements.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store HostMeasurementLister,HostDiskMeasurementsLister,HostDatabaseMeasurementsLister
+//go:generate mockgen -destination=../mocks/api/mock_measurements.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api HostMeasurementLister,HostDiskMeasurementsLister,HostDatabaseMeasurementsLister
 
 type HostMeasurementLister interface {
 	HostMeasurements(string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)

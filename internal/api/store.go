@@ -14,7 +14,7 @@
 
 package store
 
-//go:generate mockgen -destination=../mocks/store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store CredentialsGetter
+//go:generate mockgen -destination=../mocks/store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api CredentialsGetter
 
 import (
 	"context"

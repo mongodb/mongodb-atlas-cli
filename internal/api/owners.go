@@ -21,7 +21,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_owners.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OwnerCreator
+//go:generate mockgen -destination=../mocks/api/mock_owners.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api OwnerCreator
 
 type OwnerCreator interface {
 	CreateOwner(*opsmngr.User, []string) (*opsmngr.CreateUserResponse, error)

@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_project_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectInvitationLister,ProjectInvitationDescriber,ProjectInvitationDeleter,ProjectInviter,ProjectInvitationUpdater
+//go:generate mockgen -destination=../mocks/api/mock_project_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api ProjectInvitationLister,ProjectInvitationDescriber,ProjectInvitationDeleter,ProjectInviter,ProjectInvitationUpdater
 
 type ProjectInvitationLister interface {
 	ProjectInvitations(string, *atlas.InvitationOptions) ([]*atlas.Invitation, error)

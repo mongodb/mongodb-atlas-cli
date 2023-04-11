@@ -21,7 +21,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-//go:generate mockgen -destination=../mocks/mock_serverless_private_endpoints.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServerlessPrivateEndpointsLister
+//go:generate mockgen -destination=../mocks/api/mock_serverless_private_endpoints.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api ServerlessPrivateEndpointsLister
 
 type ServerlessPrivateEndpointsLister interface {
 	ServerlessPrivateEndpoints(string, string) ([]atlasv2.ServerlessTenantEndpoint, error)

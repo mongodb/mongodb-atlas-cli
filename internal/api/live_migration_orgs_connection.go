@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration_orgs_connection.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationsConnector,OrganizationsDescriber
+//go:generate mockgen -destination=../mocks/api/mock_live_migration_orgs_connection.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api OrganizationsConnector,OrganizationsDescriber
 
 type OrganizationsConnector interface {
 	ConnectOrganizations(string, *atlas.LinkToken) (*opsmngr.ConnectionStatus, error)

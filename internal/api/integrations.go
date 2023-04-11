@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store IntegrationCreator,IntegrationLister,IntegrationDeleter,IntegrationDescriber
+//go:generate mockgen -destination=../mocks/api/mock_integrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api IntegrationCreator,IntegrationLister,IntegrationDeleter,IntegrationDescriber
 
 type IntegrationCreator interface {
 	CreateIntegration(string, string, *atlas.ThirdPartyIntegration) (*atlas.ThirdPartyIntegrations, error)

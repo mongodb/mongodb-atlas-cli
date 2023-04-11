@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_processes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessLister,ProcessDescriber
+//go:generate mockgen -destination=../mocks/api/mock_processes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api ProcessLister,ProcessDescriber
 
 type ProcessLister interface {
 	Processes(string, *atlas.ProcessesListOptions) ([]*atlas.Process, error)

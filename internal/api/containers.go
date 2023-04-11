@@ -22,7 +22,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-//go:generate mockgen -destination=../mocks/mock_containers.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ContainersLister,ContainersDeleter
+//go:generate mockgen -destination=../mocks/api/mock_containers.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api ContainersLister,ContainersDeleter
 
 type ContainersLister interface {
 	ContainersByProvider(string, *atlas.ContainersListOptions) ([]interface{}, error)

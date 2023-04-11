@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_default_mongodb_version.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store DefaultVersionGetter
+//go:generate mockgen -destination=../mocks/api/mock_default_mongodb_version.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api DefaultVersionGetter
 
 type DefaultVersionGetter interface {
 	DefaultMongoDBVersion() (string, error)

@@ -21,7 +21,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_monitoring.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store MonitoringStarter,MonitoringStopper
+//go:generate mockgen -destination=../mocks/api/mock_monitoring.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api MonitoringStarter,MonitoringStopper
 
 type MonitoringStarter interface {
 	StartMonitoring(string, *opsmngr.Host) (*opsmngr.Host, error)

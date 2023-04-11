@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LogsDownloader,LogJobsDownloader,LogCollector,LogJobLister,LogJobDeleter
+//go:generate mockgen -destination=../mocks/api/mock_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api LogsDownloader,LogJobsDownloader,LogCollector,LogJobLister,LogJobDeleter
 
 type LogsDownloader interface {
 	DownloadLog(string, string, string, io.Writer, *atlas.DateRangetOptions) error

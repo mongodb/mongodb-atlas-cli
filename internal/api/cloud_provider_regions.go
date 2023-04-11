@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_regions.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store CloudProviderRegionsLister
+//go:generate mockgen -destination=../mocks/api/mock_cloud_provider_regions.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api CloudProviderRegionsLister
 
 type CloudProviderRegionsLister interface {
 	CloudProviderRegions(string, string, []*string) (*atlas.CloudProviders, error)

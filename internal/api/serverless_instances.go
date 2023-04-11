@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServerlessInstanceLister,ServerlessInstanceDescriber,ServerlessInstanceDeleter,ServerlessInstanceCreator,ServerlessInstanceUpdater
+//go:generate mockgen -destination=../mocks/api/mock_serverless_instances.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api ServerlessInstanceLister,ServerlessInstanceDescriber,ServerlessInstanceDeleter,ServerlessInstanceCreator,ServerlessInstanceUpdater
 
 type ServerlessInstanceLister interface {
 	ServerlessInstances(string, *atlas.ListOptions) (*atlas.ClustersResponse, error)

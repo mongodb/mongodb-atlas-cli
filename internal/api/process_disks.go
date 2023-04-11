@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_process_disks.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessDisksLister
+//go:generate mockgen -destination=../mocks/api/mock_process_disks.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api ProcessDisksLister
 
 type ProcessDisksLister interface {
 	ProcessDisks(string, string, int, *atlas.ListOptions) (*atlas.ProcessDisksResponse, error)

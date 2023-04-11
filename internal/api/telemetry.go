@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store EventsSender
+//go:generate mockgen -destination=../mocks/api/mock_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api EventsSender
 
 const urlPath = "api/private/v1.0/telemetry/events"
 

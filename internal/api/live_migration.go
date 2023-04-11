@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration_validations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LiveMigrationValidationsCreator,LiveMigrationCutoverCreator,LiveMigrationValidationsDescriber
+//go:generate mockgen -destination=../mocks/api/mock_live_migration_validations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api LiveMigrationValidationsCreator,LiveMigrationCutoverCreator,LiveMigrationValidationsDescriber
 
 type LiveMigrationValidationsCreator interface {
 	CreateValidation(string, *atlas.LiveMigration) (*atlas.Validation, error)

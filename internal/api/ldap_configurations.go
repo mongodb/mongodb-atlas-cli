@@ -21,7 +21,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-//go:generate mockgen -destination=../mocks/mock_ldap_configurations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LDAPConfigurationVerifier,LDAPConfigurationDescriber,LDAPConfigurationSaver,LDAPConfigurationDeleter,LDAPConfigurationGetter
+//go:generate mockgen -destination=../mocks/api/mock_ldap_configurations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api LDAPConfigurationVerifier,LDAPConfigurationDescriber,LDAPConfigurationSaver,LDAPConfigurationDeleter,LDAPConfigurationGetter
 
 type LDAPConfigurationVerifier interface {
 	VerifyLDAPConfiguration(string, *atlasv2.NDSLDAPVerifyConnectivityJobRequestParams) (*atlasv2.NDSLDAPVerifyConnectivityJobRequest, error)

@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_deployments.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store HostLister,HostDescriber,HostDatabaseLister,HostDisksLister,HostByHostnameDescriber
+//go:generate mockgen -destination=../mocks/api/mock_deployments.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api HostLister,HostDescriber,HostDatabaseLister,HostDisksLister,HostByHostnameDescriber
 
 type HostLister interface {
 	Hosts(string, *opsmngr.HostListOptions) (*opsmngr.Hosts, error)

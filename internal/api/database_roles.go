@@ -21,7 +21,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-//go:generate mockgen -destination=../mocks/mock_database_roles.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store DatabaseRoleLister,DatabaseRoleCreator,DatabaseRoleDeleter,DatabaseRoleUpdater,DatabaseRoleDescriber
+//go:generate mockgen -destination=../mocks/api/mock_database_roles.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/api DatabaseRoleLister,DatabaseRoleCreator,DatabaseRoleDeleter,DatabaseRoleUpdater,DatabaseRoleDescriber
 
 type DatabaseRoleLister interface {
 	DatabaseRoles(string) ([]atlasv2.CustomDBRole, error)

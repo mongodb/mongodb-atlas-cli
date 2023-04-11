@@ -49,7 +49,7 @@ var listTemplate = `ID	STATUS	CONTAINER ID{{range .}}
 `
 
 func (opts *ListOpts) Run() error {
-	var r []atlas.Peer
+	var r []interface{}
 	var err error
 	r, err = opts.store.PeeringConnections(opts.ConfigProjectID(), opts.newContainerListOptions())
 	if err != nil {

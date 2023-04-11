@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type WatchOpts struct {
@@ -54,10 +55,28 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if result.Status != "" {
-		return result.Status == waitingForUser || result.Status == failed || result.Status == available, nil
+
+	switch v := result.(type) {
+	case *atlasv2.AWSPeerVpc:
+		return watcherAWS(v), nil
+	case *atlasv2.AzurePeerNetwork:
+		return watcherAzure(v), nil
+	case *atlasv2.GCPPeerVpc:
+		return watcherGCP(v), nil
 	}
-	return result.StatusName == pendingAcceptance || result.StatusName == failed || result.StatusName == available, nil
+	return false, nil
+}
+
+func watcherGCP(peer *atlasv2.GCPPeerVpc) bool {
+	return *peer.Status == waitingForUser || *peer.Status == failed || *peer.Status == available
+}
+
+func watcherAzure(peer *atlasv2.AzurePeerNetwork) bool {
+	return *peer.Status == waitingForUser || *peer.Status == failed || *peer.Status == available
+}
+
+func watcherAWS(peer *atlasv2.AWSPeerVpc) bool {
+	return *peer.StatusName == waitingForUser || *peer.StatusName == failed || *peer.StatusName == available
 }
 
 func (opts *WatchOpts) Run() error {

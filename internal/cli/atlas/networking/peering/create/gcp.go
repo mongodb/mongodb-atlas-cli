@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -94,14 +93,18 @@ func (opts *GCPOpts) newContainer() *atlasv2.CloudProviderContainer {
 	return &w
 }
 
-func (opts *GCPOpts) newPeer(containerID string) *atlas.Peer {
-	a := &atlas.Peer{
-		ContainerID:  containerID,
-		GCPProjectID: opts.gcpProjectID,
+func (opts *GCPOpts) newPeer(containerID string) *atlasv2.ContainerPeerViewRequest {
+	a := atlasv2.GCPPeerVpcRequestAsContainerPeerViewRequest(opts.newGCPPeer(containerID))
+	return &a
+}
+
+func (opts *GCPOpts) newGCPPeer(containerID string) *atlasv2.GCPPeerVpcRequest {
+	return &atlasv2.GCPPeerVpcRequest{
+		ContainerId:  containerID,
+		GcpProjectId: opts.gcpProjectID,
 		NetworkName:  opts.network,
 		ProviderName: "GCP",
 	}
-	return a
 }
 
 // mongocli atlas networking peering create gcp [--atlasCidrBlock atlasCidrBlock][--gcpProjectId gcpProjectId][--network networkName]

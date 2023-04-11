@@ -21,7 +21,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestList_Run(t *testing.T) {
@@ -33,7 +32,7 @@ func TestList_Run(t *testing.T) {
 			store: mockStore,
 		}
 
-		var expected []mongodbatlas.Peer
+		var expected []interface{}
 		mockStore.
 			EXPECT().
 			PeeringConnections(listOpts.ProjectID, listOpts.newContainerListOptions()).

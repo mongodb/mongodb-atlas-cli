@@ -27,7 +27,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -104,16 +103,20 @@ func (opts *AzureOpts) newContainer() *atlasv2.CloudProviderContainer {
 	return &w
 }
 
-func (opts *AzureOpts) newPeer(containerID string) *atlas.Peer {
-	a := &atlas.Peer{
-		AzureDirectoryID:    opts.directoryID,
-		AzureSubscriptionID: opts.subscriptionID,
-		ContainerID:         containerID,
+func (opts *AzureOpts) newPeer(containerID string) *atlasv2.ContainerPeerViewRequest {
+	a := atlasv2.AzurePeerNetworkRequestAsContainerPeerViewRequest(opts.newAzurePeer((containerID)))
+	return &a
+}
+
+func (opts *AzureOpts) newAzurePeer(containerID string) *atlasv2.AzurePeerNetworkRequest {
+	return &atlasv2.AzurePeerNetworkRequest{
+		AzureDirectoryId:    opts.directoryID,
+		AzureSubscriptionId: opts.subscriptionID,
+		ContainerId:         containerID,
 		ProviderName:        "AZURE",
 		ResourceGroupName:   opts.resourceGroup,
-		VNetName:            opts.vNetName,
+		VnetName:            opts.vNetName,
 	}
-	return a
 }
 
 // mongocli atlas networking peering create azure

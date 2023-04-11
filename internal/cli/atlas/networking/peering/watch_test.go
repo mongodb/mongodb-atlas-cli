@@ -22,8 +22,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestWatchBuilder(t *testing.T) {
@@ -33,19 +34,19 @@ func TestWatchBuilder(t *testing.T) {
 func TestWatchOpts_Run(t *testing.T) {
 	tests := []struct {
 		name     string
-		expected *mongodbatlas.Peer
+		expected interface{}
 	}{
 		{
 			name:     "AWS",
-			expected: &mongodbatlas.Peer{StatusName: "PENDING_ACCEPTANCE"},
+			expected: &atlasv2.AWSPeerVpc{StatusName: pointer.Get("PENDING_ACCEPTANCE")},
 		},
 		{
 			name:     "AZURE",
-			expected: &mongodbatlas.Peer{Status: "AVAILABLE"},
+			expected: &atlasv2.AzurePeerNetwork{Status: pointer.Get("AVAILABLE")},
 		},
 		{
 			name:     "GCP",
-			expected: &mongodbatlas.Peer{Status: "WAITING_FOR_USER"},
+			expected: &atlasv2.GCPPeerVpc{Status: pointer.Get("WAITING_FOR_USER")},
 		},
 	}
 	for _, tt := range tests {

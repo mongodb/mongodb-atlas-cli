@@ -133,7 +133,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		err = json.Unmarshal(resp, &clusterResponse)
 		req.NoError(err)
 
-		ensureCluster(t, clusterResponse, clusterName, tierM10, 40, false)
+		ensureCluster(t, clusterResponse, clusterName, "6.0", 40, false)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

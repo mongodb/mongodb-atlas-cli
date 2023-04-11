@@ -48,7 +48,7 @@ var createTemplate = `{{ .OutputTemplate }}`
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newCreateRequest()
 
-	r, err := opts.store.{{.StoreMethod}}(opts.ConfigProjectID(), opts.id, createRequest)
+	r, err := opts.store.{{.StoreMethod}}(opts.ConfigProjectID(), *createRequest)
 	if err != nil {
 		return err
 	}
@@ -57,6 +57,7 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newCreateRequest() *{{.RequestType}} {
+	// TODO change code to generate entity
 	return nil
 }
 
@@ -86,7 +87,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
-	// add more flags here
+	// TODO add more flags here
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

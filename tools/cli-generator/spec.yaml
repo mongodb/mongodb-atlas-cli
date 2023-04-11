@@ -12,7 +12,7 @@ commands:
         template: list
         output_template: |
           ID	NAME	STATE{{range .}}
-          {{.ID}}	{{.Name}}	{{.State}}
+          {{.Id}}	{{.Name}}	{{.State}}
           {{end}}
       - command_path: atlas dataLake pipeline describe
         package_name: pipeline
@@ -24,7 +24,7 @@ commands:
         id_description: Name of the pipeline
         output_template: |
           ID	NAME	STATE
-          {{.ID}}	{{.Name}}	{{.State}}
+          {{.Id}}	{{.Name}}	{{.State}}
       - command_path: atlas dataLake pipeline delete
         package_name: pipeline
         store_name: PipelineDeleter

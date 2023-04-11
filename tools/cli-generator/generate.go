@@ -75,6 +75,10 @@ func (c *Command) TemplateFile() string {
 	return c.Template + ".txt"
 }
 
+func (c *Command) TemplateUnitTestFile() string {
+	return c.Template + "_test.txt"
+}
+
 type Store struct {
 	BaseFileName string          `yaml:"base_file_name,omitempty"`
 	Template     string          `yaml:"template,omitempty"`
@@ -128,12 +132,20 @@ func (c *Command) LastCommandPath() string {
 	return commandPaths[len(commandPaths)-1]
 }
 
-func (c *Command) FileName(basePath string) string {
+func (c *Command) baseFileName(basePath string) string {
 	if len(c.SubCommands) > 0 {
-		return filepath.Join(basePath, "internal", "cli", filepath.Join(c.CommandPaths()...), c.LastCommandPath()+".go")
+		return filepath.Join(basePath, "internal", "cli", filepath.Join(c.CommandPaths()...), c.LastCommandPath())
 	}
 
-	return filepath.Join(basePath, "internal", "cli", filepath.Join(c.CommandPaths()...)+".go")
+	return filepath.Join(basePath, "internal", "cli", filepath.Join(c.CommandPaths()...))
+}
+
+func (c *Command) FileName(basePath string) string {
+	return c.baseFileName(basePath) + ".go"
+}
+
+func (c *Command) UnitTestFileName(basePath string) string {
+	return c.baseFileName(basePath) + "_test.go"
 }
 
 func fileExists(f string) bool {
@@ -144,58 +156,56 @@ func fileExists(f string) bool {
 func (cli *CLI) generateStore(store *Store) error {
 	storeFile := filepath.Join(cli.basePath, "internal", "store", store.BaseFileName+".go")
 
-	if !cli.overwrite && fileExists(storeFile) {
-		fmt.Printf("File '%s' already present in disk, skipping\n", storeFile)
+	fileCreated, err := cli.generateFile(storeFile, store.TemplateFile(), store)
+	if err != nil {
+		return err
+	}
+	if !fileCreated {
 		return nil
 	}
+	return goGenerate(storeFile)
+}
 
-	err := os.MkdirAll(filepath.Dir(storeFile), os.ModePerm)
-	if err != nil {
-		return err
+func (cli *CLI) generateFile(file string, templateFile string, data any) (bool, error) {
+	if !cli.overwrite && fileExists(file) {
+		fmt.Printf("File '%s' already present in disk, skipping\n", file)
+		return false, nil
 	}
 
-	f, err := os.Create(storeFile)
+	err := os.MkdirAll(filepath.Dir(file), os.ModePerm)
 	if err != nil {
-		return err
+		return false, err
+	}
+
+	f, err := os.Create(file)
+	if err != nil {
+		return false, err
 	}
 
 	defer f.Close()
 
-	err = cli.templates.ExecuteTemplate(f, store.TemplateFile(), store)
+	err = cli.templates.ExecuteTemplate(f, templateFile, data)
+	if err != nil {
+		return false, err
+	}
+
+	err = cleanupFile(file)
+	if err != nil {
+		return true, err
+	}
+
+	return true, nil
+}
+
+func (cli *CLI) generateCommand(cmd *Command) error {
+	_, err := cli.generateFile(cmd.FileName(cli.basePath), cmd.TemplateFile(), cmd)
 	if err != nil {
 		return err
 	}
 
-	return cleanupFile(storeFile, true)
-}
-
-func (cli *CLI) generateCommand(cmd *Command) error {
-	commandFile := cmd.FileName(cli.basePath)
-
-	if !cli.overwrite && fileExists(commandFile) {
-		fmt.Printf("File '%s' already present in disk, skipping\n", commandFile)
-	} else {
-		err := os.MkdirAll(filepath.Dir(commandFile), os.ModePerm)
-		if err != nil {
-			return err
-		}
-
-		f, err := os.Create(commandFile)
-		if err != nil {
-			return err
-		}
-
-		defer f.Close()
-
-		err = cli.templates.ExecuteTemplate(f, cmd.TemplateFile(), cmd)
-		if err != nil {
-			return err
-		}
-
-		err = cleanupFile(commandFile, false)
-		if err != nil {
-			return err
-		}
+	_, err = cli.generateFile(cmd.UnitTestFileName(cli.basePath), cmd.TemplateUnitTestFile(), cmd)
+	if err != nil {
+		return err
 	}
 
 	for i := range cmd.SubCommands {
@@ -207,7 +217,7 @@ func (cli *CLI) generateCommand(cmd *Command) error {
 	return nil
 }
 
-func cleanupFile(filePath string, generateMocks bool) error {
+func cleanupFile(filePath string) error {
 	execCmd := exec.Command("goimports", "-w", filePath)
 	_, err := execCmd.Output()
 	if err != nil {
@@ -216,25 +226,18 @@ func cleanupFile(filePath string, generateMocks bool) error {
 
 	execCmd = exec.Command("gofmt", "-w", "-s", filePath)
 	_, err = execCmd.Output()
-	if err != nil {
-		return err
-	}
+	return err
+}
 
-	if generateMocks {
-		execCmd = exec.Command("go", "generate", filePath)
-		_, err = execCmd.Output()
-		return err
-	}
-
-	return nil
+func goGenerate(filePath string) error {
+	execCmd := exec.Command("go", "generate", filePath)
+	_, err := execCmd.Output()
+	return err
 }
 
 func runMake() error {
 	execCmd := exec.Command("make", "gen-docs")
 	_, err := execCmd.Output()
-	if err != nil {
-		return err
-	}
 	return err
 }
 

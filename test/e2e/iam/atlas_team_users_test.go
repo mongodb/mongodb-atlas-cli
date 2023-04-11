@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (iam && !om50 && !om60 && !atlas)
+//go:build e2e || (iam && !om50 && !om60 && atlas)
 
 package iam_test
 
@@ -29,8 +29,8 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestTeamUsers(t *testing.T) {
-	cliPath, err := e2e.Bin()
+func TestAtlasTeamUsers(t *testing.T) {
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	n, err := e2e.RandInt(1000)
@@ -50,7 +50,6 @@ func TestTeamUsers(t *testing.T) {
 
 	t.Run("Add", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			teamsEntity,
 			usersEntity,
 			"add",
@@ -80,7 +79,6 @@ func TestTeamUsers(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			teamsEntity,
 			usersEntity,
 			"ls",
@@ -99,7 +97,6 @@ func TestTeamUsers(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			teamsEntity,
 			usersEntity,
 			"delete",

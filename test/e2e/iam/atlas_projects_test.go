@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (iam && !atlas)
+//go:build e2e || (iam && atlas)
 
 package iam_test
 
@@ -28,96 +28,92 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestProjectAPIKeys(t *testing.T) {
-	cliPath, err := e2e.Bin()
+func TestAtlasProjects(t *testing.T) {
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	var ID string
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	projectName := fmt.Sprintf("e2e-proj-%v", n)
 
-	// This test must run first to grab the ID of the project to later describe
+	var projectID string
 	t.Run("Create", func(t *testing.T) {
-		const desc = "e2e-test"
-		cmd := exec.Command(cliPath, iamEntity,
+		// This depends on a ORG_ID ENV
+		cmd := exec.Command(cliPath,
 			projectsEntity,
-			apiKeysEntity,
 			"create",
-			"--desc",
-			desc,
-			"--role=GROUP_READ_ONLY",
+			projectName,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var key mongodbatlas.APIKey
-			if err := json.Unmarshal(resp, &key); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			a.Equal(desc, key.Desc)
-			ID = key.ID
+
+		assert.NoError(t, err, string(resp))
+
+		var project mongodbatlas.Project
+		if err = json.Unmarshal(resp, &project); err != nil {
+			t.Fatalf("unexpected error: %v", err)
 		}
+
+		if project.Name != projectName {
+			t.Errorf("got=%#v\nwant=%#v\n", project.Name, projectName)
+		}
+		projectID = project.ID
 	})
 
-	if ID == "" {
-		assert.FailNow(t, "Failed to create API key")
-	}
-
-	defer func() {
-		if e := deleteOrgAPIKey(ID); e != nil {
-			t.Errorf("error deleting test apikey: %v", e)
-		}
-	}()
-
-	t.Run("Assign", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity,
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
 			projectsEntity,
-			apiKeysEntity,
-			"assign",
-			ID,
-			"--role=GROUP_DATA_ACCESS_READ_ONLY",
+			"ls",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		assert.NoError(t, err, string(resp))
+	})
+
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			projectsEntity,
+			"describe",
+			projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		assert.NoError(t, err, string(resp))
+	})
+
+	t.Run("Users", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			projectsEntity,
+			usersEntity,
+			"ls",
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err, string(resp))
 	})
 
-	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			iamEntity,
-			projectsEntity,
-			apiKeysEntity,
-			"ls",
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-		var keys []mongodbatlas.APIKey
-		if err := json.Unmarshal(resp, &keys); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		assert.NotEmpty(t, keys)
-	})
-
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
-			apiKeysEntity,
-			"rm",
-			ID,
+			"delete",
+			projectID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
-			a.Equal(expected, string(resp))
+		assert.NoError(t, err, string(resp))
+
+		expected := fmt.Sprintf("Project '%s' deleted\n", projectID)
+		if string(resp) != expected {
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
 	})
 }

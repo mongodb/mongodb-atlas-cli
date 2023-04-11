@@ -29,12 +29,12 @@ import (
 )
 
 const (
-	roleNameAtlas1 = "GROUP_READ_ONLY_ATLAS"
-	roleNameAtlas2 = "GROUP_DATA_ACCESS_READ_ONLY_ATLAS"
+	roleName1 = "GROUP_READ_ONLY"
+	roleName2 = "GROUP_DATA_ACCESS_READ_ONLY"
 )
 
-func TestProjectInvitations(t *testing.T) {
-	cliPath, err := e2e.AtlasCLIBin()
+func TestAtlasProjectInvitations(t *testing.T) {
+	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
 
 	var invitationID string
@@ -78,6 +78,7 @@ func TestProjectInvitations(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
+			iamEntity,
 			projectsEntity,
 			invitationsEntity,
 			"ls",
@@ -97,6 +98,7 @@ func TestProjectInvitations(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
+			iamEntity,
 			projectsEntity,
 			invitationsEntity,
 			"get",
@@ -117,15 +119,16 @@ func TestProjectInvitations(t *testing.T) {
 
 	t.Run("Update by email", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
+			iamEntity,
 			projectsEntity,
 			invitationsEntity,
 			"update",
 			"--email",
 			emailProject,
 			"--role",
-			roleNameAtlas1,
+			roleName1,
 			"--role",
-			roleNameAtlas2,
+			roleName2,
 			"--projectId",
 			projectID,
 			"-o=json")
@@ -137,20 +140,21 @@ func TestProjectInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(emailProject, invitation.Username)
-			a.ElementsMatch([]string{roleNameAtlas1, roleNameAtlas2}, invitation.Roles)
+			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
 		}
 	})
 
 	t.Run("Update by ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
+			iamEntity,
 			projectsEntity,
 			invitationsEntity,
 			"update",
 			invitationID,
 			"--role",
-			roleNameAtlas1,
+			roleName1,
 			"--role",
-			roleNameAtlas2,
+			roleName2,
 			"--projectId",
 			projectID,
 			"-o=json")
@@ -162,12 +166,13 @@ func TestProjectInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(emailProject, invitation.Username)
-			a.ElementsMatch([]string{roleNameAtlas1, roleNameAtlas2}, invitation.Roles)
+			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
 		}
 	})
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
+			iamEntity,
 			projectsEntity,
 			invitationsEntity,
 			"delete",

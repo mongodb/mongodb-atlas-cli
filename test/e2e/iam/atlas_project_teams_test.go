@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (iam && !om50 && !om60 && !atlas)
+//go:build e2e || (iam && !om50 && !om60 && atlas)
 
 package iam_test
 
@@ -29,8 +29,8 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestProjectTeams(t *testing.T) {
-	cliPath, err := e2e.Bin()
+func TestAtlasProjectTeams(t *testing.T) {
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	n, err := e2e.RandInt(1000)
@@ -53,7 +53,6 @@ func TestProjectTeams(t *testing.T) {
 
 	t.Run("Add", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			teamsEntity,
 			"add",
@@ -82,18 +81,17 @@ func TestProjectTeams(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		roleName1 := "GROUP_READ_ONLY"
-		roleName2 := "GROUP_DATA_ACCESS_READ_ONLY"
+		roleNameAtlas1 := "GROUP_READ_ONLY_ATLAS"
+		roleNameAtlas2 := "GROUP_DATA_ACCESS_READ_ONLY_ATLAS"
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			teamsEntity,
 			"update",
 			teamID,
 			"--role",
-			roleName1,
+			roleNameAtlas1,
 			"--role",
-			roleName2,
+			roleNameAtlas2,
 			"--projectId",
 			projectID,
 			"-o=json")
@@ -109,13 +107,12 @@ func TestProjectTeams(t *testing.T) {
 			role := roles[0]
 			a.Equal(teamID, role.TeamID)
 			a.Len(role.RoleNames, 2)
-			a.ElementsMatch([]string{roleName1, roleName2}, role.RoleNames)
+			a.ElementsMatch([]string{roleNameAtlas1, roleNameAtlas2}, role.RoleNames)
 		}
 	})
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			teamsEntity,
 			"ls",
@@ -135,7 +132,6 @@ func TestProjectTeams(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			teamsEntity,
 			"delete",

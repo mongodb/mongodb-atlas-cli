@@ -48,7 +48,6 @@ func (opts *PauseOpts) initStore(ctx context.Context) func() error {
 var pauseTemplate = "Online archive '{{.Id}}' paused.\n"
 
 func (opts *PauseOpts) Run() error {
-	// paused := true
 	cluster := &atlasv2.OnlineArchive{
 		Id:    &opts.id,
 		State: pointer.Get("PAUSING"),

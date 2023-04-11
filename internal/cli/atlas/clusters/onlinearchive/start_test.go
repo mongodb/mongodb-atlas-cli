@@ -48,8 +48,7 @@ func TestStart_Run(t *testing.T) {
 		id:    "1",
 		store: mockStore,
 	}
-
-	// paused := false
+	
 	expected := &atlasv2.OnlineArchive{
 		Id:    &updateOpts.id,
 		State: pointer.Get("ACTIVE"),

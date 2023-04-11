@@ -244,20 +244,21 @@ func newCli(overwrite bool) (*CLI, error) {
 }
 
 func (cli *CLI) generateCli() error {
+	var err error
+
 	for _, store := range cli.Stores {
-		if err := cli.generateStore(&store); err != nil {
+		if err = cli.generateStore(&store); err != nil {
 			return fmt.Errorf("%w: %s", ErrGenerateCli, err)
 		}
 	}
 
 	for _, cmd := range cli.Commands {
-		if err := cli.generateCommand(&cmd); err != nil {
+		if err = cli.generateCommand(&cmd); err != nil {
 			return fmt.Errorf("%w: %s", ErrGenerateCli, err)
 		}
 	}
 
-	err := runMake()
-	if err != nil {
+	if err = runMake(); err != nil {
 		return fmt.Errorf("%w: %s", ErrGenerateCli, err)
 	}
 

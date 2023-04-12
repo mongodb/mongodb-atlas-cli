@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package api
+package atlas
 
-//go:generate mockgen -destination=../apimocks/store.go -package=apimocks github.com/mongodb/mongodb-atlas-cli/internal/api CredentialsGetter
+//go:generate mockgen -destination=../../mocks/atlas/store.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CredentialsGetter
 
 import (
 	"context"

@@ -20,13 +20,13 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/apimocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestUnacknowledge_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := apimocks.NewMockAlertAcknowledger(ctrl)
+	mockStore := atlas.NewMockAlertAcknowledger(ctrl)
 
 	expected := &mongodbatlas.Alert{}
 

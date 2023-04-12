@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package api
+package atlas
 
 import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../apimocks/mock_alerts.go -package=apimocks github.com/mongodb/mongodb-atlas-cli/internal/api AlertDescriber,AlertLister,AlertAcknowledger
+//go:generate mockgen -destination=../../mocks/atlas/mock_alerts.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas AlertDescriber,AlertLister,AlertAcknowledger
 
 type AlertDescriber interface {
 	Alert(string, string) (*atlas.Alert, error)

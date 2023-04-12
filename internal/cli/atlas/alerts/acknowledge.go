@@ -19,11 +19,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	atlasStore "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -36,13 +36,14 @@ type AcknowledgeOpts struct {
 	until   string
 	comment string
 	forever bool
-	store   api.AlertAcknowledger
+	store   atlasStore.AlertAcknowledger
 }
 
 func (opts *AcknowledgeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = api.New(api.AuthenticatedPreset(config.Default()), api.WithContext(ctx))
+		opts.store, err = atlasStore.New(
+			atlasStore.AuthenticatedPreset(config.Default()), atlasStore.WithContext(ctx))
 		return err
 	}
 }

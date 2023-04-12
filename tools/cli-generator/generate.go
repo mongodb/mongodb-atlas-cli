@@ -25,13 +25,15 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/tangzero/inflector"
+	"golang.org/x/tools/imports"
 	"gopkg.in/yaml.v3"
 )
 
 var (
 	//go:embed spec.yaml
 	spec []byte
-	//go:embed templates/*.txt
+	//go:embed templates/*.gotmpl
 	templateFolder embed.FS
 
 	templateFuncs = template.FuncMap{
@@ -44,7 +46,9 @@ var (
 		"Join": strings.Join,
 	}
 
-	ErrGenerateCli = errors.New("error generating cli")
+	ErrGenerateCli     = errors.New("error generating cli")
+	ErrGenerateStore   = errors.New("error generating store")
+	ErrGenerateCommand = errors.New("error generating command")
 )
 
 type CLI struct {
@@ -72,11 +76,11 @@ type Command struct {
 }
 
 func (c *Command) TemplateFile() string {
-	return c.Template + ".txt"
+	return c.Template + ".gotmpl"
 }
 
 func (c *Command) TemplateUnitTestFile() string {
-	return c.Template + "_test.txt"
+	return c.Template + "_test.gotmpl"
 }
 
 type Store struct {
@@ -90,11 +94,11 @@ type Store struct {
 }
 
 func (s *Store) TemplateFile() string {
-	return s.Template + ".txt"
+	return s.Template + ".gotmpl"
 }
 
 func (s *Store) InterfaceNames() string {
-	names := []string{}
+	var names []string
 	if s.Lister != nil {
 		names = append(names, s.Lister.Name)
 	}
@@ -133,11 +137,14 @@ func (c *Command) LastCommandPath() string {
 }
 
 func (c *Command) baseFileName(basePath string) string {
-	if len(c.SubCommands) > 0 {
-		return filepath.Join(basePath, "internal", "cli", filepath.Join(c.CommandPaths()...), c.LastCommandPath())
-	}
+	internalPath := filepath.Join(c.CommandPaths()...)
 
-	return filepath.Join(basePath, "internal", "cli", filepath.Join(c.CommandPaths()...))
+	if len(c.SubCommands) > 0 {
+		internalPath = filepath.Join(internalPath, c.LastCommandPath())
+	}
+	internalPath = inflector.Underscorize(internalPath)
+
+	return filepath.Join(basePath, "internal", "cli", internalPath)
 }
 
 func (c *Command) FileName(basePath string) string {
@@ -168,7 +175,7 @@ func (cli *CLI) generateStore(store *Store) error {
 
 func (cli *CLI) generateFile(file string, templateFile string, data any) (bool, error) {
 	if !cli.overwrite && fileExists(file) {
-		fmt.Printf("File %q already present in disk, skipping\n", file)
+		fmt.Fprintf(os.Stderr, "File %q already present in disk, skipping\n", file)
 		return false, nil
 	}
 
@@ -218,15 +225,15 @@ func (cli *CLI) generateCommand(cmd *Command) error {
 }
 
 func cleanupFile(filePath string) error {
-	execCmd := exec.Command("goimports", "-w", filePath)
-	_, err := execCmd.Output()
+	b, err := os.ReadFile(filePath)
 	if err != nil {
 		return err
 	}
-
-	execCmd = exec.Command("gofmt", "-w", "-s", filePath)
-	_, err = execCmd.Output()
-	return err
+	r, err := imports.Process(filePath, b, nil)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(filePath, r, os.ModePerm)
 }
 
 func goGenerate(filePath string) error {
@@ -252,7 +259,7 @@ func newCli(overwrite bool) (*CLI, error) {
 		return nil, err
 	}
 
-	cli.templates, err = template.New("root").Funcs(templateFuncs).ParseFS(templateFolder, "templates/*.txt")
+	cli.templates, err = template.New("root").Funcs(templateFuncs).ParseFS(templateFolder, "templates/*.gotmpl")
 	if err != nil {
 		return nil, err
 	}
@@ -263,18 +270,18 @@ func newCli(overwrite bool) (*CLI, error) {
 func (cli *CLI) generateCli() error {
 	for i := range cli.Stores {
 		if err := cli.generateStore(&cli.Stores[i]); err != nil {
-			return fmt.Errorf("%w: %s", ErrGenerateCli, err)
+			return fmt.Errorf("%w: %w: %w", ErrGenerateCli, ErrGenerateStore, err)
 		}
 	}
 
 	for i := range cli.Commands {
 		if err := cli.generateCommand(&cli.Commands[i]); err != nil {
-			return fmt.Errorf("%w: %s", ErrGenerateCli, err)
+			return fmt.Errorf("%w: %w: %w", ErrGenerateCli, ErrGenerateCommand, err)
 		}
 	}
 
 	if err := runMake(); err != nil {
-		return fmt.Errorf("%w: %s", ErrGenerateCli, err)
+		return fmt.Errorf("%w: %w", ErrGenerateCli, err)
 	}
 
 	return nil

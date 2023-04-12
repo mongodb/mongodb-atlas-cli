@@ -87,6 +87,8 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	_ = cmd.Flags().MarkDeprecated(flag.Page, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.Limit, deprecatedFlagMessage)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

@@ -18,7 +18,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/atlas/mock_api_keys_access_list.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
+//go:generate mockgen -destination=../../mocks/atlas/mock_api_keys_access_list.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
 
 type OrganizationAPIKeyAccessListLister interface {
 	OrganizationAPIKeyAccessLists(string, string, *atlas.ListOptions) (*atlas.AccessListAPIKeys, error)

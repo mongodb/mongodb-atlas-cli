@@ -45,7 +45,6 @@ type UserRequest struct {
 
 // CreateUser encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
-
 	atlasUser := &atlas.AtlasUser{
 		EmailAddress: user.EmailAddress,
 		FirstName:    user.FirstName,

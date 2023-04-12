@@ -115,7 +115,6 @@ func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
 func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error) {
 	result, _, err := s.client.Projects.AddTeamsToProject(s.ctx, projectID, teams)
 	return result, err
-
 }
 
 // DeleteTeamFromProject encapsulates the logic to manage different cloud providers.

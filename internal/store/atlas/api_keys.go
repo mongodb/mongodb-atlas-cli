@@ -60,7 +60,6 @@ type OrganizationAPIKeyDeleter interface {
 func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
 	result, _, err := s.client.APIKeys.List(s.ctx, orgID, opts)
 	return result, err
-
 }
 
 // OrganizationAPIKey encapsulates the logic to manage different cloud providers.
@@ -79,14 +78,12 @@ func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.AP
 func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	result, _, err := s.client.APIKeys.Create(s.ctx, orgID, input)
 	return result, err
-
 }
 
 // DeleteOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 	_, err := s.client.APIKeys.Delete(s.ctx, orgID, id)
 	return err
-
 }
 
 // ProjectAPIKeys returns the API Keys for a specific project.

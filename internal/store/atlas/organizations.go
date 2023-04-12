@@ -18,7 +18,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_organizations.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationLister,OrganizationDeleter,OrganizationDescriber,AtlasOrganizationCreator
+//go:generate mockgen -destination=../../mocks/atlas/mock_organizations.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationLister,OrganizationDeleter,OrganizationDescriber,OrganizationCreator
 
 type OrganizationLister interface {
 	Organizations(*atlas.OrganizationsListOptions) (interface{}, error)
@@ -28,7 +28,7 @@ type OrganizationDescriber interface {
 	Organization(string) (interface{}, error)
 }
 
-type AtlasOrganizationCreator interface {
+type OrganizationCreator interface {
 	CreateAtlasOrganization(*atlas.CreateOrganizationRequest) (*atlas.CreateOrganizationResponse, error)
 }
 

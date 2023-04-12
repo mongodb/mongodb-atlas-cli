@@ -270,18 +270,18 @@ func newCli(overwrite bool) (*CLI, error) {
 func (cli *CLI) generateCli() error {
 	for i := range cli.Stores {
 		if err := cli.generateStore(&cli.Stores[i]); err != nil {
-			return fmt.Errorf("%w: %w: %w", ErrGenerateCli, ErrGenerateStore, err)
+			return fmt.Errorf("%w: %s", ErrGenerateStore, err)
 		}
 	}
 
 	for i := range cli.Commands {
 		if err := cli.generateCommand(&cli.Commands[i]); err != nil {
-			return fmt.Errorf("%w: %w: %w", ErrGenerateCli, ErrGenerateCommand, err)
+			return fmt.Errorf("%w: %s", ErrGenerateCommand, err)
 		}
 	}
 
 	if err := runMake(); err != nil {
-		return fmt.Errorf("%w: %w", ErrGenerateCli, err)
+		return fmt.Errorf("%w: %s", ErrGenerateCli, err)
 	}
 
 	return nil

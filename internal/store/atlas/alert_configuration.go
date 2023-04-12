@@ -76,7 +76,6 @@ func (s *Store) MatcherFields() ([]string, error) {
 func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
 	result, _, err := s.client.(*atlas.Client).AlertConfigurations.Update(s.ctx, alertConfig.GroupID, alertConfig.ID, alertConfig)
 	return result, err
-
 }
 
 // EnableAlertConfiguration encapsulate the logic to manage different cloud providers.

@@ -247,6 +247,9 @@ func InviteBuilder() *cobra.Command {
 		Short: "Create a MongoDB user for your MongoDB application and invite the MongoDB user to your organizations and projects.",
 		Long:  fmt.Sprintf(`A MongoDB user account grants access only to the the MongoDB application. To grant database access, create a database user with %s dbusers create.`, cli.ExampleAtlasEntryPoint()),
 		Args:  require.NoArgs,
+		Annotations: map[string]string{
+			"output": inviteTemplate,
+		},
 		Example: fmt.Sprintf(`  # Create the MongoDB user with the username user@example.com and invite them to the organization with the ID 5dd56c847a3e5a1f363d424d with ORG_OWNER access:
   %[1]s users invite --email user@example.com --username user@example.com --orgRole 5dd56c847a3e5a1f363d424d:ORG_OWNER --firstName Example --lastName User --country US --output json
   

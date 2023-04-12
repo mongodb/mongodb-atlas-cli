@@ -4,7 +4,7 @@
 
 ## Usage
 
-Open `spec.yaml` and add to your needs later run `make gen-code`.
+Open [spec.yaml](spec.yaml) and add to your needs later run `make gen-code`.
 
 ### Adding Stores
 

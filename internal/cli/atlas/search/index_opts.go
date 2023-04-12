@@ -21,7 +21,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/spf13/afero"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const defaultAnalyzer = "lucene.standard"
@@ -73,9 +73,9 @@ func (opts *IndexOpts) validateOpts() error {
 	return nil
 }
 
-func (opts *IndexOpts) newSearchIndex() (*atlas.SearchIndex, error) {
+func (opts *IndexOpts) newSearchIndex() (*atlasv2.FTSIndex, error) {
 	if len(opts.filename) > 0 {
-		index := &atlas.SearchIndex{}
+		index := &atlasv2.FTSIndex{}
 		if err := file.Load(opts.fs, opts.filename, index); err != nil {
 			return nil, err
 		}
@@ -86,16 +86,16 @@ func (opts *IndexOpts) newSearchIndex() (*atlas.SearchIndex, error) {
 	if err != nil {
 		return nil, err
 	}
-	i := &atlas.SearchIndex{
-		Analyzer:       opts.analyzer,
+	i := &atlasv2.FTSIndex{
+		Analyzer:       &opts.analyzer,
 		CollectionName: opts.collection,
 		Database:       opts.dbName,
-		Mappings: &atlas.IndexMapping{
-			Dynamic: opts.dynamic,
-			Fields:  &f,
+		Mappings: &atlasv2.FTSMappings{
+			Dynamic: &opts.dynamic,
+			Fields:  f,
 		},
 		Name:           opts.name,
-		SearchAnalyzer: opts.searchAnalyzer,
+		SearchAnalyzer: &opts.searchAnalyzer,
 	}
 	return i, nil
 }
@@ -103,11 +103,11 @@ func (opts *IndexOpts) newSearchIndex() (*atlas.SearchIndex, error) {
 // indexFieldParts index field should be fieldName:analyzer:fieldType.
 const indexFieldParts = 2
 
-func (opts *IndexOpts) indexFields() (map[string]interface{}, error) {
+func (opts *IndexOpts) indexFields() (map[string]map[string]interface{}, error) {
 	if len(opts.fields) == 0 {
 		return nil, nil
 	}
-	fields := make(map[string]interface{})
+	fields := make(map[string]map[string]interface{})
 	for _, p := range opts.fields {
 		f := strings.Split(p, ":")
 		if len(f) != indexFieldParts {

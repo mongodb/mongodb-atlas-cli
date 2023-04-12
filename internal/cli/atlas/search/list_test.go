@@ -36,7 +36,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		SearchIndexes(listOpts.ProjectID, listOpts.clusterName, listOpts.dbName, listOpts.collName, listOpts.NewListOptions()).
+		SearchIndexes(listOpts.ProjectID, listOpts.clusterName, listOpts.dbName, listOpts.collName).
 		Return(expected, nil).
 		Times(1)
 

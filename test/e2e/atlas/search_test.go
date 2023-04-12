@@ -303,7 +303,7 @@ func TestSearch(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var index mongodbatlas.SearchIndex
+		var index atlasv2.FTSIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			assert.Equal(t, index.Name, indexName)
 		}
@@ -387,7 +387,7 @@ func TestSearch(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var index mongodbatlas.SearchIndex
+		var index atlasv2.FTSIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			assert.Equal(t, index.Name, indexName)
 		}

@@ -23,6 +23,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas serverless backups restores create [options]
 

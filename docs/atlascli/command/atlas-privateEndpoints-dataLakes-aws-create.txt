@@ -26,6 +26,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas privateEndpoints dataLakes aws create [options]
 

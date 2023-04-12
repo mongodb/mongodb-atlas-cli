@@ -22,6 +22,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli ops-manager performanceAdvisor slowOperationThreshold disable [options]
 

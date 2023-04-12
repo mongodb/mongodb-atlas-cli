@@ -22,6 +22,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas performanceAdvisor slowOperationThreshold enable [options]
 

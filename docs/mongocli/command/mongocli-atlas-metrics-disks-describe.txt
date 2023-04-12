@@ -23,6 +23,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli atlas metrics disks describe <hostname:port> <diskName> [options]
 

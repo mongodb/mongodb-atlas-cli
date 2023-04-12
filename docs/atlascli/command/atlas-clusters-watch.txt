@@ -25,6 +25,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas clusters watch <clusterName> [options]
 

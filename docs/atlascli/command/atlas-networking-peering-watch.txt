@@ -25,6 +25,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas networking peering watch <peerId> [options]
 

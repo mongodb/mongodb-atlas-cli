@@ -24,6 +24,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli atlas clusters delete <clusterName> [options]
 

@@ -20,6 +20,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli atlas privateEndpoints dataLakes aws delete <privateEndpointId> [options]
 

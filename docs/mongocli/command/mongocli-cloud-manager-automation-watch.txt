@@ -23,6 +23,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli cloud-manager automation watch [options]
 

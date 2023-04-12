@@ -23,6 +23,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli atlas backups restores start <automated|download|pointInTime> [options]
 

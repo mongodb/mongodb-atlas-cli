@@ -25,6 +25,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas privateEndpoints aws watch <privateEndpointId> [options]
 

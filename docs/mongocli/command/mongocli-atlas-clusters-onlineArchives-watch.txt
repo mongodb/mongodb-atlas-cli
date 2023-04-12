@@ -25,6 +25,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli atlas clusters onlineArchives watch <archiveId> [options]
 

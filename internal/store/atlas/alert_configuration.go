@@ -51,41 +51,41 @@ type AlertConfigurationDisabler interface {
 
 // AlertConfigurations encapsulate the logic to manage different cloud providers.
 func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) ([]atlas.AlertConfiguration, error) {
-	result, _, err := s.client.(*atlas.Client).AlertConfigurations.List(s.ctx, projectID, opts)
+	result, _, err := s.client.AlertConfigurations.List(s.ctx, projectID, opts)
 	return result, err
 }
 
 // CreateAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
-	result, _, err := s.client.(*atlas.Client).AlertConfigurations.Create(s.ctx, alertConfig.GroupID, alertConfig)
+	result, _, err := s.client.AlertConfigurations.Create(s.ctx, alertConfig.GroupID, alertConfig)
 	return result, err
 }
 
 // DeleteAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
-	_, err := s.client.(*atlas.Client).AlertConfigurations.Delete(s.ctx, projectID, id)
+	_, err := s.client.AlertConfigurations.Delete(s.ctx, projectID, id)
 	return err
 }
 
 // MatcherFields encapsulate the logic to manage different cloud providers.
 func (s *Store) MatcherFields() ([]string, error) {
-	result, _, err := s.client.(*atlas.Client).AlertConfigurations.ListMatcherFields(s.ctx)
+	result, _, err := s.client.AlertConfigurations.ListMatcherFields(s.ctx)
 	return result, err
 }
 
 func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
-	result, _, err := s.client.(*atlas.Client).AlertConfigurations.Update(s.ctx, alertConfig.GroupID, alertConfig.ID, alertConfig)
+	result, _, err := s.client.AlertConfigurations.Update(s.ctx, alertConfig.GroupID, alertConfig.ID, alertConfig)
 	return result, err
 }
 
 // EnableAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) EnableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
-	result, _, err := s.client.(*atlas.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(true))
+	result, _, err := s.client.AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(true))
 	return result, err
 }
 
 // DisableAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) DisableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
-	result, _, err := s.client.(*atlas.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(false))
+	result, _, err := s.client.AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(false))
 	return result, err
 }

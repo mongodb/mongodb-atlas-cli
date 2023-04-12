@@ -34,18 +34,18 @@ type AlertAcknowledger interface {
 
 // Alert encapsulate the logic to manage different cloud providers.
 func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
-	result, _, err := s.client.(*atlas.Client).Alerts.Get(s.ctx, projectID, alertID)
+	result, _, err := s.client.Alerts.Get(s.ctx, projectID, alertID)
 	return result, err
 }
 
 // Alerts encapsulate the logic to manage different cloud providers.
 func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.AlertsResponse, error) {
-	result, _, err := s.client.(*atlas.Client).Alerts.List(s.ctx, projectID, opts)
+	result, _, err := s.client.Alerts.List(s.ctx, projectID, opts)
 	return result, err
 }
 
 // Acknowledge encapsulate the logic to manage different cloud providers.
 func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlas.AcknowledgeRequest) (*atlas.Alert, error) {
-	result, _, err := s.client.(*atlas.Client).Alerts.Acknowledge(s.ctx, projectID, alertID, body)
+	result, _, err := s.client.Alerts.Acknowledge(s.ctx, projectID, alertID, body)
 	return result, err
 }

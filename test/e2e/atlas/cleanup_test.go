@@ -24,7 +24,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -53,32 +52,16 @@ func TestCleanup(t *testing.T) {
 			if projectID == os.Getenv("MCLI_PROJECT_ID") {
 				t.Skip("skipping project", projectID)
 			}
+			deleteAllNetworkPeers(t, cliPath, projectID, "aws")
+			deleteAllNetworkPeers(t, cliPath, projectID, "gcp")
+			deleteAllNetworkPeers(t, cliPath, projectID, "azure")
+			deleteAllPrivateEndpoints(t, cliPath, projectID, "aws")
+			deleteAllPrivateEndpoints(t, cliPath, projectID, "gcp")
+			deleteAllPrivateEndpoints(t, cliPath, projectID, "azure")
 			deleteClustersForProject(t, cliPath, projectID)
 			deleteProjectWithRetry(t, projectID)
 		})
 	}
 
 	fmt.Println(projects)
-}
-
-func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
-	t.Helper()
-	cmd := exec.Command(cliPath,
-		clustersEntity,
-		"list",
-		"--projectId", projectID,
-		"-o=json")
-	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
-	require.NoError(t, err, string(resp))
-	var clusters mongodbatlas.AdvancedClustersResponse
-	require.NoError(t, json.Unmarshal(resp, &clusters), string(resp))
-
-	for _, cluster := range clusters.Results {
-		clusterName := cluster.Name
-		t.Run("deleting cluster "+clusterName, func(t *testing.T) {
-			t.Parallel()
-			assert.NoError(t, deleteClusterForProject(projectID, clusterName))
-		})
-	}
 }

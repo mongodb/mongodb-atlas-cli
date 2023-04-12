@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || atlas
 
 package atlas_test
@@ -215,29 +216,8 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 			break
 		}
 	}
-
 	if !deleted {
 		t.Errorf("we could not delete the project %q", projectID)
-	}
-}
-
-func deleteNetworkPeering(t *testing.T, projectID, provider string) {
-	t.Helper()
-	err := deleteAllNetworkPeers(projectID, provider)
-	if err != nil {
-		t.Errorf("we could not delete the project network peers '%s'", projectID)
-	} else {
-		t.Logf("project '%s' network peers successfully deleted", projectID)
-	}
-}
-
-func deletePrivateEndpoints(t *testing.T, projectID, provider string) {
-	t.Helper()
-	err := deleteAllPrivateEndpoints(projectID, provider)
-	if err != nil {
-		t.Errorf("we could not delete the project private endpoints '%s'", projectID)
-	} else {
-		t.Logf("project '%s' private endpoints successfully deleted", projectID)
 	}
 }
 

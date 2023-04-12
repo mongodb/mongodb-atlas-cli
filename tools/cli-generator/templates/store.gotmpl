@@ -47,10 +47,10 @@ type {{ .Updater.Name }} interface {
 
 
 // {{ .Lister.Method }} encapsulates the logic to manage different cloud providers.
-func (s *Store) {{ .Lister.Method }}(projectId string) ({{ .Lister.ReturnType }}, error) {
+func (s *Store) {{ .Lister.Method }}(projectID string) ({{ .Lister.ReturnType }}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.{{ .Lister.SDKMethod }}(s.ctx, projectId).Execute()
+		result, _, err := s.clientv2.{{ .Lister.SDKMethod }}(s.ctx, projectID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -59,10 +59,10 @@ func (s *Store) {{ .Lister.Method }}(projectId string) ({{ .Lister.ReturnType }}
 
 
 // {{ .Describer.Method }} encapsulates the logic to manage different cloud providers.
-func (s *Store) {{ .Describer.Method }}(projectId, id string) ({{ .Describer.ReturnType }}, error) {
+func (s *Store) {{ .Describer.Method }}(projectID, id string) ({{ .Describer.ReturnType }}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.{{ .Describer.SDKMethod }}(s.ctx, projectId, id).Execute()
+		result, _, err := s.clientv2.{{ .Describer.SDKMethod }}(s.ctx, projectID, id).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -70,10 +70,10 @@ func (s *Store) {{ .Describer.Method }}(projectId, id string) ({{ .Describer.Ret
 }
 
 // {{ .Creator.Method }} encapsulates the logic to manage different cloud providers.
-func (s *Store) {{ .Creator.Method }}(projectId string, opts {{ .Creator.ArgType }}) ({{ .Creator.ReturnType }}, error) {
+func (s *Store) {{ .Creator.Method }}(projectID string, opts {{ .Creator.ArgType }}) ({{ .Creator.ReturnType }}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.{{ .Creator.SDKMethod }}(s.ctx, projectId).{{ .Creator.ArgName }}(opts).Execute()
+		result, _, err := s.clientv2.{{ .Creator.SDKMethod }}(s.ctx, projectID).{{ .Creator.ArgName }}(opts).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -81,10 +81,10 @@ func (s *Store) {{ .Creator.Method }}(projectId string, opts {{ .Creator.ArgType
 }
 
 // {{ .Updater.Method }} encapsulates the logic to manage different cloud providers.
-func (s *Store) {{ .Updater.Method }}(projectId, id string, opts {{ .Updater.ArgType }}) ({{ .Updater.ReturnType }}, error) {
+func (s *Store) {{ .Updater.Method }}(projectID, id string, opts {{ .Updater.ArgType }}) ({{ .Updater.ReturnType }}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.{{ .Updater.SDKMethod }}(s.ctx, projectId, id).{{ .Updater.ArgName }}(opts).Execute()
+		result, _, err := s.clientv2.{{ .Updater.SDKMethod }}(s.ctx, projectID, id).{{ .Updater.ArgName }}(opts).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -93,10 +93,10 @@ func (s *Store) {{ .Updater.Method }}(projectId, id string, opts {{ .Updater.Arg
 
 
 // {{ .Deleter.Method }} encapsulates the logic to manage different cloud providers.
-func (s *Store) {{ .Deleter.Method }}(projectId, id string) error {
+func (s *Store) {{ .Deleter.Method }}(projectID, id string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.{{ .Deleter.SDKMethod }}(s.ctx, projectId, id).Execute()
+		_, err := s.clientv2.{{ .Deleter.SDKMethod }}(s.ctx, projectID, id).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

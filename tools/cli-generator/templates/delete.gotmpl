@@ -45,14 +45,17 @@ func (opts *DeleteOpts) Run() error {
 
 // {{ .CommandPath }} <{{ .IDName }}> [--projectId projectId].
 func DeleteBuilder() *cobra.Command {
-	opts := new(DeleteOpts)
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("'%s' deleted\n", "Not deleted"),
+	}
 	cmd := &cobra.Command{
 		Use:   "delete <{{ .IDName }}>",
-		Short: "{{ .Description }}.",
+		Short: "{{ .Description }}",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"{{ .IDName }}Desc": "{{ .IDDescription }}",
+			"output":            opts.SuccessMessage(),
 		},
 		Example: `{{ .Example }}`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

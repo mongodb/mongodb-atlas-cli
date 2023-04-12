@@ -23,10 +23,10 @@ if [[ "${image-}" =~ "rpm" ]]; then
 	FILE_EXT=rpm
 fi
 
-URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision-}_${created_at-}/mongocli_${VERSION}-next_linux_x86_64.${FILE_EXT}
+URL=https://mongodb-mongocli-build.s3.amazonaws.com/${project-}/dist/${revision-}_${created_at-}/mongocli_${VERSION}-next_linux_x86_64.${FILE_EXT}
 ENTRYPOINT=mongocli
 if [[ "${tool_name:?}" == atlascli ]]; then
-	URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision-}_${created_at-}/mongodb-atlas-cli_${VERSION}-next_linux_x86_64.${FILE_EXT}
+	URL=https://mongodb-mongocli-build.s3.amazonaws.com/${project-}/dist/${revision-}_${created_at-}/mongodb-atlas-cli_${VERSION}-next_linux_x86_64.${FILE_EXT}
 	ENTRYPOINT=atlas
 fi
 

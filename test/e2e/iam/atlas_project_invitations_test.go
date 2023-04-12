@@ -28,7 +28,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestProjectInvitations(t *testing.T) {
+func TestAtlasProjectInvitations(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
 

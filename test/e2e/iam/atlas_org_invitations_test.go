@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (iam && !atlas)
+//go:build e2e || (iam && atlas)
 
 package iam_test
 
@@ -28,61 +28,51 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestProjectInvitations(t *testing.T) {
-	cliPath, err := e2e.Bin()
-	require.NoError(t, err)
-
-	var invitationID string
+func TestAtlasOrgInvitations(t *testing.T) {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 
 	n, err := e2e.RandInt(1000)
 	require.NoError(t, err)
 
-	projectName := fmt.Sprintf("e2e-proj-%v", n)
-	projectID, err := e2e.CreateProject(projectName)
-	require.NoError(t, err)
-
-	emailProject := fmt.Sprintf("test-%v@mongodb.com", n)
-	t.Cleanup(func() {
-		e2e.DeleteProjectWithRetry(t, projectID)
-	})
+	emailOrg := fmt.Sprintf("test-%v@mongodb.com", n)
+	var orgInvitationID string
 
 	t.Run("Invite", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
-			projectsEntity,
+			orgEntity,
 			invitationsEntity,
 			"invite",
-			emailProject,
+			emailOrg,
 			"--role",
-			"GROUP_READ_ONLY",
-			"--projectId",
-			projectID,
+			"ORG_MEMBER",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
 		a := assert.New(t)
+		require.NoError(t, err, string(resp))
 
 		var invitation mongodbatlas.Invitation
 		if err := json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailProject, invitation.Username)
+			a.Equal(emailOrg, invitation.Username)
 			require.NotEmpty(t, invitation.ID)
 		}
-		invitationID = invitation.ID
+
+		orgInvitationID = invitation.ID
 	})
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
-			projectsEntity,
+			orgEntity,
 			invitationsEntity,
 			"ls",
-			"--projectId",
-			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
+
 		a := assert.New(t)
 
 		var invitations []mongodbatlas.Invitation
@@ -93,93 +83,79 @@ func TestProjectInvitations(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
-			projectsEntity,
+			orgEntity,
 			invitationsEntity,
 			"get",
-			invitationID,
-			"--projectId",
-			projectID,
+			orgInvitationID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
+
 		a := assert.New(t)
 
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(invitationID, invitation.ID)
+			a.Equal(orgInvitationID, invitation.ID)
 		}
 	})
 
 	t.Run("Update by email", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
-			projectsEntity,
+			orgEntity,
 			invitationsEntity,
 			"update",
 			"--email",
-			emailProject,
+			emailOrg,
 			"--role",
-			roleName1,
-			"--role",
-			roleName2,
-			"--projectId",
-			projectID,
+			roleNameOrg,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
+
 		a := assert.New(t)
 
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailProject, invitation.Username)
-			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
+			a.Equal(emailOrg, invitation.Username)
+			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
 		}
 	})
 
 	t.Run("Update by ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
-			projectsEntity,
+			orgEntity,
 			invitationsEntity,
 			"update",
-			invitationID,
+			orgInvitationID,
 			"--role",
-			roleName1,
-			"--role",
-			roleName2,
-			"--projectId",
-			projectID,
+			roleNameOrg,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		a := assert.New(t)
 
+		a := assert.New(t)
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailProject, invitation.Username)
-			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
+			a.Equal(emailOrg, invitation.Username)
+			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
 		}
 	})
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
-			projectsEntity,
+			orgEntity,
 			invitationsEntity,
 			"delete",
-			invitationID,
-			"--force",
-			"--projectId",
-			projectID)
+			orgInvitationID,
+			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("Invitation '%s' deleted\n", invitationID)
+			expected := fmt.Sprintf("Invitation '%s' deleted\n", orgInvitationID)
 			a.Equal(expected, string(resp))
 		}
 	})

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (iam && !atlas)
+//go:build e2e || (iam && atlas)
 
 package iam_test
 
@@ -29,8 +29,8 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestOrgAPIKeyAccessList(t *testing.T) {
-	cliPath, er := e2e.Bin()
+func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
+	cliPath, er := e2e.AtlasCLIBin()
 	require.NoError(t, er)
 
 	apiKeyID, e := createOrgAPIKey()
@@ -47,7 +47,7 @@ func TestOrgAPIKeyAccessList(t *testing.T) {
 	entry := fmt.Sprintf("192.168.0.%d", n)
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity,
+		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
 			apiKeyAccessListEntity,
@@ -69,7 +69,7 @@ func TestOrgAPIKeyAccessList(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity,
+		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
 			apiKeyAccessListEntity,
@@ -88,12 +88,12 @@ func TestOrgAPIKeyAccessList(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		deleteAccessListEntry(t, cliPath, entry, apiKeyID)
+		deleteAtlasAccessListEntry(t, cliPath, entry, apiKeyID)
 	})
 
 	t.Run("Create Current IP", func(t *testing.T) {
 		t.Skip("400 (request \"CANNOT_REMOVE_CALLER_FROM_ACCESS_LIST\") Cannot remove caller's IP address from access list")
-		cmd := exec.Command(cliPath, iamEntity,
+		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
 			apiKeyAccessListEntity,
@@ -116,14 +116,13 @@ func TestOrgAPIKeyAccessList(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		t.Skip("400 (request \"CANNOT_REMOVE_CALLER_FROM_ACCESS_LIST\") Cannot remove caller's IP address from access list")
-		deleteAccessListEntry(t, cliPath, entry, apiKeyID)
+		deleteAtlasAccessListEntry(t, cliPath, entry, apiKeyID)
 	})
 }
 
-func deleteAccessListEntry(t *testing.T, cliPath, entry, apiKeyID string) {
+func deleteAtlasAccessListEntry(t *testing.T, cliPath, entry, apiKeyID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
-		iamEntity,
 		orgEntity,
 		apiKeysEntity,
 		apiKeyAccessListEntity,

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (iam && !om50 && !om60 && !atlas)
+//go:build e2e || (iam && atlas)
 
 package iam_test
 
@@ -25,95 +25,115 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestTeamUsers(t *testing.T) {
-	cliPath, err := e2e.Bin()
-	require.NoError(t, err)
+func TestAtlasTeams(t *testing.T) {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 
 	n, err := e2e.RandInt(1000)
-	require.NoError(t, err)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 
 	teamName := fmt.Sprintf("teams%v", n)
-	teamID, err := createTeam(teamName)
-	require.NoError(t, err)
-	defer func() {
-		if e := deleteTeam(teamID); e != nil {
-			t.Errorf("error deleting project: %v", e)
+	var teamID string
+
+	t.Run("Create", func(t *testing.T) {
+		username, _, err := OrgNUser(0)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
 		}
-	}()
 
-	username, userID, err := OrgNUser(1)
-	require.NoError(t, err)
-
-	t.Run("Add", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			teamsEntity,
-			usersEntity,
-			"add",
-			userID,
-			"--teamId",
-			teamID,
-			"-o=json",
-		)
+			"create",
+			teamName,
+			"--username",
+			username,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+
 		a := assert.New(t)
+		a.NoError(err, string(resp))
 
-		var users []mongodbatlas.AtlasUser
-		if err := json.Unmarshal(resp, &users); a.NoError(err) {
-			found := false
-			for _, user := range users {
-				if user.Username == username {
-					found = true
-					break
-				}
-			}
+		var team mongodbatlas.Team
+		if err := json.Unmarshal(resp, &team); a.NoError(err) {
+			a.Equal(teamName, team.Name)
+			teamID = team.ID
+		}
+	})
 
-			a.True(found)
+	t.Run("Describe By ID", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			teamsEntity,
+			"describe",
+			"--id",
+			teamID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var team mongodbatlas.Team
+		if err := json.Unmarshal(resp, &team); a.NoError(err) {
+			a.Equal(teamID, team.ID)
+		}
+	})
+
+	t.Run("Describe By Name", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			teamsEntity,
+			"describe",
+			"--name",
+			teamName,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var team mongodbatlas.Team
+		if err := json.Unmarshal(resp, &team); a.NoError(err) {
+			a.Equal(teamName, team.Name)
 		}
 	})
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			teamsEntity,
-			usersEntity,
 			"ls",
-			"--teamId",
-			teamID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+
 		a := assert.New(t)
-		var teams []mongodbatlas.AtlasUser
+		a.NoError(err, string(resp))
+
+		var teams []mongodbatlas.Team
 		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
-			a.NotEmpty(teams)
+			a.NotEmpty(t, teams)
 		}
 	})
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			teamsEntity,
-			usersEntity,
 			"delete",
-			userID,
-			"--teamId",
 			teamID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
-
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("User '%s' deleted from the team\n", userID)
+			expected := fmt.Sprintf("Team '%s' deleted\n", teamID)
 			a.Equal(expected, string(resp))
 		}
 	})

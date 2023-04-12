@@ -18,15 +18,11 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	description := "Create, list and manage your Cloud Manager or Ops Manager users."
-	if config.ToolName == config.AtlasCLI {
-		description = "Create, list and manage your Atlas users."
-	}
 
 	const use = "users"
 	cmd := &cobra.Command{
@@ -39,11 +35,8 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		InviteBuilder(),
 		DescribeBuilder(),
+		DeleteBuilder(),
 	)
-
-	if config.ToolName == config.MongoCLI {
-		cmd.AddCommand(DeleteBuilder())
-	}
 
 	return cmd
 }

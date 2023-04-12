@@ -35,10 +35,10 @@ func (m *MockContainersLister) EXPECT() *MockContainersListerMockRecorder {
 }
 
 // AllContainers mocks base method.
-func (m *MockContainersLister) AllContainers(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Container, error) {
+func (m *MockContainersLister) AllContainers(arg0 string, arg1 *mongodbatlas.ListOptions) ([]interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AllContainers", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.Container)
+	ret0, _ := ret[0].([]interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -50,10 +50,10 @@ func (mr *MockContainersListerMockRecorder) AllContainers(arg0, arg1 interface{}
 }
 
 // ContainersByProvider mocks base method.
-func (m *MockContainersLister) ContainersByProvider(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]mongodbatlas.Container, error) {
+func (m *MockContainersLister) ContainersByProvider(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ContainersByProvider", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.Container)
+	ret0, _ := ret[0].([]interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

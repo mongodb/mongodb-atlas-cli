@@ -25,9 +25,9 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslogs"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/cloudproviders"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters"
@@ -36,6 +36,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdns"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalake"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/dbusers"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/events"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/integrations"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/livemigrations"
@@ -43,20 +44,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/maintenance"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/metrics"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/networking"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/organizations"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/performanceadvisor"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/processes"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/teams"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/users"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/events"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/figautocomplete"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/users"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
@@ -189,8 +189,8 @@ func Builder() *cobra.Command {
 		auth.Builder(),
 		quickstart.Builder(),
 		setup.Builder(),
-		projects.AtlasCLIBuilder(),
-		organizations.AtlasCLIBuilder(),
+		projects.Builder(),
+		organizations.Builder(),
 		users.Builder(),
 		teams.Builder(),
 		clusters.Builder(),
@@ -199,7 +199,7 @@ func Builder() *cobra.Command {
 		accesslists.Builder(),
 		datalake.Builder(),
 		alerts.Builder(),
-		backup.AtlasCLIBuilder(),
+		backup.Builder(),
 		events.Builder(),
 		metrics.Builder(),
 		performanceadvisor.Builder(),
@@ -212,7 +212,7 @@ func Builder() *cobra.Command {
 		maintenance.Builder(),
 		customdns.Builder(),
 		cloudproviders.Builder(),
-		serverless.AtlasCLIBuilder(),
+		serverless.Builder(),
 		livemigrations.Builder(),
 		accesslogs.Builder(),
 		loginCmd,

@@ -68,6 +68,7 @@ func ListBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas cluster that contains the snapshots you want to retrieve.",
+			"output":          listTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of snapshots for the cluster named myDemo 
   %s backups snapshots list myDemo --output json`, cli.ExampleAtlasEntryPoint()),

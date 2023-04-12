@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type UpdateOpts struct {
@@ -54,10 +54,10 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(nil)
 }
 
-func (opts *UpdateOpts) newMaintenanceWindow() *atlas.MaintenanceWindow {
-	return &atlas.MaintenanceWindow{
-		DayOfWeek: opts.dayOfWeek,
-		HourOfDay: &opts.hourOfDay,
+func (opts *UpdateOpts) newMaintenanceWindow() *atlasv2.GroupMaintenanceWindow {
+	return &atlasv2.GroupMaintenanceWindow{
+		DayOfWeek: int32(opts.dayOfWeek),
+		HourOfDay: int32(opts.hourOfDay),
 		StartASAP: &opts.startASAP,
 	}
 }

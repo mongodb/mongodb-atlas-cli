@@ -22,8 +22,10 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestGCPOpts_Run(t *testing.T) {
@@ -35,10 +37,10 @@ func TestGCPOpts_Run(t *testing.T) {
 		network: "test",
 	}
 	t.Run("container exists", func(t *testing.T) {
-		containers := []mongodbatlas.Container{
+		containers := []*atlasv2.GCPCloudProviderContainer{
 			{
-				ID:             "containerID",
-				AtlasCIDRBlock: opts.atlasCIDRBlock,
+				Id:             pointer.Get("containerID"),
+				AtlasCidrBlock: opts.atlasCIDRBlock,
 			},
 		}
 		mockStore.
@@ -47,7 +49,7 @@ func TestGCPOpts_Run(t *testing.T) {
 			Return(containers, nil).
 			Times(1)
 
-		request := opts.newPeer(containers[0].ID)
+		request := opts.newPeer(*containers[0].Id)
 		mockStore.
 			EXPECT().
 			CreatePeeringConnection(opts.ProjectID, request).
@@ -67,7 +69,7 @@ func TestGCPOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			CreateContainer(opts.ProjectID, containerRequest).
-			Return(&mongodbatlas.Container{ID: "ID"}, nil).
+			Return(&atlasv2.GCPCloudProviderContainer{Id: pointer.Get("ID")}, nil).
 			Times(1)
 
 		request := opts.newPeer("ID")

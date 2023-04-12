@@ -326,8 +326,8 @@ func buildMaintenanceWindows(mwProvider store.MaintenanceWindowDescriber, projec
 	}
 
 	return operatorProject.MaintenanceWindow{
-		DayOfWeek: mw.DayOfWeek,
-		HourOfDay: pointer.GetOrDefault(mw.HourOfDay, 0),
+		DayOfWeek: int(mw.DayOfWeek),
+		HourOfDay: int(mw.HourOfDay),
 		AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
 		StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
 		Defer:     false,
@@ -540,28 +540,28 @@ func buildEncryptionAtRest(encProvider store.EncryptionAtRestDescriber, projectI
 	return &atlasV1.EncryptionAtRest{
 		AwsKms: atlasV1.AwsKms{
 			Enabled:             data.AwsKms.Enabled,
-			AccessKeyID:         data.AwsKms.AccessKeyID,
-			SecretAccessKey:     data.AwsKms.SecretAccessKey,
-			CustomerMasterKeyID: data.AwsKms.CustomerMasterKeyID,
-			Region:              data.AwsKms.Region,
-			RoleID:              data.AwsKms.RoleID,
+			AccessKeyID:         data.AwsKms.GetAccessKeyID(),
+			SecretAccessKey:     data.AwsKms.GetSecretAccessKey(),
+			CustomerMasterKeyID: data.AwsKms.GetCustomerMasterKeyID(),
+			Region:              data.AwsKms.GetRegion(),
+			RoleID:              data.AwsKms.GetRoleId(),
 			Valid:               data.AwsKms.Valid,
 		},
 		AzureKeyVault: atlasV1.AzureKeyVault{
 			Enabled:           data.AzureKeyVault.Enabled,
-			ClientID:          data.AzureKeyVault.ClientID,
-			AzureEnvironment:  data.AzureKeyVault.AzureEnvironment,
-			SubscriptionID:    data.AzureKeyVault.SubscriptionID,
-			ResourceGroupName: data.AzureKeyVault.ResourceGroupName,
-			KeyVaultName:      data.AzureKeyVault.KeyVaultName,
-			KeyIdentifier:     data.AzureKeyVault.KeyIdentifier,
-			Secret:            data.AzureKeyVault.Secret,
-			TenantID:          data.AzureKeyVault.TenantID,
+			ClientID:          data.AzureKeyVault.GetClientID(),
+			AzureEnvironment:  data.AzureKeyVault.GetAzureEnvironment(),
+			SubscriptionID:    data.AzureKeyVault.GetSubscriptionID(),
+			ResourceGroupName: data.AzureKeyVault.GetResourceGroupName(),
+			KeyVaultName:      data.AzureKeyVault.GetKeyVaultName(),
+			KeyIdentifier:     data.AzureKeyVault.GetKeyIdentifier(),
+			Secret:            data.AzureKeyVault.GetSecret(),
+			TenantID:          data.AzureKeyVault.GetTenantID(),
 		},
 		GoogleCloudKms: atlasV1.GoogleCloudKms{
 			Enabled:              data.GoogleCloudKms.Enabled,
-			ServiceAccountKey:    data.GoogleCloudKms.ServiceAccountKey,
-			KeyVersionResourceID: data.GoogleCloudKms.KeyVersionResourceID,
+			ServiceAccountKey:    data.GoogleCloudKms.GetServiceAccountKey(),
+			KeyVersionResourceID: data.GoogleCloudKms.GetKeyVersionResourceID(),
 		},
 	}, nil
 }
@@ -606,9 +606,9 @@ func buildAuditing(auditingProvider store.AuditingDescriber, projectID string) (
 	}
 
 	return &atlasV1.Auditing{
-		AuditAuthorizationSuccess: data.AuditAuthorizationSuccess,
+		AuditAuthorizationSuccess: &data.AuditAuthorizationSuccess,
 		AuditFilter:               data.AuditFilter,
-		Enabled:                   data.Enabled,
+		Enabled:                   &data.Enabled,
 	}, nil
 }
 

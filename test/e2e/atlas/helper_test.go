@@ -110,7 +110,7 @@ const (
 	e2eSharedClusterTier = "M2"
 	e2eClusterProvider   = "AWS" // e2eClusterProvider preferred provider for e2e testing.
 	e2eMDBVer            = "4.4"
-	e2eSharedMDBVer      = "5.0"
+	e2eSharedMDBVer      = "6.0"
 )
 
 func deployServerlessInstanceForProject(projectID string) (string, error) {
@@ -694,11 +694,11 @@ func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterN
 	a.Equal(terminationProtection, *cluster.TerminationProtectionEnabled)
 }
 
-func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, version, tier string, diskSizeGB float64, terminationProtection bool) {
+func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, tier string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.Name)
-	a.Equal(version, cluster.MongoDBMajorVersion)
+	a.Equal(e2eSharedMDBVer, cluster.MongoDBMajorVersion)
 	if cluster.ProviderSettings != nil {
 		a.Equal(tier, cluster.ProviderSettings.InstanceSizeName)
 	}

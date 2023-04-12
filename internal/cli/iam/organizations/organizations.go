@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	invitationsAtlas "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/organizations/invitations"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations/apikeys"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations/invitations"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations/users"
@@ -42,25 +41,6 @@ func Builder() *cobra.Command {
 		apikeys.Builder(),
 		users.Builder(),
 		invitations.Builder(),
-	)
-	return cmd
-}
-
-func AtlasCLIBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   fmt.Sprintf("Manage your %s organizations.", cli.DescriptionServiceName()),
-		Long:    "Create, list and manage your MongoDB organizations.",
-		Aliases: cli.GenerateAliases(use, "orgs", "org"),
-	}
-	cmd.AddCommand(
-		CreateAtlasBuilder(),
-		ListBuilder(),
-		DescribeBuilder(),
-		DeleteBuilder(),
-		apikeys.Builder(),
-		users.Builder(),
-		invitationsAtlas.Builder(),
 	)
 	return cmd
 }

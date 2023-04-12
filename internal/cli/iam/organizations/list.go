@@ -28,11 +28,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplateCloud = `ID	NAME{{range .Results}}
-{{.Id}}	{{.Name}}{{end}}
-`
-
-const listTemplateOnPrem = `ID	NAME{{range .Results}}
+const listTemplate = `ID	NAME{{range .Results}}
 {{.ID}}	{{.Name}}{{end}}
 `
 
@@ -78,6 +74,9 @@ func ListBuilder() *cobra.Command {
 		Short:   "Return all organizations.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all organizations:
   %[1]s organizations list --output json
   
@@ -86,7 +85,7 @@ func ListBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore(cmd.Context()),
-				opts.InitConditionalOutput(cmd.OutOrStdout(), listTemplateCloud, listTemplateOnPrem),
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

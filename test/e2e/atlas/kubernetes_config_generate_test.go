@@ -636,7 +636,7 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err)
 		t.Cleanup(func() {
-			deleteNetworkPeering(t, generator.projectID, gcpEntity)
+			deleteAllNetworkPeers(t, cliPath, generator.projectID, gcpEntity)
 		})
 		var createdNetworkPeer mongodbatlas.Peer
 		err = json.Unmarshal(resp, &createdNetworkPeer)
@@ -676,7 +676,7 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 	expectedProject := s.expectedProject
 	assertions := s.assertions
 
-	region := "northeurope"
+	const region = "northeurope"
 	newPrivateEndpoint := atlasV1.PrivateEndpoint{
 		Provider: provider.ProviderAzure,
 	}
@@ -697,7 +697,7 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err)
 		s.t.Cleanup(func() {
-			deletePrivateEndpoints(t, generator.projectID, azureEntity)
+			deleteAllPrivateEndpoints(t, cliPath, generator.projectID, azureEntity)
 		})
 		var createdNetworkPeer mongodbatlas.PrivateEndpointConnection
 		err = json.Unmarshal(resp, &createdNetworkPeer)

@@ -551,9 +551,10 @@ func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	require.NoError(t, err, string(resp))
+	t.Log(string(resp))
+	require.NoError(t, err)
 	var clusters mongodbatlas.AdvancedClustersResponse
-	require.NoError(t, json.Unmarshal(resp, &clusters), string(resp))
+	require.NoError(t, json.Unmarshal(resp, &clusters))
 
 	for _, cluster := range clusters.Results {
 		clusterName := cluster.Name
@@ -578,7 +579,8 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 	)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	require.NoError(t, err, string(resp))
+	t.Log(string(resp))
+	require.NoError(t, err)
 	var networkPeers []mongodbatlas.Peer
 	err = json.Unmarshal(resp, &networkPeers)
 	require.NoError(t, err)
@@ -614,10 +616,11 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 	)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	require.NoError(t, err, string(resp))
+	t.Log(string(resp))
+	require.NoError(t, err)
 	var privateEndpoints []mongodbatlas.PrivateEndpointConnection
 	err = json.Unmarshal(resp, &privateEndpoints)
-	require.NoError(t, err, string(resp))
+	require.NoError(t, err)
 	for _, endpoint := range privateEndpoints {
 		endpointID := endpoint.ID
 		t.Run("deleting "+endpointID, func(t *testing.T) {

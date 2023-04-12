@@ -143,6 +143,8 @@ For that reason, command arguments tend to match the path and query params of th
 with the last param being a required argument and the rest handled via flag options.
 For commands that create or modify complex data structures, the use of configuration files is preferred over flag options.
 
+Note: we are experimenting with a generator, make sure to try it out in [tools/cli-generator](./tools/cli-generator/)
+
 #### How to define flags:
 
 Flags are a way to modify the command, also may be called "options". Flags always have a long version with two dashes (--state) but may also have a shortcut with one dash and one letter (-s).

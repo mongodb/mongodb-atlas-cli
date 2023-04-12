@@ -168,7 +168,7 @@ func (cli *CLI) generateStore(store *Store) error {
 
 func (cli *CLI) generateFile(file string, templateFile string, data any) (bool, error) {
 	if !cli.overwrite && fileExists(file) {
-		fmt.Printf("File '%s' already present in disk, skipping\n", file)
+		fmt.Printf("File %q already present in disk, skipping\n", file)
 		return false, nil
 	}
 

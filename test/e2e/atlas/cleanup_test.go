@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (atlas && cleanup)
 
 package atlas_test
@@ -23,6 +24,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -38,21 +40,45 @@ func TestCleanup(t *testing.T) {
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	req.NoError(err, resp)
+	req.NoError(err, string(resp))
 
 	var projects mongodbatlas.Projects
 	err = json.Unmarshal(resp, &projects)
 	req.NoError(err)
 
 	for _, project := range projects.Results {
-		if project.ID == os.Getenv("MCLI_PROJECT_ID") {
-			fmt.Println("skipping project", project.ID)
-			continue
-		}
-		t.Run("Project "+project.ID, func(t *testing.T) {
-			deleteProjectWithRetry(t, project.ID)
+		projectID := project.ID
+		t.Run("deleting project "+project.ID, func(t *testing.T) {
+			t.Parallel()
+			if projectID == os.Getenv("MCLI_PROJECT_ID") {
+				t.Skip("skipping project", projectID)
+			}
+			deleteClustersForProject(t, cliPath, projectID)
+			deleteProjectWithRetry(t, projectID)
 		})
 	}
 
 	fmt.Println(projects)
+}
+
+func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		clustersEntity,
+		"list",
+		"--projectId", projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err, string(resp))
+	var clusters mongodbatlas.AdvancedClustersResponse
+	require.NoError(t, json.Unmarshal(resp, &clusters), string(resp))
+
+	for _, cluster := range clusters.Results {
+		clusterName := cluster.Name
+		t.Run("deleting cluster "+clusterName, func(t *testing.T) {
+			t.Parallel()
+			assert.NoError(t, deleteClusterForProject(projectID, clusterName))
+		})
+	}
 }

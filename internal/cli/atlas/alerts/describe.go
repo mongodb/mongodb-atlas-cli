@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -31,13 +31,13 @@ type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	alertID string
-	store   store.AlertDescriber
+	store   api.AlertDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.store, err = api.New(api.AuthenticatedPreset(config.Default()), api.WithContext(ctx))
 		return err
 	}
 }

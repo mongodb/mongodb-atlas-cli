@@ -12,40 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package store
+package api
 
 import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_alerts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AlertDescriber,AlertLister,AlertAcknowledger
+//go:generate mockgen -destination=../apimocks/mock_alerts.go -package=apimocks github.com/mongodb/mongodb-atlas-cli/internal/api AlertDescriber,AlertLister,AlertAcknowledger
 
-type AtlasAlertDescriber interface {
-	AlertAtlas(string, string) (*atlas.Alert, error)
+type AlertDescriber interface {
+	Alert(string, string) (*atlas.Alert, error)
 }
 
-type AtlasAlertLister interface {
-	AlertsAtlas(string, *atlas.AlertsListOptions) (*atlas.AlertsResponse, error)
+type AlertLister interface {
+	Alerts(string, *atlas.AlertsListOptions) (*atlas.AlertsResponse, error)
 }
 
-type AtlasAlertAcknowledger interface {
-	AcknowledgeAlertAtlas(string, string, *atlas.AcknowledgeRequest) (*atlas.Alert, error)
+type AlertAcknowledger interface {
+	AcknowledgeAlert(string, string, *atlas.AcknowledgeRequest) (*atlas.Alert, error)
 }
 
 // Alert encapsulate the logic to manage different cloud providers.
-func (s *Store) AlertAtlas(projectID, alertID string) (*atlas.Alert, error) {
+func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 	result, _, err := s.client.(*atlas.Client).Alerts.Get(s.ctx, projectID, alertID)
 	return result, err
 }
 
 // Alerts encapsulate the logic to manage different cloud providers.
-func (s *Store) AlertsAtlas(projectID string, opts *atlas.AlertsListOptions) (*atlas.AlertsResponse, error) {
+func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.AlertsResponse, error) {
 	result, _, err := s.client.(*atlas.Client).Alerts.List(s.ctx, projectID, opts)
 	return result, err
 }
 
 // Acknowledge encapsulate the logic to manage different cloud providers.
-func (s *Store) AcknowledgeAlertAtlas(projectID, alertID string, body *atlas.AcknowledgeRequest) (*atlas.Alert, error) {
+func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlas.AcknowledgeRequest) (*atlas.Alert, error) {
 	result, _, err := s.client.(*atlas.Client).Alerts.Acknowledge(s.ctx, projectID, alertID, body)
 	return result, err
 }

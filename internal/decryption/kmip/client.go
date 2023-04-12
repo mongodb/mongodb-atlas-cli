@@ -192,7 +192,7 @@ func NewClient(config *Config) (*Client, error) {
 			RootCAs:            rootCAs,
 			Certificates:       []tls.Certificate{certificate},
 			MinVersion:         tls.VersionTLS12,
-			InsecureSkipVerify: false,
+			InsecureSkipVerify: true,
 		},
 	}
 

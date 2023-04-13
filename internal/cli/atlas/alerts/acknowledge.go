@@ -26,7 +26,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type AcknowledgeOpts struct {
@@ -60,16 +60,16 @@ func (opts *AcknowledgeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *AcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
+func (opts *AcknowledgeOpts) newAcknowledgeRequest() *atlas.AlertViewForNdsGroup {
 	if opts.forever {
 		// To acknowledge an alert “forever”, set the field value to 100 years in the future.
 		const years = 100
 		opts.until = time.Now().AddDate(years, 1, 1).Format(time.RFC3339)
 	}
-
-	return &atlas.AcknowledgeRequest{
-		AcknowledgedUntil:      &opts.until,
-		AcknowledgementComment: opts.comment,
+	time, _ := time.Parse(time.RFC3339, opts.until)
+	return &atlas.AlertViewForNdsGroup{
+		AcknowledgedUntil:      &time,
+		AcknowledgementComment: &opts.comment,
 	}
 }
 

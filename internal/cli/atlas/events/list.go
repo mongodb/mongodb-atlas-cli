@@ -16,6 +16,7 @@ package events
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -24,7 +25,6 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type EventListOpts struct {
@@ -32,18 +32,6 @@ type EventListOpts struct {
 	EventType []string
 	MinDate   string
 	MaxDate   string
-}
-
-func (opts *EventListOpts) newEventListOptions() *atlas.EventListOptions {
-	return &atlas.EventListOptions{
-		ListOptions: atlas.ListOptions{
-			PageNum:      opts.PageNum,
-			ItemsPerPage: opts.ItemsPerPage,
-		},
-		EventType: opts.EventType,
-		MinDate:   opts.MinDate,
-		MaxDate:   opts.MaxDate,
-	}
 }
 
 type ListOpts struct {
@@ -67,15 +55,23 @@ var listTemplate = `ID	TYPE	CREATED{{range .Results}}
 `
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.newEventListOptions()
-
-	var r *atlas.EventResponse
+	var r interface{}
 	var err error
-
+	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
+	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
 	if opts.orgID != "" {
-		r, err = opts.store.OrganizationEvents(opts.orgID, listOpts)
+		// TODO - event type is array but we expect single event
+		r, err = opts.store.OrganizationEvents(opts.orgID, opts.EventType[0],
+			maxDate, minDate, &store.ListOptions{
+				PageNum:      opts.PageNum,
+				ItemsPerPage: opts.ItemsPerPage,
+			})
 	} else if opts.projectID != "" {
-		r, err = opts.store.ProjectEvents(opts.projectID, listOpts)
+		r, err = opts.store.ProjectEvents(opts.projectID, opts.EventType[0],
+			maxDate, minDate, &store.ListOptions{
+				PageNum:      opts.PageNum,
+				ItemsPerPage: opts.ItemsPerPage,
+			})
 	}
 	if err != nil {
 		return err

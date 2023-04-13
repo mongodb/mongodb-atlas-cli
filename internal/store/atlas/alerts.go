@@ -21,11 +21,11 @@ import (
 //go:generate mockgen -destination=../../mocks/atlas/mock_alerts.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas AlertDescriber,AlertLister,AlertAcknowledger
 
 type AlertDescriber interface {
-	Alert(string, string) (*atlas.Alert, error)
+	Alert(string, string) (*atlas.AlertViewForNdsGroup, error)
 }
 
 type AlertLister interface {
-	Alerts(string, *atlas.AlertViewForNdsGroup) (*atlas.PaginatedAlert, error)
+	Alerts(projectID string, status string, opts ListOptions) (*atlas.PaginatedAlert, error)
 }
 
 type AlertAcknowledger interface {
@@ -50,8 +50,8 @@ func (s *Store) Alerts(projectID string, status string, opts ListOptions) (*atla
 }
 
 // Acknowledge encapsulate the logic to manage different cloud providers.
-func (s *Store) AcknowledgeAlert(projectID, alertID string, body atlas.AlertViewForNdsGroup) (*atlas.AlertViewForNdsGroup, error) {
+func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlas.AlertViewForNdsGroup) (*atlas.AlertViewForNdsGroup, error) {
 	// Issue: AlertViewForNdsGroup contains whole object where originally we only had AcknowledgedUntil field
-	result, _, err := s.clientv2.AlertsApi.AcknowledgeAlert(s.ctx, projectID, alertID).AlertViewForNdsGroup(body).Execute()
+	result, _, err := s.clientv2.AlertsApi.AcknowledgeAlert(s.ctx, projectID, alertID).AlertViewForNdsGroup(*body).Execute()
 	return result, err
 }

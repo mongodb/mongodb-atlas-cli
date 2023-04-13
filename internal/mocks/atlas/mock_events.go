@@ -37,10 +37,10 @@ func (m *MockOrganizationEventLister) EXPECT() *MockOrganizationEventListerMockR
 }
 
 // OrganizationEvents mocks base method.
-func (m *MockOrganizationEventLister) OrganizationEvents(arg0, arg1 string, arg2, arg3 time.Time, arg4 *atlas.ListOptions) (*mongodbatlasv2.GroupPaginatedEvent, error) {
+func (m *MockOrganizationEventLister) OrganizationEvents(arg0, arg1 string, arg2, arg3 time.Time, arg4 *atlas.ListOptions) (*mongodbatlasv2.OrgPaginatedEvent, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationEvents", arg0, arg1, arg2, arg3, arg4)
-	ret0, _ := ret[0].(*mongodbatlasv2.GroupPaginatedEvent)
+	ret0, _ := ret[0].(*mongodbatlasv2.OrgPaginatedEvent)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -75,10 +75,10 @@ func (m *MockProjectEventLister) EXPECT() *MockProjectEventListerMockRecorder {
 }
 
 // ProjectEvents mocks base method.
-func (m *MockProjectEventLister) ProjectEvents(arg0, arg1 string, arg2, arg3 time.Time, arg4 *atlas.ListOptions) (*mongodbatlasv2.OrgPaginatedEvent, error) {
+func (m *MockProjectEventLister) ProjectEvents(arg0, arg1 string, arg2, arg3 time.Time, arg4 *atlas.ListOptions) (*mongodbatlasv2.GroupPaginatedEvent, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectEvents", arg0, arg1, arg2, arg3, arg4)
-	ret0, _ := ret[0].(*mongodbatlasv2.OrgPaginatedEvent)
+	ret0, _ := ret[0].(*mongodbatlasv2.GroupPaginatedEvent)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -113,10 +113,10 @@ func (m *MockEventLister) EXPECT() *MockEventListerMockRecorder {
 }
 
 // OrganizationEvents mocks base method.
-func (m *MockEventLister) OrganizationEvents(arg0, arg1 string, arg2, arg3 time.Time, arg4 *atlas.ListOptions) (*mongodbatlasv2.GroupPaginatedEvent, error) {
+func (m *MockEventLister) OrganizationEvents(arg0, arg1 string, arg2, arg3 time.Time, arg4 *atlas.ListOptions) (*mongodbatlasv2.OrgPaginatedEvent, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationEvents", arg0, arg1, arg2, arg3, arg4)
-	ret0, _ := ret[0].(*mongodbatlasv2.GroupPaginatedEvent)
+	ret0, _ := ret[0].(*mongodbatlasv2.OrgPaginatedEvent)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -128,10 +128,10 @@ func (mr *MockEventListerMockRecorder) OrganizationEvents(arg0, arg1, arg2, arg3
 }
 
 // ProjectEvents mocks base method.
-func (m *MockEventLister) ProjectEvents(arg0, arg1 string, arg2, arg3 time.Time, arg4 *atlas.ListOptions) (*mongodbatlasv2.OrgPaginatedEvent, error) {
+func (m *MockEventLister) ProjectEvents(arg0, arg1 string, arg2, arg3 time.Time, arg4 *atlas.ListOptions) (*mongodbatlasv2.GroupPaginatedEvent, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectEvents", arg0, arg1, arg2, arg3, arg4)
-	ret0, _ := ret[0].(*mongodbatlasv2.OrgPaginatedEvent)
+	ret0, _ := ret[0].(*mongodbatlasv2.GroupPaginatedEvent)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

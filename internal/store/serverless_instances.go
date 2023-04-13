@@ -19,12 +19,17 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-//go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServerlessInstanceLister,ServerlessInstanceDescriber,ServerlessInstanceDeleter,ServerlessInstanceCreator,ServerlessInstanceUpdater
+//go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServerlessInstanceLister,ServerlessInstanceDescriber,ServerlessInstanceDeleter,ServerlessInstanceCreator,ServerlessInstanceUpdater,ServerlessInstanceDetails
 
 type ServerlessInstanceLister interface {
 	ServerlessInstances(string, *atlas.ListOptions) (*atlas.ClustersResponse, error)
+}
+
+type ServerlessInstanceDetails interface {
+	ServerlessInstanceDetails(string, string) (*atlasv2.ServerlessInstanceDescription, error)
 }
 
 type ServerlessInstanceDescriber interface {
@@ -55,6 +60,17 @@ func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions
 }
 
 // ServerlessInstance encapsulates the logic to manage different cloud providers.
+func (s *Store) ServerlessInstanceDetails(projectID, clusterName string) (*atlasv2.ServerlessInstanceDescription, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.clientv2.ServerlessInstancesApi.GetServerlessInstance(s.ctx, projectID, clusterName).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// Used by Kubernetes v1 ServerlessInstance encapsulates the logic to manage different cloud providers.
 func (s *Store) ServerlessInstance(projectID, clusterName string) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:

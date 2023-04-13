@@ -23,14 +23,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockServerlessInstanceDescriber(ctrl)
+	mockStore := mocks.NewMockServerlessInstanceDetails(ctrl)
 
-	expected := &mongodbatlas.Cluster{StateName: "IDLE"}
+	state := "IDLE"
+	expected := &atlasv2.ServerlessInstanceDescription{StateName: &state}
 
 	opts := &WatchOpts{
 		name:  "test",
@@ -39,7 +40,7 @@ func TestWatch_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ServerlessInstance(opts.ProjectID, opts.name).
+		ServerlessInstanceDetails(opts.ProjectID, opts.name).
 		Return(expected, nil).
 		Times(1)
 

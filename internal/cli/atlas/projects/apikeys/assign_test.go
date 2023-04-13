@@ -20,12 +20,12 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectAPIKeyAssigner(ctrl)
+	mockStore := atlas.NewMockProjectAPIKeyAssigner(ctrl)
 
 	opts := &AssignOpts{
 		store: mockStore,

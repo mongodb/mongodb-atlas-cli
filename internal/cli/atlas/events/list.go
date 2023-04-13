@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	atlasStore "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -57,7 +58,7 @@ type ListOpts struct {
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.store, err = atlasStore.New(atlasStore.AuthenticatedPreset(config.Default()), atlasStore.WithContext(ctx))
 		return err
 	}
 }

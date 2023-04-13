@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	atlasStore "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -35,7 +35,7 @@ const describeTemplate = `ID	NAME
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.TeamDescriber
+	store atlasStore.TeamDescriber
 	name  string
 	id    string
 }
@@ -43,7 +43,7 @@ type DescribeOpts struct {
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.store, err = atlasStore.New(atlasStore.AuthenticatedPreset(config.Default()), atlasStore.WithContext(ctx))
 		return err
 	}
 }

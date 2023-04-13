@@ -20,13 +20,13 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectAPIKeyLister(ctrl)
+	mockStore := atlas.NewMockProjectAPIKeyLister(ctrl)
 
 	var expected []mongodbatlas.APIKey
 

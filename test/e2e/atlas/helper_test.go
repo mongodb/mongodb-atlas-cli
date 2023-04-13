@@ -579,14 +579,14 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 	)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	t.Log(string(resp))
+	t.Log("available network peers", string(resp))
 	require.NoError(t, err)
 	var networkPeers []mongodbatlas.Peer
 	err = json.Unmarshal(resp, &networkPeers)
 	require.NoError(t, err)
 	for _, peer := range networkPeers {
 		peerID := peer.ID
-		t.Run("deleting "+peerID, func(t *testing.T) {
+		t.Run("deleting peer: "+peerID, func(t *testing.T) {
 			t.Parallel()
 			cmd = exec.Command(cliPath,
 				networkingEntity,
@@ -623,7 +623,7 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 	require.NoError(t, err)
 	for _, endpoint := range privateEndpoints {
 		endpointID := endpoint.ID
-		t.Run("deleting "+endpointID, func(t *testing.T) {
+		t.Run("deleting endpoint: "+endpointID, func(t *testing.T) {
 			t.Parallel()
 			cmd = exec.Command(cliPath,
 				privateEndpointsEntity,

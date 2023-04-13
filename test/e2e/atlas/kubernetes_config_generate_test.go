@@ -95,19 +95,19 @@ func InitialSetupWithTeam(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	s := KubernetesConfigGenerateProjectSuite{
 		t: t,
 	}
-	s.generator = newAtlasE2ETestGenerator(s.t)
+	s.generator = newAtlasE2ETestGenerator(t)
 	s.generator.generateTeam("Kubernetes")
 	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
 	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
-	require.NoError(s.t, err)
+	require.NoError(t, err)
 	s.cliPath = cliPath
 
 	s.assertions = assert.New(t)
 
 	// always register atlas entities
-	require.NoError(s.t, atlasV1.AddToScheme(scheme.Scheme))
+	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
 	return s
 }
 
@@ -116,18 +116,18 @@ func InitialSetup(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	s := KubernetesConfigGenerateProjectSuite{
 		t: t,
 	}
-	s.generator = newAtlasE2ETestGenerator(s.t)
+	s.generator = newAtlasE2ETestGenerator(t)
 	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
 	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
-	require.NoError(s.t, err)
+	require.NoError(t, err)
 	s.cliPath = cliPath
 
 	s.assertions = assert.New(t)
 
 	// always register atlas entities
-	require.NoError(s.t, atlasV1.AddToScheme(scheme.Scheme))
+	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
 	return s
 }
 
@@ -607,7 +607,7 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 	expectedProject := s.expectedProject
 	assertions := s.assertions
 
-	atlasCidrBlock := "10.8.0.0/18" //
+	atlasCidrBlock := "10.8.0.0/18"
 	networkPeer := atlasV1.NetworkPeer{
 		ProviderName: provider.ProviderGCP,
 		NetworkName:  "test-network",
@@ -634,7 +634,7 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		require.NoError(t, err, string(resp))
 		t.Cleanup(func() {
 			deleteAllNetworkPeers(t, cliPath, generator.projectID, gcpEntity)
 		})
@@ -696,7 +696,7 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err)
-		s.t.Cleanup(func() {
+		t.Cleanup(func() {
 			deleteAllPrivateEndpoints(t, cliPath, generator.projectID, azureEntity)
 		})
 		var createdNetworkPeer mongodbatlas.PrivateEndpointConnection

@@ -22,14 +22,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	atlas "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := atlas.NewMockAlertLister(ctrl)
+	mockStore := mocks.NewMockAlertLister(ctrl)
 
 	expected := &mongodbatlas.AlertsResponse{
 		Links: nil,

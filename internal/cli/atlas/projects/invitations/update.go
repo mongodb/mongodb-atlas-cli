@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	atlasStore "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -33,7 +33,7 @@ const updateTemplate = "Invitation {{.ID}} updated.\n"
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store        atlasStore.ProjectInvitationUpdater
+	store        store.ProjectInvitationUpdater
 	invitationID string
 	username     string
 	roles        []string
@@ -42,7 +42,7 @@ type UpdateOpts struct {
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = atlasStore.New(atlasStore.AuthenticatedPreset(config.Default()), atlasStore.WithContext(ctx))
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return err
 	}
 }

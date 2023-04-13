@@ -15,18 +15,18 @@
 package atlas
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasOld "go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_alert_configuration.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler
 
 type AlertConfigurationLister interface {
-	AlertConfigurations(string, *atlas.ListOptions) ([]atlas.AlertConfiguration, error)
+	AlertConfigurations(string, *atlasOld.ListOptions) ([]atlasOld.AlertConfiguration, error)
 }
 
 type AlertConfigurationCreator interface {
-	CreateAlertConfiguration(*atlas.AlertConfiguration) (*atlas.AlertConfiguration, error)
+	CreateAlertConfiguration(*atlas.AlertConfigViewForNdsGroup) (*atlas.AlertConfigViewForNdsGroup, error)
 }
 
 type AlertConfigurationDeleter interface {
@@ -34,7 +34,7 @@ type AlertConfigurationDeleter interface {
 }
 
 type AlertConfigurationUpdater interface {
-	UpdateAlertConfiguration(*atlas.AlertConfiguration) (*atlas.AlertConfiguration, error)
+	UpdateAlertConfiguration(*atlas.AlertConfigViewForNdsGroup) (*atlas.AlertConfigViewForNdsGroup, error)
 }
 
 type MatcherFieldsLister interface {
@@ -42,22 +42,26 @@ type MatcherFieldsLister interface {
 }
 
 type AlertConfigurationEnabler interface {
-	EnableAlertConfiguration(string, string) (*atlas.AlertConfiguration, error)
+	EnableAlertConfiguration(string, string) (*atlas.AlertConfigViewForNdsGroup, error)
 }
 
 type AlertConfigurationDisabler interface {
-	DisableAlertConfiguration(string, string) (*atlas.AlertConfiguration, error)
+	DisableAlertConfiguration(string, string) (*atlas.AlertConfigViewForNdsGroup, error)
 }
 
 // AlertConfigurations encapsulate the logic to manage different cloud providers.
-func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) ([]atlas.AlertConfiguration, error) {
-	result, _, err := s.client.AlertConfigurations.List(s.ctx, projectID, opts)
+func (s *Store) AlertConfigurations(projectID string, opts ListOptions) (*atlas.PaginatedAlertConfig, error) {
+	result, _, err := s.clientv2.AlertConfigurationsApi.ListAlertConfigurations(s.ctx, projectID).
+		IncludeCount(opts.IncludeCount).
+		PageNum(int32(opts.PageNum)).
+		ItemsPerPage(int32(opts.ItemsPerPage)).Execute()
 	return result, err
 }
 
 // CreateAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
-	result, _, err := s.client.AlertConfigurations.Create(s.ctx, alertConfig.GroupID, alertConfig)
+func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfigViewForNdsGroup) (*atlas.AlertConfigViewForNdsGroup, error) {
+	result, _, err := s.clientv2.AlertConfigurationsApi.
+		CreateAlertConfiguration(s.ctx, alertConfig.GetGroupId()).AlertConfigViewForNdsGroup(*alertConfig).Execute()
 	return result, err
 }
 
@@ -73,19 +77,23 @@ func (s *Store) MatcherFields() ([]string, error) {
 	return result, err
 }
 
-func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
-	result, _, err := s.client.AlertConfigurations.Update(s.ctx, alertConfig.GroupID, alertConfig.ID, alertConfig)
+func (s *Store) UpdateAlertConfiguration(alertConfig atlas.AlertConfigViewForNdsGroup) (*atlas.AlertConfigViewForNdsGroup, error) {
+	result, _, err := s.clientv2.AlertConfigurationsApi.UpdateAlertConfiguration(s.ctx, alertConfig.GetGroupId(), alertConfig.GetId()).AlertConfigViewForNdsGroup(alertConfig).Execute()
 	return result, err
 }
 
 // EnableAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) EnableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
-	result, _, err := s.client.AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(true))
+func (s *Store) EnableAlertConfiguration(projectID, id string) (*atlas.AlertConfigViewForNdsGroup, error) {
+	enabled := true
+	result, _, err := s.clientv2.AlertConfigurationsApi.
+		ToggleAlertConfiguration(s.ctx, projectID, id).Toggle(atlas.Toggle{Enabled: &enabled}).Execute()
 	return result, err
 }
 
 // DisableAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) DisableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
-	result, _, err := s.client.AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(false))
+func (s *Store) DisableAlertConfiguration(projectID, id string) (*atlas.AlertConfigViewForNdsGroup, error) {
+	enabled := false
+	result, _, err := s.clientv2.AlertConfigurationsApi.
+		ToggleAlertConfiguration(s.ctx, projectID, id).Toggle(atlas.Toggle{Enabled: &enabled}).Execute()
 	return result, err
 }

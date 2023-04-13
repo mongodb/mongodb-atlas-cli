@@ -15,17 +15,19 @@
 package atlas
 
 import (
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"time"
+
+	atlas "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_events.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationEventLister,ProjectEventLister,EventLister
 
 type OrganizationEventLister interface {
-	OrganizationEvents(string, *atlas.EventListOptions) (*atlas.EventResponse, error)
+	OrganizationEvents(orgID, eventType string, maxDate, minDate time.Time, opts *ListOptions) (*atlas.GroupPaginatedEvent, error)
 }
 
 type ProjectEventLister interface {
-	ProjectEvents(string, *atlas.EventListOptions) (*atlas.EventResponse, error)
+	ProjectEvents(orgID, eventType string, maxDate, minDate time.Time, opts *ListOptions) (*atlas.OrgPaginatedEvent, error)
 }
 
 type EventLister interface {
@@ -34,13 +36,29 @@ type EventLister interface {
 }
 
 // ProjectEvents encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
-	result, _, err := s.client.Events.ListProjectEvents(s.ctx, projectID, opts)
+func (s *Store) ProjectEvents(orgID, eventType string, maxDate, minDate time.Time, opts *ListOptions) (*atlas.GroupPaginatedEvent, error) {
+	event, err := atlas.NewEventTypeForNdsGroupFromValue(eventType)
+	if err != nil {
+		return nil, err
+	}
+	result, _, err := s.clientv2.EventsApi.ListProjectEvents(s.ctx, orgID).
+		IncludeCount(opts.IncludeCount).
+		PageNum(int32(opts.PageNum)).
+		ItemsPerPage(int32(opts.ItemsPerPage)).
+		MaxDate(maxDate).MinDate(minDate).EventType(*event).Execute()
 	return result, err
 }
 
 // OrganizationEvents encapsulate the logic to manage different cloud providers.
-func (s *Store) OrganizationEvents(orgID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
-	result, _, err := s.client.Events.ListOrganizationEvents(s.ctx, orgID, opts)
+func (s *Store) OrganizationEvents(orgID, eventType string, maxDate, minDate time.Time, opts *ListOptions) (*atlas.OrgPaginatedEvent, error) {
+	event, err := atlas.NewEventTypeForOrgFromValue(eventType)
+	if err != nil {
+		return nil, err
+	}
+	result, _, err := s.clientv2.EventsApi.ListOrganizationEvents(s.ctx, orgID).
+		IncludeCount(opts.IncludeCount).
+		PageNum(int32(opts.PageNum)).
+		ItemsPerPage(int32(opts.ItemsPerPage)).
+		MaxDate(maxDate).MinDate(minDate).EventType(*event).Execute()
 	return result, err
 }

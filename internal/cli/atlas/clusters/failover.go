@@ -61,6 +61,7 @@ func FailoverBuilder() *cobra.Command {
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Human-readable label that identifies the cluster to start a failover test for.",
+			"output":          opts.SuccessMessage(),
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {

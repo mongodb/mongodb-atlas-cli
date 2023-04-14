@@ -70,6 +70,7 @@ func AuthorizeBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"roleIdDesc": "Unique ID of the role to authorize.",
+			"output":     authorizeTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

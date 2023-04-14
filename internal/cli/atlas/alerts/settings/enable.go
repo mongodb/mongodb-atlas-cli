@@ -68,6 +68,7 @@ func EnableBuilder() *cobra.Command {
 		},
 		Annotations: map[string]string{
 			"alertConfigIdDesc": "ID of the alert you want to enable.",
+			"output":            enableTemplate,
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.alertID = args[0]

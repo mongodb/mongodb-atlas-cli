@@ -54,7 +54,7 @@ func (opts *Opts) Run() error {
 	return opts.Print(r)
 }
 
-var metricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .Measurements}} {{if .DataPoints}}
+var metricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range ..Measurements}} {{if .DataPoints}}
 {{- $name := .Name }}{{- $unit := .Units }}{{- range .DataPoints}}	
 {{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
 `

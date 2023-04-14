@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockProcessMeasurementLister is a mock of ProcessMeasurementLister interface.
@@ -35,10 +36,10 @@ func (m *MockProcessMeasurementLister) EXPECT() *MockProcessMeasurementListerMoc
 }
 
 // ProcessMeasurements mocks base method.
-func (m *MockProcessMeasurementLister) ProcessMeasurements(arg0, arg1 string, arg2 int, arg3 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessMeasurements, error) {
+func (m *MockProcessMeasurementLister) ProcessMeasurements(arg0, arg1 string, arg2 int, arg3 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlasv2.MeasurementsGeneralViewAtlas, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessMeasurements", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessMeasurements)
+	ret0, _ := ret[0].(*mongodbatlasv2.MeasurementsGeneralViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

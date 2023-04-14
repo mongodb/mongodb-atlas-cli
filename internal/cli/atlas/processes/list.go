@@ -28,8 +28,8 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range .}}
-{{.ID}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}{{end}}
+const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range .Results}}
+{{.Id}}	{{.ReplicaSetName}}	{{.Version}}{{end}}
 `
 
 type ListOpts struct {

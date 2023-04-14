@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockProcessDiskMeasurementsLister is a mock of ProcessDiskMeasurementsLister interface.
@@ -35,10 +36,10 @@ func (m *MockProcessDiskMeasurementsLister) EXPECT() *MockProcessDiskMeasurement
 }
 
 // ProcessDiskMeasurements mocks base method.
-func (m *MockProcessDiskMeasurementsLister) ProcessDiskMeasurements(arg0, arg1 string, arg2 int, arg3 string, arg4 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessDiskMeasurements, error) {
+func (m *MockProcessDiskMeasurementsLister) ProcessDiskMeasurements(arg0, arg1 string, arg2 int, arg3 string, arg4 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlasv2.MeasurementsGeneralViewAtlas, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessDiskMeasurements", arg0, arg1, arg2, arg3, arg4)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessDiskMeasurements)
+	ret0, _ := ret[0].(*mongodbatlasv2.MeasurementsGeneralViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +74,10 @@ func (m *MockProcessDatabaseMeasurementsLister) EXPECT() *MockProcessDatabaseMea
 }
 
 // ProcessDatabaseMeasurements mocks base method.
-func (m *MockProcessDatabaseMeasurementsLister) ProcessDatabaseMeasurements(arg0, arg1 string, arg2 int, arg3 string, arg4 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessDatabaseMeasurements, error) {
+func (m *MockProcessDatabaseMeasurementsLister) ProcessDatabaseMeasurements(arg0, arg1 string, arg2 int, arg3 string, arg4 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlasv2.MeasurementsGeneralViewAtlas, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessDatabaseMeasurements", arg0, arg1, arg2, arg3, arg4)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessDatabaseMeasurements)
+	ret0, _ := ret[0].(*mongodbatlasv2.MeasurementsGeneralViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

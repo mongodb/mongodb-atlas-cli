@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDatabasesDescribeOpts_Run(t *testing.T) {
@@ -38,10 +38,8 @@ func TestDatabasesDescribeOpts_Run(t *testing.T) {
 	}
 
 	opts := listOpts.NewProcessMetricsListOptions()
-	expected := &mongodbatlas.ProcessDatabaseMeasurements{
-		ProcessMeasurements: &mongodbatlas.ProcessMeasurements{
-			Measurements: []*mongodbatlas.Measurements{},
-		},
+	expected := &atlasv2.MeasurementsGeneralViewAtlas{
+		Measurements: []atlasv2.MeasurementViewAtlas{},
 	}
 	mockStore.
 		EXPECT().ProcessDatabaseMeasurements(listOpts.ProjectID, listOpts.host, listOpts.port, listOpts.name, opts).

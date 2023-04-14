@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type CreateOpts struct {
@@ -60,23 +60,23 @@ func (opts *CreateOpts) Run() error {
 	return nil
 }
 
-func (opts *CreateOpts) newIndex() (*atlas.IndexConfiguration, error) {
+func (opts *CreateOpts) newIndex() (*atlasv2.IndexRequest, error) {
 	keys, err := opts.indexKeys()
 	if err != nil {
 		return nil, err
 	}
-	i := new(atlas.IndexConfiguration)
-	i.DB = opts.db
+	i := new(atlasv2.IndexRequest)
+	i.Db = opts.db
 	i.Collection = opts.collection
 	i.Keys = keys
 	i.Options = opts.newIndexOptions()
 	return i, nil
 }
 
-func (opts *CreateOpts) newIndexOptions() *atlas.IndexOptions {
-	return &atlas.IndexOptions{
-		Sparse: opts.sparse,
-		Name:   opts.name,
+func (opts *CreateOpts) newIndexOptions() *atlasv2.IndexOptions {
+	return &atlasv2.IndexOptions{
+		Sparse: &opts.sparse,
+		Name:   &opts.name,
 	}
 }
 

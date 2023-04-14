@@ -28,7 +28,7 @@ import (
 )
 
 const describeTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION
-{{.ID}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}
+{{.Id}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}
 `
 
 type DescribeOpts struct {

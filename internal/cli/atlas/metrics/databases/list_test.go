@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDatabasesListsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessDatabaseLister(ctrl)
 
-	expected := &mongodbatlas.ProcessDatabasesResponse{}
+	expected := &atlasv2.PaginatedDatabase{}
 
 	listOpts := &ListsOpts{
 		host:  "hard-00-00.mongodb.net",

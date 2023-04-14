@@ -16,22 +16,25 @@ package store
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_process_databases.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessDatabaseLister
 
 type ProcessDatabaseLister interface {
-	ProcessDatabases(string, string, int, *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error)
+	ProcessDatabases(string, string, int, *atlas.ListOptions) (*atlasv2.PaginatedDatabase, error)
 }
 
 // ProcessDatabases encapsulate the logic to manage different cloud providers.
-func (s *Store) ProcessDatabases(groupID, host string, port int, opts *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error) {
+func (s *Store) ProcessDatabases(groupID, host string, port int, opts *atlas.ListOptions) (*atlasv2.PaginatedDatabase, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProcessDatabases.List(s.ctx, groupID, host, port, opts)
+		process := host + strconv.Itoa(port)
+		result, _, err := s.clientv2.MonitoringAndLogsApi.ListDatabases(s.ctx, groupID, process).PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

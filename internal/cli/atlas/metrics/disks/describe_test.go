@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDisksDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessDiskMeasurementsLister(ctrl)
 
-	expected := &mongodbatlas.ProcessDiskMeasurements{}
+	expected := &atlasv2.MeasurementsGeneralViewAtlas{}
 
 	listOpts := &DescribeOpts{
 		host:  "hard-00-00.mongodb.net",

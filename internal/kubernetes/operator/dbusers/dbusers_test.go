@@ -22,6 +22,7 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
@@ -29,11 +30,13 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -42,11 +45,11 @@ const resourceVersion = "x.y.z"
 
 func Test_convertUserLabels(t *testing.T) {
 	t.Run("Can convert user labels from Atlas to the Operator format", func(t *testing.T) {
-		atlasUser := &mongodbatlas.DatabaseUser{
-			Labels: []mongodbatlas.Label{
+		atlasUser := &atlasv2.DatabaseUser{
+			Labels: []atlasv2.NDSLabel{
 				{
-					Key:   "TestKey",
-					Value: "TestValue",
+					Key:   pointer.Get("TestKey"),
+					Value: pointer.Get("TestValue"),
 				},
 			},
 		}
@@ -66,8 +69,8 @@ func Test_convertUserLabels(t *testing.T) {
 
 func Test_convertUserRoles(t *testing.T) {
 	t.Run("Can convert user labels from Atlas to the Operator format", func(t *testing.T) {
-		atlasUser := &mongodbatlas.DatabaseUser{
-			Roles: []mongodbatlas.Role{
+		atlasUser := &atlasv2.DatabaseUser{
+			Roles: []atlasv2.Role{
 				{
 					RoleName:       "TestRole",
 					DatabaseName:   "TestDB",
@@ -93,8 +96,8 @@ func Test_buildUserSecret(t *testing.T) {
 	dictionary := resources.AtlasNameToKubernetesName()
 	t.Run("Can build user secret WITHOUT credentials", func(t *testing.T) {
 		projectName := "TestProject-1"
-		atlasUser := &mongodbatlas.DatabaseUser{
-			Password: "TestPassword",
+		atlasUser := &atlasv2.DatabaseUser{
+			Password: pointer.Get("TestPassword"),
 			Username: "TestName",
 		}
 
@@ -132,39 +135,41 @@ func TestBuildDBUsers(t *testing.T) {
 	targetNamespace := "TestNamespace-1"
 
 	t.Run("Can build AtlasDatabaseUser from AtlasUser WITHOUT credentials", func(t *testing.T) {
-		user := mongodbatlas.DatabaseUser{
+		user := atlasv2.DatabaseUser{
 			DatabaseName:    "TestDB",
-			DeleteAfterDate: "2022",
-			Labels: []mongodbatlas.Label{
+			DeleteAfterDate: pointer.Get(time.Now()),
+			Labels: []atlasv2.NDSLabel{
 				{
-					Key:   "TestLabelKey",
-					Value: "TestLabelValue",
+					Key:   pointer.Get("TestLabelKey"),
+					Value: pointer.Get("TestLabelValue"),
 				},
 			},
-			LDAPAuthType: "TestType",
-			X509Type:     "TestX509",
-			AWSIAMType:   "TestAWSIAMType",
-			GroupID:      "0",
-			Roles: []mongodbatlas.Role{
+			LdapAuthType: pointer.Get("TestType"),
+			X509Type:     pointer.Get("TestX509"),
+			AwsIAMType:   pointer.Get("TestAWSIAMType"),
+			GroupId:      "0",
+			Roles: []atlasv2.Role{
 				{
 					RoleName:       "TestRoleName",
 					DatabaseName:   "TestRoleDatabaseName",
 					CollectionName: "TestCollectionName",
 				},
 			},
-			Scopes: []mongodbatlas.Scope{
+			Scopes: []atlasv2.UserScope{
 				{
 					Name: "TestScopeName",
 					Type: "CLUSTER",
 				},
 			},
-			Password: "TestPassword",
+			Password: pointer.Get("TestPassword"),
 			Username: "TestUsername",
 		}
 
 		listOptions := &mongodbatlas.ListOptions{}
-		mockUserStore.EXPECT().DatabaseUsers(projectID, listOptions).Return([]mongodbatlas.DatabaseUser{
-			user,
+		mockUserStore.EXPECT().DatabaseUsers(projectID, listOptions).Return(&atlasv2.PaginatedApiAtlasDatabaseUser{
+			Results: []atlasv2.DatabaseUser{
+				user,
+			},
 		}, nil)
 
 		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace, dictionary, resourceVersion)
@@ -190,11 +195,11 @@ func TestBuildDBUsers(t *testing.T) {
 					Namespace: targetNamespace,
 				},
 				DatabaseName:    user.DatabaseName,
-				DeleteAfterDate: user.DeleteAfterDate,
+				DeleteAfterDate: user.DeleteAfterDate.String(),
 				Labels: []common.LabelSpec{
 					{
-						Key:   user.Labels[0].Key,
-						Value: user.Labels[0].Value,
+						Key:   *user.Labels[0].Key,
+						Value: *user.Labels[0].Value,
 					},
 				},
 				Roles: []atlasV1.RoleSpec{
@@ -214,7 +219,7 @@ func TestBuildDBUsers(t *testing.T) {
 					Name: relatedSecrets[0].Name,
 				},
 				Username: user.Username,
-				X509Type: user.X509Type,
+				X509Type: *user.X509Type,
 			},
 			Status: status.AtlasDatabaseUserStatus{
 				Common: status.Common{
@@ -247,70 +252,72 @@ func TestBuildDBUsers(t *testing.T) {
 	})
 
 	t.Run("Can build AtlasDatabaseUser when k8s resource name conflicts", func(t *testing.T) {
-		atlasUsers := []mongodbatlas.DatabaseUser{
-			{
-				DatabaseName:    "TestDB",
-				DeleteAfterDate: "2022",
-				Labels: []mongodbatlas.Label{
-					{
-						Key:   "TestLabelKey",
-						Value: "TestLabelValue",
+		atlasUsers := atlasv2.PaginatedApiAtlasDatabaseUser{
+			Results: []atlasv2.DatabaseUser{
+				{
+					DatabaseName:    "TestDB",
+					DeleteAfterDate: pointer.Get(time.Now()),
+					Labels: []atlasv2.NDSLabel{
+						{
+							Key:   pointer.Get("TestLabelKey"),
+							Value: pointer.Get("TestLabelValue"),
+						},
 					},
-				},
-				LDAPAuthType: "TestType",
-				X509Type:     "TestX509",
-				AWSIAMType:   "TestAWSIAMType",
-				GroupID:      "0",
-				Roles: []mongodbatlas.Role{
-					{
-						RoleName:       "TestRoleName",
-						DatabaseName:   "TestRoleDatabaseName",
-						CollectionName: "TestCollectionName",
+					LdapAuthType: pointer.Get("TestType"),
+					X509Type:     pointer.Get("TestX509"),
+					AwsIAMType:   pointer.Get("TestAWSIAMType"),
+					GroupId:      "0",
+					Roles: []atlasv2.Role{
+						{
+							RoleName:       "TestRoleName",
+							DatabaseName:   "TestRoleDatabaseName",
+							CollectionName: "TestCollectionName",
+						},
 					},
-				},
-				Scopes: []mongodbatlas.Scope{
-					{
-						Name: "TestScopeName",
-						Type: "CLUSTER",
+					Scopes: []atlasv2.UserScope{
+						{
+							Name: "TestScopeName",
+							Type: "CLUSTER",
+						},
 					},
+					Password: pointer.Get("TestPassword"),
+					Username: "TestUsername",
 				},
-				Password: "TestPassword",
-				Username: "TestUsername",
-			},
-			{
-				DatabaseName:    "TestDB",
-				DeleteAfterDate: "2022",
-				Labels: []mongodbatlas.Label{
-					{
-						Key:   "TestLabelKey",
-						Value: "TestLabelValue",
+				{
+					DatabaseName:    "TestDB",
+					DeleteAfterDate: pointer.Get(time.Now()),
+					Labels: []atlasv2.NDSLabel{
+						{
+							Key:   pointer.Get("TestLabelKey"),
+							Value: pointer.Get("TestLabelValue"),
+						},
 					},
-				},
-				LDAPAuthType: "TestType",
-				X509Type:     "TestX509",
-				AWSIAMType:   "TestAWSIAMType",
-				GroupID:      "0",
-				Roles: []mongodbatlas.Role{
-					{
-						RoleName:       "TestRoleName",
-						DatabaseName:   "TestRoleDatabaseName",
-						CollectionName: "TestCollectionName",
+					LdapAuthType: pointer.Get("TestType"),
+					X509Type:     pointer.Get("TestX509"),
+					AwsIAMType:   pointer.Get("TestAWSIAMType"),
+					GroupId:      "0",
+					Roles: []atlasv2.Role{
+						{
+							RoleName:       "TestRoleName",
+							DatabaseName:   "TestRoleDatabaseName",
+							CollectionName: "TestCollectionName",
+						},
 					},
-				},
-				Scopes: []mongodbatlas.Scope{
-					{
-						Name: "TestScopeName",
-						Type: "CLUSTER",
+					Scopes: []atlasv2.UserScope{
+						{
+							Name: "TestScopeName",
+							Type: "CLUSTER",
+						},
 					},
+					Password: pointer.Get("TestPassword"),
+					Username: "testUsername",
 				},
-				Password: "TestPassword",
-				Username: "testUsername",
 			},
 		}
 
 		listOptions := &mongodbatlas.ListOptions{}
 
-		mockUserStore.EXPECT().DatabaseUsers(projectID, listOptions).Return(atlasUsers, nil)
+		mockUserStore.EXPECT().DatabaseUsers(projectID, listOptions).Return(&atlasUsers, nil)
 
 		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace, dictionary, resourceVersion)
 		if err != nil {

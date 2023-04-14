@@ -453,10 +453,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) CreateCluster(arg0 interface
 }
 
 // CreateDatabaseUser mocks base method.
-func (m *MockAtlasClusterQuickStarter) CreateDatabaseUser(arg0 *mongodbatlas.DatabaseUser) (*mongodbatlas.DatabaseUser, error) {
+func (m *MockAtlasClusterQuickStarter) CreateDatabaseUser(arg0 *mongodbatlasv2.DatabaseUser) (*mongodbatlasv2.DatabaseUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDatabaseUser", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.DatabaseUser)
+	ret0, _ := ret[0].(*mongodbatlasv2.DatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -483,10 +483,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) CreateProjectIPAccessList(ar
 }
 
 // DatabaseUser mocks base method.
-func (m *MockAtlasClusterQuickStarter) DatabaseUser(arg0, arg1, arg2 string) (*mongodbatlas.DatabaseUser, error) {
+func (m *MockAtlasClusterQuickStarter) DatabaseUser(arg0, arg1, arg2 string) (*mongodbatlasv2.DatabaseUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseUser", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.DatabaseUser)
+	ret0, _ := ret[0].(*mongodbatlasv2.DatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

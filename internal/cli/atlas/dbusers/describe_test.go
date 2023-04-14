@@ -22,14 +22,14 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDBUserDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseUserDescriber(ctrl)
 
-	var expected mongodbatlas.DatabaseUser
+	var expected atlasv2.DatabaseUser
 
 	username := "user"
 	authDB := convert.AdminDB

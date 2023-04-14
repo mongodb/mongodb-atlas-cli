@@ -22,9 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/randgen"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func (opts *Opts) createDatabaseUser() error {
@@ -91,15 +93,15 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 	return fmt.Errorf("a user with this username %s already exists", username)
 }
 
-func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {
+func (opts *Opts) newDatabaseUser() *atlasv2.DatabaseUser {
 	const none = "NONE"
-	return &atlas.DatabaseUser{
+	return &atlasv2.DatabaseUser{
 		Roles:        convert.BuildAtlasRoles([]string{atlasAdmin}),
-		GroupID:      opts.ConfigProjectID(),
-		Password:     opts.DBUserPassword,
-		X509Type:     none,
-		AWSIAMType:   none,
-		LDAPAuthType: none,
+		GroupId:      opts.ConfigProjectID(),
+		Password:     &opts.DBUserPassword,
+		X509Type:     pointer.Get(none),
+		AwsIAMType:   pointer.Get(none),
+		LdapAuthType: pointer.Get(none),
 		DatabaseName: convert.AdminDB,
 		Username:     opts.DBUsername,
 	}

@@ -17,7 +17,7 @@ package convert
 import (
 	"strings"
 
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -33,8 +33,8 @@ const (
 
 // BuildAtlasRoles converts the roles inside the array of string in an array of mongodbatlas.Role structs.
 // r contains roles in the format roleName@dbName.
-func BuildAtlasRoles(r []string) []atlas.Role {
-	roles := make([]atlas.Role, len(r))
+func BuildAtlasRoles(r []string) []atlasv2.Role {
+	roles := make([]atlasv2.Role, len(r))
 	for i, roleP := range r {
 		roleName, databaseName := splitRoleAndDBName(roleP)
 		var collectionName string
@@ -43,7 +43,7 @@ func BuildAtlasRoles(r []string) []atlas.Role {
 		if len(dbCollection) > 1 {
 			collectionName = strings.Join(dbCollection[1:], ".")
 		}
-		roles[i] = atlas.Role{
+		roles[i] = atlasv2.Role{
 			RoleName:       roleName,
 			DatabaseName:   databaseName,
 			CollectionName: collectionName,
@@ -79,8 +79,8 @@ func BuildOMRoles(r []string) []*opsmngr.Role {
 
 // BuildAtlasScopes converts the scopes inside the array of string in an array of mongodbatlas.Scope structs.
 // r contains resources in the format resourceName:resourceType.
-func BuildAtlasScopes(r []string) []atlas.Scope {
-	scopes := make([]atlas.Scope, len(r))
+func BuildAtlasScopes(r []string) []atlasv2.UserScope {
+	scopes := make([]atlasv2.UserScope, len(r))
 	for i, scopeP := range r {
 		scope := strings.Split(scopeP, scopeSep)
 		resourceType := defaultResourceType
@@ -88,7 +88,7 @@ func BuildAtlasScopes(r []string) []atlas.Scope {
 			resourceType = scope[1]
 		}
 
-		scopes[i] = atlas.Scope{
+		scopes[i] = atlasv2.UserScope{
 			Name: scope[0],
 			Type: strings.ToUpper(resourceType),
 		}

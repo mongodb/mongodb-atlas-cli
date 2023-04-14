@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const (
@@ -74,10 +74,10 @@ func TestDBUserWithFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var users []mongodbatlas.DatabaseUser
+		var users atlasv2.PaginatedApiAtlasDatabaseUser
 		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
 
-		if len(users) == 0 {
+		if len(users.Results) == 0 {
 			t.Fatalf("expected len(users) > 0, got 0")
 		}
 	})
@@ -169,7 +169,7 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	resp, err := cmd.CombinedOutput()
 	require.NoError(t, err, string(resp))
 
-	var user mongodbatlas.DatabaseUser
+	var user atlasv2.DatabaseUser
 	require.NoError(t, json.Unmarshal(resp, &user), string(resp))
 
 	a := assert.New(t)
@@ -194,7 +194,7 @@ func testDescribeUser(t *testing.T, cliPath, username string) {
 	resp, err := cmd.CombinedOutput()
 	require.NoError(t, err, string(resp))
 
-	var user mongodbatlas.DatabaseUser
+	var user atlasv2.DatabaseUser
 	require.NoError(t, json.Unmarshal(resp, &user), string(resp))
 	if user.Username != username {
 		t.Fatalf("expected username to match %v, got %v", username, user.Username)
@@ -208,7 +208,7 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	resp, err := cmd.CombinedOutput()
 	require.NoError(t, err, string(resp))
 
-	var user mongodbatlas.DatabaseUser
+	var user atlasv2.DatabaseUser
 	require.NoError(t, json.Unmarshal(resp, &user), string(resp))
 
 	a := assert.New(t)

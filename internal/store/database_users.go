@@ -129,7 +129,6 @@ func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilE
 			MonthsUntilExpiration: pointer.Get(int32(monthsUntilExpiration)),
 		}
 		_, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCertificate(s.ctx, projectID, username).UserCert(userCert).Execute()
-		s.client.(*atlas.Client).X509AuthDBUsers.CreateUserCertificate(s.ctx, projectID, username, monthsUntilExpiration)
 		return &userCert, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

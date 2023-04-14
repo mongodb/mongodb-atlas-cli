@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
+	atlasStore "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -31,19 +31,19 @@ type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	id    string
-	store store.OrganizationAPIKeyDescriber
+	store atlasStore.OrganizationAPIKeyDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.store, err = atlasStore.New(atlasStore.AuthenticatedPreset(config.Default()), atlasStore.WithContext(ctx))
 		return err
 	}
 }
 
 const describeTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY
-{{.ID}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}
+{{.Id}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}
 `
 
 func (opts *DescribeOpts) Run() error {

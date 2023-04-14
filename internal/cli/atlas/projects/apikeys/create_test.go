@@ -22,6 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -40,7 +41,7 @@ func TestCreate_Run(t *testing.T) {
 		Desc:  createOpts.description,
 		Roles: []string{},
 	}
-	expected := &mongodbatlas.APIKey{}
+	expected := &atlasv2.ApiUser{}
 
 	mockStore.
 		EXPECT().

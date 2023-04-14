@@ -22,26 +22,26 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
+	atlasStore "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `ID	PUBLIC KEY	DESCRIPTION{{range .}}
-{{.ID}}	{{.PublicKey}}	{{.Desc}}{{end}}
+const listTemplate = `ID	PUBLIC KEY	DESCRIPTION{{range .Results}}
+{{.Id}}	{{.PublicKey}}	{{.Desc}}{{end}}
 `
 
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.ProjectAPIKeyLister
+	store atlasStore.ProjectAPIKeyLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.store, err = atlasStore.New(atlasStore.AuthenticatedPreset(config.Default()), atlasStore.WithContext(ctx))
 		return err
 	}
 }

@@ -23,13 +23,11 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestRegisterBuilder(t *testing.T) {
@@ -106,9 +104,9 @@ func Test_registerOpts_Run(t *testing.T) {
 		},
 	}
 	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
-	expectedProjects := &atlasv2.PaginatedAtlasGroup{TotalCount: pointer.Get(int32(1)),
-		Results: []atlasv2.Group{
-			{Id: pointer.Get("p1"), Name: "Project1"},
+	expectedProjects := &atlas.Projects{TotalCount: 1,
+		Results: []*atlas.Project{
+			{ID: "p1", Name: "Project1"},
 		},
 	}
 	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)

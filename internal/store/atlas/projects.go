@@ -22,16 +22,16 @@ import (
 //go:generate mockgen -destination=../../mocks/atlas/mock_projects.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter
 
 type ProjectLister interface {
-	Projects(*atlas.ListOptions) (interface{}, error)
-	GetOrgProjects(string, *atlas.ProjectsListOptions) (interface{}, error)
+	Projects(*atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
+	GetOrgProjects(string, *atlas.ProjectsListOptions) (*atlasv2.PaginatedAtlasGroup, error)
 }
 
 type OrgProjectLister interface {
-	GetOrgProjects(string) (interface{}, error)
+	GetOrgProjects(string) (*atlasv2.PaginatedAtlasGroup, error)
 }
 
 type ProjectCreator interface {
-	CreateProject(string, string, *bool, *atlas.CreateProjectOptions) (interface{}, error)
+	CreateProject(string, string, *bool, *atlas.CreateProjectOptions) (*atlasv2.Group, error)
 	ServiceVersionDescriber
 }
 
@@ -44,7 +44,7 @@ type ProjectDescriber interface {
 }
 
 type ProjectUsersLister interface {
-	ProjectUsers(string, *atlas.ListOptions) (interface{}, error)
+	ProjectUsers(string, *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error)
 }
 
 type ProjectUserDeleter interface {
@@ -52,7 +52,7 @@ type ProjectUserDeleter interface {
 }
 
 type ProjectTeamLister interface {
-	ProjectTeams(string) (interface{}, error)
+	ProjectTeams(string) (*atlasv2.PaginatedTeamRole, error)
 }
 
 type ProjectTeamAdder interface {
@@ -64,14 +64,14 @@ type ProjectTeamDeleter interface {
 }
 
 // Projects encapsulates the logic to manage different cloud providers.
-func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
+func (s *Store) Projects(opts *atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
 	result, _, err := s.clientv2.ProjectsApi.ListProjects(s.ctx).PageNum(int32(opts.PageNum)).
 		ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount).Execute()
 	return result, err
 }
 
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
-func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (interface{}, error) {
+func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
 	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationProjects(s.ctx, orgID).IncludeCount(opts.IncludeCount).
 		PageNum(int32(opts.PageNum)).Name(opts.Name).ItemsPerPage(int32(opts.ItemsPerPage)).Execute()
 	return result, err
@@ -84,7 +84,7 @@ func (s *Store) Project(id string) (interface{}, error) {
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateProject(name, orgID string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (interface{}, error) {
+func (s *Store) CreateProject(name, orgID string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (*atlasv2.Group, error) {
 	group := &atlasv2.Group{Name: name, OrgId: orgID, WithDefaultAlertsSettings: defaultAlertSettings}
 	result, _, err := s.clientv2.ProjectsApi.CreateProject(s.ctx).ProjectOwnerId(opts.ProjectOwnerID).Group(*group).Execute()
 	return result, err
@@ -97,7 +97,7 @@ func (s *Store) DeleteProject(projectID string) error {
 }
 
 // ProjectUsers lists all IAM users in a project.
-func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interface{}, error) {
+func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error) {
 	result, _, err := s.clientv2.DatabaseUsersApi.ListDatabaseUsers(s.ctx, projectID).IncludeCount(opts.IncludeCount).
 		ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum)).Execute()
 	return result, err
@@ -110,7 +110,7 @@ func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 }
 
 // ProjectTeams encapsulates the logic to manage different cloud providers.
-func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
+func (s *Store) ProjectTeams(projectID string) (*atlasv2.PaginatedTeamRole, error) {
 	result, _, err := s.clientv2.TeamsApi.ListProjectTeams(s.ctx, projectID).Execute()
 	return result, err
 }

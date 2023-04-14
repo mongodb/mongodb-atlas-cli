@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectUsersLister(ctrl)
 
-	var expected []mongodbatlas.AtlasUser
+	var expected *atlasv2.PaginatedApiAtlasDatabaseUser
 
 	listOpts := &ListOpts{
 		store: mockStore,

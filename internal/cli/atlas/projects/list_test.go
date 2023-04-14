@@ -23,13 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectLister(ctrl)
 
-	expected := &mongodbatlas.Projects{}
+	expected := &atlasv2.PaginatedAtlasGroup{}
 
 	t.Run("No ConfigOrgID is given", func(t *testing.T) {
 		listOpts := &ListOpts{

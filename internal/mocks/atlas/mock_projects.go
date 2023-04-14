@@ -36,10 +36,10 @@ func (m *MockProjectLister) EXPECT() *MockProjectListerMockRecorder {
 }
 
 // GetOrgProjects mocks base method.
-func (m *MockProjectLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ProjectsListOptions) (interface{}, error) {
+func (m *MockProjectLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ProjectsListOptions) (*mongodbatlasv2.PaginatedAtlasGroup, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrgProjects", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedAtlasGroup)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -51,10 +51,10 @@ func (mr *MockProjectListerMockRecorder) GetOrgProjects(arg0, arg1 interface{}) 
 }
 
 // Projects mocks base method.
-func (m *MockProjectLister) Projects(arg0 *mongodbatlas.ListOptions) (interface{}, error) {
+func (m *MockProjectLister) Projects(arg0 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedAtlasGroup, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Projects", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedAtlasGroup)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -89,10 +89,10 @@ func (m *MockOrgProjectLister) EXPECT() *MockOrgProjectListerMockRecorder {
 }
 
 // GetOrgProjects mocks base method.
-func (m *MockOrgProjectLister) GetOrgProjects(arg0 string) (interface{}, error) {
+func (m *MockOrgProjectLister) GetOrgProjects(arg0 string) (*mongodbatlasv2.PaginatedAtlasGroup, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrgProjects", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedAtlasGroup)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -127,10 +127,10 @@ func (m *MockProjectCreator) EXPECT() *MockProjectCreatorMockRecorder {
 }
 
 // CreateProject mocks base method.
-func (m *MockProjectCreator) CreateProject(arg0, arg1 string, arg2 *bool, arg3 *mongodbatlas.CreateProjectOptions) (interface{}, error) {
+func (m *MockProjectCreator) CreateProject(arg0, arg1 string, arg2 *bool, arg3 *mongodbatlas.CreateProjectOptions) (*mongodbatlasv2.Group, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProject", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlasv2.Group)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -255,10 +255,10 @@ func (m *MockProjectUsersLister) EXPECT() *MockProjectUsersListerMockRecorder {
 }
 
 // ProjectUsers mocks base method.
-func (m *MockProjectUsersLister) ProjectUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
+func (m *MockProjectUsersLister) ProjectUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedApiAtlasDatabaseUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectUsers", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedApiAtlasDatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -330,10 +330,10 @@ func (m *MockProjectTeamLister) EXPECT() *MockProjectTeamListerMockRecorder {
 }
 
 // ProjectTeams mocks base method.
-func (m *MockProjectTeamLister) ProjectTeams(arg0 string) (interface{}, error) {
+func (m *MockProjectTeamLister) ProjectTeams(arg0 string) (*mongodbatlasv2.PaginatedTeamRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectTeams", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedTeamRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

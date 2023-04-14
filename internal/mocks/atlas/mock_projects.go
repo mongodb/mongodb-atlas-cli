@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockProjectLister is a mock of ProjectLister interface.
@@ -126,18 +127,18 @@ func (m *MockProjectCreator) EXPECT() *MockProjectCreatorMockRecorder {
 }
 
 // CreateProject mocks base method.
-func (m *MockProjectCreator) CreateProject(arg0, arg1, arg2 string, arg3 *bool, arg4 *mongodbatlas.CreateProjectOptions) (interface{}, error) {
+func (m *MockProjectCreator) CreateProject(arg0, arg1 string, arg2 *bool, arg3 *mongodbatlas.CreateProjectOptions) (interface{}, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateProject", arg0, arg1, arg2, arg3, arg4)
+	ret := m.ctrl.Call(m, "CreateProject", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateProject indicates an expected call of CreateProject.
-func (mr *MockProjectCreatorMockRecorder) CreateProject(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+func (mr *MockProjectCreatorMockRecorder) CreateProject(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockProjectCreator)(nil).CreateProject), arg0, arg1, arg2, arg3, arg4)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockProjectCreator)(nil).CreateProject), arg0, arg1, arg2, arg3)
 }
 
 // ServiceVersion mocks base method.
@@ -367,10 +368,10 @@ func (m *MockProjectTeamAdder) EXPECT() *MockProjectTeamAdderMockRecorder {
 }
 
 // AddTeamsToProject mocks base method.
-func (m *MockProjectTeamAdder) AddTeamsToProject(arg0 string, arg1 []*mongodbatlas.ProjectTeam) (*mongodbatlas.TeamsAssigned, error) {
+func (m *MockProjectTeamAdder) AddTeamsToProject(arg0 string, arg1 []*mongodbatlas.ProjectTeam) (*mongodbatlasv2.PaginatedTeamRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddTeamsToProject", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.TeamsAssigned)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedTeamRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

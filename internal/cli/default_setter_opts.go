@@ -24,7 +24,7 @@ import (
 	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	atlasStore "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -61,7 +61,7 @@ func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {
 	}
 
 	var err error
-	opts.Store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+	opts.Store, err = atlasStore.New(atlasStore.AuthenticatedPreset(config.Default()), atlasStore.WithContext(ctx))
 	return err
 }
 
@@ -107,14 +107,14 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 		return nil, nil, err
 	}
 	switch r := projects.(type) {
-	case *atlas.Projects:
-		if r.TotalCount == 0 {
+	case *atlasv2.PaginatedAtlasGroup:
+		if r.TotalCount == nil || *r.TotalCount == 0 {
 			return nil, nil, errNoResults
 		}
-		if r.TotalCount > resultsLimit {
+		if *r.TotalCount > resultsLimit {
 			return nil, nil, errTooManyResults
 		}
-		ids, names = atlasProjects(r.Results)
+		ids, names = atlasGroups(r.Results)
 	case *opsmngr.Projects:
 		if r.TotalCount == 0 {
 			return nil, nil, errNoResults
@@ -360,12 +360,12 @@ func (opts *DefaultSetterOpts) SetUpOutput() {
 	}
 }
 
-// atlasProjects transform []*atlas.Project to a []string of ids and another for names.
-func atlasProjects(projects []*atlas.Project) (ids, names []string) {
-	names = make([]string, len(projects))
-	ids = make([]string, len(projects))
-	for i, p := range projects {
-		ids[i] = p.ID
+// atlasGroups transform []*atlasv2.Group to a []string of ids and another for names.
+func atlasGroups(groups []atlasv2.Group) (ids, names []string) {
+	names = make([]string, len(groups))
+	ids = make([]string, len(groups))
+	for i, p := range groups {
+		ids[i] = *p.Id
 		names[i] = p.Name
 	}
 	return ids, names

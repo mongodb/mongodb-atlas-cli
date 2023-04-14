@@ -21,9 +21,11 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDefaultOpts_DefaultQuestions(t *testing.T) {
@@ -83,20 +85,20 @@ func TestDefaultOpts_Projects(t *testing.T) {
 		Store:   mockStore,
 	}
 	t.Run("empty", func(t *testing.T) {
-		expectedProjects := &atlas.Projects{}
+		expectedProjects := &atlasv2.PaginatedAtlasGroup{}
 		mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(1)
 		_, _, err := opts.projects()
 		require.Error(t, err)
 	})
 	t.Run("with one project", func(t *testing.T) {
-		expectedProjects := &atlas.Projects{
-			Results: []*atlas.Project{
+		expectedProjects := &atlasv2.PaginatedAtlasGroup{
+			Results: []atlasv2.Group{
 				{
-					ID:   "1",
+					Id:   pointer.Get("1"),
 					Name: "Project 1",
 				},
 			},
-			TotalCount: 1,
+			TotalCount: pointer.Get(int32(1)),
 		}
 		mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(1)
 		gotIDs, gotNames, err := opts.projects()

@@ -201,10 +201,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) ProjectIPAccessLists(arg0, 
 }
 
 // ProjectSettings mocks base method.
-func (m *MockAtlasOperatorProjectStore) ProjectSettings(arg0 string) (*mongodbatlas.ProjectSettings, error) {
+func (m *MockAtlasOperatorProjectStore) ProjectSettings(arg0 string) (*mongodbatlasv2.GroupSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectSettings", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.ProjectSettings)
+	ret0, _ := ret[0].(*mongodbatlasv2.GroupSettings)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

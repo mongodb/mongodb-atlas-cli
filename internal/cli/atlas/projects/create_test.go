@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -31,11 +31,11 @@ func TestCreate_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectCreator(ctrl)
 
 	opts := CreateOpts{}
-	expected := &mongodbatlas.Project{}
+	expected := &atlasv2.Group{}
 
 	mockStore.
 		EXPECT().
-		CreateProject(gomock.Eq("ProjectBar"), gomock.Eq("5a0a1e7e0f2912c554080adc"), opts.newRegionUsageRestrictions(), nil, opts.newCreateProjectOptions()).Return(expected, nil).
+		CreateProject(gomock.Eq("ProjectBar"), gomock.Eq("5a0a1e7e0f2912c554080adc"), nil, opts.newCreateProjectOptions()).Return(expected, nil).
 		Times(1)
 
 	createOpts := &CreateOpts{

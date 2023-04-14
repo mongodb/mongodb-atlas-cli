@@ -232,20 +232,18 @@ func TestSearch(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		_, err := cmd.CombinedOutput()
+		err := cmd.Run()
 		require.NoError(t, err)
 
 		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
 
 		file, err := os.Create(fileName)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		defer func() {
+		require.NoError(t, err)
+		t.Cleanup()(func() {
 			if e := os.Remove(fileName); e != nil {
 				t.Errorf("error deleting file '%v': %v", fileName, e)
 			}
-		}()
+		})
 
 		tpl := template.Must(template.New("").Parse(`
 {
@@ -382,11 +380,9 @@ func TestSearch(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		err := cmd.Run()
+		require.NoError(t, err)
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
 		var index mongodbatlas.SearchIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			assert.Equal(t, index.Name, indexName)

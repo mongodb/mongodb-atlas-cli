@@ -33,7 +33,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -175,18 +175,18 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				},
 			},
 		}
-		globalCluster := &mongodbatlas.GlobalCluster{
-			CustomZoneMapping: map[string]string{
+		globalCluster := &atlasv2.GeoSharding{
+			CustomZoneMapping: &map[string]string{
 				firstLocation: zoneID1,
 			},
-			ManagedNamespaces: []mongodbatlas.ManagedNamespace{
+			ManagedNamespaces: []atlasv2.ManagedNamespaces{
 				{
 					Db:                     "testDB",
 					Collection:             "testCollection",
 					CustomShardKey:         "testShardKey",
 					IsCustomShardKeyHashed: pointer.Get(true),
 					IsShardKeyUnique:       pointer.Get(true),
-					NumInitialChunks:       4,
+					NumInitialChunks:       pointer.Get(int64(4)),
 					PresplitHashedZones:    pointer.Get(true),
 				},
 			},
@@ -232,7 +232,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 							CustomShardKey:         managedNamespace[0].CustomShardKey,
 							IsCustomShardKeyHashed: managedNamespace[0].IsCustomShardKeyHashed,
 							IsShardKeyUnique:       managedNamespace[0].IsShardKeyUnique,
-							NumInitialChunks:       managedNamespace[0].NumInitialChunks,
+							NumInitialChunks:       int(managedNamespace[0].GetNumInitialChunks()),
 							PresplitHashedZones:    managedNamespace[0].PresplitHashedZones,
 						},
 					},
@@ -427,9 +427,9 @@ func TestBuildServerlessDeployments(t *testing.T) {
 		speComment := "TestPEName"
 		spePrivateEndpointIPAddress := ""
 
-		spe := []mongodbatlasv2.ServerlessTenantEndpoint{
-			mongodbatlasv2.ServerlessAzureTenantEndpointAsServerlessTenantEndpoint(
-				&mongodbatlasv2.ServerlessAzureTenantEndpoint{
+		spe := []atlasv2.ServerlessTenantEndpoint{
+			atlasv2.ServerlessAzureTenantEndpointAsServerlessTenantEndpoint(
+				&atlasv2.ServerlessAzureTenantEndpoint{
 					Id:                       &speID,
 					CloudProviderEndpointId:  &speCloudProviderEndpointID,
 					Comment:                  &speComment,

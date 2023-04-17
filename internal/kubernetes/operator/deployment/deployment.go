@@ -177,8 +177,8 @@ func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec,
 			zoneMap[rc.ID] = rc.ZoneName
 		}
 
-		customZoneMapping = make([]atlasV1.CustomZoneMapping, 0, len(globalCluster.CustomZoneMapping))
-		for location, zoneID := range globalCluster.CustomZoneMapping {
+		customZoneMapping = make([]atlasV1.CustomZoneMapping, 0, len(globalCluster.GetCustomZoneMapping()))
+		for location, zoneID := range globalCluster.GetCustomZoneMapping() {
 			customZoneMapping = append(customZoneMapping, atlasV1.CustomZoneMapping{
 				Zone:     zoneMap[zoneID],
 				Location: location,
@@ -196,7 +196,7 @@ func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec,
 			Db:                     ns.Db,
 			Collection:             ns.Collection,
 			CustomShardKey:         ns.CustomShardKey,
-			NumInitialChunks:       ns.NumInitialChunks,
+			NumInitialChunks:       int(ns.GetNumInitialChunks()),
 			PresplitHashedZones:    ns.PresplitHashedZones,
 			IsCustomShardKeyHashed: ns.IsCustomShardKeyHashed,
 			IsShardKeyUnique:       ns.IsShardKeyUnique,

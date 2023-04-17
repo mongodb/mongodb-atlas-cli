@@ -58,13 +58,13 @@ func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: "Create an Ops Manager or Cloud Manager organization. This command is unavailable for Atlas.",
+		Short: "Create an organization and links it to the requesting API Key's organization.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Label that identifies the organization.",
 			"output":   createTemplate,
 		},
-		Example: `  # Create an Ops Manager organization with the name myOrg:
+		Example: `  # Create an organization with the name myOrg:
   atlas organizations create myOrg --output json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return prerun.ExecuteE(

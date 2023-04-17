@@ -32,7 +32,7 @@ type CreateOpts struct {
 	store      store.{{ .StoreName }}
 	id       string
 
-	// flag parameters
+	// TODO add flag parameters
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

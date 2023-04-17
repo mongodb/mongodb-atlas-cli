@@ -82,6 +82,7 @@ func DeauthorizeBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"roleIdDesc": "Unique ID of the role to authorize.",
+			"output":     deauthorizeSuccess,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))

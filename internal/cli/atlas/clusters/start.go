@@ -64,6 +64,7 @@ func StartBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to start.",
+			"output":          startTmpl,
 		},
 		Example: fmt.Sprintf(`  # Start a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
   %s clusters start myCluster --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),

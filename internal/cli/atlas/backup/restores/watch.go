@@ -35,6 +35,8 @@ type WatchOpts struct {
 	store       store.RestoreJobsDescriber
 }
 
+var watchTemplate = "\nRestore completed.\n"
+
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -72,6 +74,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"restoreJobIdDesc": "ID of the restore job.",
+			"output":           watchTemplate,
 		},
 		Example: fmt.Sprintf(`  # Watch the continuous backup restore job with the ID 507f1f77bcf86cd799439011 for the cluster named Cluster0 until it becomes available:
   %s backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),
@@ -79,7 +82,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nRestore completed.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

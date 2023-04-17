@@ -51,6 +51,8 @@ type DecryptAzureOpts struct {
 	azureSecret   string
 }
 
+var decryptTemplate = "Decrypt of %s to %s completed.\n"
+
 func (opts *DecryptOpts) newDecryption() *decryption.Decryption {
 	return decryption.NewDecryption(
 		decryption.WithAWSOpts(opts.awsOpts.awsAccessKey, opts.awsOpts.awsSecretAccessKey, opts.awsOpts.awsSessionToken),
@@ -85,7 +87,7 @@ func (opts *DecryptOpts) Run() error {
 	}
 
 	if !opts.ShouldDownloadToStdout() {
-		fmt.Printf("Decrypt of %s to %s completed.\n", opts.inFileName, opts.Out)
+		fmt.Printf(decryptTemplate, opts.inFileName, opts.Out)
 	}
 
 	return nil
@@ -99,6 +101,9 @@ func DecryptBuilder() *cobra.Command {
 		Use:    "decrypt",
 		Hidden: true,
 		Short:  "Decrypts an audit log file with the provided AWS, GCP or Azure key management services.",
+		Annotations: map[string]string{
+			"output": decryptTemplate,
+		},
 		Example: `  # Decrypt using AWS credentials:
   atlas logs decrypt --file /path/to/logFile.json --awsAccessKey <accessKey> --awsSecretAccessKey <secretKey> --awsSessionToken <sessionToken>
   # Decrypt using GCP credentials:

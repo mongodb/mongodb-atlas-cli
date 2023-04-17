@@ -73,6 +73,7 @@ func AssignBuilder() *cobra.Command {
 To view possible values for the ID argument, run %s organizations apiKeys list.`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies your API key.",
+			"output": updateTemplate,
 		},
 		Example: fmt.Sprintf(`  # Assign an organization API key with the ID 5f46ae53d58b421fe3edc115 and grant the GROUP_DATA_ACCESS_READ_WRITE role for the project with ID 5e2211c17a3e5a48f5497de3:
   %s projects apiKeys assign 5f46ae53d58b421fe3edc115 --projectId 5e1234c17a3e5a48f5497de3 --role GROUP_DATA_ACCESS_READ_WRITE --output json`, cli.ExampleAtlasEntryPoint()),

@@ -60,6 +60,9 @@ func GetBuilder() *cobra.Command {
 		Use:   "get",
 		Short: "Return the current LDAP configuration details for your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": getTemplate,
+		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details of the current LDAP configuration in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s security ldap get --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

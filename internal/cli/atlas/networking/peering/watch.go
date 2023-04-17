@@ -78,7 +78,7 @@ func watcherAzure(peer *atlasv2.AzurePeerNetwork) bool {
 }
 
 func watcherAWS(peer *atlasv2.AWSPeerVpc) bool {
-	return *peer.StatusName == waitingForUser || *peer.StatusName == failed || *peer.StatusName == available
+	return *peer.StatusName == pendingAcceptance || *peer.StatusName == failed || *peer.StatusName == available
 }
 
 func (opts *WatchOpts) Run() error {

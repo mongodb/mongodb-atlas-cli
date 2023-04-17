@@ -496,17 +496,17 @@ func buildNetworkPeering(npProvider store.PeeringConnectionLister, projectID str
 	result := make([]atlasV1.NetworkPeer, 0, len(npListAWS)+len(npListGCP)+len(npListAzure))
 
 	for i := range npListAWS {
-		np := &npListAWS[i]
+		np := npListAWS[i]
 		result = append(result, convertNetworkPeer(np, provider.ProviderAWS))
 	}
 
 	for i := range npListGCP {
-		np := &npListGCP[i]
+		np := npListGCP[i]
 		result = append(result, convertNetworkPeer(np, provider.ProviderGCP))
 	}
 
 	for i := range npListAzure {
-		np := &npListAzure[i]
+		np := npListAzure[i]
 		result = append(result, convertNetworkPeer(np, provider.ProviderAzure))
 	}
 

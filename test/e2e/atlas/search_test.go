@@ -52,8 +52,7 @@ func TestSearch(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		err := cmd.Run()
-		// require.NoError(t, err)
-		r.Error(err, "Failed to load")
+		r.NoError(err)
 	})
 
 	t.Run("Create via file", func(t *testing.T) {

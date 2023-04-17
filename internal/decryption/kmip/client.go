@@ -21,7 +21,7 @@ import (
 	"errors"
 	"fmt"
 
-	kmip "github.com/gemalto/kmip-go"
+	"github.com/gemalto/kmip-go"
 	"github.com/gemalto/kmip-go/kmip14"
 	"github.com/gemalto/kmip-go/kmip20"
 	"github.com/gemalto/kmip-go/ttlv"
@@ -84,12 +84,7 @@ type DecryptResponse struct {
 	Data             []byte
 }
 
-// Symmetric key value.
-type KeyValue struct {
-	KeyMaterial []byte
-}
-
-// KMIP protocol version.
+// Version of the KMIP protocol.
 type Version struct {
 	Major int
 	Minor int
@@ -145,7 +140,6 @@ var (
 	ErrKMIPReqFailure                = errors.New("kmip request failure")
 	ErrKMIPGetOpFailure              = errors.New("failed to perform get operation")
 	ErrKMIPDecodeFailure             = errors.New("failed to decode")
-	ErrKMIPDecodeKeyBlockFailure     = errors.New("failed to decode key block")
 	ErrKMIPPerformCreateSymmetricKey = errors.New("failed to perform KMIP create symmetric key operation")
 	ErrKMIPDecodeCreateSymmetricKey  = errors.New("failed to decode KMIP create symmetric key response")
 	ErrKMIPPerformEncrypt            = errors.New("failed to perform KMIP encrypt operation")
@@ -306,14 +300,8 @@ func (kc *Client) GetSymmetricKey(keyID string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("%w: %s", ErrKMIPDecodeFailure, err)
 	}
-
-	var keyValue KeyValue
-	err = decoder.DecodeValue(&keyValue, response.SymmetricKey.KeyBlock.KeyValue.(ttlv.TTLV))
-	if err != nil {
-		return nil, fmt.Errorf("%w: %s", ErrKMIPDecodeKeyBlockFailure, err)
-	}
-
-	return keyValue.KeyMaterial, nil
+	keyValue := response.SymmetricKey.KeyBlock.KeyValue
+	return keyValue.KeyMaterial.([]byte), nil
 }
 
 // CreateSymmetricKey creates a symmetric key on KMIP server.

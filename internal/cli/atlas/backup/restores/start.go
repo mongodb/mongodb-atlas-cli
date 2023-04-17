@@ -147,6 +147,7 @@ func StartBuilder() *cobra.Command {
 		ValidArgs: []string{automatedRestore, downloadRestore, pointInTimeRestore},
 		Annotations: map[string]string{
 			"automated|download|pointInTimeDesc": "Type of restore job to create. Valid values include: automated, download, pointInTime. To learn more about types of restore jobs, see https://www.mongodb.com/docs/atlas/backup-restore-cluster/.",
+			"output":                             startTemplate,
 		},
 		Example: fmt.Sprintf(`  # Create an automated restore:
   %[1]s backup restore start automated \

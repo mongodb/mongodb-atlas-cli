@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (atlas && cleanup)
 
 package atlas_test
@@ -38,19 +39,27 @@ func TestCleanup(t *testing.T) {
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	req.NoError(err, resp)
+	req.NoError(err, string(resp))
 
 	var projects mongodbatlas.Projects
 	err = json.Unmarshal(resp, &projects)
 	req.NoError(err)
 
 	for _, project := range projects.Results {
-		if project.ID == os.Getenv("MCLI_PROJECT_ID") {
-			fmt.Println("skipping project", project.ID)
-			continue
-		}
-		t.Run("Project "+project.ID, func(t *testing.T) {
-			deleteProjectWithRetry(t, project.ID)
+		projectID := project.ID
+		t.Run("deleting project "+project.ID, func(t *testing.T) {
+			t.Parallel()
+			if projectID == os.Getenv("MCLI_PROJECT_ID") {
+				t.Skip("skipping project", projectID)
+			}
+			deleteAllNetworkPeers(t, cliPath, projectID, "aws")
+			deleteAllNetworkPeers(t, cliPath, projectID, "gcp")
+			deleteAllNetworkPeers(t, cliPath, projectID, "azure")
+			deleteAllPrivateEndpoints(t, cliPath, projectID, "aws")
+			deleteAllPrivateEndpoints(t, cliPath, projectID, "gcp")
+			deleteAllPrivateEndpoints(t, cliPath, projectID, "azure")
+			deleteClustersForProject(t, cliPath, projectID)
+			deleteProjectWithRetry(t, projectID)
 		})
 	}
 

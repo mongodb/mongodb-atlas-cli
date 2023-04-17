@@ -31,6 +31,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli completion fish [options]
 

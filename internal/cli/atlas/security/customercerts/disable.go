@@ -35,6 +35,8 @@ type DisableOpts struct {
 	confirm bool
 }
 
+var disableTemplate = "X.509 configuration for project %s was deleted.\n"
+
 func (opts *DisableOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -53,7 +55,7 @@ func (opts *DisableOpts) Run() error {
 		return err
 	}
 
-	fmt.Printf("X.509 configuration for project %s was deleted.\n", opts.ConfigProjectID())
+	fmt.Printf(disableTemplate, opts.ConfigProjectID())
 
 	return nil
 }
@@ -76,6 +78,9 @@ func DisableBuilder() *cobra.Command {
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args: require.NoArgs,
+		Annotations: map[string]string{
+			"output": disableTemplate,
+		},
 		Example: fmt.Sprintf(`  # Disable the customer-managed X.509 configuration in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s security customerCerts disable --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

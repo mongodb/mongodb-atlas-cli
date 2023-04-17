@@ -1,0 +1,101 @@
+commands:
+  - command_path: atlas dataLakePipelines
+    package_name: datalakepipelines
+    description: Data Lake pipelines.
+    template: parent
+    sub_commands:
+      - command_path: atlas dataLakePipelines list
+        package_name: datalakepipelines
+        store_name: PipelinesLister
+        store_method: Pipelines
+        description: Returns all data lake pipelines for your project.
+        template: list
+        output_template: |
+          ID	NAME	STATE{{range .}}
+          {{.Id}}	{{.Name}}	{{.State}}
+          {{end}}
+        example: |
+          # list all pipelines:
+            atlas dataLakePipelines list
+      - command_path: atlas dataLakePipelines describe
+        package_name: datalakepipelines
+        store_name: PipelinesDescriber
+        store_method: Pipeline
+        description: Return the details for the specified data lake pipeline for your project.
+        template: describe
+        id_name: pipelineName
+        id_description: Name of the pipeline
+        output_template: |
+          ID	NAME	STATE
+          {{.Id}}	{{.Name}}	{{.State}}
+        example: |
+          # retrieves pipeline 'Pipeline1':
+            atlas dataLakePipelines describe Pipeline1
+      - command_path: atlas dataLakePipelines delete
+        package_name: datalakepipelines
+        store_name: PipelinesDeleter
+        store_method: DeletePipeline
+        template: delete
+        description: Remove the specified data lake pipeline from your project.
+        id_name: pipelineName
+        id_description: Name of the pipeline
+        example: |
+          # deletes pipeline 'Pipeline1':
+            atlas dataLakePipelines delete Pipeline1
+      - command_path: atlas dataLakePipelines create
+        package_name: datalakepipelines
+        store_name: PipelinesCreator
+        store_method: CreatePipeline
+        template: create
+        description: Creates a new Data Lake Pipeline.
+        id_name: pipelineName
+        id_description: Label that identifies the pipeline
+        output_template: Pipeline {{.Name}} created.
+        request_type: 'atlasv2.IngestionPipeline'
+        example: |
+          # create data lake pipeline:
+            atlas dataLakePipelines create Pipeline1 --sinkType CPS --sinkMetadataProvider AWS --sinkMetadataRegion us-east-1 --sinkPartitionField name:0,summary:1 --sourceType PERIODIC_CPS --sourceClusterName Cluster1 --sourceDatabaseName sample_airbnb --sourceCollectionName listingsAndReviews --sourcePolicyItemId 507f1f77bcf86cd799439011 --transform EXCLUDE:space,EXCLUDE:notes
+      - command_path: atlas dataLakePipelines update
+        package_name: datalakepipelines
+        store_name: PipelinesUpdater
+        store_method: UpdatePipeline
+        template: update
+        description: Modify the details of the specified data lake pipeline for your project.
+        id_name: pipelineName
+        id_description: Label that identifies the pipeline
+        output_template: Pipeline {{.Name}} updated.
+        request_type: 'atlasv2.IngestionPipeline'
+        example: |
+          # update data lake pipeline:
+            atlas dataLakePipelines update Pipeline1 --sinkType CPS --sinkMetadataProvider AWS --sinkMetadataRegion us-east-1 --sinkPartitionField name:0,summary:1 --sourceType PERIODIC_CPS --sourceClusterName Cluster1 --sourceDatabaseName sample_airbnb --sourceCollectionName listingsAndReviews --sourcePolicyItemId 507f1f77bcf86cd799439011 --transform EXCLUDE:space,EXCLUDE:notes
+stores:
+  - base_file_name: data_lake_pipelines
+    template: store
+    lister:
+      name: PipelinesLister
+      method: Pipelines
+      sdk_method: DataLakePipelinesApi.ListPipelines
+      return_type: '[]atlasv2.IngestionPipeline'
+    describer:
+      name: PipelinesDescriber
+      method: Pipeline
+      sdk_method: DataLakePipelinesApi.GetPipeline
+      return_type: '*atlasv2.IngestionPipeline'
+    creator:
+      name: PipelinesCreator
+      method: CreatePipeline
+      sdk_method: DataLakePipelinesApi.CreatePipeline
+      arg_type: 'atlasv2.IngestionPipeline'
+      arg_name: IngestionPipeline
+      return_type: '*atlasv2.IngestionPipeline'
+    updater:
+      name: PipelinesUpdater
+      method: UpdatePipeline
+      sdk_method: DataLakePipelinesApi.UpdatePipeline
+      arg_type: 'atlasv2.IngestionPipeline'
+      arg_name: IngestionPipeline
+      return_type: '*atlasv2.IngestionPipeline'
+    deleter:
+      name: PipelinesDeleter
+      method: DeletePipeline
+      sdk_method: DataLakePipelinesApi.DeletePipeline

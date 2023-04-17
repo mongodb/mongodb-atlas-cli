@@ -28,6 +28,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli ops-manager clusters resync <clusterName> [options]
 

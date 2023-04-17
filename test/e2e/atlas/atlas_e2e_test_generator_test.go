@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || atlas
 
 package atlas_test
@@ -27,8 +28,7 @@ import (
 )
 
 const (
-	maxRetryAttempts   = 10
-	sleepTimeInSeconds = 30
+	maxRetryAttempts = 10
 )
 
 // atlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.
@@ -186,10 +186,12 @@ func (g *atlasE2ETestGenerator) generateDBUser(prefix string) {
 func deleteTeamWithRetry(t *testing.T, teamID string) {
 	t.Helper()
 	deleted := false
+	backoff := 1
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
 		if e := deleteTeam(teamID); e != nil {
-			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the team %q: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, teamID, e)
-			time.Sleep(sleepTimeInSeconds * time.Second)
+			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the team %q: %v", attempts, maxRetryAttempts, backoff, teamID, e)
+			time.Sleep(time.Duration(backoff) * time.Second)
+			backoff *= 2
 		} else {
 			t.Logf("team %q successfully deleted", teamID)
 			deleted = true
@@ -205,39 +207,20 @@ func deleteTeamWithRetry(t *testing.T, teamID string) {
 func deleteProjectWithRetry(t *testing.T, projectID string) {
 	t.Helper()
 	deleted := false
+	backoff := 1
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
 		if e := deleteProject(projectID); e != nil {
-			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, projectID, e)
-			time.Sleep(sleepTimeInSeconds * time.Second)
+			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, backoff, projectID, e)
+			time.Sleep(time.Duration(backoff) * time.Second)
+			backoff *= 2
 		} else {
 			t.Logf("project %q successfully deleted", projectID)
 			deleted = true
 			break
 		}
 	}
-
 	if !deleted {
 		t.Errorf("we could not delete the project %q", projectID)
-	}
-}
-
-func deleteNetworkPeering(t *testing.T, projectID, provider string) {
-	t.Helper()
-	err := deleteAllNetworkPeers(projectID, provider)
-	if err != nil {
-		t.Errorf("we could not delete the project network peers '%s'", projectID)
-	} else {
-		t.Logf("project '%s' network peers successfully deleted", projectID)
-	}
-}
-
-func deletePrivateEndpoints(t *testing.T, projectID, provider string) {
-	t.Helper()
-	err := deleteAllPrivateEndpoints(projectID, provider)
-	if err != nil {
-		t.Errorf("we could not delete the project private endpoints '%s'", projectID)
-	} else {
-		t.Logf("project '%s' private endpoints successfully deleted", projectID)
 	}
 }
 

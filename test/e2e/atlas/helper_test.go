@@ -27,6 +27,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -110,7 +111,7 @@ const (
 	e2eSharedClusterTier = "M2"
 	e2eClusterProvider   = "AWS" // e2eClusterProvider preferred provider for e2e testing.
 	e2eMDBVer            = "4.4"
-	e2eSharedMDBVer      = "5.0"
+	e2eSharedMDBVer      = "6.0"
 )
 
 func deployServerlessInstanceForProject(projectID string) (string, error) {
@@ -541,11 +542,31 @@ func createProjectWithoutAlertSettings(projectName string) (string, error) {
 	return project.ID, nil
 }
 
-func deleteAllNetworkPeers(projectID, provider string) error {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return err
+func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		clustersEntity,
+		"list",
+		"--projectId", projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	t.Log(string(resp))
+	require.NoError(t, err)
+	var clusters mongodbatlas.AdvancedClustersResponse
+	require.NoError(t, json.Unmarshal(resp, &clusters))
+
+	for _, cluster := range clusters.Results {
+		clusterName := cluster.Name
+		t.Run("deleting cluster "+clusterName, func(t *testing.T) {
+			t.Parallel()
+			assert.NoError(t, deleteClusterForProject(projectID, clusterName))
+		})
 	}
+}
+
+func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
+	t.Helper()
 	cmd := exec.Command(cliPath,
 		networkingEntity,
 		networkPeeringEntity,
@@ -558,38 +579,33 @@ func deleteAllNetworkPeers(projectID, provider string) error {
 	)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("%s (%w)", string(resp), err)
-	}
+	t.Log("available network peers", string(resp))
+	require.NoError(t, err)
 	var networkPeers []mongodbatlas.Peer
 	err = json.Unmarshal(resp, &networkPeers)
-	if err != nil {
-		return fmt.Errorf("invalid response: %s (%w). can't unmarshal", string(resp), err)
-	}
+	require.NoError(t, err)
 	for _, peer := range networkPeers {
-		cmd = exec.Command(cliPath,
-			networkingEntity,
-			networkPeeringEntity,
-			"delete",
-			peer.ID,
-			"--projectId",
-			projectID,
-			"--force",
-		)
-		cmd.Env = os.Environ()
-		resp, err = cmd.CombinedOutput()
-		if err != nil {
-			return fmt.Errorf("%s (%w)", string(resp), err)
-		}
+		peerID := peer.ID
+		t.Run("deleting peer: "+peerID, func(t *testing.T) {
+			t.Parallel()
+			cmd = exec.Command(cliPath,
+				networkingEntity,
+				networkPeeringEntity,
+				"delete",
+				peerID,
+				"--projectId",
+				projectID,
+				"--force",
+			)
+			cmd.Env = os.Environ()
+			resp, err = cmd.CombinedOutput()
+			assert.NoError(t, err, string(resp))
+		})
 	}
-	return nil
 }
 
-func deleteAllPrivateEndpoints(projectID, provider string) error {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return err
-	}
+func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string) {
+	t.Helper()
 	cmd := exec.Command(cliPath,
 		privateEndpointsEntity,
 		provider,
@@ -600,31 +616,29 @@ func deleteAllPrivateEndpoints(projectID, provider string) error {
 	)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("%s (%w)", string(resp), err)
-	}
+	t.Log(string(resp))
+	require.NoError(t, err)
 	var privateEndpoints []mongodbatlas.PrivateEndpointConnection
 	err = json.Unmarshal(resp, &privateEndpoints)
-	if err != nil {
-		return fmt.Errorf("invalid response: %s (%w). can't unmarshal", string(resp), err)
-	}
+	require.NoError(t, err)
 	for _, endpoint := range privateEndpoints {
-		cmd = exec.Command(cliPath,
-			privateEndpointsEntity,
-			provider,
-			"delete",
-			endpoint.ID,
-			"--projectId",
-			projectID,
-			"--force",
-		)
-		cmd.Env = os.Environ()
-		resp, err = cmd.CombinedOutput()
-		if err != nil {
-			return fmt.Errorf("%s (%w)", string(resp), err)
-		}
+		endpointID := endpoint.ID
+		t.Run("deleting endpoint: "+endpointID, func(t *testing.T) {
+			t.Parallel()
+			cmd = exec.Command(cliPath,
+				privateEndpointsEntity,
+				provider,
+				"delete",
+				endpointID,
+				"--projectId",
+				projectID,
+				"--force",
+			)
+			cmd.Env = os.Environ()
+			resp, err = cmd.CombinedOutput()
+			assert.NoError(t, err, string(resp))
+		})
 	}
-	return nil
 }
 
 func deleteTeam(teamID string) error {
@@ -694,11 +708,11 @@ func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterN
 	a.Equal(terminationProtection, *cluster.TerminationProtectionEnabled)
 }
 
-func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, version, tier string, diskSizeGB float64, terminationProtection bool) {
+func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, tier string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.Name)
-	a.Equal(version, cluster.MongoDBMajorVersion)
+	a.Equal(e2eSharedMDBVer, cluster.MongoDBMajorVersion)
 	if cluster.ProviderSettings != nil {
 		a.Equal(tier, cluster.ProviderSettings.InstanceSizeName)
 	}

@@ -92,6 +92,14 @@ check: test fix-lint ## Run tests and linters
 addcopy:
 	@scripts/add-copy.sh
 
+.PHONY: generate
+generate: gen-docs gen-mocks gen-code ## Generate docs, mocks, code, all auto generated assets
+
+.PHONY: gen-code
+gen-code: ## Generate code
+	@echo "==> Generating code"
+	go run ./tools/cli-generator
+
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
 	@echo "==> Generating mocks"

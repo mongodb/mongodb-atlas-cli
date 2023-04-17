@@ -62,7 +62,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureSharedCluster(t, cluster, clusterName, e2eSharedMDBVer, tierM2, 2, true)
+		ensureSharedCluster(t, cluster, clusterName, tierM2, 2, true)
 	})
 
 	t.Run("Watch create", func(t *testing.T) {
@@ -121,18 +121,19 @@ func TestSharedClusterUpgrade(t *testing.T) {
 	t.Run("Ensure upgrade", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
-			"ls",
+			"get",
+			clusterName,
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var clusterResponse mongodbatlas.ClustersResponse
+		var clusterResponse *mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &clusterResponse)
 		req.NoError(err)
 
-		ensureSharedCluster(t, clusterResponse.Results[0], clusterName, "6.0", tierM10, 40, false)
+		ensureCluster(t, clusterResponse, clusterName, "6.0", 40, false)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

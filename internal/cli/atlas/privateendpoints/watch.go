@@ -35,6 +35,8 @@ type WatchOpts struct {
 	store    store.PrivateEndpointDescriberDeprecated
 }
 
+var watchTemplate = "\nPrivate endpoint changes completed.\n"
+
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -74,8 +76,11 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nPrivate endpoint changes completed.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
+		},
+		Annotations: map[string]string{
+			"output": watchTemplate,
 		},
 		Example: fmt.Sprintf(`  %s privateEndpoint watch vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
 		RunE: func(cmd *cobra.Command, args []string) error {

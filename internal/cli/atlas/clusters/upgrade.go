@@ -138,6 +138,7 @@ func UpgradeBuilder() *cobra.Command {
 		},
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to upgrade.",
+			"output":          upgradeTemplate,
 		},
 	}
 

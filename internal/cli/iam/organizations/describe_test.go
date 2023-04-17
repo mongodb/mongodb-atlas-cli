@@ -24,16 +24,16 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationDescriber(ctrl)
 	stringVal := "test"
-	expected := &atlasv2.Organization{
+	expected := &atlas.Organization{
 		Links: nil,
-		Id:    &stringVal,
+		ID:    stringVal,
 		Name:  stringVal,
 	}
 	buf := new(bytes.Buffer)
@@ -48,7 +48,7 @@ func TestDescribe_Run(t *testing.T) {
 		store: mockStore,
 		id:    "5a0a1e7e0f2912c554080adc",
 		OutputOpts: cli.OutputOpts{
-			Template:  describeTemplateCloud,
+			Template:  describeTemplate,
 			OutWriter: buf,
 		},
 	}

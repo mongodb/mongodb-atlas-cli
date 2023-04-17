@@ -40,17 +40,6 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		snapshots.Builder(),
 		restores.Builder(),
-	)
-
-	return cmd
-}
-
-func AtlasCLIBuilder() *cobra.Command {
-	cmd := baseCommand()
-
-	cmd.AddCommand(
-		snapshots.Builder(),
-		restores.AtlasCLIBuilder(),
 		exports.Builder(),
 		schedule.Builder(),
 	)

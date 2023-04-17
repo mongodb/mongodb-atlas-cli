@@ -24,6 +24,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas networking peering create aws [options]
 

@@ -24,6 +24,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas integrations create VICTOR_OPS [options]
 

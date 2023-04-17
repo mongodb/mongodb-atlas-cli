@@ -19,7 +19,6 @@ package iam_test
 import (
 	"encoding/json"
 	"fmt"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"os"
 	"os/exec"
 	"testing"
@@ -27,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAtlasOrgAPIKeyAccessList(t *testing.T) {

@@ -116,12 +116,10 @@ func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlas.APIKeyI
 
 // AssignProjectAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlas.AssignAPIKey) error {
-	roles := make([]atlasv2.UserRoleAssignment, 1)
-	roles[0] = atlasv2.UserRoleAssignment{
-		ApiUserId: pointer.Get(apiKeyID),
-		Roles:     input.Roles,
+	createAPIKey := atlasv2.CreateApiKey{
+		Roles: input.Roles,
 	}
-	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.AddProjectApiKey(s.ctx, projectID, apiKeyID).UserRoleAssignment(roles).Execute()
+	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKeyRoles(s.ctx, projectID, apiKeyID).CreateApiKey(createAPIKey).Execute()
 	return err
 }
 

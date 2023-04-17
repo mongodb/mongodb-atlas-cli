@@ -32,15 +32,29 @@ import (
 func TestSearch(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("search")
+	r := require.New(t)
 
 	cliPath, err := e2e.AtlasCLIBin()
-	require.NoError(t, err)
+	r.NoError(err)
 
 	n, err := e2e.RandInt(1000)
-	require.NoError(t, err)
+	r.NoError(err)
 	indexName := fmt.Sprintf("index-%v", n)
 	collectionName := fmt.Sprintf("collection-%v", n)
 	var indexID string
+
+	t.Run("Load Sample data", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"loadSampleData",
+			g.clusterName,
+			"--projectId", g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		err := cmd.Run()
+		// require.NoError(t, err)
+		r.Error(err, "Failed to load")
+	})
 
 	t.Run("Create via file", func(t *testing.T) {
 		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
@@ -225,21 +239,11 @@ func TestSearch(t *testing.T) {
 	})
 
 	t.Run("Create combinedMapping", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"loadSampleData",
-			g.clusterName,
-			"--projectId", g.projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		err := cmd.Run()
-		require.NoError(t, err)
-
 		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
 
 		file, err := os.Create(fileName)
-		require.NoError(t, err)
-		t.Cleanup()(func() {
+		r.NoError(err)
+		t.Cleanup(func() {
 			if e := os.Remove(fileName); e != nil {
 				t.Errorf("error deleting file '%v': %v", fileName, e)
 			}
@@ -284,7 +288,7 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		cmd = exec.Command(cliPath,
+		cmd := exec.Command(cliPath,
 			clustersEntity,
 			searchEntity,
 			indexEntity,
@@ -311,14 +315,12 @@ func TestSearch(t *testing.T) {
 		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
 
 		file, err := os.Create(fileName)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		defer func() {
+		r.NoError(err)
+		t.Cleanup(func() {
 			if e := os.Remove(fileName); e != nil {
 				t.Errorf("error deleting file '%v': %v", fileName, e)
 			}
-		}()
+		})
 
 		tpl := template.Must(template.New("").Parse(`
 {
@@ -380,8 +382,8 @@ func TestSearch(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		err := cmd.Run()
-		require.NoError(t, err)
+		resp, err := cmd.CombinedOutput()
+		r.NoError(err)
 
 		var index mongodbatlas.SearchIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {

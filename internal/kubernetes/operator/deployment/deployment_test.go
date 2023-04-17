@@ -232,7 +232,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 							CustomShardKey:         managedNamespace[0].CustomShardKey,
 							IsCustomShardKeyHashed: managedNamespace[0].IsCustomShardKeyHashed,
 							IsShardKeyUnique:       managedNamespace[0].IsShardKeyUnique,
-							NumInitialChunks:       int(*managedNamespace[0].NumInitialChunks),
+							NumInitialChunks:       int(managedNamespace[0].GetNumInitialChunks()),
 							PresplitHashedZones:    managedNamespace[0].PresplitHashedZones,
 						},
 					},

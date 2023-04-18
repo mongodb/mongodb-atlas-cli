@@ -57,7 +57,7 @@ func TestServerless(t *testing.T) {
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.Equal(clusterName, cluster.Name)
+		a.Equal(clusterName, *cluster.Name)
 	})
 
 	t.Run("Watch", func(t *testing.T) {
@@ -92,7 +92,7 @@ func TestServerless(t *testing.T) {
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.Equal(clusterName, cluster.Name)
+		a.Equal(clusterName, *cluster.Name)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -129,7 +129,7 @@ func TestServerless(t *testing.T) {
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.Equal(clusterName, cluster.Name)
+		a.Equal(clusterName, *cluster.Name)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

@@ -16,7 +16,7 @@ package store
 
 import (
 	"fmt"
-	"time"
+	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -46,12 +46,12 @@ func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.Acces
 
 		if opts != nil {
 			if opts.Start != "" {
-				startTime, _ := time.Parse(time.RFC3339, opts.Start)
-				result = result.Start(startTime.Unix())
+				startTime, _ := strconv.ParseInt(opts.Start, 10, 64)
+				result = result.Start(startTime)
 			}
 			if opts.End != "" {
-				endTime, _ := time.Parse(time.RFC3339, opts.End)
-				result = result.End(endTime.Unix())
+				endTime, _ := strconv.ParseInt(opts.End, 10, 64)
+				result = result.End(endTime)
 			}
 
 			if opts.NLogs > 0 {
@@ -82,12 +82,12 @@ func (s *Store) AccessLogsByClusterName(groupID, clusterName string, opts *atlas
 
 		if opts != nil {
 			if opts.Start != "" {
-				startTime, _ := time.Parse(time.RFC3339, opts.Start)
-				result = result.Start(startTime.Unix())
+				startTime, _ := strconv.ParseInt(opts.Start, 10, 64)
+				result = result.Start(startTime)
 			}
 			if opts.End != "" {
-				endTime, _ := time.Parse(time.RFC3339, opts.End)
-				result = result.End(endTime.Unix())
+				endTime, _ := strconv.ParseInt(opts.End, 10, 64)
+				result = result.End(endTime)
 			}
 
 			if opts.NLogs > 0 {

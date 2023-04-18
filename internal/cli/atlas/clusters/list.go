@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	atlasStore "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -31,13 +31,13 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.ClusterLister
+	store atlasStore.ClusterLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.store, err = atlasStore.New(atlasStore.AuthenticatedPreset(config.Default()), atlasStore.WithContext(ctx))
 		return err
 	}
 }
@@ -56,7 +56,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas cluster(s) list --projectId projectId [--page N] [--limit N].
+// mongocli atlas cluster(s) list --projectId projectId [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

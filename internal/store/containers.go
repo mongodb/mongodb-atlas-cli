@@ -141,7 +141,7 @@ func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]inte
 func (s *Store) DeleteContainer(projectID, containerID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.NetworkPeeringApi.DeletePeeringContainer(s.ctx, projectID, containerID).Execute()
+		_, _, err := s.clientv2.NetworkPeeringApi.DeletePeeringContainer(s.ctx, projectID, containerID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

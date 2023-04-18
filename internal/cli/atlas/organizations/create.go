@@ -58,7 +58,8 @@ func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: "Create an organization and links it to the requesting API Key's organization.",
+		Short: "Create an organization.",
+		Long:  "When authenticating using API keys the requesting keys most have cross organization billing enable and the resulting org will be linked to the paying org.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Label that identifies the organization.",

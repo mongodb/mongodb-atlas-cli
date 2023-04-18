@@ -26,7 +26,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/hinshun/vt10x v0.0.0-20220119200601-820417d04eec
 	github.com/klauspost/compress v1.16.3
-	github.com/mattn/go-isatty v0.0.17
+	github.com/mattn/go-isatty v0.0.18
 	github.com/mongodb-forks/digest v1.0.4
 	github.com/mongodb-labs/cobra2snooty v0.15.0
 	github.com/mongodb/mongodb-atlas-kubernetes v1.7.0

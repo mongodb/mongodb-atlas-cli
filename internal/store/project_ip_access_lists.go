@@ -63,7 +63,7 @@ func (s *Store) CreateProjectIPAccessList(entries []*atlasv2.NetworkPermissionEn
 func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.ProjectIPAccessListApi.DeleteProjectIpAccessList(s.ctx, projectID, entry).Execute()
+		_, _, err := s.clientv2.ProjectIPAccessListApi.DeleteProjectIpAccessList(s.ctx, projectID, entry).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

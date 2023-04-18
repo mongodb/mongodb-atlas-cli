@@ -47,11 +47,11 @@ func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.Acces
 		if opts != nil {
 			if opts.Start != "" {
 				startTime, _ := time.Parse(time.RFC3339, opts.Start)
-				result = result.Start(startTime)
+				result = result.Start(startTime.Unix())
 			}
 			if opts.End != "" {
 				endTime, _ := time.Parse(time.RFC3339, opts.End)
-				result = result.End(endTime)
+				result = result.End(endTime.Unix())
 			}
 
 			if opts.NLogs > 0 {
@@ -83,10 +83,11 @@ func (s *Store) AccessLogsByClusterName(groupID, clusterName string, opts *atlas
 		if opts != nil {
 			if opts.Start != "" {
 				startTime, _ := time.Parse(time.RFC3339, opts.Start)
-				result = result.Start(startTime)
+				result = result.Start(startTime.Unix())
 			}
 			if opts.End != "" {
-				result = result.End(opts.End)
+				endTime, _ := time.Parse(time.RFC3339, opts.End)
+				result = result.End(endTime.Unix())
 			}
 
 			if opts.NLogs > 0 {

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestServerless(t *testing.T) {
@@ -52,7 +52,7 @@ func TestServerless(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster *mongodbatlas.Cluster
+		var cluster atlasv2.ServerlessInstanceDescription
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -87,7 +87,7 @@ func TestServerless(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster *mongodbatlas.Cluster
+		var cluster atlasv2.ServerlessInstanceDescription
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -105,12 +105,12 @@ func TestServerless(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var clusters mongodbatlas.ClustersResponse
+		var clusters []atlasv2.ServerlessInstanceDescription
 		err = json.Unmarshal(resp, &clusters)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.NotEmpty(clusters.Results)
+		a.NotEmpty(clusters)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -124,7 +124,7 @@ func TestServerless(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster mongodbatlas.Cluster
+		var cluster atlasv2.ServerlessInstanceDescription
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 

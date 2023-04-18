@@ -28,7 +28,7 @@ import (
 
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockServerlessInstanceDetails(ctrl)
+	mockStore := mocks.NewMockServerlessInstanceDescriber(ctrl)
 
 	state := "IDLE"
 	expected := &atlasv2.ServerlessInstanceDescription{StateName: &state}
@@ -40,7 +40,7 @@ func TestWatch_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ServerlessInstanceDetails(opts.ProjectID, opts.name).
+		GetServerlessInstance(opts.ProjectID, opts.name).
 		Return(expected, nil).
 		Times(1)
 

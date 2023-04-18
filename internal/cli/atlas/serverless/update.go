@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type UpdateOpts struct {
@@ -57,14 +57,14 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newServerlessUpdateRequestParams() *atlas.ServerlessUpdateRequestParams {
-	params := &atlas.ServerlessUpdateRequestParams{
+func (opts *UpdateOpts) newServerlessUpdateRequestParams() *atlasv2.ServerlessInstanceDescriptionUpdate {
+	params := &atlasv2.ServerlessInstanceDescriptionUpdate{
 		TerminationProtectionEnabled: cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection),
 	}
 
 	serverlessContinuousBackupEnabled := cli.ReturnValueForSetting(opts.enableServerlessContinuousBackup, opts.disableServerlessContinuousBackup)
 	if serverlessContinuousBackupEnabled != nil {
-		params.ServerlessBackupOptions = &atlas.ServerlessBackupOptions{
+		params.ServerlessBackupOptions = &atlasv2.ServerlessBackupOptions{
 			ServerlessContinuousBackupEnabled: serverlessContinuousBackupEnabled,
 		}
 	}

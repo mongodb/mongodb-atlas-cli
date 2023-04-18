@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {
@@ -34,7 +34,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.Cluster{}
+	expected := &atlasv2.ServerlessInstanceDescription{}
 	mockStore.
 		EXPECT().
 		UpdateServerlessInstance(opts.ProjectID, opts.instanceName, opts.newServerlessUpdateRequestParams()).

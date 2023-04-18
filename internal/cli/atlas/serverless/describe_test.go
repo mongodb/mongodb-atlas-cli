@@ -28,7 +28,7 @@ import (
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockServerlessInstanceDetails(ctrl)
+	mockStore := mocks.NewMockServerlessInstanceDescriber(ctrl)
 
 	var expected atlasv2.ServerlessInstanceDescription
 
@@ -38,7 +38,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ServerlessInstanceDetails(describeOpts.ConfigProjectID(), describeOpts.instanceName).
+		GetServerlessInstance(describeOpts.ConfigProjectID(), describeOpts.instanceName).
 		Return(&expected, nil).
 		Times(1)
 

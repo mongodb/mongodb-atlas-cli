@@ -238,12 +238,8 @@ func fetchClusterNames(clustersProvider store.AtlasAllClustersLister, projectID 
 		return result, nil
 	}
 
-	for i := range serverlessInstances.Results {
-		cluster := serverlessInstances.Results[i]
-		if cluster == nil {
-			continue
-		}
-		result = append(result, serverlessInstances.Results[i].Name)
+	for _, cluster := range serverlessInstances {
+		result = append(result, *cluster.Name)
 	}
 
 	return result, nil

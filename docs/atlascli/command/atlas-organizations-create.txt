@@ -12,7 +12,9 @@ atlas organizations create
    :depth: 1
    :class: singlecol
 
-Create an Ops Manager or Cloud Manager organization. This command is unavailable for Atlas.
+Create an organization.
+
+When authenticating using API keys the requesting keys most have cross organization billing enable and the resulting org will be linked to the paying org.
 
 Syntax
 ------

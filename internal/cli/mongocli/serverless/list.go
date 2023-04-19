@@ -27,8 +27,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	NAME	MDB VER	STATE{{range .Results}}
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
+var listTemplate = `ID	NAME	MDB VER	STATE{{range .}}
+{{.Id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
 `
 
 type ListOpts struct {

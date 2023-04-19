@@ -81,7 +81,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   ID     NAME     MDB VER            STATE
-   <ID>   <Name>   <MongoDBVersion>   <StateName>
+   ID     NAME     MDB VER            STATE{{range .>
+   <Id>   <Name>   <MongoDBVersion>   <StateName>
    
 

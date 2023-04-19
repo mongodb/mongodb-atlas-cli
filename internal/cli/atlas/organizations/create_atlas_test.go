@@ -42,7 +42,7 @@ func TestCreateAtlasBuilder(t *testing.T) {
 
 func TestCreateAtlasOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasOrganizationCreator(ctrl)
+	mockStore := mocks.NewMockOrganizationCreator(ctrl)
 
 	expected := &mongodbatlas.CreateOrganizationRequest{
 		APIKey:     nil,

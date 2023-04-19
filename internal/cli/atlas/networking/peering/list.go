@@ -45,7 +45,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	STATUS	CONTAINER ID{{range .}}
-{{.ID}}	{{if .AWSAccountID}}{{.StatusName}}{{else}}{{.Status}}{{end}}	{{.ContainerID}}{{end}}
+{{.Id}}	{{if .AwsAccountId}}{{.StatusName}}{{else}}{{.Status}}{{end}}	{{.ContainerId}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

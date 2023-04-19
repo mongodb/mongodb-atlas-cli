@@ -50,7 +50,7 @@ func (opts *AzureOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Network peering connection '{{.ID}}' created.\n"
+var createTemplate = "Network peering connection '{{.Id}}' created.\n"
 
 func (opts *AzureOpts) Run() error {
 	opts.region = strings.ToUpper(opts.region)

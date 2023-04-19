@@ -83,7 +83,7 @@ func TestServerlessBackup(t *testing.T) {
 		a := assert.New(t)
 		var result mongodbatlas.CloudProviderSnapshot
 		if err = json.Unmarshal(resp, &result); a.NoError(err) {
-			a.Equal(snapshotID, result.GetId())
+			a.Equal(snapshotID, result.ID)
 		}
 	})
 

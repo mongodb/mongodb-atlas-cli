@@ -85,6 +85,9 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 		if opts.RefreshToken != "" {
 			opts.config.Set(config.RefreshTokenField, opts.RefreshToken)
 		}
+		if config.ClientID() != "" {
+			opts.config.Set(config.ClientIDField, config.ClientID())
+		}
 
 		// sync OpsManagerURL from command opts (higher priority)
 		// and OpsManagerURL from default profile

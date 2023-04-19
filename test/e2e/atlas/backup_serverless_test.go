@@ -17,6 +17,7 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"go.mongodb.org/atlas/mongodbatlas"
 	"os"
 	"os/exec"
 	"testing"
@@ -24,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestServerlessBackup(t *testing.T) {
@@ -54,12 +55,12 @@ func TestServerlessBackup(t *testing.T) {
 
 		r.NoError(err, string(resp))
 
-		var r atlas.CloudProviderSnapshots
+		var r atlasv2.PaginatedApiAtlasServerlessBackupSnapshot
 		a := assert.New(t)
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
 
-			snapshotID = r.Results[0].ID
+			snapshotID = r.Results[0].GetId()
 		}
 	})
 
@@ -80,9 +81,10 @@ func TestServerlessBackup(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var result atlas.CloudProviderSnapshot
+		var result atlasv2.ServerlessBackupSnapshot
+		mongodbatlas.CloudProviderSnapshot
 		if err = json.Unmarshal(resp, &result); a.NoError(err) {
-			a.Equal(snapshotID, result.ID)
+			a.Equal(snapshotID, result.GetId())
 		}
 	})
 
@@ -108,9 +110,9 @@ func TestServerlessBackup(t *testing.T) {
 
 		r.NoError(err, string(resp))
 		a := assert.New(t)
-		var result atlas.CloudProviderSnapshotRestoreJob
+		var result atlasv2.ServerlessBackupRestoreJob
 		if err = json.Unmarshal(resp, &result); a.NoError(err) {
-			restoreJobID = result.ID
+			restoreJobID = result.GetId()
 		}
 	})
 
@@ -145,7 +147,7 @@ func TestServerlessBackup(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var result atlas.CloudProviderSnapshotRestoreJobs
+		var result atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob
 		if err = json.Unmarshal(resp, &result); a.NoError(err) {
 			a.NotEmpty(result)
 		}
@@ -168,7 +170,7 @@ func TestServerlessBackup(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var result atlas.CloudProviderSnapshotRestoreJob
+		var result atlasv2.ServerlessBackupRestoreJob
 		if err = json.Unmarshal(resp, &result); a.NoError(err) {
 			a.NotEmpty(result)
 		}

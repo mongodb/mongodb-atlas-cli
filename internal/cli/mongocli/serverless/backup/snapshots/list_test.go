@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockServerlessSnapshotsLister(ctrl)
 
-	expected := &mongodbatlas.CloudProviderSnapshots{}
+	expected := &atlasv2.PaginatedApiAtlasServerlessBackupSnapshot{}
 
 	listOpts := &ListOpts{
 		store:       mockStore,

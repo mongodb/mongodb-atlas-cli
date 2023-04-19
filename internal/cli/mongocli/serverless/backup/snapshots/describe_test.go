@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockServerlessSnapshotsDescriber(ctrl)
 
-	var expected atlasv2.ServerlessBackupSnapshot
+	var expected mongodbatlas.CloudProviderSnapshot
 
 	describeOpts := &DescribeOpts{
 		store: mockStore,

@@ -17,7 +17,6 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"go.mongodb.org/atlas/mongodbatlas"
 	"os"
 	"os/exec"
 	"testing"
@@ -25,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -81,8 +81,7 @@ func TestServerlessBackup(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var result atlasv2.ServerlessBackupSnapshot
-		mongodbatlas.CloudProviderSnapshot
+		var result mongodbatlas.CloudProviderSnapshot
 		if err = json.Unmarshal(resp, &result); a.NoError(err) {
 			a.Equal(snapshotID, result.GetId())
 		}

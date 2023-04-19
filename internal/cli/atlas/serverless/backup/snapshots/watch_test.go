@@ -21,8 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestWatch_Run(t *testing.T) {
@@ -35,7 +34,7 @@ func TestWatch_Run(t *testing.T) {
 		clusterName: "cluster",
 	}
 
-	expected := &atlasv2.ServerlessBackupSnapshot{Status: pointer.Get("completed")}
+	expected := &mongodbatlas.CloudProviderSnapshot{Status: "completed"}
 
 	mockStore.
 		EXPECT().

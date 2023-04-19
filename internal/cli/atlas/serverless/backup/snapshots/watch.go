@@ -50,7 +50,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return result.GetStatus() == "completed" || result.GetStatus() == "failed", nil
+	return result.Status == "completed" || result.Status == "failed", nil
 }
 
 func (opts *WatchOpts) Run() error {

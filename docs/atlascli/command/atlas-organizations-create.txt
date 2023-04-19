@@ -14,7 +14,7 @@ atlas organizations create
 
 Create an organization.
 
-When authenticating using API keys the requesting keys most have cross organization billing enable and the resulting org will be linked to the paying org.
+When authenticating using API keys, the organization to which the API keys belong must have cross-organization billing enabled. The resulting org will be linked to the paying org.
 
 Syntax
 ------

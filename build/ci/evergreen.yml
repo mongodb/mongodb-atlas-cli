@@ -307,17 +307,6 @@ post:
       working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
       binary: ./clean-up-cloud-manager.sh
       args: ['-h', 'hosts.json']
-  - command: s3.put
-    params:
-      aws_key: ${download_center_aws_key}
-      aws_secret: ${download_center_aws_secret}
-      local_files_include_filter:
-        - src/github.com/mongodb/mongodb-atlas-cli/*.xml
-      remote_file: mongocli/
-      bucket: mongodb-mongocli-build
-      permissions: public-read
-      content_type: ${content_type|application/octet-stream}
-      display_name: xunit_results
   - command: attach.xunit_results
     params:
       files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]

@@ -126,7 +126,8 @@ func CreateAtlasBuilder() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: "Create an Ops Manager or Cloud Manager organization. This command is unavailable for Atlas.",
+		Short: "Create an organization.",
+		Long:  "When authenticating using API keys, the organization to which the API keys belong must have cross-organization billing enabled. The resulting org will be linked to the paying org.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Label that identifies the organization.",

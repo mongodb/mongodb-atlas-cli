@@ -21,6 +21,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	sdkv2 "go.mongodb.org/atlas/sdk"
 )
 
 type CustomDNSEnabler interface {
@@ -56,7 +57,12 @@ func (s *Store) DisableCustomDNS(projectID string) (*atlasv2.AWSCustomDNSEnabled
 		customDNSSetting := &atlasv2.AWSCustomDNSEnabled{
 			Enabled: false,
 		}
-		result, _, err := s.clientv2.AWSClustersDNSApi.ToggleAWSCustomDNS(s.ctx, projectID).AWSCustomDNSEnabled(*customDNSSetting).Execute()
+		result, _, err := s.clientv2.AWSClustersDNSApi.ToggleAWSCustomDNS(s.ctx, projectID).
+			AWSCustomDNSEnabled(*customDNSSetting).Execute()
+		apiError := sdkv2.APIError(err)
+		if apiError != nil {
+			return nil, fmt.Errorf("%v", apiError)
+		}
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

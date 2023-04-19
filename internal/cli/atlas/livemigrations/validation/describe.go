@@ -41,7 +41,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplate = `ID	PROJECT ID	SOURCE PROJECT ID	STATUS
-{{.ID}}	{{.GroupID}}	{{.SourceGroupID}}	{{.Status}}`
+{{.Id}}	{{.GroupId}}	{{.SourceGroupId}}	{{.Status}}`
 
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.GetValidationStatus(opts.ConfigProjectID(), opts.validationID)

@@ -23,15 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestLinkTokenCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLinkTokenCreator(ctrl)
 
-	expected := &mongodbatlas.LinkToken{}
-
+	expected := &atlasv2.TargetOrg{}
 	createOpts := &CreateOpts{
 		GlobalOpts:   cli.GlobalOpts{OrgID: "1"},
 		accessListIP: []string{"1.2.3.4", "5.6.7.8"},

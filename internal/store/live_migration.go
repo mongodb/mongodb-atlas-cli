@@ -20,12 +20,13 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_live_migration_validations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LiveMigrationValidationsCreator,LiveMigrationCutoverCreator,LiveMigrationValidationsDescriber
 
 type LiveMigrationValidationsCreator interface {
-	CreateValidation(string, *atlas.LiveMigration) (*atlas.Validation, error)
+	CreateValidation(string, *atlasv2.LiveMigrationRequest) (*atlasv2.Validation, error)
 }
 
 type LiveMigrationCutoverCreator interface {
@@ -33,14 +34,14 @@ type LiveMigrationCutoverCreator interface {
 }
 
 type LiveMigrationValidationsDescriber interface {
-	GetValidationStatus(string, string) (*atlas.Validation, error)
+	GetValidationStatus(string, string) (*atlasv2.Validation, error)
 }
 
 // CreateValidation encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateValidation(groupID string, liveMigration *atlas.LiveMigration) (*atlas.Validation, error) {
+func (s *Store) CreateValidation(groupID string, liveMigration *atlasv2.LiveMigrationRequest) (*atlasv2.Validation, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).LiveMigration.CreateValidation(s.ctx, groupID, liveMigration)
+		result, _, err := s.clientv2.CloudMigrationServiceApi.ValidateMigration(s.ctx, groupID).LiveMigrationRequest(*liveMigration).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -59,10 +60,10 @@ func (s *Store) CreateLiveMigrationCutover(groupID, liveMigrationID string) (*at
 }
 
 // GetValidationStatus encapsulate the logic to manage different cloud providers.
-func (s *Store) GetValidationStatus(groupID, liveMigrationID string) (*atlas.Validation, error) {
+func (s *Store) GetValidationStatus(groupID, liveMigrationID string) (*atlasv2.Validation, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).LiveMigration.GetValidationStatus(context.Background(), groupID, liveMigrationID)
+		result, _, err := s.clientv2.CloudMigrationServiceApi.GetValidationStatus(context.Background(), groupID, liveMigrationID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

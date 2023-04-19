@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockLinkTokenCreator is a mock of LinkTokenCreator interface.
@@ -35,10 +35,10 @@ func (m *MockLinkTokenCreator) EXPECT() *MockLinkTokenCreatorMockRecorder {
 }
 
 // CreateLinkToken mocks base method.
-func (m *MockLinkTokenCreator) CreateLinkToken(arg0 string, arg1 *mongodbatlas.TokenCreateRequest) (*mongodbatlas.LinkToken, error) {
+func (m *MockLinkTokenCreator) CreateLinkToken(arg0 string, arg1 *mongodbatlasv2.TargetOrgRequest) (*mongodbatlasv2.TargetOrg, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateLinkToken", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.LinkToken)
+	ret0, _ := ret[0].(*mongodbatlasv2.TargetOrg)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

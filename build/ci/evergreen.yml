@@ -307,6 +307,17 @@ post:
       working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
       binary: ./clean-up-cloud-manager.sh
       args: ['-h', 'hosts.json']
+  - command: s3.put
+    params:
+      aws_key: ${download_center_aws_key}
+      aws_secret: ${download_center_aws_secret}
+      local_files_include_filter:
+        - src/github.com/mongodb/mongodb-atlas-cli/*.xml
+      remote_file: mongocli/
+      bucket: mongodb-mongocli-build
+      permissions: public-read
+      content_type: ${content_type|application/octet-stream}
+      display_name: xunit_results
   - command: attach.xunit_results
     params:
       files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
@@ -1262,7 +1273,6 @@ tasks:
           E2E_TAGS: atlas,backup,snapshot
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_TIMEOUT: 3h
   - name: atlas_backups_schedule_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
@@ -1283,7 +1293,6 @@ tasks:
           E2E_TAGS: atlas,backup,schedule
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_TIMEOUT: 3h
   - name: atlas_backups_exports_buckets_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
@@ -1304,7 +1313,6 @@ tasks:
           E2E_TAGS: atlas,backup,exports,buckets
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_TIMEOUT: 3h
   - name: atlas_backups_exports_jobs_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
@@ -1325,7 +1333,6 @@ tasks:
           E2E_TAGS: atlas,backup,exports,jobs
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_TIMEOUT: 3h
   - name: atlas_backups_serverless_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
@@ -1347,7 +1354,6 @@ tasks:
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_SERVERLESS_INSTANCE_NAME: ${e2e_serverless_instance_name}
-          E2E_TIMEOUT: 3h
   - name: atlas_backups_restores_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
@@ -1358,6 +1364,7 @@ tasks:
     commands:
       - func: "install gotestsum"
       - func: "e2e test"
+        timeout_secs: 10800 # 3 hours
         vars:
           MCLI_ORG_ID: ${atlas_org_id}
           MCLI_PROJECT_ID: ${atlas_project_id}

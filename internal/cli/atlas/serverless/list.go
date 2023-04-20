@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	NAME	MDB VER	STATE{{range .}}
+var listTemplate = `ID	NAME	MDB VER	STATE{{range .Results}}
 {{.Id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
 `
 

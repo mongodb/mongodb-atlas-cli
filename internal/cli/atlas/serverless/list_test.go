@@ -39,7 +39,7 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockServerlessInstanceLister(ctrl)
 
-	var expected []atlasv2.ServerlessInstanceDescription
+	expected := &atlasv2.PaginatedServerlessInstanceDescription{}
 
 	listOpts := &ListOpts{
 		store: mockStore,

@@ -141,10 +141,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) ServerlessInstance(arg0, ar
 }
 
 // ServerlessInstances mocks base method.
-func (m *MockAtlasOperatorClusterStore) ServerlessInstances(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlasv2.ServerlessInstanceDescription, error) {
+func (m *MockAtlasOperatorClusterStore) ServerlessInstances(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedServerlessInstanceDescription, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessInstances", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlasv2.ServerlessInstanceDescription)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedServerlessInstanceDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

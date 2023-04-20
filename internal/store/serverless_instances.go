@@ -25,7 +25,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServerlessInstanceLister,ServerlessInstanceDescriber,ServerlessInstanceDeleter,ServerlessInstanceCreator,ServerlessInstanceUpdater
 
 type ServerlessInstanceLister interface {
-	ServerlessInstances(string, *atlas.ListOptions) ([]atlasv2.ServerlessInstanceDescription, error)
+	ServerlessInstances(string, *atlas.ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error)
 }
 
 type ServerlessInstanceDescriber interface {
@@ -46,7 +46,7 @@ type ServerlessInstanceUpdater interface {
 }
 
 // ServerlessInstances encapsulates the logic to manage different cloud providers.
-func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions) ([]atlasv2.ServerlessInstanceDescription, error) {
+func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.ServerlessInstancesApi.ListServerlessInstances(s.ctx, projectID).
@@ -55,7 +55,7 @@ func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions
 			PageNum(int32(listOps.PageNum)).
 			Execute()
 
-		return result.Results, err
+		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

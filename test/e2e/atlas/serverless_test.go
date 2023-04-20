@@ -105,7 +105,7 @@ func TestServerless(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var clusters []atlasv2.ServerlessInstanceDescription
+		var clusters atlasv2.PaginatedServerlessInstanceDescription
 		err = json.Unmarshal(resp, &clusters)
 		req.NoError(err)
 

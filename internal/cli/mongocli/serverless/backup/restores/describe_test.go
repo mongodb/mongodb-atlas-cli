@@ -19,27 +19,30 @@ package restores
 import (
 	"bytes"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockServerlessRestoreJobsDescriber(ctrl)
 
-	expected := &mongodbatlas.CloudProviderSnapshotRestoreJob{
-		ID:                "test",
-		SnapshotID:        "test2",
+	expiresAt, _ := time.Parse("01-02-2006", "01-01-2023")
+	expected := &atlasv2.ServerlessBackupRestoreJob{
+		Id:                pointer.Get("test"),
+		SnapshotId:        pointer.Get("test2"),
 		TargetClusterName: "ClusterTest",
 		DeliveryType:      "test type",
-		ExpiresAt:         "2023-01-01",
-		DeliveryURL:       []string{"test url"},
+		ExpiresAt:         pointer.Get(expiresAt),
+		DeliveryUrl:       []string{"test url"},
 	}
 
 	buf := new(bytes.Buffer)
@@ -62,8 +65,8 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	assert.NoError(t, describeOpts.Run())
 
-	assert.Equal(t, `ID     SNAPSHOT   CLUSTER       TYPE        EXPIRES AT   URLs
-test   test2      ClusterTest   test type   2023-01-01   test url
+	assert.Equal(t, `ID     SNAPSHOT   CLUSTER       TYPE        EXPIRES AT                      URLs
+test   test2      ClusterTest   test type   2023-01-01 00:00:00 +0000 UTC   test url
 `, buf.String())
 }
 

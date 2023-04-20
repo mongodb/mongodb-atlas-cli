@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAtlasTeams(t *testing.T) {
@@ -61,10 +62,10 @@ func TestAtlasTeams(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var team mongodbatlas.Team
+		var team atlasv2.Team
 		if err := json.Unmarshal(resp, &team); a.NoError(err) {
 			a.Equal(teamName, team.Name)
-			teamID = team.ID
+			teamID = team.Id
 		}
 	})
 

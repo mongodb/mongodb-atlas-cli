@@ -87,7 +87,7 @@ func (s *Store) ServerlessInstance(projectID, clusterName string) (*atlas.Cluste
 func (s *Store) DeleteServerlessInstance(projectID, name string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.clientv2.ServerlessInstancesApi.DeleteServerlessInstance(s.ctx, projectID, name).Execute()
+		_, _, err := s.clientv2.ServerlessInstancesApi.DeleteServerlessInstance(s.ctx, projectID, name).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

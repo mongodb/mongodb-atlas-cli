@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestLiveMigrationDescribeOpts_Run(t *testing.T) {
@@ -36,7 +36,7 @@ func TestLiveMigrationDescribeOpts_Run(t *testing.T) {
 	}
 
 	mockStore.
-		EXPECT().LiveMigrationDescribe(opts.ProjectID, opts.liveMigrationID).Return(&mongodbatlas.LiveMigration{}, nil).
+		EXPECT().LiveMigrationDescribe(opts.ProjectID, opts.liveMigrationID).Return(&atlasv2.LiveMigrationResponse{}, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {

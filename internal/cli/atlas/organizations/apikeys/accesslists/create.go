@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store"
+	storeHelper "github.com/mongodb/mongodb-atlas-cli/internal/store"
 	atlasStore "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -109,7 +109,7 @@ func CreateBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if opts.currentIP {
-				publicIP := store.IPAddress()
+				publicIP := storeHelper.IPAddress()
 				if publicIP == "" {
 					return errors.New("unable to find your public IP address. Specify the public IP address for this command")
 				}

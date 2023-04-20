@@ -97,7 +97,7 @@ dbName and collection are required only for built-in roles.`
 	ForceQuickstart                           = "If specified, skips asking for input and creates a cluster with default settings for any options you don't specify."
 	ForceFile                                 = "Overwrites the destination file."
 	Email                                     = "Email address for the user."
-	LogOut                                    = "Optional output file name. Uses the log name if the output file's name is not specified."
+	LogOut                                    = "Output file name. Uses the log name if the output file's name is not specified."
 	DiagnoseOut                               = "Optional output file name. Uses diagnose-archive.tar.gz if the output file's name is not specified."
 	LogStart                                  = "UNIX Epoch-formatted starting date and time for the range of log messages to retrieve. This value defaults to 24 hours prior to the current timestamp."
 	LogEnd                                    = "UNIX Epoch-formatted ending date and time for the range of log messages to retrieve. This value defaults to the current timestamp."

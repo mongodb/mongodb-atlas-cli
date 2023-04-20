@@ -37,7 +37,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 var createTemplate = `ID	PROJECT ID	SOURCE PROJECT ID	STATUS
-{{.ID}}	{{.GroupID}}	{{.SourceGroupID}}	{{.Status}}`
+{{.Id}}	{{.GroupId}}	{{.SourceGroupId}}	{{.Status}}`
 
 func (opts *CreateOpts) Run() error {
 	if err := opts.Prompt(); err != nil {

@@ -19,15 +19,15 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDescribe_Run_ByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserDescriber(ctrl)
 
-	var expected mongodbatlas.AtlasUser
+	var expected *atlasv2.AppUser
 
 	descOpts := &DescribeOpts{
 		store: mockStore,
@@ -49,7 +49,7 @@ func TestDescribe_Run_ByName(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserDescriber(ctrl)
 
-	var expected mongodbatlas.AtlasUser
+	var expected *atlasv2.AppUser
 
 	descOpts := &DescribeOpts{
 		store:    mockStore,

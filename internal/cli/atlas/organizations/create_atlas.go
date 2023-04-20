@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -38,7 +38,7 @@ type CreateAtlasOpts struct {
 	ownerID           string
 	apiKeyDescription string
 	apiKeyRole        []string
-	store             store.AtlasOrganizationCreator
+	store             store.OrganizationCreator
 }
 
 func (opts *CreateAtlasOpts) initStore(ctx context.Context) func() error {
@@ -126,7 +126,8 @@ func CreateAtlasBuilder() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: "Create an Ops Manager or Cloud Manager organization. This command is unavailable for Atlas.",
+		Short: "Create an organization.",
+		Long:  "When authenticating using API keys, the organization to which the API keys belong must have cross-organization billing enabled. The resulting org will be linked to the paying org.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Label that identifies the organization.",

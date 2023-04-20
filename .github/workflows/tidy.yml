@@ -1,0 +1,37 @@
+---
+name: Check 'go mod tidy' was run
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+jobs:
+  tidy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+      - name: Cache Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/go/pkg/mod
+          key: Linux-go-1.19-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            Linux-go-1.19-
+      - name: Run 'go mod tidy'
+        run: go mod tidy
+      - name: Check for uncommited files
+        run: |
+          export FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
+          export LINES=$(echo "$FILES" | awk 'NF' | wc -l)
+          if [ $LINES -ne 0 ]; then
+            echo "Detected files that need to be committed:"
+            echo "$FILES" | sed -e "s/^/  /"
+            echo ""
+            echo "Try running: go mod tidy"
+            exit 1
+          fi

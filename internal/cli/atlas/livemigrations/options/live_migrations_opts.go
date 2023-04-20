@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type LiveMigrationsOpts struct {
@@ -45,23 +45,23 @@ type LiveMigrationsOpts struct {
 	DestinationDropEnabled      bool
 }
 
-func (opts *LiveMigrationsOpts) NewCreateRequest() *mongodbatlas.LiveMigration {
-	return &mongodbatlas.LiveMigration{
-		Source: &mongodbatlas.Source{
+func (opts *LiveMigrationsOpts) NewCreateRequest() *atlasv2.LiveMigrationRequest {
+	return &atlasv2.LiveMigrationRequest{
+		Source: atlasv2.Source{
 			ClusterName:           opts.SourceClusterName,
-			GroupID:               opts.SourceProjectID,
-			Username:              opts.SourceUsername,
-			Password:              opts.SourcePassword,
-			SSL:                   &opts.SourceSSL,
-			CACertificatePath:     opts.SourceCACertificatePath,
-			ManagedAuthentication: &opts.SourceManagedAuthentication,
+			GroupId:               opts.SourceProjectID,
+			Username:              &opts.SourceUsername,
+			Password:              &opts.SourcePassword,
+			Ssl:                   opts.SourceSSL,
+			CaCertificatePath:     &opts.SourceCACertificatePath,
+			ManagedAuthentication: opts.SourceManagedAuthentication,
 		},
-		Destination: &mongodbatlas.Destination{
+		Destination: atlasv2.Destination{
 			ClusterName: opts.DestinationClusterName,
-			GroupID:     opts.ConfigProjectID(),
+			GroupId:     opts.ConfigProjectID(),
 		},
 		MigrationHosts: opts.MigrationHosts,
-		DropEnabled:    &opts.DestinationDropEnabled,
+		DropEnabled:    opts.DestinationDropEnabled,
 	}
 }
 

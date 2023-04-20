@@ -93,7 +93,7 @@ func (s *Store) UpdatePipeline(projectID, id string, opts atlasv2.IngestionPipel
 func (s *Store) DeletePipeline(projectID, id string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.DataLakePipelinesApi.DeletePipeline(s.ctx, projectID, id).Execute()
+		_, _, err := s.clientv2.DataLakePipelinesApi.DeletePipeline(s.ctx, projectID, id).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

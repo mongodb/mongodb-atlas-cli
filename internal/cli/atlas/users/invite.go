@@ -24,13 +24,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 var inviteTemplate = "The user '{{.Username}}' has been invited.\nInvited users do not have access to the project until they accept the invitation.\n"
@@ -58,32 +58,24 @@ func (opts *InviteOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *InviteOpts) newUserRequest() (*store.UserRequest, error) {
-	atlasRoles, err := opts.createAtlasRole()
+func (opts *InviteOpts) newUserRequest() (*atlasv2.AppUser, error) {
+	roles, err := opts.createRoles()
 	if err != nil {
 		return nil, err
 	}
 
-	userRoles, err := opts.createUserRole()
-	if err != nil {
-		return nil, err
+	user := atlasv2.AppUser{
+		Username:     opts.username,
+		Password:     opts.password,
+		FirstName:    opts.firstName,
+		LastName:     opts.lastName,
+		EmailAddress: opts.email,
+		MobileNumber: opts.mobile,
+		Country:      opts.country,
+		Roles:        roles,
 	}
 
-	user := &store.UserRequest{
-		AtlasRoles: atlasRoles,
-		User: &opsmngr.User{
-			Username:     opts.username,
-			Password:     opts.password,
-			FirstName:    opts.firstName,
-			LastName:     opts.lastName,
-			EmailAddress: opts.email,
-			MobileNumber: opts.mobile,
-			Country:      opts.country,
-			Roles:        userRoles,
-		},
-	}
-
-	return user, nil
+	return &user, nil
 }
 
 func (opts *InviteOpts) Run() error {
@@ -102,12 +94,12 @@ func (opts *InviteOpts) Run() error {
 
 const keyParts = 2
 
-func (opts *InviteOpts) createAtlasRole() ([]atlas.AtlasRole, error) {
+func (opts *InviteOpts) createRoles() ([]atlasv2.RoleAssignment, error) {
 	if !config.IsCloud() {
 		return nil, nil
 	}
 
-	atlasRoles := make([]atlas.AtlasRole, len(opts.orgRoles)+len(opts.projectRoles))
+	atlasRoles := make([]atlasv2.RoleAssignment, len(opts.orgRoles)+len(opts.projectRoles))
 
 	i := 0
 	for _, role := range opts.orgRoles {
@@ -129,35 +121,6 @@ func (opts *InviteOpts) createAtlasRole() ([]atlas.AtlasRole, error) {
 	}
 
 	return atlasRoles, nil
-}
-
-func (opts *InviteOpts) createUserRole() ([]*opsmngr.UserRole, error) {
-	if config.IsCloud() {
-		return nil, nil
-	}
-
-	roles := make([]*opsmngr.UserRole, len(opts.orgRoles)+len(opts.projectRoles))
-
-	i := 0
-	for _, role := range opts.orgRoles {
-		userRole, err := newUserOrgRole(role)
-		if err != nil {
-			return nil, err
-		}
-		roles[i] = userRole
-		i++
-	}
-
-	for _, role := range opts.projectRoles {
-		userRole, err := newUserProjectRole(role)
-		if err != nil {
-			return nil, err
-		}
-		roles[i] = userRole
-		i++
-	}
-
-	return roles, nil
 }
 
 func (opts *InviteOpts) Prompt() error {
@@ -184,53 +147,27 @@ func splitRole(role string) ([]string, error) {
 	return value, nil
 }
 
-func newUserOrgRole(role string) (*opsmngr.UserRole, error) {
+func newAtlasProjectRole(role string) (atlasv2.RoleAssignment, error) {
 	value, err := splitRole(role)
 	if err != nil {
-		return nil, err
+		return atlasv2.RoleAssignment{}, err
 	}
-	userRole := &opsmngr.UserRole{
-		OrgID:    value[0],
-		RoleName: strings.ToUpper(value[1]),
-	}
-
-	return userRole, nil
-}
-
-func newUserProjectRole(role string) (*opsmngr.UserRole, error) {
-	value, err := splitRole(role)
-	if err != nil {
-		return nil, err
-	}
-	userRole := &opsmngr.UserRole{
-		GroupID:  value[0],
-		RoleName: strings.ToUpper(value[1]),
-	}
-
-	return userRole, nil
-}
-
-func newAtlasProjectRole(role string) (atlas.AtlasRole, error) {
-	value, err := splitRole(role)
-	if err != nil {
-		return atlas.AtlasRole{}, err
-	}
-	atlasRole := atlas.AtlasRole{
-		GroupID:  value[0],
-		RoleName: strings.ToUpper(value[1]),
+	atlasRole := atlasv2.RoleAssignment{
+		GroupId: &value[0],
+		Role:    pointer.Get(strings.ToUpper(value[1])),
 	}
 
 	return atlasRole, nil
 }
 
-func newAtlasOrgRole(role string) (atlas.AtlasRole, error) {
+func newAtlasOrgRole(role string) (atlasv2.RoleAssignment, error) {
 	value, err := splitRole(role)
 	if err != nil {
-		return atlas.AtlasRole{}, err
+		return atlasv2.RoleAssignment{}, err
 	}
-	atlasRole := atlas.AtlasRole{
-		OrgID:    value[0],
-		RoleName: strings.ToUpper(value[1]),
+	atlasRole := atlasv2.RoleAssignment{
+		OrgId: &value[0],
+		Role:  pointer.Get(strings.ToUpper(value[1])),
 	}
 	return atlasRole, nil
 }

@@ -22,18 +22,17 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestInvite_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserCreator(ctrl)
 
-	expected := &mongodbatlas.AtlasUser{
+	expected := &atlasv2.AppUser{
 		Username: "testUser",
 	}
 	opts := &InviteOpts{
@@ -56,11 +55,11 @@ func TestInvite_Run(t *testing.T) {
 	}
 }
 
-func TestCreateAtlasRole(t *testing.T) {
+func TestCreateRoles(t *testing.T) {
 	type test struct {
 		name  string
 		input InviteOpts
-		want  []mongodbatlas.AtlasRole
+		want  []atlasv2.RoleAssignment
 	}
 
 	tests := []test{
@@ -69,9 +68,9 @@ func TestCreateAtlasRole(t *testing.T) {
 			input: InviteOpts{
 				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER"},
 			},
-			want: []mongodbatlas.AtlasRole{{
-				OrgID:    "5e4e593f70dfbf1010295836",
-				RoleName: "ORG_OWNER",
+			want: []atlasv2.RoleAssignment{{
+				OrgId: pointer.Get("5e4e593f70dfbf1010295836"),
+				Role:  pointer.Get("ORG_OWNER"),
 			}},
 		},
 		{
@@ -79,14 +78,14 @@ func TestCreateAtlasRole(t *testing.T) {
 			input: InviteOpts{
 				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
 			},
-			want: []mongodbatlas.AtlasRole{
+			want: []atlasv2.RoleAssignment{
 				{
-					OrgID:    "5e4e593f70dfbf1010295836",
-					RoleName: "ORG_OWNER",
+					OrgId: pointer.Get("5e4e593f70dfbf1010295836"),
+					Role:  pointer.Get("ORG_OWNER"),
 				},
 				{
-					OrgID:    "5e4e593f70dfbf1010295836",
-					RoleName: "ORG_GROUP_CREATOR",
+					OrgId: pointer.Get("5e4e593f70dfbf1010295836"),
+					Role:  pointer.Get("ORG_GROUP_CREATOR"),
 				},
 			},
 		},
@@ -96,120 +95,35 @@ func TestCreateAtlasRole(t *testing.T) {
 				orgRoles:     []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
 				projectRoles: []string{"5e4e593f70dfbf1010295836:GROUP_OWNER", "5e4e593f70dfbf1010295836:GROUP_CLUSTER_MANAGER"},
 			},
-			want: []mongodbatlas.AtlasRole{
+			want: []atlasv2.RoleAssignment{
 				{
-					OrgID:    "5e4e593f70dfbf1010295836",
-					RoleName: "ORG_OWNER",
+					OrgId: pointer.Get("5e4e593f70dfbf1010295836"),
+					Role:  pointer.Get("ORG_OWNER"),
 				},
 				{
-					OrgID:    "5e4e593f70dfbf1010295836",
-					RoleName: "ORG_GROUP_CREATOR",
+					OrgId: pointer.Get("5e4e593f70dfbf1010295836"),
+					Role:  pointer.Get("ORG_GROUP_CREATOR"),
 				},
 				{
-					GroupID:  "5e4e593f70dfbf1010295836",
-					RoleName: "GROUP_OWNER",
+					GroupId: pointer.Get("5e4e593f70dfbf1010295836"),
+					Role:    pointer.Get("GROUP_OWNER"),
 				},
 				{
-					GroupID:  "5e4e593f70dfbf1010295836",
-					RoleName: "GROUP_CLUSTER_MANAGER",
-				},
-			},
-		},
-		{
-			name:  "empty",
-			input: InviteOpts{},
-			want:  []mongodbatlas.AtlasRole{},
-		},
-	}
-
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			got, err := tc.input.createAtlasRole()
-			if err != nil {
-				t.Fatalf("Run() unexpected error: %v", err)
-			}
-
-			if !reflect.DeepEqual(tc.want, got) {
-				t.Fatalf("expected: %v, got: %v", tc.want, got)
-			}
-		})
-	}
-}
-
-func TestCreateUserRole(t *testing.T) {
-	type test struct {
-		name  string
-		input InviteOpts
-		want  []*opsmngr.UserRole
-	}
-	prevServ := config.Service()
-	config.SetService(config.OpsManagerService)
-	defer func() {
-		config.SetService(prevServ)
-	}()
-
-	tests := []test{
-		{
-			name: "one role",
-			input: InviteOpts{
-				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER"},
-			},
-			want: []*opsmngr.UserRole{{
-				OrgID:    "5e4e593f70dfbf1010295836",
-				RoleName: "ORG_OWNER",
-			}},
-		},
-		{
-			name: "multiple org roles",
-			input: InviteOpts{
-				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
-			},
-			want: []*opsmngr.UserRole{
-				{
-					OrgID:    "5e4e593f70dfbf1010295836",
-					RoleName: "ORG_OWNER",
-				},
-				{
-					OrgID:    "5e4e593f70dfbf1010295836",
-					RoleName: "ORG_GROUP_CREATOR",
-				},
-			},
-		},
-		{
-			name: "projects and orgs",
-			input: InviteOpts{
-				orgRoles:     []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
-				projectRoles: []string{"5e4e593f70dfbf1010295836:GROUP_OWNER", "5e4e593f70dfbf1010295836:GROUP_CLUSTER_MANAGER"},
-			},
-			want: []*opsmngr.UserRole{
-				{
-					OrgID:    "5e4e593f70dfbf1010295836",
-					RoleName: "ORG_OWNER",
-				},
-				{
-					OrgID:    "5e4e593f70dfbf1010295836",
-					RoleName: "ORG_GROUP_CREATOR",
-				},
-				{
-					GroupID:  "5e4e593f70dfbf1010295836",
-					RoleName: "GROUP_OWNER",
-				},
-				{
-					GroupID:  "5e4e593f70dfbf1010295836",
-					RoleName: "GROUP_CLUSTER_MANAGER",
+					GroupId: pointer.Get("5e4e593f70dfbf1010295836"),
+					Role:    pointer.Get("GROUP_CLUSTER_MANAGER"),
 				},
 			},
 		},
 		{
 			name:  "empty",
 			input: InviteOpts{},
-			want:  []*opsmngr.UserRole{},
+			want:  []atlasv2.RoleAssignment{},
 		},
 	}
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			got, err := tc.input.createUserRole()
+			got, err := tc.input.createRoles()
 			if err != nil {
 				t.Fatalf("Run() unexpected error: %v", err)
 			}

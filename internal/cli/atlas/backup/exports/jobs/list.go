@@ -44,7 +44,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	EXPORT BUCKET ID	STATE	SNAPSHOT ID{{range .Results}}
-{{.ID}}	{{.ExportBucketID}}	{{.State}}	{{.SnapshotID}}{{end}}
+{{.Id}}	{{.ExportBucketId}}	{{.State}}	{{.SnapshotId}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

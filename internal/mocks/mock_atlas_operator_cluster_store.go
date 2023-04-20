@@ -66,10 +66,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) AtlasClusterConfigurationOp
 }
 
 // DescribeSchedule mocks base method.
-func (m *MockAtlasOperatorClusterStore) DescribeSchedule(arg0, arg1 string) (*mongodbatlas.CloudProviderSnapshotBackupPolicy, error) {
+func (m *MockAtlasOperatorClusterStore) DescribeSchedule(arg0, arg1 string) (*mongodbatlasv2.DiskBackupSnapshotSchedule, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeSchedule", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotBackupPolicy)
+	ret0, _ := ret[0].(*mongodbatlasv2.DiskBackupSnapshotSchedule)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

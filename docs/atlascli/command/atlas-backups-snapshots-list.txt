@@ -98,7 +98,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 .. code-block::
 
    ID     TYPE             STATUS     CREATED AT    EXPIRES AT
-   <ID>   <SnapshotType>   <Status>   <CreatedAt>   <ExpiresAt>
+   <Id>   <SnapshotType>   <Status>   <CreatedAt>   <ExpiresAt>
    
 
 Examples

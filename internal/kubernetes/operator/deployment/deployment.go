@@ -252,9 +252,9 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 		for _, pItem := range p.PolicyItems {
 			items = append(items, atlasV1.AtlasBackupPolicyItem{
 				FrequencyType:     pItem.FrequencyType,
-				FrequencyInterval: pItem.FrequencyInterval,
+				FrequencyInterval: int(pItem.FrequencyInterval),
 				RetentionUnit:     pItem.RetentionUnit,
-				RetentionValue:    pItem.RetentionValue,
+				RetentionValue:    int(pItem.RetentionValue),
 			})
 		}
 		policies = append(policies, &atlasV1.AtlasBackupPolicy{
@@ -279,8 +279,8 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 	var export *atlasV1.AtlasBackupExportSpec
 	if bs.Export != nil {
 		export = &atlasV1.AtlasBackupExportSpec{
-			ExportBucketID: bs.Export.ExportBucketID,
-			FrequencyType:  bs.Export.FrequencyType,
+			ExportBucketID: bs.Export.GetExportBucketId(),
+			FrequencyType:  bs.Export.GetFrequencyType(),
 		}
 	}
 
@@ -303,9 +303,9 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 				Name:      resources.NormalizeAtlasName(policies[0].Name, dictionary),
 				Namespace: policies[0].Namespace,
 			},
-			ReferenceHourOfDay:                pointer.GetOrDefault(bs.ReferenceHourOfDay, 0),
-			ReferenceMinuteOfHour:             pointer.GetOrDefault(bs.ReferenceMinuteOfHour, 0),
-			RestoreWindowDays:                 pointer.GetOrDefault(bs.RestoreWindowDays, 0),
+			ReferenceHourOfDay:                int64(pointer.GetOrDefault(bs.ReferenceHourOfDay, 0)),
+			ReferenceMinuteOfHour:             int64(pointer.GetOrDefault(bs.ReferenceMinuteOfHour, 0)),
+			RestoreWindowDays:                 int64(pointer.GetOrDefault(bs.RestoreWindowDays, 0)),
 			UpdateSnapshots:                   pointer.GetOrDefault(bs.UpdateSnapshots, false),
 			UseOrgAndGroupNamesInExportPrefix: pointer.GetOrDefault(bs.UseOrgAndGroupNamesInExportPrefix, false),
 		},
@@ -321,7 +321,7 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 				atlasV1.CopySetting{
 					CloudProvider:     copySetting.CloudProvider,
 					RegionName:        copySetting.RegionName,
-					ReplicationSpecID: copySetting.ReplicationSpecID,
+					ReplicationSpecID: copySetting.ReplicationSpecId,
 					ShouldCopyOplogs:  copySetting.ShouldCopyOplogs,
 					Frequencies:       copySetting.Frequencies,
 				},

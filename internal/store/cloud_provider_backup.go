@@ -19,28 +19,29 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportJobsDescriber,ExportJobsCreator,ExportBucketsLister,ExportBucketsCreator,ExportBucketsDeleter,ExportBucketsDescriber,ScheduleDescriber,ScheduleDescriberUpdater,ScheduleDeleter
 
 type RestoreJobsLister interface {
-	RestoreJobs(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error)
+	RestoreJobs(string, string, *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error)
 }
 
 type RestoreJobsDescriber interface {
-	RestoreJob(string, string, string) (*atlas.CloudProviderSnapshotRestoreJob, error)
+	RestoreJob(string, string, string) (*atlasv2.DiskBackupRestoreJob, error)
 }
 
 type RestoreJobsCreator interface {
-	CreateRestoreJobs(string, string, *atlas.CloudProviderSnapshotRestoreJob) (*atlas.CloudProviderSnapshotRestoreJob, error)
+	CreateRestoreJobs(string, string, *atlasv2.DiskBackupRestoreJob) (*atlasv2.DiskBackupRestoreJob, error)
 }
 
 type SnapshotsLister interface {
-	Snapshots(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshots, error)
+	Snapshots(string, string, *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupReplicaSet, error)
 }
 
 type SnapshotsDescriber interface {
-	Snapshot(string, string, string) (*atlas.CloudProviderSnapshot, error)
+	Snapshot(string, string, string) (*atlasv2.DiskBackupReplicaSet, error)
 }
 
 type SnapshotsCreator interface {
@@ -52,23 +53,23 @@ type SnapshotsDeleter interface {
 }
 
 type ExportJobsLister interface {
-	ExportJobs(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotExportJobs, error)
+	ExportJobs(string, string, *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDiskBackupExportJob, error)
 }
 
 type ExportJobsCreator interface {
-	CreateExportJob(string, string, *atlas.CloudProviderSnapshotExportJob) (*atlas.CloudProviderSnapshotExportJob, error)
+	CreateExportJob(string, string, *atlasv2.DiskBackupExportJobRequest) (*atlasv2.DiskBackupExportJob, error)
 }
 
 type ExportBucketsLister interface {
-	ExportBuckets(string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotExportBuckets, error)
+	ExportBuckets(string, *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBucket, error)
 }
 
 type ExportJobsDescriber interface {
-	ExportJob(string, string, string) (*atlas.CloudProviderSnapshotExportJob, error)
+	ExportJob(string, string, string) (*atlasv2.DiskBackupExportJob, error)
 }
 
 type ExportBucketsCreator interface {
-	CreateExportBucket(string, *atlas.CloudProviderSnapshotExportBucket) (*atlas.CloudProviderSnapshotExportBucket, error)
+	CreateExportBucket(string, *atlasv2.DiskBackupSnapshotAWSExportBucket) (*atlasv2.DiskBackupSnapshotAWSExportBucket, error)
 }
 
 type ExportBucketsDeleter interface {
@@ -76,16 +77,16 @@ type ExportBucketsDeleter interface {
 }
 
 type ExportBucketsDescriber interface {
-	DescribeExportBucket(string, string) (*atlas.CloudProviderSnapshotExportBucket, error)
+	DescribeExportBucket(string, string) (*atlasv2.DiskBackupSnapshotAWSExportBucket, error)
 }
 
 type ScheduleDescriber interface {
-	DescribeSchedule(string, string) (*atlas.CloudProviderSnapshotBackupPolicy, error)
+	DescribeSchedule(string, string) (*atlasv2.DiskBackupSnapshotSchedule, error)
 }
 
 type ScheduleDescriberUpdater interface {
-	DescribeSchedule(string, string) (*atlas.CloudProviderSnapshotBackupPolicy, error)
-	UpdateSchedule(string, string, *atlas.CloudProviderSnapshotBackupPolicy) (*atlas.CloudProviderSnapshotBackupPolicy, error)
+	DescribeSchedule(string, string) (*atlasv2.DiskBackupSnapshotSchedule, error)
+	UpdateSchedule(string, string, *atlasv2.DiskBackupSnapshotSchedule) (*atlasv2.DiskBackupSnapshotSchedule, error)
 }
 
 type ScheduleDeleter interface {
@@ -93,14 +94,10 @@ type ScheduleDeleter interface {
 }
 
 // RestoreJobs encapsulates the logic to manage different cloud providers.
-func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error) {
-	o := &atlas.SnapshotReqPathParameters{
-		GroupID:     projectID,
-		ClusterName: clusterName,
-	}
+func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.List(s.ctx, o, opts)
+		result, _, err := s.clientv2.CloudBackupsApi.ListBackupRestoreJobs(s.ctx, projectID, clusterName).PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -108,15 +105,10 @@ func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptio
 }
 
 // RestoreJob encapsulates the logic to manage different cloud providers.
-func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlas.CloudProviderSnapshotRestoreJob, error) {
-	o := &atlas.SnapshotReqPathParameters{
-		GroupID:     projectID,
-		ClusterName: clusterName,
-		JobID:       jobID,
-	}
+func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlasv2.DiskBackupRestoreJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.Get(s.ctx, o)
+		result, _, err := s.clientv2.CloudBackupsApi.GetBackupRestoreJob(s.ctx, projectID, clusterName, jobID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -124,14 +116,10 @@ func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlas.CloudPr
 }
 
 // CreateRestoreJobs encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlas.CloudProviderSnapshotRestoreJob) (*atlas.CloudProviderSnapshotRestoreJob, error) {
-	o := &atlas.SnapshotReqPathParameters{
-		GroupID:     projectID,
-		ClusterName: clusterName,
-	}
+func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlasv2.DiskBackupRestoreJob) (*atlasv2.DiskBackupRestoreJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.Create(s.ctx, o, request)
+		result, _, err := s.clientv2.CloudBackupsApi.CreateBackupRestoreJob(s.ctx, projectID, clusterName).DiskBackupRestoreJob(*request).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -154,14 +142,10 @@ func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlas.Clo
 }
 
 // Snapshots encapsulates the logic to manage different cloud providers.
-func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshots, error) {
-	o := &atlas.SnapshotReqPathParameters{
-		GroupID:     projectID,
-		ClusterName: clusterName,
-	}
+func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupReplicaSet, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetAllCloudProviderSnapshots(s.ctx, o, opts)
+		result, _, err := s.clientv2.CloudBackupsApi.ListReplicaSetBackups(s.ctx, projectID, clusterName).PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -169,15 +153,10 @@ func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions
 }
 
 // Snapshot encapsulates the logic to manage different cloud providers.
-func (s *Store) Snapshot(projectID, clusterName, snapshotID string) (*atlas.CloudProviderSnapshot, error) {
-	o := &atlas.SnapshotReqPathParameters{
-		GroupID:     projectID,
-		SnapshotID:  snapshotID,
-		ClusterName: clusterName,
-	}
+func (s *Store) Snapshot(projectID, clusterName, snapshotID string) (*atlasv2.DiskBackupReplicaSet, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetOneCloudProviderSnapshot(s.ctx, o)
+		result, _, err := s.clientv2.CloudBackupsApi.GetReplicaSetBackup(s.ctx, projectID, clusterName, snapshotID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -186,14 +165,9 @@ func (s *Store) Snapshot(projectID, clusterName, snapshotID string) (*atlas.Clou
 
 // DeleteSnapshot encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteSnapshot(projectID, clusterName, snapshotID string) error {
-	o := &atlas.SnapshotReqPathParameters{
-		GroupID:     projectID,
-		ClusterName: clusterName,
-		SnapshotID:  snapshotID,
-	}
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).CloudProviderSnapshots.Delete(s.ctx, o)
+		_, _, err := s.clientv2.CloudBackupsApi.DeleteReplicaSetBackup(s.ctx, projectID, clusterName, snapshotID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -201,10 +175,10 @@ func (s *Store) DeleteSnapshot(projectID, clusterName, snapshotID string) error 
 }
 
 // ExportJobs encapsulates the logic to manage different cloud providers.
-func (s *Store) ExportJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshotExportJobs, error) {
+func (s *Store) ExportJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDiskBackupExportJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotExportJobs.List(s.ctx, projectID, clusterName, opts)
+		result, _, err := s.clientv2.CloudBackupsApi.ListBackupExportJobs(s.ctx, projectID, clusterName).PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -212,10 +186,10 @@ func (s *Store) ExportJobs(projectID, clusterName string, opts *atlas.ListOption
 }
 
 // ExportJob encapsulates the logic to manage different cloud providers.
-func (s *Store) ExportJob(projectID, clusterName, bucketID string) (*atlas.CloudProviderSnapshotExportJob, error) {
+func (s *Store) ExportJob(projectID, clusterName, bucketID string) (*atlasv2.DiskBackupExportJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotExportJobs.Get(s.ctx, projectID, clusterName, bucketID)
+		result, _, err := s.clientv2.CloudBackupsApi.GetBackupExportJob(s.ctx, projectID, clusterName, bucketID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -223,10 +197,10 @@ func (s *Store) ExportJob(projectID, clusterName, bucketID string) (*atlas.Cloud
 }
 
 // CreateExportJob encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateExportJob(projectID, clusterName string, job *atlas.CloudProviderSnapshotExportJob) (*atlas.CloudProviderSnapshotExportJob, error) {
+func (s *Store) CreateExportJob(projectID, clusterName string, job *atlasv2.DiskBackupExportJobRequest) (*atlasv2.DiskBackupExportJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotExportJobs.Create(s.ctx, projectID, clusterName, job)
+		result, _, err := s.clientv2.CloudBackupsApi.CreateBackupExportJob(s.ctx, projectID, clusterName).DiskBackupExportJobRequest(*job).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -234,10 +208,10 @@ func (s *Store) CreateExportJob(projectID, clusterName string, job *atlas.CloudP
 }
 
 // ExportBuckets encapsulates the logic to manage different cloud providers.
-func (s *Store) ExportBuckets(projectID string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshotExportBuckets, error) {
+func (s *Store) ExportBuckets(projectID string, _ *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBucket, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotExportBuckets.List(s.ctx, projectID, opts)
+		result, _, err := s.clientv2.CloudBackupsApi.ListExportBuckets(s.ctx, projectID).Execute() // TODO: missing list Options
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -245,10 +219,10 @@ func (s *Store) ExportBuckets(projectID string, opts *atlas.ListOptions) (*atlas
 }
 
 // CreateExportBucket encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateExportBucket(projectID string, bucket *atlas.CloudProviderSnapshotExportBucket) (*atlas.CloudProviderSnapshotExportBucket, error) {
+func (s *Store) CreateExportBucket(projectID string, bucket *atlasv2.DiskBackupSnapshotAWSExportBucket) (*atlasv2.DiskBackupSnapshotAWSExportBucket, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotExportBuckets.Create(s.ctx, projectID, bucket)
+		result, _, err := s.clientv2.CloudBackupsApi.CreateExportBucket(s.ctx, projectID).DiskBackupSnapshotAWSExportBucket(*bucket).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -259,7 +233,7 @@ func (s *Store) CreateExportBucket(projectID string, bucket *atlas.CloudProvider
 func (s *Store) DeleteExportBucket(projectID, bucketID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).CloudProviderSnapshotExportBuckets.Delete(s.ctx, projectID, bucketID)
+		_, _, err := s.clientv2.CloudBackupsApi.DeleteExportBucket(s.ctx, projectID, bucketID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -267,10 +241,10 @@ func (s *Store) DeleteExportBucket(projectID, bucketID string) error {
 }
 
 // DescribeExportBucket encapsulates the logic to manage different cloud providers.
-func (s *Store) DescribeExportBucket(projectID, bucketID string) (*atlas.CloudProviderSnapshotExportBucket, error) {
+func (s *Store) DescribeExportBucket(projectID, bucketID string) (*atlasv2.DiskBackupSnapshotAWSExportBucket, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotExportBuckets.Get(s.ctx, projectID, bucketID)
+		result, _, err := s.clientv2.CloudBackupsApi.GetExportBucket(s.ctx, projectID, bucketID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -278,10 +252,10 @@ func (s *Store) DescribeExportBucket(projectID, bucketID string) (*atlas.CloudPr
 }
 
 // DescribeSchedule encapsulates the logic to manage different cloud providers.
-func (s *Store) DescribeSchedule(projectID, clusterName string) (*atlas.CloudProviderSnapshotBackupPolicy, error) {
+func (s *Store) DescribeSchedule(projectID, clusterName string) (*atlasv2.DiskBackupSnapshotSchedule, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotBackupPolicies.Get(s.ctx, projectID, clusterName)
+		result, _, err := s.clientv2.CloudBackupsApi.GetBackupSchedule(s.ctx, projectID, clusterName).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -289,10 +263,10 @@ func (s *Store) DescribeSchedule(projectID, clusterName string) (*atlas.CloudPro
 }
 
 // UpdateSchedule encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateSchedule(projectID, clusterName string, policy *atlas.CloudProviderSnapshotBackupPolicy) (*atlas.CloudProviderSnapshotBackupPolicy, error) {
+func (s *Store) UpdateSchedule(projectID, clusterName string, policy *atlasv2.DiskBackupSnapshotSchedule) (*atlasv2.DiskBackupSnapshotSchedule, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotBackupPolicies.Update(s.ctx, projectID, clusterName, policy)
+		result, _, err := s.clientv2.CloudBackupsApi.UpdateBackupSchedule(s.ctx, projectID, clusterName).DiskBackupSnapshotSchedule(*policy).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -303,7 +277,7 @@ func (s *Store) UpdateSchedule(projectID, clusterName string, policy *atlas.Clou
 func (s *Store) DeleteSchedule(projectID, clusterName string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, _, err := s.client.(*atlas.Client).CloudProviderSnapshotBackupPolicies.Delete(s.ctx, projectID, clusterName)
+		_, _, err := s.clientv2.CloudBackupsApi.DeleteAllBackupSchedules(s.ctx, projectID, clusterName).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

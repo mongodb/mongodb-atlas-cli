@@ -28,7 +28,7 @@ import (
 )
 
 var describeTemplate = `ID	BUCKET NAME	CLOUD PROVIDER	IAM ROLE ID
-{{.ID}}	{{.BucketName}}	{{.CloudProvider}}	{{.IAMRoleID}}
+{{.Id}}	{{.BucketName}}	{{.CloudProvider}}	{{.IamRoleId}}
 `
 
 type DescribeOpts struct {

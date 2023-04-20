@@ -18,7 +18,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/atlas/mock_performance_advisor.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas PerformanceAdvisorNamespacesLister,PerformanceAdvisorSlowQueriesLister,PerformanceAdvisorIndexesLister,PerformanceAdvisorSlowOperationThresholdEnabler,PerformanceAdvisorSlowOperationThresholdDisabler
+//go:generate mockgen -destination=../../mocks/atlas/mock_performance_advisor.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas PerformanceAdvisorNamespacesLister,PerformanceAdvisorSlowQueriesLister,PerformanceAdvisorIndexesLister,PerformanceAdvisorSlowOperationThresholdEnabler,PerformanceAdvisorSlowOperationThresholdDisabler
 type PerformanceAdvisorNamespacesLister interface {
 	PerformanceAdvisorNamespaces(string, string, *atlas.NamespaceOptions) (*atlas.Namespaces, error)
 }
@@ -43,7 +43,6 @@ type PerformanceAdvisorSlowOperationThresholdDisabler interface {
 func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts *atlas.NamespaceOptions) (*atlas.Namespaces, error) {
 	result, _, err := s.client.PerformanceAdvisor.GetNamespaces(s.ctx, projectID, processName, opts)
 	return result, err
-
 }
 
 // PerformanceAdvisorSlowQueries encapsulates the logic to manage different cloud providers.
@@ -56,7 +55,6 @@ func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opt
 func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error) {
 	result, _, err := s.client.PerformanceAdvisor.GetSuggestedIndexes(s.ctx, projectID, processName, opts)
 	return result, err
-
 }
 
 // EnablePerformanceAdvisorSlowOperationThreshold encapsulates the logic to manage different cloud providers.

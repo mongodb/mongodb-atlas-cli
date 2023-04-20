@@ -21,7 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -42,7 +42,7 @@ func TestCreateAtlasBuilder(t *testing.T) {
 
 func TestCreateAtlasOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasOrganizationCreator(ctrl)
+	mockStore := mocks.NewMockOrganizationCreator(ctrl)
 
 	expected := &mongodbatlas.CreateOrganizationRequest{
 		APIKey:     nil,

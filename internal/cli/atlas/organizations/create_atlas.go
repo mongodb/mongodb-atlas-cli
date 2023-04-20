@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -38,7 +38,7 @@ type CreateAtlasOpts struct {
 	ownerID           string
 	apiKeyDescription string
 	apiKeyRole        []string
-	store             store.AtlasOrganizationCreator
+	store             store.OrganizationCreator
 }
 
 func (opts *CreateAtlasOpts) initStore(ctx context.Context) func() error {

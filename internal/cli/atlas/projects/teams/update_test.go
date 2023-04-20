@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockTeamRolesUpdater(ctrl)
 
-	expected := []atlas.TeamRoles{}
+	expected := atlasv2.PaginatedTeamRole{}
 
 	updateOpts := &UpdateOpts{
 		roles: []string{"test"},
@@ -38,7 +38,7 @@ func TestUpdate_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		UpdateProjectTeamRoles(updateOpts.ProjectID, updateOpts.teamID, updateOpts.newTeamUpdateRoles()).
-		Return(expected, nil).
+		Return(&expected, nil).
 		Times(1)
 
 	if err := updateOpts.Run(); err != nil {

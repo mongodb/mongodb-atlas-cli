@@ -25,6 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const addTemplate = "User(s) added to the team.\n"
@@ -46,12 +47,22 @@ func (opts *AddOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *AddOpts) Run() error {
-	r, err := opts.store.AddUsersToTeam(opts.ConfigOrgID(), opts.teamID, opts.users)
+	r, err := opts.store.AddUsersToTeam(opts.ConfigOrgID(), opts.teamID, opts.newUsers())
 	if err != nil {
 		return err
 	}
 
 	return opts.Print(r)
+}
+
+func (opts *AddOpts) newUsers() []atlasv2.AddUserToTeam {
+	usersToAdd := make([]atlasv2.AddUserToTeam, len(opts.users))
+	for i, user := range opts.users {
+		usersToAdd[i] = atlasv2.AddUserToTeam{
+			Id: user,
+		}
+	}
+	return usersToAdd
 }
 
 // atlas team(s) user(s) add <userId> [userId]... --teamId teamId --orgId orgId.

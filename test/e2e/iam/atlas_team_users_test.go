@@ -27,6 +27,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAtlasTeamUsers(t *testing.T) {
@@ -89,9 +90,9 @@ func TestAtlasTeamUsers(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		var teams []mongodbatlas.AtlasUser
+		var teams atlasv2.PaginatedApiAppUser
 		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
-			a.NotEmpty(teams)
+			a.NotEmpty(teams.Results)
 		}
 	})
 

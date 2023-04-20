@@ -50,7 +50,6 @@ func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.ServerlessInstancesApi.ListServerlessInstances(s.ctx, projectID).
-			IncludeCount(listOps.IncludeCount).
 			ItemsPerPage(int32(listOps.ItemsPerPage)).
 			PageNum(int32(listOps.PageNum)).
 			Execute()

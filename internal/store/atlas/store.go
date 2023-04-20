@@ -18,7 +18,6 @@ package atlas
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -46,8 +45,6 @@ const (
 	expectContinueTimeout = 1 * time.Second
 	cloudGovServiceURL    = "https://cloud.mongodbgov.com/"
 )
-
-var errUnsupportedService = errors.New("unsupported service")
 
 type Store struct {
 	// Cloud or Gov

@@ -68,6 +68,7 @@ func DisableBuilder() *cobra.Command {
 		},
 		Annotations: map[string]string{
 			"alertConfigIdDesc": "ID of the alert configuration you want to disable.",
+			"output":            disableTemplate,
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.alertID = args[0]

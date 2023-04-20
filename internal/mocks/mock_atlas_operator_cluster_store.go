@@ -96,10 +96,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) GetServerlessInstance(arg0,
 }
 
 // GlobalCluster mocks base method.
-func (m *MockAtlasOperatorClusterStore) GlobalCluster(arg0, arg1 string) (*mongodbatlas.GlobalCluster, error) {
+func (m *MockAtlasOperatorClusterStore) GlobalCluster(arg0, arg1 string) (*mongodbatlasv2.GeoSharding, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GlobalCluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.GlobalCluster)
+	ret0, _ := ret[0].(*mongodbatlasv2.GeoSharding)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

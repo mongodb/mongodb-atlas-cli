@@ -118,5 +118,5 @@ If the command succeeds, the CLI returns output similar to the following sample.
 .. code-block::
 
    ID     PROJECT ID              SOURCE PROJECT ID   STATUS
-   <ID>   <Destination.GroupID>   <Source.GroupID>    <Status>
+   <Id>   <Destination.GroupId>   <Source.GroupId>    <Status>
 

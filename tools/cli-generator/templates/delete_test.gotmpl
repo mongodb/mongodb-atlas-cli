@@ -37,8 +37,6 @@ func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMock{{ .StoreName }}(ctrl)
 
-	var expected interface{} // TODO change here
-
 	deleteOpts := &DeleteOpts{
         store:      mockStore,
 		DeleteOpts: &cli.DeleteOpts{
@@ -50,7 +48,7 @@ func TestDelete_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		{{ .StoreMethod }}(deleteOpts.ProjectID, deleteOpts.Entry).
-		Return(expected, nil).
+		Return(nil).
 		Times(1)
 
 	if err := deleteOpts.Run(); err != nil {
@@ -63,6 +61,6 @@ func TestDeleteBuilder(t *testing.T) {
 		t,
 		DeleteBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output},
+		[]string{flag.ProjectID},
 	)
 }

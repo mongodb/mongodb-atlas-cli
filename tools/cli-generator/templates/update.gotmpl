@@ -32,7 +32,7 @@ type UpdateOpts struct {
 	store      store.{{ .StoreName }}
 	id       string
 
-	// flag parameters
+	// TODO add flag parameters
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -65,7 +65,7 @@ func (opts *UpdateOpts) newUpdateRequest() *{{.RequestType}} {
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create <{{.IDName}}>",
+		Use:   "update <{{.IDName}}>",
 		Short: "{{.Description}}",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),

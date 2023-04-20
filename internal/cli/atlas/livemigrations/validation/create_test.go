@@ -25,14 +25,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestLiveMigrationValidationCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLiveMigrationValidationsCreator(ctrl)
 
-	expected := mongodbatlas.Validation{}
+	expected := atlasv2.Validation{}
 
 	createOpts := &CreateOpts{
 		LiveMigrationsOpts: options.LiveMigrationsOpts{

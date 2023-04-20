@@ -35,6 +35,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdbroles"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdns"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalake"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalakepipelines"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/events"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/integrations"
@@ -198,6 +199,7 @@ func Builder() *cobra.Command {
 		customdbroles.Builder(),
 		accesslists.Builder(),
 		datalake.Builder(),
+		datalakepipelines.Builder(),
 		alerts.Builder(),
 		backup.Builder(),
 		events.Builder(),

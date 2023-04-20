@@ -91,7 +91,7 @@ func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, inde
 func (s *Store) DeleteSearchIndex(projectID, clusterName, indexID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
+		_, _, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

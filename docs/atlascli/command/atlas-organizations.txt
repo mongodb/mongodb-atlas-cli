@@ -52,7 +52,7 @@ Related Commands
 ----------------
 
 * :ref:`atlas-organizations-apiKeys` - Organization API Keys operations.
-* :ref:`atlas-organizations-create` - Create an Ops Manager or Cloud Manager organization. This command is unavailable for Atlas.
+* :ref:`atlas-organizations-create` - Create an organization.
 * :ref:`atlas-organizations-delete` - Remove the specified organization.
 * :ref:`atlas-organizations-describe` - Return the details for the specified organizations.
 * :ref:`atlas-organizations-invitations` - Invitation operations.

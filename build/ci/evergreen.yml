@@ -510,7 +510,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters,m0
   - name: atlas_kubernetes_e2e
-    tags: ["e2e","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernates_atlas"]
+    tags: ["e2e","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernetes_atlas"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -1262,7 +1262,6 @@ tasks:
           E2E_TAGS: atlas,backup,snapshot
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_TIMEOUT: 3h
   - name: atlas_backups_schedule_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
@@ -1283,7 +1282,6 @@ tasks:
           E2E_TAGS: atlas,backup,schedule
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_TIMEOUT: 3h
   - name: atlas_backups_exports_buckets_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
@@ -1304,7 +1302,6 @@ tasks:
           E2E_TAGS: atlas,backup,exports,buckets
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_TIMEOUT: 3h
   - name: atlas_backups_exports_jobs_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
@@ -1325,7 +1322,6 @@ tasks:
           E2E_TAGS: atlas,backup,exports,jobs
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_TIMEOUT: 3h
   - name: atlas_backups_serverless_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
@@ -1347,7 +1343,6 @@ tasks:
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_SERVERLESS_INSTANCE_NAME: ${e2e_serverless_instance_name}
-          E2E_TIMEOUT: 3h
   - name: atlas_backups_restores_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
@@ -1358,6 +1353,7 @@ tasks:
     commands:
       - func: "install gotestsum"
       - func: "e2e test"
+        timeout_secs: 10800 # 3 hours
         vars:
           MCLI_ORG_ID: ${atlas_org_id}
           MCLI_PROJECT_ID: ${atlas_project_id}

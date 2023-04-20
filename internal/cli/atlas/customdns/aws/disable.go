@@ -57,6 +57,9 @@ func DisableBuilder() *cobra.Command {
 		Use:   "disable",
 		Short: "Disable the custom DNS configuration of an Atlas project’s cluster deployed to AWS.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": disableTemplate,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

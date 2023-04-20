@@ -154,8 +154,8 @@ Private API Key '{{.APIKey.PrivateKey}}'
 		},
 	}
 	cmd.Flags().StringVar(&opts.ownerID, flag.OwnerID, "", usage.OrgOwnerID)
-	cmd.Flags().StringVar(&opts.apiKeyDescription, flag.APIKeyDescription, "", usage.APIKeyDescription)
-	cmd.Flags().StringSliceVar(&opts.apiKeyRole, flag.APIKeyRole, []string{}, usage.APIKeyRoles)
+	cmd.Flags().StringVar(&opts.apiKeyDescription, flag.APIKeyDescription, "", usage.AtlasAPIKeyDescription)
+	cmd.Flags().StringSliceVar(&opts.apiKeyRole, flag.APIKeyRole, []string{}, usage.AtlasAPIKeyRoles)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 

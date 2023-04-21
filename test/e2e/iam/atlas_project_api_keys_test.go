@@ -25,7 +25,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAtlasProjectAPIKeys(t *testing.T) {
@@ -51,12 +51,12 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var key mongodbatlas.APIKey
+			var key atlasv2.ApiUser
 			if err := json.Unmarshal(resp, &key); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
-			a.Equal(desc, key.Desc)
-			ID = key.ID
+			a.Equal(desc, *key.Desc)
+			ID = *key.Id
 		}
 	})
 
@@ -95,11 +95,11 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var keys []mongodbatlas.APIKey
+		var keys atlasv2.PaginatedApiApiUser
 		if err := json.Unmarshal(resp, &keys); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-		assert.NotEmpty(t, keys)
+		assert.NotEmpty(t, keys.Results)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

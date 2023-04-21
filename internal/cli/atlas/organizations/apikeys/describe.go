@@ -43,7 +43,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 const describeTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY
-{{.ID}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}
+{{.Id}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}
 `
 
 func (opts *DescribeOpts) Run() error {

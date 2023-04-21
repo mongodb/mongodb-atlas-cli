@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type UpdateOpts struct {
@@ -45,14 +45,14 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *UpdateOpts) newAPIKeyInput() *atlas.APIKeyInput {
-	return &atlas.APIKeyInput{
-		Desc:  opts.desc,
+func (opts *UpdateOpts) newAPIKeyInput() *atlasv2.CreateApiKey {
+	return &atlasv2.CreateApiKey{
+		Desc:  &opts.desc,
 		Roles: opts.roles,
 	}
 }
 
-const updateTemplate = "API Key '{{.ID}}' successfully updated.\n"
+const updateTemplate = "API Key '{{.Id}}' successfully updated.\n"
 
 func (opts *UpdateOpts) Run() error {
 	r, err := opts.store.UpdateOrganizationAPIKey(opts.ConfigOrgID(), opts.id, opts.newAPIKeyInput())

@@ -18,19 +18,19 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_global_cluster.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store GlobalClusterDescriber
 
 type GlobalClusterDescriber interface {
-	GlobalCluster(string, string) (*atlas.GlobalCluster, error)
+	GlobalCluster(string, string) (*atlasv2.GeoSharding, error)
 }
 
-func (s *Store) GlobalCluster(projectID, instanceName string) (*atlas.GlobalCluster, error) {
+func (s *Store) GlobalCluster(projectID, instanceName string) (*atlasv2.GeoSharding, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).GlobalClusters.Get(s.ctx, projectID, instanceName)
+		result, _, err := s.clientv2.GlobalClustersApi.GetManagedNamespace(s.ctx, projectID, instanceName).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

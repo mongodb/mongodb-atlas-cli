@@ -20,6 +20,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas serverless describe <instanceName> [options]
 
@@ -89,6 +90,6 @@ If the command succeeds, the CLI returns output similar to the following sample.
 .. code-block::
 
    ID     NAME     MDB VER            STATE
-   <ID>   <Name>   <MongoDBVersion>   <StateName>
+   <Id>   <Name>   <MongoDBVersion>   <StateName>
    
 

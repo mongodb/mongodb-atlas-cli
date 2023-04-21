@@ -109,6 +109,7 @@ To find the hostnames for an Atlas project, use the process list command.
 		Annotations: map[string]string{
 			"hostnameDesc": "Label that identifies the host that stores the log files that you want to download.",
 			"mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gzDesc": "Log file that you want to return.",
+			"output": downloadMessage,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.host = args[0]

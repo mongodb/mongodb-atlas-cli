@@ -27,7 +27,7 @@ import (
 )
 
 var describeTemplate = `ID	NAME	MDB VER	STATE
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
+{{.Id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
 `
 
 type DescribeOpts struct {
@@ -46,7 +46,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.ServerlessInstance(opts.ConfigProjectID(), opts.instanceName)
+	r, err := opts.store.GetServerlessInstance(opts.ConfigProjectID(), opts.instanceName)
 	if err != nil {
 		return err
 	}

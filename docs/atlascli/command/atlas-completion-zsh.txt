@@ -23,7 +23,7 @@ to enable it.  You can execute the following once:
 
 To load completions in your current shell session:
 
-	source <(atlas completion zsh); compdef _atlas atlas
+	source <(atlas completion zsh)
 
 To load completions for every new session, execute once:
 
@@ -42,6 +42,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas completion zsh [options]
 

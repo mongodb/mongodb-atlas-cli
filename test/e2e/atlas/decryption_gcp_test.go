@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (atlas && decrypt)
 
 package atlas_test
@@ -48,11 +49,6 @@ func TestDecryptWithGCP(t *testing.T) {
 	req.NoError(err)
 	t.Setenv("GOOGLE_APPLICATION_CREDENTIALS", GCPCredentialsFile)
 
-	t.Cleanup(func() {
-		err = os.RemoveAll(tmpDir)
-		req.NoError(err)
-	})
-
 	inputFile := decryption.GenerateFileName(tmpDir, "input")
 	err = decryption.DumpToTemp(filesGCP, decryption.GenerateFileName(gcpTestsInputDir, "input"), inputFile)
 	req.NoError(err)
@@ -71,7 +67,5 @@ func TestDecryptWithGCP(t *testing.T) {
 	gotContents, err := cmd.CombinedOutput()
 	req.NoError(err, string(gotContents))
 
-	equal, err := decryption.LogsAreEqual(expectedContents, gotContents)
-	req.NoError(err)
-	req.True(equal, "expected %v, got %v", string(expectedContents), string(gotContents))
+	decryption.LogsAreEqual(t, expectedContents, gotContents)
 }

@@ -64,6 +64,7 @@ func PauseBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to pause.",
+			"output":          pauseTmpl,
 		},
 		Example: fmt.Sprintf(`  # Pause the cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
   %s clusters pause myCluster --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),

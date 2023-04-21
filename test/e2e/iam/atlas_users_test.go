@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (iam && !om50 && !om60)
+//go:build e2e || (iam && atlas)
 
 package iam_test
 
@@ -26,8 +26,8 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestUsers(t *testing.T) {
-	cliPath, err := e2e.Bin()
+func TestAtlasUsers(t *testing.T) {
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -36,7 +36,6 @@ func TestUsers(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			usersEntity,
 			"list",
@@ -63,7 +62,6 @@ func TestUsers(t *testing.T) {
 
 	t.Run("Describe by username", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			usersEntity,
 			"describe",
 			"--username",
@@ -87,7 +85,6 @@ func TestUsers(t *testing.T) {
 
 	t.Run("Describe by id", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			usersEntity,
 			"describe",
 			"--id",

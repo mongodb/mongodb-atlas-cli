@@ -20,6 +20,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas organizations users list [options]
 
@@ -81,7 +82,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 .. code-block::
 
    ID     FIRST NAME    LAST NAME    USERNAME
-   <ID>   <FirstName>   <LastName>   <Username>
+   <Id>   <FirstName>   <LastName>   <Username>
    
 
 Examples

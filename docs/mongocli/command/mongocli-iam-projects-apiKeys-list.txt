@@ -20,6 +20,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli iam projects apiKeys list [options]
 

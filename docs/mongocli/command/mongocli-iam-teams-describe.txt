@@ -22,6 +22,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli iam teams describe [options]
 

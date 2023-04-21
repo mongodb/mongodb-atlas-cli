@@ -18,6 +18,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli cloud-manager logs jobs delete <ID> [options]
 

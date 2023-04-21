@@ -80,11 +80,26 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) DescribeSchedule(arg0, arg1
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeSchedule", reflect.TypeOf((*MockAtlasOperatorClusterStore)(nil).DescribeSchedule), arg0, arg1)
 }
 
+// GetServerlessInstance mocks base method.
+func (m *MockAtlasOperatorClusterStore) GetServerlessInstance(arg0, arg1 string) (*mongodbatlasv2.ServerlessInstanceDescription, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetServerlessInstance", arg0, arg1)
+	ret0, _ := ret[0].(*mongodbatlasv2.ServerlessInstanceDescription)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetServerlessInstance indicates an expected call of GetServerlessInstance.
+func (mr *MockAtlasOperatorClusterStoreMockRecorder) GetServerlessInstance(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServerlessInstance", reflect.TypeOf((*MockAtlasOperatorClusterStore)(nil).GetServerlessInstance), arg0, arg1)
+}
+
 // GlobalCluster mocks base method.
-func (m *MockAtlasOperatorClusterStore) GlobalCluster(arg0, arg1 string) (*mongodbatlas.GlobalCluster, error) {
+func (m *MockAtlasOperatorClusterStore) GlobalCluster(arg0, arg1 string) (*mongodbatlasv2.GeoSharding, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GlobalCluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.GlobalCluster)
+	ret0, _ := ret[0].(*mongodbatlasv2.GeoSharding)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -126,10 +141,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) ServerlessInstance(arg0, ar
 }
 
 // ServerlessInstances mocks base method.
-func (m *MockAtlasOperatorClusterStore) ServerlessInstances(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlas.ClustersResponse, error) {
+func (m *MockAtlasOperatorClusterStore) ServerlessInstances(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedServerlessInstanceDescription, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessInstances", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.ClustersResponse)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedServerlessInstanceDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

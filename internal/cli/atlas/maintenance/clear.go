@@ -74,6 +74,9 @@ func ClearBuilder() *cobra.Command {
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Aliases: []string{"rm", "delete"},
+		Annotations: map[string]string{
+			"output": clearTemplate,
+		},
 		Example: fmt.Sprintf(`  # Clear the current maintenance window for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s maintenanceWindows clear --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

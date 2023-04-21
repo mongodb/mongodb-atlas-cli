@@ -107,6 +107,9 @@ func VerifyBuilder() *cobra.Command {
 		Use:   "verify",
 		Short: "Request verification of an LDAP configuration for your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": verifyTemplate,
+		},
 		Example: fmt.Sprintf(`  # Request the JSON-formatted verification of the LDAP configuration for the atlas-ldaps-01.ldap.myteam.com host in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s security ldap verify --hostname atlas-ldaps-01.ldap.myteam.com --bindUsername "CN=Administrator,CN=Users,DC=atlas-ldaps-01,DC=myteam,DC=com" --bindPassword changeMe --projectId 5e2211c17a3e5a48f5497de3 --output json
 `, cli.ExampleAtlasEntryPoint()),

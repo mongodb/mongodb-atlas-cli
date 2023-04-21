@@ -35,6 +35,8 @@ type WatchOpts struct {
 	store       store.OnlineArchiveDescriber
 }
 
+var watchTemplate = "\nOnline archive available.\n"
+
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -77,12 +79,13 @@ You can interrupt the command's polling at any time with CTRL-C.
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to watch.",
+			"output":        watchTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nOnline archive available.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

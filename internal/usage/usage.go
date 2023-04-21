@@ -97,7 +97,7 @@ dbName and collection are required only for built-in roles.`
 	ForceQuickstart                           = "If specified, skips asking for input and creates a cluster with default settings for any options you don't specify."
 	ForceFile                                 = "Overwrites the destination file."
 	Email                                     = "Email address for the user."
-	LogOut                                    = "Optional output file name. Uses the log name if the output file's name is not specified."
+	LogOut                                    = "Output file name. Uses the log name if the output file's name is not specified."
 	DiagnoseOut                               = "Optional output file name. Uses diagnose-archive.tar.gz if the output file's name is not specified."
 	LogStart                                  = "UNIX Epoch-formatted starting date and time for the range of log messages to retrieve. This value defaults to 24 hours prior to the current timestamp."
 	LogEnd                                    = "UNIX Epoch-formatted ending date and time for the range of log messages to retrieve. This value defaults to the current timestamp."
@@ -187,7 +187,9 @@ dbName and collection are required only for built-in roles.`
 	SSEEnabled                                = "Flag indicating whether this Amazon S3 blockstore enables server-side encryption."
 	PathStyleAccessEnabled                    = "Flag indicating the style of this endpoint."
 	APIKeyDescription                         = "Description of the API key."
-	APIKeyRoles                               = "Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are ORG_OWNER, ORG_MEMBER, ORG_GROUP_CREATOR, ORG_BILLING_ADMIN, and ORG_READ_ONLY."                                                                                         //nolint:gosec // This is just a message not a credential
+	AtlasAPIKeyDescription                    = APIKeyDescription + " Required when creating organizations authenticated with API Keys."
+	APIKeyRoles                               = "Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are ORG_OWNER, ORG_MEMBER, ORG_GROUP_CREATOR, ORG_BILLING_ADMIN, and ORG_READ_ONLY." //nolint:gosec // This is just a message not a credential
+	AtlasAPIKeyRoles                          = APIKeyRoles + " Required when creating organizations authenticated with API Keys."
 	ProjectAPIKeyRoles                        = "Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are GROUP_CLUSTER_MANAGER, GROUP_DATA_ACCESS_ADMIN, GROUP_DATA_ACCESS_READ_ONLY, GROUP_DATA_ACCESS_READ_WRITE, GROUP_SEARCH_INDEX_EDITOR, GROUP_OWNER, and GROUP_READ_ONLY." //nolint:gosec // This is just a message not a credential
 	GlobalAPIKeyRoles                         = "Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are GLOBAL_AUTOMATION_ADMIN, GLOBAL_BACKUP_ADMIN GLOBAL_MONITORING_ADMIN, GLOBAL_OWNER, GLOBAL_READ_ONLY,GLOBAL_USER_ADMIN."                                                 //nolint:gosec // This is just a message not a credential
 	NotificationRegion                        = "Region that indicates which API URL to use."
@@ -404,4 +406,15 @@ dbName and collection are required only for built-in roles.`
 	DeliveryType                              = "Type of restore job to create. Valid values include: automated, download, pointInTime. To learn more about types of restore jobs, see https://www.mongodb.com/docs/atlas/backup-restore-cluster/."
 	EnableServerlessContinuousBackup          = "Enables Serverless Continuous Backup for your serverless instance. If enabled the serverless instance does not use Basic Backup."
 	DisableServerlessContinuousBackup         = "Disables Serverless Continuous Backup for your serverless instance. If disabled the serverless instance uses Basic Backup."
+	SinkType                                  = "Type of ingestion destination for this data lake pipeline."
+	SinkMetadataProvider                      = "Target cloud provider for this data lake pipeline."
+	SinkMetadataRegion                        = "Target cloud provider region for this data lake pipeline."
+	SinkPartitionField                        = "Ordered fields used to physically organize data in the destination."
+	SourceType                                = "Type of ingestion source for this data lake pipeline."
+	SourceClusterName                         = "Human-readable label that identifies the source cluster."
+	SourceCollectionName                      = "Human-readable label that identifies the source collection."
+	SourceDatabaseName                        = "Human-readable label that identifies the source database."
+	SourcePolicyItemID                        = "Human-readable label that identifies the policy item."
+	Transform                                 = "Fields to be excluded for this data lake pipeline."
+	PipelineFilename                          = "Name of the JSON data lake pipeline configuration file to use."
 )

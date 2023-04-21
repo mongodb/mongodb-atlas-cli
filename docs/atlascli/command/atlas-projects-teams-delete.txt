@@ -22,6 +22,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas projects teams delete <teamId> [options]
 

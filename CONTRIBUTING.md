@@ -112,6 +112,7 @@ Review and replace command name and arguments depending on the command you are u
             "mode": "auto",
             "program": "${workspaceFolder}/cmd/atlas",
             "env": {},
+            "buildFlags": "-ldflags '-X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli'",
             "args": [
               "login"
             ]
@@ -142,6 +143,8 @@ Commands follow a [RESTful](https://en.wikipedia.org/wiki/Representational_state
 For that reason, command arguments tend to match the path and query params of the APIs,
 with the last param being a required argument and the rest handled via flag options.
 For commands that create or modify complex data structures, the use of configuration files is preferred over flag options.
+
+Note: we are experimenting with a generator, make sure to try it out in [tools/cli-generator](./tools/cli-generator/)
 
 #### How to define flags:
 

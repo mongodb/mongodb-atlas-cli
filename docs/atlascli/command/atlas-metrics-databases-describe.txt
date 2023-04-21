@@ -21,6 +21,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas metrics databases describe <hostname:port> <databaseName> [options]
 

@@ -28,10 +28,7 @@ import (
 )
 
 const (
-	describeTemplateCloud = `ID	NAME
-{{.Id}}	{{.Name}}
-`
-	describeTemplateOnPrem = `ID	NAME
+	describeTemplate = `ID	NAME
 {{.ID}}	{{.Name}}
 `
 )
@@ -71,14 +68,14 @@ func DescribeBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies the organization.",
-			"output": describeTemplateCloud,
+			"output": describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the organization with the ID 5e2211c17a3e5a48f5497de3:
   %s organizations describe 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore(cmd.Context()),
-				opts.InitConditionalOutput(cmd.OutOrStdout(), describeTemplateCloud, describeTemplateOnPrem),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

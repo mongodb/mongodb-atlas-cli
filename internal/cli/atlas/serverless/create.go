@@ -23,10 +23,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const providerName = "SERVERLESS"
@@ -61,12 +63,12 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newServerlessCreateRequestParams() *atlas.ServerlessCreateRequestParams {
-	return &atlas.ServerlessCreateRequestParams{
+func (opts *CreateOpts) newServerlessCreateRequestParams() *atlasv2.ServerlessInstanceDescriptionCreate {
+	return &atlasv2.ServerlessInstanceDescriptionCreate{
 		Name: opts.instanceName,
-		ProviderSettings: &atlas.ServerlessProviderSettings{
+		ProviderSettings: atlasv2.ServerlessProviderSettings{
 			BackingProviderName: opts.provider,
-			ProviderName:        providerName,
+			ProviderName:        pointer.Get(providerName),
 			RegionName:          opts.region,
 		},
 	}

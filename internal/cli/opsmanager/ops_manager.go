@@ -15,8 +15,9 @@
 package opsmanager
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/alerts"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/events"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/alerts"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/events"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/performanceadvisor"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/agents"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/automation"
@@ -37,7 +38,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/serverusage"
 	softwarecompotents "github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/softwarecomponents"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/versionmanifest"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"

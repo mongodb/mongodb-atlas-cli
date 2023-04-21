@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	atlasStore "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
@@ -38,13 +38,13 @@ type CreateOpts struct {
 	cli.OutputOpts
 	desc  string
 	roles []string
-	store atlasStore.OrganizationAPIKeyCreator
+	store store.OrganizationAPIKeyCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = atlasStore.New(atlasStore.AuthenticatedPreset(config.Default()), atlasStore.WithContext(ctx))
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return err
 	}
 }

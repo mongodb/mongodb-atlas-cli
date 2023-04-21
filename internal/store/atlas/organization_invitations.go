@@ -54,7 +54,7 @@ func (s *Store) OrganizationInvitation(orgID, invitationID string) (interface{},
 
 // DeleteInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteInvitation(orgID, invitationID string) error {
-	_, err := s.client.Organizations.DeleteInvitation(s.ctx, orgID, invitationID)
+	_, _, err := s.clientv2.OrganizationsApi.DeleteOrganizationInvitation(s.ctx, orgID, invitationID).Execute()
 	return err
 }
 

@@ -64,13 +64,21 @@ func (opts *CreateOpts) Run() error {
 		defaultAlertSettings = &f
 	}
 
-	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(), defaultAlertSettings, opts.newCreateProjectOptions())
+	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(), opts.newRegionUsageRestrictions(), defaultAlertSettings, opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err
 	}
 
 	return opts.Print(r)
+}
+
+func (opts *CreateOpts) newRegionUsageRestrictions() string {
+	if opts.regionUsageRestrictions {
+		return govRegionOnly
+	}
+
+	return ""
 }
 
 func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {

@@ -31,7 +31,7 @@ type OrgProjectLister interface {
 }
 
 type ProjectCreator interface {
-	CreateProject(string, string, *bool, *atlas.CreateProjectOptions) (*atlasv2.Group, error)
+	CreateProject(string, string, string, *bool, *atlas.CreateProjectOptions) (*atlasv2.Group, error)
 	ServiceVersionDescriber
 }
 
@@ -84,15 +84,15 @@ func (s *Store) Project(id string) (interface{}, error) {
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateProject(name, orgID string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (*atlasv2.Group, error) {
-	group := &atlasv2.Group{Name: name, OrgId: orgID, WithDefaultAlertsSettings: defaultAlertSettings}
+func (s *Store) CreateProject(name, orgID, regionUsageRestrictions string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (*atlasv2.Group, error) {
+	group := &atlasv2.Group{Name: name, OrgId: orgID, WithDefaultAlertsSettings: defaultAlertSettings, RegionUsageRestrictions: &regionUsageRestrictions}
 	result, _, err := s.clientv2.ProjectsApi.CreateProject(s.ctx).ProjectOwnerId(opts.ProjectOwnerID).Group(*group).Execute()
 	return result, err
 }
 
 // DeleteProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteProject(projectID string) error {
-	_, err := s.clientv2.ProjectsApi.DeleteProject(s.ctx, projectID).Execute()
+	_, _, err := s.clientv2.ProjectsApi.DeleteProject(s.ctx, projectID).Execute()
 	return err
 }
 

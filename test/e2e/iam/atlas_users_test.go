@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAtlasUsers(t *testing.T) {
@@ -47,17 +48,17 @@ func TestAtlasUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var users []mongodbatlas.AtlasUser
+		var users atlasv2.PaginatedAppUser
 		if err := json.Unmarshal(resp, &users); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(users) == 0 {
-			t.Fatalf("expected len(users) > 0, got %v", len(users))
+		if len(users.Results) == 0 {
+			t.Fatalf("expected len(users) > 0, got %v", len(users.Results))
 		}
 
-		username = users[0].Username
-		userID = users[0].ID
+		username = users.Results[0].Username
+		userID = *users.Results[0].Id
 	})
 
 	t.Run("Describe by username", func(t *testing.T) {

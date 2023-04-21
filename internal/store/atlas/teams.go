@@ -52,26 +52,27 @@ type TeamRolesUpdater interface {
 
 // TeamByID encapsulates the logic to manage different cloud providers.
 func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
-	// Migration Blocked by incorrect OpenAPI schema
+	// Migration Blocked by incorrect OpenAPI schema :: CLOUDP-172920
 	result, _, err := s.client.Teams.Get(s.ctx, orgID, teamID)
 	return result, err
 }
 
 // TeamByName encapsulates the logic to manage different cloud providers.
 func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
-	// Migration Blocked by incorrect OpenAPI schema
+	// Migration Blocked by incorrect OpenAPI schema :: CLOUDP-172920
 	result, _, err := s.client.Teams.GetOneTeamByName(s.ctx, orgID, teamName)
 	return result, err
 }
 
 // Teams encapsulates the logic to manage different cloud providers.
 func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, error) {
-	// Migration Blocked by incorrect OpenAPI schema
+	// Migration Blocked by incorrect OpenAPI schema :: CLOUDP-172920
 	result, _, err := s.client.Teams.List(s.ctx, orgID, opts)
 	return result, err
 }
 
 func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) {
+	// Migration Blocked by sdk property missing omitempty :: CLOUDP-172927
 	result, _, err := s.client.Teams.Create(s.ctx, orgID, team)
 	return result, err
 }

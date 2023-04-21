@@ -110,7 +110,7 @@ func TestServerless(t *testing.T) {
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.NotEmpty(clusters)
+		a.NotEmpty(clusters.Results)
 	})
 
 	t.Run("Describe", func(t *testing.T) {

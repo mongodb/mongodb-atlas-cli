@@ -40,6 +40,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/backup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/events"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/performanceadvisor"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
@@ -96,6 +97,7 @@ func Builder() *cobra.Command {
 		maintenance.Builder(),
 		customdns.Builder(),
 		cloudproviders.Builder(),
+		serverless.Builder(),
 		livemigrations.Builder(),
 		accesslogs.Builder(),
 	)

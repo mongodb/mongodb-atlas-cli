@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
@@ -44,9 +43,9 @@ type ListOpts struct {
 	cli.OutputOpts
 	hostname    string
 	clusterName string
-	start       string
-	end         string
-	nLogs       int
+	start       int64
+	end         int64
+	nLogs       int64
 	ipAddresses string
 	authResult  string
 	store       store.AccessLogsLister
@@ -62,36 +61,37 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 
 func (opts *ListOpts) Run() error {
 	if opts.clusterName != "" {
-		r, err := opts.store.AccessLogsByClusterName(opts.ConfigProjectID(), opts.clusterName, opts.newAccessLogOptions())
+		r, err := opts.store.AccessLogsByClusterName(opts.ConfigProjectID(), opts.clusterName)
 		if err != nil {
 			return err
 		}
-
-		return opts.Print(r)
+		r.End(opts.end).Start(opts.start).NLogs(opts.nLogs)
+		if opts.authResult != "" {
+			isSuccess := strings.EqualFold(opts.authResult, success)
+			r.AuthResult(isSuccess)
+		}
+		resp, _, err := r.Execute()
+		if err != nil {
+			return err
+		}
+		return opts.Print(resp)
 	}
 
-	r, err := opts.store.AccessLogsByHostname(opts.ConfigProjectID(), opts.hostname, opts.newAccessLogOptions())
+	r, err := opts.store.AccessLogsByHostname(opts.ConfigProjectID(), opts.hostname)
+	if err != nil {
+		return err
+	}
+	r.End(opts.end).Start(opts.start).NLogs(int32(opts.nLogs))
+	if opts.authResult != "" {
+		isSuccess := strings.EqualFold(opts.authResult, success)
+		r.AuthResult(isSuccess)
+	}
+	resp, _, err := r.Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(r)
-}
-
-func (opts *ListOpts) newAccessLogOptions() *atlas.AccessLogOptions {
-	var authResult *bool
-	if opts.authResult != "" {
-		isSuccess := strings.EqualFold(opts.authResult, success)
-		authResult = &isSuccess
-	}
-
-	return &atlas.AccessLogOptions{
-		Start:      opts.start,
-		End:        opts.end,
-		NLogs:      opts.nLogs,
-		IPAddress:  opts.ipAddresses,
-		AuthResult: authResult,
-	}
+	return opts.Print(resp)
 }
 
 func (opts *ListOpts) ValidateInput() error {
@@ -133,14 +133,16 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.hostname, flag.Hostname, "", usage.Hostname)
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.start, flag.Start, "", usage.AccessLogStartDate)
-	cmd.Flags().StringVar(&opts.end, flag.End, "", usage.AccessLogEndDate)
-	cmd.Flags().IntVar(&opts.nLogs, flag.NLog, 0, usage.NLog)
+	cmd.Flags().Int64Var(&opts.start, flag.Start, 0, usage.AccessLogStartDate)
+	cmd.Flags().Int64Var(&opts.end, flag.End, 0, usage.AccessLogEndDate)
+	cmd.Flags().Int64Var(&opts.nLogs, flag.NLog, 0, usage.NLog)
 	cmd.Flags().StringVar(&opts.ipAddresses, flag.IP, "", usage.AccessLogIP)
 	cmd.Flags().StringVar(&opts.authResult, flag.AuthResult, "", usage.AuthResult)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	cmd.MarkFlagsMutuallyExclusive(flag.Hostname, flag.ClusterName)
 
 	return cmd
 }

@@ -21,7 +21,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	"go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -37,8 +36,8 @@ func TestCreate_Run(t *testing.T) {
 
 	createOpts.ProjectID = "5a0a1e7e0f2912c554080adc"
 
-	apiKey := &mongodbatlas.APIKeyInput{
-		Desc:  createOpts.description,
+	apiKey := &atlasv2.CreateApiKey{
+		Desc:  &createOpts.description,
 		Roles: []string{},
 	}
 	expected := &atlasv2.ApiUser{}

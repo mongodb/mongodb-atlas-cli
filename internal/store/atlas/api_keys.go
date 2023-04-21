@@ -15,7 +15,6 @@
 package atlas
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
@@ -27,7 +26,7 @@ type ProjectAPIKeyLister interface {
 }
 
 type ProjectAPIKeyCreator interface {
-	CreateProjectAPIKey(string, *atlas.APIKeyInput) (*atlasv2.ApiUser, error)
+	CreateProjectAPIKey(string, *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error)
 }
 
 type ProjectAPIKeyDeleter interface {
@@ -35,7 +34,7 @@ type ProjectAPIKeyDeleter interface {
 }
 
 type ProjectAPIKeyAssigner interface {
-	AssignProjectAPIKey(string, string, *atlas.AssignAPIKey) error
+	AssignProjectAPIKey(string, string, *atlasv2.CreateApiKey) error
 }
 
 type OrganizationAPIKeyLister interface {
@@ -47,11 +46,11 @@ type OrganizationAPIKeyDescriber interface {
 }
 
 type OrganizationAPIKeyUpdater interface {
-	UpdateOrganizationAPIKey(string, string, *atlas.APIKeyInput) (*atlasv2.ApiUser, error)
+	UpdateOrganizationAPIKey(string, string, *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error)
 }
 
 type OrganizationAPIKeyCreator interface {
-	CreateOrganizationAPIKey(string, *atlas.APIKeyInput) (*atlasv2.ApiUser, error)
+	CreateOrganizationAPIKey(string, *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error)
 }
 
 type OrganizationAPIKeyDeleter interface {
@@ -72,22 +71,14 @@ func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlasv2.ApiUser, er
 }
 
 // UpdateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.APIKeyInput) (*atlasv2.ApiUser, error) {
-	apiUser := atlasv2.CreateApiKey{
-		Desc:  pointer.Get(input.Desc),
-		Roles: input.Roles,
-	}
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKey(s.ctx, orgID, apiKeyID).CreateApiKey(apiUser).Execute()
+func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error) {
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKey(s.ctx, orgID, apiKeyID).CreateApiKey(*input).Execute()
 	return result, err
 }
 
 // CreateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput) (*atlasv2.ApiUser, error) {
-	createAPIKey := atlasv2.CreateApiKey{
-		Desc:  pointer.Get(input.Desc),
-		Roles: input.Roles,
-	}
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateApiKey(s.ctx, orgID).CreateApiKey(createAPIKey).Execute()
+func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error) {
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateApiKey(s.ctx, orgID).CreateApiKey(*input).Execute()
 	return result, err
 }
 
@@ -105,21 +96,14 @@ func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) (*atla
 }
 
 // CreateProjectAPIKey creates an API Keys for a project.
-func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlas.APIKeyInput) (*atlasv2.ApiUser, error) {
-	createAPIKey := atlasv2.CreateApiKey{
-		Desc:  pointer.Get(apiKeyInput.Desc),
-		Roles: apiKeyInput.Roles,
-	}
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateProjectApiKey(s.ctx, projectID).CreateApiKey(createAPIKey).Execute()
+func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error) {
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateProjectApiKey(s.ctx, projectID).CreateApiKey(*apiKeyInput).Execute()
 	return result, err
 }
 
 // AssignProjectAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlas.AssignAPIKey) error {
-	createAPIKey := atlasv2.CreateApiKey{
-		Roles: input.Roles,
-	}
-	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKeyRoles(s.ctx, projectID, apiKeyID).CreateApiKey(createAPIKey).Execute()
+func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlasv2.CreateApiKey) error {
+	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKeyRoles(s.ctx, projectID, apiKeyID).CreateApiKey(*input).Execute()
 	return err
 }
 

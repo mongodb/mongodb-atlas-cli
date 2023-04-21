@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockTeamCreator(ctrl)
 
-	expected := &atlasv2.Team{}
+	expected := &atlas.Team{}
 
 	createOpts := &CreateOpts{
 		store: mockStore,

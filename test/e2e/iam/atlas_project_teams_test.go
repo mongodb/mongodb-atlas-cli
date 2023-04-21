@@ -19,7 +19,6 @@ package iam_test
 import (
 	"encoding/json"
 	"fmt"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"os"
 	"os/exec"
 	"testing"
@@ -28,6 +27,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAtlasProjectTeams(t *testing.T) {
@@ -104,7 +104,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 			a.Len(roles.Results, 1)
 
 			role := roles.Results[0]
-			a.Equal(teamID, role.TeamId)
+			a.Equal(teamID, *role.TeamId)
 			a.Len(role.RoleNames, 2)
 			a.ElementsMatch([]string{roleName1, roleName2}, role.RoleNames)
 		}

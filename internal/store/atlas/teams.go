@@ -31,7 +31,7 @@ type TeamDescriber interface {
 }
 
 type TeamCreator interface {
-	CreateTeam(string, *atlasv2.Team) (*atlasv2.Team, error)
+	CreateTeam(string, *atlas.Team) (*atlas.Team, error)
 }
 
 type TeamDeleter interface {
@@ -71,9 +71,8 @@ func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, erro
 	return result, err
 }
 
-// CreateTeam encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateTeam(orgID string, team *atlasv2.Team) (*atlasv2.Team, error) {
-	result, _, err := s.clientv2.TeamsApi.CreateTeam(s.ctx, orgID).Team(*team).Execute()
+func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) {
+	result, _, err := s.client.Teams.Create(s.ctx, orgID, team)
 	return result, err
 }
 

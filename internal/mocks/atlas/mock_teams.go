@@ -127,10 +127,10 @@ func (m *MockTeamCreator) EXPECT() *MockTeamCreatorMockRecorder {
 }
 
 // CreateTeam mocks base method.
-func (m *MockTeamCreator) CreateTeam(arg0 string, arg1 *mongodbatlasv2.Team) (*mongodbatlasv2.Team, error) {
+func (m *MockTeamCreator) CreateTeam(arg0 string, arg1 *mongodbatlas.Team) (*mongodbatlas.Team, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateTeam", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.Team)
+	ret0, _ := ret[0].(*mongodbatlas.Team)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

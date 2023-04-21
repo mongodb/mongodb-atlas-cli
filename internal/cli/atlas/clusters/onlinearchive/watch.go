@@ -50,7 +50,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return result.State != "PENDING" && result.State != "PAUSING", nil
+	return result.GetState() != "PENDING" && result.GetState() != "PAUSING", nil
 }
 
 func (opts *WatchOpts) Run() error {

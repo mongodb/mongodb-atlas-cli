@@ -25,7 +25,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestOnlineArchives(t *testing.T) {
@@ -133,8 +133,8 @@ func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 
 func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	const expireAfterDays = float64(4)
-	expireAfterDaysStr := fmt.Sprintf("%.0f", expireAfterDays)
+	const expireAfterDays = int32(4)
+	expireAfterDaysStr := fmt.Sprintf("%d", expireAfterDays)
 	cmd := exec.Command(cliPath,
 		clustersEntity,
 		onlineArchiveEntity,
@@ -150,11 +150,11 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
-	var archive mongodbatlas.OnlineArchive
+	var archive atlasv2.OnlineArchive
 	if err = json.Unmarshal(resp, &archive); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	assert.Equal(t, expireAfterDays, *archive.Criteria.ExpireAfterDays)
+	assert.Equal(t, expireAfterDays, archive.Criteria.DateCriteria.GetExpireAfterDays())
 }
 
 func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
@@ -174,11 +174,11 @@ func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiv
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
 
-	var archive mongodbatlas.OnlineArchive
+	var archive atlasv2.OnlineArchive
 	if err = json.Unmarshal(resp, &archive); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	assert.Equal(t, archiveID, archive.ID)
+	assert.Equal(t, archiveID, archive.GetId())
 }
 
 func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
@@ -196,7 +196,7 @@ func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
-	var archives *mongodbatlas.OnlineArchives
+	var archives *atlasv2.PaginatedOnlineArchive
 	if err = json.Unmarshal(resp, &archives); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -225,10 +225,10 @@ func createOnlineArchive(t *testing.T, cliPath, projectID, clusterName string) s
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
 
-	var archive mongodbatlas.OnlineArchive
+	var archive atlasv2.OnlineArchive
 	if err = json.Unmarshal(resp, &archive); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	assert.Equal(t, dbName, archive.DBName)
-	return archive.ID
+	assert.Equal(t, dbName, archive.GetDbName())
+	return archive.GetId()
 }

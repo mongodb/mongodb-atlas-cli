@@ -27,6 +27,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAtlasProjectTeams(t *testing.T) {
@@ -98,12 +99,12 @@ func TestAtlasProjectTeams(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var roles []mongodbatlas.TeamRoles
+		var roles atlasv2.PaginatedTeamRole
 		if err = json.Unmarshal(resp, &roles); a.NoError(err) {
-			a.Len(roles, 1)
+			a.Len(roles.Results, 1)
 
-			role := roles[0]
-			a.Equal(teamID, role.TeamID)
+			role := roles.Results[0]
+			a.Equal(teamID, *role.TeamId)
 			a.Len(role.RoleNames, 2)
 			a.ElementsMatch([]string{roleName1, roleName2}, role.RoleNames)
 		}

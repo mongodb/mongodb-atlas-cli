@@ -126,18 +126,18 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			RootCertType:         "TestRootCertType",
 			VersionReleaseSystem: "TestReleaseSystem",
 		}
-		processArgs := &mongodbatlas.ProcessArgs{
-			DefaultReadConcern:               "TestReadConcern",
-			DefaultWriteConcern:              "TestWriteConcert",
-			MinimumEnabledTLSProtocol:        "1.0",
+		processArgs := &atlasv2.ClusterDescriptionProcessArgs{
+			DefaultReadConcern:               pointer.Get("TestReadConcern"),
+			DefaultWriteConcern:              pointer.Get("TestWriteConcert"),
+			MinimumEnabledTlsProtocol:        pointer.Get("1.0"),
 			FailIndexKeyTooLong:              pointer.Get(true),
 			JavascriptEnabled:                pointer.Get(true),
 			NoTableScan:                      pointer.Get(true),
-			OplogSizeMB:                      pointer.Get[int64](10),
-			SampleSizeBIConnector:            pointer.Get[int64](10),
-			SampleRefreshIntervalBIConnector: pointer.Get[int64](10),
-			OplogMinRetentionHours:           pointer.Get[float64](10.1),
+			SampleSizeBIConnector:            pointer.Get[int32](10),
+			SampleRefreshIntervalBIConnector: pointer.Get[int32](10),
 		}
+		processArgs.OplogSizeMB.Set(pointer.Get(int32(10)))
+		processArgs.OplogMinRetentionHours.Set(pointer.Get(float64(10.1)))
 		backupSchedule := &atlasv2.DiskBackupSnapshotSchedule{
 			ClusterId:             pointer.Get("testClusterID"),
 			ClusterName:           pointer.Get(clusterName),
@@ -302,15 +302,15 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				},
 				ServerlessSpec: nil,
 				ProcessArgs: &atlasV1.ProcessArgs{
-					DefaultReadConcern:               processArgs.DefaultReadConcern,
-					DefaultWriteConcern:              processArgs.DefaultWriteConcern,
-					MinimumEnabledTLSProtocol:        processArgs.MinimumEnabledTLSProtocol,
+					DefaultReadConcern:               processArgs.GetDefaultReadConcern(),
+					DefaultWriteConcern:              processArgs.GetDefaultWriteConcern(),
+					MinimumEnabledTLSProtocol:        processArgs.GetMinimumEnabledTlsProtocol(),
 					FailIndexKeyTooLong:              processArgs.FailIndexKeyTooLong,
 					JavascriptEnabled:                processArgs.JavascriptEnabled,
 					NoTableScan:                      processArgs.NoTableScan,
-					OplogSizeMB:                      processArgs.OplogSizeMB,
-					SampleSizeBIConnector:            processArgs.SampleSizeBIConnector,
-					SampleRefreshIntervalBIConnector: processArgs.SampleRefreshIntervalBIConnector,
+					OplogSizeMB:                      pointer.Get(int64(processArgs.GetOplogSizeMB())),
+					SampleSizeBIConnector:            pointer.Get(int64(processArgs.GetSampleSizeBIConnector())),
+					SampleRefreshIntervalBIConnector: pointer.Get(int64(processArgs.GetSampleRefreshIntervalBIConnector())),
 				},
 			},
 			Status: status.AtlasDeploymentStatus{

@@ -16,6 +16,7 @@ package atlas
 
 import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_teams.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas TeamLister,TeamDescriber,TeamCreator,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
@@ -38,7 +39,7 @@ type TeamDeleter interface {
 }
 
 type TeamAdder interface {
-	AddUsersToTeam(string, string, []string) (interface{}, error)
+	AddUsersToTeam(string, string, []atlasv2.AddUserToTeam) (*atlasv2.PaginatedApiAppUser, error)
 }
 
 type TeamUserRemover interface {
@@ -46,53 +47,56 @@ type TeamUserRemover interface {
 }
 
 type TeamRolesUpdater interface {
-	UpdateProjectTeamRoles(string, string, *atlas.TeamUpdateRoles) ([]atlas.TeamRoles, error)
+	UpdateProjectTeamRoles(string, string, *atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error)
 }
 
 // TeamByID encapsulates the logic to manage different cloud providers.
 func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
+	// Migration Blocked by incorrect OpenAPI schema :: CLOUDP-172920
 	result, _, err := s.client.Teams.Get(s.ctx, orgID, teamID)
 	return result, err
 }
 
 // TeamByName encapsulates the logic to manage different cloud providers.
 func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
+	// Migration Blocked by incorrect OpenAPI schema :: CLOUDP-172920
 	result, _, err := s.client.Teams.GetOneTeamByName(s.ctx, orgID, teamName)
 	return result, err
 }
 
 // Teams encapsulates the logic to manage different cloud providers.
 func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, error) {
+	// Migration Blocked by incorrect OpenAPI schema :: CLOUDP-172920
 	result, _, err := s.client.Teams.List(s.ctx, orgID, opts)
 	return result, err
 }
 
-// CreateTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) {
+	// Migration Blocked by sdk property missing omitempty :: CLOUDP-172927
 	result, _, err := s.client.Teams.Create(s.ctx, orgID, team)
 	return result, err
 }
 
 // DeleteTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeam(orgID, teamID string) error {
-	_, err := s.client.Teams.RemoveTeamFromOrganization(s.ctx, orgID, teamID)
+	_, _, err := s.clientv2.TeamsApi.DeleteTeam(s.ctx, orgID, teamID).Execute()
 	return err
 }
 
 // AddUsersToTeam encapsulates the logic to manage different cloud providers.
-func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{}, error) {
-	result, _, err := s.client.Teams.AddUsersToTeam(s.ctx, orgID, teamID, users)
+func (s *Store) AddUsersToTeam(orgID, teamID string, users []atlasv2.AddUserToTeam) (*atlasv2.PaginatedApiAppUser, error) {
+	result, _, err := s.clientv2.TeamsApi.AddTeamUser(s.ctx, orgID, teamID).AddUserToTeam(users).Execute()
 	return result, err
 }
 
 // RemoveUserFromTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
-	_, err := s.client.Teams.RemoveUserToTeam(s.ctx, orgID, teamID, userID)
+	_, err := s.clientv2.TeamsApi.RemoveTeamUser(s.ctx, orgID, teamID, userID).Execute()
 	return err
 }
 
 // UpdateProjectTeamRoles encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlas.TeamUpdateRoles) ([]atlas.TeamRoles, error) {
-	result, _, err := s.client.Teams.UpdateTeamRoles(s.ctx, projectID, teamID, team)
+func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error) {
+	result, _, err := s.clientv2.TeamsApi.UpdateTeamRoles(s.ctx, projectID, teamID).TeamRole(*team).Execute()
 	return result, err
 }

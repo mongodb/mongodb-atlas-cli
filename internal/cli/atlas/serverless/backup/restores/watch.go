@@ -50,7 +50,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return result.Expired || result.Cancelled || *result.Failed || result.FinishedAt != "", nil
+	return result.GetExpired() || result.GetCancelled() || result.GetFailed() || result.GetFinishedAt().String() != "", nil
 }
 
 func (opts *WatchOpts) Run() error {

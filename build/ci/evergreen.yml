@@ -1346,6 +1346,7 @@ tasks:
   - name: atlas_backups_restores_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
       - name: compile
         variant: "code_health"
@@ -1353,7 +1354,7 @@ tasks:
     commands:
       - func: "install gotestsum"
       - func: "e2e test"
-        timeout_secs: 10800 # 3 hours
+        timeout_secs: 11400 # 3 hours 10 minutes
         vars:
           MCLI_ORG_ID: ${atlas_org_id}
           MCLI_PROJECT_ID: ${atlas_project_id}

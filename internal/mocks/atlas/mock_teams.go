@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockTeamLister is a mock of TeamLister interface.
@@ -201,10 +202,10 @@ func (m *MockTeamAdder) EXPECT() *MockTeamAdderMockRecorder {
 }
 
 // AddUsersToTeam mocks base method.
-func (m *MockTeamAdder) AddUsersToTeam(arg0, arg1 string, arg2 []string) (interface{}, error) {
+func (m *MockTeamAdder) AddUsersToTeam(arg0, arg1 string, arg2 []mongodbatlasv2.AddUserToTeam) (*mongodbatlasv2.PaginatedApiAppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddUsersToTeam", arg0, arg1, arg2)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedApiAppUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -276,10 +277,10 @@ func (m *MockTeamRolesUpdater) EXPECT() *MockTeamRolesUpdaterMockRecorder {
 }
 
 // UpdateProjectTeamRoles mocks base method.
-func (m *MockTeamRolesUpdater) UpdateProjectTeamRoles(arg0, arg1 string, arg2 *mongodbatlas.TeamUpdateRoles) ([]mongodbatlas.TeamRoles, error) {
+func (m *MockTeamRolesUpdater) UpdateProjectTeamRoles(arg0, arg1 string, arg2 *mongodbatlasv2.TeamRole) (*mongodbatlasv2.PaginatedTeamRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateProjectTeamRoles", arg0, arg1, arg2)
-	ret0, _ := ret[0].([]mongodbatlas.TeamRoles)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedTeamRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

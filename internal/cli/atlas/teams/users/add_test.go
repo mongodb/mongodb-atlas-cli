@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAdd_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockTeamAdder(ctrl)
 
-	var expected []mongodbatlas.Team
+	var expected *atlasv2.PaginatedApiAppUser
 
 	listOpts := &AddOpts{
 		store: mockStore,
@@ -36,7 +36,7 @@ func TestAdd_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		AddUsersToTeam(listOpts.OrgID, listOpts.teamID, listOpts.users).
+		AddUsersToTeam(listOpts.OrgID, listOpts.teamID, listOpts.newUsers()).
 		Return(expected, nil).
 		Times(1)
 

@@ -28,7 +28,7 @@ import (
 )
 
 var listTemplate = `ID	NAME	MDB VER	STATE{{range .Results}}
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
+{{.Id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
 `
 
 type ListOpts struct {

@@ -92,7 +92,7 @@ func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atla
 func (s *Store) DeleteOnlineArchive(projectID, clusterName, archiveID string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.clientv2.OnlineArchiveApi.DeleteOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
+		_, _, err := s.clientv2.OnlineArchiveApi.DeleteOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

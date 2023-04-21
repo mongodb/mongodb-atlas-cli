@@ -43,11 +43,12 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *WatchOpts) watcher() (bool, error) {
-	result, err := opts.store.ServerlessInstance(opts.ConfigProjectID(), opts.name)
+	result, err := opts.store.GetServerlessInstance(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return false, err
 	}
-	return result.StateName == "IDLE", nil
+	const desiredState = "IDLE"
+	return *result.StateName == desiredState, nil
 }
 
 func (opts *WatchOpts) Run() error {

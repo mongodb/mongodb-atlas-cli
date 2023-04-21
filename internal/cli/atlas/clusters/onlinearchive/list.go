@@ -44,7 +44,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	DATABASE	COLLECTION	STATE{{range .Results}}
-{{.ID}}	{{.DBName}}	{{.CollName}}	{{.State}}{{end}}
+{{.Id}}	{{.DbName}}	{{.CollName}}	{{.State}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

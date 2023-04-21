@@ -26,6 +26,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const writeConcern = "majority"
@@ -189,13 +190,13 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var config mongodbatlas.ProcessArgs
+		var config atlasv2.ClusterDescriptionProcessArgs
 		err = json.Unmarshal(resp, &config)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.NotEmpty(config.MinimumEnabledTLSProtocol)
-		a.Equal(writeConcern, config.DefaultWriteConcern)
+		a.NotEmpty(config.GetMinimumEnabledTlsProtocol())
+		a.Equal(writeConcern, config.GetDefaultWriteConcern())
 	})
 
 	t.Run("Create Rolling Index", func(t *testing.T) {

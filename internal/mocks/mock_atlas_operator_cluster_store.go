@@ -51,10 +51,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) AtlasCluster(arg0, arg1 int
 }
 
 // AtlasClusterConfigurationOptions mocks base method.
-func (m *MockAtlasOperatorClusterStore) AtlasClusterConfigurationOptions(arg0, arg1 string) (*mongodbatlas.ProcessArgs, error) {
+func (m *MockAtlasOperatorClusterStore) AtlasClusterConfigurationOptions(arg0, arg1 string) (*mongodbatlasv2.ClusterDescriptionProcessArgs, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AtlasClusterConfigurationOptions", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessArgs)
+	ret0, _ := ret[0].(*mongodbatlasv2.ClusterDescriptionProcessArgs)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -43,7 +43,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	NAME	MDB VER	STATE{{range .Results}}
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
+{{.Id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

@@ -213,15 +213,15 @@ func buildProcessArgs(configOptsProvider store.AtlasClusterConfigurationOptionsD
 
 	// TODO: OplogMinRetentionHours is not exported due to a bug https://jira.mongodb.org/browse/CLOUDP-146481
 	return &atlasV1.ProcessArgs{
-		DefaultReadConcern:               pArgs.DefaultReadConcern,
-		DefaultWriteConcern:              pArgs.DefaultWriteConcern,
-		MinimumEnabledTLSProtocol:        pArgs.MinimumEnabledTLSProtocol,
+		DefaultReadConcern:               pArgs.GetDefaultReadConcern(),
+		DefaultWriteConcern:              pArgs.GetDefaultWriteConcern(),
+		MinimumEnabledTLSProtocol:        pArgs.GetMinimumEnabledTlsProtocol(),
 		FailIndexKeyTooLong:              pArgs.FailIndexKeyTooLong,
 		JavascriptEnabled:                pArgs.JavascriptEnabled,
 		NoTableScan:                      pArgs.NoTableScan,
-		OplogSizeMB:                      pArgs.OplogSizeMB,
-		SampleSizeBIConnector:            pArgs.SampleSizeBIConnector,
-		SampleRefreshIntervalBIConnector: pArgs.SampleRefreshIntervalBIConnector,
+		OplogSizeMB:                      pointer.Get(int64(pArgs.GetOplogSizeMB())),
+		SampleSizeBIConnector:            pointer.Get(int64(pArgs.GetSampleSizeBIConnector())),
+		SampleRefreshIntervalBIConnector: pointer.Get(int64(pArgs.GetSampleRefreshIntervalBIConnector())),
 	}, nil
 }
 

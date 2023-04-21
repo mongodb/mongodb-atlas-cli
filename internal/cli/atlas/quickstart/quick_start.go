@@ -348,10 +348,10 @@ func (opts *Opts) sampleDataWatcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if result.State == "FAILED" {
-		return false, fmt.Errorf("failed to load data: %s", result.ErrorMessage)
+	if result.GetState() == "FAILED" {
+		return false, fmt.Errorf("failed to load data: %s", result.GetErrorMessage())
 	}
-	return result.State == "COMPLETED", nil
+	return result.GetState() == "COMPLETED", nil
 }
 
 func (opts *Opts) clusterCreationWatcher() (bool, error) {

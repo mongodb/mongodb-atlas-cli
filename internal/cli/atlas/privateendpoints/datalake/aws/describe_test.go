@@ -24,14 +24,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDataLakePrivateEndpointDescriber(ctrl)
 
-	expected := &mongodbatlas.PrivateLinkEndpointDataLake{}
+	expected := &atlasv2.PrivateNetworkEndpointIdEntry{}
 
 	describeOpts := &DescribeOpts{
 		store: mockStore,

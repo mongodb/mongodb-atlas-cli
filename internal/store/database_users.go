@@ -15,7 +15,7 @@
 package store
 
 import (
-	"net/url"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"

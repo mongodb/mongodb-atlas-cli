@@ -35,7 +35,7 @@ func Test_projectListOpts_Run(t *testing.T) {
 	listOpts.ProjectID = "1"
 
 	mockStore.
-		EXPECT().ProjectEvents(listOpts.ProjectID, listOpts.newEventListOptions()).
+		EXPECT().ProjectEvents(listOpts.ProjectID, nil, nil, nil, nil).
 		Return(expected, nil).
 		Times(1)
 

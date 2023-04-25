@@ -41,8 +41,8 @@ func (s *Store) ProjectEvents(opts *atlas.ListProjectEventsApiParams) (*atlas.Gr
 	}
 	result, _, err := s.clientv2.EventsApi.ListProjectEvents(s.ctx, opts.GroupId).
 		IncludeCount(*opts.IncludeCount).
-		PageNum(int32(*opts.PageNum)).
-		ItemsPerPage(int32(*opts.ItemsPerPage)).
+		PageNum(*opts.PageNum).
+		ItemsPerPage(*opts.ItemsPerPage).
 		MaxDate(*opts.MaxDate).MinDate(*opts.MinDate).EventType(*event).Execute()
 	return result, err
 }
@@ -55,8 +55,8 @@ func (s *Store) OrganizationEvents(opts *atlas.ListOrganizationEventsApiParams) 
 	}
 	result, _, err := s.clientv2.EventsApi.ListOrganizationEvents(s.ctx, opts.OrgId).
 		IncludeCount(*opts.IncludeCount).
-		PageNum(int32(*opts.PageNum)).
-		ItemsPerPage(int32(*opts.ItemsPerPage)).
+		PageNum(*opts.PageNum).
+		ItemsPerPage(*opts.ItemsPerPage).
 		MaxDate(*opts.MaxDate).MinDate(*opts.MinDate).EventType(*event).Execute()
 	return result, err
 }

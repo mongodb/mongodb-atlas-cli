@@ -38,7 +38,7 @@ func TestNamespacesList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PerformanceAdvisorNamespaces(listOpts.ProjectID, listOpts.ProcessName, listOpts.newNamespaceOptions()).
+		PerformanceAdvisorNamespaces(listOpts.newNamespaceOptions(listOpts.ProjectID, listOpts.ProcessName)).
 		Return(expected, nil).
 		Times(1)
 

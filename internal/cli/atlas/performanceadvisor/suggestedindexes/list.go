@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const listTemplate = `ID	NAMESPACE	SUGGESTED INDEX{{range .SuggestedIndexes}}  
@@ -57,7 +57,7 @@ func (opts *ListOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	r, err := opts.store.PerformanceAdvisorIndexes(opts.ConfigProjectID(), host, opts.newSuggestedIndexOptions())
+	r, err := opts.store.PerformanceAdvisorIndexes(opts.newSuggestedIndexOptions(opts.ConfigProjectID(), host))
 	if err != nil {
 		return err
 	}
@@ -65,15 +65,18 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newSuggestedIndexOptions() *atlas.SuggestedIndexOptions {
-	return &atlas.SuggestedIndexOptions{
-		Namespaces: opts.namespaces,
-		NIndexes:   opts.nIndexes,
-		NExamples:  opts.nExamples,
-		NamespaceOptions: atlas.NamespaceOptions{
-			Since:    opts.since,
-			Duration: opts.duration,
-		},
+func (opts *ListOpts) newSuggestedIndexOptions(project, host string) *atlas.ListSuggestedIndexesApiParams {
+	// TODO log issue with the API
+	sinceWorkaround := float32(opts.since)
+	durationWorkaround := float32(opts.duration)
+	return &atlas.ListSuggestedIndexesApiParams{
+		GroupId:    project,
+		ProcessId:  host,
+		Namespaces: &[]string{opts.namespaces},
+		NIndexes:   &opts.nIndexes,
+		NExamples:  &opts.nExamples,
+		Since:      &sinceWorkaround,
+		Duration:   &durationWorkaround,
 	}
 }
 

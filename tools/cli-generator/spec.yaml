@@ -68,6 +68,39 @@ commands:
         example: |
           # update data lake pipeline:
             atlas dataLakePipelines update Pipeline1 --sinkType CPS --sinkMetadataProvider AWS --sinkMetadataRegion us-east-1 --sinkPartitionField name:0,summary:1 --sourceType PERIODIC_CPS --sourceClusterName Cluster1 --sourceDatabaseName sample_airbnb --sourceCollectionName listingsAndReviews --sourcePolicyItemId 507f1f77bcf86cd799439011 --transform EXCLUDE:space,EXCLUDE:notes
+      - command_path: atlas dataLakePipelines runs
+        package_name: runs
+        description: Data Lake pipelines runs.
+        template: parent
+        sub_commands:
+          - command_path: atlas dataLakePipelines runs list
+            package_name: runs
+            store_name: PipelineRunsLister
+            store_method: PipelineRuns
+            description: Returns all data lake pipeline runs for your project.
+            template: list
+            output_template: |
+              ID	DATASET NAME	STATE{{range .}}
+              {{.Id}}	{{.DatasetName}}	{{.State}}
+              {{end}}
+            example: |
+              # list all pipelines:
+                atlas dataLakePipelines runs list
+          - command_path: atlas dataLakePipelines runs describe
+            package_name: runs
+            store_name: PipelineRunsDescriber
+            store_method: PipelineRun
+            description: Return the details for the specified data lake pipeline run for your project.
+            template: describe
+            id_name: pipelineRunId
+            id_description: Unique identifier for the data lake pipeline
+            output_template: |
+              ID	DATASET NAME	STATE
+              {{.Id}}	{{.DatasetName}}	{{.State}}
+            example: |
+              # retrieves pipeline run '507f1f77bcf86cd799439011':
+                atlas dataLakePipelines runs describe 507f1f77bcf86cd799439011
+
 stores:
   - base_file_name: data_lake_pipelines
     template: store
@@ -99,3 +132,15 @@ stores:
       name: PipelinesDeleter
       method: DeletePipeline
       sdk_method: DataLakePipelinesApi.DeletePipeline
+  - base_file_name: data_lake_pipelines_runs
+    template: store
+    lister:
+      name: PipelineRunsLister
+      method: PipelineRuns
+      sdk_method: DataLakePipelinesApi.ListPipelineRuns
+      return_type: '*atlasv2.PaginatedPipelineRun'
+    describer:
+      name: PipelineRunsDescriber
+      method: PipelineRun
+      sdk_method: DataLakePipelinesApi.GetPipelineRun
+      return_type: '*atlasv2.IngestionPipelineRun'

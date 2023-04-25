@@ -80,11 +80,11 @@ commands:
             description: Returns all data lake pipeline runs for your project.
             template: list
             output_template: |
-              ID	DATASET NAME	STATE{{range .}}
+              ID	DATASET NAME	STATE{{range .Results}}
               {{.Id}}	{{.DatasetName}}	{{.State}}
               {{end}}
             example: |
-              # list all pipelines:
+              # list all pipelines runs:
                 atlas dataLakePipelines runs list
           - command_path: atlas dataLakePipelines runs describe
             package_name: runs
@@ -93,7 +93,7 @@ commands:
             description: Return the details for the specified data lake pipeline run for your project.
             template: describe
             id_name: pipelineRunId
-            id_description: Unique identifier for the data lake pipeline
+            id_description: Unique identifier for the data lake pipeline run
             output_template: |
               ID	DATASET NAME	STATE
               {{.Id}}	{{.DatasetName}}	{{.State}}

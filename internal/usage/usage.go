@@ -417,4 +417,5 @@ dbName and collection are required only for built-in roles.`
 	SourcePolicyItemID                        = "Human-readable label that identifies the policy item."
 	Transform                                 = "Fields to be excluded for this data lake pipeline."
 	PipelineFilename                          = "Name of the JSON data lake pipeline configuration file to use."
+	Pipeline                                  = "Name of the Data lake pipeline."
 )

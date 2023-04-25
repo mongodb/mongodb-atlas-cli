@@ -26,18 +26,18 @@ import (
 //go:generate mockgen -destination=../mocks/mock_data_lake_pipelines_runs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PipelineRunsLister,PipelineRunsDescriber
 
 type PipelineRunsLister interface {
-	PipelineRuns(string) (*atlasv2.PaginatedPipelineRun, error)
+	PipelineRuns(string, string) (*atlasv2.PaginatedPipelineRun, error)
 }
 
 type PipelineRunsDescriber interface {
-	PipelineRun(string, string) (*atlasv2.IngestionPipelineRun, error)
+	PipelineRun(string, string, string) (*atlasv2.IngestionPipelineRun, error)
 }
 
 // PipelineRuns encapsulates the logic to manage different cloud providers.
-func (s *Store) PipelineRuns(projectID string) (*atlasv2.PaginatedPipelineRun, error) {
+func (s *Store) PipelineRuns(projectID, pipelineName string) (*atlasv2.PaginatedPipelineRun, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.DataLakePipelinesApi.ListPipelineRuns(s.ctx, projectID).Execute()
+		result, _, err := s.clientv2.DataLakePipelinesApi.ListPipelineRuns(s.ctx, projectID, pipelineName).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -45,10 +45,10 @@ func (s *Store) PipelineRuns(projectID string) (*atlasv2.PaginatedPipelineRun, e
 }
 
 // PipelineRun encapsulates the logic to manage different cloud providers.
-func (s *Store) PipelineRun(projectID, id string) (*atlasv2.IngestionPipelineRun, error) {
+func (s *Store) PipelineRun(projectID, pipelineName, id string) (*atlasv2.IngestionPipelineRun, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.DataLakePipelinesApi.GetPipelineRun(s.ctx, projectID, id).Execute()
+		result, _, err := s.clientv2.DataLakePipelinesApi.GetPipelineRun(s.ctx, projectID, pipelineName, id).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

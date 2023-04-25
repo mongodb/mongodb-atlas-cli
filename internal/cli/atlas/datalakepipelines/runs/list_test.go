@@ -26,19 +26,30 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPipelineRunsLister(ctrl)
 
-	var expected interface{} // TODO change here
+	expected := &atlasv2.PaginatedPipelineRun{
+		Results: []atlasv2.IngestionPipelineRun{
+			{
+				Id:          pointer.Get[string]("507f1f77bcf86cd799439011"),
+				DatasetName: pointer.Get[string]("dataset"),
+				State:       pointer.Get[string]("IDLE"),
+			},
+		},
+	}
 
 	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{
-		store: mockStore,
+		store:        mockStore,
+		pipelineName: "pipeline",
 		OutputOpts: cli.OutputOpts{
 			Template:  listTemplate,
 			OutWriter: buf,
@@ -47,7 +58,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PipelineRuns(listOpts.ProjectID).
+		PipelineRuns(listOpts.ProjectID, listOpts.pipelineName).
 		Return(expected, nil).
 		Times(1)
 
@@ -55,7 +66,10 @@ func TestListOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, ``, buf.String()) // TODO change here
+	assert.Equal(t, `ID                         DATASET NAME   STATE
+507f1f77bcf86cd799439011   dataset        IDLE
+
+`, buf.String())
 	t.Log(buf.String())
 }
 
@@ -64,6 +78,6 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output},
+		[]string{flag.ProjectID, flag.Pipeline, flag.Output},
 	)
 }

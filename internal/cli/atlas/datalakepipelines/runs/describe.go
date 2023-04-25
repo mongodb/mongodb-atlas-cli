@@ -32,8 +32,9 @@ import (
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	id    string
-	store store.PipelineRunsDescriber
+	id           string
+	pipelineName string
+	store        store.PipelineRunsDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
@@ -49,7 +50,7 @@ var describeTemplate = `ID	DATASET NAME	STATE
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.PipelineRun(opts.ConfigProjectID(), opts.id)
+	r, err := opts.store.PipelineRun(opts.ConfigProjectID(), opts.pipelineName, opts.id)
 	if err != nil {
 		return err
 	}
@@ -66,7 +67,7 @@ func DescribeBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"pipelineRunIdDesc": "Unique identifier for the data lake pipeline",
+			"pipelineRunIdDesc": "Unique identifier for the data lake pipeline run",
 		},
 		Example: `# retrieves pipeline run '507f1f77bcf86cd799439011':
   atlas dataLakePipelines runs describe 507f1f77bcf86cd799439011
@@ -84,6 +85,9 @@ func DescribeBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.pipelineName, flag.Pipeline, "", usage.Pipeline)
+	_ = cmd.MarkFlagRequired(flag.Pipeline)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

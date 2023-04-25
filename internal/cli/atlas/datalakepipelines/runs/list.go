@@ -30,7 +30,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	DATASET NAME	STATE{{range .}}
+var listTemplate = `ID	DATASET NAME	STATE{{range .Results}}
 {{.Id}}	{{.DatasetName}}	{{.State}}
 {{end}}
 `
@@ -39,6 +39,8 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	store store.PipelineRunsLister
+
+	pipelineName string
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -50,7 +52,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.PipelineRuns(opts.ConfigProjectID())
+	r, err := opts.store.PipelineRuns(opts.ConfigProjectID(), opts.pipelineName)
 	if err != nil {
 		return err
 	}
@@ -67,7 +69,7 @@ func ListBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
-		Example: `# list all pipelines:
+		Example: `# list all pipeline runs:
   atlas dataLakePipelines runs list
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -81,6 +83,9 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.pipelineName, flag.Pipeline, "", usage.Pipeline)
+	_ = cmd.MarkFlagRequired(flag.Pipeline)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

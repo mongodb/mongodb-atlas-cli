@@ -26,20 +26,27 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPipelineRunsDescriber(ctrl)
 
-	var expected interface{} // TODO change here
+	expected := &atlasv2.IngestionPipelineRun{
+		Id:          pointer.Get[string]("507f1f77bcf86cd799439011"),
+		DatasetName: pointer.Get[string]("dataset"),
+		State:       pointer.Get[string]("IDLE"),
+	}
 
 	buf := new(bytes.Buffer)
 	describeOpts := &DescribeOpts{
-		id:    "id",
-		store: mockStore,
+		id:           "id",
+		pipelineName: "pipeline",
+		store:        mockStore,
 		OutputOpts: cli.OutputOpts{
 			Template:  describeTemplate,
 			OutWriter: buf,
@@ -48,14 +55,16 @@ func TestDescribe_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PipelineRun(describeOpts.ProjectID, describeOpts.id).
+		PipelineRun(describeOpts.ProjectID, describeOpts.pipelineName, describeOpts.id).
 		Return(expected, nil).
 		Times(1)
 
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	assert.Equal(t, ``, buf.String()) // TODO change here
+	assert.Equal(t, `ID                         DATASET NAME   STATE
+507f1f77bcf86cd799439011   dataset        IDLE
+`, buf.String())
 	t.Log(buf.String())
 }
 
@@ -64,6 +73,6 @@ func TestDescribeBuilder(t *testing.T) {
 		t,
 		DescribeBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output},
+		[]string{flag.ProjectID, flag.Pipeline, flag.Output},
 	)
 }

@@ -8,8 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	atlas "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 // MockAlertDescriber is a mock of AlertDescriber interface.
@@ -36,10 +35,10 @@ func (m *MockAlertDescriber) EXPECT() *MockAlertDescriberMockRecorder {
 }
 
 // Alert mocks base method.
-func (m *MockAlertDescriber) Alert(arg0, arg1 string) (*mongodbatlasv2.AlertViewForNdsGroup, error) {
+func (m *MockAlertDescriber) Alert(arg0, arg1 string) (*mongodbatlas.Alert, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Alert", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.AlertViewForNdsGroup)
+	ret0, _ := ret[0].(*mongodbatlas.Alert)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -74,18 +73,18 @@ func (m *MockAlertLister) EXPECT() *MockAlertListerMockRecorder {
 }
 
 // Alerts mocks base method.
-func (m *MockAlertLister) Alerts(arg0, arg1 string, arg2 atlas.ListOptions) (*mongodbatlasv2.PaginatedAlert, error) {
+func (m *MockAlertLister) Alerts(arg0 string, arg1 *mongodbatlas.AlertsListOptions) (*mongodbatlas.AlertsResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Alerts", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedAlert)
+	ret := m.ctrl.Call(m, "Alerts", arg0, arg1)
+	ret0, _ := ret[0].(*mongodbatlas.AlertsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Alerts indicates an expected call of Alerts.
-func (mr *MockAlertListerMockRecorder) Alerts(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockAlertListerMockRecorder) Alerts(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Alerts", reflect.TypeOf((*MockAlertLister)(nil).Alerts), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Alerts", reflect.TypeOf((*MockAlertLister)(nil).Alerts), arg0, arg1)
 }
 
 // MockAlertAcknowledger is a mock of AlertAcknowledger interface.
@@ -112,10 +111,10 @@ func (m *MockAlertAcknowledger) EXPECT() *MockAlertAcknowledgerMockRecorder {
 }
 
 // AcknowledgeAlert mocks base method.
-func (m *MockAlertAcknowledger) AcknowledgeAlert(arg0, arg1 string, arg2 *mongodbatlasv2.AlertViewForNdsGroup) (*mongodbatlasv2.AlertViewForNdsGroup, error) {
+func (m *MockAlertAcknowledger) AcknowledgeAlert(arg0, arg1 string, arg2 *mongodbatlas.AcknowledgeRequest) (*mongodbatlas.Alert, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AcknowledgeAlert", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlasv2.AlertViewForNdsGroup)
+	ret0, _ := ret[0].(*mongodbatlas.Alert)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

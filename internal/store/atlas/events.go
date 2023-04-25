@@ -21,11 +21,11 @@ import (
 //go:generate mockgen -destination=../../mocks/atlas/mock_events.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationEventLister,ProjectEventLister,EventLister
 
 type OrganizationEventLister interface {
-	OrganizationEvents(opts *atlas.ListProjectEventsApiParams) (*atlas.GroupPaginatedEvent, error)
+	OrganizationEvents(opts *atlas.ListOrganizationEventsApiParams) (*atlas.OrgPaginatedEvent, error)
 }
 
 type ProjectEventLister interface {
-	ProjectEvents(opts *atlas.ListOrganizationEventsApiParams) (*atlas.OrgPaginatedEvent, error)
+	ProjectEvents(opts *atlas.ListProjectEventsApiParams) (*atlas.GroupPaginatedEvent, error)
 }
 
 type EventLister interface {

@@ -26,6 +26,8 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas/mongodbatlasv2"
+	"k8s.io/utils/pointer"
 )
 
 type projectListOpts struct {
@@ -50,11 +52,19 @@ func (opts *projectListOpts) Run() error {
 	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
 
 	// TODO - event type is array but we expect single event
-	r, err = opts.store.ProjectEvents(opts.ProjectID, opts.EventType[0],
-		maxDate, minDate, &store.ListOptions{
-			PageNum:      opts.PageNum,
-			ItemsPerPage: opts.ItemsPerPage,
-		})
+	// TODO Support multiple event types by API
+	eventType, _ := mongodbatlasv2.NewEventTypeForNdsGroupFromValue(opts.EventType[0])
+	// TODO Use APIparams objects directly in the CLI
+	listEventsApiParams := mongodbatlasv2.ListProjectEventsApiParams{
+		GroupId:      opts.ProjectID,
+		ItemsPerPage: pointer.Int32(int32(opts.ItemsPerPage)),
+		PageNum:      pointer.Int32(int32(opts.PageNum)),
+		EventType:    eventType,
+		IncludeRaw:   new(bool),
+		MaxDate:      &minDate,
+		MinDate:      &maxDate,
+	}
+	r, err = opts.store.ProjectEvents(&listEventsApiParams)
 	if err != nil {
 		return err
 	}

@@ -18,6 +18,7 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -25,7 +26,6 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/tangzero/inflector"
 	"golang.org/x/tools/imports"
 	"gopkg.in/yaml.v3"
 )
@@ -142,7 +142,7 @@ func (c *Command) baseFileName(basePath string) string {
 	if len(c.SubCommands) > 0 {
 		internalPath = filepath.Join(internalPath, c.LastCommandPath())
 	}
-	internalPath = inflector.Underscorize(internalPath)
+	internalPath = strings.ToLower(internalPath)
 
 	return filepath.Join(basePath, "internal", "cli", internalPath)
 }
@@ -270,18 +270,18 @@ func newCli(overwrite bool) (*CLI, error) {
 func (cli *CLI) generateCli() error {
 	for i := range cli.Stores {
 		if err := cli.generateStore(&cli.Stores[i]); err != nil {
-			return fmt.Errorf("%w: %s", ErrGenerateStore, err)
+			log.Printf("%s: %s\n", ErrGenerateStore, err)
 		}
 	}
 
 	for i := range cli.Commands {
 		if err := cli.generateCommand(&cli.Commands[i]); err != nil {
-			return fmt.Errorf("%w: %s", ErrGenerateCommand, err)
+			log.Printf("%s: %s\n", ErrGenerateCommand, err)
 		}
 	}
 
 	if err := runMake(); err != nil {
-		return fmt.Errorf("%w: %s", ErrGenerateCli, err)
+		log.Printf("%s: %s\n", ErrGenerateCli, err)
 	}
 
 	return nil

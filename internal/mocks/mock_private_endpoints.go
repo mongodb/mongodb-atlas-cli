@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockPrivateEndpointLister is a mock of PrivateEndpointLister interface.
@@ -299,10 +300,10 @@ func (m *MockRegionalizedPrivateEndpointSettingUpdater) EXPECT() *MockRegionaliz
 }
 
 // UpdateRegionalizedPrivateEndpointSetting mocks base method.
-func (m *MockRegionalizedPrivateEndpointSettingUpdater) UpdateRegionalizedPrivateEndpointSetting(arg0 string, arg1 bool) (*mongodbatlas.RegionalizedPrivateEndpointSetting, error) {
+func (m *MockRegionalizedPrivateEndpointSettingUpdater) UpdateRegionalizedPrivateEndpointSetting(arg0 string, arg1 bool) (*mongodbatlasv2.ProjectSettingItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateRegionalizedPrivateEndpointSetting", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.RegionalizedPrivateEndpointSetting)
+	ret0, _ := ret[0].(*mongodbatlasv2.ProjectSettingItem)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -337,10 +338,10 @@ func (m *MockRegionalizedPrivateEndpointSettingDescriber) EXPECT() *MockRegional
 }
 
 // RegionalizedPrivateEndpointSetting mocks base method.
-func (m *MockRegionalizedPrivateEndpointSettingDescriber) RegionalizedPrivateEndpointSetting(arg0 string) (*mongodbatlas.RegionalizedPrivateEndpointSetting, error) {
+func (m *MockRegionalizedPrivateEndpointSettingDescriber) RegionalizedPrivateEndpointSetting(arg0 string) (*mongodbatlasv2.ProjectSettingItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegionalizedPrivateEndpointSetting", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.RegionalizedPrivateEndpointSetting)
+	ret0, _ := ret[0].(*mongodbatlasv2.ProjectSettingItem)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -488,10 +489,10 @@ func (m *MockDataLakePrivateEndpointDescriber) EXPECT() *MockDataLakePrivateEndp
 }
 
 // DataLakePrivateEndpoint mocks base method.
-func (m *MockDataLakePrivateEndpointDescriber) DataLakePrivateEndpoint(arg0, arg1 string) (*mongodbatlas.PrivateLinkEndpointDataLake, error) {
+func (m *MockDataLakePrivateEndpointDescriber) DataLakePrivateEndpoint(arg0, arg1 string) (*mongodbatlasv2.PrivateNetworkEndpointIdEntry, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DataLakePrivateEndpoint", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.PrivateLinkEndpointDataLake)
+	ret0, _ := ret[0].(*mongodbatlasv2.PrivateNetworkEndpointIdEntry)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

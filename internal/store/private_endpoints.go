@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_private_endpoints.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PrivateEndpointLister,PrivateEndpointDescriber,PrivateEndpointCreator,PrivateEndpointDeleter,InterfaceEndpointDescriber,InterfaceEndpointCreator,InterfaceEndpointDeleter,RegionalizedPrivateEndpointSettingUpdater,RegionalizedPrivateEndpointSettingDescriber,DataLakePrivateEndpointLister,DataLakePrivateEndpointCreator,DataLakePrivateEndpointDeleter,DataLakePrivateEndpointDescriber
@@ -36,7 +37,7 @@ type PrivateEndpointDescriber interface {
 }
 
 type DataLakePrivateEndpointDescriber interface {
-	DataLakePrivateEndpoint(string, string) (*atlas.PrivateLinkEndpointDataLake, error)
+	DataLakePrivateEndpoint(string, string) (*atlasv2.PrivateNetworkEndpointIdEntry, error)
 }
 
 type PrivateEndpointCreator interface {
@@ -68,11 +69,11 @@ type InterfaceEndpointDeleter interface {
 }
 
 type RegionalizedPrivateEndpointSettingUpdater interface {
-	UpdateRegionalizedPrivateEndpointSetting(string, bool) (*atlas.RegionalizedPrivateEndpointSetting, error)
+	UpdateRegionalizedPrivateEndpointSetting(string, bool) (*atlasv2.ProjectSettingItem, error)
 }
 
 type RegionalizedPrivateEndpointSettingDescriber interface {
-	RegionalizedPrivateEndpointSetting(string) (*atlas.RegionalizedPrivateEndpointSetting, error)
+	RegionalizedPrivateEndpointSetting(string) (*atlasv2.ProjectSettingItem, error)
 }
 
 // PrivateEndpoints encapsulates the logic to manage different cloud providers.
@@ -109,10 +110,10 @@ func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (*atl
 }
 
 // DataLakePrivateEndpoint encapsulates the logic to manage different cloud providers.
-func (s *Store) DataLakePrivateEndpoint(projectID, privateLinkID string) (*atlas.PrivateLinkEndpointDataLake, error) {
+func (s *Store) DataLakePrivateEndpoint(projectID, privateLinkID string) (*atlasv2.PrivateNetworkEndpointIdEntry, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).DataLakes.GetPrivateLinkEndpoint(s.ctx, projectID, privateLinkID)
+		result, _, err := s.clientv2.DataFederationApi.GetDataFederationPrivateEndpoint(s.ctx, projectID, privateLinkID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -145,7 +146,7 @@ func (s *Store) DataLakeCreatePrivateEndpoint(projectID string, r *atlas.Private
 func (s *Store) DeletePrivateEndpoint(projectID, provider, privateLinkID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).PrivateEndpoints.Delete(s.ctx, projectID, provider, privateLinkID)
+		_, _, err := s.clientv2.PrivateEndpointServicesApi.DeletePrivateEndpointService(s.ctx, projectID, provider, privateLinkID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -156,7 +157,7 @@ func (s *Store) DeletePrivateEndpoint(projectID, provider, privateLinkID string)
 func (s *Store) DataLakeDeletePrivateEndpoint(projectID, endpointID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).DataLakes.DeletePrivateLinkEndpoint(s.ctx, projectID, endpointID)
+		_, _, err := s.clientv2.DataFederationApi.DeleteDataFederationPrivateEndpoint(s.ctx, projectID, endpointID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -189,7 +190,7 @@ func (s *Store) InterfaceEndpoint(projectID, cloudProvider, endpointServiceID, p
 func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, privateEndpointID string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).PrivateEndpoints.DeleteOnePrivateEndpoint(s.ctx, projectID, provider, endpointServiceID, privateEndpointID)
+		_, _, err := s.clientv2.PrivateEndpointServicesApi.DeletePrivateEndpoint(s.ctx, projectID, provider, privateEndpointID, endpointServiceID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -197,10 +198,13 @@ func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, 
 }
 
 // UpdateRegionalizedPrivateEndpointSetting encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateRegionalizedPrivateEndpointSetting(projectID string, enabled bool) (*atlas.RegionalizedPrivateEndpointSetting, error) {
+func (s *Store) UpdateRegionalizedPrivateEndpointSetting(projectID string, enabled bool) (*atlasv2.ProjectSettingItem, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.UpdateRegionalizedPrivateEndpointSetting(s.ctx, projectID, enabled)
+		setting := atlasv2.ProjectSettingItem{
+			Enabled: enabled,
+		}
+		result, _, err := s.clientv2.PrivateEndpointServicesApi.ToggleRegionalizedPrivateEndpointSetting(s.ctx, projectID).ProjectSettingItem(setting).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -208,10 +212,10 @@ func (s *Store) UpdateRegionalizedPrivateEndpointSetting(projectID string, enabl
 }
 
 // RegionalizedPrivateEndpointSetting encapsulates the logic to manage different cloud providers.
-func (s *Store) RegionalizedPrivateEndpointSetting(projectID string) (*atlas.RegionalizedPrivateEndpointSetting, error) {
+func (s *Store) RegionalizedPrivateEndpointSetting(projectID string) (*atlasv2.ProjectSettingItem, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.GetRegionalizedPrivateEndpointSetting(s.ctx, projectID)
+		result, _, err := s.clientv2.PrivateEndpointServicesApi.GetRegionalizedPrivateEndpointSetting(s.ctx, projectID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

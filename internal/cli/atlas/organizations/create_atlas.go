@@ -30,7 +30,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-var createAtlasTemplate = "Organization '{{.Organization.ID}}' created.\n"
+var createAtlasTemplate = "Organization '{{.Organization.Id}}' created.\n"
 
 type CreateAtlasOpts struct {
 	cli.OutputOpts

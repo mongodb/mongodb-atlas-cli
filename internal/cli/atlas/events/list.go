@@ -25,6 +25,8 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas/mongodbatlasv2"
+	"k8s.io/utils/pointer"
 )
 
 type EventListOpts struct {
@@ -51,7 +53,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	TYPE	CREATED{{range .Results}}
-{{.ID}}	{{.EventTypeName}}	{{.Created}}{{end}}
+{{.Id}}	{{.EventType}}	{{.Created}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
@@ -59,19 +61,35 @@ func (opts *ListOpts) Run() error {
 	var err error
 	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
 	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
+
 	if opts.orgID != "" {
-		// TODO - event type is array but we expect single event
-		r, err = opts.store.OrganizationEvents(opts.orgID, opts.EventType[0],
-			maxDate, minDate, &store.ListOptions{
-				PageNum:      opts.PageNum,
-				ItemsPerPage: opts.ItemsPerPage,
-			})
+		// TODO Support multiple event types by API
+		eventType, _ := mongodbatlasv2.NewEventTypeForOrgFromValue(opts.EventType[0])
+		// TODO Use APIparams objects directly in the CLI
+		listEventsApiParams := mongodbatlasv2.ListOrganizationEventsApiParams{
+			OrgId:        opts.orgID,
+			ItemsPerPage: pointer.Int32(int32(opts.ItemsPerPage)),
+			PageNum:      pointer.Int32(int32(opts.PageNum)),
+			EventType:    eventType,
+			IncludeRaw:   new(bool),
+			MaxDate:      &minDate,
+			MinDate:      &maxDate,
+		}
+		r, err = opts.store.OrganizationEvents(&listEventsApiParams)
 	} else if opts.projectID != "" {
-		r, err = opts.store.ProjectEvents(opts.projectID, opts.EventType[0],
-			maxDate, minDate, &store.ListOptions{
-				PageNum:      opts.PageNum,
-				ItemsPerPage: opts.ItemsPerPage,
-			})
+		// TODO Drop support for multiple event types.
+		eventType, _ := mongodbatlasv2.NewEventTypeForNdsGroupFromValue(opts.EventType[0])
+		// TODO  CLOUDP-173460 Use APIparams objects directly in SDK (without need for store)
+		listEventsApiParams := mongodbatlasv2.ListProjectEventsApiParams{
+			GroupId:      opts.projectID,
+			ItemsPerPage: pointer.Int32(int32(opts.ItemsPerPage)),
+			PageNum:      pointer.Int32(int32(opts.PageNum)),
+			EventType:    eventType,
+			IncludeRaw:   new(bool),
+			MaxDate:      &minDate,
+			MinDate:      &maxDate,
+		}
+		r, err = opts.store.ProjectEvents(&listEventsApiParams)
 	}
 	if err != nil {
 		return err

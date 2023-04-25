@@ -15,19 +15,17 @@
 package atlas
 
 import (
-	"time"
-
 	atlas "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_events.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationEventLister,ProjectEventLister,EventLister
 
 type OrganizationEventLister interface {
-	OrganizationEvents(orgID, eventType string, maxDate, minDate time.Time, opts *ListOptions) (*atlas.OrgPaginatedEvent, error)
+	OrganizationEvents(opts *atlas.ListProjectEventsApiParams) (*atlas.GroupPaginatedEvent, error)
 }
 
 type ProjectEventLister interface {
-	ProjectEvents(orgID, eventType string, maxDate, minDate time.Time, opts *ListOptions) (*atlas.GroupPaginatedEvent, error)
+	ProjectEvents(opts *atlas.ListOrganizationEventsApiParams) (*atlas.OrgPaginatedEvent, error)
 }
 
 type EventLister interface {
@@ -36,29 +34,29 @@ type EventLister interface {
 }
 
 // ProjectEvents encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectEvents(orgID, eventType string, maxDate, minDate time.Time, opts *ListOptions) (*atlas.GroupPaginatedEvent, error) {
-	event, err := atlas.NewEventTypeForNdsGroupFromValue(eventType)
+func (s *Store) ProjectEvents(opts *atlas.ListProjectEventsApiParams) (*atlas.GroupPaginatedEvent, error) {
+	event, err := atlas.NewEventTypeForNdsGroupFromValue(string(*opts.EventType))
 	if err != nil {
 		return nil, err
 	}
-	result, _, err := s.clientv2.EventsApi.ListProjectEvents(s.ctx, orgID).
-		IncludeCount(opts.IncludeCount).
-		PageNum(int32(opts.PageNum)).
-		ItemsPerPage(int32(opts.ItemsPerPage)).
-		MaxDate(maxDate).MinDate(minDate).EventType(*event).Execute()
+	result, _, err := s.clientv2.EventsApi.ListProjectEvents(s.ctx, opts.GroupId).
+		IncludeCount(*opts.IncludeCount).
+		PageNum(int32(*opts.PageNum)).
+		ItemsPerPage(int32(*opts.ItemsPerPage)).
+		MaxDate(*opts.MaxDate).MinDate(*opts.MinDate).EventType(*event).Execute()
 	return result, err
 }
 
 // OrganizationEvents encapsulate the logic to manage different cloud providers.
-func (s *Store) OrganizationEvents(orgID, eventType string, maxDate, minDate time.Time, opts *ListOptions) (*atlas.OrgPaginatedEvent, error) {
-	event, err := atlas.NewEventTypeForOrgFromValue(eventType)
+func (s *Store) OrganizationEvents(opts *atlas.ListOrganizationEventsApiParams) (*atlas.OrgPaginatedEvent, error) {
+	event, err := atlas.NewEventTypeForOrgFromValue(string(*opts.EventType))
 	if err != nil {
 		return nil, err
 	}
-	result, _, err := s.clientv2.EventsApi.ListOrganizationEvents(s.ctx, orgID).
-		IncludeCount(opts.IncludeCount).
-		PageNum(int32(opts.PageNum)).
-		ItemsPerPage(int32(opts.ItemsPerPage)).
-		MaxDate(maxDate).MinDate(minDate).EventType(*event).Execute()
+	result, _, err := s.clientv2.EventsApi.ListOrganizationEvents(s.ctx, opts.OrgId).
+		IncludeCount(*opts.IncludeCount).
+		PageNum(int32(*opts.PageNum)).
+		ItemsPerPage(int32(*opts.ItemsPerPage)).
+		MaxDate(*opts.MaxDate).MinDate(*opts.MinDate).EventType(*event).Execute()
 	return result, err
 }

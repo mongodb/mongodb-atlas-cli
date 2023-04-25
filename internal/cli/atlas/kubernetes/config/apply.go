@@ -84,7 +84,7 @@ func (opts *ApplyOpts) autoDetectParams(k8sClient client.Client) error {
 			return errors.New("unable to auto detect operator version. you should explicitly set operator version if you are running an openshift certified installation")
 		}
 
-		opts.operatorVersion = strings.Trim(operatorDeployment.Spec.Template.Spec.Containers[0].Image, fmt.Sprintf("%s:", containerImage))
+		opts.operatorVersion = getOperatorMajorVersion(operatorDeployment.Spec.Template.Spec.Containers[0].Image)
 	}
 
 	return nil
@@ -257,4 +257,13 @@ func findOperatorInstallation(k8sClient client.Client) (*appsv1.Deployment, erro
 	}
 
 	return nil, errors.New("couldn't to find operator installed in any accessible namespace")
+}
+
+func getOperatorMajorVersion(image string) string {
+	version := strings.Trim(image, fmt.Sprintf("%s:", containerImage))
+
+	semVer := strings.Split(version, ".")
+	semVer[2] = "0"
+
+	return strings.Join(semVer, ".")
 }

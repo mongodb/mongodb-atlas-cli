@@ -6,9 +6,11 @@ package atlas
 
 import (
 	reflect "reflect"
+	time "time"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	atlas "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockOrganizationEventLister is a mock of OrganizationEventLister interface.
@@ -35,18 +37,18 @@ func (m *MockOrganizationEventLister) EXPECT() *MockOrganizationEventListerMockR
 }
 
 // OrganizationEvents mocks base method.
-func (m *MockOrganizationEventLister) OrganizationEvents(arg0 string, arg1 *mongodbatlas.EventListOptions) (*mongodbatlas.EventResponse, error) {
+func (m *MockOrganizationEventLister) OrganizationEvents(arg0, arg1 string, arg2, arg3 time.Time, arg4 *atlas.ListOptions) (*mongodbatlasv2.OrgPaginatedEvent, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OrganizationEvents", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.EventResponse)
+	ret := m.ctrl.Call(m, "OrganizationEvents", arg0, arg1, arg2, arg3, arg4)
+	ret0, _ := ret[0].(*mongodbatlasv2.OrgPaginatedEvent)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // OrganizationEvents indicates an expected call of OrganizationEvents.
-func (mr *MockOrganizationEventListerMockRecorder) OrganizationEvents(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockOrganizationEventListerMockRecorder) OrganizationEvents(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationEvents", reflect.TypeOf((*MockOrganizationEventLister)(nil).OrganizationEvents), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationEvents", reflect.TypeOf((*MockOrganizationEventLister)(nil).OrganizationEvents), arg0, arg1, arg2, arg3, arg4)
 }
 
 // MockProjectEventLister is a mock of ProjectEventLister interface.
@@ -73,18 +75,18 @@ func (m *MockProjectEventLister) EXPECT() *MockProjectEventListerMockRecorder {
 }
 
 // ProjectEvents mocks base method.
-func (m *MockProjectEventLister) ProjectEvents(arg0 string, arg1 *mongodbatlas.EventListOptions) (*mongodbatlas.EventResponse, error) {
+func (m *MockProjectEventLister) ProjectEvents(arg0, arg1 string, arg2, arg3 time.Time, arg4 *atlas.ListOptions) (*mongodbatlasv2.GroupPaginatedEvent, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProjectEvents", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.EventResponse)
+	ret := m.ctrl.Call(m, "ProjectEvents", arg0, arg1, arg2, arg3, arg4)
+	ret0, _ := ret[0].(*mongodbatlasv2.GroupPaginatedEvent)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ProjectEvents indicates an expected call of ProjectEvents.
-func (mr *MockProjectEventListerMockRecorder) ProjectEvents(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockProjectEventListerMockRecorder) ProjectEvents(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectEvents", reflect.TypeOf((*MockProjectEventLister)(nil).ProjectEvents), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectEvents", reflect.TypeOf((*MockProjectEventLister)(nil).ProjectEvents), arg0, arg1, arg2, arg3, arg4)
 }
 
 // MockEventLister is a mock of EventLister interface.
@@ -111,31 +113,31 @@ func (m *MockEventLister) EXPECT() *MockEventListerMockRecorder {
 }
 
 // OrganizationEvents mocks base method.
-func (m *MockEventLister) OrganizationEvents(arg0 string, arg1 *mongodbatlas.EventListOptions) (*mongodbatlas.EventResponse, error) {
+func (m *MockEventLister) OrganizationEvents(arg0, arg1 string, arg2, arg3 time.Time, arg4 *atlas.ListOptions) (*mongodbatlasv2.OrgPaginatedEvent, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OrganizationEvents", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.EventResponse)
+	ret := m.ctrl.Call(m, "OrganizationEvents", arg0, arg1, arg2, arg3, arg4)
+	ret0, _ := ret[0].(*mongodbatlasv2.OrgPaginatedEvent)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // OrganizationEvents indicates an expected call of OrganizationEvents.
-func (mr *MockEventListerMockRecorder) OrganizationEvents(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockEventListerMockRecorder) OrganizationEvents(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationEvents", reflect.TypeOf((*MockEventLister)(nil).OrganizationEvents), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationEvents", reflect.TypeOf((*MockEventLister)(nil).OrganizationEvents), arg0, arg1, arg2, arg3, arg4)
 }
 
 // ProjectEvents mocks base method.
-func (m *MockEventLister) ProjectEvents(arg0 string, arg1 *mongodbatlas.EventListOptions) (*mongodbatlas.EventResponse, error) {
+func (m *MockEventLister) ProjectEvents(arg0, arg1 string, arg2, arg3 time.Time, arg4 *atlas.ListOptions) (*mongodbatlasv2.GroupPaginatedEvent, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProjectEvents", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.EventResponse)
+	ret := m.ctrl.Call(m, "ProjectEvents", arg0, arg1, arg2, arg3, arg4)
+	ret0, _ := ret[0].(*mongodbatlasv2.GroupPaginatedEvent)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ProjectEvents indicates an expected call of ProjectEvents.
-func (mr *MockEventListerMockRecorder) ProjectEvents(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockEventListerMockRecorder) ProjectEvents(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectEvents", reflect.TypeOf((*MockEventLister)(nil).ProjectEvents), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectEvents", reflect.TypeOf((*MockEventLister)(nil).ProjectEvents), arg0, arg1, arg2, arg3, arg4)
 }

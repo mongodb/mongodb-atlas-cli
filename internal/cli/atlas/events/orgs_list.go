@@ -17,6 +17,7 @@ package events
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -25,7 +26,6 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type orgListOpts struct {
@@ -44,11 +44,18 @@ func (opts *orgListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *orgListOpts) Run() error {
-	listOpts := opts.newEventListOptions()
 
-	var r *atlas.EventResponse
+	var r interface{}
 	var err error
-	r, err = opts.store.OrganizationEvents(opts.ConfigOrgID(), listOpts)
+	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
+	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
+
+	// TODO - event type is array but we expect single event
+	r, err = opts.store.OrganizationEvents(opts.OrgID, opts.EventType[0],
+		maxDate, minDate, &store.ListOptions{
+			PageNum:      opts.PageNum,
+			ItemsPerPage: opts.ItemsPerPage,
+		})
 	if err != nil {
 		return err
 	}

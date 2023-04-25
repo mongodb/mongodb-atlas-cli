@@ -35,7 +35,7 @@ func Test_orgListOpts_Run(t *testing.T) {
 	listOpts.OrgID = "1"
 
 	mockStore.
-		EXPECT().OrganizationEvents(listOpts.OrgID, listOpts.newEventListOptions()).
+		EXPECT().OrganizationEvents(listOpts.OrgID, nil, nil, nil, nil).
 		Return(expected, nil).
 		Times(1)
 

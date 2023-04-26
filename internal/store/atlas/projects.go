@@ -44,7 +44,7 @@ type ProjectDescriber interface {
 }
 
 type ProjectUsersLister interface {
-	ProjectUsers(string, *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error)
+	ProjectUsers(string, *atlas.ListOptions) (*atlasv2.PaginatedApiAppUser, error)
 }
 
 type ProjectUserDeleter interface {
@@ -96,8 +96,8 @@ func (s *Store) DeleteProject(projectID string) error {
 }
 
 // ProjectUsers lists all IAM users in a project.
-func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error) {
-	result, _, err := s.clientv2.DatabaseUsersApi.ListDatabaseUsers(s.ctx, projectID).IncludeCount(opts.IncludeCount).
+func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAppUser, error) {
+	result, _, err := s.clientv2.ProjectsApi.ListProjectUsers(s.ctx, projectID).IncludeCount(opts.IncludeCount).
 		ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum)).Execute()
 	return result, err
 }

@@ -48,7 +48,7 @@ func TestAtlasUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var users atlasv2.PaginatedAppUser
+		var users atlasv2.PaginatedApiAppUser
 		if err := json.Unmarshal(resp, &users); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

@@ -127,18 +127,18 @@ func (m *MockProjectCreator) EXPECT() *MockProjectCreatorMockRecorder {
 }
 
 // CreateProject mocks base method.
-func (m *MockProjectCreator) CreateProject(arg0, arg1, arg2 string, arg3 *bool, arg4 *mongodbatlas.CreateProjectOptions) (*mongodbatlasv2.Group, error) {
+func (m *MockProjectCreator) CreateProject(arg0 mongodbatlasv2.Group, arg1 *mongodbatlas.CreateProjectOptions) (*mongodbatlasv2.Group, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateProject", arg0, arg1, arg2, arg3, arg4)
+	ret := m.ctrl.Call(m, "CreateProject", arg0, arg1)
 	ret0, _ := ret[0].(*mongodbatlasv2.Group)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateProject indicates an expected call of CreateProject.
-func (mr *MockProjectCreatorMockRecorder) CreateProject(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+func (mr *MockProjectCreatorMockRecorder) CreateProject(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockProjectCreator)(nil).CreateProject), arg0, arg1, arg2, arg3, arg4)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockProjectCreator)(nil).CreateProject), arg0, arg1)
 }
 
 // ServiceVersion mocks base method.
@@ -368,7 +368,7 @@ func (m *MockProjectTeamAdder) EXPECT() *MockProjectTeamAdderMockRecorder {
 }
 
 // AddTeamsToProject mocks base method.
-func (m *MockProjectTeamAdder) AddTeamsToProject(arg0 string, arg1 []*mongodbatlas.ProjectTeam) (*mongodbatlasv2.PaginatedTeamRole, error) {
+func (m *MockProjectTeamAdder) AddTeamsToProject(arg0 string, arg1 []mongodbatlasv2.TeamRole) (*mongodbatlasv2.PaginatedTeamRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddTeamsToProject", arg0, arg1)
 	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedTeamRole)

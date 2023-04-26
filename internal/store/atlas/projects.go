@@ -31,7 +31,7 @@ type OrgProjectLister interface {
 }
 
 type ProjectCreator interface {
-	CreateProject(string, string, string, *bool, *atlas.CreateProjectOptions) (*atlasv2.Group, error)
+	CreateProject(atlasv2.Group, *atlas.CreateProjectOptions) (*atlasv2.Group, error)
 	ServiceVersionDescriber
 }
 
@@ -56,7 +56,7 @@ type ProjectTeamLister interface {
 }
 
 type ProjectTeamAdder interface {
-	AddTeamsToProject(string, []*atlas.ProjectTeam) (*atlasv2.PaginatedTeamRole, error)
+	AddTeamsToProject(string, []atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error)
 }
 
 type ProjectTeamDeleter interface {
@@ -84,9 +84,8 @@ func (s *Store) Project(id string) (interface{}, error) {
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateProject(name, orgID, regionUsageRestrictions string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (*atlasv2.Group, error) {
-	group := &atlasv2.Group{Name: name, OrgId: orgID, WithDefaultAlertsSettings: defaultAlertSettings, RegionUsageRestrictions: &regionUsageRestrictions}
-	result, _, err := s.clientv2.ProjectsApi.CreateProject(s.ctx).ProjectOwnerId(opts.ProjectOwnerID).Group(*group).Execute()
+func (s *Store) CreateProject(group atlasv2.Group, opts *atlas.CreateProjectOptions) (*atlasv2.Group, error) {
+	result, _, err := s.clientv2.ProjectsApi.CreateProject(s.ctx).ProjectOwnerId(opts.ProjectOwnerID).Group(group).Execute()
 	return result, err
 }
 
@@ -116,16 +115,8 @@ func (s *Store) ProjectTeams(projectID string) (*atlasv2.PaginatedTeamRole, erro
 }
 
 // AddTeamsToProject encapsulates the logic to manage different cloud providers.
-func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) (*atlasv2.PaginatedTeamRole, error) {
-	teamRole := make([]atlasv2.TeamRole, len(teams))
-	for i, team := range teams {
-		teamRole[i] = atlasv2.TeamRole{
-			TeamId:    &team.TeamID,
-			RoleNames: team.RoleNames,
-		}
-	}
-
-	result, _, err := s.clientv2.TeamsApi.AddAllTeamsToProject(s.ctx, projectID).TeamRole(teamRole).Execute()
+func (s *Store) AddTeamsToProject(projectID string, teams []atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error) {
+	result, _, err := s.clientv2.TeamsApi.AddAllTeamsToProject(s.ctx, projectID).TeamRole(teams).Execute()
 	return result, err
 }
 

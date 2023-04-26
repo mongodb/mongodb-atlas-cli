@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const (
@@ -58,19 +59,28 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	var defaultAlertSettings *bool
-	if opts.withoutDefaultAlertSettings {
-		f := false
-		defaultAlertSettings = &f
-	}
-
-	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(), opts.newRegionUsageRestrictions(), defaultAlertSettings, opts.newCreateProjectOptions())
+	r, err := opts.store.CreateProject(opts.newCreateProjectGroup(), opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err
 	}
 
 	return opts.Print(r)
+}
+
+func (opts *CreateOpts) newCreateProjectGroup() atlasv2.Group {
+	var defaultAlertSettings *bool
+	if opts.withoutDefaultAlertSettings {
+		f := false
+		defaultAlertSettings = &f
+	}
+	restrictions := opts.newRegionUsageRestrictions()
+	return atlasv2.Group{
+		Name:                      opts.name,
+		OrgId:                     opts.ConfigOrgID(),
+		WithDefaultAlertsSettings: defaultAlertSettings,
+		RegionUsageRestrictions:   &restrictions,
+	}
 }
 
 func (opts *CreateOpts) newRegionUsageRestrictions() string {

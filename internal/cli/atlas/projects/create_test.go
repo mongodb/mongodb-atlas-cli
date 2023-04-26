@@ -33,16 +33,16 @@ func TestCreate_Run(t *testing.T) {
 	opts := CreateOpts{}
 	expected := &atlasv2.Group{}
 
-	mockStore.
-		EXPECT().
-		CreateProject(gomock.Eq("ProjectBar"), gomock.Eq("5a0a1e7e0f2912c554080adc"), opts.newRegionUsageRestrictions(), nil, opts.newCreateProjectOptions()).Return(expected, nil).
-		Times(1)
-
 	createOpts := &CreateOpts{
 		store: mockStore,
 		name:  "ProjectBar",
 	}
 	createOpts.OrgID = "5a0a1e7e0f2912c554080adc"
+
+	mockStore.
+		EXPECT().
+		CreateProject(createOpts.newCreateProjectGroup(), opts.newCreateProjectOptions()).Return(expected, nil).
+		Times(1)
 
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

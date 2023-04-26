@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
-	"k8s.io/utils/pointer"
 )
 
 type EventListOpts struct {
@@ -86,8 +85,8 @@ func (opts *ListOpts) NewOrgListOptions() atlasv2.ListOrganizationEventsApiParam
 	}
 	listEventsAPIParams := atlasv2.ListOrganizationEventsApiParams{
 		OrgId:        opts.orgID,
-		ItemsPerPage: pointer.Int32(int32(opts.ItemsPerPage)),
-		PageNum:      pointer.Int32(int32(opts.PageNum)),
+		ItemsPerPage: atlasv2.PtrInt32(int32(opts.ItemsPerPage)),
+		PageNum:      atlasv2.PtrInt32(int32(opts.PageNum)),
 		EventType:    eventType,
 		IncludeRaw:   new(bool),
 		MaxDate:      &minDate,
@@ -108,7 +107,6 @@ func (opts *ListOpts) NewProjectListOptions() atlasv2.ListProjectEventsApiParams
 		ItemsPerPage: atlasv2.PtrInt32(int32(opts.ItemsPerPage)),
 		PageNum:      atlasv2.PtrInt32(int32(opts.PageNum)),
 		EventType:    eventType,
-		IncludeRaw:   new(bool),
 		MaxDate:      &minDate,
 		MinDate:      &maxDate,
 	}

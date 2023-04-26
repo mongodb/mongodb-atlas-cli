@@ -72,7 +72,6 @@ func (opts *projectListOpts) NewProjectListOptions() atlasv2.ListProjectEventsAp
 		ItemsPerPage: atlasv2.PtrInt32(int32(opts.ItemsPerPage)),
 		PageNum:      atlasv2.PtrInt32(int32(opts.PageNum)),
 		EventType:    eventType,
-		IncludeRaw:   new(bool),
 		MaxDate:      &minDate,
 		MinDate:      &maxDate,
 	}

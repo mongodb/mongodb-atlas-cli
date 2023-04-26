@@ -70,7 +70,6 @@ func (opts *orgListOpts) NewOrgListOptions() atlasv2.ListOrganizationEventsApiPa
 		ItemsPerPage: atlasv2.PtrInt32(int32(opts.ItemsPerPage)),
 		PageNum:      atlasv2.PtrInt32(int32(opts.PageNum)),
 		EventType:    eventType,
-		IncludeRaw:   new(bool),
 		MaxDate:      &minDate,
 		MinDate:      &maxDate,
 	}

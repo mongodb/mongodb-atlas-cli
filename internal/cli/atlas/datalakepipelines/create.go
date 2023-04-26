@@ -20,7 +20,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -56,7 +55,6 @@ type CreateOpts struct {
 }
 
 var ErrSourceTypeInvalid = errors.New("--sourceType invalid")
-var ErrSinkPartitionFieldInvalid = errors.New("--sinkPartitionField format invalid")
 var ErrSinkTransformInvalid = errors.New("--transform format invalid")
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -83,27 +81,15 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func isInt(s string) bool {
-	_, err := strconv.ParseInt(s, 10, 32)
-	return err == nil
-}
-
 func (opts *CreateOpts) validate() error {
 	if strings.ToUpper(opts.sourceType) != periodicCPS || strings.ToUpper(opts.sourceType) != onDemandCPS {
 		return fmt.Errorf("%w: expected either '%s' or '%s' got '%s'", ErrSourceTypeInvalid, periodicCPS, onDemandCPS, opts.sourceType)
 	}
 
-	for _, entry := range opts.sinkPartitionField {
-		entries := strings.Split(entry, ":")
-		if len(entries) != 2 || len(entries[0]) == 0 || len(entries[1]) == 0 || !isInt(entries[1]) {
-			return fmt.Errorf("%w: expected format is 'field:order' got '%s'", ErrSinkPartitionFieldInvalid, entry)
-		}
-	}
-
 	for _, entry := range opts.transform {
 		entries := strings.Split(entry, ":")
 		if len(entries) != 2 || len(entries[0]) == 0 || len(entries[1]) == 0 {
-			return fmt.Errorf("%w: expected format is 'type:field' got '%s'", ErrSinkTransformInvalid, entry)
+			return fmt.Errorf("%w: expected format is 'type:field1,fieldN' got '%s'", ErrSinkTransformInvalid, entry)
 		}
 	}
 
@@ -131,21 +117,17 @@ func (opts *CreateOpts) newCreateRequest() (*atlasv2.IngestionPipeline, error) {
 		Source: &atlasv2.IngestionSource{},
 	}
 
-	for _, entry := range opts.sinkPartitionField {
-		entries := strings.Split(entry, ":")
-		fieldName := entries[0]
-		order, err := strconv.ParseInt(entries[1], 10, 32)
-		if err != nil {
-			return nil, err
-		}
-		pipeline.Sink.DLSIngestionSink.PartitionFields = append(pipeline.Sink.DLSIngestionSink.PartitionFields, *atlasv2.NewPartitionField(fieldName, int32(order)))
+	for i, fieldName := range opts.sinkPartitionField {
+		pipeline.Sink.DLSIngestionSink.PartitionFields = append(pipeline.Sink.DLSIngestionSink.PartitionFields, *atlasv2.NewPartitionField(fieldName, int32(i)))
 	}
 
 	for _, entry := range opts.transform {
 		entries := strings.Split(entry, ":")
 		transformType := entries[0]
-		transformFieldName := entries[1]
-		pipeline.Transformations = append(pipeline.Transformations, atlasv2.FieldTransformation{Field: &transformFieldName, Type: &transformType})
+		transformFieldNames := strings.Split(entries[1], ",")
+		for _, transformFieldName := range transformFieldNames {
+			pipeline.Transformations = append(pipeline.Transformations, atlasv2.FieldTransformation{Field: &transformFieldName, Type: &transformType})
+		}
 	}
 
 	switch strings.ToUpper(opts.sourceType) {

@@ -54,7 +54,7 @@ func (opts *PauseOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas cluster(s) pause <clusterName> [--projectId projectId].
+// mongocli atlas cluster(s) pause <clusterName> [--projectId projectId].
 func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{

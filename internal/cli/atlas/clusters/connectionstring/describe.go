@@ -59,7 +59,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r.ConnectionStrings)
 }
 
-// atlas cluster(s) connectionString describe <clusterName> --type standard|private --projectId projectId.
+// mongocli atlas cluster(s) connectionString describe <clusterName> --type standard|private --projectId projectId.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

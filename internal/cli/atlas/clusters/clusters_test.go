@@ -33,6 +33,15 @@ func TestBuilder(t *testing.T) {
 	)
 }
 
+func TestMongoCLIBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		MongoCLIBuilder(),
+		13,
+		[]string{},
+	)
+}
+
 func TestAddLabel(t *testing.T) {
 	type args struct {
 		out   *mongodbatlas.AdvancedCluster

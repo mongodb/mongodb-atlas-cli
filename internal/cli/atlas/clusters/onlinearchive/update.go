@@ -70,7 +70,7 @@ func (opts *UpdateOpts) newOnlineArchive() *atlasv2.OnlineArchive {
 	return archive
 }
 
-// atlas cluster(s) onlineArchive(s) start <archiveId> [--clusterName name][--archiveAfter N] [--projectId projectId].
+// mongocli atlas cluster(s) onlineArchive(s) start <archiveId> [--clusterName name][--archiveAfter N] [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{

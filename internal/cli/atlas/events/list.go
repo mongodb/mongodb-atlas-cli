@@ -66,7 +66,7 @@ func (opts *ListOpts) Run() error {
 		// TODO Support multiple event types by API
 		eventType, _ := mongodbatlasv2.NewEventTypeForOrgFromValue(opts.EventType[0])
 		// TODO Use APIparams objects directly in the CLI
-		listEventsApiParams := mongodbatlasv2.ListOrganizationEventsApiParams{
+		listEventsAPIParams := mongodbatlasv2.ListOrganizationEventsApiParams{
 			OrgId:        opts.orgID,
 			ItemsPerPage: pointer.Int32(int32(opts.ItemsPerPage)),
 			PageNum:      pointer.Int32(int32(opts.PageNum)),
@@ -75,12 +75,12 @@ func (opts *ListOpts) Run() error {
 			MaxDate:      &minDate,
 			MinDate:      &maxDate,
 		}
-		r, err = opts.store.OrganizationEvents(&listEventsApiParams)
+		r, err = opts.store.OrganizationEvents(&listEventsAPIParams)
 	} else if opts.projectID != "" {
-		// TODO Drop support for multiple event types.
+		// TODO CLOUDP-17348 event type is array but we expect single event
 		eventType, _ := mongodbatlasv2.NewEventTypeForNdsGroupFromValue(opts.EventType[0])
 		// TODO  CLOUDP-173460 Use APIparams objects directly in SDK (without need for store)
-		listEventsApiParams := mongodbatlasv2.ListProjectEventsApiParams{
+		listEventsAPIParams := mongodbatlasv2.ListProjectEventsApiParams{
 			GroupId:      opts.projectID,
 			ItemsPerPage: pointer.Int32(int32(opts.ItemsPerPage)),
 			PageNum:      pointer.Int32(int32(opts.PageNum)),
@@ -89,7 +89,7 @@ func (opts *ListOpts) Run() error {
 			MaxDate:      &minDate,
 			MinDate:      &maxDate,
 		}
-		r, err = opts.store.ProjectEvents(&listEventsApiParams)
+		r, err = opts.store.ProjectEvents(&listEventsAPIParams)
 	}
 	if err != nil {
 		return err

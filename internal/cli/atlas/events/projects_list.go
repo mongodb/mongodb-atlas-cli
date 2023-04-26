@@ -51,11 +51,8 @@ func (opts *projectListOpts) Run() error {
 	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
 	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
 
-	// TODO - event type is array but we expect single event
-	// TODO Support multiple event types by API
 	eventType, _ := mongodbatlasv2.NewEventTypeForNdsGroupFromValue(opts.EventType[0])
-	// TODO Use APIparams objects directly in the CLI
-	listEventsApiParams := mongodbatlasv2.ListProjectEventsApiParams{
+	listEventsAPIParams := mongodbatlasv2.ListProjectEventsApiParams{
 		GroupId:      opts.ProjectID,
 		ItemsPerPage: pointer.Int32(int32(opts.ItemsPerPage)),
 		PageNum:      pointer.Int32(int32(opts.PageNum)),
@@ -64,7 +61,7 @@ func (opts *projectListOpts) Run() error {
 		MaxDate:      &minDate,
 		MinDate:      &maxDate,
 	}
-	r, err = opts.store.ProjectEvents(&listEventsApiParams)
+	r, err = opts.store.ProjectEvents(&listEventsAPIParams)
 	if err != nil {
 		return err
 	}

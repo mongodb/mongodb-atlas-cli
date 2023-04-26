@@ -46,7 +46,6 @@ func (opts *orgListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *orgListOpts) Run() error {
-
 	var r interface{}
 	var err error
 	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
@@ -54,8 +53,7 @@ func (opts *orgListOpts) Run() error {
 
 	// TODO - event type is array but we expect single event
 	eventType, _ := mongodbatlasv2.NewEventTypeForOrgFromValue(opts.EventType[0])
-	// TODO Use APIparams objects directly in the CLI
-	listEventsApiParams := mongodbatlasv2.ListOrganizationEventsApiParams{
+	listEventsAPIParams := mongodbatlasv2.ListOrganizationEventsApiParams{
 		OrgId:        opts.OrgID,
 		ItemsPerPage: pointer.Int32(int32(opts.ItemsPerPage)),
 		PageNum:      pointer.Int32(int32(opts.PageNum)),
@@ -64,7 +62,7 @@ func (opts *orgListOpts) Run() error {
 		MaxDate:      &minDate,
 		MinDate:      &maxDate,
 	}
-	r, err = opts.store.OrganizationEvents(&listEventsApiParams)
+	r, err = opts.store.OrganizationEvents(&listEventsAPIParams)
 	if err != nil {
 		return err
 	}

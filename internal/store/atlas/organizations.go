@@ -30,7 +30,7 @@ type OrganizationDescriber interface {
 }
 
 type OrganizationCreator interface {
-	CreateAtlasOrganization(*atlas.CreateOrganizationRequest) (*atlas.CreateOrganizationResponse, error)
+	CreateAtlasOrganization(*atlasv2.CreateOrganizationRequest) (*atlasv2.CreateOrganizationResponse, error)
 }
 
 type OrganizationDeleter interface {
@@ -51,13 +51,13 @@ func (s *Store) Organization(id string) (*atlasv2.Organization, error) {
 }
 
 // CreateAtlasOrganization encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateAtlasOrganization(o *atlas.CreateOrganizationRequest) (*atlas.CreateOrganizationResponse, error) {
-	result, _, err := s.client.Organizations.Create(s.ctx, o)
+func (s *Store) CreateAtlasOrganization(o *atlasv2.CreateOrganizationRequest) (*atlasv2.CreateOrganizationResponse, error) {
+	result, _, err := s.clientv2.OrganizationsApi.CreateOrganization(s.ctx).CreateOrganizationRequest(*o).Execute()
 	return result, err
 }
 
 // DeleteOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteOrganization(id string) error {
-	_, err := s.client.Organizations.Delete(s.ctx, id)
+	_, _, err := s.clientv2.OrganizationsApi.DeleteOrganization(s.ctx, id).Execute()
 	return err
 }

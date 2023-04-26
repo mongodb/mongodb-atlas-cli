@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestCreateAtlasBuilder(t *testing.T) {
@@ -44,12 +44,12 @@ func TestCreateAtlasOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationCreator(ctrl)
 
-	expected := &mongodbatlas.CreateOrganizationRequest{
-		APIKey:     nil,
+	expected := &atlasv2.CreateOrganizationRequest{
+		ApiKey:     nil,
 		Name:       "Org 0",
-		OrgOwnerID: nil,
+		OrgOwnerId: nil,
 	}
-	resp := &mongodbatlas.CreateOrganizationResponse{}
+	resp := &atlasv2.CreateOrganizationResponse{}
 	mockStore.
 		EXPECT().
 		CreateAtlasOrganization(expected).Return(resp, nil).

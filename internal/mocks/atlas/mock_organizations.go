@@ -149,10 +149,10 @@ func (m *MockOrganizationCreator) EXPECT() *MockOrganizationCreatorMockRecorder 
 }
 
 // CreateAtlasOrganization mocks base method.
-func (m *MockOrganizationCreator) CreateAtlasOrganization(arg0 *mongodbatlas.CreateOrganizationRequest) (*mongodbatlas.CreateOrganizationResponse, error) {
+func (m *MockOrganizationCreator) CreateAtlasOrganization(arg0 *mongodbatlasv2.CreateOrganizationRequest) (*mongodbatlasv2.CreateOrganizationResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAtlasOrganization", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.CreateOrganizationResponse)
+	ret0, _ := ret[0].(*mongodbatlasv2.CreateOrganizationResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

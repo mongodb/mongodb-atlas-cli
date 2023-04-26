@@ -35,28 +35,56 @@ type EventLister interface {
 
 // ProjectEvents encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectEvents(opts *atlas.ListProjectEventsApiParams) (*atlas.GroupPaginatedEvent, error) {
-	event, err := atlas.NewEventTypeForNdsGroupFromValue(string(*opts.EventType))
-	if err != nil {
-		return nil, err
+	request := s.clientv2.EventsApi.ListProjectEvents(s.ctx, opts.GroupId)
+	// TODO CLOUDP-173460 - enable using api params directly
+	if opts.IncludeCount != nil {
+		request = request.IncludeCount(*opts.IncludeCount)
 	}
-	result, _, err := s.clientv2.EventsApi.ListProjectEvents(s.ctx, opts.GroupId).
-		IncludeCount(*opts.IncludeCount).
-		PageNum(*opts.PageNum).
-		ItemsPerPage(*opts.ItemsPerPage).
-		MaxDate(*opts.MaxDate).MinDate(*opts.MinDate).EventType(*event).Execute()
+	if opts.PageNum != nil {
+		request = request.PageNum(*opts.PageNum)
+	}
+	if opts.ItemsPerPage != nil {
+		request = request.ItemsPerPage(*opts.ItemsPerPage)
+	}
+	if opts.MaxDate != nil {
+		request = request.MaxDate(*opts.MaxDate)
+	}
+	if opts.MinDate != nil {
+		request = request.MinDate(*opts.MinDate)
+	}
+	if opts.EventType != nil {
+		request = request.EventType(*opts.EventType)
+	}
+
+	result, _, err := request.Execute()
 	return result, err
 }
 
 // OrganizationEvents encapsulate the logic to manage different cloud providers.
 func (s *Store) OrganizationEvents(opts *atlas.ListOrganizationEventsApiParams) (*atlas.OrgPaginatedEvent, error) {
-	event, err := atlas.NewEventTypeForOrgFromValue(string(*opts.EventType))
-	if err != nil {
-		return nil, err
+	request := s.clientv2.EventsApi.ListOrganizationEvents(s.ctx, opts.OrgId)
+	if opts.IncludeCount != nil {
+		request = request.IncludeCount(*opts.IncludeCount)
 	}
-	result, _, err := s.clientv2.EventsApi.ListOrganizationEvents(s.ctx, opts.OrgId).
-		IncludeCount(*opts.IncludeCount).
-		PageNum(*opts.PageNum).
-		ItemsPerPage(*opts.ItemsPerPage).
-		MaxDate(*opts.MaxDate).MinDate(*opts.MinDate).EventType(*event).Execute()
+	if opts.PageNum != nil {
+		request = request.PageNum(*opts.PageNum)
+	}
+	if opts.ItemsPerPage != nil {
+		request = request.ItemsPerPage(*opts.ItemsPerPage)
+	}
+	if opts.MaxDate != nil {
+		request = request.MaxDate(*opts.MaxDate)
+	}
+	if opts.MinDate != nil {
+		request = request.MinDate(*opts.MinDate)
+	}
+	if opts.EventType != nil {
+		event, err := atlas.NewEventTypeForOrgFromValue(string(*opts.EventType))
+		if err != nil {
+			return nil, err
+		}
+		request = request.EventType(*event)
+	}
+	result, _, err := request.Execute()
 	return result, err
 }

@@ -33,9 +33,9 @@ func Test_projectListOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 	listOpts.ProjectID = "1"
-
+	anyMock := gomock.Any()
 	mockStore.
-		EXPECT().ProjectEvents(nil).
+		EXPECT().ProjectEvents(anyMock).
 		Return(expected, nil).
 		Times(1)
 

@@ -26,8 +26,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlasv2"
-	"k8s.io/utils/pointer"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type orgListOpts struct {
@@ -48,26 +47,34 @@ func (opts *orgListOpts) initStore(ctx context.Context) func() error {
 func (opts *orgListOpts) Run() error {
 	var r interface{}
 	var err error
-	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
-	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
-
 	// TODO - event type is array but we expect single event
-	eventType, _ := mongodbatlasv2.NewEventTypeForOrgFromValue(opts.EventType[0])
-	listEventsAPIParams := mongodbatlasv2.ListOrganizationEventsApiParams{
-		OrgId:        opts.OrgID,
-		ItemsPerPage: pointer.Int32(int32(opts.ItemsPerPage)),
-		PageNum:      pointer.Int32(int32(opts.PageNum)),
-		EventType:    eventType,
-		IncludeRaw:   new(bool),
-		MaxDate:      &minDate,
-		MinDate:      &maxDate,
-	}
+	listEventsAPIParams := opts.NewOrgListOptions()
 	r, err = opts.store.OrganizationEvents(&listEventsAPIParams)
 	if err != nil {
 		return err
 	}
 
 	return opts.Print(r)
+}
+
+func (opts *orgListOpts) NewOrgListOptions() atlasv2.ListOrganizationEventsApiParams {
+	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
+	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
+
+	var eventType *atlasv2.EventTypeForOrg
+	if len(opts.EventType) > 0 {
+		eventType, _ = atlasv2.NewEventTypeForOrgFromValue(opts.EventType[0])
+	}
+	listEventsAPIParams := atlasv2.ListOrganizationEventsApiParams{
+		OrgId:        opts.ConfigOrgID(),
+		ItemsPerPage: atlasv2.PtrInt32(int32(opts.ItemsPerPage)),
+		PageNum:      atlasv2.PtrInt32(int32(opts.PageNum)),
+		EventType:    eventType,
+		IncludeRaw:   new(bool),
+		MaxDate:      &minDate,
+		MinDate:      &maxDate,
+	}
+	return listEventsAPIParams
 }
 
 // OrgListBuilder

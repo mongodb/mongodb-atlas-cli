@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type CreateOpts struct {
@@ -59,11 +59,11 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newExportBucket() *mongodbatlas.CloudProviderSnapshotExportBucket {
-	createRequest := &mongodbatlas.CloudProviderSnapshotExportBucket{
-		BucketName:    opts.bucketName,
-		CloudProvider: opts.cloudProvider,
-		IAMRoleID:     opts.iamRoleID,
+func (opts *CreateOpts) newExportBucket() *atlasv2.DiskBackupSnapshotAWSExportBucket {
+	createRequest := &atlasv2.DiskBackupSnapshotAWSExportBucket{
+		BucketName:    &opts.bucketName,
+		CloudProvider: &opts.cloudProvider,
+		IamRoleId:     &opts.iamRoleID,
 	}
 	return createRequest
 }

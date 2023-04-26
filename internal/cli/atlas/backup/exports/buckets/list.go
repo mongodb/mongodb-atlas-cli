@@ -43,7 +43,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	BUCKET NAME	CLOUD PROVIDER	IAM ROLE ID{{range .Results}}
-{{.ID}}	{{.BucketName}}	{{.CloudProvider}}	{{.IAMRoleID}}{{end}}
+{{.Id}}	{{.BucketName}}	{{.CloudProvider}}	{{.IamRoleId}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

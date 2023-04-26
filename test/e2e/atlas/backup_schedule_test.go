@@ -23,7 +23,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestSchedule(t *testing.T) {
@@ -35,7 +35,7 @@ func TestSchedule(t *testing.T) {
 	g.enableBackup = true
 	g.generateProjectAndCluster("backupSchedule")
 
-	var policy *atlas.CloudProviderSnapshotBackupPolicy
+	var policy *atlasv2.DiskBackupSnapshotSchedule
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -54,7 +54,7 @@ func TestSchedule(t *testing.T) {
 		err = json.Unmarshal(resp, &policy)
 		r.NoError(err)
 
-		r.Equal(g.clusterName, policy.ClusterName)
+		r.Equal(g.clusterName, policy.GetClusterName())
 	})
 
 	t.Run("Update", func(t *testing.T) {

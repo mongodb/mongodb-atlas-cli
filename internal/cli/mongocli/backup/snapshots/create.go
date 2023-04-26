@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type CreateOpts struct {
@@ -59,8 +59,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCloudProviderSnapshot() *mongodbatlas.CloudProviderSnapshot {
-	createRequest := &mongodbatlas.CloudProviderSnapshot{
+func (opts *CreateOpts) newCloudProviderSnapshot() *atlas.CloudProviderSnapshot {
+	createRequest := &atlas.CloudProviderSnapshot{
 		RetentionInDays: opts.retentionInDays,
 		Description:     opts.desc,
 	}

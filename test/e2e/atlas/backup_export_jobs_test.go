@@ -26,6 +26,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestExportJobs(t *testing.T) {
@@ -97,11 +98,11 @@ func TestExportJobs(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var exportBucket atlas.CloudProviderSnapshotExportBucket
+		var exportBucket atlasv2.DiskBackupSnapshotAWSExportBucket
 		if err = json.Unmarshal(resp, &exportBucket); a.NoError(err) {
-			a.Equal(bucketName, exportBucket.BucketName)
+			a.Equal(bucketName, exportBucket.GetBucketName())
 		}
-		bucketID = exportBucket.ID
+		bucketID = exportBucket.GetId()
 	})
 
 	t.Run("Create snapshot", func(t *testing.T) {
@@ -158,11 +159,11 @@ func TestExportJobs(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var job atlas.CloudProviderSnapshotExportJob
+		var job atlasv2.DiskBackupExportJob
 		if err = json.Unmarshal(resp, &job); a.NoError(err) {
-			a.Equal(job.ExportBucketID, bucketID)
+			a.Equal(job.GetExportBucketId(), bucketID)
 
-			exportJobID = job.ID
+			exportJobID = job.GetId()
 		}
 	})
 
@@ -197,9 +198,9 @@ func TestExportJobs(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var job atlas.CloudProviderSnapshotExportJob
+		var job atlasv2.DiskBackupExportJob
 		if err = json.Unmarshal(resp, &job); a.NoError(err) {
-			a.Equal(job.ExportBucketID, bucketID)
+			a.Equal(job.GetExportBucketId(), bucketID)
 		}
 	})
 
@@ -215,7 +216,7 @@ func TestExportJobs(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		r.NoError(err, string(resp))
 
-		var r atlas.CloudProviderSnapshotExportJobs
+		var r atlasv2.PaginatedApiAtlasDiskBackupExportJob
 		a := assert.New(t)
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)

@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {
@@ -54,7 +54,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 		fs:                                  afero.NewMemMapFs(),
 	}
 
-	expected := &atlas.CloudProviderSnapshotBackupPolicy{}
+	expected := &atlasv2.DiskBackupSnapshotSchedule{}
 	cmd := &cobra.Command{}
 
 	mockStore.
@@ -97,7 +97,7 @@ func TestUpdateOpts_RunWithFile(t *testing.T) {
 		fs:          fs,
 	}
 
-	expected := &atlas.CloudProviderSnapshotBackupPolicy{}
+	expected := &atlasv2.DiskBackupSnapshotSchedule{}
 	cmd := &cobra.Command{}
 
 	mockStore.

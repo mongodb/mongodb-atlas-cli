@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestExportBuckets(t *testing.T) {
@@ -57,11 +57,11 @@ func TestExportBuckets(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var exportBucket atlas.CloudProviderSnapshotExportBucket
+		var exportBucket atlasv2.DiskBackupSnapshotAWSExportBucket
 		if err = json.Unmarshal(resp, &exportBucket); a.NoError(err) {
-			a.Equal(bucketName, exportBucket.BucketName)
+			a.Equal(bucketName, exportBucket.GetBucketName())
 		}
-		bucketID = exportBucket.ID
+		bucketID = exportBucket.GetId()
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -76,7 +76,7 @@ func TestExportBuckets(t *testing.T) {
 
 		r.NoError(err, string(resp))
 
-		var r atlas.CloudProviderSnapshotExportBuckets
+		var r atlasv2.PaginatedBackupSnapshotExportBucket
 		a := assert.New(t)
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
@@ -98,9 +98,9 @@ func TestExportBuckets(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var exportBucket atlas.CloudProviderSnapshotExportBucket
+		var exportBucket atlasv2.DiskBackupSnapshotAWSExportBucket
 		if err = json.Unmarshal(resp, &exportBucket); a.NoError(err) {
-			a.Equal(bucketName, exportBucket.BucketName)
+			a.Equal(bucketName, exportBucket.GetBucketName())
 		}
 	})
 

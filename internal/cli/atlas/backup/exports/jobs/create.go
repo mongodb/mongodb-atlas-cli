@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type CreateOpts struct {
@@ -46,7 +47,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Export job created in a bucket with ID '{{.ExportBucketID}}'.\n"
+var createTemplate = "Export job created in a bucket with ID '{{.ExportBucketId}}'.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newExportJob()
@@ -59,16 +60,16 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newExportJob() *mongodbatlas.CloudProviderSnapshotExportJob {
-	var customData []*mongodbatlas.CloudProviderSnapshotExportJobCustomData
+func (opts *CreateOpts) newExportJob() *atlasv2.DiskBackupExportJobRequest {
+	var customData []atlasv2.Label
 	for key, value := range opts.customData {
-		pair := &mongodbatlas.CloudProviderSnapshotExportJobCustomData{}
-		pair.Key, pair.Value = key, value
+		pair := atlasv2.Label{}
+		pair.Key, pair.Value = pointer.Get(key), pointer.Get(value)
 		customData = append(customData, pair)
 	}
-	createRequest := &mongodbatlas.CloudProviderSnapshotExportJob{
-		SnapshotID:     opts.snapshotID,
-		ExportBucketID: opts.exportBucketID,
+	createRequest := &atlasv2.DiskBackupExportJobRequest{
+		SnapshotId:     opts.snapshotID,
+		ExportBucketId: opts.exportBucketID,
 		CustomData:     customData,
 	}
 	return createRequest

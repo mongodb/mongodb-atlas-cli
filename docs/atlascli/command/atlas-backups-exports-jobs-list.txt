@@ -98,7 +98,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 .. code-block::
 
    ID     EXPORT BUCKET ID   STATE     SNAPSHOT ID
-   <ID>   <ExportBucketID>   <State>   <SnapshotID>
+   <Id>   <ExportBucketId>   <State>   <SnapshotId>
    
 
 Examples

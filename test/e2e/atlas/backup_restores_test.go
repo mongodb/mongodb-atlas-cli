@@ -24,7 +24,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestRestores(t *testing.T) {
@@ -58,7 +59,7 @@ func TestRestores(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var snapshot atlas.CloudProviderSnapshot
+		var snapshot mongodbatlas.CloudProviderSnapshot
 		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
 			a.Equal("test-snapshot", snapshot.Description)
 		}
@@ -102,9 +103,9 @@ func TestRestores(t *testing.T) {
 
 		r.NoError(err, string(resp))
 		a := assert.New(t)
-		var result atlas.CloudProviderSnapshotRestoreJob
+		var result atlasv2.DiskBackupRestoreJob
 		if err = json.Unmarshal(resp, &result); a.NoError(err) {
-			restoreJobID = result.ID
+			restoreJobID = result.GetId()
 		}
 	})
 
@@ -140,7 +141,7 @@ func TestRestores(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var result atlas.CloudProviderSnapshotRestoreJobs
+		var result atlasv2.PaginatedCloudBackupRestoreJob
 		if err = json.Unmarshal(resp, &result); a.NoError(err) {
 			a.NotEmpty(result)
 		}
@@ -163,7 +164,7 @@ func TestRestores(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var result atlas.CloudProviderSnapshotRestoreJob
+		var result atlasv2.DiskBackupRestoreJob
 		if err = json.Unmarshal(resp, &result); a.NoError(err) {
 			a.NotEmpty(result)
 		}

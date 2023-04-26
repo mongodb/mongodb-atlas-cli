@@ -98,7 +98,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 .. code-block::
 
    ID     SNAPSHOT       CLUSTER               TYPE             EXPIRES AT
-   <ID>   <SnapshotID>   <TargetClusterName>   <DeliveryType>   <ExpiresAt>
+   <Id>   <SnapshotId>   <TargetClusterName>   <DeliveryType>   <ExpiresAt>
    
 
 Examples

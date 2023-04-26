@@ -55,7 +55,6 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return commonerrors.Check(err)
 	}
-
 	return opts.Print(r)
 }
 

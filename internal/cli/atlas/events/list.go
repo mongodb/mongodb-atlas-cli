@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"k8s.io/utils/pointer"
 )
 
@@ -59,39 +59,14 @@ var listTemplate = `ID	TYPE	CREATED{{range .Results}}
 func (opts *ListOpts) Run() error {
 	var r interface{}
 	var err error
-	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
-	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
 
 	if opts.orgID != "" {
 		// TODO Support multiple event types by API
-		eventType, _ := mongodbatlasv2.NewEventTypeForOrgFromValue(opts.EventType[0])
 		// TODO Use APIparams objects directly in the CLI
-		listEventsAPIParams := mongodbatlasv2.ListOrganizationEventsApiParams{
-			OrgId:        opts.orgID,
-			ItemsPerPage: pointer.Int32(int32(opts.ItemsPerPage)),
-			PageNum:      pointer.Int32(int32(opts.PageNum)),
-			EventType:    eventType,
-			IncludeRaw:   new(bool),
-			MaxDate:      &minDate,
-			MinDate:      &maxDate,
-		}
+		listEventsAPIParams := opts.NewOrgListOptions()
 		r, err = opts.store.OrganizationEvents(&listEventsAPIParams)
 	} else if opts.projectID != "" {
-		// TODO CLOUDP-17348 event type is array but we expect single event
-		var eventType *mongodbatlasv2.EventTypeForNdsGroup
-		if len(opts.EventType) > 1 {
-			eventType, _ = mongodbatlasv2.NewEventTypeForNdsGroupFromValue(opts.EventType[0])
-		}
-		// TODO  CLOUDP-173460 Use APIparams objects directly in SDK (without need for store)
-		listEventsAPIParams := mongodbatlasv2.ListProjectEventsApiParams{
-			GroupId:      opts.projectID,
-			ItemsPerPage: pointer.Int32(int32(opts.ItemsPerPage)),
-			PageNum:      pointer.Int32(int32(opts.PageNum)),
-			EventType:    eventType,
-			IncludeRaw:   new(bool),
-			MaxDate:      &minDate,
-			MinDate:      &maxDate,
-		}
+		listEventsAPIParams := opts.NewProjectListOptions()
 		r, err = opts.store.ProjectEvents(&listEventsAPIParams)
 	}
 	if err != nil {
@@ -99,6 +74,45 @@ func (opts *ListOpts) Run() error {
 	}
 
 	return opts.Print(r)
+}
+
+func (opts *ListOpts) NewOrgListOptions() atlasv2.ListOrganizationEventsApiParams {
+	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
+	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
+
+	var eventType *atlasv2.EventTypeForOrg
+	if len(opts.EventType) > 0 {
+		eventType, _ = atlasv2.NewEventTypeForOrgFromValue(opts.EventType[0])
+	}
+	listEventsAPIParams := atlasv2.ListOrganizationEventsApiParams{
+		OrgId:        opts.orgID,
+		ItemsPerPage: pointer.Int32(int32(opts.ItemsPerPage)),
+		PageNum:      pointer.Int32(int32(opts.PageNum)),
+		EventType:    eventType,
+		IncludeRaw:   new(bool),
+		MaxDate:      &minDate,
+		MinDate:      &maxDate,
+	}
+	return listEventsAPIParams
+}
+
+func (opts *ListOpts) NewProjectListOptions() atlasv2.ListProjectEventsApiParams {
+	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
+	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
+	var eventType *atlasv2.EventTypeForNdsGroup
+	if len(opts.EventType) > 0 {
+		eventType, _ = atlasv2.NewEventTypeForNdsGroupFromValue(opts.EventType[0])
+	}
+	listEventsAPIParams := atlasv2.ListProjectEventsApiParams{
+		GroupId:      opts.projectID,
+		ItemsPerPage: atlasv2.PtrInt32(int32(opts.ItemsPerPage)),
+		PageNum:      atlasv2.PtrInt32(int32(opts.PageNum)),
+		EventType:    eventType,
+		IncludeRaw:   new(bool),
+		MaxDate:      &minDate,
+		MinDate:      &maxDate,
+	}
+	return listEventsAPIParams
 }
 
 // ListBuilder

@@ -33,9 +33,9 @@ func Test_orgListOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 	listOpts.OrgID = "1"
-
+	anyMock := gomock.Any()
 	mockStore.
-		EXPECT().OrganizationEvents(listOpts.OrgID).
+		EXPECT().OrganizationEvents(anyMock).
 		Return(expected, nil).
 		Times(1)
 

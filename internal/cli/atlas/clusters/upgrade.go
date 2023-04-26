@@ -108,7 +108,7 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 	AddLabelSharedCluster(out, NewCLILabel())
 }
 
-// mongocli atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].
+// atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].
 func UpgradeBuilder() *cobra.Command {
 	opts := UpgradeOpts{
 		fs: afero.NewOsFs(),

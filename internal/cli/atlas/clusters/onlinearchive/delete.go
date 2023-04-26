@@ -47,7 +47,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteOnlineArchive, opts.ConfigProjectID(), opts.clusterName)
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) delete <archiveId> [--clusterName name][--projectId projectId][--force].
+// atlas cluster(s) onlineArchive(s) delete <archiveId> [--clusterName name][--projectId projectId][--force].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Archive '%s' deleted\n", "Archive not deleted"),

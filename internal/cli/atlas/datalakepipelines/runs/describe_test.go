@@ -37,9 +37,9 @@ func TestDescribe_Run(t *testing.T) {
 	mockStore := mocks.NewMockPipelineRunsDescriber(ctrl)
 
 	expected := &atlasv2.IngestionPipelineRun{
-		Id:          pointer.Get[string]("507f1f77bcf86cd799439011"),
-		DatasetName: pointer.Get[string]("dataset"),
-		State:       pointer.Get[string]("IDLE"),
+		Id:          pointer.Get("507f1f77bcf86cd799439011"),
+		DatasetName: pointer.Get("dataset"),
+		State:       pointer.Get("IDLE"),
 	}
 
 	buf := new(bytes.Buffer)

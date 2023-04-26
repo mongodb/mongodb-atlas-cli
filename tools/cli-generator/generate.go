@@ -26,6 +26,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/tangzero/inflector"
 	"golang.org/x/tools/imports"
 	"gopkg.in/yaml.v3"
 )
@@ -137,12 +138,11 @@ func (c *Command) LastCommandPath() string {
 }
 
 func (c *Command) baseFileName(basePath string) string {
-	internalPath := filepath.Join(c.CommandPaths()...)
+	internalPath := strings.ToLower(filepath.Join(c.CommandPaths()...))
 
 	if len(c.SubCommands) > 0 {
-		internalPath = filepath.Join(internalPath, c.LastCommandPath())
+		internalPath = filepath.Join(internalPath, inflector.Underscorize(c.LastCommandPath()))
 	}
-	internalPath = strings.ToLower(internalPath)
 
 	return filepath.Join(basePath, "internal", "cli", internalPath)
 }
@@ -267,7 +267,7 @@ func newCli(overwrite bool) (*CLI, error) {
 	return &cli, nil
 }
 
-func (cli *CLI) generateCli() error {
+func (cli *CLI) generateCli() {
 	for i := range cli.Stores {
 		if err := cli.generateStore(&cli.Stores[i]); err != nil {
 			log.Printf("%s: %s\n", ErrGenerateStore, err)
@@ -283,6 +283,4 @@ func (cli *CLI) generateCli() error {
 	if err := runMake(); err != nil {
 		log.Printf("%s: %s\n", ErrGenerateCli, err)
 	}
-
-	return nil
 }

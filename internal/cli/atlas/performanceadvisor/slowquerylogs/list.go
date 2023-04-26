@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const listTemplate = `NAMESPACE	LINE{{range .SlowQuery}}
@@ -64,15 +64,23 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newSlowQueryOptions(project, host string) *atlas.ListSlowQueriesApiParams {
-	return &atlas.ListSlowQueriesApiParams{
+func (opts *ListOpts) newSlowQueryOptions(project, host string) *atlasv2.ListSlowQueriesApiParams {
+	params := &atlasv2.ListSlowQueriesApiParams{
 		Namespaces: &[]string{opts.namespaces},
 		GroupId:    project,
 		ProcessId:  host,
-		NLogs:      &opts.nLog,
-		Since:      &opts.since,
-		Duration:   &opts.duration,
 	}
+	if opts.since != 0 {
+		params.Since = &opts.since
+	}
+	if opts.duration != 0 {
+		params.Duration = &opts.duration
+	}
+	if opts.nLog != 0 {
+		params.NLogs = &opts.nLog
+	}
+
+	return params
 }
 
 // atlas performanceAdvisor slowQueryLogs list  --processName processName --since since --duration duration  --projectId projectId.

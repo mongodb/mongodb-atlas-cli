@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const listTemplate = `NAMESPACE	TYPE{{range .Namespaces}}
@@ -62,13 +62,18 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newNamespaceOptions(project, host string) *atlas.ListSlowQueryNamespacesApiParams {
-	return &atlas.ListSlowQueryNamespacesApiParams{
+func (opts *ListOpts) newNamespaceOptions(project, host string) *atlasv2.ListSlowQueryNamespacesApiParams {
+	params := &atlasv2.ListSlowQueryNamespacesApiParams{
 		GroupId:   project,
 		ProcessId: host,
-		Since:     &opts.since,
-		Duration:  &opts.duration,
 	}
+	if opts.since != 0 {
+		params.Since = &opts.since
+	}
+	if opts.duration != 0 {
+		params.Duration = &opts.duration
+	}
+	return params
 }
 
 // atlas performanceAdvisor namespace(s) list  --processName processName --since since --duration duration  --projectId projectId.

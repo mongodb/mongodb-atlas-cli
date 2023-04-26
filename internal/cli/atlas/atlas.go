@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslogs"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/cloudproviders"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdbroles"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdns"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalake"
@@ -37,7 +38,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/backup"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/clusters"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/events"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/performanceadvisor"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/serverless"
@@ -78,7 +78,7 @@ func Builder() *cobra.Command {
 	}
 	cmd.AddCommand(
 		quickstart.Builder(),
-		clusters.Builder(),
+		clusters.MongoCLIBuilder(),
 		dbusers.Builder(),
 		customdbroles.Builder(),
 		accesslists.Builder(),

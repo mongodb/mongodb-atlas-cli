@@ -60,7 +60,7 @@ func (opts *PauseOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas cluster(s) onlineArchive(s) pause <archiveId> [--clusterName name][--projectId projectId].
+// mongocli atlas cluster(s) onlineArchive(s) pause <archiveId> [--clusterName name][--projectId projectId].
 func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{

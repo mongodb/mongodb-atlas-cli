@@ -70,7 +70,7 @@ func (opts *WatchOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// atlas cluster(s) watch <clusterName> [--projectId projectId].
+// mongocli atlas cluster(s) watch <clusterName> [--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{

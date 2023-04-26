@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/indexes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/onlinearchive"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -29,7 +30,37 @@ import (
 const (
 	labelKey           = "Infrastructure Tool"
 	atlasCLILabelValue = "Atlas CLI"
+	mongoCLILabelValue = "mongoCLI"
 )
+
+// MongoCLIBuilder is to split "mongocli atlas clusters" and "atlas clusters".
+func MongoCLIBuilder() *cobra.Command {
+	const use = "clusters"
+	cmd := &cobra.Command{
+		Use:        use,
+		Aliases:    cli.GenerateAliases(use),
+		SuggestFor: []string{"replicasets"},
+		Short:      "Manage clusters for your project.",
+		Long:       `The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters.`,
+	}
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		CreateBuilder(),
+		WatchBuilder(),
+		UpdateBuilder(),
+		PauseBuilder(),
+		StartBuilder(),
+		DeleteBuilder(),
+		LoadSampleDataBuilder(),
+		indexes.Builder(),
+		search.Builder(),
+		onlinearchive.Builder(),
+		connectionstring.Builder(),
+	)
+
+	return cmd
+}
 
 func Builder() *cobra.Command {
 	const use = "clusters"
@@ -65,6 +96,9 @@ func Builder() *cobra.Command {
 
 func NewCLILabel() atlas.Label {
 	labelValue := atlasCLILabelValue
+	if config.ToolName == config.MongoCLI {
+		labelValue = mongoCLILabelValue
+	}
 
 	return atlas.Label{
 		Key:   labelKey,

@@ -63,7 +63,7 @@ func (opts *WatchOpts) Run() error {
 
 // WatchBuilder
 //
-// atlas cluster(s) onlineArchive watch <archiveId> --clusterName=<name>	[--projectId projectId].
+//	mongocli atlas cluster(s) onlineArchive watch <archiveId> --clusterName=<name>	[--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{

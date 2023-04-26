@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -36,15 +37,15 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 		return nil, nil, err
 	}
 
-	if len(users) == 0 {
+	if len(users.Results) == 0 {
 		return nil, nil, nil
 	}
 
 	mappedUsers := map[string]*atlasV1.AtlasDatabaseUser{}
-	relatedSecrets := make([]*corev1.Secret, 0, len(users))
+	relatedSecrets := make([]*corev1.Secret, 0, len(users.Results))
 
-	for i := range users {
-		user := &users[i]
+	for i := range users.Results {
+		user := &users.Results[i]
 
 		resourceName := suggestResourceName(projectName, user.Username, mappedUsers, dictionary)
 		labels := convertUserLabels(user)
@@ -72,12 +73,12 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 					Namespace: targetNamespace,
 				},
 				DatabaseName:    user.DatabaseName,
-				DeleteAfterDate: user.DeleteAfterDate,
+				DeleteAfterDate: user.DeleteAfterDate.String(),
 				Labels:          labels,
 				Roles:           roles,
 				Scopes:          scopes,
 				Username:        user.Username,
-				X509Type:        user.X509Type,
+				X509Type:        *user.X509Type,
 			},
 			Status: status.AtlasDatabaseUserStatus{
 				Common: status.Common{
@@ -86,7 +87,7 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 			},
 		}
 
-		if user.X509Type != "MANAGED" {
+		if user.GetX509Type() != "MANAGED" {
 			secret := buildUserSecret(resourceName, targetNamespace, dictionary)
 			relatedSecrets = append(relatedSecrets, secret)
 
@@ -96,7 +97,7 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 		}
 	}
 
-	result := make([]*atlasV1.AtlasDatabaseUser, 0, len(users))
+	result := make([]*atlasV1.AtlasDatabaseUser, 0, len(users.Results))
 	for _, mappedUser := range mappedUsers {
 		result = append(result, mappedUser)
 	}
@@ -111,7 +112,7 @@ func buildUserSecret(resourceName string, targetNamespace string, dictionary map
 	return secret
 }
 
-func convertUserScopes(user *mongodbatlas.DatabaseUser) []atlasV1.ScopeSpec {
+func convertUserScopes(user *atlasv2.DatabaseUser) []atlasV1.ScopeSpec {
 	result := make([]atlasV1.ScopeSpec, 0, len(user.Scopes))
 	for _, scope := range user.Scopes {
 		result = append(result, atlasV1.ScopeSpec{
@@ -122,7 +123,7 @@ func convertUserScopes(user *mongodbatlas.DatabaseUser) []atlasV1.ScopeSpec {
 	return result
 }
 
-func convertUserRoles(user *mongodbatlas.DatabaseUser) []atlasV1.RoleSpec {
+func convertUserRoles(user *atlasv2.DatabaseUser) []atlasV1.RoleSpec {
 	if len(user.Roles) == 0 {
 		return nil
 	}
@@ -137,12 +138,12 @@ func convertUserRoles(user *mongodbatlas.DatabaseUser) []atlasV1.RoleSpec {
 	return result
 }
 
-func convertUserLabels(user *mongodbatlas.DatabaseUser) []common.LabelSpec {
+func convertUserLabels(user *atlasv2.DatabaseUser) []common.LabelSpec {
 	result := make([]common.LabelSpec, 0, len(user.Labels))
 	for _, label := range user.Labels {
 		result = append(result, common.LabelSpec{
-			Key:   label.Key,
-			Value: label.Value,
+			Key:   *label.Key,
+			Value: *label.Value,
 		})
 	}
 	return result

@@ -78,7 +78,10 @@ func (opts *ListOpts) Run() error {
 		r, err = opts.store.OrganizationEvents(&listEventsAPIParams)
 	} else if opts.projectID != "" {
 		// TODO CLOUDP-17348 event type is array but we expect single event
-		eventType, _ := mongodbatlasv2.NewEventTypeForNdsGroupFromValue(opts.EventType[0])
+		var eventType *mongodbatlasv2.EventTypeForNdsGroup
+		if len(opts.EventType) > 1 {
+			eventType, _ = mongodbatlasv2.NewEventTypeForNdsGroupFromValue(opts.EventType[0])
+		}
 		// TODO  CLOUDP-173460 Use APIparams objects directly in SDK (without need for store)
 		listEventsAPIParams := mongodbatlasv2.ListProjectEventsApiParams{
 			GroupId:      opts.projectID,

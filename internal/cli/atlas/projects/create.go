@@ -30,10 +30,9 @@ import (
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-const (
-	atlasCreateTemplate = "Project '{{.Id}}' created.\n"
-	govRegionOnly       = "GOV_REGIONS_ONLY"
-)
+const atlasCreateTemplate = "Project '{{.Id}}' created.\n"
+
+var govRegionOnly = "GOV_REGIONS_ONLY"
 
 type CreateOpts struct {
 	cli.GlobalOpts
@@ -79,16 +78,16 @@ func (opts *CreateOpts) newCreateProjectGroup() atlasv2.Group {
 		Name:                      opts.name,
 		OrgId:                     opts.ConfigOrgID(),
 		WithDefaultAlertsSettings: defaultAlertSettings,
-		RegionUsageRestrictions:   &restrictions,
+		RegionUsageRestrictions:   restrictions,
 	}
 }
 
-func (opts *CreateOpts) newRegionUsageRestrictions() string {
+func (opts *CreateOpts) newRegionUsageRestrictions() *string {
 	if opts.regionUsageRestrictions {
-		return govRegionOnly
+		return &govRegionOnly
 	}
 
-	return ""
+	return nil
 }
 
 func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {

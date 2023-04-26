@@ -41,33 +41,54 @@ type PerformanceAdvisorSlowOperationThresholdDisabler interface {
 
 // PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorNamespaces(opts *atlasv2.ListSlowQueryNamespacesApiParams) (*atlasv2.Namespaces, error) {
-	result, _, err := s.clientv2.PerformanceAdvisorApi.
-		ListSlowQueryNamespaces(s.ctx, opts.GroupId, opts.ProcessId).
-		Duration(*opts.Duration).
-		Since(*opts.Since).
-		Execute()
+	request := s.clientv2.PerformanceAdvisorApi.
+		ListSlowQueryNamespaces(s.ctx, opts.GroupId, opts.ProcessId)
+	if opts.Duration != nil {
+		request = request.Duration(*opts.Duration)
+	}
+	if opts.Since != nil {
+		request = request.Since(*opts.Since)
+	}
+	result, _, err := request.Execute()
 	return result, err
 }
 
 // PerformanceAdvisorSlowQueries encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorSlowQueries(opts *atlasv2.ListSlowQueriesApiParams) (*atlasv2.PerformanceAdvisorSlowQueryList, error) {
-	result, _, err := s.clientv2.PerformanceAdvisorApi.ListSlowQueries(s.ctx, opts.GroupId, opts.ProcessId).
-		Duration(*opts.Duration).
-		Since(*opts.Since).
-		Namespaces(*opts.Namespaces).
-		NLogs(*opts.NLogs).Execute()
+	request := s.clientv2.PerformanceAdvisorApi.ListSlowQueries(s.ctx, opts.GroupId, opts.ProcessId)
+	if opts.Duration != nil {
+		request = request.Duration(*opts.Duration)
+	}
+	if opts.Since != nil {
+		request = request.Since(*opts.Since)
+	}
+	if opts.Namespaces != nil {
+		request = request.Namespaces(*opts.Namespaces)
+	}
+	if opts.NLogs != nil {
+		request = request.NLogs(*opts.NLogs)
+	}
+	result, _, err := request.Execute()
 	return result, err
 }
 
 // PerformanceAdvisorIndexes encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorIndexes(opts *atlasv2.ListSuggestedIndexesApiParams) (*atlasv2.PerformanceAdvisorResponse, error) {
-	result, _, err := s.clientv2.PerformanceAdvisorApi.
-		ListSuggestedIndexes(s.ctx, opts.GroupId, opts.ProcessId).
-		NExamples(*opts.NExamples).
-		NIndexes(*opts.NIndexes).
-		Duration(*opts.Duration).
-		Since(*opts.Since).
-		Execute()
+	request := s.clientv2.PerformanceAdvisorApi.
+		ListSuggestedIndexes(s.ctx, opts.GroupId, opts.ProcessId)
+	if opts.Duration != nil {
+		request = request.Duration(*opts.Duration)
+	}
+	if opts.Since != nil {
+		request = request.Since(*opts.Since)
+	}
+	if opts.NExamples != nil {
+		request = request.NExamples(*opts.NExamples)
+	}
+	if opts.NIndexes != nil {
+		request = request.NIndexes(*opts.NIndexes)
+	}
+	result, _, err := request.Execute()
 	return result, err
 }
 

@@ -49,7 +49,8 @@ func (s *Store) Process(groupID, hostname string, port int) (*atlasv2.HostViewAt
 func (s *Store) Processes(groupID string, opts *atlas.ProcessesListOptions) (*atlasv2.PaginatedHostViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.MonitoringAndLogsApi.ListAtlasProcesses(s.ctx, groupID).PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount).Execute()
+		result, _, err := s.clientv2.MonitoringAndLogsApi.ListAtlasProcesses(s.ctx, groupID).
+			PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

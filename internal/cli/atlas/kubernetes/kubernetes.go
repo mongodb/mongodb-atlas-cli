@@ -16,6 +16,7 @@ package kubernetes
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/kubernetes/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/kubernetes/operator"
 	"github.com/spf13/cobra"
 )
 
@@ -28,6 +29,7 @@ func Builder() *cobra.Command {
 	}
 
 	cmd.AddCommand(config.Builder())
+	cmd.AddCommand(operator.Builder())
 
 	return cmd
 }

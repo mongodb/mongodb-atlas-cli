@@ -51,7 +51,7 @@ import (
 const targetNamespace = "importer-namespace"
 
 var expectedLabels = map[string]string{
-	features.ResourceVersion: features.LatestOperatorVersion,
+	features.ResourceVersion: features.LatestOperatorMajorVersion,
 }
 
 func getK8SEntities(data []byte) ([]runtime.Object, error) {
@@ -905,7 +905,7 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(name, dictionary),
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, name), dictionary),
 			Namespace: namespace,
 			Labels:    labels,
 		},
@@ -916,7 +916,7 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 			},
 			BackupScheduleRef: common.ResourceRefNamespaced{
 				Namespace: targetNamespace,
-				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backupschedule", name), dictionary),
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backupschedule", projectName, name), dictionary),
 			},
 			AdvancedDeploymentSpec: &atlasV1.AdvancedDeploymentSpec{
 				BackupEnabled: pointer.Get(true),
@@ -1004,7 +1004,7 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(name, dictionary),
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, name), dictionary),
 			Namespace: namespace,
 			Labels:    labels,
 		},
@@ -1089,7 +1089,7 @@ func defaultMaintenanceWindowAlertConfigs() []atlasV1.AlertConfiguration {
 	}
 }
 
-func referenceBackupSchedule(namespace, clusterName string, labels map[string]string) *atlasV1.AtlasBackupSchedule {
+func referenceBackupSchedule(namespace, projectName, clusterName string, labels map[string]string) *atlasV1.AtlasBackupSchedule {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &atlasV1.AtlasBackupSchedule{
 		TypeMeta: v1.TypeMeta{
@@ -1097,13 +1097,13 @@ func referenceBackupSchedule(namespace, clusterName string, labels map[string]st
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backupschedule", clusterName), dictionary),
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName), dictionary),
 			Namespace: namespace,
 			Labels:    labels,
 		},
 		Spec: atlasV1.AtlasBackupScheduleSpec{
 			PolicyRef: common.ResourceRefNamespaced{
-				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backuppolicy", clusterName), dictionary),
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName), dictionary),
 				Namespace: namespace,
 			},
 			ReferenceHourOfDay:    1,
@@ -1113,7 +1113,7 @@ func referenceBackupSchedule(namespace, clusterName string, labels map[string]st
 	}
 }
 
-func referenceBackupPolicy(namespace, clusterName string, labels map[string]string) *atlasV1.AtlasBackupPolicy {
+func referenceBackupPolicy(namespace, projectName, clusterName string, labels map[string]string) *atlasV1.AtlasBackupPolicy {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &atlasV1.AtlasBackupPolicy{
 		TypeMeta: v1.TypeMeta{
@@ -1121,7 +1121,7 @@ func referenceBackupPolicy(namespace, clusterName string, labels map[string]stri
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backuppolicy", clusterName), dictionary),
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName), dictionary),
 			Namespace: namespace,
 			Labels:    labels,
 		},
@@ -1193,8 +1193,8 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 	g.generateServerlessCluster()
 
 	expectedDeployment := referenceAdvancedCluster(g.clusterName, g.clusterRegion, targetNamespace, g.projectName, expectedLabels)
-	expectedBackupSchedule := referenceBackupSchedule(targetNamespace, g.clusterName, expectedLabels)
-	expectedBackupPolicy := referenceBackupPolicy(targetNamespace, g.clusterName, expectedLabels)
+	expectedBackupSchedule := referenceBackupSchedule(targetNamespace, g.projectName, g.clusterName, expectedLabels)
+	expectedBackupPolicy := referenceBackupPolicy(targetNamespace, g.projectName, g.clusterName, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)

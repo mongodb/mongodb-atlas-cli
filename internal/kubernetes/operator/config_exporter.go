@@ -145,10 +145,12 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		resources = append(resources, team)
 	}
 
-	// Project secret with credentials
-	resources = append(resources, project.BuildProjectConnectionSecret(e.credsProvider,
-		projectData.Project.Name,
-		projectData.Project.Namespace, e.orgID, e.includeSecretsData, e.dictionaryForAtlasNames))
+	if e.includeSecretsData {
+		// Project secret with credentials
+		resources = append(resources, project.BuildProjectConnectionSecret(e.credsProvider,
+			projectData.Project.Name,
+			projectData.Project.Namespace, e.orgID, e.includeSecretsData, e.dictionaryForAtlasNames))
+	}
 
 	// DB users
 	usersData, relatedSecrets, err := dbusers.BuildDBUsers(e.dataProvider, e.projectID, projectData.Project.Name, e.targetNamespace, e.dictionaryForAtlasNames, e.operatorVersion)

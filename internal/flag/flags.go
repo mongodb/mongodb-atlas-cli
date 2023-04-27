@@ -312,7 +312,10 @@ const (
 	BackupPolicy                              = "policy"                                    // BackupPolicy flag
 	OperatorIncludeSecrets                    = "includeSecrets"                            // OperatorIncludeSecrets flag
 	OperatorTargetNamespace                   = "targetNamespace"                           // OperatorTargetNamespace flag
+	OperatorWatchNamespace                    = "watchNamespace"                            // OperatorTargetNamespace flag
 	OperatorVersion                           = "operatorVersion"                           // OperatorVersion flag
+	OperatorProjectName                       = "projectName"                               // OperatorProjectName flag
+	OperatorImport                            = "import"                                    // OperatorImport flag
 	KubernetesClusterConfig                   = "kubeconfig"                                // Kubeconfig flag
 	KubernetesClusterContext                  = "kubeContext"                               // KubeContext flag
 	ExportID                                  = "exportId"                                  // ExportID flag

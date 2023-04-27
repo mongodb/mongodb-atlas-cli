@@ -159,7 +159,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		// Assert Backup Policy
 		akoBkpPolicy := akov1.AtlasBackupPolicy{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-backuppolicy", g.clusterName)), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backuppolicy", g.projectName, g.clusterName)), Namespace: namespace},
 			&akoBkpPolicy,
 			true,
 		)
@@ -169,20 +169,20 @@ func TestKubernetesConfigApply(t *testing.T) {
 		// Assert Backup Schedule
 		akoBkpSchedule := akov1.AtlasBackupSchedule{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-backupschedule", g.clusterName)), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backupschedule", g.projectName, g.clusterName)), Namespace: namespace},
 			&akoBkpSchedule,
 			true,
 		)
 		req.NoError(err)
 		a.Equal(
-			referenceExportedBackupSchedule(g.clusterName, akoBkpSchedule.Spec.ReferenceHourOfDay, akoBkpSchedule.Spec.ReferenceMinuteOfHour).Spec,
+			referenceExportedBackupSchedule(g.projectName, g.clusterName, akoBkpSchedule.Spec.ReferenceHourOfDay, akoBkpSchedule.Spec.ReferenceMinuteOfHour).Spec,
 			akoBkpSchedule.Spec,
 		)
 
 		// Assert Deployment
 		akoDeployment := akov1.AtlasDeployment{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(g.clusterName), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.clusterName)), Namespace: namespace},
 			&akoDeployment,
 			true,
 		)
@@ -301,11 +301,11 @@ func referenceExportedTeam(teamName, username string) *akov1.AtlasTeam {
 	}
 }
 
-func referenceExportedBackupSchedule(clusterName string, refHour, refMin int64) *akov1.AtlasBackupSchedule {
+func referenceExportedBackupSchedule(projectName, clusterName string, refHour, refMin int64) *akov1.AtlasBackupSchedule {
 	return &akov1.AtlasBackupSchedule{
 		Spec: akov1.AtlasBackupScheduleSpec{
 			PolicyRef: common.ResourceRefNamespaced{
-				Name:      prepareK8sName(fmt.Sprintf("%s-backuppolicy", clusterName)),
+				Name:      prepareK8sName(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName)),
 				Namespace: "mongodb-atlas-system",
 			},
 			AutoExportEnabled:     false,
@@ -357,7 +357,7 @@ func referenceExportedDeployment(projectName, clusterName string) *akov1.AtlasDe
 				Namespace: "mongodb-atlas-system",
 			},
 			BackupScheduleRef: common.ResourceRefNamespaced{
-				Name:      prepareK8sName(fmt.Sprintf("%s-backupschedule", clusterName)),
+				Name:      prepareK8sName(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName)),
 				Namespace: "mongodb-atlas-system",
 			},
 			AdvancedDeploymentSpec: &akov1.AdvancedDeploymentSpec{

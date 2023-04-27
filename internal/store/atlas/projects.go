@@ -41,6 +41,7 @@ type ProjectDeleter interface {
 
 type ProjectDescriber interface {
 	Project(string) (interface{}, error)
+	ProjectByName(string) (interface{}, error)
 }
 
 type ProjectUsersLister interface {
@@ -86,6 +87,11 @@ func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (*
 // Project encapsulates the logic to manage different cloud providers.
 func (s *Store) Project(id string) (interface{}, error) {
 	result, _, err := s.clientv2.ProjectsApi.GetProject(s.ctx, id).Execute()
+	return result, err
+}
+
+func (s *Store) ProjectByName(name string) (interface{}, error) {
+	result, _, err := s.client.Projects.GetOneProjectByName(s.ctx, name)
 	return result, err
 }
 

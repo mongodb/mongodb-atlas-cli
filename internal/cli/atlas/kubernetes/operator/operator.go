@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,17 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package kubernetes
+package operator
 
-import (
-	"testing"
+import "github.com/spf13/cobra"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-)
+func Builder() *cobra.Command {
+	const use = "operator"
+	cmd := &cobra.Command{
+		Use:   use,
+		Short: "Manage Atlas Kubernetes Operator.",
+		Long:  `This command provides you Atlas Kubernetes Operator management.`,
+	}
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(t,
-		Builder(),
-		2,
-		[]string{})
+	cmd.AddCommand(InstallBuilder())
+
+	return cmd
 }

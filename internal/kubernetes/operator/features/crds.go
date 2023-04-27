@@ -17,6 +17,7 @@ package features
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
@@ -25,7 +26,7 @@ import (
 )
 
 const (
-	LatestOperatorVersion       = "1.7.0"
+	LatestOperatorMajorVersion  = "1.7.0"
 	maxDepth                    = 100
 	ResourceVersion             = "app.kubernetes.io/version"
 	ResourceAtlasProject        = "atlasprojects"
@@ -85,6 +86,28 @@ func SupportedVersions() []string {
 		result = append(result, version)
 	}
 	return result
+}
+
+func CRDCompatibleVersion(operatorVersion string) (string, error) {
+	operatorVersionSem := strings.Split(operatorVersion, ".")
+	latestCRDVersionSem := strings.Split(LatestOperatorMajorVersion, ".")
+
+	operatorMajor, err := strconv.Atoi(operatorVersionSem[1])
+	if err != nil {
+		return "", fmt.Errorf("unable to decode opertor major version: %w", err)
+	}
+
+	crdMajor, err := strconv.Atoi(latestCRDVersionSem[1])
+	if err != nil {
+		return "", fmt.Errorf("unable to decode CRDs major version: %w", err)
+	}
+
+	if operatorMajor > crdMajor {
+		return LatestOperatorMajorVersion, nil
+	}
+
+	operatorVersionSem[2] = "0"
+	return strings.Join(operatorVersionSem, "."), nil
 }
 
 type AtlasCRDs struct {

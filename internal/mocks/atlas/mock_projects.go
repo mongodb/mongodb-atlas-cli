@@ -231,6 +231,21 @@ func (mr *MockProjectDescriberMockRecorder) Project(arg0 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Project", reflect.TypeOf((*MockProjectDescriber)(nil).Project), arg0)
 }
 
+// ProjectByName mocks base method.
+func (m *MockProjectDescriber) ProjectByName(arg0 string) (interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ProjectByName", arg0)
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ProjectByName indicates an expected call of ProjectByName.
+func (mr *MockProjectDescriberMockRecorder) ProjectByName(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectByName", reflect.TypeOf((*MockProjectDescriber)(nil).ProjectByName), arg0)
+}
+
 // MockProjectUsersLister is a mock of ProjectUsersLister interface.
 type MockProjectUsersLister struct {
 	ctrl     *gomock.Controller

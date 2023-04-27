@@ -1,0 +1,97 @@
+// Copyright 2023 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package version
+
+import (
+	"context"
+	"fmt"
+	"io"
+	"strconv"
+	"strings"
+
+	"github.com/google/go-github/v50/github"
+)
+
+const (
+	operatorRepositoryOrg     = "mongodb"
+	operatorRepository        = "mongodb-atlas-kubernetes"
+	maxMajorVersionsSupported = 3
+)
+
+type AtlasOperatorVersionProvider interface {
+	GetLatest() (string, error)
+	IsSupported(version string) (bool, error)
+	DownloadResource(ctx context.Context, version, path string) (io.ReadCloser, error)
+}
+
+type OperatorVersion struct {
+	ghClient *github.Client
+}
+
+func (v *OperatorVersion) GetLatest() (string, error) {
+	latest, _, err := v.ghClient.Repositories.GetLatestRelease(context.Background(), operatorRepositoryOrg, operatorRepository)
+	if err != nil {
+		return "", fmt.Errorf("unable to retrieve latest vesrion: %w", err)
+	}
+
+	return strings.Trim(*latest.Name, "v"), nil
+}
+
+func (v *OperatorVersion) IsSupported(version string) (bool, error) {
+	latest, err := v.GetLatest()
+	if err != nil {
+		return false, err
+	}
+
+	latestSemVer := strings.Split(latest, ".")
+	versionSemVer := strings.Split(version, ".")
+
+	latestMajor, _ := strconv.Atoi(latestSemVer[1])
+	if err != nil {
+		return false, fmt.Errorf("unable to evaluate latest major version: %w", err)
+	}
+
+	versionMajor, _ := strconv.Atoi(versionSemVer[1])
+	if err != nil {
+		return false, fmt.Errorf("unable to evaluate given major version: %w", err)
+	}
+
+	diff := latestMajor - versionMajor
+
+	return diff > -1 && diff < maxMajorVersionsSupported, nil
+}
+
+func (v *OperatorVersion) DownloadResource(ctx context.Context, version, path string) (io.ReadCloser, error) {
+	data, _, err := v.ghClient.Repositories.DownloadContents(
+		ctx,
+		operatorRepositoryOrg,
+		operatorRepository,
+		path,
+		&github.RepositoryContentGetOptions{
+			Ref: fmt.Sprintf("v%s", version),
+		})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+func NewOperatorVersion(ghClient *github.Client) *OperatorVersion {
+	return &OperatorVersion{
+		ghClient: ghClient,
+	}
+}

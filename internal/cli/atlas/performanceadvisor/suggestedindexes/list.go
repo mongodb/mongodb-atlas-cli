@@ -25,11 +25,11 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const listTemplate = `ID	NAMESPACE	SUGGESTED INDEX{{range .SuggestedIndexes}}  
-{{ .ID }}	{{ .Namespace}}	{ {{range $i, $element := .Index}}{{range $key, $value := .}}{{if $i}}, {{end}}{{ $key }}: {{ $value }}{{end}}{{end}} }{{end}}
+{{ .Id }}	{{ .Namespace}}	{ {{range $i, $element := .Index}}{{range $key, $value := .}}{{if $i}}, {{end}}{{ $key }}: {{ $value }}{{end}}{{end}} }{{end}}
 `
 
 type ListOpts struct {
@@ -57,7 +57,7 @@ func (opts *ListOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	r, err := opts.store.PerformanceAdvisorIndexes(opts.ConfigProjectID(), host, opts.newSuggestedIndexOptions())
+	r, err := opts.store.PerformanceAdvisorIndexes(opts.newSuggestedIndexOptions(opts.ConfigProjectID(), host))
 	if err != nil {
 		return err
 	}
@@ -65,16 +65,27 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newSuggestedIndexOptions() *atlas.SuggestedIndexOptions {
-	return &atlas.SuggestedIndexOptions{
-		Namespaces: opts.namespaces,
-		NIndexes:   opts.nIndexes,
-		NExamples:  opts.nExamples,
-		NamespaceOptions: atlas.NamespaceOptions{
-			Since:    opts.since,
-			Duration: opts.duration,
-		},
+func (opts *ListOpts) newSuggestedIndexOptions(project, host string) *atlasv2.ListSuggestedIndexesApiParams {
+	params := &atlasv2.ListSuggestedIndexesApiParams{
+		GroupId:    project,
+		ProcessId:  host,
+		Namespaces: &[]string{opts.namespaces},
 	}
+	if opts.since != 0 {
+		sinceWorkaround := float32(opts.since)
+		params.Since = &sinceWorkaround
+	}
+	if opts.duration != 0 {
+		durationWorkaround := float32(opts.duration)
+		params.Duration = &durationWorkaround
+	}
+	if opts.nExamples != 0 {
+		params.NExamples = &opts.nExamples
+	}
+	if opts.nIndexes != 0 {
+		params.NIndexes = &opts.nIndexes
+	}
+	return params
 }
 
 // atlas performanceAdvisor suggestedIndexes list  --processName processName --nIndexes nIndexes --nExamples nExamples --namespaces namespaces --since since --duration duration  --projectId projectId.

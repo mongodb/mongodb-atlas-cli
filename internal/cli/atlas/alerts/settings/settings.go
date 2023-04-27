@@ -18,7 +18,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const (
@@ -66,28 +66,28 @@ type ConfigOpts struct {
 	metricThresholdThreshold        float64
 }
 
-func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *atlas.AlertConfiguration {
-	out := new(atlas.AlertConfiguration)
-
+func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *atlasv2.AlertConfigViewForNdsGroup {
+	out := new(atlasv2.AlertConfigViewForNdsGroup)
+	// Missing GroupID
 	out.GroupID = projectID
 	out.EventTypeName = strings.ToUpper(opts.event)
 	out.Enabled = &opts.enabled
 
 	if opts.matcherFieldName != "" {
-		out.Matchers = []atlas.Matcher{*opts.newMatcher()}
+		out.Matchers = []atlasv2.Matcher{*opts.newMatcher()}
 	}
 
 	if opts.metricThresholdMetricName != "" {
 		out.MetricThreshold = opts.newMetricThreshold()
 	}
 
-	out.Notifications = []atlas.Notification{*opts.newNotification()}
+	out.Notifications = []atlasv2.NotificationViewForNdsGroup{*opts.newNotification()}
 
 	return out
 }
 
-func (opts *ConfigOpts) newNotification() *atlas.Notification {
-	out := new(atlas.Notification)
+func (opts *ConfigOpts) newNotification() *atlasv2.NotificationViewForNdsGroup {
+	out := new(atlasv2.NotificationViewForNdsGroup)
 	out.TypeName = strings.ToUpper(opts.notificationType)
 	out.DelayMin = &opts.notificationDelayMin
 	out.IntervalMin = opts.notificationIntervalMin
@@ -135,8 +135,8 @@ func (opts *ConfigOpts) newNotification() *atlas.Notification {
 	return out
 }
 
-func (opts *ConfigOpts) newMetricThreshold() *atlas.MetricThreshold {
-	return &atlas.MetricThreshold{
+func (opts *ConfigOpts) newMetricThreshold() *atlasv2.MetricThreshold {
+	return &atlasv2.MetricThreshold{
 		MetricName: strings.ToUpper(opts.metricThresholdMetricName),
 		Operator:   strings.ToUpper(opts.metricThresholdOperator),
 		Threshold:  opts.metricThresholdThreshold,
@@ -145,8 +145,8 @@ func (opts *ConfigOpts) newMetricThreshold() *atlas.MetricThreshold {
 	}
 }
 
-func (opts *ConfigOpts) newMatcher() *atlas.Matcher {
-	return &atlas.Matcher{
+func (opts *ConfigOpts) newMatcher() *atlasv2.Matcher {
+	return &atlasv2.Matcher{
 		FieldName: strings.ToUpper(opts.matcherFieldName),
 		Operator:  strings.ToUpper(opts.matcherOperator),
 		Value:     strings.ToUpper(opts.matcherValue),

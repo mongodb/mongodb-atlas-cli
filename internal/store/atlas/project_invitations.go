@@ -16,20 +16,21 @@ package atlas
 
 import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_project_invitations.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ProjectInvitationLister,ProjectInvitationDescriber,ProjectInvitationDeleter,ProjectInviter,ProjectInvitationUpdater
 
 type ProjectInvitationLister interface {
-	ProjectInvitations(string, *atlas.InvitationOptions) ([]*atlas.Invitation, error)
+	ProjectInvitations(string, *atlas.InvitationOptions) ([]mongodbatlasv2.GroupInvitation, error)
 }
 
 type ProjectInvitationDescriber interface {
-	ProjectInvitation(string, string) (*atlas.Invitation, error)
+	ProjectInvitation(string, string) (*mongodbatlasv2.GroupInvitation, error)
 }
 
 type ProjectInviter interface {
-	InviteUserToProject(string, *atlas.Invitation) (*atlas.Invitation, error)
+	InviteUserToProject(string, *atlas.Invitation) (*mongodbatlasv2.GroupInvitation, error)
 }
 
 type ProjectInvitationDeleter interface {
@@ -37,39 +38,50 @@ type ProjectInvitationDeleter interface {
 }
 
 type ProjectInvitationUpdater interface {
-	UpdateProjectInvitation(string, string, *atlas.Invitation) (*atlas.Invitation, error)
+	UpdateProjectInvitation(string, string, *atlas.Invitation) (*mongodbatlasv2.GroupInvitation, error)
 }
 
 // ProjectInvitations encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectInvitations(groupID string, opts *atlas.InvitationOptions) ([]*atlas.Invitation, error) {
-	result, _, err := s.client.Projects.Invitations(s.ctx, groupID, opts)
+func (s *Store) ProjectInvitations(groupID string, opts *atlas.InvitationOptions) ([]mongodbatlasv2.GroupInvitation, error) {
+	result, _, err := s.clientv2.ProjectsApi.ListProjectInvitations(s.ctx, groupID).Username(opts.Username).Execute()
 	return result, err
 }
 
 // ProjectInvitation encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectInvitation(groupID, invitationID string) (*atlas.Invitation, error) {
-	result, _, err := s.client.Projects.Invitation(s.ctx, groupID, invitationID)
+func (s *Store) ProjectInvitation(groupID, invitationID string) (*mongodbatlasv2.GroupInvitation, error) {
+	result, _, err := s.clientv2.ProjectsApi.GetProjectInvitation(s.ctx, groupID, invitationID).Execute()
 	return result, err
 }
 
 // DeleteProjectInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteProjectInvitation(groupID, invitationID string) error {
-	_, err := s.client.Projects.DeleteInvitation(s.ctx, groupID, invitationID)
+	_, _, err := s.clientv2.ProjectsApi.DeleteProjectInvitation(s.ctx, groupID, invitationID).Execute()
 	return err
 }
 
 // InviteUserToProject encapsulate the logic to manage different cloud providers.
-func (s *Store) InviteUserToProject(groupID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
-	result, _, err := s.client.Projects.InviteUser(s.ctx, groupID, invitation)
+func (s *Store) InviteUserToProject(groupID string, invitation *atlas.Invitation) (*mongodbatlasv2.GroupInvitation, error) {
+	groupInvitationRequest := mongodbatlasv2.GroupInvitationRequest{
+		Username: &invitation.Username,
+		Roles:    invitation.Roles,
+	}
+	result, _, err := s.clientv2.ProjectsApi.CreateProjectInvitation(s.ctx, groupID).GroupInvitationRequest(groupInvitationRequest).Execute()
 	return result, err
 }
 
 // UpdateProjectInvitation encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateProjectInvitation(groupID, invitationID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
+func (s *Store) UpdateProjectInvitation(groupID, invitationID string, invitation *atlas.Invitation) (*mongodbatlasv2.GroupInvitation, error) {
 	if invitationID != "" {
-		result, _, err := s.client.Projects.UpdateInvitationByID(s.ctx, groupID, invitationID, invitation)
+		groupInvitationRequest := mongodbatlasv2.GroupInvitationUpdateRequest{
+			Roles: invitation.Roles,
+		}
+		result, _, err := s.clientv2.ProjectsApi.UpdateProjectInvitationById(s.ctx, groupID, invitationID).GroupInvitationUpdateRequest(groupInvitationRequest).Execute()
 		return result, err
 	}
-	result, _, err := s.client.Projects.UpdateInvitation(s.ctx, groupID, invitation)
+	groupInvitationRequest := mongodbatlasv2.GroupInvitationRequest{
+		Username: &invitation.Username,
+		Roles:    invitation.Roles,
+	}
+	result, _, err := s.clientv2.ProjectsApi.UpdateProjectInvitation(s.ctx, groupID).GroupInvitationRequest(groupInvitationRequest).Execute()
 	return result, err
 }

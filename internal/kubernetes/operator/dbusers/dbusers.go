@@ -73,7 +73,7 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 					Namespace: targetNamespace,
 				},
 				DatabaseName:    user.DatabaseName,
-				DeleteAfterDate: user.DeleteAfterDate.String(),
+				DeleteAfterDate: getDeleteAfterDate(user),
 				Labels:          labels,
 				Roles:           roles,
 				Scopes:          scopes,
@@ -103,6 +103,13 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 	}
 
 	return result, relatedSecrets, nil
+}
+
+func getDeleteAfterDate(user *atlasv2.DatabaseUser) string {
+	if user.DeleteAfterDate != nil {
+		return user.DeleteAfterDate.String()
+	}
+	return ""
 }
 
 func buildUserSecret(resourceName string, targetNamespace string, dictionary map[string]string) *corev1.Secret {

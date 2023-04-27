@@ -66,7 +66,6 @@ func (opts *ListOpts) Run() error {
 }
 
 func (opts *ListOpts) newSuggestedIndexOptions(project, host string) *atlasv2.ListSuggestedIndexesApiParams {
-
 	params := &atlasv2.ListSuggestedIndexesApiParams{
 		GroupId:    project,
 		ProcessId:  host,

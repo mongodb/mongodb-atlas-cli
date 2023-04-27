@@ -81,10 +81,6 @@ Options
      - strings
      - false
      - Ordered fields used to physically organize data in the destination.
-   * - --sinkType
-     - string
-     - false
-     - Type of ingestion destination for this data lake pipeline.
    * - --sourceClusterName
      - string
      - false

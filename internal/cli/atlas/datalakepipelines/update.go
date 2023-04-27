@@ -119,8 +119,8 @@ func (opts *UpdateOpts) newUpdateRequest() (*atlasv2.IngestionPipeline, error) {
 		entries := strings.Split(entry, ":")
 		transformType := entries[0]
 		transformFieldNames := strings.Split(entries[1], ",")
-		for _, transformFieldName := range transformFieldNames {
-			pipeline.Transformations = append(pipeline.Transformations, atlasv2.FieldTransformation{Field: &transformFieldName, Type: &transformType})
+		for i := range transformFieldNames {
+			pipeline.Transformations = append(pipeline.Transformations, atlasv2.FieldTransformation{Field: &transformFieldNames[i], Type: &transformType})
 		}
 	}
 

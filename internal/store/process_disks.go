@@ -33,7 +33,7 @@ type ProcessDisksLister interface {
 func (s *Store) ProcessDisks(groupID, host string, port int, opts *atlas.ListOptions) (*atlasv2.PaginatedDiskPartition, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		processID := host + strconv.Itoa(port)
+		processID := host + ":" + strconv.Itoa(port)
 		result, _, err := s.clientv2.MonitoringAndLogsApi.ListDiskPartitions(s.ctx, groupID, processID).IncludeCount(opts.IncludeCount).ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum)).Execute()
 		return result, err
 	default:

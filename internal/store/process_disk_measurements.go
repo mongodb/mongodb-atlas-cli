@@ -37,7 +37,7 @@ type ProcessDatabaseMeasurementsLister interface {
 func (s *Store) ProcessDiskMeasurements(groupID, host string, port int, partitionName string, opts *atlas.ProcessMeasurementListOptions) (*atlasv2.MeasurementsGeneralViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		processID := host + strconv.Itoa(port)
+		processID := host + ":" + strconv.Itoa(port)
 		result, _, err := s.clientv2.MonitoringAndLogsApi.GetDiskMeasurements(s.ctx, groupID, partitionName, processID).M(opts.M).Execute()
 		return result, err
 	default:
@@ -49,7 +49,7 @@ func (s *Store) ProcessDiskMeasurements(groupID, host string, port int, partitio
 func (s *Store) ProcessDatabaseMeasurements(groupID, host string, port int, dbName string, opts *atlas.ProcessMeasurementListOptions) (*atlasv2.MeasurementsGeneralViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		processID := host + strconv.Itoa(port)
+		processID := host + ":" + strconv.Itoa(port)
 		result, _, err := s.clientv2.MonitoringAndLogsApi.GetDatabaseMeasurements(s.ctx, groupID, dbName, processID).M(opts.M).Execute()
 		return result, err
 	default:

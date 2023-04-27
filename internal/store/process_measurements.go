@@ -34,7 +34,7 @@ type ProcessMeasurementLister interface {
 func (s *Store) ProcessMeasurements(groupID, host string, port int, opts *atlas.ProcessMeasurementListOptions) (*atlasv2.MeasurementsGeneralViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		processID := host + strconv.Itoa(port)
+		processID := host + ":" + strconv.Itoa(port)
 		period, _ := time.Parse(time.RFC3339, opts.Period)
 		result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostMeasurements(s.ctx, groupID, processID).M(opts.M).Period(period).Execute()
 		return result, err

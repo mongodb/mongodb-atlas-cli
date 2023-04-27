@@ -37,7 +37,7 @@ type ProcessDescriber interface {
 func (s *Store) Process(groupID, hostname string, port int) (*atlasv2.HostViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		processID := hostname + strconv.Itoa(port)
+		processID := hostname + ":" + strconv.Itoa(port)
 		result, _, err := s.clientv2.MonitoringAndLogsApi.GetAtlasProcess(s.ctx, groupID, processID).Execute()
 		return result, err
 	default:

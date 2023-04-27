@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -54,6 +55,14 @@ func (opts *DescribeOpts) Run() error {
 	}
 
 	return opts.Print(r)
+}
+func (opts *DescribeOpts) validateArg() error {
+	if opts.ConfigOutput() == "" {
+		if err := validate.ObjectID(opts.name); err != nil {
+			return fmt.Errorf("please provide a valid cluster ID, %w", err)
+		}
+	}
+	return nil
 }
 
 func (opts *DescribeOpts) cluster() (interface{}, error) {
@@ -88,6 +97,7 @@ When using an output format the please provide the cluster name.`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
+				opts.validateArg,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)

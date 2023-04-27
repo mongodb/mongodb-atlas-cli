@@ -20,9 +20,10 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -42,18 +43,16 @@ func TestDescribe_Run(t *testing.T) {
 			Return(expected, nil).
 			Times(1)
 
-		if err := descOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
+		require.NoError(t, descOpts.Run())
 	})
 
 	t.Run("describe cluster for JSON", func(t *testing.T) {
 		descOpts := &DescribeOpts{
-			store: mockStore,
-			name:  "myReplicaSet",
+			store:      mockStore,
+			OutputOpts: cli.OutputOpts{Output: "json"},
+			name:       "myReplicaSet",
 		}
 
-		config.SetOutput(config.JSON)
 		expected := fixture.AutomationConfig()
 		mockStore.
 			EXPECT().
@@ -61,9 +60,52 @@ func TestDescribe_Run(t *testing.T) {
 			Return(expected, nil).
 			Times(1)
 
-		if err := descOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-		config.SetOutput("")
+		require.NoError(t, descOpts.Run())
 	})
+}
+
+func TestDescribeOpts_validateArg(t *testing.T) {
+	type fields struct {
+		OutputOpts cli.OutputOpts
+		name       string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		wantErr require.ErrorAssertionFunc
+	}{
+		{
+			name: "no output valid id",
+			fields: fields{
+				OutputOpts: cli.OutputOpts{},
+				name:       "62bdbde098ecb26e563edf84",
+			},
+			wantErr: require.NoError,
+		},
+		{
+			name: "no output invalid id",
+			fields: fields{
+				OutputOpts: cli.OutputOpts{},
+				name:       "test",
+			},
+			wantErr: require.Error,
+		},
+		{
+			name: "json output valid id",
+			fields: fields{
+				OutputOpts: cli.OutputOpts{Output: "json"},
+				name:       "test",
+			},
+			wantErr: require.NoError,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			opts := &DescribeOpts{
+				OutputOpts: tt.fields.OutputOpts,
+				name:       tt.fields.name,
+			}
+			tt.wantErr(t, opts.validateArg())
+		})
+	}
 }

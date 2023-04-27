@@ -47,7 +47,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Export job created in a bucket with ID '{{.ExportBucketId}}'.\n"
+var createTemplate = "Export job '{{.ID}}' created in a bucket with ID '{{.ExportBucketId}}'.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newExportJob()

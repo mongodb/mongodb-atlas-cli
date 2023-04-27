@@ -206,7 +206,7 @@ dbName and collection are required only for built-in roles.`
 	NotificationType                          = "Type of alert notification. Valid values are DATADOG, EMAIL, FLOWDOCK, GROUP (Project), ORG, OPS_GENIE, PAGER_DUTY, SLACK, SMS, USER, or VICTOR_OPS."
 	NotificationUsername                      = "Name of the Atlas user to which to send notifications."
 	NotificationVictorOpsRoutingKey           = "Routing key associated with your Splunk On-Call account."
-	SnapshotID                                = "Unique identifier of the snapshot to restore. You must specify a snapshotId for automated restores."
+	SnapshotID                                = "Unique identifier of the snapshot."
 	SnapshotDescription                       = "Description of the on-demand snapshot."
 	Database                                  = "Name of the database."
 	DatabaseUser                              = "Username of a database user."

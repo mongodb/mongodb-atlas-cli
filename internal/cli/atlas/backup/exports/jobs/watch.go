@@ -65,7 +65,7 @@ func (opts *WatchOpts) Run() error {
 func WatchBuilder() *cobra.Command {
 	opts := new(WatchOpts)
 	cmd := &cobra.Command{
-		Use:   "watch <bucketId>",
+		Use:   "watch <exportJobId>",
 		Short: "Watch for the specified export job to complete.",
 		Long: `This command checks the export job's status periodically until it reaches a completed, cancelled or failed status. 
 Once the export reaches the expected status, the command prints "Export completed."
@@ -74,8 +74,8 @@ You can interrupt the command's polling at any time with CTRL-C.
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
-			"bucketIdDesc": "Unique string that identifies the AWS S3 bucket to which you export your snapshots.",
-			"output":       watchTemplate,
+			"exportJobIdDesc": "Unique string that identifies the export job.",
+			"output":          watchTemplate,
 		},
 		Example: fmt.Sprintf(`  # Watch the continuous backup restore job with the ID 507f1f77bcf86cd799439011 for the cluster named Cluster0 until it becomes available:
   %s backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),

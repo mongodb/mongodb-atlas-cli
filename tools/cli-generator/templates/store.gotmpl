@@ -25,27 +25,37 @@ import (
 
 //go:generate mockgen -destination=../mocks/mock_{{ .BaseFileName }}.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store {{ .InterfaceNames }}
 
+{{ if .Lister }}
 type {{ .Lister.Name }} interface {
 	{{ .Lister.Method }} (string) ( {{ .Lister.ReturnType }} , error)
 }
+{{ end }}
 
+{{ if .Creator }}
 type {{ .Creator.Name }} interface {
 	{{ .Creator.Method }}(string, {{ .Creator.ArgType }} ) ( {{ .Creator.ReturnType }} , error)
 }
+{{ end }}
 
+{{ if .Deleter }}
 type {{ .Deleter.Name }} interface {
 	{{ .Deleter.Method }}(string,string) error
 }
+{{ end }}
 
+{{ if .Describer }}
 type {{ .Describer.Name }} interface {
 	{{ .Describer.Method }}(string,string) ({{ .Describer.ReturnType }}, error)
 }
+{{ end }}
 
+{{ if .Updater }}
 type {{ .Updater.Name }} interface {
 	{{ .Updater.Method }}(string,string,{{ .Updater.ArgType }}) ({{ .Updater.ReturnType }}, error)
 }
+{{ end }}
 
-
+{{ if .Lister }}
 // {{ .Lister.Method }} encapsulates the logic to manage different cloud providers.
 func (s *Store) {{ .Lister.Method }}(projectID string) ({{ .Lister.ReturnType }}, error) {
 	switch s.service {
@@ -56,8 +66,9 @@ func (s *Store) {{ .Lister.Method }}(projectID string) ({{ .Lister.ReturnType }}
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
+{{ end }}
 
-
+{{ if .Describer }}
 // {{ .Describer.Method }} encapsulates the logic to manage different cloud providers.
 func (s *Store) {{ .Describer.Method }}(projectID, id string) ({{ .Describer.ReturnType }}, error) {
 	switch s.service {
@@ -68,7 +79,9 @@ func (s *Store) {{ .Describer.Method }}(projectID, id string) ({{ .Describer.Ret
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
+{{ end }}
 
+{{ if .Creator }}
 // {{ .Creator.Method }} encapsulates the logic to manage different cloud providers.
 func (s *Store) {{ .Creator.Method }}(projectID string, opts {{ .Creator.ArgType }}) ({{ .Creator.ReturnType }}, error) {
 	switch s.service {
@@ -79,7 +92,9 @@ func (s *Store) {{ .Creator.Method }}(projectID string, opts {{ .Creator.ArgType
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
+{{ end }}
 
+{{ if .Updater }}
 // {{ .Updater.Method }} encapsulates the logic to manage different cloud providers.
 func (s *Store) {{ .Updater.Method }}(projectID, id string, opts {{ .Updater.ArgType }}) ({{ .Updater.ReturnType }}, error) {
 	switch s.service {
@@ -90,8 +105,9 @@ func (s *Store) {{ .Updater.Method }}(projectID, id string, opts {{ .Updater.Arg
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
+{{ end }}
 
-
+{{ if .Deleter }}
 // {{ .Deleter.Method }} encapsulates the logic to manage different cloud providers.
 func (s *Store) {{ .Deleter.Method }}(projectID, id string) error {
 	switch s.service {
@@ -102,3 +118,4 @@ func (s *Store) {{ .Deleter.Method }}(projectID, id string) error {
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
+{{ end }}

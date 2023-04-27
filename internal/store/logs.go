@@ -86,7 +86,9 @@ func (s *Store) DownloadLog(groupID, host, name string, out io.Writer, opts *atl
 		start, _ := strconv.ParseInt(opts.StartDate, 10, 64)
 		end, _ := strconv.ParseInt(opts.EndDate, 10, 64)
 		logs, _, err := s.clientv2.MonitoringAndLogsApi.GetHostLogs(s.ctx, groupID, host, name).StartDate(start).EndDate(end).Execute()
-		io.Copy(out, logs)
+		if logs != nil {
+			io.Copy(out, logs)
+		}
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

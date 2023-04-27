@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const victorOpsIntegrationType = "VICTOR_OPS"
@@ -56,11 +57,13 @@ func (opts *VictorOpsOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *VictorOpsOpts) newVictorOpsIntegration() *atlas.ThirdPartyIntegration {
-	return &atlas.ThirdPartyIntegration{
-		Type:       victorOpsIntegrationType,
-		APIKey:     opts.apiKey,
-		RoutingKey: opts.routingKey,
+func (opts *VictorOpsOpts) newVictorOpsIntegration() *atlasv2.Integration {
+	return &atlasv2.Integration{
+		VictorOps: &atlasv2.VictorOps{
+			Type:       pointer.Get(victorOpsIntegrationType),
+			ApiKey:     opts.apiKey,
+			RoutingKey: &opts.routingKey,
+		},
 	}
 }
 

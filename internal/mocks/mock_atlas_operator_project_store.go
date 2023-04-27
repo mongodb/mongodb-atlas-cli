@@ -111,10 +111,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) EncryptionAtRest(arg0 inter
 }
 
 // Integrations mocks base method.
-func (m *MockAtlasOperatorProjectStore) Integrations(arg0 string) (*mongodbatlasv2.GroupPaginatedIntegration, error) {
+func (m *MockAtlasOperatorProjectStore) Integrations(arg0 string) (*mongodbatlasv2.PaginatedIntegration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Integrations", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.GroupPaginatedIntegration)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedIntegration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

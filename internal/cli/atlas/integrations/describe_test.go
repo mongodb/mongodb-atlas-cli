@@ -35,7 +35,7 @@ func TestDescribe_Run(t *testing.T) {
 		integrationType: "SLACK",
 	}
 
-	expected := &atlasv2.IntegrationViewForNdsGroup{}
+	expected := &atlasv2.Integration{}
 	mockStore.
 		EXPECT().
 		Integration(describeOpts.ProjectID, describeOpts.integrationType).

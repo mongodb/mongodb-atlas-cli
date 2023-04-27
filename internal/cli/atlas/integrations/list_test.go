@@ -30,7 +30,7 @@ func TestDBUserList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIntegrationLister(ctrl)
 
-	var expected *atlasv2.GroupPaginatedIntegration
+	var expected *atlasv2.PaginatedIntegration
 
 	listOpts := &ListOpts{
 		store: mockStore,

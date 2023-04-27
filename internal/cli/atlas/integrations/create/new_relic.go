@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const newRelicIntegrationType = "NEW_RELIC"
@@ -58,13 +59,15 @@ func (opts *NewRelicOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *NewRelicOpts) newNewRelicIntegration() *atlas.ThirdPartyIntegration {
-	return &atlas.ThirdPartyIntegration{
-		Type:       newRelicIntegrationType,
-		LicenseKey: opts.licenseKey,
-		AccountID:  opts.accountID,
-		WriteToken: opts.writeToken,
-		ReadToken:  opts.readToken,
+func (opts *NewRelicOpts) newNewRelicIntegration() *atlasv2.Integration {
+	return &atlasv2.Integration{
+		NewRelic: &atlasv2.NewRelic{
+			Type:       pointer.Get(newRelicIntegrationType),
+			LicenseKey: opts.licenseKey,
+			AccountId:  opts.accountID,
+			WriteToken: opts.writeToken,
+			ReadToken:  opts.readToken,
+		},
 	}
 }
 

@@ -379,13 +379,6 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 			if includeSecrets {
 				secret.Data[secrets.PasswordField] = []byte(list.OpsGenie.ApiKey)
 			}
-		//case "FLOWDOCK":
-		//	integration.FlowName = list.FlowName
-		//	integration.OrgName = list.OrgName
-		//	integration.APITokenRef = secretRef
-		//	if includeSecrets {
-		//		secret.Data[secrets.PasswordField] = []byte(list.APIToken)
-		//	}
 		case "WEBHOOK":
 			integration.URL = list.Webhook.Url
 			integration.SecretRef = secretRef
@@ -448,7 +441,7 @@ func getIntegrationType(val reflect.Value) string {
 		field := val.Field(i)
 		if !field.IsNil() {
 			nameField := field.Elem().FieldByName("Type")
-			return fmt.Sprintf("%s", *nameField.Interface().(*string))
+			return *nameField.Interface().(*string)
 		}
 	}
 	return ""

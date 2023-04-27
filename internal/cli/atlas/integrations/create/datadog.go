@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const datadogType = "DATADOG"
@@ -56,11 +57,13 @@ func (opts *DatadogOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *DatadogOpts) newDatadogIntegration() *atlas.ThirdPartyIntegration {
-	return &atlas.ThirdPartyIntegration{
-		Type:   datadogType,
-		APIKey: opts.apiKey,
-		Region: opts.region,
+func (opts *DatadogOpts) newDatadogIntegration() *atlasv2.Integration {
+	return &atlasv2.Integration{
+		Datadog: &atlasv2.Datadog{
+			Type:   pointer.Get(datadogType),
+			ApiKey: opts.apiKey,
+			Region: &opts.region,
+		},
 	}
 }
 

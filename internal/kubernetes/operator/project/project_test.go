@@ -18,7 +18,6 @@ package project
 
 import (
 	"fmt"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"reflect"
 	"strings"
 	"testing"
@@ -114,9 +113,9 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 		}
 
-		thirdPartyIntegrations := &atlasv2.GroupPaginatedIntegration{
+		thirdPartyIntegrations := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []atlasv2.IntegrationViewForNdsGroup{
+			Results: []atlasv2.Integration{
 				{
 					Prometheus: &atlasv2.Prometheus{
 						Type:             pointer.Get("PROMETHEUS"),
@@ -888,9 +887,9 @@ func Test_buildIntegrations(t *testing.T) {
 	t.Run("Can convert third-party integrations WITH secrets: Prometheus", func(t *testing.T) {
 		const targetNamespace = "test-namespace-3"
 		const includeSecrets = true
-		ints := &atlasv2.GroupPaginatedIntegration{
+		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []atlasv2.IntegrationViewForNdsGroup{
+			Results: []atlasv2.Integration{
 				{
 					Prometheus: &atlasv2.Prometheus{
 						Type:             pointer.Get("PROMETHEUS"),
@@ -956,9 +955,9 @@ func Test_buildIntegrations(t *testing.T) {
 	t.Run("Can convert third-party integrations WITHOUT secrets: Prometheus", func(t *testing.T) {
 		const targetNamespace = "test-namespace-4"
 		const includeSecrets = false
-		ints := &atlasv2.GroupPaginatedIntegration{
+		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []atlasv2.IntegrationViewForNdsGroup{
+			Results: []atlasv2.Integration{
 				{
 					Prometheus: &atlasv2.Prometheus{
 						Type:             pointer.Get("PROMETHEUS"),

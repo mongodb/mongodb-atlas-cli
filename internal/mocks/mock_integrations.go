@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -36,10 +35,10 @@ func (m *MockIntegrationCreator) EXPECT() *MockIntegrationCreatorMockRecorder {
 }
 
 // CreateIntegration mocks base method.
-func (m *MockIntegrationCreator) CreateIntegration(arg0, arg1 string, arg2 *mongodbatlas.ThirdPartyIntegration) (*mongodbatlasv2.GroupPaginatedIntegration, error) {
+func (m *MockIntegrationCreator) CreateIntegration(arg0, arg1 string, arg2 *mongodbatlasv2.Integration) (*mongodbatlasv2.PaginatedIntegration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateIntegration", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlasv2.GroupPaginatedIntegration)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedIntegration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -74,10 +73,10 @@ func (m *MockIntegrationLister) EXPECT() *MockIntegrationListerMockRecorder {
 }
 
 // Integrations mocks base method.
-func (m *MockIntegrationLister) Integrations(arg0 string) (*mongodbatlasv2.GroupPaginatedIntegration, error) {
+func (m *MockIntegrationLister) Integrations(arg0 string) (*mongodbatlasv2.PaginatedIntegration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Integrations", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.GroupPaginatedIntegration)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedIntegration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -149,10 +148,10 @@ func (m *MockIntegrationDescriber) EXPECT() *MockIntegrationDescriberMockRecorde
 }
 
 // Integration mocks base method.
-func (m *MockIntegrationDescriber) Integration(arg0, arg1 string) (*mongodbatlasv2.IntegrationViewForNdsGroup, error) {
+func (m *MockIntegrationDescriber) Integration(arg0, arg1 string) (*mongodbatlasv2.Integration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Integration", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.IntegrationViewForNdsGroup)
+	ret0, _ := ret[0].(*mongodbatlasv2.Integration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

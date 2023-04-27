@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const opsGenieType = "OPS_GENIE"
@@ -56,11 +57,13 @@ func (opts *OpsGenieOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlas.ThirdPartyIntegration {
-	return &atlas.ThirdPartyIntegration{
-		Type:   opsGenieType,
-		Region: opts.region,
-		APIKey: opts.apiKey,
+func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlasv2.Integration {
+	return &atlasv2.Integration{
+		OpsGenie: &atlasv2.OpsGenie{
+			Type:   pointer.Get(opsGenieType),
+			Region: &opts.region,
+			ApiKey: opts.apiKey,
+		},
 	}
 }
 

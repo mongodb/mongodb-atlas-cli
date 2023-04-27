@@ -34,7 +34,7 @@ func TestVictorOpsOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.GroupPaginatedIntegration{}
+	expected := &atlasv2.PaginatedIntegration{}
 	mockStore.
 		EXPECT().
 		CreateIntegration(opts.ProjectID, victorOpsIntegrationType, opts.newVictorOpsIntegration()).

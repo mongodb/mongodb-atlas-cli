@@ -23,12 +23,14 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"reflect"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const (
@@ -412,15 +414,27 @@ func MongoDBMajorVersion() (string, error) {
 	return version, nil
 }
 
-//func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations) bool {
-//	services := thirdPartyIntegrations.Results
-//	for i := range services {
-//		if services[i].Type == name {
-//			return true
-//		}
-//	}
-//	return false
-//}
+func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedIntegration) bool {
+	services := thirdPartyIntegrations.Results
+	for i := range services {
+		iType := getIntegrationType(reflect.ValueOf(services[i]))
+		if iType == name {
+			return true
+		}
+	}
+	return false
+}
+
+func getIntegrationType(val reflect.Value) string {
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Field(i)
+		if !field.IsNil() {
+			nameField := field.Elem().FieldByName("Type")
+			return *nameField.Interface().(*string)
+		}
+	}
+	return ""
+}
 
 func IsGov() bool {
 	return os.Getenv("MCLI_SERVICE") == "cloudgov"

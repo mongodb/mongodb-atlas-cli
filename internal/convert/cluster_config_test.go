@@ -839,7 +839,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Name:                "test_config",
 						Collections:         make([]*map[string]interface{}, 0),
 						Draining:            make([]string, 0),
-						Tags:                make([]string, 0),
+						Tags:                make([]*map[string]interface{}, 0),
 						Shards: []*opsmngr.Shard{
 							{
 								ID:   "myShard_0",
@@ -1076,7 +1076,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Name:                "test_config",
 						Collections:         make([]*map[string]interface{}, 0),
 						Draining:            make([]string, 0),
-						Tags:                make([]string, 0),
+						Tags:                make([]*map[string]interface{}, 0),
 						Shards: []*opsmngr.Shard{
 							// Old
 							{

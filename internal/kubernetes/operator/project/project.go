@@ -51,6 +51,15 @@ const (
 	featureCustomRoles              = "customRoles"
 	featureTeams                    = "teams"
 	cidrException                   = "/32"
+	datadogIntegrationType          = "DATADOG"
+	newRelicIntegrationType         = "NEW_RELIC"
+	opsGenieIntegrationType         = "OPS_GENIE"
+	pagerDutyIntegrationType        = "PAGER_DUTY"
+	victorOpsIntegrationType        = "VICTOR_OPS"
+	webhookIntegrationType          = "WEBHOOK"
+	microsoftTeamsIntegrationType   = "MICROSOFT_TEAMS"
+	slackIntegrationType            = "SLACK"
+	prometheusIntegrationType       = "PROMETHEUS"
 )
 
 var (
@@ -356,38 +365,38 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 			Namespace: targetNamespace,
 		}
 		switch iType {
-		case "PAGER_DUTY":
+		case pagerDutyIntegrationType:
 			integration.ServiceKeyRef = secretRef
 			if includeSecrets {
 				secret.Data[secrets.PasswordField] = []byte(list.PagerDuty.ServiceKey)
 			}
-		case "SLACK":
+		case slackIntegrationType:
 			integration.TeamName = list.Slack.GetTeamName()
 			integration.APITokenRef = secretRef
 			if includeSecrets {
 				secret.Data[secrets.PasswordField] = []byte(list.Slack.ApiToken)
 			}
-		case "DATADOG":
+		case datadogIntegrationType:
 			integration.Region = list.Datadog.GetRegion()
 			integration.APIKeyRef = secretRef
 			if includeSecrets {
 				secret.Data[secrets.PasswordField] = []byte(list.Datadog.ApiKey)
 			}
-		case "OPS_GENIE":
+		case opsGenieIntegrationType:
 			integration.Region = list.OpsGenie.GetRegion()
 			integration.APIKeyRef = secretRef
 			if includeSecrets {
 				secret.Data[secrets.PasswordField] = []byte(list.OpsGenie.ApiKey)
 			}
-		case "WEBHOOK":
+		case webhookIntegrationType:
 			integration.URL = list.Webhook.Url
 			integration.SecretRef = secretRef
 			if includeSecrets {
 				secret.Data[secrets.PasswordField] = []byte(list.Webhook.GetSecret())
 			}
-		case "MICROSOFT_TEAMS":
+		case microsoftTeamsIntegrationType:
 			integration.MicrosoftTeamsWebhookURL = list.MicrosoftTeams.MicrosoftTeamsWebhookUrl
-		case "PROMETHEUS":
+		case prometheusIntegrationType:
 			integration.UserName = list.Prometheus.Username
 			integration.PasswordRef = secretRef
 			integration.ServiceDiscovery = list.Prometheus.ServiceDiscovery
@@ -395,7 +404,7 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 			if includeSecrets {
 				secret.Data[secrets.PasswordField] = []byte(list.Prometheus.GetPassword())
 			}
-		case "VICTOR_OPS": // One more secret required
+		case victorOpsIntegrationType: // One more secret required
 			integration.APIKeyRef = secretRef
 			secret.Data[secrets.PasswordField] = []byte(list.VictorOps.ApiKey)
 
@@ -410,7 +419,7 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 					map[string][]byte{secrets.PasswordField: []byte(routingKeyData)}, dictionary)
 				intSecrets = append(intSecrets, routingSecret)
 			}
-		case "NEW_RELIC":
+		case newRelicIntegrationType:
 			integration.LicenseKeyRef = secretRef
 			secret.Data[secrets.PasswordField] = []byte(list.NewRelic.LicenseKey)
 			// Secrets with write and read tokens
@@ -438,23 +447,23 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 
 func getIntegrationType(val atlasv2.Integration) string {
 	if val.Datadog != nil {
-		return "DATADOG"
+		return datadogIntegrationType
 	} else if val.MicrosoftTeams != nil {
-		return "MICROSOFT_TEAMS"
+		return microsoftTeamsIntegrationType
 	} else if val.NewRelic != nil {
-		return "NEW_RELIC"
+		return newRelicIntegrationType
 	} else if val.OpsGenie != nil {
-		return "OPS_GENIE"
+		return opsGenieIntegrationType
 	} else if val.PagerDuty != nil {
-		return "PAGER_DUTY"
+		return pagerDutyIntegrationType
 	} else if val.Prometheus != nil {
-		return "PROMETHEUS"
+		return prometheusIntegrationType
 	} else if val.Slack != nil {
-		return "SLACK"
+		return slackIntegrationType
 	} else if val.VictorOps != nil {
-		return "VICTOR_OPS"
+		return victorOpsIntegrationType
 	} else if val.Webhook != nil {
-		return "WEBHOOK"
+		return webhookIntegrationType
 	} else {
 		return ""
 	}

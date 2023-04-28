@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-
 	"github.com/spf13/cobra"
 )
 
@@ -83,7 +82,7 @@ func ListBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.pipelineName, flag.Pipeline, "", usage.Pipeline)
-	cmd.MarkFlagRequired(flag.Pipeline)
+	_ = cmd.MarkFlagRequired(flag.Pipeline)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

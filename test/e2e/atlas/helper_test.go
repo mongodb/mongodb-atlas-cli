@@ -23,7 +23,6 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
-	"reflect"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
@@ -99,11 +98,15 @@ const (
 // Integration constants.
 
 const (
-	datadogEntity   = "DATADOG"
-	opsGenieEntity  = "OPS_GENIE"
-	pagerDutyEntity = "PAGER_DUTY"
-	victorOpsEntity = "VICTOR_OPS"
-	webhookEntity   = "WEBHOOK"
+	datadogEntity        = "DATADOG"
+	opsGenieEntity       = "OPS_GENIE"
+	pagerDutyEntity      = "PAGER_DUTY"
+	victorOpsEntity      = "VICTOR_OPS"
+	webhookEntity        = "WEBHOOK"
+	microsoftTeamsEntity = "MICROSOFT_TEAMS"
+	slackEntity          = "SLACK"
+	prometheusEntity     = "PROMETHEUS"
+	newRelicEntity       = "NEW_RELIC"
 )
 
 // Cluster settings.
@@ -417,7 +420,7 @@ func MongoDBMajorVersion() (string, error) {
 func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedIntegration) bool {
 	services := thirdPartyIntegrations.Results
 	for i := range services {
-		iType := getIntegrationType(reflect.ValueOf(services[i]))
+		iType := getIntegrationType(services[i])
 		if iType == name {
 			return true
 		}
@@ -425,15 +428,29 @@ func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedInte
 	return false
 }
 
-func getIntegrationType(val reflect.Value) string {
-	for i := 0; i < val.NumField(); i++ {
-		field := val.Field(i)
-		if !field.IsNil() {
-			nameField := field.Elem().FieldByName("Type")
-			return *nameField.Interface().(*string)
-		}
+func getIntegrationType(val atlasv2.Integration) string {
+	switch {
+	case val.Datadog != nil:
+		return datadogEntity
+	case val.MicrosoftTeams != nil:
+		return microsoftTeamsEntity
+	case val.NewRelic != nil:
+		return newRelicEntity
+	case val.OpsGenie != nil:
+		return opsGenieEntity
+	case val.PagerDuty != nil:
+		return pagerDutyEntity
+	case val.Prometheus != nil:
+		return prometheusEntity
+	case val.Slack != nil:
+		return slackEntity
+	case val.VictorOps != nil:
+		return victorOpsEntity
+	case val.Webhook != nil:
+		return webhookEntity
+	default:
+		return ""
 	}
-	return ""
 }
 
 func IsGov() bool {

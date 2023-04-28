@@ -78,7 +78,7 @@ func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
 func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.DatabaseUsersApi.ListDatabaseUsers(s.ctx, projectID).ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum)).IncludeCount(opts.IncludeCount).Execute()
+		result, _, err := s.clientv2.DatabaseUsersApi.ListDatabaseUsers(s.ctx, projectID).ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum)).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -112,7 +112,7 @@ func (s *Store) DBUserCertificates(projectID, username string, opts *atlas.ListO
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.X509AuthenticationApi.ListDatabaseUserCertificates(s.ctx, projectID, username)
 		if opts != nil {
-			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount)
+			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
 		}
 		result, _, err := res.Execute()
 		return result, err

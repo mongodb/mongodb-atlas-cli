@@ -468,7 +468,6 @@ func getIntegrationType(val atlasv2.Integration) string {
 	default:
 		return ""
 	}
-
 }
 
 func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID string) ([]atlasV1.PrivateEndpoint, error) {

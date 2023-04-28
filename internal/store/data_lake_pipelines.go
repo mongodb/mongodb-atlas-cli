@@ -130,7 +130,6 @@ func (s *Store) PipelineAvailableSnapshots(projectID, pipelineName string, compl
 			request = request.CompletedAfter(*completedAfter)
 		}
 		if listOps != nil {
-			request = request.IncludeCount(listOps.IncludeCount)
 			request = request.ItemsPerPage(int32(listOps.ItemsPerPage))
 			request = request.PageNum(int32(listOps.PageNum))
 		}

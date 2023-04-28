@@ -17,7 +17,6 @@ package project
 import (
 	"errors"
 	"fmt"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
@@ -31,6 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -446,27 +446,29 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 }
 
 func getIntegrationType(val atlasv2.Integration) string {
-	if val.Datadog != nil {
+	switch {
+	case val.Datadog != nil:
 		return datadogIntegrationType
-	} else if val.MicrosoftTeams != nil {
+	case val.MicrosoftTeams != nil:
 		return microsoftTeamsIntegrationType
-	} else if val.NewRelic != nil {
+	case val.NewRelic != nil:
 		return newRelicIntegrationType
-	} else if val.OpsGenie != nil {
+	case val.OpsGenie != nil:
 		return opsGenieIntegrationType
-	} else if val.PagerDuty != nil {
+	case val.PagerDuty != nil:
 		return pagerDutyIntegrationType
-	} else if val.Prometheus != nil {
+	case val.Prometheus != nil:
 		return prometheusIntegrationType
-	} else if val.Slack != nil {
+	case val.Slack != nil:
 		return slackIntegrationType
-	} else if val.VictorOps != nil {
+	case val.VictorOps != nil:
 		return victorOpsIntegrationType
-	} else if val.Webhook != nil {
+	case val.Webhook != nil:
 		return webhookIntegrationType
-	} else {
+	default:
 		return ""
 	}
+
 }
 
 func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID string) ([]atlasV1.PrivateEndpoint, error) {

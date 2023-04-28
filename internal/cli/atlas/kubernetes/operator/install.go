@@ -83,7 +83,6 @@ func (opts *InstallOpts) ValidateOperatorVersion() error {
 	}
 
 	if !isSupported {
-		fmt.Println("Supported: ", isSupported)
 		return fmt.Errorf("version %s is not supported", opts.operatorVersion)
 	}
 
@@ -164,7 +163,6 @@ func InstallBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.defaults,
 				opts.ValidateOrgID,
-				opts.ValidateProjectID,
 				opts.ValidateOperatorVersion,
 				opts.ValidateTargetNamespace,
 				opts.ValidateWatchNamespace,

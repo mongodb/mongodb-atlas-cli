@@ -22,14 +22,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-const newRelicIntegrationType = "NEW_RELIC"
+var newRelicIntegrationType = "NEW_RELIC"
 
 type NewRelicOpts struct {
 	cli.GlobalOpts
@@ -62,7 +61,7 @@ func (opts *NewRelicOpts) Run() error {
 func (opts *NewRelicOpts) newNewRelicIntegration() *atlasv2.Integration {
 	return &atlasv2.Integration{
 		NewRelic: &atlasv2.NewRelic{
-			Type:       pointer.Get(newRelicIntegrationType),
+			Type:       &newRelicIntegrationType,
 			LicenseKey: opts.licenseKey,
 			AccountId:  opts.accountID,
 			WriteToken: opts.writeToken,

@@ -17,7 +17,7 @@ package project
 import (
 	"errors"
 	"fmt"
-	"reflect"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
@@ -344,7 +344,7 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	var intSecrets []*corev1.Secret
 
 	for _, list := range integrations.Results {
-		iType := getIntegrationType(reflect.ValueOf(list))
+		iType := getIntegrationType(list)
 		secret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s", projectID, strings.ToLower(iType)),
 			targetNamespace, map[string][]byte{secrets.PasswordField: []byte("")}, dictionary)
 
@@ -436,15 +436,28 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	return result, intSecrets, nil
 }
 
-func getIntegrationType(val reflect.Value) string {
-	for i := 0; i < val.NumField(); i++ {
-		field := val.Field(i)
-		if !field.IsNil() {
-			nameField := field.Elem().FieldByName("Type")
-			return *nameField.Interface().(*string)
-		}
+func getIntegrationType(val atlasv2.Integration) string {
+	if val.Datadog != nil {
+		return "DATADOG"
+	} else if val.MicrosoftTeams != nil {
+		return "MICROSOFT_TEAMS"
+	} else if val.NewRelic != nil {
+		return "NEW_RELIC"
+	} else if val.OpsGenie != nil {
+		return "OPS_GENIE"
+	} else if val.PagerDuty != nil {
+		return "PAGER_DUTY"
+	} else if val.Prometheus != nil {
+		return "PROMETHEUS"
+	} else if val.Slack != nil {
+		return "SLACK"
+	} else if val.VictorOps != nil {
+		return "VICTOR_OPS"
+	} else if val.Webhook != nil {
+		return "WEBHOOK"
+	} else {
+		return ""
 	}
-	return ""
 }
 
 func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID string) ([]atlasV1.PrivateEndpoint, error) {

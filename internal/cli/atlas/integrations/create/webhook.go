@@ -22,14 +22,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-const webhookIntegrationType = "WEBHOOK"
+var webhookIntegrationType = "WEBHOOK"
 
 type WebhookOpts struct {
 	cli.GlobalOpts
@@ -60,7 +59,7 @@ func (opts *WebhookOpts) Run() error {
 func (opts *WebhookOpts) newWebhookIntegration() *atlasv2.Integration {
 	return &atlasv2.Integration{
 		Webhook: &atlasv2.Webhook{
-			Type:   pointer.Get(webhookIntegrationType),
+			Type:   &webhookIntegrationType,
 			Url:    opts.url,
 			Secret: &opts.secret,
 		},

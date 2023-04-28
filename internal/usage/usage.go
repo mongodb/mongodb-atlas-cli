@@ -418,4 +418,5 @@ dbName and collection are required only for built-in roles.`
 	Transform                                 = "Fields to be excluded for this data lake pipeline."
 	PipelineFilename                          = "Name of the JSON data lake pipeline configuration file to use."
 	Pipeline                                  = "Name of the Data lake pipeline."
+	CompletedAfter                            = "Date filter of which the backup snapshots where completed. Format must be YYYY-MM-DD"
 )

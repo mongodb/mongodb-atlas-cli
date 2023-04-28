@@ -18,12 +18,14 @@ package store
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-//go:generate mockgen -destination=../mocks/mock_data_lake_pipelines.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PipelinesLister,PipelinesDescriber,PipelinesCreator,PipelinesUpdater,PipelinesDeleter
+//go:generate mockgen -destination=../mocks/mock_data_lake_pipelines.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PipelinesLister,PipelinesDescriber,PipelinesCreator,PipelinesUpdater,PipelinesDeleter,PipelineAvailableSnapshotsLister,PipelineAvailableSchedulesLister
 
 type PipelinesLister interface {
 	Pipelines(string) ([]atlasv2.IngestionPipeline, error)
@@ -43,6 +45,14 @@ type PipelinesDescriber interface {
 
 type PipelinesUpdater interface {
 	UpdatePipeline(string, string, atlasv2.IngestionPipeline) (*atlasv2.IngestionPipeline, error)
+}
+
+type PipelineAvailableSnapshotsLister interface {
+	PipelineAvailableSnapshots(string, string, *time.Time, *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshot, error)
+}
+
+type PipelineAvailableSchedulesLister interface {
+	PipelineAvailableSchedules(string, string) ([]atlasv2.PolicyItem, error)
 }
 
 // Pipelines encapsulates the logic to manage different cloud providers.
@@ -97,5 +107,36 @@ func (s *Store) DeletePipeline(projectID, id string) error {
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// PipelineAvailableSchedules encapsulates the logic to manage different cloud providers.
+func (s *Store) PipelineAvailableSchedules(projectID, pipelineName string) ([]atlasv2.PolicyItem, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.DataLakePipelinesApi.ListPipelineSchedules(s.ctx, projectID, pipelineName).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// PipelineAvailableSnapshots encapsulates the logic to manage different cloud providers.
+func (s *Store) PipelineAvailableSnapshots(projectID, pipelineName string, completedAfter *time.Time, listOps *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshot, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		request := s.clientv2.DataLakePipelinesApi.ListPipelineSnapshots(s.ctx, projectID, pipelineName)
+		if completedAfter != nil {
+			request = request.CompletedAfter(*completedAfter)
+		}
+		if listOps != nil {
+			request = request.IncludeCount(listOps.IncludeCount)
+			request = request.ItemsPerPage(int32(listOps.ItemsPerPage))
+			request = request.PageNum(int32(listOps.PageNum))
+		}
+		result, _, err := request.Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

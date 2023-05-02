@@ -67,7 +67,7 @@ func DatabasesDescribeBuilder() *cobra.Command {
 		Short: "Describe database measurements for a given host database.",
 		Args:  require.ExactArgs(argsN),
 		Example: `# List metrics for the database test of the process e4ac1e57c58cc9c8aaa5a1163a851993
-mongocli ops-manager metrics disk describe e4ac1e57c58cc9c8aaa5a1163a851993 test --period P1DT12H --granularity PT5`,
+mongocli ops-manager metrics database describe e4ac1e57c58cc9c8aaa5a1163a851993 test --period P1DT12H --granularity PT5`,
 		Annotations: map[string]string{
 			"hostIdDesc": "Process identifier. You can use mongocli ops-manager processes list to get the ID.",
 			"nameDesc":   "Database name.",

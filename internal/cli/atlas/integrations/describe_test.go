@@ -61,8 +61,8 @@ func TestDescribe_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	assert.Equal(t, `TYPE       API TOKEN   TEAM       CHANNEL
-testType   testToken   testTeam    testChannel 
+	assert.Equal(t, `TYPE    API TOKEN   TEAM       CHANNEL
+SLACK   testToken   testTeam    testChannel 
 `, buf.String())
 	t.Log(buf.String())
 }

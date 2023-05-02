@@ -89,7 +89,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   Export job '<ID>' created in a bucket with ID '<ExportBucketId>'.
+   Export job '<Id>' created in a bucket with ID '<ExportBucketId>'.
    
 
 Examples

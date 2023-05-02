@@ -8,7 +8,7 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.4.0
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.2.2
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys v0.9.0
-	github.com/Masterminds/semver/v3 v3.2.0
+	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/aws/aws-sdk-go-v2 v1.17.8
@@ -42,7 +42,7 @@ require (
 	go.mongodb.org/atlas v0.25.1-0.20230421170813-9eea278953c4
 	go.mongodb.org/mongo-driver v1.11.4
 	go.mongodb.org/ops-manager v0.48.0
-	golang.org/x/crypto v0.7.0
+	golang.org/x/crypto v0.8.0
 	golang.org/x/mod v0.10.0
 	golang.org/x/tools v0.8.0
 	google.golang.org/api v0.114.0

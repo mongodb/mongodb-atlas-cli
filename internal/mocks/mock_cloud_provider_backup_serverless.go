@@ -74,10 +74,10 @@ func (m *MockServerlessSnapshotsDescriber) EXPECT() *MockServerlessSnapshotsDesc
 }
 
 // ServerlessSnapshot mocks base method.
-func (m *MockServerlessSnapshotsDescriber) ServerlessSnapshot(arg0, arg1, arg2 string) (*mongodbatlas.CloudProviderSnapshot, error) {
+func (m *MockServerlessSnapshotsDescriber) ServerlessSnapshot(arg0, arg1, arg2 string) (*mongodbatlasv2.ServerlessBackupSnapshot, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessSnapshot", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshot)
+	ret0, _ := ret[0].(*mongodbatlasv2.ServerlessBackupSnapshot)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

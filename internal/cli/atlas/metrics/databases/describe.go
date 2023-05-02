@@ -113,5 +113,9 @@ func DescribeBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired(flag.Granularity)
 
+	cmd.MarkFlagsRequiredTogether(flag.Start, flag.End)
+	cmd.MarkFlagsMutuallyExclusive(flag.Period, flag.Start)
+	cmd.MarkFlagsMutuallyExclusive(flag.Period, flag.End)
+
 	return cmd
 }

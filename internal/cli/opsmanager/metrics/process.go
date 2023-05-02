@@ -64,9 +64,11 @@ func ProcessBuilder() *cobra.Command {
 		Use:     "process <hostId>",
 		Short:   "Get measurements for a given host.",
 		Aliases: []string{"processes"},
-		Args:    require.ExactArgs(1),
+		Example: `# List metrics for the process e4ac1e57c58cc9c8aaa5a1163a851993
+  mongocli ops-manager metrics process e4ac1e57c58cc9c8aaa5a1163a851993 --period P1DT12H --granularity PT5`,
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
-			"hostIdDesc": "Process identifier.",
+			"hostIdDesc": "Process identifier. You can use mongocli ops-manager processes list to get the ID.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -91,6 +93,12 @@ func ProcessBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired(flag.Granularity)
+
+	cmd.MarkFlagsRequiredTogether(flag.Start, flag.End)
+	cmd.MarkFlagsMutuallyExclusive(flag.Period, flag.Start)
+	cmd.MarkFlagsMutuallyExclusive(flag.Period, flag.End)
 
 	return cmd
 }

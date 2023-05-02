@@ -65,7 +65,7 @@ func ProcessBuilder() *cobra.Command {
 		Short:   "Get measurements for a given host.",
 		Aliases: []string{"processes"},
 		Example: `# List metrics for the process e4ac1e57c58cc9c8aaa5a1163a851993
-mongocli ops-manager metrics process e4ac1e57c58cc9c8aaa5a1163a851993 --period P1DT12H --granularity PT5`,
+  mongocli ops-manager metrics process e4ac1e57c58cc9c8aaa5a1163a851993 --period P1DT12H --granularity PT5`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"hostIdDesc": "Process identifier. You can use mongocli ops-manager processes list to get the ID.",

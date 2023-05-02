@@ -44,7 +44,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplateSlack = `TYPE	API TOKEN	TEAM	CHANNEL
-{{.Slack.Type}}	{{.Slack.ApiToken}}	{{.Slack.TeamName}}	{{.Slack.ChannelName}}
+{{.Slack.Type}}	{{.Slack.ApiToken}}	{{.Slack.TeamName}}	{{if .Slack.ChannelName.IsSet}} {{ .Slack.ChannelName.Get }} {{end}}
 `
 var describeTemplateDatadogOpsGenie = `TYPE	API KEY	REGION
 {{.GetActualInstance.Type}}	{{.GetActualInstance.ApiKey}}	{{.GetActualInstance.Region}}

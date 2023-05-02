@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockPerformanceAdvisorNamespacesLister is a mock of PerformanceAdvisorNamespacesLister interface.
@@ -35,18 +35,18 @@ func (m *MockPerformanceAdvisorNamespacesLister) EXPECT() *MockPerformanceAdviso
 }
 
 // PerformanceAdvisorNamespaces mocks base method.
-func (m *MockPerformanceAdvisorNamespacesLister) PerformanceAdvisorNamespaces(arg0, arg1 string, arg2 *mongodbatlas.NamespaceOptions) (*mongodbatlas.Namespaces, error) {
+func (m *MockPerformanceAdvisorNamespacesLister) PerformanceAdvisorNamespaces(arg0 *mongodbatlasv2.ListSlowQueryNamespacesApiParams) (*mongodbatlasv2.Namespaces, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PerformanceAdvisorNamespaces", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.Namespaces)
+	ret := m.ctrl.Call(m, "PerformanceAdvisorNamespaces", arg0)
+	ret0, _ := ret[0].(*mongodbatlasv2.Namespaces)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // PerformanceAdvisorNamespaces indicates an expected call of PerformanceAdvisorNamespaces.
-func (mr *MockPerformanceAdvisorNamespacesListerMockRecorder) PerformanceAdvisorNamespaces(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockPerformanceAdvisorNamespacesListerMockRecorder) PerformanceAdvisorNamespaces(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PerformanceAdvisorNamespaces", reflect.TypeOf((*MockPerformanceAdvisorNamespacesLister)(nil).PerformanceAdvisorNamespaces), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PerformanceAdvisorNamespaces", reflect.TypeOf((*MockPerformanceAdvisorNamespacesLister)(nil).PerformanceAdvisorNamespaces), arg0)
 }
 
 // MockPerformanceAdvisorSlowQueriesLister is a mock of PerformanceAdvisorSlowQueriesLister interface.
@@ -73,18 +73,18 @@ func (m *MockPerformanceAdvisorSlowQueriesLister) EXPECT() *MockPerformanceAdvis
 }
 
 // PerformanceAdvisorSlowQueries mocks base method.
-func (m *MockPerformanceAdvisorSlowQueriesLister) PerformanceAdvisorSlowQueries(arg0, arg1 string, arg2 *mongodbatlas.SlowQueryOptions) (*mongodbatlas.SlowQueries, error) {
+func (m *MockPerformanceAdvisorSlowQueriesLister) PerformanceAdvisorSlowQueries(arg0 *mongodbatlasv2.ListSlowQueriesApiParams) (*mongodbatlasv2.PerformanceAdvisorSlowQueryList, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PerformanceAdvisorSlowQueries", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.SlowQueries)
+	ret := m.ctrl.Call(m, "PerformanceAdvisorSlowQueries", arg0)
+	ret0, _ := ret[0].(*mongodbatlasv2.PerformanceAdvisorSlowQueryList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // PerformanceAdvisorSlowQueries indicates an expected call of PerformanceAdvisorSlowQueries.
-func (mr *MockPerformanceAdvisorSlowQueriesListerMockRecorder) PerformanceAdvisorSlowQueries(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockPerformanceAdvisorSlowQueriesListerMockRecorder) PerformanceAdvisorSlowQueries(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PerformanceAdvisorSlowQueries", reflect.TypeOf((*MockPerformanceAdvisorSlowQueriesLister)(nil).PerformanceAdvisorSlowQueries), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PerformanceAdvisorSlowQueries", reflect.TypeOf((*MockPerformanceAdvisorSlowQueriesLister)(nil).PerformanceAdvisorSlowQueries), arg0)
 }
 
 // MockPerformanceAdvisorIndexesLister is a mock of PerformanceAdvisorIndexesLister interface.
@@ -111,18 +111,18 @@ func (m *MockPerformanceAdvisorIndexesLister) EXPECT() *MockPerformanceAdvisorIn
 }
 
 // PerformanceAdvisorIndexes mocks base method.
-func (m *MockPerformanceAdvisorIndexesLister) PerformanceAdvisorIndexes(arg0, arg1 string, arg2 *mongodbatlas.SuggestedIndexOptions) (*mongodbatlas.SuggestedIndexes, error) {
+func (m *MockPerformanceAdvisorIndexesLister) PerformanceAdvisorIndexes(arg0 *mongodbatlasv2.ListSuggestedIndexesApiParams) (*mongodbatlasv2.PerformanceAdvisorResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PerformanceAdvisorIndexes", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.SuggestedIndexes)
+	ret := m.ctrl.Call(m, "PerformanceAdvisorIndexes", arg0)
+	ret0, _ := ret[0].(*mongodbatlasv2.PerformanceAdvisorResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // PerformanceAdvisorIndexes indicates an expected call of PerformanceAdvisorIndexes.
-func (mr *MockPerformanceAdvisorIndexesListerMockRecorder) PerformanceAdvisorIndexes(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockPerformanceAdvisorIndexesListerMockRecorder) PerformanceAdvisorIndexes(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PerformanceAdvisorIndexes", reflect.TypeOf((*MockPerformanceAdvisorIndexesLister)(nil).PerformanceAdvisorIndexes), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PerformanceAdvisorIndexes", reflect.TypeOf((*MockPerformanceAdvisorIndexesLister)(nil).PerformanceAdvisorIndexes), arg0)
 }
 
 // MockPerformanceAdvisorSlowOperationThresholdEnabler is a mock of PerformanceAdvisorSlowOperationThresholdEnabler interface.

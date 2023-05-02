@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockProjectSettingsDescriber is a mock of ProjectSettingsDescriber interface.
@@ -35,10 +36,10 @@ func (m *MockProjectSettingsDescriber) EXPECT() *MockProjectSettingsDescriberMoc
 }
 
 // ProjectSettings mocks base method.
-func (m *MockProjectSettingsDescriber) ProjectSettings(arg0 string) (*mongodbatlas.ProjectSettings, error) {
+func (m *MockProjectSettingsDescriber) ProjectSettings(arg0 string) (*mongodbatlasv2.GroupSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectSettings", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.ProjectSettings)
+	ret0, _ := ret[0].(*mongodbatlasv2.GroupSettings)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +74,10 @@ func (m *MockProjectSettingsUpdater) EXPECT() *MockProjectSettingsUpdaterMockRec
 }
 
 // UpdateProjectSettings mocks base method.
-func (m *MockProjectSettingsUpdater) UpdateProjectSettings(arg0 string, arg1 *mongodbatlas.ProjectSettings) (*mongodbatlas.ProjectSettings, error) {
+func (m *MockProjectSettingsUpdater) UpdateProjectSettings(arg0 string, arg1 *mongodbatlas.ProjectSettings) (*mongodbatlasv2.GroupSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateProjectSettings", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.ProjectSettings)
+	ret0, _ := ret[0].(*mongodbatlasv2.GroupSettings)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -28,7 +28,7 @@ import (
 )
 
 const describeTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT
-{{.ID}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}
+{{.Id}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}
 `
 
 type DescribeOpts struct {

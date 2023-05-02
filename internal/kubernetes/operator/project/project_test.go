@@ -230,7 +230,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 		}
 
-		projectSettings := &mongodbatlas.ProjectSettings{
+		projectSettings := &atlasv2.GroupSettings{
 			IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
 			IsDataExplorerEnabled:                       pointer.Get(true),
 			IsPerformanceAdvisorEnabled:                 pointer.Get(true),
@@ -1218,7 +1218,7 @@ func Test_buildProjectSettings(t *testing.T) {
 
 	settingsProvider := mocks.NewMockProjectSettingsDescriber(ctl)
 	t.Run("Can convert project settings", func(t *testing.T) {
-		projectSettings := mongodbatlas.ProjectSettings{
+		projectSettings := atlasv2.GroupSettings{
 			IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
 			IsDataExplorerEnabled:                       pointer.Get(true),
 			IsPerformanceAdvisorEnabled:                 pointer.Get(true),

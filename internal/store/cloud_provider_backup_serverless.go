@@ -29,7 +29,7 @@ type ServerlessSnapshotsLister interface {
 }
 
 type ServerlessSnapshotsDescriber interface {
-	ServerlessSnapshot(string, string, string) (*atlas.CloudProviderSnapshot, error)
+	ServerlessSnapshot(string, string, string) (*atlasv2.ServerlessBackupSnapshot, error)
 }
 
 type ServerlessRestoreJobsLister interface {
@@ -48,7 +48,7 @@ type ServerlessRestoreJobsCreator interface {
 func (s *Store) ServerlessSnapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupSnapshot, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.CloudBackupsApi.ListServerlessBackups(s.ctx, projectID, clusterName).PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount).Execute()
+		result, _, err := s.clientv2.CloudBackupsApi.ListServerlessBackups(s.ctx, projectID, clusterName).PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -56,15 +56,10 @@ func (s *Store) ServerlessSnapshots(projectID, clusterName string, opts *atlas.L
 }
 
 // ServerlessSnapshot encapsulates the logic to manage different cloud providers.
-func (s *Store) ServerlessSnapshot(projectID, instanceName, snapshotID string) (*atlas.CloudProviderSnapshot, error) {
-	o := &atlas.SnapshotReqPathParameters{
-		GroupID:      projectID,
-		SnapshotID:   snapshotID,
-		InstanceName: instanceName,
-	}
+func (s *Store) ServerlessSnapshot(projectID, instanceName, snapshotID string) (*atlasv2.ServerlessBackupSnapshot, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetOneServerlessSnapshot(s.ctx, o)
+		result, _, err := s.clientv2.CloudBackupsApi.GetServerlessBackup(s.ctx, projectID, instanceName, snapshotID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

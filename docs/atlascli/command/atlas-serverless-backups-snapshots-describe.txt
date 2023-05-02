@@ -81,8 +81,8 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   ID     SNAPSHOT TYPE    TYPE     DESCRIPTION     EXPIRES AT
-   <ID>   <SnapshotType>   <Type>   <Description>   <ExpiresAt>
+   ID     SNAPSHOT TYPE    EXPIRES AT
+   <ID>   <SnapshotType>   <ExpiresAt>
    
 
 Examples

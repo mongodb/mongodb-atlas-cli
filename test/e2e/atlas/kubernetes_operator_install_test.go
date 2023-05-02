@@ -213,7 +213,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		cleanUpKeys(t, operator, operatorNamespace, cliPath)
 	})
 
-	t.Run("should install operator importing atlas resources", func(t *testing.T) {
+	t.Run("should install operator importing atlas existing resources", func(t *testing.T) {
 		g := newAtlasE2ETestGenerator(t)
 		g.enableBackup = true
 		g.generateProject("k8sOperatorInstall")
@@ -228,6 +228,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"operator",
 			"install",
 			"--targetNamespace", operatorNamespace,
+			"--projectName", g.projectName,
 			"--import",
 			"--kubeContext", context)
 		cmd.Env = os.Environ()

@@ -30,6 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -50,6 +51,15 @@ const (
 	featureCustomRoles              = "customRoles"
 	featureTeams                    = "teams"
 	cidrException                   = "/32"
+	datadogIntegrationType          = "DATADOG"
+	newRelicIntegrationType         = "NEW_RELIC"
+	opsGenieIntegrationType         = "OPS_GENIE"
+	pagerDutyIntegrationType        = "PAGER_DUTY"
+	victorOpsIntegrationType        = "VICTOR_OPS"
+	webhookIntegrationType          = "WEBHOOK"
+	microsoftTeamsIntegrationType   = "MICROSOFT_TEAMS"
+	slackIntegrationType            = "SLACK"
+	prometheusIntegrationType       = "PROMETHEUS"
 )
 
 var (
@@ -343,87 +353,85 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	var intSecrets []*corev1.Secret
 
 	for _, list := range integrations.Results {
-		secret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s", projectID, strings.ToLower(list.Type)),
+		iType := getIntegrationType(list)
+		secret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s", projectID, strings.ToLower(iType)),
 			targetNamespace, map[string][]byte{secrets.PasswordField: []byte("")}, dictionary)
 
 		integration := operatorProject.Integration{
-			Type: list.Type,
+			Type: iType,
 		}
 		secretRef := common.ResourceRefNamespaced{
 			Name:      resources.NormalizeAtlasName(secret.Name, dictionary),
 			Namespace: targetNamespace,
 		}
-		switch list.Type {
-		case "PAGER_DUTY":
+		switch iType {
+		case pagerDutyIntegrationType:
 			integration.ServiceKeyRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.ServiceKey)
+				secret.Data[secrets.PasswordField] = []byte(list.PagerDuty.ServiceKey)
 			}
-		case "SLACK":
-			integration.TeamName = list.TeamName
+		case slackIntegrationType:
+			integration.TeamName = list.Slack.GetTeamName()
 			integration.APITokenRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.APIToken)
+				secret.Data[secrets.PasswordField] = []byte(list.Slack.ApiToken)
 			}
-		case "DATADOG", "OPS_GENIE":
-			integration.Region = list.Region
+		case datadogIntegrationType:
+			integration.Region = list.Datadog.GetRegion()
 			integration.APIKeyRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.APIKey)
+				secret.Data[secrets.PasswordField] = []byte(list.Datadog.ApiKey)
 			}
-		case "FLOWDOCK":
-			integration.FlowName = list.FlowName
-			integration.OrgName = list.OrgName
-			integration.APITokenRef = secretRef
+		case opsGenieIntegrationType:
+			integration.Region = list.OpsGenie.GetRegion()
+			integration.APIKeyRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.APIToken)
+				secret.Data[secrets.PasswordField] = []byte(list.OpsGenie.ApiKey)
 			}
-		case "WEBHOOK":
-			integration.URL = list.URL
+		case webhookIntegrationType:
+			integration.URL = list.Webhook.Url
 			integration.SecretRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.Secret)
+				secret.Data[secrets.PasswordField] = []byte(list.Webhook.GetSecret())
 			}
-		case "MICROSOFT_TEAMS":
-			integration.MicrosoftTeamsWebhookURL = list.MicrosoftTeamsWebhookURL
-		case "PROMETHEUS":
-			integration.UserName = list.UserName
+		case microsoftTeamsIntegrationType:
+			integration.MicrosoftTeamsWebhookURL = list.MicrosoftTeams.MicrosoftTeamsWebhookUrl
+		case prometheusIntegrationType:
+			integration.UserName = list.Prometheus.Username
 			integration.PasswordRef = secretRef
-			integration.ServiceDiscovery = list.ServiceDiscovery
-			integration.Enabled = list.Enabled
+			integration.ServiceDiscovery = list.Prometheus.ServiceDiscovery
+			integration.Enabled = list.Prometheus.Enabled
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.Password)
+				secret.Data[secrets.PasswordField] = []byte(list.Prometheus.GetPassword())
 			}
-		case "VICTOR_OPS": // One more secret required
-			integration.Region = list.Region
+		case victorOpsIntegrationType: // One more secret required
 			integration.APIKeyRef = secretRef
-			secret.Data[secrets.PasswordField] = []byte(list.APIKey)
+			secret.Data[secrets.PasswordField] = []byte(list.VictorOps.ApiKey)
 
 			var routingKeyData string
 			if includeSecrets {
-				routingKeyData = list.RoutingKey
+				routingKeyData = list.VictorOps.GetRoutingKey()
 			}
-			if list.RoutingKey != "" {
+			if list.VictorOps.GetRoutingKey() != "" {
 				// Secret with routing key
-				routingSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(list.Type)),
+				routingSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
 					targetNamespace,
 					map[string][]byte{secrets.PasswordField: []byte(routingKeyData)}, dictionary)
 				intSecrets = append(intSecrets, routingSecret)
 			}
-		case "NEW_RELIC":
-			integration.Region = list.Region
+		case newRelicIntegrationType:
 			integration.LicenseKeyRef = secretRef
-			secret.Data[secrets.PasswordField] = []byte(list.LicenseKey)
+			secret.Data[secrets.PasswordField] = []byte(list.NewRelic.LicenseKey)
 			// Secrets with write and read tokens
 			var writeToken, readToken string
 			if includeSecrets {
-				writeToken = list.WriteToken
-				readToken = list.ReadToken
+				writeToken = list.NewRelic.WriteToken
+				readToken = list.NewRelic.ReadToken
 			}
-			writeTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(list.Type)),
+			writeTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
 				targetNamespace,
 				map[string][]byte{secrets.PasswordField: []byte(writeToken)}, dictionary)
-			readTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(list.Type)),
+			readTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
 				targetNamespace,
 				map[string][]byte{secrets.PasswordField: []byte(readToken)},
 				dictionary,
@@ -435,6 +443,31 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	}
 
 	return result, intSecrets, nil
+}
+
+func getIntegrationType(val atlasv2.Integration) string {
+	switch {
+	case val.Datadog != nil:
+		return datadogIntegrationType
+	case val.MicrosoftTeams != nil:
+		return microsoftTeamsIntegrationType
+	case val.NewRelic != nil:
+		return newRelicIntegrationType
+	case val.OpsGenie != nil:
+		return opsGenieIntegrationType
+	case val.PagerDuty != nil:
+		return pagerDutyIntegrationType
+	case val.Prometheus != nil:
+		return prometheusIntegrationType
+	case val.Slack != nil:
+		return slackIntegrationType
+	case val.VictorOps != nil:
+		return victorOpsIntegrationType
+	case val.Webhook != nil:
+		return webhookIntegrationType
+	default:
+		return ""
+	}
 }
 
 func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID string) ([]atlasV1.PrivateEndpoint, error) {

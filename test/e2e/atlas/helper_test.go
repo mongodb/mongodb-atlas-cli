@@ -29,6 +29,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const (
@@ -97,11 +98,15 @@ const (
 // Integration constants.
 
 const (
-	datadogEntity   = "DATADOG"
-	opsGenieEntity  = "OPS_GENIE"
-	pagerDutyEntity = "PAGER_DUTY"
-	victorOpsEntity = "VICTOR_OPS"
-	webhookEntity   = "WEBHOOK"
+	datadogEntity        = "DATADOG"
+	opsGenieEntity       = "OPS_GENIE"
+	pagerDutyEntity      = "PAGER_DUTY"
+	victorOpsEntity      = "VICTOR_OPS"
+	webhookEntity        = "WEBHOOK"
+	microsoftTeamsEntity = "MICROSOFT_TEAMS"
+	slackEntity          = "SLACK"
+	prometheusEntity     = "PROMETHEUS"
+	newRelicEntity       = "NEW_RELIC"
 )
 
 // Cluster settings.
@@ -412,14 +417,40 @@ func MongoDBMajorVersion() (string, error) {
 	return version, nil
 }
 
-func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations) bool {
+func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedIntegration) bool {
 	services := thirdPartyIntegrations.Results
 	for i := range services {
-		if services[i].Type == name {
+		iType := getIntegrationType(services[i])
+		if iType == name {
 			return true
 		}
 	}
 	return false
+}
+
+func getIntegrationType(val atlasv2.Integration) string {
+	switch {
+	case val.Datadog != nil:
+		return datadogEntity
+	case val.MicrosoftTeams != nil:
+		return microsoftTeamsEntity
+	case val.NewRelic != nil:
+		return newRelicEntity
+	case val.OpsGenie != nil:
+		return opsGenieEntity
+	case val.PagerDuty != nil:
+		return pagerDutyEntity
+	case val.Prometheus != nil:
+		return prometheusEntity
+	case val.Slack != nil:
+		return slackEntity
+	case val.VictorOps != nil:
+		return victorOpsEntity
+	case val.Webhook != nil:
+		return webhookEntity
+	default:
+		return ""
+	}
 }
 
 func IsGov() bool {

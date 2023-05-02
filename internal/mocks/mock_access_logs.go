@@ -36,10 +36,10 @@ func (m *MockAccessLogsListerByClusterName) EXPECT() *MockAccessLogsListerByClus
 }
 
 // AccessLogsByClusterName mocks base method.
-func (m *MockAccessLogsListerByClusterName) AccessLogsByClusterName(arg0, arg1 string, arg2 *mongodbatlas.AccessLogOptions) (*mongodbatlas.AccessLogSettings, error) {
+func (m *MockAccessLogsListerByClusterName) AccessLogsByClusterName(arg0, arg1 string, arg2 *mongodbatlas.AccessLogOptions) (*mongodbatlasv2.MongoDBAccessLogsList, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AccessLogsByClusterName", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.AccessLogSettings)
+	ret0, _ := ret[0].(*mongodbatlasv2.MongoDBAccessLogsList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -74,10 +74,10 @@ func (m *MockAccessLogsListerByHostname) EXPECT() *MockAccessLogsListerByHostnam
 }
 
 // AccessLogsByHostname mocks base method.
-func (m *MockAccessLogsListerByHostname) AccessLogsByHostname(arg0, arg1 string, arg2 *mongodbatlas.AccessLogOptions) (*mongodbatlas.AccessLogSettings, error) {
+func (m *MockAccessLogsListerByHostname) AccessLogsByHostname(arg0, arg1 string, arg2 *mongodbatlas.AccessLogOptions) (*mongodbatlasv2.MongoDBAccessLogsList, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AccessLogsByHostname", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.AccessLogSettings)
+	ret0, _ := ret[0].(*mongodbatlasv2.MongoDBAccessLogsList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

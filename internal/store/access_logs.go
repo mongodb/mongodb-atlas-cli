@@ -26,11 +26,11 @@ import (
 //go:generate mockgen -destination=../mocks/mock_access_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AccessLogsListerByClusterName,AccessLogsListerByHostname,AccessLogsLister
 
 type AccessLogsListerByClusterName interface {
-	AccessLogsByClusterName(string, string, *atlas.AccessLogOptions) (*atlas.AccessLogSettings, error)
+	AccessLogsByClusterName(string, string, *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error)
 }
 
 type AccessLogsListerByHostname interface {
-	AccessLogsByHostname(string, string, *atlas.AccessLogOptions) (*atlas.AccessLogSettings, error)
+	AccessLogsByHostname(string, string, *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error)
 }
 
 type AccessLogsLister interface {

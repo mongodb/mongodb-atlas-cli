@@ -105,4 +105,11 @@ Examples
 
 .. code-block::
 
+   # Create a custom database role
    atlas customDbRoles create customRole --privilege FIND@database,UPDATE@database
+
+   
+.. code-block::
+
+   # Use an inherited role
+   atlas customDbRoles create customRole --inheritedRole read@database

@@ -18,9 +18,11 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/version"
 	"gopkg.in/yaml.v3"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -38,12 +40,14 @@ const (
 	leaderElectionRoleBindingName = "mongodb-atlas-leader-election-rolebinding"
 	installationTargetClusterWide = "clusterwide"
 	installationTargetNamespaced  = "namespaced"
+	credentialsGlobalName         = "mongodb-atlas-operator-api-key" //nolint:gosec
+	credentialsProjectScopedName  = "mongodb-atlas-%s-api-key"       //nolint:gosec
 )
 
 type Installer interface {
 	InstallCRDs(ctx context.Context, version string, namespaced bool) error
 	InstallConfiguration(ctx context.Context, version, namespace string, watch []string) error
-	InstallCredentials(ctx context.Context, namespace, orgID, publicKey, privateKey string, global bool) error
+	InstallCredentials(ctx context.Context, namespace, orgID, publicKey, privateKey string, projectName string) error
 }
 
 type InstallResources struct {
@@ -59,7 +63,7 @@ func (ir *InstallResources) InstallCRDs(ctx context.Context, version string, nam
 		target = installationTargetNamespaced
 	}
 
-	data, err := ir.versionProvider.DownloadResource(ctx, version, fmt.Sprintf("/deploy/%s/crds.yaml", target))
+	data, err := ir.versionProvider.DownloadResource(ctx, version, fmt.Sprintf("deploy/%s/crds.yaml", target))
 	if err != nil {
 		return fmt.Errorf("unable to retrieve CRDs from repository: %w", err)
 	}
@@ -97,7 +101,7 @@ func (ir *InstallResources) InstallConfiguration(ctx context.Context, version, n
 		target = installationTargetNamespaced
 	}
 
-	data, err := ir.versionProvider.DownloadResource(ctx, version, fmt.Sprintf("/deploy/%s/%s-config.yaml", target, target))
+	data, err := ir.versionProvider.DownloadResource(ctx, version, fmt.Sprintf("deploy/%s/%s-config.yaml", target, target))
 	if err != nil {
 		return fmt.Errorf("unable to retrieve configuration from repository: %w", err)
 	}
@@ -147,11 +151,11 @@ func (ir *InstallResources) InstallConfiguration(ctx context.Context, version, n
 	return nil
 }
 
-func (ir *InstallResources) InstallCredentials(ctx context.Context, namespace, orgID, publicKey, privateKey string, global bool) error {
-	name := "mongodb-atlas-operator-api-key"
+func (ir *InstallResources) InstallCredentials(ctx context.Context, namespace, orgID, publicKey, privateKey string, projectName string) error {
+	name := credentialsGlobalName
 
-	if !global {
-		name = "mongodb-atlas-project-key"
+	if projectName != "" {
+		name = fmt.Sprintf(credentialsProjectScopedName, resources.NormalizeAtlasName(projectName, resources.AtlasNameToKubernetesName()))
 	}
 
 	obj := &corev1.Secret{
@@ -297,6 +301,17 @@ func (ir *InstallResources) addDeployment(ctx context.Context, config map[string
 
 	obj.SetNamespace(namespace)
 
+	atlasDomain := os.Getenv("MCLI_OPS_MANAGER_URL")
+	if atlasDomain == "" {
+		atlasDomain = "https://cloud.mongodb.com/"
+	}
+	for i := range obj.Spec.Template.Spec.Containers[0].Args {
+		arg := obj.Spec.Template.Spec.Containers[0].Args[i]
+		if arg == "--atlas-domain=https://cloud.mongodb.com/" {
+			obj.Spec.Template.Spec.Containers[0].Args[i] = fmt.Sprintf("--atlas-domain=%s", atlasDomain)
+		}
+	}
+
 	if len(watch) > 0 {
 		for i := range obj.Spec.Template.Spec.Containers[0].Env {
 			env := obj.Spec.Template.Spec.Containers[0].Env[i]
@@ -319,7 +334,7 @@ func (ir *InstallResources) addDeployment(ctx context.Context, config map[string
 }
 
 func parseYaml(data io.ReadCloser) ([]map[string]interface{}, error) {
-	var resources []map[string]interface{}
+	var k8sResources []map[string]interface{}
 
 	decoder := yaml.NewDecoder(data)
 
@@ -334,10 +349,10 @@ func parseYaml(data io.ReadCloser) ([]map[string]interface{}, error) {
 			return nil, fmt.Errorf("object decode failed: %w", err)
 		}
 
-		resources = append(resources, obj)
+		k8sResources = append(k8sResources, obj)
 	}
 
-	return resources, nil
+	return k8sResources, nil
 }
 
 func NewInstaller(versionProvider version.AtlasOperatorVersionProvider, kubectl *kubernetes.KubeCtl) *InstallResources {

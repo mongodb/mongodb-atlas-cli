@@ -19,17 +19,23 @@ import (
 	"errors"
 	"fmt"
 
+	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
 	"go.mongodb.org/atlas/mongodbatlas"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 const (
 	roleOrgGroupCreator       = "ORG_GROUP_CREATOR"
 	roleProjectOwner          = "GROUP_OWNER"
 	atlasErrorProjectNotFound = "GROUP_NAME_NOT_FOUND"
+	atlasErrorNotInGroup      = "NOT_IN_GROUP"
 )
 
 type Install struct {
@@ -84,12 +90,16 @@ func (i *Install) Run(ctx context.Context, orgID string) error {
 		return err
 	}
 
-	if err = i.installResources.InstallCredentials(ctx, i.namespace, orgID, keys.PublicKey, keys.PrivateKey, i.projectName == ""); err != nil {
+	if err = i.installResources.InstallCredentials(ctx, i.namespace, orgID, keys.PublicKey, keys.PrivateKey, i.projectName); err != nil {
 		return err
 	}
 
 	if i.importResources {
 		if err = i.importAtlasResources(orgID, keys.ID); err != nil {
+			return err
+		}
+
+		if err = i.addCredentialsToProject(ctx); err != nil {
 			return err
 		}
 	}
@@ -111,7 +121,7 @@ func (i *Install) ensureProject(orgID, projectName string) (*mongodbatlas.Projec
 	var apiError *mongodbatlas.ErrorResponse
 	errors.As(err, &apiError)
 
-	if apiError.ErrorCode != atlasErrorProjectNotFound {
+	if apiError.ErrorCode != atlasErrorProjectNotFound && apiError.ErrorCode != atlasErrorNotInGroup {
 		return nil, fmt.Errorf("failed to retrieve project: %w", err)
 	}
 
@@ -137,7 +147,7 @@ func (i *Install) ensureProject(orgID, projectName string) (*mongodbatlas.Projec
 func (i *Install) generateKeys(orgID string) (*mongodbatlas.APIKey, error) {
 	if i.projectName == "" {
 		input := &mongodbatlas.APIKeyInput{
-			Desc: "mongodb-atlas-operator-api-key",
+			Desc: credentialsGlobalName,
 			Roles: []string{
 				roleOrgGroupCreator,
 			},
@@ -156,7 +166,7 @@ func (i *Install) generateKeys(orgID string) (*mongodbatlas.APIKey, error) {
 	}
 
 	input := &mongodbatlas.APIKeyInput{
-		Desc: "mongodb-atlas-project-key",
+		Desc: fmt.Sprintf(credentialsProjectScopedName, resources.NormalizeAtlasName(i.projectName, resources.AtlasNameToKubernetesName())),
 		Roles: []string{
 			roleProjectOwner,
 		},
@@ -231,6 +241,34 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 		if err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (i *Install) addCredentialsToProject(ctx context.Context) error {
+	if i.projectName == "" {
+		return nil
+	}
+
+	projectName := resources.NormalizeAtlasName(i.projectName, resources.AtlasNameToKubernetesName())
+	projectObjKey := client.ObjectKey{
+		Namespace: i.namespace,
+		Name:      projectName,
+	}
+	project := &akov1.AtlasProject{}
+
+	if err := i.kubectl.Get(ctx, projectObjKey, project); err != nil {
+		return fmt.Errorf("failed to find atlas project %s", i.projectName)
+	}
+
+	project.Spec.ConnectionSecret = &common.ResourceRefNamespaced{
+		Name:      fmt.Sprintf(credentialsProjectScopedName, projectName),
+		Namespace: i.namespace,
+	}
+
+	if err := i.kubectl.Update(ctx, project); err != nil {
+		return fmt.Errorf("failed to update atlas project %s", i.projectName)
 	}
 
 	return nil

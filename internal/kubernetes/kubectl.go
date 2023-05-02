@@ -75,6 +75,14 @@ func (ctl *KubeCtl) Create(ctx context.Context, obj client.Object, opts ...clien
 	return ctl.client.Create(ctx, obj, opts...)
 }
 
+func (ctl *KubeCtl) Get(ctx context.Context, key client.ObjectKey, obj client.Object, opts ...client.GetOption) error {
+	return ctl.client.Get(ctx, key, obj, opts...)
+}
+
+func (ctl *KubeCtl) Update(ctx context.Context, obj client.Object, opts ...client.UpdateOption) error {
+	return ctl.client.Update(ctx, obj, opts...)
+}
+
 func (ctl *KubeCtl) loadConfig(configFile string) error {
 	pathOptions := clientcmd.NewDefaultPathOptions()
 

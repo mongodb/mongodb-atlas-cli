@@ -98,7 +98,7 @@ Options
    * - --snapshotId
      - string
      - false
-     - Unique identifier of the snapshot.
+     - Unique identifier of the snapshot to restore. You must specify a snapshotId for automated restores.
    * - --targetClusterId
      - string
      - false

@@ -199,7 +199,7 @@ func StartBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.SnapshotID)
+	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.RestoreSnapshotID)
 	// Atlas uses cluster name
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 

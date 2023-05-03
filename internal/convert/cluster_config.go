@@ -120,9 +120,8 @@ func (c *ClusterConfig) addToMongoURI(p *opsmngr.Process) {
 
 func newShard(rsConfig *RSConfig) *opsmngr.Shard {
 	s := &opsmngr.Shard{
-		ID:   rsConfig.Name,
-		RS:   rsConfig.Name,
-		Tags: rsConfig.Tags,
+		ID: rsConfig.Name,
+		RS: rsConfig.Name,
 	}
 	if s.Tags == nil {
 		s.Tags = make([]string, 0)
@@ -140,7 +139,7 @@ func newShardingConfig(c *ClusterConfig) *opsmngr.ShardingConfig {
 		Collections:         make([]*map[string]interface{}, 0),
 	}
 	if rs.Tags == nil {
-		rs.Tags = make([]string, 0)
+		rs.Tags = make([]*map[string]interface{}, 0)
 	}
 
 	return rs

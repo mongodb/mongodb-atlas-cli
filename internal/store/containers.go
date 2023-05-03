@@ -37,12 +37,11 @@ type ContainersDeleter interface {
 func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersListOptions) ([]interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
-			IncludeCount(opts.IncludeCount).
-			PageNum(int32(opts.PageNum)).
-			ItemsPerPage(int32(opts.ItemsPerPage)).
-			ProviderName(opts.ProviderName).
-			Execute()
+		res := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID)
+		if opts != nil {
+			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount).ProviderName(opts.ProviderName)
+		}
+		result, _, err := res.Execute()
 
 		containers := make([]interface{}, len(result.Results))
 		for i, container := range result.Results {
@@ -121,11 +120,11 @@ func (s *Store) GCPContainers(projectID string) ([]*atlasv2.GCPCloudProviderCont
 func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainers(s.ctx, projectID).
-			IncludeCount(opts.IncludeCount).
-			PageNum(int32(opts.PageNum)).
-			ItemsPerPage(int32(opts.ItemsPerPage)).
-			Execute()
+		res := s.clientv2.NetworkPeeringApi.ListPeeringContainers(s.ctx, projectID)
+		if opts != nil {
+			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount)
+		}
+		result, _, err := res.Execute()
 
 		containers := make([]interface{}, len(result.Results))
 		for i, container := range result.Results {

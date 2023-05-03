@@ -24,7 +24,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const (
@@ -52,11 +52,11 @@ func TestAlerts(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alerts mongodbatlas.AlertsResponse
+			var alerts atlasv2.PaginatedAlert
 			err := json.Unmarshal(resp, &alerts)
 			a.NoError(err)
 			a.NotEmpty(alerts.Results)
-			alertID = alerts.Results[0].ID
+			alertID = *alerts.Results[0].Id
 		}
 	})
 
@@ -98,10 +98,10 @@ func TestAlerts(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.Alert
+			var alert atlasv2.AlertViewForNdsGroup
 			err := json.Unmarshal(resp, &alert)
 			a.NoError(err)
-			a.Equal(alertID, alert.ID)
+			a.Equal(alertID, alert.Id)
 			a.Equal(closed, alert.Status)
 		}
 	})
@@ -119,10 +119,10 @@ func TestAlerts(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.Alert
+			var alert atlasv2.AlertViewForNdsGroup
 			err := json.Unmarshal(resp, &alert)
 			a.NoError(err)
-			a.Equal(alertID, alert.ID)
+			a.Equal(alertID, alert.Id)
 		}
 	})
 
@@ -138,10 +138,10 @@ func TestAlerts(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.Alert
+			var alert atlasv2.AlertViewForNdsGroup
 			err := json.Unmarshal(resp, &alert)
 			a.NoError(err)
-			a.Equal(alertID, alert.ID)
+			a.Equal(alertID, alert.Id)
 		}
 	})
 
@@ -156,10 +156,10 @@ func TestAlerts(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.Alert
+			var alert atlasv2.AlertViewForNdsGroup
 			err := json.Unmarshal(resp, &alert)
 			a.NoError(err)
-			a.Equal(alertID, alert.ID)
+			a.Equal(alertID, alert.Id)
 		}
 	})
 }

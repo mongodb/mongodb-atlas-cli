@@ -25,7 +25,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAcknowledgeBuilder(t *testing.T) {
@@ -95,7 +95,7 @@ func TestAcknowledgeOpts_Run(t *testing.T) {
 					Times(1)
 				assert.Error(t, opts.Run())
 			} else {
-				expected := &mongodbatlas.Alert{}
+				expected := &atlasv2.AlertViewForNdsGroup{}
 				mockStore.
 					EXPECT().
 					AcknowledgeAlert(opts.ProjectID, opts.alertID, ackReq).

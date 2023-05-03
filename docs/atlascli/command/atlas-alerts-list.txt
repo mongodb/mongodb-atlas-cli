@@ -86,7 +86,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 .. code-block::
 
    ID     TYPE              STATUS
-   <ID>   <EventTypeName>   <Status>
+   <Id>   <EventTypeName>   <Status>
    
 
 Examples

@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestUnacknowledge_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertAcknowledger(ctrl)
 
-	expected := &mongodbatlas.Alert{}
+	expected := &atlasv2.AlertViewForNdsGroup{}
 
 	acknowledgeOpts := &UnacknowledgeOpts{
 		alertID: "533dc40ae4b00835ff81eaee",

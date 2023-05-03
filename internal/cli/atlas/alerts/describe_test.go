@@ -25,9 +25,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDescribeBuilder(t *testing.T) {
@@ -46,11 +47,12 @@ func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertDescriber(ctrl)
 
-	expected := &mongodbatlas.Alert{
-		ID:            "test",
-		EventTypeName: "test",
-		Status:        "test",
-		MetricName:    "test",
+	eventTypeExpected, _ := atlasv2.NewReplicaSetEventTypeViewForNdsGroupAlertableFromValue("NO_PRIMARY")
+	expected := &atlasv2.AlertViewForNdsGroup{
+		Id:            pointer.Get("test"),
+		EventTypeName: eventTypeExpected,
+		Status:        pointer.Get("test"),
+		MetricName:    pointer.Get("test"),
 	}
 	buf := new(bytes.Buffer)
 
@@ -103,8 +105,8 @@ func TestDescribeOpts_Run(t *testing.T) {
 					Return(expected, nil).
 					Times(1)
 				assert.NoError(t, cmd.Run())
-				assert.Equal(t, `ID     TYPE   METRIC   STATUS
-test   test   test     test
+				assert.Equal(t, `ID     TYPE         METRIC   STATUS
+test   NO_PRIMARY   test     test
 `, buf.String())
 				t.Log(buf.String())
 			}

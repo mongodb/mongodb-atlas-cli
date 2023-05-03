@@ -23,24 +23,26 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertLister(ctrl)
 
-	expected := &mongodbatlas.AlertsResponse{
+	eventTypeExpected, _ := atlasv2.NewReplicaSetEventTypeViewForNdsGroupAlertableFromValue("NO_PRIMARY")
+	expected := &atlasv2.PaginatedAlert{
 		Links: nil,
-		Results: []mongodbatlas.Alert{
+		Results: []atlasv2.AlertViewForNdsGroup{
 			{
-				ID:            "test",
-				EventTypeName: "test",
-				Status:        "test",
-				MetricName:    "test"},
+				Id:            pointer.Get("test"),
+				EventTypeName: eventTypeExpected,
+				Status:        pointer.Get("test"),
+				MetricName:    pointer.Get("test"),
+			},
 		},
-		TotalCount: 0,
 	}
 
 	buf := new(bytes.Buffer)
@@ -56,7 +58,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		Alerts(listOpts.ProjectID, listOpts.newAlertsListOptions()).
+		Alerts(listOpts.ProjectID, listOpts.status).
 		Return(expected, nil).
 		Times(1)
 
@@ -64,8 +66,8 @@ func TestList_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `ID     TYPE   STATUS
-test   test   test
+	assert.Equal(t, `ID     TYPE         STATUS
+test   NO_PRIMARY   test
 `, buf.String())
 	t.Log(buf.String())
 }

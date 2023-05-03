@@ -43,7 +43,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplate = `ID	TYPE	METRIC	STATUS
-{{.ID}}	{{.EventTypeName}}	{{.MetricName}}	{{.Status}}
+{{.Id}}	{{.EventTypeName}}	{{.MetricName}}	{{.Status}}
 `
 
 func (opts *DescribeOpts) Run() error {

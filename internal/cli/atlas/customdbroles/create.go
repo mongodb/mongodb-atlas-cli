@@ -80,15 +80,15 @@ func (opts *CreateOpts) validate() error {
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "create <roleName>",
-		Short:   "Create a custom database role for your project.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Use:   "create <roleName>",
+		Short: "Create a custom database role for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`# Create a custom database role
   %[1]s customDbRoles create customRole --privilege FIND@database,UPDATE@database
 
   # Use an inherited role
   %[1]s customDbRoles create customRole --inheritedRole read@database`, cli.ExampleAtlasEntryPoint()),
-		Args:    require.ExactArgs(1),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"roleNameDesc": "Name of the custom role to create.",
 			"output":       createTemplate,

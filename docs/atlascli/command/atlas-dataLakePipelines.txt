@@ -49,6 +49,8 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`atlas-dataLakePipelines-availableSchedules` - Manage available schedules for the specified data lake pipeline.
+* :ref:`atlas-dataLakePipelines-availableSnapshots` -  Manage available backup snapshots for data lake pipelines.
 * :ref:`atlas-dataLakePipelines-create` - Creates a new Data Lake Pipeline.
 * :ref:`atlas-dataLakePipelines-delete` - Remove the specified data lake pipeline from your project.
 * :ref:`atlas-dataLakePipelines-describe` - Return the details for the specified data lake pipeline for your project.
@@ -60,6 +62,8 @@ Related Commands
 .. toctree::
    :titlesonly:
 
+   availableSchedules </command/atlas-dataLakePipelines-availableSchedules>
+   availableSnapshots </command/atlas-dataLakePipelines-availableSnapshots>
    create </command/atlas-dataLakePipelines-create>
    delete </command/atlas-dataLakePipelines-delete>
    describe </command/atlas-dataLakePipelines-describe>

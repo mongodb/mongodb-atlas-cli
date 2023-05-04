@@ -342,4 +342,5 @@ const (
 	SourcePolicyItemID                        = "sourcePolicyItemId"                        // SourcePolicyItemID flag
 	Transform                                 = "transform"                                 // Transform flag
 	Pipeline                                  = "pipeline"                                  // Pipeline flag
+	CompletedAfter                            = "completedAfter"                            // CompletedAfter flag
 )

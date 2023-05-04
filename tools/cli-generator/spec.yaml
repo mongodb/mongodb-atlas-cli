@@ -100,6 +100,40 @@ commands:
             example: |
               # retrieves pipeline run '507f1f77bcf86cd799439011':
                 atlas dataLakePipelines runs describe 507f1f77bcf86cd799439011
+      - command_path: atlas dataLakePipelines availableSchedules
+        package_name: availableschedules
+        description: Manage available schedules for the specified data lake pipeline.
+        template: parent
+        sub_commands:
+          - command_path: atlas dataLakePipelines availableSchedules list
+            package_name: availableschedules
+            store_name: PipelineAvailableSchedulesLister
+            store_method: PipelineAvailableSchedules
+            description: Return all available schedules for the specified data lake pipeline.
+            template: list
+            output_template: |
+              ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION UNIT	RETENTION VALUE{{range .}}
+              {{ .Id }}	{{ .FrequencyInterval }}	{{ .FrequencyType }}	{{ .RetentionUnit }}	{{ .RetentionValue }}{{end}}
+            example: |
+              # list available schedules for data lake pipeline called 'Pipeline1':
+                atlas dataLakePipelines availableSchedules list Pipeline1
+      - command_path: atlas dataLakePipelines availableSnapshots
+        package_name: availablesnapshots
+        description: Manage available backup snapshots for data lake pipelines.
+        template: parent
+        sub_commands:
+          - command_path: atlas dataLakePipelines availableSnapshots list
+            package_name: availablesnapshots
+            store_name: PipelineAvailableSnapshotsLister
+            store_method: PipelineAvailableSnapshots
+            description: Return all available backup snapshots for the specified data lake pipeline.
+            template: list
+            output_template: |
+              ID	STATUS{{range .Results}}
+              {{if .DiskBackupReplicaSet}}{{.DiskBackupReplicaSet.Id}}	{{.DiskBackupReplicaSet.Status}}{{else}}{{.DiskBackupShardedClusterSnapshot.Id}}	{{.DiskBackupShardedClusterSnapshot.Status}}{{end}}{{end}}
+            example: |
+              # list available backup schedules for data lake pipeline called 'Pipeline1':
+                atlas dataLakePipelines availableSnapshots list Pipeline1
       - command_path: atlas dataLakePipelines datasets
         package_name: datasets
         description: Manage datasets for the specified data lake pipeline.

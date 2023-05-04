@@ -43,7 +43,11 @@ type ProjectInvitationUpdater interface {
 
 // ProjectInvitations encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectInvitations(groupID string, opts *atlas.InvitationOptions) ([]mongodbatlasv2.GroupInvitation, error) {
-	result, _, err := s.clientv2.ProjectsApi.ListProjectInvitations(s.ctx, groupID).Username(opts.Username).Execute()
+	res := s.clientv2.ProjectsApi.ListProjectInvitations(s.ctx, groupID)
+	if opts != nil {
+		res = res.Username(opts.Username)
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 

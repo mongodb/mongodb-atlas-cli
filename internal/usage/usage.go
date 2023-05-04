@@ -206,7 +206,8 @@ dbName and collection are required only for built-in roles.`
 	NotificationType                          = "Type of alert notification. Valid values are DATADOG, EMAIL, FLOWDOCK, GROUP (Project), ORG, OPS_GENIE, PAGER_DUTY, SLACK, SMS, USER, or VICTOR_OPS."
 	NotificationUsername                      = "Name of the Atlas user to which to send notifications."
 	NotificationVictorOpsRoutingKey           = "Routing key associated with your Splunk On-Call account."
-	SnapshotID                                = "Unique identifier of the snapshot to restore. You must specify a snapshotId for automated restores."
+	SnapshotID                                = "Unique identifier of the snapshot."
+	RestoreSnapshotID                         = "Unique identifier of the snapshot to restore. You must specify a snapshotId for automated restores."
 	SnapshotDescription                       = "Description of the on-demand snapshot."
 	Database                                  = "Name of the database."
 	DatabaseUser                              = "Username of a database user."
@@ -418,4 +419,5 @@ dbName and collection are required only for built-in roles.`
 	Transform                                 = "Fields to be excluded for this data lake pipeline."
 	PipelineFilename                          = "Name of the JSON data lake pipeline configuration file to use."
 	Pipeline                                  = "Name of the Data lake pipeline."
+	CompletedAfter                            = "Date filter of which the backup snapshots where completed. Format must be YYYY-MM-DD"
 )

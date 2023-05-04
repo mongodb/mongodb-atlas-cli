@@ -1,8 +1,8 @@
-.. _atlas-serverless-backups-snapshots-describe:
+.. _atlas-dataLakePipelines-availableSchedules-list:
 
-===========================================
-atlas serverless backups snapshots describe
-===========================================
+===============================================
+atlas dataLakePipelines availableSchedules list
+===============================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ atlas serverless backups snapshots describe
    :depth: 1
    :class: singlecol
 
-Return the details for the specified snapshot for your project.
+Return all available schedules for the specified data lake pipeline.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas serverless backups snapshots describe [options]
+   atlas dataLakePipelines availableSchedules list [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -37,26 +37,22 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterName
-     - string
-     - true
-     - Name of the cluster.
    * - -h, --help
      - 
      - false
-     - help for describe
+     - help for list
    * - -o, --output
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
+   * - --pipeline
+     - string
+     - true
+     - Name of the Data lake pipeline.
    * - --projectId
      - string
      - false
      - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
-   * - --snapshotId
-     - string
-     - true
-     - Unique identifier of the snapshot.
 
 Inherited Options
 -----------------
@@ -74,21 +70,11 @@ Inherited Options
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
-Output
-------
-
-If the command succeeds, the CLI returns output similar to the following sample. Values in brackets represent your values.
-
-.. code-block::
-
-   ID     SNAPSHOT TYPE    EXPIRES AT
-   <ID>   <SnapshotType>   <ExpiresAt>
-   
-
 Examples
 --------
 
 .. code-block::
 
-   # Return the details for the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the instance named myDemo:
-   atlas serverless backups snapshots describe --snapshotId 5f4007f327a3bd7b6f4103c5 --clusterName myDemo
+   # list available schedules for data lake pipeline called 'Pipeline1':
+   atlas dataLakePipelines availableSchedules list Pipeline1
+

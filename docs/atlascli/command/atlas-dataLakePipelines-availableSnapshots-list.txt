@@ -12,7 +12,7 @@ atlas dataLakePipelines availableSnapshots list
    :depth: 1
    :class: singlecol
 
-Returns all available backup snaphots for the data lake pipelines for your project.
+Return all available backup snapshots for the specified data lake pipeline.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 

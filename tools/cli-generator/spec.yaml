@@ -102,14 +102,14 @@ commands:
                 atlas dataLakePipelines runs describe 507f1f77bcf86cd799439011
       - command_path: atlas dataLakePipelines availableSchedules
         package_name: availableschedules
-        description: Available Schedules for data lake pipelines.
+        description: Manage available schedules for the specified data lake pipeline.
         template: parent
         sub_commands:
           - command_path: atlas dataLakePipelines availableSchedules list
             package_name: availableschedules
             store_name: PipelineAvailableSchedulesLister
             store_method: PipelineAvailableSchedules
-            description: Returns all available schedules for the data lake pipelines for your project.
+            description: Return all available schedules for the specified data lake pipeline.
             template: list
             output_template: |
               ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION UNIT	RETENTION VALUE{{range .}}
@@ -119,14 +119,14 @@ commands:
                 atlas dataLakePipelines availableSchedules list Pipeline1
       - command_path: atlas dataLakePipelines availableSnapshots
         package_name: availablesnapshots
-        description: Available backup snapshots for data lake pipelines.
+        description: Manage available backup snapshots for data lake pipelines.
         template: parent
         sub_commands:
           - command_path: atlas dataLakePipelines availableSnapshots list
             package_name: availablesnapshots
             store_name: PipelineAvailableSnapshotsLister
             store_method: PipelineAvailableSnapshots
-            description: Returns all available backup snaphots for the data lake pipelines for your project.
+            description: Return all available backup snapshots for the specified data lake pipeline.
             template: list
             output_template: |
               ID	STATUS{{range .Results}}

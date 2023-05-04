@@ -26,7 +26,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Available backup snapshots for data lake pipelines.",
+		Short:   " Manage available backup snapshots for data lake pipelines.",
 	}
 
 	cmd.AddCommand(

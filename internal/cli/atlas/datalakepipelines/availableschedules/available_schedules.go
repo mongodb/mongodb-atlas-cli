@@ -26,7 +26,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Available Schedules for data lake pipelines.",
+		Short:   "Manage available schedules for the specified data lake pipeline.",
 	}
 
 	cmd.AddCommand(

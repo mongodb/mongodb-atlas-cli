@@ -100,7 +100,22 @@ commands:
             example: |
               # retrieves pipeline run '507f1f77bcf86cd799439011':
                 atlas dataLakePipelines runs describe 507f1f77bcf86cd799439011
-
+      - command_path: atlas dataLakePipelines datasets
+        package_name: datasets
+        description: Manage datasets for the specified data lake pipeline.
+        template: parent
+        sub_commands:
+          - command_path: atlas dataLakePipelines datasets delete
+            package_name: datasets
+            store_name: PipelineDatasetDeleter
+            store_method: DeletePipelineDataset
+            description:  Remove the specified data lake pipeline dataset from your project.
+            template: delete
+            id_name: pipelineRunId
+            id_description: Unique identifier for the data lake pipeline run
+            example: |
+              # delete dataset '507f1f77bcf86cd799439011' for data lake pipeline called 'Pipeline1':
+                atlas dataLakePipelines datasets delete 507f1f77bcf86cd799439011 --pipeline Pipeline1
 stores:
   - base_file_name: data_lake_pipelines
     template: store
@@ -144,3 +159,9 @@ stores:
       method: PipelineRun
       sdk_method: DataLakePipelinesApi.GetPipelineRun
       return_type: '*atlasv2.IngestionPipelineRun'
+  - base_file_name: data_lake_pipelines_datasets
+    template: store
+    deleter:
+      name: PipelineDatasetDeleter
+      method: DeletePipelineDataset
+      sdk_method: DataLakePipelinesApi.DeletePipelineRunDataset

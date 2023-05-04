@@ -25,7 +25,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-//go:generate mockgen -destination=../mocks/mock_data_lake_pipelines.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PipelinesLister,PipelinesDescriber,PipelinesCreator,PipelinesUpdater,PipelinesDeleter,PipelineAvailableSnapshotsLister,PipelineAvailableSchedulesLister
+//go:generate mockgen -destination=../mocks/mock_data_lake_pipelines.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PipelinesLister,PipelinesDescriber,PipelinesCreator,PipelinesUpdater,PipelinesDeleter,PipelineAvailableSnapshotsLister,PipelineAvailableSchedulesLister,PipelinesTriggerer,PipelinesPauser,PipelinesResumer
 
 type PipelinesLister interface {
 	Pipelines(string) ([]atlasv2.IngestionPipeline, error)
@@ -53,6 +53,18 @@ type PipelineAvailableSnapshotsLister interface {
 
 type PipelineAvailableSchedulesLister interface {
 	PipelineAvailableSchedules(string, string) ([]atlasv2.PolicyItem, error)
+}
+
+type PipelinesTriggerer interface {
+	PipelineTrigger(string, string) (*atlasv2.IngestionPipelineRun, error)
+}
+
+type PipelinesPauser interface {
+	PipelinePause(string, string) (*atlasv2.IngestionPipeline, error)
+}
+
+type PipelinesResumer interface {
+	PipelineResume(string, string) (*atlasv2.IngestionPipeline, error)
 }
 
 // Pipelines encapsulates the logic to manage different cloud providers.
@@ -134,6 +146,39 @@ func (s *Store) PipelineAvailableSnapshots(projectID, pipelineName string, compl
 			request = request.PageNum(int32(listOps.PageNum))
 		}
 		result, _, err := request.Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// PipelineTrigger encapsulates the logic to manage different cloud providers.
+func (s *Store) PipelineTrigger(projectID, pipelineName string) (*atlasv2.IngestionPipelineRun, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.DataLakePipelinesApi.TriggerSnapshotIngestion(s.ctx, projectID, pipelineName).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// PipelinePause encapsulates the logic to manage different cloud providers.
+func (s *Store) PipelinePause(projectID, pipelineName string) (*atlasv2.IngestionPipeline, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.DataLakePipelinesApi.PausePipeline(s.ctx, projectID, pipelineName).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// PipelineResume encapsulates the logic to manage different cloud providers.
+func (s *Store) PipelineResume(projectID, pipelineName string) (*atlasv2.IngestionPipeline, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.DataLakePipelinesApi.ResumePipeline(s.ctx, projectID, pipelineName).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

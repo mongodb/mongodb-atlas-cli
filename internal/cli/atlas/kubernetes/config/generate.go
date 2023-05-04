@@ -53,10 +53,8 @@ func (opts *GenerateOpts) ValidateTargetNamespace() error {
 }
 
 func (opts *GenerateOpts) ValidateOperatorVersion() error {
-	for k := range features.VersionsToResourcesMap {
-		if opts.operatorVersion == k {
-			return nil
-		}
+	if _, versionFound := features.GetResourcesForVersion(opts.operatorVersion); versionFound {
+		return nil
 	}
 	return fmt.Errorf(ErrUnsupportedOperatorVersionFmt, opts.operatorVersion, features.SupportedVersions())
 }

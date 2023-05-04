@@ -18,6 +18,7 @@ package datalakepipelines
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalakepipelines/datasets"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalakepipelines/runs"
 	"github.com/spf13/cobra"
 )
@@ -44,6 +45,7 @@ func Builder() *cobra.Command {
 		DeleteBuilder(),
 		UpdateBuilder(),
 		runs.Builder(),
+		datasets.Builder(),
 	)
 
 	return cmd

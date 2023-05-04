@@ -25,14 +25,14 @@ import (
 //go:generate mockgen -destination=../mocks/mock_data_lake_pipelines_datasets.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PipelineDatasetDeleter
 
 type PipelineDatasetDeleter interface {
-	DeletePipelineDataset(string, string) error
+	DeletePipelineDataset(string, string, string) error
 }
 
 // DeletePipelineDataset encapsulates the logic to manage different cloud providers.
-func (s *Store) DeletePipelineDataset(projectID, id string) error {
+func (s *Store) DeletePipelineDataset(projectID, pipelineName, id string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.DataLakePipelinesApi.DeletePipelineRunDataset(s.ctx, projectID, id).Execute()
+		_, _, err := s.clientv2.DataLakePipelinesApi.DeletePipelineRunDataset(s.ctx, projectID, pipelineName, id).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

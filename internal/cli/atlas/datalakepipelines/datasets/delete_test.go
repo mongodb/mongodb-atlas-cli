@@ -42,7 +42,7 @@ func TestDelete_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeletePipelineDataset(deleteOpts.ProjectID, deleteOpts.Entry).
+		DeletePipelineDataset(deleteOpts.ProjectID, deleteOpts.pipelineName, deleteOpts.Entry).
 		Return(nil).
 		Times(1)
 

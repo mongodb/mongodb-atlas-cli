@@ -50,6 +50,7 @@ Related Commands
 ----------------
 
 * :ref:`atlas-dataLakePipelines-create` - Creates a new Data Lake Pipeline.
+* :ref:`atlas-dataLakePipelines-datasets` - Manage datasets for the specified data lake pipeline.
 * :ref:`atlas-dataLakePipelines-delete` - Remove the specified data lake pipeline from your project.
 * :ref:`atlas-dataLakePipelines-describe` - Return the details for the specified data lake pipeline for your project.
 * :ref:`atlas-dataLakePipelines-list` - Returns all data lake pipelines for your project.
@@ -61,6 +62,7 @@ Related Commands
    :titlesonly:
 
    create </command/atlas-dataLakePipelines-create>
+   datasets </command/atlas-dataLakePipelines-datasets>
    delete </command/atlas-dataLakePipelines-delete>
    describe </command/atlas-dataLakePipelines-describe>
    list </command/atlas-dataLakePipelines-list>

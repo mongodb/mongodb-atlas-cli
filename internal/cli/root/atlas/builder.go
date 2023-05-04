@@ -113,7 +113,6 @@ func Builder() *cobra.Command {
 	rootCmd := &cobra.Command{
 		Version: version.Version,
 		Use:     atlas,
-		Aliases: []string{config.ToolName},
 		Short:   "CLI tool to manage MongoDB Atlas",
 		Long:    fmt.Sprintf("Use %s command help for information on a specific command", atlas),
 		Example: `  # Display the help menu for the config command:

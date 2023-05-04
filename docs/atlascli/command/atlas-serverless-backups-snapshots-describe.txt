@@ -56,7 +56,7 @@ Options
    * - --snapshotId
      - string
      - true
-     - Unique identifier of the snapshot to restore. You must specify a snapshotId for automated restores.
+     - Unique identifier of the snapshot.
 
 Inherited Options
 -----------------

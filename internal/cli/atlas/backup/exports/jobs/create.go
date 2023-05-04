@@ -47,7 +47,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Export job created in a bucket with ID '{{.ExportBucketId}}'.\n"
+var createTemplate = "Export job '{{.Id}}' created in a bucket with ID '{{.ExportBucketId}}'.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newExportJob()
@@ -61,7 +61,7 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newExportJob() *atlasv2.DiskBackupExportJobRequest {
-	var customData []atlasv2.Label
+	customData := make([]atlasv2.Label, 0, len(opts.customData))
 	for key, value := range opts.customData {
 		pair := atlasv2.Label{}
 		pair.Key, pair.Value = pointer.Get(key), pointer.Get(value)

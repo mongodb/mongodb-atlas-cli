@@ -48,7 +48,11 @@ type ServerlessRestoreJobsCreator interface {
 func (s *Store) ServerlessSnapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupSnapshot, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.CloudBackupsApi.ListServerlessBackups(s.ctx, projectID, clusterName).PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).Execute()
+		res := s.clientv2.CloudBackupsApi.ListServerlessBackups(s.ctx, projectID, clusterName)
+		if opts != nil {
+			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+		}
+		result, _, err := res.Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

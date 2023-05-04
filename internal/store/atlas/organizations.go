@@ -39,8 +39,11 @@ type OrganizationDeleter interface {
 
 // Organizations encapsulate the logic to manage different cloud providers.
 func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlasv2.PaginatedOrganization, error) {
-	result, _, err := s.clientv2.OrganizationsApi.ListOrganizations(s.ctx).
-		Name(opts.Name).PageNum(int32(opts.PageNum)).Execute()
+	res := s.clientv2.OrganizationsApi.ListOrganizations(s.ctx)
+	if opts != nil {
+		res = res.Name(opts.Name).PageNum(int32(opts.PageNum))
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 

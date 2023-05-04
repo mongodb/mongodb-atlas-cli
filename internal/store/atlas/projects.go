@@ -65,15 +65,21 @@ type ProjectTeamDeleter interface {
 
 // Projects encapsulates the logic to manage different cloud providers.
 func (s *Store) Projects(opts *atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
-	result, _, err := s.clientv2.ProjectsApi.ListProjects(s.ctx).PageNum(int32(opts.PageNum)).
-		ItemsPerPage(int32(opts.ItemsPerPage)).Execute()
+	res := s.clientv2.ProjectsApi.ListProjects(s.ctx)
+	if opts != nil {
+		res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
 func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
-	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationProjects(s.ctx, orgID).
-		PageNum(int32(opts.PageNum)).Name(opts.Name).ItemsPerPage(int32(opts.ItemsPerPage)).Execute()
+	res := s.clientv2.OrganizationsApi.ListOrganizationProjects(s.ctx, orgID)
+	if opts != nil {
+		res = res.PageNum(int32(opts.PageNum)).Name(opts.Name).ItemsPerPage(int32(opts.ItemsPerPage))
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 
@@ -85,7 +91,11 @@ func (s *Store) Project(id string) (interface{}, error) {
 
 // CreateProject encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateProject(group atlasv2.Group, opts *atlas.CreateProjectOptions) (*atlasv2.Group, error) {
-	result, _, err := s.clientv2.ProjectsApi.CreateProject(s.ctx).ProjectOwnerId(opts.ProjectOwnerID).Group(group).Execute()
+	res := s.clientv2.ProjectsApi.CreateProject(s.ctx).Group(group)
+	if opts != nil {
+		res = res.ProjectOwnerId(opts.ProjectOwnerID)
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 
@@ -97,8 +107,11 @@ func (s *Store) DeleteProject(projectID string) error {
 
 // ProjectUsers lists all IAM users in a project.
 func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAppUser, error) {
-	result, _, err := s.clientv2.ProjectsApi.ListProjectUsers(s.ctx, projectID).
-		ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum)).Execute()
+	res := s.clientv2.ProjectsApi.ListProjectUsers(s.ctx, projectID)
+	if opts != nil {
+		res = res.ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum))
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 

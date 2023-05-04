@@ -421,9 +421,12 @@ func referenceExportedDeployment(projectName, clusterName string) *akov1.AtlasDe
 				VersionReleaseSystem: "LTS",
 			},
 			ProcessArgs: &akov1.ProcessArgs{
-				MinimumEnabledTLSProtocol: "TLS1_2",
-				JavascriptEnabled:         toptr.MakePtr(true),
-				NoTableScan:               toptr.MakePtr(false),
+				MinimumEnabledTLSProtocol:        "TLS1_2",
+				JavascriptEnabled:                toptr.MakePtr(true),
+				NoTableScan:                      toptr.MakePtr(false),
+				OplogSizeMB:                      toptr.MakePtr(0),
+				SampleSizeBIConnector:            toptr.MakePtr(0),
+				SampleRefreshIntervalBIConnector: toptr.MakePtr(0),
 			},
 		},
 	}

@@ -107,7 +107,12 @@ func (apply *ConfigApply) Run() error {
 }
 
 func sortResources(projectResources, deploymentResources []runtime.Object, version string) [][]runtime.Object {
-	sortedResources := make([][]runtime.Object, len(features.VersionsToResourcesMap[version])+1)
+	resources, versionFound := features.GetResourcesForVersion(version)
+	if !versionFound {
+		return nil
+	}
+
+	sortedResources := make([][]runtime.Object, len(resources)+1)
 
 	for _, resource := range projectResources {
 		if _, ok := resource.(*corev1.Secret); ok {

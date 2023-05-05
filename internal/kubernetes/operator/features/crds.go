@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/crds"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 )
@@ -72,10 +73,8 @@ var (
 )
 
 func GetResourcesForVersion(version string) ([]string, bool) {
-	semVer := strings.Split(version, ".")
-	semVer[2] = "0"
-	majorVersion := strings.Join(semVer, ".")
-
+	v := semver.MustParse(version)
+	majorVersion := semver.New(v.Major(), v.Minor(), 0, "", "").String()
 	resources, ok := versionsToResourcesMap[majorVersion]
 	return resources, ok
 }

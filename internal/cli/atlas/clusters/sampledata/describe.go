@@ -54,7 +54,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) describe <clusterName> --projectId projectId.
+// atlas cluster(s) sampleData describe <clusterName> --projectId projectId.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
@@ -68,7 +68,7 @@ func DescribeBuilder() *cobra.Command {
 			"output": describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the sample data load job:
-  %s clusters describe 5e98249d937cfc52efdc2a9f --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),
+  %s clusters sampleData describe 5e98249d937cfc52efdc2a9f --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

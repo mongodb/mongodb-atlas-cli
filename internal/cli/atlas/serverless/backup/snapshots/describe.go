@@ -26,8 +26,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `ID	SNAPSHOT TYPE	TYPE	DESCRIPTION	EXPIRES AT
-{{.ID}}	{{.SnapshotType}}	{{.Type}}	{{.Description}}	{{.ExpiresAt}}
+const describeTemplate = `ID	SNAPSHOT TYPE	EXPIRES AT
+{{.ID}}	{{.SnapshotType}}	{{.ExpiresAt}}
 `
 
 type DescribeOpts struct {
@@ -59,10 +59,11 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:   "describe",
-		Short: "Return the details for the specified snapshot for your project.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
-		Args:  require.NoArgs,
+		Use:         "describe",
+		Short:       "Return the details for the specified snapshot for your project.",
+		Long:        fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+		Args:        require.NoArgs,
+		Annotations: map[string]string{"output": describeTemplate},
 		Example: fmt.Sprintf(`  # Return the details for the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the instance named myDemo:
   %s serverless backups snapshots describe --snapshotId 5f4007f327a3bd7b6f4103c5 --clusterName myDemo`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -82,6 +83,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 	_ = cmd.MarkFlagRequired(flag.SnapshotID)

@@ -79,6 +79,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <username>",
 		Short: "Modify the details for a database user for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  # Update roles for a database user named myUser for the project with the ID 5e2211c17a3e5a48f5497de3:
   %[1]s dbuser update myUser --role readWriteAnyDatabase --projectId 5e2211c17a3e5a48f5497de3
 
@@ -88,6 +89,7 @@ func UpdateBuilder() *cobra.Command {
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"usernameDesc": "Username to update in the MongoDB database.",
+			"output":       updateTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -109,6 +111,7 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

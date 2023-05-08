@@ -25,11 +25,11 @@ import (
 //go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber,AtlasOrganizationCreator
 
 type OrganizationLister interface {
-	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
+	Organizations(*atlas.OrganizationsListOptions) (interface{}, error)
 }
 
 type OrganizationDescriber interface {
-	Organization(string) (*atlas.Organization, error)
+	Organization(string) (interface{}, error)
 }
 
 type OrganizationCreator interface {
@@ -45,10 +45,14 @@ type OrganizationDeleter interface {
 }
 
 // Organizations encapsulate the logic to manage different cloud providers.
-func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Organizations, error) {
+func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Organizations.List(s.ctx, opts)
+		res := s.clientv2.OrganizationsApi.ListOrganizations(s.ctx)
+		if opts != nil {
+			res = res.Name(opts.Name).PageNum(int32(opts.PageNum))
+		}
+		result, _, err := res.Execute()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.List(s.ctx, opts)
@@ -59,10 +63,10 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Orga
 }
 
 // Organization encapsulate the logic to manage different cloud providers.
-func (s *Store) Organization(id string) (*atlas.Organization, error) {
+func (s *Store) Organization(id string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Organizations.Get(s.ctx, id)
+		result, _, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Get(s.ctx, id)

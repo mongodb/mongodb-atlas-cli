@@ -35,6 +35,8 @@ type WatchOpts struct {
 	store       store.SnapshotsDescriber
 }
 
+var watchTemplate = "\nSnapshot changes completed.\n"
+
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -48,7 +50,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return result.Status == "completed" || result.Status == "failed", nil
+	return result.GetStatus() == "completed" || result.GetStatus() == "failed", nil
 }
 
 func (opts *WatchOpts) Run() error {
@@ -76,12 +78,13 @@ You can interrupt the command's polling at any time with CTRL-C.
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"snapshotIdDesc": "Unique identifier of the snapshot you want to watch.",
+			"output":         watchTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nSnapshot changes completed.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

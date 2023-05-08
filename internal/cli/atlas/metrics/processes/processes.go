@@ -66,7 +66,9 @@ func Builder() *cobra.Command {
 		Use:   "processes <hostname:port>",
 		Short: "Return the process measurements for the specified host.",
 		Long: fmt.Sprintf(`To return the hostname and port needed for this command, run
-%s processes list`, cli.ExampleAtlasEntryPoint()),
+%s processes list
+
+`, cli.ExampleAtlasEntryPoint()) + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"process"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
@@ -99,12 +101,17 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.Period, flag.Period, "", usage.Period)
 	cmd.Flags().StringVar(&opts.Start, flag.Start, "", usage.MeasurementStart)
 	cmd.Flags().StringVar(&opts.End, flag.End, "", usage.MeasurementEnd)
-	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.TypeFlag, nil, usage.MeasurementType)
+	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.TypeFlag, nil, usage.MetricsMeasurementType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Granularity)
+
+	cmd.MarkFlagsRequiredTogether(flag.Start, flag.End)
+	cmd.MarkFlagsMutuallyExclusive(flag.Period, flag.Start)
+	cmd.MarkFlagsMutuallyExclusive(flag.Period, flag.End)
 
 	return cmd
 }

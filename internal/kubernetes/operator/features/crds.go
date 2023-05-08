@@ -19,12 +19,13 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/crds"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 )
 
 const (
-	LatestOperatorVersion       = "1.6.0"
+	LatestOperatorVersion       = "1.7.0"
 	maxDepth                    = 100
 	ResourceVersion             = "app.kubernetes.io/version"
 	ResourceAtlasProject        = "atlasprojects"
@@ -43,14 +44,7 @@ var (
 	ErrDocumentHasNoSchema       = errors.New("document contains no Schema")
 	ErrDocumentHasNoSpec         = errors.New("document contains no Spec")
 
-	VersionsToResourcesMap = map[string][]string{
-		"1.4.0": {
-			ResourceAtlasProject,
-			ResourceAtlasDeployment,
-			ResourceAtlasDatabaseUser,
-			ResourceAtlasBackupSchedule,
-			ResourceAtlasBackupPolicy,
-		},
+	versionsToResourcesMap = map[string][]string{
 		"1.5.0": {
 			ResourceAtlasDatabaseUser,
 			ResourceAtlasProject,
@@ -67,12 +61,27 @@ var (
 			ResourceAtlasBackupPolicy,
 			ResourceAtlasTeam,
 		},
+		"1.7.0": {
+			ResourceAtlasDatabaseUser,
+			ResourceAtlasProject,
+			ResourceAtlasDeployment,
+			ResourceAtlasBackupSchedule,
+			ResourceAtlasBackupPolicy,
+			ResourceAtlasTeam,
+		},
 	}
 )
 
+func GetResourcesForVersion(version string) ([]string, bool) {
+	v := semver.MustParse(version)
+	majorVersion := semver.New(v.Major(), v.Minor(), 0, "", "").String()
+	resources, ok := versionsToResourcesMap[majorVersion]
+	return resources, ok
+}
+
 func SupportedVersions() []string {
-	result := make([]string, 0, len(VersionsToResourcesMap))
-	for version := range VersionsToResourcesMap {
+	result := make([]string, 0, len(versionsToResourcesMap))
+	for version := range versionsToResourcesMap {
 		result = append(result, version)
 	}
 	return result
@@ -83,20 +92,14 @@ type AtlasCRDs struct {
 }
 
 func NewAtlasCRDs(crdProvider crds.AtlasOperatorCRDProvider, version string) (*AtlasCRDs, error) {
-	versionFound := false
-	for k := range VersionsToResourcesMap {
-		if k == version {
-			versionFound = true
-		}
-	}
-
+	resources, versionFound := GetResourcesForVersion(version)
 	if !versionFound {
 		return nil, fmt.Errorf(ErrVersionNotSupportedFmt, version)
 	}
 
 	result := &AtlasCRDs{resources: map[string]*apiextensions.JSONSchemaProps{}}
 
-	for _, resource := range VersionsToResourcesMap[version] {
+	for _, resource := range resources {
 		crd, err := crdProvider.GetAtlasOperatorResource(resource, version)
 		if err != nil {
 			return nil, fmt.Errorf(ErrDownloadResourceFailedFmt, resource, err)

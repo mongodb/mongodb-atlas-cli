@@ -57,6 +57,7 @@ Related Commands
 * :ref:`mongocli-cloud-manager-clusters-list` - List clusters for your project.
 * :ref:`mongocli-cloud-manager-clusters-reclaimFreeSpace` - Reclaim unused space for a cluster using compact.
 * :ref:`mongocli-cloud-manager-clusters-restart` - Restart a cluster for your project.
+* :ref:`mongocli-cloud-manager-clusters-resync` - Start an initial sync for a cluster or process.
 * :ref:`mongocli-cloud-manager-clusters-shutdown` - Shutdown a cluster for your project.
 * :ref:`mongocli-cloud-manager-clusters-startup` - Start up a cluster for your project.
 * :ref:`mongocli-cloud-manager-clusters-unmanage` - Stop managing a cluster via automation.
@@ -74,6 +75,7 @@ Related Commands
    list </command/mongocli-cloud-manager-clusters-list>
    reclaimFreeSpace </command/mongocli-cloud-manager-clusters-reclaimFreeSpace>
    restart </command/mongocli-cloud-manager-clusters-restart>
+   resync </command/mongocli-cloud-manager-clusters-resync>
    shutdown </command/mongocli-cloud-manager-clusters-shutdown>
    startup </command/mongocli-cloud-manager-clusters-startup>
    unmanage </command/mongocli-cloud-manager-clusters-unmanage>

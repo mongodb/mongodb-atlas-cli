@@ -22,9 +22,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/openlyinc/pointy"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestWatchBuilder(t *testing.T) {
@@ -44,8 +44,8 @@ func TestWatchOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockRestoreJobsDescriber(ctrl)
 
-	expected := &mongodbatlas.CloudProviderSnapshotRestoreJob{
-		Failed: pointy.Bool(true),
+	expected := &atlasv2.DiskBackupRestoreJob{
+		Failed: pointer.Get(true),
 	}
 
 	describeOpts := &WatchOpts{

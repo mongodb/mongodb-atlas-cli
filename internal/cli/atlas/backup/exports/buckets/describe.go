@@ -28,7 +28,7 @@ import (
 )
 
 var describeTemplate = `ID	BUCKET NAME	CLOUD PROVIDER	IAM ROLE ID
-{{.ID}}	{{.BucketName}}	{{.CloudProvider}}	{{.IAMRoleID}}
+{{.Id}}	{{.BucketName}}	{{.CloudProvider}}	{{.IamRoleId}}
 `
 
 type DescribeOpts struct {
@@ -63,6 +63,9 @@ func DescribeBuilder() *cobra.Command {
 		Short:   "Return one snapshot export bucket.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": describeTemplate,
+		},
 		Example: fmt.Sprintf(`  # Return the details for the continuous backup export bucket with the ID dbdb00ca12345678f901a234:
   %s backup exports buckets describe dbdb00ca12345678f901a234`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -81,6 +84,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.BucketID)
 

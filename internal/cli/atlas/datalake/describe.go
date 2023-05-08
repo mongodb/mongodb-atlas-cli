@@ -61,12 +61,11 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe <name>",
 		Short: "Return the details for the specified federated database instance.",
-		Long: `To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.
-
-` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
-		Args: require.ExactArgs(1),
+		Long:  `To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.`,
+		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Name of the federated database instance to retrieve.",
+			"output":   describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the details for the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s dataLakes describe myFDI --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
@@ -85,6 +84,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

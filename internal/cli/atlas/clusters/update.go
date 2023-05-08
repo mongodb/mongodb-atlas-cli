@@ -121,7 +121,7 @@ func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlas.AdvancedCluster) {
 	}
 }
 
-// mongocli atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].
+// UpdateBuilder atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{
 		fs: afero.NewOsFs(),
@@ -131,11 +131,9 @@ func UpdateBuilder() *cobra.Command {
 		Short: "Modify the settings of the specified cluster.",
 		Long: `You can specify modifications in a JSON configuration file with the --file flag.
 		
-You can modify only M10 or larger clusters that are single-region replica sets.
-		
 You can't change the name of the cluster or downgrade the MongoDB version of your cluster.
 
-` + fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"),
+` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"), "Atlas supports this command only for M10+ clusters"),
 		Example: fmt.Sprintf(`  # Update the tier for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
   %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50
 
@@ -164,6 +162,7 @@ You can't change the name of the cluster or downgrade the MongoDB version of you
 		},
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to update.",
+			"output":          updateTmpl,
 		},
 	}
 
@@ -178,8 +177,12 @@ You can't change the name of the cluster or downgrade the MongoDB version of you
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagFilename(flag.File)
+
+	autocomplete := &autoCompleteOpts{}
+	_ = cmd.RegisterFlagCompletionFunc(flag.Tier, autocomplete.autocompleteTier())
 
 	return cmd
 }

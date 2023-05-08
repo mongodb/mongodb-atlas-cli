@@ -83,16 +83,19 @@ func (opts *DescribeOpts) validate() error {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe",
-		Aliases: []string{"get"},
+		Use:         "describe",
+		Aliases:     []string{"get"},
+		Annotations: map[string]string{"output": describeTemplate},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the MongoDB user with the ID 5dd56c847a3e5a1f363d424d:
   %[1]s users describe --id 5dd56c847a3e5a1f363d424d --output json
   
   # Return the JSON-formatted details for the MongoDB user with the username myUser:
   %[1]s users describe --username myUser --output json`, cli.ExampleAtlasEntryPoint()),
 		Short: "Return the details for the specified MongoDB user.",
-		Long:  `You can specify either the unique 24-digit ID that identifies the MongoDB user or the username for the MongoDB user.`,
-		Args:  require.NoArgs,
+		Long: `You can specify either the unique 24-digit ID that identifies the MongoDB user or the username for the MongoDB user.
+		
+User accounts and API keys with any role can run this command.`,
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return prerun.ExecuteE(
 				opts.initStore(cmd.Context()),
@@ -109,6 +112,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.id, flag.ID, "", usage.UserID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

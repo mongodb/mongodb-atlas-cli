@@ -28,7 +28,7 @@ import (
 )
 
 var describeTemplate = `MINIMUM TLS	JAVASCRIPT ENABLED	OPLOG SIZE MB
-{{.MinimumEnabledTLSProtocol}}	{{.JavascriptEnabled}}	{{if .OplogSizeMB}}{{.OplogSizeMB}} {{else}}N/A{{end}}
+{{.MinimumEnabledTlsProtocol}}	{{.JavascriptEnabled}}	{{if .GetOplogSizeMB}}{{.GetOplogSizeMB}} {{else}}N/A{{end}}
 `
 
 type DescribeOpts struct {
@@ -82,6 +82,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

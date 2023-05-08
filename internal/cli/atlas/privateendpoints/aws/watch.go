@@ -34,6 +34,8 @@ type WatchOpts struct {
 	store store.PrivateEndpointDescriber
 }
 
+var watchTemplate = "\nPrivate endpoint changes completed.\n"
+
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -67,18 +69,21 @@ func WatchBuilder() *cobra.Command {
 		Long: `This command checks the endpoint's state periodically until the endpoint reaches an AVAILABLE or FAILED state. 
 Once the endpoint reaches the expected state, the command prints "Private endpoint changes completed."
 If you run the command in the terminal, it blocks the terminal session until the resource becomes available or fails.
-You can interrupt the command's polling at any time with CTRL-C.`,
+You can interrupt the command's polling at any time with CTRL-C.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Example: fmt.Sprintf(`  # Watch for the AWS private endpoint with the ID 5f4fc14da2b47835a58c63a2 to become available in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s privateEndpoints aws watch 5f4fc14da2b47835a58c63a2 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"privateEndpointIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.",
+			"output":                watchTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nPrivate endpoint changes completed.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

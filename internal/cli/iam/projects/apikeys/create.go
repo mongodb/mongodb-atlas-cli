@@ -69,8 +69,13 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create an organization API key and assign it to your project.",
-		Long:  `MongoDB returns the private API key only once. After you run this command, immediately copy, save, and secure both the public and private API keys.`,
-		Args:  require.NoArgs,
+		Long: `MongoDB returns the private API key only once. After you run this command, immediately copy, save, and secure both the public and private API keys.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project User Admin"),
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
+		Args: require.NoArgs,
 		Example: fmt.Sprintf(`  # Create an organization API key with the ORG_OWNER role and assign it to the project with ID 5e2211c17a3e5a48f5497de3:
   %s projects apiKeys create --desc "My API key" --projectId 5e1234c17a3e5a48f5497de3 --role ORG_OWNER --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -90,6 +95,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Description)
 	_ = cmd.MarkFlagRequired(flag.Role)

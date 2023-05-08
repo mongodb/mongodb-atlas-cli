@@ -44,7 +44,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var restoreListTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT{{range .Results}}
-{{.ID}}	{{.SnapshotID}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}{{end}}
+{{.Id}}	{{.SnapshotId}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
@@ -68,6 +68,7 @@ func ListBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve restore jobs.",
+			"output":          restoreListTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return all continuous backup restore jobs for the cluster Cluster0:
   %s backup restore list Cluster0`, cli.ExampleAtlasEntryPoint()),
@@ -90,6 +91,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

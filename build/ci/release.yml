@@ -131,6 +131,7 @@ functions:
         env:
           <<: *go_env
           TOOL_NAME: ${TOOL_NAME}
+          SECRET_API_KEY: ${chocolatey_api_key}
         command: bash.exe -c build/package/chocoupdate.sh
   "rename pkg":
     - command: subprocess.exec
@@ -225,6 +226,7 @@ functions:
       type: test
       params:
         include_expansions_in_env:
+          - project
           - revision
           - created_at
           - image
@@ -236,6 +238,7 @@ functions:
       type: test
       params:
         include_expansions_in_env:
+          - project
           - revision
           - created_at
           - image
@@ -300,7 +303,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install go-msi"
       - func: "generate msi"
         vars:
@@ -344,7 +346,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -395,7 +396,6 @@ tasks:
     patchable: false
     stepback: false
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: mongocli
@@ -404,7 +404,6 @@ tasks:
     patchable: false
     stepback: false
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: atlascli
@@ -413,7 +412,6 @@ tasks:
     git_tag_only: true
     stepback: false
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: mongocli
@@ -422,7 +420,6 @@ tasks:
     git_tag_only: true
     stepback: false
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: atlascli
@@ -430,7 +427,6 @@ tasks:
   - name: pkg_test_mongocli_generate
     tags: [ "smoke-test", "mongocli", "pkg" ]
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: mongocli
@@ -438,7 +434,6 @@ tasks:
   - name: pkg_test_atlascli_generate
     tags: [ "smoke-test", "atlascli", "pkg" ]
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: atlascli
@@ -452,7 +447,6 @@ tasks:
       - name: release_msi
         variant: "release_mongocli_msi"
     commands:
-      - func: "clone"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -529,7 +523,6 @@ tasks:
       - name: release_msi
         variant: "release_atlascli_msi"
     commands:
-      - func: "clone"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -605,7 +598,6 @@ tasks:
       - name: compile
         variant: "code_health"
     commands:
-      - func: "clone"
       - func: "install go-msi"
       - func: "generate msi"
         vars:
@@ -664,7 +656,6 @@ tasks:
           variant: "release_atlascli_github"
     tags: [ "smoke-test", "generate", "repo", "atlascli" ]
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: atlascli
@@ -677,7 +668,6 @@ tasks:
           variant: "release_mongocli_github"
     tags: [ "smoke-test", "generate", "repo", "mongocli" ]
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: mongocli
@@ -688,7 +678,6 @@ tasks:
       - name: package_msi
         variant: go_atlascli_msi_snapshot
     commands:
-      - func: "clone"
       - func: "powershell build"
         vars:
           file: windows_post_package_test
@@ -830,7 +819,7 @@ buildvariants:
       - name: push_stable_atlascli_generate
   - name: pkg_smoke_tests_docker_mongocli
     display_name: "Post packaging smoke tests (Docker / MongoCLI)"
-    run_on: ubuntu1804-small
+    run_on: ubuntu2004-small
     expansions:
       go_root: "/opt/golang/go1.19"
       go_bin: "/opt/golang/go1.19/bin"
@@ -839,7 +828,7 @@ buildvariants:
       - name: .smoke-test .mongocli .pkg
   - name: pkg_smoke_tests_docker_atlascli
     display_name: "Post packaging smoke tests (Docker / AtlasCLI)"
-    run_on: ubuntu1804-small
+    run_on: ubuntu2004-small
     expansions:
       go_root: "/opt/golang/go1.19"
       go_bin: "/opt/golang/go1.19/bin"
@@ -858,7 +847,7 @@ buildvariants:
       go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     run_on:
-      - ubuntu1804-small
+      - ubuntu2004-small
     tasks:
       - name: .smoke-test .generate .repo .atlascli
   - name: release_mongocli_repo_test
@@ -868,6 +857,6 @@ buildvariants:
       go_bin: "/opt/golang/go1.19/bin"
       go_base_path: ""
     run_on:
-      - ubuntu1804-small
+      - ubuntu2004-small
     tasks:
       - name: .smoke-test .generate .repo .mongocli

@@ -14,10 +14,13 @@ mongocli atlas accessLists list
 
 Return all IP access list entries for your project.
 
+To use this command, you must authenticate with a user account or an API key that has the Organization Member role.
+
 Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli atlas accessLists list [options]
 

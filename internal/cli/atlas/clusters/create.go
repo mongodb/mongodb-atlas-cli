@@ -229,6 +229,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 		},
 		Annotations: map[string]string{
 			"nameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphens.",
+			"output":   createTmpl,
 		},
 	}
 
@@ -254,6 +255,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagFilename(flag.File)
 
@@ -266,6 +268,18 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.BIConnector)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.TypeFlag)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Shards)
+
+	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"REPLICASET", "SHARDED", "GEOSHARDED"}, cobra.ShellCompDirectiveDefault
+	})
+
+	_ = cmd.RegisterFlagCompletionFunc(flag.Provider, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"AWS", "AZURE", "GCP"}, cobra.ShellCompDirectiveDefault
+	})
+
+	autocomplete := &autoCompleteOpts{}
+	_ = cmd.RegisterFlagCompletionFunc(flag.Tier, autocomplete.autocompleteTier())
+	_ = cmd.RegisterFlagCompletionFunc(flag.Region, autocomplete.autocompleteRegion())
 
 	return cmd
 }

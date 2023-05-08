@@ -22,20 +22,19 @@ import (
 	"reflect"
 	"strings"
 	"testing"
-
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -58,14 +57,14 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		)
 
 		cluster := &mongodbatlas.AdvancedCluster{
-			BackupEnabled: pointers.MakePtr(true),
+			BackupEnabled: pointer.Get(true),
 			BiConnector: &mongodbatlas.BiConnector{
-				Enabled:        pointers.MakePtr(true),
+				Enabled:        pointer.Get(true),
 				ReadPreference: "TestRef",
 			},
 			ClusterType:              "REPLICASET",
 			ConnectionStrings:        nil,
-			DiskSizeGB:               pointers.MakePtr[float64](20.4),
+			DiskSizeGB:               pointer.Get[float64](20.4),
 			EncryptionAtRestProvider: "TestProvider",
 			GroupID:                  "TestGroupID",
 			ID:                       "TestID",
@@ -78,8 +77,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			MongoDBMajorVersion: "5.0",
 			MongoDBVersion:      "5.0",
 			Name:                clusterName,
-			Paused:              pointers.MakePtr(false),
-			PitEnabled:          pointers.MakePtr(true),
+			Paused:              pointer.Get(false),
+			PitEnabled:          pointer.Get(true),
 			StateName:           "RUNNING",
 			ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
 				{
@@ -89,34 +88,34 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					RegionConfigs: []*mongodbatlas.AdvancedRegionConfig{
 						{
 							AnalyticsSpecs: &mongodbatlas.Specs{
-								DiskIOPS:      pointers.MakePtr[int64](10),
+								DiskIOPS:      pointer.Get[int64](10),
 								EbsVolumeType: "TestEBSVolume",
 								InstanceSize:  "M20",
-								NodeCount:     pointers.MakePtr(3),
+								NodeCount:     pointer.Get(3),
 							},
 							ElectableSpecs: &mongodbatlas.Specs{
-								DiskIOPS:      pointers.MakePtr[int64](10),
+								DiskIOPS:      pointer.Get[int64](10),
 								EbsVolumeType: "TestEBSVolume",
 								InstanceSize:  "M20",
-								NodeCount:     pointers.MakePtr(3),
+								NodeCount:     pointer.Get(3),
 							},
 							ReadOnlySpecs: &mongodbatlas.Specs{
-								DiskIOPS:      pointers.MakePtr[int64](10),
+								DiskIOPS:      pointer.Get[int64](10),
 								EbsVolumeType: "TestEBSVolume",
 								InstanceSize:  "M20",
-								NodeCount:     pointers.MakePtr(3),
+								NodeCount:     pointer.Get(3),
 							},
 							AutoScaling: &mongodbatlas.AdvancedAutoScaling{
-								DiskGB: &mongodbatlas.DiskGB{Enabled: pointers.MakePtr(true)},
+								DiskGB: &mongodbatlas.DiskGB{Enabled: pointer.Get(true)},
 								Compute: &mongodbatlas.Compute{
-									Enabled:          pointers.MakePtr(true),
-									ScaleDownEnabled: pointers.MakePtr(true),
+									Enabled:          pointer.Get(true),
+									ScaleDownEnabled: pointer.Get(true),
 									MinInstanceSize:  "M20",
 									MaxInstanceSize:  "M40",
 								},
 							},
 							BackingProviderName: "AWS",
-							Priority:            pointers.MakePtr(1),
+							Priority:            pointer.Get(1),
 							ProviderName:        "AWS",
 							RegionName:          "US_EAST_1",
 						},
@@ -127,32 +126,32 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			RootCertType:         "TestRootCertType",
 			VersionReleaseSystem: "TestReleaseSystem",
 		}
-		processArgs := &mongodbatlas.ProcessArgs{
-			DefaultReadConcern:               "TestReadConcern",
-			DefaultWriteConcern:              "TestWriteConcert",
-			MinimumEnabledTLSProtocol:        "1.0",
-			FailIndexKeyTooLong:              pointers.MakePtr(true),
-			JavascriptEnabled:                pointers.MakePtr(true),
-			NoTableScan:                      pointers.MakePtr(true),
-			OplogSizeMB:                      pointers.MakePtr[int64](10),
-			SampleSizeBIConnector:            pointers.MakePtr[int64](10),
-			SampleRefreshIntervalBIConnector: pointers.MakePtr[int64](10),
-			OplogMinRetentionHours:           pointers.MakePtr[float64](10.1),
+		processArgs := &atlasv2.ClusterDescriptionProcessArgs{
+			DefaultReadConcern:               pointer.Get("TestReadConcern"),
+			DefaultWriteConcern:              pointer.Get("TestWriteConcert"),
+			MinimumEnabledTlsProtocol:        pointer.Get("1.0"),
+			FailIndexKeyTooLong:              pointer.Get(true),
+			JavascriptEnabled:                pointer.Get(true),
+			NoTableScan:                      pointer.Get(true),
+			SampleSizeBIConnector:            pointer.Get[int32](10),
+			SampleRefreshIntervalBIConnector: pointer.Get[int32](10),
 		}
-		backupSchedule := &mongodbatlas.CloudProviderSnapshotBackupPolicy{
-			ClusterID:             "testClusterID",
-			ClusterName:           clusterName,
-			ReferenceHourOfDay:    pointers.MakePtr[int64](5),
-			ReferenceMinuteOfHour: pointers.MakePtr[int64](5),
-			RestoreWindowDays:     pointers.MakePtr[int64](5),
-			UpdateSnapshots:       pointers.MakePtr(true),
-			NextSnapshot:          "",
-			Policies: []mongodbatlas.Policy{
+		processArgs.OplogSizeMB.Set(pointer.Get(int32(10)))
+		processArgs.OplogMinRetentionHours.Set(pointer.Get(float64(10.1)))
+		backupSchedule := &atlasv2.DiskBackupSnapshotSchedule{
+			ClusterId:             pointer.Get("testClusterID"),
+			ClusterName:           pointer.Get(clusterName),
+			ReferenceHourOfDay:    pointer.Get[int32](5),
+			ReferenceMinuteOfHour: pointer.Get[int32](5),
+			RestoreWindowDays:     pointer.Get[int32](5),
+			UpdateSnapshots:       pointer.Get(true),
+			NextSnapshot:          pointer.Get(time.Now()),
+			Policies: []atlasv2.Policy{
 				{
-					ID: "1",
-					PolicyItems: []mongodbatlas.PolicyItem{
+					Id: pointer.Get("1"),
+					PolicyItems: []atlasv2.PolicyItem{
 						{
-							ID:                "1",
+							Id:                pointer.Get("1"),
 							FrequencyInterval: 10,
 							FrequencyType:     "DAYS",
 							RetentionUnit:     "WEEKS",
@@ -161,35 +160,35 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					},
 				},
 			},
-			AutoExportEnabled: pointers.MakePtr(true),
-			Export: &mongodbatlas.Export{
-				ExportBucketID: "TestBucketID",
-				FrequencyType:  "TestFreqType",
+			AutoExportEnabled: pointer.Get(true),
+			Export: &atlasv2.AutoExportPolicy{
+				ExportBucketId: pointer.Get("TestBucketID"),
+				FrequencyType:  pointer.Get("TestFreqType"),
 			},
-			UseOrgAndGroupNamesInExportPrefix: pointers.MakePtr(true),
-			CopySettings: []mongodbatlas.CopySetting{
+			UseOrgAndGroupNamesInExportPrefix: pointer.Get(true),
+			CopySettings: []atlasv2.DiskBackupCopySetting{
 				{
-					CloudProvider:     toptr.MakePtr("AWS"),
-					RegionName:        toptr.MakePtr("US_EAST_1"),
-					ReplicationSpecID: toptr.MakePtr("123456"),
-					ShouldCopyOplogs:  toptr.MakePtr(false),
+					CloudProvider:     pointer.Get("AWS"),
+					RegionName:        pointer.Get("US_EAST_1"),
+					ReplicationSpecId: pointer.Get("123456"),
+					ShouldCopyOplogs:  pointer.Get(false),
 					Frequencies:       []string{"DAILY"},
 				},
 			},
 		}
-		globalCluster := &mongodbatlas.GlobalCluster{
-			CustomZoneMapping: map[string]string{
+		globalCluster := &atlasv2.GeoSharding{
+			CustomZoneMapping: &map[string]string{
 				firstLocation: zoneID1,
 			},
-			ManagedNamespaces: []mongodbatlas.ManagedNamespace{
+			ManagedNamespaces: []atlasv2.ManagedNamespaces{
 				{
 					Db:                     "testDB",
 					Collection:             "testCollection",
 					CustomShardKey:         "testShardKey",
-					IsCustomShardKeyHashed: pointers.MakePtr(true),
-					IsShardKeyUnique:       pointers.MakePtr(true),
-					NumInitialChunks:       4,
-					PresplitHashedZones:    pointers.MakePtr(true),
+					IsCustomShardKeyHashed: pointer.Get(true),
+					IsShardKeyUnique:       pointer.Get(true),
+					NumInitialChunks:       pointer.Get(int64(4)),
+					PresplitHashedZones:    pointer.Get(true),
 				},
 			},
 		}
@@ -234,7 +233,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 							CustomShardKey:         managedNamespace[0].CustomShardKey,
 							IsCustomShardKeyHashed: managedNamespace[0].IsCustomShardKeyHashed,
 							IsShardKeyUnique:       managedNamespace[0].IsShardKeyUnique,
-							NumInitialChunks:       managedNamespace[0].NumInitialChunks,
+							NumInitialChunks:       int(managedNamespace[0].GetNumInitialChunks()),
 							PresplitHashedZones:    managedNamespace[0].PresplitHashedZones,
 						},
 					},
@@ -303,15 +302,15 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				},
 				ServerlessSpec: nil,
 				ProcessArgs: &atlasV1.ProcessArgs{
-					DefaultReadConcern:               processArgs.DefaultReadConcern,
-					DefaultWriteConcern:              processArgs.DefaultWriteConcern,
-					MinimumEnabledTLSProtocol:        processArgs.MinimumEnabledTLSProtocol,
+					DefaultReadConcern:               processArgs.GetDefaultReadConcern(),
+					DefaultWriteConcern:              processArgs.GetDefaultWriteConcern(),
+					MinimumEnabledTLSProtocol:        processArgs.GetMinimumEnabledTlsProtocol(),
 					FailIndexKeyTooLong:              processArgs.FailIndexKeyTooLong,
 					JavascriptEnabled:                processArgs.JavascriptEnabled,
 					NoTableScan:                      processArgs.NoTableScan,
-					OplogSizeMB:                      processArgs.OplogSizeMB,
-					SampleSizeBIConnector:            processArgs.SampleSizeBIConnector,
-					SampleRefreshIntervalBIConnector: processArgs.SampleRefreshIntervalBIConnector,
+					OplogSizeMB:                      pointer.Get(int64(processArgs.GetOplogSizeMB())),
+					SampleSizeBIConnector:            pointer.Get(int64(processArgs.GetSampleSizeBIConnector())),
+					SampleRefreshIntervalBIConnector: pointer.Get(int64(processArgs.GetSampleRefreshIntervalBIConnector())),
 				},
 			},
 			Status: status.AtlasDeploymentStatus{
@@ -337,10 +336,10 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				Spec: atlasV1.AtlasBackupPolicySpec{
 					Items: []atlasV1.AtlasBackupPolicyItem{
 						{
-							FrequencyType:     backupSchedule.Policies[0].PolicyItems[0].FrequencyType,
-							FrequencyInterval: backupSchedule.Policies[0].PolicyItems[0].FrequencyInterval,
-							RetentionUnit:     backupSchedule.Policies[0].PolicyItems[0].RetentionUnit,
-							RetentionValue:    backupSchedule.Policies[0].PolicyItems[0].RetentionValue,
+							FrequencyType:     backupSchedule.Policies[0].PolicyItems[0].GetFrequencyType(),
+							FrequencyInterval: int(backupSchedule.Policies[0].PolicyItems[0].GetFrequencyInterval()),
+							RetentionUnit:     backupSchedule.Policies[0].PolicyItems[0].GetRetentionUnit(),
+							RetentionValue:    int(backupSchedule.Policies[0].PolicyItems[0].GetRetentionValue()),
 						},
 					},
 				},
@@ -363,24 +362,24 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			Spec: atlasV1.AtlasBackupScheduleSpec{
 				AutoExportEnabled: *backupSchedule.AutoExportEnabled,
 				Export: &atlasV1.AtlasBackupExportSpec{
-					ExportBucketID: backupSchedule.Export.ExportBucketID,
-					FrequencyType:  backupSchedule.Export.FrequencyType,
+					ExportBucketID: backupSchedule.Export.GetExportBucketId(),
+					FrequencyType:  backupSchedule.Export.GetFrequencyType(),
 				},
 				PolicyRef: common.ResourceRefNamespaced{
 					Name:      strings.ToLower(expectPolicies[0].Name),
 					Namespace: expectPolicies[0].Namespace,
 				},
-				ReferenceHourOfDay:                *backupSchedule.ReferenceHourOfDay,
-				ReferenceMinuteOfHour:             *backupSchedule.ReferenceMinuteOfHour,
-				RestoreWindowDays:                 *backupSchedule.RestoreWindowDays,
-				UpdateSnapshots:                   *backupSchedule.UpdateSnapshots,
-				UseOrgAndGroupNamesInExportPrefix: *backupSchedule.UseOrgAndGroupNamesInExportPrefix,
+				ReferenceHourOfDay:                int64(backupSchedule.GetReferenceHourOfDay()),
+				ReferenceMinuteOfHour:             int64(backupSchedule.GetReferenceMinuteOfHour()),
+				RestoreWindowDays:                 int64(backupSchedule.GetRestoreWindowDays()),
+				UpdateSnapshots:                   backupSchedule.GetUpdateSnapshots(),
+				UseOrgAndGroupNamesInExportPrefix: backupSchedule.GetUseOrgAndGroupNamesInExportPrefix(),
 				CopySettings: []atlasV1.CopySetting{
 					{
-						CloudProvider:     toptr.MakePtr("AWS"),
-						RegionName:        toptr.MakePtr("US_EAST_1"),
-						ReplicationSpecID: toptr.MakePtr("123456"),
-						ShouldCopyOplogs:  toptr.MakePtr(false),
+						CloudProvider:     pointer.Get("AWS"),
+						RegionName:        pointer.Get("US_EAST_1"),
+						ReplicationSpecID: pointer.Get("123456"),
+						ShouldCopyOplogs:  pointer.Get(false),
 						Frequencies:       []string{"DAILY"},
 					},
 				},
@@ -424,37 +423,40 @@ func TestBuildServerlessDeployments(t *testing.T) {
 	featureValidator := mocks.NewMockFeatureValidator(ctl)
 
 	t.Run("Can import Serverless deployment", func(t *testing.T) {
-		spe := []mongodbatlas.ServerlessPrivateEndpointConnection{
-			{ID: "TestPEId",
-				CloudProviderEndpointID:      "TestCloudProviderID",
-				Comment:                      "TestPEName",
-				EndpointServiceName:          "",
-				ErrorMessage:                 "",
-				Status:                       "",
-				ProviderName:                 "",
-				PrivateEndpointIPAddress:     "",
-				PrivateLinkServiceResourceID: "",
-			},
+		speID := "TestPEId"
+		speCloudProviderEndpointID := "TestCloudProviderID"
+		speComment := "TestPEName"
+		spePrivateEndpointIPAddress := ""
+
+		spe := []atlasv2.ServerlessTenantEndpoint{
+			atlasv2.ServerlessAzureTenantEndpointAsServerlessTenantEndpoint(
+				&atlasv2.ServerlessAzureTenantEndpoint{
+					Id:                       &speID,
+					CloudProviderEndpointId:  &speCloudProviderEndpointID,
+					Comment:                  &speComment,
+					PrivateEndpointIpAddress: &spePrivateEndpointIPAddress,
+				},
+			),
 		}
 
 		cluster := &mongodbatlas.Cluster{
 			AutoScaling: &mongodbatlas.AutoScaling{
-				AutoIndexingEnabled: pointers.MakePtr(true),
+				AutoIndexingEnabled: pointer.Get(true),
 				Compute: &mongodbatlas.Compute{
-					Enabled:          pointers.MakePtr(true),
-					ScaleDownEnabled: pointers.MakePtr(true),
+					Enabled:          pointer.Get(true),
+					ScaleDownEnabled: pointer.Get(true),
 					MinInstanceSize:  "M20",
 					MaxInstanceSize:  "M40",
 				},
-				DiskGBEnabled: pointers.MakePtr(true),
+				DiskGBEnabled: pointer.Get(true),
 			},
 			BackupEnabled: nil,
 			BiConnector: &mongodbatlas.BiConnector{
-				Enabled:        pointers.MakePtr(true),
+				Enabled:        pointer.Get(true),
 				ReadPreference: "TestRef",
 			},
 			ClusterType:              "SERVERLESS",
-			DiskSizeGB:               pointers.MakePtr[float64](20),
+			DiskSizeGB:               pointer.Get[float64](20),
 			EncryptionAtRestProvider: "TestProvider",
 			Labels:                   nil,
 			ID:                       "TestClusterID",
@@ -480,14 +482,14 @@ func TestBuildServerlessDeployments(t *testing.T) {
 				RegionName:          "US_EAST_1",
 				VolumeType:          "",
 				AutoScaling: &mongodbatlas.AutoScaling{
-					AutoIndexingEnabled: pointers.MakePtr(true),
+					AutoIndexingEnabled: pointer.Get(true),
 					Compute: &mongodbatlas.Compute{
-						Enabled:          pointers.MakePtr(true),
-						ScaleDownEnabled: pointers.MakePtr(true),
+						Enabled:          pointer.Get(true),
+						ScaleDownEnabled: pointer.Get(true),
 						MinInstanceSize:  "M20",
 						MaxInstanceSize:  "M40",
 					},
-					DiskGBEnabled: pointers.MakePtr(true),
+					DiskGBEnabled: pointer.Get(true),
 				},
 			},
 			ReplicationFactor:       nil,
@@ -501,11 +503,8 @@ func TestBuildServerlessDeployments(t *testing.T) {
 			VersionReleaseSystem:    "",
 		}
 
-		listOptions := &mongodbatlas.ListOptions{
-			ItemsPerPage: MaxItems,
-		}
 		clusterStore.EXPECT().ServerlessInstance(projectName, clusterName).Return(cluster, nil)
-		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName, listOptions).Return(spe, nil)
+		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName).Return(spe, nil)
 
 		expected := &atlasV1.AtlasDeployment{
 			TypeMeta: v1.TypeMeta{
@@ -549,9 +548,9 @@ func TestBuildServerlessDeployments(t *testing.T) {
 					},
 					PrivateEndpoints: []atlasV1.ServerlessPrivateEndpoint{
 						{
-							Name:                     spe[0].Comment,
-							CloudProviderEndpointID:  spe[0].CloudProviderEndpointID,
-							PrivateEndpointIPAddress: spe[0].PrivateEndpointIPAddress,
+							Name:                     speComment,
+							CloudProviderEndpointID:  speCloudProviderEndpointID,
+							PrivateEndpointIPAddress: spePrivateEndpointIPAddress,
 						},
 					},
 				},

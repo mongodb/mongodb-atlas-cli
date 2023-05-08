@@ -28,7 +28,7 @@ import (
 )
 
 const describeTemplate = `CIDR BLOCK	SECURITY GROUP
-{{.CIDRBlock}}	{{if .AwsSecurityGroup}}{{.AwsSecurityGroup}} {{else}}N/A{{end}}
+{{.CidrBlock}}	{{if .AwsSecurityGroup}}{{.AwsSecurityGroup}} {{else}}N/A{{end}}
 `
 
 type DescribeOpts struct {
@@ -62,6 +62,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <entry>",
 		Aliases: []string{"get"},
 		Short:   "Return the details for the specified IP access list entry.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to return.",
@@ -83,6 +84,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

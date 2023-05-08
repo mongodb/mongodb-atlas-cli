@@ -29,9 +29,9 @@ import (
 
 const (
 	provider       = "AWS"
-	createTemplate = `AWS IAM role '{{.RoleID}}' successfully created.
-Atlas AWS Account ARN: {{.AtlasAWSAccountARN}}
-Unique External ID: {{.AtlasAssumedRoleExternalID}}
+	createTemplate = `AWS IAM role '{{.CloudProviderAccessAWSIAMRole.RoleId}}' successfully created.
+Atlas AWS Account ARN: {{.CloudProviderAccessAWSIAMRole.AtlasAWSAccountArn}}
+Unique External ID: {{.CloudProviderAccessAWSIAMRole.AtlasAssumedRoleExternalId}}
 `
 )
 
@@ -65,7 +65,10 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create",
 		Short: "Create an AWS IAM role.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Args:  require.NoArgs,
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -80,6 +83,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

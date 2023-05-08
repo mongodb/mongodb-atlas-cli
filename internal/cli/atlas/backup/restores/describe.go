@@ -44,7 +44,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var restoreDescribeTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT	URLs
-{{.ID}}	{{.SnapshotID}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}	{{range $index, $element := .DeliveryURL}}{{if $index}}; {{end}}{{$element}}{{end}}
+{{.Id}}	{{.SnapshotId}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}	{{range $index, $element := .DeliveryUrl}}{{if $index}}; {{end}}{{$element}}{{end}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -86,6 +86,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 

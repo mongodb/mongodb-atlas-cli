@@ -55,7 +55,6 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return commonerrors.Check(err)
 	}
-
 	return opts.Print(r)
 }
 
@@ -76,12 +75,13 @@ func CreateBuilder() *cobra.Command {
 		Short:   "Create a backup snapshot for your project and cluster.",
 		Long: `You can create on-demand backup snapshots for Atlas cluster tiers M10 and larger.
 
-` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Owner"), "Atlas supports this command only for M10+ clusters."),
 		Args: require.ExactArgs(1),
 		Example: fmt.Sprintf(`  # Create a backup snapshot for the cluster named myDemo that Atlas retains for 30 days:
   %s backups snapshots create myDemo --desc "test" --retention 30`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas cluster whose snapshot you want to restore.",
+			"output":          createTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -100,6 +100,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Description)
 

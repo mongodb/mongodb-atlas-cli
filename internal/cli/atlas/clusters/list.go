@@ -43,7 +43,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	NAME	MDB VER	STATE{{range .Results}}
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
+{{.Id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
@@ -65,6 +65,9 @@ func ListBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all clusters for the project with ID 5e2211c17a3e5a48f5497de3:
   %s clusters list --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -84,6 +87,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

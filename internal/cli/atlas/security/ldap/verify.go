@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type VerifyOpts struct {
@@ -35,7 +35,7 @@ type VerifyOpts struct {
 	cli.OutputOpts
 	cli.InputOpts
 	hostname           string
-	port               int
+	port               int32
 	bindUsername       string
 	bindPassword       string
 	caCertificate      string
@@ -52,7 +52,7 @@ func (opts *VerifyOpts) initStore(ctx context.Context) func() error {
 }
 
 var verifyTemplate = `REQUEST ID	PROJECT ID	STATUS
-{{.RequestID}}	{{.GroupID}}	{{.Status}}
+{{.RequestId}}	{{.GroupId}}	{{.Status}}
 `
 
 func (opts *VerifyOpts) Run() error {
@@ -89,12 +89,12 @@ func (opts *VerifyOpts) Prompt() error {
 	return nil
 }
 
-func (opts *VerifyOpts) newLDAP() *atlas.LDAP {
-	return &atlas.LDAP{
-		Hostname:           &opts.hostname,
-		Port:               &opts.port,
-		BindUsername:       &opts.bindUsername,
-		BindPassword:       &opts.bindPassword,
+func (opts *VerifyOpts) newLDAP() *atlasv2.NDSLDAPVerifyConnectivityJobRequestParams {
+	return &atlasv2.NDSLDAPVerifyConnectivityJobRequestParams{
+		Hostname:           opts.hostname,
+		Port:               opts.port,
+		BindUsername:       opts.bindUsername,
+		BindPassword:       opts.bindPassword,
 		CaCertificate:      &opts.caCertificate,
 		AuthzQueryTemplate: &opts.authzQueryTemplate,
 	}
@@ -106,6 +106,10 @@ func VerifyBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "verify",
 		Short: "Request verification of an LDAP configuration for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": verifyTemplate,
+		},
 		Example: fmt.Sprintf(`  # Request the JSON-formatted verification of the LDAP configuration for the atlas-ldaps-01.ldap.myteam.com host in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s security ldap verify --hostname atlas-ldaps-01.ldap.myteam.com --bindUsername "CN=Administrator,CN=Users,DC=atlas-ldaps-01,DC=myteam,DC=com" --bindPassword changeMe --projectId 5e2211c17a3e5a48f5497de3 --output json
 `, cli.ExampleAtlasEntryPoint()),
@@ -125,7 +129,7 @@ func VerifyBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.hostname, flag.Hostname, "", usage.LDAPHostname)
-	cmd.Flags().IntVar(&opts.port, flag.Port, defaultLDAPPort, usage.LDAPPort)
+	cmd.Flags().Int32Var(&opts.port, flag.Port, defaultLDAPPort, usage.LDAPPort)
 	cmd.Flags().StringVar(&opts.bindUsername, flag.BindUsername, "", usage.BindUsername)
 	cmd.Flags().StringVar(&opts.bindPassword, flag.BindPassword, "", usage.BindPassword)
 	cmd.Flags().StringVar(&opts.caCertificate, flag.CaCertificate, "", usage.CaCertificate)
@@ -133,6 +137,7 @@ func VerifyBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Hostname)
 	_ = cmd.MarkFlagRequired(flag.BindUsername)

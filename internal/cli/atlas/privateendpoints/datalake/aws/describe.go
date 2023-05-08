@@ -28,7 +28,7 @@ import (
 )
 
 var describeTemplate = `ID	ENDPOINT PROVIDER	TYPE	COMMENT
-{{.EndpointID}}	{{.Provider}}	{{.Type}}	{{.Comment}}
+{{.EndpointId}}	{{.Provider}}	{{.Type}}	{{.Comment}}
 `
 
 type DescribeOpts struct {
@@ -62,8 +62,10 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <privateEndpointId>",
 		Aliases: []string{"get"},
 		Short:   "Return a specific Data Lake private endpoint for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+			"output":                describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # This example uses the profile named "myprofile" for accessing Atlas.
   %s privateEndpoint dataLake aws describe vpce-abcdefg0123456789 -P myprofile`, cli.ExampleAtlasEntryPoint()),
@@ -83,6 +85,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

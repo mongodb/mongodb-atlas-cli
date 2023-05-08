@@ -95,9 +95,11 @@ func CreateBuilder() *cobra.Command {
 		Use:     "create <endpointGroupId>",
 		Aliases: []string{"add"},
 		Short:   "Create a GCP private endpoint interface.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",
+			"output":              createTemplate,
 		},
 		Example: fmt.Sprintf(
 			`  %s privateEndpoints gcp interfaces create endpoint-1 \
@@ -123,6 +125,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.Endpoints, flag.Endpoint, []string{}, usage.Endpoint)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 	_ = cmd.MarkFlagRequired(flag.EndpointServiceID)
 	_ = cmd.MarkFlagRequired(flag.GCPProjectID)
 	return cmd

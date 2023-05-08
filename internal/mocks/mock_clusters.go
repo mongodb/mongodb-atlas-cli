@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -467,10 +468,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) CreateDatabaseUser(arg0 inte
 }
 
 // CreateProjectIPAccessList mocks base method.
-func (m *MockAtlasClusterQuickStarter) CreateProjectIPAccessList(arg0 []*mongodbatlas.ProjectIPAccessList) (*mongodbatlas.ProjectIPAccessLists, error) {
+func (m *MockAtlasClusterQuickStarter) CreateProjectIPAccessList(arg0 []*mongodbatlasv2.NetworkPermissionEntry) (*mongodbatlasv2.PaginatedNetworkAccess, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProjectIPAccessList", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.ProjectIPAccessLists)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedNetworkAccess)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -482,10 +483,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) CreateProjectIPAccessList(ar
 }
 
 // DatabaseUser mocks base method.
-func (m *MockAtlasClusterQuickStarter) DatabaseUser(arg0, arg1, arg2 string) (*mongodbatlas.DatabaseUser, error) {
+func (m *MockAtlasClusterQuickStarter) DatabaseUser(arg0, arg1, arg2 string) (*mongodbatlasv2.DatabaseUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseUser", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.DatabaseUser)
+	ret0, _ := ret[0].(*mongodbatlasv2.DatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -512,10 +513,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) ProjectClusters(arg0, arg1 i
 }
 
 // SampleDataStatus mocks base method.
-func (m *MockAtlasClusterQuickStarter) SampleDataStatus(arg0, arg1 string) (*mongodbatlas.SampleDatasetJob, error) {
+func (m *MockAtlasClusterQuickStarter) SampleDataStatus(arg0, arg1 string) (*mongodbatlasv2.SampleDatasetStatus, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SampleDataStatus", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.SampleDatasetJob)
+	ret0, _ := ret[0].(*mongodbatlasv2.SampleDatasetStatus)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -588,10 +589,10 @@ func (m *MockSampleDataStatusDescriber) EXPECT() *MockSampleDataStatusDescriberM
 }
 
 // SampleDataStatus mocks base method.
-func (m *MockSampleDataStatusDescriber) SampleDataStatus(arg0, arg1 string) (*mongodbatlas.SampleDatasetJob, error) {
+func (m *MockSampleDataStatusDescriber) SampleDataStatus(arg0, arg1 string) (*mongodbatlasv2.SampleDatasetStatus, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SampleDataStatus", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.SampleDatasetJob)
+	ret0, _ := ret[0].(*mongodbatlasv2.SampleDatasetStatus)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -626,10 +627,10 @@ func (m *MockAtlasClusterConfigurationOptionsDescriber) EXPECT() *MockAtlasClust
 }
 
 // AtlasClusterConfigurationOptions mocks base method.
-func (m *MockAtlasClusterConfigurationOptionsDescriber) AtlasClusterConfigurationOptions(arg0, arg1 string) (*mongodbatlas.ProcessArgs, error) {
+func (m *MockAtlasClusterConfigurationOptionsDescriber) AtlasClusterConfigurationOptions(arg0, arg1 string) (*mongodbatlasv2.ClusterDescriptionProcessArgs, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AtlasClusterConfigurationOptions", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessArgs)
+	ret0, _ := ret[0].(*mongodbatlasv2.ClusterDescriptionProcessArgs)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -793,10 +794,10 @@ func (m *MockAtlasClusterConfigurationOptionsUpdater) EXPECT() *MockAtlasCluster
 }
 
 // UpdateAtlasClusterConfigurationOptions mocks base method.
-func (m *MockAtlasClusterConfigurationOptionsUpdater) UpdateAtlasClusterConfigurationOptions(arg0, arg1 string, arg2 *mongodbatlas.ProcessArgs) (*mongodbatlas.ProcessArgs, error) {
+func (m *MockAtlasClusterConfigurationOptionsUpdater) UpdateAtlasClusterConfigurationOptions(arg0, arg1 string, arg2 *mongodbatlasv2.ClusterDescriptionProcessArgs) (*mongodbatlasv2.ClusterDescriptionProcessArgs, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAtlasClusterConfigurationOptions", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessArgs)
+	ret0, _ := ret[0].(*mongodbatlasv2.ClusterDescriptionProcessArgs)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

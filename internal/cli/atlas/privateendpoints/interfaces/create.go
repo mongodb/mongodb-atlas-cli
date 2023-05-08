@@ -61,6 +61,9 @@ func CreateBuilder() *cobra.Command {
 		Aliases: []string{"add"},
 		Short:   "Add a new interface to a private endpoint.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -78,6 +81,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
 

@@ -44,7 +44,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	TYPE	STATUS	CREATED AT	EXPIRES AT{{range .Results}}
-{{.ID}}	{{.SnapshotType}}	{{.Status}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
+{{.Id}}	{{.SnapshotType}}	{{.Status}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
@@ -90,6 +90,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

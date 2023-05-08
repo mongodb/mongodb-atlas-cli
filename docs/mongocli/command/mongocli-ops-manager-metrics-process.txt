@@ -18,6 +18,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli ops-manager metrics process <hostId> [options]
 
@@ -37,7 +38,7 @@ Arguments
    * - hostId
      - string
      - true
-     - Process identifier.
+     - Process identifier. You can use mongocli ops-manager processes list to get the ID.
 
 Options
 -------
@@ -56,7 +57,7 @@ Options
      - ISO 8601-formatted date and time that specifies when to stop retrieving measurements. You can't set this parameter and period in the same request.
    * - --granularity
      - string
-     - false
+     - true
      - ISO 8601-formatted duration that specifies the interval between measurement data points. Only the following subset of ISO 8601-formatted time periods are supported: PT10S, PT1M, PT5M, PT1H, P1D. When you specify granularity, you must specify either period or start and end.
    * - -h, --help
      - 
@@ -99,3 +100,10 @@ Inherited Options
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
+Examples
+--------
+
+.. code-block::
+
+   # List metrics for the process e4ac1e57c58cc9c8aaa5a1163a851993
+   mongocli ops-manager metrics process e4ac1e57c58cc9c8aaa5a1163a851993 --period P1DT12H --granularity PT5

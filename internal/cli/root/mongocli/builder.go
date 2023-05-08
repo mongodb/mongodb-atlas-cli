@@ -122,7 +122,9 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	)
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
-
+	_ = rootCmd.RegisterFlagCompletionFunc(flag.Profile, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return config.List(), cobra.ShellCompDirectiveDefault
+	})
 	return rootCmd
 }
 

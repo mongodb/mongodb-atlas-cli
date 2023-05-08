@@ -63,8 +63,10 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"show", "get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return the details for the specified project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies the project.",
+			"output": describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s projects describe 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
@@ -79,6 +81,7 @@ func DescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

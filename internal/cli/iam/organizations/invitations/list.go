@@ -29,7 +29,7 @@ import (
 )
 
 const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range .}}
-{{.ID}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
+{{.Id}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
 `
 
 type ListOpts struct {
@@ -64,17 +64,20 @@ func (opts *ListOpts) newInvitationOptions() *atlas.InvitationOptions {
 // mongocli iam organizations(s) invitations list [--email email]  [--orgId orgId].
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
-	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "Return all pending invitations to your organization.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of pending invitations to the organization with the ID 5f71e5255afec75a3d0f96dc:
   %s organizations invitations list --orgId 5f71e5255afec75a3d0f96dc --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore(cmd.Context())()
+			return opts.PreRunE(
+				opts.ValidateOrgID,
+				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -85,6 +88,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

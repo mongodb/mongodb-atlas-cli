@@ -23,12 +23,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/openlyinc/pointy"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {
@@ -54,7 +54,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 		fs:                                  afero.NewMemMapFs(),
 	}
 
-	expected := &atlas.CloudProviderSnapshotBackupPolicy{}
+	expected := &atlasv2.DiskBackupSnapshotSchedule{}
 	cmd := &cobra.Command{}
 
 	mockStore.
@@ -97,7 +97,7 @@ func TestUpdateOpts_RunWithFile(t *testing.T) {
 		fs:          fs,
 	}
 
-	expected := &atlas.CloudProviderSnapshotBackupPolicy{}
+	expected := &atlasv2.DiskBackupSnapshotSchedule{}
 	cmd := &cobra.Command{}
 
 	mockStore.
@@ -136,13 +136,13 @@ func TestReturnMockValueForSetting(t *testing.T) {
 			name:             "enable only",
 			inputEnableFlag:  true,
 			inputDisableFlag: false,
-			want:             pointy.Bool(true),
+			want:             pointer.Get(true),
 		},
 		{
 			name:             "disable only",
 			inputEnableFlag:  false,
 			inputDisableFlag: true,
-			want:             pointy.Bool(false),
+			want:             pointer.Get(false),
 		},
 		{
 			name:             "both false",

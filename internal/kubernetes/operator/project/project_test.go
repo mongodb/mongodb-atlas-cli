@@ -21,20 +21,21 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -59,76 +60,79 @@ func TestBuildAtlasProject(t *testing.T) {
 			Created:                   "",
 			RegionUsageRestrictions:   "",
 			Links:                     nil,
-			WithDefaultAlertsSettings: pointers.MakePtr(false),
+			WithDefaultAlertsSettings: pointer.Get(false),
 		}
 
-		ipAccessLists := &mongodbatlas.ProjectIPAccessLists{
+		ipAccessLists := &atlasv2.PaginatedNetworkAccess{
 			Links: nil,
-			Results: []mongodbatlas.ProjectIPAccessList{
+			Results: []atlasv2.NetworkPermissionEntry{
 				{
-					AwsSecurityGroup: "TestSecurity group",
-					CIDRBlock:        "0.0.0.0/0",
-					Comment:          "Allow everyone",
-					DeleteAfterDate:  "",
-					GroupID:          "TestGroupID",
-					IPAddress:        "0.0.0.0",
+					AwsSecurityGroup: pointer.Get("TestSecurity group"),
+					CidrBlock:        pointer.Get("0.0.0.0/0"),
+					Comment:          pointer.Get("Allow everyone"),
+					DeleteAfterDate:  pointer.Get(time.Now()),
+					GroupId:          pointer.Get("TestGroupID"),
+					IpAddress:        pointer.Get("0.0.0.0"),
 				},
 			},
-			TotalCount: 1,
+			TotalCount: pointer.Get(int32(1)),
 		}
 
-		auditing := &mongodbatlas.Auditing{
-			AuditAuthorizationSuccess: pointers.MakePtr(true),
+		auditing := &atlasv2.AuditLog{
+			AuditAuthorizationSuccess: true,
 			AuditFilter:               "TestFilter",
-			ConfigurationType:         "TestConfigType",
-			Enabled:                   pointers.MakePtr(true),
+			ConfigurationType:         pointer.Get("TestConfigType"),
+			Enabled:                   true,
 		}
 
-		cpas := &mongodbatlas.CloudProviderAccessRoles{
-			AWSIAMRoles: []mongodbatlas.AWSIAMRole{
+		authDate, _ := time.Parse(time.RFC3339, "01-01-2001")
+		createDate, _ := time.Parse(time.RFC3339, "01-02-2001")
+
+		cpas := &atlasv2.CloudProviderAccess{
+			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
 				{
-					AtlasAWSAccountARN:         "TestARN",
-					AtlasAssumedRoleExternalID: "TestExternalRoleID",
-					AuthorizedDate:             "01-01-2001",
-					CreatedDate:                "01-02-2001",
+					AtlasAWSAccountArn:         pointer.Get("TestARN"),
+					AtlasAssumedRoleExternalId: pointer.Get("TestExternalRoleID"),
+					AuthorizedDate:             &authDate,
+					CreatedDate:                &createDate,
 					FeatureUsages:              nil,
-					IAMAssumedRoleARN:          "TestRoleARN",
+					IamAssumedRoleArn:          pointer.Get("TestRoleARN"),
 					ProviderName:               string(provider.ProviderAWS),
-					RoleID:                     "TestRoleID",
+					RoleId:                     pointer.Get("TestRoleID"),
 				},
 			},
 		}
 
-		encryptionAtRest := &mongodbatlas.EncryptionAtRest{
-			GroupID:       "TestGroupID",
-			AwsKms:        mongodbatlas.AwsKms{},
-			AzureKeyVault: mongodbatlas.AzureKeyVault{},
-			GoogleCloudKms: mongodbatlas.GoogleCloudKms{
-				Enabled:              pointers.MakePtr(true),
-				ServiceAccountKey:    "TestServiceAccountKey",
-				KeyVersionResourceID: "TestKeyVersionResourceID",
+		encryptionAtRest := &atlasv2.EncryptionAtRest{
+			AwsKms:        &atlasv2.AWSKMS{},
+			AzureKeyVault: &atlasv2.AzureKeyVault{},
+			GoogleCloudKms: &atlasv2.GoogleCloudKMS{
+				Enabled:              pointer.Get(true),
+				ServiceAccountKey:    pointer.Get("TestServiceAccountKey"),
+				KeyVersionResourceID: pointer.Get("TestKeyVersionResourceID"),
 			},
 		}
 
-		thirdPartyIntegrations := &mongodbatlas.ThirdPartyIntegrations{
+		thirdPartyIntegrations := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []*mongodbatlas.ThirdPartyIntegration{
+			Results: []atlasv2.Integration{
 				{
-					Type:             "PROMETHEUS",
-					UserName:         "TestPrometheusUserName",
-					Password:         "TestPrometheusPassword",
-					ServiceDiscovery: "TestPrometheusServiceDiscovery",
+					Prometheus: &atlasv2.Prometheus{
+						Type:             pointer.Get("PROMETHEUS"),
+						Username:         "TestPrometheusUserName",
+						Password:         pointer.Get("TestPrometheusPassword"),
+						ServiceDiscovery: "TestPrometheusServiceDiscovery",
+					},
 				},
 			},
-			TotalCount: 1,
+			TotalCount: pointer.Get(int32(1)),
 		}
 
-		mw := &mongodbatlas.MaintenanceWindow{
+		mw := &atlasv2.GroupMaintenanceWindow{
 			DayOfWeek:            1,
-			HourOfDay:            pointers.MakePtr(10),
-			StartASAP:            pointers.MakePtr(false),
-			NumberOfDeferrals:    0,
-			AutoDeferOnceEnabled: pointers.MakePtr(false),
+			HourOfDay:            10,
+			StartASAP:            pointer.Get(false),
+			AutoDeferOnceEnabled: pointer.Get(false),
 		}
 
 		peeringConnections := []mongodbatlas.Peer{
@@ -178,7 +182,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		alertConfigs := []mongodbatlas.AlertConfiguration{
 			{
 				EventTypeName: "TestEventTypeName",
-				Enabled:       pointers.MakePtr(true),
+				Enabled:       pointer.Get(true),
 				Matchers: []mongodbatlas.Matcher{
 					{
 						FieldName: "TestFieldName",
@@ -204,9 +208,9 @@ func TestBuildAtlasProject(t *testing.T) {
 						ChannelName:         "TestChannelName",
 						DatadogAPIKey:       "TestDatadogAPIKey",
 						DatadogRegion:       "TestDatadogRegion",
-						DelayMin:            pointers.MakePtr(5),
+						DelayMin:            pointer.Get(5),
 						EmailAddress:        "TestEmail@mongodb.com",
-						EmailEnabled:        pointers.MakePtr(true),
+						EmailEnabled:        pointer.Get(true),
 						FlowdockAPIToken:    "TestFlowDockApiToken",
 						FlowName:            "TestFlowName",
 						IntervalMin:         0,
@@ -215,7 +219,7 @@ func TestBuildAtlasProject(t *testing.T) {
 						OpsGenieRegion:      "TestGenieRegion",
 						OrgName:             "TestOrgName",
 						ServiceKey:          "TestServiceKey",
-						SMSEnabled:          pointers.MakePtr(true),
+						SMSEnabled:          pointer.Get(true),
 						TeamID:              "TestTeamID",
 						TeamName:            "TestTeamName",
 						TypeName:            "TestTypeName",
@@ -228,29 +232,29 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 		}
 
-		projectSettings := &mongodbatlas.ProjectSettings{
-			IsCollectDatabaseSpecificsStatisticsEnabled: pointers.MakePtr(true),
-			IsDataExplorerEnabled:                       pointers.MakePtr(true),
-			IsPerformanceAdvisorEnabled:                 pointers.MakePtr(true),
-			IsRealtimePerformancePanelEnabled:           pointers.MakePtr(true),
-			IsSchemaAdvisorEnabled:                      pointers.MakePtr(true),
+		projectSettings := &atlasv2.GroupSettings{
+			IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
+			IsDataExplorerEnabled:                       pointer.Get(true),
+			IsPerformanceAdvisorEnabled:                 pointer.Get(true),
+			IsRealtimePerformancePanelEnabled:           pointer.Get(true),
+			IsSchemaAdvisorEnabled:                      pointer.Get(true),
 		}
 
-		customRoles := []mongodbatlas.CustomDBRole{
+		customRoles := []atlasv2.CustomDBRole{
 			{
-				Actions: []mongodbatlas.Action{
+				Actions: []atlasv2.DBAction{
 					{
 						Action: "Action-1",
-						Resources: []mongodbatlas.Resource{
+						Resources: []atlasv2.DBResource{
 							{
-								Collection: pointers.MakePtr("Collection-1"),
-								DB:         pointers.MakePtr("DB-1"),
-								Cluster:    pointers.MakePtr(true),
+								Collection: "Collection-1",
+								Db:         "DB-1",
+								Cluster:    true,
 							},
 						},
 					},
 				},
-				InheritedRoles: []mongodbatlas.InheritedRole{
+				InheritedRoles: []atlasv2.InheritedRole{
 					{
 						Db:   "Inherited-DB",
 						Role: "Inherited-ROLE",
@@ -305,7 +309,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore.EXPECT().ProjectSettings(projectID).Return(projectSettings, nil)
 		projectStore.EXPECT().Auditing(projectID).Return(auditing, nil)
 		projectStore.EXPECT().AlertConfigurations(projectID, listOption).Return(alertConfigs, nil)
-		projectStore.EXPECT().DatabaseRoles(projectID, listOption).Return(&customRoles, nil)
+		projectStore.EXPECT().DatabaseRoles(projectID).Return(customRoles, nil)
 		projectStore.EXPECT().ProjectTeams(projectID).Return(projectTeams, nil)
 		projectStore.EXPECT().TeamByID(orgID, teamID).Return(teams, nil)
 		projectStore.EXPECT().TeamUsers(orgID, teamID).Return(teamUsers, nil)
@@ -420,18 +424,18 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 				ProjectIPAccessList: []project.IPAccessList{
 					{
-						AwsSecurityGroup: ipAccessLists.Results[0].AwsSecurityGroup,
-						CIDRBlock:        ipAccessLists.Results[0].CIDRBlock,
-						Comment:          ipAccessLists.Results[0].Comment,
-						DeleteAfterDate:  ipAccessLists.Results[0].DeleteAfterDate,
-						IPAddress:        ipAccessLists.Results[0].IPAddress,
+						AwsSecurityGroup: ipAccessLists.Results[0].GetAwsSecurityGroup(),
+						CIDRBlock:        ipAccessLists.Results[0].GetCidrBlock(),
+						Comment:          ipAccessLists.Results[0].GetComment(),
+						DeleteAfterDate:  ipAccessLists.Results[0].GetDeleteAfterDate().String(),
+						IPAddress:        ipAccessLists.Results[0].GetIpAddress(),
 					},
 				},
 				MaintenanceWindow: project.MaintenanceWindow{
-					DayOfWeek: mw.DayOfWeek,
-					HourOfDay: pointers.PtrValOrDefault(mw.HourOfDay, 0),
-					AutoDefer: pointers.PtrValOrDefault(mw.AutoDeferOnceEnabled, false),
-					StartASAP: pointers.PtrValOrDefault(mw.StartASAP, false),
+					DayOfWeek: int(mw.DayOfWeek),
+					HourOfDay: int(mw.HourOfDay),
+					AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
+					StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
 					Defer:     false,
 				},
 				PrivateEndpoints: []atlasV1.PrivateEndpoint{
@@ -447,8 +451,8 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 				CloudProviderAccessRoles: []atlasV1.CloudProviderAccessRole{
 					{
-						ProviderName:      cpas.AWSIAMRoles[0].ProviderName,
-						IamAssumedRoleArn: cpas.AWSIAMRoles[0].IAMAssumedRoleARN,
+						ProviderName:      cpas.AwsIamRoles[0].ProviderName,
+						IamAssumedRoleArn: *cpas.AwsIamRoles[0].IamAssumedRoleArn,
 					},
 				},
 				AlertConfigurations: []atlasV1.AlertConfiguration{
@@ -484,15 +488,15 @@ func TestBuildAtlasProject(t *testing.T) {
 				X509CertRef:               nil,
 				Integrations: []project.Integration{
 					{
-						Type:     thirdPartyIntegrations.Results[0].Type,
-						UserName: thirdPartyIntegrations.Results[0].UserName,
+						Type:     thirdPartyIntegrations.Results[0].Prometheus.GetType(),
+						UserName: thirdPartyIntegrations.Results[0].Prometheus.GetUsername(),
 						PasswordRef: common.ResourceRefNamespaced{
 							Name: fmt.Sprintf("%s-integration-%s",
 								strings.ToLower(projectID),
-								strings.ToLower(thirdPartyIntegrations.Results[0].Type)),
+								strings.ToLower(thirdPartyIntegrations.Results[0].Prometheus.GetType())),
 							Namespace: targetNamespace,
 						},
-						ServiceDiscovery: thirdPartyIntegrations.Results[0].ServiceDiscovery,
+						ServiceDiscovery: thirdPartyIntegrations.Results[0].Prometheus.ServiceDiscovery,
 					},
 				},
 				EncryptionAtRest: &atlasV1.EncryptionAtRest{
@@ -500,14 +504,14 @@ func TestBuildAtlasProject(t *testing.T) {
 					AzureKeyVault: atlasV1.AzureKeyVault{},
 					GoogleCloudKms: atlasV1.GoogleCloudKms{
 						Enabled:              encryptionAtRest.GoogleCloudKms.Enabled,
-						ServiceAccountKey:    encryptionAtRest.GoogleCloudKms.ServiceAccountKey,
-						KeyVersionResourceID: encryptionAtRest.GoogleCloudKms.KeyVersionResourceID,
+						ServiceAccountKey:    encryptionAtRest.GoogleCloudKms.GetServiceAccountKey(),
+						KeyVersionResourceID: encryptionAtRest.GoogleCloudKms.GetKeyVersionResourceID(),
 					},
 				},
 				Auditing: &atlasV1.Auditing{
-					AuditAuthorizationSuccess: auditing.AuditAuthorizationSuccess,
+					AuditAuthorizationSuccess: &auditing.AuditAuthorizationSuccess,
 					AuditFilter:               auditing.AuditFilter,
-					Enabled:                   auditing.Enabled,
+					Enabled:                   &auditing.Enabled,
 				},
 				Settings: &atlasV1.ProjectSettings{
 					IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
@@ -530,9 +534,9 @@ func TestBuildAtlasProject(t *testing.T) {
 								Name: customRoles[0].Actions[0].Action,
 								Resources: []atlasV1.Resource{
 									{
-										Cluster:    customRoles[0].Actions[0].Resources[0].Cluster,
-										Database:   customRoles[0].Actions[0].Resources[0].DB,
-										Collection: customRoles[0].Actions[0].Resources[0].Collection,
+										Cluster:    &customRoles[0].Actions[0].Resources[0].Cluster,
+										Database:   &customRoles[0].Actions[0].Resources[0].Db,
+										Collection: &customRoles[0].Actions[0].Resources[0].Collection,
 									},
 								},
 							},
@@ -643,19 +647,19 @@ func Test_buildAccessLists(t *testing.T) {
 
 	alProvider := mocks.NewMockProjectIPAccessListLister(ctl)
 	t.Run("Can convert Access Lists", func(t *testing.T) {
-		data := &mongodbatlas.ProjectIPAccessLists{
+		data := &atlasv2.PaginatedNetworkAccess{
 			Links: nil,
-			Results: []mongodbatlas.ProjectIPAccessList{
+			Results: []atlasv2.NetworkPermissionEntry{
 				{
-					AwsSecurityGroup: "TestSecGroup",
-					CIDRBlock:        "0.0.0.0/0",
-					Comment:          "TestComment",
-					DeleteAfterDate:  "TestDate",
-					GroupID:          "TestGroupID",
-					IPAddress:        "0.0.0.0",
+					AwsSecurityGroup: pointer.Get("TestSecGroup"),
+					CidrBlock:        pointer.Get("0.0.0.0/0"),
+					Comment:          pointer.Get("TestComment"),
+					DeleteAfterDate:  pointer.Get(time.Now()),
+					GroupId:          pointer.Get("TestGroupID"),
+					IpAddress:        pointer.Get("0.0.0.0"),
 				},
 			},
-			TotalCount: 1,
+			TotalCount: pointer.Get(int32(1)),
 		}
 
 		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
@@ -669,11 +673,11 @@ func Test_buildAccessLists(t *testing.T) {
 
 		expected := []project.IPAccessList{
 			{
-				AwsSecurityGroup: data.Results[0].AwsSecurityGroup,
-				CIDRBlock:        data.Results[0].CIDRBlock,
-				Comment:          data.Results[0].Comment,
-				DeleteAfterDate:  data.Results[0].DeleteAfterDate,
-				IPAddress:        data.Results[0].IPAddress,
+				AwsSecurityGroup: data.Results[0].GetAwsSecurityGroup(),
+				CIDRBlock:        data.Results[0].GetCidrBlock(),
+				Comment:          data.Results[0].GetComment(),
+				DeleteAfterDate:  data.Results[0].GetDeleteAfterDate().String(),
+				IPAddress:        data.Results[0].GetIpAddress(),
 			},
 		}
 
@@ -688,11 +692,11 @@ func Test_buildAuditing(t *testing.T) {
 
 	auditingProvider := mocks.NewMockAuditingDescriber(ctl)
 	t.Run("Can convert Auditing", func(t *testing.T) {
-		data := &mongodbatlas.Auditing{
-			AuditAuthorizationSuccess: pointers.MakePtr(true),
+		data := &atlasv2.AuditLog{
+			AuditAuthorizationSuccess: true,
 			AuditFilter:               "TestFilter",
-			ConfigurationType:         "TestType",
-			Enabled:                   pointers.MakePtr(true),
+			ConfigurationType:         pointer.Get("TestType"),
+			Enabled:                   true,
 		}
 
 		auditingProvider.EXPECT().Auditing(projectID).Return(data, nil)
@@ -703,9 +707,9 @@ func Test_buildAuditing(t *testing.T) {
 		}
 
 		expected := &atlasV1.Auditing{
-			AuditAuthorizationSuccess: data.AuditAuthorizationSuccess,
+			AuditAuthorizationSuccess: &data.AuditAuthorizationSuccess,
 			AuditFilter:               data.AuditFilter,
-			Enabled:                   data.Enabled,
+			Enabled:                   &data.Enabled,
 		}
 
 		if !reflect.DeepEqual(expected, got) {
@@ -719,17 +723,17 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 
 	cpaProvider := mocks.NewMockCloudProviderAccessRoleLister(ctl)
 	t.Run("Can convert CPA roles", func(t *testing.T) {
-		data := &mongodbatlas.CloudProviderAccessRoles{
-			AWSIAMRoles: []mongodbatlas.AWSIAMRole{
+		data := &atlasv2.CloudProviderAccess{
+			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
 				{
-					AtlasAWSAccountARN:         "TestARN",
-					AtlasAssumedRoleExternalID: "TestRoleID",
-					AuthorizedDate:             "TestAuthDate",
-					CreatedDate:                "TestCreatedDate",
+					AtlasAWSAccountArn:         pointer.Get("TestARN"),
+					AtlasAssumedRoleExternalId: pointer.Get("TestRoleID"),
+					AuthorizedDate:             &time.Time{},
+					CreatedDate:                &time.Time{},
 					FeatureUsages:              nil,
-					IAMAssumedRoleARN:          "TestAssumedRoleARN",
+					IamAssumedRoleArn:          pointer.Get("TestAssumedRoleARN"),
 					ProviderName:               string(provider.ProviderAWS),
-					RoleID:                     "TestRoleID",
+					RoleId:                     pointer.Get("TestRoleID"),
 				},
 			},
 		}
@@ -743,8 +747,8 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 
 		expected := []atlasV1.CloudProviderAccessRole{
 			{
-				ProviderName:      data.AWSIAMRoles[0].ProviderName,
-				IamAssumedRoleArn: data.AWSIAMRoles[0].IAMAssumedRoleARN,
+				ProviderName:      data.AwsIamRoles[0].ProviderName,
+				IamAssumedRoleArn: *data.AwsIamRoles[0].IamAssumedRoleArn,
 			},
 		}
 
@@ -759,19 +763,18 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 
 	dataProvider := mocks.NewMockEncryptionAtRestDescriber(ctl)
 	t.Run("Can convert Encryption at REST AWS", func(t *testing.T) {
-		data := &mongodbatlas.EncryptionAtRest{
-			GroupID: "TestGroupID",
-			AwsKms: mongodbatlas.AwsKms{
-				Enabled:             pointers.MakePtr(true),
-				AccessKeyID:         "TestAccessKey",
-				SecretAccessKey:     "TestSecretAccessKey",
-				CustomerMasterKeyID: "TestCustomerMasterKeyID",
-				Region:              "US_EAST_1",
-				RoleID:              "TestRoleID",
-				Valid:               pointers.MakePtr(true),
+		data := &atlasv2.EncryptionAtRest{
+			AwsKms: &atlasv2.AWSKMS{
+				Enabled:             pointer.Get(true),
+				AccessKeyID:         pointer.Get("TestAccessKey"),
+				SecretAccessKey:     pointer.Get("TestSecretAccessKey"),
+				CustomerMasterKeyID: pointer.Get("TestCustomerMasterKeyID"),
+				Region:              pointer.Get("US_EAST_1"),
+				RoleId:              pointer.Get("TestRoleID"),
+				Valid:               pointer.Get(true),
 			},
-			AzureKeyVault:  mongodbatlas.AzureKeyVault{},
-			GoogleCloudKms: mongodbatlas.GoogleCloudKms{},
+			AzureKeyVault:  &atlasv2.AzureKeyVault{},
+			GoogleCloudKms: &atlasv2.GoogleCloudKMS{},
 		}
 
 		dataProvider.EXPECT().EncryptionAtRest(projectID).Return(data, nil)
@@ -784,11 +787,11 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 		expected := &atlasV1.EncryptionAtRest{
 			AwsKms: atlasV1.AwsKms{
 				Enabled:             data.AwsKms.Enabled,
-				AccessKeyID:         data.AwsKms.AccessKeyID,
-				SecretAccessKey:     data.AwsKms.SecretAccessKey,
-				CustomerMasterKeyID: data.AwsKms.CustomerMasterKeyID,
-				Region:              data.AwsKms.Region,
-				RoleID:              data.AwsKms.RoleID,
+				AccessKeyID:         data.AwsKms.GetAccessKeyID(),
+				SecretAccessKey:     data.AwsKms.GetSecretAccessKey(),
+				CustomerMasterKeyID: data.AwsKms.GetCustomerMasterKeyID(),
+				Region:              data.AwsKms.GetRegion(),
+				RoleID:              data.AwsKms.GetRoleId(),
 				Valid:               data.AwsKms.Valid,
 			},
 			AzureKeyVault:  atlasV1.AzureKeyVault{},
@@ -800,14 +803,13 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 		}
 	})
 	t.Run("Can convert Encryption at REST GCP", func(t *testing.T) {
-		data := &mongodbatlas.EncryptionAtRest{
-			GroupID:       "TestGroupID",
-			AwsKms:        mongodbatlas.AwsKms{},
-			AzureKeyVault: mongodbatlas.AzureKeyVault{},
-			GoogleCloudKms: mongodbatlas.GoogleCloudKms{
-				Enabled:              pointers.MakePtr(true),
-				ServiceAccountKey:    "TestServiceAccountKey",
-				KeyVersionResourceID: "TestVersionResourceID",
+		data := &atlasv2.EncryptionAtRest{
+			AwsKms:        &atlasv2.AWSKMS{},
+			AzureKeyVault: &atlasv2.AzureKeyVault{},
+			GoogleCloudKms: &atlasv2.GoogleCloudKMS{
+				Enabled:              pointer.Get(true),
+				ServiceAccountKey:    pointer.Get("TestServiceAccountKey"),
+				KeyVersionResourceID: pointer.Get("TestVersionResourceID"),
 			},
 		}
 
@@ -822,8 +824,8 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 			AzureKeyVault: atlasV1.AzureKeyVault{},
 			GoogleCloudKms: atlasV1.GoogleCloudKms{
 				Enabled:              data.GoogleCloudKms.Enabled,
-				ServiceAccountKey:    data.GoogleCloudKms.ServiceAccountKey,
-				KeyVersionResourceID: data.GoogleCloudKms.KeyVersionResourceID,
+				ServiceAccountKey:    data.GoogleCloudKms.GetServiceAccountKey(),
+				KeyVersionResourceID: data.GoogleCloudKms.GetKeyVersionResourceID(),
 			},
 		}
 
@@ -832,21 +834,20 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 		}
 	})
 	t.Run("Can convert Encryption at REST Azure", func(t *testing.T) {
-		data := mongodbatlas.EncryptionAtRest{
-			GroupID: "TestGroupID",
-			AwsKms:  mongodbatlas.AwsKms{},
-			AzureKeyVault: mongodbatlas.AzureKeyVault{
-				Enabled:           pointers.MakePtr(true),
-				ClientID:          "TestClientID",
-				AzureEnvironment:  "TestAzureEnv",
-				SubscriptionID:    "TestSubID",
-				ResourceGroupName: "TestResourceGroupName",
-				KeyVaultName:      "TestKeyVaultName",
-				KeyIdentifier:     "TestKeyIdentifier",
-				Secret:            "TestSecret",
-				TenantID:          "TestTenantID",
+		data := atlasv2.EncryptionAtRest{
+			AwsKms: &atlasv2.AWSKMS{},
+			AzureKeyVault: &atlasv2.AzureKeyVault{
+				Enabled:           pointer.Get(true),
+				ClientID:          pointer.Get("TestClientID"),
+				AzureEnvironment:  pointer.Get("TestAzureEnv"),
+				SubscriptionID:    pointer.Get("TestSubID"),
+				ResourceGroupName: pointer.Get("TestResourceGroupName"),
+				KeyVaultName:      pointer.Get("TestKeyVaultName"),
+				KeyIdentifier:     pointer.Get("TestKeyIdentifier"),
+				Secret:            pointer.Get("TestSecret"),
+				TenantID:          pointer.Get("TestTenantID"),
 			},
-			GoogleCloudKms: mongodbatlas.GoogleCloudKms{},
+			GoogleCloudKms: &atlasv2.GoogleCloudKMS{},
 		}
 
 		dataProvider.EXPECT().EncryptionAtRest(projectID).Return(&data, nil)
@@ -859,14 +860,14 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 			AwsKms: atlasV1.AwsKms{},
 			AzureKeyVault: atlasV1.AzureKeyVault{
 				Enabled:           data.AzureKeyVault.Enabled,
-				ClientID:          data.AzureKeyVault.ClientID,
-				AzureEnvironment:  data.AzureKeyVault.AzureEnvironment,
-				SubscriptionID:    data.AzureKeyVault.SubscriptionID,
-				ResourceGroupName: data.AzureKeyVault.ResourceGroupName,
-				KeyVaultName:      data.AzureKeyVault.KeyVaultName,
-				KeyIdentifier:     data.AzureKeyVault.KeyIdentifier,
-				Secret:            data.AzureKeyVault.Secret,
-				TenantID:          data.AzureKeyVault.TenantID,
+				ClientID:          data.AzureKeyVault.GetClientID(),
+				AzureEnvironment:  data.AzureKeyVault.GetAzureEnvironment(),
+				SubscriptionID:    data.AzureKeyVault.GetSubscriptionID(),
+				ResourceGroupName: data.AzureKeyVault.GetResourceGroupName(),
+				KeyVaultName:      data.AzureKeyVault.GetKeyVaultName(),
+				KeyIdentifier:     data.AzureKeyVault.GetKeyIdentifier(),
+				Secret:            data.AzureKeyVault.GetSecret(),
+				TenantID:          data.AzureKeyVault.GetTenantID(),
 			},
 			GoogleCloudKms: atlasV1.GoogleCloudKms{},
 		}
@@ -886,17 +887,19 @@ func Test_buildIntegrations(t *testing.T) {
 	t.Run("Can convert third-party integrations WITH secrets: Prometheus", func(t *testing.T) {
 		const targetNamespace = "test-namespace-3"
 		const includeSecrets = true
-		ints := &mongodbatlas.ThirdPartyIntegrations{
+		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []*mongodbatlas.ThirdPartyIntegration{
+			Results: []atlasv2.Integration{
 				{
-					Type:             "PROMETHEUS",
-					Password:         "PrometheusTestPassword",
-					UserName:         "PrometheusTestUserName",
-					ServiceDiscovery: "TestServiceDiscovery",
+					Prometheus: &atlasv2.Prometheus{
+						Type:             pointer.Get("PROMETHEUS"),
+						Password:         pointer.Get("PrometheusTestPassword"),
+						Username:         "PrometheusTestUserName",
+						ServiceDiscovery: "TestServiceDiscovery",
+					},
 				},
 			},
-			TotalCount: 0,
+			TotalCount: pointer.Get(int32(0)),
 		}
 
 		intProvider.EXPECT().Integrations(projectID).Return(ints, nil)
@@ -908,13 +911,13 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expected := []project.Integration{
 			{
-				Type:             ints.Results[0].Type,
-				ServiceDiscovery: ints.Results[0].ServiceDiscovery,
-				UserName:         ints.Results[0].UserName,
+				Type:             ints.Results[0].Prometheus.GetType(),
+				ServiceDiscovery: ints.Results[0].Prometheus.ServiceDiscovery,
+				UserName:         ints.Results[0].Prometheus.Username,
 				PasswordRef: common.ResourceRefNamespaced{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Type)),
+						strings.ToLower(ints.Results[0].Prometheus.GetType())),
 					Namespace: targetNamespace,
 				},
 			},
@@ -929,14 +932,14 @@ func Test_buildIntegrations(t *testing.T) {
 				ObjectMeta: v1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Type)),
+						strings.ToLower(ints.Results[0].Prometheus.GetType())),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
 						secrets.TypeLabelKey: secrets.CredLabelVal,
 					},
 				},
 				Data: map[string][]byte{
-					secrets.PasswordField: []byte(ints.Results[0].Password),
+					secrets.PasswordField: []byte(ints.Results[0].Prometheus.GetPassword()),
 				},
 			},
 		}
@@ -952,17 +955,19 @@ func Test_buildIntegrations(t *testing.T) {
 	t.Run("Can convert third-party integrations WITHOUT secrets: Prometheus", func(t *testing.T) {
 		const targetNamespace = "test-namespace-4"
 		const includeSecrets = false
-		ints := &mongodbatlas.ThirdPartyIntegrations{
+		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []*mongodbatlas.ThirdPartyIntegration{
+			Results: []atlasv2.Integration{
 				{
-					Type:             "PROMETHEUS",
-					Password:         "PrometheusTestPassword",
-					UserName:         "PrometheusTestUserName",
-					ServiceDiscovery: "TestServiceDiscovery",
+					Prometheus: &atlasv2.Prometheus{
+						Type:             pointer.Get("PROMETHEUS"),
+						Password:         pointer.Get("PrometheusTestPassword"),
+						Username:         "PrometheusTestUserName",
+						ServiceDiscovery: "TestServiceDiscovery",
+					},
 				},
 			},
-			TotalCount: 0,
+			TotalCount: pointer.Get(int32(0)),
 		}
 		intProvider.EXPECT().Integrations(projectID).Return(ints, nil)
 		got, intSecrets, err := buildIntegrations(intProvider, projectID, targetNamespace, includeSecrets, dictionary)
@@ -972,13 +977,13 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expected := []project.Integration{
 			{
-				Type:             ints.Results[0].Type,
-				ServiceDiscovery: ints.Results[0].ServiceDiscovery,
-				UserName:         ints.Results[0].UserName,
+				Type:             ints.Results[0].Prometheus.GetType(),
+				ServiceDiscovery: ints.Results[0].Prometheus.ServiceDiscovery,
+				UserName:         ints.Results[0].Prometheus.Username,
 				PasswordRef: common.ResourceRefNamespaced{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Type)),
+						strings.ToLower(ints.Results[0].Prometheus.GetType())),
 					Namespace: targetNamespace,
 				},
 			},
@@ -993,7 +998,7 @@ func Test_buildIntegrations(t *testing.T) {
 				ObjectMeta: v1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Type)),
+						strings.ToLower(ints.Results[0].Prometheus.GetType())),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
 						secrets.TypeLabelKey: secrets.CredLabelVal,
@@ -1020,12 +1025,11 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 
 	mwProvider := mocks.NewMockMaintenanceWindowDescriber(ctl)
 	t.Run("Can convert maintenance window", func(t *testing.T) {
-		mw := &mongodbatlas.MaintenanceWindow{
+		mw := &atlasv2.GroupMaintenanceWindow{
 			DayOfWeek:            3,
-			HourOfDay:            pointers.MakePtr(10),
-			StartASAP:            pointers.MakePtr(false),
-			NumberOfDeferrals:    0,
-			AutoDeferOnceEnabled: pointers.MakePtr(false),
+			HourOfDay:            10,
+			StartASAP:            pointer.Get(false),
+			AutoDeferOnceEnabled: pointer.Get(false),
 		}
 
 		mwProvider.EXPECT().MaintenanceWindow(projectID).Return(mw, nil)
@@ -1036,8 +1040,8 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 		}
 
 		expected := project.MaintenanceWindow{
-			DayOfWeek: mw.DayOfWeek,
-			HourOfDay: *mw.HourOfDay,
+			DayOfWeek: int(mw.DayOfWeek),
+			HourOfDay: int(mw.HourOfDay),
 			AutoDefer: *mw.AutoDeferOnceEnabled,
 			StartASAP: *mw.StartASAP,
 			Defer:     false,
@@ -1220,12 +1224,12 @@ func Test_buildProjectSettings(t *testing.T) {
 
 	settingsProvider := mocks.NewMockProjectSettingsDescriber(ctl)
 	t.Run("Can convert project settings", func(t *testing.T) {
-		projectSettings := mongodbatlas.ProjectSettings{
-			IsCollectDatabaseSpecificsStatisticsEnabled: pointers.MakePtr(true),
-			IsDataExplorerEnabled:                       pointers.MakePtr(true),
-			IsPerformanceAdvisorEnabled:                 pointers.MakePtr(true),
-			IsRealtimePerformancePanelEnabled:           pointers.MakePtr(true),
-			IsSchemaAdvisorEnabled:                      pointers.MakePtr(true),
+		projectSettings := atlasv2.GroupSettings{
+			IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
+			IsDataExplorerEnabled:                       pointer.Get(true),
+			IsPerformanceAdvisorEnabled:                 pointer.Get(true),
+			IsRealtimePerformancePanelEnabled:           pointer.Get(true),
+			IsSchemaAdvisorEnabled:                      pointer.Get(true),
 		}
 		settingsProvider.EXPECT().ProjectSettings(projectID).Return(&projectSettings, nil)
 
@@ -1251,21 +1255,21 @@ func Test_buildCustomRoles(t *testing.T) {
 
 	rolesProvider := mocks.NewMockDatabaseRoleLister(ctl)
 	t.Run("Can build custom roles", func(t *testing.T) {
-		data := []mongodbatlas.CustomDBRole{
+		data := []atlasv2.CustomDBRole{
 			{
-				Actions: []mongodbatlas.Action{
+				Actions: []atlasv2.DBAction{
 					{
 						Action: "TestAction",
-						Resources: []mongodbatlas.Resource{
+						Resources: []atlasv2.DBResource{
 							{
-								Collection: pointers.MakePtr("TestCollection"),
-								DB:         pointers.MakePtr("TestDB"),
-								Cluster:    pointers.MakePtr(true),
+								Collection: "TestCollection",
+								Db:         "TestDB",
+								Cluster:    true,
 							},
 						},
 					},
 				},
-				InheritedRoles: []mongodbatlas.InheritedRole{
+				InheritedRoles: []atlasv2.InheritedRole{
 					{
 						Db:   "TestDBMAIN",
 						Role: "ADMIN",
@@ -1275,8 +1279,7 @@ func Test_buildCustomRoles(t *testing.T) {
 			},
 		}
 
-		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
-		rolesProvider.EXPECT().DatabaseRoles(projectID, listOptions).Return(&data, nil)
+		rolesProvider.EXPECT().DatabaseRoles(projectID).Return(data, nil)
 
 		role := data[0]
 		expected := []atlasV1.CustomRole{
@@ -1293,9 +1296,9 @@ func Test_buildCustomRoles(t *testing.T) {
 						Name: role.Actions[0].Action,
 						Resources: []atlasV1.Resource{
 							{
-								Cluster:    role.Actions[0].Resources[0].Cluster,
-								Database:   role.Actions[0].Resources[0].DB,
-								Collection: role.Actions[0].Resources[0].Collection,
+								Cluster:    &role.Actions[0].Resources[0].Cluster,
+								Database:   &role.Actions[0].Resources[0].Db,
+								Collection: &role.Actions[0].Resources[0].Collection,
 							},
 						},
 					},

@@ -65,6 +65,7 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return a specific GCP private endpoint for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
@@ -84,6 +85,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

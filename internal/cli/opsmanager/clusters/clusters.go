@@ -40,6 +40,7 @@ func Builder() *cobra.Command {
 		StartupBuilder(),
 		ShutdownBuilder(),
 		ReclaimFreeSpaceBuilder(),
+		ResyncBuilder(),
 	)
 
 	return cmd

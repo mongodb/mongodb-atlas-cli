@@ -23,10 +23,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type AWSOpts struct {
@@ -57,38 +59,44 @@ func (opts *AWSOpts) Run() error {
 
 	if container == nil {
 		var err2 error
-		container, err2 = opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		r, err2 := opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		container = r.(*atlasv2.AWSCloudProviderContainer)
 		if err2 != nil {
 			return err2
 		}
 	}
-	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(container.ID))
+	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(*container.Id))
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *AWSOpts) containerExists() (*atlas.Container, error) {
+func (opts *AWSOpts) containerExists() (*atlasv2.AWSCloudProviderContainer, error) {
 	r, err := opts.store.AWSContainers(opts.ConfigProjectID())
 	if err != nil {
 		return nil, err
 	}
 	for i := range r {
 		if r[i].RegionName == opts.region {
-			return &r[i], nil
+			return r[i], nil
 		}
 	}
 	return nil, nil
 }
 
-func (opts *AWSOpts) newContainer() *atlas.Container {
-	c := &atlas.Container{
-		AtlasCIDRBlock: opts.atlasCIDRBlock,
+func (opts *AWSOpts) newAWSContainer() *atlasv2.AWSCloudProviderContainer {
+	c := &atlasv2.AWSCloudProviderContainer{
+		AtlasCidrBlock: &opts.atlasCIDRBlock,
 		RegionName:     opts.region,
-		ProviderName:   "AWS",
+		ProviderName:   pointer.Get("AWS"),
 	}
 	return c
+}
+
+func (opts *AWSOpts) newContainer() *atlasv2.CloudProviderContainer {
+	w := atlasv2.AWSCloudProviderContainerAsCloudProviderContainer(opts.newAWSContainer())
+	return &w
 }
 
 func normalizeAtlasRegion(region string) string {
@@ -126,7 +134,12 @@ func AwsBuilder() *cobra.Command {
 		Short: "Create a network peering connection between the Atlas VPC and your AWS VPC.",
 		Long: `The network peering create command checks if a VPC exists in the region you specify for your Atlas project. If one exists, this command creates the peering connection between that VPC and your VPC. If an Atlas VPC doesn't exist, this command creates one and creates a connection between it and your VPC.
 		
-To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.`,
+To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		Args: require.NoArgs,
 		Example: fmt.Sprintf(`  # Create a network peering connection between the Atlas VPC in CIDR block 192.168.0.0/24 and your AWS VPC in CIDR block 10.0.0.0/24 for AWS account number 854333054055:
   %s networking peering create aws --accountId 854333054055 --atlasCidrBlock 192.168.0.0/24 --region us-east-1 --routeTableCidrBlock 10.0.0.0/24 --vpcId vpc-078ac381aa90e1e63`, cli.ExampleAtlasEntryPoint()),
@@ -150,6 +163,7 @@ To learn more about network peering connections, see https://www.mongodb.com/doc
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.AccountID)
 	_ = cmd.MarkFlagRequired(flag.RouteTableCidrBlock)

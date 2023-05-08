@@ -26,6 +26,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 var regionsAWS = []string{
@@ -480,9 +481,9 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r atlas.RegionalizedPrivateEndpointSetting
+		var r atlasv2.ProjectSettingItem
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.False(r.Enabled)
+			a.False(r.GetEnabled())
 		}
 	})
 }

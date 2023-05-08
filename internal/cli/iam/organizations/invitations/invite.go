@@ -72,6 +72,7 @@ func InviteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "invite <email>",
 		Short:   "Invite the specified MongoDB user to your organization.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
 		Aliases: []string{"create"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
@@ -81,7 +82,7 @@ func InviteBuilder() *cobra.Command {
   %s organizations invitations invite user@example.com --orgId 5f71e5255afec75a3d0f96dc --role ORG_OWNER --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore(cmd.Context())()
+			return opts.PreRunE(opts.ValidateOrgID, opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]
@@ -98,6 +99,7 @@ func InviteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Role)
 

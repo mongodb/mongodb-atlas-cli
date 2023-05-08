@@ -43,7 +43,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplate = `ID	NAME	MDB VER	STATE
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
+{{.Id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -65,6 +65,7 @@ func DescribeBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to retrieve.",
+			"output":          describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the cluster named myCluster:
   %s clusters describe myCluster --output json`, cli.ExampleAtlasEntryPoint()),
@@ -83,6 +84,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

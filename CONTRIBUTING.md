@@ -19,7 +19,7 @@ this document describes some guidelines necessary to participate in the communit
 
 ## Asking Support Questions
 
-MongoDB support is provided under MongoDB Atlas or Enterprise Advance [support plans](https://support.mongodb.com/welcome).
+MongoDB support is provided under MongoDB Atlas or Enterprise Advanced [support plans](https://support.mongodb.com/welcome).
 Please don't use the GitHub issue tracker to ask questions.
 
 ## Feature Requests
@@ -91,10 +91,41 @@ We provide a git pre-commit hook to format and check the code, to install it run
 We use [mockgen](https://github.com/golang/mock) to handle mocking in our unit tests.
 If you need a new mock please update or add the `//go:generate` instruction to the appropriate file.
 
+#### Debugging in VSCode
+
+To debut in VSCode you need to create an debug configuration for the command with required arguments.
+Run following commands to 
+
+```
+touch .vscode/launch.json
+```
+Then put following configuration into the file.
+Review and replace command name and arguments depending on the command you are using.
+
+```json
+{
+    "configurations": [
+        {
+            "name": "Login Command",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/atlas",
+            "env": {},
+            "buildFlags": "-ldflags '-X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli'",
+            "args": [
+              "login"
+            ]
+      },
+    ]
+} 
+
+```
+
 ### API Interactions
 
 Atlas CLI and MongoDB CLI use [go-client-mongodb-atlas](https://github.com/mongodb/go-client-mongodb-atlas/) 
-and [o-client-mongodb-ops-manager](https://github.com/mongodb/go-client-mongodb-ops-manager/) to interact with Atlas or Ops Manager/CLoud Manager
+and [go-client-mongodb-ops-manager](https://github.com/mongodb/go-client-mongodb-ops-manager/) to interact with Atlas or Ops Manager/Cloud Manager.
 Any new feature should first update the respective client.
 
 ### Adding a New Command
@@ -112,6 +143,8 @@ Commands follow a [RESTful](https://en.wikipedia.org/wiki/Representational_state
 For that reason, command arguments tend to match the path and query params of the APIs,
 with the last param being a required argument and the rest handled via flag options.
 For commands that create or modify complex data structures, the use of configuration files is preferred over flag options.
+
+Note: we are experimenting with a generator, make sure to try it out in [tools/cli-generator](./tools/cli-generator/)
 
 #### How to define flags:
 

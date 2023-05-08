@@ -11,13 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package convert
 
 import (
 	"strings"
 
-	"github.com/openlyinc/pointy"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const (
@@ -26,8 +26,8 @@ const (
 
 // BuildAtlasInheritedRoles converts the inherited roles inside the array of string in an array of atlas.InheritedRole structs
 // r contains roles in the format roleName@dbName.
-func BuildAtlasInheritedRoles(r []string) []atlas.InheritedRole {
-	roles := make([]atlas.InheritedRole, len(r))
+func BuildAtlasInheritedRoles(r []string) []atlasv2.InheritedRole {
+	roles := make([]atlasv2.InheritedRole, len(r))
 	for i, roleP := range r {
 		role := strings.Split(roleP, roleSep)
 		roleName := role[0]
@@ -36,7 +36,7 @@ func BuildAtlasInheritedRoles(r []string) []atlas.InheritedRole {
 			databaseName = role[1]
 		}
 
-		roles[i] = atlas.InheritedRole{
+		roles[i] = atlasv2.InheritedRole{
 			Db:   databaseName,
 			Role: roleName,
 		}
@@ -46,25 +46,25 @@ func BuildAtlasInheritedRoles(r []string) []atlas.InheritedRole {
 
 // BuildAtlasActions converts the actions inside the array of string in an array of atlas.Action structs
 // r contains roles in the format action[@dbName.collection].
-func BuildAtlasActions(a []string) []atlas.Action {
-	actions := make([]atlas.Action, len(a))
+func BuildAtlasActions(a []string) []atlasv2.DBAction {
+	actions := make([]atlasv2.DBAction, len(a))
 	for i, actionP := range a {
-		resourceStruct := atlas.Resource{}
+		resourceStruct := atlasv2.DBResource{}
 		action := strings.Split(actionP, roleSep)
 		actionName := action[0]
 		if len(action) > 1 {
 			resource := strings.Split(action[1], resourceSep)
-			resourceStruct.DB = &resource[0]
+			resourceStruct.Db = resource[0]
 			if len(resource) > 1 {
-				resourceStruct.Collection = &resource[1]
+				resourceStruct.Collection = resource[1]
 			}
 		} else {
-			resourceStruct.Cluster = pointy.Bool(true)
+			resourceStruct.Cluster = true
 		}
 
-		actions[i] = atlas.Action{
+		actions[i] = atlasv2.DBAction{
 			Action:    actionName,
-			Resources: []atlas.Resource{resourceStruct},
+			Resources: []atlasv2.DBResource{resourceStruct},
 		}
 	}
 	return actions

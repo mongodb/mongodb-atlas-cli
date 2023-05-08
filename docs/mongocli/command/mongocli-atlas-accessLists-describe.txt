@@ -14,10 +14,13 @@ mongocli atlas accessLists describe
 
 Return the details for the specified IP access list entry.
 
+To use this command, you must authenticate with a user account or an API key that has the Organization Member role.
+
 Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli atlas accessLists describe <entry> [options]
 

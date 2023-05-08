@@ -64,8 +64,10 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return the details for the specified pending invitation to your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project User Admin"),
 		Annotations: map[string]string{
 			"invitationIdDesc": "Unique 24-digit string that identifies the invitation.",
+			"output":           describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details of the pending invitation with the ID 5dd56c847a3e5a1f363d424d for the project with the ID 5f71e5255afec75a3d0f96dc:
   %s projects invitations describe 5dd56c847a3e5a1f363d424d --projectId 5f71e5255afec75a3d0f96dc --output json`, cli.ExampleAtlasEntryPoint()),
@@ -82,6 +84,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

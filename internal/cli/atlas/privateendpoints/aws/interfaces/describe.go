@@ -65,8 +65,10 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return the details for the specified AWS private endpoint interface for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"interfaceEndpointIdDesc": "Unique string that identifies the AWS private endpoint interface in AWS.",
+			"output":                  describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details of the AWS private endpoint interface with the ID 	
 		vpce-00713b5e644e830a3 in AWS for an AWS private endpoint with the ID 5f4fc14da2b47835a58c63a2 in Atlas:
@@ -88,6 +90,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.EndpointServiceID)
 

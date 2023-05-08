@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type CreateOpts struct {
@@ -59,11 +59,11 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newExportBucket() *mongodbatlas.CloudProviderSnapshotExportBucket {
-	createRequest := &mongodbatlas.CloudProviderSnapshotExportBucket{
-		BucketName:    opts.bucketName,
-		CloudProvider: opts.cloudProvider,
-		IAMRoleID:     opts.iamRoleID,
+func (opts *CreateOpts) newExportBucket() *atlasv2.DiskBackupSnapshotAWSExportBucket {
+	createRequest := &atlasv2.DiskBackupSnapshotAWSExportBucket{
+		BucketName:    &opts.bucketName,
+		CloudProvider: &opts.cloudProvider,
+		IamRoleId:     &opts.iamRoleID,
 	}
 	return createRequest
 }
@@ -80,6 +80,7 @@ func CreateBuilder() *cobra.Command {
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"bucketNameDesc": "Name of the existing S3 bucket that the provided role ID is authorized to access.",
+			"output":         createTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -101,6 +102,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_, _ = cmd.MarkFlagRequired(flag.CloudProvider), cmd.MarkFlagRequired(flag.IAMRoleID)
 

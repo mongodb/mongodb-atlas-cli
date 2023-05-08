@@ -52,8 +52,8 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-var listTemplate = `ID USERNAME	SUBJECT CREATED AT{{range .}}
-{{.ID}}	{{.Username}}	{{.Subject}}	{{.CreatedAt}}{{end}}
+var listTemplate = `ID USERNAME	SUBJECT CREATED AT{{range .Results}}
+{{.Id}}	{{.Username}}	{{.Subject}}	{{.CreatedAt}}{{end}}
 `
 
 // mongocli atlas dbuser(s) certs list|ls <username> [--projectId projectId].
@@ -88,6 +88,7 @@ The user you specify must authenticate using X.509 certificates.`,
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

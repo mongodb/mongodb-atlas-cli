@@ -54,14 +54,16 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <invitationId>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified pending invitation to your organization.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"invitationIdDesc": "Unique 24-digit string that identifies the invitation.",
+			"output":           opts.SuccessMessage(),
 		},
 		Example: fmt.Sprintf(`  # Remove the pending invitation with the ID 5dd56c847a3e5a1f363d424d from the organization with the ID 5f71e5255afec75a3d0f96dc:
   %s organizations invitations delete 5dd56c847a3e5a1f363d424d --orgId 5f71e5255afec75a3d0f96dc`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.initStore(cmd.Context())(); err != nil {
+			if err := opts.PreRunE(opts.ValidateOrgID, opts.initStore(cmd.Context())); err != nil {
 				return err
 			}
 			opts.Entry = args[0]

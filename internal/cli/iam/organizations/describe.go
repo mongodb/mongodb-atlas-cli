@@ -27,11 +27,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `ID	NAME
+const (
+	describeTemplate = `ID	NAME
 {{.ID}}	{{.Name}}
 `
+)
 
 type DescribeOpts struct {
+	cli.GlobalOpts
 	cli.OutputOpts
 	id    string
 	store store.OrganizationDescriber
@@ -57,20 +60,23 @@ func (opts *DescribeOpts) Run() error {
 // mongocli iam organizations(s) describe <ID>.
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
-	opts.Template = describeTemplate
 	cmd := &cobra.Command{
 		Use:     "describe <ID>",
 		Aliases: []string{"show"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return the details for the specified organizations.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies the organization.",
+			"output": describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the organization with the ID 5e2211c17a3e5a48f5497de3:
   %s organizations describe 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore(cmd.Context())()
+			return opts.PreRunE(
+				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
@@ -79,6 +85,7 @@ func DescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

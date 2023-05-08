@@ -29,14 +29,25 @@ type RefresherOpts struct {
 	flow Refresher
 }
 
+//go:generate mockgen -destination=../mocks/mock_refresher.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli Refresher
 type Refresher interface {
+	RequestCode(context.Context) (*atlasauth.DeviceCode, *atlas.Response, error)
+	PollToken(context.Context, *atlasauth.DeviceCode) (*atlasauth.Token, *atlas.Response, error)
 	RefreshToken(context.Context, string) (*atlasauth.Token, *atlas.Response, error)
+	RegistrationConfig(ctx context.Context) (*atlasauth.RegistrationConfig, *atlas.Response, error)
 }
 
-func (opts *RefresherOpts) InitFlow() error {
-	var err error
-	opts.flow, err = oauth.FlowWithConfig(config.Default())
-	return err
+func (opts *RefresherOpts) InitFlow(c oauth.ServiceGetter) func() error {
+	return func() error {
+		var err error
+		opts.flow, err = oauth.FlowWithConfig(c)
+		return err
+	}
+}
+
+// WithFlow set a flow for testing.
+func (opts *RefresherOpts) WithFlow(f Refresher) {
+	opts.flow = f
 }
 
 var ErrInvalidRefreshToken = errors.New("session expired")
@@ -65,11 +76,14 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 	return config.Save()
 }
 
-// RefreshToken a token from the current configuration.
-func RefreshToken(ctx context.Context) error {
-	opts := &RefresherOpts{}
-	if err := opts.InitFlow(); err != nil {
-		return err
-	}
-	return opts.RefreshAccessToken(ctx)
+func (opts *RefresherOpts) PollToken(c context.Context, d *atlasauth.DeviceCode) (*atlasauth.Token, *atlas.Response, error) {
+	return opts.flow.PollToken(c, d)
+}
+
+func (opts *RefresherOpts) RequestCode(c context.Context) (*atlasauth.DeviceCode, *atlas.Response, error) {
+	return opts.flow.RequestCode(c)
+}
+
+func (opts *RefresherOpts) RegistrationConfig(c context.Context) (*atlasauth.RegistrationConfig, *atlas.Response, error) {
+	return opts.flow.RegistrationConfig(c)
 }

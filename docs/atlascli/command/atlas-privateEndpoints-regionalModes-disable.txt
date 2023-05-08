@@ -16,10 +16,13 @@ Disable the regionalized private endpoint setting for your project.
 
 This disables the ability to create multiple private resources per region in all cloud service providers for this project.
 
+To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+
 Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas privateEndpoints regionalModes disable [options]
 
@@ -64,6 +67,16 @@ Inherited Options
      - string
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+
+Output
+------
+
+If the command succeeds, the CLI returns output similar to the following sample. Values in brackets represent your values.
+
+.. code-block::
+
+   Regionalized private endpoint setting disabled.
+   
 
 Examples
 --------

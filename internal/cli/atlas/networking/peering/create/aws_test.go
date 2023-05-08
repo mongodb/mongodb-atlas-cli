@@ -22,8 +22,10 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAwsOpts_Run(t *testing.T) {
@@ -35,8 +37,9 @@ func TestAwsOpts_Run(t *testing.T) {
 		region: "TEST",
 	}
 	t.Run("container exists", func(t *testing.T) {
-		containers := []mongodbatlas.Container{
+		containers := []*atlasv2.AWSCloudProviderContainer{
 			{
+				Id:         pointer.Get("containerID"),
 				RegionName: opts.region,
 			},
 		}
@@ -46,7 +49,7 @@ func TestAwsOpts_Run(t *testing.T) {
 			Return(containers, nil).
 			Times(1)
 
-		request := opts.newPeer("")
+		request := opts.newPeer(*containers[0].Id)
 		mockStore.
 			EXPECT().
 			CreatePeeringConnection(opts.ProjectID, request).
@@ -66,7 +69,7 @@ func TestAwsOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			CreateContainer(opts.ProjectID, containerRequest).
-			Return(&mongodbatlas.Container{ID: "ID"}, nil).
+			Return(&atlasv2.AWSCloudProviderContainer{Id: pointer.Get("ID")}, nil).
 			Times(1)
 
 		request := opts.newPeer("ID")

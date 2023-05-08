@@ -64,8 +64,10 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return the details for the specified Azure private endpoint for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"privateEndpointIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.",
+			"output":                describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the Azure private endpoint connection with the ID 5f4fc81c1f03a835c2728ff7 for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s privateEndpoints azure describe 5f4fc81c1f03a835c2728ff7 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
@@ -84,6 +86,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

@@ -54,9 +54,11 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <teamId>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified team from your organization.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"teamIdDesc": "Unique 24-digit string that identifies the team.",
+			"output":     opts.SuccessMessage(),
 		},
 		Example: fmt.Sprintf(`  # Remove the team with the ID 5e44445ef10fab20b49c0f31 from the organization with ID 5e2211c17a3e5a48f5497de3:
   %s teams delete 5e44445ef10fab20b49c0f31 --orgId 5e1234c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),

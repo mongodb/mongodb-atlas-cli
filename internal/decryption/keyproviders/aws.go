@@ -15,13 +15,15 @@
 package keyproviders
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/kms"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/credentials/endpointcreds"
+	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 )
 
@@ -37,31 +39,32 @@ type AWSKeyIdentifier struct {
 	SecretAccessKey string
 	SessionToken    string
 
-	credentials *credentials.Credentials
+	cfg aws.Config
 }
 
 var (
-	ErrAWSInit    = errors.New("failed to initialize AWS KMS Service")
 	ErrAWSDecrypt = errors.New("unable to decrypt data key with AWS KMS Service")
+	ErrAWSInit    = errors.New("failed to initialize AWS KMS Service")
 )
 
 func (ki *AWSKeyIdentifier) ValidateCredentials() error {
-	p := &credentials.ChainProvider{
-		VerboseErrors: false,
-		Providers: []credentials.Provider{
-			&credentials.StaticProvider{Value: credentials.Value{
-				AccessKeyID:     ki.AccessKey,
-				SecretAccessKey: ki.SecretAccessKey,
-				SessionToken:    ki.SessionToken,
-			}},
-			&credentials.EnvProvider{},
-			&credentials.SharedCredentialsProvider{},
-		},
-	}
-	cred := credentials.NewCredentials(p)
-	_, err := cred.Get()
-	if err != nil {
-		if !errors.Is(err, credentials.ErrNoValidProvidersFoundInChain) {
+	ctx := context.Background()
+	cfg, err := config.LoadDefaultConfig(
+		ctx,
+		config.WithRegion(ki.Region),
+		config.WithEndpointCredentialOptions(func(options *endpointcreds.Options) {
+			options.Endpoint = ki.Endpoint
+		}),
+	)
+
+	cfg.Credentials = newChainProvider(
+		cfg.Credentials,
+		credentials.NewStaticCredentialsProvider(ki.AccessKey, ki.SecretAccessKey, ki.SessionToken),
+	)
+
+	if _, err2 := cfg.Credentials.Retrieve(ctx); err2 != nil {
+		var target *credentials.StaticCredentialsEmptyError
+		if !errors.As(err, &target) {
 			return err
 		}
 		_, _ = log.Warningf(`No credentials found for resource: AWS region="%v" endpoint="%v" key="%v"
@@ -79,27 +82,38 @@ func (ki *AWSKeyIdentifier) ValidateCredentials() error {
 		if err != nil {
 			return err
 		}
-		cred = credentials.NewStaticCredentials(ki.AccessKey, ki.SecretAccessKey, ki.SessionToken)
-		_, err = cred.Get()
-		if err != nil {
-			return err
-		}
+		cfg.Credentials = credentials.NewStaticCredentialsProvider(ki.AccessKey, ki.SecretAccessKey, ki.SessionToken)
 	}
-	ki.credentials = cred
-	return nil
+	ki.cfg = cfg
+	return err
+}
+
+func newChainProvider(providers ...aws.CredentialsProvider) aws.CredentialsProvider {
+	return aws.NewCredentialsCache(
+		aws.CredentialsProviderFunc(func(ctx context.Context) (aws.Credentials, error) {
+			var errs []error
+			for _, p := range providers {
+				creds, err := p.Retrieve(ctx)
+				if err == nil {
+					return creds, nil
+				}
+				errs = append(errs, err)
+			}
+
+			return aws.Credentials{}, fmt.Errorf("%w: %s", ErrAWSInit, errs)
+		}),
+	)
 }
 
 // DecryptKey attempts to decrypt the encrypted key using AWS KMS.
 func (ki *AWSKeyIdentifier) DecryptKey(encryptedKey []byte) ([]byte, error) {
-	config := aws.NewConfig().WithCredentials(ki.credentials).WithRegion(ki.Region).WithEndpoint(ki.Endpoint)
-	s, err := session.NewSession(config)
-	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrAWSInit, err)
-	}
-	service := kms.New(s, config)
+	ctx := context.Background()
+	service := kms.NewFromConfig(ki.cfg)
 
-	input := (&kms.DecryptInput{}).SetCiphertextBlob(encryptedKey)
-	output, err := service.Decrypt(input)
+	input := &kms.DecryptInput{
+		CiphertextBlob: encryptedKey,
+	}
+	output, err := service.Decrypt(ctx, input)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", ErrAWSDecrypt, err)
 	}

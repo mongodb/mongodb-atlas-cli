@@ -34,6 +34,8 @@ type WatchOpts struct {
 	store store.PrivateEndpointDescriber
 }
 
+var watchTemplate = "\nGCP Private endpoint changes completed.\n"
+
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -67,9 +69,12 @@ func WatchBuilder() *cobra.Command {
 		Long: `This command checks the endpoint's state periodically until the endpoint reaches an AVAILABLE or FAILED state. 
 Once the endpoint reaches the expected state, the command prints "GCP Private endpoint changes completed."
 If you run the command in the terminal, it blocks the terminal session until the resource becomes available or fails.
-You can interrupt the command's polling at any time with CTRL-C.`,
+You can interrupt the command's polling at any time with CTRL-C.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+			"output":                watchTemplate,
 		},
 		Example: fmt.Sprintf(`  %s privateEndpoint gcp watch vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
@@ -77,7 +82,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nGCP Private endpoint changes completed.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

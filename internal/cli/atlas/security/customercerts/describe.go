@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = "{{.Cas}}\n"
+const describeTemplate = "{{.CustomerX509.Cas}}\n"
 
 type DescribeOpts struct {
 	cli.GlobalOpts
@@ -59,6 +59,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe",
 		Short: "Return the details for the current customer-managed X.509 configuration for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.NoArgs,
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the customer-managed X.509 configuration in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s security customerCerts describe --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
@@ -76,6 +77,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

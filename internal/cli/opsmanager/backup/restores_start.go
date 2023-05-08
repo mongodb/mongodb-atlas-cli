@@ -194,7 +194,7 @@ func RestoresStartBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.SnapshotID)
+	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.RestoreSnapshotID)
 	cmd.Flags().StringVar(&opts.clusterID, flag.ClusterID, "", usage.ClusterID)
 	cmd.Flags().StringVar(&opts.targetClusterID, flag.TargetClusterID, "", usage.TargetClusterID)
 	cmd.Flags().StringVar(&opts.checkpointID, flag.CheckpointID, "", usage.CheckpointID)
@@ -211,6 +211,7 @@ func RestoresStartBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.ClusterID)
 

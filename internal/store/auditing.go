@@ -18,19 +18,19 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_auditing.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AuditingDescriber
 
 type AuditingDescriber interface {
-	Auditing(string) (*atlas.Auditing, error)
+	Auditing(string) (*atlasv2.AuditLog, error)
 }
 
-func (s *Store) Auditing(projectID string) (*atlas.Auditing, error) {
+func (s *Store) Auditing(projectID string) (*atlasv2.AuditLog, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Auditing.Get(s.ctx, projectID)
+		result, _, err := s.clientv2.AuditingApi.GetAuditingConfiguration(s.ctx, projectID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

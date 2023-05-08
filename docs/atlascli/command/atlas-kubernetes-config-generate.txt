@@ -20,6 +20,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas kubernetes config generate [options]
 
@@ -51,7 +52,7 @@ Options
    * - --operatorVersion
      - string
      - false
-     - Version of Atlas Kubernetes Operator to generate resources for. This value defaults to "1.6.0".
+     - Version of Atlas Kubernetes Operator to generate resources for. This value defaults to "1.7.0".
    * - --orgId
      - string
      - false

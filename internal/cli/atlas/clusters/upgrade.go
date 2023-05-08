@@ -138,6 +138,7 @@ func UpgradeBuilder() *cobra.Command {
 		},
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to upgrade.",
+			"output":          upgradeTemplate,
 		},
 	}
 
@@ -152,6 +153,7 @@ func UpgradeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagFilename(flag.File)
 

@@ -41,7 +41,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplate = `ID	PROJECT ID	SOURCE PROJECT ID	STATUS
-{{.ID}}	{{.GroupID}}	{{.SourceGroupID}}	{{.Status}}`
+{{.Id}}	{{.GroupId}}	{{.SourceGroupId}}	{{.Status}}`
 
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.GetValidationStatus(opts.ConfigProjectID(), opts.validationID)
@@ -58,9 +58,10 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe",
-		Aliases: []string{"get"},
-		Short:   "Return one validation job.",
+		Use:         "describe",
+		Aliases:     []string{"get"},
+		Short:       "Return one validation job.",
+		Annotations: map[string]string{"output": describeTemplate},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -76,6 +77,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.validationID, flag.LiveMigrationValidationID, "", usage.LiveMigrationValidationID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

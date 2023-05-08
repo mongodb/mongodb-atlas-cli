@@ -21,9 +21,10 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func (opts *Opts) createAccessList() error {
@@ -64,15 +65,15 @@ func (opts *Opts) askAccessListOptions() error {
 	return err
 }
 
-func (opts *Opts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
+func (opts *Opts) newProjectIPAccessList() []*atlasv2.NetworkPermissionEntry {
 	var accessListComment = fmt.Sprintf("IP added with %s quickstart", cli.ExampleAtlasEntryPoint())
 
-	accessListArray := make([]*atlas.ProjectIPAccessList, len(opts.IPAddresses))
+	accessListArray := make([]*atlasv2.NetworkPermissionEntry, len(opts.IPAddresses))
 	for i, addr := range opts.IPAddresses {
-		accessList := &atlas.ProjectIPAccessList{
-			GroupID:   opts.ConfigProjectID(),
-			Comment:   accessListComment,
-			IPAddress: addr,
+		accessList := &atlasv2.NetworkPermissionEntry{
+			GroupId:   pointer.Get(opts.ConfigProjectID()),
+			Comment:   &accessListComment,
+			IpAddress: pointer.Get(addr),
 		}
 
 		accessListArray[i] = accessList

@@ -46,7 +46,7 @@ var scheduleDescribeTemplate = `CLUSTER NAME	AUTO EXPORT ENABLED	NEXT SNAPSHOT
 {{.ClusterName}}	{{.AutoExportEnabled}}	{{.NextSnapshot}}
 
 ID	Frequency Interval	Frequency Type	Retention Value	Retention Unit{{range .Policies}}{{range.PolicyItems}}
-{{.ID}}	{{.FrequencyInterval}}	{{.FrequencyType}}	{{.RetentionValue}}	{{.RetentionUnit}}{{end}}{{end}}
+{{.Id}}	{{.FrequencyInterval}}	{{.FrequencyType}}	{{.RetentionValue}}	{{.RetentionUnit}}{{end}}{{end}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -87,6 +87,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

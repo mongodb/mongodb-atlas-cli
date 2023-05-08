@@ -1,0 +1,201 @@
+commands:
+  - command_path: atlas dataLakePipelines
+    package_name: datalakepipelines
+    description: Data Lake pipelines.
+    template: parent
+    sub_commands:
+      - command_path: atlas dataLakePipelines list
+        package_name: datalakepipelines
+        store_name: PipelinesLister
+        store_method: Pipelines
+        description: Returns all data lake pipelines for your project.
+        template: list
+        output_template: |
+          ID	NAME	STATE{{range .}}
+          {{.Id}}	{{.Name}}	{{.State}}
+          {{end}}
+        example: |
+          # list all pipelines:
+            atlas dataLakePipelines list
+      - command_path: atlas dataLakePipelines describe
+        package_name: datalakepipelines
+        store_name: PipelinesDescriber
+        store_method: Pipeline
+        description: Return the details for the specified data lake pipeline for your project.
+        template: describe
+        id_name: pipelineName
+        id_description: Name of the pipeline
+        output_template: |
+          ID	NAME	STATE
+          {{.Id}}	{{.Name}}	{{.State}}
+        example: |
+          # retrieves pipeline 'Pipeline1':
+            atlas dataLakePipelines describe Pipeline1
+      - command_path: atlas dataLakePipelines delete
+        package_name: datalakepipelines
+        store_name: PipelinesDeleter
+        store_method: DeletePipeline
+        template: delete
+        description: Remove the specified data lake pipeline from your project.
+        id_name: pipelineName
+        id_description: Name of the pipeline
+        example: |
+          # deletes pipeline 'Pipeline1':
+            atlas dataLakePipelines delete Pipeline1
+      - command_path: atlas dataLakePipelines create
+        package_name: datalakepipelines
+        store_name: PipelinesCreator
+        store_method: CreatePipeline
+        template: create
+        description: Creates a new Data Lake Pipeline.
+        id_name: pipelineName
+        id_description: Label that identifies the pipeline
+        output_template: Pipeline {{.Name}} created.
+        request_type: 'atlasv2.IngestionPipeline'
+        example: |
+          # create data lake pipeline:
+            atlas dataLakePipelines create Pipeline1 --sinkType CPS --sinkMetadataProvider AWS --sinkMetadataRegion us-east-1 --sinkPartitionField name:0,summary:1 --sourceType PERIODIC_CPS --sourceClusterName Cluster1 --sourceDatabaseName sample_airbnb --sourceCollectionName listingsAndReviews --sourcePolicyItemId 507f1f77bcf86cd799439011 --transform EXCLUDE:space,EXCLUDE:notes
+      - command_path: atlas dataLakePipelines update
+        package_name: datalakepipelines
+        store_name: PipelinesUpdater
+        store_method: UpdatePipeline
+        template: update
+        description: Modify the details of the specified data lake pipeline for your project.
+        id_name: pipelineName
+        id_description: Label that identifies the pipeline
+        output_template: Pipeline {{.Name}} updated.
+        request_type: 'atlasv2.IngestionPipeline'
+        example: |
+          # update data lake pipeline:
+            atlas dataLakePipelines update Pipeline1 --sinkType CPS --sinkMetadataProvider AWS --sinkMetadataRegion us-east-1 --sinkPartitionField name:0,summary:1 --sourceType PERIODIC_CPS --sourceClusterName Cluster1 --sourceDatabaseName sample_airbnb --sourceCollectionName listingsAndReviews --sourcePolicyItemId 507f1f77bcf86cd799439011 --transform EXCLUDE:space,EXCLUDE:notes
+      - command_path: atlas dataLakePipelines runs
+        package_name: runs
+        description: Data Lake pipelines runs.
+        template: parent
+        sub_commands:
+          - command_path: atlas dataLakePipelines runs list
+            package_name: runs
+            store_name: PipelineRunsLister
+            store_method: PipelineRuns
+            description: Returns all data lake pipeline runs for your project.
+            template: list
+            output_template: |
+              ID	DATASET NAME	STATE{{range .Results}}
+              {{.Id}}	{{.DatasetName}}	{{.State}}
+              {{end}}
+            example: |
+              # list all pipelines runs:
+                atlas dataLakePipelines runs list
+          - command_path: atlas dataLakePipelines runs describe
+            package_name: runs
+            store_name: PipelineRunsDescriber
+            store_method: PipelineRun
+            description: Return the details for the specified data lake pipeline run for your project.
+            template: describe
+            id_name: pipelineRunId
+            id_description: Unique identifier for the data lake pipeline run
+            output_template: |
+              ID	DATASET NAME	STATE
+              {{.Id}}	{{.DatasetName}}	{{.State}}
+            example: |
+              # retrieves pipeline run '507f1f77bcf86cd799439011':
+                atlas dataLakePipelines runs describe 507f1f77bcf86cd799439011
+      - command_path: atlas dataLakePipelines availableSchedules
+        package_name: availableschedules
+        description: Manage available schedules for the specified data lake pipeline.
+        template: parent
+        sub_commands:
+          - command_path: atlas dataLakePipelines availableSchedules list
+            package_name: availableschedules
+            store_name: PipelineAvailableSchedulesLister
+            store_method: PipelineAvailableSchedules
+            description: Return all available schedules for the specified data lake pipeline.
+            template: list
+            output_template: |
+              ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION UNIT	RETENTION VALUE{{range .}}
+              {{ .Id }}	{{ .FrequencyInterval }}	{{ .FrequencyType }}	{{ .RetentionUnit }}	{{ .RetentionValue }}{{end}}
+            example: |
+              # list available schedules for data lake pipeline called 'Pipeline1':
+                atlas dataLakePipelines availableSchedules list Pipeline1
+      - command_path: atlas dataLakePipelines availableSnapshots
+        package_name: availablesnapshots
+        description: Manage available backup snapshots for data lake pipelines.
+        template: parent
+        sub_commands:
+          - command_path: atlas dataLakePipelines availableSnapshots list
+            package_name: availablesnapshots
+            store_name: PipelineAvailableSnapshotsLister
+            store_method: PipelineAvailableSnapshots
+            description: Return all available backup snapshots for the specified data lake pipeline.
+            template: list
+            output_template: |
+              ID	STATUS{{range .Results}}
+              {{if .DiskBackupReplicaSet}}{{.DiskBackupReplicaSet.Id}}	{{.DiskBackupReplicaSet.Status}}{{else}}{{.DiskBackupShardedClusterSnapshot.Id}}	{{.DiskBackupShardedClusterSnapshot.Status}}{{end}}{{end}}
+            example: |
+              # list available backup schedules for data lake pipeline called 'Pipeline1':
+                atlas dataLakePipelines availableSnapshots list Pipeline1
+      - command_path: atlas dataLakePipelines datasets
+        package_name: datasets
+        description: Manage datasets for the specified data lake pipeline.
+        template: parent
+        sub_commands:
+          - command_path: atlas dataLakePipelines datasets delete
+            package_name: datasets
+            store_name: PipelineDatasetDeleter
+            store_method: DeletePipelineDataset
+            description:  Remove the specified data lake pipeline dataset from your project.
+            template: delete
+            id_name: pipelineRunId
+            id_description: Unique identifier for the data lake pipeline run
+            example: |
+              # delete dataset '507f1f77bcf86cd799439011' for data lake pipeline called 'Pipeline1':
+                atlas dataLakePipelines datasets delete 507f1f77bcf86cd799439011 --pipeline Pipeline1
+stores:
+  - base_file_name: data_lake_pipelines
+    template: store
+    lister:
+      name: PipelinesLister
+      method: Pipelines
+      sdk_method: DataLakePipelinesApi.ListPipelines
+      return_type: '[]atlasv2.IngestionPipeline'
+    describer:
+      name: PipelinesDescriber
+      method: Pipeline
+      sdk_method: DataLakePipelinesApi.GetPipeline
+      return_type: '*atlasv2.IngestionPipeline'
+    creator:
+      name: PipelinesCreator
+      method: CreatePipeline
+      sdk_method: DataLakePipelinesApi.CreatePipeline
+      arg_type: 'atlasv2.IngestionPipeline'
+      arg_name: IngestionPipeline
+      return_type: '*atlasv2.IngestionPipeline'
+    updater:
+      name: PipelinesUpdater
+      method: UpdatePipeline
+      sdk_method: DataLakePipelinesApi.UpdatePipeline
+      arg_type: 'atlasv2.IngestionPipeline'
+      arg_name: IngestionPipeline
+      return_type: '*atlasv2.IngestionPipeline'
+    deleter:
+      name: PipelinesDeleter
+      method: DeletePipeline
+      sdk_method: DataLakePipelinesApi.DeletePipeline
+  - base_file_name: data_lake_pipelines_runs
+    template: store
+    lister:
+      name: PipelineRunsLister
+      method: PipelineRuns
+      sdk_method: DataLakePipelinesApi.ListPipelineRuns
+      return_type: '*atlasv2.PaginatedPipelineRun'
+    describer:
+      name: PipelineRunsDescriber
+      method: PipelineRun
+      sdk_method: DataLakePipelinesApi.GetPipelineRun
+      return_type: '*atlasv2.IngestionPipelineRun'
+  - base_file_name: data_lake_pipelines_datasets
+    template: store
+    deleter:
+      name: PipelineDatasetDeleter
+      method: DeletePipelineDataset
+      sdk_method: DataLakePipelinesApi.DeletePipelineRunDataset

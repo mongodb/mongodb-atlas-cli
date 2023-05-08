@@ -22,22 +22,22 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/openlyinc/pointy"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterConfigurationOptionsUpdater(ctrl)
 
-	expected := &mongodbatlas.ProcessArgs{
-		DefaultReadConcern:               "",
-		DefaultWriteConcern:              "",
-		MinimumEnabledTLSProtocol:        "",
-		SampleSizeBIConnector:            pointy.Int64(1000),
-		SampleRefreshIntervalBIConnector: pointy.Int64(0),
-		NoTableScan:                      pointy.Bool(false),
+	expected := &atlasv2.ClusterDescriptionProcessArgs{
+		DefaultReadConcern:               pointer.Get(""),
+		DefaultWriteConcern:              pointer.Get(""),
+		MinimumEnabledTlsProtocol:        pointer.Get(""),
+		SampleSizeBIConnector:            pointer.Get[int32](1000),
+		SampleRefreshIntervalBIConnector: pointer.Get[int32](0),
+		NoTableScan:                      pointer.Get(false),
 	}
 
 	t.Run("flags run", func(t *testing.T) {

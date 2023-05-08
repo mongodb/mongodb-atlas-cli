@@ -45,7 +45,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplate = `ID	CLUSTER	DATABASE	COLLECTION	STATE
-{{.ID}}	{{.ClusterName}}	{{.DBName}}	{{.CollName}}	{{.State}}
+{{.Id}}	{{.ClusterName}}	{{.DbName}}	{{.CollName}}	{{.State}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -67,6 +67,7 @@ func DescribeBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to retrieve.",
+			"output":        describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
   %s clusters onlineArchives describe 5f189832e26ec075e10c32d3 --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),
@@ -91,6 +92,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 

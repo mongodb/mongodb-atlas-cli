@@ -65,8 +65,10 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return the details for the specified Azure private endpoint interface for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"privateEndpointResourceIdDesc": "Unique string that identifies the Azure private endpoint interface in Azure.",
+			"output":                        describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details of the Azure private endpoint interface with the ID /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/providers/Microsoft.Network/privateEndpoints/cli-test in Azure for an AWS private endpoint with the ID 5f4fc14da2b47835a58c63a2 in Atlas:
   %s privateEndpoints azure interfaces describe /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/providers/Microsoft.Network/privateEndpoints/cli-test --endpointServiceId 5f4fc14da2b47835a58c63a2`, cli.ExampleAtlasEntryPoint()),
@@ -86,6 +88,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.EndpointServiceID)
 

@@ -16,6 +16,7 @@ package create
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -24,10 +25,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-const newRelicIntegrationType = "NEW_RELIC"
+var newRelicIntegrationType = "NEW_RELIC"
 
 type NewRelicOpts struct {
 	cli.GlobalOpts
@@ -57,13 +58,15 @@ func (opts *NewRelicOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *NewRelicOpts) newNewRelicIntegration() *atlas.ThirdPartyIntegration {
-	return &atlas.ThirdPartyIntegration{
-		Type:       newRelicIntegrationType,
-		LicenseKey: opts.licenseKey,
-		AccountID:  opts.accountID,
-		WriteToken: opts.writeToken,
-		ReadToken:  opts.readToken,
+func (opts *NewRelicOpts) newNewRelicIntegration() *atlasv2.Integration {
+	return &atlasv2.Integration{
+		NewRelic: &atlasv2.NewRelic{
+			Type:       &newRelicIntegrationType,
+			LicenseKey: opts.licenseKey,
+			AccountId:  opts.accountID,
+			WriteToken: opts.writeToken,
+			ReadToken:  opts.readToken,
+		},
 	}
 }
 
@@ -74,7 +77,11 @@ func NewRelicBuilder() *cobra.Command {
 		Use:     "NEW_RELIC",
 		Aliases: []string{"new_relic", "newRelic"},
 		Short:   "Create or update the New Relic integration.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": createTemplateNewRelic,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -95,6 +102,7 @@ func NewRelicBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.LicenceKey)
 	_ = cmd.MarkFlagRequired(flag.AccountID)

@@ -16,6 +16,7 @@ package ldap
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -42,7 +43,7 @@ func (opts *StatusOpts) initStore(ctx context.Context) func() error {
 }
 
 var verifyStatusTemplate = `REQUEST ID	PROJECT ID	STATUS
-{{.RequestID}}	{{.GroupID}}	{{.Status}}
+{{.RequestId}}	{{.GroupId}}	{{.Status}}
 `
 
 func (opts *StatusOpts) Run() error {
@@ -61,8 +62,10 @@ func StatusBuilder() *cobra.Command {
 		Use:   "status <requestId>",
 		Args:  require.ExactValidArgs(1),
 		Short: "Get the status of an LDAP configuration request.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"requestIdDesc": "ID of the request to verify an LDAP configuration.",
+			"output":        verifyStatusTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -78,6 +81,7 @@ func StatusBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	cmd.AddCommand(
 		WatchBuilder(),

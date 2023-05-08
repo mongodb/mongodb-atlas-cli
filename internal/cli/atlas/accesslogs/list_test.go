@@ -24,29 +24,28 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/openlyinc/pointy"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAccessLogListClusterName_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAccessLogsLister(ctrl)
 
-	expected := &mongodbatlas.AccessLogSettings{
-		AccessLogs: []*mongodbatlas.AccessLogs{
+	expected := &atlasv2.MongoDBAccessLogsList{
+		AccessLogs: []atlasv2.MongoDBAccessLogs{
 			{
-				GroupID:       "test",
-				Hostname:      "test",
-				ClusterName:   "test",
-				IPAddress:     "test",
-				AuthResult:    pointy.Bool(true),
-				LogLine:       "test",
-				Timestamp:     "test",
-				Username:      "test",
-				FailureReason: "test",
-				AuthSource:    "test",
+				GroupId:       pointer.Get("test"),
+				Hostname:      pointer.Get("test"),
+				IpAddress:     pointer.Get("test"),
+				AuthResult:    pointer.Get(true),
+				LogLine:       pointer.Get("test"),
+				Timestamp:     pointer.Get("test"),
+				Username:      pointer.Get("test"),
+				FailureReason: pointer.Get("test"),
+				AuthSource:    pointer.Get("test"),
 			},
 		},
 	}
@@ -71,8 +70,8 @@ func TestAccessLogListClusterName_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `HOSTNAME    CLUSTER NAME   AUTH RESULT   LOG LINE 
-test test   test           true          test
+	assert.Equal(t, `HOSTNAME    AUTH RESULT   LOG LINE 
+test test   true          test
 `, buf.String())
 	t.Log(buf.String())
 }
@@ -81,7 +80,7 @@ func TestAccessLogListHostname_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAccessLogsLister(ctrl)
 
-	expected := &mongodbatlas.AccessLogSettings{}
+	expected := &atlasv2.MongoDBAccessLogsList{}
 
 	describeOpts := &ListOpts{
 		store:    mockStore,

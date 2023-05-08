@@ -61,7 +61,9 @@ func AddBuilder() *cobra.Command {
 		Use:   "add <userId>...",
 		Args:  require.MinimumNObjectIDArgs(1),
 		Short: "Add the specified MongoDB user to a team for your organization.",
-		Long:  `Users must be current members of your organization before you can add them to a team.`,
+		Long: `Users must be current members of your organization before you can add them to a team.
+
+` + fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
 		Annotations: map[string]string{
 			"userIdDesc": "Unique 24-digit string that identifies the user. You can add more than one user at a time by specifying multiple user IDs separated by a space.",
 		},
@@ -84,6 +86,7 @@ func AddBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.TeamID)
 

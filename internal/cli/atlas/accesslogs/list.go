@@ -32,8 +32,8 @@ import (
 const (
 	success      = "success"
 	fail         = "fail"
-	listTemplate = `HOSTNAME	CLUSTER NAME	AUTH RESULT	LOG LINE {{range .AccessLogs}}
-{{if .Hostname}}{{.Hostname}} {{else}}N/A{{end}}{{.Hostname}}	{{if .ClusterName}}{{.ClusterName}} {{else}}N/A{{end}}	{{.AuthResult}}	{{.LogLine}}{{end}}
+	listTemplate = `HOSTNAME	AUTH RESULT	LOG LINE {{range .AccessLogs}}
+{{if .Hostname}}{{.Hostname}} {{else}}N/A{{end}}{{.Hostname}}	{{.AuthResult}}	{{.LogLine}}{{end}}
 `
 	missingClusterNameHostnameErrorMessage = "one between --%s and --%s must be set"
 	invalidValueAuthResultErrorMessage     = `--%s must be set to "%s" or "%s"`
@@ -117,6 +117,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "Retrieve the access logs of a cluster identified by the cluster's name or hostname.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Monitoring Admin"),
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -139,6 +140,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.authResult, flag.AuthResult, "", usage.AuthResult)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

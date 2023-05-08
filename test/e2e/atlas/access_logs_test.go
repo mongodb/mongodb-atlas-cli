@@ -23,7 +23,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAccessLogs(t *testing.T) {
@@ -48,7 +48,7 @@ func TestAccessLogs(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
-		var entries *mongodbatlas.AccessLogSettings
+		var entries *atlasv2.MongoDBAccessLogsList
 		err = json.Unmarshal(resp, &entries)
 		req.NoError(err)
 	})
@@ -63,7 +63,7 @@ func TestAccessLogs(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
-		var entries *mongodbatlas.AccessLogSettings
+		var entries *atlasv2.MongoDBAccessLogsList
 		err = json.Unmarshal(resp, &entries)
 		req.NoError(err)
 	})

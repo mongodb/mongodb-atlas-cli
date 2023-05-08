@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockRestoreJobsLister is a mock of RestoreJobsLister interface.
@@ -35,10 +36,10 @@ func (m *MockRestoreJobsLister) EXPECT() *MockRestoreJobsListerMockRecorder {
 }
 
 // RestoreJobs mocks base method.
-func (m *MockRestoreJobsLister) RestoreJobs(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.CloudProviderSnapshotRestoreJobs, error) {
+func (m *MockRestoreJobsLister) RestoreJobs(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedCloudBackupRestoreJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RestoreJobs", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotRestoreJobs)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedCloudBackupRestoreJob)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +74,10 @@ func (m *MockRestoreJobsDescriber) EXPECT() *MockRestoreJobsDescriberMockRecorde
 }
 
 // RestoreJob mocks base method.
-func (m *MockRestoreJobsDescriber) RestoreJob(arg0, arg1, arg2 string) (*mongodbatlas.CloudProviderSnapshotRestoreJob, error) {
+func (m *MockRestoreJobsDescriber) RestoreJob(arg0, arg1, arg2 string) (*mongodbatlasv2.DiskBackupRestoreJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RestoreJob", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotRestoreJob)
+	ret0, _ := ret[0].(*mongodbatlasv2.DiskBackupRestoreJob)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +112,10 @@ func (m *MockRestoreJobsCreator) EXPECT() *MockRestoreJobsCreatorMockRecorder {
 }
 
 // CreateRestoreJobs mocks base method.
-func (m *MockRestoreJobsCreator) CreateRestoreJobs(arg0, arg1 string, arg2 *mongodbatlas.CloudProviderSnapshotRestoreJob) (*mongodbatlas.CloudProviderSnapshotRestoreJob, error) {
+func (m *MockRestoreJobsCreator) CreateRestoreJobs(arg0, arg1 string, arg2 *mongodbatlasv2.DiskBackupRestoreJob) (*mongodbatlasv2.DiskBackupRestoreJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateRestoreJobs", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotRestoreJob)
+	ret0, _ := ret[0].(*mongodbatlasv2.DiskBackupRestoreJob)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -149,10 +150,10 @@ func (m *MockSnapshotsLister) EXPECT() *MockSnapshotsListerMockRecorder {
 }
 
 // Snapshots mocks base method.
-func (m *MockSnapshotsLister) Snapshots(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.CloudProviderSnapshots, error) {
+func (m *MockSnapshotsLister) Snapshots(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedCloudBackupReplicaSet, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Snapshots", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshots)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedCloudBackupReplicaSet)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -225,10 +226,10 @@ func (m *MockSnapshotsDescriber) EXPECT() *MockSnapshotsDescriberMockRecorder {
 }
 
 // Snapshot mocks base method.
-func (m *MockSnapshotsDescriber) Snapshot(arg0, arg1, arg2 string) (*mongodbatlas.CloudProviderSnapshot, error) {
+func (m *MockSnapshotsDescriber) Snapshot(arg0, arg1, arg2 string) (*mongodbatlasv2.DiskBackupReplicaSet, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Snapshot", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshot)
+	ret0, _ := ret[0].(*mongodbatlasv2.DiskBackupReplicaSet)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -300,10 +301,10 @@ func (m *MockExportJobsLister) EXPECT() *MockExportJobsListerMockRecorder {
 }
 
 // ExportJobs mocks base method.
-func (m *MockExportJobsLister) ExportJobs(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.CloudProviderSnapshotExportJobs, error) {
+func (m *MockExportJobsLister) ExportJobs(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedApiAtlasDiskBackupExportJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ExportJobs", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotExportJobs)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedApiAtlasDiskBackupExportJob)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -338,10 +339,10 @@ func (m *MockExportJobsDescriber) EXPECT() *MockExportJobsDescriberMockRecorder 
 }
 
 // ExportJob mocks base method.
-func (m *MockExportJobsDescriber) ExportJob(arg0, arg1, arg2 string) (*mongodbatlas.CloudProviderSnapshotExportJob, error) {
+func (m *MockExportJobsDescriber) ExportJob(arg0, arg1, arg2 string) (*mongodbatlasv2.DiskBackupExportJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ExportJob", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotExportJob)
+	ret0, _ := ret[0].(*mongodbatlasv2.DiskBackupExportJob)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -376,10 +377,10 @@ func (m *MockExportJobsCreator) EXPECT() *MockExportJobsCreatorMockRecorder {
 }
 
 // CreateExportJob mocks base method.
-func (m *MockExportJobsCreator) CreateExportJob(arg0, arg1 string, arg2 *mongodbatlas.CloudProviderSnapshotExportJob) (*mongodbatlas.CloudProviderSnapshotExportJob, error) {
+func (m *MockExportJobsCreator) CreateExportJob(arg0, arg1 string, arg2 *mongodbatlasv2.DiskBackupExportJobRequest) (*mongodbatlasv2.DiskBackupExportJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateExportJob", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotExportJob)
+	ret0, _ := ret[0].(*mongodbatlasv2.DiskBackupExportJob)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -414,10 +415,10 @@ func (m *MockExportBucketsLister) EXPECT() *MockExportBucketsListerMockRecorder 
 }
 
 // ExportBuckets mocks base method.
-func (m *MockExportBucketsLister) ExportBuckets(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlas.CloudProviderSnapshotExportBuckets, error) {
+func (m *MockExportBucketsLister) ExportBuckets(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedBackupSnapshotExportBucket, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ExportBuckets", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotExportBuckets)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedBackupSnapshotExportBucket)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -452,10 +453,10 @@ func (m *MockExportBucketsCreator) EXPECT() *MockExportBucketsCreatorMockRecorde
 }
 
 // CreateExportBucket mocks base method.
-func (m *MockExportBucketsCreator) CreateExportBucket(arg0 string, arg1 *mongodbatlas.CloudProviderSnapshotExportBucket) (*mongodbatlas.CloudProviderSnapshotExportBucket, error) {
+func (m *MockExportBucketsCreator) CreateExportBucket(arg0 string, arg1 *mongodbatlasv2.DiskBackupSnapshotAWSExportBucket) (*mongodbatlasv2.DiskBackupSnapshotAWSExportBucket, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateExportBucket", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotExportBucket)
+	ret0, _ := ret[0].(*mongodbatlasv2.DiskBackupSnapshotAWSExportBucket)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -527,10 +528,10 @@ func (m *MockExportBucketsDescriber) EXPECT() *MockExportBucketsDescriberMockRec
 }
 
 // DescribeExportBucket mocks base method.
-func (m *MockExportBucketsDescriber) DescribeExportBucket(arg0, arg1 string) (*mongodbatlas.CloudProviderSnapshotExportBucket, error) {
+func (m *MockExportBucketsDescriber) DescribeExportBucket(arg0, arg1 string) (*mongodbatlasv2.DiskBackupSnapshotAWSExportBucket, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeExportBucket", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotExportBucket)
+	ret0, _ := ret[0].(*mongodbatlasv2.DiskBackupSnapshotAWSExportBucket)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -565,10 +566,10 @@ func (m *MockScheduleDescriber) EXPECT() *MockScheduleDescriberMockRecorder {
 }
 
 // DescribeSchedule mocks base method.
-func (m *MockScheduleDescriber) DescribeSchedule(arg0, arg1 string) (*mongodbatlas.CloudProviderSnapshotBackupPolicy, error) {
+func (m *MockScheduleDescriber) DescribeSchedule(arg0, arg1 string) (*mongodbatlasv2.DiskBackupSnapshotSchedule, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeSchedule", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotBackupPolicy)
+	ret0, _ := ret[0].(*mongodbatlasv2.DiskBackupSnapshotSchedule)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -603,10 +604,10 @@ func (m *MockScheduleDescriberUpdater) EXPECT() *MockScheduleDescriberUpdaterMoc
 }
 
 // DescribeSchedule mocks base method.
-func (m *MockScheduleDescriberUpdater) DescribeSchedule(arg0, arg1 string) (*mongodbatlas.CloudProviderSnapshotBackupPolicy, error) {
+func (m *MockScheduleDescriberUpdater) DescribeSchedule(arg0, arg1 string) (*mongodbatlasv2.DiskBackupSnapshotSchedule, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeSchedule", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotBackupPolicy)
+	ret0, _ := ret[0].(*mongodbatlasv2.DiskBackupSnapshotSchedule)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -618,10 +619,10 @@ func (mr *MockScheduleDescriberUpdaterMockRecorder) DescribeSchedule(arg0, arg1 
 }
 
 // UpdateSchedule mocks base method.
-func (m *MockScheduleDescriberUpdater) UpdateSchedule(arg0, arg1 string, arg2 *mongodbatlas.CloudProviderSnapshotBackupPolicy) (*mongodbatlas.CloudProviderSnapshotBackupPolicy, error) {
+func (m *MockScheduleDescriberUpdater) UpdateSchedule(arg0, arg1 string, arg2 *mongodbatlasv2.DiskBackupSnapshotSchedule) (*mongodbatlasv2.DiskBackupSnapshotSchedule, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateSchedule", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotBackupPolicy)
+	ret0, _ := ret[0].(*mongodbatlasv2.DiskBackupSnapshotSchedule)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

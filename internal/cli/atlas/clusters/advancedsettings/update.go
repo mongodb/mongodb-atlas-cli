@@ -25,9 +25,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/openlyinc/pointy"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const updateTmpl = "Updating advanced configuration settings of your cluster'.\n"
@@ -46,9 +45,9 @@ type UpdateOpts struct {
 	disableJavascript                bool
 	enableJavascript                 bool
 	oplogMinRetentionHours           float64
-	oplogSizeMB                      int64
-	sampleRefreshIntervalBIConnector int64
-	sampleSizeBIConnector            int64
+	oplogSizeMB                      int32
+	sampleRefreshIntervalBIConnector int32
+	sampleSizeBIConnector            int32
 	store                            store.AtlasClusterConfigurationOptionsUpdater
 }
 
@@ -69,59 +68,52 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newProcessArgs() *atlas.ProcessArgs {
-	args := &atlas.ProcessArgs{}
+func (opts *UpdateOpts) newProcessArgs() *atlasv2.ClusterDescriptionProcessArgs {
+	args := &atlasv2.ClusterDescriptionProcessArgs{}
 
 	if opts.defaultReadConcern != "" {
-		args.DefaultReadConcern = opts.defaultReadConcern
+		args.DefaultReadConcern = &opts.defaultReadConcern
 	}
 
 	if opts.defaultWriteConcern != "" {
-		args.DefaultWriteConcern = opts.defaultWriteConcern
+		args.DefaultWriteConcern = &opts.defaultWriteConcern
 	}
 
 	if opts.minimumEnabledTLSProtocol != "" {
-		args.MinimumEnabledTLSProtocol = opts.minimumEnabledTLSProtocol
+		args.MinimumEnabledTlsProtocol = &opts.minimumEnabledTLSProtocol
 	}
 
 	if opts.sampleSizeBIConnector != -1 {
-		args.SampleSizeBIConnector = pointy.Int64(opts.sampleSizeBIConnector)
+		args.SampleSizeBIConnector = &opts.sampleSizeBIConnector
 	}
 
 	if opts.sampleRefreshIntervalBIConnector != -1 {
-		args.SampleRefreshIntervalBIConnector = pointy.Int64(opts.sampleRefreshIntervalBIConnector)
+		args.SampleRefreshIntervalBIConnector = &opts.sampleRefreshIntervalBIConnector
 	}
 
 	if opts.disableTableScan {
-		args.NoTableScan = pointy.Bool(opts.disableTableScan)
+		args.NoTableScan = &opts.disableTableScan
 	}
 
 	if opts.enableTableScan {
-		args.NoTableScan = pointy.Bool(!opts.enableTableScan)
+		noTableScan := !opts.enableTableScan
+		args.NoTableScan = &noTableScan
 	}
 
-	if opts.disableJavascript {
-		args.JavascriptEnabled = pointy.Bool(false)
+	if opts.disableJavascript || opts.enableJavascript {
+		args.JavascriptEnabled = &opts.enableJavascript
 	}
 
-	if opts.enableJavascript {
-		args.JavascriptEnabled = pointy.Bool(true)
-	}
-
-	if opts.disableFailIndexKeyTooLong {
-		args.FailIndexKeyTooLong = pointy.Bool(false)
-	}
-
-	if opts.enableFailIndexKeyTooLong {
-		args.FailIndexKeyTooLong = pointy.Bool(true)
+	if opts.disableFailIndexKeyTooLong || opts.enableFailIndexKeyTooLong {
+		args.FailIndexKeyTooLong = &opts.enableFailIndexKeyTooLong
 	}
 
 	if opts.oplogSizeMB != 0 {
-		args.OplogSizeMB = pointy.Int64(opts.oplogSizeMB)
+		args.OplogSizeMB.Set(&opts.oplogSizeMB)
 	}
 
 	if opts.oplogMinRetentionHours != 0 {
-		args.OplogMinRetentionHours = pointy.Float64(opts.oplogMinRetentionHours)
+		args.OplogMinRetentionHours.Set(&opts.oplogMinRetentionHours)
 	}
 
 	return args
@@ -136,6 +128,9 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <clusterName>",
 		Short: "Update advanced configuration settings for one cluster.",
+		Long: `Updates the advanced configuration details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index and oplog limits, and other database settings.
+Atlas supports this command only for M10+ clusters.
+`,
 		Example: fmt.Sprintf(`  # Update the minimum oplog size for a cluster:
   %[1]s cluster advancedSettings update <clusterName> --projectId <projectId> --oplogSizeMB 1000
 
@@ -158,6 +153,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to update.",
+			"output":          updateTmpl,
 		},
 	}
 
@@ -178,12 +174,13 @@ func UpdateBuilder() *cobra.Command {
 	cmd.MarkFlagsMutuallyExclusive(flag.DisableJavascript, flag.EnableJavascript)
 
 	cmd.Flags().Float64Var(&opts.oplogMinRetentionHours, flag.OplogMinRetentionHours, 0, usage.OplogMinRetentionHours)
-	cmd.Flags().Int64Var(&opts.oplogSizeMB, flag.OplogSizeMB, 0, usage.OplogSizeMB)
-	cmd.Flags().Int64Var(&opts.sampleRefreshIntervalBIConnector, flag.SampleRefreshIntervalBIConnector, -1, usage.SampleRefreshIntervalBIConnector)
-	cmd.Flags().Int64Var(&opts.sampleSizeBIConnector, flag.SampleSizeBIConnector, -1, usage.SampleSizeBIConnector)
+	cmd.Flags().Int32Var(&opts.oplogSizeMB, flag.OplogSizeMB, 0, usage.OplogSizeMB)
+	cmd.Flags().Int32Var(&opts.sampleRefreshIntervalBIConnector, flag.SampleRefreshIntervalBIConnector, -1, usage.SampleRefreshIntervalBIConnector)
+	cmd.Flags().Int32Var(&opts.sampleSizeBIConnector, flag.SampleSizeBIConnector, -1, usage.SampleSizeBIConnector)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

@@ -18,15 +18,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const (
@@ -66,21 +68,24 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
-	entry := &atlas.ProjectIPAccessList{
-		GroupID:         opts.ConfigProjectID(),
-		Comment:         opts.comment,
-		DeleteAfterDate: opts.deleteAfter,
+func (opts *CreateOpts) newProjectIPAccessList() []*atlasv2.NetworkPermissionEntry {
+	entry := &atlasv2.NetworkPermissionEntry{
+		GroupId: pointer.Get(opts.ConfigProjectID()),
+		Comment: &opts.comment,
+	}
+	if opts.deleteAfter != "" {
+		deleteAfterDate, _ := time.Parse(time.RFC3339, opts.deleteAfter)
+		entry.DeleteAfterDate = &deleteAfterDate
 	}
 	switch opts.entryType {
 	case cidrBlock:
-		entry.CIDRBlock = opts.entry
+		entry.CidrBlock = &opts.entry
 	case ipAddress:
-		entry.IPAddress = opts.entry
+		entry.IpAddress = &opts.entry
 	case awsSecurityGroup:
-		entry.AwsSecurityGroup = opts.entry
+		entry.AwsSecurityGroup = &opts.entry
 	}
-	return []*atlas.ProjectIPAccessList{entry}
+	return []*atlasv2.NetworkPermissionEntry{entry}
 }
 
 func IPAddress() (string, error) {
@@ -142,6 +147,7 @@ The command doesn't overwrite existing entries in the access list. Instead, it a
 		Args: require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"entryDesc": "IP address, CIDR address, or AWS security group ID that you want to add to the access list.",
+			"output":    createTemplate,
 		},
 		Example: fmt.Sprintf(`  # Create an IP access list entry using the current IP address:
   %[1]s accessList create --currentIp
@@ -186,6 +192,7 @@ The command doesn't overwrite existing entries in the access list. Instead, it a
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

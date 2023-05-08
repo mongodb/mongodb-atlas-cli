@@ -18,15 +18,15 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas/mongodbatlasv2"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -177,8 +177,8 @@ func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec,
 			zoneMap[rc.ID] = rc.ZoneName
 		}
 
-		customZoneMapping = make([]atlasV1.CustomZoneMapping, 0, len(globalCluster.CustomZoneMapping))
-		for location, zoneID := range globalCluster.CustomZoneMapping {
+		customZoneMapping = make([]atlasV1.CustomZoneMapping, 0, len(globalCluster.GetCustomZoneMapping()))
+		for location, zoneID := range globalCluster.GetCustomZoneMapping() {
 			customZoneMapping = append(customZoneMapping, atlasV1.CustomZoneMapping{
 				Zone:     zoneMap[zoneID],
 				Location: location,
@@ -196,7 +196,7 @@ func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec,
 			Db:                     ns.Db,
 			Collection:             ns.Collection,
 			CustomShardKey:         ns.CustomShardKey,
-			NumInitialChunks:       ns.NumInitialChunks,
+			NumInitialChunks:       int(ns.GetNumInitialChunks()),
 			PresplitHashedZones:    ns.PresplitHashedZones,
 			IsCustomShardKeyHashed: ns.IsCustomShardKeyHashed,
 			IsShardKeyUnique:       ns.IsShardKeyUnique,
@@ -213,15 +213,15 @@ func buildProcessArgs(configOptsProvider store.AtlasClusterConfigurationOptionsD
 
 	// TODO: OplogMinRetentionHours is not exported due to a bug https://jira.mongodb.org/browse/CLOUDP-146481
 	return &atlasV1.ProcessArgs{
-		DefaultReadConcern:               pArgs.DefaultReadConcern,
-		DefaultWriteConcern:              pArgs.DefaultWriteConcern,
-		MinimumEnabledTLSProtocol:        pArgs.MinimumEnabledTLSProtocol,
+		DefaultReadConcern:               pArgs.GetDefaultReadConcern(),
+		DefaultWriteConcern:              pArgs.GetDefaultWriteConcern(),
+		MinimumEnabledTLSProtocol:        pArgs.GetMinimumEnabledTlsProtocol(),
 		FailIndexKeyTooLong:              pArgs.FailIndexKeyTooLong,
 		JavascriptEnabled:                pArgs.JavascriptEnabled,
 		NoTableScan:                      pArgs.NoTableScan,
-		OplogSizeMB:                      pArgs.OplogSizeMB,
-		SampleSizeBIConnector:            pArgs.SampleSizeBIConnector,
-		SampleRefreshIntervalBIConnector: pArgs.SampleRefreshIntervalBIConnector,
+		OplogSizeMB:                      pointer.Get(int64(pArgs.GetOplogSizeMB())),
+		SampleSizeBIConnector:            pointer.Get(int64(pArgs.GetSampleSizeBIConnector())),
+		SampleRefreshIntervalBIConnector: pointer.Get(int64(pArgs.GetSampleRefreshIntervalBIConnector())),
 	}, nil
 }
 
@@ -252,9 +252,9 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 		for _, pItem := range p.PolicyItems {
 			items = append(items, atlasV1.AtlasBackupPolicyItem{
 				FrequencyType:     pItem.FrequencyType,
-				FrequencyInterval: pItem.FrequencyInterval,
+				FrequencyInterval: int(pItem.FrequencyInterval),
 				RetentionUnit:     pItem.RetentionUnit,
-				RetentionValue:    pItem.RetentionValue,
+				RetentionValue:    int(pItem.RetentionValue),
 			})
 		}
 		policies = append(policies, &atlasV1.AtlasBackupPolicy{
@@ -279,8 +279,8 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 	var export *atlasV1.AtlasBackupExportSpec
 	if bs.Export != nil {
 		export = &atlasV1.AtlasBackupExportSpec{
-			ExportBucketID: bs.Export.ExportBucketID,
-			FrequencyType:  bs.Export.FrequencyType,
+			ExportBucketID: bs.Export.GetExportBucketId(),
+			FrequencyType:  bs.Export.GetFrequencyType(),
 		}
 	}
 
@@ -297,17 +297,17 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 			},
 		},
 		Spec: atlasV1.AtlasBackupScheduleSpec{
-			AutoExportEnabled: pointers.PtrValOrDefault(bs.AutoExportEnabled, false),
+			AutoExportEnabled: pointer.GetOrDefault(bs.AutoExportEnabled, false),
 			Export:            export,
 			PolicyRef: common.ResourceRefNamespaced{
 				Name:      resources.NormalizeAtlasName(policies[0].Name, dictionary),
 				Namespace: policies[0].Namespace,
 			},
-			ReferenceHourOfDay:                pointers.PtrValOrDefault(bs.ReferenceHourOfDay, 0),
-			ReferenceMinuteOfHour:             pointers.PtrValOrDefault(bs.ReferenceMinuteOfHour, 0),
-			RestoreWindowDays:                 pointers.PtrValOrDefault(bs.RestoreWindowDays, 0),
-			UpdateSnapshots:                   pointers.PtrValOrDefault(bs.UpdateSnapshots, false),
-			UseOrgAndGroupNamesInExportPrefix: pointers.PtrValOrDefault(bs.UseOrgAndGroupNamesInExportPrefix, false),
+			ReferenceHourOfDay:                int64(pointer.GetOrDefault(bs.ReferenceHourOfDay, 0)),
+			ReferenceMinuteOfHour:             int64(pointer.GetOrDefault(bs.ReferenceMinuteOfHour, 0)),
+			RestoreWindowDays:                 int64(pointer.GetOrDefault(bs.RestoreWindowDays, 0)),
+			UpdateSnapshots:                   pointer.GetOrDefault(bs.UpdateSnapshots, false),
+			UseOrgAndGroupNamesInExportPrefix: pointer.GetOrDefault(bs.UseOrgAndGroupNamesInExportPrefix, false),
 		},
 		Status: status.BackupScheduleStatus{},
 	}
@@ -321,7 +321,7 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 				atlasV1.CopySetting{
 					CloudProvider:     copySetting.CloudProvider,
 					RegionName:        copySetting.RegionName,
-					ReplicationSpecID: copySetting.ReplicationSpecID,
+					ReplicationSpecID: copySetting.ReplicationSpecId,
 					ShouldCopyOplogs:  copySetting.ShouldCopyOplogs,
 					Frequencies:       copySetting.Frequencies,
 				},
@@ -516,7 +516,7 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 }
 
 func buildServerlessPrivateEndpoints(deploymentStore store.ServerlessPrivateEndpointsLister, projectID, clusterName string) ([]atlasV1.ServerlessPrivateEndpoint, error) {
-	endpoints, err := deploymentStore.ServerlessPrivateEndpoints(projectID, clusterName, &mongodbatlas.ListOptions{ItemsPerPage: MaxItems})
+	endpoints, err := deploymentStore.ServerlessPrivateEndpoints(projectID, clusterName)
 	if err != nil {
 		return nil, err
 	}
@@ -524,11 +524,22 @@ func buildServerlessPrivateEndpoints(deploymentStore store.ServerlessPrivateEndp
 	result := make([]atlasV1.ServerlessPrivateEndpoint, 0, len(endpoints))
 
 	for i := range endpoints {
-		result = append(result, atlasV1.ServerlessPrivateEndpoint{
-			Name:                     endpoints[i].Comment,
-			CloudProviderEndpointID:  endpoints[i].CloudProviderEndpointID,
-			PrivateEndpointIPAddress: endpoints[i].PrivateEndpointIPAddress,
-		})
+		endpoint := endpoints[i].GetActualInstance()
+
+		switch v := endpoint.(type) {
+		case *mongodbatlasv2.ServerlessAWSTenantEndpoint:
+			result = append(result, atlasV1.ServerlessPrivateEndpoint{
+				Name:                     *v.Comment,
+				CloudProviderEndpointID:  *v.CloudProviderEndpointId,
+				PrivateEndpointIPAddress: "",
+			})
+		case *mongodbatlasv2.ServerlessAzureTenantEndpoint:
+			result = append(result, atlasV1.ServerlessPrivateEndpoint{
+				Name:                     *v.Comment,
+				CloudProviderEndpointID:  *v.CloudProviderEndpointId,
+				PrivateEndpointIPAddress: *v.PrivateEndpointIpAddress,
+			})
+		}
 	}
 	return result, nil
 }

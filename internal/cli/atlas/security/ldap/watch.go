@@ -34,6 +34,8 @@ type WatchOpts struct {
 	store store.LDAPConfigurationDescriber
 }
 
+var watchTemplate = "\nLDAP Configuration request completed.\n"
+
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -47,7 +49,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	status := result.Status
+	status := *result.Status
 	return status == "FAILED" || status == "SUCCESS", nil
 }
 
@@ -68,17 +70,20 @@ func WatchBuilder() *cobra.Command {
 		Long: `This command checks the LDAP configuration's status periodically until it reaches a SUCCESS or FAILED status. 
 Once the LDAP configuration reaches the expected status, the command prints "LDAP Configuration request completed."
 If you run the command in the terminal, it blocks the terminal session until the resource status succeeds or fails.
-You can interrupt the command's polling at any time with CTRL-C.`,
+You can interrupt the command's polling at any time with CTRL-C.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  %s security ldap status watch requestIdSample`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"requestIdDesc": "ID of the request to verify an LDAP configuration.",
+			"output":        watchTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nLDAP Configuration request completed.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -73,9 +73,12 @@ func UpdateBuilder() *cobra.Command {
 		Short:   "Modify the roles or description for the specified organization API key.",
 		Long: fmt.Sprintf(`When you modify the roles for an organization API key with this command, the values you specify overwrite the existing roles assigned to the API key.
 		
-To view possible values for the apiKeyId argument, run %s organizations apiKeys list.`, cli.ExampleAtlasEntryPoint()),
+To view possible values for the apiKeyId argument, run %s organizations apiKeys list.
+
+`+fmt.Sprintf(usage.RequiredRole, "Organization User Admin"), cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"apiKeyIdDesc": "Unique 24-digit string that identifies your API key.",
+			"output":       updateTemplate,
 		},
 		Example: fmt.Sprintf(`  # Modify the role and description for the API key with the ID 5f24084d8dbffa3ad3f21234 for the organization with the ID 5a1b39eec902201990f12345:
   %s organizations apiKeys assign 5f24084d8dbffa3ad3f21234 --role ORG_MEMBER --desc "User1 Member Key" --orgId 5a1b39eec902201990f12345 --output json`, cli.ExampleAtlasEntryPoint()),
@@ -97,6 +100,7 @@ To view possible values for the apiKeyId argument, run %s organizations apiKeys 
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

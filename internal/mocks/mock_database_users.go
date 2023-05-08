@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockDatabaseUserLister is a mock of DatabaseUserLister interface.
@@ -35,10 +36,10 @@ func (m *MockDatabaseUserLister) EXPECT() *MockDatabaseUserListerMockRecorder {
 }
 
 // DatabaseUsers mocks base method.
-func (m *MockDatabaseUserLister) DatabaseUsers(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.DatabaseUser, error) {
+func (m *MockDatabaseUserLister) DatabaseUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedApiAtlasDatabaseUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseUsers", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.DatabaseUser)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedApiAtlasDatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -186,10 +187,10 @@ func (m *MockDatabaseUserDescriber) EXPECT() *MockDatabaseUserDescriberMockRecor
 }
 
 // DatabaseUser mocks base method.
-func (m *MockDatabaseUserDescriber) DatabaseUser(arg0, arg1, arg2 string) (*mongodbatlas.DatabaseUser, error) {
+func (m *MockDatabaseUserDescriber) DatabaseUser(arg0, arg1, arg2 string) (*mongodbatlasv2.DatabaseUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseUser", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.DatabaseUser)
+	ret0, _ := ret[0].(*mongodbatlasv2.DatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -224,10 +225,10 @@ func (m *MockDBUserCertificateLister) EXPECT() *MockDBUserCertificateListerMockR
 }
 
 // DBUserCertificates mocks base method.
-func (m *MockDBUserCertificateLister) DBUserCertificates(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) ([]mongodbatlas.UserCertificate, error) {
+func (m *MockDBUserCertificateLister) DBUserCertificates(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedUserCert, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DBUserCertificates", arg0, arg1, arg2)
-	ret0, _ := ret[0].([]mongodbatlas.UserCertificate)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedUserCert)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -262,10 +263,10 @@ func (m *MockDBUserCertificateCreator) EXPECT() *MockDBUserCertificateCreatorMoc
 }
 
 // CreateDBUserCertificate mocks base method.
-func (m *MockDBUserCertificateCreator) CreateDBUserCertificate(arg0, arg1 string, arg2 int) (*mongodbatlas.UserCertificate, error) {
+func (m *MockDBUserCertificateCreator) CreateDBUserCertificate(arg0, arg1 string, arg2 int) (*mongodbatlasv2.UserCert, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDBUserCertificate", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.UserCertificate)
+	ret0, _ := ret[0].(*mongodbatlasv2.UserCert)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

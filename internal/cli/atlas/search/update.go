@@ -94,6 +94,7 @@ func UpdateBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",
+			"output":      updateTemplate,
 		},
 		Args: require.ExactArgs(1),
 		Example: fmt.Sprintf(`  # Modify the search index with the ID 5f2099cd683fc55fbb30bef6 for the cluster named myCluster:
@@ -132,6 +133,7 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 

@@ -14,10 +14,13 @@ mongocli cloud-manager alerts acknowledge
 
 Acknowledges the specified alert for your project.
 
+To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+
 Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli cloud-manager alerts acknowledge <alertId> [options]
 

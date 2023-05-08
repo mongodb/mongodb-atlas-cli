@@ -57,8 +57,10 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <privateEndpointId>",
 		Aliases: []string{"rm"},
 		Short:   "Delete a GCP private endpoint for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+			"output":                successDeleteTemplate,
 		},
 		Example: fmt.Sprintf(`  %s privateEndpoint gcp delete vpce-abcdefg0123456789 --force`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),

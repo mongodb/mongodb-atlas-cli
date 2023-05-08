@@ -16,6 +16,7 @@ package aws
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -74,7 +75,12 @@ func CreateBuilder() *cobra.Command {
 - If the endpoint ID already exists and there is no change to the associated comment, Atlas Data Lake makes no change to the endpoint ID list.
 - If the endpoint ID already exists and there is a change to the associated comment, Atlas Data Lake updates the comment value only in the endpoint ID list.
 - If the endpoint ID doesn't exist, Atlas Data Lake appends the new endpoint to the list of endpoints in the endpoint ID list.
-Your API key must have the GROUP_ATLAS_ADMIN (Project Owner) role to create a private endpoint.`,
+Your API key must have the GROUP_ATLAS_ADMIN (Project Owner) role to create a private endpoint.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -93,6 +99,7 @@ Your API key must have the GROUP_ATLAS_ADMIN (Project Owner) role to create a pr
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
 

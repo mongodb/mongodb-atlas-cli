@@ -62,6 +62,7 @@ func CreateBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Label that identifies the organization.",
+			"output":   createTemplate,
 		},
 		Example: `  # Create an Ops Manager organization with the name myOrg:
   mongocli iam organizations create myOrg --output json`,
@@ -79,6 +80,7 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

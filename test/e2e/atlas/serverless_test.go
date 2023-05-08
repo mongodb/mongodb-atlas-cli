@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && serverless)
+//go:build e2e || (atlas && serverless && instance)
 
 package atlas_test
 
@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestServerless(t *testing.T) {
@@ -52,13 +52,12 @@ func TestServerless(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster *mongodbatlas.Cluster
+		var cluster atlasv2.ServerlessInstanceDescription
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		t.Helper()
 		a := assert.New(t)
-		a.Equal(clusterName, cluster.Name)
+		a.Equal(clusterName, *cluster.Name)
 	})
 
 	t.Run("Watch", func(t *testing.T) {
@@ -76,6 +75,26 @@ func TestServerless(t *testing.T) {
 		a.Contains(string(resp), "Instance available")
 	})
 
+	t.Run("Update", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			serverlessEntity,
+			"update",
+			clusterName,
+			"--disableTerminationProtection",
+			"--projectId", g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var cluster atlasv2.ServerlessInstanceDescription
+		err = json.Unmarshal(resp, &cluster)
+		req.NoError(err)
+
+		a := assert.New(t)
+		a.Equal(clusterName, *cluster.Name)
+	})
+
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			serverlessEntity,
@@ -86,7 +105,7 @@ func TestServerless(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var clusters mongodbatlas.ClustersResponse
+		var clusters atlasv2.PaginatedServerlessInstanceDescription
 		err = json.Unmarshal(resp, &clusters)
 		req.NoError(err)
 
@@ -105,12 +124,12 @@ func TestServerless(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster mongodbatlas.Cluster
+		var cluster atlasv2.ServerlessInstanceDescription
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.Equal(clusterName, cluster.Name)
+		a.Equal(clusterName, *cluster.Name)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

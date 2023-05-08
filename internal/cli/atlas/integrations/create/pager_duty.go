@@ -25,10 +25,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-const pagerDutyIntegrationType = "PAGER_DUTY"
+var pagerDutyIntegrationType = "PAGER_DUTY"
 
 type PagerDutyOpts struct {
 	cli.GlobalOpts
@@ -55,10 +55,12 @@ func (opts *PagerDutyOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *PagerDutyOpts) newPagerDutyIntegration() *atlas.ThirdPartyIntegration {
-	return &atlas.ThirdPartyIntegration{
-		Type:       pagerDutyIntegrationType,
-		ServiceKey: opts.serviceKey,
+func (opts *PagerDutyOpts) newPagerDutyIntegration() *atlasv2.Integration {
+	return &atlasv2.Integration{
+		PagerDuty: &atlasv2.PagerDuty{
+			Type:       &pagerDutyIntegrationType,
+			ServiceKey: opts.serviceKey,
+		},
 	}
 }
 
@@ -69,7 +71,12 @@ func PagerDutyBuilder() *cobra.Command {
 		Use:     pagerDutyIntegrationType,
 		Aliases: []string{"pager_duty", "pagerDuty"},
 		Short:   "Create or update a PagerDuty integration for your project.",
-		Long:    `The requesting API key must have the Organization Owner or Project Owner role to configure an integration with PagerDuty.`,
+		Long: `The requesting API key must have the Organization Owner or Project Owner role to configure an integration with PagerDuty.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplatePagerDuty,
+		},
 		Example: fmt.Sprintf(`  # Integrate PagerDuty with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create PAGER_DUTY --serviceKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
@@ -89,6 +96,7 @@ func PagerDutyBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.ServiceKey)
 

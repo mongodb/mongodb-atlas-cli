@@ -17,15 +17,18 @@ package serverless
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const providerName = "SERVERLESS"
@@ -60,12 +63,12 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newServerlessCreateRequestParams() *atlas.ServerlessCreateRequestParams {
-	return &atlas.ServerlessCreateRequestParams{
+func (opts *CreateOpts) newServerlessCreateRequestParams() *atlasv2.ServerlessInstanceDescriptionCreate {
+	return &atlasv2.ServerlessInstanceDescriptionCreate{
 		Name: opts.instanceName,
-		ProviderSettings: &atlas.ServerlessProviderSettings{
+		ProviderSettings: atlasv2.ServerlessProviderSettings{
 			BackingProviderName: opts.provider,
-			ProviderName:        providerName,
+			ProviderName:        pointer.Get(providerName),
 			RegionName:          opts.region,
 		},
 	}
@@ -77,9 +80,11 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create <instanceName>",
 		Short: "Creates one serverless instance in the specified project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",
+			"output":           createTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -99,6 +104,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Provider)
 	_ = cmd.MarkFlagRequired(flag.Region)

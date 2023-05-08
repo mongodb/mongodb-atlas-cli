@@ -15,6 +15,7 @@ package serverless
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -26,7 +27,7 @@ import (
 )
 
 var describeTemplate = `ID	NAME	MDB VER	STATE
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
+{{.Id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
 `
 
 type DescribeOpts struct {
@@ -45,7 +46,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.ServerlessInstance(opts.ConfigProjectID(), opts.instanceName)
+	r, err := opts.store.GetServerlessInstance(opts.ConfigProjectID(), opts.instanceName)
 	if err != nil {
 		return err
 	}
@@ -59,9 +60,11 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe <instanceName>",
 		Short: "Return one serverless instance in the specified project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",
+			"output":           describeTemplate,
 		},
 		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -79,6 +82,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

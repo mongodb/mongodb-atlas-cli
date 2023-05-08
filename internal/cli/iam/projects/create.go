@@ -145,10 +145,13 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create <projectName>",
 		Short: "Create a project in your organization.",
-		Long:  `Projects group clusters into logical collections that support an application environment, workload, or both. Each project can have its own users, teams, security, and alert settings.`,
-		Args:  require.ExactArgs(1),
+		Long: `Projects group clusters into logical collections that support an application environment, workload, or both. Each project can have its own users, teams, security, and alert settings.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"projectNameDesc": "Label that identifies the project.",
+			"output":          atlasCreateTemplate,
 		},
 		Example: fmt.Sprintf(`  # Create a project in the organization with the ID 5e2211c17a3e5a48f5497de3 using default alert settings:
   %s projects create --orgId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
@@ -169,6 +172,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.regionUsageRestrictions, flag.GovCloudRegionsOnly, false, usage.GovCloudRegionsOnly)
 	cmd.Flags().BoolVar(&opts.withoutDefaultAlertSettings, flag.WithoutDefaultAlertSettings, false, usage.WithoutDefaultAlertSettings)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

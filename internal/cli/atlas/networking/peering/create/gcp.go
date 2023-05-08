@@ -22,10 +22,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type GCPOpts struct {
@@ -54,36 +56,42 @@ func (opts *GCPOpts) Run() error {
 
 	if container == nil {
 		var err2 error
-		container, err2 = opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		r, err2 := opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		container = r.(*atlasv2.GCPCloudProviderContainer)
 		if err2 != nil {
 			return err2
 		}
 	}
-	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(container.ID))
+	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(*container.Id))
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *GCPOpts) containerExists() (*atlas.Container, error) {
+func (opts *GCPOpts) containerExists() (*atlasv2.GCPCloudProviderContainer, error) {
 	r, err := opts.store.GCPContainers(opts.ConfigProjectID())
 	if err != nil {
 		return nil, err
 	}
 	if len(r) > 0 {
-		return &r[0], nil
+		return r[0], nil
 	}
 	return nil, nil
 }
 
-func (opts *GCPOpts) newContainer() *atlas.Container {
-	c := &atlas.Container{
-		AtlasCIDRBlock: opts.atlasCIDRBlock,
+func (opts *GCPOpts) newGCPContainer() *atlasv2.GCPCloudProviderContainer {
+	c := &atlasv2.GCPCloudProviderContainer{
+		AtlasCidrBlock: opts.atlasCIDRBlock,
 		Regions:        opts.regions,
-		ProviderName:   "GCP",
+		ProviderName:   pointer.Get("GCP"),
 	}
 	return c
+}
+
+func (opts *GCPOpts) newContainer() *atlasv2.CloudProviderContainer {
+	w := atlasv2.GCPCloudProviderContainerAsCloudProviderContainer(opts.newGCPContainer())
+	return &w
 }
 
 func (opts *GCPOpts) newPeer(containerID string) *atlas.Peer {
@@ -112,7 +120,12 @@ func GCPBuilder() *cobra.Command {
 		Short: "Create a network peering connection between the Atlas VPC and your Google Cloud VPC.",
 		Long: `The network peering create command checks if a VPC exists in the region you specify for your Atlas project. If one exists, this command creates the peering connection between that VPC and your VPC. If an Atlas VPC doesn't exist, this command creates one and creates a connection between it and your VPC.
 		
-To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.`,
+To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		Example: fmt.Sprintf(`  # Create a network peering connection between the Atlas VPC in CIDR block 192.168.0.0/24 and your GCP VPC with the GCP project ID grandiose-branch-256701 in the network named cli-test:
   %s networking peering create gcp --atlasCidrBlock 192.168.0.0/24 --gcpProjectId grandiose-branch-256701 --network cli-test --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
@@ -135,6 +148,7 @@ To learn more about network peering connections, see https://www.mongodb.com/doc
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.AtlasCIDRBlock)
 

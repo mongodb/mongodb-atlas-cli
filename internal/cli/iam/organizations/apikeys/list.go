@@ -63,6 +63,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "Return all API keys for your organization.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of organization API keys for the organization with the ID 5a1b39eec902201990f12345:
   %s organizations apiKeys list --orgId 5a1b39eec902201990f12345 --output json`, cli.ExampleAtlasEntryPoint()),
@@ -83,6 +84,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

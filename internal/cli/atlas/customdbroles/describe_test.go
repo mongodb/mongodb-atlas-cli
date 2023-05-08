@@ -25,28 +25,27 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/openlyinc/pointy"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseRoleDescriber(ctrl)
 
-	expected := mongodbatlas.CustomDBRole{
-		Actions: []mongodbatlas.Action{
+	expected := atlasv2.CustomDBRole{
+		Actions: []atlasv2.DBAction{
 			{
 				Action: "test",
-				Resources: []mongodbatlas.Resource{
+				Resources: []atlasv2.DBResource{
 					{
-						Collection: pointy.String("test"),
-						DB:         pointy.String("test"),
-						Cluster:    pointy.Bool(true)},
+						Collection: "test",
+						Db:         "test",
+						Cluster:    true},
 				},
 			},
 		},
-		InheritedRoles: []mongodbatlas.InheritedRole{
+		InheritedRoles: []atlasv2.InheritedRole{
 			{
 				Db:   "test",
 				Role: "test",

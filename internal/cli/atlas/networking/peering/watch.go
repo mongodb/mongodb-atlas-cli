@@ -34,6 +34,8 @@ type WatchOpts struct {
 	store store.PeeringConnectionDescriber
 }
 
+var watchTemplate = "\nNetwork peering changes completed.\n"
+
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -77,18 +79,21 @@ func WatchBuilder() *cobra.Command {
 		Long: `This command checks the peering connection's status periodically until it becomes available. 
 Once it reaches the expected state, the command prints "Network peering changes completed."
 If you run the command in the terminal, it blocks the terminal session until the resource is available.
-You can interrupt the command's polling at any time with CTRL-C.`,
+You can interrupt the command's polling at any time with CTRL-C.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Example: fmt.Sprintf(`  Watch for the network peering connection with the ID 5f621dc701240c5b7c3a888e to become available in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s networking peering watch 5f621dc701240c5b7c3a888e --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"peerIdDesc": "Unique ID of the network peering connection that you want to watch.",
+			"output":     watchTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nNetwork peering changes completed.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -99,5 +104,6 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 	return cmd
 }

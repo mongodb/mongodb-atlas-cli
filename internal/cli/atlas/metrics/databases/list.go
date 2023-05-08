@@ -45,7 +45,7 @@ func (opts *ListsOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var databasesListTemplate = `{{range .Results}}
+var databasesListTemplate = `DATABASE NAME{{range .Results}}
 {{.DatabaseName}}{{end}}
 `
 
@@ -65,11 +65,14 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "list <hostname:port>",
 		Long: fmt.Sprintf(`To return the hostname and port needed for this command, run
-%s processes list`, cli.ExampleAtlasEntryPoint()),
+%s processes list
+
+`, cli.ExampleAtlasEntryPoint()) + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Short:   "Return all databases running on the specified host for your project.",
 		Aliases: []string{"ls"},
 		Annotations: map[string]string{
 			"hostname:portDesc": "Hostname and port number of the instance running the MongoDB process.",
+			"output":            databasesListTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of available databases for the host atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
   %s metrics databases list atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 --output json`,
@@ -96,6 +99,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

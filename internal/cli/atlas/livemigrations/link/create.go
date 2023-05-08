@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 var createTemplate = "Link-token '{{.LinkToken}}' successfully created.\n"
@@ -54,9 +54,9 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newTokenCreateRequest() *mongodbatlas.TokenCreateRequest {
-	return &mongodbatlas.TokenCreateRequest{
-		AccessListIPs: opts.accessListIP,
+func (opts *CreateOpts) newTokenCreateRequest() *atlasv2.TargetOrgRequest {
+	return &atlasv2.TargetOrgRequest{
+		AccessListIps: opts.accessListIP,
 	}
 }
 
@@ -67,6 +67,9 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create",
 		Short: "Create a new link-token for a push live migration.",
 		Long:  `To migrate using scripts, use mongomirror instead of the Atlas CLI. To learn more about mongomirror, see https://www.mongodb.com/docs/atlas/reference/mongomirror/.`,
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
@@ -81,6 +84,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringSliceVar(&opts.accessListIP, flag.AccessListIP, []string{}, usage.LinkTokenAccessListCIDREntries)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

@@ -28,6 +28,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas completion powershell [options]
 

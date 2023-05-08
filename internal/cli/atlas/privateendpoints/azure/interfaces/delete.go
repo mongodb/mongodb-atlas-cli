@@ -55,9 +55,11 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <privateEndpointResourceId>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified Azure private endpoint interface and related service from your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"privateEndpointResourceIdDesc": "Unique string that identifies the Azure private endpoint interface in Azure.",
+			"output":                        opts.SuccessMessage(),
 		},
 		Example: fmt.Sprintf(`  # Remove the Azure private endpoint interface with the ID /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/providers/Microsoft.Network/privateEndpoints/cli-test in Azure from the project with the ID 5e2211c17a3e5a48f5497de3:
   %s privateEndpoints azure interfaces delete /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/providers/Microsoft.Network/privateEndpoints/cli-test --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),

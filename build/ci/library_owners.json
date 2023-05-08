@@ -6,7 +6,10 @@
 	"github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys": "mongocli",
 	"github.com/Masterminds/semver/v3": "mongocli",
 	"github.com/PaesslerAG/jsonpath": "mongocli",
-	"github.com/aws/aws-sdk-go": "mongocli",
+	"github.com/aws/aws-sdk-go-v2": "mongocli",
+	"github.com/aws/aws-sdk-go-v2/config": "mongocli",
+	"github.com/aws/aws-sdk-go-v2/credentials": "mongocli",
+	"github.com/aws/aws-sdk-go-v2/service/kms": "mongocli",
 	"github.com/briandowns/spinner": "mongocli",
 	"github.com/evergreen-ci/shrub": "mongocli",
 	"github.com/gemalto/kmip-go": "mongocli",
@@ -19,7 +22,6 @@
 	"github.com/mattn/go-isatty": "mongocli",
 	"github.com/mongodb-forks/digest": "mongocli",
 	"github.com/mongodb-labs/cobra2snooty": "mongocli",
-	"github.com/openlyinc/pointy": "mongocli",
 	"github.com/pelletier/go-toml": "mongocli",
 	"github.com/Netflix/go-expect": "mongocli",
 	"github.com/creack/pty": "mongocli",
@@ -36,6 +38,7 @@
 	"go.mongodb.org/mongo-driver": "mongocli",
 	"go.mongodb.org/ops-manager": "mongocli",
 	"golang.org/x/crypto": "mongocli",
+	"golang.org/x/tools": "mongocli",
 	"google.golang.org/api": "mongocli",
 	"google.golang.org/protobuf": "mongocli",
 	"golang.org/x/mod": "mongocli",
@@ -45,5 +48,6 @@
 	"k8s.io/apimachinery": "atlas_kubernetes_team",
 	"k8s.io/client-go": "atlas_kubernetes_team",
 	"k8s.io/apiextensions-apiserver": "atlas_kubernetes_team",
-	"sigs.k8s.io/yaml": "atlas_kubernetes_team"
+	"sigs.k8s.io/yaml": "atlas_kubernetes_team",
+	"sigs.k8s.io/controller-runtime": "atlas_kubernetes_team"
 }

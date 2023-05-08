@@ -29,8 +29,8 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/pointers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
@@ -95,19 +95,19 @@ func InitialSetupWithTeam(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	s := KubernetesConfigGenerateProjectSuite{
 		t: t,
 	}
-	s.generator = newAtlasE2ETestGenerator(s.t)
+	s.generator = newAtlasE2ETestGenerator(t)
 	s.generator.generateTeam("Kubernetes")
 	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
 	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
-	require.NoError(s.t, err)
+	require.NoError(t, err)
 	s.cliPath = cliPath
 
 	s.assertions = assert.New(t)
 
 	// always register atlas entities
-	require.NoError(s.t, atlasV1.AddToScheme(scheme.Scheme))
+	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
 	return s
 }
 
@@ -116,18 +116,18 @@ func InitialSetup(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	s := KubernetesConfigGenerateProjectSuite{
 		t: t,
 	}
-	s.generator = newAtlasE2ETestGenerator(s.t)
+	s.generator = newAtlasE2ETestGenerator(t)
 	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
 	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
-	require.NoError(s.t, err)
+	require.NoError(t, err)
 	s.cliPath = cliPath
 
 	s.assertions = assert.New(t)
 
 	// always register atlas entities
-	require.NoError(s.t, atlasV1.AddToScheme(scheme.Scheme))
+	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
 	return s
 }
 
@@ -188,7 +188,7 @@ func TestProjectWithNonDefaultSettings(t *testing.T) {
 	generator := s.generator
 	expectedProject := s.expectedProject
 	assertions := s.assertions
-	expectedProject.Spec.Settings.IsCollectDatabaseSpecificsStatisticsEnabled = pointers.MakePtr(false)
+	expectedProject.Spec.Settings.IsCollectDatabaseSpecificsStatisticsEnabled = pointer.Get(false)
 
 	t.Run("Change project settings and generate", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -245,9 +245,9 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 			{
 				TypeName:     group,
 				IntervalMin:  intervalMin,
-				DelayMin:     pointers.MakePtr(delayMin),
-				SMSEnabled:   pointers.MakePtr(false),
-				EmailEnabled: pointers.MakePtr(true),
+				DelayMin:     pointer.Get(delayMin),
+				SMSEnabled:   pointer.Get(false),
+				EmailEnabled: pointer.Get(true),
 			},
 		},
 	}
@@ -428,7 +428,9 @@ func TestProjectWithCustomRole(t *testing.T) {
 				Name: "FIND",
 				Resources: []atlasV1.Resource{
 					{
-						Database: pointers.MakePtr("test-db"),
+						Database:   pointer.Get("test-db	"),
+						Collection: pointer.Get(""),
+						Cluster:    pointer.Get(false),
 					},
 				},
 			},
@@ -605,7 +607,7 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 	expectedProject := s.expectedProject
 	assertions := s.assertions
 
-	atlasCidrBlock := "10.8.0.0/18" //
+	atlasCidrBlock := "10.8.0.0/18"
 	networkPeer := atlasV1.NetworkPeer{
 		ProviderName: provider.ProviderGCP,
 		NetworkName:  "test-network",
@@ -632,9 +634,9 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		require.NoError(t, err, string(resp))
 		t.Cleanup(func() {
-			deleteNetworkPeering(t, generator.projectID, gcpEntity)
+			deleteAllNetworkPeers(t, cliPath, generator.projectID, gcpEntity)
 		})
 		var createdNetworkPeer mongodbatlas.Peer
 		err = json.Unmarshal(resp, &createdNetworkPeer)
@@ -674,7 +676,7 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 	expectedProject := s.expectedProject
 	assertions := s.assertions
 
-	region := "northeurope"
+	const region = "northeurope"
 	newPrivateEndpoint := atlasV1.PrivateEndpoint{
 		Provider: provider.ProviderAzure,
 	}
@@ -695,7 +697,7 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err)
 		t.Cleanup(func() {
-			deletePrivateEndpoints(t, generator.projectID, azureEntity)
+			deleteAllPrivateEndpoints(t, cliPath, generator.projectID, azureEntity)
 		})
 		var createdNetworkPeer mongodbatlas.PrivateEndpointConnection
 		err = json.Unmarshal(resp, &createdNetworkPeer)
@@ -869,26 +871,26 @@ func referenceProject(name, namespace string, labels map[string]string) *atlasV1
 				Name: resources.NormalizeAtlasName(fmt.Sprintf("%s-credentials", name), dictionary),
 			},
 			Settings: &atlasV1.ProjectSettings{
-				IsCollectDatabaseSpecificsStatisticsEnabled: pointers.MakePtr(true),
-				IsDataExplorerEnabled:                       pointers.MakePtr(true),
-				IsPerformanceAdvisorEnabled:                 pointers.MakePtr(true),
-				IsRealtimePerformancePanelEnabled:           pointers.MakePtr(true),
-				IsSchemaAdvisorEnabled:                      pointers.MakePtr(true),
+				IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
+				IsDataExplorerEnabled:                       pointer.Get(true),
+				IsPerformanceAdvisorEnabled:                 pointer.Get(true),
+				IsRealtimePerformancePanelEnabled:           pointer.Get(true),
+				IsSchemaAdvisorEnabled:                      pointer.Get(true),
 			},
 			Auditing: &atlasV1.Auditing{
-				AuditAuthorizationSuccess: pointers.MakePtr(false),
-				Enabled:                   pointers.MakePtr(false),
+				AuditAuthorizationSuccess: pointer.Get(false),
+				Enabled:                   pointer.Get(false),
 			},
 			EncryptionAtRest: &atlasV1.EncryptionAtRest{
 				AwsKms: atlasV1.AwsKms{
-					Enabled: pointers.MakePtr(false),
-					Valid:   pointers.MakePtr(false),
+					Enabled: pointer.Get(false),
+					Valid:   pointer.Get(false),
 				},
 				AzureKeyVault: atlasV1.AzureKeyVault{
-					Enabled: pointers.MakePtr(false),
+					Enabled: pointer.Get(false),
 				},
 				GoogleCloudKms: atlasV1.GoogleCloudKms{
-					Enabled: pointers.MakePtr(false),
+					Enabled: pointer.Get(false),
 				},
 			},
 		},
@@ -917,9 +919,9 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backupschedule", name), dictionary),
 			},
 			AdvancedDeploymentSpec: &atlasV1.AdvancedDeploymentSpec{
-				BackupEnabled: pointers.MakePtr(true),
+				BackupEnabled: pointer.Get(true),
 				BiConnector: &atlasV1.BiConnectorSpec{
-					Enabled:        pointers.MakePtr(false),
+					Enabled:        pointer.Get(false),
 					ReadPreference: "secondary",
 				},
 				ClusterType:              string(atlasV1.TypeReplicaSet),
@@ -932,8 +934,8 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 					},
 				},
 				Name:       name,
-				Paused:     pointers.MakePtr(false),
-				PitEnabled: pointers.MakePtr(true),
+				Paused:     pointer.Get(false),
+				PitEnabled: pointer.Get(true),
 				ReplicationSpecs: []*atlasV1.AdvancedReplicationSpec{
 					{
 						NumShards: 1,
@@ -941,33 +943,33 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 						RegionConfigs: []*atlasV1.AdvancedRegionConfig{
 							{
 								AnalyticsSpecs: &atlasV1.Specs{
-									DiskIOPS:      pointers.MakePtr(int64(3000)),
+									DiskIOPS:      pointer.Get(int64(3000)),
 									EbsVolumeType: "STANDARD",
 									InstanceSize:  e2eClusterTier,
-									NodeCount:     pointers.MakePtr(0),
+									NodeCount:     pointer.Get(0),
 								},
 								ElectableSpecs: &atlasV1.Specs{
-									DiskIOPS:      pointers.MakePtr(int64(3000)),
+									DiskIOPS:      pointer.Get(int64(3000)),
 									EbsVolumeType: "STANDARD",
 									InstanceSize:  e2eClusterTier,
-									NodeCount:     pointers.MakePtr(3),
+									NodeCount:     pointer.Get(3),
 								},
 								ReadOnlySpecs: &atlasV1.Specs{
-									DiskIOPS:      pointers.MakePtr(int64(3000)),
+									DiskIOPS:      pointer.Get(int64(3000)),
 									EbsVolumeType: "STANDARD",
 									InstanceSize:  e2eClusterTier,
-									NodeCount:     pointers.MakePtr(0),
+									NodeCount:     pointer.Get(0),
 								},
 								AutoScaling: &atlasV1.AdvancedAutoScalingSpec{
 									DiskGB: &atlasV1.DiskGB{
-										Enabled: pointers.MakePtr(false),
+										Enabled: pointer.Get(false),
 									},
 									Compute: &atlasV1.ComputeSpec{
-										Enabled:          pointers.MakePtr(false),
-										ScaleDownEnabled: pointers.MakePtr(false),
+										Enabled:          pointer.Get(false),
+										ScaleDownEnabled: pointer.Get(false),
 									},
 								},
-								Priority:     pointers.MakePtr(7),
+								Priority:     pointer.Get(7),
 								ProviderName: string(provider.ProviderAWS),
 								RegionName:   region,
 							},
@@ -978,9 +980,12 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 				VersionReleaseSystem: "LTS",
 			},
 			ProcessArgs: &atlasV1.ProcessArgs{
-				MinimumEnabledTLSProtocol: "TLS1_2",
-				JavascriptEnabled:         pointers.MakePtr(true),
-				NoTableScan:               pointers.MakePtr(false),
+				MinimumEnabledTLSProtocol:        "TLS1_2",
+				JavascriptEnabled:                pointer.Get(true),
+				NoTableScan:                      pointer.Get(false),
+				OplogSizeMB:                      pointer.Get[int64](0),
+				SampleSizeBIConnector:            pointer.Get[int64](0),
+				SampleRefreshIntervalBIConnector: pointer.Get[int64](0),
 			},
 		},
 		Status: status.AtlasDeploymentStatus{
@@ -1036,7 +1041,7 @@ func referenceSharedCluster(name, region, namespace, projectName string, labels 
 	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].BackingProviderName = string(provider.ProviderAWS)
 	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ProviderName = string(provider.ProviderTenant)
 
-	cluster.Spec.AdvancedDeploymentSpec.PitEnabled = pointers.MakePtr(false)
+	cluster.Spec.AdvancedDeploymentSpec.PitEnabled = pointer.Get(false)
 	cluster.Spec.BackupScheduleRef = common.ResourceRefNamespaced{}
 	return cluster
 }
@@ -1044,10 +1049,10 @@ func referenceSharedCluster(name, region, namespace, projectName string, labels 
 func defaultMaintenanceWindowAlertConfigs() []atlasV1.AlertConfiguration {
 	ownerNotifications := []atlasV1.Notification{
 		{
-			EmailEnabled: pointers.MakePtr(true),
+			EmailEnabled: pointer.Get(true),
 			IntervalMin:  60,
-			DelayMin:     pointers.MakePtr(0),
-			SMSEnabled:   pointers.MakePtr(false),
+			DelayMin:     pointer.Get(0),
+			SMSEnabled:   pointer.Get(false),
 			TypeName:     "GROUP",
 			Roles:        []string{"GROUP_OWNER"},
 		},

@@ -78,9 +78,12 @@ func UpdateBuilder() *cobra.Command {
 		Use:     "update [invitationId]",
 		Aliases: []string{"updates"},
 		Short:   "Modifies the details of the specified pending invitation to your project.",
-		Long:    `You can use either the invitation ID or the user's email address to specify the invitation.`,
+		Long: `You can use either the invitation ID or the user's email address to specify the invitation.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"invitationIdDesc": "Unique 24-digit string that identifies the invitation.",
+			"output":           updateTemplate,
 		},
 		Example: fmt.Sprintf(`  # Modify the pending invitation with the ID 5dd56c847a3e5a1f363d424d to grant GROUP_READ_ONLY access the project with the ID 5f71e5255afec75a3d0f96dc:
   %[1]s projects invitations update 5dd56c847a3e5a1f363d424d --projectId 5f71e5255afec75a3d0f96dc --role GROUP_READ_ONLY --output json
@@ -112,6 +115,7 @@ func UpdateBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Role)
 

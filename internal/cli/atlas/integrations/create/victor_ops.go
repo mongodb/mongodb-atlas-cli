@@ -25,10 +25,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-const victorOpsIntegrationType = "VICTOR_OPS"
+var victorOpsIntegrationType = "VICTOR_OPS"
 
 type VictorOpsOpts struct {
 	cli.GlobalOpts
@@ -56,11 +56,13 @@ func (opts *VictorOpsOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *VictorOpsOpts) newVictorOpsIntegration() *atlas.ThirdPartyIntegration {
-	return &atlas.ThirdPartyIntegration{
-		Type:       victorOpsIntegrationType,
-		APIKey:     opts.apiKey,
-		RoutingKey: opts.routingKey,
+func (opts *VictorOpsOpts) newVictorOpsIntegration() *atlasv2.Integration {
+	return &atlasv2.Integration{
+		VictorOps: &atlasv2.VictorOps{
+			Type:       &victorOpsIntegrationType,
+			ApiKey:     opts.apiKey,
+			RoutingKey: &opts.routingKey,
+		},
 	}
 }
 
@@ -73,7 +75,12 @@ func VictorOpsBuilder() *cobra.Command {
 		Short:   "Create or update a Splunk On-Call integration for your project.",
 		Long: `VictorOps is now Splunk On-Call.
 		
-The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Splunk On-Call.`,
+The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Splunk On-Call.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplateVictorOps,
+		},
 		Example: fmt.Sprintf(`  # Integrate Splunk On-Call with Atlas using the routing key operations for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create VICTOR_OPS --apiKey a1a23bcdef45ghijk6789 --routingKey operations --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
@@ -94,6 +101,7 @@ The requesting API key must have the Organization Owner or Project Owner role to
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.APIKey)
 	_ = cmd.MarkFlagRequired(flag.RoutingKey)

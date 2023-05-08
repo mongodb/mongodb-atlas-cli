@@ -69,8 +69,10 @@ func UpdateBuilder() *cobra.Command {
 		Aliases: []string{"updates"},
 		Args:    require.ExactArgs(1),
 		Short:   "Modify the roles for the specified team for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project User Admin"),
 		Annotations: map[string]string{
 			"teamIdDesc": "Unique 24-digit string that identifies the team.",
+			"output":     updateTemplate,
 		},
 		Example: fmt.Sprintf(`  # Modify the roles for the team with the ID 5dd56c847a3e5a1f363d424d to grant GROUP_READ_ONLY access to the project with the ID 5f71e5255afec75a3d0f96dc:
   %s projects teams update 5dd56c847a3e5a1f363d424d --projectId 5f71e5255afec75a3d0f96dc --role GROUP_READ_ONLY --output json`, cli.ExampleAtlasEntryPoint()),
@@ -91,6 +93,7 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Role)
 

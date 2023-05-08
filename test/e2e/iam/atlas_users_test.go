@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (iam && !om50 && !om60)
+//go:build e2e || (iam && atlas)
 
 package iam_test
 
@@ -24,10 +24,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-func TestUsers(t *testing.T) {
-	cliPath, err := e2e.Bin()
+func TestAtlasUsers(t *testing.T) {
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -36,7 +37,6 @@ func TestUsers(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			usersEntity,
 			"list",
@@ -48,22 +48,21 @@ func TestUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var users []mongodbatlas.AtlasUser
+		var users atlasv2.PaginatedApiAppUser
 		if err := json.Unmarshal(resp, &users); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(users) == 0 {
-			t.Fatalf("expected len(users) > 0, got %v", len(users))
+		if len(users.Results) == 0 {
+			t.Fatalf("expected len(users) > 0, got %v", len(users.Results))
 		}
 
-		username = users[0].Username
-		userID = users[0].ID
+		username = users.Results[0].Username
+		userID = *users.Results[0].Id
 	})
 
 	t.Run("Describe by username", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			usersEntity,
 			"describe",
 			"--username",
@@ -87,7 +86,6 @@ func TestUsers(t *testing.T) {
 
 	t.Run("Describe by id", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			usersEntity,
 			"describe",
 			"--id",

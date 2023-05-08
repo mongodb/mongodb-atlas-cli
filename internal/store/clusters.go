@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -33,11 +34,11 @@ type AtlasClusterDescriber interface {
 }
 
 type AtlasClusterConfigurationOptionsDescriber interface {
-	AtlasClusterConfigurationOptions(string, string) (*atlas.ProcessArgs, error)
+	AtlasClusterConfigurationOptions(string, string) (*atlasv2.ClusterDescriptionProcessArgs, error)
 }
 
 type AtlasClusterConfigurationOptionsUpdater interface {
-	UpdateAtlasClusterConfigurationOptions(string, string, *atlas.ProcessArgs) (*atlas.ProcessArgs, error)
+	UpdateAtlasClusterConfigurationOptions(string, string, *atlasv2.ClusterDescriptionProcessArgs) (*atlasv2.ClusterDescriptionProcessArgs, error)
 }
 
 type OpsManagerClusterDescriber interface {
@@ -77,7 +78,7 @@ type SampleDataAdder interface {
 }
 
 type SampleDataStatusDescriber interface {
-	SampleDataStatus(string, string) (*atlas.SampleDatasetJob, error)
+	SampleDataStatus(string, string) (*atlasv2.SampleDatasetStatus, error)
 }
 
 type ClusterTester interface {
@@ -118,10 +119,10 @@ func (s *Store) AddSampleData(groupID, clusterName string) (*atlas.SampleDataset
 }
 
 // SampleDataStatus encapsulate the logic to manage different cloud providers.
-func (s *Store) SampleDataStatus(groupID, id string) (*atlas.SampleDatasetJob, error) {
+func (s *Store) SampleDataStatus(groupID, id string) (*atlasv2.SampleDatasetStatus, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Clusters.GetSampleDatasetStatus(s.ctx, groupID, id)
+		result, _, err := s.clientv2.ClustersApi.GetSampleDatasetLoadStatus(s.ctx, groupID, id).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -172,7 +173,7 @@ func (s *Store) StartCluster(projectID, name string) (*atlas.AdvancedCluster, er
 func (s *Store) DeleteCluster(projectID, name string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).AdvancedClusters.Delete(s.ctx, projectID, name)
+		_, err := s.clientv2.MultiCloudClustersApi.DeleteCluster(s.ctx, projectID, name).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -205,7 +206,11 @@ func (s *Store) UpgradeCluster(projectID string, cluster *atlas.Cluster) (*atlas
 func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AdvancedClusters.List(s.ctx, projectID, opts)
+		res := s.clientv2.MultiCloudClustersApi.ListClusters(s.ctx, projectID)
+		if opts != nil {
+			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+		}
+		result, _, err := res.Execute()
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Clusters.List(s.ctx, projectID, opts)
@@ -249,10 +254,10 @@ func (s *Store) ListAllProjectClusters() (*opsmngr.AllClustersProjects, error) {
 }
 
 // AtlasClusterConfigurationOptions encapsulates the logic to manage different cloud providers.
-func (s *Store) AtlasClusterConfigurationOptions(projectID, name string) (*atlas.ProcessArgs, error) {
+func (s *Store) AtlasClusterConfigurationOptions(projectID, name string) (*atlasv2.ClusterDescriptionProcessArgs, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Clusters.GetProcessArgs(s.ctx, projectID, name)
+		result, _, err := s.clientv2.ClustersApi.GetClusterAdvancedConfiguration(s.ctx, projectID, name).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -260,10 +265,10 @@ func (s *Store) AtlasClusterConfigurationOptions(projectID, name string) (*atlas
 }
 
 // UpdateAtlasClusterConfigurationOptions encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName string, args *atlas.ProcessArgs) (*atlas.ProcessArgs, error) {
+func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName string, args *atlasv2.ClusterDescriptionProcessArgs) (*atlasv2.ClusterDescriptionProcessArgs, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Clusters.UpdateProcessArgs(s.ctx, projectID, clusterName, args)
+		result, _, err := s.clientv2.ClustersApi.UpdateClusterAdvancedConfiguration(s.ctx, projectID, clusterName).ClusterDescriptionProcessArgs(*args).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -273,7 +278,7 @@ func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName st
 func (s *Store) TestClusterFailover(projectID, clusterName string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).AdvancedClusters.TestFailover(s.ctx, projectID, clusterName)
+		_, err := s.clientv2.MultiCloudClustersApi.TestFailover(s.ctx, projectID, clusterName).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

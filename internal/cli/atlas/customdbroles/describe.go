@@ -28,7 +28,7 @@ import (
 
 const describeTemplate = `NAME	ACTION	DB	COLLECTION	CLUSTER {{- $roleName := .RoleName }} {{range .Actions}} 
 {{- $actionName := .Action }} {{- range .Resources}}
-{{ $roleName }}	{{ $actionName }}{{if .DB }}	{{ .DB }}{{else}}	N/A{{end}}{{if .Collection }}	{{ .Collection }}{{else if .Cluster}}	N/A{{else}}	ALL COLLECTIONS{{end}}{{if .Cluster}}	{{ .Cluster }}{{else}}	N/A	{{end}}{{end}}{{end}}
+{{ $roleName }}	{{ $actionName }}{{if .Db }}	{{ .Db }}{{else}}	N/A{{end}}{{if .Collection }}	{{ .Collection }}{{else if .Cluster}}	N/A{{else}}	ALL COLLECTIONS{{end}}{{if .Cluster}}	{{ .Cluster }}{{else}}	N/A	{{end}}{{end}}{{end}}
 `
 
 type DescribeOpts struct {
@@ -82,6 +82,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

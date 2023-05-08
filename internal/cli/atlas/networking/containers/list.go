@@ -45,11 +45,11 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	PROVIDER	REGION	ATLAS CIDR	PROVISIONED{{range .}}
-{{.ID}}	{{.ProviderName}}	{{if .RegionName}}{{.RegionName}}{{else}}{{.Region}}{{end}}	{{.AtlasCIDRBlock}}	{{.Provisioned}}{{end}}
+{{.Id}}	{{.ProviderName}}	{{if .RegionName}}{{.RegionName}}{{else}}{{.Region}}{{end}}	{{.AtlasCidrBlock}}	{{.Provisioned}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
-	var r []atlas.Container
+	var r []interface{}
 	var err error
 	if opts.provider == "" {
 		r, err = opts.store.AllContainers(opts.ConfigProjectID(), opts.NewListOptions())
@@ -77,6 +77,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   "Return all network peering containers for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of network peering containers in the project with the ID 5e2211c17a3e5a48f5497de3:
@@ -98,6 +99,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

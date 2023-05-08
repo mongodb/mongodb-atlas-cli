@@ -66,8 +66,10 @@ func DisksDescribeBuilder() *cobra.Command {
 		Use:   "describe <hostId> <name>",
 		Short: "Describe disks measurements for a given host partition.",
 		Args:  require.ExactArgs(argsN),
+		Example: `# List metrics for the test partition of the process e4ac1e57c58cc9c8aaa5a1163a851993
+  mongocli ops-manager metrics disk describe e4ac1e57c58cc9c8aaa5a1163a851993 test --period P1DT12H --granularity PT5`,
 		Annotations: map[string]string{
-			"hostIdDesc": "Process identifier.",
+			"hostIdDesc": "Process identifier. You can use mongocli ops-manager processes list to get the ID.",
 			"nameDesc":   "Partition name.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -97,8 +99,13 @@ func DisksDescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Granularity)
+
+	cmd.MarkFlagsRequiredTogether(flag.Start, flag.End)
+	cmd.MarkFlagsMutuallyExclusive(flag.Period, flag.Start)
+	cmd.MarkFlagsMutuallyExclusive(flag.Period, flag.End)
 
 	return cmd
 }

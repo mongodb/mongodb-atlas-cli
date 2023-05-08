@@ -63,10 +63,12 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <username>",
 		Short:   "Return the details for the specified database user for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:    require.ExactArgs(1),
 		Aliases: []string{"get"},
 		Annotations: map[string]string{
 			"usernameDesc": "Username to retrieve from the MongoDB database. The format of the username depends on the user's method of authentication.",
+			"output":       describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the details for the SCRAM SHA-authenticating database user named myDbUser:
   %[1]s dbuser describe myDbUser --authDB admin --output json
@@ -99,6 +101,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

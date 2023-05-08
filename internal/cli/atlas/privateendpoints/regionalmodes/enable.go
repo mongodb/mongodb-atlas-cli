@@ -56,7 +56,13 @@ func EnableBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "enable",
 		Short: "Enable the regionalized private endpoint setting for your project.",
-		Long:  `This enables the ability to create multiple private resources per region in all cloud service providers for this project.`,
+		Long: `This enables the ability to create multiple private resources per region in all cloud service providers for this project.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": enableTemplate,
+		},
+
 		Example: fmt.Sprintf(`  # Enable the regionalied private endpoint setting in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s privateEndpoints regionalModes enable --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -73,6 +79,7 @@ func EnableBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

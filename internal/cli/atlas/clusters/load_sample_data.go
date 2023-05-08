@@ -79,7 +79,7 @@ func LoadSampleDataBuilder(deprecate bool) *cobra.Command {
 	}
 
 	if deprecate { // do not deprecate in mongocli but deprecate in atlascli
-		cmd.Deprecated = "command bas been depecated use 'atlas clusters sampleData load' instead"
+		cmd.Deprecated = "use 'atlas clusters sampleData load' instead"
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

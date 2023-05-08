@@ -18,7 +18,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"strconv"
 
 	"github.com/docker/docker/api/types"
@@ -37,6 +36,13 @@ type CreateOpts struct {
 	name string
 }
 
+const minPort = 10000
+const maxPort = 65000
+
+func randomPort() int {
+	return rand.IntnRange(minPort, maxPort)
+}
+
 const createTemplate = `NAME	PORT	CONNECTION STRING
 {{.Name}}	{{.Port}}	mongodb://localhost:{{.Port}}
 `
@@ -48,7 +54,7 @@ func (opts *CreateOpts) Run(ctx context.Context) error {
 	}
 	cli.NegotiateAPIVersion(ctx)
 
-	port := strconv.Itoa(rand.IntnRange(10000, 65000))
+	port := strconv.Itoa(randomPort())
 
 	_, portBindings, err := nat.ParsePortSpecs([]string{fmt.Sprintf("%s:27017", port)})
 	if err != nil {
@@ -60,7 +66,7 @@ func (opts *CreateOpts) Run(ctx context.Context) error {
 		return err
 	}
 	defer img.Close()
-	io.Copy(ioutil.Discard, img) //send to debug logs
+	_, _ = io.Copy(io.Discard, img) // send to debug logs
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{Image: "mongodb/mongodb-community-server:6.0-ubuntu2204", Labels: map[string]string{"atlascli": "true"}}, &container.HostConfig{PortBindings: portBindings}, nil, nil, opts.name)
 	if err != nil {
@@ -82,6 +88,9 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create <instanceName>",
 		Short: "Creates a new local instance.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"instanceNameDesc": "Name of the local instance.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),

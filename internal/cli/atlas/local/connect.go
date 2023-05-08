@@ -48,10 +48,10 @@ func (opts *ConnectOpts) Run(ctx context.Context) error {
 		return err
 	}
 	var found *types.Container
-	for _, c := range containers {
-		for _, n := range c.Names {
+	for i := range containers {
+		for _, n := range containers[i].Names {
 			if strings.EqualFold(n, fmt.Sprintf("/%s", opts.name)) {
-				found = &c
+				found = &containers[i]
 			}
 		}
 	}
@@ -70,7 +70,10 @@ func ConnectBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "connect <instanceName>",
 		Short: "Connects to an instance via mongosh.",
-		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"instanceNameDesc": "Name of the local instance.",
+		},
+		Args: require.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.Run(cmd.Context())

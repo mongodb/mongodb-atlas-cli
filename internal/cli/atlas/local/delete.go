@@ -65,6 +65,9 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Deletes an instance.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"instanceNameDesc": "Name of the local instance.",
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.Run(cmd.Context())

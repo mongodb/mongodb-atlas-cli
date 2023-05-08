@@ -20,7 +20,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var ErrInstanceNotFound = errors.New("Instance not found")
+var ErrInstanceNotFound = errors.New("instance not found")
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{

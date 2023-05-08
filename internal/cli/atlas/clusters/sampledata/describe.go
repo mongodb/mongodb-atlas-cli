@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clusters
+package sampledata
 
 import (
 	"context"
@@ -27,14 +27,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type LoadSampleDataOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	name  string
-	store store.SampleDataAdder
+	id    string
+	store store.SampleDataStatusDescriber
 }
 
-func (opts *LoadSampleDataOpts) initStore(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -42,39 +42,42 @@ func (opts *LoadSampleDataOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var addTmpl = "Sample Data Job {{.ID}} created.\n"
+var describeTemplate = `ID	CLUSTER NAME	STATE
+{{.Id}}	{{.ClusterName}}	{{.State}}
+`
 
-func (opts *LoadSampleDataOpts) Run() error {
-	r, err := opts.store.AddSampleData(opts.ConfigProjectID(), opts.name)
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.SampleDataStatus(opts.ConfigProjectID(), opts.id)
 	if err != nil {
 		return err
 	}
-
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster loadSampleData <clusterName> --projectId projectId -o json.
-func LoadSampleDataBuilder() *cobra.Command {
-	opts := &LoadSampleDataOpts{}
+// mongocli atlas cluster(s) describe <clusterName> --projectId projectId.
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:        "loadSampleData <clusterName>",
-		Short:      "Load sample data into the specified cluster for your project.",
-		Long:       fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Args:       require.ExactArgs(1),
-		Deprecated: "command bas been depecated use 'atlas clusters sampleData load' instead",
+		Use:     "describe <id>",
+		Aliases: []string{"get"},
+		Short:   "Return the details for the specified sample data load job.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"clusterNameDesc": "Name of the cluster for which you want to load sample data.",
-			"output":          addTmpl,
+			"idDesc": "Unique identifier of the sample data job.",
+			"output": describeTemplate,
 		},
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the sample data load job:
+  %s clusters describe 5e98249d937cfc52efdc2a9f --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), addTmpl),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
+			opts.id = args[0]
 			return opts.Run()
 		},
 	}

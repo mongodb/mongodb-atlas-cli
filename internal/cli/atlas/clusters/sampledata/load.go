@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clusters
+package sampledata
 
 import (
 	"context"
@@ -27,14 +27,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type LoadSampleDataOpts struct {
+type LoadOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	name  string
 	store store.SampleDataAdder
 }
 
-func (opts *LoadSampleDataOpts) initStore(ctx context.Context) func() error {
+func (opts *LoadOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -44,7 +44,7 @@ func (opts *LoadSampleDataOpts) initStore(ctx context.Context) func() error {
 
 var addTmpl = "Sample Data Job {{.ID}} created.\n"
 
-func (opts *LoadSampleDataOpts) Run() error {
+func (opts *LoadOpts) Run() error {
 	r, err := opts.store.AddSampleData(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
@@ -53,15 +53,14 @@ func (opts *LoadSampleDataOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster loadSampleData <clusterName> --projectId projectId -o json.
-func LoadSampleDataBuilder() *cobra.Command {
-	opts := &LoadSampleDataOpts{}
+// atlas cluster sampleData load <clusterName> --projectId projectId -o json.
+func LoadBuilder() *cobra.Command {
+	opts := &LoadOpts{}
 	cmd := &cobra.Command{
-		Use:        "loadSampleData <clusterName>",
-		Short:      "Load sample data into the specified cluster for your project.",
-		Long:       fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Args:       require.ExactArgs(1),
-		Deprecated: "command bas been depecated use 'atlas clusters sampleData load' instead",
+		Use:   "load <clusterName>",
+		Short: "Load sample data into the specified cluster for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster for which you want to load sample data.",
 			"output":          addTmpl,

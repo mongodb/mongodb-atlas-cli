@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/connectionstring"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/indexes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/onlinearchive"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/sampledata"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
@@ -89,6 +90,7 @@ func Builder() *cobra.Command {
 		onlinearchive.Builder(),
 		connectionstring.Builder(),
 		availableregions.Builder(),
+		sampledata.Builder(),
 	)
 
 	return cmd

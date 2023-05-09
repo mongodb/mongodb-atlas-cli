@@ -25,7 +25,6 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/stretchr/testify/assert"
@@ -38,6 +37,8 @@ import (
 )
 
 const operatorNamespace = "atlas-operator"
+const maxAttempts = 12
+const poolInterval = 10 * time.Second
 
 func TestKubernetesOperatorInstall(t *testing.T) {
 	a := assert.New(t)
@@ -167,7 +168,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 
 		projectSecret := &corev1.Secret{}
 		inErr = operator.getK8sObject(
-			client.ObjectKey{Name: fmt.Sprintf("mongodb-atlas-%s-api-key", prepareK8sName2(projectName)), Namespace: operatorNamespace},
+			client.ObjectKey{Name: fmt.Sprintf("mongodb-atlas-%s-api-key", prepareK8sName(projectName)), Namespace: operatorNamespace},
 			projectSecret,
 			false,
 		)
@@ -181,9 +182,11 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		)
 		req.Error(inErr)
 
+		checkK8sAtlasProject(t, operator, client.ObjectKey{Name: prepareK8sName(projectName), Namespace: operatorNamespace})
+
 		akoProject := &akov1.AtlasProject{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName2(projectName), Namespace: operatorNamespace},
+			client.ObjectKey{Name: prepareK8sName(projectName), Namespace: operatorNamespace},
 			akoProject,
 			true,
 		)
@@ -191,9 +194,9 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		req.NoError(operator.deleteK8sObject(akoProject))
 
 		projectDeleted := false
-		for i := 1; i < 6; i++ {
+		for i := 0; i < maxAttempts; i++ {
 			err = operator.getK8sObject(
-				client.ObjectKey{Name: prepareK8sName2(projectName), Namespace: operatorNamespace},
+				client.ObjectKey{Name: prepareK8sName(projectName), Namespace: operatorNamespace},
 				akoProject,
 				true,
 			)
@@ -203,7 +206,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 				break
 			}
 
-			time.Sleep(10 * time.Second)
+			time.Sleep(poolInterval)
 		}
 
 		if !projectDeleted {
@@ -237,22 +240,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
 
 		checkDeployment(t, operator, operatorNamespace)
-
-		akoProject := akov1.AtlasProject{}
-		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName2(g.projectName), Namespace: operatorNamespace},
-			&akoProject,
-			true,
-		)
-		req.NoError(err)
-
-		akoDeployment := akov1.AtlasDeployment{}
-		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName2(fmt.Sprintf("%s-%s", g.projectName, g.clusterName)), Namespace: operatorNamespace},
-			&akoDeployment,
-			true,
-		)
-		req.NoError(err)
+		checkK8sAtlasProject(t, operator, client.ObjectKey{Name: prepareK8sName(g.projectName), Namespace: operatorNamespace})
+		checkK8sAtlasDeployment(t, operator, client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.clusterName)), Namespace: operatorNamespace})
 
 		cleanUpKeys(t, operator, operatorNamespace, cliPath)
 	})
@@ -296,7 +285,7 @@ func checkDeployment(t *testing.T, operator *operatorHelper, namespace string) {
 
 	var deploymentReady bool
 
-	for i := 0; i < 12; i++ {
+	for i := 0; i < maxAttempts; i++ {
 		deploymentReady = true
 
 		err := operator.getK8sObject(
@@ -320,7 +309,7 @@ func checkDeployment(t *testing.T, operator *operatorHelper, namespace string) {
 			break
 		}
 
-		time.Sleep(10 * time.Second)
+		time.Sleep(poolInterval)
 	}
 
 	if !deploymentReady {
@@ -329,7 +318,7 @@ func checkDeployment(t *testing.T, operator *operatorHelper, namespace string) {
 
 	var podReady bool
 
-	for i := 0; i < 12; i++ {
+	for i := 0; i < maxAttempts; i++ {
 		podReady = true
 
 		pods, err := operator.getPodFromDeployment(deployment)
@@ -349,11 +338,71 @@ func checkDeployment(t *testing.T, operator *operatorHelper, namespace string) {
 			}
 		}
 
-		time.Sleep(10 * time.Second)
+		time.Sleep(poolInterval)
 	}
 
 	if !podReady {
 		t.Error("operator install failed: pod is not ready")
+	}
+}
+
+func checkK8sAtlasProject(t *testing.T, operator *operatorHelper, key client.ObjectKey) {
+	t.Helper()
+
+	var ready bool
+	project := &akov1.AtlasProject{}
+
+	for i := 0; i < maxAttempts; i++ {
+		ready = true
+
+		err := operator.getK8sObject(key, project, false)
+		require.NoError(t, err)
+
+		for _, condition := range project.Status.Conditions {
+			if condition.Status != corev1.ConditionTrue {
+				ready = false
+			}
+		}
+
+		if ready {
+			break
+		}
+
+		time.Sleep(poolInterval)
+	}
+
+	if !ready {
+		t.Error("import resources failed: project is not ready")
+	}
+}
+
+func checkK8sAtlasDeployment(t *testing.T, operator *operatorHelper, key client.ObjectKey) {
+	t.Helper()
+
+	var ready bool
+	deployment := &akov1.AtlasDeployment{}
+
+	for i := 0; i < maxAttempts; i++ {
+		ready = true
+
+		err := operator.getK8sObject(key, deployment, false)
+		require.NoError(t, err)
+
+		for _, condition := range deployment.Status.Conditions {
+			if condition.Status != corev1.ConditionTrue {
+				ready = false
+			}
+		}
+
+		if ready {
+			break
+		}
+
+		time.Sleep(poolInterval)
+	}
+
+	if !ready {
+		t.Error("import resources failed: deployment is not ready")
 	}
 }
 
@@ -397,8 +446,4 @@ func cleanUpKeys(t *testing.T, operator *operatorHelper, namespace string, cliPa
 			require.NoError(t, err)
 		}
 	}
-}
-
-func prepareK8sName2(pattern string) string {
-	return resources.NormalizeAtlasName(pattern, resources.AtlasNameToKubernetesName())
 }

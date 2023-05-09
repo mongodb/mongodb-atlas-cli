@@ -17,7 +17,6 @@ package features
 import (
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
@@ -89,25 +88,26 @@ func SupportedVersions() []string {
 }
 
 func CRDCompatibleVersion(operatorVersion string) (string, error) {
-	operatorVersionSem := strings.Split(operatorVersion, ".")
-	latestCRDVersionSem := strings.Split(LatestOperatorMajorVersion, ".")
-
-	operatorMajor, err := strconv.Atoi(operatorVersionSem[1])
+	operatorVersionSem, err := semver.NewVersion(operatorVersion)
 	if err != nil {
-		return "", fmt.Errorf("unable to decode opertor major version: %w", err)
+		return "", fmt.Errorf("operator version %s is invalid", operatorVersion)
 	}
 
-	crdMajor, err := strconv.Atoi(latestCRDVersionSem[1])
+	latestCRDVersionSem, err := semver.NewVersion(LatestOperatorMajorVersion)
 	if err != nil {
-		return "", fmt.Errorf("unable to decode CRDs major version: %w", err)
+		return "", fmt.Errorf("CRD version %s is invalid", LatestOperatorMajorVersion)
 	}
 
-	if operatorMajor > crdMajor {
+	if operatorVersionSem.GreaterThan(latestCRDVersionSem) {
 		return LatestOperatorMajorVersion, nil
 	}
 
-	operatorVersionSem[2] = "0"
-	return strings.Join(operatorVersionSem, "."), nil
+	return semver.New(
+		operatorVersionSem.Major(),
+		operatorVersionSem.Minor(),
+		0,
+		"",
+		"").String(), nil
 }
 
 type AtlasCRDs struct {

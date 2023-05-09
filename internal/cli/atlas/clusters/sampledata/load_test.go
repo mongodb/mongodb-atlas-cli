@@ -14,7 +14,7 @@
 
 //go:build unit
 
-package clusters
+package sampledata
 
 import (
 	"testing"
@@ -26,13 +26,13 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestLoadSampleDataOpts_Run(t *testing.T) {
+func TestLoadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSampleDataAdder(ctrl)
 
 	expected := &mongodbatlas.SampleDatasetJob{}
 
-	opts := &LoadSampleDataOpts{
+	opts := &LoadOpts{
 		name:  "test",
 		store: mockStore,
 	}
@@ -48,10 +48,10 @@ func TestLoadSampleDataOpts_Run(t *testing.T) {
 	}
 }
 
-func TestLoadSampleDataBuilder(t *testing.T) {
+func TestLoadBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		LoadSampleDataBuilder(false),
+		LoadBuilder(),
 		0,
 		[]string{flag.Output, flag.ProjectID},
 	)

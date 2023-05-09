@@ -1,8 +1,8 @@
-.. _atlas-clusters-loadSampleData:
+.. _atlas-clusters-sampleData-describe:
 
-=============================
-atlas clusters loadSampleData
-=============================
+==================================
+atlas clusters sampleData describe
+==================================
 
 .. default-domain:: mongodb
 
@@ -12,9 +12,9 @@ atlas clusters loadSampleData
    :depth: 1
    :class: singlecol
 
-Load sample data into the specified cluster for your project.
+Return the details for the specified sample data load job.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 
 Syntax
 ------
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas clusters loadSampleData <clusterName> [options]
+   atlas clusters sampleData describe <id> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -37,10 +37,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - clusterName
+   * - id
      - string
      - true
-     - Name of the cluster for which you want to load sample data.
+     - Unique identifier of the sample data job.
 
 Options
 -------
@@ -56,7 +56,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for loadSampleData
+     - help for describe
    * - -o, --output
      - string
      - false
@@ -89,6 +89,14 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   Sample Data Job <ID> created.
+   ID     CLUSTER NAME    STATE
+   <Id>   <ClusterName>   <State>
    
 
+Examples
+--------
+
+.. code-block::
+
+   # Return the JSON-formatted details for the sample data load job:
+   atlas clusters sampleData describe 5e98249d937cfc52efdc2a9f --output json

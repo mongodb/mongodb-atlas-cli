@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2020 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 //go:build unit
 
-package clusters
+package sampledata
 
 import (
 	"testing"
@@ -22,24 +22,29 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-func TestLoadSampleDataOpts_Run(t *testing.T) {
+func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSampleDataAdder(ctrl)
+	mockStore := mocks.NewMockSampleDataStatusDescriber(ctrl)
 
-	expected := &mongodbatlas.SampleDatasetJob{}
+	expected := &atlasv2.SampleDatasetStatus{
+		Id:          pointer.Get("test"),
+		ClusterName: pointer.Get("ClusterTest"),
+		State:       pointer.Get("COMPLETED"),
+	}
 
-	opts := &LoadSampleDataOpts{
-		name:  "test",
+	opts := &WatchOpts{
+		id:    "test",
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		AddSampleData(opts.ProjectID, opts.name).
+		SampleDataStatus(opts.ProjectID, opts.id).
 		Return(expected, nil).
 		Times(1)
 
@@ -48,11 +53,11 @@ func TestLoadSampleDataOpts_Run(t *testing.T) {
 	}
 }
 
-func TestLoadSampleDataBuilder(t *testing.T) {
+func TestWatchBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		LoadSampleDataBuilder(false),
+		WatchBuilder(),
 		0,
-		[]string{flag.Output, flag.ProjectID},
+		[]string{flag.ProjectID},
 	)
 }

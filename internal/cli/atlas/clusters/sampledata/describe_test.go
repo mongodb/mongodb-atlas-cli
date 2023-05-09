@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2020 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,44 +14,61 @@
 
 //go:build unit
 
-package clusters
+package sampledata
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/stretchr/testify/assert"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-func TestLoadSampleDataOpts_Run(t *testing.T) {
+func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSampleDataAdder(ctrl)
+	mockStore := mocks.NewMockSampleDataStatusDescriber(ctrl)
 
-	expected := &mongodbatlas.SampleDatasetJob{}
+	expected := &atlasv2.SampleDatasetStatus{
+		Id:          pointer.Get("test"),
+		ClusterName: pointer.Get("ClusterTest"),
+		State:       pointer.Get("COMPLETED"),
+	}
 
-	opts := &LoadSampleDataOpts{
-		name:  "test",
+	buf := new(bytes.Buffer)
+	describeOpts := &DescribeOpts{
+		id:    "test",
 		store: mockStore,
+		OutputOpts: cli.OutputOpts{
+			Template:  describeTemplate,
+			OutWriter: buf,
+		},
 	}
 
 	mockStore.
 		EXPECT().
-		AddSampleData(opts.ProjectID, opts.name).
+		SampleDataStatus(describeOpts.ProjectID, describeOpts.id).
 		Return(expected, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
+	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	assert.Equal(t, `ID     CLUSTER NAME   STATE
+test   ClusterTest    COMPLETED
+`, buf.String())
+	t.Log(buf.String())
 }
 
-func TestLoadSampleDataBuilder(t *testing.T) {
+func TestDescribeBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		LoadSampleDataBuilder(false),
+		DescribeBuilder(),
 		0,
 		[]string{flag.Output, flag.ProjectID},
 	)

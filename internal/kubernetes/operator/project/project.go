@@ -144,11 +144,11 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, validator f
 		projectResult.Spec.MaintenanceWindow = maintenanceWindows
 	}
 
+	secretRef := &common.ResourceRefNamespaced{}
 	if includeSecret {
-		secretRef := &common.ResourceRefNamespaced{}
 		secretRef.Name = resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, project.Name), dictionary)
-		projectResult.Spec.ConnectionSecret = secretRef
 	}
+	projectResult.Spec.ConnectionSecret = secretRef
 
 	if validator.FeatureExist(features.ResourceAtlasProject, featureIntegrations) {
 		integrations, intSecrets, ferr := buildIntegrations(projectStore, projectID, targetNamespace, true, dictionary)

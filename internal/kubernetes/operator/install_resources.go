@@ -301,27 +301,29 @@ func (ir *InstallResources) addDeployment(ctx context.Context, config map[string
 
 	obj.SetNamespace(namespace)
 
-	atlasDomain := os.Getenv("MCLI_OPS_MANAGER_URL")
-	if atlasDomain == "" {
-		atlasDomain = "https://cloud.mongodb.com/"
-	}
-	for i := range obj.Spec.Template.Spec.Containers[0].Args {
-		arg := obj.Spec.Template.Spec.Containers[0].Args[i]
-		if arg == "--atlas-domain=https://cloud.mongodb.com/" {
-			obj.Spec.Template.Spec.Containers[0].Args[i] = fmt.Sprintf("--atlas-domain=%s", atlasDomain)
+	if len(obj.Spec.Template.Spec.Containers) > 0 {
+		atlasDomain := os.Getenv("MCLI_OPS_MANAGER_URL")
+		if atlasDomain == "" {
+			atlasDomain = "https://cloud.mongodb.com/"
 		}
-	}
-
-	if len(watch) > 0 {
-		for i := range obj.Spec.Template.Spec.Containers[0].Env {
-			env := obj.Spec.Template.Spec.Containers[0].Env[i]
-
-			if env.Name == "WATCH_NAMESPACE" {
-				env.ValueFrom = nil
-				env.Value = strings.Join(append(watch, namespace), ",")
+		for i := range obj.Spec.Template.Spec.Containers[0].Args {
+			arg := obj.Spec.Template.Spec.Containers[0].Args[i]
+			if arg == "--atlas-domain=https://cloud.mongodb.com/" {
+				obj.Spec.Template.Spec.Containers[0].Args[i] = fmt.Sprintf("--atlas-domain=%s", atlasDomain)
 			}
+		}
 
-			obj.Spec.Template.Spec.Containers[0].Env[i] = env
+		if len(watch) > 0 {
+			for i := range obj.Spec.Template.Spec.Containers[0].Env {
+				env := obj.Spec.Template.Spec.Containers[0].Env[i]
+
+				if env.Name == "WATCH_NAMESPACE" {
+					env.ValueFrom = nil
+					env.Value = strings.Join(append(watch, namespace), ",")
+				}
+
+				obj.Spec.Template.Spec.Containers[0].Env[i] = env
+			}
 		}
 	}
 

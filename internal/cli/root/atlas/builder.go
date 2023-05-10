@@ -114,7 +114,9 @@ func Builder() *cobra.Command {
 		Version: version.Version,
 		Use:     atlas,
 		Short:   "CLI tool to manage MongoDB Atlas",
-		Long:    fmt.Sprintf("Use %s command help for information on a specific command", atlas),
+		Long: `The Atlas CLI is a command line interface built specifically for MongoDB Atlas. You can manage your Atlas database deployments and Atlas Search from the terminal with short, intuitive commands.
+		
+Use the --help flag with any command for more info on that command.`,
 		Example: `  # Display the help menu for the config command:
   atlas config --help
 `,
@@ -224,7 +226,7 @@ func Builder() *cobra.Command {
 		kubernetes.Builder(),
 	)
 
-	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
+	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
 	_ = rootCmd.PersistentFlags().MarkHidden(flag.Debug)
 

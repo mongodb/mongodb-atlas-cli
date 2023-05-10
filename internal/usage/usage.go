@@ -17,7 +17,8 @@ package usage
 const (
 	ProjectID                    = "Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable."
 	OrgID                        = "Organization ID to use. Overrides the settings in the configuration file or environment variable."
-	Profile                      = "Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file."
+	Profile                      = "Name of the profile to use from your configuration file. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file."
+	ProfileAtlasCLI              = "Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings."
 	Members                      = "Number of members in the replica set."
 	Shards                       = "Number of shards in the cluster."
 	ProcessName                  = "Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}."

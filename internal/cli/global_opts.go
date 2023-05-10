@@ -138,3 +138,10 @@ func ReturnValueForSetting(enableFlag, disableFlag bool) *bool {
 	}
 	return nil
 }
+
+func GetStringPointerIfNotEmpty(input string) *string {
+	if input != "" {
+		return &input
+	}
+	return nil
+}

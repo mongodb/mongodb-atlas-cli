@@ -16,8 +16,10 @@ package convert
 
 import (
 	"strings"
+	"time"
 
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -33,23 +35,43 @@ const (
 
 // BuildAtlasRoles converts the roles inside the array of string in an array of mongodbatlas.Role structs.
 // r contains roles in the format roleName@dbName.
-func BuildAtlasRoles(r []string) []atlas.Role {
-	roles := make([]atlas.Role, len(r))
+func BuildAtlasRoles(r []string) []atlasv2.Role {
+	roles := make([]atlasv2.Role, len(r))
 	for i, roleP := range r {
 		roleName, databaseName := splitRoleAndDBName(roleP)
-		var collectionName string
 		dbCollection := strings.Split(databaseName, collectionSep)
 		databaseName = dbCollection[0]
-		if len(dbCollection) > 1 {
-			collectionName = strings.Join(dbCollection[1:], ".")
-		}
-		roles[i] = atlas.Role{
+		roles[i] = atlasv2.Role{
 			RoleName:       roleName,
 			DatabaseName:   databaseName,
-			CollectionName: collectionName,
+			CollectionName: buildCollectionName(dbCollection),
 		}
 	}
 	return roles
+}
+
+func buildCollectionName(dbCollection []string) *string {
+	var collectionName string
+	if len(dbCollection) > 1 {
+		collectionName = strings.Join(dbCollection[1:], ".")
+	}
+	return GetStringPointerIfNotEmpty(collectionName)
+}
+
+func GetStringPointerIfNotEmpty(input string) *string {
+	if input != "" {
+		return &input
+	}
+	return nil
+}
+
+func ParseDeleteAfter(deleteAfter string) *time.Time {
+	deleteAfterDate, err := time.Parse(time.RFC3339, deleteAfter)
+
+	if err == nil {
+		return &deleteAfterDate
+	}
+	return nil
 }
 
 func splitRoleAndDBName(roleAndDBNAme string) (role, dbName string) {
@@ -79,7 +101,26 @@ func BuildOMRoles(r []string) []*opsmngr.Role {
 
 // BuildAtlasScopes converts the scopes inside the array of string in an array of mongodbatlas.Scope structs.
 // r contains resources in the format resourceName:resourceType.
-func BuildAtlasScopes(r []string) []atlas.Scope {
+func BuildAtlasScopes(r []string) []atlasv2.UserScope {
+	scopes := make([]atlasv2.UserScope, len(r))
+	for i, scopeP := range r {
+		scope := strings.Split(scopeP, scopeSep)
+		resourceType := defaultResourceType
+		if len(scope) > 1 {
+			resourceType = scope[1]
+		}
+
+		scopes[i] = atlasv2.UserScope{
+			Name: scope[0],
+			Type: strings.ToUpper(resourceType),
+		}
+	}
+	return scopes
+}
+
+// BuildLegacyAtlasScopes converts the scopes inside the array of string in an array of mongodbatlas.Scope structs.
+// r contains resources in the format resourceName:resourceType.
+func BuildLegacyAtlasScopes(r []string) []atlas.Scope {
 	scopes := make([]atlas.Scope, len(r))
 	for i, scopeP := range r {
 		scope := strings.Split(scopeP, scopeSep)
@@ -94,4 +135,25 @@ func BuildAtlasScopes(r []string) []atlas.Scope {
 		}
 	}
 	return scopes
+}
+
+// BuildLegacyAtlasRoles converts the roles inside the array of string in an array of mongodbatlas.Role structs.
+// r contains roles in the format roleName@dbName.
+func BuildLegacyAtlasRoles(r []string) []atlas.Role {
+	roles := make([]atlas.Role, len(r))
+	for i, roleP := range r {
+		roleName, databaseName := splitRoleAndDBName(roleP)
+		var collectionName string
+		dbCollection := strings.Split(databaseName, collectionSep)
+		databaseName = dbCollection[0]
+		if len(dbCollection) > 1 {
+			collectionName = strings.Join(dbCollection[1:], ".")
+		}
+		roles[i] = atlas.Role{
+			RoleName:       roleName,
+			DatabaseName:   databaseName,
+			CollectionName: collectionName,
+		}
+	}
+	return roles
 }

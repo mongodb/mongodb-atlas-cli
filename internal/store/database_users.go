@@ -30,7 +30,7 @@ type DatabaseUserLister interface {
 }
 
 type DatabaseUserCreator interface {
-	CreateDatabaseUser(*atlas.DatabaseUser) (*atlas.DatabaseUser, error)
+	CreateDatabaseUser(*atlasv2.DatabaseUser) (*atlasv2.DatabaseUser, error)
 }
 
 type DatabaseUserDeleter interface {
@@ -54,11 +54,10 @@ type DBUserCertificateCreator interface {
 }
 
 // CreateDatabaseUser encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUser, error) {
-	// requires openAPI spec fix for migration: CLOUDP-172927
+func (s *Store) CreateDatabaseUser(user *atlasv2.DatabaseUser) (*atlasv2.DatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Create(s.ctx, user.GroupID, user)
+		result, _, err := s.clientv2.DatabaseUsersApi.CreateDatabaseUser(s.ctx, user.GroupId).DatabaseUser(*user).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -90,9 +89,9 @@ func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) (*atlas
 }
 
 func (s *Store) UpdateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUser, error) {
-	// requires openAPI spec fix for migration: CLOUDP-172927
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
+		// to migrate :: requires fix for CLOUDP-176215
 		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Update(s.ctx, user.GroupID, user.Username, user)
 		return result, err
 	default:

@@ -74,7 +74,7 @@ func Test_convertUserRoles(t *testing.T) {
 				{
 					RoleName:       "TestRole",
 					DatabaseName:   "TestDB",
-					CollectionName: "TestCollection",
+					CollectionName: pointer.Get("TestCollection"),
 				},
 			},
 		}
@@ -152,7 +152,7 @@ func TestBuildDBUsers(t *testing.T) {
 				{
 					RoleName:       "TestRoleName",
 					DatabaseName:   "TestRoleDatabaseName",
-					CollectionName: "TestCollectionName",
+					CollectionName: pointer.Get("TestCollectionName"),
 				},
 			},
 			Scopes: []atlasv2.UserScope{
@@ -206,7 +206,7 @@ func TestBuildDBUsers(t *testing.T) {
 					{
 						RoleName:       user.Roles[0].RoleName,
 						DatabaseName:   user.Roles[0].DatabaseName,
-						CollectionName: user.Roles[0].CollectionName,
+						CollectionName: *user.Roles[0].CollectionName,
 					},
 				},
 				Scopes: []atlasV1.ScopeSpec{
@@ -271,7 +271,7 @@ func TestBuildDBUsers(t *testing.T) {
 						{
 							RoleName:       "TestRoleName",
 							DatabaseName:   "TestRoleDatabaseName",
-							CollectionName: "TestCollectionName",
+							CollectionName: pointer.Get("TestCollectionName"),
 						},
 					},
 					Scopes: []atlasv2.UserScope{
@@ -300,7 +300,7 @@ func TestBuildDBUsers(t *testing.T) {
 						{
 							RoleName:       "TestRoleName",
 							DatabaseName:   "TestRoleDatabaseName",
-							CollectionName: "TestCollectionName",
+							CollectionName: pointer.Get("TestCollectionName"),
 						},
 					},
 					Scopes: []atlasv2.UserScope{

@@ -97,7 +97,7 @@ func (opts *Opts) newDatabaseUser() *atlasv2.DatabaseUser {
 	return &atlasv2.DatabaseUser{
 		Roles:        convert.BuildAtlasRoles([]string{atlasAdmin}),
 		GroupId:      opts.ConfigProjectID(),
-		Password:     getStringPointerIfNotEmpty(opts.DBUserPassword),
+		Password:     convert.GetStringPointerIfNotEmpty(opts.DBUserPassword),
 		X509Type:     &none,
 		AwsIAMType:   &none,
 		LdapAuthType: &none,
@@ -114,11 +114,4 @@ func generatePassword() (string, error) {
 	}
 
 	return pwd, nil
-}
-
-func getStringPointerIfNotEmpty(input string) *string {
-	if input != "" {
-		return &input
-	}
-	return nil
 }

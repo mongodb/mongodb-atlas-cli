@@ -120,6 +120,7 @@ func BuildAtlasScopes(r []string) []atlasv2.UserScope {
 
 // BuildLegacyAtlasScopes converts the scopes inside the array of string in an array of mongodbatlas.Scope structs.
 // r contains resources in the format resourceName:resourceType.
+// currently required for dbusers update only :: remove after CLOUDP-176215 is closed.
 func BuildLegacyAtlasScopes(r []string) []atlas.Scope {
 	scopes := make([]atlas.Scope, len(r))
 	for i, scopeP := range r {
@@ -139,6 +140,7 @@ func BuildLegacyAtlasScopes(r []string) []atlas.Scope {
 
 // BuildLegacyAtlasRoles converts the roles inside the array of string in an array of mongodbatlas.Role structs.
 // r contains roles in the format roleName@dbName.
+// currently required for dbusers update only :: remove after CLOUDP-176215 is closed.
 func BuildLegacyAtlasRoles(r []string) []atlas.Role {
 	roles := make([]atlas.Role, len(r))
 	for i, roleP := range r {

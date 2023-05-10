@@ -18,9 +18,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	v1 "k8s.io/api/core/v1"
 
 	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
+	corev1 "k8s.io/api/core/v1"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
@@ -283,7 +283,7 @@ func (i *Install) ensureCredentialsAssignment(ctx context.Context) error {
 }
 
 func (i *Install) deleteSecret(ctx context.Context, key client.ObjectKey) error {
-	secret := &v1.Secret{}
+	secret := &corev1.Secret{}
 	err := i.kubectl.Get(ctx, key, secret)
 	if err != nil {
 		return fmt.Errorf("failed to get secret %s", key)

@@ -139,7 +139,7 @@ func convertUserRoles(user *atlasv2.DatabaseUser) []atlasV1.RoleSpec {
 		result = append(result, atlasV1.RoleSpec{
 			RoleName:       role.RoleName,
 			DatabaseName:   role.DatabaseName,
-			CollectionName: role.CollectionName,
+			CollectionName: *role.CollectionName,
 		})
 	}
 	return result

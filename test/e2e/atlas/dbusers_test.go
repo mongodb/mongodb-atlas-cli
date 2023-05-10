@@ -30,7 +30,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -170,7 +169,7 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	resp, err := cmd.CombinedOutput()
 	require.NoError(t, err, string(resp))
 
-	var user mongodbatlas.DatabaseUser
+	var user atlasv2.DatabaseUser
 	require.NoError(t, json.Unmarshal(resp, &user), string(resp))
 
 	a := assert.New(t)
@@ -209,7 +208,7 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	resp, err := cmd.CombinedOutput()
 	require.NoError(t, err, string(resp))
 
-	var user mongodbatlas.DatabaseUser
+	var user atlasv2.DatabaseUser
 	require.NoError(t, json.Unmarshal(resp, &user), string(resp))
 
 	a := assert.New(t)

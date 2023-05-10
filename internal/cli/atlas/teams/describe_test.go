@@ -20,14 +20,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockTeamDescriber(ctrl)
 
-	var expected *mongodbatlas.Team
+	var expected *atlasv2.TeamResponse
 
 	t.Run("by ID", func(t *testing.T) {
 		descOpts := &DescribeOpts{

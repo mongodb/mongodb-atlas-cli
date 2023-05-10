@@ -980,12 +980,9 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 				VersionReleaseSystem: "LTS",
 			},
 			ProcessArgs: &atlasV1.ProcessArgs{
-				MinimumEnabledTLSProtocol:        "TLS1_2",
-				JavascriptEnabled:                pointer.Get(true),
-				NoTableScan:                      pointer.Get(false),
-				OplogSizeMB:                      pointer.Get[int64](0),
-				SampleSizeBIConnector:            pointer.Get[int64](0),
-				SampleRefreshIntervalBIConnector: pointer.Get[int64](0),
+				MinimumEnabledTLSProtocol: "TLS1_2",
+				JavascriptEnabled:         pointer.Get(true),
+				NoTableScan:               pointer.Get(false),
 			},
 		},
 		Status: status.AtlasDeploymentStatus{

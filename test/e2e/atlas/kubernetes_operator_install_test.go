@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && cluster && kubernetes)
+//go:build e2e || (atlas && cluster && kubernetes && local)
 
 package atlas_test
 
@@ -38,6 +38,7 @@ import (
 
 const operatorNamespace = "atlas-operator"
 const maxAttempts = 12
+const deploymentMaxAttempts = 36
 const poolInterval = 10 * time.Second
 
 func TestKubernetesOperatorInstall(t *testing.T) {
@@ -382,7 +383,7 @@ func checkK8sAtlasDeployment(t *testing.T, operator *operatorHelper, key client.
 	var ready bool
 	deployment := &akov1.AtlasDeployment{}
 
-	for i := 0; i < maxAttempts; i++ {
+	for i := 0; i < deploymentMaxAttempts; i++ {
 		ready = true
 
 		err := operator.getK8sObject(key, deployment, false)

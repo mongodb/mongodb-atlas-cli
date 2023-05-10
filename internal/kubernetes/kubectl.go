@@ -83,6 +83,14 @@ func (ctl *KubeCtl) Update(ctx context.Context, obj client.Object, opts ...clien
 	return ctl.client.Update(ctx, obj, opts...)
 }
 
+func (ctl *KubeCtl) Delete(ctx context.Context, obj client.Object, opts ...client.DeleteOption) error {
+	return ctl.client.Delete(ctx, obj, opts...)
+}
+
+func (ctl *KubeCtl) List(ctx context.Context, obj client.ObjectList, opts ...client.ListOption) error {
+	return ctl.client.List(ctx, obj, opts...)
+}
+
 func (ctl *KubeCtl) loadConfig(configFile string) error {
 	pathOptions := clientcmd.NewDefaultPathOptions()
 

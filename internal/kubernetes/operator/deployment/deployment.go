@@ -219,9 +219,9 @@ func buildProcessArgs(configOptsProvider store.AtlasClusterConfigurationOptionsD
 		FailIndexKeyTooLong:              pArgs.FailIndexKeyTooLong,
 		JavascriptEnabled:                pArgs.JavascriptEnabled,
 		NoTableScan:                      pArgs.NoTableScan,
-		OplogSizeMB:                      pointer.Get(int64(pArgs.GetOplogSizeMB())),
-		SampleSizeBIConnector:            pointer.Get(int64(pArgs.GetSampleSizeBIConnector())),
-		SampleRefreshIntervalBIConnector: pointer.Get(int64(pArgs.GetSampleRefreshIntervalBIConnector())),
+		OplogSizeMB:                      pointer.GetNonZeroValue(int64(pArgs.GetOplogSizeMB())),
+		SampleSizeBIConnector:            pointer.GetNonZeroValue(int64(pArgs.GetSampleSizeBIConnector())),
+		SampleRefreshIntervalBIConnector: pointer.GetNonZeroValue(int64(pArgs.GetSampleRefreshIntervalBIConnector())),
 	}, nil
 }
 

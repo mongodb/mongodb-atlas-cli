@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	v1 "k8s.io/api/core/v1"
 
 	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 
@@ -99,7 +100,7 @@ func (i *Install) Run(ctx context.Context, orgID string) error {
 			return err
 		}
 
-		if err = i.addCredentialsToProject(ctx); err != nil {
+		if err = i.ensureCredentialsAssignment(ctx); err != nil {
 			return err
 		}
 	}
@@ -246,32 +247,49 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 	return nil
 }
 
-func (i *Install) addCredentialsToProject(ctx context.Context) error {
-	if i.projectName == "" {
-		return nil
+func (i *Install) ensureCredentialsAssignment(ctx context.Context) error {
+	projects := &akov1.AtlasProjectList{}
+	err := i.kubectl.List(ctx, projects, client.InNamespace(i.namespace))
+	if err != nil {
+		return errors.New("failed to list projects")
 	}
 
-	projectName := resources.NormalizeAtlasName(i.projectName, resources.AtlasNameToKubernetesName())
-	projectObjKey := client.ObjectKey{
-		Namespace: i.namespace,
-		Name:      projectName,
-	}
-	project := &akov1.AtlasProject{}
+	for index := range projects.Items {
+		var connectionSecret *common.ResourceRefNamespaced
+		project := projects.Items[index]
 
-	if err := i.kubectl.Get(ctx, projectObjKey, project); err != nil {
-		return fmt.Errorf("failed to find atlas project %s", i.projectName)
-	}
+		if i.projectName != "" {
+			if project.Spec.ConnectionSecret != nil && project.Spec.ConnectionSecret.Name != "" {
+				err = i.deleteSecret(ctx, *project.Spec.ConnectionSecret.GetObject(project.Namespace))
+				if err != nil {
+					return fmt.Errorf("failed to cleanup secret for project %s", project.Name)
+				}
+			}
 
-	project.Spec.ConnectionSecret = &common.ResourceRefNamespaced{
-		Name:      fmt.Sprintf(credentialsProjectScopedName, projectName),
-		Namespace: i.namespace,
-	}
+			connectionSecret = &common.ResourceRefNamespaced{
+				Name:      fmt.Sprintf(credentialsProjectScopedName, project.Name),
+				Namespace: i.namespace,
+			}
+		}
 
-	if err := i.kubectl.Update(ctx, project); err != nil {
-		return fmt.Errorf("failed to update atlas project %s", i.projectName)
+		project.Spec.ConnectionSecret = connectionSecret
+
+		if err = i.kubectl.Update(ctx, &project); err != nil {
+			return fmt.Errorf("failed to update atlas project %s", i.projectName)
+		}
 	}
 
 	return nil
+}
+
+func (i *Install) deleteSecret(ctx context.Context, key client.ObjectKey) error {
+	secret := &v1.Secret{}
+	err := i.kubectl.Get(ctx, key, secret)
+	if err != nil {
+		return fmt.Errorf("failed to get secret %s", key)
+	}
+
+	return i.kubectl.Delete(ctx, secret)
 }
 
 func NewInstall(

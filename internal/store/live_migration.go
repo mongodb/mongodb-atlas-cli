@@ -19,7 +19,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -30,7 +29,7 @@ type LiveMigrationValidationsCreator interface {
 }
 
 type LiveMigrationCutoverCreator interface {
-	CreateLiveMigrationCutover(string, string) (*atlas.Validation, error)
+	CreateLiveMigrationCutover(string, string) error
 }
 
 type LiveMigrationValidationsDescriber interface {
@@ -49,13 +48,13 @@ func (s *Store) CreateValidation(groupID string, liveMigration *atlasv2.LiveMigr
 }
 
 // StartLiveMigrationCutover encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateLiveMigrationCutover(groupID, liveMigrationID string) (*atlas.Validation, error) {
+func (s *Store) CreateLiveMigrationCutover(groupID, liveMigrationID string) error {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).LiveMigration.Start(s.ctx, groupID, liveMigrationID)
-		return result, err
+		_, err := s.clientv2.CloudMigrationServiceApi.CutoverMigration(s.ctx, groupID, liveMigrationID).Execute()
+		return err
 	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 

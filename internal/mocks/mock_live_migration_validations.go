@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -74,12 +73,11 @@ func (m *MockLiveMigrationCutoverCreator) EXPECT() *MockLiveMigrationCutoverCrea
 }
 
 // CreateLiveMigrationCutover mocks base method.
-func (m *MockLiveMigrationCutoverCreator) CreateLiveMigrationCutover(arg0, arg1 string) (*mongodbatlas.Validation, error) {
+func (m *MockLiveMigrationCutoverCreator) CreateLiveMigrationCutover(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateLiveMigrationCutover", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Validation)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // CreateLiveMigrationCutover indicates an expected call of CreateLiveMigrationCutover.

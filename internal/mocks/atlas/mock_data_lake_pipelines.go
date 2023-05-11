@@ -10,7 +10,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockPipelinesLister is a mock of PipelinesLister interface.

@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockX509CertificateConfDescriber is a mock of X509CertificateConfDescriber interface.

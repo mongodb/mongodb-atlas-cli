@@ -18,14 +18,13 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_peering_connections.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PeeringConnectionLister,PeeringConnectionDescriber,PeeringConnectionDeleter,AzurePeeringConnectionCreator,AWSPeeringConnectionCreator,GCPPeeringConnectionCreator,PeeringConnectionCreator
 
 type PeeringConnectionLister interface {
-	PeeringConnections(string, *atlas.ContainersListOptions) ([]interface{}, error)
+	PeeringConnections(string, *atlasv2.ListPeeringConnectionsApiParams) ([]interface{}, error)
 }
 
 type PeeringConnectionDescriber interface {
@@ -34,7 +33,7 @@ type PeeringConnectionDescriber interface {
 
 type PeeringConnectionCreator interface {
 	CreateContainer(string, *atlasv2.CloudProviderContainer) (interface{}, error)
-	CreatePeeringConnection(string, *atlasv2.ContainerPeerViewRequest) (interface{}, error)
+	CreatePeeringConnection(string, *atlasv2.ContainerPeer) (interface{}, error)
 }
 
 type AzurePeeringConnectionCreator interface {
@@ -57,32 +56,20 @@ type PeeringConnectionDeleter interface {
 }
 
 // PeeringConnections encapsulates the logic to manage different cloud providers.
-func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListOptions) ([]interface{}, error) {
+func (s *Store) PeeringConnections(projectID string, opts *atlasv2.ListPeeringConnectionsApiParams) ([]interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).
-			IncludeCount(opts.IncludeCount).
-			ItemsPerPage(int32(opts.ItemsPerPage)).
-			PageNum(int32(opts.PageNum)).
-			ProviderName(opts.ProviderName).Execute()
+			IncludeCount(*opts.IncludeCount).
+			ItemsPerPage(*opts.ItemsPerPage).
+			PageNum(*opts.PageNum).
+			ProviderName(*opts.ProviderName).Execute()
 
-		var connections []interface{}
-		switch v := result.GetActualInstance().(type) {
-		case *atlasv2.PaginatedAWSPeerVpc:
-			for _, connection := range v.Results {
-				connections = append(connections, connection)
-			}
-		case *atlasv2.PaginatedAzurePeerNetwork:
-			for _, connection := range v.Results {
-				connections = append(connections, connection)
-			}
-		case *atlasv2.PaginatedGCPPeerVpc:
-			for _, connection := range v.Results {
-				connections = append(connections, connection)
-			}
+		peeringConnections := make([]interface{}, len(result.Results))
+		for i, peeringConnection := range result.Results {
+			peeringConnections[i] = peeringConnection.GetActualInstance()
 		}
-
-		return connections, err
+		return peeringConnections, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -103,7 +90,7 @@ func (s *Store) PeeringConnection(projectID, peerID string) (interface{}, error)
 func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.NetworkPeeringApi.DeletePeeringConnection(s.ctx, projectID, peerID).Execute()
+		_, _, err := s.clientv2.NetworkPeeringApi.DeletePeeringConnection(s.ctx, projectID, peerID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -111,10 +98,10 @@ func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 }
 
 // CreatePeeringConnection encapsulates the logic to manage different cloud providers.
-func (s *Store) CreatePeeringConnection(projectID string, peer *atlasv2.ContainerPeerViewRequest) (interface{}, error) {
+func (s *Store) CreatePeeringConnection(projectID string, peer *atlasv2.ContainerPeer) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringConnection(s.ctx, projectID).ContainerPeerViewRequest(*peer).Execute()
+		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringConnection(s.ctx, projectID).ContainerPeer(*peer).Execute()
 		return result.GetActualInstance(), err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

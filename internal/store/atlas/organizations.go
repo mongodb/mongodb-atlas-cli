@@ -16,20 +16,21 @@ package atlas
 
 import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_organizations.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationLister,OrganizationDeleter,OrganizationDescriber,OrganizationCreator
 
 type OrganizationLister interface {
-	Organizations(*atlas.OrganizationsListOptions) (interface{}, error)
+	Organizations(*atlas.OrganizationsListOptions) (*atlasv2.PaginatedOrganization, error)
 }
 
 type OrganizationDescriber interface {
-	Organization(string) (interface{}, error)
+	Organization(string) (*atlasv2.Organization, error)
 }
 
 type OrganizationCreator interface {
-	CreateAtlasOrganization(*atlas.CreateOrganizationRequest) (*atlas.CreateOrganizationResponse, error)
+	CreateAtlasOrganization(*atlasv2.CreateOrganizationRequest) (*atlasv2.CreateOrganizationResponse, error)
 }
 
 type OrganizationDeleter interface {
@@ -37,26 +38,29 @@ type OrganizationDeleter interface {
 }
 
 // Organizations encapsulate the logic to manage different cloud providers.
-func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (interface{}, error) {
-	result, _, err := s.clientv2.OrganizationsApi.ListOrganizations(s.ctx).
-		Name(opts.Name).PageNum(int32(opts.PageNum)).IncludeCount(true).Execute()
+func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlasv2.PaginatedOrganization, error) {
+	res := s.clientv2.OrganizationsApi.ListOrganizations(s.ctx)
+	if opts != nil {
+		res = res.Name(opts.Name).PageNum(int32(opts.PageNum))
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 
 // Organization encapsulate the logic to manage different cloud providers.
-func (s *Store) Organization(id string) (interface{}, error) {
+func (s *Store) Organization(id string) (*atlasv2.Organization, error) {
 	result, _, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
 	return result, err
 }
 
 // CreateAtlasOrganization encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateAtlasOrganization(o *atlas.CreateOrganizationRequest) (*atlas.CreateOrganizationResponse, error) {
-	result, _, err := s.client.Organizations.Create(s.ctx, o)
+func (s *Store) CreateAtlasOrganization(o *atlasv2.CreateOrganizationRequest) (*atlasv2.CreateOrganizationResponse, error) {
+	result, _, err := s.clientv2.OrganizationsApi.CreateOrganization(s.ctx).CreateOrganizationRequest(*o).Execute()
 	return result, err
 }
 
 // DeleteOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteOrganization(id string) error {
-	_, err := s.client.Organizations.Delete(s.ctx, id)
+	_, _, err := s.clientv2.OrganizationsApi.DeleteOrganization(s.ctx, id).Execute()
 	return err
 }

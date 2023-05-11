@@ -26,6 +26,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestSnapshots(t *testing.T) {
@@ -119,7 +120,7 @@ func TestSnapshots(t *testing.T) {
 
 		r.NoError(err, string(resp))
 
-		var r atlas.CloudProviderSnapshots
+		var r atlasv2.PaginatedCloudBackupReplicaSet
 		a := assert.New(t)
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
@@ -141,9 +142,9 @@ func TestSnapshots(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var result atlas.CloudProviderSnapshot
+		var result atlasv2.DiskBackupReplicaSet
 		if err = json.Unmarshal(resp, &result); a.NoError(err) {
-			a.Equal(snapshotID, result.ID)
+			a.Equal(snapshotID, result.GetId())
 		}
 	})
 

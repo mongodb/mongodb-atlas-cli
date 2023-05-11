@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type CreateOpts struct {
@@ -98,23 +98,23 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
+func (opts *CreateOpts) newDatabaseUser() *atlasv2.DatabaseUser {
 	authDB := convert.AdminDB
 
 	if opts.isExternal() && opts.ldapType != group {
 		authDB = convert.ExternalAuthDB
 	}
 
-	return &atlas.DatabaseUser{
+	return &atlasv2.DatabaseUser{
 		Roles:           convert.BuildAtlasRoles(opts.roles),
 		Scopes:          convert.BuildAtlasScopes(opts.scopes),
-		GroupID:         opts.ConfigProjectID(),
+		GroupId:         opts.ConfigProjectID(),
 		Username:        opts.username,
-		Password:        opts.password,
-		X509Type:        opts.x509Type,
-		AWSIAMType:      opts.awsIamType,
-		LDAPAuthType:    opts.ldapType,
-		DeleteAfterDate: opts.deleteAfter,
+		Password:        convert.GetStringPointerIfNotEmpty(opts.password),
+		X509Type:        convert.GetStringPointerIfNotEmpty(opts.x509Type),
+		AwsIAMType:      convert.GetStringPointerIfNotEmpty(opts.awsIamType),
+		LdapAuthType:    convert.GetStringPointerIfNotEmpty(opts.ldapType),
+		DeleteAfterDate: convert.ParseDeleteAfter(opts.deleteAfter),
 		DatabaseName:    authDB,
 	}
 }

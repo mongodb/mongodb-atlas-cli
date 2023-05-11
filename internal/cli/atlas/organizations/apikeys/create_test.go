@@ -20,16 +20,16 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationAPIKeyCreator(ctrl)
 
-	expected := &mongodbatlas.APIKey{
-		ID: "1",
+	expected := &atlasv2.ApiUser{
+		Id: new(string),
 	}
 
 	createOpts := &CreateOpts{

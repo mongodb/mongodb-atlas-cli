@@ -88,7 +88,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Output
 ------
@@ -98,7 +98,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 .. code-block::
 
    ID     TYPE             STATUS     CREATED AT    EXPIRES AT
-   <ID>   <SnapshotType>   <Status>   <CreatedAt>   <ExpiresAt>
+   <Id>   <SnapshotType>   <Status>   <CreatedAt>   <ExpiresAt>
    
 
 Examples

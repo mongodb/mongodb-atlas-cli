@@ -16,21 +16,22 @@ package atlas
 
 import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_teams.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas TeamLister,TeamDescriber,TeamCreator,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
 
 type TeamLister interface {
-	Teams(string, *atlas.ListOptions) ([]atlas.Team, error)
+	Teams(string, *atlas.ListOptions) (*atlasv2.PaginatedTeam, error)
 }
 
 type TeamDescriber interface {
-	TeamByID(string, string) (*atlas.Team, error)
-	TeamByName(string, string) (*atlas.Team, error)
+	TeamByID(string, string) (*atlasv2.TeamResponse, error)
+	TeamByName(string, string) (*atlasv2.TeamResponse, error)
 }
 
 type TeamCreator interface {
-	CreateTeam(string, *atlas.Team) (*atlas.Team, error)
+	CreateTeam(string, *atlas.Team) (*atlasv2.Team, error)
 }
 
 type TeamDeleter interface {
@@ -38,7 +39,7 @@ type TeamDeleter interface {
 }
 
 type TeamAdder interface {
-	AddUsersToTeam(string, string, []string) (interface{}, error)
+	AddUsersToTeam(string, string, []atlasv2.AddUserToTeam) (*atlasv2.PaginatedApiAppUser, error)
 }
 
 type TeamUserRemover interface {
@@ -46,53 +47,57 @@ type TeamUserRemover interface {
 }
 
 type TeamRolesUpdater interface {
-	UpdateProjectTeamRoles(string, string, *atlas.TeamUpdateRoles) ([]atlas.TeamRoles, error)
+	UpdateProjectTeamRoles(string, string, *atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error)
 }
 
 // TeamByID encapsulates the logic to manage different cloud providers.
-func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
-	result, _, err := s.client.Teams.Get(s.ctx, orgID, teamID)
+func (s *Store) TeamByID(orgID, teamID string) (*atlasv2.TeamResponse, error) {
+	result, _, err := s.clientv2.TeamsApi.GetTeamById(s.ctx, orgID, teamID).Execute()
 	return result, err
 }
 
 // TeamByName encapsulates the logic to manage different cloud providers.
-func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
-	result, _, err := s.client.Teams.GetOneTeamByName(s.ctx, orgID, teamName)
+func (s *Store) TeamByName(orgID, teamName string) (*atlasv2.TeamResponse, error) {
+	result, _, err := s.clientv2.TeamsApi.GetTeamByName(s.ctx, orgID, teamName).Execute()
 	return result, err
 }
 
 // Teams encapsulates the logic to manage different cloud providers.
-func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, error) {
-	result, _, err := s.client.Teams.List(s.ctx, orgID, opts)
+func (s *Store) Teams(orgID string, opts *atlas.ListOptions) (*atlasv2.PaginatedTeam, error) {
+	res := s.clientv2.TeamsApi.ListOrganizationTeams(s.ctx, orgID)
+	if opts != nil {
+		res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 
-// CreateTeam encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) {
-	result, _, err := s.client.Teams.Create(s.ctx, orgID, team)
+func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlasv2.Team, error) {
+	newTeam := atlasv2.Team{Name: team.Name, Usernames: team.Usernames}
+	result, _, err := s.clientv2.TeamsApi.CreateTeam(s.ctx, orgID).Team(newTeam).Execute()
 	return result, err
 }
 
 // DeleteTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeam(orgID, teamID string) error {
-	_, err := s.client.Teams.RemoveTeamFromOrganization(s.ctx, orgID, teamID)
+	_, _, err := s.clientv2.TeamsApi.DeleteTeam(s.ctx, orgID, teamID).Execute()
 	return err
 }
 
 // AddUsersToTeam encapsulates the logic to manage different cloud providers.
-func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{}, error) {
-	result, _, err := s.client.Teams.AddUsersToTeam(s.ctx, orgID, teamID, users)
+func (s *Store) AddUsersToTeam(orgID, teamID string, users []atlasv2.AddUserToTeam) (*atlasv2.PaginatedApiAppUser, error) {
+	result, _, err := s.clientv2.TeamsApi.AddTeamUser(s.ctx, orgID, teamID).AddUserToTeam(users).Execute()
 	return result, err
 }
 
 // RemoveUserFromTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
-	_, err := s.client.Teams.RemoveUserToTeam(s.ctx, orgID, teamID, userID)
+	_, err := s.clientv2.TeamsApi.RemoveTeamUser(s.ctx, orgID, teamID, userID).Execute()
 	return err
 }
 
 // UpdateProjectTeamRoles encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlas.TeamUpdateRoles) ([]atlas.TeamRoles, error) {
-	result, _, err := s.client.Teams.UpdateTeamRoles(s.ctx, projectID, teamID, team)
+func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error) {
+	result, _, err := s.clientv2.TeamsApi.UpdateTeamRoles(s.ctx, projectID, teamID).TeamRole(*team).Execute()
 	return result, err
 }

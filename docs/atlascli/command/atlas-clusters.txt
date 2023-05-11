@@ -46,7 +46,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Related Commands
 ----------------
@@ -60,9 +60,9 @@ Related Commands
 * :ref:`atlas-clusters-failover` - Starts a failover test for the specified cluster in the specified project.
 * :ref:`atlas-clusters-indexes` - Manage cluster rolling indexes for your project.
 * :ref:`atlas-clusters-list` - Return all clusters for your project.
-* :ref:`atlas-clusters-loadSampleData` - Load sample data into the specified cluster for your project.
 * :ref:`atlas-clusters-onlineArchives` - Manage online archives for your cluster.
 * :ref:`atlas-clusters-pause` - Pause the specified running MongoDB cluster.
+* :ref:`atlas-clusters-sampleData` - Manage sample data for your cluster.
 * :ref:`atlas-clusters-search` - Manage Atlas Search for your cluster.
 * :ref:`atlas-clusters-start` - Start the specified paused MongoDB cluster.
 * :ref:`atlas-clusters-update` - Modify the settings of the specified cluster.
@@ -82,9 +82,9 @@ Related Commands
    failover </command/atlas-clusters-failover>
    indexes </command/atlas-clusters-indexes>
    list </command/atlas-clusters-list>
-   loadSampleData </command/atlas-clusters-loadSampleData>
    onlineArchives </command/atlas-clusters-onlineArchives>
    pause </command/atlas-clusters-pause>
+   sampleData </command/atlas-clusters-sampleData>
    search </command/atlas-clusters-search>
    start </command/atlas-clusters-start>
    update </command/atlas-clusters-update>

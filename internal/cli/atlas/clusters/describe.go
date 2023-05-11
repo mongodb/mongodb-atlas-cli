@@ -43,7 +43,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplate = `ID	NAME	MDB VER	STATE
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
+{{.Id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
 `
 
 func (opts *DescribeOpts) Run() error {

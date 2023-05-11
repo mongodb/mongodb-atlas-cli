@@ -16,69 +16,58 @@ package atlas
 
 import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_users.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas UserCreator,UserDescriber,UserLister,TeamUserLister
 
 type UserCreator interface {
-	CreateUser(*UserRequest) (interface{}, error)
+	CreateUser(user *atlasv2.AppUser) (*atlasv2.AppUser, error)
 }
 
 type UserLister interface {
-	OrganizationUsers(string, *atlas.ListOptions) (interface{}, error)
+	OrganizationUsers(string, *atlas.ListOptions) (*atlasv2.PaginatedAppUser, error)
 }
 
 type TeamUserLister interface {
-	TeamUsers(string, string) (interface{}, error)
+	TeamUsers(string, string) (*atlasv2.PaginatedApiAppUser, error)
 }
 
 type UserDescriber interface {
-	UserByID(string) (interface{}, error)
-	UserByName(string) (interface{}, error)
-}
-
-type UserRequest struct {
-	*opsmngr.User
-	AtlasRoles []atlas.AtlasRole
+	UserByID(string) (*atlasv2.AppUser, error)
+	UserByName(string) (*atlasv2.AppUser, error)
 }
 
 // CreateUser encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
-	atlasUser := &atlas.AtlasUser{
-		EmailAddress: user.EmailAddress,
-		FirstName:    user.FirstName,
-		LastName:     user.LastName,
-		Roles:        user.AtlasRoles,
-		Username:     user.Username,
-		MobileNumber: user.MobileNumber,
-		Password:     user.Password,
-		Country:      user.Country,
-	}
-	result, _, err := s.client.AtlasUsers.Create(s.ctx, atlasUser)
+func (s *Store) CreateUser(user *atlasv2.AppUser) (*atlasv2.AppUser, error) {
+	result, _, err := s.clientv2.MongoDBCloudUsersApi.CreateUser(s.ctx).AppUser(*user).Execute()
 	return result, err
 }
 
 // UserByID encapsulates the logic to manage different cloud providers.
-func (s *Store) UserByID(userID string) (interface{}, error) {
-	result, _, err := s.client.AtlasUsers.Get(s.ctx, userID)
+func (s *Store) UserByID(userID string) (*atlasv2.AppUser, error) {
+	result, _, err := s.clientv2.MongoDBCloudUsersApi.GetUser(s.ctx, userID).Execute()
 	return result, err
 }
 
 // UserByName encapsulates the logic to manage different cloud providers.
-func (s *Store) UserByName(username string) (interface{}, error) {
-	result, _, err := s.client.AtlasUsers.GetByName(s.ctx, username)
+func (s *Store) UserByName(username string) (*atlasv2.AppUser, error) {
+	result, _, err := s.clientv2.MongoDBCloudUsersApi.GetUserByUsername(s.ctx, username).Execute()
 	return result, err
 }
 
 // OrganizationUsers encapsulates the logic to manage different cloud providers.
-func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (interface{}, error) {
-	result, _, err := s.client.Organizations.Users(s.ctx, organizationID, opts)
+func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (*atlasv2.PaginatedAppUser, error) {
+	res := s.clientv2.OrganizationsApi.ListOrganizationUsers(s.ctx, organizationID)
+	if opts != nil {
+		res = res.IncludeCount(opts.IncludeCount).ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum))
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 
 // TeamUsers encapsulates the logic to manage different cloud providers.
-func (s *Store) TeamUsers(orgID, teamID string) (interface{}, error) {
-	result, _, err := s.client.Teams.GetTeamUsersAssigned(s.ctx, orgID, teamID)
+func (s *Store) TeamUsers(orgID, teamID string) (*atlasv2.PaginatedApiAppUser, error) {
+	result, _, err := s.clientv2.TeamsApi.ListTeamUsers(s.ctx, orgID, teamID).Execute()
 	return result, err
 }

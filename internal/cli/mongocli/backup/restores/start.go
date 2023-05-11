@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const (
@@ -42,10 +42,10 @@ type StartOpts struct {
 	clusterName          string
 	targetProjectID      string
 	targetClusterName    string
-	oplogTS              int64
-	oplogInc             int64
+	oplogTS              int32
+	oplogInc             int32
 	snapshotID           string
-	pointInTimeUTCMillis int64
+	pointInTimeUTCMillis int32
 	store                store.RestoreJobsCreator
 }
 
@@ -70,12 +70,12 @@ func (opts *StartOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *StartOpts) newCloudProviderSnapshotRestoreJob() *atlas.CloudProviderSnapshotRestoreJob {
-	request := new(atlas.CloudProviderSnapshotRestoreJob)
+func (opts *StartOpts) newCloudProviderSnapshotRestoreJob() *atlasv2.DiskBackupRestoreJob {
+	request := new(atlasv2.DiskBackupRestoreJob)
 	request.DeliveryType = opts.method
 
 	if opts.targetProjectID != "" {
-		request.TargetGroupID = opts.targetProjectID
+		request.TargetGroupId = opts.targetProjectID
 	}
 
 	if opts.targetClusterName != "" {
@@ -83,16 +83,16 @@ func (opts *StartOpts) newCloudProviderSnapshotRestoreJob() *atlas.CloudProvider
 	}
 
 	if opts.snapshotID != "" {
-		request.SnapshotID = opts.snapshotID
+		request.SnapshotId = &opts.snapshotID
 	}
 
 	// Set only in pointInTimeRestore
 	if opts.oplogTS != 0 && opts.oplogInc != 0 {
-		request.OplogTs = opts.oplogTS
-		request.OplogInc = opts.oplogInc
+		request.OplogTs = &opts.oplogTS
+		request.OplogInc = &opts.oplogInc
 	} else if opts.pointInTimeUTCMillis != 0 {
 		// Set only when oplogTS and oplogInc are not set
-		request.PointInTimeUTCSeconds = opts.pointInTimeUTCMillis
+		request.PointInTimeUTCSeconds = &opts.pointInTimeUTCMillis
 	}
 
 	return request
@@ -198,16 +198,16 @@ func StartBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.SnapshotID)
+	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.RestoreSnapshotID)
 	// Atlas uses cluster name
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 
 	cmd.Flags().StringVar(&opts.targetProjectID, flag.TargetProjectID, "", usage.TargetProjectID)
 	// Atlas uses cluster name
 	cmd.Flags().StringVar(&opts.targetClusterName, flag.TargetClusterName, "", usage.TargetClusterName)
-	cmd.Flags().Int64Var(&opts.oplogTS, flag.OplogTS, 0, usage.OplogTS)
-	cmd.Flags().Int64Var(&opts.oplogInc, flag.OplogInc, 0, usage.OplogInc)
-	cmd.Flags().Int64Var(&opts.pointInTimeUTCMillis, flag.PointInTimeUTCMillis, 0, usage.PointInTimeUTCMillis)
+	cmd.Flags().Int32Var(&opts.oplogTS, flag.OplogTS, 0, usage.OplogTS)
+	cmd.Flags().Int32Var(&opts.oplogInc, flag.OplogInc, 0, usage.OplogInc)
+	cmd.Flags().Int32Var(&opts.pointInTimeUTCMillis, flag.PointInTimeUTCMillis, 0, usage.PointInTimeUTCMillis)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

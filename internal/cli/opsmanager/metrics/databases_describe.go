@@ -58,7 +58,7 @@ func (opts *DatabasesDescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mcli om metric(s) disk(s) describe <hostId:port> <name> --granularity g --period p --start start --end end [--type type] [--projectId projectId].
+// mcli om metric(s) database(s) describe <hostId:port> <name> --granularity g --period p --start start --end end [--type type] [--projectId projectId].
 func DatabasesDescribeBuilder() *cobra.Command {
 	const argsN = 2
 	opts := &DatabasesDescribeOpts{}
@@ -66,8 +66,10 @@ func DatabasesDescribeBuilder() *cobra.Command {
 		Use:   "describe <hostId> <name>",
 		Short: "Describe database measurements for a given host database.",
 		Args:  require.ExactArgs(argsN),
+		Example: `# List metrics for the database test of the process e4ac1e57c58cc9c8aaa5a1163a851993
+  mongocli ops-manager metrics database describe e4ac1e57c58cc9c8aaa5a1163a851993 test --period P1DT12H --granularity PT5`,
 		Annotations: map[string]string{
-			"hostIdDesc": "Process identifier.",
+			"hostIdDesc": "Process identifier. You can use mongocli ops-manager processes list to get the ID.",
 			"nameDesc":   "Database name.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -100,6 +102,10 @@ func DatabasesDescribeBuilder() *cobra.Command {
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.Granularity)
+
+	cmd.MarkFlagsRequiredTogether(flag.Start, flag.End)
+	cmd.MarkFlagsMutuallyExclusive(flag.Period, flag.Start)
+	cmd.MarkFlagsMutuallyExclusive(flag.Period, flag.End)
 
 	return cmd
 }

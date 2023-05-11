@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type UpdateOpts struct {
@@ -45,7 +46,7 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var updateTemplate = "Online archive '{{.ID}}' updated.\n"
+var updateTemplate = "Online archive '{{.Id}}' updated.\n"
 
 func (opts *UpdateOpts) Run() error {
 	archive := opts.newOnlineArchive()
@@ -57,11 +58,13 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newOnlineArchive() *atlas.OnlineArchive {
-	archive := &atlas.OnlineArchive{
-		ID: opts.id,
-		Criteria: &atlas.OnlineArchiveCriteria{
-			ExpireAfterDays: &opts.archiveAfter,
+func (opts *UpdateOpts) newOnlineArchive() *atlasv2.OnlineArchive {
+	archive := &atlasv2.OnlineArchive{
+		Id: &opts.id,
+		Criteria: &atlasv2.Criteria{
+			DateCriteria: &atlasv2.DateCriteria{
+				ExpireAfterDays: pointer.Get(int32(opts.archiveAfter)),
+			},
 		},
 	}
 	return archive

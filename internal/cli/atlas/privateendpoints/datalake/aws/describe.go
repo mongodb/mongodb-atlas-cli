@@ -28,7 +28,7 @@ import (
 )
 
 var describeTemplate = `ID	ENDPOINT PROVIDER	TYPE	COMMENT
-{{.EndpointID}}	{{.Provider}}	{{.Type}}	{{.Comment}}
+{{.EndpointId}}	{{.Provider}}	{{.Type}}	{{.Comment}}
 `
 
 type DescribeOpts struct {

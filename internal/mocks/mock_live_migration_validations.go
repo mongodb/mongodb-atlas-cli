@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockLiveMigrationValidationsCreator is a mock of LiveMigrationValidationsCreator interface.
@@ -35,10 +35,10 @@ func (m *MockLiveMigrationValidationsCreator) EXPECT() *MockLiveMigrationValidat
 }
 
 // CreateValidation mocks base method.
-func (m *MockLiveMigrationValidationsCreator) CreateValidation(arg0 string, arg1 *mongodbatlas.LiveMigration) (*mongodbatlas.Validation, error) {
+func (m *MockLiveMigrationValidationsCreator) CreateValidation(arg0 string, arg1 *mongodbatlasv2.LiveMigrationRequest) (*mongodbatlasv2.Validation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateValidation", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Validation)
+	ret0, _ := ret[0].(*mongodbatlasv2.Validation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,12 +73,11 @@ func (m *MockLiveMigrationCutoverCreator) EXPECT() *MockLiveMigrationCutoverCrea
 }
 
 // CreateLiveMigrationCutover mocks base method.
-func (m *MockLiveMigrationCutoverCreator) CreateLiveMigrationCutover(arg0, arg1 string) (*mongodbatlas.Validation, error) {
+func (m *MockLiveMigrationCutoverCreator) CreateLiveMigrationCutover(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateLiveMigrationCutover", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Validation)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // CreateLiveMigrationCutover indicates an expected call of CreateLiveMigrationCutover.
@@ -111,10 +110,10 @@ func (m *MockLiveMigrationValidationsDescriber) EXPECT() *MockLiveMigrationValid
 }
 
 // GetValidationStatus mocks base method.
-func (m *MockLiveMigrationValidationsDescriber) GetValidationStatus(arg0, arg1 string) (*mongodbatlas.Validation, error) {
+func (m *MockLiveMigrationValidationsDescriber) GetValidationStatus(arg0, arg1 string) (*mongodbatlasv2.Validation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetValidationStatus", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Validation)
+	ret0, _ := ret[0].(*mongodbatlasv2.Validation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

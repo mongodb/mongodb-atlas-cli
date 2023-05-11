@@ -19,7 +19,6 @@ package datalakepipelines
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -27,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -40,7 +39,6 @@ type UpdateOpts struct {
 	store        store.PipelinesUpdater
 	pipelineName string
 
-	sinkType             string
 	sinkMetadataProvider string
 	sinkMetadataRegion   string
 	sinkPartitionField   []string
@@ -83,17 +81,10 @@ func (opts *UpdateOpts) validate() error {
 		return fmt.Errorf("%w: expected either '%s' or '%s' got '%s'", ErrSourceTypeInvalid, periodicCPS, onDemandCPS, opts.sourceType)
 	}
 
-	for _, entry := range opts.sinkPartitionField {
-		entries := strings.Split(entry, ":")
-		if len(entries) != 2 || len(entries[0]) == 0 || len(entries[1]) == 0 || !isInt(entries[1]) {
-			return fmt.Errorf("%w: expected format is 'field:order' got '%s'", ErrSinkPartitionFieldInvalid, entry)
-		}
-	}
-
 	for _, entry := range opts.transform {
 		entries := strings.Split(entry, ":")
 		if len(entries) != 2 || len(entries[0]) == 0 || len(entries[1]) == 0 {
-			return fmt.Errorf("%w: expected format is 'type:field' got '%s'", ErrSinkTransformInvalid, entry)
+			return fmt.Errorf("%w: expected format is 'type:field1,fieldN' got '%s'", ErrSinkTransformInvalid, entry)
 		}
 	}
 
@@ -113,7 +104,6 @@ func (opts *UpdateOpts) newUpdateRequest() (*atlasv2.IngestionPipeline, error) {
 		Name: &opts.pipelineName,
 		Sink: &atlasv2.IngestionSink{
 			DLSIngestionSink: &atlasv2.DLSIngestionSink{
-				Type:             &opts.sinkType,
 				MetadataProvider: &opts.sinkMetadataProvider,
 				MetadataRegion:   &opts.sinkMetadataRegion,
 			},
@@ -121,21 +111,17 @@ func (opts *UpdateOpts) newUpdateRequest() (*atlasv2.IngestionPipeline, error) {
 		Source: &atlasv2.IngestionSource{},
 	}
 
-	for _, entry := range opts.sinkPartitionField {
-		entries := strings.Split(entry, ":")
-		fieldName := entries[0]
-		order, err := strconv.ParseInt(entries[1], 10, 32)
-		if err != nil {
-			return nil, err
-		}
-		pipeline.Sink.DLSIngestionSink.PartitionFields = append(pipeline.Sink.DLSIngestionSink.PartitionFields, *atlasv2.NewPartitionField(fieldName, int32(order)))
+	for i, fieldName := range opts.sinkPartitionField {
+		pipeline.Sink.DLSIngestionSink.PartitionFields = append(pipeline.Sink.DLSIngestionSink.PartitionFields, *atlasv2.NewPartitionField(fieldName, int32(i)))
 	}
 
 	for _, entry := range opts.transform {
 		entries := strings.Split(entry, ":")
 		transformType := entries[0]
-		transformFieldName := entries[1]
-		pipeline.Transformations = append(pipeline.Transformations, atlasv2.FieldTransformation{Field: &transformFieldName, Type: &transformType})
+		transformFieldNames := strings.Split(entries[1], ",")
+		for i := range transformFieldNames {
+			pipeline.Transformations = append(pipeline.Transformations, atlasv2.FieldTransformation{Field: &transformFieldNames[i], Type: &transformType})
+		}
 	}
 
 	switch strings.ToUpper(opts.sourceType) {
@@ -185,7 +171,6 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.sinkType, flag.SinkType, "", usage.SinkType)
 	cmd.Flags().StringVar(&opts.sinkMetadataProvider, flag.SinkMetadataProvider, "", usage.SinkMetadataProvider)
 	cmd.Flags().StringVar(&opts.sinkMetadataRegion, flag.SinkMetadataRegion, "", usage.SinkMetadataRegion)
 	cmd.Flags().StringSliceVar(&opts.sinkPartitionField, flag.SinkPartitionField, nil, usage.SinkPartitionField)
@@ -200,7 +185,6 @@ func UpdateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagFilename(flag.File)
 	_ = cmd.RegisterFlagCompletionFunc(flag.SourceType, autoCompleteSourceType)
 
-	cmd.MarkFlagsMutuallyExclusive(flag.SinkType, flag.File)
 	cmd.MarkFlagsMutuallyExclusive(flag.SinkMetadataProvider, flag.File)
 	cmd.MarkFlagsMutuallyExclusive(flag.SinkMetadataRegion, flag.File)
 	cmd.MarkFlagsMutuallyExclusive(flag.SinkPartitionField, flag.File)

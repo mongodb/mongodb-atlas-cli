@@ -16,21 +16,22 @@ package atlas
 
 import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_projects.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter
 
 type ProjectLister interface {
-	Projects(*atlas.ListOptions) (interface{}, error)
-	GetOrgProjects(string, *atlas.ProjectsListOptions) (interface{}, error)
+	Projects(*atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
+	GetOrgProjects(string, *atlas.ProjectsListOptions) (*atlasv2.PaginatedAtlasGroup, error)
 }
 
 type OrgProjectLister interface {
-	GetOrgProjects(string) (interface{}, error)
+	GetOrgProjects(string) (*atlasv2.PaginatedAtlasGroup, error)
 }
 
 type ProjectCreator interface {
-	CreateProject(string, string, string, *bool, *atlas.CreateProjectOptions) (interface{}, error)
+	CreateProject(atlasv2.Group, *atlas.CreateProjectOptions) (*atlasv2.Group, error)
 	ServiceVersionDescriber
 }
 
@@ -43,7 +44,7 @@ type ProjectDescriber interface {
 }
 
 type ProjectUsersLister interface {
-	ProjectUsers(string, *atlas.ListOptions) (interface{}, error)
+	ProjectUsers(string, *atlas.ListOptions) (*atlasv2.PaginatedApiAppUser, error)
 }
 
 type ProjectUserDeleter interface {
@@ -51,11 +52,11 @@ type ProjectUserDeleter interface {
 }
 
 type ProjectTeamLister interface {
-	ProjectTeams(string) (interface{}, error)
+	ProjectTeams(string) (*atlasv2.PaginatedTeamRole, error)
 }
 
 type ProjectTeamAdder interface {
-	AddTeamsToProject(string, []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error)
+	AddTeamsToProject(string, []atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error)
 }
 
 type ProjectTeamDeleter interface {
@@ -63,62 +64,77 @@ type ProjectTeamDeleter interface {
 }
 
 // Projects encapsulates the logic to manage different cloud providers.
-func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
-	result, _, err := s.client.Projects.GetAllProjects(s.ctx, opts)
+func (s *Store) Projects(opts *atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
+	res := s.clientv2.ProjectsApi.ListProjects(s.ctx)
+	if opts != nil {
+		res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
-func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (interface{}, error) {
-	result, _, err := s.client.Organizations.Projects(s.ctx, orgID, opts)
+func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
+	res := s.clientv2.OrganizationsApi.ListOrganizationProjects(s.ctx, orgID)
+	if opts != nil {
+		res = res.PageNum(int32(opts.PageNum)).Name(opts.Name).ItemsPerPage(int32(opts.ItemsPerPage))
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 
 // Project encapsulates the logic to manage different cloud providers.
 func (s *Store) Project(id string) (interface{}, error) {
-	result, _, err := s.client.Projects.GetOneProject(s.ctx, id)
+	result, _, err := s.clientv2.ProjectsApi.GetProject(s.ctx, id).Execute()
 	return result, err
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateProject(name, orgID, regionUsageRestrictions string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (interface{}, error) {
-	project := &atlas.Project{Name: name, OrgID: orgID, RegionUsageRestrictions: regionUsageRestrictions, WithDefaultAlertsSettings: defaultAlertSettings}
-	result, _, err := s.client.Projects.Create(s.ctx, project, opts)
+func (s *Store) CreateProject(group atlasv2.Group, opts *atlas.CreateProjectOptions) (*atlasv2.Group, error) {
+	res := s.clientv2.ProjectsApi.CreateProject(s.ctx).Group(group)
+	if opts != nil {
+		res = res.ProjectOwnerId(opts.ProjectOwnerID)
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 
 // DeleteProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteProject(projectID string) error {
-	_, err := s.client.Projects.Delete(s.ctx, projectID)
+	_, _, err := s.clientv2.ProjectsApi.DeleteProject(s.ctx, projectID).Execute()
 	return err
 }
 
 // ProjectUsers lists all IAM users in a project.
-func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interface{}, error) {
-	result, _, err := s.client.AtlasUsers.List(s.ctx, projectID, opts)
+func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAppUser, error) {
+	res := s.clientv2.ProjectsApi.ListProjectUsers(s.ctx, projectID)
+	if opts != nil {
+		res = res.ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum))
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 
 // DeleteProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteUserFromProject(projectID, userID string) error {
-	_, err := s.client.Projects.RemoveUserFromProject(s.ctx, projectID, userID)
+	_, err := s.clientv2.ProjectsApi.RemoveProjectUser(s.ctx, projectID, userID).Execute()
 	return err
 }
 
 // ProjectTeams encapsulates the logic to manage different cloud providers.
-func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
-	result, _, err := s.client.Projects.GetProjectTeamsAssigned(s.ctx, projectID)
+func (s *Store) ProjectTeams(projectID string) (*atlasv2.PaginatedTeamRole, error) {
+	result, _, err := s.clientv2.TeamsApi.ListProjectTeams(s.ctx, projectID).Execute()
 	return result, err
 }
 
 // AddTeamsToProject encapsulates the logic to manage different cloud providers.
-func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error) {
-	result, _, err := s.client.Projects.AddTeamsToProject(s.ctx, projectID, teams)
+func (s *Store) AddTeamsToProject(projectID string, teams []atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error) {
+	result, _, err := s.clientv2.TeamsApi.AddAllTeamsToProject(s.ctx, projectID).TeamRole(teams).Execute()
 	return result, err
 }
 
 // DeleteTeamFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
-	_, err := s.client.Teams.RemoveTeamFromProject(s.ctx, projectID, teamID)
+	_, _, err := s.clientv2.TeamsApi.RemoveProjectTeam(s.ctx, projectID, teamID).Execute()
 	return err
 }

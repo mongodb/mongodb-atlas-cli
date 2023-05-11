@@ -20,8 +20,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
@@ -36,7 +36,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		OrganizationAPIKey(opts.OrgID, opts.id).
-		Return(&mongodbatlas.APIKey{}, nil).
+		Return(&atlasv2.ApiUser{}, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {

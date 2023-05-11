@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestApplyBuilder(t *testing.T) {
@@ -31,4 +32,14 @@ func TestApplyBuilder(t *testing.T) {
 			flag.OperatorTargetNamespace,
 			flag.OperatorVersion,
 		})
+}
+
+func TestGetOperatorMajorVersion(t *testing.T) {
+	t.Run("should return major when version has minor different of 0", func(t *testing.T) {
+		assert.Equal(t, "1.7.0", getOperatorMajorVersion("mongodb/mongodb-atlas-kubernetes-operator:1.7.1"))
+	})
+
+	t.Run("should return same major version when minor is 0", func(t *testing.T) {
+		assert.Equal(t, "1.7.0", getOperatorMajorVersion("mongodb/mongodb-atlas-kubernetes-operator:1.7.0"))
+	})
 }

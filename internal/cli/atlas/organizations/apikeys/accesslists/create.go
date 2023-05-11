@@ -22,8 +22,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store"
-	atlasStore "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
+	storeHelper "github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -38,13 +38,13 @@ type CreateOpts struct {
 	ips       []string
 	cidrs     []string
 	currentIP bool
-	store     atlasStore.OrganizationAPIKeyAccessListCreator
+	store     store.OrganizationAPIKeyAccessListCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = atlasStore.New(atlasStore.AuthenticatedPreset(config.Default()), atlasStore.WithContext(ctx))
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return err
 	}
 }
@@ -109,7 +109,7 @@ func CreateBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if opts.currentIP {
-				publicIP := store.IPAddress()
+				publicIP := storeHelper.IPAddress()
 				if publicIP == "" {
 					return errors.New("unable to find your public IP address. Specify the public IP address for this command")
 				}

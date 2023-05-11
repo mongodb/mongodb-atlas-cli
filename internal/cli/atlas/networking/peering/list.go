@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type ListOpts struct {
@@ -51,17 +51,21 @@ var listTemplate = `ID	STATUS	CONTAINER ID{{range .}}
 func (opts *ListOpts) Run() error {
 	var r []interface{}
 	var err error
-	r, err = opts.store.PeeringConnections(opts.ConfigProjectID(), opts.newContainerListOptions())
+	r, err = opts.store.PeeringConnections(opts.ConfigProjectID(), opts.newPeeringConnectionsListOptions())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newContainerListOptions() *atlas.ContainersListOptions {
-	return &atlas.ContainersListOptions{
-		ListOptions:  *opts.NewListOptions(),
-		ProviderName: opts.provider,
+func (opts *ListOpts) newPeeringConnectionsListOptions() *atlasv2.ListPeeringConnectionsApiParams {
+	pageNum := int32(opts.PageNum)
+	itemsPerPage := int32(opts.ItemsPerPage)
+
+	return &atlasv2.ListPeeringConnectionsApiParams{
+		ItemsPerPage: &itemsPerPage,
+		PageNum:      &pageNum,
+		ProviderName: &opts.provider,
 	}
 }
 

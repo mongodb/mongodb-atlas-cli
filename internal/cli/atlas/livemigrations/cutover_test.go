@@ -22,21 +22,18 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCutoverOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLiveMigrationCutoverCreator(ctrl)
 
-	expected := &mongodbatlas.Validation{}
-
 	opts := &CutoverOpts{
 		store: mockStore,
 	}
 
 	mockStore.
-		EXPECT().CreateLiveMigrationCutover(opts.ConfigProjectID(), opts.liveMigrationID).Return(expected, nil).
+		EXPECT().CreateLiveMigrationCutover(opts.ConfigProjectID(), opts.liveMigrationID).Return(nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {

@@ -25,10 +25,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-const pagerDutyIntegrationType = "PAGER_DUTY"
+var pagerDutyIntegrationType = "PAGER_DUTY"
 
 type PagerDutyOpts struct {
 	cli.GlobalOpts
@@ -55,10 +55,12 @@ func (opts *PagerDutyOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *PagerDutyOpts) newPagerDutyIntegration() *atlas.ThirdPartyIntegration {
-	return &atlas.ThirdPartyIntegration{
-		Type:       pagerDutyIntegrationType,
-		ServiceKey: opts.serviceKey,
+func (opts *PagerDutyOpts) newPagerDutyIntegration() *atlasv2.Integration {
+	return &atlasv2.Integration{
+		PagerDuty: &atlasv2.PagerDuty{
+			Type:       &pagerDutyIntegrationType,
+			ServiceKey: opts.serviceKey,
+		},
 	}
 }
 

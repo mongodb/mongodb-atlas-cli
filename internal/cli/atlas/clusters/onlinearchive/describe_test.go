@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDescribeBuilder(t *testing.T) {
@@ -49,7 +49,7 @@ func TestDescribe_Run(t *testing.T) {
 		store:       mockStore,
 	}
 
-	expected := &mongodbatlas.OnlineArchive{}
+	expected := &atlasv2.OnlineArchive{}
 	mockStore.
 		EXPECT().
 		OnlineArchive(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.archiveID).

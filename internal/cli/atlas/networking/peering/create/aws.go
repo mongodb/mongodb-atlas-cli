@@ -103,15 +103,17 @@ func normalizeAtlasRegion(region string) string {
 	return strings.ReplaceAll(region, "-", "_")
 }
 
-func (opts *AWSOpts) newPeer(containerID string) *atlasv2.ContainerPeerViewRequest {
-	a := atlasv2.AWSPeerVpcRequestAsContainerPeerViewRequest(opts.newAWSPeer(containerID))
+func (opts *AWSOpts) newPeer(containerID string) *atlasv2.ContainerPeer {
+	a := atlasv2.AWSPeerVpcAsContainerPeer(opts.newAWSPeer(containerID))
 	return &a
 }
 
-func (opts *AWSOpts) newAWSPeer(containerID string) *atlasv2.AWSPeerVpcRequest {
+func (opts *AWSOpts) newAWSPeer(containerID string) *atlasv2.AWSPeerVpc {
+	provider := "AWS"
 	region := strings.ToLower(opts.region)
 	region = strings.ReplaceAll(region, "_", "-")
-	return &atlasv2.AWSPeerVpcRequest{
+	return &atlasv2.AWSPeerVpc{
+		ProviderName:        &provider,
 		AccepterRegionName:  region,
 		AwsAccountId:        opts.accountID,
 		ContainerId:         containerID,

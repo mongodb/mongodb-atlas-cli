@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
@@ -61,7 +61,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var key mongodbatlas.AccessListAPIKeys
+			var key atlasv2.PaginatedApiUserAccessList
 			if err := json.Unmarshal(resp, &key); a.NoError(err) {
 				a.NotEmpty(key.Results)
 			}
@@ -80,7 +80,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var key mongodbatlas.AccessListAPIKeys
+			var key atlasv2.PaginatedApiUserAccessList
 			if err := json.Unmarshal(resp, &key); a.NoError(err) {
 				a.NotEmpty(key.Results)
 			}
@@ -106,10 +106,10 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var key mongodbatlas.AccessListAPIKeys
+			var key atlasv2.PaginatedApiUserAccessList
 			if err := json.Unmarshal(resp, &key); a.NoError(err) {
 				a.NotEmpty(key.Results)
-				entry = key.Results[0].IPAddress
+				entry = *key.Results[0].IpAddress
 			}
 		}
 	})

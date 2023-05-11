@@ -22,13 +22,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-const createTemplate = `API Key '{{.ID}}' created.
+const createTemplate = `API Key '{{.Id}}' created.
 Public API Key {{.PublicKey}}
 Private API Key {{.PrivateKey}}
 `
@@ -49,9 +49,9 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *CreateOpts) newAPIKeyInput() *atlas.APIKeyInput {
-	return &atlas.APIKeyInput{
-		Desc:  opts.desc,
+func (opts *CreateOpts) newAPIKeyInput() *atlasv2.CreateApiKey {
+	return &atlasv2.CreateApiKey{
+		Desc:  &opts.desc,
 		Roles: opts.roles,
 	}
 }

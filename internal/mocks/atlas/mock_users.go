@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	atlas "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockUserCreator is a mock of UserCreator interface.
@@ -36,10 +36,10 @@ func (m *MockUserCreator) EXPECT() *MockUserCreatorMockRecorder {
 }
 
 // CreateUser mocks base method.
-func (m *MockUserCreator) CreateUser(arg0 *atlas.UserRequest) (interface{}, error) {
+func (m *MockUserCreator) CreateUser(arg0 *mongodbatlasv2.AppUser) (*mongodbatlasv2.AppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlasv2.AppUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -74,10 +74,10 @@ func (m *MockUserDescriber) EXPECT() *MockUserDescriberMockRecorder {
 }
 
 // UserByID mocks base method.
-func (m *MockUserDescriber) UserByID(arg0 string) (interface{}, error) {
+func (m *MockUserDescriber) UserByID(arg0 string) (*mongodbatlasv2.AppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserByID", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlasv2.AppUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -89,10 +89,10 @@ func (mr *MockUserDescriberMockRecorder) UserByID(arg0 interface{}) *gomock.Call
 }
 
 // UserByName mocks base method.
-func (m *MockUserDescriber) UserByName(arg0 string) (interface{}, error) {
+func (m *MockUserDescriber) UserByName(arg0 string) (*mongodbatlasv2.AppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserByName", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlasv2.AppUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -127,10 +127,10 @@ func (m *MockUserLister) EXPECT() *MockUserListerMockRecorder {
 }
 
 // OrganizationUsers mocks base method.
-func (m *MockUserLister) OrganizationUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
+func (m *MockUserLister) OrganizationUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedAppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationUsers", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedAppUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -165,10 +165,10 @@ func (m *MockTeamUserLister) EXPECT() *MockTeamUserListerMockRecorder {
 }
 
 // TeamUsers mocks base method.
-func (m *MockTeamUserLister) TeamUsers(arg0, arg1 string) (interface{}, error) {
+func (m *MockTeamUserLister) TeamUsers(arg0, arg1 string) (*mongodbatlasv2.PaginatedApiAppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TeamUsers", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedApiAppUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -63,7 +63,7 @@ func (s *Store) CreateProjectIPAccessList(entries []*atlasv2.NetworkPermissionEn
 func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.ProjectIPAccessListApi.DeleteProjectIpAccessList(s.ctx, projectID, entry).Execute()
+		_, _, err := s.clientv2.ProjectIPAccessListApi.DeleteProjectIpAccessList(s.ctx, projectID, entry).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -74,7 +74,11 @@ func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedNetworkAccess, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.ProjectIPAccessListApi.ListProjectIpAccessLists(s.ctx, projectID).PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount).Execute()
+		res := s.clientv2.ProjectIPAccessListApi.ListProjectIpAccessLists(s.ctx, projectID)
+		if opts != nil {
+			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+		}
+		result, _, err := res.Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

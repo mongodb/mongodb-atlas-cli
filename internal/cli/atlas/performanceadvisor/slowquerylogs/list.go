@@ -22,10 +22,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const listTemplate = `NAMESPACE	LINE{{range .SlowQuery}}
@@ -56,7 +56,7 @@ func (opts *ListOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	r, err := opts.store.PerformanceAdvisorSlowQueries(opts.ConfigProjectID(), host, opts.newSlowQueryOptions())
+	r, err := opts.store.PerformanceAdvisorSlowQueries(opts.newSlowQueryOptions(opts.ConfigProjectID(), host))
 	if err != nil {
 		return err
 	}
@@ -64,15 +64,23 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newSlowQueryOptions() *atlas.SlowQueryOptions {
-	return &atlas.SlowQueryOptions{
-		Namespaces: opts.namespaces,
-		NLogs:      opts.nLog,
-		NamespaceOptions: atlas.NamespaceOptions{
-			Since:    opts.since,
-			Duration: opts.duration,
-		},
+func (opts *ListOpts) newSlowQueryOptions(project, host string) *atlasv2.ListSlowQueriesApiParams {
+	params := &atlasv2.ListSlowQueriesApiParams{
+		Namespaces: &[]string{opts.namespaces},
+		GroupId:    project,
+		ProcessId:  host,
 	}
+	if opts.since != 0 {
+		params.Since = &opts.since
+	}
+	if opts.duration != 0 {
+		params.Duration = &opts.duration
+	}
+	if opts.nLog != 0 {
+		params.NLogs = &opts.nLog
+	}
+
+	return params
 }
 
 // atlas performanceAdvisor slowQueryLogs list  --processName processName --since since --duration duration  --projectId projectId.

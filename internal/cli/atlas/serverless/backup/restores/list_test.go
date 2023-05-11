@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -31,7 +31,7 @@ func TestListOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockServerlessRestoreJobsLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.CloudProviderSnapshotRestoreJobs{}
+	expected := &atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob{}
 
 	listOpts := &ListOpts{
 		store:       mockStore,

@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2020 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,30 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package organizations
+package sampledata
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-const createTemplate = "Organization '{{.ID}}' created.\n"
-
-type CreateOpts struct {
+type DescribeOpts struct {
+	cli.GlobalOpts
 	cli.OutputOpts
-	name  string
-	store store.OrganizationCreator
+	id    string
+	store store.SampleDataStatusDescriber
 }
 
-func (opts *CreateOpts) initStore(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -43,42 +42,47 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateOrganization(opts.name)
+var describeTemplate = `ID	CLUSTER NAME	STATE
+{{.Id}}	{{.ClusterName}}	{{.State}}
+`
 
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.SampleDataStatus(opts.ConfigProjectID(), opts.id)
 	if err != nil {
 		return err
 	}
-
 	return opts.Print(r)
 }
 
-// CreateBuilder atlas organization(s) create <name>.
-func CreateBuilder() *cobra.Command {
-	opts := new(CreateOpts)
+// atlas cluster(s) sampleData describe <clusterName> --projectId projectId.
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "create <name>",
-		Short: "Create an Ops Manager or Cloud Manager organization. This command is unavailable for Atlas.",
-		Args:  require.ExactArgs(1),
+		Use:     "describe <id>",
+		Aliases: []string{"get"},
+		Short:   "Return the details for the specified sample data load job.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"nameDesc": "Label that identifies the organization.",
-			"output":   createTemplate,
+			"idDesc": "Unique identifier of the sample data job.",
+			"output": describeTemplate,
 		},
-		Example: `  # Create an Ops Manager organization with the name myOrg:
-  atlas organizations create myOrg --output json`,
+		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the sample data load job:
+  %s clusters sampleData describe 5e98249d937cfc52efdc2a9f --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return prerun.ExecuteE(
-				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
-
+			opts.id = args[0]
 			return opts.Run()
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 

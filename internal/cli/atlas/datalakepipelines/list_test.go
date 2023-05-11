@@ -25,11 +25,11 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
-	"k8s.io/utils/pointer"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -38,9 +38,9 @@ func TestListOpts_Run(t *testing.T) {
 
 	expected := []atlasv2.IngestionPipeline{
 		{
-			Id:    pointer.String("2a5cbd92c036a0eb288"),
-			Name:  pointer.String("pipeline 2"),
-			State: pointer.String("PENDING"),
+			Id:    pointer.Get("2a5cbd92c036a0eb288"),
+			Name:  pointer.Get("pipeline 2"),
+			State: pointer.Get("PENDING"),
 		},
 	}
 

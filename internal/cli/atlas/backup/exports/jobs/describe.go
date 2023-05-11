@@ -44,7 +44,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplate = `ID	EXPORT BUCKET ID	STATE	SNAPSHOT ID
-{{.ID}}	{{.ExportBucketID}}	{{.State}}	{{.SnapshotID}}
+{{.Id}}	{{.ExportBucketId}}	{{.State}}	{{.SnapshotId}}
 `
 
 func (opts *DescribeOpts) Run() error {

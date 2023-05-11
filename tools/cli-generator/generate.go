@@ -18,6 +18,7 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -137,12 +138,11 @@ func (c *Command) LastCommandPath() string {
 }
 
 func (c *Command) baseFileName(basePath string) string {
-	internalPath := filepath.Join(c.CommandPaths()...)
+	internalPath := strings.ToLower(filepath.Join(c.CommandPaths()...))
 
 	if len(c.SubCommands) > 0 {
-		internalPath = filepath.Join(internalPath, c.LastCommandPath())
+		internalPath = filepath.Join(internalPath, inflector.Underscorize(c.LastCommandPath()))
 	}
-	internalPath = inflector.Underscorize(internalPath)
 
 	return filepath.Join(basePath, "internal", "cli", internalPath)
 }
@@ -267,22 +267,20 @@ func newCli(overwrite bool) (*CLI, error) {
 	return &cli, nil
 }
 
-func (cli *CLI) generateCli() error {
+func (cli *CLI) generateCli() {
 	for i := range cli.Stores {
 		if err := cli.generateStore(&cli.Stores[i]); err != nil {
-			return fmt.Errorf("%w: %s", ErrGenerateStore, err)
+			log.Printf("%s: %s\n", ErrGenerateStore, err)
 		}
 	}
 
 	for i := range cli.Commands {
 		if err := cli.generateCommand(&cli.Commands[i]); err != nil {
-			return fmt.Errorf("%w: %s", ErrGenerateCommand, err)
+			log.Printf("%s: %s\n", ErrGenerateCommand, err)
 		}
 	}
 
 	if err := runMake(); err != nil {
-		return fmt.Errorf("%w: %s", ErrGenerateCli, err)
+		log.Printf("%s: %s\n", ErrGenerateCli, err)
 	}
-
-	return nil
 }

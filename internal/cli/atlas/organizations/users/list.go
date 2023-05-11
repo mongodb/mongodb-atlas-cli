@@ -22,13 +22,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
 const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME{{range .Results}}
-{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Username}}{{end}}
+{{.Id}}	{{.FirstName}}	{{.LastName}}	{{.Username}}{{end}}
 `
 
 type ListOpts struct {

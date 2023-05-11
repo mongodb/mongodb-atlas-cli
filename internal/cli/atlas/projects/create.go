@@ -27,12 +27,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-const (
-	atlasCreateTemplate = "Project '{{.ID}}' created.\n"
-	govRegionOnly       = "GOV_REGIONS_ONLY"
-)
+const atlasCreateTemplate = "Project '{{.Id}}' created.\n"
+
+var govRegionOnly = "GOV_REGIONS_ONLY"
 
 type CreateOpts struct {
 	cli.GlobalOpts
@@ -58,14 +58,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	var defaultAlertSettings *bool
-	if opts.withoutDefaultAlertSettings {
-		f := false
-		defaultAlertSettings = &f
-	}
-
-	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(),
-		opts.newRegionUsageRestrictions(), defaultAlertSettings, opts.newCreateProjectOptions())
+	r, err := opts.store.CreateProject(opts.newCreateProjectGroup(), opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err
@@ -74,12 +67,27 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newRegionUsageRestrictions() string {
+func (opts *CreateOpts) newCreateProjectGroup() atlasv2.Group {
+	var defaultAlertSettings *bool
+	if opts.withoutDefaultAlertSettings {
+		f := false
+		defaultAlertSettings = &f
+	}
+	restrictions := opts.newRegionUsageRestrictions()
+	return atlasv2.Group{
+		Name:                      opts.name,
+		OrgId:                     opts.ConfigOrgID(),
+		WithDefaultAlertsSettings: defaultAlertSettings,
+		RegionUsageRestrictions:   restrictions,
+	}
+}
+
+func (opts *CreateOpts) newRegionUsageRestrictions() *string {
 	if opts.regionUsageRestrictions {
-		return govRegionOnly
+		return &govRegionOnly
 	}
 
-	return ""
+	return nil
 }
 
 func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {

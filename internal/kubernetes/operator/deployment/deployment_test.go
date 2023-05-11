@@ -22,6 +22,7 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
@@ -125,32 +126,32 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			RootCertType:         "TestRootCertType",
 			VersionReleaseSystem: "TestReleaseSystem",
 		}
-		processArgs := &mongodbatlas.ProcessArgs{
-			DefaultReadConcern:               "TestReadConcern",
-			DefaultWriteConcern:              "TestWriteConcert",
-			MinimumEnabledTLSProtocol:        "1.0",
+		processArgs := &atlasv2.ClusterDescriptionProcessArgs{
+			DefaultReadConcern:               pointer.Get("TestReadConcern"),
+			DefaultWriteConcern:              pointer.Get("TestWriteConcert"),
+			MinimumEnabledTlsProtocol:        pointer.Get("1.0"),
 			FailIndexKeyTooLong:              pointer.Get(true),
 			JavascriptEnabled:                pointer.Get(true),
 			NoTableScan:                      pointer.Get(true),
-			OplogSizeMB:                      pointer.Get[int64](10),
-			SampleSizeBIConnector:            pointer.Get[int64](10),
-			SampleRefreshIntervalBIConnector: pointer.Get[int64](10),
-			OplogMinRetentionHours:           pointer.Get[float64](10.1),
+			SampleSizeBIConnector:            pointer.Get[int32](10),
+			SampleRefreshIntervalBIConnector: pointer.Get[int32](10),
 		}
-		backupSchedule := &mongodbatlas.CloudProviderSnapshotBackupPolicy{
-			ClusterID:             "testClusterID",
-			ClusterName:           clusterName,
-			ReferenceHourOfDay:    pointer.Get[int64](5),
-			ReferenceMinuteOfHour: pointer.Get[int64](5),
-			RestoreWindowDays:     pointer.Get[int64](5),
+		processArgs.OplogSizeMB.Set(pointer.Get(int32(10)))
+		processArgs.OplogMinRetentionHours.Set(pointer.Get(float64(10.1)))
+		backupSchedule := &atlasv2.DiskBackupSnapshotSchedule{
+			ClusterId:             pointer.Get("testClusterID"),
+			ClusterName:           pointer.Get(clusterName),
+			ReferenceHourOfDay:    pointer.Get[int32](5),
+			ReferenceMinuteOfHour: pointer.Get[int32](5),
+			RestoreWindowDays:     pointer.Get[int32](5),
 			UpdateSnapshots:       pointer.Get(true),
-			NextSnapshot:          "",
-			Policies: []mongodbatlas.Policy{
+			NextSnapshot:          pointer.Get(time.Now()),
+			Policies: []atlasv2.Policy{
 				{
-					ID: "1",
-					PolicyItems: []mongodbatlas.PolicyItem{
+					Id: pointer.Get("1"),
+					PolicyItems: []atlasv2.PolicyItem{
 						{
-							ID:                "1",
+							Id:                pointer.Get("1"),
 							FrequencyInterval: 10,
 							FrequencyType:     "DAYS",
 							RetentionUnit:     "WEEKS",
@@ -160,16 +161,16 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				},
 			},
 			AutoExportEnabled: pointer.Get(true),
-			Export: &mongodbatlas.Export{
-				ExportBucketID: "TestBucketID",
-				FrequencyType:  "TestFreqType",
+			Export: &atlasv2.AutoExportPolicy{
+				ExportBucketId: pointer.Get("TestBucketID"),
+				FrequencyType:  pointer.Get("TestFreqType"),
 			},
 			UseOrgAndGroupNamesInExportPrefix: pointer.Get(true),
-			CopySettings: []mongodbatlas.CopySetting{
+			CopySettings: []atlasv2.DiskBackupCopySetting{
 				{
 					CloudProvider:     pointer.Get("AWS"),
 					RegionName:        pointer.Get("US_EAST_1"),
-					ReplicationSpecID: pointer.Get("123456"),
+					ReplicationSpecId: pointer.Get("123456"),
 					ShouldCopyOplogs:  pointer.Get(false),
 					Frequencies:       []string{"DAILY"},
 				},
@@ -301,15 +302,15 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				},
 				ServerlessSpec: nil,
 				ProcessArgs: &atlasV1.ProcessArgs{
-					DefaultReadConcern:               processArgs.DefaultReadConcern,
-					DefaultWriteConcern:              processArgs.DefaultWriteConcern,
-					MinimumEnabledTLSProtocol:        processArgs.MinimumEnabledTLSProtocol,
+					DefaultReadConcern:               processArgs.GetDefaultReadConcern(),
+					DefaultWriteConcern:              processArgs.GetDefaultWriteConcern(),
+					MinimumEnabledTLSProtocol:        processArgs.GetMinimumEnabledTlsProtocol(),
 					FailIndexKeyTooLong:              processArgs.FailIndexKeyTooLong,
 					JavascriptEnabled:                processArgs.JavascriptEnabled,
 					NoTableScan:                      processArgs.NoTableScan,
-					OplogSizeMB:                      processArgs.OplogSizeMB,
-					SampleSizeBIConnector:            processArgs.SampleSizeBIConnector,
-					SampleRefreshIntervalBIConnector: processArgs.SampleRefreshIntervalBIConnector,
+					OplogSizeMB:                      pointer.Get(int64(processArgs.GetOplogSizeMB())),
+					SampleSizeBIConnector:            pointer.Get(int64(processArgs.GetSampleSizeBIConnector())),
+					SampleRefreshIntervalBIConnector: pointer.Get(int64(processArgs.GetSampleRefreshIntervalBIConnector())),
 				},
 			},
 			Status: status.AtlasDeploymentStatus{
@@ -335,10 +336,10 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				Spec: atlasV1.AtlasBackupPolicySpec{
 					Items: []atlasV1.AtlasBackupPolicyItem{
 						{
-							FrequencyType:     backupSchedule.Policies[0].PolicyItems[0].FrequencyType,
-							FrequencyInterval: backupSchedule.Policies[0].PolicyItems[0].FrequencyInterval,
-							RetentionUnit:     backupSchedule.Policies[0].PolicyItems[0].RetentionUnit,
-							RetentionValue:    backupSchedule.Policies[0].PolicyItems[0].RetentionValue,
+							FrequencyType:     backupSchedule.Policies[0].PolicyItems[0].GetFrequencyType(),
+							FrequencyInterval: int(backupSchedule.Policies[0].PolicyItems[0].GetFrequencyInterval()),
+							RetentionUnit:     backupSchedule.Policies[0].PolicyItems[0].GetRetentionUnit(),
+							RetentionValue:    int(backupSchedule.Policies[0].PolicyItems[0].GetRetentionValue()),
 						},
 					},
 				},
@@ -361,18 +362,18 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			Spec: atlasV1.AtlasBackupScheduleSpec{
 				AutoExportEnabled: *backupSchedule.AutoExportEnabled,
 				Export: &atlasV1.AtlasBackupExportSpec{
-					ExportBucketID: backupSchedule.Export.ExportBucketID,
-					FrequencyType:  backupSchedule.Export.FrequencyType,
+					ExportBucketID: backupSchedule.Export.GetExportBucketId(),
+					FrequencyType:  backupSchedule.Export.GetFrequencyType(),
 				},
 				PolicyRef: common.ResourceRefNamespaced{
 					Name:      strings.ToLower(expectPolicies[0].Name),
 					Namespace: expectPolicies[0].Namespace,
 				},
-				ReferenceHourOfDay:                *backupSchedule.ReferenceHourOfDay,
-				ReferenceMinuteOfHour:             *backupSchedule.ReferenceMinuteOfHour,
-				RestoreWindowDays:                 *backupSchedule.RestoreWindowDays,
-				UpdateSnapshots:                   *backupSchedule.UpdateSnapshots,
-				UseOrgAndGroupNamesInExportPrefix: *backupSchedule.UseOrgAndGroupNamesInExportPrefix,
+				ReferenceHourOfDay:                int64(backupSchedule.GetReferenceHourOfDay()),
+				ReferenceMinuteOfHour:             int64(backupSchedule.GetReferenceMinuteOfHour()),
+				RestoreWindowDays:                 int64(backupSchedule.GetRestoreWindowDays()),
+				UpdateSnapshots:                   backupSchedule.GetUpdateSnapshots(),
+				UseOrgAndGroupNamesInExportPrefix: backupSchedule.GetUseOrgAndGroupNamesInExportPrefix(),
 				CopySettings: []atlasV1.CopySetting{
 					{
 						CloudProvider:     pointer.Get("AWS"),

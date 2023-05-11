@@ -35,7 +35,7 @@ func TestList_Run(t *testing.T) {
 		var expected []interface{}
 		mockStore.
 			EXPECT().
-			PeeringConnections(listOpts.ProjectID, listOpts.newContainerListOptions()).
+			PeeringConnections(listOpts.ProjectID, listOpts.newPeeringConnectionsListOptions()).
 			Return(expected, nil).
 			Times(1)
 

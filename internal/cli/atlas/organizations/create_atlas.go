@@ -24,13 +24,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-var createAtlasTemplate = "Organization '{{.Organization.ID}}' created.\n"
+var createAtlasTemplate = "Organization '{{.Organization.Id}}' created.\n"
 
 type CreateAtlasOpts struct {
 	cli.OutputOpts
@@ -38,7 +38,7 @@ type CreateAtlasOpts struct {
 	ownerID           string
 	apiKeyDescription string
 	apiKeyRole        []string
-	store             store.AtlasOrganizationCreator
+	store             store.OrganizationCreator
 }
 
 func (opts *CreateAtlasOpts) initStore(ctx context.Context) func() error {
@@ -50,16 +50,16 @@ func (opts *CreateAtlasOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateAtlasOpts) Run() error {
-	o := &mongodbatlas.CreateOrganizationRequest{
+	o := &atlasv2.CreateOrganizationRequest{
 		Name: opts.name,
 	}
 	if opts.ownerID != "" {
-		o.OrgOwnerID = &opts.ownerID
+		o.OrgOwnerId = &opts.ownerID
 	}
 	if len(opts.apiKeyRole) > 0 {
-		o.APIKey = &mongodbatlas.APIKeyInput{}
-		o.APIKey.Roles = opts.apiKeyRole
-		o.APIKey.Desc = opts.apiKeyDescription
+		o.ApiKey = &atlasv2.CreateApiKey{}
+		o.ApiKey.Roles = opts.apiKeyRole
+		o.ApiKey.Desc = &opts.apiKeyDescription
 	}
 
 	r, err := opts.store.CreateAtlasOrganization(o)
@@ -126,7 +126,8 @@ func CreateAtlasBuilder() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: "Create an Ops Manager or Cloud Manager organization. This command is unavailable for Atlas.",
+		Short: "Create an organization.",
+		Long:  "When authenticating using API keys, the organization to which the API keys belong must have cross-organization billing enabled. The resulting org will be linked to the paying org.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Label that identifies the organization.",
@@ -153,8 +154,8 @@ Private API Key '{{.APIKey.PrivateKey}}'
 		},
 	}
 	cmd.Flags().StringVar(&opts.ownerID, flag.OwnerID, "", usage.OrgOwnerID)
-	cmd.Flags().StringVar(&opts.apiKeyDescription, flag.APIKeyDescription, "", usage.APIKeyDescription)
-	cmd.Flags().StringSliceVar(&opts.apiKeyRole, flag.APIKeyRole, []string{}, usage.APIKeyRoles)
+	cmd.Flags().StringVar(&opts.apiKeyDescription, flag.APIKeyDescription, "", usage.AtlasAPIKeyDescription)
+	cmd.Flags().StringSliceVar(&opts.apiKeyRole, flag.APIKeyRole, []string{}, usage.AtlasAPIKeyRoles)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 

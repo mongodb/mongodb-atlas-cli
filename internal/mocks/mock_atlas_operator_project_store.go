@@ -111,10 +111,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) EncryptionAtRest(arg0 inter
 }
 
 // Integrations mocks base method.
-func (m *MockAtlasOperatorProjectStore) Integrations(arg0 string) (*mongodbatlas.ThirdPartyIntegrations, error) {
+func (m *MockAtlasOperatorProjectStore) Integrations(arg0 string) (*mongodbatlasv2.PaginatedIntegration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Integrations", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.ThirdPartyIntegrations)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedIntegration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -141,7 +141,7 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) MaintenanceWindow(arg0 inte
 }
 
 // PeeringConnections mocks base method.
-func (m *MockAtlasOperatorProjectStore) PeeringConnections(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]interface{}, error) {
+func (m *MockAtlasOperatorProjectStore) PeeringConnections(arg0 string, arg1 *mongodbatlasv2.ListPeeringConnectionsApiParams) ([]interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PeeringConnections", arg0, arg1)
 	ret0, _ := ret[0].([]interface{})
@@ -201,10 +201,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) ProjectIPAccessLists(arg0, 
 }
 
 // ProjectSettings mocks base method.
-func (m *MockAtlasOperatorProjectStore) ProjectSettings(arg0 string) (*mongodbatlas.ProjectSettings, error) {
+func (m *MockAtlasOperatorProjectStore) ProjectSettings(arg0 string) (*mongodbatlasv2.GroupSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectSettings", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.ProjectSettings)
+	ret0, _ := ret[0].(*mongodbatlasv2.GroupSettings)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

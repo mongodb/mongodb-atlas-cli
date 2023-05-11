@@ -16,7 +16,7 @@ package store
 
 import (
 	"fmt"
-	"time"
+	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -26,11 +26,11 @@ import (
 //go:generate mockgen -destination=../mocks/mock_access_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AccessLogsListerByClusterName,AccessLogsListerByHostname,AccessLogsLister
 
 type AccessLogsListerByClusterName interface {
-	AccessLogsByClusterName(string, string, *atlas.AccessLogOptions) (*atlas.AccessLogSettings, error)
+	AccessLogsByClusterName(string, string, *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error)
 }
 
 type AccessLogsListerByHostname interface {
-	AccessLogsByHostname(string, string, *atlas.AccessLogOptions) (*atlas.AccessLogSettings, error)
+	AccessLogsByHostname(string, string, *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error)
 }
 
 type AccessLogsLister interface {
@@ -46,11 +46,11 @@ func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.Acces
 
 		if opts != nil {
 			if opts.Start != "" {
-				startTime, _ := time.Parse(time.RFC3339, opts.Start)
+				startTime, _ := strconv.ParseInt(opts.Start, 10, 64)
 				result = result.Start(startTime)
 			}
 			if opts.End != "" {
-				endTime, _ := time.Parse(time.RFC3339, opts.End)
+				endTime, _ := strconv.ParseInt(opts.End, 10, 64)
 				result = result.End(endTime)
 			}
 
@@ -82,15 +82,16 @@ func (s *Store) AccessLogsByClusterName(groupID, clusterName string, opts *atlas
 
 		if opts != nil {
 			if opts.Start != "" {
-				startTime, _ := time.Parse(time.RFC3339, opts.Start)
+				startTime, _ := strconv.ParseInt(opts.Start, 10, 64)
 				result = result.Start(startTime)
 			}
 			if opts.End != "" {
-				result = result.End(opts.End)
+				endTime, _ := strconv.ParseInt(opts.End, 10, 64)
+				result = result.End(endTime)
 			}
 
 			if opts.NLogs > 0 {
-				result = result.NLogs(int64(opts.NLogs))
+				result = result.NLogs(int32(opts.NLogs))
 			}
 
 			if opts.IPAddress != "" {

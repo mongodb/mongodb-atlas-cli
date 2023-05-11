@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 var createTemplate = "Link-token '{{.LinkToken}}' successfully created.\n"
@@ -54,9 +54,9 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newTokenCreateRequest() *mongodbatlas.TokenCreateRequest {
-	return &mongodbatlas.TokenCreateRequest{
-		AccessListIPs: opts.accessListIP,
+func (opts *CreateOpts) newTokenCreateRequest() *atlasv2.TargetOrgRequest {
+	return &atlasv2.TargetOrgRequest{
+		AccessListIps: opts.accessListIP,
 	}
 }
 

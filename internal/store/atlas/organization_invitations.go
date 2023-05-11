@@ -42,7 +42,11 @@ type OrganizationInvitationUpdater interface {
 
 // OrganizationInvitations encapsulate the logic to manage different cloud providers.
 func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOptions) (interface{}, error) {
-	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationInvitations(s.ctx, orgID).Username(opts.Username).Execute()
+	res := s.clientv2.OrganizationsApi.ListOrganizationInvitations(s.ctx, orgID)
+	if opts != nil {
+		res = res.Username(opts.Username)
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 
@@ -54,7 +58,7 @@ func (s *Store) OrganizationInvitation(orgID, invitationID string) (interface{},
 
 // DeleteInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteInvitation(orgID, invitationID string) error {
-	_, err := s.client.Organizations.DeleteInvitation(s.ctx, orgID, invitationID)
+	_, _, err := s.clientv2.OrganizationsApi.DeleteOrganizationInvitation(s.ctx, orgID, invitationID).Execute()
 	return err
 }
 

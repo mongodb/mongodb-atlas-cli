@@ -28,7 +28,7 @@ import (
 )
 
 var describeTemplate = `MINIMUM TLS	JAVASCRIPT ENABLED	OPLOG SIZE MB
-{{.MinimumEnabledTLSProtocol}}	{{.JavascriptEnabled}}	{{if .OplogSizeMB}}{{.OplogSizeMB}} {{else}}N/A{{end}}
+{{.MinimumEnabledTlsProtocol}}	{{.JavascriptEnabled}}	{{if .GetOplogSizeMB}}{{.GetOplogSizeMB}} {{else}}N/A{{end}}
 `
 
 type DescribeOpts struct {

@@ -24,11 +24,11 @@ import (
 
 // RSConfig shared properties of replica sets, config servers, and sharded clusters.
 type RSConfig struct {
-	Name                        string           `yaml:"name,omitempty" json:"name,omitempty"`
-	FeatureCompatibilityVersion string           `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
-	Processes                   []*ProcessConfig `yaml:"processes,omitempty" json:"processes,omitempty"`
-	Tags                        []string         `yaml:"tags,omitempty" json:"tags,omitempty"`
-	Version                     string           `yaml:"version,omitempty" json:"version,omitempty"`
+	Name                        string                    `yaml:"name,omitempty" json:"name,omitempty"`
+	FeatureCompatibilityVersion string                    `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
+	Processes                   []*ProcessConfig          `yaml:"processes,omitempty" json:"processes,omitempty"`
+	Tags                        []*map[string]interface{} `yaml:"tags,omitempty" json:"tags,omitempty"`
+	Version                     string                    `yaml:"version,omitempty" json:"version,omitempty"`
 }
 
 type patcher func(*ProcessConfig, string) *opsmngr.Process

@@ -50,12 +50,6 @@ func (opts *MetricsOpts) ValidatePeriodStartEnd() error {
 	if opts.Period == "" && opts.Start == "" && opts.End == "" {
 		return fmt.Errorf("either the --%s flag or the --%s and --%s flags are required", flag.Period, flag.Start, flag.End)
 	}
-	if opts.Period != "" && (opts.Start != "" || opts.End != "") {
-		return fmt.Errorf("the --%s flag is mutually exclusive to the --%s and --%s flags", flag.Period, flag.Start, flag.End)
-	}
-	if (opts.Start != "" && opts.End == "") || (opts.Start == "" && opts.End != "") {
-		return fmt.Errorf("the --%s and --%s flags need to be used together", flag.Start, flag.End)
-	}
 	return nil
 }
 

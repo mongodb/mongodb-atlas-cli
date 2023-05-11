@@ -46,13 +46,13 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Related Commands
 ----------------
 
 * :ref:`atlas-organizations-apiKeys` - Organization API Keys operations.
-* :ref:`atlas-organizations-create` - Create an Ops Manager or Cloud Manager organization. This command is unavailable for Atlas.
+* :ref:`atlas-organizations-create` - Create an organization.
 * :ref:`atlas-organizations-delete` - Remove the specified organization.
 * :ref:`atlas-organizations-describe` - Return the details for the specified organizations.
 * :ref:`atlas-organizations-invitations` - Invitation operations.

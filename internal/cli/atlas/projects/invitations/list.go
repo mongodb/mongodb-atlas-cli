@@ -29,7 +29,7 @@ import (
 )
 
 const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range .}}
-{{.ID}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
+{{.Id}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
 `
 
 type ListOpts struct {

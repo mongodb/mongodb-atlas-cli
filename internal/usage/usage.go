@@ -17,7 +17,8 @@ package usage
 const (
 	ProjectID                    = "Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable."
 	OrgID                        = "Organization ID to use. Overrides the settings in the configuration file or environment variable."
-	Profile                      = "Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file."
+	Profile                      = "Name of the profile to use from your configuration file. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file."
+	ProfileAtlasCLI              = "Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings."
 	Members                      = "Number of members in the replica set."
 	Shards                       = "Number of shards in the cluster."
 	ProcessName                  = "Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}."
@@ -97,7 +98,7 @@ dbName and collection are required only for built-in roles.`
 	ForceQuickstart                           = "If specified, skips asking for input and creates a cluster with default settings for any options you don't specify."
 	ForceFile                                 = "Overwrites the destination file."
 	Email                                     = "Email address for the user."
-	LogOut                                    = "Optional output file name. Uses the log name if the output file's name is not specified."
+	LogOut                                    = "Output file name. Uses the log name if the output file's name is not specified."
 	DiagnoseOut                               = "Optional output file name. Uses diagnose-archive.tar.gz if the output file's name is not specified."
 	LogStart                                  = "UNIX Epoch-formatted starting date and time for the range of log messages to retrieve. This value defaults to 24 hours prior to the current timestamp."
 	LogEnd                                    = "UNIX Epoch-formatted ending date and time for the range of log messages to retrieve. This value defaults to the current timestamp."
@@ -187,7 +188,9 @@ dbName and collection are required only for built-in roles.`
 	SSEEnabled                                = "Flag indicating whether this Amazon S3 blockstore enables server-side encryption."
 	PathStyleAccessEnabled                    = "Flag indicating the style of this endpoint."
 	APIKeyDescription                         = "Description of the API key."
-	APIKeyRoles                               = "Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are ORG_OWNER, ORG_MEMBER, ORG_GROUP_CREATOR, ORG_BILLING_ADMIN, and ORG_READ_ONLY."                                                                                         //nolint:gosec // This is just a message not a credential
+	AtlasAPIKeyDescription                    = APIKeyDescription + " Required when creating organizations authenticated with API Keys."
+	APIKeyRoles                               = "Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are ORG_OWNER, ORG_MEMBER, ORG_GROUP_CREATOR, ORG_BILLING_ADMIN, and ORG_READ_ONLY." //nolint:gosec // This is just a message not a credential
+	AtlasAPIKeyRoles                          = APIKeyRoles + " Required when creating organizations authenticated with API Keys."
 	ProjectAPIKeyRoles                        = "Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are GROUP_CLUSTER_MANAGER, GROUP_DATA_ACCESS_ADMIN, GROUP_DATA_ACCESS_READ_ONLY, GROUP_DATA_ACCESS_READ_WRITE, GROUP_SEARCH_INDEX_EDITOR, GROUP_OWNER, and GROUP_READ_ONLY." //nolint:gosec // This is just a message not a credential
 	GlobalAPIKeyRoles                         = "Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are GLOBAL_AUTOMATION_ADMIN, GLOBAL_BACKUP_ADMIN GLOBAL_MONITORING_ADMIN, GLOBAL_OWNER, GLOBAL_READ_ONLY,GLOBAL_USER_ADMIN."                                                 //nolint:gosec // This is just a message not a credential
 	NotificationRegion                        = "Region that indicates which API URL to use."
@@ -204,7 +207,8 @@ dbName and collection are required only for built-in roles.`
 	NotificationType                          = "Type of alert notification. Valid values are DATADOG, EMAIL, FLOWDOCK, GROUP (Project), ORG, OPS_GENIE, PAGER_DUTY, SLACK, SMS, USER, or VICTOR_OPS."
 	NotificationUsername                      = "Name of the Atlas user to which to send notifications."
 	NotificationVictorOpsRoutingKey           = "Routing key associated with your Splunk On-Call account."
-	SnapshotID                                = "Unique identifier of the snapshot to restore. You must specify a snapshotId for automated restores."
+	SnapshotID                                = "Unique identifier of the snapshot."
+	RestoreSnapshotID                         = "Unique identifier of the snapshot to restore. You must specify a snapshotId for automated restores."
 	SnapshotDescription                       = "Description of the on-demand snapshot."
 	Database                                  = "Name of the database."
 	DatabaseUser                              = "Username of a database user."
@@ -415,4 +419,6 @@ dbName and collection are required only for built-in roles.`
 	SourcePolicyItemID                        = "Human-readable label that identifies the policy item."
 	Transform                                 = "Fields to be excluded for this data lake pipeline."
 	PipelineFilename                          = "Name of the JSON data lake pipeline configuration file to use."
+	Pipeline                                  = "Name of the Data lake pipeline."
+	CompletedAfter                            = "Date filter of which the backup snapshots where completed. Format must be YYYY-MM-DD"
 )

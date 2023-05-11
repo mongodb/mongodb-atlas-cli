@@ -26,6 +26,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDataLakePrivateEndpointsAWS(t *testing.T) {
@@ -75,9 +76,9 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		var r atlas.PrivateLinkEndpointDataLake
+		var r atlasv2.PrivateNetworkEndpointIdEntry
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.Equal(vpcID, r.EndpointID)
+			a.Equal(vpcID, r.GetEndpointId())
 		}
 	})
 

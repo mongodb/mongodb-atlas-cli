@@ -16,59 +16,55 @@ package local
 
 import (
 	"context"
+	"os"
+	"os/exec"
 
-	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/api/types/filters"
-	"github.com/docker/docker/client"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type ListOpts struct {
+type StartOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
 }
 
-const listTemplate = `NAME	PORT	CONNECTION STRING{{range .}}
-{{range .Names}}{{.}}{{end}}	{{range .Ports}}{{.PublicPort}}	mongodb://localhost:{{.PublicPort}}{{end}}{{end}}
+var startTemplate = `local environment started
 `
 
-func (opts *ListOpts) Run(ctx context.Context) error {
-	cli, err := client.NewClientWithOpts(client.FromEnv)
+func (opts *StartOpts) Run(ctx context.Context) error {
+	mongotHome, err := mongotHome()
 	if err != nil {
 		return err
 	}
-	cli.NegotiateAPIVersion(ctx)
-
-	containers, err := cli.ContainerList(ctx, types.ContainerListOptions{Filters: filters.NewArgs(filters.Arg("label", "atlascli"))})
+	cmd := exec.Command("make", "docker.up")
+	cmd.Dir = mongotHome
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+	err = cmd.Run()
 	if err != nil {
 		return err
 	}
-
-	return opts.Print(containers)
+	return opts.Print(startTemplate)
 }
 
-// atlas local list <instanceName>.
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+// atlas local start.
+func StartBuilder() *cobra.Command {
+	opts := &StartOpts{}
 	cmd := &cobra.Command{
-		Use:   "list",
-		Short: "Lists all local instances.",
+		Use:   "start",
+		Short: "Starts a local instance.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), startTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

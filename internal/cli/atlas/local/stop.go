@@ -19,18 +19,24 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/spf13/cobra"
 )
 
-type ConnectOpts struct{}
+type StopOpts struct {
+	cli.OutputOpts
+}
 
-func (opts *ConnectOpts) Run(ctx context.Context) error {
+var stopTemplate = `local environment stopped
+`
+
+func (opts *StopOpts) Run(ctx context.Context) error {
 	mongotHome, err := mongotHome()
 	if err != nil {
 		return err
 	}
-	cmd := exec.Command("make", "docker.connect")
+	cmd := exec.Command("make", "docker.down")
 	cmd.Dir = mongotHome
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -39,15 +45,15 @@ func (opts *ConnectOpts) Run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	return nil
+	return opts.Print(stopTemplate)
 }
 
-// atlas local connect.
-func ConnectBuilder() *cobra.Command {
-	opts := &ConnectOpts{}
+// atlas local delete.
+func StopBuilder() *cobra.Command {
+	opts := &StopOpts{}
 	cmd := &cobra.Command{
-		Use:   "connect",
-		Short: "Connects to the local instance.",
+		Use:   "stop",
+		Short: "Stops local instance.",
 		Args:  require.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

@@ -12,7 +12,7 @@ atlas local connect
    :depth: 1
    :class: singlecol
 
-Connects to an instance via mongosh.
+Connects to the local instance.
 
 Syntax
 ------
@@ -20,25 +20,9 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas local connect <instanceName> [options]
+   atlas local connect [options]
 
 .. Code end marker, please don't delete this comment
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - instanceName
-     - string
-     - true
-     - Name of the local instance.
 
 Options
 -------

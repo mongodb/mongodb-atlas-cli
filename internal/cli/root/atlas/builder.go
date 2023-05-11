@@ -257,6 +257,10 @@ func shouldSetService(cmd *cobra.Command) bool {
 		return false
 	}
 
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "local")) {
+		return false
+	}
+
 	return true
 }
 
@@ -279,6 +283,7 @@ func shouldCheckCredentials(cmd *cobra.Command) bool {
 		fmt.Sprintf("%s %s", atlas, "setup"),      // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "register"),   // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "quickstart"), // command supports login
+		fmt.Sprintf("%s %s", atlas, "local"),      // command supports login
 	}
 	for _, p := range skipFor {
 		if strings.HasPrefix(cmd.CommandPath(), p) {

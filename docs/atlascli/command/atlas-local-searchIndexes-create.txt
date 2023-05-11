@@ -1,8 +1,8 @@
-.. _atlas-local-create:
+.. _atlas-local-searchIndexes-create:
 
-==================
-atlas local create
-==================
+================================
+atlas local searchIndexes create
+================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ atlas local create
    :depth: 1
    :class: singlecol
 
-Creates a new local instance.
+Create a new index.
 
 Syntax
 ------
@@ -20,25 +20,9 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas local create <instanceName> [options]
+   atlas local searchIndexes create [options]
 
 .. Code end marker, please don't delete this comment
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - instanceName
-     - string
-     - true
-     - Name of the local instance.
 
 Options
 -------
@@ -51,10 +35,18 @@ Options
      - Type
      - Required
      - Description
+   * - -f, --file
+     - string
+     - true
+     - Name of the JSON index configuration file to use. To learn about the Atlas Search index syntax and options that you can define in your configuration file, see https://www.mongodb.com/docs/atlas/atlas-search/index-definitions/.
    * - -h, --help
      - 
      - false
      - help for create
+   * - -o, --output
+     - string
+     - false
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
 
 Inherited Options
 -----------------

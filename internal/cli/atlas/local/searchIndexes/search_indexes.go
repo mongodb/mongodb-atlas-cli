@@ -12,45 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package local
+package searchIndexes
 
 import (
-	"errors"
-	"os"
-	"os/user"
-	"path"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/local/searchIndexes"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
-var ErrInstanceNotFound = errors.New("instance not found")
-
 func Builder() *cobra.Command {
+	const use = "searchIndexes"
 	cmd := &cobra.Command{
-		Use:   "local",
-		Short: "Manage local instances.",
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage local search indexes.",
 	}
 
-	cmd.AddCommand(
-		StartBuilder(),
-		StopBuilder(),
-		ConnectBuilder(),
-		searchIndexes.Builder(),
-	)
+	cmd.AddCommand(CreateBuilder())
 
 	return cmd
-}
-
-func mongotHome() (string, error) {
-	env := os.Getenv("MONGOT_HOME")
-	if env != "" {
-		return env, nil
-	}
-
-	usr, err := user.Current()
-	if err != nil {
-		return "", err
-	}
-	return path.Join(usr.HomeDir, "mongot"), nil
 }

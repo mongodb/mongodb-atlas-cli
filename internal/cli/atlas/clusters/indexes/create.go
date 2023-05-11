@@ -74,9 +74,13 @@ func (opts *CreateOpts) newIndex() (*atlasv2.IndexRequest, error) {
 }
 
 func (opts *CreateOpts) newIndexOptions() *atlasv2.IndexOptions {
+	var name *string
+	if opts.name != "" {
+		name = &opts.name
+	}
 	return &atlasv2.IndexOptions{
 		Sparse: &opts.sparse,
-		Name:   &opts.name,
+		Name:   name,
 	}
 }
 

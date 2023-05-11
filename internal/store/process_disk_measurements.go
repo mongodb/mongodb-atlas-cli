@@ -38,7 +38,8 @@ func (s *Store) ProcessDiskMeasurements(groupID, host string, port int, partitio
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		processID := host + ":" + strconv.Itoa(port)
-		result, _, err := s.clientv2.MonitoringAndLogsApi.GetDiskMeasurements(s.ctx, groupID, partitionName, processID).M(opts.M).Execute()
+		result, _, err := s.clientv2.MonitoringAndLogsApi.GetDiskMeasurements(s.ctx, groupID, partitionName, processID).
+			M(opts.M).Period(opts.Period).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -50,7 +51,8 @@ func (s *Store) ProcessDatabaseMeasurements(groupID, host string, port int, dbNa
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		processID := host + ":" + strconv.Itoa(port)
-		result, _, err := s.clientv2.MonitoringAndLogsApi.GetDatabaseMeasurements(s.ctx, groupID, dbName, processID).M(opts.M).Execute()
+		result, _, err := s.clientv2.MonitoringAndLogsApi.GetDatabaseMeasurements(s.ctx, groupID, dbName, processID).
+			M(opts.M).Granularity(opts.Granularity).Period(opts.Period).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

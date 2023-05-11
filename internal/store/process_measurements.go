@@ -36,7 +36,8 @@ func (s *Store) ProcessMeasurements(groupID, host string, port int, opts *atlas.
 	case config.CloudService, config.CloudGovService:
 		processID := host + ":" + strconv.Itoa(port)
 		period, _ := time.Parse(time.RFC3339, opts.Period)
-		result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostMeasurements(s.ctx, groupID, processID).M(opts.M).Period(period).Execute()
+		result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostMeasurements(s.ctx, groupID, processID).
+			M(opts.M).Period(period).Granularity(opts.Granularity).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

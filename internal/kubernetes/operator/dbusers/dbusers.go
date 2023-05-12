@@ -16,6 +16,7 @@ package dbusers
 
 import (
 	"fmt"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 
 	"github.com/google/uuid"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
@@ -139,7 +140,7 @@ func convertUserRoles(user *atlasv2.DatabaseUser) []atlasV1.RoleSpec {
 		result = append(result, atlasV1.RoleSpec{
 			RoleName:       role.RoleName,
 			DatabaseName:   role.DatabaseName,
-			CollectionName: *role.CollectionName,
+			CollectionName: pointer.GetOrDefault(role.CollectionName, ""),
 		})
 	}
 	return result

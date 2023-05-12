@@ -28,6 +28,7 @@ import (
 
 type StopOpts struct {
 	cli.OutputOpts
+	cli.GlobalOpts
 	s *spinner.Spinner
 }
 
@@ -73,6 +74,11 @@ func StopBuilder() *cobra.Command {
 		Use:   "stop",
 		Short: "Stops local instance.",
 		Args:  require.NoArgs,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.InitOutput(cmd.OutOrStdout(), stopTemplate),
+			)
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},

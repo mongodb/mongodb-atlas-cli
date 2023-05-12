@@ -17,8 +17,8 @@ package version
 import (
 	"context"
 	"fmt"
+	"github.com/Masterminds/semver/v3"
 	"io"
-	"strconv"
 	"strings"
 
 	"github.com/google/go-github/v50/github"
@@ -55,22 +55,29 @@ func (v *OperatorVersion) IsSupported(version string) (bool, error) {
 		return false, err
 	}
 
-	latestSemVer := strings.Split(latest, ".")
-	versionSemVer := strings.Split(version, ".")
-
-	latestMajor, _ := strconv.Atoi(latestSemVer[1])
+	latestSemVer, err := semver.NewVersion(latest)
 	if err != nil {
-		return false, fmt.Errorf("unable to evaluate latest major version: %w", err)
+		return false, fmt.Errorf("latest operator version %s is invalid", latest)
 	}
 
-	versionMajor, _ := strconv.Atoi(versionSemVer[1])
+	requestedOperatorVersionSem, err := semver.NewVersion(version)
 	if err != nil {
-		return false, fmt.Errorf("unable to evaluate given major version: %w", err)
+		return false, fmt.Errorf("requested operator version %s is invalid", version)
 	}
 
-	diff := latestMajor - versionMajor
+	if requestedOperatorVersionSem.Major() != latestSemVer.Major() {
+		return false, nil
+	}
 
-	return diff > -1 && diff < maxMajorVersionsSupported, nil
+	if requestedOperatorVersionSem.GreaterThan(latestSemVer) {
+		return false, nil
+	}
+
+	if requestedOperatorVersionSem.LessThan(latestSemVer) {
+		return latestSemVer.Minor()-requestedOperatorVersionSem.Minor() < maxMajorVersionsSupported, nil
+	}
+
+	return true, nil
 }
 
 func (v *OperatorVersion) DownloadResource(ctx context.Context, version, path string) (io.ReadCloser, error) {

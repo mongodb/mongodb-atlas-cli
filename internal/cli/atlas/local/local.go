@@ -26,9 +26,15 @@ import (
 
 var ErrInstanceNotFound = errors.New("instance not found")
 
-const localUser = "mongoUser"
-const localPassword = "hunter1"
-const localUri = "mongodb://localhost:37017"
+const (
+	localUser     = "mongoUser"
+	localPassword = "hunter1"
+	localUri      = "mongodb://localhost:37017"
+)
+
+var (
+	localData = map[string]string{"ConnectionString": localUri, "User": localUser, "Password": localPassword}
+)
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
@@ -39,6 +45,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		StartBuilder(),
 		StopBuilder(),
+		DescribeBuilder(),
 		ConnectBuilder(),
 		SampleDataBuilder(),
 		searchIndexes.Builder(),

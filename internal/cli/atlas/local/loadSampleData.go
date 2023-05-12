@@ -25,6 +25,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/spf13/cobra"
@@ -36,6 +37,7 @@ var dump []byte
 type SampleDataOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
+	s *spinner.Spinner
 }
 
 var sampleDataTemplate = `sample data loaded
@@ -79,6 +81,16 @@ func extractTarGz(input []byte, output string) error {
 }
 
 func (opts *SampleDataOpts) Run(ctx context.Context) error {
+	if opts.s != nil {
+		opts.s.Start()
+	}
+
+	defer func() {
+		if opts.s != nil {
+			opts.s.Stop()
+		}
+	}()
+
 	dumpDir, err := os.MkdirTemp("", "dump")
 	if err != nil {
 		return err
@@ -99,12 +111,19 @@ func (opts *SampleDataOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(sampleDataTemplate)
+	if opts.s != nil {
+		opts.s.Stop()
+	}
+
+	return opts.Print(nil)
 }
 
 // atlas local loadSampleData.
 func SampleDataBuilder() *cobra.Command {
 	opts := &SampleDataOpts{}
+	if opts.IsTerminal() {
+		opts.s = spinner.New(spinner.CharSets[9], speed)
+	}
 	cmd := &cobra.Command{
 		Use:   "loadSampleData",
 		Short: "Loads sample data in a local instance.",

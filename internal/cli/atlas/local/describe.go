@@ -16,9 +16,7 @@ package local
 
 import (
 	"context"
-	"os/exec"
 
-	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -26,53 +24,31 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type StopOpts struct {
+type DescribeOpts struct {
 	cli.OutputOpts
-	s *spinner.Spinner
+	cli.GlobalOpts
 }
 
-var stopTemplate = `local environment stopped
+var describeTemplate = `local environment running on {{ .ConnectionString }}
 `
 
-func (opts *StopOpts) Run(ctx context.Context) error {
-	if opts.s != nil {
-		opts.s.Start()
-	}
-
-	defer func() {
-		if opts.s != nil {
-			opts.s.Stop()
-		}
-	}()
-
-	mongotHome, err := mongotHome()
-	if err != nil {
-		return err
-	}
-	cmd := exec.Command("make", "docker.down")
-	cmd.Dir = mongotHome
-	// cmd.Stdout = os.Stdout
-	// cmd.Stderr = os.Stderr
-	// cmd.Stdin = os.Stdin
-	err = cmd.Run()
-	if err != nil {
-		return err
-	}
-
-	if opts.s != nil {
-		opts.s.Stop()
-	}
-
+func (opts *DescribeOpts) Run(ctx context.Context) error {
 	return opts.Print(localData)
 }
 
-// atlas local delete.
-func StopBuilder() *cobra.Command {
-	opts := &StopOpts{}
+// atlas local start.
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "stop",
-		Short: "Stops local instance.",
-		Args:  require.NoArgs,
+		Use:     "describe",
+		Aliases: []string{"get"},
+		Short:   "Describes the local instance.",
+		Args:    require.NoArgs,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+			)
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},

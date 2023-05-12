@@ -17,21 +17,38 @@ package local
 import (
 	"context"
 	"os/exec"
+	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
+
+const speed = 100 * time.Millisecond
 
 type StartOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
+	s *spinner.Spinner
 }
 
-var startTemplate = `local environment started
+var startTemplate = `local environment started at {{.ConnectionString}}
 `
 
 func (opts *StartOpts) Run(ctx context.Context) error {
+	if opts.s != nil {
+		opts.s.Start()
+	}
+
+	defer func() {
+		if opts.s != nil {
+			opts.s.Stop()
+		}
+	}()
+
 	mongotHome, err := mongotHome()
 	if err != nil {
 		return err
@@ -45,12 +62,19 @@ func (opts *StartOpts) Run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	return opts.Print(startTemplate)
+
+	if opts.s != nil {
+		opts.s.Stop()
+	}
+	return opts.Print(localData)
 }
 
 // atlas local start.
 func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
+	if opts.IsTerminal() {
+		opts.s = spinner.New(spinner.CharSets[9], speed)
+	}
 	cmd := &cobra.Command{
 		Use:   "start",
 		Short: "Starts a local instance.",
@@ -64,6 +88,9 @@ func StartBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

@@ -28,7 +28,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type CreateOpts struct {
@@ -40,16 +39,30 @@ type CreateOpts struct {
 const createTemplate = `index created
 `
 
+type Index struct {
+	CollectionName             string  `json:"collectionName"`
+	LastObservedCollectionName string  `json:"lastObservedCollectionName"`
+	Database                   string  `json:"database"`
+	IndexID                    *string `json:"indexID,omitempty"`
+	Mappings                   *struct {
+		Dynamic *bool                             `json:"dynamic,omitempty"`
+		Fields  map[string]map[string]interface{} `json:"fields,omitempty"`
+	} `json:"mappings,omitempty"`
+	Name           string  `json:"name"`
+	SearchAnalyzer *string `json:"searchAnalyzer,omitempty"`
+	Status         *string `json:"status,omitempty"`
+}
+
 type SeachConfig struct {
 	Address string `json:"address"`
 	ID      struct {
 		GroupID     string `json:"groupId"`
 		ClusterName string `json:"clusterName"`
 	} `json:"id"`
-	ConnectionString string                  `json:"connectionString"`
-	HostnameRegex    string                  `json:"hostnameRegex"`
-	Indexes          []*atlasv2.FTSIndex     `json:"indexes"`
-	Analyzers        []*atlasv2.FTSAnalyzers `json:"analyzers"`
+	ConnectionString string   `json:"connectionString"`
+	HostnameRegex    string   `json:"hostnameRegex"`
+	Indexes          []*Index `json:"indexes"`
+	Analyzers        []any    `json:"analyzers"`
 }
 
 func mongotHome() (string, error) {
@@ -108,7 +121,7 @@ func randStringRunes(n int) string {
 }
 
 func (opts *CreateOpts) Run() error {
-	var index atlasv2.FTSIndex
+	var index Index
 	if err := file.Load(opts.fs, opts.filename, &index); err != nil {
 		return err
 	}

@@ -46,7 +46,8 @@ func TestSearch(t *testing.T) {
 	t.Run("Load Sample data", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
-			"loadSampleData",
+			"sampleData",
+			"load",
 			g.clusterName,
 			"--projectId", g.projectID,
 			"-o=json")

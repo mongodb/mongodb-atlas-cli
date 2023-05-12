@@ -16,7 +16,6 @@ package local
 
 import (
 	"context"
-	"os"
 	"os/exec"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -39,9 +38,9 @@ func (opts *StartOpts) Run(ctx context.Context) error {
 	}
 	cmd := exec.Command("make", "docker.up")
 	cmd.Dir = mongotHome
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
+	// cmd.Stdout = os.Stdout
+	// cmd.Stderr = os.Stderr
+	// cmd.Stdin = os.Stdin
 	err = cmd.Run()
 	if err != nil {
 		return err

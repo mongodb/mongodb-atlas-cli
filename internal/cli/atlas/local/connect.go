@@ -16,30 +16,16 @@ package local
 
 import (
 	"context"
-	"os"
-	"os/exec"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/spf13/cobra"
 )
 
 type ConnectOpts struct{}
 
 func (opts *ConnectOpts) Run(ctx context.Context) error {
-	mongotHome, err := mongotHome()
-	if err != nil {
-		return err
-	}
-	cmd := exec.Command("make", "docker.connect")
-	cmd.Dir = mongotHome
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
-	err = cmd.Run()
-	if err != nil {
-		return err
-	}
-	return nil
+	return mongosh.Run(localUser, localPassword, localUri)
 }
 
 // atlas local connect.

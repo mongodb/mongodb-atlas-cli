@@ -26,6 +26,10 @@ import (
 
 var ErrInstanceNotFound = errors.New("instance not found")
 
+const localUser = "mongoUser"
+const localPassword = "hunter1"
+const localUri = "mongodb://localhost:37017"
+
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "local",
@@ -36,6 +40,7 @@ func Builder() *cobra.Command {
 		StartBuilder(),
 		StopBuilder(),
 		ConnectBuilder(),
+		SampleDataBuilder(),
 		searchIndexes.Builder(),
 	)
 

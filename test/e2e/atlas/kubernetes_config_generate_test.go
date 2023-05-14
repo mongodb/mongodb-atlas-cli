@@ -41,6 +41,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas/mongodbatlasv2"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -638,10 +639,10 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 		t.Cleanup(func() {
 			deleteAllNetworkPeers(t, cliPath, generator.projectID, gcpEntity)
 		})
-		var createdNetworkPeer mongodbatlas.Peer
+		var createdNetworkPeer mongodbatlasv2.GCPPeerVpc
 		err = json.Unmarshal(resp, &createdNetworkPeer)
 		require.NoError(t, err)
-		expectedProject.Spec.NetworkPeers[0].ContainerID = createdNetworkPeer.ContainerID
+		expectedProject.Spec.NetworkPeers[0].ContainerID = createdNetworkPeer.ContainerId
 
 		cmd = exec.Command(cliPath,
 			"kubernetes",

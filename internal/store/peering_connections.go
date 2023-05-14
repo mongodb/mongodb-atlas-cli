@@ -60,7 +60,6 @@ func (s *Store) PeeringConnections(projectID string, opts *atlasv2.ListPeeringCo
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).
-			IncludeCount(*opts.IncludeCount).
 			ItemsPerPage(*opts.ItemsPerPage).
 			PageNum(*opts.PageNum).
 			ProviderName(*opts.ProviderName).Execute()

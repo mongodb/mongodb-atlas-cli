@@ -69,8 +69,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"sampleData",
 			"watch",
 			sampleDatasetJob.ID,
-			"--projectId", g.projectID,
-			"-o=json")
+			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))

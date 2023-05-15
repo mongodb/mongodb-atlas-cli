@@ -31,7 +31,7 @@ func TestDBUserUpdate_Run(t *testing.T) {
 	expected := &atlas.DatabaseUser{}
 
 	updateOpts := &UpdateOpts{
-		username: "test4",
+		currentUsername: "test4",
 		password: "US",
 		roles:    []string{"admin@admin"},
 		store:    mockStore,
@@ -42,7 +42,7 @@ func TestDBUserUpdate_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		UpdateDatabaseUser(&dbUser, dbUser.Username).
+		UpdateDatabaseUser(&dbUser, updateOpts.currentUsername).
 		Return(expected, nil).
 		Times(1)
 

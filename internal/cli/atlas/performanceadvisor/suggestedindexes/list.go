@@ -72,11 +72,11 @@ func (opts *ListOpts) newSuggestedIndexOptions(project, host string) *atlasv2.Li
 		Namespaces: &[]string{opts.namespaces},
 	}
 	if opts.since != 0 {
-		sinceWorkaround := float32(opts.since)
+		sinceWorkaround := opts.since
 		params.Since = &sinceWorkaround
 	}
 	if opts.duration != 0 {
-		durationWorkaround := float32(opts.duration)
+		durationWorkaround := opts.duration
 		params.Duration = &durationWorkaround
 	}
 	if opts.nExamples != 0 {

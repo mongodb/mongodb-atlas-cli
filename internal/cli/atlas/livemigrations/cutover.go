@@ -25,7 +25,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var cutoverTemplate = "Cutover process '{{.ID}}' successfully started.\n"
+var cutoverTemplate = "Cutover process successfully started.\n"
 
 type CutoverOpts struct {
 	cli.GlobalOpts
@@ -43,12 +43,12 @@ func (opts *CutoverOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CutoverOpts) Run() error {
-	r, err := opts.store.CreateLiveMigrationCutover(opts.ConfigProjectID(), opts.liveMigrationID)
+	err := opts.store.CreateLiveMigrationCutover(opts.ConfigProjectID(), opts.liveMigrationID)
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	return opts.Print(nil)
 }
 
 // mongocli atlas liveMigrations|lm cutover [--liveMigrationID liveMigrationId] [--projectId projectId].

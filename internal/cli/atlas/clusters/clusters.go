@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/connectionstring"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/indexes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/onlinearchive"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/sampledata"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
@@ -43,6 +44,7 @@ func MongoCLIBuilder() *cobra.Command {
 		Short:      "Manage clusters for your project.",
 		Long:       `The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters.`,
 	}
+
 	cmd.AddCommand(
 		ListBuilder(),
 		DescribeBuilder(),
@@ -52,7 +54,7 @@ func MongoCLIBuilder() *cobra.Command {
 		PauseBuilder(),
 		StartBuilder(),
 		DeleteBuilder(),
-		LoadSampleDataBuilder(),
+		LoadSampleDataBuilder(false),
 		indexes.Builder(),
 		search.Builder(),
 		onlinearchive.Builder(),
@@ -81,7 +83,7 @@ func Builder() *cobra.Command {
 		PauseBuilder(),
 		StartBuilder(),
 		DeleteBuilder(),
-		LoadSampleDataBuilder(),
+		LoadSampleDataBuilder(true),
 		UpgradeBuilder(),
 		FailoverBuilder(),
 		indexes.Builder(),
@@ -89,6 +91,7 @@ func Builder() *cobra.Command {
 		onlinearchive.Builder(),
 		connectionstring.Builder(),
 		availableregions.Builder(),
+		sampledata.Builder(),
 	)
 
 	return cmd

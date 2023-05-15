@@ -39,7 +39,7 @@ func Execute() {
 	// append here to avoid a recursive link on generated docs
 	rootCmd.Long += `
 
-To learn more, see our documentation: https://www.mongodb.com/docs/atlas/cli/stable/`
+To learn more, see our documentation: https://www.mongodb.com/docs/atlas/cli/stable/connect-atlas-cli/`
 	if cmd, err := rootCmd.ExecuteContextC(ctx); err != nil {
 		if !telemetry.StartedTrackingCommand() {
 			telemetry.StartTrackingCommand(cmd, os.Args[1:])

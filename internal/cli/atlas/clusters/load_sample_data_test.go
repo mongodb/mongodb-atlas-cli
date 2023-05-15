@@ -51,7 +51,7 @@ func TestLoadSampleDataOpts_Run(t *testing.T) {
 func TestLoadSampleDataBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		LoadSampleDataBuilder(),
+		LoadSampleDataBuilder(false),
 		0,
 		[]string{flag.Output, flag.ProjectID},
 	)

@@ -220,10 +220,14 @@ func (s *Store) CreateExportJob(projectID, clusterName string, job *atlasv2.Disk
 }
 
 // ExportBuckets encapsulates the logic to manage different cloud providers.
-func (s *Store) ExportBuckets(projectID string, _ *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBucket, error) {
+func (s *Store) ExportBuckets(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBucket, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.CloudBackupsApi.ListExportBuckets(s.ctx, projectID).Execute() // TODO: missing list Options
+		res := s.clientv2.CloudBackupsApi.ListExportBuckets(s.ctx, projectID)
+		if opts != nil {
+			res = res.ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum))
+		}
+		result, _, err := res.Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

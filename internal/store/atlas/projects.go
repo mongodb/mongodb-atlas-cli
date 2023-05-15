@@ -91,7 +91,7 @@ func (s *Store) Project(id string) (interface{}, error) {
 }
 
 func (s *Store) ProjectByName(name string) (interface{}, error) {
-	result, _, err := s.client.Projects.GetOneProjectByName(s.ctx, name)
+	result, _, err := s.clientv2.ProjectsApi.GetProjectByName(s.ctx, name).Execute()
 	return result, err
 }
 

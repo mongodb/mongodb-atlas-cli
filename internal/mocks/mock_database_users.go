@@ -149,18 +149,18 @@ func (m *MockDatabaseUserUpdater) EXPECT() *MockDatabaseUserUpdaterMockRecorder 
 }
 
 // UpdateDatabaseUser mocks base method.
-func (m *MockDatabaseUserUpdater) UpdateDatabaseUser(arg0 *mongodbatlas.DatabaseUser) (*mongodbatlas.DatabaseUser, error) {
+func (m *MockDatabaseUserUpdater) UpdateDatabaseUser(arg0 *mongodbatlas.DatabaseUser, arg1 string) (*mongodbatlas.DatabaseUser, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateDatabaseUser", arg0)
+	ret := m.ctrl.Call(m, "UpdateDatabaseUser", arg0, arg1)
 	ret0, _ := ret[0].(*mongodbatlas.DatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // UpdateDatabaseUser indicates an expected call of UpdateDatabaseUser.
-func (mr *MockDatabaseUserUpdaterMockRecorder) UpdateDatabaseUser(arg0 interface{}) *gomock.Call {
+func (mr *MockDatabaseUserUpdaterMockRecorder) UpdateDatabaseUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDatabaseUser", reflect.TypeOf((*MockDatabaseUserUpdater)(nil).UpdateDatabaseUser), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDatabaseUser", reflect.TypeOf((*MockDatabaseUserUpdater)(nil).UpdateDatabaseUser), arg0, arg1)
 }
 
 // MockDatabaseUserDescriber is a mock of DatabaseUserDescriber interface.

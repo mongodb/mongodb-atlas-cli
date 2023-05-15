@@ -32,9 +32,9 @@ func TestDBUserUpdate_Run(t *testing.T) {
 
 	updateOpts := &UpdateOpts{
 		currentUsername: "test4",
-		password: "US",
-		roles:    []string{"admin@admin"},
-		store:    mockStore,
+		password:        "US",
+		roles:           []string{"admin@admin"},
+		store:           mockStore,
 	}
 
 	dbUser := atlas.DatabaseUser{}

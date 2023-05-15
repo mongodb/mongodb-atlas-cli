@@ -75,7 +75,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.Error(err, string(resp))
-		a.Equal("Error: unable to auto detect params: couldn't to find operator installed in any accessible namespace\n", string(resp))
+		a.Equal("Error: unable to auto detect params: couldn't find an operator installed in any accessible namespace\n", string(resp))
 	})
 
 	t.Run("should failed to apply resources when unable to autodetect operator version", func(t *testing.T) {

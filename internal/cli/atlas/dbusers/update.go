@@ -34,12 +34,12 @@ const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
 type UpdateOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
-	username    string
+	username        string
 	currentUsername string
-	password    string
-	roles       []string
-	scopes      []string
-	store       store.DatabaseUserUpdater
+	password        string
+	roles           []string
+	scopes          []string
+	store           store.DatabaseUserUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {

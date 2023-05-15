@@ -71,10 +71,14 @@ func (s *Store) ServerlessSnapshot(projectID, instanceName, snapshotID string) (
 }
 
 // ServerlessRestoreJobs encapsulates the logic to manage different cloud providers.
-func (s *Store) ServerlessRestoreJobs(projectID, instanceName string, _ *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob, error) {
+func (s *Store) ServerlessRestoreJobs(projectID, instanceName string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.CloudBackupsApi.ListServerlessBackupRestoreJobs(s.ctx, projectID, instanceName).Execute() // TODO:List options missing in call
+		res := s.clientv2.CloudBackupsApi.ListServerlessBackupRestoreJobs(s.ctx, projectID, instanceName)
+		if opts != nil {
+			res = res.ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum))
+		}
+		result, _, err := res.Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

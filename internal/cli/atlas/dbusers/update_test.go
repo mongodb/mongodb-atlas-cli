@@ -42,7 +42,7 @@ func TestDBUserUpdate_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		UpdateDatabaseUser(&dbUser).
+		UpdateDatabaseUser(&dbUser, dbUser.Username).
 		Return(expected, nil).
 		Times(1)
 

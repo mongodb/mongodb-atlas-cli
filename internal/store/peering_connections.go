@@ -18,13 +18,14 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_peering_connections.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PeeringConnectionLister,PeeringConnectionDescriber,PeeringConnectionDeleter,AzurePeeringConnectionCreator,AWSPeeringConnectionCreator,GCPPeeringConnectionCreator,PeeringConnectionCreator
 
 type PeeringConnectionLister interface {
-	PeeringConnections(string, *atlasv2.ListPeeringConnectionsApiParams) ([]interface{}, error)
+	PeeringConnections(string, *atlas.ContainersListOptions) ([]interface{}, error)
 }
 
 type PeeringConnectionDescriber interface {
@@ -56,13 +57,13 @@ type PeeringConnectionDeleter interface {
 }
 
 // PeeringConnections encapsulates the logic to manage different cloud providers.
-func (s *Store) PeeringConnections(projectID string, opts *atlasv2.ListPeeringConnectionsApiParams) ([]interface{}, error) {
+func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListOptions) ([]interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).
-			ItemsPerPage(*opts.ItemsPerPage).
-			PageNum(*opts.PageNum).
-			ProviderName(*opts.ProviderName).Execute()
+			ItemsPerPage(int32(opts.ItemsPerPage)).
+			PageNum(int32(opts.PageNum)).
+			ProviderName(opts.ProviderName).Execute()
 
 		peeringConnections := make([]interface{}, len(result.Results))
 		for i, peeringConnection := range result.Results {

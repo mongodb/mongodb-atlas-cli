@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type ListOpts struct {
@@ -58,14 +58,10 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newPeeringConnectionsListOptions() *atlasv2.ListPeeringConnectionsApiParams {
-	pageNum := int32(opts.PageNum)
-	itemsPerPage := int32(opts.ItemsPerPage)
-
-	return &atlasv2.ListPeeringConnectionsApiParams{
-		ItemsPerPage: &itemsPerPage,
-		PageNum:      &pageNum,
-		ProviderName: &opts.provider,
+func (opts *ListOpts) newPeeringConnectionsListOptions() *atlas.ContainersListOptions {
+	return &atlas.ContainersListOptions{
+		ListOptions:  *opts.NewListOptions(),
+		ProviderName: opts.provider,
 	}
 }
 

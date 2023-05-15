@@ -495,30 +495,31 @@ func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID str
 
 func buildNetworkPeering(npProvider store.PeeringConnectionLister, projectID string) ([]atlasV1.NetworkPeer, error) {
 	// pagination not required, max 25 entries per provider can be configured via API
-	itemsPerPage := int32(MaxItems)
-	providerName := string(provider.ProviderAWS)
-
-	npListAWS, err := npProvider.PeeringConnections(projectID, &atlasv2.ListPeeringConnectionsApiParams{
-		ItemsPerPage: &itemsPerPage,
-		ProviderName: &providerName,
+	npListAWS, err := npProvider.PeeringConnections(projectID, &atlas.ContainersListOptions{
+		ListOptions: atlas.ListOptions{
+			ItemsPerPage: MaxItems,
+		},
+		ProviderName: string(provider.ProviderAWS),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("error getting network peering connections for AWS: %w", err)
 	}
 
-	providerName = string(provider.ProviderGCP)
-	npListGCP, err := npProvider.PeeringConnections(projectID, &atlasv2.ListPeeringConnectionsApiParams{
-		ItemsPerPage: &itemsPerPage,
-		ProviderName: &providerName,
+	npListGCP, err := npProvider.PeeringConnections(projectID, &atlas.ContainersListOptions{
+		ListOptions: atlas.ListOptions{
+			ItemsPerPage: MaxItems,
+		},
+		ProviderName: string(provider.ProviderGCP),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("error getting network peering connections for GCP: %w", err)
 	}
 
-	providerName = string(provider.ProviderAzure)
-	npListAzure, err := npProvider.PeeringConnections(projectID, &atlasv2.ListPeeringConnectionsApiParams{
-		ItemsPerPage: &itemsPerPage,
-		ProviderName: &providerName,
+	npListAzure, err := npProvider.PeeringConnections(projectID, &atlas.ContainersListOptions{
+		ListOptions: atlas.ListOptions{
+			ItemsPerPage: MaxItems,
+		},
+		ProviderName: string(provider.ProviderAzure),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("error getting network peering connections for Azure: %w", err)

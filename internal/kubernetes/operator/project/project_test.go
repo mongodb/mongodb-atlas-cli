@@ -283,18 +283,9 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 
 		listOption := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
-		containerListOptionAWS := &atlasv2.ListPeeringConnectionsApiParams{
-			ItemsPerPage: pointer.Get(int32(MaxItems)),
-			ProviderName: pointer.Get(string(provider.ProviderAWS)),
-		}
-		containerListOptionGCP := &atlasv2.ListPeeringConnectionsApiParams{
-			ItemsPerPage: pointer.Get(int32(MaxItems)),
-			ProviderName: pointer.Get(string(provider.ProviderGCP)),
-		}
-		containerListOptionAzure := &atlasv2.ListPeeringConnectionsApiParams{
-			ItemsPerPage: pointer.Get(int32(MaxItems)),
-			ProviderName: pointer.Get(string(provider.ProviderAzure)),
-		}
+		containerListOptionAWS := &mongodbatlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(provider.ProviderAWS)}
+		containerListOptionGCP := &mongodbatlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(provider.ProviderGCP)}
+		containerListOptionAzure := &mongodbatlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(provider.ProviderAzure)}
 		projectStore.EXPECT().Project(projectID).Return(p, nil)
 		projectStore.EXPECT().ProjectIPAccessLists(projectID, listOption).Return(ipAccessLists, nil)
 		projectStore.EXPECT().MaintenanceWindow(projectID).Return(mw, nil)
@@ -1069,18 +1060,10 @@ func Test_buildNetworkPeering(t *testing.T) {
 			peeringConnectionAWS,
 		}
 
-		containerListOptionAWS := &atlasv2.ListPeeringConnectionsApiParams{
-			ItemsPerPage: pointer.Get(int32(MaxItems)),
-			ProviderName: pointer.Get(string(provider.ProviderAWS)),
-		}
-		containerListOptionGCP := &atlasv2.ListPeeringConnectionsApiParams{
-			ItemsPerPage: pointer.Get(int32(MaxItems)),
-			ProviderName: pointer.Get(string(provider.ProviderGCP)),
-		}
-		containerListOptionAzure := &atlasv2.ListPeeringConnectionsApiParams{
-			ItemsPerPage: pointer.Get(int32(MaxItems)),
-			ProviderName: pointer.Get(string(provider.ProviderAzure)),
-		}
+		listOptions := mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
+		containerListOptionAWS := &mongodbatlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(provider.ProviderAWS)}
+		containerListOptionGCP := &mongodbatlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(provider.ProviderGCP)}
+		containerListOptionAzure := &mongodbatlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(provider.ProviderAzure)}
 
 		peerProvider.EXPECT().PeeringConnections(projectID, containerListOptionAWS).Return(peeringConnections, nil)
 		peerProvider.EXPECT().PeeringConnections(projectID, containerListOptionGCP).Return(nil, nil)

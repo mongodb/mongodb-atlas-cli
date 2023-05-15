@@ -141,7 +141,7 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) MaintenanceWindow(arg0 inte
 }
 
 // PeeringConnections mocks base method.
-func (m *MockAtlasOperatorProjectStore) PeeringConnections(arg0 string, arg1 *mongodbatlasv2.ListPeeringConnectionsApiParams) ([]interface{}, error) {
+func (m *MockAtlasOperatorProjectStore) PeeringConnections(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PeeringConnections", arg0, arg1)
 	ret0, _ := ret[0].([]interface{})

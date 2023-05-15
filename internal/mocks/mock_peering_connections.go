@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -35,7 +36,7 @@ func (m *MockPeeringConnectionLister) EXPECT() *MockPeeringConnectionListerMockR
 }
 
 // PeeringConnections mocks base method.
-func (m *MockPeeringConnectionLister) PeeringConnections(arg0 string, arg1 *mongodbatlasv2.ListPeeringConnectionsApiParams) ([]interface{}, error) {
+func (m *MockPeeringConnectionLister) PeeringConnections(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PeeringConnections", arg0, arg1)
 	ret0, _ := ret[0].([]interface{})

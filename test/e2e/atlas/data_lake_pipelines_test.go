@@ -86,7 +86,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--sinkType", "CPS",
 			"--sinkMetadataProvider", "AWS",
 			"--sinkMetadataRegion", "us-east-1",
-			"--sinkPartitionField", "year", "title",
+			"--sinkPartitionField", "year,title",
 			"--transform", "EXCLUDE:fullplot",
 			"--projectId", g.projectID,
 			"-o=json")

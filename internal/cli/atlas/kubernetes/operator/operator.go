@@ -21,7 +21,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   use,
 		Short: "Manage Atlas Kubernetes Operator.",
-		Long:  `This command provides you Atlas Kubernetes Operator management.`,
+		Long:  `This command manages the Atlas Kubernetes Operator.`,
 	}
 
 	cmd.AddCommand(InstallBuilder())

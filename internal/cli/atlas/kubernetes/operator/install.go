@@ -148,7 +148,7 @@ func InstallBuilder() *cobra.Command {
 		Args:    require.NoArgs,
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Install Atlas Kubernetes Operator to a cluster.",
-		Long:    `This command let you install one of the supported versions of Atlas Kubernetes Operator to an existing cluster, as well as automatically import Atlas resources to be managed by the operator.`,
+		Long:    `This command installs one of the supported versions of Atlas Kubernetes Operator to an existing cluster, as well as automatically import Atlas resources to be managed by the operator.`,
 		Example: `# Install latest version of the operator into the default namespace:
   atlas kubernetes operator install
 

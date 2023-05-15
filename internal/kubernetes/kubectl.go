@@ -68,7 +68,7 @@ func (ctl *KubeCtl) FindAtlasOperator(ctx context.Context) (*appsv1.Deployment, 
 		}
 	}
 
-	return nil, errors.New("couldn't to find operator installed in any accessible namespace")
+	return nil, errors.New("couldn't find an operator installed in any accessible namespace")
 }
 
 func (ctl *KubeCtl) Create(ctx context.Context, obj client.Object, opts ...client.CreateOption) error {

@@ -14,7 +14,7 @@ atlas kubernetes operator
 
 Manage Atlas Kubernetes Operator.
 
-This command provides you Atlas Kubernetes Operator management.
+This command manages the Atlas Kubernetes Operator.
 
 Options
 -------

@@ -14,7 +14,7 @@ atlas kubernetes operator install
 
 Install Atlas Kubernetes Operator to a cluster.
 
-This command let you install one of the supported versions of Atlas Kubernetes Operator to an existing cluster, as well as automatically import Atlas resources to be managed by the operator.
+This command installs one of the supported versions of Atlas Kubernetes Operator to an existing cluster, as well as automatically import Atlas resources to be managed by the operator.
 
 Syntax
 ------

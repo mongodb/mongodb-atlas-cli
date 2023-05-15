@@ -39,9 +39,10 @@ func TestDisksDescribeOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	opts := listOpts.NewProcessMetricsListOptions()
+	params := listOpts.NewDiskMeasurementsAPIParams("", "hard-00-00.mongodb.net:27017", listOpts.name)
+
 	mockStore.
-		EXPECT().ProcessDiskMeasurements(listOpts.ProjectID, listOpts.host, listOpts.port, listOpts.name, opts).
+		EXPECT().ProcessDiskMeasurements(params).
 		Return(expected, nil).
 		Times(1)
 

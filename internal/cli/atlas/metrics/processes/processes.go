@@ -17,6 +17,7 @@ package processes
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -45,8 +46,10 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *Opts) Run() error {
-	listOpts := opts.NewProcessMetricsListOptions()
-	r, err := opts.store.ProcessMeasurements(opts.ConfigProjectID(), opts.host, opts.port, listOpts)
+	processID := opts.host + ":" + strconv.Itoa(opts.port)
+	params := opts.NewProcessMeasurementsAPIParams(opts.ConfigProjectID(), processID)
+
+	r, err := opts.store.ProcessMeasurements(params)
 	if err != nil {
 		return err
 	}

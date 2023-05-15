@@ -65,6 +65,21 @@ func GetStringPointerIfNotEmpty(input string) *string {
 	return nil
 }
 
+func GetArrayPointerIfNotEmpty(input []string) *[]string {
+	if len(input) > 0 {
+		return &input
+	}
+	return nil
+}
+
+func StringToTimePointer(value string) *time.Time {
+	var result *time.Time
+	if completedAfter, err := time.Parse(time.RFC3339, value); err == nil {
+		result = &completedAfter
+	}
+	return result
+}
+
 func ParseDeleteAfter(deleteAfter string) *time.Time {
 	deleteAfterDate, err := time.Parse(time.RFC3339, deleteAfter)
 

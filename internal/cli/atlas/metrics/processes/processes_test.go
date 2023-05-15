@@ -42,9 +42,10 @@ func TestProcess_Run(t *testing.T) {
 	listOpts.Granularity = oneMinute
 	listOpts.Period = oneMinute
 
-	opts := listOpts.NewProcessMetricsListOptions()
+	params := listOpts.NewProcessMeasurementsAPIParams("", "hard-00-00.mongodb.net:27017")
+
 	mockStore.
-		EXPECT().ProcessMeasurements(listOpts.ProjectID, listOpts.host, listOpts.port, opts).
+		EXPECT().ProcessMeasurements(params).
 		Return(expected, nil).
 		Times(1)
 

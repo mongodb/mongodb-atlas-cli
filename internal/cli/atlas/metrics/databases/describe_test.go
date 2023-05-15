@@ -37,12 +37,12 @@ func TestDatabasesDescribeOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	opts := listOpts.NewProcessMetricsListOptions()
+	params := listOpts.NewDatabaseMeasurementsAPIParams("", "hard-00-00.mongodb.net:27017", listOpts.name)
 	expected := &atlasv2.MeasurementsGeneralViewAtlas{
 		Measurements: []atlasv2.MeasurementViewAtlas{},
 	}
 	mockStore.
-		EXPECT().ProcessDatabaseMeasurements(listOpts.ProjectID, listOpts.host, listOpts.port, listOpts.name, opts).
+		EXPECT().ProcessDatabaseMeasurements(params).
 		Return(expected, nil).
 		Times(1)
 

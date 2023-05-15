@@ -17,6 +17,7 @@ package disks
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -46,8 +47,10 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	listOpts := opts.NewProcessMetricsListOptions()
-	r, err := opts.store.ProcessDiskMeasurements(opts.ConfigProjectID(), opts.host, opts.port, opts.name, listOpts)
+	processID := opts.host + ":" + strconv.Itoa(opts.port)
+	params := opts.NewDiskMeasurementsAPIParams(opts.ConfigProjectID(), processID, opts.name)
+
+	r, err := opts.store.ProcessDiskMeasurements(params)
 	if err != nil {
 		return err
 	}

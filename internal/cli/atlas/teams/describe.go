@@ -29,7 +29,7 @@ import (
 )
 
 const describeTemplate = `ID	NAME
-{{.ID}}	{{.Name}}
+{{.Id}}	{{.Name}}
 `
 
 type DescribeOpts struct {

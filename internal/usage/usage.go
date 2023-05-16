@@ -17,7 +17,8 @@ package usage
 const (
 	ProjectID                    = "Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable."
 	OrgID                        = "Organization ID to use. Overrides the settings in the configuration file or environment variable."
-	Profile                      = "Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file."
+	Profile                      = "Name of the profile to use from your configuration file. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file."
+	ProfileAtlasCLI              = "Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings."
 	Members                      = "Number of members in the replica set."
 	Shards                       = "Number of shards in the cluster."
 	ProcessName                  = "Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}."
@@ -399,6 +400,11 @@ dbName and collection are required only for built-in roles.`
 	OperatorIncludeSecrets                    = "Generate kubernetes secrets with data for projects, users, deployments entities" //nolint:gosec //This is just a message, not a credential
 	OperatorTargetNamespace                   = "Namespaces to use for generated kubernetes entities"
 	OperatorVersion                           = "Version of Atlas Kubernetes Operator to generate resources for."
+	OperatorVersionInstall                    = "Version of the operator to be installed."
+	OperatorTargetNamespaceInstall            = "Namespace where to install the operator."
+	OperatorWatchNamespace                    = "List of namespaces which the operator will be listen to."
+	OperatorProjectName                       = "Name of the project to create or use with the installed operator."
+	OperatorImport                            = "Flag to import existing Atlas resources into the cluster to be managed by the operator."
 	KubernetesClusterConfig                   = "Path to the kubeconfig file to use for CLI requests."
 	KubernetesClusterContext                  = "The name of the kubeconfig context to use."
 	ExportID                                  = "Unique string that identifies the AWS S3 bucket to which you export your snapshots."

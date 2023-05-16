@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/randgen"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func (opts *Opts) createDatabaseUser() error {
@@ -91,15 +92,15 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 	return fmt.Errorf("a user with this username %s already exists", username)
 }
 
-func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {
-	const none = "NONE"
-	return &atlas.DatabaseUser{
+func (opts *Opts) newDatabaseUser() *atlasv2.DatabaseUser {
+	var none = "NONE"
+	return &atlasv2.DatabaseUser{
 		Roles:        convert.BuildAtlasRoles([]string{atlasAdmin}),
-		GroupID:      opts.ConfigProjectID(),
-		Password:     opts.DBUserPassword,
-		X509Type:     none,
-		AWSIAMType:   none,
-		LDAPAuthType: none,
+		GroupId:      opts.ConfigProjectID(),
+		Password:     convert.GetStringPointerIfNotEmpty(opts.DBUserPassword),
+		X509Type:     &none,
+		AwsIAMType:   &none,
+		LdapAuthType: &none,
 		DatabaseName: convert.AdminDB,
 		Username:     opts.DBUsername,
 	}

@@ -66,7 +66,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		},
 	}
 
-	expectedDBUser := &mongodbatlas.DatabaseUser{}
+	expectedDBUser := &atlasv2.DatabaseUser{}
 
 	var expectedProjectAccessLists *atlasv2.PaginatedNetworkAccess
 
@@ -150,7 +150,7 @@ func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 		},
 	}
 
-	expectedDBUser := &mongodbatlas.DatabaseUser{}
+	expectedDBUser := &atlasv2.DatabaseUser{}
 
 	var expectedProjectAccessLists *atlasv2.PaginatedNetworkAccess
 

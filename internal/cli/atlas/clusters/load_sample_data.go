@@ -54,7 +54,7 @@ func (opts *LoadSampleDataOpts) Run() error {
 }
 
 // mongocli atlas cluster loadSampleData <clusterName> --projectId projectId -o json.
-func LoadSampleDataBuilder() *cobra.Command {
+func LoadSampleDataBuilder(deprecate bool) *cobra.Command {
 	opts := &LoadSampleDataOpts{}
 	cmd := &cobra.Command{
 		Use:   "loadSampleData <clusterName>",
@@ -76,6 +76,10 @@ func LoadSampleDataBuilder() *cobra.Command {
 			opts.name = args[0]
 			return opts.Run()
 		},
+	}
+
+	if deprecate { // do not deprecate in mongocli but deprecate in atlascli
+		cmd.Deprecated = "use 'atlas clusters sampleData load' instead"
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

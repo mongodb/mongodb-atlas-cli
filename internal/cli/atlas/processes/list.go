@@ -22,14 +22,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
-const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range .}}
-{{.ID}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}{{end}}
+const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range .Results}}
+{{.Id}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}{{end}}
 `
 
 type ListOpts struct {
@@ -48,8 +49,8 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.newProcessesListOptions()
-	r, err := opts.store.Processes(opts.ConfigProjectID(), listOpts)
+	listParams := opts.newProcessesListParams()
+	r, err := opts.store.Processes(listParams)
 	if err != nil {
 		return err
 	}
@@ -57,10 +58,18 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newProcessesListOptions() *atlas.ProcessesListOptions {
-	return &atlas.ProcessesListOptions{
-		ListOptions: *opts.NewListOptions(),
+func (opts *ListOpts) newProcessesListParams() *atlasv2.ListAtlasProcessesApiParams {
+	listOpts := *opts.NewListOptions()
+	processesList := &atlasv2.ListAtlasProcessesApiParams{
+		GroupId: opts.ConfigProjectID(),
 	}
+	if listOpts.PageNum > 0 {
+		processesList.PageNum = pointer.Get(int32(listOpts.PageNum))
+	}
+	if listOpts.ItemsPerPage > 0 {
+		processesList.ItemsPerPage = pointer.Get(int32(listOpts.ItemsPerPage))
+	}
+	return processesList
 }
 
 // ListBuilder mongocli atlas process(es) list --projectId projectId [--page N] [--limit N].

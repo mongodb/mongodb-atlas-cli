@@ -18,6 +18,8 @@ import (
 	"context"
 	"errors"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -33,27 +35,24 @@ type ConfigApply struct {
 	Namespace string
 	Version   string
 
-	k8sClientSet client.Client
-	exporter     *ConfigExporter
-	validator    features.FeatureValidator
+	kubeCtl  *kubernetes.KubeCtl
+	exporter *ConfigExporter
 }
 
 type NewConfigApplyParams struct {
 	OrgID     string
 	ProjectID string
 
-	K8sClient client.Client
-	Exporter  *ConfigExporter
-	Validator features.FeatureValidator
+	KubeCtl  *kubernetes.KubeCtl
+	Exporter *ConfigExporter
 }
 
 func NewConfigApply(params NewConfigApplyParams) *ConfigApply {
 	return &ConfigApply{
-		OrgID:        params.OrgID,
-		ProjectID:    params.ProjectID,
-		k8sClientSet: params.K8sClient,
-		exporter:     params.Exporter,
-		validator:    params.Validator,
+		OrgID:     params.OrgID,
+		ProjectID: params.ProjectID,
+		kubeCtl:   params.KubeCtl,
+		exporter:  params.Exporter,
 	}
 }
 
@@ -70,13 +69,6 @@ func (apply *ConfigApply) WithNamespace(namespace string) *ConfigApply {
 }
 
 func (apply *ConfigApply) Run() error {
-	apply.exporter.
-		WithClustersNames(apply.ClusterNames).
-		WithTargetNamespace(apply.Namespace).
-		WithTargetOperatorVersion(apply.Version).
-		WithSecretsData(true).
-		WithFeatureValidator(apply.validator)
-
 	ProjectResources, projectName, err := apply.exporter.exportProject()
 	if err != nil {
 		return err
@@ -96,7 +88,7 @@ func (apply *ConfigApply) Run() error {
 				return errors.New("unable to apply resource")
 			}
 
-			err = apply.k8sClientSet.Create(context.Background(), ctrlObj, &client.CreateOptions{})
+			err = apply.kubeCtl.Create(context.Background(), ctrlObj, &client.CreateOptions{})
 			if err != nil {
 				return err
 			}

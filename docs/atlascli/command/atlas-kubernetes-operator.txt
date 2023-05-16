@@ -1,8 +1,8 @@
-.. _atlas-kubernetes:
+.. _atlas-kubernetes-operator:
 
-================
-atlas kubernetes
-================
+=========================
+atlas kubernetes operator
+=========================
 
 .. default-domain:: mongodb
 
@@ -12,9 +12,9 @@ atlas kubernetes
    :depth: 1
    :class: singlecol
 
-Manage Kubernetes resources.
+Manage Atlas Kubernetes Operator.
 
-This command provides access to Kubernetes features within Atlas.
+This command manages the Atlas Kubernetes Operator.
 
 Options
 -------
@@ -30,7 +30,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for kubernetes
+     - help for operator
 
 Inherited Options
 -----------------
@@ -51,13 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-kubernetes-config` - Manage Kubernetes configuration resources.
-* :ref:`atlas-kubernetes-operator` - Manage Atlas Kubernetes Operator.
+* :ref:`atlas-kubernetes-operator-install` - Install Atlas Kubernetes Operator to a cluster.
 
 
 .. toctree::
    :titlesonly:
 
-   config </command/atlas-kubernetes-config>
-   operator </command/atlas-kubernetes-operator>
+   install </command/atlas-kubernetes-operator-install>
 

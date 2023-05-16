@@ -80,6 +80,36 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) CloudProviderAccessRoles(ar
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloudProviderAccessRoles", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).CloudProviderAccessRoles), arg0)
 }
 
+// CreateProject mocks base method.
+func (m *MockAtlasOperatorProjectStore) CreateProject(arg0, arg1, arg2 string, arg3 *bool, arg4 *mongodbatlas.CreateProjectOptions) (interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateProject", arg0, arg1, arg2, arg3, arg4)
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateProject indicates an expected call of CreateProject.
+func (mr *MockAtlasOperatorProjectStoreMockRecorder) CreateProject(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).CreateProject), arg0, arg1, arg2, arg3, arg4)
+}
+
+// CreateProjectAPIKey mocks base method.
+func (m *MockAtlasOperatorProjectStore) CreateProjectAPIKey(arg0 string, arg1 *mongodbatlas.APIKeyInput) (*mongodbatlas.APIKey, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateProjectAPIKey", arg0, arg1)
+	ret0, _ := ret[0].(*mongodbatlas.APIKey)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateProjectAPIKey indicates an expected call of CreateProjectAPIKey.
+func (mr *MockAtlasOperatorProjectStoreMockRecorder) CreateProjectAPIKey(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProjectAPIKey", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).CreateProjectAPIKey), arg0, arg1)
+}
+
 // DatabaseRoles mocks base method.
 func (m *MockAtlasOperatorProjectStore) DatabaseRoles(arg0 string) ([]mongodbatlasv2.CustomDBRole, error) {
 	m.ctrl.T.Helper()
@@ -108,6 +138,21 @@ func (m *MockAtlasOperatorProjectStore) EncryptionAtRest(arg0 string) (*mongodba
 func (mr *MockAtlasOperatorProjectStoreMockRecorder) EncryptionAtRest(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EncryptionAtRest", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).EncryptionAtRest), arg0)
+}
+
+// GetOrgProjects mocks base method.
+func (m *MockAtlasOperatorProjectStore) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ProjectsListOptions) (interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrgProjects", arg0, arg1)
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrgProjects indicates an expected call of GetOrgProjects.
+func (mr *MockAtlasOperatorProjectStoreMockRecorder) GetOrgProjects(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrgProjects", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).GetOrgProjects), arg0, arg1)
 }
 
 // Integrations mocks base method.
@@ -185,6 +230,21 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) Project(arg0 interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Project", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).Project), arg0)
 }
 
+// ProjectByName mocks base method.
+func (m *MockAtlasOperatorProjectStore) ProjectByName(arg0 string) (interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ProjectByName", arg0)
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ProjectByName indicates an expected call of ProjectByName.
+func (mr *MockAtlasOperatorProjectStoreMockRecorder) ProjectByName(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectByName", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).ProjectByName), arg0)
+}
+
 // ProjectIPAccessLists mocks base method.
 func (m *MockAtlasOperatorProjectStore) ProjectIPAccessLists(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedNetworkAccess, error) {
 	m.ctrl.T.Helper()
@@ -228,6 +288,36 @@ func (m *MockAtlasOperatorProjectStore) ProjectTeams(arg0 string) (interface{}, 
 func (mr *MockAtlasOperatorProjectStoreMockRecorder) ProjectTeams(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectTeams", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).ProjectTeams), arg0)
+}
+
+// Projects mocks base method.
+func (m *MockAtlasOperatorProjectStore) Projects(arg0 *mongodbatlas.ListOptions) (interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Projects", arg0)
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Projects indicates an expected call of Projects.
+func (mr *MockAtlasOperatorProjectStoreMockRecorder) Projects(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Projects", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).Projects), arg0)
+}
+
+// ServiceVersion mocks base method.
+func (m *MockAtlasOperatorProjectStore) ServiceVersion() (*mongodbatlas.ServiceVersion, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ServiceVersion")
+	ret0, _ := ret[0].(*mongodbatlas.ServiceVersion)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ServiceVersion indicates an expected call of ServiceVersion.
+func (mr *MockAtlasOperatorProjectStoreMockRecorder) ServiceVersion() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServiceVersion", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).ServiceVersion))
 }
 
 // TeamByID mocks base method.

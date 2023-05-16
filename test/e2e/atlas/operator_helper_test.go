@@ -17,15 +17,21 @@ package atlas_test
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"testing"
+	"time"
 
 	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
 	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
+	"sigs.k8s.io/kind/pkg/apis/config/v1alpha4"
+	"sigs.k8s.io/kind/pkg/cluster"
 )
 
 type operatorHelper struct {
@@ -60,6 +66,38 @@ func newOperatorHelper(t *testing.T) (*operatorHelper, error) {
 	}, nil
 }
 
+func createCluster(name string) error {
+	clusterConfig := &v1alpha4.Cluster{
+		Networking: v1alpha4.Networking{
+			IPFamily: v1alpha4.IPv4Family,
+		},
+	}
+
+	provider := cluster.NewProvider(cluster.ProviderWithDocker())
+	err := provider.Create(
+		name,
+		cluster.CreateWithV1Alpha4Config(clusterConfig),
+		cluster.CreateWithWaitForReady(1*time.Minute),
+		cluster.CreateWithDisplayUsage(false),
+		cluster.CreateWithDisplaySalutation(false),
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func deleteCluster(name string) error {
+	provider := cluster.NewProvider(cluster.ProviderWithDocker())
+	err := provider.Delete(name, "")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (oh *operatorHelper) getK8sObject(key client.ObjectKey, object client.Object, track bool) error {
 	err := oh.k8sClient.Get(context.Background(), key, object, &client.GetOptions{})
 	if err != nil {
@@ -71,6 +109,66 @@ func (oh *operatorHelper) getK8sObject(key client.ObjectKey, object client.Objec
 	}
 
 	return nil
+}
+
+func (oh *operatorHelper) createK8sObject(object client.Object, track bool) error {
+	err := oh.k8sClient.Create(context.Background(), object, &client.CreateOptions{})
+	if err != nil {
+		return err
+	}
+
+	if track {
+		oh.resourcesTracked = append(oh.resourcesTracked, object)
+	}
+
+	return nil
+}
+
+func (oh *operatorHelper) deleteK8sObject(object client.Object) error {
+	err := oh.k8sClient.Delete(context.Background(), object, &client.DeleteOptions{})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (oh *operatorHelper) getPodFromDeployment(deployment *appsv1.Deployment) ([]corev1.Pod, error) {
+	podList := &corev1.PodList{}
+	err := oh.k8sClient.List(
+		context.Background(),
+		podList,
+		&client.ListOptions{
+			Namespace:     deployment.Namespace,
+			LabelSelector: labels.SelectorFromSet(deployment.Labels),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(podList.Items) == 0 {
+		return nil, errors.New("pod not found")
+	}
+
+	return podList.Items, nil
+}
+
+func (oh *operatorHelper) getOperatorSecretes(namespace string) ([]corev1.Secret, error) {
+	secretList := &corev1.SecretList{}
+	err := oh.k8sClient.List(
+		context.Background(),
+		secretList,
+		&client.ListOptions{
+			Namespace:     namespace,
+			LabelSelector: labels.SelectorFromSet(map[string]string{"atlas.mongodb.com/type": "credentials"}),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return secretList.Items, nil
 }
 
 func (oh *operatorHelper) stopOperator() {

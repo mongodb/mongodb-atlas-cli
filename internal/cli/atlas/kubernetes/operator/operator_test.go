@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package kubernetes
+package operator
 
 import (
 	"testing"
@@ -23,6 +23,7 @@ import (
 func TestBuilder(t *testing.T) {
 	test.CmdValidator(t,
 		Builder(),
-		2,
-		[]string{})
+		1,
+		[]string{},
+	)
 }

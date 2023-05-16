@@ -44,6 +44,7 @@ type ProjectDeleter interface {
 
 type ProjectDescriber interface {
 	Project(string) (interface{}, error)
+	ProjectByName(string) (interface{}, error)
 }
 
 type ProjectUsersLister interface {
@@ -102,6 +103,19 @@ func (s *Store) Project(id string) (interface{}, error) {
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Projects.Get(s.ctx, id)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+func (s *Store) ProjectByName(name string) (interface{}, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).Projects.GetOneProjectByName(s.ctx, name)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Projects.GetByName(s.ctx, name)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -30,7 +30,7 @@ import (
 )
 
 const describeTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION
-{{.Id}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Versiond}}
+{{.Id}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}
 `
 
 type DescribeOpts struct {

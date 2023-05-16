@@ -88,7 +88,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 .. code-block::
 
    ID     REPLICA SET NAME   SHARD NAME    VERSION
-   <Id>   <ReplicaSetName>   <ShardName>   <Versiond>
+   <Id>   <ReplicaSetName>   <ShardName>   <Version>
    
 
 Examples

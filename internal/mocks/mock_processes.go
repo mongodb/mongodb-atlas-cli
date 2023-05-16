@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -36,18 +35,18 @@ func (m *MockProcessLister) EXPECT() *MockProcessListerMockRecorder {
 }
 
 // Processes mocks base method.
-func (m *MockProcessLister) Processes(arg0 string, arg1 *mongodbatlas.ProcessesListOptions) (*mongodbatlasv2.PaginatedHostViewAtlas, error) {
+func (m *MockProcessLister) Processes(arg0 *mongodbatlasv2.ListAtlasProcessesApiParams) (*mongodbatlasv2.PaginatedHostViewAtlas, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Processes", arg0, arg1)
+	ret := m.ctrl.Call(m, "Processes", arg0)
 	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedHostViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Processes indicates an expected call of Processes.
-func (mr *MockProcessListerMockRecorder) Processes(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockProcessListerMockRecorder) Processes(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Processes", reflect.TypeOf((*MockProcessLister)(nil).Processes), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Processes", reflect.TypeOf((*MockProcessLister)(nil).Processes), arg0)
 }
 
 // MockProcessDescriber is a mock of ProcessDescriber interface.
@@ -74,16 +73,16 @@ func (m *MockProcessDescriber) EXPECT() *MockProcessDescriberMockRecorder {
 }
 
 // Process mocks base method.
-func (m *MockProcessDescriber) Process(arg0, arg1 string, arg2 int) (*mongodbatlasv2.HostViewAtlas, error) {
+func (m *MockProcessDescriber) Process(arg0 *mongodbatlasv2.GetAtlasProcessApiParams) (*mongodbatlasv2.HostViewAtlas, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Process", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "Process", arg0)
 	ret0, _ := ret[0].(*mongodbatlasv2.HostViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Process indicates an expected call of Process.
-func (mr *MockProcessDescriberMockRecorder) Process(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockProcessDescriberMockRecorder) Process(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Process", reflect.TypeOf((*MockProcessDescriber)(nil).Process), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Process", reflect.TypeOf((*MockProcessDescriber)(nil).Process), arg0)
 }

@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
@@ -39,16 +40,25 @@ func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessDescriber(ctrl)
 
-	var expected *atlasv2.HostViewAtlas
+	expected := atlasv2.HostViewAtlas{}
 
 	opts := &DescribeOpts{
 		store: mockStore,
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "projectID",
+		},
+		host: "host",
+		port: 1000,
+	}
+	params := atlasv2.GetAtlasProcessApiParams{
+		ProcessId: "host:1000",
+		GroupId:   "projectID",
 	}
 
 	mockStore.
 		EXPECT().
-		Process(opts.ProjectID, opts.host, opts.port).
-		Return(expected, nil).
+		Process(&params).
+		Return(&expected, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {

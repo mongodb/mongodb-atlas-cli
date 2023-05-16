@@ -35,10 +35,11 @@ func TestList_Run(t *testing.T) {
 	listOpts := &ListOpts{
 		store: mockStore,
 	}
+	params := atlasv2.ListAtlasProcessesApiParams{}
 
 	mockStore.
 		EXPECT().
-		Processes(listOpts.ProjectID, listOpts.newProcessesListOptions()).
+		Processes(&params).
 		Return(expected, nil).
 		Times(1)
 

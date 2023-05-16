@@ -16,29 +16,26 @@ package store
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_processes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessLister,ProcessDescriber
 
 type ProcessLister interface {
-	Processes(string, *atlas.ProcessesListOptions) (*atlasv2.PaginatedHostViewAtlas, error)
+	Processes(*atlasv2.ListAtlasProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error)
 }
 
 type ProcessDescriber interface {
-	Process(string, string, int) (*atlasv2.HostViewAtlas, error)
+	Process(*atlasv2.GetAtlasProcessApiParams) (*atlasv2.HostViewAtlas, error)
 }
 
 // Process encapsulate the logic to manage different cloud providers.
-func (s *Store) Process(groupID, hostname string, port int) (*atlasv2.HostViewAtlas, error) {
+func (s *Store) Process(params *atlasv2.GetAtlasProcessApiParams) (*atlasv2.HostViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		processID := hostname + ":" + strconv.Itoa(port)
-		result, _, err := s.clientv2.MonitoringAndLogsApi.GetAtlasProcess(s.ctx, groupID, processID).Execute()
+		result, _, err := s.clientv2.MonitoringAndLogsApi.GetAtlasProcessWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -46,11 +43,10 @@ func (s *Store) Process(groupID, hostname string, port int) (*atlasv2.HostViewAt
 }
 
 // Processes encapsulate the logic to manage different cloud providers.
-func (s *Store) Processes(groupID string, opts *atlas.ProcessesListOptions) (*atlasv2.PaginatedHostViewAtlas, error) {
+func (s *Store) Processes(params *atlasv2.ListAtlasProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.MonitoringAndLogsApi.ListAtlasProcesses(s.ctx, groupID).
-			PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).Execute()
+		result, _, err := s.clientv2.MonitoringAndLogsApi.ListAtlasProcessesWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

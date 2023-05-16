@@ -51,7 +51,7 @@ func TestProcesses(t *testing.T) {
 		}
 
 		if err := json.Unmarshal(resp, &processes); assert.NoError(t, err) {
-			require.NotEmpty(t, processes)
+			require.NotEmpty(t, processes.Results)
 		}
 	})
 

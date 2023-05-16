@@ -14,7 +14,11 @@
 
 package pointer
 
-import "time"
+import (
+	"time"
+
+	"golang.org/x/exp/constraints"
+)
 
 func GetOrDefault[T any](ptr *T, defaultValue T) T {
 	if ptr != nil {
@@ -47,4 +51,12 @@ func StringToTimePointer(value string) *time.Time {
 		result = &completedAfter
 	}
 	return result
+}
+
+func GetNonZeroValue[T constraints.Integer](val T) *T {
+	if val > T(0) {
+		return Get(val)
+	}
+
+	return nil
 }

@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
@@ -139,7 +140,7 @@ func convertUserRoles(user *atlasv2.DatabaseUser) []atlasV1.RoleSpec {
 		result = append(result, atlasV1.RoleSpec{
 			RoleName:       role.RoleName,
 			DatabaseName:   role.DatabaseName,
-			CollectionName: *role.CollectionName,
+			CollectionName: pointer.GetOrDefault(role.CollectionName, ""),
 		})
 	}
 	return result

@@ -35,7 +35,7 @@ type MetricsOpts struct {
 }
 
 func (opts *MetricsOpts) NewProcessMeasurementsAPIParams(groupID string, processID string) *atlasv2.GetHostMeasurementsApiParams {
-	o := &atlasv2.GetHostMeasurementsApiParams{
+	return &atlasv2.GetHostMeasurementsApiParams{
 		GroupId:     groupID,
 		ProcessId:   processID,
 		Granularity: convert.GetStringPointerIfNotEmpty(opts.Granularity),
@@ -44,11 +44,10 @@ func (opts *MetricsOpts) NewProcessMeasurementsAPIParams(groupID string, process
 		Start:       convert.StringToTimePointer(opts.Start),
 		End:         convert.StringToTimePointer(opts.End),
 	}
-	return o
 }
 
 func (opts *MetricsOpts) NewDiskMeasurementsAPIParams(groupID string, processID string, partitionName string) *atlasv2.GetDiskMeasurementsApiParams {
-	o := &atlasv2.GetDiskMeasurementsApiParams{
+	return &atlasv2.GetDiskMeasurementsApiParams{
 		GroupId:       groupID,
 		ProcessId:     processID,
 		PartitionName: partitionName,
@@ -58,11 +57,10 @@ func (opts *MetricsOpts) NewDiskMeasurementsAPIParams(groupID string, processID 
 		Start:         convert.StringToTimePointer(opts.Start),
 		End:           convert.StringToTimePointer(opts.End),
 	}
-	return o
 }
 
 func (opts *MetricsOpts) NewDatabaseMeasurementsAPIParams(groupID string, processID string, dbName string) *atlasv2.GetDatabaseMeasurementsApiParams {
-	o := &atlasv2.GetDatabaseMeasurementsApiParams{
+	return &atlasv2.GetDatabaseMeasurementsApiParams{
 		GroupId:      groupID,
 		ProcessId:    processID,
 		DatabaseName: dbName,
@@ -72,7 +70,6 @@ func (opts *MetricsOpts) NewDatabaseMeasurementsAPIParams(groupID string, proces
 		Start:        convert.StringToTimePointer(opts.Start),
 		End:          convert.StringToTimePointer(opts.End),
 	}
-	return o
 }
 
 func (opts *MetricsOpts) NewProcessMetricsListOptions() *atlas.ProcessMeasurementListOptions {

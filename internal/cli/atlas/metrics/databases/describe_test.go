@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
@@ -35,9 +36,12 @@ func TestDatabasesDescribeOpts_Run(t *testing.T) {
 		port:  27017,
 		name:  "test",
 		store: mockStore,
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "groupID",
+		},
 	}
 
-	params := listOpts.NewDatabaseMeasurementsAPIParams("", "hard-00-00.mongodb.net:27017", listOpts.name)
+	params := listOpts.NewDatabaseMeasurementsAPIParams("groupID", "hard-00-00.mongodb.net:27017", listOpts.name)
 	expected := &atlasv2.MeasurementsGeneralViewAtlas{
 		Measurements: []atlasv2.MeasurementViewAtlas{},
 	}

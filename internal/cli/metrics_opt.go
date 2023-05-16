@@ -19,8 +19,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
@@ -38,11 +38,11 @@ func (opts *MetricsOpts) NewProcessMeasurementsAPIParams(groupID string, process
 	return &atlasv2.GetHostMeasurementsApiParams{
 		GroupId:     groupID,
 		ProcessId:   processID,
-		Granularity: convert.GetStringPointerIfNotEmpty(opts.Granularity),
-		M:           convert.GetArrayPointerIfNotEmpty(opts.MeasurementType),
-		Period:      convert.GetStringPointerIfNotEmpty(opts.Period),
-		Start:       convert.StringToTimePointer(opts.Start),
-		End:         convert.StringToTimePointer(opts.End),
+		Granularity: pointer.GetStringPointerIfNotEmpty(opts.Granularity),
+		M:           pointer.GetArrayPointerIfNotEmpty(opts.MeasurementType),
+		Period:      pointer.GetStringPointerIfNotEmpty(opts.Period),
+		Start:       pointer.StringToTimePointer(opts.Start),
+		End:         pointer.StringToTimePointer(opts.End),
 	}
 }
 
@@ -51,11 +51,11 @@ func (opts *MetricsOpts) NewDiskMeasurementsAPIParams(groupID string, processID 
 		GroupId:       groupID,
 		ProcessId:     processID,
 		PartitionName: partitionName,
-		Granularity:   convert.GetStringPointerIfNotEmpty(opts.Granularity),
-		M:             convert.GetArrayPointerIfNotEmpty(opts.MeasurementType),
-		Period:        convert.GetStringPointerIfNotEmpty(opts.Period),
-		Start:         convert.StringToTimePointer(opts.Start),
-		End:           convert.StringToTimePointer(opts.End),
+		Granularity:   pointer.GetStringPointerIfNotEmpty(opts.Granularity),
+		M:             pointer.GetArrayPointerIfNotEmpty(opts.MeasurementType),
+		Period:        pointer.GetStringPointerIfNotEmpty(opts.Period),
+		Start:         pointer.StringToTimePointer(opts.Start),
+		End:           pointer.StringToTimePointer(opts.End),
 	}
 }
 
@@ -64,11 +64,11 @@ func (opts *MetricsOpts) NewDatabaseMeasurementsAPIParams(groupID string, proces
 		GroupId:      groupID,
 		ProcessId:    processID,
 		DatabaseName: dbName,
-		Granularity:  convert.GetStringPointerIfNotEmpty(opts.Granularity),
-		M:            convert.GetArrayPointerIfNotEmpty(opts.MeasurementType),
-		Period:       convert.GetStringPointerIfNotEmpty(opts.Period),
-		Start:        convert.StringToTimePointer(opts.Start),
-		End:          convert.StringToTimePointer(opts.End),
+		Granularity:  pointer.GetStringPointerIfNotEmpty(opts.Granularity),
+		M:            pointer.GetArrayPointerIfNotEmpty(opts.MeasurementType),
+		Period:       pointer.GetStringPointerIfNotEmpty(opts.Period),
+		Start:        pointer.StringToTimePointer(opts.Start),
+		End:          pointer.StringToTimePointer(opts.End),
 	}
 }
 

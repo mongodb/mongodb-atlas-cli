@@ -98,7 +98,10 @@ func (s *Store) DownloadLog(groupID, host, name string, out io.Writer, opts *atl
 			}
 		}
 		logs, _, err := result.Execute()
-		_, _ = io.Copy(out, logs)
+		if err != nil {
+			return err
+		}
+		_, err = io.Copy(out, logs)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

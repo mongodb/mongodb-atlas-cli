@@ -98,7 +98,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var job mongodbatlas.SampleDatasetJob
+		var job *mongodbatlas.SampleDatasetJob
 		err = json.Unmarshal(resp, &job)
 		req.NoError(err)
 

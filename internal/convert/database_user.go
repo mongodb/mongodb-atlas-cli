@@ -18,6 +18,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"go.mongodb.org/ops-manager/opsmngr"
@@ -55,29 +56,7 @@ func buildCollectionName(dbCollection []string) *string {
 	if len(dbCollection) > 1 {
 		collectionName = strings.Join(dbCollection[1:], ".")
 	}
-	return GetStringPointerIfNotEmpty(collectionName)
-}
-
-func GetStringPointerIfNotEmpty(input string) *string {
-	if input != "" {
-		return &input
-	}
-	return nil
-}
-
-func GetArrayPointerIfNotEmpty(input []string) *[]string {
-	if len(input) > 0 {
-		return &input
-	}
-	return nil
-}
-
-func StringToTimePointer(value string) *time.Time {
-	var result *time.Time
-	if completedAfter, err := time.Parse(time.RFC3339, value); err == nil {
-		result = &completedAfter
-	}
-	return result
+	return pointer.GetStringPointerIfNotEmpty(collectionName)
 }
 
 func ParseDeleteAfter(deleteAfter string) *time.Time {

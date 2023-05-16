@@ -3,7 +3,7 @@ module github.com/mongodb/mongodb-atlas-cli
 go 1.19
 
 require (
-	cloud.google.com/go/kms v1.10.1
+	cloud.google.com/go/kms v1.10.2
 	github.com/AlecAivazis/survey/v2 v2.3.6
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.4.0
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.2.2
@@ -131,7 +131,7 @@ require (
 	golang.org/x/time v0.3.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
-	google.golang.org/grpc v1.54.0 // indirect
+	google.golang.org/grpc v1.55.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

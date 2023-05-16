@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 	"strconv"
 
 	"github.com/docker/docker/api/types"
@@ -47,6 +48,15 @@ const createTemplate = `NAME	PORT	CONNECTION STRING
 {{.Name}}	{{.Port}}	mongodb://localhost:{{.Port}}
 `
 
+func dockerImage() string {
+	env := os.Getenv("ATLASCLI_LOCAL_DOCKER_IMAGE")
+	if env != "" {
+		return env
+	}
+	// return "mongodb/mongodb-community-server:6.0-ubuntu2204"
+	return "mongo:6.0"
+}
+
 func (opts *CreateOpts) Run(ctx context.Context) error {
 	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
@@ -61,14 +71,14 @@ func (opts *CreateOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	img, err := cli.ImagePull(ctx, "mongodb/mongodb-community-server:6.0-ubuntu2204", types.ImagePullOptions{})
+	img, err := cli.ImagePull(ctx, dockerImage(), types.ImagePullOptions{})
 	if err != nil {
 		return err
 	}
 	defer img.Close()
 	_, _ = io.Copy(io.Discard, img) // send to debug logs
 
-	resp, err := cli.ContainerCreate(ctx, &container.Config{Image: "mongodb/mongodb-community-server:6.0-ubuntu2204", Labels: map[string]string{"atlascli": "true"}}, &container.HostConfig{PortBindings: portBindings}, nil, nil, opts.name)
+	resp, err := cli.ContainerCreate(ctx, &container.Config{Image: dockerImage(), Labels: map[string]string{"atlascli": "true"}}, &container.HostConfig{PortBindings: portBindings}, nil, nil, opts.name)
 	if err != nil {
 		return err
 	}

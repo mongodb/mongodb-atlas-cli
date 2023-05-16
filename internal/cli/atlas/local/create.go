@@ -49,7 +49,7 @@ const createTemplate = `NAME	PORT	CONNECTION STRING
 `
 
 func dockerImage() string {
-	env := os.Getenv("ATLASCLI_LOCAL_DOCKER_IMAGE")
+	env := os.Getenv("ATLASCLI_LOCAL_DOCKER_IMAGE_MONGOD")
 	if env != "" {
 		return env
 	}

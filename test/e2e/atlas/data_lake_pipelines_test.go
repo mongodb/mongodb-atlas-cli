@@ -83,7 +83,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--sourceClusterName", g.clusterName,
 			"--sourceDatabaseName", "sample_mflix",
 			"--sourceCollectionName", "movies",
-			"--sinkType", "CPS",
+			"--sinkType", "DLS",
 			"--sinkMetadataProvider", "AWS",
 			"--sinkMetadataRegion", "us-east-1",
 			"--sinkPartitionField", "year,title",

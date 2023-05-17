@@ -358,3 +358,4 @@
 | `register`                                  | N         |           |           | Y         |       |       |
 | `kubernetes config generate`                | Y         |           |           | Y         | N     |       |
 | `kubernetes config apply`                   | Y         |           |           | Y         | N     |       |
+| `kubernetes operator install`               | Y         |           |           | Y         | N     |       |

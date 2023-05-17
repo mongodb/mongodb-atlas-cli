@@ -14,6 +14,8 @@
 
 package pointer
 
+import "golang.org/x/exp/constraints"
+
 func GetOrDefault[T any](ptr *T, defaultValue T) T {
 	if ptr != nil {
 		return *ptr
@@ -23,4 +25,12 @@ func GetOrDefault[T any](ptr *T, defaultValue T) T {
 
 func Get[T any](val T) *T {
 	return &val
+}
+
+func GetNonZeroValue[T constraints.Integer](val T) *T {
+	if val > T(0) {
+		return Get(val)
+	}
+
+	return nil
 }

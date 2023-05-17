@@ -23,19 +23,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/spf13/cobra"
-	appsv1 "k8s.io/api/apps/v1"
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/kubernetes/scheme"
-	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/client-go/tools/clientcmd/api"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 const containerImage = "mongodb/mongodb-atlas-kubernetes-operator"
@@ -65,12 +57,12 @@ func (opts *ApplyOpts) ValidateOperatorVersion() error {
 	return nil
 }
 
-func (opts *ApplyOpts) autoDetectParams(k8sClient client.Client) error {
+func (opts *ApplyOpts) autoDetectParams(kubeCtl *kubernetes.KubeCtl) error {
 	if opts.targetNamespace != "" && opts.operatorVersion != "" {
 		return nil
 	}
 
-	operatorDeployment, err := findOperatorInstallation(k8sClient)
+	operatorDeployment, err := kubeCtl.FindAtlasOperator(context.Background())
 	if err != nil {
 		return fmt.Errorf("unable to auto detect params: %w", err)
 	}
@@ -91,17 +83,12 @@ func (opts *ApplyOpts) autoDetectParams(k8sClient client.Client) error {
 }
 
 func (opts *ApplyOpts) Run() error {
-	kubeConfig, err := loadKubeConfig(opts.KubeConfig)
+	kubeCtl, err := kubernetes.NewKubeCtl(opts.KubeConfig, opts.KubeContext)
 	if err != nil {
 		return err
 	}
 
-	kubeClient, err := newK8sClient(kubeConfig, opts.KubeConfig)
-	if err != nil {
-		return err
-	}
-
-	err = opts.autoDetectParams(kubeClient)
+	err = opts.autoDetectParams(kubeCtl)
 	if err != nil {
 		return err
 	}
@@ -111,14 +98,18 @@ func (opts *ApplyOpts) Run() error {
 		return err
 	}
 
-	exporter := operator.NewConfigExporter(opts.store, opts.credsStore, opts.ProjectID, opts.OrgID)
+	exporter := operator.NewConfigExporter(opts.store, opts.credsStore, opts.ProjectID, opts.OrgID).
+		WithClustersNames(opts.clusterName).
+		WithTargetNamespace(opts.targetNamespace).
+		WithTargetOperatorVersion(opts.operatorVersion).
+		WithSecretsData(true).
+		WithFeatureValidator(featureValidator)
 	err = operator.NewConfigApply(
 		operator.NewConfigApplyParams{
 			OrgID:     opts.OrgID,
 			ProjectID: opts.ProjectID,
-			K8sClient: kubeClient,
+			KubeCtl:   kubeCtl,
 			Exporter:  exporter,
-			Validator: featureValidator,
 		},
 	).WithTargetOperatorVersion(opts.operatorVersion).
 		WithNamespace(opts.targetNamespace).
@@ -179,84 +170,6 @@ func ApplyBuilder() *cobra.Command {
 	flags.StringVar(&opts.KubeContext, flag.KubernetesClusterContext, "", usage.KubernetesClusterContext)
 
 	return cmd
-}
-
-func loadKubeConfig(kubeConfig string) (*api.Config, error) {
-	pathOptions := clientcmd.NewDefaultPathOptions()
-
-	if kubeConfig != "" {
-		pathOptions.LoadingRules.ExplicitPath = kubeConfig
-	}
-
-	config, err := pathOptions.GetStartingConfig()
-	if err != nil {
-		return nil, fmt.Errorf("unable to load kubernetes configuration: %w", err)
-	}
-
-	return config, nil
-}
-
-func newK8sClient(config *api.Config, kubeContext string) (client.Client, error) {
-	configOverrides := &clientcmd.ConfigOverrides{}
-
-	if kubeContext != "" {
-		configOverrides.CurrentContext = kubeContext
-	}
-
-	clientConfig := clientcmd.NewDefaultClientConfig(*config, configOverrides)
-
-	restConfig, err := clientConfig.ClientConfig()
-	if err != nil {
-		return nil, fmt.Errorf("unable to prepare client configuration: %w", err)
-	}
-
-	err = akov1.AddToScheme(scheme.Scheme)
-	if err != nil {
-		return nil, err
-	}
-
-	k8sClient, err := client.New(restConfig, client.Options{Scheme: scheme.Scheme})
-	if err != nil {
-		return nil, fmt.Errorf("unable to setup kubernetes client: %w", err)
-	}
-
-	return k8sClient, nil
-}
-
-func findOperatorInstallation(k8sClient client.Client) (*appsv1.Deployment, error) {
-	namespaces := corev1.NamespaceList{}
-	err := k8sClient.List(context.Background(), &namespaces, &client.ListOptions{})
-	if err != nil {
-		return nil, fmt.Errorf("unable to find operator installation. failed to list cluster namespaces: %w", err)
-	}
-
-	listOptions := client.ListOptions{
-		LabelSelector: labels.SelectorFromSet(
-			map[string]string{
-				"app.kubernetes.io/component": "controller",
-				"app.kubernetes.io/instance":  "mongodb-atlas-kubernetes-operator",
-				"app.kubernetes.io/name":      "mongodb-atlas-kubernetes-operator",
-			},
-		),
-	}
-
-	for _, namespace := range namespaces.Items {
-		deployments := appsv1.DeploymentList{}
-		err := k8sClient.List(context.Background(), &deployments, &listOptions)
-		if err != nil {
-			_, _ = log.Warningf("failed to look into namespace %s: %v", namespace.GetName(), err)
-		}
-
-		if len(deployments.Items) > 0 {
-			if err != nil {
-				return nil, err
-			}
-
-			return &deployments.Items[0], nil
-		}
-	}
-
-	return nil, errors.New("couldn't to find operator installed in any accessible namespace")
 }
 
 func getOperatorMajorVersion(image string) string {

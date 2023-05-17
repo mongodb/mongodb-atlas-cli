@@ -160,22 +160,15 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 		}
 
-		privateEndpoints := []mongodbatlas.PrivateEndpointConnection{
-
+		privateEndpoints := []atlasv2.AWSPrivateLinkConnection{
 			{
-				ID:                           "TestID",
-				ProviderName:                 string(provider.ProviderAWS),
-				Region:                       "US_WEST_2",
-				EndpointServiceName:          "",
-				ErrorMessage:                 "",
-				InterfaceEndpoints:           nil,
-				PrivateEndpoints:             nil,
-				PrivateLinkServiceName:       "",
-				PrivateLinkServiceResourceID: "",
-				Status:                       "",
-				EndpointGroupNames:           nil,
-				RegionName:                   "",
-				ServiceAttachmentNames:       nil,
+				Id:                  pointer.Get("TestID"),
+				CloudProvider:       string(provider.ProviderAWS),
+				RegionName:          pointer.Get("US_WEST_2"),
+				EndpointServiceName: "",
+				ErrorMessage:        "",
+				InterfaceEndpoints:  nil,
+				Status:              "",
 			},
 		}
 
@@ -441,8 +434,8 @@ func TestBuildAtlasProject(t *testing.T) {
 				PrivateEndpoints: []atlasV1.PrivateEndpoint{
 					{
 						Provider:          provider.ProviderAWS,
-						Region:            privateEndpoints[0].Region,
-						ID:                privateEndpoints[0].ID,
+						Region:            *privateEndpoints[0].RegionName,
+						ID:                *privateEndpoints[0].Id,
 						IP:                "",
 						GCPProjectID:      "",
 						EndpointGroupName: "",
@@ -1129,24 +1122,18 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 	peProvider := mocks.NewMockPrivateEndpointLister(ctl)
 	t.Run("Can convert PrivateEndpointConnection for AWS", func(t *testing.T) {
 		providerName := provider.ProviderAWS
-		privateEndpoint := mongodbatlas.PrivateEndpointConnection{
-			ID:                           "1",
-			ProviderName:                 string(providerName),
-			Region:                       "US_EAST_1",
-			EndpointServiceName:          "",
-			ErrorMessage:                 "",
-			InterfaceEndpoints:           nil,
-			PrivateEndpoints:             nil,
-			PrivateLinkServiceName:       "",
-			PrivateLinkServiceResourceID: "",
-			Status:                       "",
-			EndpointGroupNames:           nil,
-			RegionName:                   "",
-			ServiceAttachmentNames:       nil,
+		privateEndpoint := atlasv2.AWSPrivateLinkConnection{
+			Id:                  pointer.Get("1"),
+			CloudProvider:       string(providerName),
+			RegionName:          pointe.Get("US_EAST_1"),
+			EndpointServiceName: "",
+			ErrorMessage:        "",
+			InterfaceEndpoints:  nil,
+			Status:              "",
 		}
 
 		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName), listOptions).Return([]mongodbatlas.PrivateEndpointConnection{privateEndpoint}, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName), listOptions).Return([]atlasv2.AWSPrivateLinkConnection{privateEndpoint}, nil)
 		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAzure), listOptions).Return(nil, nil)
 		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP), listOptions).Return(nil, nil)
 
@@ -1158,8 +1145,8 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 		expected := []atlasV1.PrivateEndpoint{
 			{
 				Provider:          providerName,
-				Region:            privateEndpoint.Region,
-				ID:                privateEndpoint.ID,
+				Region:            *privateEndpoint.Region,
+				ID:                *privateEndpoint.ID,
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",

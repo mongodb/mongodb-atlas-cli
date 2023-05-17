@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type CreateOpts struct {
@@ -44,7 +44,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Interface endpoint '{{.InterfaceEndpointID}}' created.\n"
+var createTemplate = "Interface endpoint '{{.InterfaceEndpointId}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	r, err := opts.store.CreateInterfaceEndpoint(opts.ConfigProjectID(), provider, opts.interfaceEndpointID, opts.newInterfaceEndpointConnection())
@@ -55,10 +55,12 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newInterfaceEndpointConnection() *atlas.InterfaceEndpointConnection {
-	return &atlas.InterfaceEndpointConnection{
-		ID: opts.privateEndpointID,
-	}
+func (opts *CreateOpts) newInterfaceEndpointConnection() *atlasv2.CreateEndpointRequest {
+	r := atlasv2.CreateAWSEndpointRequestAsCreateEndpointRequest(&atlasv2.CreateAWSEndpointRequest{
+		Id: opts.privateEndpointID,
+	})
+
+	return &r
 }
 
 // mongocli atlas privateEndpoint(s)|privateendpoint(s) aws interface(s) create <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId].

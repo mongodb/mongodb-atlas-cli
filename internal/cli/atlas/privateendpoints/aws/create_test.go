@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	altasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -36,7 +36,7 @@ func TestCreate_Run(t *testing.T) {
 		region: "region",
 	}
 
-	expected := &mongodbatlas.PrivateEndpointConnection{}
+	expected := &atlasv2.AWSPrivateLinkConnection{}
 	mockStore.
 		EXPECT().
 		CreatePrivateEndpoint(createOpts.ProjectID, createOpts.newPrivateEndpointConnection()).

@@ -28,13 +28,12 @@ import (
 )
 
 var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range .}}
-{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
+{{.Id}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
 `
 
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.ListOpts
 	store store.PrivateEndpointLister
 }
 
@@ -47,7 +46,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.PrivateEndpoints(opts.ConfigProjectID(), provider, opts.NewListOptions())
+	r, err := opts.store.PrivateEndpoints(opts.ConfigProjectID(), provider)
 
 	if err != nil {
 		return err
@@ -78,9 +77,6 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPage, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

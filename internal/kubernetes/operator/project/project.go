@@ -106,7 +106,7 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, validator f
 			AlertConfigurations:           nil,
 			AlertConfigurationSyncEnabled: false,
 			NetworkPeers:                  nil,
-			WithDefaultAlertsSettings:     pointer.GetOrDefault[bool](project.WithDefaultAlertsSettings, false),
+			WithDefaultAlertsSettings:     pointer.GetOrDefault(project.WithDefaultAlertsSettings, false),
 			X509CertRef:                   nil, // not available for import
 			Integrations:                  nil,
 			EncryptionAtRest:              nil,
@@ -473,21 +473,31 @@ func getIntegrationType(val atlasv2.Integration) string {
 func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID string) ([]atlasV1.PrivateEndpoint, error) {
 	var result []atlasV1.PrivateEndpoint
 	for _, cloudProvider := range []provider.ProviderName{provider.ProviderAWS, provider.ProviderGCP, provider.ProviderAzure} {
-		peList, err := peProvider.PrivateEndpoints(projectID, string(cloudProvider), &atlas.ListOptions{ItemsPerPage: MaxItems})
+		peList, err := peProvider.PrivateEndpoints(projectID, string(cloudProvider))
 		if err != nil {
 			return nil, err
 		}
 		for i := range peList {
-			pe := &peList[i]
-			result = append(result, atlasV1.PrivateEndpoint{
+			peResult := atlasV1.PrivateEndpoint{
 				Provider:          cloudProvider,
-				Region:            pe.Region,
-				ID:                pe.ID,
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",
 				Endpoints:         atlasV1.GCPEndpoints{},
-			})
+			}
+
+			switch v := peList[i].(type) {
+			case atlasv2.AWSPrivateLinkConnection:
+				peResult.ID = *v.Id
+				peResult.Region = *v.RegionName
+			case atlasv2.AzurePrivateLinkConnection:
+				peResult.ID = *v.Id
+				peResult.Region = *v.RegionName
+			case atlasv2.GCPEndpointService:
+				peResult.ID = *v.Id
+				peResult.Region = *v.RegionName
+			}
+			result = append(result, peResult)
 		}
 	}
 	return result, nil

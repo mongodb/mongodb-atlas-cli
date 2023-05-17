@@ -34,11 +34,12 @@ const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
 type UpdateOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
-	username string
-	password string
-	roles    []string
-	scopes   []string
-	store    store.DatabaseUserUpdater
+	username        string
+	currentUsername string
+	password        string
+	roles           []string
+	scopes          []string
+	store           store.DatabaseUserUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -53,7 +54,7 @@ func (opts *UpdateOpts) Run() error {
 	current := new(atlas.DatabaseUser)
 	opts.update(current)
 
-	r, err := opts.store.UpdateDatabaseUser(current)
+	r, err := opts.store.UpdateDatabaseUser(current, opts.currentUsername)
 
 	if err != nil {
 		return err
@@ -65,6 +66,9 @@ func (opts *UpdateOpts) Run() error {
 func (opts *UpdateOpts) update(out *atlas.DatabaseUser) {
 	out.GroupID = opts.ConfigProjectID()
 	out.Username = opts.username
+	if opts.username == "" {
+		out.Username = opts.currentUsername
+	}
 	if opts.password != "" {
 		out.Password = opts.password
 	}
@@ -73,7 +77,7 @@ func (opts *UpdateOpts) update(out *atlas.DatabaseUser) {
 	out.Roles = convert.BuildLegacyAtlasRoles(opts.roles)
 }
 
-// mongocli atlas dbuser(s) update <username> [--password password] [--role roleName@dbName] [--projectId projectId].
+// atlas dbuser(s) update <username> [--password password] [--role roleName@dbName] [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
@@ -99,7 +103,7 @@ func UpdateBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.username = args[0]
+			opts.currentUsername = args[0]
 			return opts.Run()
 		},
 	}

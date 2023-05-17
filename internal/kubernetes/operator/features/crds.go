@@ -25,7 +25,7 @@ import (
 )
 
 const (
-	LatestOperatorVersion       = "1.7.0"
+	LatestOperatorMajorVersion  = "1.7.0"
 	maxDepth                    = 100
 	ResourceVersion             = "app.kubernetes.io/version"
 	ResourceAtlasProject        = "atlasprojects"
@@ -85,6 +85,29 @@ func SupportedVersions() []string {
 		result = append(result, version)
 	}
 	return result
+}
+
+func CRDCompatibleVersion(operatorVersion string) (string, error) {
+	operatorVersionSem, err := semver.NewVersion(operatorVersion)
+	if err != nil {
+		return "", fmt.Errorf("operator version %s is invalid", operatorVersion)
+	}
+
+	latestCRDVersionSem, err := semver.NewVersion(LatestOperatorMajorVersion)
+	if err != nil {
+		return "", fmt.Errorf("CRD version %s is invalid", LatestOperatorMajorVersion)
+	}
+
+	if operatorVersionSem.GreaterThan(latestCRDVersionSem) {
+		return LatestOperatorMajorVersion, nil
+	}
+
+	return semver.New(
+		operatorVersionSem.Major(),
+		operatorVersionSem.Minor(),
+		0,
+		"",
+		"").String(), nil
 }
 
 type AtlasCRDs struct {

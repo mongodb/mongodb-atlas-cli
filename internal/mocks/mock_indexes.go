@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockIndexCreator is a mock of IndexCreator interface.
@@ -35,7 +35,7 @@ func (m *MockIndexCreator) EXPECT() *MockIndexCreatorMockRecorder {
 }
 
 // CreateIndex mocks base method.
-func (m *MockIndexCreator) CreateIndex(arg0, arg1 string, arg2 *mongodbatlas.IndexConfiguration) error {
+func (m *MockIndexCreator) CreateIndex(arg0, arg1 string, arg2 *mongodbatlasv2.IndexRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateIndex", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)

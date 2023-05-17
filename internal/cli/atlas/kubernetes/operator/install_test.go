@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,17 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package kubernetes
+package operator
 
 import (
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
-func TestBuilder(t *testing.T) {
+func TestInstallBuilder(t *testing.T) {
 	test.CmdValidator(t,
-		Builder(),
-		2,
-		[]string{})
+		InstallBuilder(),
+		0,
+		[]string{
+			flag.OrgID,
+			flag.OperatorVersion,
+			flag.OperatorTargetNamespace,
+			flag.OperatorWatchNamespace,
+			flag.OperatorProjectName,
+			flag.OperatorImport,
+		})
 }

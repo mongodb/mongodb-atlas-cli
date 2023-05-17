@@ -103,7 +103,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(clusterID, dictionary),
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, clusterID), dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{
 				features.ResourceVersion: version,
@@ -142,7 +142,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 
 	if validator.FeatureExist(features.ResourceAtlasDeployment, featureBackupSchedule) {
 		var backupScheduleRef common.ResourceRefNamespaced
-		backupSchedule, backupPolicies := buildBackups(deploymentStore, projectID, clusterID, targetNamespace, version, dictionary)
+		backupSchedule, backupPolicies := buildBackups(deploymentStore, projectName, projectID, clusterID, targetNamespace, version, dictionary)
 		if backupSchedule != nil {
 			backupScheduleRef.Name = backupSchedule.Name
 			backupScheduleRef.Namespace = backupSchedule.Namespace
@@ -219,9 +219,9 @@ func buildProcessArgs(configOptsProvider store.AtlasClusterConfigurationOptionsD
 		FailIndexKeyTooLong:              pArgs.FailIndexKeyTooLong,
 		JavascriptEnabled:                pArgs.JavascriptEnabled,
 		NoTableScan:                      pArgs.NoTableScan,
-		OplogSizeMB:                      pointer.Get(int64(pArgs.GetOplogSizeMB())),
-		SampleSizeBIConnector:            pointer.Get(int64(pArgs.GetSampleSizeBIConnector())),
-		SampleRefreshIntervalBIConnector: pointer.Get(int64(pArgs.GetSampleRefreshIntervalBIConnector())),
+		OplogSizeMB:                      pointer.GetNonZeroValue(int64(pArgs.GetOplogSizeMB())),
+		SampleSizeBIConnector:            pointer.GetNonZeroValue(int64(pArgs.GetSampleSizeBIConnector())),
+		SampleRefreshIntervalBIConnector: pointer.GetNonZeroValue(int64(pArgs.GetSampleRefreshIntervalBIConnector())),
 	}, nil
 }
 
@@ -239,7 +239,7 @@ func isServerlessExportable(deployment *mongodbatlas.Cluster) bool {
 	return true
 }
 
-func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterName, targetNamespace, version string, dictionary map[string]string) (*atlasV1.AtlasBackupSchedule, []*atlasV1.AtlasBackupPolicy) {
+func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectID, clusterName, targetNamespace, version string, dictionary map[string]string) (*atlasV1.AtlasBackupSchedule, []*atlasV1.AtlasBackupPolicy) {
 	bs, err := backupsProvider.DescribeSchedule(projectID, clusterName)
 	if err != nil {
 		return nil, nil
@@ -263,7 +263,7 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 				APIVersion: "atlas.mongodb.com/v1",
 			},
 			ObjectMeta: v1.ObjectMeta{
-				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backuppolicy", clusterName), dictionary),
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName), dictionary),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
 					features.ResourceVersion: version,
@@ -290,7 +290,7 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectID, clusterNam
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backupschedule", clusterName), dictionary),
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName), dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{
 				features.ResourceVersion: version,
@@ -482,7 +482,7 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(deployment.Name, dictionary),
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, deployment.Name), dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{
 				features.ResourceVersion: version,

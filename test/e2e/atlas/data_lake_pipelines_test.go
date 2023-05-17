@@ -85,7 +85,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--sourceCollectionName", "movies",
 			"--sinkType", "DLS",
 			"--sinkMetadataProvider", "AWS",
-			"--sinkMetadataRegion", "us-east-1",
+			"--sinkMetadataRegion", "US_EAST_1",
 			"--sinkPartitionField", "year,title",
 			"--transform", "EXCLUDE:fullplot",
 			"--projectId", g.projectID,

@@ -16,15 +16,37 @@ package local
 
 import (
 	"context"
+	_ "embed"
+	"os"
 	"os/exec"
+	"path"
 	"time"
 
 	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+)
+
+var (
+	//go:embed files/docker-compose.yml
+	dockerComposeContents []byte
+
+	//go:embed files/mms-config.json
+	mmsConfigContents []byte
+
+	//go:embed files/ca.pem
+	CaContents []byte
+
+	//go:embed files/seedRs.js
+	SeedRsContents []byte
+
+	//go:embed files/seedUser.js
+	SeedUserContents []byte
 )
 
 const speed = 100 * time.Millisecond
@@ -38,6 +60,69 @@ type StartOpts struct {
 var startTemplate = `local environment started at {{.ConnectionString}}
 `
 
+func dumpTempFile(pattern string, contents []byte) (string, error) {
+	f, err := os.CreateTemp("", pattern)
+	if err != nil {
+		return "", err
+	}
+	_, err = f.Write(contents)
+	_ = f.Close()
+	if err != nil {
+		return f.Name(), err
+	}
+	return f.Name(), nil
+}
+
+func runDockerCompose(args ...string) error {
+	dockerComposeFilename, err := dumpTempFile("docker-compose", dockerComposeContents)
+	if dockerComposeFilename != "" {
+		defer os.Remove(dockerComposeFilename)
+	}
+	if err != nil {
+		return err
+	}
+	cmdArgs := append([]string{"compose", "--compatibility", "-p", "docker", "-f", dockerComposeFilename}, args...)
+	cmd := exec.Command("docker", cmdArgs...)
+	cmd.Env = append(os.Environ(), "DOCKER_BUILDKIT=0")
+	// cmd.Stdout = os.Stdout
+	// cmd.Stderr = os.Stderr
+	// cmd.Stdin = os.Stdin
+	return cmd.Run()
+}
+
+func mmsConfigPath() (string, error) {
+	configHome, err := config.AtlasCLIConfigHome()
+	if err != nil {
+		return "", err
+	}
+	return path.Join(configHome, "mms-config.json"), nil
+}
+
+func dumpMmsConfig() error {
+	mmsConfigfile, err := mmsConfigPath()
+	if err != nil {
+		return err
+	}
+	if _, err := os.Stat(mmsConfigfile); os.IsNotExist(err) {
+		err = os.WriteFile(mmsConfigfile, mmsConfigContents, os.ModePerm)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func seed(script string) error {
+	caFilename, err := dumpTempFile("ca", CaContents)
+	if caFilename != "" {
+		defer os.Remove(caFilename)
+	}
+	if err != nil {
+		return err
+	}
+
+	return mongosh.Exec("mongodb://__system:keyfile@localhost:37017/admin?authSource=local&tls=true&tlsCAFile="+caFilename, "--eval", script)
+}
+
 func (opts *StartOpts) Run(ctx context.Context) error {
 	if opts.s != nil {
 		opts.s.Start()
@@ -49,18 +134,18 @@ func (opts *StartOpts) Run(ctx context.Context) error {
 		}
 	}()
 
-	mongotHome, err := mongotHome()
-	if err != nil {
+	if err := dumpMmsConfig(); err != nil {
 		return err
 	}
-	cmd := exec.Command("make", "docker.up")
-	cmd.Dir = mongotHome
-	// cmd.Stdout = os.Stdout
-	// cmd.Stderr = os.Stderr
-	// cmd.Stdin = os.Stdin
-	err = cmd.Run()
-	if err != nil {
+
+	if err := runDockerCompose("up", "-d"); err != nil {
 		return err
+	}
+
+	for _, seedScriptContents := range []string{string(SeedRsContents), string(SeedUserContents)} {
+		if err := seed(seedScriptContents); err != nil {
+			return err
+		}
 	}
 
 	if opts.s != nil {

@@ -16,6 +16,7 @@ package local
 
 import (
 	"context"
+	"os"
 
 	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -25,16 +26,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type StopOpts struct {
+type ClearOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
 	s *spinner.Spinner
 }
 
-var stopTemplate = `local environment stopped
+var clearTemplate = `local environment stopped and cleared
 `
 
-func (opts *StopOpts) Run(ctx context.Context) error {
+func (opts *ClearOpts) Run(ctx context.Context) error {
 	if opts.s != nil {
 		opts.s.Start()
 	}
@@ -45,9 +46,15 @@ func (opts *StopOpts) Run(ctx context.Context) error {
 		}
 	}()
 
-	if err := runDockerCompose("down"); err != nil {
+	if err := runDockerCompose("down", "-v"); err != nil {
 		return err
 	}
+
+	mmsConfigFilename, err := mmsConfigPath()
+	if err != nil {
+		return err
+	}
+	_ = os.Remove(mmsConfigFilename)
 
 	if opts.s != nil {
 		opts.s.Stop()
@@ -56,16 +63,16 @@ func (opts *StopOpts) Run(ctx context.Context) error {
 	return opts.Print(localData)
 }
 
-// atlas local delete.
-func StopBuilder() *cobra.Command {
-	opts := &StopOpts{}
+// atlas local clear.
+func ClearBuilder() *cobra.Command {
+	opts := &ClearOpts{}
 	cmd := &cobra.Command{
-		Use:   "stop",
-		Short: "Stops local instance.",
+		Use:   "clear",
+		Short: "Stops local instance and deletes stored data.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.InitOutput(cmd.OutOrStdout(), stopTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), clearTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

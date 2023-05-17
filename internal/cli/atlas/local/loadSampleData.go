@@ -31,7 +31,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:embed dump.tar.gz
+//go:embed files/dump.tar.gz
 var dump []byte
 
 type SampleDataOpts struct {

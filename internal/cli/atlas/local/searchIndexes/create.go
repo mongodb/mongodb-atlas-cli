@@ -18,10 +18,10 @@ import (
 	"encoding/json"
 	"math/rand"
 	"os"
-	"os/user"
 	"path"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
@@ -65,25 +65,12 @@ type SeachConfig struct {
 	Analyzers        []any    `json:"analyzers"`
 }
 
-func mongotHome() (string, error) {
-	env := os.Getenv("MONGOT_HOME")
-	if env != "" {
-		return env, nil
-	}
-
-	usr, err := user.Current()
-	if err != nil {
-		return "", err
-	}
-	return path.Join(usr.HomeDir, "mongot"), nil
-}
-
 func mongotConfigPath() (string, error) {
-	basePath, err := mongotHome()
+	configHome, err := config.AtlasCLIConfigHome()
 	if err != nil {
 		return "", err
 	}
-	return path.Join(basePath, "docker", "mms-config.json"), nil
+	return path.Join(configHome, "mms-config.json"), nil
 }
 
 func (opts *CreateOpts) loadConfig() (*SeachConfig, error) {

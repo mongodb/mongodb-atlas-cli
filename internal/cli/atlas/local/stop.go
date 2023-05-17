@@ -34,7 +34,7 @@ type StopOpts struct {
 var stopTemplate = `local environment stopped
 `
 
-func (opts *StopOpts) Run(ctx context.Context) error {
+func (opts *StopOpts) Run(_ context.Context) error {
 	if opts.s != nil {
 		opts.s.Start()
 	}

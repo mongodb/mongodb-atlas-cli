@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package searchIndexes
+package searchindexes
 
 import (
 	"encoding/json"
@@ -85,7 +85,7 @@ func (opts *CreateOpts) loadConfig() (*SeachConfig, error) {
 	return &config, nil
 }
 
-func (opts *CreateOpts) dumpConfig(config *SeachConfig) error {
+func (*CreateOpts) dumpConfig(config *SeachConfig) error {
 	configPath, err := mongotConfigPath()
 	if err != nil {
 		return err
@@ -99,10 +99,12 @@ func (opts *CreateOpts) dumpConfig(config *SeachConfig) error {
 
 var letterRunes = []rune("0123456789abcdef")
 
-func randStringRunes(n int) string {
-	b := make([]rune, n)
+const objectIDLen = 24
+
+func randObjectID() string {
+	b := make([]rune, objectIDLen)
 	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+		b[i] = letterRunes[rand.Intn(len(letterRunes))] //nolint:gosec // ignore pseudo random is good enough
 	}
 	return string(b)
 }
@@ -112,7 +114,7 @@ func (opts *CreateOpts) Run() error {
 	if err := file.Load(opts.fs, opts.filename, &index); err != nil {
 		return err
 	}
-	index.IndexID = pointer.Get(randStringRunes(24))
+	index.IndexID = pointer.Get(randObjectID())
 
 	config, err := opts.loadConfig()
 	if err != nil {

@@ -16,11 +16,8 @@ package local
 
 import (
 	"errors"
-	"os"
-	"os/user"
-	"path"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/local/searchIndexes"
+	searchindexes "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/local/searchindexes"
 	"github.com/spf13/cobra"
 )
 
@@ -29,11 +26,11 @@ var ErrInstanceNotFound = errors.New("instance not found")
 const (
 	localUser     = "mongoUser"
 	localPassword = "hunter1"
-	localUri      = "mongodb://localhost:37017"
+	localURI      = "mongodb://localhost:37017"
 )
 
 var (
-	localData = map[string]string{"ConnectionString": localUri, "User": localUser, "Password": localPassword}
+	localData = map[string]string{"ConnectionString": localURI, "User": localUser, "Password": localPassword}
 )
 
 func Builder() *cobra.Command {
@@ -49,21 +46,8 @@ func Builder() *cobra.Command {
 		DescribeBuilder(),
 		ConnectBuilder(),
 		SampleDataBuilder(),
-		searchIndexes.Builder(),
+		searchindexes.Builder(),
 	)
 
 	return cmd
-}
-
-func mongotHome() (string, error) {
-	env := os.Getenv("MONGOT_HOME")
-	if env != "" {
-		return env, nil
-	}
-
-	usr, err := user.Current()
-	if err != nil {
-		return "", err
-	}
-	return path.Join(usr.HomeDir, "mongot"), nil
 }

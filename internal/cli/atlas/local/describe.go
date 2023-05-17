@@ -32,7 +32,7 @@ type DescribeOpts struct {
 var describeTemplate = `local environment running on {{ .ConnectionString }}
 `
 
-func (opts *DescribeOpts) Run(ctx context.Context) error {
+func (opts *DescribeOpts) Run(_ context.Context) error {
 	return opts.Print(localData)
 }
 

@@ -11,8 +11,6 @@
 	"github.com/aws/aws-sdk-go-v2/credentials": "mongocli",
 	"github.com/aws/aws-sdk-go-v2/service/kms": "mongocli",
 	"github.com/briandowns/spinner": "mongocli",
-	"github.com/docker/docker": "mongocli",
-	"github.com/docker/go-connections": "mongocli",
 	"github.com/evergreen-ci/shrub": "mongocli",
 	"github.com/gemalto/kmip-go": "mongocli",
 	"github.com/go-test/deep": "mongocli",

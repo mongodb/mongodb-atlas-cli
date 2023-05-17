@@ -123,7 +123,7 @@ func seed(script string) error {
 	return mongosh.Exec("mongodb://__system:keyfile@localhost:37017/admin?authSource=local&tls=true&tlsCAFile="+caFilename, "--eval", script)
 }
 
-func (opts *StartOpts) Run(ctx context.Context) error {
+func (opts *StartOpts) Run(_ context.Context) error {
 	if opts.s != nil {
 		opts.s.Start()
 	}

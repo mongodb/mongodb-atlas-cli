@@ -35,7 +35,7 @@ type ClearOpts struct {
 var clearTemplate = `local environment stopped and cleared
 `
 
-func (opts *ClearOpts) Run(ctx context.Context) error {
+func (opts *ClearOpts) Run(_ context.Context) error {
 	if opts.s != nil {
 		opts.s.Start()
 	}

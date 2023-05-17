@@ -44,12 +44,15 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Related Commands
 ----------------
 
+* :ref:`atlas-local-clear` - Stops local instance and deletes stored data.
 * :ref:`atlas-local-connect` - Connects to the local instance.
+* :ref:`atlas-local-describe` - Describes the local instance.
+* :ref:`atlas-local-loadSampleData` - Loads sample data in a local instance.
 * :ref:`atlas-local-searchIndexes` - Manage local search indexes.
 * :ref:`atlas-local-start` - Starts a local instance.
 * :ref:`atlas-local-stop` - Stops local instance.
@@ -58,7 +61,10 @@ Related Commands
 .. toctree::
    :titlesonly:
 
+   clear </command/atlas-local-clear>
    connect </command/atlas-local-connect>
+   describe </command/atlas-local-describe>
+   loadSampleData </command/atlas-local-loadSampleData>
    searchIndexes </command/atlas-local-searchIndexes>
    start </command/atlas-local-start>
    stop </command/atlas-local-stop>

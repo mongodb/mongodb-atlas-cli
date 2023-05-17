@@ -1,8 +1,8 @@
-.. _atlas-local-connect:
+.. _atlas-local-describe:
 
-===================
-atlas local connect
-===================
+====================
+atlas local describe
+====================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ atlas local connect
    :depth: 1
    :class: singlecol
 
-Connects to the local instance.
+Describes the local instance.
 
 Syntax
 ------
@@ -20,7 +20,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas local connect [options]
+   atlas local describe [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -38,7 +38,11 @@ Options
    * - -h, --help
      - 
      - false
-     - help for connect
+     - help for describe
+   * - -o, --output
+     - string
+     - false
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
 
 Inherited Options
 -----------------

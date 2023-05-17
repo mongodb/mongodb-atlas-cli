@@ -61,10 +61,10 @@ func extractTarGz(input []byte, output string) error {
 		case header == nil:
 			continue
 		}
-		target := filepath.Join(output, header.Name)
+		target := filepath.Join(output, filepath.Clean(header.Name))
 		switch header.Typeflag {
 		case tar.TypeDir:
-			if err := os.MkdirAll(target, 0755); err != nil {
+			if err := os.MkdirAll(target, os.ModePerm); err != nil {
 				return err
 			}
 		case tar.TypeReg:
@@ -73,14 +73,14 @@ func extractTarGz(input []byte, output string) error {
 				return err
 			}
 			defer f.Close()
-			if _, err := io.Copy(f, r); err != nil {
+			if _, err := io.Copy(f, r); err != nil { //nolint:gosec // tar.gz is embedded inside binary, no way this will be tampered
 				return err
 			}
 		}
 	}
 }
 
-func (opts *SampleDataOpts) Run(ctx context.Context) error {
+func (opts *SampleDataOpts) Run(_ context.Context) error {
 	if opts.s != nil {
 		opts.s.Start()
 	}
@@ -102,7 +102,7 @@ func (opts *SampleDataOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	cmd := exec.Command("mongorestore", "--gzip", "-u", localUser, "-p", localPassword, localUri, dumpDir)
+	cmd := exec.Command("mongorestore", "--gzip", "-u", localUser, "-p", localPassword, localURI, dumpDir)
 	// cmd.Stdout = os.Stdout
 	// cmd.Stderr = os.Stderr
 	// cmd.Stdin = os.Stdin

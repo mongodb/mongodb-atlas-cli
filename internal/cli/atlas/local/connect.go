@@ -24,8 +24,8 @@ import (
 
 type ConnectOpts struct{}
 
-func (opts *ConnectOpts) Run(ctx context.Context) error {
-	return mongosh.Run(localUser, localPassword, localUri)
+func (*ConnectOpts) Run(_ context.Context) error {
+	return mongosh.Run(localUser, localPassword, localURI)
 }
 
 // atlas local connect.

@@ -101,8 +101,8 @@ func TestAlerts(t *testing.T) {
 			var alert atlasv2.AlertViewForNdsGroup
 			err := json.Unmarshal(resp, &alert)
 			a.NoError(err)
-			a.Equal(alertID, alert.Id)
-			a.Equal(closed, alert.Status)
+			a.Equal(alertID, *alert.Id)
+			a.Equal(closed, *alert.Status)
 		}
 	})
 
@@ -122,7 +122,7 @@ func TestAlerts(t *testing.T) {
 			var alert atlasv2.AlertViewForNdsGroup
 			err := json.Unmarshal(resp, &alert)
 			a.NoError(err)
-			a.Equal(alertID, alert.Id)
+			a.Equal(alertID, *alert.Id)
 		}
 	})
 
@@ -141,7 +141,7 @@ func TestAlerts(t *testing.T) {
 			var alert atlasv2.AlertViewForNdsGroup
 			err := json.Unmarshal(resp, &alert)
 			a.NoError(err)
-			a.Equal(alertID, alert.Id)
+			a.Equal(alertID, *alert.Id)
 		}
 	})
 
@@ -159,7 +159,7 @@ func TestAlerts(t *testing.T) {
 			var alert atlasv2.AlertViewForNdsGroup
 			err := json.Unmarshal(resp, &alert)
 			a.NoError(err)
-			a.Equal(alertID, alert.Id)
+			a.Equal(alertID, *alert.Id)
 		}
 	})
 }

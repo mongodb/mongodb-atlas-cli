@@ -32,13 +32,12 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertLister(ctrl)
 
-	eventTypeExpected, _ := atlasv2.NewReplicaSetEventTypeViewForNdsGroupAlertableFromValue("NO_PRIMARY")
 	expected := &atlasv2.PaginatedAlert{
 		Links: nil,
 		Results: []atlasv2.AlertViewForNdsGroup{
 			{
 				Id:            pointer.Get("test"),
-				EventTypeName: eventTypeExpected,
+				EventTypeName: pointer.Get("NO_PRIMARY"),
 				Status:        pointer.Get("test"),
 				MetricName:    pointer.Get("test"),
 			},

@@ -53,8 +53,8 @@ func Run(username, password, mongoURI string) error {
 func Exec(args ...string) error {
 	cmd := exec.Command(mongoshBin, args...) //nolint:gosec // false positive, this path won't be tampered
 	cmd.Env = os.Environ()
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
+	// cmd.Stdout = os.Stdout
+	// cmd.Stderr = os.Stderr
+	// cmd.Stdin = os.Stdin
 	return cmd.Run()
 }

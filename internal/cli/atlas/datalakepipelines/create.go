@@ -82,7 +82,7 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) validate() error {
-	if strings.ToUpper(opts.sourceType) != periodicCPS || strings.ToUpper(opts.sourceType) != onDemandCPS {
+	if !strings.EqualFold(opts.sourceType, periodicCPS) && !strings.EqualFold(opts.sourceType, onDemandCPS) {
 		return fmt.Errorf("%w: expected either '%s' or '%s' got '%s'", ErrSourceTypeInvalid, periodicCPS, onDemandCPS, opts.sourceType)
 	}
 
@@ -130,8 +130,7 @@ func (opts *CreateOpts) newCreateRequest() (*atlasv2.IngestionPipeline, error) {
 		}
 	}
 
-	switch strings.ToUpper(opts.sourceType) {
-	case periodicCPS:
+	if strings.EqualFold(opts.sourceType, periodicCPS) {
 		pipeline.Source.PeriodicCpsSnapshotSource = &atlasv2.PeriodicCpsSnapshotSource{
 			Type:           &opts.sourceType,
 			ClusterName:    &opts.sourceClusterName,
@@ -139,7 +138,7 @@ func (opts *CreateOpts) newCreateRequest() (*atlasv2.IngestionPipeline, error) {
 			DatabaseName:   &opts.sourceDatabaseName,
 			PolicyItemId:   &opts.sourcePolicyItemID,
 		}
-	case onDemandCPS:
+	} else if strings.EqualFold(opts.sourceType, onDemandCPS) {
 		pipeline.Source.OnDemandCpsSnapshotSource = &atlasv2.OnDemandCpsSnapshotSource{
 			Type:           &opts.sourceType,
 			ClusterName:    &opts.sourceClusterName,

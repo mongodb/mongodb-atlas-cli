@@ -77,7 +77,7 @@ func (opts *UpdateOpts) Run() error {
 }
 
 func (opts *UpdateOpts) validate() error {
-	if strings.ToUpper(opts.sourceType) != periodicCPS || strings.ToUpper(opts.sourceType) != onDemandCPS {
+	if !strings.EqualFold(opts.sourceType, periodicCPS) && !strings.EqualFold(opts.sourceType, onDemandCPS) {
 		return fmt.Errorf("%w: expected either '%s' or '%s' got '%s'", ErrSourceTypeInvalid, periodicCPS, onDemandCPS, opts.sourceType)
 	}
 
@@ -124,15 +124,14 @@ func (opts *UpdateOpts) newUpdateRequest() (*atlasv2.IngestionPipeline, error) {
 		}
 	}
 
-	switch strings.ToUpper(opts.sourceType) {
-	case periodicCPS:
+	if strings.EqualFold(opts.sourceType, periodicCPS) {
 		pipeline.Source.PeriodicCpsSnapshotSource = &atlasv2.PeriodicCpsSnapshotSource{
 			Type:           &opts.sourceType,
 			ClusterName:    &opts.sourceClusterName,
 			CollectionName: &opts.sourceCollectionName,
 			DatabaseName:   &opts.sourceDatabaseName,
 		}
-	case onDemandCPS:
+	} else if strings.EqualFold(opts.sourceType, onDemandCPS) {
 		pipeline.Source.OnDemandCpsSnapshotSource = &atlasv2.OnDemandCpsSnapshotSource{
 			Type:           &opts.sourceType,
 			ClusterName:    &opts.sourceClusterName,

@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -110,10 +111,10 @@ func (opts *CreateOpts) newDatabaseUser() *atlasv2.DatabaseUser {
 		Scopes:          convert.BuildAtlasScopes(opts.scopes),
 		GroupId:         opts.ConfigProjectID(),
 		Username:        opts.username,
-		Password:        convert.GetStringPointerIfNotEmpty(opts.password),
-		X509Type:        convert.GetStringPointerIfNotEmpty(opts.x509Type),
-		AwsIAMType:      convert.GetStringPointerIfNotEmpty(opts.awsIamType),
-		LdapAuthType:    convert.GetStringPointerIfNotEmpty(opts.ldapType),
+		Password:        pointer.GetStringPointerIfNotEmpty(opts.password),
+		X509Type:        pointer.GetStringPointerIfNotEmpty(opts.x509Type),
+		AwsIAMType:      pointer.GetStringPointerIfNotEmpty(opts.awsIamType),
+		LdapAuthType:    pointer.GetStringPointerIfNotEmpty(opts.ldapType),
 		DeleteAfterDate: convert.ParseDeleteAfter(opts.deleteAfter),
 		DatabaseName:    authDB,
 	}

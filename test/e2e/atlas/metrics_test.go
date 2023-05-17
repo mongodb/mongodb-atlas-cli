@@ -23,7 +23,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestMetrics(t *testing.T) {
@@ -67,7 +67,7 @@ func process(t *testing.T, cliPath, hostname, projectID string) {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
 
-	metrics := &mongodbatlas.ProcessMeasurements{}
+	metrics := &atlasv2.MeasurementsGeneralViewAtlas{}
 	err = json.Unmarshal(resp, &metrics)
 
 	if err != nil {
@@ -101,14 +101,14 @@ func databases(t *testing.T, cliPath, hostname, projectID string) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		var databases mongodbatlas.ProcessDatabasesResponse
+		var databases atlasv2.PaginatedDatabase
 
 		if err := json.Unmarshal(resp, &databases); err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
 		const defaultNDatabases = 2
-		if databases.TotalCount != defaultNDatabases {
+		if databases.GetTotalCount() != defaultNDatabases {
 			t.Errorf("got=%#v\nwant=%#v\n", databases.TotalCount, defaultNDatabases)
 		}
 	})
@@ -130,7 +130,7 @@ func databases(t *testing.T, cliPath, hostname, projectID string) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var metrics mongodbatlas.ProcessDatabaseMeasurements
+		var metrics atlasv2.MeasurementsGeneralViewAtlas
 		err = json.Unmarshal(resp, &metrics)
 
 		if err != nil {
@@ -165,11 +165,11 @@ func disks(t *testing.T, cliPath, hostname, projectID string) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var disks mongodbatlas.ProcessDisksResponse
+		var disks atlasv2.PaginatedDiskPartition
 		if err := json.Unmarshal(resp, &disks); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-		if disks.TotalCount != 1 {
+		if disks.GetTotalCount() != 1 {
 			t.Errorf("got=%#v\nwant=%#v\n", disks.TotalCount, 1)
 		}
 	})
@@ -191,7 +191,7 @@ func disks(t *testing.T, cliPath, hostname, projectID string) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var metrics mongodbatlas.ProcessDiskMeasurements
+		var metrics atlasv2.MeasurementsGeneralViewAtlas
 		err = json.Unmarshal(resp, &metrics)
 
 		if err != nil {

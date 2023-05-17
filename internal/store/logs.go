@@ -17,6 +17,9 @@ package store
 import (
 	"fmt"
 	"io"
+	"path/filepath"
+	"strconv"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -82,7 +85,23 @@ func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsm
 func (s *Store) DownloadLog(groupID, host, name string, out io.Writer, opts *atlas.DateRangetOptions) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Logs.Get(s.ctx, groupID, host, name, out, opts)
+		fileBaseName := strings.TrimSuffix(name, filepath.Ext(name))
+		result := s.clientv2.MonitoringAndLogsApi.GetHostLogs(s.ctx, groupID, host, fileBaseName)
+		if opts != nil {
+			if opts.StartDate != "" {
+				start, _ := strconv.ParseInt(opts.StartDate, 10, 64)
+				result = result.StartDate(start)
+			}
+			if opts.EndDate != "" {
+				end, _ := strconv.ParseInt(opts.EndDate, 10, 64)
+				result = result.EndDate(end)
+			}
+		}
+		logs, _, err := result.Execute()
+		if err != nil {
+			return err
+		}
+		_, err = io.Copy(out, logs)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -77,7 +77,7 @@ func (opts *UpdateOpts) Run() error {
 }
 
 func (opts *UpdateOpts) validate() error {
-	if !strings.EqualFold(opts.sourceType, periodicCPS) && !strings.EqualFold(opts.sourceType, onDemandCPS) {
+	if opts.sourceType != "" && !strings.EqualFold(opts.sourceType, periodicCPS) && !strings.EqualFold(opts.sourceType, onDemandCPS) {
 		return fmt.Errorf("%w: expected either '%s' or '%s' got '%s'", ErrSourceTypeInvalid, periodicCPS, onDemandCPS, opts.sourceType)
 	}
 

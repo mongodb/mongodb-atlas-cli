@@ -17,10 +17,14 @@
 package snapshots
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -28,21 +32,67 @@ func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSnapshotsCreator(ctrl)
 
-	expected := &atlasv2.DiskBackupSnapshot{}
+	t.Run("diskBackupReplicaSet run", func(t *testing.T) {
+		expected := &atlasv2.DiskBackupSnapshot{
+			DiskBackupReplicaSet: &atlasv2.DiskBackupReplicaSet{
+				Id: pointer.Get("DiskBackupReplicaSetId"),
+			},
+		}
+		buf := new(bytes.Buffer)
 
-	createOpts := &CreateOpts{
-		store:           mockStore,
-		clusterName:     "",
-		desc:            "",
-		retentionInDays: 0,
-	}
+		createOpts := &CreateOpts{
+			store:           mockStore,
+			clusterName:     "",
+			desc:            "",
+			retentionInDays: 0,
+			OutputOpts: cli.OutputOpts{
+				Template:  createTemplate,
+				OutWriter: buf,
+			},
+		}
 
-	mockStore.
-		EXPECT().
-		CreateSnapshot(createOpts.ProjectID, createOpts.clusterName, createOpts.newCloudProviderSnapshot()).Return(expected, nil).
-		Times(1)
+		mockStore.
+			EXPECT().
+			CreateSnapshot(createOpts.ProjectID, createOpts.clusterName, createOpts.newCloudProviderSnapshot()).Return(expected, nil).
+			Times(1)
 
-	if err := createOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+		if err := createOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+
+		assert.Equal(t, `Snapshot 'DiskBackupReplicaSetId' created.
+`, buf.String())
+	})
+
+	t.Run("diskBackupReplicaSet run", func(t *testing.T) {
+		expected := &atlasv2.DiskBackupSnapshot{
+			DiskBackupShardedClusterSnapshot: &atlasv2.DiskBackupShardedClusterSnapshot{
+				Id: pointer.Get("DiskBackupShardedClusterSnapshotId"),
+			},
+		}
+
+		buf := new(bytes.Buffer)
+
+		createOpts := &CreateOpts{
+			store:           mockStore,
+			clusterName:     "",
+			desc:            "",
+			retentionInDays: 0,
+			OutputOpts: cli.OutputOpts{
+				Template:  createTemplate,
+				OutWriter: buf,
+			},
+		}
+		mockStore.
+			EXPECT().
+			CreateSnapshot(createOpts.ProjectID, createOpts.clusterName, createOpts.newCloudProviderSnapshot()).Return(expected, nil).
+			Times(1)
+
+		if err := createOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+
+		assert.Equal(t, `Snapshot 'DiskBackupShardedClusterSnapshotId' created.
+`, buf.String())
+	})
 }

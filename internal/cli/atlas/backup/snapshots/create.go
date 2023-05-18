@@ -46,7 +46,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Snapshot '{{.}}' created.\n"
+var createTemplate = "Snapshot '{{.Id}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newCloudProviderSnapshot()
@@ -55,7 +55,11 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return commonerrors.Check(err)
 	}
-	return opts.Print(r)
+
+	if r.DiskBackupShardedClusterSnapshot != nil {
+		return opts.Print(r.DiskBackupShardedClusterSnapshot)
+	}
+	return opts.Print(r.DiskBackupReplicaSet)
 }
 
 func (opts *CreateOpts) newCloudProviderSnapshot() *atlasv2.DiskBackupOnDemandSnapshotRequest {

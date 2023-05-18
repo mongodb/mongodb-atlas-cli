@@ -67,15 +67,6 @@ functions:
       params:
         <<: *go_options
         command: make check-library-owners
-  "unit-test":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        env:
-          <<: *go_env
-          TEST_CMD: gotestsum --junitfile unit-tests.xml --
-        command: make unit-test
   "integration-test":
     - command: subprocess.exec
       type: test
@@ -225,12 +216,6 @@ functions:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
-  "lint":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        binary: ./build/ci/lint.sh
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -323,25 +308,12 @@ tasks:
     tags: [ "code_health" ]
     commands:
       - func: "build atlascli"
-  - name: unit_test
-    tags: ["code_health"]
-    must_have_test_results: true
-    commands:
-      - func: "install gotestsum"
-      - func: "unit-test"
-      - func: "generate html coverage"
-      - func: "upload html coverage"
   - name: integration_test
     tags: ["code_health"]
     must_have_test_results: true
     commands:
       - func: "install gotestsum"
       - func: "integration-test"
-  - name: lint
-    tags: ["code_health"]
-    commands:
-      - func: "install dev tools"
-      - func: "lint"
   - name: snyk_scan
     tags: ["snyk"]
     commands:
@@ -384,10 +356,6 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,config
-  - name: library_owners_check
-    tags: ["code_health"]
-    commands:
-      - func: "check library_owners.json"
   - name: brew_e2e
     tags: ["e2e","required"]
     depends_on:

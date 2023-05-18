@@ -71,7 +71,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	const pipelineName = "sample_mflix.movies"
-	var pipelineId string
+	var pipelineID string
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -96,7 +96,7 @@ func TestDataLakePipelines(t *testing.T) {
 		a := assert.New(t)
 		var pipeline *atlasv2.IngestionPipeline
 		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
-			pipelineId = *pipeline.Id
+			pipelineID = *pipeline.Id
 			a.Equal(pipelineName, *pipeline.Name)
 		}
 	})
@@ -179,7 +179,7 @@ func TestDataLakePipelines(t *testing.T) {
 		a := assert.New(t)
 		var run *atlasv2.IngestionPipelineRun
 		if err = json.Unmarshal(resp, &run); a.NoError(err) {
-			a.Equal(pipelineId, *run.PipelineId)
+			a.Equal(pipelineID, *run.PipelineId)
 		}
 	})
 

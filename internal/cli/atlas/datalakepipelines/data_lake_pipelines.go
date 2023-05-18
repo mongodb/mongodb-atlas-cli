@@ -49,6 +49,7 @@ func Builder() *cobra.Command {
 		TriggerBuilder(),
 		PauseBuilder(),
 		StartBuilder(),
+		WatchBuilder(),
 		runs.Builder(),
 		availableschedules.Builder(),
 		availablesnapshots.Builder(),

@@ -99,6 +99,16 @@ func TestDataLakePipelines(t *testing.T) {
 		}
 	})
 
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			datalakePipelineEntity,
+			"watch", pipelineName)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+		t.Log(string(resp))
+	})
+
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datalakePipelineEntity,

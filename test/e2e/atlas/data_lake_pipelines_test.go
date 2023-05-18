@@ -99,7 +99,7 @@ func TestDataLakePipelines(t *testing.T) {
 		a := assert.New(t)
 		var dataLake *atlasv2.IngestionPipeline
 		if err = json.Unmarshal(resp, &dataLake); a.NoError(err) {
-			a.Equal(dataLakeName, dataLake.Name)
+			a.Equal(dataLakeName, *dataLake.Name)
 		}
 	})
 }

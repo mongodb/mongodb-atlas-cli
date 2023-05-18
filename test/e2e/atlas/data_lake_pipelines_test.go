@@ -102,7 +102,8 @@ func TestDataLakePipelines(t *testing.T) {
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datalakePipelineEntity,
-			"watch", pipelineName)
+			"watch", pipelineName,
+			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
@@ -113,6 +114,7 @@ func TestDataLakePipelines(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datalakePipelineEntity,
 			"describe", pipelineName,
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -129,6 +131,7 @@ func TestDataLakePipelines(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datalakePipelineEntity,
 			"ls",
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -145,6 +148,7 @@ func TestDataLakePipelines(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datalakePipelineEntity,
 			"delete", pipelineName,
+			"--projectId", g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

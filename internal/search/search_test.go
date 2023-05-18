@@ -19,8 +19,10 @@ package search
 import (
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestStringInSlice(t *testing.T) {
@@ -126,61 +128,61 @@ func TestAtlasClusterExists(t *testing.T) {
 
 func TestDefaultRegion(t *testing.T) {
 	tests := []struct {
-		input []*atlas.AvailableRegion
+		input []atlasv2.AvailableRegion
 		want  int
 	}{
 		{
-			input: []*atlas.AvailableRegion{},
+			input: []atlasv2.AvailableRegion{},
 			want:  -1,
 		},
 		{
-			input: []*atlas.AvailableRegion{
+			input: []atlasv2.AvailableRegion{
 				{
-					Name:    "test",
-					Default: false,
+					Name:    pointer.Get("test"),
+					Default: pointer.Get(false),
 				},
 			},
 			want: -1,
 		},
 		{
-			input: []*atlas.AvailableRegion{
+			input: []atlasv2.AvailableRegion{
 				{
-					Name:    "test",
-					Default: true,
+					Name:    pointer.Get("test"),
+					Default: pointer.Get(true),
 				},
 			},
 			want: 0,
 		},
 		{
-			input: []*atlas.AvailableRegion{
+			input: []atlasv2.AvailableRegion{
 				{
-					Name:    "test",
-					Default: false,
+					Name:    pointer.Get("test"),
+					Default: pointer.Get(false),
 				},
 				{
-					Name:    "test2",
-					Default: true,
+					Name:    pointer.Get("test2"),
+					Default: pointer.Get(true),
 				},
 				{
-					Name:    "test1",
-					Default: false,
+					Name:    pointer.Get("test1"),
+					Default: pointer.Get(false),
 				},
 			},
 			want: 1,
 		},
 		{
-			input: []*atlas.AvailableRegion{
+			input: []atlasv2.AvailableRegion{
 				{
-					Name:    "test",
-					Default: false,
+					Name:    pointer.Get("test"),
+					Default: pointer.Get(false),
 				},
 				{
-					Name:    "test2",
-					Default: false,
+					Name:    pointer.Get("test2"),
+					Default: pointer.Get(false),
 				},
 				{
-					Name:    "test1",
-					Default: false,
+					Name:    pointer.Get("test1"),
+					Default: pointer.Get(false),
 				},
 			},
 			want: -1,

@@ -423,10 +423,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) AtlasCluster(arg0, arg1 inte
 }
 
 // CloudProviderRegions mocks base method.
-func (m *MockAtlasClusterQuickStarter) CloudProviderRegions(arg0, arg1 string, arg2 []*string) (*mongodbatlas.CloudProviders, error) {
+func (m *MockAtlasClusterQuickStarter) CloudProviderRegions(arg0, arg1 string, arg2 *[]string) (*mongodbatlasv2.PaginatedApiAtlasProviderRegions, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CloudProviderRegions", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviders)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedApiAtlasProviderRegions)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

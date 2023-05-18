@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockCloudProviderRegionsLister is a mock of CloudProviderRegionsLister interface.
@@ -35,10 +35,10 @@ func (m *MockCloudProviderRegionsLister) EXPECT() *MockCloudProviderRegionsListe
 }
 
 // CloudProviderRegions mocks base method.
-func (m *MockCloudProviderRegionsLister) CloudProviderRegions(arg0, arg1 string, arg2 []*string) (*mongodbatlas.CloudProviders, error) {
+func (m *MockCloudProviderRegionsLister) CloudProviderRegions(arg0, arg1 string, arg2 *[]string) (*mongodbatlasv2.PaginatedApiAtlasProviderRegions, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CloudProviderRegions", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviders)
+	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedApiAtlasProviderRegions)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

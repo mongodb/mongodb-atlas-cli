@@ -150,7 +150,10 @@ func TestDataLakePipelines(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datalakePipelineEntity,
 			"update", pipelineName,
+			"--sinkType", "DLS",
+			"--sinkMetadataProvider", "AWS",
 			"--sinkMetadataRegion", "US_EAST_2",
+			"--sinkPartitionField", "year,title",
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()

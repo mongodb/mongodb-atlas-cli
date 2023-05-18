@@ -52,15 +52,10 @@ func (opts *CreateOpts) Run() error {
 	createRequest := opts.newCloudProviderSnapshot()
 
 	r, err := opts.store.CreateSnapshot(opts.ConfigProjectID(), opts.clusterName, createRequest)
-
 	if err != nil {
 		return commonerrors.Check(err)
 	}
-
-	if r.DiskBackupShardedClusterSnapshot != nil {
-		return opts.Print(r.DiskBackupShardedClusterSnapshot)
-	}
-	return opts.Print(r.DiskBackupReplicaSet)
+	return opts.Print(r.GetActualInstance())
 }
 
 func (opts *CreateOpts) newCloudProviderSnapshot() *atlasv2.DiskBackupOnDemandSnapshotRequest {

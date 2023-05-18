@@ -17,7 +17,6 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -38,7 +37,6 @@ func TestDataLakePipelines(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	dataLakeName := fmt.Sprintf("e2e-data-lake-%v", n)
 
 	g := newAtlasE2ETestGenerator(t)
 	g.enableBackup = true
@@ -77,9 +75,11 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("Create", func(t *testing.T) {
+		const pipelineName = "sample_mflix.movies"
+
 		cmd := exec.Command(cliPath,
 			datalakePipelineEntity,
-			"create", "sample_mflix.movies",
+			"create", pipelineName,
 			"--sourceType", "ON_DEMAND_CPS",
 			"--sourceClusterName", g.clusterName,
 			"--sourceDatabaseName", "sample_mflix",
@@ -99,7 +99,7 @@ func TestDataLakePipelines(t *testing.T) {
 		a := assert.New(t)
 		var dataLake *atlasv2.IngestionPipeline
 		if err = json.Unmarshal(resp, &dataLake); a.NoError(err) {
-			a.Equal(dataLakeName, *dataLake.Name)
+			a.Equal(pipelineName, *dataLake.Name)
 		}
 	})
 }

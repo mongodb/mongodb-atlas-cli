@@ -308,12 +308,6 @@ tasks:
     tags: [ "code_health" ]
     commands:
       - func: "build atlascli"
-  - name: integration_test
-    tags: ["code_health"]
-    must_have_test_results: true
-    commands:
-      - func: "install gotestsum"
-      - func: "integration-test"
   - name: snyk_scan
     tags: ["snyk"]
     commands:

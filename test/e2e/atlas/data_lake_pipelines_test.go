@@ -41,6 +41,7 @@ func TestDataLakePipelines(t *testing.T) {
 	dataLakeName := fmt.Sprintf("e2e-data-lake-%v", n)
 
 	g := newAtlasE2ETestGenerator(t)
+	g.enableBackup = true
 	g.generateProjectAndCluster("dataLakePipeline")
 
 	var sampleDatasetJob *mongodbatlas.SampleDatasetJob

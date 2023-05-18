@@ -33,11 +33,6 @@ func TestDataLakePipelines(t *testing.T) {
 	req := require.New(t)
 	req.NoError(err)
 
-	n, err := e2e.RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
 	g := newAtlasE2ETestGenerator(t)
 	g.enableBackup = true
 	g.generateProjectAndCluster("dataLakePipeline")

@@ -144,6 +144,29 @@ func TestDataLakePipelines(t *testing.T) {
 		}
 	})
 
+	t.Run("Update", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			datalakePipelineEntity,
+			"update", pipelineName,
+			"--sinkType", "DLS",
+			"--sinkMetadataProvider", "AWS",
+			"--sinkMetadataRegion", "US_EAST_2",
+			"--sinkPartitionField", "year,title",
+			"--transform", "EXCLUDE:fullplot",
+			"--projectId", g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		req.NoError(err, string(resp))
+
+		a := assert.New(t)
+		var pipeline *atlasv2.IngestionPipeline
+		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
+			a.Equal(pipelineName, *pipeline.Name)
+		}
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datalakePipelineEntity,

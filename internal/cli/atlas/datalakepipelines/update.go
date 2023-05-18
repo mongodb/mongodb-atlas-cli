@@ -108,7 +108,6 @@ func (opts *UpdateOpts) newUpdateRequest() (*atlasv2.IngestionPipeline, error) {
 				MetadataRegion:   &opts.sinkMetadataRegion,
 			},
 		},
-		Source: &atlasv2.IngestionSource{},
 	}
 
 	for i, fieldName := range opts.sinkPartitionField {
@@ -125,18 +124,22 @@ func (opts *UpdateOpts) newUpdateRequest() (*atlasv2.IngestionPipeline, error) {
 	}
 
 	if strings.EqualFold(opts.sourceType, periodicCPS) {
-		pipeline.Source.PeriodicCpsSnapshotSource = &atlasv2.PeriodicCpsSnapshotSource{
-			Type:           &opts.sourceType,
-			ClusterName:    &opts.sourceClusterName,
-			CollectionName: &opts.sourceCollectionName,
-			DatabaseName:   &opts.sourceDatabaseName,
+		pipeline.Source = &atlasv2.IngestionSource{
+			PeriodicCpsSnapshotSource: &atlasv2.PeriodicCpsSnapshotSource{
+				Type:           &opts.sourceType,
+				ClusterName:    &opts.sourceClusterName,
+				CollectionName: &opts.sourceCollectionName,
+				DatabaseName:   &opts.sourceDatabaseName,
+			},
 		}
 	} else if strings.EqualFold(opts.sourceType, onDemandCPS) {
-		pipeline.Source.OnDemandCpsSnapshotSource = &atlasv2.OnDemandCpsSnapshotSource{
-			Type:           &opts.sourceType,
-			ClusterName:    &opts.sourceClusterName,
-			CollectionName: &opts.sourceCollectionName,
-			DatabaseName:   &opts.sourceDatabaseName,
+		pipeline.Source = &atlasv2.IngestionSource{
+			OnDemandCpsSnapshotSource: &atlasv2.OnDemandCpsSnapshotSource{
+				Type:           &opts.sourceType,
+				ClusterName:    &opts.sourceClusterName,
+				CollectionName: &opts.sourceCollectionName,
+				DatabaseName:   &opts.sourceDatabaseName,
+			},
 		}
 	}
 

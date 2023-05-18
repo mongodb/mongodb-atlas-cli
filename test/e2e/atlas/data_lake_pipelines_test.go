@@ -17,6 +17,7 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -69,9 +70,9 @@ func TestDataLakePipelines(t *testing.T) {
 		req.NoError(err, string(resp))
 	})
 
-	t.Run("Create", func(t *testing.T) {
-		const pipelineName = "sample_mflix.movies"
+	const pipelineName = "sample_mflix.movies"
 
+	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datalakePipelineEntity,
 			"create", pipelineName,
@@ -92,9 +93,54 @@ func TestDataLakePipelines(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var dataLake *atlasv2.IngestionPipeline
-		if err = json.Unmarshal(resp, &dataLake); a.NoError(err) {
-			a.Equal(pipelineName, *dataLake.Name)
+		var pipeline *atlasv2.IngestionPipeline
+		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
+			a.Equal(pipelineName, *pipeline.Name)
 		}
+	})
+
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			datalakePipelineEntity,
+			"describe", pipelineName,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		a := assert.New(t)
+		var pipeline atlasv2.IngestionPipeline
+		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
+			a.Equal(pipelineName, *pipeline.Name)
+		}
+	})
+
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			datalakePipelineEntity,
+			"ls",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var r []atlasv2.IngestionPipeline
+		a := assert.New(t)
+		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			a.NotEmpty(r)
+		}
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			datalakePipelineEntity,
+			"delete", pipelineName,
+			"--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		expected := fmt.Sprintf("'%s' deleted\n", pipelineName)
+		assert.Equal(t, expected, string(resp))
 	})
 }

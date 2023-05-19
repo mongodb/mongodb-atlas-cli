@@ -649,11 +649,22 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 	resp, err := cmd.CombinedOutput()
 	t.Log(string(resp))
 	require.NoError(t, err)
-	var privateEndpoints []mongodbatlas.PrivateEndpointConnection
+	var privateEndpoints []interface{}
 	err = json.Unmarshal(resp, &privateEndpoints)
 	require.NoError(t, err)
 	for _, endpoint := range privateEndpoints {
-		endpointID := endpoint.ID
+		var endpointID string
+
+		switch v := endpoint.(type) {
+		case *atlasv2.AWSPrivateLinkConnection:
+			endpointID = v.GetId()
+		case *atlasv2.AzurePrivateLinkConnection:
+			endpointID = v.GetId()
+		case *atlasv2.GCPEndpointService:
+			endpointID = v.GetId()
+		}
+		require.NotEmpty(t, endpointID)
+
 		t.Run("deleting endpoint: "+endpointID, func(t *testing.T) {
 			t.Parallel()
 			cmd = exec.Command(cliPath,

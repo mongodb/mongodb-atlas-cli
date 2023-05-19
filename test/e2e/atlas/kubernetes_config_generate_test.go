@@ -41,6 +41,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -699,10 +700,10 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 		t.Cleanup(func() {
 			deleteAllPrivateEndpoints(t, cliPath, generator.projectID, azureEntity)
 		})
-		var createdNetworkPeer mongodbatlas.PrivateEndpointConnection
+		var createdNetworkPeer atlasv2.AzurePrivateLinkConnection
 		err = json.Unmarshal(resp, &createdNetworkPeer)
 		require.NoError(t, err)
-		expectedProject.Spec.PrivateEndpoints[0].ID = createdNetworkPeer.ID
+		expectedProject.Spec.PrivateEndpoints[0].ID = createdNetworkPeer.GetId()
 
 		cmd = exec.Command(cliPath,
 			"kubernetes",

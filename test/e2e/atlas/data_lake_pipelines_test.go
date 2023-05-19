@@ -75,6 +75,7 @@ func TestDataLakePipelines(t *testing.T) {
 			backupsEntity,
 			snapshotsEntity,
 			"create", g.clusterName,
+			"--desc", "snapshot 1",
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -98,8 +99,6 @@ func TestDataLakePipelines(t *testing.T) {
 		req.NoError(err, string(resp))
 		t.Log(resp)
 	})
-
-	//backups snapshots create myDemo --desc "test" --retention 30
 
 	const pipelineName = "sample_mflix.movies"
 	var pipelineID string

@@ -201,7 +201,7 @@ func TestDataLakePipelines(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datalakePipelineEntity,
 			"trigger", pipelineName,
-			"--snapshotID", snapshotID,
+			"--snapshotId", snapshotID,
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()

@@ -51,6 +51,7 @@ Related Commands
 
 * :ref:`atlas-dataLakePipelines-runs-describe` - Return the details for the specified data lake pipeline run for your project.
 * :ref:`atlas-dataLakePipelines-runs-list` - Returns all data lake pipeline runs for your project.
+* :ref:`atlas-dataLakePipelines-runs-watch` - Watch for the specified data lake pipeline run to complete.
 
 
 .. toctree::
@@ -58,4 +59,5 @@ Related Commands
 
    describe </command/atlas-dataLakePipelines-runs-describe>
    list </command/atlas-dataLakePipelines-runs-list>
+   watch </command/atlas-dataLakePipelines-runs-watch>
 

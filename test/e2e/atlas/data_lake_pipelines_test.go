@@ -292,6 +292,19 @@ func TestDataLakePipelines(t *testing.T) {
 		}
 	})
 
+	t.Run("Runs Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			datalakePipelineEntity,
+			"runs",
+			"watch", pipelineRunID,
+			"--pipeline", pipelineName,
+			"--projectId", g.projectID)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+		t.Log(string(resp))
+	})
+
 	t.Run("Datasets Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datalakePipelineEntity,

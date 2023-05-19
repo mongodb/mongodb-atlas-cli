@@ -120,11 +120,11 @@ func TestExportJobs(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var snapshot atlas.CloudProviderSnapshot
+		var snapshot atlasv2.DiskBackupSnapshot
 		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
-			a.Equal("test-snapshot", snapshot.Description)
+			a.Equal("test-snapshot", snapshot.DiskBackupReplicaSet.GetDescription())
 		}
-		snapshotID = snapshot.ID
+		snapshotID = snapshot.DiskBackupReplicaSet.GetId()
 	})
 
 	t.Run("Watch snapshot creation", func(t *testing.T) {

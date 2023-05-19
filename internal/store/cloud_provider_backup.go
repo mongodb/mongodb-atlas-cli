@@ -45,7 +45,7 @@ type SnapshotsDescriber interface {
 }
 
 type SnapshotsCreator interface {
-	CreateSnapshot(string, string, *atlas.CloudProviderSnapshot) (*atlas.CloudProviderSnapshot, error)
+	CreateSnapshot(string, string, *atlasv2.DiskBackupOnDemandSnapshotRequest) (*atlasv2.DiskBackupSnapshot, error)
 }
 
 type SnapshotsDeleter interface {
@@ -131,14 +131,10 @@ func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlasv
 }
 
 // CreateSnapshot encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlas.CloudProviderSnapshot) (*atlas.CloudProviderSnapshot, error) {
-	o := &atlas.SnapshotReqPathParameters{
-		GroupID:     projectID,
-		ClusterName: clusterName,
-	}
+func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlasv2.DiskBackupOnDemandSnapshotRequest) (*atlasv2.DiskBackupSnapshot, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.Create(s.ctx, o, request)
+		result, _, err := s.clientv2.CloudBackupsApi.TakeSnapshot(s.ctx, projectID, clusterName).DiskBackupOnDemandSnapshotRequest(*request).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

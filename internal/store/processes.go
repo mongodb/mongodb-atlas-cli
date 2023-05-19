@@ -18,24 +18,24 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_processes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessLister,ProcessDescriber
 
 type ProcessLister interface {
-	Processes(string, *atlas.ProcessesListOptions) ([]*atlas.Process, error)
+	Processes(*atlasv2.ListAtlasProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error)
 }
 
 type ProcessDescriber interface {
-	Process(string, string, int) (*atlas.Process, error)
+	Process(*atlasv2.GetAtlasProcessApiParams) (*atlasv2.HostViewAtlas, error)
 }
 
 // Process encapsulate the logic to manage different cloud providers.
-func (s *Store) Process(groupID, hostname string, port int) (*atlas.Process, error) {
+func (s *Store) Process(params *atlasv2.GetAtlasProcessApiParams) (*atlasv2.HostViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Processes.Get(s.ctx, groupID, hostname, port)
+		result, _, err := s.clientv2.MonitoringAndLogsApi.GetAtlasProcessWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -43,10 +43,10 @@ func (s *Store) Process(groupID, hostname string, port int) (*atlas.Process, err
 }
 
 // Processes encapsulate the logic to manage different cloud providers.
-func (s *Store) Processes(groupID string, opts *atlas.ProcessesListOptions) ([]*atlas.Process, error) {
+func (s *Store) Processes(params *atlasv2.ListAtlasProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Processes.List(s.ctx, groupID, opts)
+		result, _, err := s.clientv2.MonitoringAndLogsApi.ListAtlasProcessesWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

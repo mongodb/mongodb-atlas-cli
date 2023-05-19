@@ -75,7 +75,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.Error(err, string(resp))
-		a.Equal("Error: unable to auto detect params: couldn't to find operator installed in any accessible namespace\n", string(resp))
+		a.Equal("Error: unable to auto detect params: couldn't find an operator installed in any accessible namespace\n", string(resp))
 	})
 
 	t.Run("should failed to apply resources when unable to autodetect operator version", func(t *testing.T) {
@@ -159,7 +159,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		// Assert Backup Policy
 		akoBkpPolicy := akov1.AtlasBackupPolicy{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-backuppolicy", g.clusterName)), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backuppolicy", g.projectName, g.clusterName)), Namespace: namespace},
 			&akoBkpPolicy,
 			true,
 		)
@@ -169,20 +169,20 @@ func TestKubernetesConfigApply(t *testing.T) {
 		// Assert Backup Schedule
 		akoBkpSchedule := akov1.AtlasBackupSchedule{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-backupschedule", g.clusterName)), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backupschedule", g.projectName, g.clusterName)), Namespace: namespace},
 			&akoBkpSchedule,
 			true,
 		)
 		req.NoError(err)
 		a.Equal(
-			referenceExportedBackupSchedule(g.clusterName, akoBkpSchedule.Spec.ReferenceHourOfDay, akoBkpSchedule.Spec.ReferenceMinuteOfHour).Spec,
+			referenceExportedBackupSchedule(g.projectName, g.clusterName, akoBkpSchedule.Spec.ReferenceHourOfDay, akoBkpSchedule.Spec.ReferenceMinuteOfHour).Spec,
 			akoBkpSchedule.Spec,
 		)
 
 		// Assert Deployment
 		akoDeployment := akov1.AtlasDeployment{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(g.clusterName), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.clusterName)), Namespace: namespace},
 			&akoDeployment,
 			true,
 		)
@@ -301,11 +301,11 @@ func referenceExportedTeam(teamName, username string) *akov1.AtlasTeam {
 	}
 }
 
-func referenceExportedBackupSchedule(clusterName string, refHour, refMin int64) *akov1.AtlasBackupSchedule {
+func referenceExportedBackupSchedule(projectName, clusterName string, refHour, refMin int64) *akov1.AtlasBackupSchedule {
 	return &akov1.AtlasBackupSchedule{
 		Spec: akov1.AtlasBackupScheduleSpec{
 			PolicyRef: common.ResourceRefNamespaced{
-				Name:      prepareK8sName(fmt.Sprintf("%s-backuppolicy", clusterName)),
+				Name:      prepareK8sName(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName)),
 				Namespace: "mongodb-atlas-system",
 			},
 			AutoExportEnabled:     false,
@@ -357,7 +357,7 @@ func referenceExportedDeployment(projectName, clusterName string) *akov1.AtlasDe
 				Namespace: "mongodb-atlas-system",
 			},
 			BackupScheduleRef: common.ResourceRefNamespaced{
-				Name:      prepareK8sName(fmt.Sprintf("%s-backupschedule", clusterName)),
+				Name:      prepareK8sName(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName)),
 				Namespace: "mongodb-atlas-system",
 			},
 			AdvancedDeploymentSpec: &akov1.AdvancedDeploymentSpec{
@@ -421,12 +421,9 @@ func referenceExportedDeployment(projectName, clusterName string) *akov1.AtlasDe
 				VersionReleaseSystem: "LTS",
 			},
 			ProcessArgs: &akov1.ProcessArgs{
-				MinimumEnabledTLSProtocol:        "TLS1_2",
-				JavascriptEnabled:                toptr.MakePtr(true),
-				NoTableScan:                      toptr.MakePtr(false),
-				OplogSizeMB:                      toptr.MakePtr(int64(0)),
-				SampleSizeBIConnector:            toptr.MakePtr(int64(0)),
-				SampleRefreshIntervalBIConnector: toptr.MakePtr(int64(0)),
+				MinimumEnabledTLSProtocol: "TLS1_2",
+				JavascriptEnabled:         toptr.MakePtr(true),
+				NoTableScan:               toptr.MakePtr(false),
 			},
 		},
 	}

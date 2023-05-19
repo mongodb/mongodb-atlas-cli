@@ -66,7 +66,7 @@ func TestDataLakePipelines(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err = cmd.CombinedOutput()
 		req.NoError(err, string(resp))
-		t.Log(resp)
+		t.Log(string(resp))
 	})
 
 	var snapshotID string
@@ -97,7 +97,7 @@ func TestDataLakePipelines(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err = cmd.CombinedOutput()
 		req.NoError(err, string(resp))
-		t.Log(resp)
+		t.Log(string(resp))
 	})
 
 	const pipelineName = "sample_mflix.movies"
@@ -290,6 +290,20 @@ func TestDataLakePipelines(t *testing.T) {
 			pipelineRunID = *run.Id
 			a.Equal(pipelineID, *run.PipelineId)
 		}
+	})
+
+	t.Run("Datasets Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			datalakePipelineEntity,
+			"datasets",
+			"delete", pipelineRunID,
+			"--pipeline", pipelineName,
+			"--projectId", g.projectID,
+			"--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+		t.Log(string(resp))
 	})
 
 	t.Run("Delete", func(t *testing.T) {

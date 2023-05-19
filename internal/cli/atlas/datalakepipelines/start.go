@@ -66,8 +66,8 @@ func StartBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"pipelineNameDesc": "Name of the pipeline",
 		},
-		Example: `# pause pipeline 'Pipeline1':
-  atlas dataLakePipelines pause Pipeline1
+		Example: `# start pipeline 'Pipeline1':
+  atlas dataLakePipelines start Pipeline1
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

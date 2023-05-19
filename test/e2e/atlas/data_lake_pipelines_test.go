@@ -101,7 +101,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	const pipelineName = "sample_mflix.movies"
-	var pipelineID string
+	var pipelineID, pipelineRunID string
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -212,6 +212,7 @@ func TestDataLakePipelines(t *testing.T) {
 		a := assert.New(t)
 		var run *atlasv2.IngestionPipelineRun
 		if err = json.Unmarshal(resp, &run); a.NoError(err) {
+			pipelineRunID = *run.Id
 			a.Equal(pipelineID, *run.PipelineId)
 		}
 	})
@@ -249,6 +250,44 @@ func TestDataLakePipelines(t *testing.T) {
 		var pipeline *atlasv2.IngestionPipeline
 		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
 			a.Equal(pipelineName, *pipeline.Name)
+		}
+	})
+
+	t.Run("Runs List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			datalakePipelineEntity,
+			"runs",
+			"ls",
+			"--pipeline", pipelineName,
+			"--projectId", g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var r *atlasv2.PaginatedPipelineRun
+		a := assert.New(t)
+		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			a.NotEmpty(r)
+		}
+	})
+
+	t.Run("Runs Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			datalakePipelineEntity,
+			"runs",
+			"describe", pipelineRunID,
+			"--pipeline", pipelineName,
+			"--projectId", g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var r *atlasv2.PaginatedPipelineRun
+		a := assert.New(t)
+		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			a.NotEmpty(r)
 		}
 	})
 

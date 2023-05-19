@@ -680,6 +680,7 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 	const region = "northeurope"
 	newPrivateEndpoint := atlasV1.PrivateEndpoint{
 		Provider: provider.ProviderAzure,
+		Region:   "EUROPE_NORTH",
 	}
 	expectedProject.Spec.PrivateEndpoints = []atlasV1.PrivateEndpoint{
 		newPrivateEndpoint,

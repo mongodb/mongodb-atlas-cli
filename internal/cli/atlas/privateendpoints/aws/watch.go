@@ -51,8 +51,8 @@ func (opts *WatchOpts) watcher() (bool, error) {
 		return false, err
 	}
 
-	endpoint := result.(*atlasv2.AWSPrivateLinkConnection)
-	return *endpoint.Status == "AVAILABLE" || *endpoint.Status == "FAILED", nil
+	endpointService := result.(*atlasv2.AWSPrivateLinkConnection)
+	return endpointService.GetStatus() == "AVAILABLE" || endpointService.GetStatus() == "FAILED", nil
 }
 
 func (opts *WatchOpts) Run() error {

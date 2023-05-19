@@ -487,13 +487,13 @@ func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID str
 			}
 
 			switch v := peList[i].(type) {
-			case atlasv2.AWSPrivateLinkConnection:
+			case *atlasv2.AWSPrivateLinkConnection:
 				peResult.ID = *v.Id
 				peResult.Region = *v.RegionName
-			case atlasv2.AzurePrivateLinkConnection:
+			case *atlasv2.AzurePrivateLinkConnection:
 				peResult.ID = *v.Id
 				peResult.Region = *v.RegionName
-			case atlasv2.GCPEndpointService:
+			case *atlasv2.GCPEndpointService:
 				peResult.ID = *v.Id
 				peResult.Region = *v.RegionName
 			}

@@ -160,17 +160,16 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 		}
 
-		privateEndpoints := []atlasv2.AWSPrivateLinkConnection{
-			{
-				Id:                  pointer.Get("TestID"),
-				CloudProvider:       string(provider.ProviderAWS),
-				RegionName:          pointer.Get("US_WEST_2"),
-				EndpointServiceName: "",
-				ErrorMessage:        "",
-				InterfaceEndpoints:  nil,
-				Status:              "",
-			},
+		privateAWSEndpoint := atlasv2.AWSPrivateLinkConnection{
+			Id:                  pointer.Get("TestID"),
+			CloudProvider:       string(provider.ProviderAWS),
+			RegionName:          pointer.Get("US_WEST_2"),
+			EndpointServiceName: nil,
+			ErrorMessage:        nil,
+			InterfaceEndpoints:  nil,
+			Status:              nil,
 		}
+		privateEndpoints := []interface{}{&privateAWSEndpoint}
 
 		alertConfigs := []mongodbatlas.AlertConfiguration{
 			{
@@ -294,9 +293,9 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore.EXPECT().PeeringConnections(projectID, containerListOptionAWS).Return(peeringConnections, nil)
 		projectStore.EXPECT().PeeringConnections(projectID, containerListOptionGCP).Return(nil, nil)
 		projectStore.EXPECT().PeeringConnections(projectID, containerListOptionAzure).Return(nil, nil)
-		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAWS), listOption).Return(privateEndpoints, nil)
-		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP), listOption).Return(nil, nil)
-		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAzure), listOption).Return(nil, nil)
+		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAWS)).Return(privateEndpoints, nil)
+		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP)).Return(nil, nil)
+		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAzure)).Return(nil, nil)
 		projectStore.EXPECT().EncryptionAtRest(projectID).Return(encryptionAtRest, nil)
 		projectStore.EXPECT().CloudProviderAccessRoles(projectID).Return(cpas, nil)
 		projectStore.EXPECT().ProjectSettings(projectID).Return(projectSettings, nil)
@@ -434,8 +433,8 @@ func TestBuildAtlasProject(t *testing.T) {
 				PrivateEndpoints: []atlasV1.PrivateEndpoint{
 					{
 						Provider:          provider.ProviderAWS,
-						Region:            *privateEndpoints[0].RegionName,
-						ID:                *privateEndpoints[0].Id,
+						Region:            *privateAWSEndpoint.RegionName,
+						ID:                *privateAWSEndpoint.Id,
 						IP:                "",
 						GCPProjectID:      "",
 						EndpointGroupName: "",
@@ -1125,17 +1124,16 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 		privateEndpoint := atlasv2.AWSPrivateLinkConnection{
 			Id:                  pointer.Get("1"),
 			CloudProvider:       string(providerName),
-			RegionName:          pointe.Get("US_EAST_1"),
-			EndpointServiceName: "",
-			ErrorMessage:        "",
+			RegionName:          pointer.Get("US_EAST_1"),
+			EndpointServiceName: nil,
+			ErrorMessage:        nil,
 			InterfaceEndpoints:  nil,
-			Status:              "",
+			Status:              nil,
 		}
 
-		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName), listOptions).Return([]atlasv2.AWSPrivateLinkConnection{privateEndpoint}, nil)
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAzure), listOptions).Return(nil, nil)
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP), listOptions).Return(nil, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]interface{}{&privateEndpoint}, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAzure)).Return(nil, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP)).Return(nil, nil)
 
 		got, err := buildPrivateEndpoints(peProvider, projectID)
 		if err != nil {
@@ -1145,8 +1143,8 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 		expected := []atlasV1.PrivateEndpoint{
 			{
 				Provider:          providerName,
-				Region:            *privateEndpoint.Region,
-				ID:                *privateEndpoint.ID,
+				Region:            *privateEndpoint.RegionName,
+				ID:                *privateEndpoint.Id,
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",
@@ -1161,27 +1159,20 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 
 	t.Run("Can convert PrivateEndpointConnection for Azure", func(t *testing.T) {
 		providerName := provider.ProviderAzure
-		privateEndpoint := mongodbatlas.PrivateEndpointConnection{
-
-			ID:                           "1",
-			ProviderName:                 string(providerName),
-			Region:                       "uswest3",
-			EndpointServiceName:          "",
-			ErrorMessage:                 "",
-			InterfaceEndpoints:           nil,
+		privateEndpoint := atlasv2.AzurePrivateLinkConnection{
+			Id:                           pointer.Get("1"),
+			CloudProvider:                string(providerName),
+			RegionName:                   pointer.Get("uswest3"),
+			ErrorMessage:                 pointer.Get(""),
 			PrivateEndpoints:             nil,
-			PrivateLinkServiceName:       "",
-			PrivateLinkServiceResourceID: "",
-			Status:                       "",
-			EndpointGroupNames:           nil,
-			RegionName:                   "",
-			ServiceAttachmentNames:       nil,
+			PrivateLinkServiceName:       nil,
+			PrivateLinkServiceResourceId: nil,
+			Status:                       nil,
 		}
 
-		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName), listOptions).Return([]mongodbatlas.PrivateEndpointConnection{privateEndpoint}, nil)
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAWS), listOptions).Return(nil, nil)
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP), listOptions).Return(nil, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]interface{}{&privateEndpoint}, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAWS)).Return(nil, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP)).Return(nil, nil)
 
 		got, err := buildPrivateEndpoints(peProvider, projectID)
 		if err != nil {
@@ -1191,8 +1182,8 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 		expected := []atlasV1.PrivateEndpoint{
 			{
 				Provider:          providerName,
-				Region:            privateEndpoint.Region,
-				ID:                privateEndpoint.ID,
+				Region:            *privateEndpoint.RegionName,
+				ID:                *privateEndpoint.Id,
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",

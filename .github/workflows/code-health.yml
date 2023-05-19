@@ -52,7 +52,7 @@ jobs:
         uses: test-summary/action@v2
         with:
           paths: unit-tests.xml
-        if: always()
+        if: always() && matrix.os == 'ubuntu-latest'
   integration-tests:
     env:
       COVERAGE: coverage.out

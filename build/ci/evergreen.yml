@@ -61,41 +61,6 @@ functions:
       params:
         <<: *go_options
         command: make build-atlascli
-  "check library_owners.json":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        command: make check-library-owners
-  "integration-test":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        env:
-          <<: *go_env
-          TEST_CMD: gotestsum --junitfile unit-tests.xml --
-        command: make integration-test
-  "generate html coverage":
-    - command: shell.exec
-      type: test
-      params:
-        <<: *go_options
-        script: |
-          set -Eeou pipefail
-          export PATH="$ADD_PATH:$PATH"
-          go tool cover -html=coverage.out -o coverage.html
-  "upload html coverage":
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.html
-        remote_file: ${project}/coverage/internal/${task_id}.html
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: text/html
-        display_name: internal-html-coverage
   "e2e test":
     - command: subprocess.exec
       type: test

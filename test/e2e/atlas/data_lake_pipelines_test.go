@@ -38,7 +38,6 @@ func TestDataLakePipelines(t *testing.T) {
 	g.enableBackup = true
 	g.generateProjectAndCluster("dataLakePipeline")
 
-	var sampleDatasetJob *mongodbatlas.SampleDatasetJob
 	t.Run("Load Sample Data", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -51,24 +50,56 @@ func TestDataLakePipelines(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
+		var sampleDatasetJob *mongodbatlas.SampleDatasetJob
 		err = json.Unmarshal(resp, &sampleDatasetJob)
 		req.NoError(err)
 
 		a := assert.New(t)
 		a.Equal(g.clusterName, sampleDatasetJob.ClusterName)
-	})
 
-	t.Run("Watch Sample Data", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd = exec.Command(cliPath,
 			clustersEntity,
 			"sampleData",
 			"watch",
 			sampleDatasetJob.ID,
 			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
+		resp, err = cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+		t.Log(resp)
+	})
+
+	var snapshotID string
+	t.Run("Generate Snapshot", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			snapshotsEntity,
+			"create", g.clusterName,
+			"--projectId", g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
+
+		var snapshot *mongodbatlas.CloudProviderSnapshot
+		err = json.Unmarshal(resp, &snapshot)
+		req.NoError(err)
+
+		snapshotID = snapshot.ID
+
+		cmd = exec.Command(cliPath,
+			backupsEntity,
+			snapshotsEntity,
+			"watch", snapshotID,
+			"--clusterName", g.clusterName,
+			"--projectId", g.projectID)
+		cmd.Env = os.Environ()
+		resp, err = cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+		t.Log(resp)
 	})
+
+	//backups snapshots create myDemo --desc "test" --retention 30
 
 	const pipelineName = "sample_mflix.movies"
 	var pipelineID string
@@ -171,6 +202,7 @@ func TestDataLakePipelines(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datalakePipelineEntity,
 			"trigger", pipelineName,
+			"--snapshotID", snapshotID,
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()

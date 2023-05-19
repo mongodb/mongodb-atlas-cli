@@ -302,18 +302,18 @@ func (m *MockPipelinesTriggerer) EXPECT() *MockPipelinesTriggererMockRecorder {
 }
 
 // PipelineTrigger mocks base method.
-func (m *MockPipelinesTriggerer) PipelineTrigger(arg0, arg1 string) (*mongodbatlasv2.IngestionPipelineRun, error) {
+func (m *MockPipelinesTriggerer) PipelineTrigger(arg0, arg1, arg2 string) (*mongodbatlasv2.IngestionPipelineRun, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PipelineTrigger", arg0, arg1)
+	ret := m.ctrl.Call(m, "PipelineTrigger", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlasv2.IngestionPipelineRun)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // PipelineTrigger indicates an expected call of PipelineTrigger.
-func (mr *MockPipelinesTriggererMockRecorder) PipelineTrigger(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockPipelinesTriggererMockRecorder) PipelineTrigger(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PipelineTrigger", reflect.TypeOf((*MockPipelinesTriggerer)(nil).PipelineTrigger), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PipelineTrigger", reflect.TypeOf((*MockPipelinesTriggerer)(nil).PipelineTrigger), arg0, arg1, arg2)
 }
 
 // MockPipelinesPauser is a mock of PipelinesPauser interface.

@@ -284,10 +284,11 @@ func TestDataLakePipelines(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var r *atlasv2.PaginatedPipelineRun
 		a := assert.New(t)
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
+		var run *atlasv2.IngestionPipelineRun
+		if err = json.Unmarshal(resp, &run); a.NoError(err) {
+			pipelineRunID = *run.Id
+			a.Equal(pipelineID, *run.PipelineId)
 		}
 	})
 

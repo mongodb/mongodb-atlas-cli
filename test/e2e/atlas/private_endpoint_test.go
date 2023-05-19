@@ -118,7 +118,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r []interface{}
+		var r []atlasv2.AWSPrivateLinkConnection
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
 		}
@@ -250,7 +250,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r []interface{}
+		var r []atlasv2.AzurePrivateLinkConnection
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
 		}
@@ -388,7 +388,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r []interface{}
+		var r []atlasv2.GCPEndpointService
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
 		}

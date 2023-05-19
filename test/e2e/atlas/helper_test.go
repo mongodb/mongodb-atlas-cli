@@ -649,13 +649,13 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 	resp, err := cmd.CombinedOutput()
 	t.Log(string(resp))
 	require.NoError(t, err)
-	var privateEndpoints []interface{}
+	var privateEndpoints []atlasv2.EndpointService
 	err = json.Unmarshal(resp, &privateEndpoints)
 	require.NoError(t, err)
 	for _, endpoint := range privateEndpoints {
 		var endpointID string
 
-		switch v := endpoint.(type) {
+		switch v := endpoint.GetActualInstance().(type) {
 		case *atlasv2.AWSPrivateLinkConnection:
 			endpointID = v.GetId()
 		case *atlasv2.AzurePrivateLinkConnection:

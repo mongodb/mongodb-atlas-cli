@@ -16,10 +16,11 @@ package store
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
-	"io"
 )
 
 //go:generate mockgen -destination=../mocks/mock_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LogsDownloader,LogJobsDownloader,LogCollector,LogJobLister,LogJobDeleter

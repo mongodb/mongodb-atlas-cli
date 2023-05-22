@@ -58,7 +58,7 @@ func DeleteBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"pipelineNameDesc": "Name of the pipeline",
+			"pipelineNameDesc": "Label that identifies the pipeline",
 			"output":           opts.SuccessMessage(),
 		},
 		Example: `# deletes pipeline 'Pipeline1':

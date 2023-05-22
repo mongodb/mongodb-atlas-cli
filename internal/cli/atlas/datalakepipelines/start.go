@@ -64,7 +64,7 @@ func StartBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"pipelineNameDesc": "Name of the pipeline",
+			"pipelineNameDesc": "Label that identifies the pipeline",
 		},
 		Example: `# start pipeline 'Pipeline1':
   atlas dataLakePipelines start Pipeline1

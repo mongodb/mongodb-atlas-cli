@@ -338,6 +338,7 @@ func TestDataLakePipelines(t *testing.T) {
 		}
 	})
 
+	// TODO renable this once CLOUDP-178195 is fixed
 	// t.Run("AvailableSnapshots List", func(t *testing.T) {
 	// 	cmd := exec.Command(cliPath,
 	// 		datalakePipelineEntity,

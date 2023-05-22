@@ -51,6 +51,7 @@ func Builder() *cobra.Command {
 		WatchBuilder(),
 		runs.Builder(),
 		availableschedules.Builder(),
+		// TODO renable this once CLOUDP-178195 is fixed
 		// availablesnapshots.Builder(),
 		datasets.Builder(),
 	)

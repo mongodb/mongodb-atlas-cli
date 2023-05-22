@@ -19,7 +19,6 @@ package datalakepipelines
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalakepipelines/availableschedules"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalakepipelines/availablesnapshots"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalakepipelines/datasets"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalakepipelines/runs"
 	"github.com/spf13/cobra"
@@ -49,9 +48,11 @@ func Builder() *cobra.Command {
 		TriggerBuilder(),
 		PauseBuilder(),
 		StartBuilder(),
+		WatchBuilder(),
 		runs.Builder(),
 		availableschedules.Builder(),
-		availablesnapshots.Builder(),
+		// TODO renable this once CLOUDP-178195 is fixed
+		// availablesnapshots.Builder(),
 		datasets.Builder(),
 	)
 

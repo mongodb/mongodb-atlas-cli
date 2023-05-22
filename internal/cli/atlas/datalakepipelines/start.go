@@ -64,10 +64,10 @@ func StartBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"pipelineNameDesc": "Name of the pipeline",
+			"pipelineNameDesc": "Label that identifies the pipeline",
 		},
-		Example: `# pause pipeline 'Pipeline1':
-  atlas dataLakePipelines pause Pipeline1
+		Example: `# start pipeline 'Pipeline1':
+  atlas dataLakePipelines start Pipeline1
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

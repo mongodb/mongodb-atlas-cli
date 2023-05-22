@@ -29,14 +29,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type DescribeOpts struct {
+type WatchOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
+	cli.WatchOpts
 	id    string
 	store store.PipelinesDescriber
 }
 
-func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
+func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -44,38 +45,45 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var describeTemplate = `ID	NAME	STATE
-{{.Id}}	{{.Name}}	{{.State}}
+var watchTemplate = `data lake pipeline created
 `
 
-func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.Pipeline(opts.ConfigProjectID(), opts.id)
+func (opts *WatchOpts) watcher() (bool, error) {
+	result, err := opts.store.Pipeline(opts.ConfigProjectID(), opts.id)
 	if err != nil {
+		return false, err
+	}
+	return result.GetState() == "ACTIVE", nil
+}
+
+func (opts *WatchOpts) Run() error {
+	if err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	return opts.Print(nil)
 }
 
-// atlas dataLakePipelines describe <pipelineName> [--projectId projectId].
-func DescribeBuilder() *cobra.Command {
-	opts := new(DescribeOpts)
+// atlas dataLakePipelines watch <pipelineName> [--projectId projectId].
+func WatchBuilder() *cobra.Command {
+	opts := new(WatchOpts)
 	cmd := &cobra.Command{
-		Use:   "describe <pipelineName>",
-		Short: "Return the details for the specified data lake pipeline for your project.",
+		Use:   "watch <pipelineName>",
+		Short: "Watch for the specified data lake pipeline to complete.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"pipelineNameDesc": "Label that identifies the pipeline",
+			"output":           watchTemplate,
 		},
-		Example: `# retrieves pipeline 'Pipeline1':
-  atlas dataLakePipelines describe Pipeline1
+		Example: `# watches the pipeline 'Pipeline1':
+  atlas dataLakePipelines watch Pipeline1
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

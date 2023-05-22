@@ -30,8 +30,9 @@ import (
 type TriggerOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	id    string
-	store store.PipelinesTriggerer
+	id         string
+	snapshotID string
+	store      store.PipelinesTriggerer
 }
 
 func (opts *TriggerOpts) initStore(ctx context.Context) func() error {
@@ -47,7 +48,7 @@ var triggerTemplate = `ID	DATASET NAME	STATE
 `
 
 func (opts *TriggerOpts) Run() error {
-	r, err := opts.store.PipelineTrigger(opts.ConfigProjectID(), opts.id)
+	r, err := opts.store.PipelineTrigger(opts.ConfigProjectID(), opts.id, opts.snapshotID)
 	if err != nil {
 		return err
 	}
@@ -64,7 +65,7 @@ func TriggerBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"pipelineNameDesc": "Name of the pipeline",
+			"pipelineNameDesc": "Label that identifies the pipeline",
 		},
 		Example: `# trigger pipeline 'Pipeline1':
   atlas dataLakePipelines trigger Pipeline1
@@ -82,6 +83,9 @@ func TriggerBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.SnapshotID)
+	_ = cmd.MarkFlagRequired(flag.SnapshotID)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

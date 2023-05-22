@@ -40,7 +40,7 @@ Arguments
    * - pipelineName
      - string
      - true
-     - Name of the pipeline
+     - Label that identifies the pipeline
 
 Options
 -------
@@ -65,6 +65,10 @@ Options
      - string
      - false
      - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
+   * - --snapshotId
+     - string
+     - true
+     - Unique identifier of the snapshot.
 
 Inherited Options
 -----------------

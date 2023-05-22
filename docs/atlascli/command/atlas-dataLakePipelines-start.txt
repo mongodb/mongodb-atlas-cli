@@ -40,7 +40,7 @@ Arguments
    * - pipelineName
      - string
      - true
-     - Name of the pipeline
+     - Label that identifies the pipeline
 
 Options
 -------
@@ -87,6 +87,6 @@ Examples
 
 .. code-block::
 
-   # pause pipeline 'Pipeline1':
-   atlas dataLakePipelines pause Pipeline1
+   # start pipeline 'Pipeline1':
+   atlas dataLakePipelines start Pipeline1
 

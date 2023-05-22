@@ -42,7 +42,7 @@ func TestWatch_Run(t *testing.T) {
 	expected := &atlasv2.IngestionPipelineRun{
 		Id:          pointer.Get("1a5cbd92c036a0eb288"),
 		DatasetName: pointer.Get("pipeline 1"),
-		State:       pointer.Get("ACTIVE"),
+		State:       pointer.Get("DONE"),
 	}
 
 	mockStore.

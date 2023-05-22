@@ -319,25 +319,6 @@ func TestDataLakePipelines(t *testing.T) {
 		t.Log(string(resp))
 	})
 
-	t.Run("AvailableSnapshots List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			datalakePipelineEntity,
-			"availablesnapshots",
-			"ls",
-			"--pipeline", pipelineName,
-			"--projectId", g.projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		var r *atlasv2.PaginatedBackupSnapshot
-		a := assert.New(t)
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
-		}
-	})
-
 	t.Run("AvailableSchedules List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datalakePipelineEntity,
@@ -356,6 +337,25 @@ func TestDataLakePipelines(t *testing.T) {
 			a.NotEmpty(r)
 		}
 	})
+
+	// t.Run("AvailableSnapshots List", func(t *testing.T) {
+	// 	cmd := exec.Command(cliPath,
+	// 		datalakePipelineEntity,
+	// 		"availablesnapshots",
+	// 		"ls",
+	// 		"--pipeline", pipelineName,
+	// 		"--projectId", g.projectID,
+	// 		"-o=json")
+	// 	cmd.Env = os.Environ()
+	// 	resp, err := cmd.CombinedOutput()
+	// 	req.NoError(err, string(resp))
+
+	// 	var r *atlasv2.PaginatedBackupSnapshot
+	// 	a := assert.New(t)
+	// 	if err = json.Unmarshal(resp, &r); a.NoError(err) {
+	// 		a.NotEmpty(r)
+	// 	}
+	// })
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

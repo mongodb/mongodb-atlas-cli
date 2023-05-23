@@ -28,7 +28,7 @@ import (
 )
 
 var describeTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR
-{{.ID}}	{{.PrivateLinkServiceName}}	{{.Status}}	{{.ErrorMessage}}
+{{.Id}}	{{.PrivateLinkServiceName}}	{{.Status}}	{{.ErrorMessage}}
 `
 
 type DescribeOpts struct {

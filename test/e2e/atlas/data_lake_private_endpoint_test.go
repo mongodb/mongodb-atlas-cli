@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -54,10 +53,10 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 
 		a := assert.New(t)
 		if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
-			var r atlas.PrivateLinkEndpointDataLakeResponse
+			var r atlasv2.PaginatedPrivateNetworkEndpointIdEntry
 			if err = json.Unmarshal(resp, &r); a.NoError(err) {
 				a.NotEmpty(r.Results)
-				a.Equal(r.Results[0].EndpointID, vpcID)
+				a.Equal(r.Results[0].GetEndpointId(), vpcID)
 			}
 		}
 	})
@@ -96,7 +95,7 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r atlas.PrivateLinkEndpointDataLakeResponse
+		var r atlasv2.PaginatedPrivateNetworkEndpointIdEntry
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
 		}

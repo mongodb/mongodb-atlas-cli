@@ -44,7 +44,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplate = `ID	STATUS	ERROR
-{{.InterfaceEndpointID}}	{{.AWSConnectionStatus}}	{{.ErrorMessage}}
+{{.InterfaceEndpointId}}	{{.AwsConnectionStatus}}	{{.ErrorMessage}}
 `
 
 func (opts *DescribeOpts) Run() error {

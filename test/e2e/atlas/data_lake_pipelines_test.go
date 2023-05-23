@@ -338,25 +338,24 @@ func TestDataLakePipelines(t *testing.T) {
 		}
 	})
 
-	// TODO renable this once CLOUDP-178195 is fixed
-	// t.Run("AvailableSnapshots List", func(t *testing.T) {
-	// 	cmd := exec.Command(cliPath,
-	// 		datalakePipelineEntity,
-	// 		"availablesnapshots",
-	// 		"ls",
-	// 		"--pipeline", pipelineName,
-	// 		"--projectId", g.projectID,
-	// 		"-o=json")
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := cmd.CombinedOutput()
-	// 	req.NoError(err, string(resp))
+	t.Run("AvailableSnapshots List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			datalakePipelineEntity,
+			"availablesnapshots",
+			"ls",
+			"--pipeline", pipelineName,
+			"--projectId", g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
 
-	// 	var r *atlasv2.PaginatedBackupSnapshot
-	// 	a := assert.New(t)
-	// 	if err = json.Unmarshal(resp, &r); a.NoError(err) {
-	// 		a.NotEmpty(r)
-	// 	}
-	// })
+		var r *atlasv2.PaginatedBackupSnapshot
+		a := assert.New(t)
+		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			a.NotEmpty(r)
+		}
+	})
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

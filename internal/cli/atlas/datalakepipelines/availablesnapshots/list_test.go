@@ -40,14 +40,16 @@ func TestListOpts_Run(t *testing.T) {
 		Results: []atlasv2.DiskBackupSnapshot{
 			{
 				DiskBackupReplicaSet: &atlasv2.DiskBackupReplicaSet{
-					Id:     pointer.Get("5e4e593f70dfbf1010295836"),
-					Status: pointer.Get("IDLE"),
+					Id:          pointer.Get("5e4e593f70dfbf1010295836"),
+					Description: pointer.Get("test rs"),
+					Status:      pointer.Get("IDLE"),
 				},
 			},
 			{
 				DiskBackupShardedClusterSnapshot: &atlasv2.DiskBackupShardedClusterSnapshot{
-					Id:     pointer.Get("5e4e593f70dfbf1010295638"),
-					Status: pointer.Get("IDLE"),
+					Id:          pointer.Get("5e4e593f70dfbf1010295638"),
+					Description: pointer.Get("test cluster"),
+					Status:      pointer.Get("IDLE"),
 				},
 			},
 		},
@@ -79,9 +81,9 @@ func TestListOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `ID                         STATUS
-5e4e593f70dfbf1010295836   IDLE
-5e4e593f70dfbf1010295638   IDLE`, buf.String())
+	assert.Equal(t, `ID                         DESCRIPTION    STATUS
+5e4e593f70dfbf1010295836   test rs        IDLE
+5e4e593f70dfbf1010295638   test cluster   IDLE`, buf.String())
 	t.Log(buf.String())
 }
 

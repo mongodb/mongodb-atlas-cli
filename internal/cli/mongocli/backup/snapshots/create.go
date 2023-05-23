@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type CreateOpts struct {
@@ -35,7 +35,7 @@ type CreateOpts struct {
 	store           store.SnapshotsCreator
 	clusterName     string
 	desc            string
-	retentionInDays int
+	retentionInDays int32
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -46,7 +46,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Snapshot '{{.ID}}' created.\n"
+var createTemplate = "Snapshot '{{.Id}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newCloudProviderSnapshot()
@@ -55,14 +55,13 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return commonerrors.Check(err)
 	}
-
-	return opts.Print(r)
+	return opts.Print(r.GetActualInstance())
 }
 
-func (opts *CreateOpts) newCloudProviderSnapshot() *atlas.CloudProviderSnapshot {
-	createRequest := &atlas.CloudProviderSnapshot{
-		RetentionInDays: opts.retentionInDays,
-		Description:     opts.desc,
+func (opts *CreateOpts) newCloudProviderSnapshot() *atlasv2.DiskBackupOnDemandSnapshotRequest {
+	createRequest := &atlasv2.DiskBackupOnDemandSnapshotRequest{
+		RetentionInDays: &opts.retentionInDays,
+		Description:     &opts.desc,
 	}
 	return createRequest
 }
@@ -97,7 +96,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.SnapshotDescription)
-	cmd.Flags().IntVar(&opts.retentionInDays, flag.Retention, 1, usage.RetentionInDays)
+	cmd.Flags().Int32Var(&opts.retentionInDays, flag.Retention, 1, usage.RetentionInDays)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

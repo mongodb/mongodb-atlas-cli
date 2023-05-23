@@ -24,7 +24,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const (
@@ -44,7 +44,7 @@ type atlasE2ETestGenerator struct {
 	dbUser         string
 	tier           string
 	enableBackup   bool
-	firstProcess   *mongodbatlas.Process
+	firstProcess   *atlasv2.HostViewAtlas
 	t              *testing.T
 }
 
@@ -301,7 +301,7 @@ func (g *atlasE2ETestGenerator) getHostnameAndPort() (string, error) {
 
 	// The first element may not be the created cluster but that is fine since
 	// we just need one cluster up and running
-	return p.ID, nil
+	return *p.Id, nil
 }
 
 // getHostname returns the hostname of first process.
@@ -313,11 +313,11 @@ func (g *atlasE2ETestGenerator) getHostname() (string, error) {
 		return "", err
 	}
 
-	return p.Hostname, nil
+	return *p.Hostname, nil
 }
 
 // getFirstProcess returns the first process of the project.
-func (g *atlasE2ETestGenerator) getFirstProcess() (*mongodbatlas.Process, error) {
+func (g *atlasE2ETestGenerator) getFirstProcess() (*atlasv2.HostViewAtlas, error) {
 	g.t.Helper()
 
 	if g.firstProcess != nil {
@@ -328,13 +328,13 @@ func (g *atlasE2ETestGenerator) getFirstProcess() (*mongodbatlas.Process, error)
 	if err != nil {
 		return nil, err
 	}
-	g.firstProcess = processes[0]
+	g.firstProcess = &processes[0]
 
 	return g.firstProcess, nil
 }
 
 // getHostname returns the list of processes.
-func (g *atlasE2ETestGenerator) getProcesses() ([]*mongodbatlas.Process, error) {
+func (g *atlasE2ETestGenerator) getProcesses() ([]atlasv2.HostViewAtlas, error) {
 	g.t.Helper()
 
 	if g.projectID == "" {
@@ -352,16 +352,16 @@ func (g *atlasE2ETestGenerator) getProcesses() ([]*mongodbatlas.Process, error) 
 		return nil, err
 	}
 
-	var processes []*mongodbatlas.Process
+	var processes *atlasv2.PaginatedHostViewAtlas
 	if err := json.Unmarshal(resp, &processes); err != nil {
 		g.t.Fatalf("unexpected error: project must be generated %s - %s", err, resp)
 	}
 
-	if len(processes) == 0 {
+	if len(processes.Results) == 0 {
 		g.t.Fatalf("got=%#v\nwant=%#v", 0, "len(processes) > 0")
 	}
 
-	return processes, nil
+	return processes.Results, nil
 }
 
 // runCommand runs a command on mongocli tool.

@@ -1,8 +1,8 @@
-.. _atlas-dataLakePipelines-availableSnapshots:
+.. _atlas-kubernetes-operator:
 
-==========================================
-atlas dataLakePipelines availableSnapshots
-==========================================
+=========================
+atlas kubernetes operator
+=========================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,9 @@ atlas dataLakePipelines availableSnapshots
    :depth: 1
    :class: singlecol
 
- Manage available backup snapshots for data lake pipelines.
+Manage Atlas Kubernetes Operator.
+
+This command manages the Atlas Kubernetes Operator.
 
 Options
 -------
@@ -28,7 +30,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for availableSnapshots
+     - help for operator
 
 Inherited Options
 -----------------
@@ -49,11 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-dataLakePipelines-availableSnapshots-list` - Return all available backup snapshots for the specified data lake pipeline.
+* :ref:`atlas-kubernetes-operator-install` - Install Atlas Kubernetes Operator to a cluster.
 
 
 .. toctree::
    :titlesonly:
 
-   list </command/atlas-dataLakePipelines-availableSnapshots-list>
+   install </command/atlas-kubernetes-operator-install>
 

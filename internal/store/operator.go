@@ -20,6 +20,8 @@ package store
 type AtlasOperatorProjectStore interface {
 	AtlasOperatorTeamsStore
 	ProjectDescriber
+	ProjectCreator
+	ProjectLister
 	ProjectIPAccessListLister
 	ProjectSettingsDescriber
 	IntegrationLister
@@ -31,6 +33,7 @@ type AtlasOperatorProjectStore interface {
 	AuditingDescriber
 	AlertConfigurationLister
 	DatabaseRoleLister
+	ProjectAPIKeyCreator
 }
 
 type AtlasOperatorDBUsersStore interface {
@@ -58,7 +61,13 @@ type AtlasOperatorTeamsStore interface {
 	TeamUserLister
 }
 
+type AtlasOperatorOrgStore interface {
+	OrganizationAPIKeyCreator
+	ProjectAPIKeyAssigner
+}
+
 type AtlasOperatorGenericStore interface {
+	AtlasOperatorOrgStore
 	AtlasOperatorProjectStore
 	AtlasOperatorClusterStore
 	AtlasOperatorDBUsersStore

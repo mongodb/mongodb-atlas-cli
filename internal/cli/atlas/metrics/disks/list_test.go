@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestDisksListsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessDisksLister(ctrl)
 
-	expected := &mongodbatlas.ProcessDisksResponse{}
+	expected := &atlasv2.PaginatedDiskPartition{}
 
 	listOpts := &ListsOpts{
 		host:  "hard-00-00.mongodb.net",

@@ -38,7 +38,7 @@ type DatabaseUserDeleter interface {
 }
 
 type DatabaseUserUpdater interface {
-	UpdateDatabaseUser(*atlas.DatabaseUser) (*atlas.DatabaseUser, error)
+	UpdateDatabaseUser(*atlas.DatabaseUser, string) (*atlas.DatabaseUser, error)
 }
 
 type DatabaseUserDescriber interface {
@@ -88,11 +88,11 @@ func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) (*atlas
 	}
 }
 
-func (s *Store) UpdateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUser, error) {
+func (s *Store) UpdateDatabaseUser(user *atlas.DatabaseUser, currentUsername string) (*atlas.DatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		// to migrate :: requires fix for CLOUDP-176215
-		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Update(s.ctx, user.GroupID, user.Username, user)
+		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Update(s.ctx, user.GroupID, currentUsername, user)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

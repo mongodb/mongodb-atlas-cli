@@ -54,7 +54,7 @@ type PipelineAvailableSchedulesLister interface {
 }
 
 type PipelinesTriggerer interface {
-	PipelineTrigger(string, string) (*atlasv2.IngestionPipelineRun, error)
+	PipelineTrigger(string, string, string) (*atlasv2.IngestionPipelineRun, error)
 }
 
 type PipelinesPauser interface {
@@ -116,8 +116,8 @@ func (s *Store) PipelineAvailableSnapshots(projectID, pipelineName string, compl
 }
 
 // PipelineTrigger encapsulates the logic to manage different cloud providers.
-func (s *Store) PipelineTrigger(projectID, pipelineName string) (*atlasv2.IngestionPipelineRun, error) {
-	result, _, err := s.clientv2.DataLakePipelinesApi.TriggerSnapshotIngestion(s.ctx, projectID, pipelineName).Execute()
+func (s *Store) PipelineTrigger(projectID, pipelineName, snapshotID string) (*atlasv2.IngestionPipelineRun, error) {
+	result, _, err := s.clientv2.DataLakePipelinesApi.TriggerSnapshotIngestion(s.ctx, projectID, pipelineName).TriggerIngestionRequest(*atlasv2.NewTriggerIngestionRequest(snapshotID)).Execute()
 	return result, err
 }
 

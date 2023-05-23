@@ -206,7 +206,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				APIVersion: "atlas.mongodb.com/v1",
 			},
 			ObjectMeta: v1.ObjectMeta{
-				Name:      strings.ToLower(clusterName),
+				Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, clusterName)),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
 					features.ResourceVersion: resourceVersion,
@@ -297,7 +297,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					VersionReleaseSystem: cluster.VersionReleaseSystem,
 				},
 				BackupScheduleRef: common.ResourceRefNamespaced{
-					Name:      strings.ToLower(fmt.Sprintf("%s-backupschedule", clusterName)),
+					Name:      strings.ToLower(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName)),
 					Namespace: targetNamespace,
 				},
 				ServerlessSpec: nil,
@@ -327,7 +327,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					APIVersion: "atlas.mongodb.com/v1",
 				},
 				ObjectMeta: v1.ObjectMeta{
-					Name:      strings.ToLower(fmt.Sprintf("%s-backuppolicy", clusterName)),
+					Name:      strings.ToLower(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName)),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
 						features.ResourceVersion: resourceVersion,
@@ -353,7 +353,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				APIVersion: "atlas.mongodb.com/v1",
 			},
 			ObjectMeta: v1.ObjectMeta{
-				Name:      strings.ToLower(fmt.Sprintf("%s-backupschedule", clusterName)),
+				Name:      strings.ToLower(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName)),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
 					features.ResourceVersion: resourceVersion,
@@ -512,7 +512,7 @@ func TestBuildServerlessDeployments(t *testing.T) {
 				APIVersion: "atlas.mongodb.com/v1",
 			},
 			ObjectMeta: v1.ObjectMeta{
-				Name:      strings.ToLower(cluster.Name),
+				Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, clusterName)),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
 					features.ResourceVersion: resourceVersion,

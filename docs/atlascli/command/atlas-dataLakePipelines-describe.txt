@@ -40,7 +40,7 @@ Arguments
    * - pipelineName
      - string
      - true
-     - Name of the pipeline
+     - Label that identifies the pipeline
 
 Options
 -------

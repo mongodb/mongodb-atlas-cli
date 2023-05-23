@@ -89,7 +89,8 @@ func TestClustersFlags(t *testing.T) {
 	t.Run("Load Sample Data", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
-			"loadSampleData",
+			"sampleData",
+			"load",
 			clusterName,
 			"--projectId", g.projectID,
 			"-o=json")

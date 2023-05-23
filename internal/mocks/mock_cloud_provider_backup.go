@@ -188,10 +188,10 @@ func (m *MockSnapshotsCreator) EXPECT() *MockSnapshotsCreatorMockRecorder {
 }
 
 // CreateSnapshot mocks base method.
-func (m *MockSnapshotsCreator) CreateSnapshot(arg0, arg1 string, arg2 *mongodbatlas.CloudProviderSnapshot) (*mongodbatlas.CloudProviderSnapshot, error) {
+func (m *MockSnapshotsCreator) CreateSnapshot(arg0, arg1 string, arg2 *mongodbatlasv2.DiskBackupOnDemandSnapshotRequest) (*mongodbatlasv2.DiskBackupSnapshot, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateSnapshot", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshot)
+	ret0, _ := ret[0].(*mongodbatlasv2.DiskBackupSnapshot)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -24,14 +24,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDataLakePrivateEndpointLister(ctrl)
 
-	var expected *mongodbatlas.PrivateLinkEndpointDataLakeResponse
+	var expected *atlasv2.PaginatedPrivateNetworkEndpointIdEntry
 
 	listOpts := &ListOpts{
 		store: mockStore,
@@ -39,7 +39,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DataLakePrivateEndpoints(listOpts.ProjectID).
+		DataLakePrivateEndpoints(listOpts.newDatalakePrivateEndpointsListOpts()).
 		Return(expected, nil).
 		Times(1)
 

@@ -201,18 +201,18 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) PeeringConnections(arg0, ar
 }
 
 // PrivateEndpoints mocks base method.
-func (m *MockAtlasOperatorProjectStore) PrivateEndpoints(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) ([]mongodbatlas.PrivateEndpointConnection, error) {
+func (m *MockAtlasOperatorProjectStore) PrivateEndpoints(arg0, arg1 string) ([]interface{}, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PrivateEndpoints", arg0, arg1, arg2)
-	ret0, _ := ret[0].([]mongodbatlas.PrivateEndpointConnection)
+	ret := m.ctrl.Call(m, "PrivateEndpoints", arg0, arg1)
+	ret0, _ := ret[0].([]interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // PrivateEndpoints indicates an expected call of PrivateEndpoints.
-func (mr *MockAtlasOperatorProjectStoreMockRecorder) PrivateEndpoints(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockAtlasOperatorProjectStoreMockRecorder) PrivateEndpoints(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PrivateEndpoints", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).PrivateEndpoints), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PrivateEndpoints", reflect.TypeOf((*MockAtlasOperatorProjectStore)(nil).PrivateEndpoints), arg0, arg1)
 }
 
 // Project mocks base method.

@@ -73,8 +73,8 @@ func LogsAreEqual(t *testing.T, expected, got []byte) {
 	require.NoError(t, err)
 
 	if diff := deep.Equal(expectedLines, gotLines); diff != nil {
-		t.Logf("expectedLines: %q\n", expectedLines)
-		t.Logf("gotLines: %q\n", gotLines)
+		t.Logf("expectedLines: %s\n", expected)
+		t.Logf("gotLines: %s\n", string(got))
 		t.Error(diff)
 	}
 }

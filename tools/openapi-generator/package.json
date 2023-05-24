@@ -1,0 +1,24 @@
+{
+  "name": "openapi-generator",
+  "version": "1.0.0",
+  "description": "OpenAPI Generator for MongoDB Atlas CLI",
+  "scripts": {
+    "generate:clear": "rm -rf ../../internal/generated",
+    "generate:init": "mkdir -p ../../internal/generated && cp ./config/.openapi-generator-ignore ../../internal/generated/.openapi-generator-ignore",
+    "generate:run": "openapi-generator-cli generate -c './config/config.yaml' -o ../../internal/generated",
+    "generate": "npm run generate:clear && npm run generate:init && npm run generate:run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/mongodb/mongodb-atlas-cli.git"
+  },
+  "author": "Filipe C. Menezes <filipe.menezes@mongodb.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/mongodb/mongodb-atlas-cli/issues"
+  },
+  "homepage": "https://github.com/mongodb/mongodb-atlas-cli#readme",
+  "dependencies": {
+    "@openapitools/openapi-generator-cli": "^2.6.0"
+  }
+}

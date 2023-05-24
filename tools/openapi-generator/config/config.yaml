@@ -1,0 +1,15 @@
+generatorName: go
+gitUserId: mongodb
+gitRepoId: mongodb-atlas-cli
+gitHost: github.com
+templateDir: config/go-templates
+isGoSubmodule: true
+packageName: generated
+inputSpec: https://raw.githubusercontent.com/mongodb/go-client-mongodb-atlas/sdkv2/openapi/atlas-api-transformed.yaml
+files:
+  cmd.mustache:
+    templateType: API
+    destinationFilename: _cmd.go
+  store.mustache:
+    templateType: API
+    destinationFilename: _store.go

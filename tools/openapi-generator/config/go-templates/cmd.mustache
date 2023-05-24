@@ -1,0 +1,81 @@
+{{>partial_header}}
+package {{packageName}}
+
+import (
+	"context"
+	"github.com/spf13/cobra"
+	"{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/internal/cli"
+	store "{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/internal/store/atlas"
+)
+
+{{#operations}}
+{{#operation}}
+type {{operationId}}Opts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	store store.{{operationId}}Operation
+	{{#pathParams}}
+	{{paramName}} {{{dataType}}}
+	{{/pathParams}}
+	{{#queryParams}}
+	{{paramName}} {{{dataType}}}
+	{{/queryParams}}
+}
+
+func (opts *ListOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
+}
+
+func (opts *{{operationId}}Opts) Run() error {
+	params := &atlasv2.{{operationId}}ApiParams{
+		{{#pathParams}}
+		{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: opts.{{paramName}},
+		{{/pathParams}}
+		{{#queryParams}}
+		{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: opts.{{paramName}},
+		{{/queryParams}}
+	}
+	{{#returnType}}resp, {{/returnType}}_, err := opts.store.{{operationId}}(params)
+	if err != nil {
+		return err
+	}
+
+	return opts.Print({{#returnType}}resp{{/returnType}}{{^returnType}}nil{{/returnType}})
+}
+
+const {{operationId}}Template = "<<some template>>"
+
+func {{operationId}}Builder() cobra.Command {
+	opts := {{operationId}}Opts{}
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "<<decription>>",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
+		// Aliases: []string{"ls"},
+		Args:    require.NoArgs,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.ValidateProjectID,
+				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), {{operationId}}Template),
+			)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run()
+		},
+	}
+	{{#pathParams}}
+	cmd.Flags().StringVar(&opts.{{paramName}}, "{{paramName}}", "", "usage description")
+	{{/pathParams}}
+	{{#queryParams}}
+	cmd.Flags().StringVar(&opts.{{paramName}}, "{{paramName}}", "", "usage description")
+	{{/queryParams}}
+
+	return cmd
+}
+{{/operation}}
+{{/operations}}

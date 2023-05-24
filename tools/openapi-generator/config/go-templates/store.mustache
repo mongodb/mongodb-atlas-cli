@@ -1,0 +1,24 @@
+{{>partial_header}}
+package store
+
+import (
+	"context"
+	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+)
+
+//go:generate mockgen -destination=../../mocks/atlas/{{classFilename}}_store_mock.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas {{#operations}}{{#operation}}{{operationId}}Operation{{^-last}}, {{/-last}}{{/operation}}{{/operations}}
+
+{{#operations}}
+{{#operation}}
+type {{operationId}}Operation interface {
+	{{operationId}} (*atlasv2.{{operationId}}ApiParams) ({{#returnType}}*atlasv2.{{{.}}}{{/returnType}}, error)
+}
+
+// {{operationId}} encapsulates the logic to manage different cloud providers.
+func (s *Store) {{operationId}}(params *atlasv2.{{operationId}}ApiParams) ({{#returnType}}*atlasv2.{{{.}}}, {{/returnType}}error) {
+	{{#returnType}}result, {{/returnType}}_, err := s.clientv2.{{classname}}.{{operationId}}WithParams(s.ctx, params).Execute()
+	return {{#returnType}}&result, {{/returnType}}err
+}
+
+{{/operation}}
+{{/operations}}

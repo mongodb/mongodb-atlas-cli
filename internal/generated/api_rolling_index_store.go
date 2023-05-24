@@ -24,7 +24,7 @@ import (
 //go:generate mockgen -destination=../../mocks/atlas/api_rolling_index_store_mock.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CreateRollingIndexOperation
 
 type CreateRollingIndexOperation interface {
-	CreateRollingIndex (*atlasv2.CreateRollingIndexApiParams) (, error)
+	CreateRollingIndex (*atlasv2.CreateRollingIndexApiParams) error
 }
 
 // CreateRollingIndex encapsulates the logic to manage different cloud providers.

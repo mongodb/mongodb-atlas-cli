@@ -24,7 +24,7 @@ import (
 //go:generate mockgen -destination=../../mocks/atlas/api_performance_advisor_store_mock.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas DisableSlowOperationThresholdingOperation, EnableSlowOperationThresholdingOperation, ListSlowQueriesOperation, ListSlowQueryNamespacesOperation, ListSuggestedIndexesOperation
 
 type DisableSlowOperationThresholdingOperation interface {
-	DisableSlowOperationThresholding (*atlasv2.DisableSlowOperationThresholdingApiParams) (, error)
+	DisableSlowOperationThresholding (*atlasv2.DisableSlowOperationThresholdingApiParams) error
 }
 
 // DisableSlowOperationThresholding encapsulates the logic to manage different cloud providers.
@@ -34,7 +34,7 @@ func (s *Store) DisableSlowOperationThresholding(params *atlasv2.DisableSlowOper
 }
 
 type EnableSlowOperationThresholdingOperation interface {
-	EnableSlowOperationThresholding (*atlasv2.EnableSlowOperationThresholdingApiParams) (, error)
+	EnableSlowOperationThresholding (*atlasv2.EnableSlowOperationThresholdingApiParams) error
 }
 
 // EnableSlowOperationThresholding encapsulates the logic to manage different cloud providers.

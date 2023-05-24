@@ -34,7 +34,7 @@ func (s *Store) CreateAlertConfiguration(params *atlasv2.CreateAlertConfiguratio
 }
 
 type DeleteAlertConfigurationOperation interface {
-	DeleteAlertConfiguration (*atlasv2.DeleteAlertConfigurationApiParams) (, error)
+	DeleteAlertConfiguration (*atlasv2.DeleteAlertConfigurationApiParams) error
 }
 
 // DeleteAlertConfiguration encapsulates the logic to manage different cloud providers.

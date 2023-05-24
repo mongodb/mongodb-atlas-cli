@@ -44,7 +44,7 @@ func (s *Store) CreateCloudProviderAccessRole(params *atlasv2.CreateCloudProvide
 }
 
 type DeauthorizeCloudProviderAccessRoleOperation interface {
-	DeauthorizeCloudProviderAccessRole (*atlasv2.DeauthorizeCloudProviderAccessRoleApiParams) (, error)
+	DeauthorizeCloudProviderAccessRole (*atlasv2.DeauthorizeCloudProviderAccessRoleApiParams) error
 }
 
 // DeauthorizeCloudProviderAccessRole encapsulates the logic to manage different cloud providers.

@@ -24,7 +24,7 @@ import (
 //go:generate mockgen -destination=../../mocks/atlas/api_invoices_store_mock.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas DownloadInvoiceCSVOperation, GetInvoiceOperation, ListInvoicesOperation, ListPendingInvoicesOperation
 
 type DownloadInvoiceCSVOperation interface {
-	DownloadInvoiceCSV (*atlasv2.DownloadInvoiceCSVApiParams) (, error)
+	DownloadInvoiceCSV (*atlasv2.DownloadInvoiceCSVApiParams) error
 }
 
 // DownloadInvoiceCSV encapsulates the logic to manage different cloud providers.

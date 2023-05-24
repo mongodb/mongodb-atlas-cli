@@ -44,7 +44,7 @@ func (s *Store) CreatePushMigration(params *atlasv2.CreatePushMigrationApiParams
 }
 
 type CutoverMigrationOperation interface {
-	CutoverMigration (*atlasv2.CutoverMigrationApiParams) (, error)
+	CutoverMigration (*atlasv2.CutoverMigrationApiParams) error
 }
 
 // CutoverMigration encapsulates the logic to manage different cloud providers.

@@ -24,7 +24,7 @@ import (
 //go:generate mockgen -destination=../../mocks/atlas/api_ldap_configuration_store_mock.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas DeleteLDAPConfigurationOperation, GetLDAPConfigurationOperation, GetLDAPConfigurationStatusOperation, SaveLDAPConfigurationOperation, VerifyLDAPConfigurationOperation
 
 type DeleteLDAPConfigurationOperation interface {
-	DeleteLDAPConfiguration (*atlasv2.DeleteLDAPConfigurationApiParams) (, error)
+	DeleteLDAPConfiguration (*atlasv2.DeleteLDAPConfigurationApiParams) error
 }
 
 // DeleteLDAPConfiguration encapsulates the logic to manage different cloud providers.

@@ -34,7 +34,7 @@ func (s *Store) CreateCluster(params *atlasv2.CreateClusterApiParams) (*atlasv2.
 }
 
 type DeleteClusterOperation interface {
-	DeleteCluster (*atlasv2.DeleteClusterApiParams) (, error)
+	DeleteCluster (*atlasv2.DeleteClusterApiParams) error
 }
 
 // DeleteCluster encapsulates the logic to manage different cloud providers.
@@ -64,7 +64,7 @@ func (s *Store) ListClusters(params *atlasv2.ListClustersApiParams) (*atlasv2.Pa
 }
 
 type TestFailoverOperation interface {
-	TestFailover (*atlasv2.TestFailoverApiParams) (, error)
+	TestFailover (*atlasv2.TestFailoverApiParams) error
 }
 
 // TestFailover encapsulates the logic to manage different cloud providers.

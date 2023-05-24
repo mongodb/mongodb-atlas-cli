@@ -34,7 +34,7 @@ func (s *Store) CreateCustomDatabaseRole(params *atlasv2.CreateCustomDatabaseRol
 }
 
 type DeleteCustomDatabaseRoleOperation interface {
-	DeleteCustomDatabaseRole (*atlasv2.DeleteCustomDatabaseRoleApiParams) (, error)
+	DeleteCustomDatabaseRole (*atlasv2.DeleteCustomDatabaseRoleApiParams) error
 }
 
 // DeleteCustomDatabaseRole encapsulates the logic to manage different cloud providers.

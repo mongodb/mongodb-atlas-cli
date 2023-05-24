@@ -11,7 +11,7 @@ import (
 {{#operations}}
 {{#operation}}
 type {{operationId}}Operation interface {
-	{{operationId}} (*atlasv2.{{operationId}}ApiParams) ({{#returnType}}*atlasv2.{{{.}}}{{/returnType}}, error)
+	{{operationId}} (*atlasv2.{{operationId}}ApiParams) {{#returnType}}(*atlasv2.{{{.}}}, {{/returnType}}error{{#returnType}}){{/returnType}}
 }
 
 // {{operationId}} encapsulates the logic to manage different cloud providers.

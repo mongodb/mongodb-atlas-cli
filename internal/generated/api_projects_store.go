@@ -164,7 +164,7 @@ func (s *Store) ListProjects(params *atlasv2.ListProjectsApiParams) (*atlasv2.Pa
 }
 
 type RemoveProjectUserOperation interface {
-	RemoveProjectUser (*atlasv2.RemoveProjectUserApiParams) (, error)
+	RemoveProjectUser (*atlasv2.RemoveProjectUserApiParams) error
 }
 
 // RemoveProjectUser encapsulates the logic to manage different cloud providers.

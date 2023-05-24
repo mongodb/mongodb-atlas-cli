@@ -24,7 +24,7 @@ import (
 //go:generate mockgen -destination=../../mocks/atlas/api_x509_authentication_store_mock.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CreateDatabaseUserCertificateOperation, DisableCustomerManagedX509Operation, ListDatabaseUserCertificatesOperation
 
 type CreateDatabaseUserCertificateOperation interface {
-	CreateDatabaseUserCertificate (*atlasv2.CreateDatabaseUserCertificateApiParams) (, error)
+	CreateDatabaseUserCertificate (*atlasv2.CreateDatabaseUserCertificateApiParams) error
 }
 
 // CreateDatabaseUserCertificate encapsulates the logic to manage different cloud providers.

@@ -124,7 +124,7 @@ func (s *Store) RemoveProjectTeam(params *atlasv2.RemoveProjectTeamApiParams) (*
 }
 
 type RemoveTeamUserOperation interface {
-	RemoveTeamUser (*atlasv2.RemoveTeamUserApiParams) (, error)
+	RemoveTeamUser (*atlasv2.RemoveTeamUserApiParams) error
 }
 
 // RemoveTeamUser encapsulates the logic to manage different cloud providers.

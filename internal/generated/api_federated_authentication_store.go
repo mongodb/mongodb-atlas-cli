@@ -34,7 +34,7 @@ func (s *Store) CreateRoleMapping(params *atlasv2.CreateRoleMappingApiParams) (*
 }
 
 type DeleteFederationAppOperation interface {
-	DeleteFederationApp (*atlasv2.DeleteFederationAppApiParams) (, error)
+	DeleteFederationApp (*atlasv2.DeleteFederationAppApiParams) error
 }
 
 // DeleteFederationApp encapsulates the logic to manage different cloud providers.
@@ -44,7 +44,7 @@ func (s *Store) DeleteFederationApp(params *atlasv2.DeleteFederationAppApiParams
 }
 
 type DeleteRoleMappingOperation interface {
-	DeleteRoleMapping (*atlasv2.DeleteRoleMappingApiParams) (, error)
+	DeleteRoleMapping (*atlasv2.DeleteRoleMappingApiParams) error
 }
 
 // DeleteRoleMapping encapsulates the logic to manage different cloud providers.

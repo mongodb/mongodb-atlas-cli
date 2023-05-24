@@ -24,7 +24,7 @@ import (
 //go:generate mockgen -destination=../../mocks/atlas/api_maintenance_windows__store_mock.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas DeferMaintenanceWindowOperation, GetMaintenanceWindowOperation, ResetMaintenanceWindowOperation, ToggleMaintenanceAutoDeferOperation, UpdateMaintenanceWindowOperation
 
 type DeferMaintenanceWindowOperation interface {
-	DeferMaintenanceWindow (*atlasv2.DeferMaintenanceWindowApiParams) (, error)
+	DeferMaintenanceWindow (*atlasv2.DeferMaintenanceWindowApiParams) error
 }
 
 // DeferMaintenanceWindow encapsulates the logic to manage different cloud providers.
@@ -54,7 +54,7 @@ func (s *Store) ResetMaintenanceWindow(params *atlasv2.ResetMaintenanceWindowApi
 }
 
 type ToggleMaintenanceAutoDeferOperation interface {
-	ToggleMaintenanceAutoDefer (*atlasv2.ToggleMaintenanceAutoDeferApiParams) (, error)
+	ToggleMaintenanceAutoDefer (*atlasv2.ToggleMaintenanceAutoDeferApiParams) error
 }
 
 // ToggleMaintenanceAutoDefer encapsulates the logic to manage different cloud providers.

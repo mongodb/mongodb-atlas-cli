@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	maxRetryAttempts = 10
+	maxRetryAttempts = 5
 )
 
 // atlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.

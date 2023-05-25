@@ -65,7 +65,7 @@ func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atl
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		_, _, err := s.clientv2.MaintenanceWindowsApi.UpdateMaintenanceWindow(s.ctx, projectID).
-		GroupMaintenanceWindow(maintenanceWindow).Execute()
+			GroupMaintenanceWindow(maintenanceWindow).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

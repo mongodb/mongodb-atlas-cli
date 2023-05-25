@@ -90,7 +90,7 @@ func (opts *DeleteOpts) hostIDs() ([]string, error) {
 	var hostIds []string
 	for k, ports := range hostnameMap {
 		for _, port := range ports {
-			host, err := opts.store.HostByHostname(opts.ConfigProjectID(), k, int(port))
+			host, err := opts.store.HostByHostname(opts.ConfigProjectID(), k, port)
 			if err != nil {
 				return nil, err
 			}

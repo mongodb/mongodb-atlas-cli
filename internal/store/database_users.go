@@ -132,7 +132,7 @@ func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilE
 			MonthsUntilExpiration: pointer.Get(monthsUntilExpiration),
 		}
 		_, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCertificate(s.ctx, projectID, username).
-		UserCert(&userCert).Execute()
+			UserCert(&userCert).Execute()
 		return &userCert, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

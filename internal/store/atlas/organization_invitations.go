@@ -71,7 +71,7 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 		}
 
 		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID, invitationID).
-		OrganizationInvitationUpdateRequest(&invitationRequest).Execute()
+			OrganizationInvitationUpdateRequest(&invitationRequest).Execute()
 		return result, err
 	}
 	invitationRequest := mapInvitation(invitation)

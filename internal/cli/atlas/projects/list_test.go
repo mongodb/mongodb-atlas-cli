@@ -22,8 +22,8 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	"go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestList_Run(t *testing.T) {

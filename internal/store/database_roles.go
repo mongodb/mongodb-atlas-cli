@@ -86,7 +86,7 @@ func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlasv2.Custo
 			InheritedRoles: role.InheritedRoles,
 		}
 		result, _, err := s.clientv2.CustomDatabaseRolesApi.UpdateCustomDatabaseRole(s.ctx, groupID, roleName).
-		UpdateCustomDBRole(&dbRole).Execute()
+			UpdateCustomDBRole(&dbRole).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

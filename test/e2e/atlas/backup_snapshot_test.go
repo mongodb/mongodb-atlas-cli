@@ -25,8 +25,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestSnapshots(t *testing.T) {

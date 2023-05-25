@@ -26,8 +26,8 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const atlasCreateTemplate = "Project '{{.Id}}' created.\n"

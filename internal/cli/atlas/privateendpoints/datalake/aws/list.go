@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 var listTemplate = `ID	ENDPOINT PROVIDER	TYPE	COMMENT{{range .Results}}
@@ -61,8 +61,8 @@ func (opts *ListOpts) Run() error {
 func (opts *ListOpts) newDatalakePrivateEndpointsListOpts() *atlasv2.ListDataFederationPrivateEndpointsApiParams {
 	return &atlasv2.ListDataFederationPrivateEndpointsApiParams{
 		GroupId:      opts.ConfigProjectID(),
-		PageNum:      pointer.Get(int32(opts.PageNum)),
-		ItemsPerPage: pointer.Get(int32(opts.ItemsPerPage)),
+		PageNum:      pointer.Get(opts.PageNum),
+		ItemsPerPage: pointer.Get(opts.ItemsPerPage),
 	}
 }
 

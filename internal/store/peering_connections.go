@@ -61,8 +61,8 @@ func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListO
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).
-			ItemsPerPage(int32(opts.ItemsPerPage)).
-			PageNum(int32(opts.PageNum)).
+			ItemsPerPage(opts.ItemsPerPage).
+			PageNum(opts.PageNum).
 			ProviderName(opts.ProviderName).Execute()
 
 		peeringConnections := make([]interface{}, len(result.Results))
@@ -101,7 +101,8 @@ func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 func (s *Store) CreatePeeringConnection(projectID string, peer *atlasv2.ContainerPeer) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringConnection(s.ctx, projectID).ContainerPeer(*peer).Execute()
+		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringConnection(s.ctx, projectID).
+			ContainerPeer(peer).Execute()
 		return result.GetActualInstance(), err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

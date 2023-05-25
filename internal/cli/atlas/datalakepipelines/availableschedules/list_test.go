@@ -42,7 +42,7 @@ func TestListOpts_Run(t *testing.T) {
 			FrequencyInterval: 1,
 			FrequencyType:     "daily",
 			RetentionUnit:     "months",
-			RetentionValue:    int32(1),
+			RetentionValue:    1,
 		},
 	}
 

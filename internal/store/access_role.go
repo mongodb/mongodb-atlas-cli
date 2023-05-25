@@ -50,7 +50,7 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlasv
 				ProviderName: provider,
 			},
 		}
-		result, _, err := s.clientv2.CloudProviderAccessApi.CreateCloudProviderAccessRole(s.ctx, groupID).CloudProviderAccessRole(req).Execute()
+		result, _, err := s.clientv2.CloudProviderAccessApi.CreateCloudProviderAccessRole(s.ctx, groupID).CloudProviderAccessRole(&req).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -89,7 +89,7 @@ func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *at
 				IamAssumedRoleArn: &req.IAMAssumedRoleARN,
 			},
 		}
-		result, _, err := s.clientv2.CloudProviderAccessApi.AuthorizeCloudProviderAccessRole(s.ctx, groupID, roleID).CloudProviderAccessRole(role).Execute()
+		result, _, err := s.clientv2.CloudProviderAccessApi.AuthorizeCloudProviderAccessRole(s.ctx, groupID, roleID).CloudProviderAccessRole(&role).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

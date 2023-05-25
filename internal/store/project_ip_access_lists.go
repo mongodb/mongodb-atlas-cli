@@ -76,7 +76,7 @@ func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) 
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.ProjectIPAccessListApi.ListProjectIpAccessLists(s.ctx, projectID)
 		if opts != nil {
-			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+			res = res.PageNum(opts.PageNum) .ItemsPerPage(opts.ItemsPerPage)
 		}
 		result, _, err := res.Execute()
 		return result, err

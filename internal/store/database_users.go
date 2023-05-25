@@ -57,7 +57,7 @@ type DBUserCertificateCreator interface {
 func (s *Store) CreateDatabaseUser(user *atlasv2.DatabaseUser) (*atlasv2.DatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.DatabaseUsersApi.CreateDatabaseUser(s.ctx, user.GroupId).DatabaseUser(*user).Execute()
+		result, _, err := s.clientv2.DatabaseUsersApi.CreateDatabaseUser(s.ctx, user.GroupId).DatabaseUser(user).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -79,7 +79,7 @@ func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) (*atlas
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.DatabaseUsersApi.ListDatabaseUsers(s.ctx, projectID)
 		if opts != nil {
-			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
 		result, _, err := res.Execute()
 		return result, err
@@ -115,7 +115,7 @@ func (s *Store) DBUserCertificates(projectID, username string, opts *atlas.ListO
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.X509AuthenticationApi.ListDatabaseUserCertificates(s.ctx, projectID, username)
 		if opts != nil {
-			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
 		result, _, err := res.Execute()
 		return result, err
@@ -129,9 +129,10 @@ func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilE
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		userCert := atlasv2.UserCert{
-			MonthsUntilExpiration: pointer.Get(int32(monthsUntilExpiration)),
+			MonthsUntilExpiration: pointer.Get(monthsUntilExpiration),
 		}
-		_, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCertificate(s.ctx, projectID, username).UserCert(userCert).Execute()
+		_, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCertificate(s.ctx, projectID, username).
+		UserCert(&userCert).Execute()
 		return &userCert, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -53,7 +53,7 @@ func TestListOpts_Run(t *testing.T) {
 				},
 			},
 		},
-		TotalCount: pointer.Get(int32(2)),
+		TotalCount: pointer.Get(2),
 	}
 
 	buf := new(bytes.Buffer)

@@ -54,7 +54,7 @@ func (s *Store) UpdateProjectSettings(projectID string, projectSettings *atlas.P
 			IsRealtimePerformancePanelEnabled:           projectSettings.IsRealtimePerformancePanelEnabled,
 			IsSchemaAdvisorEnabled:                      projectSettings.IsSchemaAdvisorEnabled,
 		}
-		result, _, err := s.clientv2.ProjectsApi.UpdateProjectSettings(s.ctx, projectID).GroupSettings(groupSettings).Execute()
+		result, _, err := s.clientv2.ProjectsApi.UpdateProjectSettings(s.ctx, projectID).GroupSettings(&groupSettings).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

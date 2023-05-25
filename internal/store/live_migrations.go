@@ -36,7 +36,7 @@ type LiveMigrationDescriber interface {
 func (s *Store) LiveMigrationCreate(groupID string, liveMigrationRequest *atlasv2.LiveMigrationRequest) (*atlasv2.LiveMigrationResponse, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.CloudMigrationServiceApi.CreatePushMigration(context.Background(), groupID).LiveMigrationRequest(*liveMigrationRequest).Execute()
+		result, _, err := s.clientv2.CloudMigrationServiceApi.CreatePushMigration(context.Background(), groupID).LiveMigrationRequest(liveMigrationRequest).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

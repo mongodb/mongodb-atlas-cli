@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_indexes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store IndexCreator
@@ -31,7 +31,8 @@ type IndexCreator interface {
 func (s *Store) CreateIndex(projectID, clusterName string, index *atlasv2.IndexRequest) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.RollingIndexApi.CreateRollingIndex(s.ctx, projectID, clusterName).IndexRequest(*index).Execute()
+		_, err := s.clientv2.RollingIndexApi.CreateRollingIndex(s.ctx, projectID, clusterName).
+			IndexRequest(index).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

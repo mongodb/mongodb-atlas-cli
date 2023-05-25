@@ -75,7 +75,7 @@ func TestBuildAtlasProject(t *testing.T) {
 					IpAddress:        pointer.Get("0.0.0.0"),
 				},
 			},
-			TotalCount: pointer.Get(int32(1)),
+			TotalCount: pointer.Get(1),
 		}
 
 		auditing := &atlasv2.AuditLog{
@@ -125,7 +125,7 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 			},
-			TotalCount: pointer.Get(int32(1)),
+			TotalCount: pointer.Get(1),
 		}
 
 		mw := &atlasv2.GroupMaintenanceWindow{
@@ -636,7 +636,7 @@ func Test_buildAccessLists(t *testing.T) {
 					IpAddress:        pointer.Get("0.0.0.0"),
 				},
 			},
-			TotalCount: pointer.Get(int32(1)),
+			TotalCount: pointer.Get(1),
 		}
 
 		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
@@ -876,7 +876,7 @@ func Test_buildIntegrations(t *testing.T) {
 					},
 				},
 			},
-			TotalCount: pointer.Get(int32(0)),
+			TotalCount: pointer.Get(0),
 		}
 
 		intProvider.EXPECT().Integrations(projectID).Return(ints, nil)
@@ -944,7 +944,7 @@ func Test_buildIntegrations(t *testing.T) {
 					},
 				},
 			},
-			TotalCount: pointer.Get(int32(0)),
+			TotalCount: pointer.Get(0),
 		}
 		intProvider.EXPECT().Integrations(projectID).Return(ints, nil)
 		got, intSecrets, err := buildIntegrations(intProvider, projectID, targetNamespace, includeSecrets, dictionary)

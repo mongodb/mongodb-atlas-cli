@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range .Results}}
@@ -64,10 +64,10 @@ func (opts *ListOpts) newProcessesListParams() *atlasv2.ListAtlasProcessesApiPar
 		GroupId: opts.ConfigProjectID(),
 	}
 	if listOpts.PageNum > 0 {
-		processesList.PageNum = pointer.Get(int32(listOpts.PageNum))
+		processesList.PageNum = pointer.Get(listOpts.PageNum)
 	}
 	if listOpts.ItemsPerPage > 0 {
-		processesList.ItemsPerPage = pointer.Get(int32(listOpts.ItemsPerPage))
+		processesList.ItemsPerPage = pointer.Get(listOpts.ItemsPerPage)
 	}
 	return processesList
 }

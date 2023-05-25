@@ -55,7 +55,7 @@ func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.Acces
 			}
 
 			if opts.NLogs > 0 {
-				result = result.NLogs(int32(opts.NLogs))
+				result = result.NLogs(opts.NLogs)
 			}
 
 			if opts.IPAddress != "" {
@@ -91,7 +91,7 @@ func (s *Store) AccessLogsByClusterName(groupID, clusterName string, opts *atlas
 			}
 
 			if opts.NLogs > 0 {
-				result = result.NLogs(int32(opts.NLogs))
+				result = result.NLogs(opts.NLogs)
 			}
 
 			if opts.IPAddress != "" {

@@ -50,8 +50,8 @@ func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.ServerlessInstancesApi.ListServerlessInstances(s.ctx, projectID).
-			ItemsPerPage(int32(listOps.ItemsPerPage)).
-			PageNum(int32(listOps.PageNum)).
+			ItemsPerPage(listOps.ItemsPerPage).
+			PageNum(listOps.PageNum).
 			Execute()
 
 		return result, err
@@ -98,7 +98,7 @@ func (s *Store) CreateServerlessInstance(projectID string, cluster *atlasv2.Serv
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.ServerlessInstancesApi.CreateServerlessInstance(s.ctx, projectID).
-			ServerlessInstanceDescriptionCreate(*cluster).
+			ServerlessInstanceDescriptionCreate(cluster).
 			Execute()
 		return result, err
 	default:
@@ -111,7 +111,7 @@ func (s *Store) UpdateServerlessInstance(projectID string, instanceName string, 
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.ServerlessInstancesApi.UpdateServerlessInstance(s.ctx, projectID, instanceName).
-			ServerlessInstanceDescriptionUpdate(*req).
+			ServerlessInstanceDescriptionUpdate(req).
 			Execute()
 
 		return result, err

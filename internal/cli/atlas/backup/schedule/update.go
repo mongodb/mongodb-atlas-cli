@@ -51,9 +51,9 @@ type UpdateOpts struct {
 	exportBucketID                      string
 	exportFrequencyType                 string
 	backupPolicy                        []string
-	referenceHourOfDay                  int32
-	referenceMinuteOfHour               int32
-	restoreWindowDays                   int32
+	referenceHourOfDay                  int
+	referenceMinuteOfHour               int
+	restoreWindowDays                   int
 	autoExport                          bool
 	noAutoExport                        bool
 	updateSnapshots                     bool
@@ -150,9 +150,9 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 			policyItem := atlasv2.PolicyItem{
 				Id:                &policyItems[1],
 				FrequencyType:     policyItems[2],
-				FrequencyInterval: int32(frequencyInterval),
+				FrequencyInterval: int(frequencyInterval),
 				RetentionUnit:     policyItems[4],
-				RetentionValue:    int32(retentionValue),
+				RetentionValue:    int(retentionValue),
 			}
 			policyItemIndex := findPolicyItemsIndex(policyItems[1], policies[policyIndex].PolicyItems)
 			if policyItemIndex == -1 {
@@ -366,9 +366,9 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.exportBucketID, flag.ExportBucketID, "", usage.BucketID)
 	cmd.Flags().StringVar(&opts.exportFrequencyType, flag.ExportFrequencyType, "", usage.ExportFrequencyType)
-	cmd.Flags().Int32Var(&opts.referenceHourOfDay, flag.ReferenceHourOfDay, 0, usage.ReferenceHourOfDay)
-	cmd.Flags().Int32Var(&opts.referenceMinuteOfHour, flag.ReferenceMinuteOfHour, 0, usage.ReferenceMinuteOfHour)
-	cmd.Flags().Int32Var(&opts.restoreWindowDays, flag.RestoreWindowDays, 0, usage.RestoreWindowDays)
+	cmd.Flags().IntVar(&opts.referenceHourOfDay, flag.ReferenceHourOfDay, 0, usage.ReferenceHourOfDay)
+	cmd.Flags().IntVar(&opts.referenceMinuteOfHour, flag.ReferenceMinuteOfHour, 0, usage.ReferenceMinuteOfHour)
+	cmd.Flags().IntVar(&opts.restoreWindowDays, flag.RestoreWindowDays, 0, usage.RestoreWindowDays)
 
 	cmd.Flags().BoolVar(&opts.autoExport, flag.AutoExport, false, usage.AutoExport)
 	cmd.Flags().BoolVar(&opts.noAutoExport, flag.NoAutoExport, false, usage.NoAutoExport)

@@ -50,7 +50,7 @@ func (s *Store) ServerlessSnapshots(projectID, clusterName string, opts *atlas.L
 	case config.CloudService:
 		res := s.clientv2.CloudBackupsApi.ListServerlessBackups(s.ctx, projectID, clusterName)
 		if opts != nil {
-			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
 		result, _, err := res.Execute()
 		return result, err
@@ -76,7 +76,7 @@ func (s *Store) ServerlessRestoreJobs(projectID, instanceName string, opts *atla
 	case config.CloudService:
 		res := s.clientv2.CloudBackupsApi.ListServerlessBackupRestoreJobs(s.ctx, projectID, instanceName)
 		if opts != nil {
-			res = res.ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum))
+			res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
 		}
 		result, _, err := res.Execute()
 		return result, err
@@ -100,7 +100,7 @@ func (s *Store) ServerlessRestoreJob(projectID, instanceName string, jobID strin
 func (s *Store) ServerlessCreateRestoreJobs(projectID, clusterName string, request *atlasv2.ServerlessBackupRestoreJob) (*atlasv2.ServerlessBackupRestoreJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.CloudBackupsApi.CreateServerlessBackupRestoreJob(s.ctx, projectID, clusterName).ServerlessBackupRestoreJob(*request).Execute()
+		result, _, err := s.clientv2.CloudBackupsApi.CreateServerlessBackupRestoreJob(s.ctx, projectID, clusterName).ServerlessBackupRestoreJob(request).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

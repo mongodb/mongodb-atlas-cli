@@ -64,7 +64,8 @@ type OpsManagerMaintenanceWindowUpdater interface {
 func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atlasv2.GroupMaintenanceWindow) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, _, err := s.clientv2.MaintenanceWindowsApi.UpdateMaintenanceWindow(s.ctx, projectID).GroupMaintenanceWindow(*maintenanceWindow).Execute()
+		_, _, err := s.clientv2.MaintenanceWindowsApi.UpdateMaintenanceWindow(s.ctx, projectID).
+		GroupMaintenanceWindow(maintenanceWindow).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

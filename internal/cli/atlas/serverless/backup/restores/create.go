@@ -42,10 +42,10 @@ type CreateOpts struct {
 	clusterName          string
 	targetProjectID      string
 	targetClusterName    string
-	oplogTS              int32
-	oplogInc             int32
+	oplogTS              int
+	oplogInc             int
 	snapshotID           string
-	pointInTimeUTCMillis int32
+	pointInTimeUTCMillis int
 	store                store.ServerlessRestoreJobsCreator
 }
 
@@ -211,9 +211,9 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.deliveryType, flag.DeliveryType, "", usage.DeliveryType)
 	cmd.Flags().StringVar(&opts.targetProjectID, flag.TargetProjectID, "", usage.TargetProjectID)
 	cmd.Flags().StringVar(&opts.targetClusterName, flag.TargetClusterName, "", usage.TargetClusterName)
-	cmd.Flags().Int32Var(&opts.oplogTS, flag.OplogTS, 0, usage.OplogTS)
-	cmd.Flags().Int32Var(&opts.oplogInc, flag.OplogInc, 0, usage.OplogInc)
-	cmd.Flags().Int32Var(&opts.pointInTimeUTCMillis, flag.PointInTimeUTCMillis, 0, usage.PointInTimeUTCMillis)
+	cmd.Flags().IntVar(&opts.oplogTS, flag.OplogTS, 0, usage.OplogTS)
+	cmd.Flags().IntVar(&opts.oplogInc, flag.OplogInc, 0, usage.OplogInc)
+	cmd.Flags().IntVar(&opts.pointInTimeUTCMillis, flag.PointInTimeUTCMillis, 0, usage.PointInTimeUTCMillis)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

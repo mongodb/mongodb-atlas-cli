@@ -40,7 +40,7 @@ type LiveMigrationValidationsDescriber interface {
 func (s *Store) CreateValidation(groupID string, liveMigration *atlasv2.LiveMigrationRequest) (*atlasv2.Validation, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.CloudMigrationServiceApi.ValidateMigration(s.ctx, groupID).LiveMigrationRequest(*liveMigration).Execute()
+		result, _, err := s.clientv2.CloudMigrationServiceApi.ValidateMigration(s.ctx, groupID).LiveMigrationRequest(liveMigration).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

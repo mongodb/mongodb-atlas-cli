@@ -52,7 +52,7 @@ func TestWhitelistList_Run(t *testing.T) {
 				IpAddress:        pointer.Get("test"),
 			},
 		},
-		TotalCount: pointer.Get(int32(0)),
+		TotalCount: pointer.Get(0),
 	}
 
 	buf := new(bytes.Buffer)

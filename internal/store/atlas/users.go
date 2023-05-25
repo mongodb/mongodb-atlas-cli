@@ -40,7 +40,7 @@ type UserDescriber interface {
 
 // CreateUser encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateUser(user *atlasv2.AppUser) (*atlasv2.AppUser, error) {
-	result, _, err := s.clientv2.MongoDBCloudUsersApi.CreateUser(s.ctx).AppUser(*user).Execute()
+	result, _, err := s.clientv2.MongoDBCloudUsersApi.CreateUser(s.ctx).AppUser(user).Execute()
 	return result, err
 }
 
@@ -60,7 +60,7 @@ func (s *Store) UserByName(username string) (*atlasv2.AppUser, error) {
 func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (*atlasv2.PaginatedAppUser, error) {
 	res := s.clientv2.OrganizationsApi.ListOrganizationUsers(s.ctx, organizationID)
 	if opts != nil {
-		res = res.IncludeCount(opts.IncludeCount).ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum))
+		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
 	}
 	result, _, err := res.Execute()
 	return result, err

@@ -34,7 +34,7 @@ type UpdateOpts struct {
 	cli.OutputOpts
 	id           string
 	clusterName  string
-	archiveAfter float64
+	archiveAfter int
 	store        store.OnlineArchiveUpdater
 }
 
@@ -63,7 +63,7 @@ func (opts *UpdateOpts) newOnlineArchive() *atlasv2.OnlineArchive {
 		Id: &opts.id,
 		Criteria: &atlasv2.Criteria{
 			DateCriteria: &atlasv2.DateCriteria{
-				ExpireAfterDays: pointer.Get(int32(opts.archiveAfter)),
+				ExpireAfterDays: pointer.Get(opts.archiveAfter),
 			},
 		},
 	}
@@ -98,7 +98,7 @@ func UpdateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().Float64Var(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
+	cmd.Flags().IntVar(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

@@ -19,8 +19,8 @@ import (
 	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_process_disks.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessDisksLister
@@ -35,7 +35,7 @@ func (s *Store) ProcessDisks(groupID, host string, port int, opts *atlas.ListOpt
 	case config.CloudService, config.CloudGovService:
 		processID := host + ":" + strconv.Itoa(port)
 		result, _, err := s.clientv2.MonitoringAndLogsApi.ListDiskPartitions(s.ctx, groupID, processID).
-			IncludeCount(opts.IncludeCount).ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum)).Execute()
+			ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

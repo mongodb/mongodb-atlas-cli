@@ -1315,7 +1315,7 @@ tasks:
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_TIMEOUT: 3h
   - name: atlas_cleanup_e2e
-    tags: [ "e2e","cleanup", "foliage_infrequent_task" ]
+    tags: [ "e2e","cleanup", "foliage_check_task_only" ]
     must_have_test_results: true
     stepback: false
     depends_on:
@@ -1334,7 +1334,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,cleanup
   - name: atlas_gov_cleanup_e2e
-    tags: [ "e2e","cleanup" ]
+    tags: [ "e2e","cleanup", "foliage_check_task_only" ]
     must_have_test_results: true
     stepback: false
     depends_on:

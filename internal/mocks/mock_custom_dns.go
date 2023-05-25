@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockCustomDNSEnabler is a mock of CustomDNSEnabler interface.
@@ -35,10 +35,10 @@ func (m *MockCustomDNSEnabler) EXPECT() *MockCustomDNSEnablerMockRecorder {
 }
 
 // EnableCustomDNS mocks base method.
-func (m *MockCustomDNSEnabler) EnableCustomDNS(arg0 string) (*mongodbatlasv2.AWSCustomDNSEnabled, error) {
+func (m *MockCustomDNSEnabler) EnableCustomDNS(arg0 string) (*admin.AWSCustomDNSEnabled, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "EnableCustomDNS", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.AWSCustomDNSEnabled)
+	ret0, _ := ret[0].(*admin.AWSCustomDNSEnabled)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockCustomDNSDisabler) EXPECT() *MockCustomDNSDisablerMockRecorder {
 }
 
 // DisableCustomDNS mocks base method.
-func (m *MockCustomDNSDisabler) DisableCustomDNS(arg0 string) (*mongodbatlasv2.AWSCustomDNSEnabled, error) {
+func (m *MockCustomDNSDisabler) DisableCustomDNS(arg0 string) (*admin.AWSCustomDNSEnabled, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DisableCustomDNS", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.AWSCustomDNSEnabled)
+	ret0, _ := ret[0].(*admin.AWSCustomDNSEnabled)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockCustomDNSDescriber) EXPECT() *MockCustomDNSDescriberMockRecorder {
 }
 
 // DescribeCustomDNS mocks base method.
-func (m *MockCustomDNSDescriber) DescribeCustomDNS(arg0 string) (*mongodbatlasv2.AWSCustomDNSEnabled, error) {
+func (m *MockCustomDNSDescriber) DescribeCustomDNS(arg0 string) (*admin.AWSCustomDNSEnabled, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeCustomDNS", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.AWSCustomDNSEnabled)
+	ret0, _ := ret[0].(*admin.AWSCustomDNSEnabled)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

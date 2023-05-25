@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockAtlasOperatorProjectStore is a mock of AtlasOperatorProjectStore interface.
@@ -51,10 +51,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) AlertConfigurations(arg0, a
 }
 
 // Auditing mocks base method.
-func (m *MockAtlasOperatorProjectStore) Auditing(arg0 string) (*mongodbatlasv2.AuditLog, error) {
+func (m *MockAtlasOperatorProjectStore) Auditing(arg0 string) (*admin.AuditLog, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Auditing", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.AuditLog)
+	ret0, _ := ret[0].(*admin.AuditLog)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -66,10 +66,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) Auditing(arg0 interface{}) 
 }
 
 // CloudProviderAccessRoles mocks base method.
-func (m *MockAtlasOperatorProjectStore) CloudProviderAccessRoles(arg0 string) (*mongodbatlasv2.CloudProviderAccess, error) {
+func (m *MockAtlasOperatorProjectStore) CloudProviderAccessRoles(arg0 string) (*admin.CloudProviderAccess, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CloudProviderAccessRoles", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.CloudProviderAccess)
+	ret0, _ := ret[0].(*admin.CloudProviderAccess)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) CreateProjectAPIKey(arg0, a
 }
 
 // DatabaseRoles mocks base method.
-func (m *MockAtlasOperatorProjectStore) DatabaseRoles(arg0 string) ([]mongodbatlasv2.CustomDBRole, error) {
+func (m *MockAtlasOperatorProjectStore) DatabaseRoles(arg0 string) ([]admin.CustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseRoles", arg0)
-	ret0, _ := ret[0].([]mongodbatlasv2.CustomDBRole)
+	ret0, _ := ret[0].([]admin.CustomDBRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -126,10 +126,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) DatabaseRoles(arg0 interfac
 }
 
 // EncryptionAtRest mocks base method.
-func (m *MockAtlasOperatorProjectStore) EncryptionAtRest(arg0 string) (*mongodbatlasv2.EncryptionAtRest, error) {
+func (m *MockAtlasOperatorProjectStore) EncryptionAtRest(arg0 string) (*admin.EncryptionAtRest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "EncryptionAtRest", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.EncryptionAtRest)
+	ret0, _ := ret[0].(*admin.EncryptionAtRest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -156,10 +156,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) GetOrgProjects(arg0, arg1 i
 }
 
 // Integrations mocks base method.
-func (m *MockAtlasOperatorProjectStore) Integrations(arg0 string) (*mongodbatlasv2.PaginatedIntegration, error) {
+func (m *MockAtlasOperatorProjectStore) Integrations(arg0 string) (*admin.PaginatedIntegration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Integrations", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedIntegration)
+	ret0, _ := ret[0].(*admin.PaginatedIntegration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -171,10 +171,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) Integrations(arg0 interface
 }
 
 // MaintenanceWindow mocks base method.
-func (m *MockAtlasOperatorProjectStore) MaintenanceWindow(arg0 string) (*mongodbatlasv2.GroupMaintenanceWindow, error) {
+func (m *MockAtlasOperatorProjectStore) MaintenanceWindow(arg0 string) (*admin.GroupMaintenanceWindow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MaintenanceWindow", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.GroupMaintenanceWindow)
+	ret0, _ := ret[0].(*admin.GroupMaintenanceWindow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -246,10 +246,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) ProjectByName(arg0 interfac
 }
 
 // ProjectIPAccessLists mocks base method.
-func (m *MockAtlasOperatorProjectStore) ProjectIPAccessLists(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedNetworkAccess, error) {
+func (m *MockAtlasOperatorProjectStore) ProjectIPAccessLists(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedNetworkAccess, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectIPAccessLists", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedNetworkAccess)
+	ret0, _ := ret[0].(*admin.PaginatedNetworkAccess)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -261,10 +261,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) ProjectIPAccessLists(arg0, 
 }
 
 // ProjectSettings mocks base method.
-func (m *MockAtlasOperatorProjectStore) ProjectSettings(arg0 string) (*mongodbatlasv2.GroupSettings, error) {
+func (m *MockAtlasOperatorProjectStore) ProjectSettings(arg0 string) (*admin.GroupSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectSettings", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.GroupSettings)
+	ret0, _ := ret[0].(*admin.GroupSettings)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

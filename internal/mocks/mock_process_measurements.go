@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockProcessMeasurementLister is a mock of ProcessMeasurementLister interface.
@@ -35,10 +35,10 @@ func (m *MockProcessMeasurementLister) EXPECT() *MockProcessMeasurementListerMoc
 }
 
 // ProcessMeasurements mocks base method.
-func (m *MockProcessMeasurementLister) ProcessMeasurements(arg0 *mongodbatlasv2.GetHostMeasurementsApiParams) (*mongodbatlasv2.MeasurementsGeneralViewAtlas, error) {
+func (m *MockProcessMeasurementLister) ProcessMeasurements(arg0 *admin.GetHostMeasurementsApiParams) (*admin.MeasurementsGeneralViewAtlas, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessMeasurements", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.MeasurementsGeneralViewAtlas)
+	ret0, _ := ret[0].(*admin.MeasurementsGeneralViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockOrganizationLister is a mock of OrganizationLister interface.
@@ -36,10 +36,10 @@ func (m *MockOrganizationLister) EXPECT() *MockOrganizationListerMockRecorder {
 }
 
 // Organizations mocks base method.
-func (m *MockOrganizationLister) Organizations(arg0 *mongodbatlas.OrganizationsListOptions) (*mongodbatlasv2.PaginatedOrganization, error) {
+func (m *MockOrganizationLister) Organizations(arg0 *mongodbatlas.OrganizationsListOptions) (*admin.PaginatedOrganization, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organizations", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedOrganization)
+	ret0, _ := ret[0].(*admin.PaginatedOrganization)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockOrganizationDescriber) EXPECT() *MockOrganizationDescriberMockRecor
 }
 
 // Organization mocks base method.
-func (m *MockOrganizationDescriber) Organization(arg0 string) (*mongodbatlasv2.Organization, error) {
+func (m *MockOrganizationDescriber) Organization(arg0 string) (*admin.Organization, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organization", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.Organization)
+	ret0, _ := ret[0].(*admin.Organization)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -149,10 +149,10 @@ func (m *MockOrganizationCreator) EXPECT() *MockOrganizationCreatorMockRecorder 
 }
 
 // CreateAtlasOrganization mocks base method.
-func (m *MockOrganizationCreator) CreateAtlasOrganization(arg0 *mongodbatlasv2.CreateOrganizationRequest) (*mongodbatlasv2.CreateOrganizationResponse, error) {
+func (m *MockOrganizationCreator) CreateAtlasOrganization(arg0 *admin.CreateOrganizationRequest) (*admin.CreateOrganizationResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAtlasOrganization", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.CreateOrganizationResponse)
+	ret0, _ := ret[0].(*admin.CreateOrganizationResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

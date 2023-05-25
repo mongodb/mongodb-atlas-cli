@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -36,7 +36,7 @@ func (m *MockMaintenanceWindowUpdater) EXPECT() *MockMaintenanceWindowUpdaterMoc
 }
 
 // UpdateMaintenanceWindow mocks base method.
-func (m *MockMaintenanceWindowUpdater) UpdateMaintenanceWindow(arg0 string, arg1 *mongodbatlasv2.GroupMaintenanceWindow) error {
+func (m *MockMaintenanceWindowUpdater) UpdateMaintenanceWindow(arg0 string, arg1 *admin.GroupMaintenanceWindow) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateMaintenanceWindow", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -147,10 +147,10 @@ func (m *MockMaintenanceWindowDescriber) EXPECT() *MockMaintenanceWindowDescribe
 }
 
 // MaintenanceWindow mocks base method.
-func (m *MockMaintenanceWindowDescriber) MaintenanceWindow(arg0 string) (*mongodbatlasv2.GroupMaintenanceWindow, error) {
+func (m *MockMaintenanceWindowDescriber) MaintenanceWindow(arg0 string) (*admin.GroupMaintenanceWindow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MaintenanceWindow", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.GroupMaintenanceWindow)
+	ret0, _ := ret[0].(*admin.GroupMaintenanceWindow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

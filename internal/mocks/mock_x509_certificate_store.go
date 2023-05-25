@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockX509CertificateConfDescriber is a mock of X509CertificateConfDescriber interface.
@@ -35,10 +35,10 @@ func (m *MockX509CertificateConfDescriber) EXPECT() *MockX509CertificateConfDesc
 }
 
 // X509Configuration mocks base method.
-func (m *MockX509CertificateConfDescriber) X509Configuration(arg0 string) (*mongodbatlasv2.UserSecurity, error) {
+func (m *MockX509CertificateConfDescriber) X509Configuration(arg0 string) (*admin.UserSecurity, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "X509Configuration", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.UserSecurity)
+	ret0, _ := ret[0].(*admin.UserSecurity)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockX509CertificateConfSaver) EXPECT() *MockX509CertificateConfSaverMoc
 }
 
 // SaveX509Configuration mocks base method.
-func (m *MockX509CertificateConfSaver) SaveX509Configuration(arg0, arg1 string) (*mongodbatlasv2.UserSecurity, error) {
+func (m *MockX509CertificateConfSaver) SaveX509Configuration(arg0, arg1 string) (*admin.UserSecurity, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveX509Configuration", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.UserSecurity)
+	ret0, _ := ret[0].(*admin.UserSecurity)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

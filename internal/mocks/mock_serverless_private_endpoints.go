@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockServerlessPrivateEndpointsLister is a mock of ServerlessPrivateEndpointsLister interface.
@@ -35,10 +35,10 @@ func (m *MockServerlessPrivateEndpointsLister) EXPECT() *MockServerlessPrivateEn
 }
 
 // ServerlessPrivateEndpoints mocks base method.
-func (m *MockServerlessPrivateEndpointsLister) ServerlessPrivateEndpoints(arg0, arg1 string) ([]mongodbatlasv2.ServerlessTenantEndpoint, error) {
+func (m *MockServerlessPrivateEndpointsLister) ServerlessPrivateEndpoints(arg0, arg1 string) ([]admin.ServerlessTenantEndpoint, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessPrivateEndpoints", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlasv2.ServerlessTenantEndpoint)
+	ret0, _ := ret[0].([]admin.ServerlessTenantEndpoint)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

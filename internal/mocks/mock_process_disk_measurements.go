@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockProcessDiskMeasurementsLister is a mock of ProcessDiskMeasurementsLister interface.
@@ -35,10 +35,10 @@ func (m *MockProcessDiskMeasurementsLister) EXPECT() *MockProcessDiskMeasurement
 }
 
 // ProcessDiskMeasurements mocks base method.
-func (m *MockProcessDiskMeasurementsLister) ProcessDiskMeasurements(arg0 *mongodbatlasv2.GetDiskMeasurementsApiParams) (*mongodbatlasv2.MeasurementsGeneralViewAtlas, error) {
+func (m *MockProcessDiskMeasurementsLister) ProcessDiskMeasurements(arg0 *admin.GetDiskMeasurementsApiParams) (*admin.MeasurementsGeneralViewAtlas, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessDiskMeasurements", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.MeasurementsGeneralViewAtlas)
+	ret0, _ := ret[0].(*admin.MeasurementsGeneralViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockProcessDatabaseMeasurementsLister) EXPECT() *MockProcessDatabaseMea
 }
 
 // ProcessDatabaseMeasurements mocks base method.
-func (m *MockProcessDatabaseMeasurementsLister) ProcessDatabaseMeasurements(arg0 *mongodbatlasv2.GetDatabaseMeasurementsApiParams) (*mongodbatlasv2.MeasurementsGeneralViewAtlas, error) {
+func (m *MockProcessDatabaseMeasurementsLister) ProcessDatabaseMeasurements(arg0 *admin.GetDatabaseMeasurementsApiParams) (*admin.MeasurementsGeneralViewAtlas, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessDatabaseMeasurements", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.MeasurementsGeneralViewAtlas)
+	ret0, _ := ret[0].(*admin.MeasurementsGeneralViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

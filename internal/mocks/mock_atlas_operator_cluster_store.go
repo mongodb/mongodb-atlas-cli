@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockAtlasOperatorClusterStore is a mock of AtlasOperatorClusterStore interface.
@@ -51,10 +51,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) AtlasCluster(arg0, arg1 int
 }
 
 // AtlasClusterConfigurationOptions mocks base method.
-func (m *MockAtlasOperatorClusterStore) AtlasClusterConfigurationOptions(arg0, arg1 string) (*mongodbatlasv2.ClusterDescriptionProcessArgs, error) {
+func (m *MockAtlasOperatorClusterStore) AtlasClusterConfigurationOptions(arg0, arg1 string) (*admin.ClusterDescriptionProcessArgs, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AtlasClusterConfigurationOptions", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.ClusterDescriptionProcessArgs)
+	ret0, _ := ret[0].(*admin.ClusterDescriptionProcessArgs)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -66,10 +66,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) AtlasClusterConfigurationOp
 }
 
 // DescribeSchedule mocks base method.
-func (m *MockAtlasOperatorClusterStore) DescribeSchedule(arg0, arg1 string) (*mongodbatlasv2.DiskBackupSnapshotSchedule, error) {
+func (m *MockAtlasOperatorClusterStore) DescribeSchedule(arg0, arg1 string) (*admin.DiskBackupSnapshotSchedule, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeSchedule", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.DiskBackupSnapshotSchedule)
+	ret0, _ := ret[0].(*admin.DiskBackupSnapshotSchedule)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -81,10 +81,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) DescribeSchedule(arg0, arg1
 }
 
 // GetServerlessInstance mocks base method.
-func (m *MockAtlasOperatorClusterStore) GetServerlessInstance(arg0, arg1 string) (*mongodbatlasv2.ServerlessInstanceDescription, error) {
+func (m *MockAtlasOperatorClusterStore) GetServerlessInstance(arg0, arg1 string) (*admin.ServerlessInstanceDescription, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetServerlessInstance", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.ServerlessInstanceDescription)
+	ret0, _ := ret[0].(*admin.ServerlessInstanceDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -96,10 +96,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) GetServerlessInstance(arg0,
 }
 
 // GlobalCluster mocks base method.
-func (m *MockAtlasOperatorClusterStore) GlobalCluster(arg0, arg1 string) (*mongodbatlasv2.GeoSharding, error) {
+func (m *MockAtlasOperatorClusterStore) GlobalCluster(arg0, arg1 string) (*admin.GeoSharding, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GlobalCluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.GeoSharding)
+	ret0, _ := ret[0].(*admin.GeoSharding)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -141,10 +141,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) ServerlessInstance(arg0, ar
 }
 
 // ServerlessInstances mocks base method.
-func (m *MockAtlasOperatorClusterStore) ServerlessInstances(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedServerlessInstanceDescription, error) {
+func (m *MockAtlasOperatorClusterStore) ServerlessInstances(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedServerlessInstanceDescription, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessInstances", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedServerlessInstanceDescription)
+	ret0, _ := ret[0].(*admin.PaginatedServerlessInstanceDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -156,10 +156,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) ServerlessInstances(arg0, a
 }
 
 // ServerlessPrivateEndpoints mocks base method.
-func (m *MockAtlasOperatorClusterStore) ServerlessPrivateEndpoints(arg0, arg1 string) ([]mongodbatlasv2.ServerlessTenantEndpoint, error) {
+func (m *MockAtlasOperatorClusterStore) ServerlessPrivateEndpoints(arg0, arg1 string) ([]admin.ServerlessTenantEndpoint, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessPrivateEndpoints", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlasv2.ServerlessTenantEndpoint)
+	ret0, _ := ret[0].([]admin.ServerlessTenantEndpoint)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

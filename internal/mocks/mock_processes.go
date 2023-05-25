@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockProcessLister is a mock of ProcessLister interface.
@@ -35,10 +35,10 @@ func (m *MockProcessLister) EXPECT() *MockProcessListerMockRecorder {
 }
 
 // Processes mocks base method.
-func (m *MockProcessLister) Processes(arg0 *mongodbatlasv2.ListAtlasProcessesApiParams) (*mongodbatlasv2.PaginatedHostViewAtlas, error) {
+func (m *MockProcessLister) Processes(arg0 *admin.ListAtlasProcessesApiParams) (*admin.PaginatedHostViewAtlas, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Processes", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedHostViewAtlas)
+	ret0, _ := ret[0].(*admin.PaginatedHostViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockProcessDescriber) EXPECT() *MockProcessDescriberMockRecorder {
 }
 
 // Process mocks base method.
-func (m *MockProcessDescriber) Process(arg0 *mongodbatlasv2.GetAtlasProcessApiParams) (*mongodbatlasv2.HostViewAtlas, error) {
+func (m *MockProcessDescriber) Process(arg0 *admin.GetAtlasProcessApiParams) (*admin.HostViewAtlas, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Process", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.HostViewAtlas)
+	ret0, _ := ret[0].(*admin.HostViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

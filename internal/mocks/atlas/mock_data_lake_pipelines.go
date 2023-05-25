@@ -9,8 +9,8 @@ import (
 	time "time"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockPipelinesLister is a mock of PipelinesLister interface.
@@ -37,10 +37,10 @@ func (m *MockPipelinesLister) EXPECT() *MockPipelinesListerMockRecorder {
 }
 
 // Pipelines mocks base method.
-func (m *MockPipelinesLister) Pipelines(arg0 string) ([]mongodbatlasv2.IngestionPipeline, error) {
+func (m *MockPipelinesLister) Pipelines(arg0 string) ([]admin.IngestionPipeline, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Pipelines", arg0)
-	ret0, _ := ret[0].([]mongodbatlasv2.IngestionPipeline)
+	ret0, _ := ret[0].([]admin.IngestionPipeline)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -75,10 +75,10 @@ func (m *MockPipelinesDescriber) EXPECT() *MockPipelinesDescriberMockRecorder {
 }
 
 // Pipeline mocks base method.
-func (m *MockPipelinesDescriber) Pipeline(arg0, arg1 string) (*mongodbatlasv2.IngestionPipeline, error) {
+func (m *MockPipelinesDescriber) Pipeline(arg0, arg1 string) (*admin.IngestionPipeline, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Pipeline", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.IngestionPipeline)
+	ret0, _ := ret[0].(*admin.IngestionPipeline)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -113,10 +113,10 @@ func (m *MockPipelinesCreator) EXPECT() *MockPipelinesCreatorMockRecorder {
 }
 
 // CreatePipeline mocks base method.
-func (m *MockPipelinesCreator) CreatePipeline(arg0 string, arg1 mongodbatlasv2.IngestionPipeline) (*mongodbatlasv2.IngestionPipeline, error) {
+func (m *MockPipelinesCreator) CreatePipeline(arg0 string, arg1 admin.IngestionPipeline) (*admin.IngestionPipeline, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePipeline", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.IngestionPipeline)
+	ret0, _ := ret[0].(*admin.IngestionPipeline)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -151,10 +151,10 @@ func (m *MockPipelinesUpdater) EXPECT() *MockPipelinesUpdaterMockRecorder {
 }
 
 // UpdatePipeline mocks base method.
-func (m *MockPipelinesUpdater) UpdatePipeline(arg0, arg1 string, arg2 mongodbatlasv2.IngestionPipeline) (*mongodbatlasv2.IngestionPipeline, error) {
+func (m *MockPipelinesUpdater) UpdatePipeline(arg0, arg1 string, arg2 admin.IngestionPipeline) (*admin.IngestionPipeline, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdatePipeline", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlasv2.IngestionPipeline)
+	ret0, _ := ret[0].(*admin.IngestionPipeline)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -226,10 +226,10 @@ func (m *MockPipelineAvailableSnapshotsLister) EXPECT() *MockPipelineAvailableSn
 }
 
 // PipelineAvailableSnapshots mocks base method.
-func (m *MockPipelineAvailableSnapshotsLister) PipelineAvailableSnapshots(arg0, arg1 string, arg2 *time.Time, arg3 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedBackupSnapshot, error) {
+func (m *MockPipelineAvailableSnapshotsLister) PipelineAvailableSnapshots(arg0, arg1 string, arg2 *time.Time, arg3 *mongodbatlas.ListOptions) (*admin.PaginatedBackupSnapshot, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PipelineAvailableSnapshots", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedBackupSnapshot)
+	ret0, _ := ret[0].(*admin.PaginatedBackupSnapshot)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -264,10 +264,10 @@ func (m *MockPipelineAvailableSchedulesLister) EXPECT() *MockPipelineAvailableSc
 }
 
 // PipelineAvailableSchedules mocks base method.
-func (m *MockPipelineAvailableSchedulesLister) PipelineAvailableSchedules(arg0, arg1 string) ([]mongodbatlasv2.PolicyItem, error) {
+func (m *MockPipelineAvailableSchedulesLister) PipelineAvailableSchedules(arg0, arg1 string) ([]admin.PolicyItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PipelineAvailableSchedules", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlasv2.PolicyItem)
+	ret0, _ := ret[0].([]admin.PolicyItem)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -302,10 +302,10 @@ func (m *MockPipelinesTriggerer) EXPECT() *MockPipelinesTriggererMockRecorder {
 }
 
 // PipelineTrigger mocks base method.
-func (m *MockPipelinesTriggerer) PipelineTrigger(arg0, arg1, arg2 string) (*mongodbatlasv2.IngestionPipelineRun, error) {
+func (m *MockPipelinesTriggerer) PipelineTrigger(arg0, arg1, arg2 string) (*admin.IngestionPipelineRun, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PipelineTrigger", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlasv2.IngestionPipelineRun)
+	ret0, _ := ret[0].(*admin.IngestionPipelineRun)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -340,10 +340,10 @@ func (m *MockPipelinesPauser) EXPECT() *MockPipelinesPauserMockRecorder {
 }
 
 // PipelinePause mocks base method.
-func (m *MockPipelinesPauser) PipelinePause(arg0, arg1 string) (*mongodbatlasv2.IngestionPipeline, error) {
+func (m *MockPipelinesPauser) PipelinePause(arg0, arg1 string) (*admin.IngestionPipeline, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PipelinePause", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.IngestionPipeline)
+	ret0, _ := ret[0].(*admin.IngestionPipeline)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -378,10 +378,10 @@ func (m *MockPipelinesResumer) EXPECT() *MockPipelinesResumerMockRecorder {
 }
 
 // PipelineResume mocks base method.
-func (m *MockPipelinesResumer) PipelineResume(arg0, arg1 string) (*mongodbatlasv2.IngestionPipeline, error) {
+func (m *MockPipelinesResumer) PipelineResume(arg0, arg1 string) (*admin.IngestionPipeline, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PipelineResume", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.IngestionPipeline)
+	ret0, _ := ret[0].(*admin.IngestionPipeline)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

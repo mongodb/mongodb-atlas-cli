@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockLiveMigrationValidationsCreator is a mock of LiveMigrationValidationsCreator interface.
@@ -35,10 +35,10 @@ func (m *MockLiveMigrationValidationsCreator) EXPECT() *MockLiveMigrationValidat
 }
 
 // CreateValidation mocks base method.
-func (m *MockLiveMigrationValidationsCreator) CreateValidation(arg0 string, arg1 *mongodbatlasv2.LiveMigrationRequest) (*mongodbatlasv2.Validation, error) {
+func (m *MockLiveMigrationValidationsCreator) CreateValidation(arg0 string, arg1 *admin.LiveMigrationRequest) (*admin.Validation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateValidation", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.Validation)
+	ret0, _ := ret[0].(*admin.Validation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -110,10 +110,10 @@ func (m *MockLiveMigrationValidationsDescriber) EXPECT() *MockLiveMigrationValid
 }
 
 // GetValidationStatus mocks base method.
-func (m *MockLiveMigrationValidationsDescriber) GetValidationStatus(arg0, arg1 string) (*mongodbatlasv2.Validation, error) {
+func (m *MockLiveMigrationValidationsDescriber) GetValidationStatus(arg0, arg1 string) (*admin.Validation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetValidationStatus", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.Validation)
+	ret0, _ := ret[0].(*admin.Validation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

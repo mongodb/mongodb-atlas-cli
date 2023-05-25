@@ -93,7 +93,13 @@ addcopy:
 	@scripts/add-copy.sh
 
 .PHONY: generate
-generate: gen-docs gen-mocks gen-code ## Generate docs, mocks, code, all auto generated assets
+generate: gen-docs gen-mocks gen-code gen-openapi ## Generate docs, mocks, code, all auto generated assets
+
+.PHONY: gen-openapi
+gen-openapi: ## Generate openapi code
+	@echo "==> Generating openapi code"
+	cd tools/openapi-generator; \
+		npm run generate
 
 .PHONY: gen-code
 gen-code: ## Generate code

@@ -99,6 +99,7 @@ generate: gen-docs gen-mocks gen-code gen-openapi ## Generate docs, mocks, code,
 gen-openapi: ## Generate openapi code
 	@echo "==> Generating openapi code"
 	cd tools/openapi-generator; \
+		npm install; \
 		npm run generate
 
 .PHONY: gen-code

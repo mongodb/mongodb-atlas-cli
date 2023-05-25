@@ -35,6 +35,7 @@
 	"github.com/tangzero/inflector": "mongocli",
 	"github.com/withfig/autocomplete-tools/packages/cobra": "mongocli",
 	"go.mongodb.org/atlas": "mongocli",
+	"go.mongodb.org/atlas-sdk": "mongocli",
 	"go.mongodb.org/mongo-driver": "mongocli",
 	"go.mongodb.org/ops-manager": "mongocli",
 	"golang.org/x/crypto": "mongocli",

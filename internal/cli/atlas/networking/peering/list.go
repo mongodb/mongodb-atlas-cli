@@ -45,20 +45,20 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	STATUS	CONTAINER ID{{range .}}
-{{.ID}}	{{if .AWSAccountID}}{{.StatusName}}{{else}}{{.Status}}{{end}}	{{.ContainerID}}{{end}}
+{{.Id}}	{{if .AwsAccountId}}{{.StatusName}}{{else}}{{.Status}}{{end}}	{{.ContainerId}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
-	var r []atlas.Peer
+	var r []interface{}
 	var err error
-	r, err = opts.store.PeeringConnections(opts.ConfigProjectID(), opts.newContainerListOptions())
+	r, err = opts.store.PeeringConnections(opts.ConfigProjectID(), opts.newPeeringConnectionsListOptions())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newContainerListOptions() *atlas.ContainersListOptions {
+func (opts *ListOpts) newPeeringConnectionsListOptions() *atlas.ContainersListOptions {
 	return &atlas.ContainersListOptions{
 		ListOptions:  *opts.NewListOptions(),
 		ProviderName: opts.provider,

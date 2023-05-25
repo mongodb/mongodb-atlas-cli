@@ -538,39 +538,66 @@ func buildNetworkPeering(npProvider store.PeeringConnectionLister, projectID str
 	result := make([]atlasV1.NetworkPeer, 0, len(npListAWS)+len(npListGCP)+len(npListAzure))
 
 	for i := range npListAWS {
-		np := &npListAWS[i]
+		np := npListAWS[i]
 		result = append(result, convertNetworkPeer(np, provider.ProviderAWS))
 	}
 
 	for i := range npListGCP {
-		np := &npListGCP[i]
+		np := npListGCP[i]
 		result = append(result, convertNetworkPeer(np, provider.ProviderGCP))
 	}
 
 	for i := range npListAzure {
-		np := &npListAzure[i]
+		np := npListAzure[i]
 		result = append(result, convertNetworkPeer(np, provider.ProviderAzure))
 	}
 
 	return result, nil
 }
 
-func convertNetworkPeer(np *atlas.Peer, providerName provider.ProviderName) atlasV1.NetworkPeer {
+func convertNetworkPeer(np interface{}, providerName provider.ProviderName) atlasV1.NetworkPeer {
+	switch v := np.(type) {
+	case *atlasv2.AWSPeerVpc:
+		return convertAWSNetworkPeer(v, providerName)
+	case *atlasv2.GCPPeerVpc:
+		return convertGCPNetworkPeer(v, providerName)
+	case *atlasv2.AzurePeerNetwork:
+		return convertAzureNetworkPeer(v, providerName)
+	}
+	return atlasV1.NetworkPeer{}
+}
+
+func convertAWSNetworkPeer(np *atlasv2.AWSPeerVpc, providerName provider.ProviderName) atlasV1.NetworkPeer {
 	return atlasV1.NetworkPeer{
 		AccepterRegionName:  np.AccepterRegionName,
+		AWSAccountID:        np.AwsAccountId,
 		ContainerRegion:     "",
-		AWSAccountID:        np.AWSAccountID,
-		ContainerID:         np.ContainerID,
+		ContainerID:         np.ContainerId,
 		ProviderName:        providerName,
-		RouteTableCIDRBlock: np.RouteTableCIDRBlock,
-		VpcID:               np.VpcID,
-		AtlasCIDRBlock:      np.AtlasCIDRBlock,
-		AzureDirectoryID:    np.AzureDirectoryID,
-		AzureSubscriptionID: np.AzureSubscriptionID,
+		RouteTableCIDRBlock: np.RouteTableCidrBlock,
+		VpcID:               np.VpcId,
+	}
+}
+
+func convertAzureNetworkPeer(np *atlasv2.AzurePeerNetwork, providerName provider.ProviderName) atlasV1.NetworkPeer {
+	return atlasV1.NetworkPeer{
+		AzureDirectoryID:    np.AzureDirectoryId,
+		AzureSubscriptionID: np.AzureSubscriptionId,
+		ContainerRegion:     "",
+		ContainerID:         np.ContainerId,
+		ProviderName:        providerName,
 		ResourceGroupName:   np.ResourceGroupName,
-		VNetName:            np.VNetName,
-		GCPProjectID:        np.GCPProjectID,
-		NetworkName:         np.NetworkName,
+		VNetName:            np.VnetName,
+	}
+}
+
+func convertGCPNetworkPeer(np *atlasv2.GCPPeerVpc, providerName provider.ProviderName) atlasV1.NetworkPeer {
+	return atlasV1.NetworkPeer{
+		GCPProjectID:    np.GcpProjectId,
+		ContainerRegion: "",
+		ContainerID:     np.ContainerId,
+		ProviderName:    providerName,
+		NetworkName:     np.NetworkName,
 	}
 }
 

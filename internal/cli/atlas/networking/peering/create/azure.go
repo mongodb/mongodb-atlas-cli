@@ -27,7 +27,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -51,7 +50,7 @@ func (opts *AzureOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Network peering connection '{{.ID}}' created.\n"
+var createTemplate = "Network peering connection '{{.Id}}' created.\n"
 
 func (opts *AzureOpts) Run() error {
 	opts.region = strings.ToUpper(opts.region)
@@ -104,16 +103,21 @@ func (opts *AzureOpts) newContainer() *atlasv2.CloudProviderContainer {
 	return &w
 }
 
-func (opts *AzureOpts) newPeer(containerID string) *atlas.Peer {
-	a := &atlas.Peer{
-		AzureDirectoryID:    opts.directoryID,
-		AzureSubscriptionID: opts.subscriptionID,
-		ContainerID:         containerID,
-		ProviderName:        "AZURE",
+func (opts *AzureOpts) newPeer(containerID string) *atlasv2.ContainerPeer {
+	a := atlasv2.AzurePeerNetworkAsContainerPeer(opts.newAzurePeer((containerID)))
+	return &a
+}
+
+func (opts *AzureOpts) newAzurePeer(containerID string) *atlasv2.AzurePeerNetwork {
+	provider := "AZURE"
+	return &atlasv2.AzurePeerNetwork{
+		AzureDirectoryId:    opts.directoryID,
+		AzureSubscriptionId: opts.subscriptionID,
+		ContainerId:         containerID,
+		ProviderName:        &provider,
 		ResourceGroupName:   opts.resourceGroup,
-		VNetName:            opts.vNetName,
+		VnetName:            opts.vNetName,
 	}
-	return a
 }
 
 // mongocli atlas networking peering create azure

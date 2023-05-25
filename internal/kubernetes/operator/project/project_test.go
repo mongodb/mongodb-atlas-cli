@@ -135,29 +135,21 @@ func TestBuildAtlasProject(t *testing.T) {
 			AutoDeferOnceEnabled: pointer.Get(false),
 		}
 
-		peeringConnections := []mongodbatlas.Peer{
-			{
-				AccepterRegionName:  "US_EAST_1",
-				AWSAccountID:        "TestAwsAccountID",
-				ConnectionID:        "TestConnectionID",
-				ContainerID:         "TestContainerID",
-				ErrorStateName:      "TestErrorStateName",
-				ID:                  "TestID",
-				ProviderName:        string(provider.ProviderAWS),
-				RouteTableCIDRBlock: "0.0.0.0/0",
-				StatusName:          "",
-				VpcID:               "TestVPCID",
-				AtlasCIDRBlock:      "0.0.0.0/0",
-				AzureDirectoryID:    "TestDirectoryID",
-				AzureSubscriptionID: "TestAzureSubID",
-				ResourceGroupName:   "TestResourceGroupName",
-				VNetName:            "TestVNetName",
-				ErrorState:          "TestErrorState",
-				Status:              "TestStatus",
-				GCPProjectID:        "TestGCPProjectID",
-				NetworkName:         "TestNetworkName",
-				ErrorMessage:        "TestErrorMessage",
-			},
+		peeringConnectionAWS := &atlasv2.AWSPeerVpc{
+			AccepterRegionName:  "TestRegionName",
+			AwsAccountId:        "TestAWSAccountID",
+			ConnectionId:        pointer.Get("TestConnID"),
+			ContainerId:         "TestContainerID",
+			ErrorStateName:      pointer.Get("TestErrStateName"),
+			Id:                  pointer.Get("TestID"),
+			ProviderName:        pointer.Get(string(provider.ProviderAWS)),
+			RouteTableCidrBlock: "0.0.0.0/0",
+			StatusName:          pointer.Get("TestStatusName"),
+			VpcId:               "TestVPCID",
+		}
+
+		peeringConnections := []interface{}{
+			peeringConnectionAWS,
 		}
 
 		privateAWSEndpoint := atlasv2.AWSPrivateLinkConnection{
@@ -460,20 +452,13 @@ func TestBuildAtlasProject(t *testing.T) {
 				AlertConfigurationSyncEnabled: false,
 				NetworkPeers: []atlasV1.NetworkPeer{
 					{
-						AccepterRegionName:  peeringConnections[0].AccepterRegionName,
+						AccepterRegionName:  peeringConnectionAWS.AccepterRegionName,
 						ContainerRegion:     "",
-						AWSAccountID:        peeringConnections[0].AWSAccountID,
-						ContainerID:         peeringConnections[0].ContainerID,
-						ProviderName:        provider.ProviderName(peeringConnections[0].ProviderName),
-						RouteTableCIDRBlock: peeringConnections[0].RouteTableCIDRBlock,
-						VpcID:               peeringConnections[0].VpcID,
-						AtlasCIDRBlock:      peeringConnections[0].AtlasCIDRBlock,
-						AzureDirectoryID:    peeringConnections[0].AzureDirectoryID,
-						AzureSubscriptionID: peeringConnections[0].AzureSubscriptionID,
-						ResourceGroupName:   peeringConnections[0].ResourceGroupName,
-						VNetName:            peeringConnections[0].VNetName,
-						GCPProjectID:        peeringConnections[0].GCPProjectID,
-						NetworkName:         peeringConnections[0].NetworkName,
+						AWSAccountID:        peeringConnectionAWS.AwsAccountId,
+						ContainerID:         peeringConnectionAWS.ContainerId,
+						ProviderName:        provider.ProviderName(*peeringConnectionAWS.ProviderName),
+						RouteTableCIDRBlock: peeringConnectionAWS.RouteTableCidrBlock,
+						VpcID:               peeringConnectionAWS.VpcId,
 					},
 				},
 				WithDefaultAlertsSettings: false,
@@ -1050,30 +1035,21 @@ func Test_buildNetworkPeering(t *testing.T) {
 
 	peerProvider := mocks.NewMockPeeringConnectionLister(ctl)
 	t.Run("Can convert Peering connections", func(t *testing.T) {
-		peeringConnections := []mongodbatlas.Peer{
+		peeringConnectionAWS := &atlasv2.AWSPeerVpc{
+			AccepterRegionName:  "TestRegionName",
+			AwsAccountId:        "TestAWSAccountID",
+			ConnectionId:        pointer.Get("TestConnID"),
+			ContainerId:         "TestContainerID",
+			ErrorStateName:      pointer.Get("TestErrStateName"),
+			Id:                  pointer.Get("TestID"),
+			ProviderName:        pointer.Get(string(provider.ProviderAWS)),
+			RouteTableCidrBlock: "0.0.0.0/0",
+			StatusName:          pointer.Get("TestStatusName"),
+			VpcId:               "TestVPCID",
+		}
 
-			{
-				AccepterRegionName:  "TestRegionName",
-				AWSAccountID:        "TestAWSAccountID",
-				ConnectionID:        "TestConnID",
-				ContainerID:         "TestContainerID",
-				ErrorStateName:      "TestErrStateName",
-				ID:                  "TestID",
-				ProviderName:        string(provider.ProviderAWS),
-				RouteTableCIDRBlock: "0.0.0.0/0",
-				StatusName:          "TestStatusName",
-				VpcID:               "TestVPCID",
-				AtlasCIDRBlock:      "0.0.0.0/0",
-				AzureDirectoryID:    "TestDir",
-				AzureSubscriptionID: "TestSub",
-				ResourceGroupName:   "TestResourceName",
-				VNetName:            "TestNETName",
-				ErrorState:          "TestErrState",
-				Status:              "TestStatus",
-				GCPProjectID:        "TestProjectID",
-				NetworkName:         "TestNetworkName",
-				ErrorMessage:        "TestErrMessage",
-			},
+		peeringConnections := []interface{}{
+			peeringConnectionAWS,
 		}
 
 		listOptions := mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
@@ -1092,20 +1068,13 @@ func Test_buildNetworkPeering(t *testing.T) {
 
 		expected := []atlasV1.NetworkPeer{
 			{
-				AccepterRegionName:  peeringConnections[0].AccepterRegionName,
+				AccepterRegionName:  peeringConnectionAWS.AccepterRegionName,
 				ContainerRegion:     "",
-				AWSAccountID:        peeringConnections[0].AWSAccountID,
-				ContainerID:         peeringConnections[0].ContainerID,
-				ProviderName:        provider.ProviderName(peeringConnections[0].ProviderName),
-				RouteTableCIDRBlock: peeringConnections[0].RouteTableCIDRBlock,
-				VpcID:               peeringConnections[0].VpcID,
-				AtlasCIDRBlock:      peeringConnections[0].AtlasCIDRBlock,
-				AzureDirectoryID:    peeringConnections[0].AzureDirectoryID,
-				AzureSubscriptionID: peeringConnections[0].AzureSubscriptionID,
-				ResourceGroupName:   peeringConnections[0].ResourceGroupName,
-				VNetName:            peeringConnections[0].VNetName,
-				GCPProjectID:        peeringConnections[0].GCPProjectID,
-				NetworkName:         peeringConnections[0].NetworkName,
+				AWSAccountID:        peeringConnectionAWS.AwsAccountId,
+				ContainerID:         peeringConnectionAWS.ContainerId,
+				ProviderName:        provider.ProviderName(*peeringConnectionAWS.ProviderName),
+				RouteTableCIDRBlock: peeringConnectionAWS.RouteTableCidrBlock,
+				VpcID:               peeringConnectionAWS.VpcId,
 			},
 		}
 

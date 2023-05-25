@@ -27,7 +27,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
@@ -104,17 +103,23 @@ func normalizeAtlasRegion(region string) string {
 	return strings.ReplaceAll(region, "-", "_")
 }
 
-func (opts *AWSOpts) newPeer(containerID string) *atlas.Peer {
+func (opts *AWSOpts) newPeer(containerID string) *atlasv2.ContainerPeer {
+	a := atlasv2.AWSPeerVpcAsContainerPeer(opts.newAWSPeer(containerID))
+	return &a
+}
+
+func (opts *AWSOpts) newAWSPeer(containerID string) *atlasv2.AWSPeerVpc {
+	provider := "AWS"
 	region := strings.ToLower(opts.region)
 	region = strings.ReplaceAll(region, "_", "-")
-	a := &atlas.Peer{
+	return &atlasv2.AWSPeerVpc{
+		ProviderName:        &provider,
 		AccepterRegionName:  region,
-		AWSAccountID:        opts.accountID,
-		ContainerID:         containerID,
-		RouteTableCIDRBlock: opts.routeTableCidrBlock,
-		VpcID:               opts.vpcID,
+		AwsAccountId:        opts.accountID,
+		ContainerId:         containerID,
+		RouteTableCidrBlock: opts.routeTableCidrBlock,
+		VpcId:               opts.vpcID,
 	}
-	return a
 }
 
 // mongocli atlas networking peering create aws

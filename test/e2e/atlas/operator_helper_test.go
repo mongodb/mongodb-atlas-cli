@@ -182,7 +182,7 @@ func (oh *operatorHelper) stopOperator() {
 		oh.t.Errorf("unable to retrieve operator deployment: %v", err)
 	}
 
-	deployment.Spec.Replicas = toptr.MakePtr(0)
+	deployment.Spec.Replicas = toptr.MakePtr(int32(0))
 
 	err = oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
 	if err != nil {
@@ -201,7 +201,7 @@ func (oh *operatorHelper) startOperator() {
 		oh.t.Errorf("unable to retrieve operator deployment: %v", err)
 	}
 
-	deployment.Spec.Replicas = toptr.MakePtr(1)
+	deployment.Spec.Replicas = toptr.MakePtr(int32(1))
 
 	err = oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
 	if err != nil {

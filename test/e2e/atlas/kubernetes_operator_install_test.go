@@ -302,7 +302,7 @@ func checkDeployment(t *testing.T, operator *operatorHelper, namespace string) {
 			}
 		}
 
-		if 1 != deployment.Status.ReadyReplicas {
+		if deployment.Status.ReadyReplicas != 1 {
 			deploymentReady = false
 		}
 

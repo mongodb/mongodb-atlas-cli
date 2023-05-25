@@ -416,8 +416,8 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 				MaintenanceWindow: project.MaintenanceWindow{
-					DayOfWeek: int(mw.DayOfWeek),
-					HourOfDay: int(mw.HourOfDay),
+					DayOfWeek: mw.DayOfWeek,
+					HourOfDay: mw.HourOfDay,
 					AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
 					StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
 					Defer:     false,
@@ -1017,8 +1017,8 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 		}
 
 		expected := project.MaintenanceWindow{
-			DayOfWeek: int(mw.DayOfWeek),
-			HourOfDay: int(mw.HourOfDay),
+			DayOfWeek: mw.DayOfWeek,
+			HourOfDay: mw.HourOfDay,
 			AutoDefer: *mw.AutoDeferOnceEnabled,
 			StartASAP: *mw.StartASAP,
 			Defer:     false,

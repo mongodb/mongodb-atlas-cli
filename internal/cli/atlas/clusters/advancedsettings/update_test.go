@@ -35,8 +35,8 @@ func TestUpdate_Run(t *testing.T) {
 		DefaultReadConcern:               pointer.Get(""),
 		DefaultWriteConcern:              pointer.Get(""),
 		MinimumEnabledTlsProtocol:        pointer.Get(""),
-		SampleSizeBIConnector:            pointer.Get[int32](1000),
-		SampleRefreshIntervalBIConnector: pointer.Get[int32](0),
+		SampleSizeBIConnector:            pointer.Get[int](1000),
+		SampleRefreshIntervalBIConnector: pointer.Get[int](0),
 		NoTableScan:                      pointer.Get(false),
 	}
 

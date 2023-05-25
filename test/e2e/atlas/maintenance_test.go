@@ -70,8 +70,8 @@ func TestMaintenanceWindows(t *testing.T) {
 
 		var maintenanceWindow atlasv2.GroupMaintenanceWindow
 		if err := json.Unmarshal(resp, &maintenanceWindow); a.NoError(err) {
-			a.Equal(1), maintenanceWindow.DayOfWeek
-			a.Equal(1), maintenanceWindow.HourOfDay
+			a.Equal(1, maintenanceWindow.DayOfWeek)
+			a.Equal(1, maintenanceWindow.HourOfDay)
 		}
 	})
 

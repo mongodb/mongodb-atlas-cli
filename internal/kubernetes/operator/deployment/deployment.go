@@ -252,9 +252,9 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 		for _, pItem := range p.PolicyItems {
 			items = append(items, atlasV1.AtlasBackupPolicyItem{
 				FrequencyType:     pItem.FrequencyType,
-				FrequencyInterval: int(pItem.FrequencyInterval),
+				FrequencyInterval: pItem.FrequencyInterval,
 				RetentionUnit:     pItem.RetentionUnit,
-				RetentionValue:    int(pItem.RetentionValue),
+				RetentionValue:    pItem.RetentionValue,
 			})
 		}
 		policies = append(policies, &atlasV1.AtlasBackupPolicy{

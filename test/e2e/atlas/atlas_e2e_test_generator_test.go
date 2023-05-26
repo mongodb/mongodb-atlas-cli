@@ -49,10 +49,19 @@ type atlasE2ETestGenerator struct {
 	t              *testing.T
 }
 
+// Log formats its arguments using default formatting, analogous to Println,
+// and records the text in the error log. For tests, the text will be printed only if
+// the test fails or the -test.v flag is set. For benchmarks, the text is always
+// printed to avoid having performance depend on the value of the -test.v flag.
 func (g *atlasE2ETestGenerator) Log(args ...any) {
 	g.t.Log(args...)
 }
 
+// Logf formats its arguments according to the format, analogous to Printf, and
+// records the text in the error log. A final newline is added if not provided. For
+// tests, the text will be printed only if the test fails or the -test.v flag is
+// set. For benchmarks, the text is always printed to avoid having performance
+// depend on the value of the -test.v flag.
 func (g *atlasE2ETestGenerator) Logf(format string, args ...any) {
 	g.t.Logf(format, args...)
 }
@@ -93,8 +102,8 @@ func (g *atlasE2ETestGenerator) generateTeam(prefix string) {
 	if err != nil {
 		g.t.Fatalf("unexpected error creating team: %v", err)
 	}
-	g.t.Logf("teamID=%s", g.teamID)
-	g.t.Logf("teamName=%s", g.teamName)
+	g.Logf("teamID=%s", g.teamID)
+	g.Logf("teamName=%s", g.teamName)
 	if g.teamID == "" {
 		g.t.Fatal("teamID not created")
 	}
@@ -125,8 +134,8 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	if err != nil {
 		g.t.Fatalf("unexpected error creating project: %v", err)
 	}
-	g.t.Logf("projectID=%s", g.projectID)
-	g.t.Logf("projectName=%s", g.projectName)
+	g.Logf("projectID=%s", g.projectID)
+	g.Logf("projectName=%s", g.projectName)
 	if g.projectID == "" {
 		g.t.Fatal("projectID not created")
 	}

@@ -40,7 +40,7 @@ type UserDescriber interface {
 
 // CreateUser encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateUser(user *atlasv2.AppUser) (*atlasv2.AppUser, error) {
-	result, _, err := s.clientv2.MongoDBCloudUsersApi.CreateUser(s.ctx).AppUser(user).Execute()
+	result, _, err := s.clientv2.MongoDBCloudUsersApi.CreateUser(s.ctx, user).Execute()
 	return result, err
 }
 

@@ -268,7 +268,7 @@ func (s *Store) AtlasClusterConfigurationOptions(projectID, name string) (*atlas
 func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName string, args *atlasv2.ClusterDescriptionProcessArgs) (*atlasv2.ClusterDescriptionProcessArgs, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.ClustersApi.UpdateClusterAdvancedConfiguration(s.ctx, projectID, clusterName).ClusterDescriptionProcessArgs(args).Execute()
+		result, _, err := s.clientv2.ClustersApi.UpdateClusterAdvancedConfiguration(s.ctx, projectID, clusterName, args).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

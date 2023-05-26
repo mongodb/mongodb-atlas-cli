@@ -440,6 +440,8 @@ go.mongodb.org/atlas v0.25.1-0.20230522162956-d4f376b72f78 h1:JafEV07Uj8FCsIpf3q
 go.mongodb.org/atlas v0.25.1-0.20230522162956-d4f376b72f78/go.mod h1:sZ7wAszLXP2JNaWysQnvnL7cB2d32noqUi3vr2IPF5s=
 go.mongodb.org/atlas-sdk v0.2.0 h1:dy0HqO5cVgxvWp3yLieTO15d/PPcZszuyPERqXWxaQM=
 go.mongodb.org/atlas-sdk v0.2.0/go.mod h1:GzQWxevVUwtUOk9I4DlYLZVvl17TEjTQsGNsH07JQpI=
+go.mongodb.org/atlas-sdk v0.3.0 h1:BvRL1Am40HXCeAxuS7fqwwX21CgN9Ujyztdkq+qdL7k=
+go.mongodb.org/atlas-sdk v0.3.0/go.mod h1:GzQWxevVUwtUOk9I4DlYLZVvl17TEjTQsGNsH07JQpI=
 go.mongodb.org/mongo-driver v1.11.4 h1:4ayjakA013OdpGyL2K3ZqylTac/rMjrJOMZ1EHizXas=
 go.mongodb.org/mongo-driver v1.11.4/go.mod h1:PTSz5yu21bkT/wXpkS7WR5f0ddqw5quethTUn9WM+2g=
 go.mongodb.org/ops-manager v0.50.0 h1:H6OX1OJjNaUjO+mu+2XtPGPZHrwHBb4/Hn4ln+QF7uk=

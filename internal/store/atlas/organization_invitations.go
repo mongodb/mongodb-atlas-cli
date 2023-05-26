@@ -70,12 +70,12 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 			TeamIds: invitation.TeamIDs,
 		}
 
-		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID, invitationID).
-			OrganizationInvitationUpdateRequest(&invitationRequest).Execute()
+		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID,
+			 invitationID,&invitationRequest).Execute()
 		return result, err
 	}
 	invitationRequest := mapInvitation(invitation)
-	result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitation(s.ctx, orgID).OrganizationInvitationRequest(&invitationRequest).Execute()
+	result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitation(s.ctx, orgID, &invitationRequest).Execute()
 
 	return result, err
 }
@@ -83,7 +83,7 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 // InviteUser encapsulates the logic to manage different cloud providers.
 func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (interface{}, error) {
 	invitationRequest := mapInvitation(invitation)
-	result, _, err := s.clientv2.OrganizationsApi.CreateOrganizationInvitation(s.ctx, orgID).OrganizationInvitationRequest(&invitationRequest).Execute()
+	result, _, err := s.clientv2.OrganizationsApi.CreateOrganizationInvitation(s.ctx, orgID, &invitationRequest).Execute()
 
 	return result, err
 }

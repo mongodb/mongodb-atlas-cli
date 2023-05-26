@@ -31,8 +31,7 @@ type IndexCreator interface {
 func (s *Store) CreateIndex(projectID, clusterName string, index *atlasv2.IndexRequest) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.RollingIndexApi.CreateRollingIndex(s.ctx, projectID, clusterName).
-			IndexRequest(index).Execute()
+		_, err := s.clientv2.RollingIndexApi.CreateRollingIndex(s.ctx, projectID, clusterName, index).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

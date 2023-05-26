@@ -162,7 +162,7 @@ func (s *Store) Container(projectID, containerID string) (interface{}, error) {
 func (s *Store) CreateContainer(projectID string, container *atlasv2.CloudProviderContainer) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringContainer(s.ctx, projectID).CloudProviderContainer(container).Execute()
+		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringContainer(s.ctx, projectID, container).Execute()
 		return result.GetActualInstance(), err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

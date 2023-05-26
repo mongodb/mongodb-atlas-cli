@@ -97,7 +97,7 @@ func (s *Store) ProjectByName(name string) (interface{}, error) {
 
 // CreateProject encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateProject(group atlasv2.Group, opts *atlas.CreateProjectOptions) (*atlasv2.Group, error) {
-	res := s.clientv2.ProjectsApi.CreateProject(s.ctx).Group(&group)
+	res := s.clientv2.ProjectsApi.CreateProject(s.ctx, &group)
 	if opts != nil {
 		res = res.ProjectOwnerId(opts.ProjectOwnerID)
 	}
@@ -135,7 +135,7 @@ func (s *Store) ProjectTeams(projectID string) (*atlasv2.PaginatedTeamRole, erro
 
 // AddTeamsToProject encapsulates the logic to manage different cloud providers.
 func (s *Store) AddTeamsToProject(projectID string, teams []atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error) {
-	result, _, err := s.clientv2.TeamsApi.AddAllTeamsToProject(s.ctx, projectID).TeamRole(teams).Execute()
+	result, _, err := s.clientv2.TeamsApi.AddAllTeamsToProject(s.ctx, projectID, &teams).Execute()
 	return result, err
 }
 

@@ -57,7 +57,7 @@ type DBUserCertificateCreator interface {
 func (s *Store) CreateDatabaseUser(user *atlasv2.DatabaseUser) (*atlasv2.DatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.DatabaseUsersApi.CreateDatabaseUser(s.ctx, user.GroupId).DatabaseUser(user).Execute()
+		result, _, err := s.clientv2.DatabaseUsersApi.CreateDatabaseUser(s.ctx, user.GroupId, user).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -131,8 +131,7 @@ func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilE
 		userCert := atlasv2.UserCert{
 			MonthsUntilExpiration: pointer.Get(monthsUntilExpiration),
 		}
-		_, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCertificate(s.ctx, projectID, username).
-			UserCert(&userCert).Execute()
+		_, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCertificate(s.ctx, projectID, username, &userCert).Execute()
 		return &userCert, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

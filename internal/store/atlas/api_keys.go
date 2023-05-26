@@ -75,13 +75,13 @@ func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlasv2.ApiUser, er
 
 // UpdateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error) {
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKey(s.ctx, orgID, apiKeyID).CreateApiKey(input).Execute()
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKey(s.ctx, orgID, apiKeyID,input).Execute()
 	return result, err
 }
 
 // CreateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error) {
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateApiKey(s.ctx, orgID).CreateApiKey(input).Execute()
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateApiKey(s.ctx, orgID,input).Execute()
 	return result, err
 }
 
@@ -103,13 +103,13 @@ func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) (*atla
 
 // CreateProjectAPIKey creates an API Keys for a project.
 func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error) {
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateProjectApiKey(s.ctx, projectID).CreateApiKey(apiKeyInput).Execute()
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateProjectApiKey(s.ctx, projectID,apiKeyInput).Execute()
 	return result, err
 }
 
 // AssignProjectAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlasv2.CreateApiKey) error {
-	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKeyRoles(s.ctx, projectID, apiKeyID).CreateApiKey(input).Execute()
+	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKeyRoles(s.ctx, projectID, apiKeyID,input).Execute()
 	return err
 }
 

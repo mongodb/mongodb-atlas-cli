@@ -101,8 +101,7 @@ func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 func (s *Store) CreatePeeringConnection(projectID string, peer *atlasv2.ContainerPeer) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringConnection(s.ctx, projectID).
-			ContainerPeer(peer).Execute()
+		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringConnection(s.ctx, projectID, peer).Execute()
 		return result.GetActualInstance(), err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

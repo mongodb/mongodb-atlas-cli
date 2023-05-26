@@ -69,7 +69,7 @@ func (s *Store) InviteUserToProject(groupID string, invitation *atlas.Invitation
 		Username: &invitation.Username,
 		Roles:    invitation.Roles,
 	}
-	result, _, err := s.clientv2.ProjectsApi.CreateProjectInvitation(s.ctx, groupID).GroupInvitationRequest(&groupInvitationRequest).Execute()
+	result, _, err := s.clientv2.ProjectsApi.CreateProjectInvitation(s.ctx, groupID, &groupInvitationRequest).Execute()
 	return result, err
 }
 
@@ -79,13 +79,13 @@ func (s *Store) UpdateProjectInvitation(groupID, invitationID string, invitation
 		groupInvitationRequest := atlasv2.GroupInvitationUpdateRequest{
 			Roles: invitation.Roles,
 		}
-		result, _, err := s.clientv2.ProjectsApi.UpdateProjectInvitationById(s.ctx, groupID, invitationID).GroupInvitationUpdateRequest(&groupInvitationRequest).Execute()
+		result, _, err := s.clientv2.ProjectsApi.UpdateProjectInvitationById(s.ctx, groupID, invitationID, &groupInvitationRequest).Execute()
 		return result, err
 	}
 	groupInvitationRequest := atlasv2.GroupInvitationRequest{
 		Username: &invitation.Username,
 		Roles:    invitation.Roles,
 	}
-	result, _, err := s.clientv2.ProjectsApi.UpdateProjectInvitation(s.ctx, groupID).GroupInvitationRequest(&groupInvitationRequest).Execute()
+	result, _, err := s.clientv2.ProjectsApi.UpdateProjectInvitation(s.ctx, groupID, &groupInvitationRequest).Execute()
 	return result, err
 }

@@ -47,8 +47,7 @@ type LDAPConfigurationGetter interface {
 func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlasv2.NDSLDAPVerifyConnectivityJobRequestParams) (*atlasv2.NDSLDAPVerifyConnectivityJobRequest, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.clientv2.LDAPConfigurationApi.VerifyLDAPConfiguration(s.ctx, projectID).
-			NDSLDAPVerifyConnectivityJobRequestParams(ldap).
+		resp, _, err := s.clientv2.LDAPConfigurationApi.VerifyLDAPConfiguration(s.ctx, projectID, ldap).
 			Execute()
 		return resp, err
 	default:
@@ -71,8 +70,7 @@ func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlasv
 func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlasv2.UserSecurity) (*atlasv2.UserSecurity, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.clientv2.LDAPConfigurationApi.SaveLDAPConfiguration(s.ctx, projectID).
-			UserSecurity(ldap).
+		resp, _, err := s.clientv2.LDAPConfigurationApi.SaveLDAPConfiguration(s.ctx, projectID, ldap).
 			Execute()
 		return resp, err
 	default:

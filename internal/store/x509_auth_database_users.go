@@ -61,7 +61,7 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlasv2.U
 				Cas: &certificate,
 			},
 		}
-		result, _, err := s.clientv2.LDAPConfigurationApi.SaveLDAPConfiguration(s.ctx, projectID).UserSecurity(&userCertificate).Execute()
+		result, _, err := s.clientv2.LDAPConfigurationApi.SaveLDAPConfiguration(s.ctx, projectID, &userCertificate).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

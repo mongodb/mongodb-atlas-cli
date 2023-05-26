@@ -71,8 +71,7 @@ func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlasv
 func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlasv2.OnlineArchive) (*atlasv2.OnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.OnlineArchiveApi.CreateOnlineArchive(s.ctx, projectID, clusterName).
-			OnlineArchive(archive).Execute()
+		result, _, err := s.clientv2.OnlineArchiveApi.CreateOnlineArchive(s.ctx, projectID, clusterName, archive).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -83,8 +82,7 @@ func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atla
 func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atlasv2.OnlineArchive) (*atlasv2.OnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.OnlineArchiveApi.UpdateOnlineArchive(s.ctx, projectID, archive.GetId(), clusterName).
-			OnlineArchive(archive).Execute()
+		result, _, err := s.clientv2.OnlineArchiveApi.UpdateOnlineArchive(s.ctx, projectID, archive.GetId(), clusterName, archive).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

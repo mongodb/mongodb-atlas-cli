@@ -52,7 +52,7 @@ func (s *Store) CreateProjectIPAccessList(entries []*atlasv2.NetworkPermissionEn
 			entry[i] = *ptr
 		}
 
-		result, _, err := s.clientv2.ProjectIPAccessListApi.CreateProjectIpAccessList(s.ctx, entries[0].GetGroupId()).NetworkPermissionEntry(entry).Execute()
+		result, _, err := s.clientv2.ProjectIPAccessListApi.CreateProjectIpAccessList(s.ctx, entries[0].GetGroupId(), &entry).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

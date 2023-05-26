@@ -43,7 +43,8 @@ type IntegrationDescriber interface {
 func (s *Store) CreateIntegration(projectID, integrationType string, integration *atlasv2.Integration) (*atlasv2.PaginatedIntegration, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.CreateThirdPartyIntegration(s.ctx, integrationType, projectID).Integration(integration).Execute()
+		resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.CreateThirdPartyIntegration(s.ctx, 
+			integrationType, projectID, integration).Execute()
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

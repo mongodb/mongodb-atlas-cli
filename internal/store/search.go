@@ -58,7 +58,7 @@ func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string) (
 func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlasv2.FTSIndex) (*atlasv2.FTSIndex, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.AtlasSearchApi.CreateAtlasSearchIndex(s.ctx, projectID, clusterName).FTSIndex(index).Execute()
+		result, _, err := s.clientv2.AtlasSearchApi.CreateAtlasSearchIndex(s.ctx, projectID, clusterName, index).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -80,7 +80,7 @@ func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlasv2.FT
 func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, index *atlasv2.FTSIndex) (*atlasv2.FTSIndex, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.AtlasSearchApi.UpdateAtlasSearchIndex(s.ctx, projectID, clusterName, indexID).FTSIndex(index).Execute()
+		result, _, err := s.clientv2.AtlasSearchApi.UpdateAtlasSearchIndex(s.ctx, projectID, clusterName, indexID, index).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

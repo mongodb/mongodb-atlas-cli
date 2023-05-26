@@ -97,8 +97,7 @@ func (s *Store) DeleteServerlessInstance(projectID, name string) error {
 func (s *Store) CreateServerlessInstance(projectID string, cluster *atlasv2.ServerlessInstanceDescriptionCreate) (*atlasv2.ServerlessInstanceDescription, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.ServerlessInstancesApi.CreateServerlessInstance(s.ctx, projectID).
-			ServerlessInstanceDescriptionCreate(cluster).
+		result, _, err := s.clientv2.ServerlessInstancesApi.CreateServerlessInstance(s.ctx, projectID, cluster).
 			Execute()
 		return result, err
 	default:
@@ -110,8 +109,7 @@ func (s *Store) CreateServerlessInstance(projectID string, cluster *atlasv2.Serv
 func (s *Store) UpdateServerlessInstance(projectID string, instanceName string, req *atlasv2.ServerlessInstanceDescriptionUpdate) (*atlasv2.ServerlessInstanceDescription, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.ServerlessInstancesApi.UpdateServerlessInstance(s.ctx, projectID, instanceName).
-			ServerlessInstanceDescriptionUpdate(req).
+		result, _, err := s.clientv2.ServerlessInstancesApi.UpdateServerlessInstance(s.ctx, projectID, instanceName, req).
 			Execute()
 
 		return result, err

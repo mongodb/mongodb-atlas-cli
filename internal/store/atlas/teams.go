@@ -74,7 +74,7 @@ func (s *Store) Teams(orgID string, opts *atlas.ListOptions) (*atlasv2.Paginated
 
 func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlasv2.Team, error) {
 	newTeam := atlasv2.Team{Name: team.Name, Usernames: team.Usernames}
-	result, _, err := s.clientv2.TeamsApi.CreateTeam(s.ctx, orgID).Team(&newTeam).Execute()
+	result, _, err := s.clientv2.TeamsApi.CreateTeam(s.ctx, orgID, &newTeam).Execute()
 	return result, err
 }
 
@@ -86,7 +86,7 @@ func (s *Store) DeleteTeam(orgID, teamID string) error {
 
 // AddUsersToTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) AddUsersToTeam(orgID, teamID string, users []atlasv2.AddUserToTeam) (*atlasv2.PaginatedApiAppUser, error) {
-	result, _, err := s.clientv2.TeamsApi.AddTeamUser(s.ctx, orgID, teamID).AddUserToTeam(users).Execute()
+	result, _, err := s.clientv2.TeamsApi.AddTeamUser(s.ctx, orgID, teamID, &users).Execute()
 	return result, err
 }
 
@@ -98,6 +98,6 @@ func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
 
 // UpdateProjectTeamRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error) {
-	result, _, err := s.clientv2.TeamsApi.UpdateTeamRoles(s.ctx, projectID, teamID).TeamRole(team).Execute()
+	result, _, err := s.clientv2.TeamsApi.UpdateTeamRoles(s.ctx, projectID, teamID, team).Execute()
 	return result, err
 }

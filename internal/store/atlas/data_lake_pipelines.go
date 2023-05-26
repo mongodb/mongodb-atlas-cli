@@ -79,13 +79,13 @@ func (s *Store) Pipeline(projectID, id string) (*atlasv2.IngestionPipeline, erro
 
 // CreatePipeline encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePipeline(projectID string, opts atlasv2.IngestionPipeline) (*atlasv2.IngestionPipeline, error) {
-	result, _, err := s.clientv2.DataLakePipelinesApi.CreatePipeline(s.ctx, projectID).IngestionPipeline(&opts).Execute()
+	result, _, err := s.clientv2.DataLakePipelinesApi.CreatePipeline(s.ctx, projectID,&opts).Execute()
 	return result, err
 }
 
 // UpdatePipeline encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdatePipeline(projectID, id string, opts atlasv2.IngestionPipeline) (*atlasv2.IngestionPipeline, error) {
-	result, _, err := s.clientv2.DataLakePipelinesApi.UpdatePipeline(s.ctx, projectID, id).IngestionPipeline(&opts).Execute()
+	result, _, err := s.clientv2.DataLakePipelinesApi.UpdatePipeline(s.ctx, projectID, id,&opts).Execute() 
 	return result, err
 }
 
@@ -117,7 +117,8 @@ func (s *Store) PipelineAvailableSnapshots(projectID, pipelineName string, compl
 
 // PipelineTrigger encapsulates the logic to manage different cloud providers.
 func (s *Store) PipelineTrigger(projectID, pipelineName, snapshotID string) (*atlasv2.IngestionPipelineRun, error) {
-	result, _, err := s.clientv2.DataLakePipelinesApi.TriggerSnapshotIngestion(s.ctx, projectID, pipelineName).TriggerIngestionRequest(atlasv2.NewTriggerIngestionRequest(snapshotID)).Execute()
+	result, _, err := s.clientv2.DataLakePipelinesApi.TriggerSnapshotIngestion(s.ctx, projectID, pipelineName,
+		atlasv2.NewTriggerIngestionRequest(snapshotID)).Execute()
 	return result, err
 }
 

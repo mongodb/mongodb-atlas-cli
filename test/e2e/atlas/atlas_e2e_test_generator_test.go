@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 	"time"
 
@@ -48,10 +49,32 @@ type atlasE2ETestGenerator struct {
 	t              *testing.T
 }
 
+// Log formats its arguments using default formatting, analogous to Println,
+// and records the text in the error log. For tests, the text will be printed only if
+// the test fails or the -test.v flag is set. For benchmarks, the text is always
+// printed to avoid having performance depend on the value of the -test.v flag.
+func (g *atlasE2ETestGenerator) Log(args ...any) {
+	g.t.Log(args...)
+}
+
+// Logf formats its arguments according to the format, analogous to Printf, and
+// records the text in the error log. A final newline is added if not provided. For
+// tests, the text will be printed only if the test fails or the -test.v flag is
+// set. For benchmarks, the text is always printed to avoid having performance
+// depend on the value of the -test.v flag.
+func (g *atlasE2ETestGenerator) Logf(format string, args ...any) {
+	g.t.Logf(format, args...)
+}
+
 // newAtlasE2ETestGenerator creates a new instance of atlasE2ETestGenerator struct.
 func newAtlasE2ETestGenerator(t *testing.T) *atlasE2ETestGenerator {
 	t.Helper()
 	return &atlasE2ETestGenerator{t: t}
+}
+
+func newAtlasE2ETestGeneratorWithBackup(t *testing.T) *atlasE2ETestGenerator {
+	t.Helper()
+	return &atlasE2ETestGenerator{t: t, enableBackup: true}
 }
 
 func (g *atlasE2ETestGenerator) generateTeam(prefix string) {
@@ -73,14 +96,14 @@ func (g *atlasE2ETestGenerator) generateTeam(prefix string) {
 
 	g.teamUser, err = getFirstOrgUser()
 	if err != nil {
-		g.t.Fatalf("unexpected error: %v", err)
+		g.t.Fatalf("unexpected error retrieving org user: %v", err)
 	}
 	g.teamID, err = createTeam(g.teamName, g.teamUser)
 	if err != nil {
-		g.t.Fatalf("unexpected error: %v", err)
+		g.t.Fatalf("unexpected error creating team: %v", err)
 	}
-	g.t.Logf("teamID=%s", g.teamID)
-	g.t.Logf("teamName=%s", g.teamName)
+	g.Logf("teamID=%s", g.teamID)
+	g.Logf("teamName=%s", g.teamName)
 	if g.teamID == "" {
 		g.t.Fatal("teamID not created")
 	}
@@ -89,7 +112,7 @@ func (g *atlasE2ETestGenerator) generateTeam(prefix string) {
 	})
 }
 
-// generateProject generates a new project and also registers it's deletion on test cleanup.
+// generateProject generates a new project and also registers its deletion on test cleanup.
 func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	g.t.Helper()
 
@@ -109,10 +132,10 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 
 	g.projectID, err = createProject(g.projectName)
 	if err != nil {
-		g.t.Fatalf("unexpected error: %v", err)
+		g.t.Fatalf("unexpected error creating project: %v", err)
 	}
-	g.t.Logf("projectID=%s", g.projectID)
-	g.t.Logf("projectName=%s", g.projectName)
+	g.Logf("projectID=%s", g.projectID)
+	g.Logf("projectName=%s", g.projectName)
 	if g.projectID == "" {
 		g.t.Fatal("projectID not created")
 	}
@@ -188,15 +211,15 @@ func deleteTeamWithRetry(t *testing.T, teamID string) {
 	deleted := false
 	backoff := 1
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
-		if e := deleteTeam(teamID); e != nil {
-			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the team %q: %v", attempts, maxRetryAttempts, backoff, teamID, e)
-			time.Sleep(time.Duration(backoff) * time.Second)
-			backoff *= 2
-		} else {
+		e := deleteTeam(teamID)
+		if e == nil {
 			t.Logf("team %q successfully deleted", teamID)
 			deleted = true
 			break
 		}
+		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the team %q: %v", attempts, maxRetryAttempts, backoff, teamID, e)
+		time.Sleep(time.Duration(backoff) * time.Second)
+		backoff *= 2
 	}
 
 	if !deleted {
@@ -209,15 +232,22 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	deleted := false
 	backoff := 1
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
-		if e := deleteProject(projectID); e != nil {
-			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, backoff, projectID, e)
-			time.Sleep(time.Duration(backoff) * time.Second)
-			backoff *= 2
-		} else {
+		e := deleteProject(projectID)
+		if e == nil {
 			t.Logf("project %q successfully deleted", projectID)
 			deleted = true
 			break
 		}
+		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, backoff, projectID, e)
+		if strings.Contains(e.Error(), "CANNOT_CLOSE_GROUP_ACTIVE_ATLAS_CLUSTERS") {
+			cliPath, err := e2e.AtlasCLIBin()
+			if err != nil {
+				t.Errorf("%s: invalid bin", err)
+			}
+			deleteClustersForProject(t, cliPath, projectID)
+		}
+		time.Sleep(time.Duration(backoff) * time.Second)
+		backoff *= 2
 	}
 	if !deleted {
 		t.Errorf("we could not delete the project %q", projectID)
@@ -234,18 +264,18 @@ func (g *atlasE2ETestGenerator) generateServerlessCluster() {
 	var err error
 	g.serverlessName, err = deployServerlessInstanceForProject(g.projectID)
 	if err != nil {
-		g.t.Errorf("unexpected error: %v", err)
+		g.t.Errorf("unexpected error deploying serverless instance: %v", err)
 	}
 	g.t.Logf("serverlessName=%s", g.serverlessName)
 
 	g.t.Cleanup(func() {
 		if e := deleteServerlessInstanceForProject(g.projectID, g.serverlessName); e != nil {
-			g.t.Errorf("unexpected error: %v", e)
+			g.t.Errorf("unexpected error deleting serverless instance: %v", e)
 		}
 	})
 }
 
-// generateCluster generates a new cluster and also registers it's deletion on test cleanup.
+// generateCluster generates a new cluster and also registers its deletion on test cleanup.
 func (g *atlasE2ETestGenerator) generateCluster() {
 	g.t.Helper()
 
@@ -260,13 +290,15 @@ func (g *atlasE2ETestGenerator) generateCluster() {
 
 	g.clusterName, g.clusterRegion, err = deployClusterForProject(g.projectID, g.tier, g.enableBackup)
 	if err != nil {
-		g.t.Errorf("unexpected error: %v", err)
+		g.Logf("projectID=%q, clusterName=%q", g.projectID, g.clusterName)
+		g.t.Errorf("unexpected error deploying cluster: %v", err)
 	}
 	g.t.Logf("clusterName=%s", g.clusterName)
 
 	g.t.Cleanup(func() {
+		g.Logf("Cluster cleanup %q\n", g.projectID)
 		if e := deleteClusterForProject(g.projectID, g.clusterName); e != nil {
-			g.t.Errorf("unexpected error: %v", e)
+			g.t.Errorf("unexpected error deleting cluster: %v", e)
 		}
 	})
 }

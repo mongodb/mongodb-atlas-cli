@@ -123,8 +123,7 @@ func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlasv2.DiskB
 func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlasv2.DiskBackupRestoreJob) (*atlasv2.DiskBackupRestoreJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.CloudBackupsApi.CreateBackupRestoreJob(s.ctx, 
-			projectID, clusterName, request).Execute()
+		result, _, err := s.clientv2.CloudBackupsApi.CreateBackupRestoreJob(s.ctx, projectID, clusterName, request).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

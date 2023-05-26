@@ -79,13 +79,13 @@ func (s *Store) Pipeline(projectID, id string) (*atlasv2.IngestionPipeline, erro
 
 // CreatePipeline encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePipeline(projectID string, opts atlasv2.IngestionPipeline) (*atlasv2.IngestionPipeline, error) {
-	result, _, err := s.clientv2.DataLakePipelinesApi.CreatePipeline(s.ctx, projectID,&opts).Execute()
+	result, _, err := s.clientv2.DataLakePipelinesApi.CreatePipeline(s.ctx, projectID, &opts).Execute()
 	return result, err
 }
 
 // UpdatePipeline encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdatePipeline(projectID, id string, opts atlasv2.IngestionPipeline) (*atlasv2.IngestionPipeline, error) {
-	result, _, err := s.clientv2.DataLakePipelinesApi.UpdatePipeline(s.ctx, projectID, id,&opts).Execute() 
+	result, _, err := s.clientv2.DataLakePipelinesApi.UpdatePipeline(s.ctx, projectID, id, &opts).Execute()
 	return result, err
 }
 

@@ -174,7 +174,7 @@ func (s *Store) DataLakeDeletePrivateEndpoint(projectID, endpointID string) erro
 func (s *Store) CreateInterfaceEndpoint(projectID, provider, endpointServiceID string, createRequest *atlasv2.CreateEndpointRequest) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.PrivateEndpointServicesApi.CreatePrivateEndpoint(s.ctx, projectID, provider, 
+		result, _, err := s.clientv2.PrivateEndpointServicesApi.CreatePrivateEndpoint(s.ctx, projectID, provider,
 			endpointServiceID, createRequest).Execute()
 		return result.GetActualInstance(), err
 	default:

@@ -55,7 +55,7 @@ func (s *Store) Organization(id string) (*atlasv2.Organization, error) {
 
 // CreateAtlasOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateAtlasOrganization(o *atlasv2.CreateOrganizationRequest) (*atlasv2.CreateOrganizationResponse, error) {
-	result, _, err := s.clientv2.OrganizationsApi.CreateOrganization(s.ctx,o).Execute()
+	result, _, err := s.clientv2.OrganizationsApi.CreateOrganization(s.ctx, o).Execute()
 	return result, err
 }
 

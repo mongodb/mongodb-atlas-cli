@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 	"time"
 
@@ -188,15 +189,15 @@ func deleteTeamWithRetry(t *testing.T, teamID string) {
 	deleted := false
 	backoff := 1
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
-		if e := deleteTeam(teamID); e != nil {
-			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the team %q: %v", attempts, maxRetryAttempts, backoff, teamID, e)
-			time.Sleep(time.Duration(backoff) * time.Second)
-			backoff *= 2
-		} else {
+		e := deleteTeam(teamID)
+		if e == nil {
 			t.Logf("team %q successfully deleted", teamID)
 			deleted = true
 			break
 		}
+		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the team %q: %v", attempts, maxRetryAttempts, backoff, teamID, e)
+		time.Sleep(time.Duration(backoff) * time.Second)
+		backoff *= 2
 	}
 
 	if !deleted {
@@ -209,15 +210,22 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	deleted := false
 	backoff := 1
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
-		if e := deleteProject(projectID); e != nil {
-			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, backoff, projectID, e)
-			time.Sleep(time.Duration(backoff) * time.Second)
-			backoff *= 2
-		} else {
+		e := deleteProject(projectID)
+		if e == nil {
 			t.Logf("project %q successfully deleted", projectID)
 			deleted = true
 			break
 		}
+		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, backoff, projectID, e)
+		if strings.Contains(e.Error(), "CANNOT_CLOSE_GROUP_ACTIVE_ATLAS_CLUSTERS") {
+			cliPath, err := e2e.AtlasCLIBin()
+			if err != nil {
+				t.Errorf("%s: invalid bin", err)
+			}
+			deleteClustersForProject(t, cliPath, projectID)
+		}
+		time.Sleep(time.Duration(backoff) * time.Second)
+		backoff *= 2
 	}
 	if !deleted {
 		t.Errorf("we could not delete the project %q", projectID)

@@ -199,17 +199,19 @@ func (ir *InstallResources) addServiceAccount(ctx context.Context, config map[st
 }
 
 func (ir *InstallResources) addRoles(ctx context.Context, config map[string]interface{}, namespace string, watch []string) error {
-	namespaces := []string{namespace}
+	namespaces := map[string]struct{}{namespace: {}}
 
 	if value, ok := config["metadata"]; ok {
 		if metadata, ok := value.(map[string]interface{}); ok {
 			if name, ok := metadata["name"]; ok && name != leaderElectionRoleName {
-				namespaces = append(namespaces, watch...)
+				for _, watchedNamespace := range watch {
+					namespaces[watchedNamespace] = struct{}{}
+				}
 			}
 		}
 	}
 
-	for _, watchNamespace := range namespaces {
+	for watchNamespace := range namespaces {
 		obj := &rbacv1.Role{}
 		err := ir.objConverter.FromUnstructured(config, obj)
 		if err != nil {
@@ -245,17 +247,19 @@ func (ir *InstallResources) addClusterRole(ctx context.Context, config map[strin
 }
 
 func (ir *InstallResources) addRoleBindings(ctx context.Context, config map[string]interface{}, namespace string, watch []string) error {
-	namespaces := []string{namespace}
+	namespaces := map[string]struct{}{namespace: {}}
 
 	if value, ok := config["metadata"]; ok {
 		if metadata, ok := value.(map[string]interface{}); ok {
 			if name, ok := metadata["name"]; ok && name != leaderElectionRoleBindingName {
-				namespaces = append(namespaces, watch...)
+				for _, watchedNamespace := range watch {
+					namespaces[watchedNamespace] = struct{}{}
+				}
 			}
 		}
 	}
 
-	for _, watchNamespace := range namespaces {
+	for watchNamespace := range namespaces {
 		obj := &rbacv1.RoleBinding{}
 		err := ir.objConverter.FromUnstructured(config, obj)
 		if err != nil {
@@ -319,7 +323,7 @@ func (ir *InstallResources) addDeployment(ctx context.Context, config map[string
 
 				if env.Name == "WATCH_NAMESPACE" {
 					env.ValueFrom = nil
-					env.Value = strings.Join(append(watch, namespace), ",")
+					env.Value = joinNamespaces(namespace, watch)
 				}
 
 				obj.Spec.Template.Spec.Containers[0].Env[i] = env
@@ -363,4 +367,18 @@ func NewInstaller(versionProvider version.AtlasOperatorVersionProvider, kubectl 
 		kubeCtl:         kubectl,
 		objConverter:    runtime.DefaultUnstructuredConverter,
 	}
+}
+
+func joinNamespaces(namespace string, watched []string) string {
+	unique := map[string]struct{}{namespace: {}}
+	for _, watch := range watched {
+		unique[watch] = struct{}{}
+	}
+
+	list := make([]string, 0, len(unique))
+	for item := range unique {
+		list = append(list, item)
+	}
+
+	return strings.Join(list, ",")
 }

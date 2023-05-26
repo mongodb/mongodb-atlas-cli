@@ -146,6 +146,27 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		checkDeployment(t, operator, operatorNamespace)
 	})
 
+	t.Run("should install latest major version of operator in a single namespaced config", func(t *testing.T) {
+		clusterName := "install-namespaced"
+		operator := setupCluster(t, clusterName, operatorNamespace)
+		context := fmt.Sprintf("kind-%s", clusterName)
+
+		cmd := exec.Command(cliPath,
+			"kubernetes",
+			"operator",
+			"install",
+			"--operatorVersion", features.LatestOperatorMajorVersion,
+			"--targetNamespace", operatorNamespace,
+			"--watchNamespace", operatorNamespace,
+			"--kubeContext", context)
+		cmd.Env = os.Environ()
+		resp, inErr := cmd.CombinedOutput()
+		req.NoError(inErr, string(resp))
+		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+
+		checkDeployment(t, operator, operatorNamespace)
+	})
+
 	t.Run("should install operator starting a new project", func(t *testing.T) {
 		clusterName := "install-new-project"
 		operator := setupCluster(t, clusterName, operatorNamespace)

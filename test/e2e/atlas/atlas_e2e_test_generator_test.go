@@ -55,6 +55,11 @@ func newAtlasE2ETestGenerator(t *testing.T) *atlasE2ETestGenerator {
 	return &atlasE2ETestGenerator{t: t}
 }
 
+func newAtlasE2ETestGeneratorWithBackup(t *testing.T) *atlasE2ETestGenerator {
+	t.Helper()
+	return &atlasE2ETestGenerator{t: t, enableBackup: true}
+}
+
 func (g *atlasE2ETestGenerator) generateTeam(prefix string) {
 	g.t.Helper()
 
@@ -268,13 +273,14 @@ func (g *atlasE2ETestGenerator) generateCluster() {
 
 	g.clusterName, g.clusterRegion, err = deployClusterForProject(g.projectID, g.tier, g.enableBackup)
 	if err != nil {
-		g.t.Errorf("unexpected error: %v", err)
+		g.t.Logf("projectID=%q, clusterName=%q", g.projectID, g.clusterName)
+		g.t.Errorf("unexpected error deploying cluster: %v", err)
 	}
 	g.t.Logf("clusterName=%s", g.clusterName)
 
 	g.t.Cleanup(func() {
 		if e := deleteClusterForProject(g.projectID, g.clusterName); e != nil {
-			g.t.Errorf("unexpected error: %v", e)
+			g.t.Errorf("unexpected error deleting cluster: %v", e)
 		}
 	})
 }

@@ -124,7 +124,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 	})
 
 	t.Run("should install latest major version of operator in its own namespace with namespaced config", func(t *testing.T) {
-		clusterName := "install-namespaced"
+		clusterName := "single-namespace"
 		operatorWatch1 := "atlas-watch1"
 		operatorWatch2 := "atlas-watch2"
 		operator := setupCluster(t, clusterName, operatorNamespace, operatorWatch1, operatorWatch2)

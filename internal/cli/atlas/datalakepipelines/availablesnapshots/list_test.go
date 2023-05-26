@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -53,7 +53,7 @@ func TestListOpts_Run(t *testing.T) {
 				},
 			},
 		},
-		TotalCount: pointer.Get(int32(2)),
+		TotalCount: pointer.Get(2),
 	}
 
 	buf := new(bytes.Buffer)

@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_project_settings.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectSettingsDescriber,ProjectSettingsUpdater
@@ -54,7 +54,7 @@ func (s *Store) UpdateProjectSettings(projectID string, projectSettings *atlas.P
 			IsRealtimePerformancePanelEnabled:           projectSettings.IsRealtimePerformancePanelEnabled,
 			IsSchemaAdvisorEnabled:                      projectSettings.IsSchemaAdvisorEnabled,
 		}
-		result, _, err := s.clientv2.ProjectsApi.UpdateProjectSettings(s.ctx, projectID).GroupSettings(groupSettings).Execute()
+		result, _, err := s.clientv2.ProjectsApi.UpdateProjectSettings(s.ctx, projectID, &groupSettings).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -41,7 +41,7 @@ type LinkTokenStore interface {
 func (s *Store) CreateLinkToken(orgID string, linkToken *atlasv2.TargetOrgRequest) (*atlasv2.TargetOrg, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.CloudMigrationServiceApi.CreateLinkToken(s.ctx, orgID).TargetOrgRequest(*linkToken).Execute()
+		result, _, err := s.clientv2.CloudMigrationServiceApi.CreateLinkToken(s.ctx, orgID, linkToken).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

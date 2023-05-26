@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockTeamLister is a mock of TeamLister interface.
@@ -36,10 +36,10 @@ func (m *MockTeamLister) EXPECT() *MockTeamListerMockRecorder {
 }
 
 // Teams mocks base method.
-func (m *MockTeamLister) Teams(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedTeam, error) {
+func (m *MockTeamLister) Teams(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedTeam, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Teams", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedTeam)
+	ret0, _ := ret[0].(*admin.PaginatedTeam)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -74,10 +74,10 @@ func (m *MockTeamDescriber) EXPECT() *MockTeamDescriberMockRecorder {
 }
 
 // TeamByID mocks base method.
-func (m *MockTeamDescriber) TeamByID(arg0, arg1 string) (*mongodbatlasv2.TeamResponse, error) {
+func (m *MockTeamDescriber) TeamByID(arg0, arg1 string) (*admin.TeamResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TeamByID", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.TeamResponse)
+	ret0, _ := ret[0].(*admin.TeamResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -89,10 +89,10 @@ func (mr *MockTeamDescriberMockRecorder) TeamByID(arg0, arg1 interface{}) *gomoc
 }
 
 // TeamByName mocks base method.
-func (m *MockTeamDescriber) TeamByName(arg0, arg1 string) (*mongodbatlasv2.TeamResponse, error) {
+func (m *MockTeamDescriber) TeamByName(arg0, arg1 string) (*admin.TeamResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TeamByName", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.TeamResponse)
+	ret0, _ := ret[0].(*admin.TeamResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -127,10 +127,10 @@ func (m *MockTeamCreator) EXPECT() *MockTeamCreatorMockRecorder {
 }
 
 // CreateTeam mocks base method.
-func (m *MockTeamCreator) CreateTeam(arg0 string, arg1 *mongodbatlas.Team) (*mongodbatlasv2.Team, error) {
+func (m *MockTeamCreator) CreateTeam(arg0 string, arg1 *mongodbatlas.Team) (*admin.Team, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateTeam", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.Team)
+	ret0, _ := ret[0].(*admin.Team)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -202,10 +202,10 @@ func (m *MockTeamAdder) EXPECT() *MockTeamAdderMockRecorder {
 }
 
 // AddUsersToTeam mocks base method.
-func (m *MockTeamAdder) AddUsersToTeam(arg0, arg1 string, arg2 []mongodbatlasv2.AddUserToTeam) (*mongodbatlasv2.PaginatedApiAppUser, error) {
+func (m *MockTeamAdder) AddUsersToTeam(arg0, arg1 string, arg2 []admin.AddUserToTeam) (*admin.PaginatedApiAppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddUsersToTeam", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedApiAppUser)
+	ret0, _ := ret[0].(*admin.PaginatedApiAppUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -277,10 +277,10 @@ func (m *MockTeamRolesUpdater) EXPECT() *MockTeamRolesUpdaterMockRecorder {
 }
 
 // UpdateProjectTeamRoles mocks base method.
-func (m *MockTeamRolesUpdater) UpdateProjectTeamRoles(arg0, arg1 string, arg2 *mongodbatlasv2.TeamRole) (*mongodbatlasv2.PaginatedTeamRole, error) {
+func (m *MockTeamRolesUpdater) UpdateProjectTeamRoles(arg0, arg1 string, arg2 *admin.TeamRole) (*admin.PaginatedTeamRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateProjectTeamRoles", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedTeamRole)
+	ret0, _ := ret[0].(*admin.PaginatedTeamRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -19,8 +19,8 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectIPAccessListDescriber,ProjectIPAccessListLister,ProjectIPAccessListCreator,ProjectIPAccessListDeleter
@@ -52,7 +52,7 @@ func (s *Store) CreateProjectIPAccessList(entries []*atlasv2.NetworkPermissionEn
 			entry[i] = *ptr
 		}
 
-		result, _, err := s.clientv2.ProjectIPAccessListApi.CreateProjectIpAccessList(s.ctx, entries[0].GetGroupId()).NetworkPermissionEntry(entry).Execute()
+		result, _, err := s.clientv2.ProjectIPAccessListApi.CreateProjectIpAccessList(s.ctx, entries[0].GetGroupId(), &entry).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -76,7 +76,7 @@ func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) 
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.ProjectIPAccessListApi.ListProjectIpAccessLists(s.ctx, projectID)
 		if opts != nil {
-			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
 		result, _, err := res.Execute()
 		return result, err

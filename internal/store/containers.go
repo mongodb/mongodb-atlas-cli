@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_containers.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ContainersLister,ContainersDeleter
@@ -39,7 +39,7 @@ func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersLis
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID)
 		if opts != nil {
-			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount).ProviderName(opts.ProviderName)
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).ProviderName(opts.ProviderName)
 		}
 		result, _, err := res.Execute()
 
@@ -122,7 +122,7 @@ func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]inte
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.NetworkPeeringApi.ListPeeringContainers(s.ctx, projectID)
 		if opts != nil {
-			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).IncludeCount(opts.IncludeCount)
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
 		result, _, err := res.Execute()
 
@@ -162,7 +162,7 @@ func (s *Store) Container(projectID, containerID string) (interface{}, error) {
 func (s *Store) CreateContainer(projectID string, container *atlasv2.CloudProviderContainer) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringContainer(s.ctx, projectID).CloudProviderContainer(*container).Execute()
+		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringContainer(s.ctx, projectID, container).Execute()
 		return result.GetActualInstance(), err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

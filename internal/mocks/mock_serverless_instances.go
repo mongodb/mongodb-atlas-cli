@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockServerlessInstanceLister is a mock of ServerlessInstanceLister interface.
@@ -36,10 +36,10 @@ func (m *MockServerlessInstanceLister) EXPECT() *MockServerlessInstanceListerMoc
 }
 
 // ServerlessInstances mocks base method.
-func (m *MockServerlessInstanceLister) ServerlessInstances(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedServerlessInstanceDescription, error) {
+func (m *MockServerlessInstanceLister) ServerlessInstances(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedServerlessInstanceDescription, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessInstances", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedServerlessInstanceDescription)
+	ret0, _ := ret[0].(*admin.PaginatedServerlessInstanceDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -74,10 +74,10 @@ func (m *MockServerlessInstanceDescriber) EXPECT() *MockServerlessInstanceDescri
 }
 
 // GetServerlessInstance mocks base method.
-func (m *MockServerlessInstanceDescriber) GetServerlessInstance(arg0, arg1 string) (*mongodbatlasv2.ServerlessInstanceDescription, error) {
+func (m *MockServerlessInstanceDescriber) GetServerlessInstance(arg0, arg1 string) (*admin.ServerlessInstanceDescription, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetServerlessInstance", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.ServerlessInstanceDescription)
+	ret0, _ := ret[0].(*admin.ServerlessInstanceDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -164,10 +164,10 @@ func (m *MockServerlessInstanceCreator) EXPECT() *MockServerlessInstanceCreatorM
 }
 
 // CreateServerlessInstance mocks base method.
-func (m *MockServerlessInstanceCreator) CreateServerlessInstance(arg0 string, arg1 *mongodbatlasv2.ServerlessInstanceDescriptionCreate) (*mongodbatlasv2.ServerlessInstanceDescription, error) {
+func (m *MockServerlessInstanceCreator) CreateServerlessInstance(arg0 string, arg1 *admin.ServerlessInstanceDescriptionCreate) (*admin.ServerlessInstanceDescription, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateServerlessInstance", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.ServerlessInstanceDescription)
+	ret0, _ := ret[0].(*admin.ServerlessInstanceDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -202,10 +202,10 @@ func (m *MockServerlessInstanceUpdater) EXPECT() *MockServerlessInstanceUpdaterM
 }
 
 // UpdateServerlessInstance mocks base method.
-func (m *MockServerlessInstanceUpdater) UpdateServerlessInstance(arg0, arg1 string, arg2 *mongodbatlasv2.ServerlessInstanceDescriptionUpdate) (*mongodbatlasv2.ServerlessInstanceDescription, error) {
+func (m *MockServerlessInstanceUpdater) UpdateServerlessInstance(arg0, arg1 string, arg2 *admin.ServerlessInstanceDescriptionUpdate) (*admin.ServerlessInstanceDescription, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateServerlessInstance", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlasv2.ServerlessInstanceDescription)
+	ret0, _ := ret[0].(*admin.ServerlessInstanceDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -83,14 +83,14 @@ func (opts *DeleteOpts) hostIDs() ([]string, error) {
 		return nil, err
 	}
 
-	hostnameMap := make(map[string][]int32)
+	hostnameMap := make(map[string][]int)
 	replicaSetHostNames(current, hostnameMap, opts.Entry)
 	opts.shardClusterHostNames(current, hostnameMap)
 
 	var hostIds []string
 	for k, ports := range hostnameMap {
 		for _, port := range ports {
-			host, err := opts.store.HostByHostname(opts.ConfigProjectID(), k, int(port))
+			host, err := opts.store.HostByHostname(opts.ConfigProjectID(), k, port)
 			if err != nil {
 				return nil, err
 			}
@@ -105,15 +105,15 @@ func (opts *DeleteOpts) hostIDs() ([]string, error) {
 	return hostIds, nil
 }
 
-func replicaSetHostNames(automationConfig *opsmngr.AutomationConfig, hostnameMap map[string][]int32, name string) {
+func replicaSetHostNames(automationConfig *opsmngr.AutomationConfig, hostnameMap map[string][]int, name string) {
 	for _, process := range automationConfig.Processes {
 		if process.Cluster == name || (process.Args26.Replication != nil && process.Args26.Replication.ReplSetName == name) {
-			hostnameMap[process.Hostname] = append(hostnameMap[process.Hostname], int32(process.Args26.NET.Port))
+			hostnameMap[process.Hostname] = append(hostnameMap[process.Hostname], process.Args26.NET.Port)
 		}
 	}
 }
 
-func (opts *DeleteOpts) shardClusterHostNames(automationConfig *opsmngr.AutomationConfig, hostnameMap map[string][]int32) {
+func (opts *DeleteOpts) shardClusterHostNames(automationConfig *opsmngr.AutomationConfig, hostnameMap map[string][]int) {
 	for _, sharding := range automationConfig.Sharding {
 		if sharding.Name == opts.Entry {
 			for _, shard := range sharding.Shards {

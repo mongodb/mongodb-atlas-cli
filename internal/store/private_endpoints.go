@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_private_endpoints.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PrivateEndpointLister,PrivateEndpointDescriber,PrivateEndpointCreator,PrivateEndpointDeleter,InterfaceEndpointDescriber,InterfaceEndpointCreator,InterfaceEndpointDeleter,RegionalizedPrivateEndpointSettingUpdater,RegionalizedPrivateEndpointSettingDescriber,DataLakePrivateEndpointLister,DataLakePrivateEndpointCreator,DataLakePrivateEndpointDeleter,DataLakePrivateEndpointDescriber
@@ -128,8 +128,7 @@ func (s *Store) DataLakePrivateEndpoint(projectID, privateLinkID string) (*atlas
 func (s *Store) CreatePrivateEndpoint(projectID string, r *atlasv2.CreateEndpointServiceRequest) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.PrivateEndpointServicesApi.CreatePrivateEndpointService(s.ctx, projectID).
-			CreateEndpointServiceRequest(*r).
+		result, _, err := s.clientv2.PrivateEndpointServicesApi.CreatePrivateEndpointService(s.ctx, projectID, r).
 			Execute()
 		return result.GetActualInstance(), err
 	default:
@@ -141,8 +140,7 @@ func (s *Store) CreatePrivateEndpoint(projectID string, r *atlasv2.CreateEndpoin
 func (s *Store) DataLakeCreatePrivateEndpoint(projectID string, r *atlasv2.PrivateNetworkEndpointIdEntry) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.DataFederationApi.CreateDataFederationPrivateEndpoint(s.ctx, projectID).
-			PrivateNetworkEndpointIdEntry(*r).
+		result, _, err := s.clientv2.DataFederationApi.CreateDataFederationPrivateEndpoint(s.ctx, projectID, r).
 			Execute()
 		return result, err
 	default:
@@ -176,7 +174,8 @@ func (s *Store) DataLakeDeletePrivateEndpoint(projectID, endpointID string) erro
 func (s *Store) CreateInterfaceEndpoint(projectID, provider, endpointServiceID string, createRequest *atlasv2.CreateEndpointRequest) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.PrivateEndpointServicesApi.CreatePrivateEndpoint(s.ctx, projectID, provider, endpointServiceID).CreateEndpointRequest(*createRequest).Execute()
+		result, _, err := s.clientv2.PrivateEndpointServicesApi.CreatePrivateEndpoint(s.ctx, projectID, provider,
+			endpointServiceID, createRequest).Execute()
 		return result.GetActualInstance(), err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -212,7 +211,8 @@ func (s *Store) UpdateRegionalizedPrivateEndpointSetting(projectID string, enabl
 		setting := atlasv2.ProjectSettingItem{
 			Enabled: enabled,
 		}
-		result, _, err := s.clientv2.PrivateEndpointServicesApi.ToggleRegionalizedPrivateEndpointSetting(s.ctx, projectID).ProjectSettingItem(setting).Execute()
+		result, _, err := s.clientv2.PrivateEndpointServicesApi.
+			ToggleRegionalizedPrivateEndpointSetting(s.ctx, projectID, &setting).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

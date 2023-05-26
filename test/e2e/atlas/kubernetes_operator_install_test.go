@@ -29,7 +29,7 @@ import (
 	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -302,7 +302,7 @@ func checkDeployment(t *testing.T, operator *operatorHelper, namespace string) {
 			}
 		}
 
-		if int32(1) != deployment.Status.ReadyReplicas {
+		if deployment.Status.ReadyReplicas != 1 {
 			deploymentReady = false
 		}
 

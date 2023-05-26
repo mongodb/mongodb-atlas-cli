@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockPrivateEndpointLister is a mock of PrivateEndpointLister interface.
@@ -111,7 +111,7 @@ func (m *MockPrivateEndpointCreator) EXPECT() *MockPrivateEndpointCreatorMockRec
 }
 
 // CreatePrivateEndpoint mocks base method.
-func (m *MockPrivateEndpointCreator) CreatePrivateEndpoint(arg0 string, arg1 *mongodbatlasv2.CreateEndpointServiceRequest) (interface{}, error) {
+func (m *MockPrivateEndpointCreator) CreatePrivateEndpoint(arg0 string, arg1 *admin.CreateEndpointServiceRequest) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePrivateEndpoint", arg0, arg1)
 	ret0, _ := ret[0].(interface{})
@@ -224,7 +224,7 @@ func (m *MockInterfaceEndpointCreator) EXPECT() *MockInterfaceEndpointCreatorMoc
 }
 
 // CreateInterfaceEndpoint mocks base method.
-func (m *MockInterfaceEndpointCreator) CreateInterfaceEndpoint(arg0, arg1, arg2 string, arg3 *mongodbatlasv2.CreateEndpointRequest) (interface{}, error) {
+func (m *MockInterfaceEndpointCreator) CreateInterfaceEndpoint(arg0, arg1, arg2 string, arg3 *admin.CreateEndpointRequest) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateInterfaceEndpoint", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(interface{})
@@ -299,10 +299,10 @@ func (m *MockRegionalizedPrivateEndpointSettingUpdater) EXPECT() *MockRegionaliz
 }
 
 // UpdateRegionalizedPrivateEndpointSetting mocks base method.
-func (m *MockRegionalizedPrivateEndpointSettingUpdater) UpdateRegionalizedPrivateEndpointSetting(arg0 string, arg1 bool) (*mongodbatlasv2.ProjectSettingItem, error) {
+func (m *MockRegionalizedPrivateEndpointSettingUpdater) UpdateRegionalizedPrivateEndpointSetting(arg0 string, arg1 bool) (*admin.ProjectSettingItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateRegionalizedPrivateEndpointSetting", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.ProjectSettingItem)
+	ret0, _ := ret[0].(*admin.ProjectSettingItem)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -337,10 +337,10 @@ func (m *MockRegionalizedPrivateEndpointSettingDescriber) EXPECT() *MockRegional
 }
 
 // RegionalizedPrivateEndpointSetting mocks base method.
-func (m *MockRegionalizedPrivateEndpointSettingDescriber) RegionalizedPrivateEndpointSetting(arg0 string) (*mongodbatlasv2.ProjectSettingItem, error) {
+func (m *MockRegionalizedPrivateEndpointSettingDescriber) RegionalizedPrivateEndpointSetting(arg0 string) (*admin.ProjectSettingItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegionalizedPrivateEndpointSetting", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.ProjectSettingItem)
+	ret0, _ := ret[0].(*admin.ProjectSettingItem)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -375,10 +375,10 @@ func (m *MockDataLakePrivateEndpointLister) EXPECT() *MockDataLakePrivateEndpoin
 }
 
 // DataLakePrivateEndpoints mocks base method.
-func (m *MockDataLakePrivateEndpointLister) DataLakePrivateEndpoints(arg0 *mongodbatlasv2.ListDataFederationPrivateEndpointsApiParams) (*mongodbatlasv2.PaginatedPrivateNetworkEndpointIdEntry, error) {
+func (m *MockDataLakePrivateEndpointLister) DataLakePrivateEndpoints(arg0 *admin.ListDataFederationPrivateEndpointsApiParams) (*admin.PaginatedPrivateNetworkEndpointIdEntry, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DataLakePrivateEndpoints", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedPrivateNetworkEndpointIdEntry)
+	ret0, _ := ret[0].(*admin.PaginatedPrivateNetworkEndpointIdEntry)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -413,10 +413,10 @@ func (m *MockDataLakePrivateEndpointCreator) EXPECT() *MockDataLakePrivateEndpoi
 }
 
 // DataLakeCreatePrivateEndpoint mocks base method.
-func (m *MockDataLakePrivateEndpointCreator) DataLakeCreatePrivateEndpoint(arg0 string, arg1 *mongodbatlasv2.PrivateNetworkEndpointIdEntry) (*mongodbatlasv2.PaginatedPrivateNetworkEndpointIdEntry, error) {
+func (m *MockDataLakePrivateEndpointCreator) DataLakeCreatePrivateEndpoint(arg0 string, arg1 *admin.PrivateNetworkEndpointIdEntry) (*admin.PaginatedPrivateNetworkEndpointIdEntry, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DataLakeCreatePrivateEndpoint", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedPrivateNetworkEndpointIdEntry)
+	ret0, _ := ret[0].(*admin.PaginatedPrivateNetworkEndpointIdEntry)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -488,10 +488,10 @@ func (m *MockDataLakePrivateEndpointDescriber) EXPECT() *MockDataLakePrivateEndp
 }
 
 // DataLakePrivateEndpoint mocks base method.
-func (m *MockDataLakePrivateEndpointDescriber) DataLakePrivateEndpoint(arg0, arg1 string) (*mongodbatlasv2.PrivateNetworkEndpointIdEntry, error) {
+func (m *MockDataLakePrivateEndpointDescriber) DataLakePrivateEndpoint(arg0, arg1 string) (*admin.PrivateNetworkEndpointIdEntry, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DataLakePrivateEndpoint", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.PrivateNetworkEndpointIdEntry)
+	ret0, _ := ret[0].(*admin.PrivateNetworkEndpointIdEntry)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

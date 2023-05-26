@@ -25,7 +25,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestOnlineArchives(t *testing.T) {
@@ -133,7 +133,7 @@ func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 
 func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	const expireAfterDays = int32(4)
+	const expireAfterDays = 4
 	expireAfterDaysStr := fmt.Sprintf("%d", expireAfterDays)
 	cmd := exec.Command(cliPath,
 		clustersEntity,

@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -208,7 +208,7 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (inte
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.MultiCloudClustersApi.ListClusters(s.ctx, projectID)
 		if opts != nil {
-			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
 		result, _, err := res.Execute()
 		return result, err
@@ -268,7 +268,7 @@ func (s *Store) AtlasClusterConfigurationOptions(projectID, name string) (*atlas
 func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName string, args *atlasv2.ClusterDescriptionProcessArgs) (*atlasv2.ClusterDescriptionProcessArgs, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.ClustersApi.UpdateClusterAdvancedConfiguration(s.ctx, projectID, clusterName).ClusterDescriptionProcessArgs(*args).Execute()
+		result, _, err := s.clientv2.ClustersApi.UpdateClusterAdvancedConfiguration(s.ctx, projectID, clusterName, args).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

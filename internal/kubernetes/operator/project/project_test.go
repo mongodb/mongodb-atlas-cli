@@ -34,8 +34,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -75,7 +75,7 @@ func TestBuildAtlasProject(t *testing.T) {
 					IpAddress:        pointer.Get("0.0.0.0"),
 				},
 			},
-			TotalCount: pointer.Get(int32(1)),
+			TotalCount: pointer.Get(1),
 		}
 
 		auditing := &atlasv2.AuditLog{
@@ -125,7 +125,7 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 			},
-			TotalCount: pointer.Get(int32(1)),
+			TotalCount: pointer.Get(1),
 		}
 
 		mw := &atlasv2.GroupMaintenanceWindow{
@@ -416,8 +416,8 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 				MaintenanceWindow: project.MaintenanceWindow{
-					DayOfWeek: int(mw.DayOfWeek),
-					HourOfDay: int(mw.HourOfDay),
+					DayOfWeek: mw.DayOfWeek,
+					HourOfDay: mw.HourOfDay,
 					AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
 					StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
 					Defer:     false,
@@ -636,7 +636,7 @@ func Test_buildAccessLists(t *testing.T) {
 					IpAddress:        pointer.Get("0.0.0.0"),
 				},
 			},
-			TotalCount: pointer.Get(int32(1)),
+			TotalCount: pointer.Get(1),
 		}
 
 		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
@@ -876,7 +876,7 @@ func Test_buildIntegrations(t *testing.T) {
 					},
 				},
 			},
-			TotalCount: pointer.Get(int32(0)),
+			TotalCount: pointer.Get(0),
 		}
 
 		intProvider.EXPECT().Integrations(projectID).Return(ints, nil)
@@ -944,7 +944,7 @@ func Test_buildIntegrations(t *testing.T) {
 					},
 				},
 			},
-			TotalCount: pointer.Get(int32(0)),
+			TotalCount: pointer.Get(0),
 		}
 		intProvider.EXPECT().Integrations(projectID).Return(ints, nil)
 		got, intSecrets, err := buildIntegrations(intProvider, projectID, targetNamespace, includeSecrets, dictionary)
@@ -1017,8 +1017,8 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 		}
 
 		expected := project.MaintenanceWindow{
-			DayOfWeek: int(mw.DayOfWeek),
-			HourOfDay: int(mw.HourOfDay),
+			DayOfWeek: mw.DayOfWeek,
+			HourOfDay: mw.HourOfDay,
 			AutoDefer: *mw.AutoDeferOnceEnabled,
 			StartASAP: *mw.StartASAP,
 			Defer:     false,

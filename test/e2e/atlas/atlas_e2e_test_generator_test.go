@@ -112,7 +112,7 @@ func (g *atlasE2ETestGenerator) generateTeam(prefix string) {
 	})
 }
 
-// generateProject generates a new project and also registers it's deletion on test cleanup.
+// generateProject generates a new project and also registers its deletion on test cleanup.
 func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	g.t.Helper()
 

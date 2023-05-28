@@ -56,10 +56,10 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if result.StateName == "UPDATING" {
+	if result.GetStateName() == "UPDATING" {
 		opts.IsRetryableErr = isRetryable
 	}
-	return result.StateName == "IDLE", nil
+	return result.GetStateName() == "IDLE", nil
 }
 
 func (opts *WatchOpts) Run() error {

@@ -31,7 +31,7 @@ type autoFunc func(cmd *cobra.Command, args []string, toComplete string) ([]stri
 
 type autoCompleteOpts struct {
 	cli.GlobalOpts
-	providers []*string
+	providers []string
 	tier      string
 	store     store.CloudProviderRegionsLister
 }
@@ -69,8 +69,8 @@ func (opts *autoCompleteOpts) tierSuggestions(toComplete string) ([]string, erro
 	availableTiers := map[string]bool{}
 	for _, p := range result.Results {
 		for _, i := range p.InstanceSizes {
-			if _, ok := availableTiers[i.Name]; !ok && strings.HasPrefix(i.Name, strings.ToUpper(toComplete)) {
-				availableTiers[i.Name] = true
+			if _, ok := availableTiers[i.GetName()]; !ok && strings.HasPrefix(i.GetName(), strings.ToUpper(toComplete)) {
+				availableTiers[i.GetName()] = true
 			}
 		}
 	}
@@ -117,8 +117,8 @@ func (opts *autoCompleteOpts) regionSuggestions(toComplete string) ([]string, er
 	for _, p := range result.Results {
 		for _, i := range p.InstanceSizes {
 			for _, r := range i.AvailableRegions {
-				if _, ok := availableRegions[r.Name]; !ok && strings.HasPrefix(r.Name, strings.ToUpper(toComplete)) {
-					availableRegions[r.Name] = true
+				if _, ok := availableRegions[r.GetName()]; !ok && strings.HasPrefix(r.GetName(), strings.ToUpper(toComplete)) {
+					availableRegions[r.GetName()] = true
 				}
 			}
 		}
@@ -151,9 +151,9 @@ func (opts *autoCompleteOpts) parseFlags(cmd *cobra.Command) {
 	if project := cmd.Flag(flag.ProjectID).Value.String(); project != "" {
 		opts.ProjectID = project
 	}
-	opts.providers = make([]*string, 0, 1)
+	opts.providers = make([]string, 0, 1)
 	if provider := cmd.Flag(flag.Provider).Value.String(); provider != "" {
-		opts.providers = append(opts.providers, &provider)
+		opts.providers = append(opts.providers, provider)
 	}
 
 	if tier := cmd.Flag(flag.Tier).Value.String(); tier != "" {

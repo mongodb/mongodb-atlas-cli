@@ -18,24 +18,20 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_cloud_provider_regions.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store CloudProviderRegionsLister
 
 type CloudProviderRegionsLister interface {
-	CloudProviderRegions(string, string, []*string) (*atlas.CloudProviders, error)
+	CloudProviderRegions(string, string, []string) (*atlasv2.PaginatedApiAtlasProviderRegions, error)
 }
 
 // CloudProviderRegions encapsulates the logic to manage different cloud providers.
-func (s *Store) CloudProviderRegions(projectID, tier string, providerName []*string) (*atlas.CloudProviders, error) {
-	options := &atlas.CloudProviderRegionsOptions{
-		Providers: providerName,
-		Tier:      tier,
-	}
+func (s *Store) CloudProviderRegions(projectID, tier string, providerName []string) (*atlasv2.PaginatedApiAtlasProviderRegions, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Clusters.ListCloudProviderRegions(s.ctx, projectID, options)
+		result, _, err := s.clientv2.ClustersApi.ListCloudProviderRegions(s.ctx, projectID).Providers(providerName).Tier(tier).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

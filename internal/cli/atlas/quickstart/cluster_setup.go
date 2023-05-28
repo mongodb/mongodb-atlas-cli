@@ -17,6 +17,8 @@ package quickstart
 import (
 	"errors"
 	"fmt"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -95,16 +97,16 @@ func defaultDiskSizeGB(provider, tier string) float64 {
 	return atlas.DefaultDiskSizeGB[strings.ToUpper(provider)][tier]
 }
 
-func (opts *Opts) newCluster() *atlas.AdvancedCluster {
-	cluster := &atlas.AdvancedCluster{
-		GroupID:          opts.ConfigProjectID(),
-		ClusterType:      replicaSet,
-		ReplicationSpecs: []*atlas.AdvancedReplicationSpec{opts.newAdvanceReplicationSpec()},
-		Name:             opts.ClusterName,
-		Labels: []atlas.Label{
+func (opts *Opts) newCluster() *atlasv2.ClusterDescriptionV15 {
+	cluster := &atlasv2.ClusterDescriptionV15{
+		GroupId:          pointer.Get(opts.ConfigProjectID()),
+		ClusterType:      pointer.Get(replicaSet),
+		ReplicationSpecs: []atlasv2.ReplicationSpec{opts.newAdvanceReplicationSpec()},
+		Name:             &opts.ClusterName,
+		Labels: []atlasv2.NDSLabel{
 			{
-				Key:   opts.LabelKey,
-				Value: opts.LabelValue,
+				Key:   &opts.LabelKey,
+				Value: &opts.LabelValue,
 			},
 		},
 		TerminationProtectionEnabled: &opts.EnableTerminationProtection,
@@ -114,22 +116,22 @@ func (opts *Opts) newCluster() *atlas.AdvancedCluster {
 		diskSizeGB := defaultDiskSizeGB(opts.providerName(), opts.Tier)
 		mdbVersion, _ := cli.DefaultMongoDBMajorVersion()
 		cluster.DiskSizeGB = &diskSizeGB
-		cluster.MongoDBMajorVersion = mdbVersion
+		cluster.MongoDBMajorVersion = &mdbVersion
 	}
 
 	return cluster
 }
 
-const (
+var (
 	shards   = 1
 	zoneName = "Zone 1"
 )
 
-func (opts *Opts) newAdvanceReplicationSpec() *atlas.AdvancedReplicationSpec {
-	return &atlas.AdvancedReplicationSpec{
-		NumShards:     shards,
-		ZoneName:      zoneName,
-		RegionConfigs: []*atlas.AdvancedRegionConfig{opts.newAdvancedRegionConfig()},
+func (opts *Opts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
+	return atlasv2.ReplicationSpec{
+		NumShards:     &shards,
+		ZoneName:      &zoneName,
+		RegionConfigs: []atlasv2.RegionConfig{opts.newAdvancedRegionConfig()},
 	}
 }
 
@@ -139,28 +141,57 @@ const (
 	atlasM5 = "M5"
 )
 
-func (opts *Opts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
+func (opts *Opts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 	providerName := opts.providerName()
 
 	priority := 7
-	regionConfig := atlas.AdvancedRegionConfig{
-		RegionName: opts.Region,
-		Priority:   &priority,
-	}
-
-	regionConfig.ProviderName = providerName
-	regionConfig.ElectableSpecs = &atlas.Specs{
-		InstanceSize: opts.Tier,
-	}
+	regionConfig := atlasv2.RegionConfig{}
 
 	members := 3
-	if providerName == tenant {
-		regionConfig.BackingProviderName = opts.Provider
-	} else {
-		regionConfig.ElectableSpecs.NodeCount = &members
-	}
 
-	return &regionConfig
+	switch providerName {
+	case "TENANT":
+		regionConfig.TenantRegionConfig = &atlasv2.TenantRegionConfig{
+			ProviderName: &providerName,
+			Priority:     &priority,
+			RegionName:   &opts.Region,
+			ElectableSpecs: &atlasv2.HardwareSpec{
+				InstanceSize: &opts.Tier,
+			},
+			BackingProviderName: &opts.Provider,
+		}
+	case "AWS":
+		regionConfig.AWSRegionConfig = &atlasv2.AWSRegionConfig{
+			ProviderName: &providerName,
+			Priority:     &priority,
+			RegionName:   &opts.Region,
+			ElectableSpecs: &atlasv2.HardwareSpec{
+				InstanceSize: &opts.Tier,
+				NodeCount:    &members,
+			},
+		}
+	case "Azure":
+		regionConfig.AzureRegionConfig = &atlasv2.AzureRegionConfig{
+			ProviderName: &providerName,
+			Priority:     &priority,
+			RegionName:   &opts.Region,
+			ElectableSpecs: &atlasv2.HardwareSpec{
+				InstanceSize: &opts.Tier,
+				NodeCount:    &members,
+			},
+		}
+	case "GCP":
+		regionConfig.GCPRegionConfig = &atlasv2.GCPRegionConfig{
+			ProviderName: &providerName,
+			Priority:     &priority,
+			RegionName:   &opts.Region,
+			ElectableSpecs: &atlasv2.HardwareSpec{
+				InstanceSize: &opts.Tier,
+				NodeCount:    &members,
+			},
+		}
+	}
+	return regionConfig
 }
 
 func providerName(tier, provider string) string {
@@ -182,7 +213,7 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 	cloudProviders, err := opts.store.CloudProviderRegions(
 		opts.ConfigProjectID(),
 		opts.Tier,
-		[]*string{&opts.Provider},
+		[]string{opts.Provider},
 	)
 
 	if err != nil {

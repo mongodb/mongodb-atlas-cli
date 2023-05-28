@@ -49,9 +49,9 @@ var listTemplate = `PROVIDER	INSTANCE SIZE	REGIONS{{range .Results}}{{ $provider
 
 func (opts *ListOpts) Run() error {
 	// Set provider if existent
-	var provider []*string
+	var provider []string
 	if opts.provider != "" {
-		provider = []*string{&opts.provider}
+		provider = []string{opts.provider}
 	}
 
 	r, err := opts.store.CloudProviderRegions(opts.ConfigProjectID(), opts.tier, provider)

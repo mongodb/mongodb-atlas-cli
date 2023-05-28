@@ -173,7 +173,7 @@ func (s *Store) StartCluster(projectID, name string) (*atlas.AdvancedCluster, er
 func (s *Store) DeleteCluster(projectID, name string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, _, err := s.clientv2.MultiCloudClustersApi.DeleteCluster(s.ctx, projectID, name).Execute()
+		_, err := s.clientv2.MultiCloudClustersApi.DeleteCluster(s.ctx, projectID, name).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

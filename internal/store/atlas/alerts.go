@@ -15,7 +15,7 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_alerts.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas AlertDescriber,AlertLister,AlertAcknowledger
@@ -50,6 +50,6 @@ func (s *Store) Alerts(projectID string, status string) (*atlasv2.PaginatedAlert
 
 // Acknowledge encapsulate the logic to manage different cloud providers.
 func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlasv2.AlertViewForNdsGroup) (*atlasv2.AlertViewForNdsGroup, error) {
-	result, _, err := s.clientv2.AlertsApi.AcknowledgeAlert(s.ctx, projectID, alertID).AlertViewForNdsGroup(*body).Execute()
+	result, _, err := s.clientv2.AlertsApi.AcknowledgeAlert(s.ctx, projectID, alertID, body).Execute()
 	return result, err
 }

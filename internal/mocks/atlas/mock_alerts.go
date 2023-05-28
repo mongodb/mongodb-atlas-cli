@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockAlertDescriber is a mock of AlertDescriber interface.
@@ -35,10 +35,10 @@ func (m *MockAlertDescriber) EXPECT() *MockAlertDescriberMockRecorder {
 }
 
 // Alert mocks base method.
-func (m *MockAlertDescriber) Alert(arg0, arg1 string) (*mongodbatlasv2.AlertViewForNdsGroup, error) {
+func (m *MockAlertDescriber) Alert(arg0, arg1 string) (*admin.AlertViewForNdsGroup, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Alert", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.AlertViewForNdsGroup)
+	ret0, _ := ret[0].(*admin.AlertViewForNdsGroup)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockAlertLister) EXPECT() *MockAlertListerMockRecorder {
 }
 
 // Alerts mocks base method.
-func (m *MockAlertLister) Alerts(arg0, arg1 string) (*mongodbatlasv2.PaginatedAlert, error) {
+func (m *MockAlertLister) Alerts(arg0, arg1 string) (*admin.PaginatedAlert, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Alerts", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedAlert)
+	ret0, _ := ret[0].(*admin.PaginatedAlert)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockAlertAcknowledger) EXPECT() *MockAlertAcknowledgerMockRecorder {
 }
 
 // AcknowledgeAlert mocks base method.
-func (m *MockAlertAcknowledger) AcknowledgeAlert(arg0, arg1 string, arg2 *mongodbatlasv2.AlertViewForNdsGroup) (*mongodbatlasv2.AlertViewForNdsGroup, error) {
+func (m *MockAlertAcknowledger) AcknowledgeAlert(arg0, arg1 string, arg2 *admin.AlertViewForNdsGroup) (*admin.AlertViewForNdsGroup, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AcknowledgeAlert", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlasv2.AlertViewForNdsGroup)
+	ret0, _ := ret[0].(*admin.AlertViewForNdsGroup)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

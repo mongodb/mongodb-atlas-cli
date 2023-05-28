@@ -171,7 +171,7 @@ func TestDefaultRegion(t *testing.T) {
 			want: 1,
 		},
 		{
-			input: []atlasv2.AvailableRegion{
+			input: []atlas.AvailableRegion{
 				{
 					Name:    pointer.Get("test"),
 					Default: pointer.Get(false),

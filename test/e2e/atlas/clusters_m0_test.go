@@ -18,6 +18,7 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"os"
 	"os/exec"
 	"testing"
@@ -25,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
@@ -61,7 +61,7 @@ func TestClustersM0Flags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster *mongodbatlas.AdvancedCluster
+		var cluster *atlasv2.ClusterDescriptionV15
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -95,12 +95,12 @@ func TestClustersM0Flags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster mongodbatlas.AdvancedCluster
+		var cluster atlasv2.ClusterDescriptionV15
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.Equal(clusterName, cluster.Name)
+		a.Equal(clusterName, cluster.GetName())
 	})
 
 	t.Run("Delete", func(t *testing.T) {

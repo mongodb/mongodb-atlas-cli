@@ -18,6 +18,7 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"os"
 	"os/exec"
 	"testing"
@@ -129,7 +130,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var clusterResponse *mongodbatlas.AdvancedCluster
+		var clusterResponse *atlasv2.ClusterDescriptionV15
 		err = json.Unmarshal(resp, &clusterResponse)
 		req.NoError(err)
 

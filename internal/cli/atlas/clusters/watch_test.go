@@ -17,20 +17,21 @@
 package clusters
 
 import (
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
 
-	expected := &mongodbatlas.AdvancedCluster{StateName: "IDLE"}
+	expected := &atlasv2.ClusterDescriptionV15{StateName: pointer.Get("IDLE")}
 
 	opts := &WatchOpts{
 		name:  "test",

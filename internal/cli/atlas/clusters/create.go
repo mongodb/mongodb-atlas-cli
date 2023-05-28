@@ -18,6 +18,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -88,8 +90,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCluster() (*atlas.AdvancedCluster, error) {
-	cluster := new(atlas.AdvancedCluster)
+func (opts *CreateOpts) newCluster() (*atlasv2.ClusterDescriptionV15, error) {
+	cluster := new(atlasv2.ClusterDescriptionV15)
 	if opts.filename != "" {
 		if err := file.Load(opts.fs, opts.filename, cluster); err != nil {
 			return nil, err
@@ -100,33 +102,33 @@ func (opts *CreateOpts) newCluster() (*atlas.AdvancedCluster, error) {
 	}
 
 	if opts.name != "" {
-		cluster.Name = opts.name
+		cluster.Name = &opts.name
 	}
 
 	AddLabel(cluster, NewCLILabel())
 
-	cluster.GroupID = opts.ConfigProjectID()
+	cluster.GroupId = pointer.Get(opts.ConfigProjectID())
 	return cluster, nil
 }
 
-func (opts *CreateOpts) applyOpts(out *atlas.AdvancedCluster) {
+func (opts *CreateOpts) applyOpts(out *atlasv2.ClusterDescriptionV15) {
 	replicationSpec := opts.newAdvanceReplicationSpec()
 	if opts.backup {
 		out.BackupEnabled = &opts.backup
 		out.PitEnabled = &opts.backup
 	}
 	if opts.biConnector {
-		out.BiConnector = &atlas.BiConnector{Enabled: &opts.biConnector}
+		out.BiConnector = &atlasv2.BiConnector{Enabled: &opts.biConnector}
 	}
 	out.TerminationProtectionEnabled = &opts.enableTerminationProtection
-	out.ClusterType = opts.clusterType
+	out.ClusterType = &opts.clusterType
 
 	if !opts.isTenant() {
 		out.DiskSizeGB = &opts.diskSizeGB
-		out.MongoDBMajorVersion = opts.mdbVersion
+		out.MongoDBMajorVersion = &opts.mdbVersion
 	}
 
-	out.ReplicationSpecs = []*atlas.AdvancedReplicationSpec{replicationSpec}
+	out.ReplicationSpecs = []atlasv2.ReplicationSpec{replicationSpec}
 }
 
 func (opts *CreateOpts) isTenant() bool {
@@ -140,42 +142,90 @@ func (opts *CreateOpts) providerName() string {
 	return opts.provider
 }
 
-func (opts *CreateOpts) newAdvanceReplicationSpec() *atlas.AdvancedReplicationSpec {
-	return &atlas.AdvancedReplicationSpec{
-		NumShards:     opts.shards,
-		ZoneName:      zoneName,
-		RegionConfigs: []*atlas.AdvancedRegionConfig{opts.newAdvancedRegionConfig()},
+func (opts *CreateOpts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
+	return atlasv2.ReplicationSpec{
+		NumShards:     &opts.shards,
+		ZoneName:      pointer.Get(zoneName),
+		RegionConfigs: []atlasv2.RegionConfig{opts.newAdvancedRegionConfig()},
 	}
 }
 
-func (opts *CreateOpts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
+func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 	priority := 7
 	readOnlyNode := 0
 	providerName := opts.providerName()
-
-	regionConfig := atlas.AdvancedRegionConfig{
-		RegionName: opts.region,
-		Priority:   &priority,
-	}
-
-	regionConfig.ProviderName = providerName
-	regionConfig.ElectableSpecs = &atlas.Specs{
-		InstanceSize: opts.tier,
-	}
-
-	if providerName == tenant {
-		regionConfig.BackingProviderName = opts.provider
-	} else {
-		regionConfig.ElectableSpecs.NodeCount = &opts.members
-	}
-
-	readOnlySpec := &atlas.Specs{
-		InstanceSize: opts.tier,
+	readOnlySpec := &atlasv2.DedicatedHardwareSpec{
+		InstanceSize: &opts.tier,
 		NodeCount:    &readOnlyNode,
 	}
-	regionConfig.ReadOnlySpecs = readOnlySpec
+	regionConfig := atlasv2.RegionConfig{}
 
-	return &regionConfig
+	switch providerName {
+	case "TENANT":
+		regionConfig.TenantRegionConfig = &atlasv2.TenantRegionConfig{
+			ProviderName: &providerName,
+			Priority:     &priority,
+			RegionName:   &opts.region,
+			ElectableSpecs: &atlasv2.HardwareSpec{
+				InstanceSize: &opts.tier,
+			},
+			BackingProviderName: &opts.provider,
+		}
+	case "AWS":
+		regionConfig.AWSRegionConfig = &atlasv2.AWSRegionConfig{
+			ProviderName: &providerName,
+			Priority:     &priority,
+			RegionName:   &opts.region,
+			ElectableSpecs: &atlasv2.HardwareSpec{
+				InstanceSize: &opts.tier,
+				NodeCount:    &opts.members,
+			},
+			ReadOnlySpecs: readOnlySpec,
+		}
+	case "Azure":
+		regionConfig.AzureRegionConfig = &atlasv2.AzureRegionConfig{
+			ProviderName: &providerName,
+			Priority:     &priority,
+			RegionName:   &opts.region,
+			ElectableSpecs: &atlasv2.HardwareSpec{
+				InstanceSize: &opts.tier,
+				NodeCount:    &opts.members,
+			},
+			ReadOnlySpecs: readOnlySpec,
+		}
+	case "GCP":
+		regionConfig.GCPRegionConfig = &atlasv2.GCPRegionConfig{
+			ProviderName: &providerName,
+			Priority:     &priority,
+			RegionName:   &opts.region,
+			ElectableSpecs: &atlasv2.HardwareSpec{
+				InstanceSize: &opts.tier,
+				NodeCount:    &opts.members,
+			},
+			ReadOnlySpecs: readOnlySpec,
+		}
+	}
+
+	//regionConfig := atlasv2.RegionConfig{
+	//	RegionName: opts.region,
+	//	Priority:   &priority,
+	//}
+	//
+	//regionConfig.ProviderName = providerName
+	//regionConfig.ElectableSpecs = &atlas.Specs{
+	//	InstanceSize: opts.tier,
+	//}
+	//
+	//if providerName == tenant {
+	//	regionConfig.BackingProviderName = opts.provider
+	//} else {
+	//	regionConfig.ElectableSpecs.NodeCount = &opts.members
+	//}
+	//
+	//
+	//regionConfig.ReadOnlySpecs = readOnlySpec
+
+	return regionConfig
 }
 
 // CreateBuilder builds a cobra.Command that can run as:

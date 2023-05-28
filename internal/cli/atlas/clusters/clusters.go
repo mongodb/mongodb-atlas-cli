@@ -24,7 +24,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/sampledata"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -97,19 +99,19 @@ func Builder() *cobra.Command {
 	return cmd
 }
 
-func NewCLILabel() atlas.Label {
+func NewCLILabel() atlasv2.NDSLabel {
 	labelValue := atlasCLILabelValue
 	if config.ToolName == config.MongoCLI {
 		labelValue = mongoCLILabelValue
 	}
 
-	return atlas.Label{
-		Key:   labelKey,
-		Value: labelValue,
+	return atlasv2.NDSLabel{
+		Key:   pointer.Get(labelKey),
+		Value: pointer.Get(labelValue),
 	}
 }
 
-func AddLabel(out *atlas.AdvancedCluster, l atlas.Label) {
+func AddLabel(out *atlasv2.ClusterDescriptionV15, l atlasv2.NDSLabel) {
 	if LabelExists(out.Labels, l) {
 		return
 	}
@@ -117,38 +119,63 @@ func AddLabel(out *atlas.AdvancedCluster, l atlas.Label) {
 	out.Labels = append(out.Labels, l)
 }
 
-func LabelExists(labels []atlas.Label, l atlas.Label) bool {
+func LabelExists(labels []atlasv2.NDSLabel, l atlasv2.NDSLabel) bool {
 	for _, v := range labels {
-		if v.Key == l.Key && v.Value == l.Value {
+		if v.GetKey() == l.GetKey() && v.GetValue() == l.GetValue() {
 			return true
 		}
 	}
 	return false
 }
 
-func RemoveReadOnlyAttributes(out *atlas.AdvancedCluster) {
-	out.ID = ""
-	out.CreateDate = ""
-	out.StateName = ""
-	out.MongoDBVersion = ""
+func RemoveReadOnlyAttributes(out *atlasv2.ClusterDescriptionV15) {
+	out.Id = nil
+	out.CreateDate = nil
+	out.StateName = nil
+	out.MongoDBVersion = nil
 	out.ConnectionStrings = nil
 	isTenant := false
 	for _, spec := range out.ReplicationSpecs {
-		spec.ID = ""
+		spec.Id = nil
 		for _, c := range spec.RegionConfigs {
-			if c.ProviderName == tenant {
+			providerName := getProviderName(&c)
+			if providerName == tenant {
+				c.TenantRegionConfig.ProviderName = pointer.Get(tenant)
 				isTenant = true
+				break
+			} else if providerName == "AWS" {
+				c.AWSRegionConfig.ProviderName = pointer.Get("AWS")
+				break
+			} else if providerName == "GCP" {
+				c.GCPRegionConfig.ProviderName = pointer.Get("GCP")
+				break
+			} else if providerName == "Azure" {
+				c.AzureRegionConfig.ProviderName = pointer.Get("Azure")
 				break
 			}
 		}
 	}
 	if isTenant {
 		out.BiConnector = nil
-		out.EncryptionAtRestProvider = ""
+		out.EncryptionAtRestProvider = nil
 		out.DiskSizeGB = nil
-		out.MongoDBMajorVersion = ""
+		out.MongoDBMajorVersion = nil
 		out.PitEnabled = nil
 		out.BackupEnabled = nil
+	}
+}
+
+func getProviderName(out *atlasv2.RegionConfig) string {
+	if out.GCPRegionConfig != nil {
+		return "GCP"
+	} else if out.AWSRegionConfig != nil {
+		return "AWS"
+	} else if out.AzureRegionConfig != nil {
+		return "Azure"
+	} else if out.TenantRegionConfig != nil {
+		return tenant
+	} else {
+		return ""
 	}
 }
 
@@ -171,10 +198,23 @@ func RemoveReadOnlyAttributesSharedCluster(out *atlas.Cluster) {
 	}
 }
 
-func AddLabelSharedCluster(out *atlas.Cluster, l atlas.Label) {
-	if LabelExists(out.Labels, l) {
+func SharedLabelExists(labels []atlas.Label, l atlasv2.NDSLabel) bool {
+	for _, v := range labels {
+		if v.Key == l.GetKey() && v.Value == l.GetValue() {
+			return true
+		}
+	}
+	return false
+}
+
+func AddLabelSharedCluster(out *atlas.Cluster, l atlasv2.NDSLabel) {
+	if SharedLabelExists(out.Labels, l) {
 		return
 	}
 
-	out.Labels = append(out.Labels, l)
+	l2 := atlas.Label{
+		Key:   l.GetKey(),
+		Value: l.GetValue(),
+	}
+	out.Labels = append(out.Labels, l2)
 }

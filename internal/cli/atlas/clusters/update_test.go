@@ -17,6 +17,7 @@
 package clusters
 
 import (
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -24,14 +25,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/spf13/afero"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterGetterUpdater(ctrl)
 
-	expected := &mongodbatlas.AdvancedCluster{}
+	expected := &atlasv2.ClusterDescriptionV15{}
 
 	t.Run("flags run", func(t *testing.T) {
 		updateOpts := &UpdateOpts{

@@ -299,7 +299,7 @@ func (opts *Opts) Run() error {
 	}
 
 	fmt.Printf(quickstartTemplateMongoshDetected, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
-	return mongosh.Run(opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
+	return mongosh.Run(opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.GetStandardSrv())
 }
 
 func (opts *Opts) createResources() error {
@@ -338,7 +338,7 @@ Loading sample data into your cluster... [It's safe to 'Ctrl + C']
 		return nil
 	}
 
-	opts.SampleDataJobID = sampleDataJob.ID
+	opts.SampleDataJobID = sampleDataJob.GetId()
 
 	return opts.Watch(opts.sampleDataWatcher)
 }
@@ -359,7 +359,7 @@ func (opts *Opts) clusterCreationWatcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return result.StateName == "IDLE", nil
+	return result.GetStateName() == "IDLE", nil
 }
 
 func (opts *Opts) askSampleDataQuestion() error {

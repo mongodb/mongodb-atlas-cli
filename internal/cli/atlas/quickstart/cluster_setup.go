@@ -17,16 +17,16 @@ package quickstart
 import (
 	"errors"
 	"fmt"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -224,7 +224,7 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 		return nil, errors.New("no regions available")
 	}
 
-	availableRegions := cloudProviders.Results[0].InstanceSizes[0].AvailableRegions
+	availableRegions := cloudProviders.Results[0].InstanceSizes[0].GetAvailableRegions()
 
 	defaultRegions := make([]string, 0, len(availableRegions))
 	popularRegionIndex := search.DefaultRegion(availableRegions)
@@ -232,14 +232,14 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 	if popularRegionIndex != -1 {
 		// the most popular region must be the first in the list
 		popularRegion := availableRegions[popularRegionIndex]
-		defaultRegions = append(defaultRegions, popularRegion.Name)
+		defaultRegions = append(defaultRegions, popularRegion.GetName())
 
 		// remove popular region from availableRegions
 		availableRegions = append(availableRegions[:popularRegionIndex], availableRegions[popularRegionIndex+1:]...)
 	}
 
 	for _, v := range availableRegions {
-		defaultRegions = append(defaultRegions, v.Name)
+		defaultRegions = append(defaultRegions, v.GetName())
 	}
 
 	return defaultRegions, nil

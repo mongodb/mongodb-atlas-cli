@@ -169,7 +169,7 @@ func TestDefaultRegion(t *testing.T) {
 			want: 1,
 		},
 		{
-			input: []*atlas.AvailableRegion{
+			input: []atlas.AvailableRegion{
 				{
 					Name:    "test",
 					Default: false,

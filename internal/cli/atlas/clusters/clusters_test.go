@@ -139,6 +139,14 @@ func TestLabelExists(t *testing.T) {
 }
 
 func TestRemoveReadOnlyAttributes(t *testing.T) {
+	var (
+		id        = "Test"
+		testVar   = "test"
+		specId    = "22"
+		shards    = 2
+		zone      = "1"
+		timeStamp = time.Now()
+	)
 	tests := []struct {
 		name string
 		args *atlasv2.ClusterDescriptionV15
@@ -147,26 +155,23 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 		{
 			name: "One AdvancedReplicationSpec",
 			args: &atlasv2.ClusterDescriptionV15{
-				Id:             pointer.Get("Test"),
-				MongoDBVersion: pointer.Get("test"),
-				StateName:      pointer.Get("test"),
+				Id:             &id,
+				MongoDBVersion: &testVar,
+				StateName:      &testVar,
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						Id:        pointer.Get("22"),
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						Id:        &specId,
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 				},
-				CreateDate: pointer.Get(time.Now()),
+				CreateDate: &timeStamp,
 			},
 			want: &atlasv2.ClusterDescriptionV15{
-				Id:             nil,
-				MongoDBVersion: nil,
-				StateName:      nil,
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 				},
 			},
@@ -174,44 +179,41 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 		{
 			name: "More AdvancedReplicationSpecs",
 			args: &atlasv2.ClusterDescriptionV15{
-				Id:             pointer.Get("Test"),
-				MongoDBVersion: pointer.Get("test"),
-				StateName:      pointer.Get("test"),
+				Id:             &id,
+				MongoDBVersion: &testVar,
+				StateName:      &testVar,
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						Id:        pointer.Get("22"),
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						Id:        &specId,
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						Id:        pointer.Get("22"),
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						Id:        &specId,
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						Id:        pointer.Get("22"),
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						Id:        &specId,
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 				},
-				CreateDate: pointer.Get(time.Now()),
+				CreateDate: &timeStamp,
 			},
 			want: &atlasv2.ClusterDescriptionV15{
-				Id:             nil,
-				MongoDBVersion: nil,
-				StateName:      nil,
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 				},
 			},
@@ -221,32 +223,32 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 			args: &atlasv2.ClusterDescriptionV15{
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 				},
 			},
 			want: &atlasv2.ClusterDescriptionV15{
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						NumShards: pointer.Get(2),
-						ZoneName:  pointer.Get("1"),
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 				},
 			},
@@ -259,6 +261,8 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			RemoveReadOnlyAttributes(arg)
 			if diff := deep.Equal(arg, want); diff != nil {
+				t.Log(arg)
+				t.Log(want)
 				t.Error(diff)
 			}
 		})

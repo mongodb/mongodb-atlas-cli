@@ -463,7 +463,7 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 	return result
 }
 
-func GetInstanceSizeStringIfNotNil(instanceSize *atlasv2.InstanceSize) *string{
+func GetInstanceSizeStringIfNotNil(instanceSize *atlasv2.InstanceSize) *string {
 	if instanceSize == nil {
 		return nil
 	}

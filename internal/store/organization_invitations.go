@@ -17,8 +17,8 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -100,11 +100,11 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 				TeamIds: invitation.TeamIDs,
 			}
 
-			result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID, invitationID).OrganizationInvitationUpdateRequest(invitationRequest).Execute()
+			result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID, invitationID, &invitationRequest).Execute()
 			return result, err
 		}
 		invitationRequest := mapInvitation(invitation)
-		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitation(s.ctx, orgID).OrganizationInvitationRequest(invitationRequest).Execute()
+		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitation(s.ctx, orgID, &invitationRequest).Execute()
 
 		return result, err
 
@@ -125,7 +125,7 @@ func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (interfac
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		invitationRequest := mapInvitation(invitation)
-		result, _, err := s.clientv2.OrganizationsApi.CreateOrganizationInvitation(s.ctx, orgID).OrganizationInvitationRequest(invitationRequest).Execute()
+		result, _, err := s.clientv2.OrganizationsApi.CreateOrganizationInvitation(s.ctx, orgID, &invitationRequest).Execute()
 
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:

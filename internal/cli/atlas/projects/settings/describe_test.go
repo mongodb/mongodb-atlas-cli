@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
@@ -35,7 +35,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &mongodbatlasv2.GroupSettings{}
+	expected := &atlasv2.GroupSettings{}
 
 	mockStore.
 		EXPECT().

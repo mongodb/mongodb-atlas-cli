@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 // MockProcessDatabaseLister is a mock of ProcessDatabaseLister interface.
@@ -36,10 +36,10 @@ func (m *MockProcessDatabaseLister) EXPECT() *MockProcessDatabaseListerMockRecor
 }
 
 // ProcessDatabases mocks base method.
-func (m *MockProcessDatabaseLister) ProcessDatabases(arg0, arg1 string, arg2 int, arg3 *mongodbatlas.ListOptions) (*mongodbatlasv2.PaginatedDatabase, error) {
+func (m *MockProcessDatabaseLister) ProcessDatabases(arg0, arg1 string, arg2 int, arg3 *mongodbatlas.ListOptions) (*admin.PaginatedDatabase, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessDatabases", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedDatabase)
+	ret0, _ := ret[0].(*admin.PaginatedDatabase)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

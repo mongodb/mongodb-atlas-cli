@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type CreateOpts struct {
@@ -57,13 +57,13 @@ func (opts *CreateOpts) validateEndpoints() error {
 	return nil
 }
 
-func (opts *CreateOpts) parseEndpoints() []*atlas.GCPEndpoint {
-	endpoints := make([]*atlas.GCPEndpoint, len(opts.Endpoints))
+func (opts *CreateOpts) parseEndpoints() []atlasv2.CreateGCPForwardingRuleRequest {
+	endpoints := make([]atlasv2.CreateGCPForwardingRuleRequest, len(opts.Endpoints))
 	for i, endpoint := range opts.Endpoints {
 		s := strings.Split(endpoint, "@")
-		endpoints[i] = &atlas.GCPEndpoint{
-			EndpointName: s[0],
-			IPAddress:    s[1],
+		endpoints[i] = atlasv2.CreateGCPForwardingRuleRequest{
+			EndpointName: &s[0],
+			IpAddress:    &s[1],
 		}
 	}
 	return endpoints
@@ -80,12 +80,15 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newInterfaceEndpointConnection() *atlas.InterfaceEndpointConnection {
-	return &atlas.InterfaceEndpointConnection{
-		EndpointGroupName: opts.privateEndpointGroupID,
-		GCPProjectID:      opts.gcpProjectID,
-		Endpoints:         opts.parseEndpoints(),
-	}
+func (opts *CreateOpts) newInterfaceEndpointConnection() *atlasv2.CreateEndpointRequest {
+	r := atlasv2.CreateGCPEndpointGroupRequestAsCreateEndpointRequest(
+		&atlasv2.CreateGCPEndpointGroupRequest{
+			EndpointGroupName: opts.privateEndpointGroupID,
+			GcpProjectId:      opts.gcpProjectID,
+			Endpoints:         opts.parseEndpoints(),
+		},
+	)
+	return &r
 }
 
 // mongocli atlas privateEndpoint(s) gcp interface(s) create <endpointGroupId> --endpointServiceId endpointServiceId --gcpProjectId gcpProjectId --endpoint endpointName1@ipAddress1,...,endpointNameN@ipAddressN [--projectId projectId].

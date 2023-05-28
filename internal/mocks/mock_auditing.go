@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockAuditingDescriber is a mock of AuditingDescriber interface.
@@ -35,10 +35,10 @@ func (m *MockAuditingDescriber) EXPECT() *MockAuditingDescriberMockRecorder {
 }
 
 // Auditing mocks base method.
-func (m *MockAuditingDescriber) Auditing(arg0 string) (*mongodbatlasv2.AuditLog, error) {
+func (m *MockAuditingDescriber) Auditing(arg0 string) (*admin.AuditLog, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Auditing", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.AuditLog)
+	ret0, _ := ret[0].(*admin.AuditLog)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

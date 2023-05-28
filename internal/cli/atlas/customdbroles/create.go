@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 const createTemplate = "Custom database role '{{.RoleName}}' successfully created.\n"
@@ -80,11 +80,15 @@ func (opts *CreateOpts) validate() error {
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "create <roleName>",
-		Short:   "Create a custom database role for your project.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Example: fmt.Sprintf(`  %s customDbRoles create customRole --privilege FIND@database,UPDATE@database`, cli.ExampleAtlasEntryPoint()),
-		Args:    require.ExactArgs(1),
+		Use:   "create <roleName>",
+		Short: "Create a custom database role for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Example: fmt.Sprintf(`# Create a custom database role
+  %[1]s customDbRoles create customRole --privilege FIND@database,UPDATE@database
+
+  # Use an inherited role
+  %[1]s customDbRoles create customRole --inheritedRole read@database`, cli.ExampleAtlasEntryPoint()),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"roleNameDesc": "Name of the custom role to create.",
 			"output":       createTemplate,

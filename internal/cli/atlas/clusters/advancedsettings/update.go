@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 const updateTmpl = "Updating advanced configuration settings of your cluster'.\n"
@@ -45,9 +45,9 @@ type UpdateOpts struct {
 	disableJavascript                bool
 	enableJavascript                 bool
 	oplogMinRetentionHours           float64
-	oplogSizeMB                      int32
-	sampleRefreshIntervalBIConnector int32
-	sampleSizeBIConnector            int32
+	oplogSizeMB                      int
+	sampleRefreshIntervalBIConnector int
+	sampleSizeBIConnector            int
 	store                            store.AtlasClusterConfigurationOptionsUpdater
 }
 
@@ -174,9 +174,9 @@ Atlas supports this command only for M10+ clusters.
 	cmd.MarkFlagsMutuallyExclusive(flag.DisableJavascript, flag.EnableJavascript)
 
 	cmd.Flags().Float64Var(&opts.oplogMinRetentionHours, flag.OplogMinRetentionHours, 0, usage.OplogMinRetentionHours)
-	cmd.Flags().Int32Var(&opts.oplogSizeMB, flag.OplogSizeMB, 0, usage.OplogSizeMB)
-	cmd.Flags().Int32Var(&opts.sampleRefreshIntervalBIConnector, flag.SampleRefreshIntervalBIConnector, -1, usage.SampleRefreshIntervalBIConnector)
-	cmd.Flags().Int32Var(&opts.sampleSizeBIConnector, flag.SampleSizeBIConnector, -1, usage.SampleSizeBIConnector)
+	cmd.Flags().IntVar(&opts.oplogSizeMB, flag.OplogSizeMB, 0, usage.OplogSizeMB)
+	cmd.Flags().IntVar(&opts.sampleRefreshIntervalBIConnector, flag.SampleRefreshIntervalBIConnector, -1, usage.SampleRefreshIntervalBIConnector)
+	cmd.Flags().IntVar(&opts.sampleSizeBIConnector, flag.SampleSizeBIConnector, -1, usage.SampleSizeBIConnector)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

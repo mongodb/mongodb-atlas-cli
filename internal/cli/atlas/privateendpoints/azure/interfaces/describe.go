@@ -44,7 +44,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplate = `ID	IP ADDRESS	STATUS	ERROR
-{{.PrivateEndpointResourceID}}	{{.PrivateEndpointIPAddress}}	{{.Status}}	{{.ErrorMessage}}
+{{.PrivateEndpointResourceId}}	{{.PrivateEndpointIPAddress}}	{{.Status}}	{{.ErrorMessage}}
 `
 
 func (opts *DescribeOpts) Run() error {

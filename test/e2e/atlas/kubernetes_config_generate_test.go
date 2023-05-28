@@ -40,7 +40,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -638,10 +638,10 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 		t.Cleanup(func() {
 			deleteAllNetworkPeers(t, cliPath, generator.projectID, gcpEntity)
 		})
-		var createdNetworkPeer mongodbatlas.Peer
+		var createdNetworkPeer atlasv2.GCPPeerVpc
 		err = json.Unmarshal(resp, &createdNetworkPeer)
 		require.NoError(t, err)
-		expectedProject.Spec.NetworkPeers[0].ContainerID = createdNetworkPeer.ContainerID
+		expectedProject.Spec.NetworkPeers[0].ContainerID = createdNetworkPeer.ContainerId
 
 		cmd = exec.Command(cliPath,
 			"kubernetes",
@@ -679,6 +679,7 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 	const region = "northeurope"
 	newPrivateEndpoint := atlasV1.PrivateEndpoint{
 		Provider: provider.ProviderAzure,
+		Region:   "EUROPE_NORTH",
 	}
 	expectedProject.Spec.PrivateEndpoints = []atlasV1.PrivateEndpoint{
 		newPrivateEndpoint,
@@ -699,10 +700,10 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 		t.Cleanup(func() {
 			deleteAllPrivateEndpoints(t, cliPath, generator.projectID, azureEntity)
 		})
-		var createdNetworkPeer mongodbatlas.PrivateEndpointConnection
+		var createdNetworkPeer atlasv2.AzurePrivateLinkConnection
 		err = json.Unmarshal(resp, &createdNetworkPeer)
 		require.NoError(t, err)
-		expectedProject.Spec.PrivateEndpoints[0].ID = createdNetworkPeer.ID
+		expectedProject.Spec.PrivateEndpoints[0].ID = createdNetworkPeer.GetId()
 
 		cmd = exec.Command(cliPath,
 			"kubernetes",

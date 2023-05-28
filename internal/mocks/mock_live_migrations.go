@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockLiveMigrationCreator is a mock of LiveMigrationCreator interface.
@@ -35,10 +35,10 @@ func (m *MockLiveMigrationCreator) EXPECT() *MockLiveMigrationCreatorMockRecorde
 }
 
 // LiveMigrationCreate mocks base method.
-func (m *MockLiveMigrationCreator) LiveMigrationCreate(arg0 string, arg1 *mongodbatlasv2.LiveMigrationRequest) (*mongodbatlasv2.LiveMigrationResponse, error) {
+func (m *MockLiveMigrationCreator) LiveMigrationCreate(arg0 string, arg1 *admin.LiveMigrationRequest) (*admin.LiveMigrationResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "LiveMigrationCreate", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.LiveMigrationResponse)
+	ret0, _ := ret[0].(*admin.LiveMigrationResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockLiveMigrationDescriber) EXPECT() *MockLiveMigrationDescriberMockRec
 }
 
 // LiveMigrationDescribe mocks base method.
-func (m *MockLiveMigrationDescriber) LiveMigrationDescribe(arg0, arg1 string) (*mongodbatlasv2.LiveMigrationResponse, error) {
+func (m *MockLiveMigrationDescriber) LiveMigrationDescribe(arg0, arg1 string) (*admin.LiveMigrationResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "LiveMigrationDescribe", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.LiveMigrationResponse)
+	ret0, _ := ret[0].(*admin.LiveMigrationResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type CreateOpts struct {
@@ -35,7 +35,7 @@ type CreateOpts struct {
 	store           store.SnapshotsCreator
 	clusterName     string
 	desc            string
-	retentionInDays int32
+	retentionInDays int
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -96,7 +96,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.SnapshotDescription)
-	cmd.Flags().Int32Var(&opts.retentionInDays, flag.Retention, 1, usage.RetentionInDays)
+	cmd.Flags().IntVar(&opts.retentionInDays, flag.Retention, 1, usage.RetentionInDays)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

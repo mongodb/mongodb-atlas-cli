@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type CreateOpts struct {
@@ -37,7 +37,7 @@ type CreateOpts struct {
 	collection   string
 	dateField    string
 	dateFormat   string
-	archiveAfter float64
+	archiveAfter int
 	partitions   []string
 	store        store.OnlineArchiveCreator
 }
@@ -71,7 +71,7 @@ func (opts *CreateOpts) newOnlineArchive() *atlasv2.OnlineArchive {
 			DateCriteria: &atlasv2.DateCriteria{
 				DateField:       &opts.dateField,
 				DateFormat:      &opts.dateFormat,
-				ExpireAfterDays: pointer.Get(int32(opts.archiveAfter)),
+				ExpireAfterDays: pointer.Get(opts.archiveAfter),
 			},
 		},
 		DbName:          &opts.dbName,
@@ -87,10 +87,9 @@ const (
 func (opts *CreateOpts) partitionFields() []atlasv2.PartitionField {
 	fields := make([]atlasv2.PartitionField, len(opts.partitions))
 	for i, p := range opts.partitions {
-		order := float64(i)
 		fields[i] = atlasv2.PartitionField{
 			FieldName: p,
-			Order:     int32(order),
+			Order:     i,
 		}
 	}
 	return fields
@@ -133,7 +132,7 @@ To learn more about online archives, see https://www.mongodb.com/docs/atlas/onli
 	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVar(&opts.dateField, flag.DateField, "", usage.DateField)
 	cmd.Flags().StringVar(&opts.dateFormat, flag.DateFormat, "ISODATE", usage.DateFormat)
-	cmd.Flags().Float64Var(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
+	cmd.Flags().IntVar(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
 	cmd.Flags().StringSliceVar(&opts.partitions, flag.Partition, nil, usage.PartitionFields)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

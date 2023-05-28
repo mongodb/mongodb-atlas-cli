@@ -14,8 +14,8 @@
 package atlas
 
 import (
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_organization_invitations.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationInvitationLister,OrganizationInvitationDeleter,OrganizationInvitationDescriber,OrganizationInvitationUpdater,OrganizationInviter
@@ -70,11 +70,12 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 			TeamIds: invitation.TeamIDs,
 		}
 
-		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID, invitationID).OrganizationInvitationUpdateRequest(invitationRequest).Execute()
+		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID,
+			invitationID, &invitationRequest).Execute()
 		return result, err
 	}
 	invitationRequest := mapInvitation(invitation)
-	result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitation(s.ctx, orgID).OrganizationInvitationRequest(invitationRequest).Execute()
+	result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitation(s.ctx, orgID, &invitationRequest).Execute()
 
 	return result, err
 }
@@ -82,7 +83,7 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 // InviteUser encapsulates the logic to manage different cloud providers.
 func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (interface{}, error) {
 	invitationRequest := mapInvitation(invitation)
-	result, _, err := s.clientv2.OrganizationsApi.CreateOrganizationInvitation(s.ctx, orgID).OrganizationInvitationRequest(invitationRequest).Execute()
+	result, _, err := s.clientv2.OrganizationsApi.CreateOrganizationInvitation(s.ctx, orgID, &invitationRequest).Execute()
 
 	return result, err
 }

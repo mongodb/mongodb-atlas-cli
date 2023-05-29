@@ -112,6 +112,6 @@ func TestCreateBuilder(t *testing.T) {
 		CreateBuilder(),
 		0,
 		[]string{flag.Provider, flag.Region, flag.Members, flag.Tier, flag.DiskSizeGB, flag.MDBVersion, flag.Backup,
-			flag.File, flag.TypeFlag, flag.Shards, flag.ProjectID, flag.Output, flag.EnableTerminationProtection},
+			flag.File, flag.TypeFlag, flag.Shards, flag.ProjectID, flag.Output, flag.EnableTerminationProtection, flag.Tag},
 	)
 }

@@ -346,4 +346,5 @@ const (
 	Transform                                 = "transform"                                 // Transform flag
 	Pipeline                                  = "pipeline"                                  // Pipeline flag
 	CompletedAfter                            = "completedAfter"                            // CompletedAfter flag
+	Tag                                       = "tag"                                       // Tag flag
 )

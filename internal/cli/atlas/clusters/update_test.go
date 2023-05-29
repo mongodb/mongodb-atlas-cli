@@ -118,6 +118,6 @@ func TestUpdateBuilder(t *testing.T) {
 		0,
 		[]string{flag.Tier, flag.DiskSizeGB, flag.MDBVersion,
 			flag.File, flag.EnableTerminationProtection, flag.DisableTerminationProtection,
-			flag.ProjectID, flag.Output},
+			flag.Tag, flag.ProjectID, flag.Output},
 	)
 }

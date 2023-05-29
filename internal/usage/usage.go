@@ -426,4 +426,6 @@ dbName and collection are required only for built-in roles.`
 	PipelineFilename                          = "Name of the JSON data lake pipeline configuration file to use."
 	Pipeline                                  = "Name of the Data lake pipeline."
 	CompletedAfter                            = "Date filter of which the backup snapshots where completed. Format must be YYYY-MM-DD"
+	Tag                                       = "Collection of key-value pairs that categorizes the cluster."
+	UpdateTag                                 = Tag + " This will replace existing tags."
 )

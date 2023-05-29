@@ -58,6 +58,7 @@ func TestAcknowledgeOpts_Run(t *testing.T) {
 				alertID: "533dc40ae4b00835ff81eaee",
 				comment: "Test",
 				store:   mockStore,
+				until:   "2123-06-30T13:13:09+01:00",
 			},
 			wantErr: false,
 		},
@@ -86,7 +87,7 @@ func TestAcknowledgeOpts_Run(t *testing.T) {
 		opts := tt.opts
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
-			ackReq := opts.newAcknowledgeRequest()
+			ackReq, _ := opts.newAcknowledgeRequest()
 			if wantErr {
 				mockStore.
 					EXPECT().

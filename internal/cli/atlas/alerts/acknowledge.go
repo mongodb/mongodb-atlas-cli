@@ -51,7 +51,11 @@ func (opts *AcknowledgeOpts) initStore(ctx context.Context) func() error {
 var ackTemplate = "Alert '{{.Id}}' acknowledged until {{.AcknowledgedUntil}}\n"
 
 func (opts *AcknowledgeOpts) Run() error {
-	body := opts.newAcknowledgeRequest()
+	body, err := opts.newAcknowledgeRequest()
+	if err != nil {
+		return err
+	}
+
 	r, err := opts.store.AcknowledgeAlert(opts.ConfigProjectID(), opts.alertID, body)
 	if err != nil {
 		return err
@@ -60,17 +64,20 @@ func (opts *AcknowledgeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *AcknowledgeOpts) newAcknowledgeRequest() *atlas.AlertViewForNdsGroup {
+func (opts *AcknowledgeOpts) newAcknowledgeRequest() (*atlas.AlertViewForNdsGroup, error) {
 	if opts.forever {
 		// To acknowledge an alert “forever”, set the field value to 100 years in the future.
 		const years = 100
 		opts.until = time.Now().AddDate(years, 1, 1).Format(time.RFC3339)
 	}
-	time, _ := time.Parse(time.RFC3339, opts.until)
+	time, err := time.Parse(time.RFC3339, opts.until)
+	if err != nil {
+		return nil, err
+	}
 	return &atlas.AlertViewForNdsGroup{
 		AcknowledgedUntil:      &time,
 		AcknowledgementComment: &opts.comment,
-	}
+	}, nil
 }
 
 // atlas alerts acknowledge <ID> --projectId projectId --forever --comment comment --until until.

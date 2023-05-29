@@ -35,18 +35,18 @@ func (m *MockAlertDescriber) EXPECT() *MockAlertDescriberMockRecorder {
 }
 
 // Alert mocks base method.
-func (m *MockAlertDescriber) Alert(arg0, arg1 string) (*admin.AlertViewForNdsGroup, error) {
+func (m *MockAlertDescriber) Alert(arg0 *admin.GetAlertApiParams) (*admin.AlertViewForNdsGroup, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Alert", arg0, arg1)
+	ret := m.ctrl.Call(m, "Alert", arg0)
 	ret0, _ := ret[0].(*admin.AlertViewForNdsGroup)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Alert indicates an expected call of Alert.
-func (mr *MockAlertDescriberMockRecorder) Alert(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockAlertDescriberMockRecorder) Alert(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Alert", reflect.TypeOf((*MockAlertDescriber)(nil).Alert), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Alert", reflect.TypeOf((*MockAlertDescriber)(nil).Alert), arg0)
 }
 
 // MockAlertLister is a mock of AlertLister interface.
@@ -73,18 +73,18 @@ func (m *MockAlertLister) EXPECT() *MockAlertListerMockRecorder {
 }
 
 // Alerts mocks base method.
-func (m *MockAlertLister) Alerts(arg0, arg1 string) (*admin.PaginatedAlert, error) {
+func (m *MockAlertLister) Alerts(arg0 *admin.ListAlertsApiParams) (*admin.PaginatedAlert, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Alerts", arg0, arg1)
+	ret := m.ctrl.Call(m, "Alerts", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedAlert)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Alerts indicates an expected call of Alerts.
-func (mr *MockAlertListerMockRecorder) Alerts(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockAlertListerMockRecorder) Alerts(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Alerts", reflect.TypeOf((*MockAlertLister)(nil).Alerts), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Alerts", reflect.TypeOf((*MockAlertLister)(nil).Alerts), arg0)
 }
 
 // MockAlertAcknowledger is a mock of AlertAcknowledger interface.
@@ -111,16 +111,16 @@ func (m *MockAlertAcknowledger) EXPECT() *MockAlertAcknowledgerMockRecorder {
 }
 
 // AcknowledgeAlert mocks base method.
-func (m *MockAlertAcknowledger) AcknowledgeAlert(arg0, arg1 string, arg2 *admin.AlertViewForNdsGroup) (*admin.AlertViewForNdsGroup, error) {
+func (m *MockAlertAcknowledger) AcknowledgeAlert(arg0 *admin.AcknowledgeAlertApiParams) (*admin.AlertViewForNdsGroup, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AcknowledgeAlert", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "AcknowledgeAlert", arg0)
 	ret0, _ := ret[0].(*admin.AlertViewForNdsGroup)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // AcknowledgeAlert indicates an expected call of AcknowledgeAlert.
-func (mr *MockAlertAcknowledgerMockRecorder) AcknowledgeAlert(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockAlertAcknowledgerMockRecorder) AcknowledgeAlert(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AcknowledgeAlert", reflect.TypeOf((*MockAlertAcknowledger)(nil).AcknowledgeAlert), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AcknowledgeAlert", reflect.TypeOf((*MockAlertAcknowledger)(nil).AcknowledgeAlert), arg0)
 }

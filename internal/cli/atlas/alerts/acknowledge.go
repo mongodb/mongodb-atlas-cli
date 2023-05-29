@@ -26,7 +26,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 type AcknowledgeOpts struct {
@@ -55,8 +55,13 @@ func (opts *AcknowledgeOpts) Run() error {
 	if err != nil {
 		return err
 	}
+	params := &admin.AcknowledgeAlertApiParams{
+		GroupId:              opts.ConfigProjectID(),
+		AlertId:              opts.alertID,
+		AlertViewForNdsGroup: body,
+	}
 
-	r, err := opts.store.AcknowledgeAlert(opts.ConfigProjectID(), opts.alertID, body)
+	r, err := opts.store.AcknowledgeAlert(params)
 	if err != nil {
 		return err
 	}
@@ -64,7 +69,7 @@ func (opts *AcknowledgeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *AcknowledgeOpts) newAcknowledgeRequest() (*atlas.AlertViewForNdsGroup, error) {
+func (opts *AcknowledgeOpts) newAcknowledgeRequest() (*admin.AlertViewForNdsGroup, error) {
 	if opts.forever {
 		// To acknowledge an alert “forever”, set the field value to 100 years in the future.
 		const years = 100
@@ -74,7 +79,7 @@ func (opts *AcknowledgeOpts) newAcknowledgeRequest() (*atlas.AlertViewForNdsGrou
 	if err != nil {
 		return nil, err
 	}
-	return &atlas.AlertViewForNdsGroup{
+	return &admin.AlertViewForNdsGroup{
 		AcknowledgedUntil:      &time,
 		AcknowledgementComment: &opts.comment,
 	}, nil

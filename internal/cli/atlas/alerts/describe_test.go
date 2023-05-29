@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestDescribeBuilder(t *testing.T) {
@@ -47,7 +47,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertDescriber(ctrl)
 
-	expected := &atlasv2.AlertViewForNdsGroup{
+	expected := &admin.AlertViewForNdsGroup{
 		Id:            pointer.Get("test"),
 		EventTypeName: pointer.Get("NO_PRIMARY"),
 		Status:        pointer.Get("test"),
@@ -88,19 +88,23 @@ func TestDescribeOpts_Run(t *testing.T) {
 	}
 	for _, tt := range tests {
 		cmd := tt.cmd
+		params := &admin.GetAlertApiParams{
+			GroupId: cmd.ProjectID,
+			AlertId: cmd.alertID,
+		}
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
 			if wantErr {
 				mockStore.
 					EXPECT().
-					Alert(cmd.ProjectID, cmd.alertID).
+					Alert(params).
 					Return(nil, errors.New("fake")).
 					Times(1)
 				assert.Error(t, cmd.Run())
 			} else {
 				mockStore.
 					EXPECT().
-					Alert(cmd.ProjectID, cmd.alertID).
+					Alert(params).
 					Return(expected, nil).
 					Times(1)
 				assert.NoError(t, cmd.Run())

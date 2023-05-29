@@ -25,6 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 type ListOpts struct {
@@ -48,7 +49,14 @@ var listTemplate = `ID	TYPE   	STATUS{{range .Results}}
 `
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.Alerts(opts.ConfigProjectID(), opts.status)
+	params := &admin.ListAlertsApiParams{
+		GroupId:      opts.ConfigProjectID(),
+		ItemsPerPage: &opts.ItemsPerPage,
+		PageNum:      &opts.PageNum,
+		Status:       &opts.status,
+	}
+
+	r, err := opts.store.Alerts(params)
 
 	if err != nil {
 		return err

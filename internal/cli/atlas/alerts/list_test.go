@@ -25,16 +25,16 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertLister(ctrl)
 
-	expected := &atlasv2.PaginatedAlert{
+	expected := &admin.PaginatedAlert{
 		Links: nil,
-		Results: []atlasv2.AlertViewForNdsGroup{
+		Results: []admin.AlertViewForNdsGroup{
 			{
 				Id:            pointer.Get("test"),
 				EventTypeName: pointer.Get("NO_PRIMARY"),
@@ -55,9 +55,16 @@ func TestList_Run(t *testing.T) {
 		},
 	}
 
+	params := &admin.ListAlertsApiParams{
+		GroupId:      listOpts.ProjectID,
+		ItemsPerPage: &listOpts.ItemsPerPage,
+		PageNum:      &listOpts.PageNum,
+		Status:       &listOpts.status,
+	}
+
 	mockStore.
 		EXPECT().
-		Alerts(listOpts.ProjectID, listOpts.status).
+		Alerts(params).
 		Return(expected, nil).
 		Times(1)
 

@@ -84,7 +84,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.GlobalAPIKeyRoles)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.GlobalAPIKeyRoles+usage.UpdateWarning)
 	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.APIKeyDescription)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

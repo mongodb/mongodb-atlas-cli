@@ -126,8 +126,8 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.encryption, flag.Encryption, false, usage.Encryption)
 	cmd.Flags().BoolVar(&opts.ssl, flag.SSL, false, usage.SSL)
 	cmd.Flags().StringVar(&opts.syncSource, flag.SyncSource, "", usage.SyncSource)
-	cmd.Flags().StringSliceVar(&opts.excludedNamespace, flag.ExcludedNamespace, []string{}, usage.ExcludedNamespace)
-	cmd.Flags().StringSliceVar(&opts.includedNamespace, flag.IncludedNamespace, []string{}, usage.IncludedNamespace)
+	cmd.Flags().StringSliceVar(&opts.excludedNamespace, flag.ExcludedNamespace, []string{}, usage.ExcludedNamespace+usage.UpdateWarning)
+	cmd.Flags().StringSliceVar(&opts.includedNamespace, flag.IncludedNamespace, []string{}, usage.IncludedNamespace+usage.UpdateWarning)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

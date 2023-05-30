@@ -24,8 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestAzureOpts_Run(t *testing.T) {
@@ -53,7 +52,7 @@ func TestAzureOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			CreatePeeringConnection(opts.ProjectID, request).
-			Return(&mongodbatlas.Peer{}, nil).
+			Return(&atlasv2.AzurePeerNetwork{}, nil).
 			Times(1)
 		if err := opts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
@@ -76,7 +75,7 @@ func TestAzureOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			CreatePeeringConnection(opts.ProjectID, request).
-			Return(&mongodbatlas.Peer{}, nil).
+			Return(&atlasv2.AzurePeerNetwork{}, nil).
 			Times(1)
 		if err := opts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)

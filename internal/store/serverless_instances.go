@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServerlessInstanceLister,ServerlessInstanceDescriber,ServerlessInstanceDeleter,ServerlessInstanceCreator,ServerlessInstanceUpdater
@@ -50,8 +50,8 @@ func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.ServerlessInstancesApi.ListServerlessInstances(s.ctx, projectID).
-			ItemsPerPage(int32(listOps.ItemsPerPage)).
-			PageNum(int32(listOps.PageNum)).
+			ItemsPerPage(listOps.ItemsPerPage).
+			PageNum(listOps.PageNum).
 			Execute()
 
 		return result, err
@@ -97,8 +97,7 @@ func (s *Store) DeleteServerlessInstance(projectID, name string) error {
 func (s *Store) CreateServerlessInstance(projectID string, cluster *atlasv2.ServerlessInstanceDescriptionCreate) (*atlasv2.ServerlessInstanceDescription, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.ServerlessInstancesApi.CreateServerlessInstance(s.ctx, projectID).
-			ServerlessInstanceDescriptionCreate(*cluster).
+		result, _, err := s.clientv2.ServerlessInstancesApi.CreateServerlessInstance(s.ctx, projectID, cluster).
 			Execute()
 		return result, err
 	default:
@@ -110,8 +109,7 @@ func (s *Store) CreateServerlessInstance(projectID string, cluster *atlasv2.Serv
 func (s *Store) UpdateServerlessInstance(projectID string, instanceName string, req *atlasv2.ServerlessInstanceDescriptionUpdate) (*atlasv2.ServerlessInstanceDescription, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.ServerlessInstancesApi.UpdateServerlessInstance(s.ctx, projectID, instanceName).
-			ServerlessInstanceDescriptionUpdate(*req).
+		result, _, err := s.clientv2.ServerlessInstancesApi.UpdateServerlessInstance(s.ctx, projectID, instanceName, req).
 			Execute()
 
 		return result, err

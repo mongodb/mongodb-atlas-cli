@@ -21,8 +21,8 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 type MetricsOpts struct {

@@ -12,7 +12,7 @@ atlas dataLakePipelines availableSnapshots
    :depth: 1
    :class: singlecol
 
- Manage available backup snapshots for data lake pipelines.
+Manage available backup snapshots for data lake pipelines.
 
 Options
 -------

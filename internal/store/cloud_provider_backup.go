@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportJobsDescriber,ExportJobsCreator,ExportBucketsLister,ExportBucketsCreator,ExportBucketsDeleter,ExportBucketsDescriber,ScheduleDescriber,ScheduleDescriberUpdater,ScheduleDeleter
@@ -99,7 +99,7 @@ func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptio
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.CloudBackupsApi.ListBackupRestoreJobs(s.ctx, projectID, clusterName)
 		if opts != nil {
-			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
 		result, _, err := res.Execute()
 		return result, err
@@ -123,7 +123,7 @@ func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlasv2.DiskB
 func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlasv2.DiskBackupRestoreJob) (*atlasv2.DiskBackupRestoreJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.CloudBackupsApi.CreateBackupRestoreJob(s.ctx, projectID, clusterName).DiskBackupRestoreJob(*request).Execute()
+		result, _, err := s.clientv2.CloudBackupsApi.CreateBackupRestoreJob(s.ctx, projectID, clusterName, request).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -134,7 +134,7 @@ func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlasv
 func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlasv2.DiskBackupOnDemandSnapshotRequest) (*atlasv2.DiskBackupSnapshot, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.CloudBackupsApi.TakeSnapshot(s.ctx, projectID, clusterName).DiskBackupOnDemandSnapshotRequest(*request).Execute()
+		result, _, err := s.clientv2.CloudBackupsApi.TakeSnapshot(s.ctx, projectID, clusterName, request).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -147,7 +147,7 @@ func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.CloudBackupsApi.ListReplicaSetBackups(s.ctx, projectID, clusterName)
 		if opts != nil {
-			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
 		result, _, err := res.Execute()
 		return result, err
@@ -184,7 +184,7 @@ func (s *Store) ExportJobs(projectID, clusterName string, opts *atlas.ListOption
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.CloudBackupsApi.ListBackupExportJobs(s.ctx, projectID, clusterName)
 		if opts != nil {
-			res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
 		result, _, err := res.Execute()
 		return result, err
@@ -208,7 +208,7 @@ func (s *Store) ExportJob(projectID, clusterName, bucketID string) (*atlasv2.Dis
 func (s *Store) CreateExportJob(projectID, clusterName string, job *atlasv2.DiskBackupExportJobRequest) (*atlasv2.DiskBackupExportJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.CloudBackupsApi.CreateBackupExportJob(s.ctx, projectID, clusterName).DiskBackupExportJobRequest(*job).Execute()
+		result, _, err := s.clientv2.CloudBackupsApi.CreateBackupExportJob(s.ctx, projectID, clusterName, job).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -221,7 +221,7 @@ func (s *Store) ExportBuckets(projectID string, opts *atlas.ListOptions) (*atlas
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.CloudBackupsApi.ListExportBuckets(s.ctx, projectID)
 		if opts != nil {
-			res = res.ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum))
+			res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
 		}
 		result, _, err := res.Execute()
 		return result, err
@@ -234,7 +234,7 @@ func (s *Store) ExportBuckets(projectID string, opts *atlas.ListOptions) (*atlas
 func (s *Store) CreateExportBucket(projectID string, bucket *atlasv2.DiskBackupSnapshotAWSExportBucket) (*atlasv2.DiskBackupSnapshotAWSExportBucket, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.CloudBackupsApi.CreateExportBucket(s.ctx, projectID).DiskBackupSnapshotAWSExportBucket(*bucket).Execute()
+		result, _, err := s.clientv2.CloudBackupsApi.CreateExportBucket(s.ctx, projectID, bucket).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -278,7 +278,7 @@ func (s *Store) DescribeSchedule(projectID, clusterName string) (*atlasv2.DiskBa
 func (s *Store) UpdateSchedule(projectID, clusterName string, policy *atlasv2.DiskBackupSnapshotSchedule) (*atlasv2.DiskBackupSnapshotSchedule, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.CloudBackupsApi.UpdateBackupSchedule(s.ctx, projectID, clusterName).DiskBackupSnapshotSchedule(*policy).Execute()
+		result, _, err := s.clientv2.CloudBackupsApi.UpdateBackupSchedule(s.ctx, projectID, clusterName, policy).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

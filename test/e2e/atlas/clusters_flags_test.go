@@ -25,8 +25,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const writeConcern = "majority"

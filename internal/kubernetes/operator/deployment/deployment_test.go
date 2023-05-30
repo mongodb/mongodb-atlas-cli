@@ -33,8 +33,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -133,17 +133,17 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			FailIndexKeyTooLong:              pointer.Get(true),
 			JavascriptEnabled:                pointer.Get(true),
 			NoTableScan:                      pointer.Get(true),
-			SampleSizeBIConnector:            pointer.Get[int32](10),
-			SampleRefreshIntervalBIConnector: pointer.Get[int32](10),
+			SampleSizeBIConnector:            pointer.Get[int](10),
+			SampleRefreshIntervalBIConnector: pointer.Get[int](10),
 		}
-		processArgs.OplogSizeMB.Set(pointer.Get(int32(10)))
+		processArgs.OplogSizeMB.Set(pointer.Get(10))
 		processArgs.OplogMinRetentionHours.Set(pointer.Get(float64(10.1)))
 		backupSchedule := &atlasv2.DiskBackupSnapshotSchedule{
 			ClusterId:             pointer.Get("testClusterID"),
 			ClusterName:           pointer.Get(clusterName),
-			ReferenceHourOfDay:    pointer.Get[int32](5),
-			ReferenceMinuteOfHour: pointer.Get[int32](5),
-			RestoreWindowDays:     pointer.Get[int32](5),
+			ReferenceHourOfDay:    pointer.Get[int](5),
+			ReferenceMinuteOfHour: pointer.Get[int](5),
+			RestoreWindowDays:     pointer.Get[int](5),
 			UpdateSnapshots:       pointer.Get(true),
 			NextSnapshot:          pointer.Get(time.Now()),
 			Policies: []atlasv2.Policy{
@@ -337,9 +337,9 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					Items: []atlasV1.AtlasBackupPolicyItem{
 						{
 							FrequencyType:     backupSchedule.Policies[0].PolicyItems[0].GetFrequencyType(),
-							FrequencyInterval: int(backupSchedule.Policies[0].PolicyItems[0].GetFrequencyInterval()),
+							FrequencyInterval: backupSchedule.Policies[0].PolicyItems[0].GetFrequencyInterval(),
 							RetentionUnit:     backupSchedule.Policies[0].PolicyItems[0].GetRetentionUnit(),
-							RetentionValue:    int(backupSchedule.Policies[0].PolicyItems[0].GetRetentionValue()),
+							RetentionValue:    backupSchedule.Policies[0].PolicyItems[0].GetRetentionValue(),
 						},
 					},
 				},

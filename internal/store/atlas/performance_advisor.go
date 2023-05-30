@@ -15,7 +15,7 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_performance_advisor.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas PerformanceAdvisorNamespacesLister,PerformanceAdvisorSlowQueriesLister,PerformanceAdvisorIndexesLister,PerformanceAdvisorSlowOperationThresholdEnabler,PerformanceAdvisorSlowOperationThresholdDisabler

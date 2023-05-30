@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -42,7 +42,7 @@ func TestListOpts_Run(t *testing.T) {
 			FrequencyInterval: 1,
 			FrequencyType:     "daily",
 			RetentionUnit:     "months",
-			RetentionValue:    int32(1),
+			RetentionValue:    1,
 		},
 	}
 

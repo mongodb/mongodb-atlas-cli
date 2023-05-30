@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (atlas && onlinearchive)
 
 package atlas_test
@@ -25,7 +26,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestOnlineArchives(t *testing.T) {
@@ -69,6 +70,10 @@ func TestOnlineArchives(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		deleteOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
+
+	t.Run("Watch", func(t *testing.T) {
+		watchOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
+	})
 }
 
 func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
@@ -89,6 +94,20 @@ func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 	}
 	expected := fmt.Sprintf("Archive '%s' deleted\n", archiveID)
 	assert.Equal(t, string(resp), expected)
+}
+
+func watchOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		clustersEntity,
+		onlineArchiveEntity,
+		"watch",
+		archiveID,
+		"--clusterName", clusterName,
+		"--projectId", projectID,
+	)
+	cmd.Env = os.Environ()
+	_ = cmd.Run()
 }
 
 func startOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
@@ -124,7 +143,7 @@ func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	// online archive never reaches goal state as the db and collection must exists
+	// online archive never reaches goal state as the db and collection must exist
 	const expectedError = "ONLINE_ARCHIVE_MUST_BE_ACTIVE_TO_PAUSE"
 	if err != nil && !strings.Contains(string(resp), expectedError) {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -133,7 +152,7 @@ func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 
 func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	const expireAfterDays = int32(4)
+	const expireAfterDays = 4
 	expireAfterDaysStr := fmt.Sprintf("%d", expireAfterDays)
 	cmd := exec.Command(cliPath,
 		clustersEntity,

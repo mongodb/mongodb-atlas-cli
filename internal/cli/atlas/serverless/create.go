@@ -27,8 +27,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const providerName = "SERVERLESS"

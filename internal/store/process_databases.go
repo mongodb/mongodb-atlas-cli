@@ -19,8 +19,8 @@ import (
 	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../mocks/mock_process_databases.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessDatabaseLister
@@ -35,7 +35,7 @@ func (s *Store) ProcessDatabases(groupID, host string, port int, opts *atlas.Lis
 	case config.CloudService, config.CloudGovService:
 		process := host + ":" + strconv.Itoa(port)
 		result, _, err := s.clientv2.MonitoringAndLogsApi.ListDatabases(s.ctx, groupID, process).
-			PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage)).Execute()
+			PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

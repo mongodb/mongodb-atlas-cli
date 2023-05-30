@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockPipelineRunsLister is a mock of PipelineRunsLister interface.
@@ -35,10 +35,10 @@ func (m *MockPipelineRunsLister) EXPECT() *MockPipelineRunsListerMockRecorder {
 }
 
 // PipelineRuns mocks base method.
-func (m *MockPipelineRunsLister) PipelineRuns(arg0, arg1 string) (*mongodbatlasv2.PaginatedPipelineRun, error) {
+func (m *MockPipelineRunsLister) PipelineRuns(arg0, arg1 string) (*admin.PaginatedPipelineRun, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PipelineRuns", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlasv2.PaginatedPipelineRun)
+	ret0, _ := ret[0].(*admin.PaginatedPipelineRun)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockPipelineRunsDescriber) EXPECT() *MockPipelineRunsDescriberMockRecor
 }
 
 // PipelineRun mocks base method.
-func (m *MockPipelineRunsDescriber) PipelineRun(arg0, arg1, arg2 string) (*mongodbatlasv2.IngestionPipelineRun, error) {
+func (m *MockPipelineRunsDescriber) PipelineRun(arg0, arg1, arg2 string) (*admin.IngestionPipelineRun, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PipelineRun", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlasv2.IngestionPipelineRun)
+	ret0, _ := ret[0].(*admin.IngestionPipelineRun)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

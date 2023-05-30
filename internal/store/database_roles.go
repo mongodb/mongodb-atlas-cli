@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_database_roles.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store DatabaseRoleLister,DatabaseRoleCreator,DatabaseRoleDeleter,DatabaseRoleUpdater,DatabaseRoleDescriber
@@ -48,7 +48,7 @@ type DatabaseRoleDescriber interface {
 func (s *Store) CreateDatabaseRole(groupID string, role *atlasv2.CustomDBRole) (*atlasv2.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.CustomDatabaseRolesApi.CreateCustomDatabaseRole(s.ctx, groupID).CustomDBRole(*role).Execute()
+		result, _, err := s.clientv2.CustomDatabaseRolesApi.CreateCustomDatabaseRole(s.ctx, groupID, role).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -85,7 +85,7 @@ func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlasv2.Custo
 			Actions:        role.Actions,
 			InheritedRoles: role.InheritedRoles,
 		}
-		result, _, err := s.clientv2.CustomDatabaseRolesApi.UpdateCustomDatabaseRole(s.ctx, groupID, roleName).UpdateCustomDBRole(dbRole).Execute()
+		result, _, err := s.clientv2.CustomDatabaseRolesApi.UpdateCustomDatabaseRole(s.ctx, groupID, roleName, &dbRole).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

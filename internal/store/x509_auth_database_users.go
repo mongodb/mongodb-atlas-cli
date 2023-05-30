@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store X509CertificateConfDescriber,X509CertificateConfSaver,X509CertificateConfDisabler
@@ -61,7 +61,7 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlasv2.U
 				Cas: &certificate,
 			},
 		}
-		result, _, err := s.clientv2.LDAPConfigurationApi.SaveLDAPConfiguration(s.ctx, projectID).UserSecurity(userCertificate).Execute()
+		result, _, err := s.clientv2.LDAPConfigurationApi.SaveLDAPConfiguration(s.ctx, projectID, &userCertificate).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

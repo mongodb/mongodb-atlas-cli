@@ -40,7 +40,7 @@ require (
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
 	go.mongodb.org/atlas v0.25.1-0.20230522162956-d4f376b72f78
-	go.mongodb.org/atlas-sdk v0.3.0
+	go.mongodb.org/atlas-sdk v0.3.1-0.20230529214006-03805e98d970
 	go.mongodb.org/mongo-driver v1.11.4
 	go.mongodb.org/ops-manager v0.50.0
 	golang.org/x/crypto v0.9.0

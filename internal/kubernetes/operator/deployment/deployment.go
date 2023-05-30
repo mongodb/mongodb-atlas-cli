@@ -375,7 +375,6 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 				priority = rc.AzureRegionConfig.Priority
 				providerName = rc.AzureRegionConfig.GetProviderName()
 				regionName = rc.AzureRegionConfig.GetRegionName()
-
 			} else if rc.GCPRegionConfig != nil {
 				configAnalyticsSpecs = rc.GCPRegionConfig.AnalyticsSpecs
 				configElectableSpecs = rc.GCPRegionConfig.ElectableSpecs
@@ -387,6 +386,9 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 			} else if rc.TenantRegionConfig != nil {
 				configElectableSpecs = rc.TenantRegionConfig.ElectableSpecs
 				backingProviderName = rc.TenantRegionConfig.GetBackingProviderName()
+				priority = rc.TenantRegionConfig.Priority
+				providerName = rc.TenantRegionConfig.GetProviderName()
+				regionName = rc.TenantRegionConfig.GetRegionName()
 			}
 
 			var analyticsSpecs *atlasV1.Specs

@@ -17,6 +17,7 @@ package events
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -25,7 +26,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 type orgListOpts struct {
@@ -44,16 +45,34 @@ func (opts *orgListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *orgListOpts) Run() error {
-	listOpts := opts.newEventListOptions()
-
-	var r *atlas.EventResponse
+	var r interface{}
 	var err error
-	r, err = opts.store.OrganizationEvents(opts.ConfigOrgID(), listOpts)
+	listEventsAPIParams := opts.NewOrgListOptions()
+	r, err = opts.store.OrganizationEvents(&listEventsAPIParams)
 	if err != nil {
 		return err
 	}
 
 	return opts.Print(r)
+}
+
+func (opts *orgListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiParams {
+	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
+	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
+
+	var eventType *[]string
+	if len(opts.EventType) > 0 {
+		eventType = &opts.EventType
+	}
+	listEventsAPIParams := admin.ListOrganizationEventsApiParams{
+		OrgId:        opts.ConfigOrgID(),
+		ItemsPerPage: &opts.ItemsPerPage,
+		PageNum:      &opts.PageNum,
+		EventType:    eventType,
+		MaxDate:      &minDate,
+		MinDate:      &maxDate,
+	}
+	return listEventsAPIParams
 }
 
 // OrgListBuilder

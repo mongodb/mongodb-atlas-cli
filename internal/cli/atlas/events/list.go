@@ -16,6 +16,7 @@ package events
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -24,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 type EventListOpts struct {
@@ -32,18 +33,6 @@ type EventListOpts struct {
 	EventType []string
 	MinDate   string
 	MaxDate   string
-}
-
-func (opts *EventListOpts) newEventListOptions() *atlas.EventListOptions {
-	return &atlas.EventListOptions{
-		ListOptions: atlas.ListOptions{
-			PageNum:      opts.PageNum,
-			ItemsPerPage: opts.ItemsPerPage,
-		},
-		EventType: opts.EventType,
-		MinDate:   opts.MinDate,
-		MaxDate:   opts.MaxDate,
-	}
 }
 
 type ListOpts struct {
@@ -63,25 +52,63 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	TYPE	CREATED{{range .Results}}
-{{.ID}}	{{.EventTypeName}}	{{.Created}}{{end}}
+{{.Id}}	{{.EventTypeName}}	{{.Created}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.newEventListOptions()
-
-	var r *atlas.EventResponse
+	var r interface{}
 	var err error
 
 	if opts.orgID != "" {
-		r, err = opts.store.OrganizationEvents(opts.orgID, listOpts)
+		listEventsAPIParams := opts.NewOrgListOptions()
+		r, err = opts.store.OrganizationEvents(&listEventsAPIParams)
 	} else if opts.projectID != "" {
-		r, err = opts.store.ProjectEvents(opts.projectID, listOpts)
+		listEventsAPIParams := opts.NewProjectListOptions()
+		r, err = opts.store.ProjectEvents(&listEventsAPIParams)
 	}
 	if err != nil {
 		return err
 	}
 
 	return opts.Print(r)
+}
+
+func (opts *ListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiParams {
+	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
+	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
+
+	var eventType *[]string
+	if len(opts.EventType) > 0 {
+		eventType = &opts.EventType
+	}
+	listEventsAPIParams := admin.ListOrganizationEventsApiParams{
+		OrgId:        opts.orgID,
+		ItemsPerPage: &opts.ItemsPerPage,
+		PageNum:      &opts.PageNum,
+		EventType:    eventType,
+		IncludeRaw:   new(bool),
+		MaxDate:      &minDate,
+		MinDate:      &maxDate,
+	}
+	return listEventsAPIParams
+}
+
+func (opts *ListOpts) NewProjectListOptions() admin.ListProjectEventsApiParams {
+	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
+	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
+	var eventType *[]string
+	if len(opts.EventType) > 0 {
+		eventType = &opts.EventType
+	}
+	listEventsAPIParams := admin.ListProjectEventsApiParams{
+		GroupId:      opts.projectID,
+		ItemsPerPage: &opts.ItemsPerPage,
+		PageNum:      &opts.PageNum,
+		EventType:    eventType,
+		MaxDate:      &minDate,
+		MinDate:      &maxDate,
+	}
+	return listEventsAPIParams
 }
 
 // ListBuilder

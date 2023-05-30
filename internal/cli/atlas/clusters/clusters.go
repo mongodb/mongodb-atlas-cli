@@ -135,22 +135,23 @@ func RemoveReadOnlyAttributes(out *atlasv2.ClusterDescriptionV15) {
 	out.MongoDBVersion = nil
 	out.ConnectionStrings = nil
 	isTenant := false
-	for _, spec := range out.ReplicationSpecs {
-		spec.Id = nil
-		for _, c := range spec.RegionConfigs {
+
+	for i, spec := range out.ReplicationSpecs {
+		out.ReplicationSpecs[i].Id = nil
+		for j, c := range spec.RegionConfigs {
 			providerName := getProviderName(&c)
 			if providerName == tenant {
-				c.TenantRegionConfig.ProviderName = pointer.Get(tenant)
+				out.ReplicationSpecs[i].RegionConfigs[j].TenantRegionConfig.ProviderName = pointer.Get(tenant)
 				isTenant = true
 				break
 			} else if providerName == "AWS" {
-				c.AWSRegionConfig.ProviderName = pointer.Get("AWS")
+				out.ReplicationSpecs[i].RegionConfigs[j].AWSRegionConfig.ProviderName = pointer.Get("AWS")
 				break
 			} else if providerName == "GCP" {
-				c.GCPRegionConfig.ProviderName = pointer.Get("GCP")
+				out.ReplicationSpecs[i].RegionConfigs[j].GCPRegionConfig.ProviderName = pointer.Get("GCP")
 				break
 			} else if providerName == "Azure" {
-				c.AzureRegionConfig.ProviderName = pointer.Get("Azure")
+				out.ReplicationSpecs[i].RegionConfigs[j].AzureRegionConfig.ProviderName = pointer.Get("Azure")
 				break
 			}
 		}

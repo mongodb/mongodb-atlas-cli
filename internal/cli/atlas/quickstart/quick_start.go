@@ -293,12 +293,12 @@ func (opts *Opts) Run() error {
 	}
 
 	if !mongosh.Detect() {
-		fmt.Printf(quickstartTemplateMongoshNotDetected, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
+		fmt.Printf(quickstartTemplateMongoshNotDetected, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.GetStandardSrv())
 
 		return nil
 	}
 
-	fmt.Printf(quickstartTemplateMongoshDetected, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
+	fmt.Printf(quickstartTemplateMongoshDetected, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.GetStandardSrv())
 	return mongosh.Run(opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.GetStandardSrv())
 }
 

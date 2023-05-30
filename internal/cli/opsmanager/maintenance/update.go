@@ -91,7 +91,7 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.startDate, flag.StartDate, "", usage.StartDate)
 	cmd.Flags().StringVar(&opts.endDate, flag.EndDate, "", usage.EndDate)
-	cmd.Flags().StringSliceVar(&opts.alertType, flag.AlertType, []string{}, usage.AlertType+usage.UpdateWarning)
+	cmd.Flags().StringSliceVar(&opts.alertType, flag.AlertType, []string{}, usage.AlertType)
 	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.MaintenanceDescription)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

@@ -104,7 +104,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.Label, flag.Label, []string{}, usage.Label+usage.UpdateWarning)
+	cmd.Flags().StringSliceVar(&opts.Label, flag.Label, []string{}, usage.Label)
 	cmd.Flags().BoolVar(&opts.Assignment, flag.Assignment, false, usage.BlockstoreAssignment)
 	cmd.Flags().BoolVar(&opts.EncryptedCredentials, flag.EncryptedCredentials, false, usage.EncryptedCredentials)
 	cmd.Flags().Int64Var(&opts.LoadFactor, flag.LoadFactor, 0, usage.LoadFactor)

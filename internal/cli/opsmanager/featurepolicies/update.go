@@ -118,7 +118,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.policy, flag.Policy, []string{}, usage.Policy+usage.UpdateWarning)
+	cmd.Flags().StringSliceVar(&opts.policy, flag.Policy, []string{}, usage.Policy)
 	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.ExternalSystemName)
 	cmd.Flags().StringVar(&opts.systemID, flag.SystemID, "", usage.SystemID)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.PoliciesFilename)

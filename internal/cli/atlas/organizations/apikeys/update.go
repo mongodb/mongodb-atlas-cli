@@ -95,7 +95,7 @@ To view possible values for the apiKeyId argument, run %s organizations apiKeys 
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles+usage.UpdateWarning)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles)
 	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.APIKeyDescription)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)

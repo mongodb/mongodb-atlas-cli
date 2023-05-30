@@ -126,7 +126,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.analyzer, flag.Analyzer, defaultAnalyzer, usage.Analyzer)
 	cmd.Flags().StringVar(&opts.searchAnalyzer, flag.SearchAnalyzer, defaultAnalyzer, usage.SearchAnalyzer)
 	cmd.Flags().BoolVar(&opts.dynamic, flag.Dynamic, false, usage.Dynamic)
-	cmd.Flags().StringSliceVar(&opts.fields, flag.Field, nil, usage.SearchFields+usage.UpdateWarning)
+	cmd.Flags().StringSliceVar(&opts.fields, flag.Field, nil, usage.SearchFields)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.SearchFilename)
 
 	_ = cmd.MarkFlagFilename(flag.File)

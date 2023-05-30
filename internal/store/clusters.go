@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -34,11 +34,11 @@ type AtlasClusterDescriber interface {
 }
 
 type AtlasClusterConfigurationOptionsDescriber interface {
-	AtlasClusterConfigurationOptions(string, string) (*atlasv2.ClusterDescriptionProcessArgs, error)
+	AtlasClusterConfigurationOptions(string, string) (*admin.ClusterDescriptionProcessArgs, error)
 }
 
 type AtlasClusterConfigurationOptionsUpdater interface {
-	UpdateAtlasClusterConfigurationOptions(string, string, *atlasv2.ClusterDescriptionProcessArgs) (*atlasv2.ClusterDescriptionProcessArgs, error)
+	UpdateAtlasClusterConfigurationOptions(string, string, *admin.ClusterDescriptionProcessArgs) (*admin.ClusterDescriptionProcessArgs, error)
 }
 
 type OpsManagerClusterDescriber interface {
@@ -78,7 +78,7 @@ type SampleDataAdder interface {
 }
 
 type SampleDataStatusDescriber interface {
-	SampleDataStatus(string, string) (*atlasv2.SampleDatasetStatus, error)
+	SampleDataStatus(string, string) (*admin.SampleDatasetStatus, error)
 }
 
 type ClusterTester interface {
@@ -119,7 +119,7 @@ func (s *Store) AddSampleData(groupID, clusterName string) (*atlasv2.SampleDatas
 }
 
 // SampleDataStatus encapsulate the logic to manage different cloud providers.
-func (s *Store) SampleDataStatus(groupID, id string) (*atlasv2.SampleDatasetStatus, error) {
+func (s *Store) SampleDataStatus(groupID, id string) (*admin.SampleDatasetStatus, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.ClustersApi.GetSampleDatasetLoadStatus(s.ctx, groupID, id).Execute()
@@ -254,7 +254,7 @@ func (s *Store) ListAllProjectClusters() (*opsmngr.AllClustersProjects, error) {
 }
 
 // AtlasClusterConfigurationOptions encapsulates the logic to manage different cloud providers.
-func (s *Store) AtlasClusterConfigurationOptions(projectID, name string) (*atlasv2.ClusterDescriptionProcessArgs, error) {
+func (s *Store) AtlasClusterConfigurationOptions(projectID, name string) (*admin.ClusterDescriptionProcessArgs, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.ClustersApi.GetClusterAdvancedConfiguration(s.ctx, projectID, name).Execute()
@@ -265,7 +265,7 @@ func (s *Store) AtlasClusterConfigurationOptions(projectID, name string) (*atlas
 }
 
 // UpdateAtlasClusterConfigurationOptions encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName string, args *atlasv2.ClusterDescriptionProcessArgs) (*atlasv2.ClusterDescriptionProcessArgs, error) {
+func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName string, args *admin.ClusterDescriptionProcessArgs) (*admin.ClusterDescriptionProcessArgs, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.ClustersApi.UpdateClusterAdvancedConfiguration(s.ctx, projectID, clusterName, args).Execute()

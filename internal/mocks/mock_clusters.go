@@ -431,7 +431,8 @@ func (m *MockAtlasClusterQuickStarter) CloudProviderRegions(arg0, arg1 string, a
 	return ret0, ret1
 }
 
-// CloudProviderRegions indicates an expected call of CloudProviderRegions.
+// CloudProviderRegions indicates an expected ca
+//ll of CloudProviderRegions.
 func (mr *MockAtlasClusterQuickStarterMockRecorder) CloudProviderRegions(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloudProviderRegions", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).CloudProviderRegions), arg0, arg1, arg2)

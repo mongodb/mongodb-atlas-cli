@@ -17,13 +17,13 @@
 package clusters
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"go.mongodb.org/atlas-sdk/admin"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/stretchr/testify/require"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func Test_autoCompleteOpts_tierSuggestions(t *testing.T) {

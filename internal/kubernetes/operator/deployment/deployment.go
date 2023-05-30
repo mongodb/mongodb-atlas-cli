@@ -337,7 +337,6 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.AdvancedReplicationSpec {
 	result := make([]*atlasV1.AdvancedReplicationSpec, 0, len(atlasRepSpec))
 	for _, rs := range atlasRepSpec {
-
 		replicationSpec := &atlasV1.AdvancedReplicationSpec{
 			NumShards:     rs.GetNumShards(),
 			ZoneName:      rs.GetZoneName(),
@@ -426,8 +425,8 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 					compute = &atlasV1.ComputeSpec{
 						Enabled:          configAutoScaling.Compute.Enabled,
 						ScaleDownEnabled: configAutoScaling.Compute.ScaleDownEnabled,
-						MinInstanceSize:  *GetInstanceSizeStringIfNotNil(configAutoScaling.Compute.MinInstanceSize),
-						MaxInstanceSize:  *GetInstanceSizeStringIfNotNil(configAutoScaling.Compute.MaxInstanceSize),
+						MinInstanceSize:  GetInstanceSizeStringIfNotNil(configAutoScaling.Compute.MinInstanceSize),
+						MaxInstanceSize:  GetInstanceSizeStringIfNotNil(configAutoScaling.Compute.MaxInstanceSize),
 					}
 				}
 
@@ -457,12 +456,12 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 	return result
 }
 
-func GetInstanceSizeStringIfNotNil(instanceSize *atlasv2.InstanceSize) *string {
+func GetInstanceSizeStringIfNotNil(instanceSize *atlasv2.InstanceSize) string {
 	if instanceSize == nil {
-		return nil
+		return ""
 	}
 	stringInstanceSize := string(*instanceSize)
-	return &stringInstanceSize
+	return stringInstanceSize
 }
 
 func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*atlasV1.AtlasDeployment, error) {

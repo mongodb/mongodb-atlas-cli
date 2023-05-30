@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
@@ -31,7 +32,7 @@ type autoFunc func(cmd *cobra.Command, args []string, toComplete string) ([]stri
 
 type autoCompleteOpts struct {
 	cli.GlobalOpts
-	providers []*string
+	providers *[]string
 	tier      string
 	store     store.CloudProviderRegionsLister
 }
@@ -69,8 +70,8 @@ func (opts *autoCompleteOpts) tierSuggestions(toComplete string) ([]string, erro
 	availableTiers := map[string]bool{}
 	for _, p := range result.Results {
 		for _, i := range p.InstanceSizes {
-			if _, ok := availableTiers[i.Name]; !ok && strings.HasPrefix(i.Name, strings.ToUpper(toComplete)) {
-				availableTiers[i.Name] = true
+			if _, ok := availableTiers[*i.Name]; !ok && strings.HasPrefix(*i.Name, strings.ToUpper(toComplete)) {
+				availableTiers[*i.Name] = true
 			}
 		}
 	}
@@ -117,8 +118,8 @@ func (opts *autoCompleteOpts) regionSuggestions(toComplete string) ([]string, er
 	for _, p := range result.Results {
 		for _, i := range p.InstanceSizes {
 			for _, r := range i.AvailableRegions {
-				if _, ok := availableRegions[r.Name]; !ok && strings.HasPrefix(r.Name, strings.ToUpper(toComplete)) {
-					availableRegions[r.Name] = true
+				if _, ok := availableRegions[*r.Name]; !ok && strings.HasPrefix(*r.Name, strings.ToUpper(toComplete)) {
+					availableRegions[*r.Name] = true
 				}
 			}
 		}
@@ -151,9 +152,9 @@ func (opts *autoCompleteOpts) parseFlags(cmd *cobra.Command) {
 	if project := cmd.Flag(flag.ProjectID).Value.String(); project != "" {
 		opts.ProjectID = project
 	}
-	opts.providers = make([]*string, 0, 1)
+	providers := make([]string, 0, 1)
 	if provider := cmd.Flag(flag.Provider).Value.String(); provider != "" {
-		opts.providers = append(opts.providers, &provider)
+		opts.providers = pointer.Get(append(providers, provider))
 	}
 
 	if tier := cmd.Flag(flag.Tier).Value.String(); tier != "" {

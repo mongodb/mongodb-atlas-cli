@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -53,7 +54,7 @@ func (opts *ListOpts) Run() error {
 		GroupId:      opts.ConfigProjectID(),
 		ItemsPerPage: &opts.ItemsPerPage,
 		PageNum:      &opts.PageNum,
-		Status:       &opts.status,
+		Status:       pointer.GetStringPointerIfNotEmpty(opts.status),
 	}
 
 	r, err := opts.store.Alerts(params)

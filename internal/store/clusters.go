@@ -30,7 +30,7 @@ type ClusterLister interface {
 }
 
 type AtlasClusterDescriber interface {
-	AtlasCluster(string, string) (*atlasv2.ClusterDescriptionV15, error)
+	AtlasCluster(string, string) (*admin.ClusterDescriptionV15, error)
 }
 
 type AtlasClusterConfigurationOptionsDescriber interface {
@@ -50,7 +50,7 @@ type AtlasSharedClusterDescriber interface {
 }
 
 type ClusterCreator interface {
-	CreateCluster(v15 *atlasv2.ClusterDescriptionV15) (*atlasv2.ClusterDescriptionV15, error)
+	CreateCluster(v15 *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error)
 }
 
 type ClusterDeleter interface {
@@ -58,15 +58,15 @@ type ClusterDeleter interface {
 }
 
 type ClusterUpdater interface {
-	UpdateCluster(string, string, *atlasv2.ClusterDescriptionV15) (*atlasv2.ClusterDescriptionV15, error)
+	UpdateCluster(string, string, *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error)
 }
 
 type ClusterPauser interface {
-	PauseCluster(string, string) (*atlasv2.ClusterDescriptionV15, error)
+	PauseCluster(string, string) (*admin.ClusterDescriptionV15, error)
 }
 
 type ClusterStarter interface {
-	StartCluster(string, string) (*atlasv2.ClusterDescriptionV15, error)
+	StartCluster(string, string) (*admin.ClusterDescriptionV15, error)
 }
 
 type ClusterUpgrader interface {
@@ -74,7 +74,7 @@ type ClusterUpgrader interface {
 }
 
 type SampleDataAdder interface {
-	AddSampleData(string, string) (*atlasv2.SampleDatasetStatus, error)
+	AddSampleData(string, string) (*admin.SampleDatasetStatus, error)
 }
 
 type SampleDataStatusDescriber interface {
@@ -108,7 +108,7 @@ type AtlasClusterQuickStarter interface {
 }
 
 // AddSampleData encapsulate the logic to manage different cloud providers.
-func (s *Store) AddSampleData(groupID, clusterName string) (*atlasv2.SampleDatasetStatus, error) {
+func (s *Store) AddSampleData(groupID, clusterName string) (*admin.SampleDatasetStatus, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.ClustersApi.LoadSampleDataset(s.ctx, groupID, clusterName).Execute()
@@ -130,7 +130,7 @@ func (s *Store) SampleDataStatus(groupID, id string) (*admin.SampleDatasetStatus
 }
 
 // CreateCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateCluster(cluster *atlasv2.ClusterDescriptionV15) (*atlasv2.ClusterDescriptionV15, error) {
+func (s *Store) CreateCluster(cluster *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.MultiCloudClustersApi.CreateCluster(s.ctx, cluster.GetGroupId(), cluster).Execute()
@@ -141,7 +141,7 @@ func (s *Store) CreateCluster(cluster *atlasv2.ClusterDescriptionV15) (*atlasv2.
 }
 
 // UpdateCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateCluster(projectID, name string, cluster *atlasv2.ClusterDescriptionV15) (*atlasv2.ClusterDescriptionV15, error) {
+func (s *Store) UpdateCluster(projectID, name string, cluster *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.MultiCloudClustersApi.UpdateCluster(s.ctx, projectID, name, cluster).Execute()
@@ -152,18 +152,18 @@ func (s *Store) UpdateCluster(projectID, name string, cluster *atlasv2.ClusterDe
 }
 
 // PauseCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) PauseCluster(projectID, name string) (*atlasv2.ClusterDescriptionV15, error) {
+func (s *Store) PauseCluster(projectID, name string) (*admin.ClusterDescriptionV15, error) {
 	paused := true
-	cluster := &atlasv2.ClusterDescriptionV15{
+	cluster := &admin.ClusterDescriptionV15{
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
 }
 
 // StartCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) StartCluster(projectID, name string) (*atlasv2.ClusterDescriptionV15, error) {
+func (s *Store) StartCluster(projectID, name string) (*admin.ClusterDescriptionV15, error) {
 	paused := false
-	cluster := &atlasv2.ClusterDescriptionV15{
+	cluster := &admin.ClusterDescriptionV15{
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
@@ -221,7 +221,7 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (inte
 }
 
 // AtlasCluster encapsulates the logic to manage different cloud providers.
-func (s *Store) AtlasCluster(projectID, name string) (*atlasv2.ClusterDescriptionV15, error) {
+func (s *Store) AtlasCluster(projectID, name string) (*admin.ClusterDescriptionV15, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.MultiCloudClustersApi.GetCluster(s.ctx, projectID, name).Execute()

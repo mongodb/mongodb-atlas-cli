@@ -81,6 +81,10 @@ Options
      - string
      - false
      - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
+   * - --tag
+     - stringToString
+     - false
+     - Collection of key-value pairs that categorizes the serverless instance. This will replace existing tags. This value defaults to [].
 
 Inherited Options
 -----------------

@@ -73,6 +73,10 @@ Options
      - string
      - true
      - Human-readable label that identifies the physical location of your MongoDB serverless instance. The region you choose can affect network latency for clients accessing your databases.
+   * - --tag
+     - stringToString
+     - false
+     - Collection of key-value pairs that categorizes the serverless instance. This value defaults to [].
 
 Inherited Options
 -----------------

@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 type EventListOpts struct {
@@ -60,8 +60,6 @@ func (opts *ListOpts) Run() error {
 	var err error
 
 	if opts.orgID != "" {
-		// TODO Support multiple event types by API
-		// TODO Use APIparams objects directly in the CLI
 		listEventsAPIParams := opts.NewOrgListOptions()
 		r, err = opts.store.OrganizationEvents(&listEventsAPIParams)
 	} else if opts.projectID != "" {
@@ -75,18 +73,18 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) NewOrgListOptions() atlasv2.ListOrganizationEventsApiParams {
+func (opts *ListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiParams {
 	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
 	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
 
-	var eventType *atlasv2.EventTypeForOrg
+	var eventType *[]string
 	if len(opts.EventType) > 0 {
-		eventType, _ = atlasv2.NewEventTypeForOrgFromValue(opts.EventType[0])
+		eventType = &opts.EventType
 	}
-	listEventsAPIParams := atlasv2.ListOrganizationEventsApiParams{
+	listEventsAPIParams := admin.ListOrganizationEventsApiParams{
 		OrgId:        opts.orgID,
-		ItemsPerPage: atlasv2.PtrInt32(int32(opts.ItemsPerPage)),
-		PageNum:      atlasv2.PtrInt32(int32(opts.PageNum)),
+		ItemsPerPage: &opts.ItemsPerPage,
+		PageNum:      &opts.PageNum,
 		EventType:    eventType,
 		IncludeRaw:   new(bool),
 		MaxDate:      &minDate,
@@ -95,17 +93,17 @@ func (opts *ListOpts) NewOrgListOptions() atlasv2.ListOrganizationEventsApiParam
 	return listEventsAPIParams
 }
 
-func (opts *ListOpts) NewProjectListOptions() atlasv2.ListProjectEventsApiParams {
+func (opts *ListOpts) NewProjectListOptions() admin.ListProjectEventsApiParams {
 	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
 	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
-	var eventType *atlasv2.EventTypeForNdsGroup
+	var eventType *[]string
 	if len(opts.EventType) > 0 {
-		eventType, _ = atlasv2.NewEventTypeForNdsGroupFromValue(opts.EventType[0])
+		eventType = &opts.EventType
 	}
-	listEventsAPIParams := atlasv2.ListProjectEventsApiParams{
+	listEventsAPIParams := admin.ListProjectEventsApiParams{
 		GroupId:      opts.projectID,
-		ItemsPerPage: atlasv2.PtrInt32(int32(opts.ItemsPerPage)),
-		PageNum:      atlasv2.PtrInt32(int32(opts.PageNum)),
+		ItemsPerPage: &opts.ItemsPerPage,
+		PageNum:      &opts.PageNum,
 		EventType:    eventType,
 		MaxDate:      &minDate,
 		MinDate:      &maxDate,

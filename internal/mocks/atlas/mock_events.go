@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockOrganizationEventLister is a mock of OrganizationEventLister interface.
@@ -35,10 +35,10 @@ func (m *MockOrganizationEventLister) EXPECT() *MockOrganizationEventListerMockR
 }
 
 // OrganizationEvents mocks base method.
-func (m *MockOrganizationEventLister) OrganizationEvents(arg0 *mongodbatlasv2.ListOrganizationEventsApiParams) (*mongodbatlasv2.OrgPaginatedEvent, error) {
+func (m *MockOrganizationEventLister) OrganizationEvents(arg0 *admin.ListOrganizationEventsApiParams) (*admin.OrgPaginatedEvent, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationEvents", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.OrgPaginatedEvent)
+	ret0, _ := ret[0].(*admin.OrgPaginatedEvent)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockProjectEventLister) EXPECT() *MockProjectEventListerMockRecorder {
 }
 
 // ProjectEvents mocks base method.
-func (m *MockProjectEventLister) ProjectEvents(arg0 *mongodbatlasv2.ListProjectEventsApiParams) (*mongodbatlasv2.GroupPaginatedEvent, error) {
+func (m *MockProjectEventLister) ProjectEvents(arg0 *admin.ListProjectEventsApiParams) (*admin.GroupPaginatedEvent, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectEvents", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.GroupPaginatedEvent)
+	ret0, _ := ret[0].(*admin.GroupPaginatedEvent)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockEventLister) EXPECT() *MockEventListerMockRecorder {
 }
 
 // OrganizationEvents mocks base method.
-func (m *MockEventLister) OrganizationEvents(arg0 *mongodbatlasv2.ListOrganizationEventsApiParams) (*mongodbatlasv2.OrgPaginatedEvent, error) {
+func (m *MockEventLister) OrganizationEvents(arg0 *admin.ListOrganizationEventsApiParams) (*admin.OrgPaginatedEvent, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationEvents", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.OrgPaginatedEvent)
+	ret0, _ := ret[0].(*admin.OrgPaginatedEvent)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -126,10 +126,10 @@ func (mr *MockEventListerMockRecorder) OrganizationEvents(arg0 interface{}) *gom
 }
 
 // ProjectEvents mocks base method.
-func (m *MockEventLister) ProjectEvents(arg0 *mongodbatlasv2.ListProjectEventsApiParams) (*mongodbatlasv2.GroupPaginatedEvent, error) {
+func (m *MockEventLister) ProjectEvents(arg0 *admin.ListProjectEventsApiParams) (*admin.GroupPaginatedEvent, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectEvents", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.GroupPaginatedEvent)
+	ret0, _ := ret[0].(*admin.GroupPaginatedEvent)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

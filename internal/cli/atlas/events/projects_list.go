@@ -26,7 +26,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 type projectListOpts struct {
@@ -60,17 +60,17 @@ func (opts *projectListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *projectListOpts) NewProjectListOptions() atlasv2.ListProjectEventsApiParams {
+func (opts *projectListOpts) NewProjectListOptions() admin.ListProjectEventsApiParams {
 	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
 	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
-	var eventType *atlasv2.EventTypeForNdsGroup
+	var eventType *[]string
 	if len(opts.EventType) > 0 {
-		eventType, _ = atlasv2.NewEventTypeForNdsGroupFromValue(opts.EventType[0])
+		eventType = &opts.EventType
 	}
-	listEventsAPIParams := atlasv2.ListProjectEventsApiParams{
+	listEventsAPIParams := admin.ListProjectEventsApiParams{
 		GroupId:      opts.ConfigProjectID(),
-		ItemsPerPage: atlasv2.PtrInt32(int32(opts.ItemsPerPage)),
-		PageNum:      atlasv2.PtrInt32(int32(opts.PageNum)),
+		ItemsPerPage: &opts.ItemsPerPage,
+		PageNum:      &opts.PageNum,
 		EventType:    eventType,
 		MaxDate:      &minDate,
 		MinDate:      &maxDate,

@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -29,7 +29,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockEventLister(ctrl)
 
 	t.Run("for a org", func(t *testing.T) {
-		expected := &atlasv2.OrgPaginatedEvent{}
+		expected := &admin.OrgPaginatedEvent{}
 		listOpts := &ListOpts{
 			store: mockStore,
 		}
@@ -46,7 +46,7 @@ func TestList_Run(t *testing.T) {
 		}
 	})
 	t.Run("for an project", func(t *testing.T) {
-		expected := &atlasv2.GroupPaginatedEvent{}
+		expected := &admin.GroupPaginatedEvent{}
 		listOpts := &ListOpts{
 			store: mockStore,
 		}

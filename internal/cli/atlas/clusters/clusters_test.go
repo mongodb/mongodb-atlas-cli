@@ -142,7 +142,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 	var (
 		id        = "Test"
 		testVar   = "test"
-		specId    = "22"
+		specID    = "22"
 		shards    = 2
 		zone      = "1"
 		timeStamp = time.Now()
@@ -160,7 +160,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 				StateName:      &testVar,
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						Id:        &specId,
+						Id:        &specID,
 						NumShards: &shards,
 						ZoneName:  &zone,
 					},
@@ -184,17 +184,17 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 				StateName:      &testVar,
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						Id:        &specId,
+						Id:        &specID,
 						NumShards: &shards,
 						ZoneName:  &zone,
 					},
 					{
-						Id:        &specId,
+						Id:        &specID,
 						NumShards: &shards,
 						ZoneName:  &zone,
 					},
 					{
-						Id:        &specId,
+						Id:        &specID,
 						NumShards: &shards,
 						ZoneName:  &zone,
 					},
@@ -261,8 +261,6 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			RemoveReadOnlyAttributes(arg)
 			if diff := deep.Equal(arg, want); diff != nil {
-				t.Log(arg)
-				t.Log(want)
 				t.Error(diff)
 			}
 		})

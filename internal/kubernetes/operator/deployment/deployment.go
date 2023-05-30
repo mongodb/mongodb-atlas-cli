@@ -337,9 +337,6 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.AdvancedReplicationSpec {
 	result := make([]*atlasV1.AdvancedReplicationSpec, 0, len(atlasRepSpec))
 	for _, rs := range atlasRepSpec {
-		//if rs == nil {
-		//	continue
-		//}
 
 		replicationSpec := &atlasV1.AdvancedReplicationSpec{
 			NumShards:     rs.GetNumShards(),
@@ -354,9 +351,6 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 
 		replicationSpec.RegionConfigs = make([]*atlasV1.AdvancedRegionConfig, 0, len(replicationSpec.RegionConfigs))
 		for _, rc := range rs.RegionConfigs {
-			//if rc == nil {
-			//	continue
-			//}
 			var configAnalyticsSpecs *atlasv2.DedicatedHardwareSpec
 			var configElectableSpecs *atlasv2.HardwareSpec
 			var configReadOnlySpecs *atlasv2.DedicatedHardwareSpec

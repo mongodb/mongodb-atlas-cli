@@ -206,25 +206,6 @@ func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 		}
 	}
 
-	//regionConfig := atlasv2.RegionConfig{
-	//	RegionName: opts.region,
-	//	Priority:   &priority,
-	//}
-	//
-	//regionConfig.ProviderName = providerName
-	//regionConfig.ElectableSpecs = &atlas.Specs{
-	//	InstanceSize: opts.tier,
-	//}
-	//
-	//if providerName == tenant {
-	//	regionConfig.BackingProviderName = opts.provider
-	//} else {
-	//	regionConfig.ElectableSpecs.NodeCount = &opts.members
-	//}
-	//
-	//
-	//regionConfig.ReadOnlySpecs = readOnlySpec
-
 	return regionConfig
 }
 

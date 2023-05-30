@@ -93,7 +93,7 @@ Options
    * - --tag
      - stringToString
      - false
-     - Collection of key-value pairs that categorizes the cluster. This will replace existing tags. This value defaults to [].
+     - Collection of key-value pairs that categorizes the cluster. Passing this flag replaces preexisting data. This value defaults to [].
    * - --tier
      - string
      - false

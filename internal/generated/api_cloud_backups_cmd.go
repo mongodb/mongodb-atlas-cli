@@ -19,34 +19,34 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CancelBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CancelBackupRestoreJobOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	restoreJobId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CancelBackupRestoreJobOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CancelBackupRestoreJobOpts) Run() error {
-	params := &atlasv2.CancelBackupRestoreJobApiParams{
+func (opts *CancelBackupRestoreJobOpts) Run(ctx context.Context) error {
+	params := &admin.CancelBackupRestoreJobApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		RestoreJobId: opts.restoreJobId,
 	}
-	resp, _, err := opts.store.CancelBackupRestoreJob(params)
+	resp, _, err := opts.client.CloudBackupsApi.CancelBackupRestoreJobWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -66,43 +66,46 @@ func CancelBackupRestoreJobBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CancelBackupRestoreJobTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.restoreJobId, "restoreJobId", "", "usage description")
+	_ = cmd.MarkFlagRequired("restoreJobId")
 
 	return cmd
 }
 type CreateBackupExportJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateBackupExportJobOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateBackupExportJobOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateBackupExportJobOpts) Run() error {
-	params := &atlasv2.CreateBackupExportJobApiParams{
+func (opts *CreateBackupExportJobOpts) Run(ctx context.Context) error {
+	params := &admin.CreateBackupExportJobApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.CreateBackupExportJob(params)
+	resp, _, err := opts.client.CloudBackupsApi.CreateBackupExportJobWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -122,42 +125,44 @@ func CreateBackupExportJobBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateBackupExportJobTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type CreateBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateBackupRestoreJobOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateBackupRestoreJobOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateBackupRestoreJobOpts) Run() error {
-	params := &atlasv2.CreateBackupRestoreJobApiParams{
+func (opts *CreateBackupRestoreJobOpts) Run(ctx context.Context) error {
+	params := &admin.CreateBackupRestoreJobApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.CreateBackupRestoreJob(params)
+	resp, _, err := opts.client.CloudBackupsApi.CreateBackupRestoreJobWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -177,40 +182,42 @@ func CreateBackupRestoreJobBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateBackupRestoreJobTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type CreateExportBucketOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateExportBucketOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateExportBucketOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateExportBucketOpts) Run() error {
-	params := &atlasv2.CreateExportBucketApiParams{
+func (opts *CreateExportBucketOpts) Run(ctx context.Context) error {
+	params := &admin.CreateExportBucketApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreateExportBucket(params)
+	resp, _, err := opts.client.CloudBackupsApi.CreateExportBucketWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -230,41 +237,42 @@ func CreateExportBucketBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateExportBucketTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type CreateServerlessBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateServerlessBackupRestoreJobOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateServerlessBackupRestoreJobOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateServerlessBackupRestoreJobOpts) Run() error {
-	params := &atlasv2.CreateServerlessBackupRestoreJobApiParams{
+func (opts *CreateServerlessBackupRestoreJobOpts) Run(ctx context.Context) error {
+	params := &admin.CreateServerlessBackupRestoreJobApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.CreateServerlessBackupRestoreJob(params)
+	resp, _, err := opts.client.CloudBackupsApi.CreateServerlessBackupRestoreJobWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -284,42 +292,44 @@ func CreateServerlessBackupRestoreJobBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateServerlessBackupRestoreJobTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type DeleteAllBackupSchedulesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteAllBackupSchedulesOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteAllBackupSchedulesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteAllBackupSchedulesOpts) Run() error {
-	params := &atlasv2.DeleteAllBackupSchedulesApiParams{
+func (opts *DeleteAllBackupSchedulesOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteAllBackupSchedulesApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.DeleteAllBackupSchedules(params)
+	resp, _, err := opts.client.CloudBackupsApi.DeleteAllBackupSchedulesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -339,42 +349,44 @@ func DeleteAllBackupSchedulesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteAllBackupSchedulesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type DeleteExportBucketOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteExportBucketOperation
+	client admin.APIClient
 	groupId string
 	exportBucketId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteExportBucketOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteExportBucketOpts) Run() error {
-	params := &atlasv2.DeleteExportBucketApiParams{
+func (opts *DeleteExportBucketOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteExportBucketApiParams{
 		GroupId: opts.groupId,
 		ExportBucketId: opts.exportBucketId,
 	}
-	resp, _, err := opts.store.DeleteExportBucket(params)
+	resp, _, err := opts.client.CloudBackupsApi.DeleteExportBucketWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -394,44 +406,46 @@ func DeleteExportBucketBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteExportBucketTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.exportBucketId, "exportBucketId", "", "usage description")
+	_ = cmd.MarkFlagRequired("exportBucketId")
 
 	return cmd
 }
 type DeleteReplicaSetBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteReplicaSetBackupOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	snapshotId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteReplicaSetBackupOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteReplicaSetBackupOpts) Run() error {
-	params := &atlasv2.DeleteReplicaSetBackupApiParams{
+func (opts *DeleteReplicaSetBackupOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteReplicaSetBackupApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId: opts.snapshotId,
 	}
-	resp, _, err := opts.store.DeleteReplicaSetBackup(params)
+	resp, _, err := opts.client.CloudBackupsApi.DeleteReplicaSetBackupWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -451,45 +465,48 @@ func DeleteReplicaSetBackupBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteReplicaSetBackupTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "usage description")
+	_ = cmd.MarkFlagRequired("snapshotId")
 
 	return cmd
 }
 type DeleteShardedClusterBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteShardedClusterBackupOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	snapshotId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteShardedClusterBackupOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteShardedClusterBackupOpts) Run() error {
-	params := &atlasv2.DeleteShardedClusterBackupApiParams{
+func (opts *DeleteShardedClusterBackupOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteShardedClusterBackupApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId: opts.snapshotId,
 	}
-	resp, _, err := opts.store.DeleteShardedClusterBackup(params)
+	resp, _, err := opts.client.CloudBackupsApi.DeleteShardedClusterBackupWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -509,45 +526,48 @@ func DeleteShardedClusterBackupBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteShardedClusterBackupTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "usage description")
+	_ = cmd.MarkFlagRequired("snapshotId")
 
 	return cmd
 }
 type GetBackupExportJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetBackupExportJobOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	exportId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetBackupExportJobOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetBackupExportJobOpts) Run() error {
-	params := &atlasv2.GetBackupExportJobApiParams{
+func (opts *GetBackupExportJobOpts) Run(ctx context.Context) error {
+	params := &admin.GetBackupExportJobApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		ExportId: opts.exportId,
 	}
-	resp, _, err := opts.store.GetBackupExportJob(params)
+	resp, _, err := opts.client.CloudBackupsApi.GetBackupExportJobWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -567,45 +587,48 @@ func GetBackupExportJobBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetBackupExportJobTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.exportId, "exportId", "", "usage description")
+	_ = cmd.MarkFlagRequired("exportId")
 
 	return cmd
 }
 type GetBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetBackupRestoreJobOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	restoreJobId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetBackupRestoreJobOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetBackupRestoreJobOpts) Run() error {
-	params := &atlasv2.GetBackupRestoreJobApiParams{
+func (opts *GetBackupRestoreJobOpts) Run(ctx context.Context) error {
+	params := &admin.GetBackupRestoreJobApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		RestoreJobId: opts.restoreJobId,
 	}
-	resp, _, err := opts.store.GetBackupRestoreJob(params)
+	resp, _, err := opts.client.CloudBackupsApi.GetBackupRestoreJobWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -625,43 +648,46 @@ func GetBackupRestoreJobBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetBackupRestoreJobTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.restoreJobId, "restoreJobId", "", "usage description")
+	_ = cmd.MarkFlagRequired("restoreJobId")
 
 	return cmd
 }
 type GetBackupScheduleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetBackupScheduleOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetBackupScheduleOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetBackupScheduleOpts) Run() error {
-	params := &atlasv2.GetBackupScheduleApiParams{
+func (opts *GetBackupScheduleOpts) Run(ctx context.Context) error {
+	params := &admin.GetBackupScheduleApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.GetBackupSchedule(params)
+	resp, _, err := opts.client.CloudBackupsApi.GetBackupScheduleWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -681,40 +707,42 @@ func GetBackupScheduleBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetBackupScheduleTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type GetDataProtectionSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetDataProtectionSettingsOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetDataProtectionSettingsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetDataProtectionSettingsOpts) Run() error {
-	params := &atlasv2.GetDataProtectionSettingsApiParams{
+func (opts *GetDataProtectionSettingsOpts) Run(ctx context.Context) error {
+	params := &admin.GetDataProtectionSettingsApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.GetDataProtectionSettings(params)
+	resp, _, err := opts.client.CloudBackupsApi.GetDataProtectionSettingsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -734,41 +762,42 @@ func GetDataProtectionSettingsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetDataProtectionSettingsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type GetExportBucketOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetExportBucketOperation
+	client admin.APIClient
 	groupId string
 	exportBucketId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetExportBucketOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetExportBucketOpts) Run() error {
-	params := &atlasv2.GetExportBucketApiParams{
+func (opts *GetExportBucketOpts) Run(ctx context.Context) error {
+	params := &admin.GetExportBucketApiParams{
 		GroupId: opts.groupId,
 		ExportBucketId: opts.exportBucketId,
 	}
-	resp, _, err := opts.store.GetExportBucket(params)
+	resp, _, err := opts.client.CloudBackupsApi.GetExportBucketWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -788,44 +817,46 @@ func GetExportBucketBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetExportBucketTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.exportBucketId, "exportBucketId", "", "usage description")
+	_ = cmd.MarkFlagRequired("exportBucketId")
 
 	return cmd
 }
 type GetReplicaSetBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetReplicaSetBackupOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	snapshotId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetReplicaSetBackupOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetReplicaSetBackupOpts) Run() error {
-	params := &atlasv2.GetReplicaSetBackupApiParams{
+func (opts *GetReplicaSetBackupOpts) Run(ctx context.Context) error {
+	params := &admin.GetReplicaSetBackupApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId: opts.snapshotId,
 	}
-	resp, _, err := opts.store.GetReplicaSetBackup(params)
+	resp, _, err := opts.client.CloudBackupsApi.GetReplicaSetBackupWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -845,45 +876,48 @@ func GetReplicaSetBackupBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetReplicaSetBackupTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "usage description")
+	_ = cmd.MarkFlagRequired("snapshotId")
 
 	return cmd
 }
 type GetServerlessBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetServerlessBackupOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	snapshotId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetServerlessBackupOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetServerlessBackupOpts) Run() error {
-	params := &atlasv2.GetServerlessBackupApiParams{
+func (opts *GetServerlessBackupOpts) Run(ctx context.Context) error {
+	params := &admin.GetServerlessBackupApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId: opts.snapshotId,
 	}
-	resp, _, err := opts.store.GetServerlessBackup(params)
+	resp, _, err := opts.client.CloudBackupsApi.GetServerlessBackupWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -903,45 +937,48 @@ func GetServerlessBackupBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetServerlessBackupTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "usage description")
+	_ = cmd.MarkFlagRequired("snapshotId")
 
 	return cmd
 }
 type GetServerlessBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetServerlessBackupRestoreJobOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	restoreJobId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetServerlessBackupRestoreJobOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetServerlessBackupRestoreJobOpts) Run() error {
-	params := &atlasv2.GetServerlessBackupRestoreJobApiParams{
+func (opts *GetServerlessBackupRestoreJobOpts) Run(ctx context.Context) error {
+	params := &admin.GetServerlessBackupRestoreJobApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		RestoreJobId: opts.restoreJobId,
 	}
-	resp, _, err := opts.store.GetServerlessBackupRestoreJob(params)
+	resp, _, err := opts.client.CloudBackupsApi.GetServerlessBackupRestoreJobWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -961,45 +998,48 @@ func GetServerlessBackupRestoreJobBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetServerlessBackupRestoreJobTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.restoreJobId, "restoreJobId", "", "usage description")
+	_ = cmd.MarkFlagRequired("restoreJobId")
 
 	return cmd
 }
 type GetShardedClusterBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetShardedClusterBackupOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	snapshotId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetShardedClusterBackupOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetShardedClusterBackupOpts) Run() error {
-	params := &atlasv2.GetShardedClusterBackupApiParams{
+func (opts *GetShardedClusterBackupOpts) Run(ctx context.Context) error {
+	params := &admin.GetShardedClusterBackupApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId: opts.snapshotId,
 	}
-	resp, _, err := opts.store.GetShardedClusterBackup(params)
+	resp, _, err := opts.client.CloudBackupsApi.GetShardedClusterBackupWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1019,25 +1059,28 @@ func GetShardedClusterBackupBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetShardedClusterBackupTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "usage description")
+	_ = cmd.MarkFlagRequired("snapshotId")
 
 	return cmd
 }
 type ListBackupExportJobsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListBackupExportJobsOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	includeCount bool
@@ -1045,23 +1088,23 @@ type ListBackupExportJobsOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListBackupExportJobsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListBackupExportJobsOpts) Run() error {
-	params := &atlasv2.ListBackupExportJobsApiParams{
+func (opts *ListBackupExportJobsOpts) Run(ctx context.Context) error {
+	params := &admin.ListBackupExportJobsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListBackupExportJobs(params)
+	resp, _, err := opts.client.CloudBackupsApi.ListBackupExportJobsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1081,17 +1124,19 @@ func ListBackupExportJobsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListBackupExportJobsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -1101,7 +1146,7 @@ func ListBackupExportJobsBuilder() cobra.Command {
 type ListBackupRestoreJobsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListBackupRestoreJobsOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	includeCount bool
@@ -1109,23 +1154,23 @@ type ListBackupRestoreJobsOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListBackupRestoreJobsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListBackupRestoreJobsOpts) Run() error {
-	params := &atlasv2.ListBackupRestoreJobsApiParams{
+func (opts *ListBackupRestoreJobsOpts) Run(ctx context.Context) error {
+	params := &admin.ListBackupRestoreJobsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListBackupRestoreJobs(params)
+	resp, _, err := opts.client.CloudBackupsApi.ListBackupRestoreJobsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1145,17 +1190,19 @@ func ListBackupRestoreJobsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListBackupRestoreJobsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -1165,29 +1212,29 @@ func ListBackupRestoreJobsBuilder() cobra.Command {
 type ListExportBucketsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListExportBucketsOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListExportBucketsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListExportBucketsOpts) Run() error {
-	params := &atlasv2.ListExportBucketsApiParams{
+func (opts *ListExportBucketsOpts) Run(ctx context.Context) error {
+	params := &admin.ListExportBucketsApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListExportBuckets(params)
+	resp, _, err := opts.client.CloudBackupsApi.ListExportBucketsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1207,16 +1254,17 @@ func ListExportBucketsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListExportBucketsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -1226,7 +1274,7 @@ func ListExportBucketsBuilder() cobra.Command {
 type ListReplicaSetBackupsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListReplicaSetBackupsOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	includeCount bool
@@ -1234,23 +1282,23 @@ type ListReplicaSetBackupsOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListReplicaSetBackupsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListReplicaSetBackupsOpts) Run() error {
-	params := &atlasv2.ListReplicaSetBackupsApiParams{
+func (opts *ListReplicaSetBackupsOpts) Run(ctx context.Context) error {
+	params := &admin.ListReplicaSetBackupsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListReplicaSetBackups(params)
+	resp, _, err := opts.client.CloudBackupsApi.ListReplicaSetBackupsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1270,17 +1318,19 @@ func ListReplicaSetBackupsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListReplicaSetBackupsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -1290,7 +1340,7 @@ func ListReplicaSetBackupsBuilder() cobra.Command {
 type ListServerlessBackupRestoreJobsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListServerlessBackupRestoreJobsOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	includeCount bool
@@ -1298,23 +1348,23 @@ type ListServerlessBackupRestoreJobsOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListServerlessBackupRestoreJobsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListServerlessBackupRestoreJobsOpts) Run() error {
-	params := &atlasv2.ListServerlessBackupRestoreJobsApiParams{
+func (opts *ListServerlessBackupRestoreJobsOpts) Run(ctx context.Context) error {
+	params := &admin.ListServerlessBackupRestoreJobsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListServerlessBackupRestoreJobs(params)
+	resp, _, err := opts.client.CloudBackupsApi.ListServerlessBackupRestoreJobsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1334,17 +1384,19 @@ func ListServerlessBackupRestoreJobsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListServerlessBackupRestoreJobsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -1354,7 +1406,7 @@ func ListServerlessBackupRestoreJobsBuilder() cobra.Command {
 type ListServerlessBackupsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListServerlessBackupsOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	includeCount bool
@@ -1362,23 +1414,23 @@ type ListServerlessBackupsOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListServerlessBackupsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListServerlessBackupsOpts) Run() error {
-	params := &atlasv2.ListServerlessBackupsApiParams{
+func (opts *ListServerlessBackupsOpts) Run(ctx context.Context) error {
+	params := &admin.ListServerlessBackupsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListServerlessBackups(params)
+	resp, _, err := opts.client.CloudBackupsApi.ListServerlessBackupsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1398,17 +1450,19 @@ func ListServerlessBackupsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListServerlessBackupsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -1418,25 +1472,25 @@ func ListServerlessBackupsBuilder() cobra.Command {
 type ListShardedClusterBackupsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListShardedClusterBackupsOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListShardedClusterBackupsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListShardedClusterBackupsOpts) Run() error {
-	params := &atlasv2.ListShardedClusterBackupsApiParams{
+func (opts *ListShardedClusterBackupsOpts) Run(ctx context.Context) error {
+	params := &admin.ListShardedClusterBackupsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.ListShardedClusterBackups(params)
+	resp, _, err := opts.client.CloudBackupsApi.ListShardedClusterBackupsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1456,42 +1510,44 @@ func ListShardedClusterBackupsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListShardedClusterBackupsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type TakeSnapshotOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.TakeSnapshotOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *TakeSnapshotOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *TakeSnapshotOpts) Run() error {
-	params := &atlasv2.TakeSnapshotApiParams{
+func (opts *TakeSnapshotOpts) Run(ctx context.Context) error {
+	params := &admin.TakeSnapshotApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.TakeSnapshot(params)
+	resp, _, err := opts.client.CloudBackupsApi.TakeSnapshotWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1511,42 +1567,44 @@ func TakeSnapshotBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), TakeSnapshotTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type UpdateBackupScheduleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateBackupScheduleOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateBackupScheduleOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateBackupScheduleOpts) Run() error {
-	params := &atlasv2.UpdateBackupScheduleApiParams{
+func (opts *UpdateBackupScheduleOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateBackupScheduleApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.UpdateBackupSchedule(params)
+	resp, _, err := opts.client.CloudBackupsApi.UpdateBackupScheduleWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1566,40 +1624,42 @@ func UpdateBackupScheduleBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateBackupScheduleTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type UpdateDataProtectionSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateDataProtectionSettingsOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateDataProtectionSettingsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateDataProtectionSettingsOpts) Run() error {
-	params := &atlasv2.UpdateDataProtectionSettingsApiParams{
+func (opts *UpdateDataProtectionSettingsOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateDataProtectionSettingsApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.UpdateDataProtectionSettings(params)
+	resp, _, err := opts.client.CloudBackupsApi.UpdateDataProtectionSettingsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1619,43 +1679,44 @@ func UpdateDataProtectionSettingsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateDataProtectionSettingsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type UpdateSnapshotRetentionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateSnapshotRetentionOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	snapshotId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateSnapshotRetentionOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateSnapshotRetentionOpts) Run() error {
-	params := &atlasv2.UpdateSnapshotRetentionApiParams{
+func (opts *UpdateSnapshotRetentionOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateSnapshotRetentionApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId: opts.snapshotId,
 	}
-	resp, _, err := opts.store.UpdateSnapshotRetention(params)
+	resp, _, err := opts.client.CloudBackupsApi.UpdateSnapshotRetentionWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1675,18 +1736,21 @@ func UpdateSnapshotRetentionBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateSnapshotRetentionTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "usage description")
+	_ = cmd.MarkFlagRequired("snapshotId")
 
 	return cmd
 }

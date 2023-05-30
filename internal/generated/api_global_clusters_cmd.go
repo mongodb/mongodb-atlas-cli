@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateCustomZoneMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateCustomZoneMappingOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateCustomZoneMappingOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateCustomZoneMappingOpts) Run() error {
-	params := &atlasv2.CreateCustomZoneMappingApiParams{
+func (opts *CreateCustomZoneMappingOpts) Run(ctx context.Context) error {
+	params := &admin.CreateCustomZoneMappingApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.CreateCustomZoneMapping(params)
+	resp, _, err := opts.client.GlobalClustersApi.CreateCustomZoneMappingWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,42 +64,44 @@ func CreateCustomZoneMappingBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateCustomZoneMappingTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type CreateManagedNamespaceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateManagedNamespaceOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateManagedNamespaceOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateManagedNamespaceOpts) Run() error {
-	params := &atlasv2.CreateManagedNamespaceApiParams{
+func (opts *CreateManagedNamespaceOpts) Run(ctx context.Context) error {
+	params := &admin.CreateManagedNamespaceApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.CreateManagedNamespace(params)
+	resp, _, err := opts.client.GlobalClustersApi.CreateManagedNamespaceWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -119,42 +121,44 @@ func CreateManagedNamespaceBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateManagedNamespaceTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type DeleteAllCustomZoneMappingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteAllCustomZoneMappingsOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteAllCustomZoneMappingsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteAllCustomZoneMappingsOpts) Run() error {
-	params := &atlasv2.DeleteAllCustomZoneMappingsApiParams{
+func (opts *DeleteAllCustomZoneMappingsOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteAllCustomZoneMappingsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.DeleteAllCustomZoneMappings(params)
+	resp, _, err := opts.client.GlobalClustersApi.DeleteAllCustomZoneMappingsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -174,46 +178,48 @@ func DeleteAllCustomZoneMappingsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteAllCustomZoneMappingsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type DeleteManagedNamespaceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteManagedNamespaceOperation
+	client admin.APIClient
 	clusterName string
 	groupId string
 	db string
 	collection string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteManagedNamespaceOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteManagedNamespaceOpts) Run() error {
-	params := &atlasv2.DeleteManagedNamespaceApiParams{
+func (opts *DeleteManagedNamespaceOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteManagedNamespaceApiParams{
 		ClusterName: opts.clusterName,
 		GroupId: opts.groupId,
 		Db: opts.db,
 		Collection: opts.collection,
 	}
-	resp, _, err := opts.store.DeleteManagedNamespace(params)
+	resp, _, err := opts.client.GlobalClustersApi.DeleteManagedNamespaceWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -233,17 +239,19 @@ func DeleteManagedNamespaceBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteManagedNamespaceTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.db, "db", "", "usage description")
 	cmd.Flags().StringVar(&opts.collection, "collection", "", "usage description")
 
@@ -252,25 +260,25 @@ func DeleteManagedNamespaceBuilder() cobra.Command {
 type GetManagedNamespaceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetManagedNamespaceOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetManagedNamespaceOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetManagedNamespaceOpts) Run() error {
-	params := &atlasv2.GetManagedNamespaceApiParams{
+func (opts *GetManagedNamespaceOpts) Run(ctx context.Context) error {
+	params := &admin.GetManagedNamespaceApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.GetManagedNamespace(params)
+	resp, _, err := opts.client.GlobalClustersApi.GetManagedNamespaceWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -290,17 +298,19 @@ func GetManagedNamespaceBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetManagedNamespaceTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }

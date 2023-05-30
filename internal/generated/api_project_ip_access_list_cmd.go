@@ -19,36 +19,36 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateProjectIpAccessListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateProjectIpAccessListOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateProjectIpAccessListOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateProjectIpAccessListOpts) Run() error {
-	params := &atlasv2.CreateProjectIpAccessListApiParams{
+func (opts *CreateProjectIpAccessListOpts) Run(ctx context.Context) error {
+	params := &admin.CreateProjectIpAccessListApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.CreateProjectIpAccessList(params)
+	resp, _, err := opts.client.ProjectIPAccessListApi.CreateProjectIpAccessListWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -68,16 +68,17 @@ func CreateProjectIpAccessListBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateProjectIpAccessListTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -87,25 +88,25 @@ func CreateProjectIpAccessListBuilder() cobra.Command {
 type DeleteProjectIpAccessListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteProjectIpAccessListOperation
+	client admin.APIClient
 	groupId string
 	entryValue string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteProjectIpAccessListOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteProjectIpAccessListOpts) Run() error {
-	params := &atlasv2.DeleteProjectIpAccessListApiParams{
+func (opts *DeleteProjectIpAccessListOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteProjectIpAccessListApiParams{
 		GroupId: opts.groupId,
 		EntryValue: opts.entryValue,
 	}
-	resp, _, err := opts.store.DeleteProjectIpAccessList(params)
+	resp, _, err := opts.client.ProjectIPAccessListApi.DeleteProjectIpAccessListWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -125,42 +126,44 @@ func DeleteProjectIpAccessListBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteProjectIpAccessListTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.entryValue, "entryValue", "", "usage description")
+	_ = cmd.MarkFlagRequired("entryValue")
 
 	return cmd
 }
 type GetProjectIpAccessListStatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetProjectIpAccessListStatusOperation
+	client admin.APIClient
 	groupId string
 	entryValue string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetProjectIpAccessListStatusOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetProjectIpAccessListStatusOpts) Run() error {
-	params := &atlasv2.GetProjectIpAccessListStatusApiParams{
+func (opts *GetProjectIpAccessListStatusOpts) Run(ctx context.Context) error {
+	params := &admin.GetProjectIpAccessListStatusApiParams{
 		GroupId: opts.groupId,
 		EntryValue: opts.entryValue,
 	}
-	resp, _, err := opts.store.GetProjectIpAccessListStatus(params)
+	resp, _, err := opts.client.ProjectIPAccessListApi.GetProjectIpAccessListStatusWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -180,42 +183,44 @@ func GetProjectIpAccessListStatusBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetProjectIpAccessListStatusTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.entryValue, "entryValue", "", "usage description")
+	_ = cmd.MarkFlagRequired("entryValue")
 
 	return cmd
 }
 type GetProjectIpListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetProjectIpListOperation
+	client admin.APIClient
 	groupId string
 	entryValue string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetProjectIpListOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetProjectIpListOpts) Run() error {
-	params := &atlasv2.GetProjectIpListApiParams{
+func (opts *GetProjectIpListOpts) Run(ctx context.Context) error {
+	params := &admin.GetProjectIpListApiParams{
 		GroupId: opts.groupId,
 		EntryValue: opts.entryValue,
 	}
-	resp, _, err := opts.store.GetProjectIpList(params)
+	resp, _, err := opts.client.ProjectIPAccessListApi.GetProjectIpListWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -235,46 +240,48 @@ func GetProjectIpListBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetProjectIpListTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.entryValue, "entryValue", "", "usage description")
+	_ = cmd.MarkFlagRequired("entryValue")
 
 	return cmd
 }
 type ListProjectIpAccessListsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListProjectIpAccessListsOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListProjectIpAccessListsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListProjectIpAccessListsOpts) Run() error {
-	params := &atlasv2.ListProjectIpAccessListsApiParams{
+func (opts *ListProjectIpAccessListsOpts) Run(ctx context.Context) error {
+	params := &admin.ListProjectIpAccessListsApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListProjectIpAccessLists(params)
+	resp, _, err := opts.client.ProjectIPAccessListApi.ListProjectIpAccessListsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -294,16 +301,17 @@ func ListProjectIpAccessListsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListProjectIpAccessListsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")

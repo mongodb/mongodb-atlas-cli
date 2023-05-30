@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type AddAllTeamsToProjectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.AddAllTeamsToProjectOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *AddAllTeamsToProjectOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *AddAllTeamsToProjectOpts) Run() error {
-	params := &atlasv2.AddAllTeamsToProjectApiParams{
+func (opts *AddAllTeamsToProjectOpts) Run(ctx context.Context) error {
+	params := &admin.AddAllTeamsToProjectApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.AddAllTeamsToProject(params)
+	resp, _, err := opts.client.TeamsApi.AddAllTeamsToProjectWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,41 +62,42 @@ func AddAllTeamsToProjectBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), AddAllTeamsToProjectTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type AddTeamUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.AddTeamUserOperation
+	client admin.APIClient
 	orgId string
 	teamId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *AddTeamUserOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *AddTeamUserOpts) Run() error {
-	params := &atlasv2.AddTeamUserApiParams{
+func (opts *AddTeamUserOpts) Run(ctx context.Context) error {
+	params := &admin.AddTeamUserApiParams{
 		OrgId: opts.orgId,
 		TeamId: opts.teamId,
 	}
-	resp, _, err := opts.store.AddTeamUser(params)
+	resp, _, err := opts.client.TeamsApi.AddTeamUserWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -116,40 +117,42 @@ func AddTeamUserBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), AddTeamUserTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
+	_ = cmd.MarkFlagRequired("teamId")
 
 	return cmd
 }
 type CreateTeamOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateTeamOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateTeamOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateTeamOpts) Run() error {
-	params := &atlasv2.CreateTeamApiParams{
+func (opts *CreateTeamOpts) Run(ctx context.Context) error {
+	params := &admin.CreateTeamApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.CreateTeam(params)
+	resp, _, err := opts.client.TeamsApi.CreateTeamWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -169,41 +172,42 @@ func CreateTeamBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateTeamTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type DeleteTeamOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteTeamOperation
+	client admin.APIClient
 	orgId string
 	teamId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteTeamOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteTeamOpts) Run() error {
-	params := &atlasv2.DeleteTeamApiParams{
+func (opts *DeleteTeamOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteTeamApiParams{
 		OrgId: opts.orgId,
 		TeamId: opts.teamId,
 	}
-	resp, _, err := opts.store.DeleteTeam(params)
+	resp, _, err := opts.client.TeamsApi.DeleteTeamWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -223,42 +227,44 @@ func DeleteTeamBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteTeamTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
+	_ = cmd.MarkFlagRequired("teamId")
 
 	return cmd
 }
 type GetTeamByIdOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetTeamByIdOperation
+	client admin.APIClient
 	orgId string
 	teamId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetTeamByIdOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetTeamByIdOpts) Run() error {
-	params := &atlasv2.GetTeamByIdApiParams{
+func (opts *GetTeamByIdOpts) Run(ctx context.Context) error {
+	params := &admin.GetTeamByIdApiParams{
 		OrgId: opts.orgId,
 		TeamId: opts.teamId,
 	}
-	resp, _, err := opts.store.GetTeamById(params)
+	resp, _, err := opts.client.TeamsApi.GetTeamByIdWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -278,42 +284,44 @@ func GetTeamByIdBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetTeamByIdTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
+	_ = cmd.MarkFlagRequired("teamId")
 
 	return cmd
 }
 type GetTeamByNameOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetTeamByNameOperation
+	client admin.APIClient
 	orgId string
 	teamName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetTeamByNameOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetTeamByNameOpts) Run() error {
-	params := &atlasv2.GetTeamByNameApiParams{
+func (opts *GetTeamByNameOpts) Run(ctx context.Context) error {
+	params := &admin.GetTeamByNameApiParams{
 		OrgId: opts.orgId,
 		TeamName: opts.teamName,
 	}
-	resp, _, err := opts.store.GetTeamByName(params)
+	resp, _, err := opts.client.TeamsApi.GetTeamByNameWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -333,46 +341,48 @@ func GetTeamByNameBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetTeamByNameTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.teamName, "teamName", "", "usage description")
+	_ = cmd.MarkFlagRequired("teamName")
 
 	return cmd
 }
 type ListOrganizationTeamsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListOrganizationTeamsOperation
+	client admin.APIClient
 	orgId string
 	itemsPerPage int32
 	includeCount bool
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListOrganizationTeamsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListOrganizationTeamsOpts) Run() error {
-	params := &atlasv2.ListOrganizationTeamsApiParams{
+func (opts *ListOrganizationTeamsOpts) Run(ctx context.Context) error {
+	params := &admin.ListOrganizationTeamsApiParams{
 		OrgId: opts.orgId,
 		ItemsPerPage: opts.itemsPerPage,
 		IncludeCount: opts.includeCount,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListOrganizationTeams(params)
+	resp, _, err := opts.client.TeamsApi.ListOrganizationTeamsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -392,16 +402,17 @@ func ListOrganizationTeamsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListOrganizationTeamsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -411,29 +422,29 @@ func ListOrganizationTeamsBuilder() cobra.Command {
 type ListProjectTeamsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListProjectTeamsOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListProjectTeamsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListProjectTeamsOpts) Run() error {
-	params := &atlasv2.ListProjectTeamsApiParams{
+func (opts *ListProjectTeamsOpts) Run(ctx context.Context) error {
+	params := &admin.ListProjectTeamsApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListProjectTeams(params)
+	resp, _, err := opts.client.TeamsApi.ListProjectTeamsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -453,16 +464,17 @@ func ListProjectTeamsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListProjectTeamsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -472,29 +484,29 @@ func ListProjectTeamsBuilder() cobra.Command {
 type ListTeamUsersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListTeamUsersOperation
+	client admin.APIClient
 	orgId string
 	teamId string
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListTeamUsersOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListTeamUsersOpts) Run() error {
-	params := &atlasv2.ListTeamUsersApiParams{
+func (opts *ListTeamUsersOpts) Run(ctx context.Context) error {
+	params := &admin.ListTeamUsersApiParams{
 		OrgId: opts.orgId,
 		TeamId: opts.teamId,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListTeamUsers(params)
+	resp, _, err := opts.client.TeamsApi.ListTeamUsersWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -514,17 +526,19 @@ func ListTeamUsersBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListTeamUsersTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
+	_ = cmd.MarkFlagRequired("teamId")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
 
@@ -533,25 +547,25 @@ func ListTeamUsersBuilder() cobra.Command {
 type RemoveProjectTeamOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.RemoveProjectTeamOperation
+	client admin.APIClient
 	groupId string
 	teamId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *RemoveProjectTeamOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *RemoveProjectTeamOpts) Run() error {
-	params := &atlasv2.RemoveProjectTeamApiParams{
+func (opts *RemoveProjectTeamOpts) Run(ctx context.Context) error {
+	params := &admin.RemoveProjectTeamApiParams{
 		GroupId: opts.groupId,
 		TeamId: opts.teamId,
 	}
-	resp, _, err := opts.store.RemoveProjectTeam(params)
+	resp, _, err := opts.client.TeamsApi.RemoveProjectTeamWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -571,44 +585,46 @@ func RemoveProjectTeamBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), RemoveProjectTeamTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
+	_ = cmd.MarkFlagRequired("teamId")
 
 	return cmd
 }
 type RemoveTeamUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.RemoveTeamUserOperation
+	client admin.APIClient
 	orgId string
 	teamId string
 	userId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *RemoveTeamUserOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *RemoveTeamUserOpts) Run() error {
-	params := &atlasv2.RemoveTeamUserApiParams{
+func (opts *RemoveTeamUserOpts) Run(ctx context.Context) error {
+	params := &admin.RemoveTeamUserApiParams{
 		OrgId: opts.orgId,
 		TeamId: opts.teamId,
 		UserId: opts.userId,
 	}
-	_, err := opts.store.RemoveTeamUser(params)
+	_, err := opts.client.TeamsApi.RemoveTeamUserWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -628,43 +644,46 @@ func RemoveTeamUserBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), RemoveTeamUserTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
+	_ = cmd.MarkFlagRequired("teamId")
 	cmd.Flags().StringVar(&opts.userId, "userId", "", "usage description")
+	_ = cmd.MarkFlagRequired("userId")
 
 	return cmd
 }
 type RenameTeamOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.RenameTeamOperation
+	client admin.APIClient
 	orgId string
 	teamId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *RenameTeamOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *RenameTeamOpts) Run() error {
-	params := &atlasv2.RenameTeamApiParams{
+func (opts *RenameTeamOpts) Run(ctx context.Context) error {
+	params := &admin.RenameTeamApiParams{
 		OrgId: opts.orgId,
 		TeamId: opts.teamId,
 	}
-	resp, _, err := opts.store.RenameTeam(params)
+	resp, _, err := opts.client.TeamsApi.RenameTeamWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -684,42 +703,44 @@ func RenameTeamBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), RenameTeamTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
+	_ = cmd.MarkFlagRequired("teamId")
 
 	return cmd
 }
 type UpdateTeamRolesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateTeamRolesOperation
+	client admin.APIClient
 	groupId string
 	teamId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateTeamRolesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateTeamRolesOpts) Run() error {
-	params := &atlasv2.UpdateTeamRolesApiParams{
+func (opts *UpdateTeamRolesOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateTeamRolesApiParams{
 		GroupId: opts.groupId,
 		TeamId: opts.teamId,
 	}
-	resp, _, err := opts.store.UpdateTeamRoles(params)
+	resp, _, err := opts.client.TeamsApi.UpdateTeamRolesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -739,17 +760,19 @@ func UpdateTeamRolesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateTeamRolesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
+	_ = cmd.MarkFlagRequired("teamId")
 
 	return cmd
 }

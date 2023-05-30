@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type DeleteLDAPConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteLDAPConfigurationOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteLDAPConfigurationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteLDAPConfigurationOpts) Run() error {
-	params := &atlasv2.DeleteLDAPConfigurationApiParams{
+func (opts *DeleteLDAPConfigurationOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.store.DeleteLDAPConfiguration(params)
+	_, err := opts.client.LDAPConfigurationApi.DeleteLDAPConfigurationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,39 +62,40 @@ func DeleteLDAPConfigurationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteLDAPConfigurationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type GetLDAPConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetLDAPConfigurationOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetLDAPConfigurationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetLDAPConfigurationOpts) Run() error {
-	params := &atlasv2.GetLDAPConfigurationApiParams{
+func (opts *GetLDAPConfigurationOpts) Run(ctx context.Context) error {
+	params := &admin.GetLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.GetLDAPConfiguration(params)
+	resp, _, err := opts.client.LDAPConfigurationApi.GetLDAPConfigurationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -114,41 +115,42 @@ func GetLDAPConfigurationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetLDAPConfigurationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type GetLDAPConfigurationStatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetLDAPConfigurationStatusOperation
+	client admin.APIClient
 	groupId string
 	requestId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetLDAPConfigurationStatusOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetLDAPConfigurationStatusOpts) Run() error {
-	params := &atlasv2.GetLDAPConfigurationStatusApiParams{
+func (opts *GetLDAPConfigurationStatusOpts) Run(ctx context.Context) error {
+	params := &admin.GetLDAPConfigurationStatusApiParams{
 		GroupId: opts.groupId,
 		RequestId: opts.requestId,
 	}
-	resp, _, err := opts.store.GetLDAPConfigurationStatus(params)
+	resp, _, err := opts.client.LDAPConfigurationApi.GetLDAPConfigurationStatusWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -168,40 +170,42 @@ func GetLDAPConfigurationStatusBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetLDAPConfigurationStatusTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.requestId, "requestId", "", "usage description")
+	_ = cmd.MarkFlagRequired("requestId")
 
 	return cmd
 }
 type SaveLDAPConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.SaveLDAPConfigurationOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *SaveLDAPConfigurationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *SaveLDAPConfigurationOpts) Run() error {
-	params := &atlasv2.SaveLDAPConfigurationApiParams{
+func (opts *SaveLDAPConfigurationOpts) Run(ctx context.Context) error {
+	params := &admin.SaveLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.SaveLDAPConfiguration(params)
+	resp, _, err := opts.client.LDAPConfigurationApi.SaveLDAPConfigurationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -221,39 +225,40 @@ func SaveLDAPConfigurationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), SaveLDAPConfigurationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type VerifyLDAPConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.VerifyLDAPConfigurationOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *VerifyLDAPConfigurationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *VerifyLDAPConfigurationOpts) Run() error {
-	params := &atlasv2.VerifyLDAPConfigurationApiParams{
+func (opts *VerifyLDAPConfigurationOpts) Run(ctx context.Context) error {
+	params := &admin.VerifyLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.VerifyLDAPConfiguration(params)
+	resp, _, err := opts.client.LDAPConfigurationApi.VerifyLDAPConfigurationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -273,16 +278,17 @@ func VerifyLDAPConfigurationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), VerifyLDAPConfigurationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }

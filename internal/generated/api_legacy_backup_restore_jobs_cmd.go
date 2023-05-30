@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateLegacyBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateLegacyBackupRestoreJobOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateLegacyBackupRestoreJobOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateLegacyBackupRestoreJobOpts) Run() error {
-	params := &atlasv2.CreateLegacyBackupRestoreJobApiParams{
+func (opts *CreateLegacyBackupRestoreJobOpts) Run(ctx context.Context) error {
+	params := &admin.CreateLegacyBackupRestoreJobApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.CreateLegacyBackupRestoreJob(params)
+	resp, _, err := opts.client.LegacyBackupRestoreJobsApi.CreateLegacyBackupRestoreJobWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,17 +64,19 @@ func CreateLegacyBackupRestoreJobBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateLegacyBackupRestoreJobTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }

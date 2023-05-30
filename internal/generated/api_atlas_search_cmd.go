@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateAtlasSearchIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateAtlasSearchIndexOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateAtlasSearchIndexOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateAtlasSearchIndexOpts) Run() error {
-	params := &atlasv2.CreateAtlasSearchIndexApiParams{
+func (opts *CreateAtlasSearchIndexOpts) Run(ctx context.Context) error {
+	params := &admin.CreateAtlasSearchIndexApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.CreateAtlasSearchIndex(params)
+	resp, _, err := opts.client.AtlasSearchApi.CreateAtlasSearchIndexWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,44 +64,46 @@ func CreateAtlasSearchIndexBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateAtlasSearchIndexTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type DeleteAtlasSearchIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteAtlasSearchIndexOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	indexId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteAtlasSearchIndexOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteAtlasSearchIndexOpts) Run() error {
-	params := &atlasv2.DeleteAtlasSearchIndexApiParams{
+func (opts *DeleteAtlasSearchIndexOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteAtlasSearchIndexApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		IndexId: opts.indexId,
 	}
-	resp, _, err := opts.store.DeleteAtlasSearchIndex(params)
+	resp, _, err := opts.client.AtlasSearchApi.DeleteAtlasSearchIndexWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -121,45 +123,48 @@ func DeleteAtlasSearchIndexBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteAtlasSearchIndexTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.indexId, "indexId", "", "usage description")
+	_ = cmd.MarkFlagRequired("indexId")
 
 	return cmd
 }
 type GetAtlasSearchIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetAtlasSearchIndexOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	indexId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetAtlasSearchIndexOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetAtlasSearchIndexOpts) Run() error {
-	params := &atlasv2.GetAtlasSearchIndexApiParams{
+func (opts *GetAtlasSearchIndexOpts) Run(ctx context.Context) error {
+	params := &admin.GetAtlasSearchIndexApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		IndexId: opts.indexId,
 	}
-	resp, _, err := opts.store.GetAtlasSearchIndex(params)
+	resp, _, err := opts.client.AtlasSearchApi.GetAtlasSearchIndexWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -179,47 +184,50 @@ func GetAtlasSearchIndexBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetAtlasSearchIndexTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.indexId, "indexId", "", "usage description")
+	_ = cmd.MarkFlagRequired("indexId")
 
 	return cmd
 }
 type ListAtlasSearchIndexesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListAtlasSearchIndexesOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	collectionName string
 	databaseName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListAtlasSearchIndexesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListAtlasSearchIndexesOpts) Run() error {
-	params := &atlasv2.ListAtlasSearchIndexesApiParams{
+func (opts *ListAtlasSearchIndexesOpts) Run(ctx context.Context) error {
+	params := &admin.ListAtlasSearchIndexesApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		CollectionName: opts.collectionName,
 		DatabaseName: opts.databaseName,
 	}
-	resp, _, err := opts.store.ListAtlasSearchIndexes(params)
+	resp, _, err := opts.client.AtlasSearchApi.ListAtlasSearchIndexesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -239,46 +247,50 @@ func ListAtlasSearchIndexesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListAtlasSearchIndexesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.collectionName, "collectionName", "", "usage description")
+	_ = cmd.MarkFlagRequired("collectionName")
 	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "usage description")
+	_ = cmd.MarkFlagRequired("databaseName")
 
 	return cmd
 }
 type UpdateAtlasSearchIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateAtlasSearchIndexOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	indexId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateAtlasSearchIndexOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateAtlasSearchIndexOpts) Run() error {
-	params := &atlasv2.UpdateAtlasSearchIndexApiParams{
+func (opts *UpdateAtlasSearchIndexOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateAtlasSearchIndexApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		IndexId: opts.indexId,
 	}
-	resp, _, err := opts.store.UpdateAtlasSearchIndex(params)
+	resp, _, err := opts.client.AtlasSearchApi.UpdateAtlasSearchIndexWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -298,18 +310,21 @@ func UpdateAtlasSearchIndexBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateAtlasSearchIndexTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.indexId, "indexId", "", "usage description")
+	_ = cmd.MarkFlagRequired("indexId")
 
 	return cmd
 }

@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateServerlessInstanceOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateServerlessInstanceOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateServerlessInstanceOpts) Run() error {
-	params := &atlasv2.CreateServerlessInstanceApiParams{
+func (opts *CreateServerlessInstanceOpts) Run(ctx context.Context) error {
+	params := &admin.CreateServerlessInstanceApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreateServerlessInstance(params)
+	resp, _, err := opts.client.ServerlessInstancesApi.CreateServerlessInstanceWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,41 +62,42 @@ func CreateServerlessInstanceBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateServerlessInstanceTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type DeleteServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteServerlessInstanceOperation
+	client admin.APIClient
 	groupId string
 	name string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteServerlessInstanceOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteServerlessInstanceOpts) Run() error {
-	params := &atlasv2.DeleteServerlessInstanceApiParams{
+func (opts *DeleteServerlessInstanceOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteServerlessInstanceApiParams{
 		GroupId: opts.groupId,
 		Name: opts.name,
 	}
-	resp, _, err := opts.store.DeleteServerlessInstance(params)
+	resp, _, err := opts.client.ServerlessInstancesApi.DeleteServerlessInstanceWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -116,42 +117,44 @@ func DeleteServerlessInstanceBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteServerlessInstanceTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.name, "name", "", "usage description")
+	_ = cmd.MarkFlagRequired("name")
 
 	return cmd
 }
 type GetServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetServerlessInstanceOperation
+	client admin.APIClient
 	groupId string
 	name string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetServerlessInstanceOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetServerlessInstanceOpts) Run() error {
-	params := &atlasv2.GetServerlessInstanceApiParams{
+func (opts *GetServerlessInstanceOpts) Run(ctx context.Context) error {
+	params := &admin.GetServerlessInstanceApiParams{
 		GroupId: opts.groupId,
 		Name: opts.name,
 	}
-	resp, _, err := opts.store.GetServerlessInstance(params)
+	resp, _, err := opts.client.ServerlessInstancesApi.GetServerlessInstanceWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -171,46 +174,48 @@ func GetServerlessInstanceBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetServerlessInstanceTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.name, "name", "", "usage description")
+	_ = cmd.MarkFlagRequired("name")
 
 	return cmd
 }
 type ListServerlessInstancesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListServerlessInstancesOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListServerlessInstancesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListServerlessInstancesOpts) Run() error {
-	params := &atlasv2.ListServerlessInstancesApiParams{
+func (opts *ListServerlessInstancesOpts) Run(ctx context.Context) error {
+	params := &admin.ListServerlessInstancesApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListServerlessInstances(params)
+	resp, _, err := opts.client.ServerlessInstancesApi.ListServerlessInstancesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -230,16 +235,17 @@ func ListServerlessInstancesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListServerlessInstancesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -249,25 +255,25 @@ func ListServerlessInstancesBuilder() cobra.Command {
 type UpdateServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateServerlessInstanceOperation
+	client admin.APIClient
 	groupId string
 	name string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateServerlessInstanceOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateServerlessInstanceOpts) Run() error {
-	params := &atlasv2.UpdateServerlessInstanceApiParams{
+func (opts *UpdateServerlessInstanceOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateServerlessInstanceApiParams{
 		GroupId: opts.groupId,
 		Name: opts.name,
 	}
-	resp, _, err := opts.store.UpdateServerlessInstance(params)
+	resp, _, err := opts.client.ServerlessInstancesApi.UpdateServerlessInstanceWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -287,17 +293,19 @@ func UpdateServerlessInstanceBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateServerlessInstanceTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.name, "name", "", "usage description")
+	_ = cmd.MarkFlagRequired("name")
 
 	return cmd
 }

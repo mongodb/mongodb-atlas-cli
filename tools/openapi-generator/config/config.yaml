@@ -10,6 +10,6 @@ files:
   cmd.mustache:
     templateType: API
     destinationFilename: _cmd.go
-  store.mustache:
-    templateType: API
-    destinationFilename: _store.go
+  generated.mustache:
+    destinationFilename: generated.go
+    templateType: SupportingFiles

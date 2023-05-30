@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateDatabaseUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateDatabaseUserOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateDatabaseUserOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateDatabaseUserOpts) Run() error {
-	params := &atlasv2.CreateDatabaseUserApiParams{
+func (opts *CreateDatabaseUserOpts) Run(ctx context.Context) error {
+	params := &admin.CreateDatabaseUserApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreateDatabaseUser(params)
+	resp, _, err := opts.client.DatabaseUsersApi.CreateDatabaseUserWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,43 +62,44 @@ func CreateDatabaseUserBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateDatabaseUserTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type DeleteDatabaseUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteDatabaseUserOperation
+	client admin.APIClient
 	groupId string
 	databaseName string
 	username string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteDatabaseUserOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteDatabaseUserOpts) Run() error {
-	params := &atlasv2.DeleteDatabaseUserApiParams{
+func (opts *DeleteDatabaseUserOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteDatabaseUserApiParams{
 		GroupId: opts.groupId,
 		DatabaseName: opts.databaseName,
 		Username: opts.username,
 	}
-	resp, _, err := opts.store.DeleteDatabaseUser(params)
+	resp, _, err := opts.client.DatabaseUsersApi.DeleteDatabaseUserWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -118,45 +119,48 @@ func DeleteDatabaseUserBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteDatabaseUserTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "usage description")
+	_ = cmd.MarkFlagRequired("databaseName")
 	cmd.Flags().StringVar(&opts.username, "username", "", "usage description")
+	_ = cmd.MarkFlagRequired("username")
 
 	return cmd
 }
 type GetDatabaseUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetDatabaseUserOperation
+	client admin.APIClient
 	groupId string
 	databaseName string
 	username string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetDatabaseUserOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetDatabaseUserOpts) Run() error {
-	params := &atlasv2.GetDatabaseUserApiParams{
+func (opts *GetDatabaseUserOpts) Run(ctx context.Context) error {
+	params := &admin.GetDatabaseUserApiParams{
 		GroupId: opts.groupId,
 		DatabaseName: opts.databaseName,
 		Username: opts.username,
 	}
-	resp, _, err := opts.store.GetDatabaseUser(params)
+	resp, _, err := opts.client.DatabaseUsersApi.GetDatabaseUserWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -176,47 +180,50 @@ func GetDatabaseUserBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetDatabaseUserTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "usage description")
+	_ = cmd.MarkFlagRequired("databaseName")
 	cmd.Flags().StringVar(&opts.username, "username", "", "usage description")
+	_ = cmd.MarkFlagRequired("username")
 
 	return cmd
 }
 type ListDatabaseUsersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListDatabaseUsersOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListDatabaseUsersOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListDatabaseUsersOpts) Run() error {
-	params := &atlasv2.ListDatabaseUsersApiParams{
+func (opts *ListDatabaseUsersOpts) Run(ctx context.Context) error {
+	params := &admin.ListDatabaseUsersApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListDatabaseUsers(params)
+	resp, _, err := opts.client.DatabaseUsersApi.ListDatabaseUsersWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -236,16 +243,17 @@ func ListDatabaseUsersBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListDatabaseUsersTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -255,27 +263,27 @@ func ListDatabaseUsersBuilder() cobra.Command {
 type UpdateDatabaseUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateDatabaseUserOperation
+	client admin.APIClient
 	groupId string
 	databaseName string
 	username string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateDatabaseUserOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateDatabaseUserOpts) Run() error {
-	params := &atlasv2.UpdateDatabaseUserApiParams{
+func (opts *UpdateDatabaseUserOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateDatabaseUserApiParams{
 		GroupId: opts.groupId,
 		DatabaseName: opts.databaseName,
 		Username: opts.username,
 	}
-	resp, _, err := opts.store.UpdateDatabaseUser(params)
+	resp, _, err := opts.client.DatabaseUsersApi.UpdateDatabaseUserWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -295,18 +303,21 @@ func UpdateDatabaseUserBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateDatabaseUserTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "usage description")
+	_ = cmd.MarkFlagRequired("databaseName")
 	cmd.Flags().StringVar(&opts.username, "username", "", "usage description")
+	_ = cmd.MarkFlagRequired("username")
 
 	return cmd
 }

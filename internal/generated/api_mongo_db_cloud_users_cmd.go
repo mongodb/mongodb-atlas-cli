@@ -19,28 +19,28 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateUserOperation
+	client admin.APIClient
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateUserOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateUserOpts) Run() error {
-	params := &atlasv2.CreateUserApiParams{
+func (opts *CreateUserOpts) Run(ctx context.Context) error {
+	params := &admin.CreateUserApiParams{
 	}
-	resp, _, err := opts.store.CreateUser(params)
+	resp, _, err := opts.client.MongoDBCloudUsersApi.CreateUserWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -60,13 +60,13 @@ func CreateUserBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateUserTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 
@@ -75,23 +75,23 @@ func CreateUserBuilder() cobra.Command {
 type GetUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetUserOperation
+	client admin.APIClient
 	userId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetUserOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetUserOpts) Run() error {
-	params := &atlasv2.GetUserApiParams{
+func (opts *GetUserOpts) Run(ctx context.Context) error {
+	params := &admin.GetUserApiParams{
 		UserId: opts.userId,
 	}
-	resp, _, err := opts.store.GetUser(params)
+	resp, _, err := opts.client.MongoDBCloudUsersApi.GetUserWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -111,39 +111,40 @@ func GetUserBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetUserTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.userId, "userId", "", "usage description")
+	_ = cmd.MarkFlagRequired("userId")
 
 	return cmd
 }
 type GetUserByUsernameOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetUserByUsernameOperation
+	client admin.APIClient
 	userName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetUserByUsernameOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetUserByUsernameOpts) Run() error {
-	params := &atlasv2.GetUserByUsernameApiParams{
+func (opts *GetUserByUsernameOpts) Run(ctx context.Context) error {
+	params := &admin.GetUserByUsernameApiParams{
 		UserName: opts.userName,
 	}
-	resp, _, err := opts.store.GetUserByUsername(params)
+	resp, _, err := opts.client.MongoDBCloudUsersApi.GetUserByUsernameWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -163,16 +164,17 @@ func GetUserByUsernameBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetUserByUsernameTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.userName, "userName", "", "usage description")
+	_ = cmd.MarkFlagRequired("userName")
 
 	return cmd
 }

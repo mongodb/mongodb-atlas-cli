@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type AcknowledgeAlertOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.AcknowledgeAlertOperation
+	client admin.APIClient
 	groupId string
 	alertId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *AcknowledgeAlertOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *AcknowledgeAlertOpts) Run() error {
-	params := &atlasv2.AcknowledgeAlertApiParams{
+func (opts *AcknowledgeAlertOpts) Run(ctx context.Context) error {
+	params := &admin.AcknowledgeAlertApiParams{
 		GroupId: opts.groupId,
 		AlertId: opts.alertId,
 	}
-	resp, _, err := opts.store.AcknowledgeAlert(params)
+	resp, _, err := opts.client.AlertsApi.AcknowledgeAlertWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,42 +64,44 @@ func AcknowledgeAlertBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), AcknowledgeAlertTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.alertId, "alertId", "", "usage description")
+	_ = cmd.MarkFlagRequired("alertId")
 
 	return cmd
 }
 type GetAlertOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetAlertOperation
+	client admin.APIClient
 	groupId string
 	alertId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetAlertOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetAlertOpts) Run() error {
-	params := &atlasv2.GetAlertApiParams{
+func (opts *GetAlertOpts) Run(ctx context.Context) error {
+	params := &admin.GetAlertApiParams{
 		GroupId: opts.groupId,
 		AlertId: opts.alertId,
 	}
-	resp, _, err := opts.store.GetAlert(params)
+	resp, _, err := opts.client.AlertsApi.GetAlertWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -119,24 +121,26 @@ func GetAlertBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetAlertTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.alertId, "alertId", "", "usage description")
+	_ = cmd.MarkFlagRequired("alertId")
 
 	return cmd
 }
 type ListAlertsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListAlertsOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
@@ -144,23 +148,23 @@ type ListAlertsOpts struct {
 	status string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListAlertsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListAlertsOpts) Run() error {
-	params := &atlasv2.ListAlertsApiParams{
+func (opts *ListAlertsOpts) Run(ctx context.Context) error {
+	params := &admin.ListAlertsApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 		Status: opts.status,
 	}
-	resp, _, err := opts.store.ListAlerts(params)
+	resp, _, err := opts.client.AlertsApi.ListAlertsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -180,16 +184,17 @@ func ListAlertsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListAlertsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -200,7 +205,7 @@ func ListAlertsBuilder() cobra.Command {
 type ListAlertsByAlertConfigurationIdOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListAlertsByAlertConfigurationIdOperation
+	client admin.APIClient
 	groupId string
 	alertConfigId string
 	includeCount bool
@@ -208,23 +213,23 @@ type ListAlertsByAlertConfigurationIdOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListAlertsByAlertConfigurationIdOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListAlertsByAlertConfigurationIdOpts) Run() error {
-	params := &atlasv2.ListAlertsByAlertConfigurationIdApiParams{
+func (opts *ListAlertsByAlertConfigurationIdOpts) Run(ctx context.Context) error {
+	params := &admin.ListAlertsByAlertConfigurationIdApiParams{
 		GroupId: opts.groupId,
 		AlertConfigId: opts.alertConfigId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListAlertsByAlertConfigurationId(params)
+	resp, _, err := opts.client.AlertsApi.ListAlertsByAlertConfigurationIdWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -244,17 +249,19 @@ func ListAlertsByAlertConfigurationIdBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListAlertsByAlertConfigurationIdTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.alertConfigId, "alertConfigId", "", "usage description")
+	_ = cmd.MarkFlagRequired("alertConfigId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")

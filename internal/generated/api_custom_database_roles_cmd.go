@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateCustomDatabaseRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateCustomDatabaseRoleOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateCustomDatabaseRoleOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateCustomDatabaseRoleOpts) Run() error {
-	params := &atlasv2.CreateCustomDatabaseRoleApiParams{
+func (opts *CreateCustomDatabaseRoleOpts) Run(ctx context.Context) error {
+	params := &admin.CreateCustomDatabaseRoleApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreateCustomDatabaseRole(params)
+	resp, _, err := opts.client.CustomDatabaseRolesApi.CreateCustomDatabaseRoleWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,41 +62,42 @@ func CreateCustomDatabaseRoleBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateCustomDatabaseRoleTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type DeleteCustomDatabaseRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteCustomDatabaseRoleOperation
+	client admin.APIClient
 	groupId string
 	roleName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteCustomDatabaseRoleOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteCustomDatabaseRoleOpts) Run() error {
-	params := &atlasv2.DeleteCustomDatabaseRoleApiParams{
+func (opts *DeleteCustomDatabaseRoleOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteCustomDatabaseRoleApiParams{
 		GroupId: opts.groupId,
 		RoleName: opts.roleName,
 	}
-	_, err := opts.store.DeleteCustomDatabaseRole(params)
+	_, err := opts.client.CustomDatabaseRolesApi.DeleteCustomDatabaseRoleWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -116,42 +117,44 @@ func DeleteCustomDatabaseRoleBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteCustomDatabaseRoleTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.roleName, "roleName", "", "usage description")
+	_ = cmd.MarkFlagRequired("roleName")
 
 	return cmd
 }
 type GetCustomDatabaseRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetCustomDatabaseRoleOperation
+	client admin.APIClient
 	groupId string
 	roleName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetCustomDatabaseRoleOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetCustomDatabaseRoleOpts) Run() error {
-	params := &atlasv2.GetCustomDatabaseRoleApiParams{
+func (opts *GetCustomDatabaseRoleOpts) Run(ctx context.Context) error {
+	params := &admin.GetCustomDatabaseRoleApiParams{
 		GroupId: opts.groupId,
 		RoleName: opts.roleName,
 	}
-	resp, _, err := opts.store.GetCustomDatabaseRole(params)
+	resp, _, err := opts.client.CustomDatabaseRolesApi.GetCustomDatabaseRoleWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -171,40 +174,42 @@ func GetCustomDatabaseRoleBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetCustomDatabaseRoleTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.roleName, "roleName", "", "usage description")
+	_ = cmd.MarkFlagRequired("roleName")
 
 	return cmd
 }
 type ListCustomDatabaseRolesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListCustomDatabaseRolesOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListCustomDatabaseRolesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListCustomDatabaseRolesOpts) Run() error {
-	params := &atlasv2.ListCustomDatabaseRolesApiParams{
+func (opts *ListCustomDatabaseRolesOpts) Run(ctx context.Context) error {
+	params := &admin.ListCustomDatabaseRolesApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.ListCustomDatabaseRoles(params)
+	resp, _, err := opts.client.CustomDatabaseRolesApi.ListCustomDatabaseRolesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -224,41 +229,42 @@ func ListCustomDatabaseRolesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListCustomDatabaseRolesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type UpdateCustomDatabaseRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateCustomDatabaseRoleOperation
+	client admin.APIClient
 	groupId string
 	roleName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateCustomDatabaseRoleOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateCustomDatabaseRoleOpts) Run() error {
-	params := &atlasv2.UpdateCustomDatabaseRoleApiParams{
+func (opts *UpdateCustomDatabaseRoleOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateCustomDatabaseRoleApiParams{
 		GroupId: opts.groupId,
 		RoleName: opts.roleName,
 	}
-	resp, _, err := opts.store.UpdateCustomDatabaseRole(params)
+	resp, _, err := opts.client.CustomDatabaseRolesApi.UpdateCustomDatabaseRoleWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -278,17 +284,19 @@ func UpdateCustomDatabaseRoleBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateCustomDatabaseRoleTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.roleName, "roleName", "", "usage description")
+	_ = cmd.MarkFlagRequired("roleName")
 
 	return cmd
 }

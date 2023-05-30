@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type AddProjectApiKeyOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.AddProjectApiKeyOperation
+	client admin.APIClient
 	groupId string
 	apiUserId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *AddProjectApiKeyOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *AddProjectApiKeyOpts) Run() error {
-	params := &atlasv2.AddProjectApiKeyApiParams{
+func (opts *AddProjectApiKeyOpts) Run(ctx context.Context) error {
+	params := &admin.AddProjectApiKeyApiParams{
 		GroupId: opts.groupId,
 		ApiUserId: opts.apiUserId,
 	}
-	resp, _, err := opts.store.AddProjectApiKey(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.AddProjectApiKeyWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,40 +64,42 @@ func AddProjectApiKeyBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), AddProjectApiKeyTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", "usage description")
+	_ = cmd.MarkFlagRequired("apiUserId")
 
 	return cmd
 }
 type CreateApiKeyOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateApiKeyOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateApiKeyOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateApiKeyOpts) Run() error {
-	params := &atlasv2.CreateApiKeyApiParams{
+func (opts *CreateApiKeyOpts) Run(ctx context.Context) error {
+	params := &admin.CreateApiKeyApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.CreateApiKey(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.CreateApiKeyWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -117,23 +119,24 @@ func CreateApiKeyBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateApiKeyTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type CreateApiKeyAccessListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateApiKeyAccessListOperation
+	client admin.APIClient
 	orgId string
 	apiUserId string
 	includeCount bool
@@ -141,23 +144,23 @@ type CreateApiKeyAccessListOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateApiKeyAccessListOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateApiKeyAccessListOpts) Run() error {
-	params := &atlasv2.CreateApiKeyAccessListApiParams{
+func (opts *CreateApiKeyAccessListOpts) Run(ctx context.Context) error {
+	params := &admin.CreateApiKeyAccessListApiParams{
 		OrgId: opts.orgId,
 		ApiUserId: opts.apiUserId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.CreateApiKeyAccessList(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.CreateApiKeyAccessListWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -177,17 +180,19 @@ func CreateApiKeyAccessListBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateApiKeyAccessListTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", "usage description")
+	_ = cmd.MarkFlagRequired("apiUserId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -197,23 +202,23 @@ func CreateApiKeyAccessListBuilder() cobra.Command {
 type CreateProjectApiKeyOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateProjectApiKeyOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateProjectApiKeyOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateProjectApiKeyOpts) Run() error {
-	params := &atlasv2.CreateProjectApiKeyApiParams{
+func (opts *CreateProjectApiKeyOpts) Run(ctx context.Context) error {
+	params := &admin.CreateProjectApiKeyApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreateProjectApiKey(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.CreateProjectApiKeyWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -233,41 +238,42 @@ func CreateProjectApiKeyBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateProjectApiKeyTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type DeleteApiKeyOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteApiKeyOperation
+	client admin.APIClient
 	orgId string
 	apiUserId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteApiKeyOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteApiKeyOpts) Run() error {
-	params := &atlasv2.DeleteApiKeyApiParams{
+func (opts *DeleteApiKeyOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteApiKeyApiParams{
 		OrgId: opts.orgId,
 		ApiUserId: opts.apiUserId,
 	}
-	resp, _, err := opts.store.DeleteApiKey(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.DeleteApiKeyWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -287,44 +293,46 @@ func DeleteApiKeyBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteApiKeyTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", "usage description")
+	_ = cmd.MarkFlagRequired("apiUserId")
 
 	return cmd
 }
 type DeleteApiKeyAccessListEntryOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteApiKeyAccessListEntryOperation
+	client admin.APIClient
 	orgId string
 	apiUserId string
 	ipAddress string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteApiKeyAccessListEntryOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteApiKeyAccessListEntryOpts) Run() error {
-	params := &atlasv2.DeleteApiKeyAccessListEntryApiParams{
+func (opts *DeleteApiKeyAccessListEntryOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteApiKeyAccessListEntryApiParams{
 		OrgId: opts.orgId,
 		ApiUserId: opts.apiUserId,
 		IpAddress: opts.ipAddress,
 	}
-	resp, _, err := opts.store.DeleteApiKeyAccessListEntry(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.DeleteApiKeyAccessListEntryWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -344,43 +352,46 @@ func DeleteApiKeyAccessListEntryBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteApiKeyAccessListEntryTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", "usage description")
+	_ = cmd.MarkFlagRequired("apiUserId")
 	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", "usage description")
+	_ = cmd.MarkFlagRequired("ipAddress")
 
 	return cmd
 }
 type GetApiKeyOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetApiKeyOperation
+	client admin.APIClient
 	orgId string
 	apiUserId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetApiKeyOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetApiKeyOpts) Run() error {
-	params := &atlasv2.GetApiKeyApiParams{
+func (opts *GetApiKeyOpts) Run(ctx context.Context) error {
+	params := &admin.GetApiKeyApiParams{
 		OrgId: opts.orgId,
 		ApiUserId: opts.apiUserId,
 	}
-	resp, _, err := opts.store.GetApiKey(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.GetApiKeyWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -400,44 +411,46 @@ func GetApiKeyBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetApiKeyTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", "usage description")
+	_ = cmd.MarkFlagRequired("apiUserId")
 
 	return cmd
 }
 type GetApiKeyAccessListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetApiKeyAccessListOperation
+	client admin.APIClient
 	orgId string
 	ipAddress string
 	apiUserId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetApiKeyAccessListOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetApiKeyAccessListOpts) Run() error {
-	params := &atlasv2.GetApiKeyAccessListApiParams{
+func (opts *GetApiKeyAccessListOpts) Run(ctx context.Context) error {
+	params := &admin.GetApiKeyAccessListApiParams{
 		OrgId: opts.orgId,
 		IpAddress: opts.ipAddress,
 		ApiUserId: opts.apiUserId,
 	}
-	resp, _, err := opts.store.GetApiKeyAccessList(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.GetApiKeyAccessListWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -457,25 +470,28 @@ func GetApiKeyAccessListBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetApiKeyAccessListTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", "usage description")
+	_ = cmd.MarkFlagRequired("ipAddress")
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", "usage description")
+	_ = cmd.MarkFlagRequired("apiUserId")
 
 	return cmd
 }
 type ListApiKeyAccessListsEntriesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListApiKeyAccessListsEntriesOperation
+	client admin.APIClient
 	orgId string
 	apiUserId string
 	includeCount bool
@@ -483,23 +499,23 @@ type ListApiKeyAccessListsEntriesOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListApiKeyAccessListsEntriesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListApiKeyAccessListsEntriesOpts) Run() error {
-	params := &atlasv2.ListApiKeyAccessListsEntriesApiParams{
+func (opts *ListApiKeyAccessListsEntriesOpts) Run(ctx context.Context) error {
+	params := &admin.ListApiKeyAccessListsEntriesApiParams{
 		OrgId: opts.orgId,
 		ApiUserId: opts.apiUserId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListApiKeyAccessListsEntries(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.ListApiKeyAccessListsEntriesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -519,17 +535,19 @@ func ListApiKeyAccessListsEntriesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListApiKeyAccessListsEntriesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", "usage description")
+	_ = cmd.MarkFlagRequired("apiUserId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -539,29 +557,29 @@ func ListApiKeyAccessListsEntriesBuilder() cobra.Command {
 type ListApiKeysOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListApiKeysOperation
+	client admin.APIClient
 	orgId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListApiKeysOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListApiKeysOpts) Run() error {
-	params := &atlasv2.ListApiKeysApiParams{
+func (opts *ListApiKeysOpts) Run(ctx context.Context) error {
+	params := &admin.ListApiKeysApiParams{
 		OrgId: opts.orgId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListApiKeys(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.ListApiKeysWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -581,16 +599,17 @@ func ListApiKeysBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListApiKeysTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -600,29 +619,29 @@ func ListApiKeysBuilder() cobra.Command {
 type ListProjectApiKeysOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListProjectApiKeysOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListProjectApiKeysOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListProjectApiKeysOpts) Run() error {
-	params := &atlasv2.ListProjectApiKeysApiParams{
+func (opts *ListProjectApiKeysOpts) Run(ctx context.Context) error {
+	params := &admin.ListProjectApiKeysApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListProjectApiKeys(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.ListProjectApiKeysWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -642,16 +661,17 @@ func ListProjectApiKeysBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListProjectApiKeysTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -661,25 +681,25 @@ func ListProjectApiKeysBuilder() cobra.Command {
 type RemoveProjectApiKeyOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.RemoveProjectApiKeyOperation
+	client admin.APIClient
 	groupId string
 	apiUserId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *RemoveProjectApiKeyOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *RemoveProjectApiKeyOpts) Run() error {
-	params := &atlasv2.RemoveProjectApiKeyApiParams{
+func (opts *RemoveProjectApiKeyOpts) Run(ctx context.Context) error {
+	params := &admin.RemoveProjectApiKeyApiParams{
 		GroupId: opts.groupId,
 		ApiUserId: opts.apiUserId,
 	}
-	resp, _, err := opts.store.RemoveProjectApiKey(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.RemoveProjectApiKeyWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -699,42 +719,44 @@ func RemoveProjectApiKeyBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), RemoveProjectApiKeyTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", "usage description")
+	_ = cmd.MarkFlagRequired("apiUserId")
 
 	return cmd
 }
 type UpdateApiKeyOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateApiKeyOperation
+	client admin.APIClient
 	orgId string
 	apiUserId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateApiKeyOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateApiKeyOpts) Run() error {
-	params := &atlasv2.UpdateApiKeyApiParams{
+func (opts *UpdateApiKeyOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateApiKeyApiParams{
 		OrgId: opts.orgId,
 		ApiUserId: opts.apiUserId,
 	}
-	resp, _, err := opts.store.UpdateApiKey(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.UpdateApiKeyWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -754,24 +776,26 @@ func UpdateApiKeyBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateApiKeyTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", "usage description")
+	_ = cmd.MarkFlagRequired("apiUserId")
 
 	return cmd
 }
 type UpdateApiKeyRolesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateApiKeyRolesOperation
+	client admin.APIClient
 	groupId string
 	apiUserId string
 	pageNum int32
@@ -779,23 +803,23 @@ type UpdateApiKeyRolesOpts struct {
 	includeCount bool
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateApiKeyRolesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateApiKeyRolesOpts) Run() error {
-	params := &atlasv2.UpdateApiKeyRolesApiParams{
+func (opts *UpdateApiKeyRolesOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateApiKeyRolesApiParams{
 		GroupId: opts.groupId,
 		ApiUserId: opts.apiUserId,
 		PageNum: opts.pageNum,
 		ItemsPerPage: opts.itemsPerPage,
 		IncludeCount: opts.includeCount,
 	}
-	resp, _, err := opts.store.UpdateApiKeyRoles(params)
+	resp, _, err := opts.client.ProgrammaticAPIKeysApi.UpdateApiKeyRolesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -815,17 +839,19 @@ func UpdateApiKeyRolesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateApiKeyRolesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", "usage description")
+	_ = cmd.MarkFlagRequired("apiUserId")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")

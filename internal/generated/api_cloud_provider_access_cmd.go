@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type AuthorizeCloudProviderAccessRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.AuthorizeCloudProviderAccessRoleOperation
+	client admin.APIClient
 	groupId string
 	roleId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *AuthorizeCloudProviderAccessRoleOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *AuthorizeCloudProviderAccessRoleOpts) Run() error {
-	params := &atlasv2.AuthorizeCloudProviderAccessRoleApiParams{
+func (opts *AuthorizeCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
+	params := &admin.AuthorizeCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
 		RoleId: opts.roleId,
 	}
-	resp, _, err := opts.store.AuthorizeCloudProviderAccessRole(params)
+	resp, _, err := opts.client.CloudProviderAccessApi.AuthorizeCloudProviderAccessRoleWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,40 +64,42 @@ func AuthorizeCloudProviderAccessRoleBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), AuthorizeCloudProviderAccessRoleTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.roleId, "roleId", "", "usage description")
+	_ = cmd.MarkFlagRequired("roleId")
 
 	return cmd
 }
 type CreateCloudProviderAccessRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateCloudProviderAccessRoleOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateCloudProviderAccessRoleOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateCloudProviderAccessRoleOpts) Run() error {
-	params := &atlasv2.CreateCloudProviderAccessRoleApiParams{
+func (opts *CreateCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
+	params := &admin.CreateCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreateCloudProviderAccessRole(params)
+	resp, _, err := opts.client.CloudProviderAccessApi.CreateCloudProviderAccessRoleWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -117,43 +119,44 @@ func CreateCloudProviderAccessRoleBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateCloudProviderAccessRoleTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type DeauthorizeCloudProviderAccessRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeauthorizeCloudProviderAccessRoleOperation
+	client admin.APIClient
 	groupId string
 	cloudProvider string
 	roleId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeauthorizeCloudProviderAccessRoleOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeauthorizeCloudProviderAccessRoleOpts) Run() error {
-	params := &atlasv2.DeauthorizeCloudProviderAccessRoleApiParams{
+func (opts *DeauthorizeCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
+	params := &admin.DeauthorizeCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
 		CloudProvider: opts.cloudProvider,
 		RoleId: opts.roleId,
 	}
-	_, err := opts.store.DeauthorizeCloudProviderAccessRole(params)
+	_, err := opts.client.CloudProviderAccessApi.DeauthorizeCloudProviderAccessRoleWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -173,43 +176,46 @@ func DeauthorizeCloudProviderAccessRoleBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeauthorizeCloudProviderAccessRoleTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "", "usage description")
+	_ = cmd.MarkFlagRequired("cloudProvider")
 	cmd.Flags().StringVar(&opts.roleId, "roleId", "", "usage description")
+	_ = cmd.MarkFlagRequired("roleId")
 
 	return cmd
 }
 type GetCloudProviderAccessRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetCloudProviderAccessRoleOperation
+	client admin.APIClient
 	groupId string
 	roleId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetCloudProviderAccessRoleOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetCloudProviderAccessRoleOpts) Run() error {
-	params := &atlasv2.GetCloudProviderAccessRoleApiParams{
+func (opts *GetCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
+	params := &admin.GetCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
 		RoleId: opts.roleId,
 	}
-	resp, _, err := opts.store.GetCloudProviderAccessRole(params)
+	resp, _, err := opts.client.CloudProviderAccessApi.GetCloudProviderAccessRoleWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -229,40 +235,42 @@ func GetCloudProviderAccessRoleBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetCloudProviderAccessRoleTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.roleId, "roleId", "", "usage description")
+	_ = cmd.MarkFlagRequired("roleId")
 
 	return cmd
 }
 type ListCloudProviderAccessRolesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListCloudProviderAccessRolesOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListCloudProviderAccessRolesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListCloudProviderAccessRolesOpts) Run() error {
-	params := &atlasv2.ListCloudProviderAccessRolesApiParams{
+func (opts *ListCloudProviderAccessRolesOpts) Run(ctx context.Context) error {
+	params := &admin.ListCloudProviderAccessRolesApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.ListCloudProviderAccessRoles(params)
+	resp, _, err := opts.client.CloudProviderAccessApi.ListCloudProviderAccessRolesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -282,16 +290,17 @@ func ListCloudProviderAccessRolesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListCloudProviderAccessRolesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }

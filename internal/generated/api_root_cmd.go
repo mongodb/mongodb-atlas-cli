@@ -19,28 +19,28 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type GetSystemStatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetSystemStatusOperation
+	client admin.APIClient
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetSystemStatusOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetSystemStatusOpts) Run() error {
-	params := &atlasv2.GetSystemStatusApiParams{
+func (opts *GetSystemStatusOpts) Run(ctx context.Context) error {
+	params := &admin.GetSystemStatusApiParams{
 	}
-	resp, _, err := opts.store.GetSystemStatus(params)
+	resp, _, err := opts.client.RootApi.GetSystemStatusWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -60,13 +60,13 @@ func GetSystemStatusBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetSystemStatusTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 

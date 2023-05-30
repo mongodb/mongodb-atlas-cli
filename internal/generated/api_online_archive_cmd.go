@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateOnlineArchiveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateOnlineArchiveOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateOnlineArchiveOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateOnlineArchiveOpts) Run() error {
-	params := &atlasv2.CreateOnlineArchiveApiParams{
+func (opts *CreateOnlineArchiveOpts) Run(ctx context.Context) error {
+	params := &admin.CreateOnlineArchiveApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.CreateOnlineArchive(params)
+	resp, _, err := opts.client.OnlineArchiveApi.CreateOnlineArchiveWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,44 +64,46 @@ func CreateOnlineArchiveBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateOnlineArchiveTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type DeleteOnlineArchiveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteOnlineArchiveOperation
+	client admin.APIClient
 	groupId string
 	archiveId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteOnlineArchiveOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteOnlineArchiveOpts) Run() error {
-	params := &atlasv2.DeleteOnlineArchiveApiParams{
+func (opts *DeleteOnlineArchiveOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteOnlineArchiveApiParams{
 		GroupId: opts.groupId,
 		ArchiveId: opts.archiveId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.DeleteOnlineArchive(params)
+	resp, _, err := opts.client.OnlineArchiveApi.DeleteOnlineArchiveWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -121,25 +123,28 @@ func DeleteOnlineArchiveBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteOnlineArchiveTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.archiveId, "archiveId", "", "usage description")
+	_ = cmd.MarkFlagRequired("archiveId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type DownloadOnlineArchiveQueryLogsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DownloadOnlineArchiveQueryLogsOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	startDate int64
@@ -147,23 +152,23 @@ type DownloadOnlineArchiveQueryLogsOpts struct {
 	archiveOnly bool
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DownloadOnlineArchiveQueryLogsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DownloadOnlineArchiveQueryLogsOpts) Run() error {
-	params := &atlasv2.DownloadOnlineArchiveQueryLogsApiParams{
+func (opts *DownloadOnlineArchiveQueryLogsOpts) Run(ctx context.Context) error {
+	params := &admin.DownloadOnlineArchiveQueryLogsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		StartDate: opts.startDate,
 		EndDate: opts.endDate,
 		ArchiveOnly: opts.archiveOnly,
 	}
-	resp, _, err := opts.store.DownloadOnlineArchiveQueryLogs(params)
+	resp, _, err := opts.client.OnlineArchiveApi.DownloadOnlineArchiveQueryLogsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -183,17 +188,19 @@ func DownloadOnlineArchiveQueryLogsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DownloadOnlineArchiveQueryLogsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.startDate, "startDate", "", "usage description")
 	cmd.Flags().StringVar(&opts.endDate, "endDate", "", "usage description")
 	cmd.Flags().StringVar(&opts.archiveOnly, "archiveOnly", "", "usage description")
@@ -203,27 +210,27 @@ func DownloadOnlineArchiveQueryLogsBuilder() cobra.Command {
 type GetOnlineArchiveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetOnlineArchiveOperation
+	client admin.APIClient
 	groupId string
 	archiveId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetOnlineArchiveOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetOnlineArchiveOpts) Run() error {
-	params := &atlasv2.GetOnlineArchiveApiParams{
+func (opts *GetOnlineArchiveOpts) Run(ctx context.Context) error {
+	params := &admin.GetOnlineArchiveApiParams{
 		GroupId: opts.groupId,
 		ArchiveId: opts.archiveId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.GetOnlineArchive(params)
+	resp, _, err := opts.client.OnlineArchiveApi.GetOnlineArchiveWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -243,25 +250,28 @@ func GetOnlineArchiveBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetOnlineArchiveTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.archiveId, "archiveId", "", "usage description")
+	_ = cmd.MarkFlagRequired("archiveId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type ListOnlineArchivesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListOnlineArchivesOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	includeCount bool
@@ -269,23 +279,23 @@ type ListOnlineArchivesOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListOnlineArchivesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListOnlineArchivesOpts) Run() error {
-	params := &atlasv2.ListOnlineArchivesApiParams{
+func (opts *ListOnlineArchivesOpts) Run(ctx context.Context) error {
+	params := &admin.ListOnlineArchivesApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListOnlineArchives(params)
+	resp, _, err := opts.client.OnlineArchiveApi.ListOnlineArchivesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -305,17 +315,19 @@ func ListOnlineArchivesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListOnlineArchivesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -325,27 +337,27 @@ func ListOnlineArchivesBuilder() cobra.Command {
 type UpdateOnlineArchiveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateOnlineArchiveOperation
+	client admin.APIClient
 	groupId string
 	archiveId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateOnlineArchiveOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateOnlineArchiveOpts) Run() error {
-	params := &atlasv2.UpdateOnlineArchiveApiParams{
+func (opts *UpdateOnlineArchiveOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateOnlineArchiveApiParams{
 		GroupId: opts.groupId,
 		ArchiveId: opts.archiveId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.UpdateOnlineArchive(params)
+	resp, _, err := opts.client.OnlineArchiveApi.UpdateOnlineArchiveWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -365,18 +377,21 @@ func UpdateOnlineArchiveBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateOnlineArchiveTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.archiveId, "archiveId", "", "usage description")
+	_ = cmd.MarkFlagRequired("archiveId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }

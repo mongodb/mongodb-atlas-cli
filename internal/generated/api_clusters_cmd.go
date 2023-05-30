@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type GetClusterAdvancedConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetClusterAdvancedConfigurationOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetClusterAdvancedConfigurationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetClusterAdvancedConfigurationOpts) Run() error {
-	params := &atlasv2.GetClusterAdvancedConfigurationApiParams{
+func (opts *GetClusterAdvancedConfigurationOpts) Run(ctx context.Context) error {
+	params := &admin.GetClusterAdvancedConfigurationApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.GetClusterAdvancedConfiguration(params)
+	resp, _, err := opts.client.ClustersApi.GetClusterAdvancedConfigurationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,42 +64,44 @@ func GetClusterAdvancedConfigurationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetClusterAdvancedConfigurationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type GetClusterStatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetClusterStatusOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetClusterStatusOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetClusterStatusOpts) Run() error {
-	params := &atlasv2.GetClusterStatusApiParams{
+func (opts *GetClusterStatusOpts) Run(ctx context.Context) error {
+	params := &admin.GetClusterStatusApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.GetClusterStatus(params)
+	resp, _, err := opts.client.ClustersApi.GetClusterStatusWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -119,42 +121,44 @@ func GetClusterStatusBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetClusterStatusTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type GetSampleDatasetLoadStatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetSampleDatasetLoadStatusOperation
+	client admin.APIClient
 	groupId string
 	sampleDatasetId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetSampleDatasetLoadStatusOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetSampleDatasetLoadStatusOpts) Run() error {
-	params := &atlasv2.GetSampleDatasetLoadStatusApiParams{
+func (opts *GetSampleDatasetLoadStatusOpts) Run(ctx context.Context) error {
+	params := &admin.GetSampleDatasetLoadStatusApiParams{
 		GroupId: opts.groupId,
 		SampleDatasetId: opts.sampleDatasetId,
 	}
-	resp, _, err := opts.store.GetSampleDatasetLoadStatus(params)
+	resp, _, err := opts.client.ClustersApi.GetSampleDatasetLoadStatusWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -174,24 +178,26 @@ func GetSampleDatasetLoadStatusBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetSampleDatasetLoadStatusTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.sampleDatasetId, "sampleDatasetId", "", "usage description")
+	_ = cmd.MarkFlagRequired("sampleDatasetId")
 
 	return cmd
 }
 type ListCloudProviderRegionsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListCloudProviderRegionsOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
@@ -200,16 +206,16 @@ type ListCloudProviderRegionsOpts struct {
 	tier string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListCloudProviderRegionsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListCloudProviderRegionsOpts) Run() error {
-	params := &atlasv2.ListCloudProviderRegionsApiParams{
+func (opts *ListCloudProviderRegionsOpts) Run(ctx context.Context) error {
+	params := &admin.ListCloudProviderRegionsApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
@@ -217,7 +223,7 @@ func (opts *ListCloudProviderRegionsOpts) Run() error {
 		Providers: opts.providers,
 		Tier: opts.tier,
 	}
-	resp, _, err := opts.store.ListCloudProviderRegions(params)
+	resp, _, err := opts.client.ClustersApi.ListCloudProviderRegionsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -237,16 +243,17 @@ func ListCloudProviderRegionsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListCloudProviderRegionsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -258,27 +265,27 @@ func ListCloudProviderRegionsBuilder() cobra.Command {
 type ListClustersForAllProjectsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListClustersForAllProjectsOperation
+	client admin.APIClient
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListClustersForAllProjectsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListClustersForAllProjectsOpts) Run() error {
-	params := &atlasv2.ListClustersForAllProjectsApiParams{
+func (opts *ListClustersForAllProjectsOpts) Run(ctx context.Context) error {
+	params := &admin.ListClustersForAllProjectsApiParams{
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListClustersForAllProjects(params)
+	resp, _, err := opts.client.ClustersApi.ListClustersForAllProjectsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -298,13 +305,13 @@ func ListClustersForAllProjectsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListClustersForAllProjectsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
@@ -316,25 +323,25 @@ func ListClustersForAllProjectsBuilder() cobra.Command {
 type LoadSampleDatasetOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.LoadSampleDatasetOperation
+	client admin.APIClient
 	groupId string
 	name string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *LoadSampleDatasetOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *LoadSampleDatasetOpts) Run() error {
-	params := &atlasv2.LoadSampleDatasetApiParams{
+func (opts *LoadSampleDatasetOpts) Run(ctx context.Context) error {
+	params := &admin.LoadSampleDatasetApiParams{
 		GroupId: opts.groupId,
 		Name: opts.name,
 	}
-	resp, _, err := opts.store.LoadSampleDataset(params)
+	resp, _, err := opts.client.ClustersApi.LoadSampleDatasetWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -354,42 +361,44 @@ func LoadSampleDatasetBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), LoadSampleDatasetTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.name, "name", "", "usage description")
+	_ = cmd.MarkFlagRequired("name")
 
 	return cmd
 }
 type UpdateClusterAdvancedConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateClusterAdvancedConfigurationOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateClusterAdvancedConfigurationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateClusterAdvancedConfigurationOpts) Run() error {
-	params := &atlasv2.UpdateClusterAdvancedConfigurationApiParams{
+func (opts *UpdateClusterAdvancedConfigurationOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateClusterAdvancedConfigurationApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.UpdateClusterAdvancedConfiguration(params)
+	resp, _, err := opts.client.ClustersApi.UpdateClusterAdvancedConfigurationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -409,40 +418,42 @@ func UpdateClusterAdvancedConfigurationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateClusterAdvancedConfigurationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type UpgradeSharedClusterOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpgradeSharedClusterOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpgradeSharedClusterOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpgradeSharedClusterOpts) Run() error {
-	params := &atlasv2.UpgradeSharedClusterApiParams{
+func (opts *UpgradeSharedClusterOpts) Run(ctx context.Context) error {
+	params := &admin.UpgradeSharedClusterApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.UpgradeSharedCluster(params)
+	resp, _, err := opts.client.ClustersApi.UpgradeSharedClusterWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -462,39 +473,40 @@ func UpgradeSharedClusterBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpgradeSharedClusterTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type UpgradeSharedClusterToServerlessOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpgradeSharedClusterToServerlessOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpgradeSharedClusterToServerlessOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpgradeSharedClusterToServerlessOpts) Run() error {
-	params := &atlasv2.UpgradeSharedClusterToServerlessApiParams{
+func (opts *UpgradeSharedClusterToServerlessOpts) Run(ctx context.Context) error {
+	params := &admin.UpgradeSharedClusterToServerlessApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.UpgradeSharedClusterToServerless(params)
+	resp, _, err := opts.client.ClustersApi.UpgradeSharedClusterToServerlessWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -514,16 +526,17 @@ func UpgradeSharedClusterToServerlessBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpgradeSharedClusterToServerlessTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }

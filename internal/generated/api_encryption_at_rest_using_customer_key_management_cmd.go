@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type GetEncryptionAtRestOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetEncryptionAtRestOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetEncryptionAtRestOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetEncryptionAtRestOpts) Run() error {
-	params := &atlasv2.GetEncryptionAtRestApiParams{
+func (opts *GetEncryptionAtRestOpts) Run(ctx context.Context) error {
+	params := &admin.GetEncryptionAtRestApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.GetEncryptionAtRest(params)
+	resp, _, err := opts.client.EncryptionAtRestUsingCustomerKeyManagementApi.GetEncryptionAtRestWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,39 +62,40 @@ func GetEncryptionAtRestBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetEncryptionAtRestTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type UpdateEncryptionAtRestOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateEncryptionAtRestOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateEncryptionAtRestOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateEncryptionAtRestOpts) Run() error {
-	params := &atlasv2.UpdateEncryptionAtRestApiParams{
+func (opts *UpdateEncryptionAtRestOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateEncryptionAtRestApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.UpdateEncryptionAtRest(params)
+	resp, _, err := opts.client.EncryptionAtRestUsingCustomerKeyManagementApi.UpdateEncryptionAtRestWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -114,16 +115,17 @@ func UpdateEncryptionAtRestBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateEncryptionAtRestTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }

@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateServerlessPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateServerlessPrivateEndpointOperation
+	client admin.APIClient
 	groupId string
 	instanceName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateServerlessPrivateEndpointOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateServerlessPrivateEndpointOpts) Run() error {
-	params := &atlasv2.CreateServerlessPrivateEndpointApiParams{
+func (opts *CreateServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
+	params := &admin.CreateServerlessPrivateEndpointApiParams{
 		GroupId: opts.groupId,
 		InstanceName: opts.instanceName,
 	}
-	resp, _, err := opts.store.CreateServerlessPrivateEndpoint(params)
+	resp, _, err := opts.client.ServerlessPrivateEndpointsApi.CreateServerlessPrivateEndpointWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,44 +64,46 @@ func CreateServerlessPrivateEndpointBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateServerlessPrivateEndpointTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", "usage description")
+	_ = cmd.MarkFlagRequired("instanceName")
 
 	return cmd
 }
 type DeleteServerlessPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteServerlessPrivateEndpointOperation
+	client admin.APIClient
 	groupId string
 	instanceName string
 	endpointId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteServerlessPrivateEndpointOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteServerlessPrivateEndpointOpts) Run() error {
-	params := &atlasv2.DeleteServerlessPrivateEndpointApiParams{
+func (opts *DeleteServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteServerlessPrivateEndpointApiParams{
 		GroupId: opts.groupId,
 		InstanceName: opts.instanceName,
 		EndpointId: opts.endpointId,
 	}
-	resp, _, err := opts.store.DeleteServerlessPrivateEndpoint(params)
+	resp, _, err := opts.client.ServerlessPrivateEndpointsApi.DeleteServerlessPrivateEndpointWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -121,45 +123,48 @@ func DeleteServerlessPrivateEndpointBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteServerlessPrivateEndpointTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", "usage description")
+	_ = cmd.MarkFlagRequired("instanceName")
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", "usage description")
+	_ = cmd.MarkFlagRequired("endpointId")
 
 	return cmd
 }
 type GetServerlessPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetServerlessPrivateEndpointOperation
+	client admin.APIClient
 	groupId string
 	instanceName string
 	endpointId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetServerlessPrivateEndpointOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetServerlessPrivateEndpointOpts) Run() error {
-	params := &atlasv2.GetServerlessPrivateEndpointApiParams{
+func (opts *GetServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
+	params := &admin.GetServerlessPrivateEndpointApiParams{
 		GroupId: opts.groupId,
 		InstanceName: opts.instanceName,
 		EndpointId: opts.endpointId,
 	}
-	resp, _, err := opts.store.GetServerlessPrivateEndpoint(params)
+	resp, _, err := opts.client.ServerlessPrivateEndpointsApi.GetServerlessPrivateEndpointWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -179,43 +184,46 @@ func GetServerlessPrivateEndpointBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetServerlessPrivateEndpointTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", "usage description")
+	_ = cmd.MarkFlagRequired("instanceName")
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", "usage description")
+	_ = cmd.MarkFlagRequired("endpointId")
 
 	return cmd
 }
 type ListServerlessPrivateEndpointsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListServerlessPrivateEndpointsOperation
+	client admin.APIClient
 	groupId string
 	instanceName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListServerlessPrivateEndpointsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListServerlessPrivateEndpointsOpts) Run() error {
-	params := &atlasv2.ListServerlessPrivateEndpointsApiParams{
+func (opts *ListServerlessPrivateEndpointsOpts) Run(ctx context.Context) error {
+	params := &admin.ListServerlessPrivateEndpointsApiParams{
 		GroupId: opts.groupId,
 		InstanceName: opts.instanceName,
 	}
-	resp, _, err := opts.store.ListServerlessPrivateEndpoints(params)
+	resp, _, err := opts.client.ServerlessPrivateEndpointsApi.ListServerlessPrivateEndpointsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -235,44 +243,46 @@ func ListServerlessPrivateEndpointsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListServerlessPrivateEndpointsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", "usage description")
+	_ = cmd.MarkFlagRequired("instanceName")
 
 	return cmd
 }
 type UpdateServerlessPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateServerlessPrivateEndpointOperation
+	client admin.APIClient
 	groupId string
 	instanceName string
 	endpointId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateServerlessPrivateEndpointOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateServerlessPrivateEndpointOpts) Run() error {
-	params := &atlasv2.UpdateServerlessPrivateEndpointApiParams{
+func (opts *UpdateServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateServerlessPrivateEndpointApiParams{
 		GroupId: opts.groupId,
 		InstanceName: opts.instanceName,
 		EndpointId: opts.endpointId,
 	}
-	resp, _, err := opts.store.UpdateServerlessPrivateEndpoint(params)
+	resp, _, err := opts.client.ServerlessPrivateEndpointsApi.UpdateServerlessPrivateEndpointWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -292,18 +302,21 @@ func UpdateServerlessPrivateEndpointBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateServerlessPrivateEndpointTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", "usage description")
+	_ = cmd.MarkFlagRequired("instanceName")
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", "usage description")
+	_ = cmd.MarkFlagRequired("endpointId")
 
 	return cmd
 }

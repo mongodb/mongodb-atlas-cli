@@ -19,14 +19,14 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateThirdPartyIntegrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateThirdPartyIntegrationOperation
+	client admin.APIClient
 	integrationType string
 	groupId string
 	includeCount bool
@@ -34,23 +34,23 @@ type CreateThirdPartyIntegrationOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateThirdPartyIntegrationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateThirdPartyIntegrationOpts) Run() error {
-	params := &atlasv2.CreateThirdPartyIntegrationApiParams{
+func (opts *CreateThirdPartyIntegrationOpts) Run(ctx context.Context) error {
+	params := &admin.CreateThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.CreateThirdPartyIntegration(params)
+	resp, _, err := opts.client.ThirdPartyIntegrationsApi.CreateThirdPartyIntegrationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -70,17 +70,19 @@ func CreateThirdPartyIntegrationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateThirdPartyIntegrationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", "usage description")
+	_ = cmd.MarkFlagRequired("integrationType")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -90,25 +92,25 @@ func CreateThirdPartyIntegrationBuilder() cobra.Command {
 type DeleteThirdPartyIntegrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteThirdPartyIntegrationOperation
+	client admin.APIClient
 	integrationType string
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteThirdPartyIntegrationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteThirdPartyIntegrationOpts) Run() error {
-	params := &atlasv2.DeleteThirdPartyIntegrationApiParams{
+func (opts *DeleteThirdPartyIntegrationOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.DeleteThirdPartyIntegration(params)
+	resp, _, err := opts.client.ThirdPartyIntegrationsApi.DeleteThirdPartyIntegrationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -128,42 +130,44 @@ func DeleteThirdPartyIntegrationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteThirdPartyIntegrationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", "usage description")
+	_ = cmd.MarkFlagRequired("integrationType")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type GetThirdPartyIntegrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetThirdPartyIntegrationOperation
+	client admin.APIClient
 	groupId string
 	integrationType string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetThirdPartyIntegrationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetThirdPartyIntegrationOpts) Run() error {
-	params := &atlasv2.GetThirdPartyIntegrationApiParams{
+func (opts *GetThirdPartyIntegrationOpts) Run(ctx context.Context) error {
+	params := &admin.GetThirdPartyIntegrationApiParams{
 		GroupId: opts.groupId,
 		IntegrationType: opts.integrationType,
 	}
-	resp, _, err := opts.store.GetThirdPartyIntegration(params)
+	resp, _, err := opts.client.ThirdPartyIntegrationsApi.GetThirdPartyIntegrationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -183,46 +187,48 @@ func GetThirdPartyIntegrationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetThirdPartyIntegrationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", "usage description")
+	_ = cmd.MarkFlagRequired("integrationType")
 
 	return cmd
 }
 type ListThirdPartyIntegrationsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListThirdPartyIntegrationsOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListThirdPartyIntegrationsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListThirdPartyIntegrationsOpts) Run() error {
-	params := &atlasv2.ListThirdPartyIntegrationsApiParams{
+func (opts *ListThirdPartyIntegrationsOpts) Run(ctx context.Context) error {
+	params := &admin.ListThirdPartyIntegrationsApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListThirdPartyIntegrations(params)
+	resp, _, err := opts.client.ThirdPartyIntegrationsApi.ListThirdPartyIntegrationsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -242,16 +248,17 @@ func ListThirdPartyIntegrationsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListThirdPartyIntegrationsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -261,7 +268,7 @@ func ListThirdPartyIntegrationsBuilder() cobra.Command {
 type UpdateThirdPartyIntegrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateThirdPartyIntegrationOperation
+	client admin.APIClient
 	integrationType string
 	groupId string
 	includeCount bool
@@ -269,23 +276,23 @@ type UpdateThirdPartyIntegrationOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateThirdPartyIntegrationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateThirdPartyIntegrationOpts) Run() error {
-	params := &atlasv2.UpdateThirdPartyIntegrationApiParams{
+func (opts *UpdateThirdPartyIntegrationOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.UpdateThirdPartyIntegration(params)
+	resp, _, err := opts.client.ThirdPartyIntegrationsApi.UpdateThirdPartyIntegrationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -305,17 +312,19 @@ func UpdateThirdPartyIntegrationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateThirdPartyIntegrationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", "usage description")
+	_ = cmd.MarkFlagRequired("integrationType")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")

@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type GetAWSCustomDNSOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetAWSCustomDNSOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetAWSCustomDNSOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetAWSCustomDNSOpts) Run() error {
-	params := &atlasv2.GetAWSCustomDNSApiParams{
+func (opts *GetAWSCustomDNSOpts) Run(ctx context.Context) error {
+	params := &admin.GetAWSCustomDNSApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.GetAWSCustomDNS(params)
+	resp, _, err := opts.client.AWSClustersDNSApi.GetAWSCustomDNSWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,39 +62,40 @@ func GetAWSCustomDNSBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetAWSCustomDNSTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type ToggleAWSCustomDNSOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ToggleAWSCustomDNSOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ToggleAWSCustomDNSOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ToggleAWSCustomDNSOpts) Run() error {
-	params := &atlasv2.ToggleAWSCustomDNSApiParams{
+func (opts *ToggleAWSCustomDNSOpts) Run(ctx context.Context) error {
+	params := &admin.ToggleAWSCustomDNSApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.ToggleAWSCustomDNS(params)
+	resp, _, err := opts.client.AWSClustersDNSApi.ToggleAWSCustomDNSWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -114,16 +115,17 @@ func ToggleAWSCustomDNSBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ToggleAWSCustomDNSTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }

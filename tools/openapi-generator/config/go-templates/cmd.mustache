@@ -4,8 +4,8 @@ package {{packageName}}
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/internal/cli"
-	store "{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/internal/store/atlas"
 )
 
 {{#operations}}
@@ -13,7 +13,7 @@ import (
 type {{operationId}}Opts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.{{operationId}}Operation
+	client admin.APIClient
 	{{#pathParams}}
 	{{paramName}} {{{dataType}}}
 	{{/pathParams}}
@@ -22,16 +22,16 @@ type {{operationId}}Opts struct {
 	{{/queryParams}}
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *{{operationId}}Opts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *{{operationId}}Opts) Run() error {
-	params := &atlasv2.{{operationId}}ApiParams{
+func (opts *{{operationId}}Opts) Run(ctx context.Context) error {
+	params := &admin.{{operationId}}ApiParams{
 		{{#pathParams}}
 		{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: opts.{{paramName}},
 		{{/pathParams}}
@@ -39,7 +39,7 @@ func (opts *{{operationId}}Opts) Run() error {
 		{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: opts.{{paramName}},
 		{{/queryParams}}
 	}
-	{{#returnType}}resp, {{/returnType}}_, err := opts.store.{{operationId}}(params)
+	{{#returnType}}resp, {{/returnType}}_, err := opts.client.{{classname}}.{{operationId}}WithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -59,17 +59,18 @@ func {{operationId}}Builder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), {{operationId}}Template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	{{#pathParams}}
 	cmd.Flags().StringVar(&opts.{{paramName}}, "{{paramName}}", "", "usage description")
+	_ = cmd.MarkFlagRequired("{{paramName}}")
 	{{/pathParams}}
 	{{#queryParams}}
 	cmd.Flags().StringVar(&opts.{{paramName}}, "{{paramName}}", "", "usage description")

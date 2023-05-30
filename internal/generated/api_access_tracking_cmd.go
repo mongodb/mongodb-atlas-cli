@@ -19,14 +19,14 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type ListAccessLogsByClusterNameOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListAccessLogsByClusterNameOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	authResult bool
@@ -36,16 +36,16 @@ type ListAccessLogsByClusterNameOpts struct {
 	start int64
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListAccessLogsByClusterNameOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListAccessLogsByClusterNameOpts) Run() error {
-	params := &atlasv2.ListAccessLogsByClusterNameApiParams{
+func (opts *ListAccessLogsByClusterNameOpts) Run(ctx context.Context) error {
+	params := &admin.ListAccessLogsByClusterNameApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		AuthResult: opts.authResult,
@@ -54,7 +54,7 @@ func (opts *ListAccessLogsByClusterNameOpts) Run() error {
 		NLogs: opts.nLogs,
 		Start: opts.start,
 	}
-	resp, _, err := opts.store.ListAccessLogsByClusterName(params)
+	resp, _, err := opts.client.AccessTrackingApi.ListAccessLogsByClusterNameWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -74,17 +74,19 @@ func ListAccessLogsByClusterNameBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListAccessLogsByClusterNameTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.authResult, "authResult", "", "usage description")
 	cmd.Flags().StringVar(&opts.end, "end", "", "usage description")
 	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", "usage description")
@@ -96,7 +98,7 @@ func ListAccessLogsByClusterNameBuilder() cobra.Command {
 type ListAccessLogsByHostnameOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListAccessLogsByHostnameOperation
+	client admin.APIClient
 	groupId string
 	hostname string
 	authResult bool
@@ -106,16 +108,16 @@ type ListAccessLogsByHostnameOpts struct {
 	start int64
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListAccessLogsByHostnameOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListAccessLogsByHostnameOpts) Run() error {
-	params := &atlasv2.ListAccessLogsByHostnameApiParams{
+func (opts *ListAccessLogsByHostnameOpts) Run(ctx context.Context) error {
+	params := &admin.ListAccessLogsByHostnameApiParams{
 		GroupId: opts.groupId,
 		Hostname: opts.hostname,
 		AuthResult: opts.authResult,
@@ -124,7 +126,7 @@ func (opts *ListAccessLogsByHostnameOpts) Run() error {
 		NLogs: opts.nLogs,
 		Start: opts.start,
 	}
-	resp, _, err := opts.store.ListAccessLogsByHostname(params)
+	resp, _, err := opts.client.AccessTrackingApi.ListAccessLogsByHostnameWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -144,17 +146,19 @@ func ListAccessLogsByHostnameBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListAccessLogsByHostnameTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.hostname, "hostname", "", "usage description")
+	_ = cmd.MarkFlagRequired("hostname")
 	cmd.Flags().StringVar(&opts.authResult, "authResult", "", "usage description")
 	cmd.Flags().StringVar(&opts.end, "end", "", "usage description")
 	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", "usage description")

@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type DeferMaintenanceWindowOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeferMaintenanceWindowOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeferMaintenanceWindowOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeferMaintenanceWindowOpts) Run() error {
-	params := &atlasv2.DeferMaintenanceWindowApiParams{
+func (opts *DeferMaintenanceWindowOpts) Run(ctx context.Context) error {
+	params := &admin.DeferMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.store.DeferMaintenanceWindow(params)
+	_, err := opts.client.MaintenanceWindowsApi.DeferMaintenanceWindowWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,39 +62,40 @@ func DeferMaintenanceWindowBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeferMaintenanceWindowTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type GetMaintenanceWindowOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetMaintenanceWindowOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetMaintenanceWindowOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetMaintenanceWindowOpts) Run() error {
-	params := &atlasv2.GetMaintenanceWindowApiParams{
+func (opts *GetMaintenanceWindowOpts) Run(ctx context.Context) error {
+	params := &admin.GetMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.GetMaintenanceWindow(params)
+	resp, _, err := opts.client.MaintenanceWindowsApi.GetMaintenanceWindowWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -114,39 +115,40 @@ func GetMaintenanceWindowBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetMaintenanceWindowTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type ResetMaintenanceWindowOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ResetMaintenanceWindowOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ResetMaintenanceWindowOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ResetMaintenanceWindowOpts) Run() error {
-	params := &atlasv2.ResetMaintenanceWindowApiParams{
+func (opts *ResetMaintenanceWindowOpts) Run(ctx context.Context) error {
+	params := &admin.ResetMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.ResetMaintenanceWindow(params)
+	resp, _, err := opts.client.MaintenanceWindowsApi.ResetMaintenanceWindowWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -166,39 +168,40 @@ func ResetMaintenanceWindowBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ResetMaintenanceWindowTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type ToggleMaintenanceAutoDeferOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ToggleMaintenanceAutoDeferOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ToggleMaintenanceAutoDeferOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ToggleMaintenanceAutoDeferOpts) Run() error {
-	params := &atlasv2.ToggleMaintenanceAutoDeferApiParams{
+func (opts *ToggleMaintenanceAutoDeferOpts) Run(ctx context.Context) error {
+	params := &admin.ToggleMaintenanceAutoDeferApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.store.ToggleMaintenanceAutoDefer(params)
+	_, err := opts.client.MaintenanceWindowsApi.ToggleMaintenanceAutoDeferWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -218,39 +221,40 @@ func ToggleMaintenanceAutoDeferBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ToggleMaintenanceAutoDeferTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type UpdateMaintenanceWindowOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateMaintenanceWindowOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateMaintenanceWindowOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateMaintenanceWindowOpts) Run() error {
-	params := &atlasv2.UpdateMaintenanceWindowApiParams{
+func (opts *UpdateMaintenanceWindowOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.UpdateMaintenanceWindow(params)
+	resp, _, err := opts.client.MaintenanceWindowsApi.UpdateMaintenanceWindowWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -270,16 +274,17 @@ func UpdateMaintenanceWindowBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateMaintenanceWindowTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }

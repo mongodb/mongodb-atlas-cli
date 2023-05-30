@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateProjectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateProjectOperation
+	client admin.APIClient
 	projectOwnerId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateProjectOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateProjectOpts) Run() error {
-	params := &atlasv2.CreateProjectApiParams{
+func (opts *CreateProjectOpts) Run(ctx context.Context) error {
+	params := &admin.CreateProjectApiParams{
 		ProjectOwnerId: opts.projectOwnerId,
 	}
-	resp, _, err := opts.store.CreateProject(params)
+	resp, _, err := opts.client.ProjectsApi.CreateProjectWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,13 +62,13 @@ func CreateProjectBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateProjectTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.projectOwnerId, "projectOwnerId", "", "usage description")
@@ -78,23 +78,23 @@ func CreateProjectBuilder() cobra.Command {
 type CreateProjectInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateProjectInvitationOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateProjectInvitationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateProjectInvitationOpts) Run() error {
-	params := &atlasv2.CreateProjectInvitationApiParams{
+func (opts *CreateProjectInvitationOpts) Run(ctx context.Context) error {
+	params := &admin.CreateProjectInvitationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreateProjectInvitation(params)
+	resp, _, err := opts.client.ProjectsApi.CreateProjectInvitationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -114,39 +114,40 @@ func CreateProjectInvitationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateProjectInvitationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type DeleteProjectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteProjectOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteProjectOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteProjectOpts) Run() error {
-	params := &atlasv2.DeleteProjectApiParams{
+func (opts *DeleteProjectOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteProjectApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.DeleteProject(params)
+	resp, _, err := opts.client.ProjectsApi.DeleteProjectWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -166,41 +167,42 @@ func DeleteProjectBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteProjectTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type DeleteProjectInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteProjectInvitationOperation
+	client admin.APIClient
 	groupId string
 	invitationId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteProjectInvitationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteProjectInvitationOpts) Run() error {
-	params := &atlasv2.DeleteProjectInvitationApiParams{
+func (opts *DeleteProjectInvitationOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteProjectInvitationApiParams{
 		GroupId: opts.groupId,
 		InvitationId: opts.invitationId,
 	}
-	resp, _, err := opts.store.DeleteProjectInvitation(params)
+	resp, _, err := opts.client.ProjectsApi.DeleteProjectInvitationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -220,42 +222,44 @@ func DeleteProjectInvitationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteProjectInvitationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "usage description")
+	_ = cmd.MarkFlagRequired("invitationId")
 
 	return cmd
 }
 type DeleteProjectLimitOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteProjectLimitOperation
+	client admin.APIClient
 	limitName string
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteProjectLimitOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteProjectLimitOpts) Run() error {
-	params := &atlasv2.DeleteProjectLimitApiParams{
+func (opts *DeleteProjectLimitOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteProjectLimitApiParams{
 		LimitName: opts.limitName,
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.DeleteProjectLimit(params)
+	resp, _, err := opts.client.ProjectsApi.DeleteProjectLimitWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -275,40 +279,42 @@ func DeleteProjectLimitBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteProjectLimitTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", "usage description")
+	_ = cmd.MarkFlagRequired("limitName")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type GetProjectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetProjectOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetProjectOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetProjectOpts) Run() error {
-	params := &atlasv2.GetProjectApiParams{
+func (opts *GetProjectOpts) Run(ctx context.Context) error {
+	params := &admin.GetProjectApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.GetProject(params)
+	resp, _, err := opts.client.ProjectsApi.GetProjectWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -328,39 +334,40 @@ func GetProjectBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetProjectTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type GetProjectByNameOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetProjectByNameOperation
+	client admin.APIClient
 	groupName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetProjectByNameOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetProjectByNameOpts) Run() error {
-	params := &atlasv2.GetProjectByNameApiParams{
+func (opts *GetProjectByNameOpts) Run(ctx context.Context) error {
+	params := &admin.GetProjectByNameApiParams{
 		GroupName: opts.groupName,
 	}
-	resp, _, err := opts.store.GetProjectByName(params)
+	resp, _, err := opts.client.ProjectsApi.GetProjectByNameWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -380,41 +387,42 @@ func GetProjectByNameBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetProjectByNameTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupName, "groupName", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupName")
 
 	return cmd
 }
 type GetProjectInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetProjectInvitationOperation
+	client admin.APIClient
 	groupId string
 	invitationId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetProjectInvitationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetProjectInvitationOpts) Run() error {
-	params := &atlasv2.GetProjectInvitationApiParams{
+func (opts *GetProjectInvitationOpts) Run(ctx context.Context) error {
+	params := &admin.GetProjectInvitationApiParams{
 		GroupId: opts.groupId,
 		InvitationId: opts.invitationId,
 	}
-	resp, _, err := opts.store.GetProjectInvitation(params)
+	resp, _, err := opts.client.ProjectsApi.GetProjectInvitationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -434,42 +442,44 @@ func GetProjectInvitationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetProjectInvitationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "usage description")
+	_ = cmd.MarkFlagRequired("invitationId")
 
 	return cmd
 }
 type GetProjectLimitOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetProjectLimitOperation
+	client admin.APIClient
 	limitName string
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetProjectLimitOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetProjectLimitOpts) Run() error {
-	params := &atlasv2.GetProjectLimitApiParams{
+func (opts *GetProjectLimitOpts) Run(ctx context.Context) error {
+	params := &admin.GetProjectLimitApiParams{
 		LimitName: opts.limitName,
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.GetProjectLimit(params)
+	resp, _, err := opts.client.ProjectsApi.GetProjectLimitWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -489,40 +499,42 @@ func GetProjectLimitBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetProjectLimitTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", "usage description")
+	_ = cmd.MarkFlagRequired("limitName")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type GetProjectSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetProjectSettingsOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetProjectSettingsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetProjectSettingsOpts) Run() error {
-	params := &atlasv2.GetProjectSettingsApiParams{
+func (opts *GetProjectSettingsOpts) Run(ctx context.Context) error {
+	params := &admin.GetProjectSettingsApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.GetProjectSettings(params)
+	resp, _, err := opts.client.ProjectsApi.GetProjectSettingsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -542,41 +554,42 @@ func GetProjectSettingsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetProjectSettingsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type ListProjectInvitationsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListProjectInvitationsOperation
+	client admin.APIClient
 	groupId string
 	username string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListProjectInvitationsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListProjectInvitationsOpts) Run() error {
-	params := &atlasv2.ListProjectInvitationsApiParams{
+func (opts *ListProjectInvitationsOpts) Run(ctx context.Context) error {
+	params := &admin.ListProjectInvitationsApiParams{
 		GroupId: opts.groupId,
 		Username: opts.username,
 	}
-	resp, _, err := opts.store.ListProjectInvitations(params)
+	resp, _, err := opts.client.ProjectsApi.ListProjectInvitationsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -596,16 +609,17 @@ func ListProjectInvitationsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListProjectInvitationsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.username, "username", "", "usage description")
 
 	return cmd
@@ -613,23 +627,23 @@ func ListProjectInvitationsBuilder() cobra.Command {
 type ListProjectLimitsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListProjectLimitsOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListProjectLimitsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListProjectLimitsOpts) Run() error {
-	params := &atlasv2.ListProjectLimitsApiParams{
+func (opts *ListProjectLimitsOpts) Run(ctx context.Context) error {
+	params := &admin.ListProjectLimitsApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.ListProjectLimits(params)
+	resp, _, err := opts.client.ProjectsApi.ListProjectLimitsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -649,23 +663,24 @@ func ListProjectLimitsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListProjectLimitsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type ListProjectUsersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListProjectUsersOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
@@ -674,16 +689,16 @@ type ListProjectUsersOpts struct {
 	includeOrgUsers bool
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListProjectUsersOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListProjectUsersOpts) Run() error {
-	params := &atlasv2.ListProjectUsersApiParams{
+func (opts *ListProjectUsersOpts) Run(ctx context.Context) error {
+	params := &admin.ListProjectUsersApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
@@ -691,7 +706,7 @@ func (opts *ListProjectUsersOpts) Run() error {
 		FlattenTeams: opts.flattenTeams,
 		IncludeOrgUsers: opts.includeOrgUsers,
 	}
-	resp, _, err := opts.store.ListProjectUsers(params)
+	resp, _, err := opts.client.ProjectsApi.ListProjectUsersWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -711,16 +726,17 @@ func ListProjectUsersBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListProjectUsersTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -732,27 +748,27 @@ func ListProjectUsersBuilder() cobra.Command {
 type ListProjectsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListProjectsOperation
+	client admin.APIClient
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListProjectsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListProjectsOpts) Run() error {
-	params := &atlasv2.ListProjectsApiParams{
+func (opts *ListProjectsOpts) Run(ctx context.Context) error {
+	params := &admin.ListProjectsApiParams{
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListProjects(params)
+	resp, _, err := opts.client.ProjectsApi.ListProjectsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -772,13 +788,13 @@ func ListProjectsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListProjectsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
@@ -790,25 +806,25 @@ func ListProjectsBuilder() cobra.Command {
 type RemoveProjectUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.RemoveProjectUserOperation
+	client admin.APIClient
 	groupId string
 	userId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *RemoveProjectUserOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *RemoveProjectUserOpts) Run() error {
-	params := &atlasv2.RemoveProjectUserApiParams{
+func (opts *RemoveProjectUserOpts) Run(ctx context.Context) error {
+	params := &admin.RemoveProjectUserApiParams{
 		GroupId: opts.groupId,
 		UserId: opts.userId,
 	}
-	_, err := opts.store.RemoveProjectUser(params)
+	_, err := opts.client.ProjectsApi.RemoveProjectUserWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -828,42 +844,44 @@ func RemoveProjectUserBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), RemoveProjectUserTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.userId, "userId", "", "usage description")
+	_ = cmd.MarkFlagRequired("userId")
 
 	return cmd
 }
 type SetProjectLimitOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.SetProjectLimitOperation
+	client admin.APIClient
 	limitName string
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *SetProjectLimitOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *SetProjectLimitOpts) Run() error {
-	params := &atlasv2.SetProjectLimitApiParams{
+func (opts *SetProjectLimitOpts) Run(ctx context.Context) error {
+	params := &admin.SetProjectLimitApiParams{
 		LimitName: opts.limitName,
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.SetProjectLimit(params)
+	resp, _, err := opts.client.ProjectsApi.SetProjectLimitWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -883,40 +901,42 @@ func SetProjectLimitBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), SetProjectLimitTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", "usage description")
+	_ = cmd.MarkFlagRequired("limitName")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type UpdateProjectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateProjectOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateProjectOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateProjectOpts) Run() error {
-	params := &atlasv2.UpdateProjectApiParams{
+func (opts *UpdateProjectOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateProjectApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.UpdateProject(params)
+	resp, _, err := opts.client.ProjectsApi.UpdateProjectWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -936,39 +956,40 @@ func UpdateProjectBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateProjectTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type UpdateProjectInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateProjectInvitationOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateProjectInvitationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateProjectInvitationOpts) Run() error {
-	params := &atlasv2.UpdateProjectInvitationApiParams{
+func (opts *UpdateProjectInvitationOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateProjectInvitationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.UpdateProjectInvitation(params)
+	resp, _, err := opts.client.ProjectsApi.UpdateProjectInvitationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -988,41 +1009,42 @@ func UpdateProjectInvitationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateProjectInvitationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type UpdateProjectInvitationByIdOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateProjectInvitationByIdOperation
+	client admin.APIClient
 	groupId string
 	invitationId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateProjectInvitationByIdOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateProjectInvitationByIdOpts) Run() error {
-	params := &atlasv2.UpdateProjectInvitationByIdApiParams{
+func (opts *UpdateProjectInvitationByIdOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateProjectInvitationByIdApiParams{
 		GroupId: opts.groupId,
 		InvitationId: opts.invitationId,
 	}
-	resp, _, err := opts.store.UpdateProjectInvitationById(params)
+	resp, _, err := opts.client.ProjectsApi.UpdateProjectInvitationByIdWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1042,40 +1064,42 @@ func UpdateProjectInvitationByIdBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateProjectInvitationByIdTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "usage description")
+	_ = cmd.MarkFlagRequired("invitationId")
 
 	return cmd
 }
 type UpdateProjectSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateProjectSettingsOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateProjectSettingsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateProjectSettingsOpts) Run() error {
-	params := &atlasv2.UpdateProjectSettingsApiParams{
+func (opts *UpdateProjectSettingsOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateProjectSettingsApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.UpdateProjectSettings(params)
+	resp, _, err := opts.client.ProjectsApi.UpdateProjectSettingsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -1095,16 +1119,17 @@ func UpdateProjectSettingsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateProjectSettingsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }

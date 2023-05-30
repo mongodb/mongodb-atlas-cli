@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreatePeeringConnectionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreatePeeringConnectionOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreatePeeringConnectionOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreatePeeringConnectionOpts) Run() error {
-	params := &atlasv2.CreatePeeringConnectionApiParams{
+func (opts *CreatePeeringConnectionOpts) Run(ctx context.Context) error {
+	params := &admin.CreatePeeringConnectionApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreatePeeringConnection(params)
+	resp, _, err := opts.client.NetworkPeeringApi.CreatePeeringConnectionWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,39 +62,40 @@ func CreatePeeringConnectionBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreatePeeringConnectionTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type CreatePeeringContainerOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreatePeeringContainerOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreatePeeringContainerOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreatePeeringContainerOpts) Run() error {
-	params := &atlasv2.CreatePeeringContainerApiParams{
+func (opts *CreatePeeringContainerOpts) Run(ctx context.Context) error {
+	params := &admin.CreatePeeringContainerApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreatePeeringContainer(params)
+	resp, _, err := opts.client.NetworkPeeringApi.CreatePeeringContainerWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -114,41 +115,42 @@ func CreatePeeringContainerBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreatePeeringContainerTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type DeletePeeringConnectionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeletePeeringConnectionOperation
+	client admin.APIClient
 	groupId string
 	peerId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeletePeeringConnectionOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeletePeeringConnectionOpts) Run() error {
-	params := &atlasv2.DeletePeeringConnectionApiParams{
+func (opts *DeletePeeringConnectionOpts) Run(ctx context.Context) error {
+	params := &admin.DeletePeeringConnectionApiParams{
 		GroupId: opts.groupId,
 		PeerId: opts.peerId,
 	}
-	resp, _, err := opts.store.DeletePeeringConnection(params)
+	resp, _, err := opts.client.NetworkPeeringApi.DeletePeeringConnectionWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -168,42 +170,44 @@ func DeletePeeringConnectionBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeletePeeringConnectionTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.peerId, "peerId", "", "usage description")
+	_ = cmd.MarkFlagRequired("peerId")
 
 	return cmd
 }
 type DeletePeeringContainerOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeletePeeringContainerOperation
+	client admin.APIClient
 	groupId string
 	containerId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeletePeeringContainerOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeletePeeringContainerOpts) Run() error {
-	params := &atlasv2.DeletePeeringContainerApiParams{
+func (opts *DeletePeeringContainerOpts) Run(ctx context.Context) error {
+	params := &admin.DeletePeeringContainerApiParams{
 		GroupId: opts.groupId,
 		ContainerId: opts.containerId,
 	}
-	resp, _, err := opts.store.DeletePeeringContainer(params)
+	resp, _, err := opts.client.NetworkPeeringApi.DeletePeeringContainerWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -223,40 +227,42 @@ func DeletePeeringContainerBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeletePeeringContainerTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.containerId, "containerId", "", "usage description")
+	_ = cmd.MarkFlagRequired("containerId")
 
 	return cmd
 }
 type DisablePeeringOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DisablePeeringOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DisablePeeringOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DisablePeeringOpts) Run() error {
-	params := &atlasv2.DisablePeeringApiParams{
+func (opts *DisablePeeringOpts) Run(ctx context.Context) error {
+	params := &admin.DisablePeeringApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.DisablePeering(params)
+	resp, _, err := opts.client.NetworkPeeringApi.DisablePeeringWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -276,41 +282,42 @@ func DisablePeeringBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DisablePeeringTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type GetPeeringConnectionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetPeeringConnectionOperation
+	client admin.APIClient
 	groupId string
 	peerId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetPeeringConnectionOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetPeeringConnectionOpts) Run() error {
-	params := &atlasv2.GetPeeringConnectionApiParams{
+func (opts *GetPeeringConnectionOpts) Run(ctx context.Context) error {
+	params := &admin.GetPeeringConnectionApiParams{
 		GroupId: opts.groupId,
 		PeerId: opts.peerId,
 	}
-	resp, _, err := opts.store.GetPeeringConnection(params)
+	resp, _, err := opts.client.NetworkPeeringApi.GetPeeringConnectionWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -330,42 +337,44 @@ func GetPeeringConnectionBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetPeeringConnectionTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.peerId, "peerId", "", "usage description")
+	_ = cmd.MarkFlagRequired("peerId")
 
 	return cmd
 }
 type GetPeeringContainerOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetPeeringContainerOperation
+	client admin.APIClient
 	groupId string
 	containerId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetPeeringContainerOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetPeeringContainerOpts) Run() error {
-	params := &atlasv2.GetPeeringContainerApiParams{
+func (opts *GetPeeringContainerOpts) Run(ctx context.Context) error {
+	params := &admin.GetPeeringContainerApiParams{
 		GroupId: opts.groupId,
 		ContainerId: opts.containerId,
 	}
-	resp, _, err := opts.store.GetPeeringContainer(params)
+	resp, _, err := opts.client.NetworkPeeringApi.GetPeeringContainerWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -385,24 +394,26 @@ func GetPeeringContainerBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetPeeringContainerTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.containerId, "containerId", "", "usage description")
+	_ = cmd.MarkFlagRequired("containerId")
 
 	return cmd
 }
 type ListPeeringConnectionsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListPeeringConnectionsOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
@@ -410,23 +421,23 @@ type ListPeeringConnectionsOpts struct {
 	providerName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListPeeringConnectionsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListPeeringConnectionsOpts) Run() error {
-	params := &atlasv2.ListPeeringConnectionsApiParams{
+func (opts *ListPeeringConnectionsOpts) Run(ctx context.Context) error {
+	params := &admin.ListPeeringConnectionsApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 		ProviderName: opts.providerName,
 	}
-	resp, _, err := opts.store.ListPeeringConnections(params)
+	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringConnectionsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -446,16 +457,17 @@ func ListPeeringConnectionsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListPeeringConnectionsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -466,7 +478,7 @@ func ListPeeringConnectionsBuilder() cobra.Command {
 type ListPeeringContainerByCloudProviderOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListPeeringContainerByCloudProviderOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
@@ -474,23 +486,23 @@ type ListPeeringContainerByCloudProviderOpts struct {
 	providerName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListPeeringContainerByCloudProviderOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListPeeringContainerByCloudProviderOpts) Run() error {
-	params := &atlasv2.ListPeeringContainerByCloudProviderApiParams{
+func (opts *ListPeeringContainerByCloudProviderOpts) Run(ctx context.Context) error {
+	params := &admin.ListPeeringContainerByCloudProviderApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 		ProviderName: opts.providerName,
 	}
-	resp, _, err := opts.store.ListPeeringContainerByCloudProvider(params)
+	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringContainerByCloudProviderWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -510,16 +522,17 @@ func ListPeeringContainerByCloudProviderBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListPeeringContainerByCloudProviderTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -530,29 +543,29 @@ func ListPeeringContainerByCloudProviderBuilder() cobra.Command {
 type ListPeeringContainersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListPeeringContainersOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListPeeringContainersOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListPeeringContainersOpts) Run() error {
-	params := &atlasv2.ListPeeringContainersApiParams{
+func (opts *ListPeeringContainersOpts) Run(ctx context.Context) error {
+	params := &admin.ListPeeringContainersApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListPeeringContainers(params)
+	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringContainersWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -572,16 +585,17 @@ func ListPeeringContainersBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListPeeringContainersTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -591,25 +605,25 @@ func ListPeeringContainersBuilder() cobra.Command {
 type UpdatePeeringConnectionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdatePeeringConnectionOperation
+	client admin.APIClient
 	groupId string
 	peerId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdatePeeringConnectionOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdatePeeringConnectionOpts) Run() error {
-	params := &atlasv2.UpdatePeeringConnectionApiParams{
+func (opts *UpdatePeeringConnectionOpts) Run(ctx context.Context) error {
+	params := &admin.UpdatePeeringConnectionApiParams{
 		GroupId: opts.groupId,
 		PeerId: opts.peerId,
 	}
-	resp, _, err := opts.store.UpdatePeeringConnection(params)
+	resp, _, err := opts.client.NetworkPeeringApi.UpdatePeeringConnectionWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -629,42 +643,44 @@ func UpdatePeeringConnectionBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdatePeeringConnectionTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.peerId, "peerId", "", "usage description")
+	_ = cmd.MarkFlagRequired("peerId")
 
 	return cmd
 }
 type UpdatePeeringContainerOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdatePeeringContainerOperation
+	client admin.APIClient
 	groupId string
 	containerId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdatePeeringContainerOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdatePeeringContainerOpts) Run() error {
-	params := &atlasv2.UpdatePeeringContainerApiParams{
+func (opts *UpdatePeeringContainerOpts) Run(ctx context.Context) error {
+	params := &admin.UpdatePeeringContainerApiParams{
 		GroupId: opts.groupId,
 		ContainerId: opts.containerId,
 	}
-	resp, _, err := opts.store.UpdatePeeringContainer(params)
+	resp, _, err := opts.client.NetworkPeeringApi.UpdatePeeringContainerWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -684,40 +700,42 @@ func UpdatePeeringContainerBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdatePeeringContainerTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.containerId, "containerId", "", "usage description")
+	_ = cmd.MarkFlagRequired("containerId")
 
 	return cmd
 }
 type VerifyConnectViaPeeringOnlyModeForOneProjectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.VerifyConnectViaPeeringOnlyModeForOneProjectOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *VerifyConnectViaPeeringOnlyModeForOneProjectOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *VerifyConnectViaPeeringOnlyModeForOneProjectOpts) Run() error {
-	params := &atlasv2.VerifyConnectViaPeeringOnlyModeForOneProjectApiParams{
+func (opts *VerifyConnectViaPeeringOnlyModeForOneProjectOpts) Run(ctx context.Context) error {
+	params := &admin.VerifyConnectViaPeeringOnlyModeForOneProjectApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.VerifyConnectViaPeeringOnlyModeForOneProject(params)
+	resp, _, err := opts.client.NetworkPeeringApi.VerifyConnectViaPeeringOnlyModeForOneProjectWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -737,16 +755,17 @@ func VerifyConnectViaPeeringOnlyModeForOneProjectBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), VerifyConnectViaPeeringOnlyModeForOneProjectTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }

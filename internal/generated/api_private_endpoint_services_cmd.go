@@ -19,34 +19,34 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreatePrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreatePrivateEndpointOperation
+	client admin.APIClient
 	groupId string
 	cloudProvider string
 	endpointServiceId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreatePrivateEndpointOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreatePrivateEndpointOpts) Run() error {
-	params := &atlasv2.CreatePrivateEndpointApiParams{
+func (opts *CreatePrivateEndpointOpts) Run(ctx context.Context) error {
+	params := &admin.CreatePrivateEndpointApiParams{
 		GroupId: opts.groupId,
 		CloudProvider: opts.cloudProvider,
 		EndpointServiceId: opts.endpointServiceId,
 	}
-	resp, _, err := opts.store.CreatePrivateEndpoint(params)
+	resp, _, err := opts.client.PrivateEndpointServicesApi.CreatePrivateEndpointWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -66,41 +66,44 @@ func CreatePrivateEndpointBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreatePrivateEndpointTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "", "usage description")
+	_ = cmd.MarkFlagRequired("cloudProvider")
 	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", "usage description")
+	_ = cmd.MarkFlagRequired("endpointServiceId")
 
 	return cmd
 }
 type CreatePrivateEndpointServiceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreatePrivateEndpointServiceOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreatePrivateEndpointServiceOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreatePrivateEndpointServiceOpts) Run() error {
-	params := &atlasv2.CreatePrivateEndpointServiceApiParams{
+func (opts *CreatePrivateEndpointServiceOpts) Run(ctx context.Context) error {
+	params := &admin.CreatePrivateEndpointServiceApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreatePrivateEndpointService(params)
+	resp, _, err := opts.client.PrivateEndpointServicesApi.CreatePrivateEndpointServiceWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -120,45 +123,46 @@ func CreatePrivateEndpointServiceBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreatePrivateEndpointServiceTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type DeletePrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeletePrivateEndpointOperation
+	client admin.APIClient
 	groupId string
 	cloudProvider string
 	endpointId string
 	endpointServiceId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeletePrivateEndpointOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeletePrivateEndpointOpts) Run() error {
-	params := &atlasv2.DeletePrivateEndpointApiParams{
+func (opts *DeletePrivateEndpointOpts) Run(ctx context.Context) error {
+	params := &admin.DeletePrivateEndpointApiParams{
 		GroupId: opts.groupId,
 		CloudProvider: opts.cloudProvider,
 		EndpointId: opts.endpointId,
 		EndpointServiceId: opts.endpointServiceId,
 	}
-	resp, _, err := opts.store.DeletePrivateEndpoint(params)
+	resp, _, err := opts.client.PrivateEndpointServicesApi.DeletePrivateEndpointWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -178,46 +182,50 @@ func DeletePrivateEndpointBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeletePrivateEndpointTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "", "usage description")
+	_ = cmd.MarkFlagRequired("cloudProvider")
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", "usage description")
+	_ = cmd.MarkFlagRequired("endpointId")
 	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", "usage description")
+	_ = cmd.MarkFlagRequired("endpointServiceId")
 
 	return cmd
 }
 type DeletePrivateEndpointServiceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeletePrivateEndpointServiceOperation
+	client admin.APIClient
 	groupId string
 	cloudProvider string
 	endpointServiceId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeletePrivateEndpointServiceOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeletePrivateEndpointServiceOpts) Run() error {
-	params := &atlasv2.DeletePrivateEndpointServiceApiParams{
+func (opts *DeletePrivateEndpointServiceOpts) Run(ctx context.Context) error {
+	params := &admin.DeletePrivateEndpointServiceApiParams{
 		GroupId: opts.groupId,
 		CloudProvider: opts.cloudProvider,
 		EndpointServiceId: opts.endpointServiceId,
 	}
-	resp, _, err := opts.store.DeletePrivateEndpointService(params)
+	resp, _, err := opts.client.PrivateEndpointServicesApi.DeletePrivateEndpointServiceWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -237,47 +245,50 @@ func DeletePrivateEndpointServiceBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeletePrivateEndpointServiceTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "", "usage description")
+	_ = cmd.MarkFlagRequired("cloudProvider")
 	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", "usage description")
+	_ = cmd.MarkFlagRequired("endpointServiceId")
 
 	return cmd
 }
 type GetPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetPrivateEndpointOperation
+	client admin.APIClient
 	groupId string
 	cloudProvider string
 	endpointId string
 	endpointServiceId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetPrivateEndpointOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetPrivateEndpointOpts) Run() error {
-	params := &atlasv2.GetPrivateEndpointApiParams{
+func (opts *GetPrivateEndpointOpts) Run(ctx context.Context) error {
+	params := &admin.GetPrivateEndpointApiParams{
 		GroupId: opts.groupId,
 		CloudProvider: opts.cloudProvider,
 		EndpointId: opts.endpointId,
 		EndpointServiceId: opts.endpointServiceId,
 	}
-	resp, _, err := opts.store.GetPrivateEndpoint(params)
+	resp, _, err := opts.client.PrivateEndpointServicesApi.GetPrivateEndpointWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -297,46 +308,50 @@ func GetPrivateEndpointBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetPrivateEndpointTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "", "usage description")
+	_ = cmd.MarkFlagRequired("cloudProvider")
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", "usage description")
+	_ = cmd.MarkFlagRequired("endpointId")
 	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", "usage description")
+	_ = cmd.MarkFlagRequired("endpointServiceId")
 
 	return cmd
 }
 type GetPrivateEndpointServiceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetPrivateEndpointServiceOperation
+	client admin.APIClient
 	groupId string
 	cloudProvider string
 	endpointServiceId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetPrivateEndpointServiceOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetPrivateEndpointServiceOpts) Run() error {
-	params := &atlasv2.GetPrivateEndpointServiceApiParams{
+func (opts *GetPrivateEndpointServiceOpts) Run(ctx context.Context) error {
+	params := &admin.GetPrivateEndpointServiceApiParams{
 		GroupId: opts.groupId,
 		CloudProvider: opts.cloudProvider,
 		EndpointServiceId: opts.endpointServiceId,
 	}
-	resp, _, err := opts.store.GetPrivateEndpointService(params)
+	resp, _, err := opts.client.PrivateEndpointServicesApi.GetPrivateEndpointServiceWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -356,41 +371,44 @@ func GetPrivateEndpointServiceBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetPrivateEndpointServiceTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "", "usage description")
+	_ = cmd.MarkFlagRequired("cloudProvider")
 	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", "usage description")
+	_ = cmd.MarkFlagRequired("endpointServiceId")
 
 	return cmd
 }
 type GetRegionalizedPrivateEndpointSettingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetRegionalizedPrivateEndpointSettingOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetRegionalizedPrivateEndpointSettingOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetRegionalizedPrivateEndpointSettingOpts) Run() error {
-	params := &atlasv2.GetRegionalizedPrivateEndpointSettingApiParams{
+func (opts *GetRegionalizedPrivateEndpointSettingOpts) Run(ctx context.Context) error {
+	params := &admin.GetRegionalizedPrivateEndpointSettingApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.GetRegionalizedPrivateEndpointSetting(params)
+	resp, _, err := opts.client.PrivateEndpointServicesApi.GetRegionalizedPrivateEndpointSettingWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -410,41 +428,42 @@ func GetRegionalizedPrivateEndpointSettingBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetRegionalizedPrivateEndpointSettingTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type ListPrivateEndpointServicesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListPrivateEndpointServicesOperation
+	client admin.APIClient
 	groupId string
 	cloudProvider string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListPrivateEndpointServicesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListPrivateEndpointServicesOpts) Run() error {
-	params := &atlasv2.ListPrivateEndpointServicesApiParams{
+func (opts *ListPrivateEndpointServicesOpts) Run(ctx context.Context) error {
+	params := &admin.ListPrivateEndpointServicesApiParams{
 		GroupId: opts.groupId,
 		CloudProvider: opts.cloudProvider,
 	}
-	resp, _, err := opts.store.ListPrivateEndpointServices(params)
+	resp, _, err := opts.client.PrivateEndpointServicesApi.ListPrivateEndpointServicesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -464,40 +483,42 @@ func ListPrivateEndpointServicesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListPrivateEndpointServicesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "", "usage description")
+	_ = cmd.MarkFlagRequired("cloudProvider")
 
 	return cmd
 }
 type ToggleRegionalizedPrivateEndpointSettingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ToggleRegionalizedPrivateEndpointSettingOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ToggleRegionalizedPrivateEndpointSettingOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ToggleRegionalizedPrivateEndpointSettingOpts) Run() error {
-	params := &atlasv2.ToggleRegionalizedPrivateEndpointSettingApiParams{
+func (opts *ToggleRegionalizedPrivateEndpointSettingOpts) Run(ctx context.Context) error {
+	params := &admin.ToggleRegionalizedPrivateEndpointSettingApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.ToggleRegionalizedPrivateEndpointSetting(params)
+	resp, _, err := opts.client.PrivateEndpointServicesApi.ToggleRegionalizedPrivateEndpointSettingWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -517,16 +538,17 @@ func ToggleRegionalizedPrivateEndpointSettingBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ToggleRegionalizedPrivateEndpointSettingTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }

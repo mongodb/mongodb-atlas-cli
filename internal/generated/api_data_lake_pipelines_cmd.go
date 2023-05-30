@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreatePipelineOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreatePipelineOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreatePipelineOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreatePipelineOpts) Run() error {
-	params := &atlasv2.CreatePipelineApiParams{
+func (opts *CreatePipelineOpts) Run(ctx context.Context) error {
+	params := &admin.CreatePipelineApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreatePipeline(params)
+	resp, _, err := opts.client.DataLakePipelinesApi.CreatePipelineWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,41 +62,42 @@ func CreatePipelineBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreatePipelineTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type DeletePipelineOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeletePipelineOperation
+	client admin.APIClient
 	groupId string
 	pipelineName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeletePipelineOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeletePipelineOpts) Run() error {
-	params := &atlasv2.DeletePipelineApiParams{
+func (opts *DeletePipelineOpts) Run(ctx context.Context) error {
+	params := &admin.DeletePipelineApiParams{
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.store.DeletePipeline(params)
+	resp, _, err := opts.client.DataLakePipelinesApi.DeletePipelineWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -116,44 +117,46 @@ func DeletePipelineBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeletePipelineTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
+	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd
 }
 type DeletePipelineRunDatasetOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeletePipelineRunDatasetOperation
+	client admin.APIClient
 	groupId string
 	pipelineName string
 	pipelineRunId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeletePipelineRunDatasetOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeletePipelineRunDatasetOpts) Run() error {
-	params := &atlasv2.DeletePipelineRunDatasetApiParams{
+func (opts *DeletePipelineRunDatasetOpts) Run(ctx context.Context) error {
+	params := &admin.DeletePipelineRunDatasetApiParams{
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 		PipelineRunId: opts.pipelineRunId,
 	}
-	resp, _, err := opts.store.DeletePipelineRunDataset(params)
+	resp, _, err := opts.client.DataLakePipelinesApi.DeletePipelineRunDatasetWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -173,43 +176,46 @@ func DeletePipelineRunDatasetBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeletePipelineRunDatasetTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
+	_ = cmd.MarkFlagRequired("pipelineName")
 	cmd.Flags().StringVar(&opts.pipelineRunId, "pipelineRunId", "", "usage description")
+	_ = cmd.MarkFlagRequired("pipelineRunId")
 
 	return cmd
 }
 type GetPipelineOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetPipelineOperation
+	client admin.APIClient
 	groupId string
 	pipelineName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetPipelineOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetPipelineOpts) Run() error {
-	params := &atlasv2.GetPipelineApiParams{
+func (opts *GetPipelineOpts) Run(ctx context.Context) error {
+	params := &admin.GetPipelineApiParams{
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.store.GetPipeline(params)
+	resp, _, err := opts.client.DataLakePipelinesApi.GetPipelineWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -229,44 +235,46 @@ func GetPipelineBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetPipelineTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
+	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd
 }
 type GetPipelineRunOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetPipelineRunOperation
+	client admin.APIClient
 	groupId string
 	pipelineName string
 	pipelineRunId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetPipelineRunOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetPipelineRunOpts) Run() error {
-	params := &atlasv2.GetPipelineRunApiParams{
+func (opts *GetPipelineRunOpts) Run(ctx context.Context) error {
+	params := &admin.GetPipelineRunApiParams{
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 		PipelineRunId: opts.pipelineRunId,
 	}
-	resp, _, err := opts.store.GetPipelineRun(params)
+	resp, _, err := opts.client.DataLakePipelinesApi.GetPipelineRunWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -286,25 +294,28 @@ func GetPipelineRunBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetPipelineRunTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
+	_ = cmd.MarkFlagRequired("pipelineName")
 	cmd.Flags().StringVar(&opts.pipelineRunId, "pipelineRunId", "", "usage description")
+	_ = cmd.MarkFlagRequired("pipelineRunId")
 
 	return cmd
 }
 type ListPipelineRunsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListPipelineRunsOperation
+	client admin.APIClient
 	groupId string
 	pipelineName string
 	includeCount bool
@@ -313,16 +324,16 @@ type ListPipelineRunsOpts struct {
 	createdBefore time.Time
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListPipelineRunsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListPipelineRunsOpts) Run() error {
-	params := &atlasv2.ListPipelineRunsApiParams{
+func (opts *ListPipelineRunsOpts) Run(ctx context.Context) error {
+	params := &admin.ListPipelineRunsApiParams{
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 		IncludeCount: opts.includeCount,
@@ -330,7 +341,7 @@ func (opts *ListPipelineRunsOpts) Run() error {
 		PageNum: opts.pageNum,
 		CreatedBefore: opts.createdBefore,
 	}
-	resp, _, err := opts.store.ListPipelineRuns(params)
+	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelineRunsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -350,17 +361,19 @@ func ListPipelineRunsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListPipelineRunsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
+	_ = cmd.MarkFlagRequired("pipelineName")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -371,25 +384,25 @@ func ListPipelineRunsBuilder() cobra.Command {
 type ListPipelineSchedulesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListPipelineSchedulesOperation
+	client admin.APIClient
 	groupId string
 	pipelineName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListPipelineSchedulesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListPipelineSchedulesOpts) Run() error {
-	params := &atlasv2.ListPipelineSchedulesApiParams{
+func (opts *ListPipelineSchedulesOpts) Run(ctx context.Context) error {
+	params := &admin.ListPipelineSchedulesApiParams{
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.store.ListPipelineSchedules(params)
+	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelineSchedulesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -409,24 +422,26 @@ func ListPipelineSchedulesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListPipelineSchedulesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
+	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd
 }
 type ListPipelineSnapshotsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListPipelineSnapshotsOperation
+	client admin.APIClient
 	groupId string
 	pipelineName string
 	includeCount bool
@@ -435,16 +450,16 @@ type ListPipelineSnapshotsOpts struct {
 	completedAfter time.Time
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListPipelineSnapshotsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListPipelineSnapshotsOpts) Run() error {
-	params := &atlasv2.ListPipelineSnapshotsApiParams{
+func (opts *ListPipelineSnapshotsOpts) Run(ctx context.Context) error {
+	params := &admin.ListPipelineSnapshotsApiParams{
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 		IncludeCount: opts.includeCount,
@@ -452,7 +467,7 @@ func (opts *ListPipelineSnapshotsOpts) Run() error {
 		PageNum: opts.pageNum,
 		CompletedAfter: opts.completedAfter,
 	}
-	resp, _, err := opts.store.ListPipelineSnapshots(params)
+	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelineSnapshotsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -472,17 +487,19 @@ func ListPipelineSnapshotsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListPipelineSnapshotsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
+	_ = cmd.MarkFlagRequired("pipelineName")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -493,23 +510,23 @@ func ListPipelineSnapshotsBuilder() cobra.Command {
 type ListPipelinesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListPipelinesOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListPipelinesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListPipelinesOpts) Run() error {
-	params := &atlasv2.ListPipelinesApiParams{
+func (opts *ListPipelinesOpts) Run(ctx context.Context) error {
+	params := &admin.ListPipelinesApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.ListPipelines(params)
+	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelinesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -529,41 +546,42 @@ func ListPipelinesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListPipelinesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type PausePipelineOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.PausePipelineOperation
+	client admin.APIClient
 	groupId string
 	pipelineName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *PausePipelineOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *PausePipelineOpts) Run() error {
-	params := &atlasv2.PausePipelineApiParams{
+func (opts *PausePipelineOpts) Run(ctx context.Context) error {
+	params := &admin.PausePipelineApiParams{
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.store.PausePipeline(params)
+	resp, _, err := opts.client.DataLakePipelinesApi.PausePipelineWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -583,42 +601,44 @@ func PausePipelineBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), PausePipelineTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
+	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd
 }
 type ResumePipelineOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ResumePipelineOperation
+	client admin.APIClient
 	groupId string
 	pipelineName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ResumePipelineOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ResumePipelineOpts) Run() error {
-	params := &atlasv2.ResumePipelineApiParams{
+func (opts *ResumePipelineOpts) Run(ctx context.Context) error {
+	params := &admin.ResumePipelineApiParams{
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.store.ResumePipeline(params)
+	resp, _, err := opts.client.DataLakePipelinesApi.ResumePipelineWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -638,42 +658,44 @@ func ResumePipelineBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ResumePipelineTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
+	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd
 }
 type TriggerSnapshotIngestionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.TriggerSnapshotIngestionOperation
+	client admin.APIClient
 	groupId string
 	pipelineName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *TriggerSnapshotIngestionOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *TriggerSnapshotIngestionOpts) Run() error {
-	params := &atlasv2.TriggerSnapshotIngestionApiParams{
+func (opts *TriggerSnapshotIngestionOpts) Run(ctx context.Context) error {
+	params := &admin.TriggerSnapshotIngestionApiParams{
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.store.TriggerSnapshotIngestion(params)
+	resp, _, err := opts.client.DataLakePipelinesApi.TriggerSnapshotIngestionWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -693,42 +715,44 @@ func TriggerSnapshotIngestionBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), TriggerSnapshotIngestionTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
+	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd
 }
 type UpdatePipelineOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdatePipelineOperation
+	client admin.APIClient
 	groupId string
 	pipelineName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdatePipelineOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdatePipelineOpts) Run() error {
-	params := &atlasv2.UpdatePipelineApiParams{
+func (opts *UpdatePipelineOpts) Run(ctx context.Context) error {
+	params := &admin.UpdatePipelineApiParams{
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.store.UpdatePipeline(params)
+	resp, _, err := opts.client.DataLakePipelinesApi.UpdatePipelineWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -748,17 +772,19 @@ func UpdatePipelineBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdatePipelineTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
+	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd
 }

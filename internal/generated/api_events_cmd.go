@@ -19,34 +19,34 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type GetOrganizationEventOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetOrganizationEventOperation
+	client admin.APIClient
 	orgId string
 	eventId string
 	includeRaw bool
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetOrganizationEventOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetOrganizationEventOpts) Run() error {
-	params := &atlasv2.GetOrganizationEventApiParams{
+func (opts *GetOrganizationEventOpts) Run(ctx context.Context) error {
+	params := &admin.GetOrganizationEventApiParams{
 		OrgId: opts.orgId,
 		EventId: opts.eventId,
 		IncludeRaw: opts.includeRaw,
 	}
-	resp, _, err := opts.store.GetOrganizationEvent(params)
+	resp, _, err := opts.client.EventsApi.GetOrganizationEventWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -66,17 +66,19 @@ func GetOrganizationEventBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetOrganizationEventTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.eventId, "eventId", "", "usage description")
+	_ = cmd.MarkFlagRequired("eventId")
 	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", "", "usage description")
 
 	return cmd
@@ -84,27 +86,27 @@ func GetOrganizationEventBuilder() cobra.Command {
 type GetProjectEventOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetProjectEventOperation
+	client admin.APIClient
 	groupId string
 	eventId string
 	includeRaw bool
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetProjectEventOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetProjectEventOpts) Run() error {
-	params := &atlasv2.GetProjectEventApiParams{
+func (opts *GetProjectEventOpts) Run(ctx context.Context) error {
+	params := &admin.GetProjectEventApiParams{
 		GroupId: opts.groupId,
 		EventId: opts.eventId,
 		IncludeRaw: opts.includeRaw,
 	}
-	resp, _, err := opts.store.GetProjectEvent(params)
+	resp, _, err := opts.client.EventsApi.GetProjectEventWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -124,17 +126,19 @@ func GetProjectEventBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetProjectEventTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.eventId, "eventId", "", "usage description")
+	_ = cmd.MarkFlagRequired("eventId")
 	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", "", "usage description")
 
 	return cmd
@@ -142,7 +146,7 @@ func GetProjectEventBuilder() cobra.Command {
 type ListOrganizationEventsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListOrganizationEventsOperation
+	client admin.APIClient
 	orgId string
 	includeCount bool
 	itemsPerPage int32
@@ -153,16 +157,16 @@ type ListOrganizationEventsOpts struct {
 	minDate time.Time
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListOrganizationEventsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListOrganizationEventsOpts) Run() error {
-	params := &atlasv2.ListOrganizationEventsApiParams{
+func (opts *ListOrganizationEventsOpts) Run(ctx context.Context) error {
+	params := &admin.ListOrganizationEventsApiParams{
 		OrgId: opts.orgId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
@@ -172,7 +176,7 @@ func (opts *ListOrganizationEventsOpts) Run() error {
 		MaxDate: opts.maxDate,
 		MinDate: opts.minDate,
 	}
-	resp, _, err := opts.store.ListOrganizationEvents(params)
+	resp, _, err := opts.client.EventsApi.ListOrganizationEventsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -192,16 +196,17 @@ func ListOrganizationEventsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListOrganizationEventsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -215,7 +220,7 @@ func ListOrganizationEventsBuilder() cobra.Command {
 type ListProjectEventsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListProjectEventsOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
@@ -227,16 +232,16 @@ type ListProjectEventsOpts struct {
 	minDate time.Time
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListProjectEventsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListProjectEventsOpts) Run() error {
-	params := &atlasv2.ListProjectEventsApiParams{
+func (opts *ListProjectEventsOpts) Run(ctx context.Context) error {
+	params := &admin.ListProjectEventsApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
@@ -247,7 +252,7 @@ func (opts *ListProjectEventsOpts) Run() error {
 		MaxDate: opts.maxDate,
 		MinDate: opts.minDate,
 	}
-	resp, _, err := opts.store.ListProjectEvents(params)
+	resp, _, err := opts.client.EventsApi.ListProjectEventsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -267,16 +272,17 @@ func ListProjectEventsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListProjectEventsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")

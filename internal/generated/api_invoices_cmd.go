@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type DownloadInvoiceCSVOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DownloadInvoiceCSVOperation
+	client admin.APIClient
 	orgId string
 	invoiceId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DownloadInvoiceCSVOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DownloadInvoiceCSVOpts) Run() error {
-	params := &atlasv2.DownloadInvoiceCSVApiParams{
+func (opts *DownloadInvoiceCSVOpts) Run(ctx context.Context) error {
+	params := &admin.DownloadInvoiceCSVApiParams{
 		OrgId: opts.orgId,
 		InvoiceId: opts.invoiceId,
 	}
-	_, err := opts.store.DownloadInvoiceCSV(params)
+	_, err := opts.client.InvoicesApi.DownloadInvoiceCSVWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,42 +64,44 @@ func DownloadInvoiceCSVBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DownloadInvoiceCSVTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", "", "usage description")
+	_ = cmd.MarkFlagRequired("invoiceId")
 
 	return cmd
 }
 type GetInvoiceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetInvoiceOperation
+	client admin.APIClient
 	orgId string
 	invoiceId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetInvoiceOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetInvoiceOpts) Run() error {
-	params := &atlasv2.GetInvoiceApiParams{
+func (opts *GetInvoiceOpts) Run(ctx context.Context) error {
+	params := &admin.GetInvoiceApiParams{
 		OrgId: opts.orgId,
 		InvoiceId: opts.invoiceId,
 	}
-	resp, _, err := opts.store.GetInvoice(params)
+	resp, _, err := opts.client.InvoicesApi.GetInvoiceWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -119,46 +121,48 @@ func GetInvoiceBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetInvoiceTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", "", "usage description")
+	_ = cmd.MarkFlagRequired("invoiceId")
 
 	return cmd
 }
 type ListInvoicesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListInvoicesOperation
+	client admin.APIClient
 	orgId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListInvoicesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListInvoicesOpts) Run() error {
-	params := &atlasv2.ListInvoicesApiParams{
+func (opts *ListInvoicesOpts) Run(ctx context.Context) error {
+	params := &admin.ListInvoicesApiParams{
 		OrgId: opts.orgId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListInvoices(params)
+	resp, _, err := opts.client.InvoicesApi.ListInvoicesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -178,16 +182,17 @@ func ListInvoicesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListInvoicesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -197,23 +202,23 @@ func ListInvoicesBuilder() cobra.Command {
 type ListPendingInvoicesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListPendingInvoicesOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListPendingInvoicesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListPendingInvoicesOpts) Run() error {
-	params := &atlasv2.ListPendingInvoicesApiParams{
+func (opts *ListPendingInvoicesOpts) Run(ctx context.Context) error {
+	params := &admin.ListPendingInvoicesApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.ListPendingInvoices(params)
+	resp, _, err := opts.client.InvoicesApi.ListPendingInvoicesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -233,16 +238,17 @@ func ListPendingInvoicesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListPendingInvoicesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }

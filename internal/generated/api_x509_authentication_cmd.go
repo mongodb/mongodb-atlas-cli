@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateDatabaseUserCertificateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateDatabaseUserCertificateOperation
+	client admin.APIClient
 	groupId string
 	username string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateDatabaseUserCertificateOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateDatabaseUserCertificateOpts) Run() error {
-	params := &atlasv2.CreateDatabaseUserCertificateApiParams{
+func (opts *CreateDatabaseUserCertificateOpts) Run(ctx context.Context) error {
+	params := &admin.CreateDatabaseUserCertificateApiParams{
 		GroupId: opts.groupId,
 		Username: opts.username,
 	}
-	_, err := opts.store.CreateDatabaseUserCertificate(params)
+	_, err := opts.client.X509AuthenticationApi.CreateDatabaseUserCertificateWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,40 +64,42 @@ func CreateDatabaseUserCertificateBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateDatabaseUserCertificateTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.username, "username", "", "usage description")
+	_ = cmd.MarkFlagRequired("username")
 
 	return cmd
 }
 type DisableCustomerManagedX509Opts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DisableCustomerManagedX509Operation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DisableCustomerManagedX509Opts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DisableCustomerManagedX509Opts) Run() error {
-	params := &atlasv2.DisableCustomerManagedX509ApiParams{
+func (opts *DisableCustomerManagedX509Opts) Run(ctx context.Context) error {
+	params := &admin.DisableCustomerManagedX509ApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.DisableCustomerManagedX509(params)
+	resp, _, err := opts.client.X509AuthenticationApi.DisableCustomerManagedX509WithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -117,23 +119,24 @@ func DisableCustomerManagedX509Builder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DisableCustomerManagedX509Template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type ListDatabaseUserCertificatesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListDatabaseUserCertificatesOperation
+	client admin.APIClient
 	groupId string
 	username string
 	includeCount bool
@@ -141,23 +144,23 @@ type ListDatabaseUserCertificatesOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListDatabaseUserCertificatesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListDatabaseUserCertificatesOpts) Run() error {
-	params := &atlasv2.ListDatabaseUserCertificatesApiParams{
+func (opts *ListDatabaseUserCertificatesOpts) Run(ctx context.Context) error {
+	params := &admin.ListDatabaseUserCertificatesApiParams{
 		GroupId: opts.groupId,
 		Username: opts.username,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListDatabaseUserCertificates(params)
+	resp, _, err := opts.client.X509AuthenticationApi.ListDatabaseUserCertificatesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -177,17 +180,19 @@ func ListDatabaseUserCertificatesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListDatabaseUserCertificatesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.username, "username", "", "usage description")
+	_ = cmd.MarkFlagRequired("username")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")

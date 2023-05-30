@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type GetAtlasProcessOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetAtlasProcessOperation
+	client admin.APIClient
 	groupId string
 	processId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetAtlasProcessOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetAtlasProcessOpts) Run() error {
-	params := &atlasv2.GetAtlasProcessApiParams{
+func (opts *GetAtlasProcessOpts) Run(ctx context.Context) error {
+	params := &admin.GetAtlasProcessApiParams{
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
 	}
-	resp, _, err := opts.store.GetAtlasProcess(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.GetAtlasProcessWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,44 +64,46 @@ func GetAtlasProcessBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetAtlasProcessTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 
 	return cmd
 }
 type GetDatabaseOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetDatabaseOperation
+	client admin.APIClient
 	groupId string
 	databaseName string
 	processId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetDatabaseOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetDatabaseOpts) Run() error {
-	params := &atlasv2.GetDatabaseApiParams{
+func (opts *GetDatabaseOpts) Run(ctx context.Context) error {
+	params := &admin.GetDatabaseApiParams{
 		GroupId: opts.groupId,
 		DatabaseName: opts.databaseName,
 		ProcessId: opts.processId,
 	}
-	resp, _, err := opts.store.GetDatabase(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.GetDatabaseWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -121,25 +123,28 @@ func GetDatabaseBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetDatabaseTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "usage description")
+	_ = cmd.MarkFlagRequired("databaseName")
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 
 	return cmd
 }
 type GetDatabaseMeasurementsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetDatabaseMeasurementsOperation
+	client admin.APIClient
 	groupId string
 	databaseName string
 	processId string
@@ -150,16 +155,16 @@ type GetDatabaseMeasurementsOpts struct {
 	end time.Time
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetDatabaseMeasurementsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetDatabaseMeasurementsOpts) Run() error {
-	params := &atlasv2.GetDatabaseMeasurementsApiParams{
+func (opts *GetDatabaseMeasurementsOpts) Run(ctx context.Context) error {
+	params := &admin.GetDatabaseMeasurementsApiParams{
 		GroupId: opts.groupId,
 		DatabaseName: opts.databaseName,
 		ProcessId: opts.processId,
@@ -169,7 +174,7 @@ func (opts *GetDatabaseMeasurementsOpts) Run() error {
 		Start: opts.start,
 		End: opts.end,
 	}
-	resp, _, err := opts.store.GetDatabaseMeasurements(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.GetDatabaseMeasurementsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -189,18 +194,21 @@ func GetDatabaseMeasurementsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetDatabaseMeasurementsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "usage description")
+	_ = cmd.MarkFlagRequired("databaseName")
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 	cmd.Flags().StringVar(&opts.m, "m", "", "usage description")
 	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "usage description")
 	cmd.Flags().StringVar(&opts.period, "period", "", "usage description")
@@ -212,7 +220,7 @@ func GetDatabaseMeasurementsBuilder() cobra.Command {
 type GetDiskMeasurementsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetDiskMeasurementsOperation
+	client admin.APIClient
 	groupId string
 	partitionName string
 	processId string
@@ -223,16 +231,16 @@ type GetDiskMeasurementsOpts struct {
 	end time.Time
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetDiskMeasurementsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetDiskMeasurementsOpts) Run() error {
-	params := &atlasv2.GetDiskMeasurementsApiParams{
+func (opts *GetDiskMeasurementsOpts) Run(ctx context.Context) error {
+	params := &admin.GetDiskMeasurementsApiParams{
 		GroupId: opts.groupId,
 		PartitionName: opts.partitionName,
 		ProcessId: opts.processId,
@@ -242,7 +250,7 @@ func (opts *GetDiskMeasurementsOpts) Run() error {
 		Start: opts.start,
 		End: opts.end,
 	}
-	resp, _, err := opts.store.GetDiskMeasurements(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.GetDiskMeasurementsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -262,18 +270,21 @@ func GetDiskMeasurementsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetDiskMeasurementsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.partitionName, "partitionName", "", "usage description")
+	_ = cmd.MarkFlagRequired("partitionName")
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 	cmd.Flags().StringVar(&opts.m, "m", "", "usage description")
 	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "usage description")
 	cmd.Flags().StringVar(&opts.period, "period", "", "usage description")
@@ -285,7 +296,7 @@ func GetDiskMeasurementsBuilder() cobra.Command {
 type GetHostLogsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetHostLogsOperation
+	client admin.APIClient
 	groupId string
 	hostName string
 	logName string
@@ -293,23 +304,23 @@ type GetHostLogsOpts struct {
 	startDate int64
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetHostLogsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetHostLogsOpts) Run() error {
-	params := &atlasv2.GetHostLogsApiParams{
+func (opts *GetHostLogsOpts) Run(ctx context.Context) error {
+	params := &admin.GetHostLogsApiParams{
 		GroupId: opts.groupId,
 		HostName: opts.hostName,
 		LogName: opts.logName,
 		EndDate: opts.endDate,
 		StartDate: opts.startDate,
 	}
-	resp, _, err := opts.store.GetHostLogs(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.GetHostLogsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -329,18 +340,21 @@ func GetHostLogsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetHostLogsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.hostName, "hostName", "", "usage description")
+	_ = cmd.MarkFlagRequired("hostName")
 	cmd.Flags().StringVar(&opts.logName, "logName", "", "usage description")
+	_ = cmd.MarkFlagRequired("logName")
 	cmd.Flags().StringVar(&opts.endDate, "endDate", "", "usage description")
 	cmd.Flags().StringVar(&opts.startDate, "startDate", "", "usage description")
 
@@ -349,7 +363,7 @@ func GetHostLogsBuilder() cobra.Command {
 type GetHostMeasurementsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetHostMeasurementsOperation
+	client admin.APIClient
 	groupId string
 	processId string
 	m []string
@@ -359,16 +373,16 @@ type GetHostMeasurementsOpts struct {
 	end time.Time
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetHostMeasurementsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetHostMeasurementsOpts) Run() error {
-	params := &atlasv2.GetHostMeasurementsApiParams{
+func (opts *GetHostMeasurementsOpts) Run(ctx context.Context) error {
+	params := &admin.GetHostMeasurementsApiParams{
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
 		M: opts.m,
@@ -377,7 +391,7 @@ func (opts *GetHostMeasurementsOpts) Run() error {
 		Start: opts.start,
 		End: opts.end,
 	}
-	resp, _, err := opts.store.GetHostMeasurements(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.GetHostMeasurementsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -397,17 +411,19 @@ func GetHostMeasurementsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetHostMeasurementsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 	cmd.Flags().StringVar(&opts.m, "m", "", "usage description")
 	cmd.Flags().StringVar(&opts.period, "period", "", "usage description")
 	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "usage description")
@@ -419,7 +435,7 @@ func GetHostMeasurementsBuilder() cobra.Command {
 type GetIndexMetricsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetIndexMetricsOperation
+	client admin.APIClient
 	processId string
 	indexName string
 	databaseName string
@@ -432,16 +448,16 @@ type GetIndexMetricsOpts struct {
 	metrics []string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetIndexMetricsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetIndexMetricsOpts) Run() error {
-	params := &atlasv2.GetIndexMetricsApiParams{
+func (opts *GetIndexMetricsOpts) Run(ctx context.Context) error {
+	params := &admin.GetIndexMetricsApiParams{
 		ProcessId: opts.processId,
 		IndexName: opts.indexName,
 		DatabaseName: opts.databaseName,
@@ -453,7 +469,7 @@ func (opts *GetIndexMetricsOpts) Run() error {
 		End: opts.end,
 		Metrics: opts.metrics,
 	}
-	resp, _, err := opts.store.GetIndexMetrics(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.GetIndexMetricsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -473,20 +489,25 @@ func GetIndexMetricsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetIndexMetricsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 	cmd.Flags().StringVar(&opts.indexName, "indexName", "", "usage description")
+	_ = cmd.MarkFlagRequired("indexName")
 	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "usage description")
+	_ = cmd.MarkFlagRequired("databaseName")
 	cmd.Flags().StringVar(&opts.collectionName, "collectionName", "", "usage description")
+	_ = cmd.MarkFlagRequired("collectionName")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "usage description")
 	cmd.Flags().StringVar(&opts.period, "period", "", "usage description")
 	cmd.Flags().StringVar(&opts.start, "start", "", "usage description")
@@ -498,7 +519,7 @@ func GetIndexMetricsBuilder() cobra.Command {
 type GetMeasurementsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetMeasurementsOperation
+	client admin.APIClient
 	processId string
 	groupId string
 	granularity string
@@ -508,16 +529,16 @@ type GetMeasurementsOpts struct {
 	metrics []string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetMeasurementsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetMeasurementsOpts) Run() error {
-	params := &atlasv2.GetMeasurementsApiParams{
+func (opts *GetMeasurementsOpts) Run(ctx context.Context) error {
+	params := &admin.GetMeasurementsApiParams{
 		ProcessId: opts.processId,
 		GroupId: opts.groupId,
 		Granularity: opts.granularity,
@@ -526,7 +547,7 @@ func (opts *GetMeasurementsOpts) Run() error {
 		End: opts.end,
 		Metrics: opts.metrics,
 	}
-	resp, _, err := opts.store.GetMeasurements(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.GetMeasurementsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -546,17 +567,19 @@ func GetMeasurementsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetMeasurementsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "usage description")
 	cmd.Flags().StringVar(&opts.period, "period", "", "usage description")
 	cmd.Flags().StringVar(&opts.start, "start", "", "usage description")
@@ -568,29 +591,29 @@ func GetMeasurementsBuilder() cobra.Command {
 type ListAtlasProcessesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListAtlasProcessesOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListAtlasProcessesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListAtlasProcessesOpts) Run() error {
-	params := &atlasv2.ListAtlasProcessesApiParams{
+func (opts *ListAtlasProcessesOpts) Run(ctx context.Context) error {
+	params := &admin.ListAtlasProcessesApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListAtlasProcesses(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.ListAtlasProcessesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -610,16 +633,17 @@ func ListAtlasProcessesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListAtlasProcessesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -629,7 +653,7 @@ func ListAtlasProcessesBuilder() cobra.Command {
 type ListDatabasesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListDatabasesOperation
+	client admin.APIClient
 	groupId string
 	processId string
 	includeCount bool
@@ -637,23 +661,23 @@ type ListDatabasesOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListDatabasesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListDatabasesOpts) Run() error {
-	params := &atlasv2.ListDatabasesApiParams{
+func (opts *ListDatabasesOpts) Run(ctx context.Context) error {
+	params := &admin.ListDatabasesApiParams{
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListDatabases(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.ListDatabasesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -673,17 +697,19 @@ func ListDatabasesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListDatabasesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -693,27 +719,27 @@ func ListDatabasesBuilder() cobra.Command {
 type ListDiskMeasurementsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListDiskMeasurementsOperation
+	client admin.APIClient
 	partitionName string
 	groupId string
 	processId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListDiskMeasurementsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListDiskMeasurementsOpts) Run() error {
-	params := &atlasv2.ListDiskMeasurementsApiParams{
+func (opts *ListDiskMeasurementsOpts) Run(ctx context.Context) error {
+	params := &admin.ListDiskMeasurementsApiParams{
 		PartitionName: opts.partitionName,
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
 	}
-	resp, _, err := opts.store.ListDiskMeasurements(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.ListDiskMeasurementsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -733,25 +759,28 @@ func ListDiskMeasurementsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListDiskMeasurementsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.partitionName, "partitionName", "", "usage description")
+	_ = cmd.MarkFlagRequired("partitionName")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 
 	return cmd
 }
 type ListDiskPartitionsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListDiskPartitionsOperation
+	client admin.APIClient
 	groupId string
 	processId string
 	includeCount bool
@@ -759,23 +788,23 @@ type ListDiskPartitionsOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListDiskPartitionsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListDiskPartitionsOpts) Run() error {
-	params := &atlasv2.ListDiskPartitionsApiParams{
+func (opts *ListDiskPartitionsOpts) Run(ctx context.Context) error {
+	params := &admin.ListDiskPartitionsApiParams{
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListDiskPartitions(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.ListDiskPartitionsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -795,17 +824,19 @@ func ListDiskPartitionsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListDiskPartitionsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -815,7 +846,7 @@ func ListDiskPartitionsBuilder() cobra.Command {
 type ListIndexMetricsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListIndexMetricsOperation
+	client admin.APIClient
 	processId string
 	databaseName string
 	collectionName string
@@ -827,16 +858,16 @@ type ListIndexMetricsOpts struct {
 	metrics []string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListIndexMetricsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListIndexMetricsOpts) Run() error {
-	params := &atlasv2.ListIndexMetricsApiParams{
+func (opts *ListIndexMetricsOpts) Run(ctx context.Context) error {
+	params := &admin.ListIndexMetricsApiParams{
 		ProcessId: opts.processId,
 		DatabaseName: opts.databaseName,
 		CollectionName: opts.collectionName,
@@ -847,7 +878,7 @@ func (opts *ListIndexMetricsOpts) Run() error {
 		End: opts.end,
 		Metrics: opts.metrics,
 	}
-	resp, _, err := opts.store.ListIndexMetrics(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.ListIndexMetricsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -867,19 +898,23 @@ func ListIndexMetricsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListIndexMetricsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "usage description")
+	_ = cmd.MarkFlagRequired("databaseName")
 	cmd.Flags().StringVar(&opts.collectionName, "collectionName", "", "usage description")
+	_ = cmd.MarkFlagRequired("collectionName")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "usage description")
 	cmd.Flags().StringVar(&opts.period, "period", "", "usage description")
 	cmd.Flags().StringVar(&opts.start, "start", "", "usage description")
@@ -891,25 +926,25 @@ func ListIndexMetricsBuilder() cobra.Command {
 type ListMetricTypesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListMetricTypesOperation
+	client admin.APIClient
 	processId string
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListMetricTypesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListMetricTypesOpts) Run() error {
-	params := &atlasv2.ListMetricTypesApiParams{
+func (opts *ListMetricTypesOpts) Run(ctx context.Context) error {
+	params := &admin.ListMetricTypesApiParams{
 		ProcessId: opts.processId,
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.ListMetricTypes(params)
+	resp, _, err := opts.client.MonitoringAndLogsApi.ListMetricTypesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -929,17 +964,19 @@ func ListMetricTypesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListMetricTypesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }

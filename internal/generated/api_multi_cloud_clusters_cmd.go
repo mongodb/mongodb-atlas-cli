@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateClusterOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateClusterOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateClusterOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateClusterOpts) Run() error {
-	params := &atlasv2.CreateClusterApiParams{
+func (opts *CreateClusterOpts) Run(ctx context.Context) error {
+	params := &admin.CreateClusterApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreateCluster(params)
+	resp, _, err := opts.client.MultiCloudClustersApi.CreateClusterWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,43 +62,44 @@ func CreateClusterBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateClusterTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type DeleteClusterOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteClusterOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	retainBackups bool
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteClusterOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteClusterOpts) Run() error {
-	params := &atlasv2.DeleteClusterApiParams{
+func (opts *DeleteClusterOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteClusterApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		RetainBackups: opts.retainBackups,
 	}
-	_, err := opts.store.DeleteCluster(params)
+	_, err := opts.client.MultiCloudClustersApi.DeleteClusterWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -118,17 +119,19 @@ func DeleteClusterBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteClusterTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.retainBackups, "retainBackups", "", "usage description")
 
 	return cmd
@@ -136,25 +139,25 @@ func DeleteClusterBuilder() cobra.Command {
 type GetClusterOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetClusterOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetClusterOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetClusterOpts) Run() error {
-	params := &atlasv2.GetClusterApiParams{
+func (opts *GetClusterOpts) Run(ctx context.Context) error {
+	params := &admin.GetClusterApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.GetCluster(params)
+	resp, _, err := opts.client.MultiCloudClustersApi.GetClusterWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -174,46 +177,48 @@ func GetClusterBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetClusterTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type ListClustersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListClustersOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListClustersOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListClustersOpts) Run() error {
-	params := &atlasv2.ListClustersApiParams{
+func (opts *ListClustersOpts) Run(ctx context.Context) error {
+	params := &admin.ListClustersApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListClusters(params)
+	resp, _, err := opts.client.MultiCloudClustersApi.ListClustersWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -233,16 +238,17 @@ func ListClustersBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListClustersTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -252,25 +258,25 @@ func ListClustersBuilder() cobra.Command {
 type TestFailoverOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.TestFailoverOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *TestFailoverOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *TestFailoverOpts) Run() error {
-	params := &atlasv2.TestFailoverApiParams{
+func (opts *TestFailoverOpts) Run(ctx context.Context) error {
+	params := &admin.TestFailoverApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	_, err := opts.store.TestFailover(params)
+	_, err := opts.client.MultiCloudClustersApi.TestFailoverWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -290,42 +296,44 @@ func TestFailoverBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), TestFailoverTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type UpdateClusterOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateClusterOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateClusterOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateClusterOpts) Run() error {
-	params := &atlasv2.UpdateClusterApiParams{
+func (opts *UpdateClusterOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateClusterApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.UpdateCluster(params)
+	resp, _, err := opts.client.MultiCloudClustersApi.UpdateClusterWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -345,17 +353,19 @@ func UpdateClusterBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateClusterTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }

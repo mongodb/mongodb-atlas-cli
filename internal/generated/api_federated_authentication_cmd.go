@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateRoleMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateRoleMappingOperation
+	client admin.APIClient
 	federationSettingsId string
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateRoleMappingOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateRoleMappingOpts) Run() error {
-	params := &atlasv2.CreateRoleMappingApiParams{
+func (opts *CreateRoleMappingOpts) Run(ctx context.Context) error {
+	params := &admin.CreateRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.CreateRoleMapping(params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.CreateRoleMappingWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,40 +64,42 @@ func CreateRoleMappingBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateRoleMappingTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type DeleteFederationAppOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteFederationAppOperation
+	client admin.APIClient
 	federationSettingsId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteFederationAppOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteFederationAppOpts) Run() error {
-	params := &atlasv2.DeleteFederationAppApiParams{
+func (opts *DeleteFederationAppOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteFederationAppApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
-	_, err := opts.store.DeleteFederationApp(params)
+	_, err := opts.client.FederatedAuthenticationApi.DeleteFederationAppWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -117,43 +119,44 @@ func DeleteFederationAppBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteFederationAppTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 
 	return cmd
 }
 type DeleteRoleMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteRoleMappingOperation
+	client admin.APIClient
 	federationSettingsId string
 	id string
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteRoleMappingOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteRoleMappingOpts) Run() error {
-	params := &atlasv2.DeleteRoleMappingApiParams{
+func (opts *DeleteRoleMappingOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		Id: opts.id,
 		OrgId: opts.orgId,
 	}
-	_, err := opts.store.DeleteRoleMapping(params)
+	_, err := opts.client.FederatedAuthenticationApi.DeleteRoleMappingWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -173,43 +176,46 @@ func DeleteRoleMappingBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteRoleMappingTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 	cmd.Flags().StringVar(&opts.id, "id", "", "usage description")
+	_ = cmd.MarkFlagRequired("id")
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type GetConnectedOrgConfigOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetConnectedOrgConfigOperation
+	client admin.APIClient
 	federationSettingsId string
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetConnectedOrgConfigOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetConnectedOrgConfigOpts) Run() error {
-	params := &atlasv2.GetConnectedOrgConfigApiParams{
+func (opts *GetConnectedOrgConfigOpts) Run(ctx context.Context) error {
+	params := &admin.GetConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.GetConnectedOrgConfig(params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.GetConnectedOrgConfigWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -229,40 +235,42 @@ func GetConnectedOrgConfigBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetConnectedOrgConfigTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type GetFederationSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetFederationSettingsOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetFederationSettingsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetFederationSettingsOpts) Run() error {
-	params := &atlasv2.GetFederationSettingsApiParams{
+func (opts *GetFederationSettingsOpts) Run(ctx context.Context) error {
+	params := &admin.GetFederationSettingsApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.GetFederationSettings(params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.GetFederationSettingsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -282,41 +290,42 @@ func GetFederationSettingsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetFederationSettingsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type GetIdentityProviderOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetIdentityProviderOperation
+	client admin.APIClient
 	federationSettingsId string
 	identityProviderId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetIdentityProviderOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetIdentityProviderOpts) Run() error {
-	params := &atlasv2.GetIdentityProviderApiParams{
+func (opts *GetIdentityProviderOpts) Run(ctx context.Context) error {
+	params := &admin.GetIdentityProviderApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		IdentityProviderId: opts.identityProviderId,
 	}
-	resp, _, err := opts.store.GetIdentityProvider(params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.GetIdentityProviderWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -336,42 +345,44 @@ func GetIdentityProviderBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetIdentityProviderTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", "usage description")
+	_ = cmd.MarkFlagRequired("identityProviderId")
 
 	return cmd
 }
 type GetIdentityProviderMetadataOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetIdentityProviderMetadataOperation
+	client admin.APIClient
 	federationSettingsId string
 	identityProviderId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetIdentityProviderMetadataOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetIdentityProviderMetadataOpts) Run() error {
-	params := &atlasv2.GetIdentityProviderMetadataApiParams{
+func (opts *GetIdentityProviderMetadataOpts) Run(ctx context.Context) error {
+	params := &admin.GetIdentityProviderMetadataApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		IdentityProviderId: opts.identityProviderId,
 	}
-	resp, _, err := opts.store.GetIdentityProviderMetadata(params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.GetIdentityProviderMetadataWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -391,44 +402,46 @@ func GetIdentityProviderMetadataBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetIdentityProviderMetadataTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", "usage description")
+	_ = cmd.MarkFlagRequired("identityProviderId")
 
 	return cmd
 }
 type GetRoleMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetRoleMappingOperation
+	client admin.APIClient
 	federationSettingsId string
 	id string
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetRoleMappingOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetRoleMappingOpts) Run() error {
-	params := &atlasv2.GetRoleMappingApiParams{
+func (opts *GetRoleMappingOpts) Run(ctx context.Context) error {
+	params := &admin.GetRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		Id: opts.id,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.GetRoleMapping(params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.GetRoleMappingWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -448,41 +461,44 @@ func GetRoleMappingBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetRoleMappingTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 	cmd.Flags().StringVar(&opts.id, "id", "", "usage description")
+	_ = cmd.MarkFlagRequired("id")
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type ListConnectedOrgConfigsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListConnectedOrgConfigsOperation
+	client admin.APIClient
 	federationSettingsId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListConnectedOrgConfigsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListConnectedOrgConfigsOpts) Run() error {
-	params := &atlasv2.ListConnectedOrgConfigsApiParams{
+func (opts *ListConnectedOrgConfigsOpts) Run(ctx context.Context) error {
+	params := &admin.ListConnectedOrgConfigsApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
-	resp, _, err := opts.store.ListConnectedOrgConfigs(params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.ListConnectedOrgConfigsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -502,39 +518,40 @@ func ListConnectedOrgConfigsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListConnectedOrgConfigsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 
 	return cmd
 }
 type ListIdentityProvidersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListIdentityProvidersOperation
+	client admin.APIClient
 	federationSettingsId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListIdentityProvidersOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListIdentityProvidersOpts) Run() error {
-	params := &atlasv2.ListIdentityProvidersApiParams{
+func (opts *ListIdentityProvidersOpts) Run(ctx context.Context) error {
+	params := &admin.ListIdentityProvidersApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
-	resp, _, err := opts.store.ListIdentityProviders(params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.ListIdentityProvidersWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -554,41 +571,42 @@ func ListIdentityProvidersBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListIdentityProvidersTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 
 	return cmd
 }
 type ListRoleMappingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListRoleMappingsOperation
+	client admin.APIClient
 	federationSettingsId string
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListRoleMappingsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListRoleMappingsOpts) Run() error {
-	params := &atlasv2.ListRoleMappingsApiParams{
+func (opts *ListRoleMappingsOpts) Run(ctx context.Context) error {
+	params := &admin.ListRoleMappingsApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.ListRoleMappings(params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.ListRoleMappingsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -608,42 +626,44 @@ func ListRoleMappingsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListRoleMappingsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type RemoveConnectedOrgConfigOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.RemoveConnectedOrgConfigOperation
+	client admin.APIClient
 	federationSettingsId string
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *RemoveConnectedOrgConfigOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *RemoveConnectedOrgConfigOpts) Run() error {
-	params := &atlasv2.RemoveConnectedOrgConfigApiParams{
+func (opts *RemoveConnectedOrgConfigOpts) Run(ctx context.Context) error {
+	params := &admin.RemoveConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.RemoveConnectedOrgConfig(params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.RemoveConnectedOrgConfigWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -663,42 +683,44 @@ func RemoveConnectedOrgConfigBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), RemoveConnectedOrgConfigTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type UpdateConnectedOrgConfigOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateConnectedOrgConfigOperation
+	client admin.APIClient
 	federationSettingsId string
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateConnectedOrgConfigOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateConnectedOrgConfigOpts) Run() error {
-	params := &atlasv2.UpdateConnectedOrgConfigApiParams{
+func (opts *UpdateConnectedOrgConfigOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.UpdateConnectedOrgConfig(params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateConnectedOrgConfigWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -718,42 +740,44 @@ func UpdateConnectedOrgConfigBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateConnectedOrgConfigTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type UpdateIdentityProviderOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateIdentityProviderOperation
+	client admin.APIClient
 	federationSettingsId string
 	identityProviderId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateIdentityProviderOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateIdentityProviderOpts) Run() error {
-	params := &atlasv2.UpdateIdentityProviderApiParams{
+func (opts *UpdateIdentityProviderOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateIdentityProviderApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		IdentityProviderId: opts.identityProviderId,
 	}
-	resp, _, err := opts.store.UpdateIdentityProvider(params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateIdentityProviderWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -773,44 +797,46 @@ func UpdateIdentityProviderBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateIdentityProviderTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", "usage description")
+	_ = cmd.MarkFlagRequired("identityProviderId")
 
 	return cmd
 }
 type UpdateRoleMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateRoleMappingOperation
+	client admin.APIClient
 	federationSettingsId string
 	id string
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateRoleMappingOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateRoleMappingOpts) Run() error {
-	params := &atlasv2.UpdateRoleMappingApiParams{
+func (opts *UpdateRoleMappingOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		Id: opts.id,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.UpdateRoleMapping(params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateRoleMappingWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -830,18 +856,21 @@ func UpdateRoleMappingBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateRoleMappingTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	_ = cmd.MarkFlagRequired("federationSettingsId")
 	cmd.Flags().StringVar(&opts.id, "id", "", "usage description")
+	_ = cmd.MarkFlagRequired("id")
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }

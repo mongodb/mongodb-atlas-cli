@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type VersionedExampleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.VersionedExampleOperation
+	client admin.APIClient
 	additionalInfo bool
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *VersionedExampleOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *VersionedExampleOpts) Run() error {
-	params := &atlasv2.VersionedExampleApiParams{
+func (opts *VersionedExampleOpts) Run(ctx context.Context) error {
+	params := &admin.VersionedExampleApiParams{
 		AdditionalInfo: opts.additionalInfo,
 	}
-	resp, _, err := opts.store.VersionedExample(params)
+	resp, _, err := opts.client.TestApi.VersionedExampleWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,13 +62,13 @@ func VersionedExampleBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), VersionedExampleTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.additionalInfo, "additionalInfo", "", "usage description")

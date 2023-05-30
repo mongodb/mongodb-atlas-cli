@@ -19,34 +19,34 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type DeleteLegacySnapshotOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteLegacySnapshotOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	snapshotId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteLegacySnapshotOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteLegacySnapshotOpts) Run() error {
-	params := &atlasv2.DeleteLegacySnapshotApiParams{
+func (opts *DeleteLegacySnapshotOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteLegacySnapshotApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId: opts.snapshotId,
 	}
-	resp, _, err := opts.store.DeleteLegacySnapshot(params)
+	resp, _, err := opts.client.LegacyBackupApi.DeleteLegacySnapshotWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -66,45 +66,48 @@ func DeleteLegacySnapshotBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteLegacySnapshotTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "usage description")
+	_ = cmd.MarkFlagRequired("snapshotId")
 
 	return cmd
 }
 type GetLegacyBackupCheckpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetLegacyBackupCheckpointOperation
+	client admin.APIClient
 	groupId string
 	checkpointId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetLegacyBackupCheckpointOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetLegacyBackupCheckpointOpts) Run() error {
-	params := &atlasv2.GetLegacyBackupCheckpointApiParams{
+func (opts *GetLegacyBackupCheckpointOpts) Run(ctx context.Context) error {
+	params := &admin.GetLegacyBackupCheckpointApiParams{
 		GroupId: opts.groupId,
 		CheckpointId: opts.checkpointId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.GetLegacyBackupCheckpoint(params)
+	resp, _, err := opts.client.LegacyBackupApi.GetLegacyBackupCheckpointWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -124,45 +127,48 @@ func GetLegacyBackupCheckpointBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetLegacyBackupCheckpointTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.checkpointId, "checkpointId", "", "usage description")
+	_ = cmd.MarkFlagRequired("checkpointId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type GetLegacyBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetLegacyBackupRestoreJobOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	jobId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetLegacyBackupRestoreJobOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetLegacyBackupRestoreJobOpts) Run() error {
-	params := &atlasv2.GetLegacyBackupRestoreJobApiParams{
+func (opts *GetLegacyBackupRestoreJobOpts) Run(ctx context.Context) error {
+	params := &admin.GetLegacyBackupRestoreJobApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		JobId: opts.jobId,
 	}
-	resp, _, err := opts.store.GetLegacyBackupRestoreJob(params)
+	resp, _, err := opts.client.LegacyBackupApi.GetLegacyBackupRestoreJobWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -182,45 +188,48 @@ func GetLegacyBackupRestoreJobBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetLegacyBackupRestoreJobTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.jobId, "jobId", "", "usage description")
+	_ = cmd.MarkFlagRequired("jobId")
 
 	return cmd
 }
 type GetLegacySnapshotOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetLegacySnapshotOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	snapshotId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetLegacySnapshotOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetLegacySnapshotOpts) Run() error {
-	params := &atlasv2.GetLegacySnapshotApiParams{
+func (opts *GetLegacySnapshotOpts) Run(ctx context.Context) error {
+	params := &admin.GetLegacySnapshotApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId: opts.snapshotId,
 	}
-	resp, _, err := opts.store.GetLegacySnapshot(params)
+	resp, _, err := opts.client.LegacyBackupApi.GetLegacySnapshotWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -240,43 +249,46 @@ func GetLegacySnapshotBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetLegacySnapshotTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "usage description")
+	_ = cmd.MarkFlagRequired("snapshotId")
 
 	return cmd
 }
 type GetLegacySnapshotScheduleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetLegacySnapshotScheduleOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetLegacySnapshotScheduleOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetLegacySnapshotScheduleOpts) Run() error {
-	params := &atlasv2.GetLegacySnapshotScheduleApiParams{
+func (opts *GetLegacySnapshotScheduleOpts) Run(ctx context.Context) error {
+	params := &admin.GetLegacySnapshotScheduleApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.GetLegacySnapshotSchedule(params)
+	resp, _, err := opts.client.LegacyBackupApi.GetLegacySnapshotScheduleWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -296,24 +308,26 @@ func GetLegacySnapshotScheduleBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetLegacySnapshotScheduleTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }
 type ListLegacyBackupCheckpointsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListLegacyBackupCheckpointsOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	includeCount bool
@@ -321,23 +335,23 @@ type ListLegacyBackupCheckpointsOpts struct {
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListLegacyBackupCheckpointsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListLegacyBackupCheckpointsOpts) Run() error {
-	params := &atlasv2.ListLegacyBackupCheckpointsApiParams{
+func (opts *ListLegacyBackupCheckpointsOpts) Run(ctx context.Context) error {
+	params := &admin.ListLegacyBackupCheckpointsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListLegacyBackupCheckpoints(params)
+	resp, _, err := opts.client.LegacyBackupApi.ListLegacyBackupCheckpointsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -357,17 +371,19 @@ func ListLegacyBackupCheckpointsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListLegacyBackupCheckpointsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -377,7 +393,7 @@ func ListLegacyBackupCheckpointsBuilder() cobra.Command {
 type ListLegacyBackupRestoreJobsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListLegacyBackupRestoreJobsOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	includeCount bool
@@ -386,16 +402,16 @@ type ListLegacyBackupRestoreJobsOpts struct {
 	batchId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListLegacyBackupRestoreJobsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListLegacyBackupRestoreJobsOpts) Run() error {
-	params := &atlasv2.ListLegacyBackupRestoreJobsApiParams{
+func (opts *ListLegacyBackupRestoreJobsOpts) Run(ctx context.Context) error {
+	params := &admin.ListLegacyBackupRestoreJobsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		IncludeCount: opts.includeCount,
@@ -403,7 +419,7 @@ func (opts *ListLegacyBackupRestoreJobsOpts) Run() error {
 		PageNum: opts.pageNum,
 		BatchId: opts.batchId,
 	}
-	resp, _, err := opts.store.ListLegacyBackupRestoreJobs(params)
+	resp, _, err := opts.client.LegacyBackupApi.ListLegacyBackupRestoreJobsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -423,17 +439,19 @@ func ListLegacyBackupRestoreJobsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListLegacyBackupRestoreJobsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -444,7 +462,7 @@ func ListLegacyBackupRestoreJobsBuilder() cobra.Command {
 type ListLegacySnapshotsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListLegacySnapshotsOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	includeCount bool
@@ -453,16 +471,16 @@ type ListLegacySnapshotsOpts struct {
 	completed string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListLegacySnapshotsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListLegacySnapshotsOpts) Run() error {
-	params := &atlasv2.ListLegacySnapshotsApiParams{
+func (opts *ListLegacySnapshotsOpts) Run(ctx context.Context) error {
+	params := &admin.ListLegacySnapshotsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		IncludeCount: opts.includeCount,
@@ -470,7 +488,7 @@ func (opts *ListLegacySnapshotsOpts) Run() error {
 		PageNum: opts.pageNum,
 		Completed: opts.completed,
 	}
-	resp, _, err := opts.store.ListLegacySnapshots(params)
+	resp, _, err := opts.client.LegacyBackupApi.ListLegacySnapshotsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -490,17 +508,19 @@ func ListLegacySnapshotsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListLegacySnapshotsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -511,27 +531,27 @@ func ListLegacySnapshotsBuilder() cobra.Command {
 type UpdateLegacySnapshotRetentionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateLegacySnapshotRetentionOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	snapshotId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateLegacySnapshotRetentionOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateLegacySnapshotRetentionOpts) Run() error {
-	params := &atlasv2.UpdateLegacySnapshotRetentionApiParams{
+func (opts *UpdateLegacySnapshotRetentionOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateLegacySnapshotRetentionApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId: opts.snapshotId,
 	}
-	resp, _, err := opts.store.UpdateLegacySnapshotRetention(params)
+	resp, _, err := opts.client.LegacyBackupApi.UpdateLegacySnapshotRetentionWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -551,43 +571,46 @@ func UpdateLegacySnapshotRetentionBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateLegacySnapshotRetentionTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "usage description")
+	_ = cmd.MarkFlagRequired("snapshotId")
 
 	return cmd
 }
 type UpdateLegacySnapshotScheduleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateLegacySnapshotScheduleOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateLegacySnapshotScheduleOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateLegacySnapshotScheduleOpts) Run() error {
-	params := &atlasv2.UpdateLegacySnapshotScheduleApiParams{
+func (opts *UpdateLegacySnapshotScheduleOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateLegacySnapshotScheduleApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.UpdateLegacySnapshotSchedule(params)
+	resp, _, err := opts.client.LegacyBackupApi.UpdateLegacySnapshotScheduleWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -607,17 +630,19 @@ func UpdateLegacySnapshotScheduleBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateLegacySnapshotScheduleTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }

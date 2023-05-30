@@ -19,28 +19,28 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateOrganizationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateOrganizationOperation
+	client admin.APIClient
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateOrganizationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateOrganizationOpts) Run() error {
-	params := &atlasv2.CreateOrganizationApiParams{
+func (opts *CreateOrganizationOpts) Run(ctx context.Context) error {
+	params := &admin.CreateOrganizationApiParams{
 	}
-	resp, _, err := opts.store.CreateOrganization(params)
+	resp, _, err := opts.client.OrganizationsApi.CreateOrganizationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -60,13 +60,13 @@ func CreateOrganizationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateOrganizationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 
@@ -75,23 +75,23 @@ func CreateOrganizationBuilder() cobra.Command {
 type CreateOrganizationInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateOrganizationInvitationOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateOrganizationInvitationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateOrganizationInvitationOpts) Run() error {
-	params := &atlasv2.CreateOrganizationInvitationApiParams{
+func (opts *CreateOrganizationInvitationOpts) Run(ctx context.Context) error {
+	params := &admin.CreateOrganizationInvitationApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.CreateOrganizationInvitation(params)
+	resp, _, err := opts.client.OrganizationsApi.CreateOrganizationInvitationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -111,39 +111,40 @@ func CreateOrganizationInvitationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateOrganizationInvitationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type DeleteOrganizationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteOrganizationOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteOrganizationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteOrganizationOpts) Run() error {
-	params := &atlasv2.DeleteOrganizationApiParams{
+func (opts *DeleteOrganizationOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteOrganizationApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.DeleteOrganization(params)
+	resp, _, err := opts.client.OrganizationsApi.DeleteOrganizationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -163,41 +164,42 @@ func DeleteOrganizationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteOrganizationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type DeleteOrganizationInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteOrganizationInvitationOperation
+	client admin.APIClient
 	orgId string
 	invitationId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteOrganizationInvitationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteOrganizationInvitationOpts) Run() error {
-	params := &atlasv2.DeleteOrganizationInvitationApiParams{
+func (opts *DeleteOrganizationInvitationOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteOrganizationInvitationApiParams{
 		OrgId: opts.orgId,
 		InvitationId: opts.invitationId,
 	}
-	resp, _, err := opts.store.DeleteOrganizationInvitation(params)
+	resp, _, err := opts.client.OrganizationsApi.DeleteOrganizationInvitationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -217,40 +219,42 @@ func DeleteOrganizationInvitationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteOrganizationInvitationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "usage description")
+	_ = cmd.MarkFlagRequired("invitationId")
 
 	return cmd
 }
 type GetOrganizationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetOrganizationOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetOrganizationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetOrganizationOpts) Run() error {
-	params := &atlasv2.GetOrganizationApiParams{
+func (opts *GetOrganizationOpts) Run(ctx context.Context) error {
+	params := &admin.GetOrganizationApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.GetOrganization(params)
+	resp, _, err := opts.client.OrganizationsApi.GetOrganizationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -270,41 +274,42 @@ func GetOrganizationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetOrganizationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type GetOrganizationInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetOrganizationInvitationOperation
+	client admin.APIClient
 	orgId string
 	invitationId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetOrganizationInvitationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetOrganizationInvitationOpts) Run() error {
-	params := &atlasv2.GetOrganizationInvitationApiParams{
+func (opts *GetOrganizationInvitationOpts) Run(ctx context.Context) error {
+	params := &admin.GetOrganizationInvitationApiParams{
 		OrgId: opts.orgId,
 		InvitationId: opts.invitationId,
 	}
-	resp, _, err := opts.store.GetOrganizationInvitation(params)
+	resp, _, err := opts.client.OrganizationsApi.GetOrganizationInvitationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -324,40 +329,42 @@ func GetOrganizationInvitationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetOrganizationInvitationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "usage description")
+	_ = cmd.MarkFlagRequired("invitationId")
 
 	return cmd
 }
 type GetOrganizationSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetOrganizationSettingsOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetOrganizationSettingsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetOrganizationSettingsOpts) Run() error {
-	params := &atlasv2.GetOrganizationSettingsApiParams{
+func (opts *GetOrganizationSettingsOpts) Run(ctx context.Context) error {
+	params := &admin.GetOrganizationSettingsApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.GetOrganizationSettings(params)
+	resp, _, err := opts.client.OrganizationsApi.GetOrganizationSettingsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -377,41 +384,42 @@ func GetOrganizationSettingsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetOrganizationSettingsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type ListOrganizationInvitationsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListOrganizationInvitationsOperation
+	client admin.APIClient
 	orgId string
 	username string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListOrganizationInvitationsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListOrganizationInvitationsOpts) Run() error {
-	params := &atlasv2.ListOrganizationInvitationsApiParams{
+func (opts *ListOrganizationInvitationsOpts) Run(ctx context.Context) error {
+	params := &admin.ListOrganizationInvitationsApiParams{
 		OrgId: opts.orgId,
 		Username: opts.username,
 	}
-	resp, _, err := opts.store.ListOrganizationInvitations(params)
+	resp, _, err := opts.client.OrganizationsApi.ListOrganizationInvitationsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -431,16 +439,17 @@ func ListOrganizationInvitationsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListOrganizationInvitationsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.username, "username", "", "usage description")
 
 	return cmd
@@ -448,7 +457,7 @@ func ListOrganizationInvitationsBuilder() cobra.Command {
 type ListOrganizationProjectsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListOrganizationProjectsOperation
+	client admin.APIClient
 	orgId string
 	includeCount bool
 	itemsPerPage int32
@@ -456,23 +465,23 @@ type ListOrganizationProjectsOpts struct {
 	name string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListOrganizationProjectsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListOrganizationProjectsOpts) Run() error {
-	params := &atlasv2.ListOrganizationProjectsApiParams{
+func (opts *ListOrganizationProjectsOpts) Run(ctx context.Context) error {
+	params := &admin.ListOrganizationProjectsApiParams{
 		OrgId: opts.orgId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 		Name: opts.name,
 	}
-	resp, _, err := opts.store.ListOrganizationProjects(params)
+	resp, _, err := opts.client.OrganizationsApi.ListOrganizationProjectsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -492,16 +501,17 @@ func ListOrganizationProjectsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListOrganizationProjectsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -512,29 +522,29 @@ func ListOrganizationProjectsBuilder() cobra.Command {
 type ListOrganizationUsersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListOrganizationUsersOperation
+	client admin.APIClient
 	orgId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListOrganizationUsersOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListOrganizationUsersOpts) Run() error {
-	params := &atlasv2.ListOrganizationUsersApiParams{
+func (opts *ListOrganizationUsersOpts) Run(ctx context.Context) error {
+	params := &admin.ListOrganizationUsersApiParams{
 		OrgId: opts.orgId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListOrganizationUsers(params)
+	resp, _, err := opts.client.OrganizationsApi.ListOrganizationUsersWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -554,16 +564,17 @@ func ListOrganizationUsersBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListOrganizationUsersTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -573,29 +584,29 @@ func ListOrganizationUsersBuilder() cobra.Command {
 type ListOrganizationsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListOrganizationsOperation
+	client admin.APIClient
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 	name string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListOrganizationsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListOrganizationsOpts) Run() error {
-	params := &atlasv2.ListOrganizationsApiParams{
+func (opts *ListOrganizationsOpts) Run(ctx context.Context) error {
+	params := &admin.ListOrganizationsApiParams{
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 		Name: opts.name,
 	}
-	resp, _, err := opts.store.ListOrganizations(params)
+	resp, _, err := opts.client.OrganizationsApi.ListOrganizationsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -615,13 +626,13 @@ func ListOrganizationsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListOrganizationsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
@@ -634,23 +645,23 @@ func ListOrganizationsBuilder() cobra.Command {
 type RenameOrganizationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.RenameOrganizationOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *RenameOrganizationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *RenameOrganizationOpts) Run() error {
-	params := &atlasv2.RenameOrganizationApiParams{
+func (opts *RenameOrganizationOpts) Run(ctx context.Context) error {
+	params := &admin.RenameOrganizationApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.RenameOrganization(params)
+	resp, _, err := opts.client.OrganizationsApi.RenameOrganizationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -670,39 +681,40 @@ func RenameOrganizationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), RenameOrganizationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type UpdateOrganizationInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateOrganizationInvitationOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateOrganizationInvitationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateOrganizationInvitationOpts) Run() error {
-	params := &atlasv2.UpdateOrganizationInvitationApiParams{
+func (opts *UpdateOrganizationInvitationOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateOrganizationInvitationApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.UpdateOrganizationInvitation(params)
+	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationInvitationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -722,41 +734,42 @@ func UpdateOrganizationInvitationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateOrganizationInvitationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type UpdateOrganizationInvitationByIdOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateOrganizationInvitationByIdOperation
+	client admin.APIClient
 	orgId string
 	invitationId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateOrganizationInvitationByIdOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateOrganizationInvitationByIdOpts) Run() error {
-	params := &atlasv2.UpdateOrganizationInvitationByIdApiParams{
+func (opts *UpdateOrganizationInvitationByIdOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateOrganizationInvitationByIdApiParams{
 		OrgId: opts.orgId,
 		InvitationId: opts.invitationId,
 	}
-	resp, _, err := opts.store.UpdateOrganizationInvitationById(params)
+	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationInvitationByIdWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -776,40 +789,42 @@ func UpdateOrganizationInvitationByIdBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateOrganizationInvitationByIdTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "usage description")
+	_ = cmd.MarkFlagRequired("invitationId")
 
 	return cmd
 }
 type UpdateOrganizationSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateOrganizationSettingsOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateOrganizationSettingsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateOrganizationSettingsOpts) Run() error {
-	params := &atlasv2.UpdateOrganizationSettingsApiParams{
+func (opts *UpdateOrganizationSettingsOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateOrganizationSettingsApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.UpdateOrganizationSettings(params)
+	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationSettingsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -829,16 +844,17 @@ func UpdateOrganizationSettingsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateOrganizationSettingsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }

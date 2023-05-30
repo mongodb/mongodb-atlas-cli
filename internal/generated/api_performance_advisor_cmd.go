@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type DisableSlowOperationThresholdingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DisableSlowOperationThresholdingOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DisableSlowOperationThresholdingOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DisableSlowOperationThresholdingOpts) Run() error {
-	params := &atlasv2.DisableSlowOperationThresholdingApiParams{
+func (opts *DisableSlowOperationThresholdingOpts) Run(ctx context.Context) error {
+	params := &admin.DisableSlowOperationThresholdingApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.store.DisableSlowOperationThresholding(params)
+	_, err := opts.client.PerformanceAdvisorApi.DisableSlowOperationThresholdingWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,39 +62,40 @@ func DisableSlowOperationThresholdingBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DisableSlowOperationThresholdingTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type EnableSlowOperationThresholdingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.EnableSlowOperationThresholdingOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *EnableSlowOperationThresholdingOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *EnableSlowOperationThresholdingOpts) Run() error {
-	params := &atlasv2.EnableSlowOperationThresholdingApiParams{
+func (opts *EnableSlowOperationThresholdingOpts) Run(ctx context.Context) error {
+	params := &admin.EnableSlowOperationThresholdingApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.store.EnableSlowOperationThresholding(params)
+	_, err := opts.client.PerformanceAdvisorApi.EnableSlowOperationThresholdingWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -114,23 +115,24 @@ func EnableSlowOperationThresholdingBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), EnableSlowOperationThresholdingTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type ListSlowQueriesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListSlowQueriesOperation
+	client admin.APIClient
 	groupId string
 	processId string
 	duration int64
@@ -139,16 +141,16 @@ type ListSlowQueriesOpts struct {
 	since int64
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListSlowQueriesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListSlowQueriesOpts) Run() error {
-	params := &atlasv2.ListSlowQueriesApiParams{
+func (opts *ListSlowQueriesOpts) Run(ctx context.Context) error {
+	params := &admin.ListSlowQueriesApiParams{
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
 		Duration: opts.duration,
@@ -156,7 +158,7 @@ func (opts *ListSlowQueriesOpts) Run() error {
 		NLogs: opts.nLogs,
 		Since: opts.since,
 	}
-	resp, _, err := opts.store.ListSlowQueries(params)
+	resp, _, err := opts.client.PerformanceAdvisorApi.ListSlowQueriesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -176,17 +178,19 @@ func ListSlowQueriesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListSlowQueriesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 	cmd.Flags().StringVar(&opts.duration, "duration", "", "usage description")
 	cmd.Flags().StringVar(&opts.namespaces, "namespaces", "", "usage description")
 	cmd.Flags().StringVar(&opts.nLogs, "nLogs", "", "usage description")
@@ -197,29 +201,29 @@ func ListSlowQueriesBuilder() cobra.Command {
 type ListSlowQueryNamespacesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListSlowQueryNamespacesOperation
+	client admin.APIClient
 	groupId string
 	processId string
 	duration int64
 	since int64
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListSlowQueryNamespacesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListSlowQueryNamespacesOpts) Run() error {
-	params := &atlasv2.ListSlowQueryNamespacesApiParams{
+func (opts *ListSlowQueryNamespacesOpts) Run(ctx context.Context) error {
+	params := &admin.ListSlowQueryNamespacesApiParams{
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
 		Duration: opts.duration,
 		Since: opts.since,
 	}
-	resp, _, err := opts.store.ListSlowQueryNamespaces(params)
+	resp, _, err := opts.client.PerformanceAdvisorApi.ListSlowQueryNamespacesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -239,17 +243,19 @@ func ListSlowQueryNamespacesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListSlowQueryNamespacesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 	cmd.Flags().StringVar(&opts.duration, "duration", "", "usage description")
 	cmd.Flags().StringVar(&opts.since, "since", "", "usage description")
 
@@ -258,7 +264,7 @@ func ListSlowQueryNamespacesBuilder() cobra.Command {
 type ListSuggestedIndexesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListSuggestedIndexesOperation
+	client admin.APIClient
 	groupId string
 	processId string
 	includeCount bool
@@ -271,16 +277,16 @@ type ListSuggestedIndexesOpts struct {
 	since int64
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListSuggestedIndexesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListSuggestedIndexesOpts) Run() error {
-	params := &atlasv2.ListSuggestedIndexesApiParams{
+func (opts *ListSuggestedIndexesOpts) Run(ctx context.Context) error {
+	params := &admin.ListSuggestedIndexesApiParams{
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
 		IncludeCount: opts.includeCount,
@@ -292,7 +298,7 @@ func (opts *ListSuggestedIndexesOpts) Run() error {
 		NIndexes: opts.nIndexes,
 		Since: opts.since,
 	}
-	resp, _, err := opts.store.ListSuggestedIndexes(params)
+	resp, _, err := opts.client.PerformanceAdvisorApi.ListSuggestedIndexesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -312,17 +318,19 @@ func ListSuggestedIndexesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListSuggestedIndexesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
+	_ = cmd.MarkFlagRequired("processId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")

@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type DownloadSharedClusterBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DownloadSharedClusterBackupOperation
+	client admin.APIClient
 	clusterName string
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DownloadSharedClusterBackupOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DownloadSharedClusterBackupOpts) Run() error {
-	params := &atlasv2.DownloadSharedClusterBackupApiParams{
+func (opts *DownloadSharedClusterBackupOpts) Run(ctx context.Context) error {
+	params := &admin.DownloadSharedClusterBackupApiParams{
 		ClusterName: opts.clusterName,
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.DownloadSharedClusterBackup(params)
+	resp, _, err := opts.client.SharedTierSnapshotsApi.DownloadSharedClusterBackupWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,44 +64,46 @@ func DownloadSharedClusterBackupBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DownloadSharedClusterBackupTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type GetSharedClusterBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetSharedClusterBackupOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 	snapshotId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetSharedClusterBackupOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetSharedClusterBackupOpts) Run() error {
-	params := &atlasv2.GetSharedClusterBackupApiParams{
+func (opts *GetSharedClusterBackupOpts) Run(ctx context.Context) error {
+	params := &admin.GetSharedClusterBackupApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId: opts.snapshotId,
 	}
-	resp, _, err := opts.store.GetSharedClusterBackup(params)
+	resp, _, err := opts.client.SharedTierSnapshotsApi.GetSharedClusterBackupWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -121,43 +123,46 @@ func GetSharedClusterBackupBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetSharedClusterBackupTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "usage description")
+	_ = cmd.MarkFlagRequired("snapshotId")
 
 	return cmd
 }
 type ListSharedClusterBackupsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListSharedClusterBackupsOperation
+	client admin.APIClient
 	groupId string
 	clusterName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListSharedClusterBackupsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListSharedClusterBackupsOpts) Run() error {
-	params := &atlasv2.ListSharedClusterBackupsApiParams{
+func (opts *ListSharedClusterBackupsOpts) Run(ctx context.Context) error {
+	params := &admin.ListSharedClusterBackupsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.store.ListSharedClusterBackups(params)
+	resp, _, err := opts.client.SharedTierSnapshotsApi.ListSharedClusterBackupsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -177,17 +182,19 @@ func ListSharedClusterBackupsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListSharedClusterBackupsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
 }

@@ -1,4 +1,4 @@
 **/*
 *.*
 !*_cmd.go
-!api_*_store.go
+!generated.go

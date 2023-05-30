@@ -19,32 +19,32 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateSharedClusterBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateSharedClusterBackupRestoreJobOperation
+	client admin.APIClient
 	clusterName string
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateSharedClusterBackupRestoreJobOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateSharedClusterBackupRestoreJobOpts) Run() error {
-	params := &atlasv2.CreateSharedClusterBackupRestoreJobApiParams{
+func (opts *CreateSharedClusterBackupRestoreJobOpts) Run(ctx context.Context) error {
+	params := &admin.CreateSharedClusterBackupRestoreJobApiParams{
 		ClusterName: opts.clusterName,
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreateSharedClusterBackupRestoreJob(params)
+	resp, _, err := opts.client.SharedTierRestoreJobsApi.CreateSharedClusterBackupRestoreJobWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -64,44 +64,46 @@ func CreateSharedClusterBackupRestoreJobBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateSharedClusterBackupRestoreJobTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type GetSharedClusterBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetSharedClusterBackupRestoreJobOperation
+	client admin.APIClient
 	clusterName string
 	groupId string
 	restoreId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetSharedClusterBackupRestoreJobOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetSharedClusterBackupRestoreJobOpts) Run() error {
-	params := &atlasv2.GetSharedClusterBackupRestoreJobApiParams{
+func (opts *GetSharedClusterBackupRestoreJobOpts) Run(ctx context.Context) error {
+	params := &admin.GetSharedClusterBackupRestoreJobApiParams{
 		ClusterName: opts.clusterName,
 		GroupId: opts.groupId,
 		RestoreId: opts.restoreId,
 	}
-	resp, _, err := opts.store.GetSharedClusterBackupRestoreJob(params)
+	resp, _, err := opts.client.SharedTierRestoreJobsApi.GetSharedClusterBackupRestoreJobWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -121,43 +123,46 @@ func GetSharedClusterBackupRestoreJobBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetSharedClusterBackupRestoreJobTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.restoreId, "restoreId", "", "usage description")
+	_ = cmd.MarkFlagRequired("restoreId")
 
 	return cmd
 }
 type ListSharedClusterBackupRestoreJobsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListSharedClusterBackupRestoreJobsOperation
+	client admin.APIClient
 	clusterName string
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListSharedClusterBackupRestoreJobsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListSharedClusterBackupRestoreJobsOpts) Run() error {
-	params := &atlasv2.ListSharedClusterBackupRestoreJobsApiParams{
+func (opts *ListSharedClusterBackupRestoreJobsOpts) Run(ctx context.Context) error {
+	params := &admin.ListSharedClusterBackupRestoreJobsApiParams{
 		ClusterName: opts.clusterName,
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.ListSharedClusterBackupRestoreJobs(params)
+	resp, _, err := opts.client.SharedTierRestoreJobsApi.ListSharedClusterBackupRestoreJobsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -177,17 +182,19 @@ func ListSharedClusterBackupRestoreJobsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListSharedClusterBackupRestoreJobsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }

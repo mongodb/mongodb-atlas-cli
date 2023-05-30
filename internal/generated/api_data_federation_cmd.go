@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateDataFederationPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateDataFederationPrivateEndpointOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateDataFederationPrivateEndpointOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateDataFederationPrivateEndpointOpts) Run() error {
-	params := &atlasv2.CreateDataFederationPrivateEndpointApiParams{
+func (opts *CreateDataFederationPrivateEndpointOpts) Run(ctx context.Context) error {
+	params := &admin.CreateDataFederationPrivateEndpointApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreateDataFederationPrivateEndpoint(params)
+	resp, _, err := opts.client.DataFederationApi.CreateDataFederationPrivateEndpointWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,41 +62,42 @@ func CreateDataFederationPrivateEndpointBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateDataFederationPrivateEndpointTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type CreateFederatedDatabaseOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateFederatedDatabaseOperation
+	client admin.APIClient
 	groupId string
 	skipRoleValidation bool
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateFederatedDatabaseOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateFederatedDatabaseOpts) Run() error {
-	params := &atlasv2.CreateFederatedDatabaseApiParams{
+func (opts *CreateFederatedDatabaseOpts) Run(ctx context.Context) error {
+	params := &admin.CreateFederatedDatabaseApiParams{
 		GroupId: opts.groupId,
 		SkipRoleValidation: opts.skipRoleValidation,
 	}
-	resp, _, err := opts.store.CreateFederatedDatabase(params)
+	resp, _, err := opts.client.DataFederationApi.CreateFederatedDatabaseWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -116,16 +117,17 @@ func CreateFederatedDatabaseBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateFederatedDatabaseTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.skipRoleValidation, "skipRoleValidation", "", "usage description")
 
 	return cmd
@@ -133,27 +135,27 @@ func CreateFederatedDatabaseBuilder() cobra.Command {
 type CreateOneDataFederationQueryLimitOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateOneDataFederationQueryLimitOperation
+	client admin.APIClient
 	groupId string
 	tenantName string
 	limitName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateOneDataFederationQueryLimitOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateOneDataFederationQueryLimitOpts) Run() error {
-	params := &atlasv2.CreateOneDataFederationQueryLimitApiParams{
+func (opts *CreateOneDataFederationQueryLimitOpts) Run(ctx context.Context) error {
+	params := &admin.CreateOneDataFederationQueryLimitApiParams{
 		GroupId: opts.groupId,
 		TenantName: opts.tenantName,
 		LimitName: opts.limitName,
 	}
-	resp, _, err := opts.store.CreateOneDataFederationQueryLimit(params)
+	resp, _, err := opts.client.DataFederationApi.CreateOneDataFederationQueryLimitWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -173,43 +175,46 @@ func CreateOneDataFederationQueryLimitBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateOneDataFederationQueryLimitTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "usage description")
+	_ = cmd.MarkFlagRequired("tenantName")
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", "usage description")
+	_ = cmd.MarkFlagRequired("limitName")
 
 	return cmd
 }
 type DeleteDataFederationPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteDataFederationPrivateEndpointOperation
+	client admin.APIClient
 	groupId string
 	endpointId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteDataFederationPrivateEndpointOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteDataFederationPrivateEndpointOpts) Run() error {
-	params := &atlasv2.DeleteDataFederationPrivateEndpointApiParams{
+func (opts *DeleteDataFederationPrivateEndpointOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteDataFederationPrivateEndpointApiParams{
 		GroupId: opts.groupId,
 		EndpointId: opts.endpointId,
 	}
-	resp, _, err := opts.store.DeleteDataFederationPrivateEndpoint(params)
+	resp, _, err := opts.client.DataFederationApi.DeleteDataFederationPrivateEndpointWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -229,42 +234,44 @@ func DeleteDataFederationPrivateEndpointBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteDataFederationPrivateEndpointTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", "usage description")
+	_ = cmd.MarkFlagRequired("endpointId")
 
 	return cmd
 }
 type DeleteFederatedDatabaseOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteFederatedDatabaseOperation
+	client admin.APIClient
 	groupId string
 	tenantName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteFederatedDatabaseOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteFederatedDatabaseOpts) Run() error {
-	params := &atlasv2.DeleteFederatedDatabaseApiParams{
+func (opts *DeleteFederatedDatabaseOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteFederatedDatabaseApiParams{
 		GroupId: opts.groupId,
 		TenantName: opts.tenantName,
 	}
-	resp, _, err := opts.store.DeleteFederatedDatabase(params)
+	resp, _, err := opts.client.DataFederationApi.DeleteFederatedDatabaseWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -284,44 +291,46 @@ func DeleteFederatedDatabaseBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteFederatedDatabaseTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "usage description")
+	_ = cmd.MarkFlagRequired("tenantName")
 
 	return cmd
 }
 type DeleteOneDataFederationInstanceQueryLimitOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteOneDataFederationInstanceQueryLimitOperation
+	client admin.APIClient
 	groupId string
 	tenantName string
 	limitName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteOneDataFederationInstanceQueryLimitOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteOneDataFederationInstanceQueryLimitOpts) Run() error {
-	params := &atlasv2.DeleteOneDataFederationInstanceQueryLimitApiParams{
+func (opts *DeleteOneDataFederationInstanceQueryLimitOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteOneDataFederationInstanceQueryLimitApiParams{
 		GroupId: opts.groupId,
 		TenantName: opts.tenantName,
 		LimitName: opts.limitName,
 	}
-	resp, _, err := opts.store.DeleteOneDataFederationInstanceQueryLimit(params)
+	resp, _, err := opts.client.DataFederationApi.DeleteOneDataFederationInstanceQueryLimitWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -341,47 +350,50 @@ func DeleteOneDataFederationInstanceQueryLimitBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteOneDataFederationInstanceQueryLimitTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "usage description")
+	_ = cmd.MarkFlagRequired("tenantName")
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", "usage description")
+	_ = cmd.MarkFlagRequired("limitName")
 
 	return cmd
 }
 type DownloadFederatedDatabaseQueryLogsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DownloadFederatedDatabaseQueryLogsOperation
+	client admin.APIClient
 	groupId string
 	tenantName string
 	endDate int64
 	startDate int64
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DownloadFederatedDatabaseQueryLogsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DownloadFederatedDatabaseQueryLogsOpts) Run() error {
-	params := &atlasv2.DownloadFederatedDatabaseQueryLogsApiParams{
+func (opts *DownloadFederatedDatabaseQueryLogsOpts) Run(ctx context.Context) error {
+	params := &admin.DownloadFederatedDatabaseQueryLogsApiParams{
 		GroupId: opts.groupId,
 		TenantName: opts.tenantName,
 		EndDate: opts.endDate,
 		StartDate: opts.startDate,
 	}
-	resp, _, err := opts.store.DownloadFederatedDatabaseQueryLogs(params)
+	resp, _, err := opts.client.DataFederationApi.DownloadFederatedDatabaseQueryLogsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -401,17 +413,19 @@ func DownloadFederatedDatabaseQueryLogsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DownloadFederatedDatabaseQueryLogsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "usage description")
+	_ = cmd.MarkFlagRequired("tenantName")
 	cmd.Flags().StringVar(&opts.endDate, "endDate", "", "usage description")
 	cmd.Flags().StringVar(&opts.startDate, "startDate", "", "usage description")
 
@@ -420,25 +434,25 @@ func DownloadFederatedDatabaseQueryLogsBuilder() cobra.Command {
 type GetDataFederationPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetDataFederationPrivateEndpointOperation
+	client admin.APIClient
 	groupId string
 	endpointId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetDataFederationPrivateEndpointOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetDataFederationPrivateEndpointOpts) Run() error {
-	params := &atlasv2.GetDataFederationPrivateEndpointApiParams{
+func (opts *GetDataFederationPrivateEndpointOpts) Run(ctx context.Context) error {
+	params := &admin.GetDataFederationPrivateEndpointApiParams{
 		GroupId: opts.groupId,
 		EndpointId: opts.endpointId,
 	}
-	resp, _, err := opts.store.GetDataFederationPrivateEndpoint(params)
+	resp, _, err := opts.client.DataFederationApi.GetDataFederationPrivateEndpointWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -458,42 +472,44 @@ func GetDataFederationPrivateEndpointBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetDataFederationPrivateEndpointTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", "usage description")
+	_ = cmd.MarkFlagRequired("endpointId")
 
 	return cmd
 }
 type GetFederatedDatabaseOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetFederatedDatabaseOperation
+	client admin.APIClient
 	groupId string
 	tenantName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetFederatedDatabaseOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetFederatedDatabaseOpts) Run() error {
-	params := &atlasv2.GetFederatedDatabaseApiParams{
+func (opts *GetFederatedDatabaseOpts) Run(ctx context.Context) error {
+	params := &admin.GetFederatedDatabaseApiParams{
 		GroupId: opts.groupId,
 		TenantName: opts.tenantName,
 	}
-	resp, _, err := opts.store.GetFederatedDatabase(params)
+	resp, _, err := opts.client.DataFederationApi.GetFederatedDatabaseWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -513,46 +529,48 @@ func GetFederatedDatabaseBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetFederatedDatabaseTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "usage description")
+	_ = cmd.MarkFlagRequired("tenantName")
 
 	return cmd
 }
 type ListDataFederationPrivateEndpointsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListDataFederationPrivateEndpointsOperation
+	client admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListDataFederationPrivateEndpointsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListDataFederationPrivateEndpointsOpts) Run() error {
-	params := &atlasv2.ListDataFederationPrivateEndpointsApiParams{
+func (opts *ListDataFederationPrivateEndpointsOpts) Run(ctx context.Context) error {
+	params := &admin.ListDataFederationPrivateEndpointsApiParams{
 		GroupId: opts.groupId,
 		IncludeCount: opts.includeCount,
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.store.ListDataFederationPrivateEndpoints(params)
+	resp, _, err := opts.client.DataFederationApi.ListDataFederationPrivateEndpointsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -572,16 +590,17 @@ func ListDataFederationPrivateEndpointsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListDataFederationPrivateEndpointsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
 	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
 	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
@@ -591,25 +610,25 @@ func ListDataFederationPrivateEndpointsBuilder() cobra.Command {
 type ListFederatedDatabasesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListFederatedDatabasesOperation
+	client admin.APIClient
 	groupId string
 	type_ string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListFederatedDatabasesOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListFederatedDatabasesOpts) Run() error {
-	params := &atlasv2.ListFederatedDatabasesApiParams{
+func (opts *ListFederatedDatabasesOpts) Run(ctx context.Context) error {
+	params := &admin.ListFederatedDatabasesApiParams{
 		GroupId: opts.groupId,
 		Type_: opts.type_,
 	}
-	resp, _, err := opts.store.ListFederatedDatabases(params)
+	resp, _, err := opts.client.DataFederationApi.ListFederatedDatabasesWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -629,16 +648,17 @@ func ListFederatedDatabasesBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListFederatedDatabasesTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.type_, "type_", "", "usage description")
 
 	return cmd
@@ -646,27 +666,27 @@ func ListFederatedDatabasesBuilder() cobra.Command {
 type ReturnFederatedDatabaseQueryLimitOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ReturnFederatedDatabaseQueryLimitOperation
+	client admin.APIClient
 	groupId string
 	tenantName string
 	limitName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ReturnFederatedDatabaseQueryLimitOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ReturnFederatedDatabaseQueryLimitOpts) Run() error {
-	params := &atlasv2.ReturnFederatedDatabaseQueryLimitApiParams{
+func (opts *ReturnFederatedDatabaseQueryLimitOpts) Run(ctx context.Context) error {
+	params := &admin.ReturnFederatedDatabaseQueryLimitApiParams{
 		GroupId: opts.groupId,
 		TenantName: opts.tenantName,
 		LimitName: opts.limitName,
 	}
-	resp, _, err := opts.store.ReturnFederatedDatabaseQueryLimit(params)
+	resp, _, err := opts.client.DataFederationApi.ReturnFederatedDatabaseQueryLimitWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -686,43 +706,46 @@ func ReturnFederatedDatabaseQueryLimitBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ReturnFederatedDatabaseQueryLimitTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "usage description")
+	_ = cmd.MarkFlagRequired("tenantName")
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", "usage description")
+	_ = cmd.MarkFlagRequired("limitName")
 
 	return cmd
 }
 type ReturnFederatedDatabaseQueryLimitsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ReturnFederatedDatabaseQueryLimitsOperation
+	client admin.APIClient
 	groupId string
 	tenantName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ReturnFederatedDatabaseQueryLimitsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ReturnFederatedDatabaseQueryLimitsOpts) Run() error {
-	params := &atlasv2.ReturnFederatedDatabaseQueryLimitsApiParams{
+func (opts *ReturnFederatedDatabaseQueryLimitsOpts) Run(ctx context.Context) error {
+	params := &admin.ReturnFederatedDatabaseQueryLimitsApiParams{
 		GroupId: opts.groupId,
 		TenantName: opts.tenantName,
 	}
-	resp, _, err := opts.store.ReturnFederatedDatabaseQueryLimits(params)
+	resp, _, err := opts.client.DataFederationApi.ReturnFederatedDatabaseQueryLimitsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -742,44 +765,46 @@ func ReturnFederatedDatabaseQueryLimitsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ReturnFederatedDatabaseQueryLimitsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "usage description")
+	_ = cmd.MarkFlagRequired("tenantName")
 
 	return cmd
 }
 type UpdateFederatedDatabaseOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.UpdateFederatedDatabaseOperation
+	client admin.APIClient
 	groupId string
 	tenantName string
 	skipRoleValidation bool
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *UpdateFederatedDatabaseOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateFederatedDatabaseOpts) Run() error {
-	params := &atlasv2.UpdateFederatedDatabaseApiParams{
+func (opts *UpdateFederatedDatabaseOpts) Run(ctx context.Context) error {
+	params := &admin.UpdateFederatedDatabaseApiParams{
 		GroupId: opts.groupId,
 		TenantName: opts.tenantName,
 		SkipRoleValidation: opts.skipRoleValidation,
 	}
-	resp, _, err := opts.store.UpdateFederatedDatabase(params)
+	resp, _, err := opts.client.DataFederationApi.UpdateFederatedDatabaseWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -799,17 +824,19 @@ func UpdateFederatedDatabaseBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), UpdateFederatedDatabaseTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "usage description")
+	_ = cmd.MarkFlagRequired("tenantName")
 	cmd.Flags().StringVar(&opts.skipRoleValidation, "skipRoleValidation", "", "usage description")
 
 	return cmd

@@ -19,30 +19,30 @@ package generated
 import (
 	"context"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 )
 
 type CreateLinkTokenOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreateLinkTokenOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateLinkTokenOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateLinkTokenOpts) Run() error {
-	params := &atlasv2.CreateLinkTokenApiParams{
+func (opts *CreateLinkTokenOpts) Run(ctx context.Context) error {
+	params := &admin.CreateLinkTokenApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.CreateLinkToken(params)
+	resp, _, err := opts.client.CloudMigrationServiceApi.CreateLinkTokenWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -62,39 +62,40 @@ func CreateLinkTokenBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreateLinkTokenTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type CreatePushMigrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CreatePushMigrationOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CreatePushMigrationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreatePushMigrationOpts) Run() error {
-	params := &atlasv2.CreatePushMigrationApiParams{
+func (opts *CreatePushMigrationOpts) Run(ctx context.Context) error {
+	params := &admin.CreatePushMigrationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.CreatePushMigration(params)
+	resp, _, err := opts.client.CloudMigrationServiceApi.CreatePushMigrationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -114,41 +115,42 @@ func CreatePushMigrationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CreatePushMigrationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }
 type CutoverMigrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CutoverMigrationOperation
+	client admin.APIClient
 	groupId string
 	liveMigrationId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *CutoverMigrationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CutoverMigrationOpts) Run() error {
-	params := &atlasv2.CutoverMigrationApiParams{
+func (opts *CutoverMigrationOpts) Run(ctx context.Context) error {
+	params := &admin.CutoverMigrationApiParams{
 		GroupId: opts.groupId,
 		LiveMigrationId: opts.liveMigrationId,
 	}
-	_, err := opts.store.CutoverMigration(params)
+	_, err := opts.client.CloudMigrationServiceApi.CutoverMigrationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -168,40 +170,42 @@ func CutoverMigrationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), CutoverMigrationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.liveMigrationId, "liveMigrationId", "", "usage description")
+	_ = cmd.MarkFlagRequired("liveMigrationId")
 
 	return cmd
 }
 type DeleteLinkTokenOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DeleteLinkTokenOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteLinkTokenOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteLinkTokenOpts) Run() error {
-	params := &atlasv2.DeleteLinkTokenApiParams{
+func (opts *DeleteLinkTokenOpts) Run(ctx context.Context) error {
+	params := &admin.DeleteLinkTokenApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.DeleteLinkToken(params)
+	resp, _, err := opts.client.CloudMigrationServiceApi.DeleteLinkTokenWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -221,41 +225,42 @@ func DeleteLinkTokenBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), DeleteLinkTokenTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type GetPushMigrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetPushMigrationOperation
+	client admin.APIClient
 	groupId string
 	liveMigrationId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetPushMigrationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetPushMigrationOpts) Run() error {
-	params := &atlasv2.GetPushMigrationApiParams{
+func (opts *GetPushMigrationOpts) Run(ctx context.Context) error {
+	params := &admin.GetPushMigrationApiParams{
 		GroupId: opts.groupId,
 		LiveMigrationId: opts.liveMigrationId,
 	}
-	resp, _, err := opts.store.GetPushMigration(params)
+	resp, _, err := opts.client.CloudMigrationServiceApi.GetPushMigrationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -275,42 +280,44 @@ func GetPushMigrationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetPushMigrationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.liveMigrationId, "liveMigrationId", "", "usage description")
+	_ = cmd.MarkFlagRequired("liveMigrationId")
 
 	return cmd
 }
 type GetValidationStatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.GetValidationStatusOperation
+	client admin.APIClient
 	groupId string
 	validationId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *GetValidationStatusOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetValidationStatusOpts) Run() error {
-	params := &atlasv2.GetValidationStatusApiParams{
+func (opts *GetValidationStatusOpts) Run(ctx context.Context) error {
+	params := &admin.GetValidationStatusApiParams{
 		GroupId: opts.groupId,
 		ValidationId: opts.validationId,
 	}
-	resp, _, err := opts.store.GetValidationStatus(params)
+	resp, _, err := opts.client.CloudMigrationServiceApi.GetValidationStatusWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -330,40 +337,42 @@ func GetValidationStatusBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), GetValidationStatusTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 	cmd.Flags().StringVar(&opts.validationId, "validationId", "", "usage description")
+	_ = cmd.MarkFlagRequired("validationId")
 
 	return cmd
 }
 type ListSourceProjectsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ListSourceProjectsOperation
+	client admin.APIClient
 	orgId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListSourceProjectsOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListSourceProjectsOpts) Run() error {
-	params := &atlasv2.ListSourceProjectsApiParams{
+func (opts *ListSourceProjectsOpts) Run(ctx context.Context) error {
+	params := &admin.ListSourceProjectsApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.store.ListSourceProjects(params)
+	resp, _, err := opts.client.CloudMigrationServiceApi.ListSourceProjectsWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -383,39 +392,40 @@ func ListSourceProjectsBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ListSourceProjectsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
 }
 type ValidateMigrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ValidateMigrationOperation
+	client admin.APIClient
 	groupId string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ValidateMigrationOpts) initClient(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.client, err = NewClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ValidateMigrationOpts) Run() error {
-	params := &atlasv2.ValidateMigrationApiParams{
+func (opts *ValidateMigrationOpts) Run(ctx context.Context) error {
+	params := &admin.ValidateMigrationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.store.ValidateMigration(params)
+	resp, _, err := opts.client.CloudMigrationServiceApi.ValidateMigrationWithParams(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -435,16 +445,17 @@ func ValidateMigrationBuilder() cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
+				//opts.ValidateProjectID,
+				opts.initClient(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ValidateMigrationTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
 }

@@ -672,6 +672,19 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 		cmd.Env = os.Environ()
 		resp, err = cmd.CombinedOutput()
 		assert.NoError(t, err, string(resp))
+
+		require.NotEmpty(t, endpointID)
+		cmd = exec.Command(cliPath,
+			privateEndpointsEntity,
+			provider,
+			"watch",
+			endpointID,
+			"--projectId",
+			projectID,
+		)
+		cmd.Env = os.Environ()
+		resp, err = cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
 	}
 }
 

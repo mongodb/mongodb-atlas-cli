@@ -348,3 +348,18 @@ func UpdateAtlasSearchIndexBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func AtlasSearchApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, and removes Atlas Search indexes for the specified cluster. Also returns and updates user-defined analyzers for the specified cluster.",
+	}
+	cmd.AddCommand(
+		CreateAtlasSearchIndexBuilder(),
+		DeleteAtlasSearchIndexBuilder(),
+		GetAtlasSearchIndexBuilder(),
+		ListAtlasSearchIndexesBuilder(),
+		UpdateAtlasSearchIndexBuilder(),
+	)
+	return cmd
+}

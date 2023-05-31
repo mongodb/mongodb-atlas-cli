@@ -393,3 +393,23 @@ func UpdateClusterBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func MultiCloudClustersApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, or removes multi-cloud clusters. Changes to cluster configurations can affect costs.
+
+The total number of nodes in clusters spanning across regions has a specific constraint on a per-project basis. MongoDB Cloud limits the total number of nodes in other regions in one project to a total of 40. This total excludes Google Cloud regions communicating with each other, shared-tier clusters, or serverless clusters. The total number of nodes between any two regions must meet this constraint. For example, if a project has nodes in clusters spread across three regions: 30 nodes in Region A, 10 nodes in Region B, and 5 nodes in Region C, you can add only 5 more nodes to Region C because if you exclude Region C, Region A + Region B &#x3D; 40. If you exclude Region B, Region A + Region C &#x3D; 35, &lt;&#x3D; 40. If you exclude Region A, Region B + Region C &#x3D; 15, &lt;&#x3D; 40. Each combination of regions with the added 5 nodes still meets the per-project constraint. Region A + B &#x3D; 40. Region A + C &#x3D; 40. Region B + C &#x3D; 20. You can&#39;t create a multi-region cluster in a project if it has one or more clusters spanning 40 or more nodes in other regions. Each project supports up to 25 database deployments.
+
+If your MongoDB Cloud project contains a custom role that uses actions introduced in a specific MongoDB version, you must delete that role before you create clusters with an earlier MongoDB version. MongoDB Cloud clusters created after July 2020 use TLS version 1.2 by default. When you create a cluster, MongoDB Cloud creates a network container in the project for the cloud provider to which you deploy the cluster if one doesn&#39;t already exist.",
+	}
+	cmd.AddCommand(
+		CreateClusterBuilder(),
+		DeleteClusterBuilder(),
+		GetClusterBuilder(),
+		ListClustersBuilder(),
+		TestFailoverBuilder(),
+		UpdateClusterBuilder(),
+	)
+	return cmd
+}

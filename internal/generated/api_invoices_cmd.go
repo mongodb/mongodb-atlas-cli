@@ -268,3 +268,17 @@ func ListPendingInvoicesBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func InvoicesApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns invoices.",
+	}
+	cmd.AddCommand(
+		DownloadInvoiceCSVBuilder(),
+		GetInvoiceBuilder(),
+		ListInvoicesBuilder(),
+		ListPendingInvoicesBuilder(),
+	)
+	return cmd
+}

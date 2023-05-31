@@ -340,3 +340,18 @@ func UpdateServerlessPrivateEndpointBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func ServerlessPrivateEndpointsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, and removes private endpoints for serverless instances. To learn more, see the Atlas Administration API tab on the following tutorial.",
+	}
+	cmd.AddCommand(
+		CreateServerlessPrivateEndpointBuilder(),
+		DeleteServerlessPrivateEndpointBuilder(),
+		GetServerlessPrivateEndpointBuilder(),
+		ListServerlessPrivateEndpointsBuilder(),
+		UpdateServerlessPrivateEndpointBuilder(),
+	)
+	return cmd
+}

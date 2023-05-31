@@ -137,3 +137,15 @@ func UpdateAuditingConfigurationBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func AuditingApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns and edits database auditing settings for MongoDB Cloud projects.",
+	}
+	cmd.AddCommand(
+		GetAuditingConfigurationBuilder(),
+		UpdateAuditingConfigurationBuilder(),
+	)
+	return cmd
+}

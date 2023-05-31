@@ -828,3 +828,26 @@ func UpdateTeamRolesBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func TeamsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, or removes teams.",
+	}
+	cmd.AddCommand(
+		AddAllTeamsToProjectBuilder(),
+		AddTeamUserBuilder(),
+		CreateTeamBuilder(),
+		DeleteTeamBuilder(),
+		GetTeamByIdBuilder(),
+		GetTeamByNameBuilder(),
+		ListOrganizationTeamsBuilder(),
+		ListProjectTeamsBuilder(),
+		ListTeamUsersBuilder(),
+		RemoveProjectTeamBuilder(),
+		RemoveTeamUserBuilder(),
+		RenameTeamBuilder(),
+		UpdateTeamRolesBuilder(),
+	)
+	return cmd
+}

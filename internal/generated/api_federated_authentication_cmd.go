@@ -934,3 +934,28 @@ func UpdateRoleMappingBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func FederatedAuthenticationApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.",
+	}
+	cmd.AddCommand(
+		CreateRoleMappingBuilder(),
+		DeleteFederationAppBuilder(),
+		DeleteRoleMappingBuilder(),
+		GetConnectedOrgConfigBuilder(),
+		GetFederationSettingsBuilder(),
+		GetIdentityProviderBuilder(),
+		GetIdentityProviderMetadataBuilder(),
+		GetRoleMappingBuilder(),
+		ListConnectedOrgConfigsBuilder(),
+		ListIdentityProvidersBuilder(),
+		ListRoleMappingsBuilder(),
+		RemoveConnectedOrgConfigBuilder(),
+		UpdateConnectedOrgConfigBuilder(),
+		UpdateIdentityProviderBuilder(),
+		UpdateRoleMappingBuilder(),
+	)
+	return cmd
+}

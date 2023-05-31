@@ -324,3 +324,18 @@ func ListCloudProviderAccessRolesBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func CloudProviderAccessApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, authorizes, and removes AWS IAM roles in Atlas.",
+	}
+	cmd.AddCommand(
+		AuthorizeCloudProviderAccessRoleBuilder(),
+		CreateCloudProviderAccessRoleBuilder(),
+		DeauthorizeCloudProviderAccessRoleBuilder(),
+		GetCloudProviderAccessRoleBuilder(),
+		ListCloudProviderAccessRolesBuilder(),
+	)
+	return cmd
+}

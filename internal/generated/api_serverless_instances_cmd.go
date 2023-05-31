@@ -329,3 +329,18 @@ func UpdateServerlessInstanceBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func ServerlessInstancesApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, and removes serverless instances.",
+	}
+	cmd.AddCommand(
+		CreateServerlessInstanceBuilder(),
+		DeleteServerlessInstanceBuilder(),
+		GetServerlessInstanceBuilder(),
+		ListServerlessInstancesBuilder(),
+		UpdateServerlessInstanceBuilder(),
+	)
+	return cmd
+}

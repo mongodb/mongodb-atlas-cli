@@ -284,3 +284,17 @@ func ListAlertsByAlertConfigurationIdBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func AlertsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns and acknowledges alerts that MongoDB Cloud triggers based on the alert conditions that you define. This collection remains under revision and may change.",
+	}
+	cmd.AddCommand(
+		AcknowledgeAlertBuilder(),
+		GetAlertBuilder(),
+		ListAlertsBuilder(),
+		ListAlertsByAlertConfigurationIdBuilder(),
+	)
+	return cmd
+}

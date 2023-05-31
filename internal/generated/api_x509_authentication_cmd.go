@@ -211,3 +211,16 @@ func ListDatabaseUserCertificatesBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func X509AuthenticationApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, edits, and removes user-managed X.509 configurations. Also returns and generates MongoDB Cloud-managed X.509 certificates for database users. The following resources help manage database users who authenticate using X.509 certificates. You can manage these X.509 certificates or let MongoDB Cloud do it for you. If MongoDB Cloud manages your certificates, it also manages your Certificate Authority and can generate certificates for your database users. No additional X.509 configuration is required. If you manage your certificates, you must provide a Certificate Authority and generate certificates for your database users.",
+	}
+	cmd.AddCommand(
+		CreateDatabaseUserCertificateBuilder(),
+		DisableCustomerManagedX509Builder(),
+		ListDatabaseUserCertificatesBuilder(),
+	)
+	return cmd
+}

@@ -1213,3 +1213,33 @@ func UpdateProjectSettingsBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func ProjectsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, and edits collections of clusters and users in MongoDB Cloud.",
+	}
+	cmd.AddCommand(
+		CreateProjectBuilder(),
+		CreateProjectInvitationBuilder(),
+		DeleteProjectBuilder(),
+		DeleteProjectInvitationBuilder(),
+		DeleteProjectLimitBuilder(),
+		GetProjectBuilder(),
+		GetProjectByNameBuilder(),
+		GetProjectInvitationBuilder(),
+		GetProjectLimitBuilder(),
+		GetProjectSettingsBuilder(),
+		ListProjectInvitationsBuilder(),
+		ListProjectLimitsBuilder(),
+		ListProjectUsersBuilder(),
+		ListProjectsBuilder(),
+		RemoveProjectUserBuilder(),
+		SetProjectLimitBuilder(),
+		UpdateProjectBuilder(),
+		UpdateProjectInvitationBuilder(),
+		UpdateProjectInvitationByIdBuilder(),
+		UpdateProjectSettingsBuilder(),
+	)
+	return cmd
+}

@@ -513,3 +513,21 @@ func UpdateAlertConfigurationBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func AlertConfigurationsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users. This collection remains under revision and may change.",
+	}
+	cmd.AddCommand(
+		CreateAlertConfigurationBuilder(),
+		DeleteAlertConfigurationBuilder(),
+		GetAlertConfigurationBuilder(),
+		ListAlertConfigurationMatchersFieldNamesBuilder(),
+		ListAlertConfigurationsBuilder(),
+		ListAlertConfigurationsByAlertIdBuilder(),
+		ToggleAlertConfigurationBuilder(),
+		UpdateAlertConfigurationBuilder(),
+	)
+	return cmd
+}

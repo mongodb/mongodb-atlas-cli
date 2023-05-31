@@ -491,3 +491,21 @@ func ValidateMigrationBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func CloudMigrationServiceApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Manages the Cloud Migration Service. Source organizations, projects, and MongoDB clusters reside on Cloud Manager or Ops Manager. Destination organizations, projects, and MongoDB clusters reside on MongoDB Cloud. Source databases can&#39;t use any authentication except SCRAM-SHA.",
+	}
+	cmd.AddCommand(
+		CreateLinkTokenBuilder(),
+		CreatePushMigrationBuilder(),
+		CutoverMigrationBuilder(),
+		DeleteLinkTokenBuilder(),
+		GetPushMigrationBuilder(),
+		GetValidationStatusBuilder(),
+		ListSourceProjectsBuilder(),
+		ValidateMigrationBuilder(),
+	)
+	return cmd
+}

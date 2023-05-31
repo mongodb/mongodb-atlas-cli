@@ -338,3 +338,18 @@ func ListProjectIpAccessListsBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func ProjectIPAccessListApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, and removes network access limits to database deployments in Atlas. This resource replaces the whitelist resource. Atlas removed whitelists in July 2021. Update your applications to use this new resource. This resource manages a project&#39;s IP Access List and supports creating temporary Access List entries that automatically expire within a user-configurable 7-day period.",
+	}
+	cmd.AddCommand(
+		CreateProjectIpAccessListBuilder(),
+		DeleteProjectIpAccessListBuilder(),
+		GetProjectIpAccessListStatusBuilder(),
+		GetProjectIpListBuilder(),
+		ListProjectIpAccessListsBuilder(),
+	)
+	return cmd
+}

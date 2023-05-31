@@ -190,3 +190,16 @@ func GetUserByUsernameBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func MongoDBCloudUsersApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, and edits MongoDB Cloud users.",
+	}
+	cmd.AddCommand(
+		CreateUserBuilder(),
+		GetUserBuilder(),
+		GetUserByUsernameBuilder(),
+	)
+	return cmd
+}

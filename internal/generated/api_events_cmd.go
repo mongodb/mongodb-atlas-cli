@@ -310,3 +310,17 @@ func ListProjectEventsBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func EventsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns events. This collection remains under revision and may change.",
+	}
+	cmd.AddCommand(
+		GetOrganizationEventBuilder(),
+		GetProjectEventBuilder(),
+		ListOrganizationEventsBuilder(),
+		ListProjectEventsBuilder(),
+	)
+	return cmd
+}

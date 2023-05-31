@@ -362,3 +362,18 @@ func ListSuggestedIndexesBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func PerformanceAdvisorApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns suggested indexes and slow query data for a database deployment. Also enables or disables MongoDB Cloud-managed slow operation thresholds. To view field values in a sample query, you must have the Project Data Access Read Only role or higher. Otherwise, MongoDB Cloud returns redacted data rather than the field values.",
+	}
+	cmd.AddCommand(
+		DisableSlowOperationThresholdingBuilder(),
+		EnableSlowOperationThresholdingBuilder(),
+		ListSlowQueriesBuilder(),
+		ListSlowQueryNamespacesBuilder(),
+		ListSuggestedIndexesBuilder(),
+	)
+	return cmd
+}

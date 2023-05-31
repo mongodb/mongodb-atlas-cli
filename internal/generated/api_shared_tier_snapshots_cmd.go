@@ -210,3 +210,16 @@ func ListSharedClusterBackupsBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func SharedTierSnapshotsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns and requests to download shared-tier database deployment snapshots.",
+	}
+	cmd.AddCommand(
+		DownloadSharedClusterBackupBuilder(),
+		GetSharedClusterBackupBuilder(),
+		ListSharedClusterBackupsBuilder(),
+	)
+	return cmd
+}

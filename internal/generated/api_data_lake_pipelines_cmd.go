@@ -840,3 +840,26 @@ func UpdatePipelineBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func DataLakePipelinesApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, and removes Atlas Data Lake Pipelines and associated runs.",
+	}
+	cmd.AddCommand(
+		CreatePipelineBuilder(),
+		DeletePipelineBuilder(),
+		DeletePipelineRunDatasetBuilder(),
+		GetPipelineBuilder(),
+		GetPipelineRunBuilder(),
+		ListPipelineRunsBuilder(),
+		ListPipelineSchedulesBuilder(),
+		ListPipelineSnapshotsBuilder(),
+		ListPipelinesBuilder(),
+		PausePipelineBuilder(),
+		ResumePipelineBuilder(),
+		TriggerSnapshotIngestionBuilder(),
+		UpdatePipelineBuilder(),
+	)
+	return cmd
+}

@@ -419,3 +419,19 @@ func UpdateOnlineArchiveBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func OnlineArchiveApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, or removes an online archive.",
+	}
+	cmd.AddCommand(
+		CreateOnlineArchiveBuilder(),
+		DeleteOnlineArchiveBuilder(),
+		DownloadOnlineArchiveQueryLogsBuilder(),
+		GetOnlineArchiveBuilder(),
+		ListOnlineArchivesBuilder(),
+		UpdateOnlineArchiveBuilder(),
+	)
+	return cmd
+}

@@ -79,3 +79,14 @@ func VersionedExampleBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func TestApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Atlas test endpoints.",
+	}
+	cmd.AddCommand(
+		VersionedExampleBuilder(),
+	)
+	return cmd
+}

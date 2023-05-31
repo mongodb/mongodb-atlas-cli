@@ -320,3 +320,18 @@ func UpdateCustomDatabaseRoleBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func CustomDatabaseRolesApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, and removes custom database user privilege roles. Use custom roles to specify custom sets of actions that the MongoDB Cloud built-in roles can&#39;t describe. You define custom roles at the project level, for all clusters in the project. This resource supports a subset of MongoDB privilege actions. You can create a subset of custom role actions. To create a wider list of custom role actions, use the MongoDB Cloud user interface. Custom roles must include actions that all project&#39;s clusters support, and that are compatible with each MongoDB version that your project&#39;s clusters use. For example, if your project has MongoDB 4.2 clusters, you can&#39;t create custom roles that use actions introduced in MongoDB 4.4.",
+	}
+	cmd.AddCommand(
+		CreateCustomDatabaseRoleBuilder(),
+		DeleteCustomDatabaseRoleBuilder(),
+		GetCustomDatabaseRoleBuilder(),
+		ListCustomDatabaseRolesBuilder(),
+		UpdateCustomDatabaseRoleBuilder(),
+	)
+	return cmd
+}

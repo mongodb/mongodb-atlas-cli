@@ -206,3 +206,16 @@ func StartOutageSimulationBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func ClusterOutageSimulationApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, starts, or ends a cluster outage simulation.",
+	}
+	cmd.AddCommand(
+		EndOutageSimulationBuilder(),
+		GetOutageSimulationBuilder(),
+		StartOutageSimulationBuilder(),
+	)
+	return cmd
+}

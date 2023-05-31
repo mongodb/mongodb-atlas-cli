@@ -914,3 +914,27 @@ func UpdateApiKeyRolesBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func ProgrammaticAPIKeysApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API. MongoDB Cloud applies these keys to organizations. These resources can return, assign, or revoke use of these keys within a specified project.",
+	}
+	cmd.AddCommand(
+		AddProjectApiKeyBuilder(),
+		CreateApiKeyBuilder(),
+		CreateApiKeyAccessListBuilder(),
+		CreateProjectApiKeyBuilder(),
+		DeleteApiKeyBuilder(),
+		DeleteApiKeyAccessListEntryBuilder(),
+		GetApiKeyBuilder(),
+		GetApiKeyAccessListBuilder(),
+		ListApiKeyAccessListsEntriesBuilder(),
+		ListApiKeysBuilder(),
+		ListProjectApiKeysBuilder(),
+		RemoveProjectApiKeyBuilder(),
+		UpdateApiKeyBuilder(),
+		UpdateApiKeyRolesBuilder(),
+	)
+	return cmd
+}

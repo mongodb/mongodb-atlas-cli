@@ -308,3 +308,18 @@ func UpdateMaintenanceWindowBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func MaintenanceWindowsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, edits, and removes maintenance windows. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. You can defer a scheduled maintenance event for a project up to two times. Deferred maintenance events occur during your preferred maintenance window exactly one week after the previously scheduled date and time.",
+	}
+	cmd.AddCommand(
+		DeferMaintenanceWindowBuilder(),
+		GetMaintenanceWindowBuilder(),
+		ResetMaintenanceWindowBuilder(),
+		ToggleMaintenanceAutoDeferBuilder(),
+		UpdateMaintenanceWindowBuilder(),
+	)
+	return cmd
+}

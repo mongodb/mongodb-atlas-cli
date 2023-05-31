@@ -341,3 +341,18 @@ func UpdateDatabaseUserBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func DatabaseUsersApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, and removes database users.",
+	}
+	cmd.AddCommand(
+		CreateDatabaseUserBuilder(),
+		DeleteDatabaseUserBuilder(),
+		GetDatabaseUserBuilder(),
+		ListDatabaseUsersBuilder(),
+		UpdateDatabaseUserBuilder(),
+	)
+	return cmd
+}

@@ -76,3 +76,14 @@ func GetSystemStatusBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func RootApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns details that describe the MongoDB Cloud build and the access token that requests this resource. This starts the MongoDB Cloud API.",
+	}
+	cmd.AddCommand(
+		GetSystemStatusBuilder(),
+	)
+	return cmd
+}

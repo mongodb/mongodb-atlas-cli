@@ -175,3 +175,15 @@ func ListAccessLogsByHostnameBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func AccessTrackingApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns access logs for authentication attempts made to Atlas database deployments. To view database access history, you must have either the Project Owner or Organization Owner role.",
+	}
+	cmd.AddCommand(
+		ListAccessLogsByClusterNameBuilder(),
+		ListAccessLogsByHostnameBuilder(),
+	)
+	return cmd
+}

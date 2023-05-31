@@ -686,3 +686,23 @@ func UpdateLegacySnapshotScheduleBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func LegacyBackupApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Manages Legacy Backup snapshots, restore jobs, schedules and checkpoints.",
+	}
+	cmd.AddCommand(
+		DeleteLegacySnapshotBuilder(),
+		GetLegacyBackupCheckpointBuilder(),
+		GetLegacyBackupRestoreJobBuilder(),
+		GetLegacySnapshotBuilder(),
+		GetLegacySnapshotScheduleBuilder(),
+		ListLegacyBackupCheckpointsBuilder(),
+		ListLegacyBackupRestoreJobsBuilder(),
+		ListLegacySnapshotsBuilder(),
+		UpdateLegacySnapshotRetentionBuilder(),
+		UpdateLegacySnapshotScheduleBuilder(),
+	)
+	return cmd
+}

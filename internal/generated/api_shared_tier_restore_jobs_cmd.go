@@ -210,3 +210,16 @@ func ListSharedClusterBackupRestoreJobsBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func SharedTierRestoreJobsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns and adds restore jobs for shared-tier database deployments.",
+	}
+	cmd.AddCommand(
+		CreateSharedClusterBackupRestoreJobBuilder(),
+		GetSharedClusterBackupRestoreJobBuilder(),
+		ListSharedClusterBackupRestoreJobsBuilder(),
+	)
+	return cmd
+}

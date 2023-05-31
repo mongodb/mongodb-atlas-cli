@@ -85,3 +85,20 @@ func {{operationId}}Builder() *cobra.Command {
 }
 {{/operation}}
 {{/operations}}
+
+func {{classname}}Builder() *cobra.Command {
+{{#operations}}
+{{#operation}}
+{{#-first}}
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "{{#tags}}{{#-first}}{{description}}{{/-first}}{{/tags}}",
+	}
+	cmd.AddCommand(
+{{/-first}}
+		{{operationId}}Builder(),
+{{/operation}}
+{{/operations}}
+	)
+	return cmd
+}

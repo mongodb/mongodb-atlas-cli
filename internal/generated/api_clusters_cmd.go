@@ -576,3 +576,22 @@ func UpgradeSharedClusterToServerlessBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func ClustersApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, and removes database deployments. Changes to cluster configurations can affect costs. This resource requires your Project ID.",
+	}
+	cmd.AddCommand(
+		GetClusterAdvancedConfigurationBuilder(),
+		GetClusterStatusBuilder(),
+		GetSampleDatasetLoadStatusBuilder(),
+		ListCloudProviderRegionsBuilder(),
+		ListClustersForAllProjectsBuilder(),
+		LoadSampleDatasetBuilder(),
+		UpdateClusterAdvancedConfigurationBuilder(),
+		UpgradeSharedClusterBuilder(),
+		UpgradeSharedClusterToServerlessBuilder(),
+	)
+	return cmd
+}

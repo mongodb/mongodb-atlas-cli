@@ -918,3 +918,28 @@ func UpdateOrganizationSettingsBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func OrganizationsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, and edits organizational units in MongoDB Cloud.",
+	}
+	cmd.AddCommand(
+		CreateOrganizationBuilder(),
+		CreateOrganizationInvitationBuilder(),
+		DeleteOrganizationBuilder(),
+		DeleteOrganizationInvitationBuilder(),
+		GetOrganizationBuilder(),
+		GetOrganizationInvitationBuilder(),
+		GetOrganizationSettingsBuilder(),
+		ListOrganizationInvitationsBuilder(),
+		ListOrganizationProjectsBuilder(),
+		ListOrganizationUsersBuilder(),
+		ListOrganizationsBuilder(),
+		RenameOrganizationBuilder(),
+		UpdateOrganizationInvitationBuilder(),
+		UpdateOrganizationInvitationByIdBuilder(),
+		UpdateOrganizationSettingsBuilder(),
+	)
+	return cmd
+}

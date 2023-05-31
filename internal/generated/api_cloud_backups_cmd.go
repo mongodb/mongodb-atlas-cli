@@ -1870,3 +1870,42 @@ func UpdateSnapshotRetentionBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func CloudBackupsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Manages Cloud Backup snapshots, snapshot export buckets, restore jobs, and schedules. This resource applies only to clusters that use Cloud Backups.",
+	}
+	cmd.AddCommand(
+		CancelBackupRestoreJobBuilder(),
+		CreateBackupExportJobBuilder(),
+		CreateBackupRestoreJobBuilder(),
+		CreateExportBucketBuilder(),
+		CreateServerlessBackupRestoreJobBuilder(),
+		DeleteAllBackupSchedulesBuilder(),
+		DeleteExportBucketBuilder(),
+		DeleteReplicaSetBackupBuilder(),
+		DeleteShardedClusterBackupBuilder(),
+		GetBackupExportJobBuilder(),
+		GetBackupRestoreJobBuilder(),
+		GetBackupScheduleBuilder(),
+		GetDataProtectionSettingsBuilder(),
+		GetExportBucketBuilder(),
+		GetReplicaSetBackupBuilder(),
+		GetServerlessBackupBuilder(),
+		GetServerlessBackupRestoreJobBuilder(),
+		GetShardedClusterBackupBuilder(),
+		ListBackupExportJobsBuilder(),
+		ListBackupRestoreJobsBuilder(),
+		ListExportBucketsBuilder(),
+		ListReplicaSetBackupsBuilder(),
+		ListServerlessBackupRestoreJobsBuilder(),
+		ListServerlessBackupsBuilder(),
+		ListShardedClusterBackupsBuilder(),
+		TakeSnapshotBuilder(),
+		UpdateBackupScheduleBuilder(),
+		UpdateDataProtectionSettingsBuilder(),
+		UpdateSnapshotRetentionBuilder(),
+	)
+	return cmd
+}

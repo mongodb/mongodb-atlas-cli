@@ -898,3 +898,27 @@ func UpdateFederatedDatabaseBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired("skipRoleValidation")
 	return cmd
 }
+
+func DataFederationApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, and removes Federated Database Instances. This resource requires your project ID. Changes to federated database instance configurations can affect costs.",
+	}
+	cmd.AddCommand(
+		CreateDataFederationPrivateEndpointBuilder(),
+		CreateFederatedDatabaseBuilder(),
+		CreateOneDataFederationQueryLimitBuilder(),
+		DeleteDataFederationPrivateEndpointBuilder(),
+		DeleteFederatedDatabaseBuilder(),
+		DeleteOneDataFederationInstanceQueryLimitBuilder(),
+		DownloadFederatedDatabaseQueryLogsBuilder(),
+		GetDataFederationPrivateEndpointBuilder(),
+		GetFederatedDatabaseBuilder(),
+		ListDataFederationPrivateEndpointsBuilder(),
+		ListFederatedDatabasesBuilder(),
+		ReturnFederatedDatabaseQueryLimitBuilder(),
+		ReturnFederatedDatabaseQueryLimitsBuilder(),
+		UpdateFederatedDatabaseBuilder(),
+	)
+	return cmd
+}

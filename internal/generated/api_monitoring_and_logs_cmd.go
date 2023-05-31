@@ -1045,3 +1045,27 @@ func ListMetricTypesBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func MonitoringAndLogsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns database deployment monitoring and logging data.",
+	}
+	cmd.AddCommand(
+		GetAtlasProcessBuilder(),
+		GetDatabaseBuilder(),
+		GetDatabaseMeasurementsBuilder(),
+		GetDiskMeasurementsBuilder(),
+		GetHostLogsBuilder(),
+		GetHostMeasurementsBuilder(),
+		GetIndexMetricsBuilder(),
+		GetMeasurementsBuilder(),
+		ListAtlasProcessesBuilder(),
+		ListDatabasesBuilder(),
+		ListDiskMeasurementsBuilder(),
+		ListDiskPartitionsBuilder(),
+		ListIndexMetricsBuilder(),
+		ListMetricTypesBuilder(),
+	)
+	return cmd
+}

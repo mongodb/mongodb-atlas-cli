@@ -137,3 +137,15 @@ func UpdateEncryptionAtRestBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func EncryptionAtRestUsingCustomerKeyManagementApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns and edits the Encryption at Rest using Customer Key Management configuration. MongoDB Cloud encrypts all storage whether or not you use your own key management.",
+	}
+	cmd.AddCommand(
+		GetEncryptionAtRestBuilder(),
+		UpdateEncryptionAtRestBuilder(),
+	)
+	return cmd
+}

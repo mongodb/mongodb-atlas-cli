@@ -84,3 +84,14 @@ func CreateLegacyBackupRestoreJobBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func LegacyBackupRestoreJobsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "",
+	}
+	cmd.AddCommand(
+		CreateLegacyBackupRestoreJobBuilder(),
+	)
+	return cmd
+}

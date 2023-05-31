@@ -351,3 +351,20 @@ func UpdateThirdPartyIntegrationBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func ThirdPartyIntegrationsApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, and removes third-party service integration configurations. MongoDB Cloud sends alerts to each third-party service that you configure.
+
+**IMPORTANT**: Each project can only have one configuration per integrationType.",
+	}
+	cmd.AddCommand(
+		CreateThirdPartyIntegrationBuilder(),
+		DeleteThirdPartyIntegrationBuilder(),
+		GetThirdPartyIntegrationBuilder(),
+		ListThirdPartyIntegrationsBuilder(),
+		UpdateThirdPartyIntegrationBuilder(),
+	)
+	return cmd
+}

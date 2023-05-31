@@ -588,3 +588,22 @@ func ToggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 
 	return cmd
 }
+
+func PrivateEndpointServicesApiBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "<<use>>",
+		Short:   "Returns, adds, edits, and removes private endpoint services.",
+	}
+	cmd.AddCommand(
+		CreatePrivateEndpointBuilder(),
+		CreatePrivateEndpointServiceBuilder(),
+		DeletePrivateEndpointBuilder(),
+		DeletePrivateEndpointServiceBuilder(),
+		GetPrivateEndpointBuilder(),
+		GetPrivateEndpointServiceBuilder(),
+		GetRegionalizedPrivateEndpointSettingBuilder(),
+		ListPrivateEndpointServicesBuilder(),
+		ToggleRegionalizedPrivateEndpointSettingBuilder(),
+	)
+	return cmd
+}

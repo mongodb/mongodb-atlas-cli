@@ -93,7 +93,6 @@ func TestDecryptWithKMIP(t *testing.T) {
 
 			gotContents, err := cmd.CombinedOutput()
 			req.NoError(err, string(gotContents))
-			t.Skip("re-enable via CLOUDP-171174")
 			decryption.LogsAreEqual(t, expectedContents, gotContents)
 		})
 	}

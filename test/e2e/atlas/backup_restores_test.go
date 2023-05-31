@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (atlas && backup && restores)
 
 package atlas_test
@@ -24,8 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestRestores(t *testing.T) {
@@ -35,12 +35,13 @@ func TestRestores(t *testing.T) {
 
 	var snapshotID, restoreJobID string
 
-	g := newAtlasE2ETestGenerator(t)
-	g.enableBackup = true
+	g := newAtlasE2ETestGeneratorWithBackup(t)
 	g.generateProjectAndCluster("backupRestores")
+	require.NotEmpty(t, g.clusterName)
 
 	g2 := newAtlasE2ETestGenerator(t)
-	g2.generateProjectAndCluster("backupRestores")
+	g2.generateProjectAndCluster("backupRestores2")
+	require.NotEmpty(t, g2.clusterName)
 
 	t.Run("Create snapshot", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -59,11 +60,11 @@ func TestRestores(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var snapshot mongodbatlas.CloudProviderSnapshot
+		var snapshot atlasv2.DiskBackupSnapshot
 		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
-			a.Equal("test-snapshot", snapshot.Description)
+			a.Equal("test-snapshot", snapshot.DiskBackupReplicaSet.GetDescription())
 		}
-		snapshotID = snapshot.ID
+		snapshotID = snapshot.DiskBackupReplicaSet.GetId()
 	})
 
 	t.Run("Watch snapshot creation", func(t *testing.T) {
@@ -142,7 +143,7 @@ func TestRestores(t *testing.T) {
 
 		a := assert.New(t)
 		var result atlasv2.PaginatedCloudBackupRestoreJob
-		if err = json.Unmarshal(resp, &result); a.NoError(err) {
+		if err = json.Unmarshal(resp, &result); a.NoError(err, string(resp)) {
 			a.NotEmpty(result)
 		}
 	})
@@ -165,7 +166,7 @@ func TestRestores(t *testing.T) {
 
 		a := assert.New(t)
 		var result atlasv2.DiskBackupRestoreJob
-		if err = json.Unmarshal(resp, &result); a.NoError(err) {
+		if err = json.Unmarshal(resp, &result); a.NoError(err, string(resp)) {
 			a.NotEmpty(result)
 		}
 	})

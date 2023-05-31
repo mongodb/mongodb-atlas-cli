@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type CreateOpts struct {
@@ -46,7 +46,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Snapshot '{{.ID}}' created.\n"
+var createTemplate = "Snapshot '{{.Id}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newCloudProviderSnapshot()
@@ -55,13 +55,13 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return commonerrors.Check(err)
 	}
-	return opts.Print(r)
+	return opts.Print(r.GetActualInstance())
 }
 
-func (opts *CreateOpts) newCloudProviderSnapshot() *mongodbatlas.CloudProviderSnapshot {
-	createRequest := &mongodbatlas.CloudProviderSnapshot{
-		RetentionInDays: opts.retentionInDays,
-		Description:     opts.desc,
+func (opts *CreateOpts) newCloudProviderSnapshot() *atlasv2.DiskBackupOnDemandSnapshotRequest {
+	createRequest := &atlasv2.DiskBackupOnDemandSnapshotRequest{
+		RetentionInDays: &opts.retentionInDays,
+		Description:     &opts.desc,
 	}
 	return createRequest
 }

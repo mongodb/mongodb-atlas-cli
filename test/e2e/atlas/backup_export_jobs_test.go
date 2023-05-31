@@ -25,8 +25,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func TestExportJobs(t *testing.T) {
@@ -120,11 +120,11 @@ func TestExportJobs(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var snapshot atlas.CloudProviderSnapshot
+		var snapshot atlasv2.DiskBackupSnapshot
 		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
-			a.Equal("test-snapshot", snapshot.Description)
+			a.Equal("test-snapshot", snapshot.DiskBackupReplicaSet.GetDescription())
 		}
-		snapshotID = snapshot.ID
+		snapshotID = snapshot.DiskBackupReplicaSet.GetId()
 	})
 
 	t.Run("Watch snapshot creation", func(t *testing.T) {

@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSnapshotsCreator(ctrl)
 
-	expected := &mongodbatlas.CloudProviderSnapshot{}
+	expected := &atlasv2.DiskBackupSnapshot{}
 
 	createOpts := &CreateOpts{
 		store:           mockStore,

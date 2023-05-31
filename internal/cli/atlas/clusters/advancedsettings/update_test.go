@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestUpdate_Run(t *testing.T) {
@@ -35,8 +35,8 @@ func TestUpdate_Run(t *testing.T) {
 		DefaultReadConcern:               pointer.Get(""),
 		DefaultWriteConcern:              pointer.Get(""),
 		MinimumEnabledTlsProtocol:        pointer.Get(""),
-		SampleSizeBIConnector:            pointer.Get[int32](1000),
-		SampleRefreshIntervalBIConnector: pointer.Get[int32](0),
+		SampleSizeBIConnector:            pointer.Get[int](1000),
+		SampleRefreshIntervalBIConnector: pointer.Get[int](0),
 		NoTableScan:                      pointer.Get(false),
 	}
 

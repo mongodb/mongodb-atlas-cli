@@ -28,8 +28,10 @@ import (
 )
 
 var listTemplate = `ID	REGION	STATUS	ERROR{{range .}}
-{{.ID}}	{{.RegionName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
+{{.Id}}	{{.RegionName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
 `
+
+const deprecatedFlagMessage = "--page and --limit are not supported by privateendpoint aws list"
 
 type ListOpts struct {
 	cli.GlobalOpts
@@ -47,7 +49,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.PrivateEndpoints(opts.ConfigProjectID(), provider, opts.NewListOptions())
+	r, err := opts.store.PrivateEndpoints(opts.ConfigProjectID(), provider)
 
 	if err != nil {
 		return err
@@ -80,6 +82,8 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	_ = cmd.Flags().MarkDeprecated(flag.Page, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.Limit, deprecatedFlagMessage)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

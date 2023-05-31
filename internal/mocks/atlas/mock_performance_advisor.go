@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockPerformanceAdvisorNamespacesLister is a mock of PerformanceAdvisorNamespacesLister interface.
@@ -35,10 +35,10 @@ func (m *MockPerformanceAdvisorNamespacesLister) EXPECT() *MockPerformanceAdviso
 }
 
 // PerformanceAdvisorNamespaces mocks base method.
-func (m *MockPerformanceAdvisorNamespacesLister) PerformanceAdvisorNamespaces(arg0 *mongodbatlasv2.ListSlowQueryNamespacesApiParams) (*mongodbatlasv2.Namespaces, error) {
+func (m *MockPerformanceAdvisorNamespacesLister) PerformanceAdvisorNamespaces(arg0 *admin.ListSlowQueryNamespacesApiParams) (*admin.Namespaces, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PerformanceAdvisorNamespaces", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.Namespaces)
+	ret0, _ := ret[0].(*admin.Namespaces)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockPerformanceAdvisorSlowQueriesLister) EXPECT() *MockPerformanceAdvis
 }
 
 // PerformanceAdvisorSlowQueries mocks base method.
-func (m *MockPerformanceAdvisorSlowQueriesLister) PerformanceAdvisorSlowQueries(arg0 *mongodbatlasv2.ListSlowQueriesApiParams) (*mongodbatlasv2.PerformanceAdvisorSlowQueryList, error) {
+func (m *MockPerformanceAdvisorSlowQueriesLister) PerformanceAdvisorSlowQueries(arg0 *admin.ListSlowQueriesApiParams) (*admin.PerformanceAdvisorSlowQueryList, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PerformanceAdvisorSlowQueries", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.PerformanceAdvisorSlowQueryList)
+	ret0, _ := ret[0].(*admin.PerformanceAdvisorSlowQueryList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockPerformanceAdvisorIndexesLister) EXPECT() *MockPerformanceAdvisorIn
 }
 
 // PerformanceAdvisorIndexes mocks base method.
-func (m *MockPerformanceAdvisorIndexesLister) PerformanceAdvisorIndexes(arg0 *mongodbatlasv2.ListSuggestedIndexesApiParams) (*mongodbatlasv2.PerformanceAdvisorResponse, error) {
+func (m *MockPerformanceAdvisorIndexesLister) PerformanceAdvisorIndexes(arg0 *admin.ListSuggestedIndexesApiParams) (*admin.PerformanceAdvisorResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PerformanceAdvisorIndexes", arg0)
-	ret0, _ := ret[0].(*mongodbatlasv2.PerformanceAdvisorResponse)
+	ret0, _ := ret[0].(*admin.PerformanceAdvisorResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

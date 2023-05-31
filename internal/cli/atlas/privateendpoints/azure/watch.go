@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type WatchOpts struct {
@@ -49,7 +50,9 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return result.Status == "AVAILABLE" || result.Status == "FAILED", nil
+
+	endpointService := result.(*atlasv2.AzurePrivateLinkConnection)
+	return endpointService.GetStatus() == "AVAILABLE" || endpointService.GetStatus() == "FAILED", nil
 }
 
 func (opts *WatchOpts) Run() error {

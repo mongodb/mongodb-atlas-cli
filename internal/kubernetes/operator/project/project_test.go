@@ -34,8 +34,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -75,7 +75,7 @@ func TestBuildAtlasProject(t *testing.T) {
 					IpAddress:        pointer.Get("0.0.0.0"),
 				},
 			},
-			TotalCount: pointer.Get(int32(1)),
+			TotalCount: pointer.Get(1),
 		}
 
 		auditing := &atlasv2.AuditLog{
@@ -125,7 +125,7 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 			},
-			TotalCount: pointer.Get(int32(1)),
+			TotalCount: pointer.Get(1),
 		}
 
 		mw := &atlasv2.GroupMaintenanceWindow{
@@ -135,49 +135,33 @@ func TestBuildAtlasProject(t *testing.T) {
 			AutoDeferOnceEnabled: pointer.Get(false),
 		}
 
-		peeringConnections := []mongodbatlas.Peer{
-			{
-				AccepterRegionName:  "US_EAST_1",
-				AWSAccountID:        "TestAwsAccountID",
-				ConnectionID:        "TestConnectionID",
-				ContainerID:         "TestContainerID",
-				ErrorStateName:      "TestErrorStateName",
-				ID:                  "TestID",
-				ProviderName:        string(provider.ProviderAWS),
-				RouteTableCIDRBlock: "0.0.0.0/0",
-				StatusName:          "",
-				VpcID:               "TestVPCID",
-				AtlasCIDRBlock:      "0.0.0.0/0",
-				AzureDirectoryID:    "TestDirectoryID",
-				AzureSubscriptionID: "TestAzureSubID",
-				ResourceGroupName:   "TestResourceGroupName",
-				VNetName:            "TestVNetName",
-				ErrorState:          "TestErrorState",
-				Status:              "TestStatus",
-				GCPProjectID:        "TestGCPProjectID",
-				NetworkName:         "TestNetworkName",
-				ErrorMessage:        "TestErrorMessage",
-			},
+		peeringConnectionAWS := &atlasv2.AWSPeerVpc{
+			AccepterRegionName:  "TestRegionName",
+			AwsAccountId:        "TestAWSAccountID",
+			ConnectionId:        pointer.Get("TestConnID"),
+			ContainerId:         "TestContainerID",
+			ErrorStateName:      pointer.Get("TestErrStateName"),
+			Id:                  pointer.Get("TestID"),
+			ProviderName:        pointer.Get(string(provider.ProviderAWS)),
+			RouteTableCidrBlock: "0.0.0.0/0",
+			StatusName:          pointer.Get("TestStatusName"),
+			VpcId:               "TestVPCID",
 		}
 
-		privateEndpoints := []mongodbatlas.PrivateEndpointConnection{
-
-			{
-				ID:                           "TestID",
-				ProviderName:                 string(provider.ProviderAWS),
-				Region:                       "US_WEST_2",
-				EndpointServiceName:          "",
-				ErrorMessage:                 "",
-				InterfaceEndpoints:           nil,
-				PrivateEndpoints:             nil,
-				PrivateLinkServiceName:       "",
-				PrivateLinkServiceResourceID: "",
-				Status:                       "",
-				EndpointGroupNames:           nil,
-				RegionName:                   "",
-				ServiceAttachmentNames:       nil,
-			},
+		peeringConnections := []interface{}{
+			peeringConnectionAWS,
 		}
+
+		privateAWSEndpoint := atlasv2.AWSPrivateLinkConnection{
+			Id:                  pointer.Get("TestID"),
+			CloudProvider:       string(provider.ProviderAWS),
+			RegionName:          pointer.Get("US_WEST_2"),
+			EndpointServiceName: nil,
+			ErrorMessage:        nil,
+			InterfaceEndpoints:  nil,
+			Status:              nil,
+		}
+		privateEndpoints := []interface{}{&privateAWSEndpoint}
 
 		alertConfigs := []mongodbatlas.AlertConfiguration{
 			{
@@ -301,9 +285,9 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore.EXPECT().PeeringConnections(projectID, containerListOptionAWS).Return(peeringConnections, nil)
 		projectStore.EXPECT().PeeringConnections(projectID, containerListOptionGCP).Return(nil, nil)
 		projectStore.EXPECT().PeeringConnections(projectID, containerListOptionAzure).Return(nil, nil)
-		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAWS), listOption).Return(privateEndpoints, nil)
-		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP), listOption).Return(nil, nil)
-		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAzure), listOption).Return(nil, nil)
+		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAWS)).Return(privateEndpoints, nil)
+		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP)).Return(nil, nil)
+		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAzure)).Return(nil, nil)
 		projectStore.EXPECT().EncryptionAtRest(projectID).Return(encryptionAtRest, nil)
 		projectStore.EXPECT().CloudProviderAccessRoles(projectID).Return(cpas, nil)
 		projectStore.EXPECT().ProjectSettings(projectID).Return(projectSettings, nil)
@@ -432,8 +416,8 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 				MaintenanceWindow: project.MaintenanceWindow{
-					DayOfWeek: int(mw.DayOfWeek),
-					HourOfDay: int(mw.HourOfDay),
+					DayOfWeek: mw.DayOfWeek,
+					HourOfDay: mw.HourOfDay,
 					AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
 					StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
 					Defer:     false,
@@ -441,8 +425,8 @@ func TestBuildAtlasProject(t *testing.T) {
 				PrivateEndpoints: []atlasV1.PrivateEndpoint{
 					{
 						Provider:          provider.ProviderAWS,
-						Region:            privateEndpoints[0].Region,
-						ID:                privateEndpoints[0].ID,
+						Region:            *privateAWSEndpoint.RegionName,
+						ID:                *privateAWSEndpoint.Id,
 						IP:                "",
 						GCPProjectID:      "",
 						EndpointGroupName: "",
@@ -468,20 +452,13 @@ func TestBuildAtlasProject(t *testing.T) {
 				AlertConfigurationSyncEnabled: false,
 				NetworkPeers: []atlasV1.NetworkPeer{
 					{
-						AccepterRegionName:  peeringConnections[0].AccepterRegionName,
+						AccepterRegionName:  peeringConnectionAWS.AccepterRegionName,
 						ContainerRegion:     "",
-						AWSAccountID:        peeringConnections[0].AWSAccountID,
-						ContainerID:         peeringConnections[0].ContainerID,
-						ProviderName:        provider.ProviderName(peeringConnections[0].ProviderName),
-						RouteTableCIDRBlock: peeringConnections[0].RouteTableCIDRBlock,
-						VpcID:               peeringConnections[0].VpcID,
-						AtlasCIDRBlock:      peeringConnections[0].AtlasCIDRBlock,
-						AzureDirectoryID:    peeringConnections[0].AzureDirectoryID,
-						AzureSubscriptionID: peeringConnections[0].AzureSubscriptionID,
-						ResourceGroupName:   peeringConnections[0].ResourceGroupName,
-						VNetName:            peeringConnections[0].VNetName,
-						GCPProjectID:        peeringConnections[0].GCPProjectID,
-						NetworkName:         peeringConnections[0].NetworkName,
+						AWSAccountID:        peeringConnectionAWS.AwsAccountId,
+						ContainerID:         peeringConnectionAWS.ContainerId,
+						ProviderName:        provider.ProviderName(*peeringConnectionAWS.ProviderName),
+						RouteTableCIDRBlock: peeringConnectionAWS.RouteTableCidrBlock,
+						VpcID:               peeringConnectionAWS.VpcId,
 					},
 				},
 				WithDefaultAlertsSettings: false,
@@ -659,7 +636,7 @@ func Test_buildAccessLists(t *testing.T) {
 					IpAddress:        pointer.Get("0.0.0.0"),
 				},
 			},
-			TotalCount: pointer.Get(int32(1)),
+			TotalCount: pointer.Get(1),
 		}
 
 		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
@@ -899,7 +876,7 @@ func Test_buildIntegrations(t *testing.T) {
 					},
 				},
 			},
-			TotalCount: pointer.Get(int32(0)),
+			TotalCount: pointer.Get(0),
 		}
 
 		intProvider.EXPECT().Integrations(projectID).Return(ints, nil)
@@ -967,7 +944,7 @@ func Test_buildIntegrations(t *testing.T) {
 					},
 				},
 			},
-			TotalCount: pointer.Get(int32(0)),
+			TotalCount: pointer.Get(0),
 		}
 		intProvider.EXPECT().Integrations(projectID).Return(ints, nil)
 		got, intSecrets, err := buildIntegrations(intProvider, projectID, targetNamespace, includeSecrets, dictionary)
@@ -1040,8 +1017,8 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 		}
 
 		expected := project.MaintenanceWindow{
-			DayOfWeek: int(mw.DayOfWeek),
-			HourOfDay: int(mw.HourOfDay),
+			DayOfWeek: mw.DayOfWeek,
+			HourOfDay: mw.HourOfDay,
 			AutoDefer: *mw.AutoDeferOnceEnabled,
 			StartASAP: *mw.StartASAP,
 			Defer:     false,
@@ -1058,30 +1035,21 @@ func Test_buildNetworkPeering(t *testing.T) {
 
 	peerProvider := mocks.NewMockPeeringConnectionLister(ctl)
 	t.Run("Can convert Peering connections", func(t *testing.T) {
-		peeringConnections := []mongodbatlas.Peer{
+		peeringConnectionAWS := &atlasv2.AWSPeerVpc{
+			AccepterRegionName:  "TestRegionName",
+			AwsAccountId:        "TestAWSAccountID",
+			ConnectionId:        pointer.Get("TestConnID"),
+			ContainerId:         "TestContainerID",
+			ErrorStateName:      pointer.Get("TestErrStateName"),
+			Id:                  pointer.Get("TestID"),
+			ProviderName:        pointer.Get(string(provider.ProviderAWS)),
+			RouteTableCidrBlock: "0.0.0.0/0",
+			StatusName:          pointer.Get("TestStatusName"),
+			VpcId:               "TestVPCID",
+		}
 
-			{
-				AccepterRegionName:  "TestRegionName",
-				AWSAccountID:        "TestAWSAccountID",
-				ConnectionID:        "TestConnID",
-				ContainerID:         "TestContainerID",
-				ErrorStateName:      "TestErrStateName",
-				ID:                  "TestID",
-				ProviderName:        string(provider.ProviderAWS),
-				RouteTableCIDRBlock: "0.0.0.0/0",
-				StatusName:          "TestStatusName",
-				VpcID:               "TestVPCID",
-				AtlasCIDRBlock:      "0.0.0.0/0",
-				AzureDirectoryID:    "TestDir",
-				AzureSubscriptionID: "TestSub",
-				ResourceGroupName:   "TestResourceName",
-				VNetName:            "TestNETName",
-				ErrorState:          "TestErrState",
-				Status:              "TestStatus",
-				GCPProjectID:        "TestProjectID",
-				NetworkName:         "TestNetworkName",
-				ErrorMessage:        "TestErrMessage",
-			},
+		peeringConnections := []interface{}{
+			peeringConnectionAWS,
 		}
 
 		listOptions := mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
@@ -1100,20 +1068,13 @@ func Test_buildNetworkPeering(t *testing.T) {
 
 		expected := []atlasV1.NetworkPeer{
 			{
-				AccepterRegionName:  peeringConnections[0].AccepterRegionName,
+				AccepterRegionName:  peeringConnectionAWS.AccepterRegionName,
 				ContainerRegion:     "",
-				AWSAccountID:        peeringConnections[0].AWSAccountID,
-				ContainerID:         peeringConnections[0].ContainerID,
-				ProviderName:        provider.ProviderName(peeringConnections[0].ProviderName),
-				RouteTableCIDRBlock: peeringConnections[0].RouteTableCIDRBlock,
-				VpcID:               peeringConnections[0].VpcID,
-				AtlasCIDRBlock:      peeringConnections[0].AtlasCIDRBlock,
-				AzureDirectoryID:    peeringConnections[0].AzureDirectoryID,
-				AzureSubscriptionID: peeringConnections[0].AzureSubscriptionID,
-				ResourceGroupName:   peeringConnections[0].ResourceGroupName,
-				VNetName:            peeringConnections[0].VNetName,
-				GCPProjectID:        peeringConnections[0].GCPProjectID,
-				NetworkName:         peeringConnections[0].NetworkName,
+				AWSAccountID:        peeringConnectionAWS.AwsAccountId,
+				ContainerID:         peeringConnectionAWS.ContainerId,
+				ProviderName:        provider.ProviderName(*peeringConnectionAWS.ProviderName),
+				RouteTableCIDRBlock: peeringConnectionAWS.RouteTableCidrBlock,
+				VpcID:               peeringConnectionAWS.VpcId,
 			},
 		}
 
@@ -1129,26 +1090,19 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 	peProvider := mocks.NewMockPrivateEndpointLister(ctl)
 	t.Run("Can convert PrivateEndpointConnection for AWS", func(t *testing.T) {
 		providerName := provider.ProviderAWS
-		privateEndpoint := mongodbatlas.PrivateEndpointConnection{
-			ID:                           "1",
-			ProviderName:                 string(providerName),
-			Region:                       "US_EAST_1",
-			EndpointServiceName:          "",
-			ErrorMessage:                 "",
-			InterfaceEndpoints:           nil,
-			PrivateEndpoints:             nil,
-			PrivateLinkServiceName:       "",
-			PrivateLinkServiceResourceID: "",
-			Status:                       "",
-			EndpointGroupNames:           nil,
-			RegionName:                   "",
-			ServiceAttachmentNames:       nil,
+		privateEndpoint := atlasv2.AWSPrivateLinkConnection{
+			Id:                  pointer.Get("1"),
+			CloudProvider:       string(providerName),
+			RegionName:          pointer.Get("US_EAST_1"),
+			EndpointServiceName: nil,
+			ErrorMessage:        nil,
+			InterfaceEndpoints:  nil,
+			Status:              nil,
 		}
 
-		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName), listOptions).Return([]mongodbatlas.PrivateEndpointConnection{privateEndpoint}, nil)
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAzure), listOptions).Return(nil, nil)
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP), listOptions).Return(nil, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]interface{}{&privateEndpoint}, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAzure)).Return(nil, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP)).Return(nil, nil)
 
 		got, err := buildPrivateEndpoints(peProvider, projectID)
 		if err != nil {
@@ -1158,8 +1112,8 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 		expected := []atlasV1.PrivateEndpoint{
 			{
 				Provider:          providerName,
-				Region:            privateEndpoint.Region,
-				ID:                privateEndpoint.ID,
+				Region:            *privateEndpoint.RegionName,
+				ID:                *privateEndpoint.Id,
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",
@@ -1174,27 +1128,20 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 
 	t.Run("Can convert PrivateEndpointConnection for Azure", func(t *testing.T) {
 		providerName := provider.ProviderAzure
-		privateEndpoint := mongodbatlas.PrivateEndpointConnection{
-
-			ID:                           "1",
-			ProviderName:                 string(providerName),
-			Region:                       "uswest3",
-			EndpointServiceName:          "",
-			ErrorMessage:                 "",
-			InterfaceEndpoints:           nil,
+		privateEndpoint := atlasv2.AzurePrivateLinkConnection{
+			Id:                           pointer.Get("1"),
+			CloudProvider:                string(providerName),
+			RegionName:                   pointer.Get("uswest3"),
+			ErrorMessage:                 pointer.Get(""),
 			PrivateEndpoints:             nil,
-			PrivateLinkServiceName:       "",
-			PrivateLinkServiceResourceID: "",
-			Status:                       "",
-			EndpointGroupNames:           nil,
-			RegionName:                   "",
-			ServiceAttachmentNames:       nil,
+			PrivateLinkServiceName:       nil,
+			PrivateLinkServiceResourceId: nil,
+			Status:                       nil,
 		}
 
-		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName), listOptions).Return([]mongodbatlas.PrivateEndpointConnection{privateEndpoint}, nil)
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAWS), listOptions).Return(nil, nil)
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP), listOptions).Return(nil, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]interface{}{&privateEndpoint}, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAWS)).Return(nil, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP)).Return(nil, nil)
 
 		got, err := buildPrivateEndpoints(peProvider, projectID)
 		if err != nil {
@@ -1204,8 +1151,8 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 		expected := []atlasV1.PrivateEndpoint{
 			{
 				Provider:          providerName,
-				Region:            privateEndpoint.Region,
-				ID:                privateEndpoint.ID,
+				Region:            *privateEndpoint.RegionName,
+				ID:                *privateEndpoint.Id,
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",

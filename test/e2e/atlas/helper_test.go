@@ -28,8 +28,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 const (
@@ -40,6 +40,7 @@ const (
 	searchEntity                 = "search"
 	indexEntity                  = "index"
 	datalakeEntity               = "datalake"
+	datalakePipelineEntity       = "datalakepipeline"
 	alertsEntity                 = "alerts"
 	configEntity                 = "settings"
 	dbusersEntity                = "dbusers"
@@ -586,13 +587,11 @@ func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
 	require.NoError(t, err)
 	var clusters mongodbatlas.AdvancedClustersResponse
 	require.NoError(t, json.Unmarshal(resp, &clusters))
-
 	for _, cluster := range clusters.Results {
-		clusterName := cluster.Name
-		t.Run("deleting cluster "+clusterName, func(t *testing.T) {
-			t.Parallel()
-			assert.NoError(t, deleteClusterForProject(projectID, clusterName))
-		})
+		if cluster.StateName == "DELETING" {
+			continue
+		}
+		assert.NoError(t, deleteClusterForProject(projectID, cluster.Name))
 	}
 }
 
@@ -617,21 +616,18 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 	require.NoError(t, err)
 	for _, peer := range networkPeers {
 		peerID := peer.ID
-		t.Run("deleting peer: "+peerID, func(t *testing.T) {
-			t.Parallel()
-			cmd = exec.Command(cliPath,
-				networkingEntity,
-				networkPeeringEntity,
-				"delete",
-				peerID,
-				"--projectId",
-				projectID,
-				"--force",
-			)
-			cmd.Env = os.Environ()
-			resp, err = cmd.CombinedOutput()
-			assert.NoError(t, err, string(resp))
-		})
+		cmd = exec.Command(cliPath,
+			networkingEntity,
+			networkPeeringEntity,
+			"delete",
+			peerID,
+			"--projectId",
+			projectID,
+			"--force",
+		)
+		cmd.Env = os.Environ()
+		resp, err = cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
 	}
 }
 
@@ -649,26 +645,33 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 	resp, err := cmd.CombinedOutput()
 	t.Log(string(resp))
 	require.NoError(t, err)
-	var privateEndpoints []mongodbatlas.PrivateEndpointConnection
+	var privateEndpoints []atlasv2.EndpointService
 	err = json.Unmarshal(resp, &privateEndpoints)
 	require.NoError(t, err)
 	for _, endpoint := range privateEndpoints {
-		endpointID := endpoint.ID
-		t.Run("deleting endpoint: "+endpointID, func(t *testing.T) {
-			t.Parallel()
-			cmd = exec.Command(cliPath,
-				privateEndpointsEntity,
-				provider,
-				"delete",
-				endpointID,
-				"--projectId",
-				projectID,
-				"--force",
-			)
-			cmd.Env = os.Environ()
-			resp, err = cmd.CombinedOutput()
-			assert.NoError(t, err, string(resp))
-		})
+		var endpointID string
+
+		switch v := endpoint.GetActualInstance().(type) {
+		case *atlasv2.AWSPrivateLinkConnection:
+			endpointID = v.GetId()
+		case *atlasv2.AzurePrivateLinkConnection:
+			endpointID = v.GetId()
+		case *atlasv2.GCPEndpointService:
+			endpointID = v.GetId()
+		}
+		require.NotEmpty(t, endpointID)
+		cmd = exec.Command(cliPath,
+			privateEndpointsEntity,
+			provider,
+			"delete",
+			endpointID,
+			"--projectId",
+			projectID,
+			"--force",
+		)
+		cmd.Env = os.Environ()
+		resp, err = cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
 	}
 }
 

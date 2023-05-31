@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type CreateOpts struct {
@@ -82,7 +82,7 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) validate() error {
-	if strings.ToUpper(opts.sourceType) != periodicCPS || strings.ToUpper(opts.sourceType) != onDemandCPS {
+	if opts.sourceType != "" && !strings.EqualFold(opts.sourceType, periodicCPS) && !strings.EqualFold(opts.sourceType, onDemandCPS) {
 		return fmt.Errorf("%w: expected either '%s' or '%s' got '%s'", ErrSourceTypeInvalid, periodicCPS, onDemandCPS, opts.sourceType)
 	}
 
@@ -114,11 +114,10 @@ func (opts *CreateOpts) newCreateRequest() (*atlasv2.IngestionPipeline, error) {
 				MetadataRegion:   &opts.sinkMetadataRegion,
 			},
 		},
-		Source: &atlasv2.IngestionSource{},
 	}
 
 	for i, fieldName := range opts.sinkPartitionField {
-		pipeline.Sink.DLSIngestionSink.PartitionFields = append(pipeline.Sink.DLSIngestionSink.PartitionFields, *atlasv2.NewPartitionField(fieldName, int32(i)))
+		pipeline.Sink.DLSIngestionSink.PartitionFields = append(pipeline.Sink.DLSIngestionSink.PartitionFields, *atlasv2.NewPartitionField(fieldName, i))
 	}
 
 	for _, entry := range opts.transform {
@@ -130,21 +129,24 @@ func (opts *CreateOpts) newCreateRequest() (*atlasv2.IngestionPipeline, error) {
 		}
 	}
 
-	switch strings.ToUpper(opts.sourceType) {
-	case periodicCPS:
-		pipeline.Source.PeriodicCpsSnapshotSource = &atlasv2.PeriodicCpsSnapshotSource{
-			Type:           &opts.sourceType,
-			ClusterName:    &opts.sourceClusterName,
-			CollectionName: &opts.sourceCollectionName,
-			DatabaseName:   &opts.sourceDatabaseName,
-			PolicyItemId:   &opts.sourcePolicyItemID,
+	if strings.EqualFold(opts.sourceType, periodicCPS) {
+		pipeline.Source = &atlasv2.IngestionSource{
+			PeriodicCpsSnapshotSource: &atlasv2.PeriodicCpsSnapshotSource{
+				Type:           &opts.sourceType,
+				ClusterName:    &opts.sourceClusterName,
+				CollectionName: &opts.sourceCollectionName,
+				DatabaseName:   &opts.sourceDatabaseName,
+				PolicyItemId:   &opts.sourcePolicyItemID,
+			},
 		}
-	case onDemandCPS:
-		pipeline.Source.OnDemandCpsSnapshotSource = &atlasv2.OnDemandCpsSnapshotSource{
-			Type:           &opts.sourceType,
-			ClusterName:    &opts.sourceClusterName,
-			CollectionName: &opts.sourceCollectionName,
-			DatabaseName:   &opts.sourceDatabaseName,
+	} else if strings.EqualFold(opts.sourceType, onDemandCPS) {
+		pipeline.Source = &atlasv2.IngestionSource{
+			OnDemandCpsSnapshotSource: &atlasv2.OnDemandCpsSnapshotSource{
+				Type:           &opts.sourceType,
+				ClusterName:    &opts.sourceClusterName,
+				CollectionName: &opts.sourceCollectionName,
+				DatabaseName:   &opts.sourceDatabaseName,
+			},
 		}
 	}
 

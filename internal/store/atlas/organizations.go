@@ -15,8 +15,8 @@
 package atlas
 
 import (
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_organizations.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationLister,OrganizationDeleter,OrganizationDescriber,OrganizationCreator
@@ -41,7 +41,7 @@ type OrganizationDeleter interface {
 func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlasv2.PaginatedOrganization, error) {
 	res := s.clientv2.OrganizationsApi.ListOrganizations(s.ctx)
 	if opts != nil {
-		res = res.Name(opts.Name).PageNum(int32(opts.PageNum))
+		res = res.Name(opts.Name).PageNum(opts.PageNum)
 	}
 	result, _, err := res.Execute()
 	return result, err
@@ -55,7 +55,7 @@ func (s *Store) Organization(id string) (*atlasv2.Organization, error) {
 
 // CreateAtlasOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateAtlasOrganization(o *atlasv2.CreateOrganizationRequest) (*atlasv2.CreateOrganizationResponse, error) {
-	result, _, err := s.clientv2.OrganizationsApi.CreateOrganization(s.ctx).CreateOrganizationRequest(*o).Execute()
+	result, _, err := s.clientv2.OrganizationsApi.CreateOrganization(s.ctx, o).Execute()
 	return result, err
 }
 

@@ -18,35 +18,35 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen  -destination=../mocks/mock_process_disk_measurements.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessDiskMeasurementsLister,ProcessDatabaseMeasurementsLister
 
 type ProcessDiskMeasurementsLister interface {
-	ProcessDiskMeasurements(string, string, int, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error)
+	ProcessDiskMeasurements(*atlasv2.GetDiskMeasurementsApiParams) (*atlasv2.MeasurementsGeneralViewAtlas, error)
 }
 
 type ProcessDatabaseMeasurementsLister interface {
-	ProcessDatabaseMeasurements(string, string, int, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error)
+	ProcessDatabaseMeasurements(*atlasv2.GetDatabaseMeasurementsApiParams) (*atlasv2.MeasurementsGeneralViewAtlas, error)
 }
 
 // ProcessDiskMeasurements encapsulate the logic to manage different cloud providers.
-func (s *Store) ProcessDiskMeasurements(groupID, host string, port int, partitionName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error) {
+func (s *Store) ProcessDiskMeasurements(params *atlasv2.GetDiskMeasurementsApiParams) (*atlasv2.MeasurementsGeneralViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProcessDiskMeasurements.List(s.ctx, groupID, host, port, partitionName, opts)
+		result, _, err := s.clientv2.MonitoringAndLogsApi.GetDiskMeasurementsWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// ProcessDiskMeasurements encapsulate the logic to manage different cloud providers.
-func (s *Store) ProcessDatabaseMeasurements(groupID, host string, port int, dbName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error) {
+// ProcessDatabaseMeasurements encapsulate the logic to manage different cloud providers.
+func (s *Store) ProcessDatabaseMeasurements(args *atlasv2.GetDatabaseMeasurementsApiParams) (*atlasv2.MeasurementsGeneralViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProcessDatabaseMeasurements.List(s.ctx, groupID, host, port, dbName, opts)
+		result, _, err := s.clientv2.MonitoringAndLogsApi.GetDatabaseMeasurementsWithParams(s.ctx, args).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

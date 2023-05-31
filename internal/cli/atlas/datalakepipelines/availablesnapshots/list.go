@@ -31,8 +31,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	STATUS{{range .Results}}
-{{if .DiskBackupReplicaSet}}{{.DiskBackupReplicaSet.Id}}	{{.DiskBackupReplicaSet.Status}}{{else}}{{.DiskBackupShardedClusterSnapshot.Id}}	{{.DiskBackupShardedClusterSnapshot.Status}}{{end}}{{end}}`
+var listTemplate = `ID	DESCRIPTION	STATUS{{range .Results}}
+{{if .DiskBackupReplicaSet}}{{.DiskBackupReplicaSet.Id}}	{{.DiskBackupReplicaSet.Description}}	{{.DiskBackupReplicaSet.Status}}{{else}}{{.DiskBackupShardedClusterSnapshot.Id}}	{{.DiskBackupShardedClusterSnapshot.Description}}	{{.DiskBackupShardedClusterSnapshot.Status}}{{end}}{{end}}`
 
 type ListOpts struct {
 	cli.GlobalOpts

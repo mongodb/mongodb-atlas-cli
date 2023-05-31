@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestTrigger_Run(t *testing.T) {
@@ -42,8 +42,9 @@ func TestTrigger_Run(t *testing.T) {
 
 	buf := new(bytes.Buffer)
 	triggerOpts := &TriggerOpts{
-		id:    "id",
-		store: mockStore,
+		id:         "id",
+		snapshotID: "snapshotID",
+		store:      mockStore,
 		OutputOpts: cli.OutputOpts{
 			Template:  triggerTemplate,
 			OutWriter: buf,
@@ -52,7 +53,7 @@ func TestTrigger_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PipelineTrigger(triggerOpts.ProjectID, triggerOpts.id).
+		PipelineTrigger(triggerOpts.ProjectID, triggerOpts.id, triggerOpts.snapshotID).
 		Return(expected, nil).
 		Times(1)
 

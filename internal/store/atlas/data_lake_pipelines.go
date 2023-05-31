@@ -19,8 +19,8 @@ package atlas
 import (
 	"time"
 
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_data_lake_pipelines.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas PipelinesLister,PipelinesDescriber,PipelinesCreator,PipelinesUpdater,PipelinesDeleter,PipelineAvailableSnapshotsLister,PipelineAvailableSchedulesLister,PipelinesTriggerer,PipelinesPauser,PipelinesResumer
@@ -54,7 +54,7 @@ type PipelineAvailableSchedulesLister interface {
 }
 
 type PipelinesTriggerer interface {
-	PipelineTrigger(string, string) (*atlasv2.IngestionPipelineRun, error)
+	PipelineTrigger(string, string, string) (*atlasv2.IngestionPipelineRun, error)
 }
 
 type PipelinesPauser interface {
@@ -79,13 +79,13 @@ func (s *Store) Pipeline(projectID, id string) (*atlasv2.IngestionPipeline, erro
 
 // CreatePipeline encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePipeline(projectID string, opts atlasv2.IngestionPipeline) (*atlasv2.IngestionPipeline, error) {
-	result, _, err := s.clientv2.DataLakePipelinesApi.CreatePipeline(s.ctx, projectID).IngestionPipeline(opts).Execute()
+	result, _, err := s.clientv2.DataLakePipelinesApi.CreatePipeline(s.ctx, projectID, &opts).Execute()
 	return result, err
 }
 
 // UpdatePipeline encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdatePipeline(projectID, id string, opts atlasv2.IngestionPipeline) (*atlasv2.IngestionPipeline, error) {
-	result, _, err := s.clientv2.DataLakePipelinesApi.UpdatePipeline(s.ctx, projectID, id).IngestionPipeline(opts).Execute()
+	result, _, err := s.clientv2.DataLakePipelinesApi.UpdatePipeline(s.ctx, projectID, id, &opts).Execute()
 	return result, err
 }
 
@@ -108,16 +108,17 @@ func (s *Store) PipelineAvailableSnapshots(projectID, pipelineName string, compl
 		request = request.CompletedAfter(*completedAfter)
 	}
 	if listOps != nil {
-		request = request.ItemsPerPage(int32(listOps.ItemsPerPage))
-		request = request.PageNum(int32(listOps.PageNum))
+		request = request.ItemsPerPage(listOps.ItemsPerPage)
+		request = request.PageNum(listOps.PageNum)
 	}
 	result, _, err := request.Execute()
 	return result, err
 }
 
 // PipelineTrigger encapsulates the logic to manage different cloud providers.
-func (s *Store) PipelineTrigger(projectID, pipelineName string) (*atlasv2.IngestionPipelineRun, error) {
-	result, _, err := s.clientv2.DataLakePipelinesApi.TriggerSnapshotIngestion(s.ctx, projectID, pipelineName).Execute()
+func (s *Store) PipelineTrigger(projectID, pipelineName, snapshotID string) (*atlasv2.IngestionPipelineRun, error) {
+	result, _, err := s.clientv2.DataLakePipelinesApi.TriggerSnapshotIngestion(s.ctx, projectID, pipelineName,
+		atlasv2.NewTriggerIngestionRequest(snapshotID)).Execute()
 	return result, err
 }
 

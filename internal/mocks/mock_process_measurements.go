@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockProcessMeasurementLister is a mock of ProcessMeasurementLister interface.
@@ -35,16 +35,16 @@ func (m *MockProcessMeasurementLister) EXPECT() *MockProcessMeasurementListerMoc
 }
 
 // ProcessMeasurements mocks base method.
-func (m *MockProcessMeasurementLister) ProcessMeasurements(arg0, arg1 string, arg2 int, arg3 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessMeasurements, error) {
+func (m *MockProcessMeasurementLister) ProcessMeasurements(arg0 *admin.GetHostMeasurementsApiParams) (*admin.MeasurementsGeneralViewAtlas, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProcessMeasurements", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessMeasurements)
+	ret := m.ctrl.Call(m, "ProcessMeasurements", arg0)
+	ret0, _ := ret[0].(*admin.MeasurementsGeneralViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ProcessMeasurements indicates an expected call of ProcessMeasurements.
-func (mr *MockProcessMeasurementListerMockRecorder) ProcessMeasurements(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockProcessMeasurementListerMockRecorder) ProcessMeasurements(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessMeasurements", reflect.TypeOf((*MockProcessMeasurementLister)(nil).ProcessMeasurements), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessMeasurements", reflect.TypeOf((*MockProcessMeasurementLister)(nil).ProcessMeasurements), arg0)
 }

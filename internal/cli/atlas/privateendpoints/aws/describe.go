@@ -29,7 +29,7 @@ import (
 )
 
 var describeTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR
-{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}
+{{.Id}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}
 `
 
 type DescribeOpts struct {

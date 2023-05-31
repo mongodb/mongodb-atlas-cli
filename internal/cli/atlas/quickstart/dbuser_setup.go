@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/randgen"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 func (opts *Opts) createDatabaseUser() error {
@@ -97,7 +98,7 @@ func (opts *Opts) newDatabaseUser() *atlasv2.DatabaseUser {
 	return &atlasv2.DatabaseUser{
 		Roles:        convert.BuildAtlasRoles([]string{atlasAdmin}),
 		GroupId:      opts.ConfigProjectID(),
-		Password:     convert.GetStringPointerIfNotEmpty(opts.DBUserPassword),
+		Password:     pointer.GetStringPointerIfNotEmpty(opts.DBUserPassword),
 		X509Type:     &none,
 		AwsIAMType:   &none,
 		LdapAuthType: &none,

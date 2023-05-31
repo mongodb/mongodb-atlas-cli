@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -37,7 +37,7 @@ func TestCreate_Run(t *testing.T) {
 		interfaceEndpointID: "interfaceEndpointID",
 	}
 
-	expected := &mongodbatlas.InterfaceEndpointConnection{}
+	expected := &atlasv2.AzurePrivateEndpoint{}
 	mockStore.
 		EXPECT().
 		CreateInterfaceEndpoint(createOpts.ProjectID, provider, createOpts.interfaceEndpointID, createOpts.newInterfaceEndpointConnection()).

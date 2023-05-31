@@ -15,8 +15,8 @@
 package atlas
 
 import (
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	atlasv2 "go.mongodb.org/atlas/mongodbatlasv2"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_projects.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter
@@ -68,7 +68,7 @@ type ProjectTeamDeleter interface {
 func (s *Store) Projects(opts *atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
 	res := s.clientv2.ProjectsApi.ListProjects(s.ctx)
 	if opts != nil {
-		res = res.PageNum(int32(opts.PageNum)).ItemsPerPage(int32(opts.ItemsPerPage))
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 	}
 	result, _, err := res.Execute()
 	return result, err
@@ -78,7 +78,7 @@ func (s *Store) Projects(opts *atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup,
 func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
 	res := s.clientv2.OrganizationsApi.ListOrganizationProjects(s.ctx, orgID)
 	if opts != nil {
-		res = res.PageNum(int32(opts.PageNum)).Name(opts.Name).ItemsPerPage(int32(opts.ItemsPerPage))
+		res = res.PageNum(opts.PageNum).Name(opts.Name).ItemsPerPage(opts.ItemsPerPage)
 	}
 	result, _, err := res.Execute()
 	return result, err
@@ -97,7 +97,7 @@ func (s *Store) ProjectByName(name string) (interface{}, error) {
 
 // CreateProject encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateProject(group atlasv2.Group, opts *atlas.CreateProjectOptions) (*atlasv2.Group, error) {
-	res := s.clientv2.ProjectsApi.CreateProject(s.ctx).Group(group)
+	res := s.clientv2.ProjectsApi.CreateProject(s.ctx, &group)
 	if opts != nil {
 		res = res.ProjectOwnerId(opts.ProjectOwnerID)
 	}
@@ -115,7 +115,7 @@ func (s *Store) DeleteProject(projectID string) error {
 func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAppUser, error) {
 	res := s.clientv2.ProjectsApi.ListProjectUsers(s.ctx, projectID)
 	if opts != nil {
-		res = res.ItemsPerPage(int32(opts.ItemsPerPage)).PageNum(int32(opts.PageNum))
+		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
 	}
 	result, _, err := res.Execute()
 	return result, err
@@ -135,7 +135,7 @@ func (s *Store) ProjectTeams(projectID string) (*atlasv2.PaginatedTeamRole, erro
 
 // AddTeamsToProject encapsulates the logic to manage different cloud providers.
 func (s *Store) AddTeamsToProject(projectID string, teams []atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error) {
-	result, _, err := s.clientv2.TeamsApi.AddAllTeamsToProject(s.ctx, projectID).TeamRole(teams).Execute()
+	result, _, err := s.clientv2.TeamsApi.AddAllTeamsToProject(s.ctx, projectID, &teams).Execute()
 	return result, err
 }
 

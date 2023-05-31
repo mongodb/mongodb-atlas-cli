@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockProcessDiskMeasurementsLister is a mock of ProcessDiskMeasurementsLister interface.
@@ -35,18 +35,18 @@ func (m *MockProcessDiskMeasurementsLister) EXPECT() *MockProcessDiskMeasurement
 }
 
 // ProcessDiskMeasurements mocks base method.
-func (m *MockProcessDiskMeasurementsLister) ProcessDiskMeasurements(arg0, arg1 string, arg2 int, arg3 string, arg4 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessDiskMeasurements, error) {
+func (m *MockProcessDiskMeasurementsLister) ProcessDiskMeasurements(arg0 *admin.GetDiskMeasurementsApiParams) (*admin.MeasurementsGeneralViewAtlas, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProcessDiskMeasurements", arg0, arg1, arg2, arg3, arg4)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessDiskMeasurements)
+	ret := m.ctrl.Call(m, "ProcessDiskMeasurements", arg0)
+	ret0, _ := ret[0].(*admin.MeasurementsGeneralViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ProcessDiskMeasurements indicates an expected call of ProcessDiskMeasurements.
-func (mr *MockProcessDiskMeasurementsListerMockRecorder) ProcessDiskMeasurements(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+func (mr *MockProcessDiskMeasurementsListerMockRecorder) ProcessDiskMeasurements(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessDiskMeasurements", reflect.TypeOf((*MockProcessDiskMeasurementsLister)(nil).ProcessDiskMeasurements), arg0, arg1, arg2, arg3, arg4)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessDiskMeasurements", reflect.TypeOf((*MockProcessDiskMeasurementsLister)(nil).ProcessDiskMeasurements), arg0)
 }
 
 // MockProcessDatabaseMeasurementsLister is a mock of ProcessDatabaseMeasurementsLister interface.
@@ -73,16 +73,16 @@ func (m *MockProcessDatabaseMeasurementsLister) EXPECT() *MockProcessDatabaseMea
 }
 
 // ProcessDatabaseMeasurements mocks base method.
-func (m *MockProcessDatabaseMeasurementsLister) ProcessDatabaseMeasurements(arg0, arg1 string, arg2 int, arg3 string, arg4 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessDatabaseMeasurements, error) {
+func (m *MockProcessDatabaseMeasurementsLister) ProcessDatabaseMeasurements(arg0 *admin.GetDatabaseMeasurementsApiParams) (*admin.MeasurementsGeneralViewAtlas, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProcessDatabaseMeasurements", arg0, arg1, arg2, arg3, arg4)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessDatabaseMeasurements)
+	ret := m.ctrl.Call(m, "ProcessDatabaseMeasurements", arg0)
+	ret0, _ := ret[0].(*admin.MeasurementsGeneralViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ProcessDatabaseMeasurements indicates an expected call of ProcessDatabaseMeasurements.
-func (mr *MockProcessDatabaseMeasurementsListerMockRecorder) ProcessDatabaseMeasurements(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+func (mr *MockProcessDatabaseMeasurementsListerMockRecorder) ProcessDatabaseMeasurements(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessDatabaseMeasurements", reflect.TypeOf((*MockProcessDatabaseMeasurementsLister)(nil).ProcessDatabaseMeasurements), arg0, arg1, arg2, arg3, arg4)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessDatabaseMeasurements", reflect.TypeOf((*MockProcessDatabaseMeasurementsLister)(nil).ProcessDatabaseMeasurements), arg0)
 }

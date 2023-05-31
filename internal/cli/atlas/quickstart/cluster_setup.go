@@ -22,6 +22,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -182,7 +183,7 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 	cloudProviders, err := opts.store.CloudProviderRegions(
 		opts.ConfigProjectID(),
 		opts.Tier,
-		[]*string{&opts.Provider},
+		pointer.Get([]string{opts.Provider}),
 	)
 
 	if err != nil {
@@ -201,14 +202,14 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 	if popularRegionIndex != -1 {
 		// the most popular region must be the first in the list
 		popularRegion := availableRegions[popularRegionIndex]
-		defaultRegions = append(defaultRegions, popularRegion.Name)
+		defaultRegions = append(defaultRegions, *popularRegion.Name)
 
 		// remove popular region from availableRegions
 		availableRegions = append(availableRegions[:popularRegionIndex], availableRegions[popularRegionIndex+1:]...)
 	}
 
 	for _, v := range availableRegions {
-		defaultRegions = append(defaultRegions, v.Name)
+		defaultRegions = append(defaultRegions, *v.Name)
 	}
 
 	return defaultRegions, nil

@@ -61,50 +61,6 @@ functions:
       params:
         <<: *go_options
         command: make build-atlascli
-  "check library_owners.json":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        command: make check-library-owners
-  "unit-test":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        env:
-          <<: *go_env
-          TEST_CMD: gotestsum --junitfile unit-tests.xml --
-        command: make unit-test
-  "integration-test":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        env:
-          <<: *go_env
-          TEST_CMD: gotestsum --junitfile unit-tests.xml --
-        command: make integration-test
-  "generate html coverage":
-    - command: shell.exec
-      type: test
-      params:
-        <<: *go_options
-        script: |
-          set -Eeou pipefail
-          export PATH="$ADD_PATH:$PATH"
-          go tool cover -html=coverage.out -o coverage.html
-  "upload html coverage":
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.html
-        remote_file: ${project}/coverage/internal/${task_id}.html
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: text/html
-        display_name: internal-html-coverage
   "e2e test":
     - command: subprocess.exec
       type: test
@@ -225,12 +181,6 @@ functions:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
-  "lint":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        binary: ./build/ci/lint.sh
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -323,25 +273,6 @@ tasks:
     tags: [ "code_health" ]
     commands:
       - func: "build atlascli"
-  - name: unit_test
-    tags: ["code_health"]
-    must_have_test_results: true
-    commands:
-      - func: "install gotestsum"
-      - func: "unit-test"
-      - func: "generate html coverage"
-      - func: "upload html coverage"
-  - name: integration_test
-    tags: ["code_health"]
-    must_have_test_results: true
-    commands:
-      - func: "install gotestsum"
-      - func: "integration-test"
-  - name: lint
-    tags: ["code_health"]
-    commands:
-      - func: "install dev tools"
-      - func: "lint"
   - name: snyk_scan
     tags: ["snyk"]
     commands:
@@ -384,10 +315,6 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,config
-  - name: library_owners_check
-    tags: ["code_health"]
-    commands:
-      - func: "check library_owners.json"
   - name: brew_e2e
     tags: ["e2e","required"]
     depends_on:
@@ -899,6 +826,27 @@ tasks:
           E2E_TAGS: atlas,datalake
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+  # datalakepipeline requires cloud provider role authentication and an s3 bucket created
+  - name: atlas_datalakepipeline_e2e
+    tags: ["e2e","datalakepipeline","atlas"]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,datalakepipeline
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # IAM commands tests with an Atlas profile
   - name: atlas_iam_e2e
     tags: ["e2e","generic","atlas"]
@@ -1367,7 +1315,7 @@ tasks:
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_TIMEOUT: 3h
   - name: atlas_cleanup_e2e
-    tags: [ "e2e","cleanup", "foliage_infrequent_task" ]
+    tags: [ "e2e","cleanup", "foliage_check_task_only" ]
     must_have_test_results: true
     stepback: false
     depends_on:
@@ -1386,7 +1334,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,cleanup
   - name: atlas_gov_cleanup_e2e
-    tags: [ "e2e","cleanup" ]
+    tags: [ "e2e","cleanup", "foliage_check_task_only" ]
     must_have_test_results: true
     stepback: false
     depends_on:
@@ -1515,6 +1463,16 @@ buildvariants:
       go_base_path: ""
     tasks:
       - name: ".e2e .datalake .atlas"
+  - name: e2e_atlas_datalakepipeline
+    display_name: "E2E Atlas Datalake Pipeline Tests"
+    run_on:
+      - rhel80-small
+    expansions:
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
+      go_base_path: ""
+    tasks:
+      - name: ".e2e .datalakepipeline .atlas"
   - name: e2e_atlas_backups
     display_name: "E2E Atlas Backup Tests"
     run_on:

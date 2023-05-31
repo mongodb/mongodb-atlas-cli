@@ -158,6 +158,13 @@ func UpgradeBuilder() *cobra.Command {
 
 	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.Tag+usage.UpdateWarning)
 
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tier)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DiskSizeGB)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.MDBVersion)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.EnableTerminationProtection)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DisableTerminationProtection)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tag)
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())

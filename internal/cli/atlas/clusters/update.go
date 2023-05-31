@@ -191,7 +191,9 @@ You can't change the name of the cluster or downgrade the MongoDB version of you
 
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tier)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DiskSizeGB)
-	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DiskSizeGB)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.EnableTerminationProtection)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DisableTerminationProtection)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tag)
 
 	autocomplete := &autoCompleteOpts{}
 	_ = cmd.RegisterFlagCompletionFunc(flag.Tier, autocomplete.autocompleteTier())

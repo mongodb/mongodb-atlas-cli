@@ -26,7 +26,7 @@ import (
 type AddAllTeamsToProjectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -42,7 +42,7 @@ func (opts *AddAllTeamsToProjectOpts) Run(ctx context.Context) error {
 	params := &admin.AddAllTeamsToProjectApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.TeamsApi.AddAllTeamsToProjectWithParams(ctx, params)
+	resp, _, err := opts.client.TeamsApi.AddAllTeamsToProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -50,28 +50,33 @@ func (opts *AddAllTeamsToProjectOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const AddAllTeamsToProjectTemplate = "<<some template>>"
+func AddAllTeamsToProjectBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func AddAllTeamsToProjectBuilder() cobra.Command {
 	opts := AddAllTeamsToProjectOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Add One or More Teams to One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), AddAllTeamsToProjectTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -79,7 +84,7 @@ func AddAllTeamsToProjectBuilder() cobra.Command {
 type AddTeamUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	teamId string
 }
@@ -97,7 +102,7 @@ func (opts *AddTeamUserOpts) Run(ctx context.Context) error {
 		OrgId: opts.orgId,
 		TeamId: opts.teamId,
 	}
-	resp, _, err := opts.client.TeamsApi.AddTeamUserWithParams(ctx, params)
+	resp, _, err := opts.client.TeamsApi.AddTeamUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -105,30 +110,34 @@ func (opts *AddTeamUserOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const AddTeamUserTemplate = "<<some template>>"
+func AddTeamUserBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func AddTeamUserBuilder() cobra.Command {
 	opts := AddTeamUserOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Assign MongoDB Cloud Users from One Organization to One Team",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), AddTeamUserTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.teamId, "teamId", , "Unique 24-hexadecimal character string that identifies the team to which you want to add MongoDB Cloud users.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
 	_ = cmd.MarkFlagRequired("teamId")
 
 	return cmd
@@ -136,7 +145,7 @@ func AddTeamUserBuilder() cobra.Command {
 type CreateTeamOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 }
 
@@ -152,7 +161,7 @@ func (opts *CreateTeamOpts) Run(ctx context.Context) error {
 	params := &admin.CreateTeamApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.TeamsApi.CreateTeamWithParams(ctx, params)
+	resp, _, err := opts.client.TeamsApi.CreateTeamWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -160,28 +169,33 @@ func (opts *CreateTeamOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const CreateTeamTemplate = "<<some template>>"
+func CreateTeamBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreateTeamBuilder() cobra.Command {
 	opts := CreateTeamOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Create One Team in One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreateTeamTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -189,7 +203,7 @@ func CreateTeamBuilder() cobra.Command {
 type DeleteTeamOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	teamId string
 }
@@ -207,7 +221,7 @@ func (opts *DeleteTeamOpts) Run(ctx context.Context) error {
 		OrgId: opts.orgId,
 		TeamId: opts.teamId,
 	}
-	resp, _, err := opts.client.TeamsApi.DeleteTeamWithParams(ctx, params)
+	resp, _, err := opts.client.TeamsApi.DeleteTeamWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -215,30 +229,34 @@ func (opts *DeleteTeamOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DeleteTeamTemplate = "<<some template>>"
+func DeleteTeamBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeleteTeamBuilder() cobra.Command {
 	opts := DeleteTeamOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One Team from One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeleteTeamTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.teamId, "teamId", , "Unique 24-hexadecimal digit string that identifies the team that you want to delete.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
 	_ = cmd.MarkFlagRequired("teamId")
 
 	return cmd
@@ -246,7 +264,7 @@ func DeleteTeamBuilder() cobra.Command {
 type GetTeamByIdOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	teamId string
 }
@@ -264,7 +282,7 @@ func (opts *GetTeamByIdOpts) Run(ctx context.Context) error {
 		OrgId: opts.orgId,
 		TeamId: opts.teamId,
 	}
-	resp, _, err := opts.client.TeamsApi.GetTeamByIdWithParams(ctx, params)
+	resp, _, err := opts.client.TeamsApi.GetTeamByIdWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -272,30 +290,34 @@ func (opts *GetTeamByIdOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetTeamByIdTemplate = "<<some template>>"
+func GetTeamByIdBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetTeamByIdBuilder() cobra.Command {
 	opts := GetTeamByIdOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Team using its ID",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetTeamByIdTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.teamId, "teamId", , "Unique 24-hexadecimal digit string that identifies the team whose information you want to return.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
 	_ = cmd.MarkFlagRequired("teamId")
 
 	return cmd
@@ -303,7 +325,7 @@ func GetTeamByIdBuilder() cobra.Command {
 type GetTeamByNameOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	teamName string
 }
@@ -321,7 +343,7 @@ func (opts *GetTeamByNameOpts) Run(ctx context.Context) error {
 		OrgId: opts.orgId,
 		TeamName: opts.teamName,
 	}
-	resp, _, err := opts.client.TeamsApi.GetTeamByNameWithParams(ctx, params)
+	resp, _, err := opts.client.TeamsApi.GetTeamByNameWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -329,30 +351,34 @@ func (opts *GetTeamByNameOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetTeamByNameTemplate = "<<some template>>"
+func GetTeamByNameBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetTeamByNameBuilder() cobra.Command {
 	opts := GetTeamByNameOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Team using its Name",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetTeamByNameTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.teamName, "teamName", , "Name of the team whose information you want to return.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.teamName, "teamName", "", "usage description")
 	_ = cmd.MarkFlagRequired("teamName")
 
 	return cmd
@@ -360,7 +386,7 @@ func GetTeamByNameBuilder() cobra.Command {
 type ListOrganizationTeamsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	itemsPerPage int32
 	includeCount bool
@@ -382,7 +408,7 @@ func (opts *ListOrganizationTeamsOpts) Run(ctx context.Context) error {
 		IncludeCount: opts.includeCount,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.client.TeamsApi.ListOrganizationTeamsWithParams(ctx, params)
+	resp, _, err := opts.client.TeamsApi.ListOrganizationTeamsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -390,39 +416,41 @@ func (opts *ListOrganizationTeamsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListOrganizationTeamsTemplate = "<<some template>>"
+func ListOrganizationTeamsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListOrganizationTeamsBuilder() cobra.Command {
 	opts := ListOrganizationTeamsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Teams in One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListOrganizationTeamsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
 
 	return cmd
 }
 type ListProjectTeamsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
@@ -444,7 +472,7 @@ func (opts *ListProjectTeamsOpts) Run(ctx context.Context) error {
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.client.TeamsApi.ListProjectTeamsWithParams(ctx, params)
+	resp, _, err := opts.client.TeamsApi.ListProjectTeamsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -452,39 +480,41 @@ func (opts *ListProjectTeamsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListProjectTeamsTemplate = "<<some template>>"
+func ListProjectTeamsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListProjectTeamsBuilder() cobra.Command {
 	opts := ListProjectTeamsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Teams in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListProjectTeamsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
 
 	return cmd
 }
 type ListTeamUsersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	teamId string
 	itemsPerPage int32
@@ -506,7 +536,7 @@ func (opts *ListTeamUsersOpts) Run(ctx context.Context) error {
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.client.TeamsApi.ListTeamUsersWithParams(ctx, params)
+	resp, _, err := opts.client.TeamsApi.ListTeamUsersWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -514,40 +544,42 @@ func (opts *ListTeamUsersOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListTeamUsersTemplate = "<<some template>>"
+func ListTeamUsersBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListTeamUsersBuilder() cobra.Command {
 	opts := ListTeamUsersOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All MongoDB Cloud Users Assigned to One Team",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListTeamUsersTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.teamId, "teamId", , "Unique 24-hexadecimal digit string that identifies the team whose application users you want to return.")
+	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
 	_ = cmd.MarkFlagRequired("teamId")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
 
 	return cmd
 }
 type RemoveProjectTeamOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	teamId string
 }
@@ -565,7 +597,7 @@ func (opts *RemoveProjectTeamOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		TeamId: opts.teamId,
 	}
-	resp, _, err := opts.client.TeamsApi.RemoveProjectTeamWithParams(ctx, params)
+	resp, _, err := opts.client.TeamsApi.RemoveProjectTeamWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -573,30 +605,34 @@ func (opts *RemoveProjectTeamOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const RemoveProjectTeamTemplate = "<<some template>>"
+func RemoveProjectTeamBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func RemoveProjectTeamBuilder() cobra.Command {
 	opts := RemoveProjectTeamOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One Team from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), RemoveProjectTeamTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.teamId, "teamId", , "Unique 24-hexadecimal digit string that identifies the team that you want to remove from the specified project.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
 	_ = cmd.MarkFlagRequired("teamId")
 
 	return cmd
@@ -604,7 +640,7 @@ func RemoveProjectTeamBuilder() cobra.Command {
 type RemoveTeamUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	teamId string
 	userId string
@@ -624,7 +660,7 @@ func (opts *RemoveTeamUserOpts) Run(ctx context.Context) error {
 		TeamId: opts.teamId,
 		UserId: opts.userId,
 	}
-	_, err := opts.client.TeamsApi.RemoveTeamUserWithParams(ctx, params)
+	_, err := opts.client.TeamsApi.RemoveTeamUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -632,32 +668,35 @@ func (opts *RemoveTeamUserOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-const RemoveTeamUserTemplate = "<<some template>>"
+func RemoveTeamUserBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func RemoveTeamUserBuilder() cobra.Command {
 	opts := RemoveTeamUserOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One MongoDB Cloud User from One Team",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), RemoveTeamUserTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.teamId, "teamId", , "Unique 24-hexadecimal digit string that identifies the team from which you want to remove one database application user.")	cmd.Flags().StringVar(&opts.userId, "userId", , "Unique 24-hexadecimal digit string that identifies MongoDB Cloud user that you want to remove from the specified team.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
 	_ = cmd.MarkFlagRequired("teamId")
-	cmd.Flags().StringVar(&opts.userId, "userId", "", "usage description")
 	_ = cmd.MarkFlagRequired("userId")
 
 	return cmd
@@ -665,7 +704,7 @@ func RemoveTeamUserBuilder() cobra.Command {
 type RenameTeamOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	teamId string
 }
@@ -683,7 +722,7 @@ func (opts *RenameTeamOpts) Run(ctx context.Context) error {
 		OrgId: opts.orgId,
 		TeamId: opts.teamId,
 	}
-	resp, _, err := opts.client.TeamsApi.RenameTeamWithParams(ctx, params)
+	resp, _, err := opts.client.TeamsApi.RenameTeamWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -691,30 +730,34 @@ func (opts *RenameTeamOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const RenameTeamTemplate = "<<some template>>"
+func RenameTeamBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func RenameTeamBuilder() cobra.Command {
 	opts := RenameTeamOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Rename One Team",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), RenameTeamTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.teamId, "teamId", , "Unique 24-hexadecimal digit string that identifies the team that you want to rename.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
 	_ = cmd.MarkFlagRequired("teamId")
 
 	return cmd
@@ -722,7 +765,7 @@ func RenameTeamBuilder() cobra.Command {
 type UpdateTeamRolesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	teamId string
 }
@@ -740,7 +783,7 @@ func (opts *UpdateTeamRolesOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		TeamId: opts.teamId,
 	}
-	resp, _, err := opts.client.TeamsApi.UpdateTeamRolesWithParams(ctx, params)
+	resp, _, err := opts.client.TeamsApi.UpdateTeamRolesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -748,30 +791,34 @@ func (opts *UpdateTeamRolesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateTeamRolesTemplate = "<<some template>>"
+func UpdateTeamRolesBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateTeamRolesBuilder() cobra.Command {
 	opts := UpdateTeamRolesOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update Team Roles in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateTeamRolesTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.teamId, "teamId", , "Unique 24-hexadecimal digit string that identifies the team for which you want to update roles.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.teamId, "teamId", "", "usage description")
 	_ = cmd.MarkFlagRequired("teamId")
 
 	return cmd

@@ -26,7 +26,7 @@ import (
 type CreateDatabaseUserCertificateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	username string
 }
@@ -44,7 +44,7 @@ func (opts *CreateDatabaseUserCertificateOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		Username: opts.username,
 	}
-	_, err := opts.client.X509AuthenticationApi.CreateDatabaseUserCertificateWithParams(ctx, params)
+	_, err := opts.client.X509AuthenticationApi.CreateDatabaseUserCertificateWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -52,30 +52,34 @@ func (opts *CreateDatabaseUserCertificateOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-const CreateDatabaseUserCertificateTemplate = "<<some template>>"
+func CreateDatabaseUserCertificateBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreateDatabaseUserCertificateBuilder() cobra.Command {
 	opts := CreateDatabaseUserCertificateOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Create One X.509 Certificate for One MongoDB User",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreateDatabaseUserCertificateTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.username, "username", , "Human-readable label that represents the MongoDB database user account for whom to create a certificate.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.username, "username", "", "usage description")
 	_ = cmd.MarkFlagRequired("username")
 
 	return cmd
@@ -83,7 +87,7 @@ func CreateDatabaseUserCertificateBuilder() cobra.Command {
 type DisableCustomerManagedX509Opts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -99,7 +103,7 @@ func (opts *DisableCustomerManagedX509Opts) Run(ctx context.Context) error {
 	params := &admin.DisableCustomerManagedX509ApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.X509AuthenticationApi.DisableCustomerManagedX509WithParams(ctx, params)
+	resp, _, err := opts.client.X509AuthenticationApi.DisableCustomerManagedX509WithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -107,28 +111,33 @@ func (opts *DisableCustomerManagedX509Opts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DisableCustomerManagedX509Template = "<<some template>>"
+func DisableCustomerManagedX509Builder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DisableCustomerManagedX509Builder() cobra.Command {
 	opts := DisableCustomerManagedX509Opts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Disable Customer-Managed X.509",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DisableCustomerManagedX509Template),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -136,7 +145,7 @@ func DisableCustomerManagedX509Builder() cobra.Command {
 type ListDatabaseUserCertificatesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	username string
 	includeCount bool
@@ -160,7 +169,7 @@ func (opts *ListDatabaseUserCertificatesOpts) Run(ctx context.Context) error {
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.client.X509AuthenticationApi.ListDatabaseUserCertificatesWithParams(ctx, params)
+	resp, _, err := opts.client.X509AuthenticationApi.ListDatabaseUserCertificatesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -168,34 +177,35 @@ func (opts *ListDatabaseUserCertificatesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListDatabaseUserCertificatesTemplate = "<<some template>>"
+func ListDatabaseUserCertificatesBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListDatabaseUserCertificatesBuilder() cobra.Command {
 	opts := ListDatabaseUserCertificatesOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All X.509 Certificates Assigned to One MongoDB User",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListDatabaseUserCertificatesTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.username, "username", , "Human-readable label that represents the MongoDB database user account whose certificates you want to return.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.username, "username", "", "usage description")
 	_ = cmd.MarkFlagRequired("username")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
 
 	return cmd
 }

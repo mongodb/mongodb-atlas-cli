@@ -26,7 +26,7 @@ import (
 type GetSystemStatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 }
 
 func (opts *GetSystemStatusOpts) initClient(ctx context.Context) func() error {
@@ -40,7 +40,7 @@ func (opts *GetSystemStatusOpts) initClient(ctx context.Context) func() error {
 func (opts *GetSystemStatusOpts) Run(ctx context.Context) error {
 	params := &admin.GetSystemStatusApiParams{
 	}
-	resp, _, err := opts.client.RootApi.GetSystemStatusWithParams(ctx, params)
+	resp, _, err := opts.client.RootApi.GetSystemStatusWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -48,27 +48,33 @@ func (opts *GetSystemStatusOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetSystemStatusTemplate = "<<some template>>"
+func GetSystemStatusBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetSystemStatusBuilder() cobra.Command {
 	opts := GetSystemStatusOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return the status of this MongoDB application",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetSystemStatusTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
+
+
+	
 
 	return cmd
 }

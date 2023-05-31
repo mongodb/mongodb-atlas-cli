@@ -26,7 +26,7 @@ import (
 type DeferMaintenanceWindowOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -42,7 +42,7 @@ func (opts *DeferMaintenanceWindowOpts) Run(ctx context.Context) error {
 	params := &admin.DeferMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.client.MaintenanceWindowsApi.DeferMaintenanceWindowWithParams(ctx, params)
+	_, err := opts.client.MaintenanceWindowsApi.DeferMaintenanceWindowWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -50,28 +50,33 @@ func (opts *DeferMaintenanceWindowOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-const DeferMaintenanceWindowTemplate = "<<some template>>"
+func DeferMaintenanceWindowBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeferMaintenanceWindowBuilder() cobra.Command {
 	opts := DeferMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Defer One Maintenance Window for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeferMaintenanceWindowTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -79,7 +84,7 @@ func DeferMaintenanceWindowBuilder() cobra.Command {
 type GetMaintenanceWindowOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -95,7 +100,7 @@ func (opts *GetMaintenanceWindowOpts) Run(ctx context.Context) error {
 	params := &admin.GetMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.MaintenanceWindowsApi.GetMaintenanceWindowWithParams(ctx, params)
+	resp, _, err := opts.client.MaintenanceWindowsApi.GetMaintenanceWindowWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -103,28 +108,33 @@ func (opts *GetMaintenanceWindowOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetMaintenanceWindowTemplate = "<<some template>>"
+func GetMaintenanceWindowBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetMaintenanceWindowBuilder() cobra.Command {
 	opts := GetMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Maintenance Window for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetMaintenanceWindowTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -132,7 +142,7 @@ func GetMaintenanceWindowBuilder() cobra.Command {
 type ResetMaintenanceWindowOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -148,7 +158,7 @@ func (opts *ResetMaintenanceWindowOpts) Run(ctx context.Context) error {
 	params := &admin.ResetMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.MaintenanceWindowsApi.ResetMaintenanceWindowWithParams(ctx, params)
+	resp, _, err := opts.client.MaintenanceWindowsApi.ResetMaintenanceWindowWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -156,28 +166,33 @@ func (opts *ResetMaintenanceWindowOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ResetMaintenanceWindowTemplate = "<<some template>>"
+func ResetMaintenanceWindowBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ResetMaintenanceWindowBuilder() cobra.Command {
 	opts := ResetMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Reset One Maintenance Window for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ResetMaintenanceWindowTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -185,7 +200,7 @@ func ResetMaintenanceWindowBuilder() cobra.Command {
 type ToggleMaintenanceAutoDeferOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -201,7 +216,7 @@ func (opts *ToggleMaintenanceAutoDeferOpts) Run(ctx context.Context) error {
 	params := &admin.ToggleMaintenanceAutoDeferApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.client.MaintenanceWindowsApi.ToggleMaintenanceAutoDeferWithParams(ctx, params)
+	_, err := opts.client.MaintenanceWindowsApi.ToggleMaintenanceAutoDeferWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -209,28 +224,33 @@ func (opts *ToggleMaintenanceAutoDeferOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-const ToggleMaintenanceAutoDeferTemplate = "<<some template>>"
+func ToggleMaintenanceAutoDeferBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ToggleMaintenanceAutoDeferBuilder() cobra.Command {
 	opts := ToggleMaintenanceAutoDeferOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Toggle Automatic Deferral of Maintenance for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ToggleMaintenanceAutoDeferTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -238,7 +258,7 @@ func ToggleMaintenanceAutoDeferBuilder() cobra.Command {
 type UpdateMaintenanceWindowOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -254,7 +274,7 @@ func (opts *UpdateMaintenanceWindowOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.MaintenanceWindowsApi.UpdateMaintenanceWindowWithParams(ctx, params)
+	resp, _, err := opts.client.MaintenanceWindowsApi.UpdateMaintenanceWindowWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -262,28 +282,33 @@ func (opts *UpdateMaintenanceWindowOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateMaintenanceWindowTemplate = "<<some template>>"
+func UpdateMaintenanceWindowBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateMaintenanceWindowBuilder() cobra.Command {
 	opts := UpdateMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update Maintenance Window for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateMaintenanceWindowTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd

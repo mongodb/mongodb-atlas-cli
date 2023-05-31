@@ -26,7 +26,7 @@ import (
 type CreateOrganizationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 }
 
 func (opts *CreateOrganizationOpts) initClient(ctx context.Context) func() error {
@@ -40,7 +40,7 @@ func (opts *CreateOrganizationOpts) initClient(ctx context.Context) func() error
 func (opts *CreateOrganizationOpts) Run(ctx context.Context) error {
 	params := &admin.CreateOrganizationApiParams{
 	}
-	resp, _, err := opts.client.OrganizationsApi.CreateOrganizationWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.CreateOrganizationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -48,21 +48,24 @@ func (opts *CreateOrganizationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const CreateOrganizationTemplate = "<<some template>>"
+func CreateOrganizationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreateOrganizationBuilder() cobra.Command {
 	opts := CreateOrganizationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Create One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreateOrganizationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -70,12 +73,15 @@ func CreateOrganizationBuilder() cobra.Command {
 		},
 	}
 
+
+	
+
 	return cmd
 }
 type CreateOrganizationInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 }
 
@@ -91,7 +97,7 @@ func (opts *CreateOrganizationInvitationOpts) Run(ctx context.Context) error {
 	params := &admin.CreateOrganizationInvitationApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.OrganizationsApi.CreateOrganizationInvitationWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.CreateOrganizationInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -99,28 +105,33 @@ func (opts *CreateOrganizationInvitationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const CreateOrganizationInvitationTemplate = "<<some template>>"
+func CreateOrganizationInvitationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreateOrganizationInvitationBuilder() cobra.Command {
 	opts := CreateOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Invite One MongoDB Cloud User to Join One Atlas Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreateOrganizationInvitationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -128,7 +139,7 @@ func CreateOrganizationInvitationBuilder() cobra.Command {
 type DeleteOrganizationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 }
 
@@ -144,7 +155,7 @@ func (opts *DeleteOrganizationOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteOrganizationApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.OrganizationsApi.DeleteOrganizationWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.DeleteOrganizationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -152,28 +163,33 @@ func (opts *DeleteOrganizationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DeleteOrganizationTemplate = "<<some template>>"
+func DeleteOrganizationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeleteOrganizationBuilder() cobra.Command {
 	opts := DeleteOrganizationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeleteOrganizationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -181,7 +197,7 @@ func DeleteOrganizationBuilder() cobra.Command {
 type DeleteOrganizationInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	invitationId string
 }
@@ -199,7 +215,7 @@ func (opts *DeleteOrganizationInvitationOpts) Run(ctx context.Context) error {
 		OrgId: opts.orgId,
 		InvitationId: opts.invitationId,
 	}
-	resp, _, err := opts.client.OrganizationsApi.DeleteOrganizationInvitationWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.DeleteOrganizationInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -207,30 +223,34 @@ func (opts *DeleteOrganizationInvitationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DeleteOrganizationInvitationTemplate = "<<some template>>"
+func DeleteOrganizationInvitationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeleteOrganizationInvitationBuilder() cobra.Command {
 	opts := DeleteOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Cancel One Organization Invitation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeleteOrganizationInvitationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.invitationId, "invitationId", , "Unique 24-hexadecimal digit string that identifies the invitation.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "usage description")
 	_ = cmd.MarkFlagRequired("invitationId")
 
 	return cmd
@@ -238,7 +258,7 @@ func DeleteOrganizationInvitationBuilder() cobra.Command {
 type GetOrganizationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 }
 
@@ -254,7 +274,7 @@ func (opts *GetOrganizationOpts) Run(ctx context.Context) error {
 	params := &admin.GetOrganizationApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.OrganizationsApi.GetOrganizationWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.GetOrganizationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -262,28 +282,33 @@ func (opts *GetOrganizationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetOrganizationTemplate = "<<some template>>"
+func GetOrganizationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetOrganizationBuilder() cobra.Command {
 	opts := GetOrganizationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetOrganizationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -291,7 +316,7 @@ func GetOrganizationBuilder() cobra.Command {
 type GetOrganizationInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	invitationId string
 }
@@ -309,7 +334,7 @@ func (opts *GetOrganizationInvitationOpts) Run(ctx context.Context) error {
 		OrgId: opts.orgId,
 		InvitationId: opts.invitationId,
 	}
-	resp, _, err := opts.client.OrganizationsApi.GetOrganizationInvitationWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.GetOrganizationInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -317,30 +342,34 @@ func (opts *GetOrganizationInvitationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetOrganizationInvitationTemplate = "<<some template>>"
+func GetOrganizationInvitationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetOrganizationInvitationBuilder() cobra.Command {
 	opts := GetOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Organization Invitation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetOrganizationInvitationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.invitationId, "invitationId", , "Unique 24-hexadecimal digit string that identifies the invitation.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "usage description")
 	_ = cmd.MarkFlagRequired("invitationId")
 
 	return cmd
@@ -348,7 +377,7 @@ func GetOrganizationInvitationBuilder() cobra.Command {
 type GetOrganizationSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 }
 
@@ -364,7 +393,7 @@ func (opts *GetOrganizationSettingsOpts) Run(ctx context.Context) error {
 	params := &admin.GetOrganizationSettingsApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.OrganizationsApi.GetOrganizationSettingsWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.GetOrganizationSettingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -372,28 +401,33 @@ func (opts *GetOrganizationSettingsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetOrganizationSettingsTemplate = "<<some template>>"
+func GetOrganizationSettingsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetOrganizationSettingsBuilder() cobra.Command {
 	opts := GetOrganizationSettingsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return Settings for One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetOrganizationSettingsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -401,7 +435,7 @@ func GetOrganizationSettingsBuilder() cobra.Command {
 type ListOrganizationInvitationsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	username string
 }
@@ -419,7 +453,7 @@ func (opts *ListOrganizationInvitationsOpts) Run(ctx context.Context) error {
 		OrgId: opts.orgId,
 		Username: opts.username,
 	}
-	resp, _, err := opts.client.OrganizationsApi.ListOrganizationInvitationsWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.ListOrganizationInvitationsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -427,37 +461,41 @@ func (opts *ListOrganizationInvitationsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListOrganizationInvitationsTemplate = "<<some template>>"
+func ListOrganizationInvitationsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListOrganizationInvitationsBuilder() cobra.Command {
 	opts := ListOrganizationInvitationsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Organization Invitations",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListOrganizationInvitationsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.username, "username", , "Email address of the user account invited to this organization. If you exclude this parameter, this resource returns all pending invitations.")
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.username, "username", "", "usage description")
 
 	return cmd
 }
 type ListOrganizationProjectsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	includeCount bool
 	itemsPerPage int32
@@ -481,7 +519,7 @@ func (opts *ListOrganizationProjectsOpts) Run(ctx context.Context) error {
 		PageNum: opts.pageNum,
 		Name: opts.name,
 	}
-	resp, _, err := opts.client.OrganizationsApi.ListOrganizationProjectsWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.ListOrganizationProjectsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -489,40 +527,41 @@ func (opts *ListOrganizationProjectsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListOrganizationProjectsTemplate = "<<some template>>"
+func ListOrganizationProjectsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListOrganizationProjectsBuilder() cobra.Command {
 	opts := ListOrganizationProjectsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One or More Projects in One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListOrganizationProjectsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")	cmd.Flags().StringVar(&opts.name, "name", , "Human-readable label of the project to use to filter the returned list. Performs a case-insensitive search for a project within the organization which is prefixed by the specified name.")
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
-	cmd.Flags().StringVar(&opts.name, "name", "", "usage description")
 
 	return cmd
 }
 type ListOrganizationUsersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	includeCount bool
 	itemsPerPage int32
@@ -544,7 +583,7 @@ func (opts *ListOrganizationUsersOpts) Run(ctx context.Context) error {
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.client.OrganizationsApi.ListOrganizationUsersWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.ListOrganizationUsersWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -552,39 +591,41 @@ func (opts *ListOrganizationUsersOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListOrganizationUsersTemplate = "<<some template>>"
+func ListOrganizationUsersBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListOrganizationUsersBuilder() cobra.Command {
 	opts := ListOrganizationUsersOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All MongoDB Cloud Users in One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListOrganizationUsersTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
 
 	return cmd
 }
 type ListOrganizationsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
@@ -606,7 +647,7 @@ func (opts *ListOrganizationsOpts) Run(ctx context.Context) error {
 		PageNum: opts.pageNum,
 		Name: opts.name,
 	}
-	resp, _, err := opts.client.OrganizationsApi.ListOrganizationsWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.ListOrganizationsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -614,38 +655,40 @@ func (opts *ListOrganizationsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListOrganizationsTemplate = "<<some template>>"
+func ListOrganizationsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListOrganizationsBuilder() cobra.Command {
 	opts := ListOrganizationsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Organizations",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListOrganizationsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
-	cmd.Flags().StringVar(&opts.name, "name", "", "usage description")
+
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")	cmd.Flags().StringVar(&opts.name, "name", , "Human-readable label of the organization to use to filter the returned list. Performs a case-insensitive search for an organization that starts with the specified name.")
+	
 
 	return cmd
 }
 type RenameOrganizationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 }
 
@@ -661,7 +704,7 @@ func (opts *RenameOrganizationOpts) Run(ctx context.Context) error {
 	params := &admin.RenameOrganizationApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.OrganizationsApi.RenameOrganizationWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.RenameOrganizationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -669,28 +712,33 @@ func (opts *RenameOrganizationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const RenameOrganizationTemplate = "<<some template>>"
+func RenameOrganizationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func RenameOrganizationBuilder() cobra.Command {
 	opts := RenameOrganizationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Rename One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), RenameOrganizationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -698,7 +746,7 @@ func RenameOrganizationBuilder() cobra.Command {
 type UpdateOrganizationInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 }
 
@@ -714,7 +762,7 @@ func (opts *UpdateOrganizationInvitationOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateOrganizationInvitationApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationInvitationWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -722,28 +770,33 @@ func (opts *UpdateOrganizationInvitationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateOrganizationInvitationTemplate = "<<some template>>"
+func UpdateOrganizationInvitationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateOrganizationInvitationBuilder() cobra.Command {
 	opts := UpdateOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update One Organization Invitation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateOrganizationInvitationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -751,7 +804,7 @@ func UpdateOrganizationInvitationBuilder() cobra.Command {
 type UpdateOrganizationInvitationByIdOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	invitationId string
 }
@@ -769,7 +822,7 @@ func (opts *UpdateOrganizationInvitationByIdOpts) Run(ctx context.Context) error
 		OrgId: opts.orgId,
 		InvitationId: opts.invitationId,
 	}
-	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationInvitationByIdWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationInvitationByIdWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -777,30 +830,34 @@ func (opts *UpdateOrganizationInvitationByIdOpts) Run(ctx context.Context) error
 	return opts.Print(resp)
 }
 
-const UpdateOrganizationInvitationByIdTemplate = "<<some template>>"
+func UpdateOrganizationInvitationByIdBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateOrganizationInvitationByIdBuilder() cobra.Command {
 	opts := UpdateOrganizationInvitationByIdOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update One Organization Invitation by Invitation ID",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateOrganizationInvitationByIdTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.invitationId, "invitationId", , "Unique 24-hexadecimal digit string that identifies the invitation.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "usage description")
 	_ = cmd.MarkFlagRequired("invitationId")
 
 	return cmd
@@ -808,7 +865,7 @@ func UpdateOrganizationInvitationByIdBuilder() cobra.Command {
 type UpdateOrganizationSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 }
 
@@ -824,7 +881,7 @@ func (opts *UpdateOrganizationSettingsOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateOrganizationSettingsApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationSettingsWithParams(ctx, params)
+	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationSettingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -832,28 +889,33 @@ func (opts *UpdateOrganizationSettingsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateOrganizationSettingsTemplate = "<<some template>>"
+func UpdateOrganizationSettingsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateOrganizationSettingsBuilder() cobra.Command {
 	opts := UpdateOrganizationSettingsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update Settings for One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateOrganizationSettingsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd

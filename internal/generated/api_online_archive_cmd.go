@@ -26,7 +26,7 @@ import (
 type CreateOnlineArchiveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	clusterName string
 }
@@ -44,7 +44,7 @@ func (opts *CreateOnlineArchiveOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.client.OnlineArchiveApi.CreateOnlineArchiveWithParams(ctx, params)
+	resp, _, err := opts.client.OnlineArchiveApi.CreateOnlineArchiveWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -52,30 +52,34 @@ func (opts *CreateOnlineArchiveOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const CreateOnlineArchiveTemplate = "<<some template>>"
+func CreateOnlineArchiveBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreateOnlineArchiveBuilder() cobra.Command {
 	opts := CreateOnlineArchiveOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Create One Online Archive",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreateOnlineArchiveTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster that contains the collection for which you want to create one online archive.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
 	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
@@ -83,7 +87,7 @@ func CreateOnlineArchiveBuilder() cobra.Command {
 type DeleteOnlineArchiveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	archiveId string
 	clusterName string
@@ -103,7 +107,7 @@ func (opts *DeleteOnlineArchiveOpts) Run(ctx context.Context) error {
 		ArchiveId: opts.archiveId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.client.OnlineArchiveApi.DeleteOnlineArchiveWithParams(ctx, params)
+	resp, _, err := opts.client.OnlineArchiveApi.DeleteOnlineArchiveWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -111,32 +115,35 @@ func (opts *DeleteOnlineArchiveOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DeleteOnlineArchiveTemplate = "<<some template>>"
+func DeleteOnlineArchiveBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeleteOnlineArchiveBuilder() cobra.Command {
 	opts := DeleteOnlineArchiveOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One Online Archive",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeleteOnlineArchiveTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.archiveId, "archiveId", , "Unique 24-hexadecimal digit string that identifies the online archive to delete.")	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster that contains the collection from which you want to remove an online archive.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.archiveId, "archiveId", "", "usage description")
 	_ = cmd.MarkFlagRequired("archiveId")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
 	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
@@ -144,7 +151,7 @@ func DeleteOnlineArchiveBuilder() cobra.Command {
 type DownloadOnlineArchiveQueryLogsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	clusterName string
 	startDate int64
@@ -168,7 +175,7 @@ func (opts *DownloadOnlineArchiveQueryLogsOpts) Run(ctx context.Context) error {
 		EndDate: opts.endDate,
 		ArchiveOnly: opts.archiveOnly,
 	}
-	resp, _, err := opts.client.OnlineArchiveApi.DownloadOnlineArchiveQueryLogsWithParams(ctx, params)
+	resp, _, err := opts.client.OnlineArchiveApi.DownloadOnlineArchiveQueryLogsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -176,41 +183,42 @@ func (opts *DownloadOnlineArchiveQueryLogsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DownloadOnlineArchiveQueryLogsTemplate = "<<some template>>"
+func DownloadOnlineArchiveQueryLogsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DownloadOnlineArchiveQueryLogsBuilder() cobra.Command {
 	opts := DownloadOnlineArchiveQueryLogsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Download Online Archive Query Logs",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DownloadOnlineArchiveQueryLogsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster that contains the collection for which you want to return the query logs from one online archive.")
+	cmd.Flags().StringVar(&opts.startDate, "startDate", , "Date and time that specifies the starting point for the range of log messages to return. This resource expresses this value in the number of seconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).")	cmd.Flags().StringVar(&opts.endDate, "endDate", , "Date and time that specifies the end point for the range of log messages to return. This resource expresses this value in the number of seconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).")	cmd.Flags().StringVar(&opts.archiveOnly, "archiveOnly", false, "Flag that indicates whether to download logs for queries against your online archive only or both your online archive and cluster.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
 	_ = cmd.MarkFlagRequired("clusterName")
-	cmd.Flags().StringVar(&opts.startDate, "startDate", "", "usage description")
-	cmd.Flags().StringVar(&opts.endDate, "endDate", "", "usage description")
-	cmd.Flags().StringVar(&opts.archiveOnly, "archiveOnly", "", "usage description")
 
 	return cmd
 }
 type GetOnlineArchiveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	archiveId string
 	clusterName string
@@ -230,7 +238,7 @@ func (opts *GetOnlineArchiveOpts) Run(ctx context.Context) error {
 		ArchiveId: opts.archiveId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.client.OnlineArchiveApi.GetOnlineArchiveWithParams(ctx, params)
+	resp, _, err := opts.client.OnlineArchiveApi.GetOnlineArchiveWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -238,32 +246,35 @@ func (opts *GetOnlineArchiveOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetOnlineArchiveTemplate = "<<some template>>"
+func GetOnlineArchiveBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetOnlineArchiveBuilder() cobra.Command {
 	opts := GetOnlineArchiveOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Online Archive",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetOnlineArchiveTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.archiveId, "archiveId", , "Unique 24-hexadecimal digit string that identifies the online archive to return.")	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster that contains the specified collection from which Application created the online archive.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.archiveId, "archiveId", "", "usage description")
 	_ = cmd.MarkFlagRequired("archiveId")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
 	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd
@@ -271,7 +282,7 @@ func GetOnlineArchiveBuilder() cobra.Command {
 type ListOnlineArchivesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	clusterName string
 	includeCount bool
@@ -295,7 +306,7 @@ func (opts *ListOnlineArchivesOpts) Run(ctx context.Context) error {
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.client.OnlineArchiveApi.ListOnlineArchivesWithParams(ctx, params)
+	resp, _, err := opts.client.OnlineArchiveApi.ListOnlineArchivesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -303,41 +314,42 @@ func (opts *ListOnlineArchivesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListOnlineArchivesTemplate = "<<some template>>"
+func ListOnlineArchivesBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListOnlineArchivesBuilder() cobra.Command {
 	opts := ListOnlineArchivesOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Online Archives for One Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListOnlineArchivesTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster that contains the collection for which you want to return the online archives.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
 	_ = cmd.MarkFlagRequired("clusterName")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
 
 	return cmd
 }
 type UpdateOnlineArchiveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	archiveId string
 	clusterName string
@@ -357,7 +369,7 @@ func (opts *UpdateOnlineArchiveOpts) Run(ctx context.Context) error {
 		ArchiveId: opts.archiveId,
 		ClusterName: opts.clusterName,
 	}
-	resp, _, err := opts.client.OnlineArchiveApi.UpdateOnlineArchiveWithParams(ctx, params)
+	resp, _, err := opts.client.OnlineArchiveApi.UpdateOnlineArchiveWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -365,32 +377,35 @@ func (opts *UpdateOnlineArchiveOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateOnlineArchiveTemplate = "<<some template>>"
+func UpdateOnlineArchiveBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateOnlineArchiveBuilder() cobra.Command {
 	opts := UpdateOnlineArchiveOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update One Online Archive",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateOnlineArchiveTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.archiveId, "archiveId", , "Unique 24-hexadecimal digit string that identifies the online archive to update.")	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster that contains the specified collection from which Application created the online archive.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.archiveId, "archiveId", "", "usage description")
 	_ = cmd.MarkFlagRequired("archiveId")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "usage description")
 	_ = cmd.MarkFlagRequired("clusterName")
 
 	return cmd

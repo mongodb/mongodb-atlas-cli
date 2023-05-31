@@ -26,7 +26,7 @@ import (
 type CreatePeeringConnectionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -42,7 +42,7 @@ func (opts *CreatePeeringConnectionOpts) Run(ctx context.Context) error {
 	params := &admin.CreatePeeringConnectionApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.NetworkPeeringApi.CreatePeeringConnectionWithParams(ctx, params)
+	resp, _, err := opts.client.NetworkPeeringApi.CreatePeeringConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -50,28 +50,33 @@ func (opts *CreatePeeringConnectionOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const CreatePeeringConnectionTemplate = "<<some template>>"
+func CreatePeeringConnectionBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreatePeeringConnectionBuilder() cobra.Command {
 	opts := CreatePeeringConnectionOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Create One New Network Peering Connection",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreatePeeringConnectionTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -79,7 +84,7 @@ func CreatePeeringConnectionBuilder() cobra.Command {
 type CreatePeeringContainerOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -95,7 +100,7 @@ func (opts *CreatePeeringContainerOpts) Run(ctx context.Context) error {
 	params := &admin.CreatePeeringContainerApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.NetworkPeeringApi.CreatePeeringContainerWithParams(ctx, params)
+	resp, _, err := opts.client.NetworkPeeringApi.CreatePeeringContainerWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -103,28 +108,33 @@ func (opts *CreatePeeringContainerOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const CreatePeeringContainerTemplate = "<<some template>>"
+func CreatePeeringContainerBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreatePeeringContainerBuilder() cobra.Command {
 	opts := CreatePeeringContainerOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Create One New Network Peering Container",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreatePeeringContainerTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -132,7 +142,7 @@ func CreatePeeringContainerBuilder() cobra.Command {
 type DeletePeeringConnectionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	peerId string
 }
@@ -150,7 +160,7 @@ func (opts *DeletePeeringConnectionOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		PeerId: opts.peerId,
 	}
-	resp, _, err := opts.client.NetworkPeeringApi.DeletePeeringConnectionWithParams(ctx, params)
+	resp, _, err := opts.client.NetworkPeeringApi.DeletePeeringConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -158,30 +168,34 @@ func (opts *DeletePeeringConnectionOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DeletePeeringConnectionTemplate = "<<some template>>"
+func DeletePeeringConnectionBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeletePeeringConnectionBuilder() cobra.Command {
 	opts := DeletePeeringConnectionOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One Existing Network Peering Connection",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeletePeeringConnectionTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.peerId, "peerId", , "Unique 24-hexadecimal digit string that identifies the network peering connection that you want to delete.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.peerId, "peerId", "", "usage description")
 	_ = cmd.MarkFlagRequired("peerId")
 
 	return cmd
@@ -189,7 +203,7 @@ func DeletePeeringConnectionBuilder() cobra.Command {
 type DeletePeeringContainerOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	containerId string
 }
@@ -207,7 +221,7 @@ func (opts *DeletePeeringContainerOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		ContainerId: opts.containerId,
 	}
-	resp, _, err := opts.client.NetworkPeeringApi.DeletePeeringContainerWithParams(ctx, params)
+	resp, _, err := opts.client.NetworkPeeringApi.DeletePeeringContainerWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -215,30 +229,34 @@ func (opts *DeletePeeringContainerOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DeletePeeringContainerTemplate = "<<some template>>"
+func DeletePeeringContainerBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeletePeeringContainerBuilder() cobra.Command {
 	opts := DeletePeeringContainerOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One Network Peering Container",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeletePeeringContainerTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.containerId, "containerId", , "Unique 24-hexadecimal digit string that identifies the MongoDB Cloud network container that you want to remove.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.containerId, "containerId", "", "usage description")
 	_ = cmd.MarkFlagRequired("containerId")
 
 	return cmd
@@ -246,7 +264,7 @@ func DeletePeeringContainerBuilder() cobra.Command {
 type DisablePeeringOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -262,7 +280,7 @@ func (opts *DisablePeeringOpts) Run(ctx context.Context) error {
 	params := &admin.DisablePeeringApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.NetworkPeeringApi.DisablePeeringWithParams(ctx, params)
+	resp, _, err := opts.client.NetworkPeeringApi.DisablePeeringWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -270,28 +288,33 @@ func (opts *DisablePeeringOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DisablePeeringTemplate = "<<some template>>"
+func DisablePeeringBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DisablePeeringBuilder() cobra.Command {
 	opts := DisablePeeringOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Disable Connect via Peering Only Mode for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DisablePeeringTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -299,7 +322,7 @@ func DisablePeeringBuilder() cobra.Command {
 type GetPeeringConnectionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	peerId string
 }
@@ -317,7 +340,7 @@ func (opts *GetPeeringConnectionOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		PeerId: opts.peerId,
 	}
-	resp, _, err := opts.client.NetworkPeeringApi.GetPeeringConnectionWithParams(ctx, params)
+	resp, _, err := opts.client.NetworkPeeringApi.GetPeeringConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -325,30 +348,34 @@ func (opts *GetPeeringConnectionOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetPeeringConnectionTemplate = "<<some template>>"
+func GetPeeringConnectionBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetPeeringConnectionBuilder() cobra.Command {
 	opts := GetPeeringConnectionOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Network Peering Connection in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetPeeringConnectionTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.peerId, "peerId", , "Unique 24-hexadecimal digit string that identifies the network peering connection that you want to retrieve.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.peerId, "peerId", "", "usage description")
 	_ = cmd.MarkFlagRequired("peerId")
 
 	return cmd
@@ -356,7 +383,7 @@ func GetPeeringConnectionBuilder() cobra.Command {
 type GetPeeringContainerOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	containerId string
 }
@@ -374,7 +401,7 @@ func (opts *GetPeeringContainerOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		ContainerId: opts.containerId,
 	}
-	resp, _, err := opts.client.NetworkPeeringApi.GetPeeringContainerWithParams(ctx, params)
+	resp, _, err := opts.client.NetworkPeeringApi.GetPeeringContainerWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -382,30 +409,34 @@ func (opts *GetPeeringContainerOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetPeeringContainerTemplate = "<<some template>>"
+func GetPeeringContainerBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetPeeringContainerBuilder() cobra.Command {
 	opts := GetPeeringContainerOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Network Peering Container",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetPeeringContainerTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.containerId, "containerId", , "Unique 24-hexadecimal digit string that identifies the MongoDB Cloud network container that you want to remove.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.containerId, "containerId", "", "usage description")
 	_ = cmd.MarkFlagRequired("containerId")
 
 	return cmd
@@ -413,7 +444,7 @@ func GetPeeringContainerBuilder() cobra.Command {
 type ListPeeringConnectionsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
@@ -437,7 +468,7 @@ func (opts *ListPeeringConnectionsOpts) Run(ctx context.Context) error {
 		PageNum: opts.pageNum,
 		ProviderName: opts.providerName,
 	}
-	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringConnectionsWithParams(ctx, params)
+	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringConnectionsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -445,40 +476,41 @@ func (opts *ListPeeringConnectionsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListPeeringConnectionsTemplate = "<<some template>>"
+func ListPeeringConnectionsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListPeeringConnectionsBuilder() cobra.Command {
 	opts := ListPeeringConnectionsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Network Peering Connections in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListPeeringConnectionsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")	cmd.Flags().StringVar(&opts.providerName, "providerName", &quot;AWS&quot;, "Cloud service provider to use for this VPC peering connection.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
-	cmd.Flags().StringVar(&opts.providerName, "providerName", "", "usage description")
 
 	return cmd
 }
 type ListPeeringContainerByCloudProviderOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
@@ -502,7 +534,7 @@ func (opts *ListPeeringContainerByCloudProviderOpts) Run(ctx context.Context) er
 		PageNum: opts.pageNum,
 		ProviderName: opts.providerName,
 	}
-	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringContainerByCloudProviderWithParams(ctx, params)
+	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringContainerByCloudProviderWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -510,40 +542,42 @@ func (opts *ListPeeringContainerByCloudProviderOpts) Run(ctx context.Context) er
 	return opts.Print(resp)
 }
 
-const ListPeeringContainerByCloudProviderTemplate = "<<some template>>"
+func ListPeeringContainerByCloudProviderBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListPeeringContainerByCloudProviderBuilder() cobra.Command {
 	opts := ListPeeringContainerByCloudProviderOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Network Peering Containers in One Project for One Cloud Provider",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListPeeringContainerByCloudProviderTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")	cmd.Flags().StringVar(&opts.providerName, "providerName", &quot;AWS&quot;, "Cloud service provider that serves the desired network peering containers.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
-	cmd.Flags().StringVar(&opts.providerName, "providerName", "", "usage description")
+	_ = cmd.MarkFlagRequired("providerName")
 
 	return cmd
 }
 type ListPeeringContainersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
@@ -565,7 +599,7 @@ func (opts *ListPeeringContainersOpts) Run(ctx context.Context) error {
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringContainersWithParams(ctx, params)
+	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringContainersWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -573,39 +607,41 @@ func (opts *ListPeeringContainersOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListPeeringContainersTemplate = "<<some template>>"
+func ListPeeringContainersBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListPeeringContainersBuilder() cobra.Command {
 	opts := ListPeeringContainersOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Network Peering Containers in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListPeeringContainersTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
 
 	return cmd
 }
 type UpdatePeeringConnectionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	peerId string
 }
@@ -623,7 +659,7 @@ func (opts *UpdatePeeringConnectionOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		PeerId: opts.peerId,
 	}
-	resp, _, err := opts.client.NetworkPeeringApi.UpdatePeeringConnectionWithParams(ctx, params)
+	resp, _, err := opts.client.NetworkPeeringApi.UpdatePeeringConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -631,30 +667,34 @@ func (opts *UpdatePeeringConnectionOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdatePeeringConnectionTemplate = "<<some template>>"
+func UpdatePeeringConnectionBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdatePeeringConnectionBuilder() cobra.Command {
 	opts := UpdatePeeringConnectionOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update One New Network Peering Connection",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdatePeeringConnectionTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.peerId, "peerId", , "Unique 24-hexadecimal digit string that identifies the network peering connection that you want to update.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.peerId, "peerId", "", "usage description")
 	_ = cmd.MarkFlagRequired("peerId")
 
 	return cmd
@@ -662,7 +702,7 @@ func UpdatePeeringConnectionBuilder() cobra.Command {
 type UpdatePeeringContainerOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	containerId string
 }
@@ -680,7 +720,7 @@ func (opts *UpdatePeeringContainerOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		ContainerId: opts.containerId,
 	}
-	resp, _, err := opts.client.NetworkPeeringApi.UpdatePeeringContainerWithParams(ctx, params)
+	resp, _, err := opts.client.NetworkPeeringApi.UpdatePeeringContainerWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -688,30 +728,34 @@ func (opts *UpdatePeeringContainerOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdatePeeringContainerTemplate = "<<some template>>"
+func UpdatePeeringContainerBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdatePeeringContainerBuilder() cobra.Command {
 	opts := UpdatePeeringContainerOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update One Network Peering Container",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdatePeeringContainerTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.containerId, "containerId", , "Unique 24-hexadecimal digit string that identifies the MongoDB Cloud network container that you want to remove.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.containerId, "containerId", "", "usage description")
 	_ = cmd.MarkFlagRequired("containerId")
 
 	return cmd
@@ -719,7 +763,7 @@ func UpdatePeeringContainerBuilder() cobra.Command {
 type VerifyConnectViaPeeringOnlyModeForOneProjectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -735,7 +779,7 @@ func (opts *VerifyConnectViaPeeringOnlyModeForOneProjectOpts) Run(ctx context.Co
 	params := &admin.VerifyConnectViaPeeringOnlyModeForOneProjectApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.NetworkPeeringApi.VerifyConnectViaPeeringOnlyModeForOneProjectWithParams(ctx, params)
+	resp, _, err := opts.client.NetworkPeeringApi.VerifyConnectViaPeeringOnlyModeForOneProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -743,28 +787,33 @@ func (opts *VerifyConnectViaPeeringOnlyModeForOneProjectOpts) Run(ctx context.Co
 	return opts.Print(resp)
 }
 
-const VerifyConnectViaPeeringOnlyModeForOneProjectTemplate = "<<some template>>"
+func VerifyConnectViaPeeringOnlyModeForOneProjectBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func VerifyConnectViaPeeringOnlyModeForOneProjectBuilder() cobra.Command {
 	opts := VerifyConnectViaPeeringOnlyModeForOneProjectOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Verify Connect via Peering Only Mode for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), VerifyConnectViaPeeringOnlyModeForOneProjectTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd

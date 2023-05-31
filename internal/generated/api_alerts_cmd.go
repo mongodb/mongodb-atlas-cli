@@ -26,7 +26,7 @@ import (
 type AcknowledgeAlertOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	alertId string
 }
@@ -44,7 +44,7 @@ func (opts *AcknowledgeAlertOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		AlertId: opts.alertId,
 	}
-	resp, _, err := opts.client.AlertsApi.AcknowledgeAlertWithParams(ctx, params)
+	resp, _, err := opts.client.AlertsApi.AcknowledgeAlertWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -52,30 +52,34 @@ func (opts *AcknowledgeAlertOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const AcknowledgeAlertTemplate = "<<some template>>"
+func AcknowledgeAlertBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func AcknowledgeAlertBuilder() cobra.Command {
 	opts := AcknowledgeAlertOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Acknowledge One Alert from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), AcknowledgeAlertTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.alertId, "alertId", , "Unique 24-hexadecimal digit string that identifies the alert. Use the [/alerts](#tag/Alerts/operation/listAlerts) endpoint to retrieve all alerts to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.alertId, "alertId", "", "usage description")
 	_ = cmd.MarkFlagRequired("alertId")
 
 	return cmd
@@ -83,7 +87,7 @@ func AcknowledgeAlertBuilder() cobra.Command {
 type GetAlertOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	alertId string
 }
@@ -101,7 +105,7 @@ func (opts *GetAlertOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		AlertId: opts.alertId,
 	}
-	resp, _, err := opts.client.AlertsApi.GetAlertWithParams(ctx, params)
+	resp, _, err := opts.client.AlertsApi.GetAlertWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -109,30 +113,34 @@ func (opts *GetAlertOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetAlertTemplate = "<<some template>>"
+func GetAlertBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetAlertBuilder() cobra.Command {
 	opts := GetAlertOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Alert from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetAlertTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.alertId, "alertId", , "Unique 24-hexadecimal digit string that identifies the alert. Use the [/alerts](#tag/Alerts/operation/listAlerts) endpoint to retrieve all alerts to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.alertId, "alertId", "", "usage description")
 	_ = cmd.MarkFlagRequired("alertId")
 
 	return cmd
@@ -140,7 +148,7 @@ func GetAlertBuilder() cobra.Command {
 type ListAlertsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
@@ -164,7 +172,7 @@ func (opts *ListAlertsOpts) Run(ctx context.Context) error {
 		PageNum: opts.pageNum,
 		Status: opts.status,
 	}
-	resp, _, err := opts.client.AlertsApi.ListAlertsWithParams(ctx, params)
+	resp, _, err := opts.client.AlertsApi.ListAlertsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -172,40 +180,41 @@ func (opts *ListAlertsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListAlertsTemplate = "<<some template>>"
+func ListAlertsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListAlertsBuilder() cobra.Command {
 	opts := ListAlertsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Alerts from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListAlertsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")	cmd.Flags().StringVar(&opts.status, "status", , "Status of the alerts to return. Omit to return all alerts in all statuses.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
-	cmd.Flags().StringVar(&opts.status, "status", "", "usage description")
 
 	return cmd
 }
 type ListAlertsByAlertConfigurationIdOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	alertConfigId string
 	includeCount bool
@@ -229,7 +238,7 @@ func (opts *ListAlertsByAlertConfigurationIdOpts) Run(ctx context.Context) error
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.client.AlertsApi.ListAlertsByAlertConfigurationIdWithParams(ctx, params)
+	resp, _, err := opts.client.AlertsApi.ListAlertsByAlertConfigurationIdWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -237,34 +246,35 @@ func (opts *ListAlertsByAlertConfigurationIdOpts) Run(ctx context.Context) error
 	return opts.Print(resp)
 }
 
-const ListAlertsByAlertConfigurationIdTemplate = "<<some template>>"
+func ListAlertsByAlertConfigurationIdBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListAlertsByAlertConfigurationIdBuilder() cobra.Command {
 	opts := ListAlertsByAlertConfigurationIdOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Open Alerts for Alert Configuration",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListAlertsByAlertConfigurationIdTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.alertConfigId, "alertConfigId", , "Unique 24-hexadecimal digit string that identifies the alert configuration. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.alertConfigId, "alertConfigId", "", "usage description")
 	_ = cmd.MarkFlagRequired("alertConfigId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
 
 	return cmd
 }

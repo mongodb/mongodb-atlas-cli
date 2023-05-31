@@ -26,7 +26,7 @@ import (
 type GetAuditingConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -42,7 +42,7 @@ func (opts *GetAuditingConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.GetAuditingConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.AuditingApi.GetAuditingConfigurationWithParams(ctx, params)
+	resp, _, err := opts.client.AuditingApi.GetAuditingConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -50,28 +50,33 @@ func (opts *GetAuditingConfigurationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetAuditingConfigurationTemplate = "<<some template>>"
+func GetAuditingConfigurationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetAuditingConfigurationBuilder() cobra.Command {
 	opts := GetAuditingConfigurationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return the Auditing Configuration for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetAuditingConfigurationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -79,7 +84,7 @@ func GetAuditingConfigurationBuilder() cobra.Command {
 type UpdateAuditingConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -95,7 +100,7 @@ func (opts *UpdateAuditingConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateAuditingConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.AuditingApi.UpdateAuditingConfigurationWithParams(ctx, params)
+	resp, _, err := opts.client.AuditingApi.UpdateAuditingConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -103,28 +108,33 @@ func (opts *UpdateAuditingConfigurationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateAuditingConfigurationTemplate = "<<some template>>"
+func UpdateAuditingConfigurationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateAuditingConfigurationBuilder() cobra.Command {
 	opts := UpdateAuditingConfigurationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update Auditing Configuration for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateAuditingConfigurationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd

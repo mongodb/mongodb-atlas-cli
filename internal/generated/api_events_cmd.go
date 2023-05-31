@@ -26,7 +26,7 @@ import (
 type GetOrganizationEventOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	eventId string
 	includeRaw bool
@@ -46,7 +46,7 @@ func (opts *GetOrganizationEventOpts) Run(ctx context.Context) error {
 		EventId: opts.eventId,
 		IncludeRaw: opts.includeRaw,
 	}
-	resp, _, err := opts.client.EventsApi.GetOrganizationEventWithParams(ctx, params)
+	resp, _, err := opts.client.EventsApi.GetOrganizationEventWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -54,39 +54,42 @@ func (opts *GetOrganizationEventOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetOrganizationEventTemplate = "<<some template>>"
+func GetOrganizationEventBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetOrganizationEventBuilder() cobra.Command {
 	opts := GetOrganizationEventOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Event from One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetOrganizationEventTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.eventId, "eventId", , "Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listOrganizationEvents) endpoint to retrieve all events to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.eventId, "eventId", "", "usage description")
 	_ = cmd.MarkFlagRequired("eventId")
-	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", "", "usage description")
 
 	return cmd
 }
 type GetProjectEventOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	eventId string
 	includeRaw bool
@@ -106,7 +109,7 @@ func (opts *GetProjectEventOpts) Run(ctx context.Context) error {
 		EventId: opts.eventId,
 		IncludeRaw: opts.includeRaw,
 	}
-	resp, _, err := opts.client.EventsApi.GetProjectEventWithParams(ctx, params)
+	resp, _, err := opts.client.EventsApi.GetProjectEventWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -114,44 +117,47 @@ func (opts *GetProjectEventOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetProjectEventTemplate = "<<some template>>"
+func GetProjectEventBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetProjectEventBuilder() cobra.Command {
 	opts := GetProjectEventOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Event from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetProjectEventTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.eventId, "eventId", , "Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listProjectEvents) endpoint to retrieve all events to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.eventId, "eventId", "", "usage description")
 	_ = cmd.MarkFlagRequired("eventId")
-	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", "", "usage description")
 
 	return cmd
 }
 type ListOrganizationEventsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
-	eventType []map[string]interface{}
+	eventType []string
 	includeRaw bool
 	maxDate time.Time
 	minDate time.Time
@@ -176,7 +182,7 @@ func (opts *ListOrganizationEventsOpts) Run(ctx context.Context) error {
 		MaxDate: opts.maxDate,
 		MinDate: opts.minDate,
 	}
-	resp, _, err := opts.client.EventsApi.ListOrganizationEventsWithParams(ctx, params)
+	resp, _, err := opts.client.EventsApi.ListOrganizationEventsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -184,49 +190,47 @@ func (opts *ListOrganizationEventsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListOrganizationEventsTemplate = "<<some template>>"
+func ListOrganizationEventsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListOrganizationEventsBuilder() cobra.Command {
 	opts := ListOrganizationEventsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Events from One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListOrganizationEventsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")	cmd.Flags().StringVar(&opts.eventType, "eventType", , "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")	cmd.Flags().StringVar(&opts.maxDate, "maxDate", , "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")	cmd.Flags().StringVar(&opts.minDate, "minDate", , "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
-	cmd.Flags().StringVar(&opts.eventType, "eventType", "", "usage description")
-	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", "", "usage description")
-	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", "usage description")
-	cmd.Flags().StringVar(&opts.minDate, "minDate", "", "usage description")
 
 	return cmd
 }
 type ListProjectEventsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
 	clusterNames []string
-	eventType EventTypeForNdsGroup
+	eventType []string
 	includeRaw bool
 	maxDate time.Time
 	minDate time.Time
@@ -252,7 +256,7 @@ func (opts *ListProjectEventsOpts) Run(ctx context.Context) error {
 		MaxDate: opts.maxDate,
 		MinDate: opts.minDate,
 	}
-	resp, _, err := opts.client.EventsApi.ListProjectEventsWithParams(ctx, params)
+	resp, _, err := opts.client.EventsApi.ListProjectEventsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -260,37 +264,34 @@ func (opts *ListProjectEventsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListProjectEventsTemplate = "<<some template>>"
+func ListProjectEventsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListProjectEventsBuilder() cobra.Command {
 	opts := ListProjectEventsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Events from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListProjectEventsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")	cmd.Flags().StringVar(&opts.clusterNames, "clusterNames", , "Human-readable label that identifies the cluster.")	cmd.Flags().StringVar(&opts.eventType, "eventType", , "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")	cmd.Flags().StringVar(&opts.maxDate, "maxDate", , "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")	cmd.Flags().StringVar(&opts.minDate, "minDate", , "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
-	cmd.Flags().StringVar(&opts.clusterNames, "clusterNames", "", "usage description")
-	cmd.Flags().StringVar(&opts.eventType, "eventType", "", "usage description")
-	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", "", "usage description")
-	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", "usage description")
-	cmd.Flags().StringVar(&opts.minDate, "minDate", "", "usage description")
 
 	return cmd
 }

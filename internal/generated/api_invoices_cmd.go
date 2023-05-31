@@ -26,7 +26,7 @@ import (
 type DownloadInvoiceCSVOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	invoiceId string
 }
@@ -44,7 +44,7 @@ func (opts *DownloadInvoiceCSVOpts) Run(ctx context.Context) error {
 		OrgId: opts.orgId,
 		InvoiceId: opts.invoiceId,
 	}
-	_, err := opts.client.InvoicesApi.DownloadInvoiceCSVWithParams(ctx, params)
+	_, err := opts.client.InvoicesApi.DownloadInvoiceCSVWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -52,30 +52,34 @@ func (opts *DownloadInvoiceCSVOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-const DownloadInvoiceCSVTemplate = "<<some template>>"
+func DownloadInvoiceCSVBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DownloadInvoiceCSVBuilder() cobra.Command {
 	opts := DownloadInvoiceCSVOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Organization Invoice as CSV",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DownloadInvoiceCSVTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", , "Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", "", "usage description")
 	_ = cmd.MarkFlagRequired("invoiceId")
 
 	return cmd
@@ -83,7 +87,7 @@ func DownloadInvoiceCSVBuilder() cobra.Command {
 type GetInvoiceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	invoiceId string
 }
@@ -101,7 +105,7 @@ func (opts *GetInvoiceOpts) Run(ctx context.Context) error {
 		OrgId: opts.orgId,
 		InvoiceId: opts.invoiceId,
 	}
-	resp, _, err := opts.client.InvoicesApi.GetInvoiceWithParams(ctx, params)
+	resp, _, err := opts.client.InvoicesApi.GetInvoiceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -109,30 +113,34 @@ func (opts *GetInvoiceOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetInvoiceTemplate = "<<some template>>"
+func GetInvoiceBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetInvoiceBuilder() cobra.Command {
 	opts := GetInvoiceOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Organization Invoice",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetInvoiceTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", , "Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", "", "usage description")
 	_ = cmd.MarkFlagRequired("invoiceId")
 
 	return cmd
@@ -140,7 +148,7 @@ func GetInvoiceBuilder() cobra.Command {
 type ListInvoicesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 	includeCount bool
 	itemsPerPage int32
@@ -162,7 +170,7 @@ func (opts *ListInvoicesOpts) Run(ctx context.Context) error {
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.client.InvoicesApi.ListInvoicesWithParams(ctx, params)
+	resp, _, err := opts.client.InvoicesApi.ListInvoicesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -170,39 +178,41 @@ func (opts *ListInvoicesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListInvoicesTemplate = "<<some template>>"
+func ListInvoicesBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListInvoicesBuilder() cobra.Command {
 	opts := ListInvoicesOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Invoices for One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListInvoicesTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	
 	_ = cmd.MarkFlagRequired("orgId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
 
 	return cmd
 }
 type ListPendingInvoicesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 }
 
@@ -218,7 +228,7 @@ func (opts *ListPendingInvoicesOpts) Run(ctx context.Context) error {
 	params := &admin.ListPendingInvoicesApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.InvoicesApi.ListPendingInvoicesWithParams(ctx, params)
+	resp, _, err := opts.client.InvoicesApi.ListPendingInvoicesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -226,28 +236,33 @@ func (opts *ListPendingInvoicesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListPendingInvoicesTemplate = "<<some template>>"
+func ListPendingInvoicesBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListPendingInvoicesBuilder() cobra.Command {
 	opts := ListPendingInvoicesOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Pending Invoices for One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListPendingInvoicesTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd

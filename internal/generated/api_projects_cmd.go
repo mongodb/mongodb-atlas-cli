@@ -26,7 +26,7 @@ import (
 type CreateProjectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	projectOwnerId string
 }
 
@@ -42,7 +42,7 @@ func (opts *CreateProjectOpts) Run(ctx context.Context) error {
 	params := &admin.CreateProjectApiParams{
 		ProjectOwnerId: opts.projectOwnerId,
 	}
-	resp, _, err := opts.client.ProjectsApi.CreateProjectWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.CreateProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -50,35 +50,40 @@ func (opts *CreateProjectOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const CreateProjectTemplate = "<<some template>>"
+func CreateProjectBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreateProjectBuilder() cobra.Command {
 	opts := CreateProjectOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Create One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreateProjectTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.projectOwnerId, "projectOwnerId", "", "usage description")
+
+	cmd.Flags().StringVar(&opts.projectOwnerId, "projectOwnerId", , "Unique 24-hexadecimal digit string that identifies the MongoDB Cloud user to whom to grant the Project Owner role on the specified project. If you set this parameter, it overrides the default value of the oldest Organization Owner. ")
+	
 
 	return cmd
 }
 type CreateProjectInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -94,7 +99,7 @@ func (opts *CreateProjectInvitationOpts) Run(ctx context.Context) error {
 	params := &admin.CreateProjectInvitationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.ProjectsApi.CreateProjectInvitationWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.CreateProjectInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -102,28 +107,33 @@ func (opts *CreateProjectInvitationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const CreateProjectInvitationTemplate = "<<some template>>"
+func CreateProjectInvitationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreateProjectInvitationBuilder() cobra.Command {
 	opts := CreateProjectInvitationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Invite One MongoDB Cloud User to Join One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreateProjectInvitationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -131,7 +141,7 @@ func CreateProjectInvitationBuilder() cobra.Command {
 type DeleteProjectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -147,7 +157,7 @@ func (opts *DeleteProjectOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteProjectApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.ProjectsApi.DeleteProjectWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.DeleteProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -155,28 +165,33 @@ func (opts *DeleteProjectOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DeleteProjectTemplate = "<<some template>>"
+func DeleteProjectBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeleteProjectBuilder() cobra.Command {
 	opts := DeleteProjectOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeleteProjectTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -184,7 +199,7 @@ func DeleteProjectBuilder() cobra.Command {
 type DeleteProjectInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	invitationId string
 }
@@ -202,7 +217,7 @@ func (opts *DeleteProjectInvitationOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		InvitationId: opts.invitationId,
 	}
-	resp, _, err := opts.client.ProjectsApi.DeleteProjectInvitationWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.DeleteProjectInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -210,30 +225,34 @@ func (opts *DeleteProjectInvitationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DeleteProjectInvitationTemplate = "<<some template>>"
+func DeleteProjectInvitationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeleteProjectInvitationBuilder() cobra.Command {
 	opts := DeleteProjectInvitationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Cancel One Project Invitation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeleteProjectInvitationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.invitationId, "invitationId", , "Unique 24-hexadecimal digit string that identifies the invitation.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "usage description")
 	_ = cmd.MarkFlagRequired("invitationId")
 
 	return cmd
@@ -241,7 +260,7 @@ func DeleteProjectInvitationBuilder() cobra.Command {
 type DeleteProjectLimitOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	limitName string
 	groupId string
 }
@@ -259,7 +278,7 @@ func (opts *DeleteProjectLimitOpts) Run(ctx context.Context) error {
 		LimitName: opts.limitName,
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.ProjectsApi.DeleteProjectLimitWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.DeleteProjectLimitWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -267,30 +286,34 @@ func (opts *DeleteProjectLimitOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DeleteProjectLimitTemplate = "<<some template>>"
+func DeleteProjectLimitBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeleteProjectLimitBuilder() cobra.Command {
 	opts := DeleteProjectLimitOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One Project Limit",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeleteProjectLimitTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.limitName, "limitName", "", "usage description")
+	cmd.Flags().StringVar(&opts.limitName, "limitName", , "Human-readable label that identifies this project limit.  | Limit Name | Description | Default | API Override Limit | | --- | --- | --- | --- | | atlas.project.deployment.clusters | Limit on the number of clusters in this project | 25 | 90 | | atlas.project.deployment.nodesPerPrivateLinkRegion | Limit on the number of nodes per Private Link region in this project | 50 | 90 | | atlas.project.security.databaseAccess.customRoles | Limit on the number of custom roles in this project | 100 | 1400 | | atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 900 | | atlas.project.security.networkAccess.crossRegionEntries | Limit on the number of cross-region network access entries in this project | 40 | 220 | | atlas.project.security.networkAccess.entries | Limit on the number of network access entries in this project | 200 | 20 | | dataFederation.bytesProcessed.query | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A | | dataFederation.bytesProcessed.daily | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A | | dataFederation.bytesProcessed.weekly | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A | | dataFederation.bytesProcessed.monthly | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A | ")	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("limitName")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -298,7 +321,7 @@ func DeleteProjectLimitBuilder() cobra.Command {
 type GetProjectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -314,7 +337,7 @@ func (opts *GetProjectOpts) Run(ctx context.Context) error {
 	params := &admin.GetProjectApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.ProjectsApi.GetProjectWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.GetProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -322,28 +345,33 @@ func (opts *GetProjectOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetProjectTemplate = "<<some template>>"
+func GetProjectBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetProjectBuilder() cobra.Command {
 	opts := GetProjectOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetProjectTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -351,7 +379,7 @@ func GetProjectBuilder() cobra.Command {
 type GetProjectByNameOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupName string
 }
 
@@ -367,7 +395,7 @@ func (opts *GetProjectByNameOpts) Run(ctx context.Context) error {
 	params := &admin.GetProjectByNameApiParams{
 		GroupName: opts.groupName,
 	}
-	resp, _, err := opts.client.ProjectsApi.GetProjectByNameWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.GetProjectByNameWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -375,28 +403,33 @@ func (opts *GetProjectByNameOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetProjectByNameTemplate = "<<some template>>"
+func GetProjectByNameBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetProjectByNameBuilder() cobra.Command {
 	opts := GetProjectByNameOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Project using Its Name",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetProjectByNameTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupName, "groupName", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupName, "groupName", , "Human-readable label that identifies this project.")
+
+	
 	_ = cmd.MarkFlagRequired("groupName")
 
 	return cmd
@@ -404,7 +437,7 @@ func GetProjectByNameBuilder() cobra.Command {
 type GetProjectInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	invitationId string
 }
@@ -422,7 +455,7 @@ func (opts *GetProjectInvitationOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		InvitationId: opts.invitationId,
 	}
-	resp, _, err := opts.client.ProjectsApi.GetProjectInvitationWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.GetProjectInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -430,30 +463,34 @@ func (opts *GetProjectInvitationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetProjectInvitationTemplate = "<<some template>>"
+func GetProjectInvitationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetProjectInvitationBuilder() cobra.Command {
 	opts := GetProjectInvitationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Project Invitation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetProjectInvitationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.invitationId, "invitationId", , "Unique 24-hexadecimal digit string that identifies the invitation.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "usage description")
 	_ = cmd.MarkFlagRequired("invitationId")
 
 	return cmd
@@ -461,7 +498,7 @@ func GetProjectInvitationBuilder() cobra.Command {
 type GetProjectLimitOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	limitName string
 	groupId string
 }
@@ -479,7 +516,7 @@ func (opts *GetProjectLimitOpts) Run(ctx context.Context) error {
 		LimitName: opts.limitName,
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.ProjectsApi.GetProjectLimitWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.GetProjectLimitWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -487,30 +524,34 @@ func (opts *GetProjectLimitOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetProjectLimitTemplate = "<<some template>>"
+func GetProjectLimitBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetProjectLimitBuilder() cobra.Command {
 	opts := GetProjectLimitOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Limit for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetProjectLimitTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.limitName, "limitName", "", "usage description")
+	cmd.Flags().StringVar(&opts.limitName, "limitName", , "Human-readable label that identifies this project limit.  | Limit Name | Description | Default | API Override Limit | | --- | --- | --- | --- | | atlas.project.deployment.clusters | Limit on the number of clusters in this project | 25 | 90 | | atlas.project.deployment.nodesPerPrivateLinkRegion | Limit on the number of nodes per Private Link region in this project | 50 | 90 | | atlas.project.security.databaseAccess.customRoles | Limit on the number of custom roles in this project | 100 | 1400 | | atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 900 | | atlas.project.security.networkAccess.crossRegionEntries | Limit on the number of cross-region network access entries in this project | 40 | 220 | | atlas.project.security.networkAccess.entries | Limit on the number of network access entries in this project | 200 | 20 | | dataFederation.bytesProcessed.query | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A | | dataFederation.bytesProcessed.daily | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A | | dataFederation.bytesProcessed.weekly | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A | | dataFederation.bytesProcessed.monthly | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A | ")	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("limitName")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -518,7 +559,7 @@ func GetProjectLimitBuilder() cobra.Command {
 type GetProjectSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -534,7 +575,7 @@ func (opts *GetProjectSettingsOpts) Run(ctx context.Context) error {
 	params := &admin.GetProjectSettingsApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.ProjectsApi.GetProjectSettingsWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.GetProjectSettingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -542,28 +583,33 @@ func (opts *GetProjectSettingsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetProjectSettingsTemplate = "<<some template>>"
+func GetProjectSettingsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetProjectSettingsBuilder() cobra.Command {
 	opts := GetProjectSettingsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Project Settings",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetProjectSettingsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -571,7 +617,7 @@ func GetProjectSettingsBuilder() cobra.Command {
 type ListProjectInvitationsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	username string
 }
@@ -589,7 +635,7 @@ func (opts *ListProjectInvitationsOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		Username: opts.username,
 	}
-	resp, _, err := opts.client.ProjectsApi.ListProjectInvitationsWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.ListProjectInvitationsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -597,37 +643,41 @@ func (opts *ListProjectInvitationsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListProjectInvitationsTemplate = "<<some template>>"
+func ListProjectInvitationsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListProjectInvitationsBuilder() cobra.Command {
 	opts := ListProjectInvitationsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Project Invitations",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListProjectInvitationsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.username, "username", , "Email address of the user account invited to this project.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.username, "username", "", "usage description")
 
 	return cmd
 }
 type ListProjectLimitsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -643,7 +693,7 @@ func (opts *ListProjectLimitsOpts) Run(ctx context.Context) error {
 	params := &admin.ListProjectLimitsApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.ProjectsApi.ListProjectLimitsWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.ListProjectLimitsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -651,28 +701,33 @@ func (opts *ListProjectLimitsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListProjectLimitsTemplate = "<<some template>>"
+func ListProjectLimitsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListProjectLimitsBuilder() cobra.Command {
 	opts := ListProjectLimitsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Limits for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListProjectLimitsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -680,7 +735,7 @@ func ListProjectLimitsBuilder() cobra.Command {
 type ListProjectUsersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
@@ -706,7 +761,7 @@ func (opts *ListProjectUsersOpts) Run(ctx context.Context) error {
 		FlattenTeams: opts.flattenTeams,
 		IncludeOrgUsers: opts.includeOrgUsers,
 	}
-	resp, _, err := opts.client.ProjectsApi.ListProjectUsersWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.ListProjectUsersWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -714,41 +769,41 @@ func (opts *ListProjectUsersOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListProjectUsersTemplate = "<<some template>>"
+func ListProjectUsersBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListProjectUsersBuilder() cobra.Command {
 	opts := ListProjectUsersOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Users in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListProjectUsersTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")	cmd.Flags().StringVar(&opts.flattenTeams, "flattenTeams", false, "Flag that indicates whether the returned list should include users who belong to a team with a role in this project. You might not have assigned the individual users a role in this project. If &#x60;\&quot;flattenTeams\&quot; : false&#x60;, this resource returns only users with a role in the project.  If &#x60;\&quot;flattenTeams\&quot; : true&#x60;, this resource returns both users with roles in the project and users who belong to teams with roles in the project.")	cmd.Flags().StringVar(&opts.includeOrgUsers, "includeOrgUsers", false, "Flag that indicates whether the returned list should include users with implicit access to the project, the Organization Owner or Organization Read Only role. You might not have assigned the individual users a role in this project. If &#x60;\&quot;includeOrgUsers\&quot;: false&#x60;, this resource returns only users with a role in the project. If &#x60;\&quot;includeOrgUsers\&quot;: true&#x60;, this resource returns both users with roles in the project and users who have implicit access to the project through their organization role.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
-	cmd.Flags().StringVar(&opts.flattenTeams, "flattenTeams", "", "usage description")
-	cmd.Flags().StringVar(&opts.includeOrgUsers, "includeOrgUsers", "", "usage description")
 
 	return cmd
 }
 type ListProjectsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	includeCount bool
 	itemsPerPage int32
 	pageNum int32
@@ -768,7 +823,7 @@ func (opts *ListProjectsOpts) Run(ctx context.Context) error {
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.client.ProjectsApi.ListProjectsWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.ListProjectsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -776,37 +831,40 @@ func (opts *ListProjectsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListProjectsTemplate = "<<some template>>"
+func ListProjectsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListProjectsBuilder() cobra.Command {
 	opts := ListProjectsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Projects",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListProjectsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
+
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	
 
 	return cmd
 }
 type RemoveProjectUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	userId string
 }
@@ -824,7 +882,7 @@ func (opts *RemoveProjectUserOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		UserId: opts.userId,
 	}
-	_, err := opts.client.ProjectsApi.RemoveProjectUserWithParams(ctx, params)
+	_, err := opts.client.ProjectsApi.RemoveProjectUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -832,30 +890,34 @@ func (opts *RemoveProjectUserOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-const RemoveProjectUserTemplate = "<<some template>>"
+func RemoveProjectUserBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func RemoveProjectUserBuilder() cobra.Command {
 	opts := RemoveProjectUserOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One User from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), RemoveProjectUserTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.userId, "userId", , "Unique 24-hexadecimal string that identifies MongoDB Cloud user you want to remove from the specified project. To return a application user&#39;s ID using their application username, use the Get All application users in One Project endpoint.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.userId, "userId", "", "usage description")
 	_ = cmd.MarkFlagRequired("userId")
 
 	return cmd
@@ -863,7 +925,7 @@ func RemoveProjectUserBuilder() cobra.Command {
 type SetProjectLimitOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	limitName string
 	groupId string
 }
@@ -881,7 +943,7 @@ func (opts *SetProjectLimitOpts) Run(ctx context.Context) error {
 		LimitName: opts.limitName,
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.ProjectsApi.SetProjectLimitWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.SetProjectLimitWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -889,30 +951,34 @@ func (opts *SetProjectLimitOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const SetProjectLimitTemplate = "<<some template>>"
+func SetProjectLimitBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func SetProjectLimitBuilder() cobra.Command {
 	opts := SetProjectLimitOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Set One Project Limit",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), SetProjectLimitTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.limitName, "limitName", "", "usage description")
+	cmd.Flags().StringVar(&opts.limitName, "limitName", , "Human-readable label that identifies this project limit.  | Limit Name | Description | Default | API Override Limit | | --- | --- | --- | --- | | atlas.project.deployment.clusters | Limit on the number of clusters in this project | 25 | 90 | | atlas.project.deployment.nodesPerPrivateLinkRegion | Limit on the number of nodes per Private Link region in this project | 50 | 90 | | atlas.project.security.databaseAccess.customRoles | Limit on the number of custom roles in this project | 100 | 1400 | | atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 900 | | atlas.project.security.networkAccess.crossRegionEntries | Limit on the number of cross-region network access entries in this project | 40 | 220 | | atlas.project.security.networkAccess.entries | Limit on the number of network access entries in this project | 200 | 20 | | dataFederation.bytesProcessed.query | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A | | dataFederation.bytesProcessed.daily | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A | | dataFederation.bytesProcessed.weekly | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A | | dataFederation.bytesProcessed.monthly | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A | ")	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("limitName")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -920,7 +986,7 @@ func SetProjectLimitBuilder() cobra.Command {
 type UpdateProjectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -936,7 +1002,7 @@ func (opts *UpdateProjectOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateProjectApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.ProjectsApi.UpdateProjectWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.UpdateProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -944,28 +1010,33 @@ func (opts *UpdateProjectOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateProjectTemplate = "<<some template>>"
+func UpdateProjectBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateProjectBuilder() cobra.Command {
 	opts := UpdateProjectOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update One Project Name",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateProjectTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -973,7 +1044,7 @@ func UpdateProjectBuilder() cobra.Command {
 type UpdateProjectInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -989,7 +1060,7 @@ func (opts *UpdateProjectInvitationOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateProjectInvitationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.ProjectsApi.UpdateProjectInvitationWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.UpdateProjectInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -997,28 +1068,33 @@ func (opts *UpdateProjectInvitationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateProjectInvitationTemplate = "<<some template>>"
+func UpdateProjectInvitationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateProjectInvitationBuilder() cobra.Command {
 	opts := UpdateProjectInvitationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update One Project Invitation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateProjectInvitationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -1026,7 +1102,7 @@ func UpdateProjectInvitationBuilder() cobra.Command {
 type UpdateProjectInvitationByIdOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	invitationId string
 }
@@ -1044,7 +1120,7 @@ func (opts *UpdateProjectInvitationByIdOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		InvitationId: opts.invitationId,
 	}
-	resp, _, err := opts.client.ProjectsApi.UpdateProjectInvitationByIdWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.UpdateProjectInvitationByIdWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -1052,30 +1128,34 @@ func (opts *UpdateProjectInvitationByIdOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateProjectInvitationByIdTemplate = "<<some template>>"
+func UpdateProjectInvitationByIdBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateProjectInvitationByIdBuilder() cobra.Command {
 	opts := UpdateProjectInvitationByIdOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update One Project Invitation by Invitation ID",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateProjectInvitationByIdTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.invitationId, "invitationId", , "Unique 24-hexadecimal digit string that identifies the invitation.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "usage description")
 	_ = cmd.MarkFlagRequired("invitationId")
 
 	return cmd
@@ -1083,7 +1163,7 @@ func UpdateProjectInvitationByIdBuilder() cobra.Command {
 type UpdateProjectSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -1099,7 +1179,7 @@ func (opts *UpdateProjectSettingsOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateProjectSettingsApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.ProjectsApi.UpdateProjectSettingsWithParams(ctx, params)
+	resp, _, err := opts.client.ProjectsApi.UpdateProjectSettingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -1107,28 +1187,33 @@ func (opts *UpdateProjectSettingsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateProjectSettingsTemplate = "<<some template>>"
+func UpdateProjectSettingsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateProjectSettingsBuilder() cobra.Command {
 	opts := UpdateProjectSettingsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update One Project Settings",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateProjectSettingsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd

@@ -26,7 +26,7 @@ import (
 type GetAWSCustomDNSOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -42,7 +42,7 @@ func (opts *GetAWSCustomDNSOpts) Run(ctx context.Context) error {
 	params := &admin.GetAWSCustomDNSApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.AWSClustersDNSApi.GetAWSCustomDNSWithParams(ctx, params)
+	resp, _, err := opts.client.AWSClustersDNSApi.GetAWSCustomDNSWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -50,28 +50,33 @@ func (opts *GetAWSCustomDNSOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetAWSCustomDNSTemplate = "<<some template>>"
+func GetAWSCustomDNSBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetAWSCustomDNSBuilder() cobra.Command {
 	opts := GetAWSCustomDNSOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Custom DNS Configuration for Atlas Clusters on AWS",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetAWSCustomDNSTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -79,7 +84,7 @@ func GetAWSCustomDNSBuilder() cobra.Command {
 type ToggleAWSCustomDNSOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -95,7 +100,7 @@ func (opts *ToggleAWSCustomDNSOpts) Run(ctx context.Context) error {
 	params := &admin.ToggleAWSCustomDNSApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.AWSClustersDNSApi.ToggleAWSCustomDNSWithParams(ctx, params)
+	resp, _, err := opts.client.AWSClustersDNSApi.ToggleAWSCustomDNSWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -103,28 +108,33 @@ func (opts *ToggleAWSCustomDNSOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ToggleAWSCustomDNSTemplate = "<<some template>>"
+func ToggleAWSCustomDNSBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ToggleAWSCustomDNSBuilder() cobra.Command {
 	opts := ToggleAWSCustomDNSOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Toggle State of One Custom DNS Configuration for Atlas Clusters on AWS",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ToggleAWSCustomDNSTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd

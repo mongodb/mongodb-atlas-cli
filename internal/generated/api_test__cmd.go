@@ -26,7 +26,7 @@ import (
 type VersionedExampleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	additionalInfo bool
 }
 
@@ -42,7 +42,7 @@ func (opts *VersionedExampleOpts) Run(ctx context.Context) error {
 	params := &admin.VersionedExampleApiParams{
 		AdditionalInfo: opts.additionalInfo,
 	}
-	resp, _, err := opts.client.TestApi.VersionedExampleWithParams(ctx, params)
+	resp, _, err := opts.client.TestApi.VersionedExampleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -50,28 +50,33 @@ func (opts *VersionedExampleOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const VersionedExampleTemplate = "<<some template>>"
+func VersionedExampleBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func VersionedExampleBuilder() cobra.Command {
 	opts := VersionedExampleOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Example resource info for versioning of the Atlas API",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), VersionedExampleTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.additionalInfo, "additionalInfo", "", "usage description")
+
+	cmd.Flags().StringVar(&opts.additionalInfo, "additionalInfo", false, "")
+	
 
 	return cmd
 }

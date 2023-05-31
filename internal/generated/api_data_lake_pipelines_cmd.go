@@ -26,7 +26,7 @@ import (
 type CreatePipelineOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -42,7 +42,7 @@ func (opts *CreatePipelineOpts) Run(ctx context.Context) error {
 	params := &admin.CreatePipelineApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.DataLakePipelinesApi.CreatePipelineWithParams(ctx, params)
+	resp, _, err := opts.client.DataLakePipelinesApi.CreatePipelineWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -50,28 +50,33 @@ func (opts *CreatePipelineOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const CreatePipelineTemplate = "<<some template>>"
+func CreatePipelineBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreatePipelineBuilder() cobra.Command {
 	opts := CreatePipelineOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Create One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreatePipelineTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -79,7 +84,7 @@ func CreatePipelineBuilder() cobra.Command {
 type DeletePipelineOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	pipelineName string
 }
@@ -97,7 +102,7 @@ func (opts *DeletePipelineOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.client.DataLakePipelinesApi.DeletePipelineWithParams(ctx, params)
+	resp, _, err := opts.client.DataLakePipelinesApi.DeletePipelineWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -105,30 +110,34 @@ func (opts *DeletePipelineOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DeletePipelineTemplate = "<<some template>>"
+func DeletePipelineBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeletePipelineBuilder() cobra.Command {
 	opts := DeletePipelineOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeletePipelineTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", , "Human-readable label that identifies the Data Lake Pipeline.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
 	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd
@@ -136,7 +145,7 @@ func DeletePipelineBuilder() cobra.Command {
 type DeletePipelineRunDatasetOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	pipelineName string
 	pipelineRunId string
@@ -156,7 +165,7 @@ func (opts *DeletePipelineRunDatasetOpts) Run(ctx context.Context) error {
 		PipelineName: opts.pipelineName,
 		PipelineRunId: opts.pipelineRunId,
 	}
-	resp, _, err := opts.client.DataLakePipelinesApi.DeletePipelineRunDatasetWithParams(ctx, params)
+	resp, _, err := opts.client.DataLakePipelinesApi.DeletePipelineRunDatasetWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -164,32 +173,35 @@ func (opts *DeletePipelineRunDatasetOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DeletePipelineRunDatasetTemplate = "<<some template>>"
+func DeletePipelineRunDatasetBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeletePipelineRunDatasetBuilder() cobra.Command {
 	opts := DeletePipelineRunDatasetOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Delete Pipeline Run Dataset",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeletePipelineRunDatasetTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", , "Human-readable label that identifies the Data Lake Pipeline.")	cmd.Flags().StringVar(&opts.pipelineRunId, "pipelineRunId", , "Unique 24-hexadecimal character string that identifies a Data Lake Pipeline run.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
 	_ = cmd.MarkFlagRequired("pipelineName")
-	cmd.Flags().StringVar(&opts.pipelineRunId, "pipelineRunId", "", "usage description")
 	_ = cmd.MarkFlagRequired("pipelineRunId")
 
 	return cmd
@@ -197,7 +209,7 @@ func DeletePipelineRunDatasetBuilder() cobra.Command {
 type GetPipelineOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	pipelineName string
 }
@@ -215,7 +227,7 @@ func (opts *GetPipelineOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.client.DataLakePipelinesApi.GetPipelineWithParams(ctx, params)
+	resp, _, err := opts.client.DataLakePipelinesApi.GetPipelineWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -223,30 +235,34 @@ func (opts *GetPipelineOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetPipelineTemplate = "<<some template>>"
+func GetPipelineBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetPipelineBuilder() cobra.Command {
 	opts := GetPipelineOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetPipelineTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", , "Human-readable label that identifies the Data Lake Pipeline.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
 	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd
@@ -254,7 +270,7 @@ func GetPipelineBuilder() cobra.Command {
 type GetPipelineRunOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	pipelineName string
 	pipelineRunId string
@@ -274,7 +290,7 @@ func (opts *GetPipelineRunOpts) Run(ctx context.Context) error {
 		PipelineName: opts.pipelineName,
 		PipelineRunId: opts.pipelineRunId,
 	}
-	resp, _, err := opts.client.DataLakePipelinesApi.GetPipelineRunWithParams(ctx, params)
+	resp, _, err := opts.client.DataLakePipelinesApi.GetPipelineRunWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -282,32 +298,35 @@ func (opts *GetPipelineRunOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetPipelineRunTemplate = "<<some template>>"
+func GetPipelineRunBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetPipelineRunBuilder() cobra.Command {
 	opts := GetPipelineRunOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Data Lake Pipeline Run",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetPipelineRunTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", , "Human-readable label that identifies the Data Lake Pipeline.")	cmd.Flags().StringVar(&opts.pipelineRunId, "pipelineRunId", , "Unique 24-hexadecimal character string that identifies a Data Lake Pipeline run.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
 	_ = cmd.MarkFlagRequired("pipelineName")
-	cmd.Flags().StringVar(&opts.pipelineRunId, "pipelineRunId", "", "usage description")
 	_ = cmd.MarkFlagRequired("pipelineRunId")
 
 	return cmd
@@ -315,7 +334,7 @@ func GetPipelineRunBuilder() cobra.Command {
 type ListPipelineRunsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	pipelineName string
 	includeCount bool
@@ -341,7 +360,7 @@ func (opts *ListPipelineRunsOpts) Run(ctx context.Context) error {
 		PageNum: opts.pageNum,
 		CreatedBefore: opts.createdBefore,
 	}
-	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelineRunsWithParams(ctx, params)
+	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelineRunsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -349,42 +368,42 @@ func (opts *ListPipelineRunsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListPipelineRunsTemplate = "<<some template>>"
+func ListPipelineRunsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListPipelineRunsBuilder() cobra.Command {
 	opts := ListPipelineRunsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Data Lake Pipeline Runs from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListPipelineRunsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", , "Human-readable label that identifies the Data Lake Pipeline.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")	cmd.Flags().StringVar(&opts.createdBefore, "createdBefore", , "If specified, Atlas returns only Data Lake Pipeline runs initiated before this time and date.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
 	_ = cmd.MarkFlagRequired("pipelineName")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
-	cmd.Flags().StringVar(&opts.createdBefore, "createdBefore", "", "usage description")
 
 	return cmd
 }
 type ListPipelineSchedulesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	pipelineName string
 }
@@ -402,7 +421,7 @@ func (opts *ListPipelineSchedulesOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelineSchedulesWithParams(ctx, params)
+	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelineSchedulesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -410,30 +429,34 @@ func (opts *ListPipelineSchedulesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListPipelineSchedulesTemplate = "<<some template>>"
+func ListPipelineSchedulesBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListPipelineSchedulesBuilder() cobra.Command {
 	opts := ListPipelineSchedulesOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return Available Ingestion Schedules for One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListPipelineSchedulesTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", , "Human-readable label that identifies the Data Lake Pipeline.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
 	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd
@@ -441,7 +464,7 @@ func ListPipelineSchedulesBuilder() cobra.Command {
 type ListPipelineSnapshotsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	pipelineName string
 	includeCount bool
@@ -467,7 +490,7 @@ func (opts *ListPipelineSnapshotsOpts) Run(ctx context.Context) error {
 		PageNum: opts.pageNum,
 		CompletedAfter: opts.completedAfter,
 	}
-	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelineSnapshotsWithParams(ctx, params)
+	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelineSnapshotsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -475,42 +498,42 @@ func (opts *ListPipelineSnapshotsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListPipelineSnapshotsTemplate = "<<some template>>"
+func ListPipelineSnapshotsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListPipelineSnapshotsBuilder() cobra.Command {
 	opts := ListPipelineSnapshotsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return Available Backup Snapshots for One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListPipelineSnapshotsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", , "Human-readable label that identifies the Data Lake Pipeline.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")	cmd.Flags().StringVar(&opts.completedAfter, "completedAfter", , "Date and time after which MongoDB Cloud created the snapshot. If specified, MongoDB Cloud returns available backup snapshots created after this time and date only. This parameter expresses its value in the ISO 8601 timestamp format in UTC.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
 	_ = cmd.MarkFlagRequired("pipelineName")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
-	cmd.Flags().StringVar(&opts.completedAfter, "completedAfter", "", "usage description")
 
 	return cmd
 }
 type ListPipelinesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -526,7 +549,7 @@ func (opts *ListPipelinesOpts) Run(ctx context.Context) error {
 	params := &admin.ListPipelinesApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelinesWithParams(ctx, params)
+	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelinesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -534,28 +557,33 @@ func (opts *ListPipelinesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListPipelinesTemplate = "<<some template>>"
+func ListPipelinesBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListPipelinesBuilder() cobra.Command {
 	opts := ListPipelinesOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Data Lake Pipelines from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListPipelinesTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -563,7 +591,7 @@ func ListPipelinesBuilder() cobra.Command {
 type PausePipelineOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	pipelineName string
 }
@@ -581,7 +609,7 @@ func (opts *PausePipelineOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.client.DataLakePipelinesApi.PausePipelineWithParams(ctx, params)
+	resp, _, err := opts.client.DataLakePipelinesApi.PausePipelineWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -589,30 +617,34 @@ func (opts *PausePipelineOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const PausePipelineTemplate = "<<some template>>"
+func PausePipelineBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func PausePipelineBuilder() cobra.Command {
 	opts := PausePipelineOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Pause One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), PausePipelineTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", , "Human-readable label that identifies the Data Lake Pipeline.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
 	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd
@@ -620,7 +652,7 @@ func PausePipelineBuilder() cobra.Command {
 type ResumePipelineOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	pipelineName string
 }
@@ -638,7 +670,7 @@ func (opts *ResumePipelineOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.client.DataLakePipelinesApi.ResumePipelineWithParams(ctx, params)
+	resp, _, err := opts.client.DataLakePipelinesApi.ResumePipelineWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -646,30 +678,34 @@ func (opts *ResumePipelineOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ResumePipelineTemplate = "<<some template>>"
+func ResumePipelineBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ResumePipelineBuilder() cobra.Command {
 	opts := ResumePipelineOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Resume One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ResumePipelineTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", , "Human-readable label that identifies the Data Lake Pipeline.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
 	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd
@@ -677,7 +713,7 @@ func ResumePipelineBuilder() cobra.Command {
 type TriggerSnapshotIngestionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	pipelineName string
 }
@@ -695,7 +731,7 @@ func (opts *TriggerSnapshotIngestionOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.client.DataLakePipelinesApi.TriggerSnapshotIngestionWithParams(ctx, params)
+	resp, _, err := opts.client.DataLakePipelinesApi.TriggerSnapshotIngestionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -703,30 +739,34 @@ func (opts *TriggerSnapshotIngestionOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const TriggerSnapshotIngestionTemplate = "<<some template>>"
+func TriggerSnapshotIngestionBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func TriggerSnapshotIngestionBuilder() cobra.Command {
 	opts := TriggerSnapshotIngestionOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Trigger on demand snapshot ingestion",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), TriggerSnapshotIngestionTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", , "Human-readable label that identifies the Data Lake Pipeline.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
 	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd
@@ -734,7 +774,7 @@ func TriggerSnapshotIngestionBuilder() cobra.Command {
 type UpdatePipelineOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	pipelineName string
 }
@@ -752,7 +792,7 @@ func (opts *UpdatePipelineOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
 	}
-	resp, _, err := opts.client.DataLakePipelinesApi.UpdatePipelineWithParams(ctx, params)
+	resp, _, err := opts.client.DataLakePipelinesApi.UpdatePipelineWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -760,30 +800,34 @@ func (opts *UpdatePipelineOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdatePipelineTemplate = "<<some template>>"
+func UpdatePipelineBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdatePipelineBuilder() cobra.Command {
 	opts := UpdatePipelineOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdatePipelineTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", , "Human-readable label that identifies the Data Lake Pipeline.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", "usage description")
 	_ = cmd.MarkFlagRequired("pipelineName")
 
 	return cmd

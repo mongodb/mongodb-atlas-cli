@@ -13,7 +13,7 @@ import (
 type {{operationId}}Opts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	{{#pathParams}}
 	{{paramName}} {{{dataType}}}
 	{{/pathParams}}
@@ -39,7 +39,7 @@ func (opts *{{operationId}}Opts) Run(ctx context.Context) error {
 		{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: opts.{{paramName}},
 		{{/queryParams}}
 	}
-	{{#returnType}}resp, {{/returnType}}_, err := opts.client.{{classname}}.{{operationId}}WithParams(ctx, params)
+	{{#returnType}}resp, {{/returnType}}_, err := opts.client.{{classname}}.{{operationId}}WithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -47,21 +47,24 @@ func (opts *{{operationId}}Opts) Run(ctx context.Context) error {
 	return opts.Print({{#returnType}}resp{{/returnType}}{{^returnType}}nil{{/returnType}})
 }
 
-const {{operationId}}Template = "<<some template>>"
+func {{operationId}}Builder() *cobra.Command {
+	const template = "<<some template>>"
 
-func {{operationId}}Builder() cobra.Command {
 	opts := {{operationId}}Opts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "{{ summary }}",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), {{operationId}}Template),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -69,12 +72,12 @@ func {{operationId}}Builder() cobra.Command {
 		},
 	}
 	{{#pathParams}}
-	cmd.Flags().StringVar(&opts.{{paramName}}, "{{paramName}}", "", "usage description")
-	_ = cmd.MarkFlagRequired("{{paramName}}")
-	{{/pathParams}}
+	cmd.Flags().StringVar(&opts.{{paramName}}, "{{paramName}}", {{defaultValue}}, "{{description}}"){{/pathParams}}
 	{{#queryParams}}
-	cmd.Flags().StringVar(&opts.{{paramName}}, "{{paramName}}", "", "usage description")
-	{{/queryParams}}
+	cmd.Flags().StringVar(&opts.{{paramName}}, "{{paramName}}", {{defaultValue}}, "{{description}}"){{/queryParams}}
+	{{#pathParams}}{{#required}}
+	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/pathParams}}{{#queryParams}}{{#required}}
+	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/queryParams}}
 
 	return cmd
 }

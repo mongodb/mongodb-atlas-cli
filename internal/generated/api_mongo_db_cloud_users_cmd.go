@@ -26,7 +26,7 @@ import (
 type CreateUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 }
 
 func (opts *CreateUserOpts) initClient(ctx context.Context) func() error {
@@ -40,7 +40,7 @@ func (opts *CreateUserOpts) initClient(ctx context.Context) func() error {
 func (opts *CreateUserOpts) Run(ctx context.Context) error {
 	params := &admin.CreateUserApiParams{
 	}
-	resp, _, err := opts.client.MongoDBCloudUsersApi.CreateUserWithParams(ctx, params)
+	resp, _, err := opts.client.MongoDBCloudUsersApi.CreateUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -48,21 +48,24 @@ func (opts *CreateUserOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const CreateUserTemplate = "<<some template>>"
+func CreateUserBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreateUserBuilder() cobra.Command {
 	opts := CreateUserOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Create One MongoDB Cloud User",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreateUserTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -70,12 +73,15 @@ func CreateUserBuilder() cobra.Command {
 		},
 	}
 
+
+	
+
 	return cmd
 }
 type GetUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	userId string
 }
 
@@ -91,7 +97,7 @@ func (opts *GetUserOpts) Run(ctx context.Context) error {
 	params := &admin.GetUserApiParams{
 		UserId: opts.userId,
 	}
-	resp, _, err := opts.client.MongoDBCloudUsersApi.GetUserWithParams(ctx, params)
+	resp, _, err := opts.client.MongoDBCloudUsersApi.GetUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -99,28 +105,33 @@ func (opts *GetUserOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetUserTemplate = "<<some template>>"
+func GetUserBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetUserBuilder() cobra.Command {
 	opts := GetUserOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One MongoDB Cloud User using Its ID",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetUserTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.userId, "userId", "", "usage description")
+	cmd.Flags().StringVar(&opts.userId, "userId", , "Unique 24-hexadecimal digit string that identifies this user.")
+
+	
 	_ = cmd.MarkFlagRequired("userId")
 
 	return cmd
@@ -128,7 +139,7 @@ func GetUserBuilder() cobra.Command {
 type GetUserByUsernameOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	userName string
 }
 
@@ -144,7 +155,7 @@ func (opts *GetUserByUsernameOpts) Run(ctx context.Context) error {
 	params := &admin.GetUserByUsernameApiParams{
 		UserName: opts.userName,
 	}
-	resp, _, err := opts.client.MongoDBCloudUsersApi.GetUserByUsernameWithParams(ctx, params)
+	resp, _, err := opts.client.MongoDBCloudUsersApi.GetUserByUsernameWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -152,28 +163,33 @@ func (opts *GetUserByUsernameOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetUserByUsernameTemplate = "<<some template>>"
+func GetUserByUsernameBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetUserByUsernameBuilder() cobra.Command {
 	opts := GetUserByUsernameOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One MongoDB Cloud User using Their Username",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetUserByUsernameTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.userName, "userName", "", "usage description")
+	cmd.Flags().StringVar(&opts.userName, "userName", , "Email address that belongs to the MongoDB Cloud user account. You cannot modify this address after creating the user.")
+
+	
 	_ = cmd.MarkFlagRequired("userName")
 
 	return cmd

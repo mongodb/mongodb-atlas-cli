@@ -26,7 +26,7 @@ import (
 type AuthorizeCloudProviderAccessRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	roleId string
 }
@@ -44,7 +44,7 @@ func (opts *AuthorizeCloudProviderAccessRoleOpts) Run(ctx context.Context) error
 		GroupId: opts.groupId,
 		RoleId: opts.roleId,
 	}
-	resp, _, err := opts.client.CloudProviderAccessApi.AuthorizeCloudProviderAccessRoleWithParams(ctx, params)
+	resp, _, err := opts.client.CloudProviderAccessApi.AuthorizeCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -52,30 +52,34 @@ func (opts *AuthorizeCloudProviderAccessRoleOpts) Run(ctx context.Context) error
 	return opts.Print(resp)
 }
 
-const AuthorizeCloudProviderAccessRoleTemplate = "<<some template>>"
+func AuthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func AuthorizeCloudProviderAccessRoleBuilder() cobra.Command {
 	opts := AuthorizeCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Authorize One Cloud Provider Access Role",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), AuthorizeCloudProviderAccessRoleTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.roleId, "roleId", , "Unique 24-hexadecimal digit string that identifies the role.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.roleId, "roleId", "", "usage description")
 	_ = cmd.MarkFlagRequired("roleId")
 
 	return cmd
@@ -83,7 +87,7 @@ func AuthorizeCloudProviderAccessRoleBuilder() cobra.Command {
 type CreateCloudProviderAccessRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -99,7 +103,7 @@ func (opts *CreateCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
 	params := &admin.CreateCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.CloudProviderAccessApi.CreateCloudProviderAccessRoleWithParams(ctx, params)
+	resp, _, err := opts.client.CloudProviderAccessApi.CreateCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -107,28 +111,33 @@ func (opts *CreateCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const CreateCloudProviderAccessRoleTemplate = "<<some template>>"
+func CreateCloudProviderAccessRoleBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreateCloudProviderAccessRoleBuilder() cobra.Command {
 	opts := CreateCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Create One Cloud Provider Access Role",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreateCloudProviderAccessRoleTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -136,7 +145,7 @@ func CreateCloudProviderAccessRoleBuilder() cobra.Command {
 type DeauthorizeCloudProviderAccessRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	cloudProvider string
 	roleId string
@@ -156,7 +165,7 @@ func (opts *DeauthorizeCloudProviderAccessRoleOpts) Run(ctx context.Context) err
 		CloudProvider: opts.cloudProvider,
 		RoleId: opts.roleId,
 	}
-	_, err := opts.client.CloudProviderAccessApi.DeauthorizeCloudProviderAccessRoleWithParams(ctx, params)
+	_, err := opts.client.CloudProviderAccessApi.DeauthorizeCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -164,32 +173,35 @@ func (opts *DeauthorizeCloudProviderAccessRoleOpts) Run(ctx context.Context) err
 	return opts.Print(nil)
 }
 
-const DeauthorizeCloudProviderAccessRoleTemplate = "<<some template>>"
+func DeauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeauthorizeCloudProviderAccessRoleBuilder() cobra.Command {
 	opts := DeauthorizeCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Deauthorize One Cloud Provider Access Role",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeauthorizeCloudProviderAccessRoleTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", , "Human-readable label that identifies the cloud provider of the role to deauthorize.")	cmd.Flags().StringVar(&opts.roleId, "roleId", , "Unique 24-hexadecimal digit string that identifies the role.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "", "usage description")
 	_ = cmd.MarkFlagRequired("cloudProvider")
-	cmd.Flags().StringVar(&opts.roleId, "roleId", "", "usage description")
 	_ = cmd.MarkFlagRequired("roleId")
 
 	return cmd
@@ -197,7 +209,7 @@ func DeauthorizeCloudProviderAccessRoleBuilder() cobra.Command {
 type GetCloudProviderAccessRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	roleId string
 }
@@ -215,7 +227,7 @@ func (opts *GetCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		RoleId: opts.roleId,
 	}
-	resp, _, err := opts.client.CloudProviderAccessApi.GetCloudProviderAccessRoleWithParams(ctx, params)
+	resp, _, err := opts.client.CloudProviderAccessApi.GetCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -223,30 +235,34 @@ func (opts *GetCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetCloudProviderAccessRoleTemplate = "<<some template>>"
+func GetCloudProviderAccessRoleBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetCloudProviderAccessRoleBuilder() cobra.Command {
 	opts := GetCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return specified Cloud Provider Access Role",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetCloudProviderAccessRoleTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.roleId, "roleId", , "Unique 24-hexadecimal digit string that identifies the role.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.roleId, "roleId", "", "usage description")
 	_ = cmd.MarkFlagRequired("roleId")
 
 	return cmd
@@ -254,7 +270,7 @@ func GetCloudProviderAccessRoleBuilder() cobra.Command {
 type ListCloudProviderAccessRolesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -270,7 +286,7 @@ func (opts *ListCloudProviderAccessRolesOpts) Run(ctx context.Context) error {
 	params := &admin.ListCloudProviderAccessRolesApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.CloudProviderAccessApi.ListCloudProviderAccessRolesWithParams(ctx, params)
+	resp, _, err := opts.client.CloudProviderAccessApi.ListCloudProviderAccessRolesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -278,28 +294,33 @@ func (opts *ListCloudProviderAccessRolesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListCloudProviderAccessRolesTemplate = "<<some template>>"
+func ListCloudProviderAccessRolesBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListCloudProviderAccessRolesBuilder() cobra.Command {
 	opts := ListCloudProviderAccessRolesOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Cloud Provider Access Roles",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListCloudProviderAccessRolesTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd

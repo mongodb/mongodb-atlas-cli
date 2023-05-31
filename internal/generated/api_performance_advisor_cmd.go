@@ -26,7 +26,7 @@ import (
 type DisableSlowOperationThresholdingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -42,7 +42,7 @@ func (opts *DisableSlowOperationThresholdingOpts) Run(ctx context.Context) error
 	params := &admin.DisableSlowOperationThresholdingApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.client.PerformanceAdvisorApi.DisableSlowOperationThresholdingWithParams(ctx, params)
+	_, err := opts.client.PerformanceAdvisorApi.DisableSlowOperationThresholdingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -50,28 +50,33 @@ func (opts *DisableSlowOperationThresholdingOpts) Run(ctx context.Context) error
 	return opts.Print(nil)
 }
 
-const DisableSlowOperationThresholdingTemplate = "<<some template>>"
+func DisableSlowOperationThresholdingBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DisableSlowOperationThresholdingBuilder() cobra.Command {
 	opts := DisableSlowOperationThresholdingOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Disable Managed Slow Operation Threshold",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DisableSlowOperationThresholdingTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -79,7 +84,7 @@ func DisableSlowOperationThresholdingBuilder() cobra.Command {
 type EnableSlowOperationThresholdingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -95,7 +100,7 @@ func (opts *EnableSlowOperationThresholdingOpts) Run(ctx context.Context) error 
 	params := &admin.EnableSlowOperationThresholdingApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.client.PerformanceAdvisorApi.EnableSlowOperationThresholdingWithParams(ctx, params)
+	_, err := opts.client.PerformanceAdvisorApi.EnableSlowOperationThresholdingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -103,28 +108,33 @@ func (opts *EnableSlowOperationThresholdingOpts) Run(ctx context.Context) error 
 	return opts.Print(nil)
 }
 
-const EnableSlowOperationThresholdingTemplate = "<<some template>>"
+func EnableSlowOperationThresholdingBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func EnableSlowOperationThresholdingBuilder() cobra.Command {
 	opts := EnableSlowOperationThresholdingOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Enable Managed Slow Operation Threshold",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), EnableSlowOperationThresholdingTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -132,7 +142,7 @@ func EnableSlowOperationThresholdingBuilder() cobra.Command {
 type ListSlowQueriesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	processId string
 	duration int64
@@ -158,7 +168,7 @@ func (opts *ListSlowQueriesOpts) Run(ctx context.Context) error {
 		NLogs: opts.nLogs,
 		Since: opts.since,
 	}
-	resp, _, err := opts.client.PerformanceAdvisorApi.ListSlowQueriesWithParams(ctx, params)
+	resp, _, err := opts.client.PerformanceAdvisorApi.ListSlowQueriesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -166,42 +176,42 @@ func (opts *ListSlowQueriesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListSlowQueriesTemplate = "<<some template>>"
+func ListSlowQueriesBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListSlowQueriesBuilder() cobra.Command {
 	opts := ListSlowQueriesOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return Slow Queries",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListSlowQueriesTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.duration, "duration", , "Length of time expressed during which the query finds suggested indexes among the managed namespaces in the cluster. This parameter expresses its value in milliseconds.  - If you don&#39;t specify the **since** parameter, the endpoint returns data covering the duration before the current time. - If you specify neither the **duration** nor **since** parameters, the endpoint returns data from the previous 24 hours.")	cmd.Flags().StringVar(&opts.namespaces, "namespaces", , "Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as &#x60;.&#x60;: &#x60;&lt;database&gt;.&lt;collection&gt;&#x60;. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&#x60;&amp;&#x60;) between each namespace. Omit this parameter to return results for all namespaces.")	cmd.Flags().StringVar(&opts.nLogs, "nLogs", 20000, "Maximum number of lines from the log to return.")	cmd.Flags().StringVar(&opts.since, "since", , "Date and time from which the query retrieves the suggested indexes. This parameter expresses its value in the number of seconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).  - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time. - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
 	_ = cmd.MarkFlagRequired("processId")
-	cmd.Flags().StringVar(&opts.duration, "duration", "", "usage description")
-	cmd.Flags().StringVar(&opts.namespaces, "namespaces", "", "usage description")
-	cmd.Flags().StringVar(&opts.nLogs, "nLogs", "", "usage description")
-	cmd.Flags().StringVar(&opts.since, "since", "", "usage description")
 
 	return cmd
 }
 type ListSlowQueryNamespacesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	processId string
 	duration int64
@@ -223,7 +233,7 @@ func (opts *ListSlowQueryNamespacesOpts) Run(ctx context.Context) error {
 		Duration: opts.duration,
 		Since: opts.since,
 	}
-	resp, _, err := opts.client.PerformanceAdvisorApi.ListSlowQueryNamespacesWithParams(ctx, params)
+	resp, _, err := opts.client.PerformanceAdvisorApi.ListSlowQueryNamespacesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -231,40 +241,42 @@ func (opts *ListSlowQueryNamespacesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListSlowQueryNamespacesTemplate = "<<some template>>"
+func ListSlowQueryNamespacesBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListSlowQueryNamespacesBuilder() cobra.Command {
 	opts := ListSlowQueryNamespacesOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Namespaces for One Host",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListSlowQueryNamespacesTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.duration, "duration", , "Length of time expressed during which the query finds suggested indexes among the managed namespaces in the cluster. This parameter expresses its value in milliseconds.  - If you don&#39;t specify the **since** parameter, the endpoint returns data covering the duration before the current time. - If you specify neither the **duration** nor **since** parameters, the endpoint returns data from the previous 24 hours.")	cmd.Flags().StringVar(&opts.since, "since", , "Date and time from which the query retrieves the suggested indexes. This parameter expresses its value in the number of seconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).  - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time. - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
 	_ = cmd.MarkFlagRequired("processId")
-	cmd.Flags().StringVar(&opts.duration, "duration", "", "usage description")
-	cmd.Flags().StringVar(&opts.since, "since", "", "usage description")
 
 	return cmd
 }
 type ListSuggestedIndexesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	processId string
 	includeCount bool
@@ -298,7 +310,7 @@ func (opts *ListSuggestedIndexesOpts) Run(ctx context.Context) error {
 		NIndexes: opts.nIndexes,
 		Since: opts.since,
 	}
-	resp, _, err := opts.client.PerformanceAdvisorApi.ListSuggestedIndexesWithParams(ctx, params)
+	resp, _, err := opts.client.PerformanceAdvisorApi.ListSuggestedIndexesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -306,39 +318,35 @@ func (opts *ListSuggestedIndexesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListSuggestedIndexesTemplate = "<<some template>>"
+func ListSuggestedIndexesBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListSuggestedIndexesBuilder() cobra.Command {
 	opts := ListSuggestedIndexesOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return Suggested Indexes",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListSuggestedIndexesTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")	cmd.Flags().StringVar(&opts.duration, "duration", , "Length of time expressed during which the query finds suggested indexes among the managed namespaces in the cluster. This parameter expresses its value in milliseconds.  - If you don&#39;t specify the **since** parameter, the endpoint returns data covering the duration before the current time. - If you specify neither the **duration** nor **since** parameters, the endpoint returns data from the previous 24 hours.")	cmd.Flags().StringVar(&opts.namespaces, "namespaces", , "Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as &#x60;.&#x60;: &#x60;&lt;database&gt;.&lt;collection&gt;&#x60;. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&#x60;&amp;&#x60;) between each namespace. Omit this parameter to return results for all namespaces.")	cmd.Flags().StringVar(&opts.nExamples, "nExamples", 5, "Maximum number of example queries that benefit from the suggested index.")	cmd.Flags().StringVar(&opts.nIndexes, "nIndexes", , "Number that indicates the maximum indexes to suggest.")	cmd.Flags().StringVar(&opts.since, "since", , "Date and time from which the query retrieves the suggested indexes. This parameter expresses its value in the number of seconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).  - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time. - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.processId, "processId", "", "usage description")
 	_ = cmd.MarkFlagRequired("processId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
-	cmd.Flags().StringVar(&opts.duration, "duration", "", "usage description")
-	cmd.Flags().StringVar(&opts.namespaces, "namespaces", "", "usage description")
-	cmd.Flags().StringVar(&opts.nExamples, "nExamples", "", "usage description")
-	cmd.Flags().StringVar(&opts.nIndexes, "nIndexes", "", "usage description")
-	cmd.Flags().StringVar(&opts.since, "since", "", "usage description")
 
 	return cmd
 }

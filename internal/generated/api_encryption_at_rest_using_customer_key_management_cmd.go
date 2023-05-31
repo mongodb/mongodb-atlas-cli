@@ -26,7 +26,7 @@ import (
 type GetEncryptionAtRestOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -42,7 +42,7 @@ func (opts *GetEncryptionAtRestOpts) Run(ctx context.Context) error {
 	params := &admin.GetEncryptionAtRestApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.EncryptionAtRestUsingCustomerKeyManagementApi.GetEncryptionAtRestWithParams(ctx, params)
+	resp, _, err := opts.client.EncryptionAtRestUsingCustomerKeyManagementApi.GetEncryptionAtRestWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -50,28 +50,33 @@ func (opts *GetEncryptionAtRestOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetEncryptionAtRestTemplate = "<<some template>>"
+func GetEncryptionAtRestBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetEncryptionAtRestBuilder() cobra.Command {
 	opts := GetEncryptionAtRestOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetEncryptionAtRestTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -79,7 +84,7 @@ func GetEncryptionAtRestBuilder() cobra.Command {
 type UpdateEncryptionAtRestOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -95,7 +100,7 @@ func (opts *UpdateEncryptionAtRestOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateEncryptionAtRestApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.EncryptionAtRestUsingCustomerKeyManagementApi.UpdateEncryptionAtRestWithParams(ctx, params)
+	resp, _, err := opts.client.EncryptionAtRestUsingCustomerKeyManagementApi.UpdateEncryptionAtRestWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -103,28 +108,33 @@ func (opts *UpdateEncryptionAtRestOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateEncryptionAtRestTemplate = "<<some template>>"
+func UpdateEncryptionAtRestBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateEncryptionAtRestBuilder() cobra.Command {
 	opts := UpdateEncryptionAtRestOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateEncryptionAtRestTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd

@@ -26,7 +26,7 @@ import (
 type CreateRoleMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 	orgId string
 }
@@ -44,7 +44,7 @@ func (opts *CreateRoleMappingOpts) Run(ctx context.Context) error {
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.FederatedAuthenticationApi.CreateRoleMappingWithParams(ctx, params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.CreateRoleMappingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -52,30 +52,34 @@ func (opts *CreateRoleMappingOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const CreateRoleMappingTemplate = "<<some template>>"
+func CreateRoleMappingBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreateRoleMappingBuilder() cobra.Command {
 	opts := CreateRoleMappingOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Add One Role Mapping to One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreateRoleMappingTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -83,7 +87,7 @@ func CreateRoleMappingBuilder() cobra.Command {
 type DeleteFederationAppOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 }
 
@@ -99,7 +103,7 @@ func (opts *DeleteFederationAppOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteFederationAppApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
-	_, err := opts.client.FederatedAuthenticationApi.DeleteFederationAppWithParams(ctx, params)
+	_, err := opts.client.FederatedAuthenticationApi.DeleteFederationAppWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -107,28 +111,33 @@ func (opts *DeleteFederationAppOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-const DeleteFederationAppTemplate = "<<some template>>"
+func DeleteFederationAppBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeleteFederationAppBuilder() cobra.Command {
 	opts := DeleteFederationAppOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Delete the federation settings instance.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeleteFederationAppTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 
 	return cmd
@@ -136,7 +145,7 @@ func DeleteFederationAppBuilder() cobra.Command {
 type DeleteRoleMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 	id string
 	orgId string
@@ -156,7 +165,7 @@ func (opts *DeleteRoleMappingOpts) Run(ctx context.Context) error {
 		Id: opts.id,
 		OrgId: opts.orgId,
 	}
-	_, err := opts.client.FederatedAuthenticationApi.DeleteRoleMappingWithParams(ctx, params)
+	_, err := opts.client.FederatedAuthenticationApi.DeleteRoleMappingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -164,32 +173,35 @@ func (opts *DeleteRoleMappingOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-const DeleteRoleMappingTemplate = "<<some template>>"
+func DeleteRoleMappingBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeleteRoleMappingBuilder() cobra.Command {
 	opts := DeleteRoleMappingOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One Role Mapping from One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeleteRoleMappingTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.id, "id", , "Unique 24-hexadecimal digit string that identifies the role mapping that you want to remove.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
-	cmd.Flags().StringVar(&opts.id, "id", "", "usage description")
 	_ = cmd.MarkFlagRequired("id")
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -197,7 +209,7 @@ func DeleteRoleMappingBuilder() cobra.Command {
 type GetConnectedOrgConfigOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 	orgId string
 }
@@ -215,7 +227,7 @@ func (opts *GetConnectedOrgConfigOpts) Run(ctx context.Context) error {
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.FederatedAuthenticationApi.GetConnectedOrgConfigWithParams(ctx, params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.GetConnectedOrgConfigWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -223,30 +235,34 @@ func (opts *GetConnectedOrgConfigOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetConnectedOrgConfigTemplate = "<<some template>>"
+func GetConnectedOrgConfigBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetConnectedOrgConfigBuilder() cobra.Command {
 	opts := GetConnectedOrgConfigOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Org Config Connected to One Federation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetConnectedOrgConfigTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the connected organization configuration to return.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -254,7 +270,7 @@ func GetConnectedOrgConfigBuilder() cobra.Command {
 type GetFederationSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	orgId string
 }
 
@@ -270,7 +286,7 @@ func (opts *GetFederationSettingsOpts) Run(ctx context.Context) error {
 	params := &admin.GetFederationSettingsApiParams{
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.FederatedAuthenticationApi.GetFederationSettingsWithParams(ctx, params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.GetFederationSettingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -278,28 +294,33 @@ func (opts *GetFederationSettingsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetFederationSettingsTemplate = "<<some template>>"
+func GetFederationSettingsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetFederationSettingsBuilder() cobra.Command {
 	opts := GetFederationSettingsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return Federation Settings for One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetFederationSettingsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -307,7 +328,7 @@ func GetFederationSettingsBuilder() cobra.Command {
 type GetIdentityProviderOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 	identityProviderId string
 }
@@ -325,7 +346,7 @@ func (opts *GetIdentityProviderOpts) Run(ctx context.Context) error {
 		FederationSettingsId: opts.federationSettingsId,
 		IdentityProviderId: opts.identityProviderId,
 	}
-	resp, _, err := opts.client.FederatedAuthenticationApi.GetIdentityProviderWithParams(ctx, params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.GetIdentityProviderWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -333,30 +354,34 @@ func (opts *GetIdentityProviderOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetIdentityProviderTemplate = "<<some template>>"
+func GetIdentityProviderBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetIdentityProviderBuilder() cobra.Command {
 	opts := GetIdentityProviderOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return one identity provider from the specified federation.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetIdentityProviderTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", , "Unique 20-hexadecimal digit string that identifies the identity provider.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
-	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", "usage description")
 	_ = cmd.MarkFlagRequired("identityProviderId")
 
 	return cmd
@@ -364,7 +389,7 @@ func GetIdentityProviderBuilder() cobra.Command {
 type GetIdentityProviderMetadataOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 	identityProviderId string
 }
@@ -382,7 +407,7 @@ func (opts *GetIdentityProviderMetadataOpts) Run(ctx context.Context) error {
 		FederationSettingsId: opts.federationSettingsId,
 		IdentityProviderId: opts.identityProviderId,
 	}
-	resp, _, err := opts.client.FederatedAuthenticationApi.GetIdentityProviderMetadataWithParams(ctx, params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.GetIdentityProviderMetadataWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -390,30 +415,34 @@ func (opts *GetIdentityProviderMetadataOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetIdentityProviderMetadataTemplate = "<<some template>>"
+func GetIdentityProviderMetadataBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetIdentityProviderMetadataBuilder() cobra.Command {
 	opts := GetIdentityProviderMetadataOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return the metadata of one identity provider in the specified federation.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetIdentityProviderMetadataTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", , "Unique 20-hexadecimal digit string that identifies the identity provider.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
-	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", "usage description")
 	_ = cmd.MarkFlagRequired("identityProviderId")
 
 	return cmd
@@ -421,7 +450,7 @@ func GetIdentityProviderMetadataBuilder() cobra.Command {
 type GetRoleMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 	id string
 	orgId string
@@ -441,7 +470,7 @@ func (opts *GetRoleMappingOpts) Run(ctx context.Context) error {
 		Id: opts.id,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.FederatedAuthenticationApi.GetRoleMappingWithParams(ctx, params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.GetRoleMappingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -449,32 +478,35 @@ func (opts *GetRoleMappingOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetRoleMappingTemplate = "<<some template>>"
+func GetRoleMappingBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetRoleMappingBuilder() cobra.Command {
 	opts := GetRoleMappingOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Role Mapping from One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetRoleMappingTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.id, "id", , "Unique 24-hexadecimal digit string that identifies the role mapping that you want to return.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
-	cmd.Flags().StringVar(&opts.id, "id", "", "usage description")
 	_ = cmd.MarkFlagRequired("id")
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -482,7 +514,7 @@ func GetRoleMappingBuilder() cobra.Command {
 type ListConnectedOrgConfigsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 }
 
@@ -498,7 +530,7 @@ func (opts *ListConnectedOrgConfigsOpts) Run(ctx context.Context) error {
 	params := &admin.ListConnectedOrgConfigsApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
-	resp, _, err := opts.client.FederatedAuthenticationApi.ListConnectedOrgConfigsWithParams(ctx, params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.ListConnectedOrgConfigsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -506,28 +538,33 @@ func (opts *ListConnectedOrgConfigsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListConnectedOrgConfigsTemplate = "<<some template>>"
+func ListConnectedOrgConfigsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListConnectedOrgConfigsBuilder() cobra.Command {
 	opts := ListConnectedOrgConfigsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Connected Org Configs from the Federation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListConnectedOrgConfigsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 
 	return cmd
@@ -535,7 +572,7 @@ func ListConnectedOrgConfigsBuilder() cobra.Command {
 type ListIdentityProvidersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 }
 
@@ -551,7 +588,7 @@ func (opts *ListIdentityProvidersOpts) Run(ctx context.Context) error {
 	params := &admin.ListIdentityProvidersApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
-	resp, _, err := opts.client.FederatedAuthenticationApi.ListIdentityProvidersWithParams(ctx, params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.ListIdentityProvidersWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -559,28 +596,33 @@ func (opts *ListIdentityProvidersOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListIdentityProvidersTemplate = "<<some template>>"
+func ListIdentityProvidersBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListIdentityProvidersBuilder() cobra.Command {
 	opts := ListIdentityProvidersOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return all identity providers from the specified federation.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListIdentityProvidersTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 
 	return cmd
@@ -588,7 +630,7 @@ func ListIdentityProvidersBuilder() cobra.Command {
 type ListRoleMappingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 	orgId string
 }
@@ -606,7 +648,7 @@ func (opts *ListRoleMappingsOpts) Run(ctx context.Context) error {
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.FederatedAuthenticationApi.ListRoleMappingsWithParams(ctx, params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.ListRoleMappingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -614,30 +656,34 @@ func (opts *ListRoleMappingsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListRoleMappingsTemplate = "<<some template>>"
+func ListRoleMappingsBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListRoleMappingsBuilder() cobra.Command {
 	opts := ListRoleMappingsOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Role Mappings from One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListRoleMappingsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -645,7 +691,7 @@ func ListRoleMappingsBuilder() cobra.Command {
 type RemoveConnectedOrgConfigOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 	orgId string
 }
@@ -663,7 +709,7 @@ func (opts *RemoveConnectedOrgConfigOpts) Run(ctx context.Context) error {
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.FederatedAuthenticationApi.RemoveConnectedOrgConfigWithParams(ctx, params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.RemoveConnectedOrgConfigWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -671,30 +717,34 @@ func (opts *RemoveConnectedOrgConfigOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const RemoveConnectedOrgConfigTemplate = "<<some template>>"
+func RemoveConnectedOrgConfigBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func RemoveConnectedOrgConfigBuilder() cobra.Command {
 	opts := RemoveConnectedOrgConfigOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One Org Config Connected to One Federation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), RemoveConnectedOrgConfigTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the connected organization configuration to remove.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -702,7 +752,7 @@ func RemoveConnectedOrgConfigBuilder() cobra.Command {
 type UpdateConnectedOrgConfigOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 	orgId string
 }
@@ -720,7 +770,7 @@ func (opts *UpdateConnectedOrgConfigOpts) Run(ctx context.Context) error {
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateConnectedOrgConfigWithParams(ctx, params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateConnectedOrgConfigWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -728,30 +778,34 @@ func (opts *UpdateConnectedOrgConfigOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateConnectedOrgConfigTemplate = "<<some template>>"
+func UpdateConnectedOrgConfigBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateConnectedOrgConfigBuilder() cobra.Command {
 	opts := UpdateConnectedOrgConfigOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update One Org Config Connected to One Federation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateConnectedOrgConfigTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the connected organization configuration to update.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -759,7 +813,7 @@ func UpdateConnectedOrgConfigBuilder() cobra.Command {
 type UpdateIdentityProviderOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 	identityProviderId string
 }
@@ -777,7 +831,7 @@ func (opts *UpdateIdentityProviderOpts) Run(ctx context.Context) error {
 		FederationSettingsId: opts.federationSettingsId,
 		IdentityProviderId: opts.identityProviderId,
 	}
-	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateIdentityProviderWithParams(ctx, params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateIdentityProviderWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -785,30 +839,34 @@ func (opts *UpdateIdentityProviderOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateIdentityProviderTemplate = "<<some template>>"
+func UpdateIdentityProviderBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateIdentityProviderBuilder() cobra.Command {
 	opts := UpdateIdentityProviderOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update the identity provider.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateIdentityProviderTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", , "Unique 20-hexadecimal digit string that identifies the identity provider.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
-	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", "usage description")
 	_ = cmd.MarkFlagRequired("identityProviderId")
 
 	return cmd
@@ -816,7 +874,7 @@ func UpdateIdentityProviderBuilder() cobra.Command {
 type UpdateRoleMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	federationSettingsId string
 	id string
 	orgId string
@@ -836,7 +894,7 @@ func (opts *UpdateRoleMappingOpts) Run(ctx context.Context) error {
 		Id: opts.id,
 		OrgId: opts.orgId,
 	}
-	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateRoleMappingWithParams(ctx, params)
+	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateRoleMappingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -844,32 +902,35 @@ func (opts *UpdateRoleMappingOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateRoleMappingTemplate = "<<some template>>"
+func UpdateRoleMappingBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateRoleMappingBuilder() cobra.Command {
 	opts := UpdateRoleMappingOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update One Role Mapping in One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateRoleMappingTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", "usage description")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.id, "id", , "Unique 24-hexadecimal digit string that identifies the role mapping that you want to update.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+
+	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
-	cmd.Flags().StringVar(&opts.id, "id", "", "usage description")
 	_ = cmd.MarkFlagRequired("id")
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "usage description")
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd

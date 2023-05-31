@@ -26,7 +26,7 @@ import (
 type CreateServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -42,7 +42,7 @@ func (opts *CreateServerlessInstanceOpts) Run(ctx context.Context) error {
 	params := &admin.CreateServerlessInstanceApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.ServerlessInstancesApi.CreateServerlessInstanceWithParams(ctx, params)
+	resp, _, err := opts.client.ServerlessInstancesApi.CreateServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -50,28 +50,33 @@ func (opts *CreateServerlessInstanceOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const CreateServerlessInstanceTemplate = "<<some template>>"
+func CreateServerlessInstanceBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func CreateServerlessInstanceBuilder() cobra.Command {
 	opts := CreateServerlessInstanceOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Create One Serverless Instance in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), CreateServerlessInstanceTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -79,7 +84,7 @@ func CreateServerlessInstanceBuilder() cobra.Command {
 type DeleteServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	name string
 }
@@ -97,7 +102,7 @@ func (opts *DeleteServerlessInstanceOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		Name: opts.name,
 	}
-	resp, _, err := opts.client.ServerlessInstancesApi.DeleteServerlessInstanceWithParams(ctx, params)
+	resp, _, err := opts.client.ServerlessInstancesApi.DeleteServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -105,30 +110,34 @@ func (opts *DeleteServerlessInstanceOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const DeleteServerlessInstanceTemplate = "<<some template>>"
+func DeleteServerlessInstanceBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeleteServerlessInstanceBuilder() cobra.Command {
 	opts := DeleteServerlessInstanceOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove One Serverless Instance from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeleteServerlessInstanceTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.name, "name", , "Human-readable label that identifies the serverless instance.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.name, "name", "", "usage description")
 	_ = cmd.MarkFlagRequired("name")
 
 	return cmd
@@ -136,7 +145,7 @@ func DeleteServerlessInstanceBuilder() cobra.Command {
 type GetServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	name string
 }
@@ -154,7 +163,7 @@ func (opts *GetServerlessInstanceOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		Name: opts.name,
 	}
-	resp, _, err := opts.client.ServerlessInstancesApi.GetServerlessInstanceWithParams(ctx, params)
+	resp, _, err := opts.client.ServerlessInstancesApi.GetServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -162,30 +171,34 @@ func (opts *GetServerlessInstanceOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetServerlessInstanceTemplate = "<<some template>>"
+func GetServerlessInstanceBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetServerlessInstanceBuilder() cobra.Command {
 	opts := GetServerlessInstanceOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return One Serverless Instance from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetServerlessInstanceTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.name, "name", , "Human-readable label that identifies the serverless instance.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.name, "name", "", "usage description")
 	_ = cmd.MarkFlagRequired("name")
 
 	return cmd
@@ -193,7 +206,7 @@ func GetServerlessInstanceBuilder() cobra.Command {
 type ListServerlessInstancesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	includeCount bool
 	itemsPerPage int32
@@ -215,7 +228,7 @@ func (opts *ListServerlessInstancesOpts) Run(ctx context.Context) error {
 		ItemsPerPage: opts.itemsPerPage,
 		PageNum: opts.pageNum,
 	}
-	resp, _, err := opts.client.ServerlessInstancesApi.ListServerlessInstancesWithParams(ctx, params)
+	resp, _, err := opts.client.ServerlessInstancesApi.ListServerlessInstancesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -223,39 +236,41 @@ func (opts *ListServerlessInstancesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const ListServerlessInstancesTemplate = "<<some template>>"
+func ListServerlessInstancesBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func ListServerlessInstancesBuilder() cobra.Command {
 	opts := ListServerlessInstancesOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return All Serverless Instances from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ListServerlessInstancesTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", "", "usage description")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", "", "usage description")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", "", "usage description")
 
 	return cmd
 }
 type UpdateServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	name string
 }
@@ -273,7 +288,7 @@ func (opts *UpdateServerlessInstanceOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		Name: opts.name,
 	}
-	resp, _, err := opts.client.ServerlessInstancesApi.UpdateServerlessInstanceWithParams(ctx, params)
+	resp, _, err := opts.client.ServerlessInstancesApi.UpdateServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -281,30 +296,34 @@ func (opts *UpdateServerlessInstanceOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const UpdateServerlessInstanceTemplate = "<<some template>>"
+func UpdateServerlessInstanceBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func UpdateServerlessInstanceBuilder() cobra.Command {
 	opts := UpdateServerlessInstanceOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Update One Serverless Instance in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), UpdateServerlessInstanceTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.name, "name", , "Human-readable label that identifies the serverless instance.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.name, "name", "", "usage description")
 	_ = cmd.MarkFlagRequired("name")
 
 	return cmd

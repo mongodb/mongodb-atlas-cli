@@ -26,7 +26,7 @@ import (
 type DeleteLDAPConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -42,7 +42,7 @@ func (opts *DeleteLDAPConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.client.LDAPConfigurationApi.DeleteLDAPConfigurationWithParams(ctx, params)
+	_, err := opts.client.LDAPConfigurationApi.DeleteLDAPConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -50,28 +50,33 @@ func (opts *DeleteLDAPConfigurationOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-const DeleteLDAPConfigurationTemplate = "<<some template>>"
+func DeleteLDAPConfigurationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func DeleteLDAPConfigurationBuilder() cobra.Command {
 	opts := DeleteLDAPConfigurationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Remove the Current LDAP User to DN Mapping",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), DeleteLDAPConfigurationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -79,7 +84,7 @@ func DeleteLDAPConfigurationBuilder() cobra.Command {
 type GetLDAPConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -95,7 +100,7 @@ func (opts *GetLDAPConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.GetLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.LDAPConfigurationApi.GetLDAPConfigurationWithParams(ctx, params)
+	resp, _, err := opts.client.LDAPConfigurationApi.GetLDAPConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -103,28 +108,33 @@ func (opts *GetLDAPConfigurationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetLDAPConfigurationTemplate = "<<some template>>"
+func GetLDAPConfigurationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetLDAPConfigurationBuilder() cobra.Command {
 	opts := GetLDAPConfigurationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return the Current LDAP or X.509 Configuration",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetLDAPConfigurationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -132,7 +142,7 @@ func GetLDAPConfigurationBuilder() cobra.Command {
 type GetLDAPConfigurationStatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 	requestId string
 }
@@ -150,7 +160,7 @@ func (opts *GetLDAPConfigurationStatusOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		RequestId: opts.requestId,
 	}
-	resp, _, err := opts.client.LDAPConfigurationApi.GetLDAPConfigurationStatusWithParams(ctx, params)
+	resp, _, err := opts.client.LDAPConfigurationApi.GetLDAPConfigurationStatusWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -158,30 +168,34 @@ func (opts *GetLDAPConfigurationStatusOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const GetLDAPConfigurationStatusTemplate = "<<some template>>"
+func GetLDAPConfigurationStatusBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func GetLDAPConfigurationStatusBuilder() cobra.Command {
 	opts := GetLDAPConfigurationStatusOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Return the Status of One Verify LDAP Configuration Request",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), GetLDAPConfigurationStatusTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.requestId, "requestId", , "Unique string that identifies the request to verify an &lt;abbr title&#x3D;\&quot;Lightweight Directory Access Protocol\&quot;&gt;LDAP&lt;/abbr&gt; configuration.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
-	cmd.Flags().StringVar(&opts.requestId, "requestId", "", "usage description")
 	_ = cmd.MarkFlagRequired("requestId")
 
 	return cmd
@@ -189,7 +203,7 @@ func GetLDAPConfigurationStatusBuilder() cobra.Command {
 type SaveLDAPConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -205,7 +219,7 @@ func (opts *SaveLDAPConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.SaveLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.LDAPConfigurationApi.SaveLDAPConfigurationWithParams(ctx, params)
+	resp, _, err := opts.client.LDAPConfigurationApi.SaveLDAPConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -213,28 +227,33 @@ func (opts *SaveLDAPConfigurationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const SaveLDAPConfigurationTemplate = "<<some template>>"
+func SaveLDAPConfigurationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func SaveLDAPConfigurationBuilder() cobra.Command {
 	opts := SaveLDAPConfigurationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Edit the LDAP or X.509 Configuration",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), SaveLDAPConfigurationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -242,7 +261,7 @@ func SaveLDAPConfigurationBuilder() cobra.Command {
 type VerifyLDAPConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -258,7 +277,7 @@ func (opts *VerifyLDAPConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.VerifyLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
-	resp, _, err := opts.client.LDAPConfigurationApi.VerifyLDAPConfigurationWithParams(ctx, params)
+	resp, _, err := opts.client.LDAPConfigurationApi.VerifyLDAPConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -266,28 +285,33 @@ func (opts *VerifyLDAPConfigurationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-const VerifyLDAPConfigurationTemplate = "<<some template>>"
+func VerifyLDAPConfigurationBuilder() *cobra.Command {
+	const template = "<<some template>>"
 
-func VerifyLDAPConfigurationBuilder() cobra.Command {
 	opts := VerifyLDAPConfigurationOpts{}
 	cmd := &cobra.Command{
 		Use:     "<<use>>",
-		Short:   "<<decription>>",
+		// Aliases: []string{"?"},
+		Short:   "Verify the LDAP Configuration in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		// Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output":      template,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
 				opts.initClient(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), VerifyLDAPConfigurationTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "usage description")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+
+	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd

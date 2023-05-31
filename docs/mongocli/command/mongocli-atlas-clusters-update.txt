@@ -93,7 +93,7 @@ Options
    * - --tag
      - stringToString
      - false
-     - Collection of key-value pairs that categorizes the cluster. Passing this flag replaces preexisting data. This value defaults to [].
+     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the cluster. Passing this flag replaces preexisting data. This value defaults to [].
    * - --tier
      - string
      - false

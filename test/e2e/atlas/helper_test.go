@@ -652,7 +652,7 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 	}
 
 	clear := false
-	for attempt := 0; attempt < maxAttempts; attempt++ {
+	for attempt := 0; attempt < 10; attempt++ {
 		privateEndpoints = listPrivateEndpointsByProject(t, cliPath, projectID, provider)
 		if len(privateEndpoints) == 0 {
 			t.Logf("all %s private endpoints successfully deleted", provider)
@@ -660,7 +660,7 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 			break
 		}
 
-		time.Sleep(poolInterval)
+		time.Sleep(10 * time.Second)
 	}
 
 	require.True(t, clear)

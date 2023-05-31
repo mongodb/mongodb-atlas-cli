@@ -19,7 +19,6 @@ package quickstart
 import (
 	"bytes"
 	"context"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"testing"
 
 	"github.com/golang/mock/gomock"

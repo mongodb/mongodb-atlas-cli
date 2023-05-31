@@ -151,20 +151,6 @@ func (opts *UpdateOpts) setRegionConf(regionConf atlasv2.RegionConfig) {
 		}
 	}
 }
-func getObject(regionConfig *atlasv2.RegionConfig) interface{} {
-	providerName := getProviderName(regionConfig)
-	switch providerName {
-	case "AWS":
-		return regionConfig.AWSRegionConfig
-	case "GCP":
-		return regionConfig.GCPRegionConfig
-	case "TENANT":
-		return regionConfig.TenantRegionConfig
-	case "AZURE":
-		return regionConfig.AzureRegionConfig
-	}
-	return nil
-}
 
 // UpdateBuilder atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].
 func UpdateBuilder() *cobra.Command {

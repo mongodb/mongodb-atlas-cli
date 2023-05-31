@@ -18,7 +18,6 @@ import (
 	"context"
 	"os"
 
-	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -29,24 +28,14 @@ import (
 type ClearOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
-	s *spinner.Spinner
+	debug bool
 }
 
 var clearTemplate = `local environment stopped and cleared
 `
 
 func (opts *ClearOpts) Run(_ context.Context) error {
-	if opts.s != nil {
-		opts.s.Start()
-	}
-
-	defer func() {
-		if opts.s != nil {
-			opts.s.Stop()
-		}
-	}()
-
-	if err := runDockerCompose("down", "-v"); err != nil {
+	if err := runDockerCompose(opts.debug, "down", "-v"); err != nil {
 		return err
 	}
 
@@ -55,10 +44,6 @@ func (opts *ClearOpts) Run(_ context.Context) error {
 		return err
 	}
 	_ = os.Remove(mmsConfigFilename)
-
-	if opts.s != nil {
-		opts.s.Stop()
-	}
 
 	return opts.Print(localData)
 }
@@ -80,6 +65,7 @@ func ClearBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 

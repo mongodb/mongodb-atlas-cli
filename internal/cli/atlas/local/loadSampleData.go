@@ -25,9 +25,10 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +38,7 @@ var dump []byte
 type SampleDataOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
-	s *spinner.Spinner
+	debug bool
 }
 
 var sampleDataTemplate = `sample data loaded
@@ -81,16 +82,6 @@ func extractTarGz(input []byte, output string) error {
 }
 
 func (opts *SampleDataOpts) Run(_ context.Context) error {
-	if opts.s != nil {
-		opts.s.Start()
-	}
-
-	defer func() {
-		if opts.s != nil {
-			opts.s.Stop()
-		}
-	}()
-
 	dumpDir, err := os.MkdirTemp("", "dump")
 	if err != nil {
 		return err
@@ -103,16 +94,14 @@ func (opts *SampleDataOpts) Run(_ context.Context) error {
 	}
 
 	cmd := exec.Command("mongorestore", "--gzip", "-u", localUser, "-p", localPassword, localURI, dumpDir)
-	// cmd.Stdout = os.Stdout
-	// cmd.Stderr = os.Stderr
-	// cmd.Stdin = os.Stdin
+	if opts.debug {
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
+	}
 	err = cmd.Run()
 	if err != nil {
 		return err
-	}
-
-	if opts.s != nil {
-		opts.s.Stop()
 	}
 
 	return opts.Print(nil)
@@ -121,9 +110,6 @@ func (opts *SampleDataOpts) Run(_ context.Context) error {
 // atlas local loadSampleData.
 func SampleDataBuilder() *cobra.Command {
 	opts := &SampleDataOpts{}
-	if opts.IsTerminal() {
-		opts.s = spinner.New(spinner.CharSets[9], speed)
-	}
 	cmd := &cobra.Command{
 		Use:   "loadSampleData",
 		Short: "Loads sample data in a local instance.",
@@ -137,6 +123,8 @@ func SampleDataBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
+
+	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 
 	return cmd
 }

@@ -17,7 +17,6 @@ package local
 import (
 	"context"
 
-	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -28,29 +27,15 @@ import (
 type StopOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
-	s *spinner.Spinner
+	debug bool
 }
 
 var stopTemplate = `local environment stopped
 `
 
 func (opts *StopOpts) Run(_ context.Context) error {
-	if opts.s != nil {
-		opts.s.Start()
-	}
-
-	defer func() {
-		if opts.s != nil {
-			opts.s.Stop()
-		}
-	}()
-
-	if err := runDockerCompose("down"); err != nil {
+	if err := runDockerCompose(opts.debug, "down"); err != nil {
 		return err
-	}
-
-	if opts.s != nil {
-		opts.s.Stop()
 	}
 
 	return opts.Print(localData)
@@ -73,6 +58,7 @@ func StopBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 

@@ -22,7 +22,6 @@ import (
 	"path"
 	"time"
 
-	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -54,7 +53,7 @@ const speed = 100 * time.Millisecond
 type StartOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
-	s *spinner.Spinner
+	debug bool
 }
 
 var startTemplate = `local environment started at {{.ConnectionString}}
@@ -73,7 +72,7 @@ func dumpTempFile(pattern string, contents []byte) (string, error) {
 	return f.Name(), nil
 }
 
-func runDockerCompose(args ...string) error {
+func runDockerCompose(debug bool, args ...string) error {
 	dockerComposeFilename, err := dumpTempFile("docker-compose", dockerComposeContents)
 	if dockerComposeFilename != "" {
 		defer os.Remove(dockerComposeFilename)
@@ -84,9 +83,11 @@ func runDockerCompose(args ...string) error {
 	cmdArgs := append([]string{"compose", "--compatibility", "-p", "docker", "-f", dockerComposeFilename}, args...)
 	cmd := exec.Command("docker", cmdArgs...)
 	cmd.Env = append(os.Environ(), "DOCKER_BUILDKIT=0")
-	// cmd.Stdout = os.Stdout
-	// cmd.Stderr = os.Stderr
-	// cmd.Stdin = os.Stdin
+	if debug {
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
+	}
 	return cmd.Run()
 }
 
@@ -124,21 +125,11 @@ func seed(script string) error {
 }
 
 func (opts *StartOpts) Run(_ context.Context) error {
-	if opts.s != nil {
-		opts.s.Start()
-	}
-
-	defer func() {
-		if opts.s != nil {
-			opts.s.Stop()
-		}
-	}()
-
 	if err := dumpMmsConfig(); err != nil {
 		return err
 	}
 
-	if err := runDockerCompose("up", "-d"); err != nil {
+	if err := runDockerCompose(opts.debug, "up", "-d"); err != nil {
 		return err
 	}
 
@@ -148,18 +139,12 @@ func (opts *StartOpts) Run(_ context.Context) error {
 		}
 	}
 
-	if opts.s != nil {
-		opts.s.Stop()
-	}
 	return opts.Print(localData)
 }
 
 // atlas local start.
 func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
-	if opts.IsTerminal() {
-		opts.s = spinner.New(spinner.CharSets[9], speed)
-	}
 	cmd := &cobra.Command{
 		Use:   "start",
 		Short: "Starts a local instance.",
@@ -174,6 +159,7 @@ func StartBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 

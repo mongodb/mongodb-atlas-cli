@@ -201,13 +201,9 @@ func (ir *InstallResources) addServiceAccount(ctx context.Context, config map[st
 func (ir *InstallResources) addRoles(ctx context.Context, config map[string]interface{}, namespace string, watch []string) error {
 	namespaces := map[string]struct{}{namespace: {}}
 
-	if value, ok := config["metadata"]; ok {
-		if metadata, ok := value.(map[string]interface{}); ok {
-			if name, ok := metadata["name"]; ok && name != leaderElectionRoleName {
-				for _, watchedNamespace := range watch {
-					namespaces[watchedNamespace] = struct{}{}
-				}
-			}
+	if !isLeaderElectionResource(config, leaderElectionRoleName) {
+		for _, watchedNamespace := range watch {
+			namespaces[watchedNamespace] = struct{}{}
 		}
 	}
 
@@ -249,13 +245,9 @@ func (ir *InstallResources) addClusterRole(ctx context.Context, config map[strin
 func (ir *InstallResources) addRoleBindings(ctx context.Context, config map[string]interface{}, namespace string, watch []string) error {
 	namespaces := map[string]struct{}{namespace: {}}
 
-	if value, ok := config["metadata"]; ok {
-		if metadata, ok := value.(map[string]interface{}); ok {
-			if name, ok := metadata["name"]; ok && name != leaderElectionRoleBindingName {
-				for _, watchedNamespace := range watch {
-					namespaces[watchedNamespace] = struct{}{}
-				}
-			}
+	if !isLeaderElectionResource(config, leaderElectionRoleBindingName) {
+		for _, watchedNamespace := range watch {
+			namespaces[watchedNamespace] = struct{}{}
 		}
 	}
 
@@ -381,4 +373,23 @@ func joinNamespaces(namespace string, watched []string) string {
 	}
 
 	return strings.Join(list, ",")
+}
+
+func isLeaderElectionResource(config map[string]interface{}, leaderElectionId string) bool {
+	value, ok := config["metadata"]
+	if !ok {
+		return false
+	}
+
+	metadata, ok := value.(map[string]interface{})
+	if !ok {
+		return false
+	}
+
+	name, ok := metadata["name"]
+	if !ok {
+		return false
+	}
+
+	return name == leaderElectionId
 }

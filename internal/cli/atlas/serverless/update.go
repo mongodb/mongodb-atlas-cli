@@ -106,7 +106,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.disableServerlessContinuousBackup, flag.DisableServerlessContinuousBackup, false, usage.DisableServerlessContinuousBackup)
 	cmd.MarkFlagsMutuallyExclusive(flag.EnableServerlessContinuousBackup, flag.DisableServerlessContinuousBackup)
 
-	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.UpdateServerlessTag)
+	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.ServerlessTag+usage.UpdateWarning)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

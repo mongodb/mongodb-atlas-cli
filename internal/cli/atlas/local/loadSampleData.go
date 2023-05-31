@@ -93,7 +93,7 @@ func (opts *SampleDataOpts) Run(_ context.Context) error {
 		return err
 	}
 
-	cmd := exec.Command("mongorestore", "--gzip", "-u", localUser, "-p", localPassword, localURI, dumpDir)
+	cmd := exec.Command("mongorestore", "--drop", "--gzip", "-u", localUser, "-p", localPassword, localURI, dumpDir)
 	if opts.debug {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr

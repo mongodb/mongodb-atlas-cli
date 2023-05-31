@@ -20,7 +20,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -47,8 +46,6 @@ var (
 	//go:embed files/seedUser.js
 	SeedUserContents []byte
 )
-
-const speed = 100 * time.Millisecond
 
 type StartOpts struct {
 	cli.OutputOpts

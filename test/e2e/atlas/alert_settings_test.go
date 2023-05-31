@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestAlertConfig(t *testing.T) {
@@ -56,15 +56,15 @@ func TestAlertConfig(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.AlertConfiguration
+			var alert admin.AlertConfigViewForNdsGroup
 			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
-				a.Equal(eventTypeName, alert.EventTypeName)
+				a.Equal(eventTypeName, alert.GetEventTypeName())
 				a.NotEmpty(alert.Notifications)
-				a.Equal(delayMin, *alert.Notifications[0].DelayMin)
-				a.Equal(group, alert.Notifications[0].TypeName)
-				a.Equal(intervalMin, alert.Notifications[0].IntervalMin)
-				a.False(*alert.Notifications[0].SMSEnabled)
-				alertID = alert.ID
+				a.Equal(delayMin, alert.Notifications[0].GroupNotification.GetDelayMin())
+				a.Equal(group, alert.Notifications[0].GroupNotification.GetTypeName())
+				a.Equal(intervalMin, alert.Notifications[0].GroupNotification.GetIntervalMin())
+				a.False(alert.Notifications[0].GroupNotification.GetSmsEnabled())
+				alertID = alert.GetId()
 			}
 		}
 	})
@@ -105,12 +105,12 @@ func TestAlertConfig(t *testing.T) {
 
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.AlertConfiguration
+			var alert admin.AlertConfigViewForNdsGroup
 			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
-				a.False(*alert.Enabled)
+				a.False(alert.GetEnabled())
 				a.NotEmpty(alert.Notifications)
-				a.True(*alert.Notifications[0].SMSEnabled)
-				a.True(*alert.Notifications[0].EmailEnabled)
+				a.True(alert.Notifications[0].GroupNotification.GetSmsEnabled())
+				a.True(alert.Notifications[0].GroupNotification.GetEmailEnabled())
 			}
 		}
 	})
@@ -133,12 +133,12 @@ func TestAlertConfig(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err)
 
-		var fields []string
+		var fields []admin.MatcherField
 		if err := json.Unmarshal(resp, &fields); err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		expected := []string{
+		expected := []admin.MatcherField{
 			"TYPE_NAME",
 			"HOSTNAME",
 			"PORT",

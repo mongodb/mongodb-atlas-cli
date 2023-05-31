@@ -71,7 +71,8 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.AlertConf
 	out := new(admin.AlertConfigViewForNdsGroup)
 
 	out.GroupId = &projectID
-	out.EventTypeName = pointer.Get(admin.ServerlessEventTypeViewAlertable(strings.ToUpper(opts.event)))
+	val := admin.ServerlessEventTypeViewAlertable(strings.ToUpper(opts.event))
+	out.EventTypeName = &val
 	out.Enabled = &opts.enabled
 
 	if opts.matcherFieldName != "" {

@@ -47,7 +47,7 @@ var updateTemplate = "Alert configuration '{{.Id}}' updated.\n"
 
 func (opts *UpdateOpts) Run() error {
 	alert := opts.NewAlertConfiguration(opts.ConfigProjectID())
-	alert.GroupId = &opts.alertID
+	alert.Id = &opts.alertID
 	r, err := opts.store.UpdateAlertConfiguration(alert)
 	if err != nil {
 		return err

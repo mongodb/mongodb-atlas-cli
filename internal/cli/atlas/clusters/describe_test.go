@@ -17,13 +17,13 @@
 package clusters
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestDescribe_Run(t *testing.T) {

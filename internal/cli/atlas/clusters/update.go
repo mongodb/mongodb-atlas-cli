@@ -17,7 +17,6 @@ package clusters
 import (
 	"context"
 	"fmt"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/commonerrors"
@@ -29,6 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 const (
@@ -108,57 +108,48 @@ func (opts *UpdateOpts) patchOpts(out *atlasv2.ClusterDescriptionV15) {
 func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasv2.ClusterDescriptionV15) {
 	for _, replicationSpec := range out.ReplicationSpecs {
 		for _, regionConf := range replicationSpec.RegionConfigs {
-			if regionConf.AWSRegionConfig != nil {
-				if regionConf.AWSRegionConfig.ReadOnlySpecs != nil {
-					regionConf.AWSRegionConfig.ReadOnlySpecs.InstanceSize = &opts.tier
-				}
-				if regionConf.AWSRegionConfig.AnalyticsSpecs != nil {
-					regionConf.AWSRegionConfig.AnalyticsSpecs.InstanceSize = &opts.tier
-				}
-				if regionConf.AWSRegionConfig.ElectableSpecs != nil {
-					regionConf.AWSRegionConfig.ElectableSpecs.InstanceSize = &opts.tier
-				}
-			} else if regionConf.AzureRegionConfig != nil {
-				if regionConf.AzureRegionConfig.ReadOnlySpecs != nil {
-					regionConf.AzureRegionConfig.ReadOnlySpecs.InstanceSize = &opts.tier
-				}
-				if regionConf.AzureRegionConfig.AnalyticsSpecs != nil {
-					regionConf.AzureRegionConfig.AnalyticsSpecs.InstanceSize = &opts.tier
-				}
-				if regionConf.AzureRegionConfig.ElectableSpecs != nil {
-					regionConf.AzureRegionConfig.ElectableSpecs.InstanceSize = &opts.tier
-				}
-			} else if regionConf.GCPRegionConfig != nil {
-				if regionConf.GCPRegionConfig.ReadOnlySpecs != nil {
-					regionConf.GCPRegionConfig.ReadOnlySpecs.InstanceSize = &opts.tier
-				}
-				if regionConf.GCPRegionConfig.AnalyticsSpecs != nil {
-					regionConf.GCPRegionConfig.AnalyticsSpecs.InstanceSize = &opts.tier
-				}
-				if regionConf.GCPRegionConfig.ElectableSpecs != nil {
-					regionConf.GCPRegionConfig.ElectableSpecs.InstanceSize = &opts.tier
-				}
-			} else if regionConf.TenantRegionConfig != nil {
-				if regionConf.TenantRegionConfig.ElectableSpecs != nil {
-					regionConf.AWSRegionConfig.ElectableSpecs.InstanceSize = &opts.tier
-				}
-			}
+			opts.setRegionConf(regionConf)
 		}
 	}
 }
-func getObject(regionConfig *atlasv2.RegionConfig) interface{} {
-	providerName := getProviderName(regionConfig)
-	switch providerName {
-	case "AWS":
-		return regionConfig.AWSRegionConfig
-	case "GCP":
-		return regionConfig.GCPRegionConfig
-	case "TENANT":
-		return regionConfig.TenantRegionConfig
-	case "AZURE":
-		return regionConfig.AzureRegionConfig
+
+func (opts *UpdateOpts) setRegionConf(regionConf atlasv2.RegionConfig) {
+	switch {
+	case regionConf.AWSRegionConfig != nil:
+		if regionConf.AWSRegionConfig.ReadOnlySpecs != nil {
+			regionConf.AWSRegionConfig.ReadOnlySpecs.InstanceSize = &opts.tier
+		}
+		if regionConf.AWSRegionConfig.AnalyticsSpecs != nil {
+			regionConf.AWSRegionConfig.AnalyticsSpecs.InstanceSize = &opts.tier
+		}
+		if regionConf.AWSRegionConfig.ElectableSpecs != nil {
+			regionConf.AWSRegionConfig.ElectableSpecs.InstanceSize = &opts.tier
+		}
+	case regionConf.AzureRegionConfig != nil:
+		if regionConf.AzureRegionConfig.ReadOnlySpecs != nil {
+			regionConf.AzureRegionConfig.ReadOnlySpecs.InstanceSize = &opts.tier
+		}
+		if regionConf.AzureRegionConfig.AnalyticsSpecs != nil {
+			regionConf.AzureRegionConfig.AnalyticsSpecs.InstanceSize = &opts.tier
+		}
+		if regionConf.AzureRegionConfig.ElectableSpecs != nil {
+			regionConf.AzureRegionConfig.ElectableSpecs.InstanceSize = &opts.tier
+		}
+	case regionConf.GCPRegionConfig != nil:
+		if regionConf.GCPRegionConfig.ReadOnlySpecs != nil {
+			regionConf.GCPRegionConfig.ReadOnlySpecs.InstanceSize = &opts.tier
+		}
+		if regionConf.GCPRegionConfig.AnalyticsSpecs != nil {
+			regionConf.GCPRegionConfig.AnalyticsSpecs.InstanceSize = &opts.tier
+		}
+		if regionConf.GCPRegionConfig.ElectableSpecs != nil {
+			regionConf.GCPRegionConfig.ElectableSpecs.InstanceSize = &opts.tier
+		}
+	case regionConf.TenantRegionConfig != nil:
+		if regionConf.TenantRegionConfig.ElectableSpecs != nil {
+			regionConf.AWSRegionConfig.ElectableSpecs.InstanceSize = &opts.tier
+		}
 	}
-	return nil
 }
 
 // UpdateBuilder atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].

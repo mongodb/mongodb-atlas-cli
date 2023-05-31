@@ -17,7 +17,6 @@
 package clusters
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -25,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/spf13/afero"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestUpdate_Run(t *testing.T) {

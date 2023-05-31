@@ -18,8 +18,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -27,20 +25,25 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
-	replicaSet = "REPLICASET"
-	tenant     = "TENANT"
-	atlasM0    = "M0"
-	atlasM2    = "M2"
-	atlasM5    = "M5"
-	zoneName   = "Zone 1"
+	replicaSet        = "REPLICASET"
+	tenant            = "TENANT"
+	atlasM0           = "M0"
+	atlasM2           = "M2"
+	atlasM5           = "M5"
+	zoneName          = "Zone 1"
+	awsProviderName   = "AWS"
+	gcpProviderName   = "GCP"
+	azureProviderName = "Azure"
 )
 
 type CreateOpts struct {
@@ -161,7 +164,7 @@ func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 	regionConfig := atlasv2.RegionConfig{}
 
 	switch providerName {
-	case "TENANT":
+	case tenant:
 		regionConfig.TenantRegionConfig = &atlasv2.TenantRegionConfig{
 			ProviderName: &providerName,
 			Priority:     &priority,
@@ -171,7 +174,7 @@ func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 			},
 			BackingProviderName: &opts.provider,
 		}
-	case "AWS":
+	case awsProviderName:
 		regionConfig.AWSRegionConfig = &atlasv2.AWSRegionConfig{
 			ProviderName: &providerName,
 			Priority:     &priority,
@@ -182,7 +185,7 @@ func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 			},
 			ReadOnlySpecs: readOnlySpec,
 		}
-	case "Azure":
+	case azureProviderName:
 		regionConfig.AzureRegionConfig = &atlasv2.AzureRegionConfig{
 			ProviderName: &providerName,
 			Priority:     &priority,
@@ -193,7 +196,7 @@ func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 			},
 			ReadOnlySpecs: readOnlySpec,
 		}
-	case "GCP":
+	case gcpProviderName:
 		regionConfig.GCPRegionConfig = &atlasv2.GCPRegionConfig{
 			ProviderName: &providerName,
 			Priority:     &priority,

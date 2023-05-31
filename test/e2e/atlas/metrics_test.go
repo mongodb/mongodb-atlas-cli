@@ -40,6 +40,10 @@ func TestMetrics(t *testing.T) {
 		process(t, cliPath, hostname, g.projectID)
 	})
 
+	t.Run("processes with type", func(t *testing.T) {
+		processWithType(t, cliPath, hostname, g.projectID)
+	})
+
 	t.Run("databases", func(t *testing.T) {
 		databases(t, cliPath, hostname, g.projectID)
 	})
@@ -57,6 +61,41 @@ func process(t *testing.T, cliPath, hostname, projectID string) {
 		hostname,
 		"--granularity=PT30M",
 		"--period=P1DT12H",
+		"--projectId", projectID,
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+
+	metrics := &atlasv2.MeasurementsGeneralViewAtlas{}
+	err = json.Unmarshal(resp, &metrics)
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if metrics.Measurements == nil {
+		t.Errorf("there are no measurements")
+	}
+
+	if len(metrics.Measurements) == 0 {
+		t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
+	}
+}
+
+func processWithType(t *testing.T, cliPath, hostname, projectID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		metricsEntity,
+		"processes",
+		hostname,
+		"--granularity=PT30M",
+		"--period=P1DT12H",
+		"--type=MAX_SWAP_USAGE_FREE",
 		"--projectId", projectID,
 		"-o=json")
 

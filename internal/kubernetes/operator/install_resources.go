@@ -375,7 +375,7 @@ func joinNamespaces(namespace string, watched []string) string {
 	return strings.Join(list, ",")
 }
 
-func isLeaderElectionResource(config map[string]interface{}, leaderElectionId string) bool {
+func isLeaderElectionResource(config map[string]interface{}, leaderElectionID string) bool {
 	value, ok := config["metadata"]
 	if !ok {
 		return false
@@ -391,5 +391,5 @@ func isLeaderElectionResource(config map[string]interface{}, leaderElectionId st
 		return false
 	}
 
-	return name == leaderElectionId
+	return name == leaderElectionID
 }

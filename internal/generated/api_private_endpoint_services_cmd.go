@@ -78,9 +78,10 @@ func CreatePrivateEndpointBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", &quot;AWS&quot;, "Cloud service provider that manages this private endpoint.")	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", , "Unique 24-hexadecimal digit string that identifies the private endpoint service for which you want to create a private endpoint.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", &quot;AWS&quot;, "Cloud service provider that manages this private endpoint.")
+	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", , "Unique 24-hexadecimal digit string that identifies the private endpoint service for which you want to create a private endpoint.")
 
-	
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("cloudProvider")
 	_ = cmd.MarkFlagRequired("endpointServiceId")
@@ -140,7 +141,6 @@ func CreatePrivateEndpointServiceBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 
-	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -202,9 +202,11 @@ func DeletePrivateEndpointBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", &quot;AWS&quot;, "Cloud service provider that manages this private endpoint.")	cmd.Flags().StringVar(&opts.endpointId, "endpointId", , "Unique string that identifies the private endpoint you want to delete. The format of the **endpointId** parameter differs for AWS and Azure. You must URL encode the **endpointId** for Azure private endpoints.")	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", , "Unique 24-hexadecimal digit string that identifies the private endpoint service from which you want to delete a private endpoint.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", &quot;AWS&quot;, "Cloud service provider that manages this private endpoint.")
+	cmd.Flags().StringVar(&opts.endpointId, "endpointId", , "Unique string that identifies the private endpoint you want to delete. The format of the **endpointId** parameter differs for AWS and Azure. You must URL encode the **endpointId** for Azure private endpoints.")
+	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", , "Unique 24-hexadecimal digit string that identifies the private endpoint service from which you want to delete a private endpoint.")
 
-	
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("cloudProvider")
 	_ = cmd.MarkFlagRequired("endpointId")
@@ -267,9 +269,10 @@ func DeletePrivateEndpointServiceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", &quot;AWS&quot;, "Cloud service provider that manages this private endpoint service.")	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", , "Unique 24-hexadecimal digit string that identifies the private endpoint service that you want to delete.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", &quot;AWS&quot;, "Cloud service provider that manages this private endpoint service.")
+	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", , "Unique 24-hexadecimal digit string that identifies the private endpoint service that you want to delete.")
 
-	
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("cloudProvider")
 	_ = cmd.MarkFlagRequired("endpointServiceId")
@@ -333,9 +336,11 @@ func GetPrivateEndpointBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", &quot;AWS&quot;, "Cloud service provider that manages this private endpoint.")	cmd.Flags().StringVar(&opts.endpointId, "endpointId", , "Unique string that identifies the private endpoint you want to return. The format of the **endpointId** parameter differs for AWS and Azure. You must URL encode the **endpointId** for Azure private endpoints.")	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", , "Unique 24-hexadecimal digit string that identifies the private endpoint service for which you want to return a private endpoint.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", &quot;AWS&quot;, "Cloud service provider that manages this private endpoint.")
+	cmd.Flags().StringVar(&opts.endpointId, "endpointId", , "Unique string that identifies the private endpoint you want to return. The format of the **endpointId** parameter differs for AWS and Azure. You must URL encode the **endpointId** for Azure private endpoints.")
+	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", , "Unique 24-hexadecimal digit string that identifies the private endpoint service for which you want to return a private endpoint.")
 
-	
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("cloudProvider")
 	_ = cmd.MarkFlagRequired("endpointId")
@@ -398,9 +403,10 @@ func GetPrivateEndpointServiceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", &quot;AWS&quot;, "Cloud service provider that manages this private endpoint service.")	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", , "Unique 24-hexadecimal digit string that identifies the private endpoint service that you want to return.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", &quot;AWS&quot;, "Cloud service provider that manages this private endpoint service.")
+	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", , "Unique 24-hexadecimal digit string that identifies the private endpoint service that you want to return.")
 
-	
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("cloudProvider")
 	_ = cmd.MarkFlagRequired("endpointServiceId")
@@ -460,7 +466,6 @@ func GetRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 
-	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd
@@ -518,9 +523,9 @@ func ListPrivateEndpointServicesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", &quot;AWS&quot;, "Cloud service provider that manages this private endpoint service.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", &quot;AWS&quot;, "Cloud service provider that manages this private endpoint service.")
 
-	
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("cloudProvider")
 
@@ -579,7 +584,6 @@ func ToggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 
-	
 	_ = cmd.MarkFlagRequired("groupId")
 
 	return cmd

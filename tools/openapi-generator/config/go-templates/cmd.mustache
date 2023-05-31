@@ -71,14 +71,16 @@ func {{operationId}}Builder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	{{#pathParams}}
-	cmd.Flags().StringVar(&opts.{{paramName}}, "{{paramName}}", {{defaultValue}}, "{{description}}"){{/pathParams}}
-	{{#queryParams}}
-	cmd.Flags().StringVar(&opts.{{paramName}}, "{{paramName}}", {{defaultValue}}, "{{description}}"){{/queryParams}}
-	{{#pathParams}}{{#required}}
-	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/pathParams}}{{#queryParams}}{{#required}}
+{{#pathParams}}
+	cmd.Flags().StringVar(&opts.{{paramName}}, "{{paramName}}", {{defaultValue}}, "{{description}}")
+{{/pathParams}}
+{{#queryParams}}
+	cmd.Flags().StringVar(&opts.{{paramName}}, "{{paramName}}", {{defaultValue}}, "{{description}}")
+{{/queryParams}}
+{{#pathParams}}{{#required}}
+	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/pathParams}}
+{{#queryParams}}{{#required}}
 	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/queryParams}}
-
 	return cmd
 }
 {{/operation}}

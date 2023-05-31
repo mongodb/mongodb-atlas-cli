@@ -74,8 +74,6 @@ func CreateOrganizationBuilder() *cobra.Command {
 	}
 
 
-	
-
 	return cmd
 }
 type CreateOrganizationInvitationOpts struct {
@@ -131,7 +129,6 @@ func CreateOrganizationInvitationBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
-	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -189,7 +186,6 @@ func DeleteOrganizationBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
-	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -247,9 +243,9 @@ func DeleteOrganizationInvitationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.invitationId, "invitationId", , "Unique 24-hexadecimal digit string that identifies the invitation.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.invitationId, "invitationId", , "Unique 24-hexadecimal digit string that identifies the invitation.")
 
-	
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invitationId")
 
@@ -308,7 +304,6 @@ func GetOrganizationBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
-	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -366,9 +361,9 @@ func GetOrganizationInvitationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.invitationId, "invitationId", , "Unique 24-hexadecimal digit string that identifies the invitation.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.invitationId, "invitationId", , "Unique 24-hexadecimal digit string that identifies the invitation.")
 
-	
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invitationId")
 
@@ -427,7 +422,6 @@ func GetOrganizationSettingsBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
-	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -487,7 +481,7 @@ func ListOrganizationInvitationsBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 	cmd.Flags().StringVar(&opts.username, "username", , "Email address of the user account invited to this organization. If you exclude this parameter, this resource returns all pending invitations.")
-	
+
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -552,8 +546,11 @@ func ListOrganizationProjectsBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")	cmd.Flags().StringVar(&opts.name, "name", , "Human-readable label of the project to use to filter the returned list. Performs a case-insensitive search for a project within the organization which is prefixed by the specified name.")
-	
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
+	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
+	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.name, "name", , "Human-readable label of the project to use to filter the returned list. Performs a case-insensitive search for a project within the organization which is prefixed by the specified name.")
+
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -616,8 +613,10 @@ func ListOrganizationUsersBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
-	
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
+	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
+	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -679,9 +678,11 @@ func ListOrganizationsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
+	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
+	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
+	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.name, "name", , "Human-readable label of the organization to use to filter the returned list. Performs a case-insensitive search for an organization that starts with the specified name.")
 
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")	cmd.Flags().StringVar(&opts.name, "name", , "Human-readable label of the organization to use to filter the returned list. Performs a case-insensitive search for an organization that starts with the specified name.")
-	
 
 	return cmd
 }
@@ -738,7 +739,6 @@ func RenameOrganizationBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
-	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -796,7 +796,6 @@ func UpdateOrganizationInvitationBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
-	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -854,9 +853,9 @@ func UpdateOrganizationInvitationByIdBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")	cmd.Flags().StringVar(&opts.invitationId, "invitationId", , "Unique 24-hexadecimal digit string that identifies the invitation.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.invitationId, "invitationId", , "Unique 24-hexadecimal digit string that identifies the invitation.")
 
-	
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invitationId")
 
@@ -915,7 +914,6 @@ func UpdateOrganizationSettingsBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
-	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd

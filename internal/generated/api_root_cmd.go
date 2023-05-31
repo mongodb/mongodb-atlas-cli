@@ -74,7 +74,5 @@ func GetSystemStatusBuilder() *cobra.Command {
 	}
 
 
-	
-
 	return cmd
 }

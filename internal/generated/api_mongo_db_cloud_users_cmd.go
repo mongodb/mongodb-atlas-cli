@@ -74,8 +74,6 @@ func CreateUserBuilder() *cobra.Command {
 	}
 
 
-	
-
 	return cmd
 }
 type GetUserOpts struct {
@@ -131,7 +129,6 @@ func GetUserBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.userId, "userId", , "Unique 24-hexadecimal digit string that identifies this user.")
 
-	
 	_ = cmd.MarkFlagRequired("userId")
 
 	return cmd
@@ -189,7 +186,6 @@ func GetUserByUsernameBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.userName, "userName", , "Email address that belongs to the MongoDB Cloud user account. You cannot modify this address after creating the user.")
 
-	
 	_ = cmd.MarkFlagRequired("userName")
 
 	return cmd

@@ -76,9 +76,9 @@ func CreateRoleMappingBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
 
@@ -137,7 +137,6 @@ func DeleteFederationAppBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 
 	return cmd
@@ -197,9 +196,10 @@ func DeleteRoleMappingBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.id, "id", , "Unique 24-hexadecimal digit string that identifies the role mapping that you want to remove.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+	cmd.Flags().StringVar(&opts.id, "id", , "Unique 24-hexadecimal digit string that identifies the role mapping that you want to remove.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")
 	_ = cmd.MarkFlagRequired("orgId")
@@ -259,9 +259,9 @@ func GetConnectedOrgConfigBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the connected organization configuration to return.")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the connected organization configuration to return.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
 
@@ -320,7 +320,6 @@ func GetFederationSettingsBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
-	
 	_ = cmd.MarkFlagRequired("orgId")
 
 	return cmd
@@ -378,9 +377,9 @@ func GetIdentityProviderBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", , "Unique 20-hexadecimal digit string that identifies the identity provider.")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", , "Unique 20-hexadecimal digit string that identifies the identity provider.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("identityProviderId")
 
@@ -439,9 +438,9 @@ func GetIdentityProviderMetadataBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", , "Unique 20-hexadecimal digit string that identifies the identity provider.")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", , "Unique 20-hexadecimal digit string that identifies the identity provider.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("identityProviderId")
 
@@ -502,9 +501,10 @@ func GetRoleMappingBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.id, "id", , "Unique 24-hexadecimal digit string that identifies the role mapping that you want to return.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+	cmd.Flags().StringVar(&opts.id, "id", , "Unique 24-hexadecimal digit string that identifies the role mapping that you want to return.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")
 	_ = cmd.MarkFlagRequired("orgId")
@@ -564,7 +564,6 @@ func ListConnectedOrgConfigsBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 
 	return cmd
@@ -622,7 +621,6 @@ func ListIdentityProvidersBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 
 	return cmd
@@ -680,9 +678,9 @@ func ListRoleMappingsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
 
@@ -741,9 +739,9 @@ func RemoveConnectedOrgConfigBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the connected organization configuration to remove.")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the connected organization configuration to remove.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
 
@@ -802,9 +800,9 @@ func UpdateConnectedOrgConfigBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the connected organization configuration to update.")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the connected organization configuration to update.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
 
@@ -863,9 +861,9 @@ func UpdateIdentityProviderBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", , "Unique 20-hexadecimal digit string that identifies the identity provider.")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", , "Unique 20-hexadecimal digit string that identifies the identity provider.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("identityProviderId")
 
@@ -926,9 +924,10 @@ func UpdateRoleMappingBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")	cmd.Flags().StringVar(&opts.id, "id", , "Unique 24-hexadecimal digit string that identifies the role mapping that you want to update.")	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", , "Unique 24-hexadecimal digit string that identifies your federation.")
+	cmd.Flags().StringVar(&opts.id, "id", , "Unique 24-hexadecimal digit string that identifies the role mapping that you want to update.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
-	
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")
 	_ = cmd.MarkFlagRequired("orgId")

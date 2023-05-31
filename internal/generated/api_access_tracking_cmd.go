@@ -86,9 +86,14 @@ func ListAccessLogsByClusterNameBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.authResult, "authResult", , "Flag that indicates whether the response returns the successful authentication attempts only.")	cmd.Flags().StringVar(&opts.end, "end", , "Date and time when to stop retrieving database history. If you specify **end**, you must also specify **start**. This parameter uses UNIX epoch time in milliseconds.")	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", , "One Internet Protocol address that attempted to authenticate with the database.")	cmd.Flags().StringVar(&opts.nLogs, "nLogs", 20000, "Maximum number of lines from the log to return.")	cmd.Flags().StringVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster.")
+	cmd.Flags().StringVar(&opts.authResult, "authResult", , "Flag that indicates whether the response returns the successful authentication attempts only.")
+	cmd.Flags().StringVar(&opts.end, "end", , "Date and time when to stop retrieving database history. If you specify **end**, you must also specify **start**. This parameter uses UNIX epoch time in milliseconds.")
+	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", , "One Internet Protocol address that attempted to authenticate with the database.")
+	cmd.Flags().StringVar(&opts.nLogs, "nLogs", 20000, "Maximum number of lines from the log to return.")
+	cmd.Flags().StringVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.")
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 
@@ -157,9 +162,14 @@ func ListAccessLogsByHostnameBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")	cmd.Flags().StringVar(&opts.hostname, "hostname", , "Fully qualified domain name or IP address of the MongoDB host that stores the log files that you want to download.")
-	cmd.Flags().StringVar(&opts.authResult, "authResult", , "Flag that indicates whether the response returns the successful authentication attempts only.")	cmd.Flags().StringVar(&opts.end, "end", , "Date and time when to stop retrieving database history. If you specify **end**, you must also specify **start**. This parameter uses UNIX epoch time in milliseconds.")	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", , "One Internet Protocol address that attempted to authenticate with the database.")	cmd.Flags().StringVar(&opts.nLogs, "nLogs", 20000, "Maximum number of lines from the log to return.")	cmd.Flags().StringVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.hostname, "hostname", , "Fully qualified domain name or IP address of the MongoDB host that stores the log files that you want to download.")
+	cmd.Flags().StringVar(&opts.authResult, "authResult", , "Flag that indicates whether the response returns the successful authentication attempts only.")
+	cmd.Flags().StringVar(&opts.end, "end", , "Date and time when to stop retrieving database history. If you specify **end**, you must also specify **start**. This parameter uses UNIX epoch time in milliseconds.")
+	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", , "One Internet Protocol address that attempted to authenticate with the database.")
+	cmd.Flags().StringVar(&opts.nLogs, "nLogs", 20000, "Maximum number of lines from the log to return.")
+	cmd.Flags().StringVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.")
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("hostname")
 

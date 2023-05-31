@@ -191,7 +191,6 @@ func (opts *ConfigOpts) newNotification() *admin.NotificationViewForNdsGroup {
 			IntervalMin:  &opts.notificationIntervalMin,
 			TeamId:       &opts.notificationTeamID,
 		}
-
 	}
 
 	return out
@@ -235,7 +234,6 @@ func (opts *ConfigOpts) newMetricThreshold() *admin.ServerlessMetricThreshold {
 			Units:      pointer.Get(admin.TimeMetricUnits(strings.ToUpper(opts.metricThresholdUnits))),
 			Mode:       &mode,
 		}
-
 	}
 	return result
 }

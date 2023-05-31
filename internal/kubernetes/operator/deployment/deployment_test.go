@@ -66,7 +66,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			ConnectionStrings:        nil,
 			DiskSizeGB:               pointer.Get[float64](20.4),
 			EncryptionAtRestProvider: pointer.Get("TestProvider"),
-			GroupId:                   pointer.Get("TestGroupID"),
+			GroupId:                  pointer.Get("TestGroupID"),
 			Id:                       pointer.Get("TestID"),
 			Labels: []atlasv2.NDSLabel{
 				{
@@ -286,9 +286,9 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 											MaxInstanceSize:  string(*cluster.ReplicationSpecs[0].RegionConfigs[0].AWSRegionConfig.AutoScaling.Compute.MaxInstanceSize),
 										},
 									},
-									Priority:            cluster.ReplicationSpecs[0].RegionConfigs[0].AWSRegionConfig.Priority,
-									ProviderName:        *cluster.ReplicationSpecs[0].RegionConfigs[0].AWSRegionConfig.ProviderName,
-									RegionName:          *cluster.ReplicationSpecs[0].RegionConfigs[0].AWSRegionConfig.RegionName,
+									Priority:     cluster.ReplicationSpecs[0].RegionConfigs[0].AWSRegionConfig.Priority,
+									ProviderName: *cluster.ReplicationSpecs[0].RegionConfigs[0].AWSRegionConfig.ProviderName,
+									RegionName:   *cluster.ReplicationSpecs[0].RegionConfigs[0].AWSRegionConfig.RegionName,
 								},
 							},
 						},

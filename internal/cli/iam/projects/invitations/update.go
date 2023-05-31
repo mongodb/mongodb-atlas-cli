@@ -109,9 +109,9 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.username, flag.Email, "", usage.Email)
 	if config.BinName() == config.MongoCLI {
-		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.MCLIOrgRole)
+		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.MCLIOrgRole+usage.UpdateWarning)
 	} else {
-		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
+		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole+usage.UpdateWarning)
 	}
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

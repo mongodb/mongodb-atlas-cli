@@ -17,13 +17,13 @@
 package clusters
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"testing"
 	"time"
 
 	"github.com/go-test/deep"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestBuilder(t *testing.T) {

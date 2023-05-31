@@ -359,7 +359,8 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 			var regionName string
 			var backingProviderName string
 
-			if rc.AWSRegionConfig != nil {
+			switch {
+			case rc.AWSRegionConfig != nil:
 				configAnalyticsSpecs = rc.AWSRegionConfig.AnalyticsSpecs
 				configElectableSpecs = rc.AWSRegionConfig.ElectableSpecs
 				configReadOnlySpecs = rc.AWSRegionConfig.ReadOnlySpecs
@@ -367,7 +368,7 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 				priority = rc.AWSRegionConfig.Priority
 				providerName = rc.AWSRegionConfig.GetProviderName()
 				regionName = rc.AWSRegionConfig.GetRegionName()
-			} else if rc.AzureRegionConfig != nil {
+			case rc.AzureRegionConfig != nil:
 				configAnalyticsSpecs = rc.AzureRegionConfig.AnalyticsSpecs
 				configElectableSpecs = rc.AzureRegionConfig.ElectableSpecs
 				configReadOnlySpecs = rc.AzureRegionConfig.ReadOnlySpecs
@@ -375,7 +376,7 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 				priority = rc.AzureRegionConfig.Priority
 				providerName = rc.AzureRegionConfig.GetProviderName()
 				regionName = rc.AzureRegionConfig.GetRegionName()
-			} else if rc.GCPRegionConfig != nil {
+			case rc.GCPRegionConfig != nil:
 				configAnalyticsSpecs = rc.GCPRegionConfig.AnalyticsSpecs
 				configElectableSpecs = rc.GCPRegionConfig.ElectableSpecs
 				configReadOnlySpecs = rc.GCPRegionConfig.ReadOnlySpecs
@@ -383,7 +384,7 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 				priority = rc.GCPRegionConfig.Priority
 				providerName = rc.GCPRegionConfig.GetProviderName()
 				regionName = rc.GCPRegionConfig.GetRegionName()
-			} else if rc.TenantRegionConfig != nil {
+			case rc.TenantRegionConfig != nil:
 				configElectableSpecs = rc.TenantRegionConfig.ElectableSpecs
 				backingProviderName = rc.TenantRegionConfig.GetBackingProviderName()
 				priority = rc.TenantRegionConfig.Priority

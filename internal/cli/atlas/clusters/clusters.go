@@ -138,21 +138,19 @@ func RemoveReadOnlyAttributes(out *atlasv2.ClusterDescriptionV15) {
 
 	for i, spec := range out.ReplicationSpecs {
 		out.ReplicationSpecs[i].Id = nil
-		for j, c := range spec.RegionConfigs {
+		for j, config := range spec.RegionConfigs {
+			c := config
 			providerName := getProviderName(&c)
-			if providerName == tenant {
+			switch providerName {
+			case tenant:
 				out.ReplicationSpecs[i].RegionConfigs[j].TenantRegionConfig.ProviderName = pointer.Get(tenant)
 				isTenant = true
-				break
-			} else if providerName == "AWS" {
-				out.ReplicationSpecs[i].RegionConfigs[j].AWSRegionConfig.ProviderName = pointer.Get("AWS")
-				break
-			} else if providerName == "GCP" {
-				out.ReplicationSpecs[i].RegionConfigs[j].GCPRegionConfig.ProviderName = pointer.Get("GCP")
-				break
-			} else if providerName == "Azure" {
-				out.ReplicationSpecs[i].RegionConfigs[j].AzureRegionConfig.ProviderName = pointer.Get("Azure")
-				break
+			case awsProviderName:
+				out.ReplicationSpecs[i].RegionConfigs[j].AWSRegionConfig.ProviderName = pointer.Get(awsProviderName)
+			case gcpProviderName:
+				out.ReplicationSpecs[i].RegionConfigs[j].GCPRegionConfig.ProviderName = pointer.Get(gcpProviderName)
+			case azureProviderName:
+				out.ReplicationSpecs[i].RegionConfigs[j].AzureRegionConfig.ProviderName = pointer.Get(azureProviderName)
 			}
 		}
 	}
@@ -167,17 +165,17 @@ func RemoveReadOnlyAttributes(out *atlasv2.ClusterDescriptionV15) {
 }
 
 func getProviderName(out *atlasv2.RegionConfig) string {
-	if out.GCPRegionConfig != nil {
-		return "GCP"
-	} else if out.AWSRegionConfig != nil {
-		return "AWS"
-	} else if out.AzureRegionConfig != nil {
-		return "Azure"
-	} else if out.TenantRegionConfig != nil {
+	switch {
+	case out.GCPRegionConfig != nil:
+		return gcpProviderName
+	case out.AWSRegionConfig != nil:
+		return awsProviderName
+	case out.AzureRegionConfig != nil:
+		return azureProviderName
+	case out.TenantRegionConfig != nil:
 		return tenant
-	} else {
-		return ""
 	}
+	return ""
 }
 
 func RemoveReadOnlyAttributesSharedCluster(out *atlas.Cluster) {

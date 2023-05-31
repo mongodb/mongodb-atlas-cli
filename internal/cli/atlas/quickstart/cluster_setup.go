@@ -136,9 +136,12 @@ func (opts *Opts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
 }
 
 const (
-	tenant  = "TENANT"
-	atlasM2 = "M2"
-	atlasM5 = "M5"
+	tenant            = "TENANT"
+	atlasM2           = "M2"
+	atlasM5           = "M5"
+	awsProviderName   = "AWS"
+	gcpProviderName   = "GCP"
+	azureProviderName = "Azure"
 )
 
 func (opts *Opts) newAdvancedRegionConfig() atlasv2.RegionConfig {
@@ -150,7 +153,7 @@ func (opts *Opts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 	members := 3
 
 	switch providerName {
-	case "TENANT":
+	case tenant:
 		regionConfig.TenantRegionConfig = &atlasv2.TenantRegionConfig{
 			ProviderName: &providerName,
 			Priority:     &priority,
@@ -160,7 +163,7 @@ func (opts *Opts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 			},
 			BackingProviderName: &opts.Provider,
 		}
-	case "AWS":
+	case awsProviderName:
 		regionConfig.AWSRegionConfig = &atlasv2.AWSRegionConfig{
 			ProviderName: &providerName,
 			Priority:     &priority,
@@ -170,7 +173,7 @@ func (opts *Opts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 				NodeCount:    &members,
 			},
 		}
-	case "Azure":
+	case azureProviderName:
 		regionConfig.AzureRegionConfig = &atlasv2.AzureRegionConfig{
 			ProviderName: &providerName,
 			Priority:     &priority,
@@ -180,7 +183,7 @@ func (opts *Opts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 				NodeCount:    &members,
 			},
 		}
-	case "GCP":
+	case gcpProviderName:
 		regionConfig.GCPRegionConfig = &atlasv2.GCPRegionConfig{
 			ProviderName: &providerName,
 			Priority:     &priority,

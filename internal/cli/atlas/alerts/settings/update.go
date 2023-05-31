@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -43,11 +43,11 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var updateTemplate = "Alert configuration '{{.ID}}' updated.\n"
+var updateTemplate = "Alert configuration '{{.Id}}' updated.\n"
 
 func (opts *UpdateOpts) Run() error {
 	alert := opts.NewAlertConfiguration(opts.ConfigProjectID())
-	alert.ID = opts.alertID
+	alert.GroupId = &opts.alertID
 	r, err := opts.store.UpdateAlertConfiguration(alert)
 	if err != nil {
 		return err

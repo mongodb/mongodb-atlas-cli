@@ -17,12 +17,13 @@ package settings
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/atlas-sdk/admin"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -42,13 +43,17 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var settingsListTemplate = `ID	TYPE	ENABLED{{range .}}
-{{.ID}}	{{.EventTypeName}}	{{.Enabled}}{{end}}
+var settingsListTemplate = `ID	TYPE	ENABLED{{range .Results}}
+{{.Id}}	{{.EventTypeName}}	{{.Enabled}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.AlertConfigurations(opts.ConfigProjectID(), listOpts)
+	params := &admin.ListAlertConfigurationsApiParams{
+		GroupId:      opts.ConfigProjectID(),
+		ItemsPerPage: &opts.ItemsPerPage,
+		PageNum:      &opts.PageNum,
+	}
+	r, err := opts.store.AlertConfigurations(params)
 	if err != nil {
 		return err
 	}

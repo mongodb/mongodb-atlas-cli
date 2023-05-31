@@ -20,14 +20,15 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestFieldsType_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockMatcherFieldsLister(ctrl)
 
-	var expected []string
+	var expected []admin.MatcherField
 
 	listOpts := &FieldsTypeOpts{
 		store: mockStore,

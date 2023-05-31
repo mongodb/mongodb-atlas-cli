@@ -18,7 +18,6 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"os"
 	"os/exec"
 	"testing"

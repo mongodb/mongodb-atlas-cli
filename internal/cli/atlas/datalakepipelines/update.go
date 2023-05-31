@@ -175,13 +175,13 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.sinkMetadataProvider, flag.SinkMetadataProvider, "", usage.SinkMetadataProvider)
 	cmd.Flags().StringVar(&opts.sinkMetadataRegion, flag.SinkMetadataRegion, "", usage.SinkMetadataRegion)
-	cmd.Flags().StringSliceVar(&opts.sinkPartitionField, flag.SinkPartitionField, nil, usage.SinkPartitionField)
+	cmd.Flags().StringSliceVar(&opts.sinkPartitionField, flag.SinkPartitionField, nil, usage.SinkPartitionField+usage.UpdateWarning)
 	cmd.Flags().StringVar(&opts.sourceType, flag.SourceType, "", usage.SourceType)
 	cmd.Flags().StringVar(&opts.sourceClusterName, flag.SourceClusterName, "", usage.SourceClusterName)
 	cmd.Flags().StringVar(&opts.sourceCollectionName, flag.SourceCollectionName, "", usage.SourceCollectionName)
 	cmd.Flags().StringVar(&opts.sourceDatabaseName, flag.SourceDatabaseName, "", usage.SourceDatabaseName)
 	cmd.Flags().StringVar(&opts.sourcePolicyItemID, flag.SourcePolicyItemID, "", usage.SourcePolicyItemID)
-	cmd.Flags().StringSliceVar(&opts.transform, flag.Transform, nil, usage.Transform)
+	cmd.Flags().StringSliceVar(&opts.transform, flag.Transform, nil, usage.Transform+usage.UpdateWarning)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.PipelineFilename)
 
 	_ = cmd.MarkFlagFilename(flag.File)

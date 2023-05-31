@@ -688,6 +688,8 @@ func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider st
 }
 
 func deletePrivateEndpoint(t *testing.T, cliPath, projectID, provider, endpointID string) {
+	t.Helper()
+
 	cmd := exec.Command(cliPath,
 		privateEndpointsEntity,
 		provider,

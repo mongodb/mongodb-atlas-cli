@@ -27,12 +27,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -166,11 +164,7 @@ func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 	regionConfig := atlasv2.RegionConfig{}
 
 	switch providerName {
-<<<<<<< HEAD
-	case "TENANT":
-=======
 	case tenant:
->>>>>>> d6b32a40d3af2aef9413f28499f4869e4dceb9e8
 		regionConfig.TenantRegionConfig = &atlasv2.TenantRegionConfig{
 			ProviderName: &providerName,
 			Priority:     &priority,
@@ -180,11 +174,7 @@ func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 			},
 			BackingProviderName: &opts.provider,
 		}
-<<<<<<< HEAD
-	case "AWS":
-=======
 	case awsProviderName:
->>>>>>> d6b32a40d3af2aef9413f28499f4869e4dceb9e8
 		regionConfig.AWSRegionConfig = &atlasv2.AWSRegionConfig{
 			ProviderName: &providerName,
 			Priority:     &priority,
@@ -195,11 +185,7 @@ func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 			},
 			ReadOnlySpecs: readOnlySpec,
 		}
-<<<<<<< HEAD
-	case "Azure":
-=======
 	case azureProviderName:
->>>>>>> d6b32a40d3af2aef9413f28499f4869e4dceb9e8
 		regionConfig.AzureRegionConfig = &atlasv2.AzureRegionConfig{
 			ProviderName: &providerName,
 			Priority:     &priority,

@@ -71,8 +71,7 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.AlertConf
 	out := new(admin.AlertConfigViewForNdsGroup)
 
 	out.GroupId = &projectID
-	val := admin.ServerlessEventTypeViewAlertable(strings.ToUpper(opts.event))
-	out.EventTypeName = &val
+	out.EventTypeName = pointer.Get(strings.ToUpper(opts.event))
 	out.Enabled = &opts.enabled
 
 	if opts.matcherFieldName != "" {
@@ -198,40 +197,41 @@ func (opts *ConfigOpts) newNotification() *admin.NotificationViewForNdsGroup {
 
 func (opts *ConfigOpts) newMetricThreshold() *admin.ServerlessMetricThreshold {
 	metricName := strings.ToUpper(opts.metricThresholdMetricName)
-	operator, _ := admin.NewOperatorFromValue(strings.ToUpper(opts.metricThresholdOperator))
+	operator := strings.ToUpper(opts.metricThresholdOperator)
 	mode := strings.ToUpper(opts.metricThresholdMode)
+	units := strings.ToUpper(opts.metricThresholdUnits)
 	result := &admin.ServerlessMetricThreshold{}
 	switch metricName {
 	case "DATA":
 		result.DataMetricThreshold = &admin.DataMetricThreshold{
 			MetricName: &metricName,
-			Operator:   operator,
+			Operator:   &operator,
 			Threshold:  &opts.metricThresholdThreshold,
-			Units:      pointer.Get(admin.DataMetricUnits(strings.ToUpper(opts.metricThresholdUnits))),
+			Units:      &units,
 			Mode:       &mode,
 		}
 	case "RPU":
 		result.RPUMetricThreshold = &admin.RPUMetricThreshold{
 			MetricName: &metricName,
-			Operator:   operator,
+			Operator:   &operator,
 			Threshold:  &opts.metricThresholdThreshold,
-			Units:      pointer.Get(admin.ServerlessMetricUnits(strings.ToUpper(opts.metricThresholdUnits))),
+			Units:      &units,
 			Mode:       &mode,
 		}
 	case "RAW":
 		result.RawMetricThreshold = &admin.RawMetricThreshold{
 			MetricName: &metricName,
-			Operator:   operator,
+			Operator:   &operator,
 			Threshold:  &opts.metricThresholdThreshold,
-			Units:      pointer.Get(admin.RawMetricUnits(strings.ToUpper(opts.metricThresholdUnits))),
+			Units:      &units,
 			Mode:       &mode,
 		}
 	case "TIME":
 		result.TimeMetricThreshold = &admin.TimeMetricThreshold{
 			MetricName: &metricName,
-			Operator:   operator,
+			Operator:   &operator,
 			Threshold:  &opts.metricThresholdThreshold,
-			Units:      pointer.Get(admin.TimeMetricUnits(strings.ToUpper(opts.metricThresholdUnits))),
+			Units:      &units,
 			Mode:       &mode,
 		}
 	}

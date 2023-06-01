@@ -38,7 +38,7 @@ type AlertConfigurationUpdater interface {
 }
 
 type MatcherFieldsLister interface {
-	MatcherFields() ([]admin.MatcherField, error)
+	MatcherFields() ([]string, error)
 }
 
 type AlertConfigurationEnabler interface {
@@ -68,7 +68,7 @@ func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
 }
 
 // MatcherFields encapsulate the logic to manage different cloud providers.
-func (s *Store) MatcherFields() ([]admin.MatcherField, error) {
+func (s *Store) MatcherFields() ([]string, error) {
 	result, _, err := s.clientv2.AlertConfigurationsApi.ListAlertConfigurationMatchersFieldNames(s.ctx).Execute()
 	return result, err
 }

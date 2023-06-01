@@ -186,10 +186,10 @@ func (m *MockMatcherFieldsLister) EXPECT() *MockMatcherFieldsListerMockRecorder 
 }
 
 // MatcherFields mocks base method.
-func (m *MockMatcherFieldsLister) MatcherFields() ([]admin.MatcherField, error) {
+func (m *MockMatcherFieldsLister) MatcherFields() ([]string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MatcherFields")
-	ret0, _ := ret[0].([]admin.MatcherField)
+	ret0, _ := ret[0].([]string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

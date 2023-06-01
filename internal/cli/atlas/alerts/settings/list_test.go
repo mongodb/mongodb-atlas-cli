@@ -39,7 +39,7 @@ func TestConfigList_Run(t *testing.T) {
 				Id:              pointer.Get("test"),
 				GroupId:         pointer.Get("test"),
 				Enabled:         pointer.Get(true),
-				EventTypeName:   admin.ServerlessEventTypeViewAlertable("test").Ptr(),
+				EventTypeName:   pointer.Get("test"),
 				Created:         pointer.Get(time.Now()),
 				Matchers:        nil,
 				Notifications:   nil,

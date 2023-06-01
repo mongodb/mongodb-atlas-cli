@@ -51,6 +51,6 @@ func TestCreateBuilder(t *testing.T) {
 		t,
 		CreateBuilder(),
 		0,
-		[]string{flag.Provider, flag.Region},
+		[]string{flag.Provider, flag.Region, flag.Tag},
 	)
 }

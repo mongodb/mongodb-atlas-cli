@@ -38,7 +38,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../../../mocks/mock_quick_start.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart Flow
@@ -312,11 +312,11 @@ func (opts *Opts) createResources() error {
 	}
 
 	if err := opts.createCluster(); err != nil {
-		var target *atlas.ErrorResponse
+		var target *admin.Error
 		_ = errors.As(err, &target)
-		if target.ErrorCode == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" && strings.Contains(strings.ToLower(target.Detail), cli.ErrFreeClusterAlreadyExists.Error()) {
+		if target.GetErrorCode() == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" && strings.Contains(strings.ToLower(target.GetDetail()), cli.ErrFreeClusterAlreadyExists.Error()) {
 			return cli.ErrFreeClusterAlreadyExists
-		} else if target.ErrorCode == "INVALID_ATTRIBUTE" && strings.Contains(target.Detail, "regionName") {
+		} else if target.GetErrorCode() == "INVALID_ATTRIBUTE" && strings.Contains(target.GetDetail(), "regionName") {
 			return cli.ErrNoRegionExistsTryCommand
 		}
 		return err

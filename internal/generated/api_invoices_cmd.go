@@ -57,7 +57,7 @@ func DownloadInvoiceCSVBuilder() *cobra.Command {
 
 	opts := DownloadInvoiceCSVOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "downloadInvoiceCSV",
 		// Aliases: []string{"?"},
 		Short:   "Return One Organization Invoice as CSV",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -118,7 +118,7 @@ func GetInvoiceBuilder() *cobra.Command {
 
 	opts := GetInvoiceOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getInvoice",
 		// Aliases: []string{"?"},
 		Short:   "Return One Organization Invoice",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -183,7 +183,7 @@ func ListInvoicesBuilder() *cobra.Command {
 
 	opts := ListInvoicesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listInvoices",
 		// Aliases: []string{"?"},
 		Short:   "Return All Invoices for One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -243,7 +243,7 @@ func ListPendingInvoicesBuilder() *cobra.Command {
 
 	opts := ListPendingInvoicesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listPendingInvoices",
 		// Aliases: []string{"?"},
 		Short:   "Return All Pending Invoices for One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -269,9 +269,9 @@ func ListPendingInvoicesBuilder() *cobra.Command {
 	return cmd
 }
 
-func InvoicesApiBuilder() *cobra.Command {
+func InvoicesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "invoices",
 		Short:   "Returns invoices.",
 	}
 	cmd.AddCommand(

@@ -57,7 +57,7 @@ func AuthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 
 	opts := AuthorizeCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "authorizeCloudProviderAccessRole",
 		// Aliases: []string{"?"},
 		Short:   "Authorize One Cloud Provider Access Role",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -116,7 +116,7 @@ func CreateCloudProviderAccessRoleBuilder() *cobra.Command {
 
 	opts := CreateCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createCloudProviderAccessRole",
 		// Aliases: []string{"?"},
 		Short:   "Create One Cloud Provider Access Role",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -177,7 +177,7 @@ func DeauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 
 	opts := DeauthorizeCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deauthorizeCloudProviderAccessRole",
 		// Aliases: []string{"?"},
 		Short:   "Deauthorize One Cloud Provider Access Role",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -240,7 +240,7 @@ func GetCloudProviderAccessRoleBuilder() *cobra.Command {
 
 	opts := GetCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getCloudProviderAccessRole",
 		// Aliases: []string{"?"},
 		Short:   "Return specified Cloud Provider Access Role",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -299,7 +299,7 @@ func ListCloudProviderAccessRolesBuilder() *cobra.Command {
 
 	opts := ListCloudProviderAccessRolesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listCloudProviderAccessRoles",
 		// Aliases: []string{"?"},
 		Short:   "Return All Cloud Provider Access Roles",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -325,9 +325,9 @@ func ListCloudProviderAccessRolesBuilder() *cobra.Command {
 	return cmd
 }
 
-func CloudProviderAccessApiBuilder() *cobra.Command {
+func CloudProviderAccessBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "cloudProviderAccess",
 		Short:   "Returns, adds, authorizes, and removes AWS IAM roles in Atlas.",
 	}
 	cmd.AddCommand(

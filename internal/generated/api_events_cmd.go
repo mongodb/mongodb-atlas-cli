@@ -59,7 +59,7 @@ func GetOrganizationEventBuilder() *cobra.Command {
 
 	opts := GetOrganizationEventOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getOrganizationEvent",
 		// Aliases: []string{"?"},
 		Short:   "Return One Event from One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -123,7 +123,7 @@ func GetProjectEventBuilder() *cobra.Command {
 
 	opts := GetProjectEventOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getProjectEvent",
 		// Aliases: []string{"?"},
 		Short:   "Return One Event from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -197,7 +197,7 @@ func ListOrganizationEventsBuilder() *cobra.Command {
 
 	opts := ListOrganizationEventsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listOrganizationEvents",
 		// Aliases: []string{"?"},
 		Short:   "Return All Events from One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -277,7 +277,7 @@ func ListProjectEventsBuilder() *cobra.Command {
 
 	opts := ListProjectEventsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listProjectEvents",
 		// Aliases: []string{"?"},
 		Short:   "Return All Events from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -311,9 +311,9 @@ func ListProjectEventsBuilder() *cobra.Command {
 	return cmd
 }
 
-func EventsApiBuilder() *cobra.Command {
+func EventsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "events",
 		Short:   "Returns events. This collection remains under revision and may change.",
 	}
 	cmd.AddCommand(

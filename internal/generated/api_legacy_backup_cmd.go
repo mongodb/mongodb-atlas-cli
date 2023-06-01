@@ -59,7 +59,7 @@ func DeleteLegacySnapshotBuilder() *cobra.Command {
 
 	opts := DeleteLegacySnapshotOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteLegacySnapshot",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Legacy Backup Snapshot",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -124,7 +124,7 @@ func GetLegacyBackupCheckpointBuilder() *cobra.Command {
 
 	opts := GetLegacyBackupCheckpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getLegacyBackupCheckpoint",
 		// Aliases: []string{"?"},
 		Short:   "Return One Legacy Backup Checkpoint",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -189,7 +189,7 @@ func GetLegacyBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := GetLegacyBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getLegacyBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Return One Legacy Backup Restore Job",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -254,7 +254,7 @@ func GetLegacySnapshotBuilder() *cobra.Command {
 
 	opts := GetLegacySnapshotOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getLegacySnapshot",
 		// Aliases: []string{"?"},
 		Short:   "Return One Legacy Backup Snapshot",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -317,7 +317,7 @@ func GetLegacySnapshotScheduleBuilder() *cobra.Command {
 
 	opts := GetLegacySnapshotScheduleOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getLegacySnapshotSchedule",
 		// Aliases: []string{"?"},
 		Short:   "Return One Snapshot Schedule",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -384,7 +384,7 @@ func ListLegacyBackupCheckpointsBuilder() *cobra.Command {
 
 	opts := ListLegacyBackupCheckpointsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listLegacyBackupCheckpoints",
 		// Aliases: []string{"?"},
 		Short:   "Return All Legacy Backup Checkpoints",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -456,7 +456,7 @@ func ListLegacyBackupRestoreJobsBuilder() *cobra.Command {
 
 	opts := ListLegacyBackupRestoreJobsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listLegacyBackupRestoreJobs",
 		// Aliases: []string{"?"},
 		Short:   "Return All Legacy Backup Restore Jobs",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -529,7 +529,7 @@ func ListLegacySnapshotsBuilder() *cobra.Command {
 
 	opts := ListLegacySnapshotsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listLegacySnapshots",
 		// Aliases: []string{"?"},
 		Short:   "Return All Legacy Backup Snapshots",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -596,7 +596,7 @@ func UpdateLegacySnapshotRetentionBuilder() *cobra.Command {
 
 	opts := UpdateLegacySnapshotRetentionOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateLegacySnapshotRetention",
 		// Aliases: []string{"?"},
 		Short:   "Change One Legacy Backup Snapshot Expiration",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -659,7 +659,7 @@ func UpdateLegacySnapshotScheduleBuilder() *cobra.Command {
 
 	opts := UpdateLegacySnapshotScheduleOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateLegacySnapshotSchedule",
 		// Aliases: []string{"?"},
 		Short:   "Update Snapshot Schedule for One Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -687,9 +687,9 @@ func UpdateLegacySnapshotScheduleBuilder() *cobra.Command {
 	return cmd
 }
 
-func LegacyBackupApiBuilder() *cobra.Command {
+func LegacyBackupBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "legacyBackup",
 		Short:   "Manages Legacy Backup snapshots, restore jobs, schedules and checkpoints.",
 	}
 	cmd.AddCommand(

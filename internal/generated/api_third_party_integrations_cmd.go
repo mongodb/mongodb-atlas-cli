@@ -63,7 +63,7 @@ func CreateThirdPartyIntegrationBuilder() *cobra.Command {
 
 	opts := CreateThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createThirdPartyIntegration",
 		// Aliases: []string{"?"},
 		Short:   "Configure One Third-Party Service Integration",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -127,7 +127,7 @@ func DeleteThirdPartyIntegrationBuilder() *cobra.Command {
 
 	opts := DeleteThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteThirdPartyIntegration",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Third-Party Service Integration",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -188,7 +188,7 @@ func GetThirdPartyIntegrationBuilder() *cobra.Command {
 
 	opts := GetThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getThirdPartyIntegration",
 		// Aliases: []string{"?"},
 		Short:   "Return One Third-Party Service Integration",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -253,7 +253,7 @@ func ListThirdPartyIntegrationsBuilder() *cobra.Command {
 
 	opts := ListThirdPartyIntegrationsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listThirdPartyIntegrations",
 		// Aliases: []string{"?"},
 		Short:   "Return All Active Third-Party Service Integrations",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -321,7 +321,7 @@ func UpdateThirdPartyIntegrationBuilder() *cobra.Command {
 
 	opts := UpdateThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateThirdPartyIntegration",
 		// Aliases: []string{"?"},
 		Short:   "Update One Third-Party Service Integration",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -352,9 +352,9 @@ func UpdateThirdPartyIntegrationBuilder() *cobra.Command {
 	return cmd
 }
 
-func ThirdPartyIntegrationsApiBuilder() *cobra.Command {
+func ThirdPartyIntegrationsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "thirdPartyIntegrations",
 		Short:   "Returns, adds, edits, and removes third-party service integration configurations. MongoDB Cloud sends alerts to each third-party service that you configure.
 
 **IMPORTANT**: Each project can only have one configuration per integrationType.",

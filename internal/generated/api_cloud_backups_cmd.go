@@ -59,7 +59,7 @@ func CancelBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := CancelBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "cancelBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Cancel One Restore Job of One Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -122,7 +122,7 @@ func CreateBackupExportJobBuilder() *cobra.Command {
 
 	opts := CreateBackupExportJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createBackupExportJob",
 		// Aliases: []string{"?"},
 		Short:   "Create One Cloud Backup Snapshot Export Job",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -183,7 +183,7 @@ func CreateBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := CreateBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Restore One Snapshot of One Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -242,7 +242,7 @@ func CreateExportBucketBuilder() *cobra.Command {
 
 	opts := CreateExportBucketOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createExportBucket",
 		// Aliases: []string{"?"},
 		Short:   "Grant Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -301,7 +301,7 @@ func CreateServerlessBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := CreateServerlessBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createServerlessBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Restore One Snapshot of One Serverless Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -362,7 +362,7 @@ func DeleteAllBackupSchedulesBuilder() *cobra.Command {
 
 	opts := DeleteAllBackupSchedulesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteAllBackupSchedules",
 		// Aliases: []string{"?"},
 		Short:   "Remove All Cloud Backup Schedules",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -423,7 +423,7 @@ func DeleteExportBucketBuilder() *cobra.Command {
 
 	opts := DeleteExportBucketOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteExportBucket",
 		// Aliases: []string{"?"},
 		Short:   "Revoke Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -486,7 +486,7 @@ func DeleteReplicaSetBackupBuilder() *cobra.Command {
 
 	opts := DeleteReplicaSetBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteReplicaSetBackup",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Replica Set Cloud Backup",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -551,7 +551,7 @@ func DeleteShardedClusterBackupBuilder() *cobra.Command {
 
 	opts := DeleteShardedClusterBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteShardedClusterBackup",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Sharded Cluster Cloud Backup",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -616,7 +616,7 @@ func GetBackupExportJobBuilder() *cobra.Command {
 
 	opts := GetBackupExportJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getBackupExportJob",
 		// Aliases: []string{"?"},
 		Short:   "Return One Cloud Backup Snapshot Export Job",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -681,7 +681,7 @@ func GetBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := GetBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Return One Restore Job of One Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -744,7 +744,7 @@ func GetBackupScheduleBuilder() *cobra.Command {
 
 	opts := GetBackupScheduleOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getBackupSchedule",
 		// Aliases: []string{"?"},
 		Short:   "Return One Cloud Backup Schedule",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -803,7 +803,7 @@ func GetDataProtectionSettingsBuilder() *cobra.Command {
 
 	opts := GetDataProtectionSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getDataProtectionSettings",
 		// Aliases: []string{"?"},
 		Short:   "Return the Backup Compliance Policy settings",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -862,7 +862,7 @@ func GetExportBucketBuilder() *cobra.Command {
 
 	opts := GetExportBucketOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getExportBucket",
 		// Aliases: []string{"?"},
 		Short:   "Return One AWS S3 Bucket Used for Cloud Backup Snapshot Exports",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -925,7 +925,7 @@ func GetReplicaSetBackupBuilder() *cobra.Command {
 
 	opts := GetReplicaSetBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getReplicaSetBackup",
 		// Aliases: []string{"?"},
 		Short:   "Return One Replica Set Cloud Backup",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -990,7 +990,7 @@ func GetServerlessBackupBuilder() *cobra.Command {
 
 	opts := GetServerlessBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getServerlessBackup",
 		// Aliases: []string{"?"},
 		Short:   "Return One Snapshot of One Serverless Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1055,7 +1055,7 @@ func GetServerlessBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := GetServerlessBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getServerlessBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Return One Restore Job for One Serverless Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1120,7 +1120,7 @@ func GetShardedClusterBackupBuilder() *cobra.Command {
 
 	opts := GetShardedClusterBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getShardedClusterBackup",
 		// Aliases: []string{"?"},
 		Short:   "Return One Sharded Cluster Cloud Backup",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1189,7 +1189,7 @@ func ListBackupExportJobsBuilder() *cobra.Command {
 
 	opts := ListBackupExportJobsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listBackupExportJobs",
 		// Aliases: []string{"?"},
 		Short:   "Return All Cloud Backup Snapshot Export Jobs",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1259,7 +1259,7 @@ func ListBackupRestoreJobsBuilder() *cobra.Command {
 
 	opts := ListBackupRestoreJobsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listBackupRestoreJobs",
 		// Aliases: []string{"?"},
 		Short:   "Return All Restore Jobs for One Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1327,7 +1327,7 @@ func ListExportBucketsBuilder() *cobra.Command {
 
 	opts := ListExportBucketsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listExportBuckets",
 		// Aliases: []string{"?"},
 		Short:   "Return All AWS S3 Buckets Used for Cloud Backup Snapshot Exports",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1395,7 +1395,7 @@ func ListReplicaSetBackupsBuilder() *cobra.Command {
 
 	opts := ListReplicaSetBackupsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listReplicaSetBackups",
 		// Aliases: []string{"?"},
 		Short:   "Return All Replica Set Cloud Backups",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1465,7 +1465,7 @@ func ListServerlessBackupRestoreJobsBuilder() *cobra.Command {
 
 	opts := ListServerlessBackupRestoreJobsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listServerlessBackupRestoreJobs",
 		// Aliases: []string{"?"},
 		Short:   "Return All Restore Jobs for One Serverless Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1535,7 +1535,7 @@ func ListServerlessBackupsBuilder() *cobra.Command {
 
 	opts := ListServerlessBackupsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listServerlessBackups",
 		// Aliases: []string{"?"},
 		Short:   "Return All Snapshots of One Serverless Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1599,7 +1599,7 @@ func ListShardedClusterBackupsBuilder() *cobra.Command {
 
 	opts := ListShardedClusterBackupsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listShardedClusterBackups",
 		// Aliases: []string{"?"},
 		Short:   "Return All Sharded Cluster Cloud Backups",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1660,7 +1660,7 @@ func TakeSnapshotBuilder() *cobra.Command {
 
 	opts := TakeSnapshotOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "takeSnapshot",
 		// Aliases: []string{"?"},
 		Short:   "Take One On-Demand Snapshot",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1721,7 +1721,7 @@ func UpdateBackupScheduleBuilder() *cobra.Command {
 
 	opts := UpdateBackupScheduleOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateBackupSchedule",
 		// Aliases: []string{"?"},
 		Short:   "Update Cloud Backup Schedule for One Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1780,7 +1780,7 @@ func UpdateDataProtectionSettingsBuilder() *cobra.Command {
 
 	opts := UpdateDataProtectionSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateDataProtectionSettings",
 		// Aliases: []string{"?"},
 		Short:   "Update or enable the Backup Compliance Policy settings",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1841,7 +1841,7 @@ func UpdateSnapshotRetentionBuilder() *cobra.Command {
 
 	opts := UpdateSnapshotRetentionOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateSnapshotRetention",
 		// Aliases: []string{"?"},
 		Short:   "Change Expiration Date for One Cloud Backup",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1871,9 +1871,9 @@ func UpdateSnapshotRetentionBuilder() *cobra.Command {
 	return cmd
 }
 
-func CloudBackupsApiBuilder() *cobra.Command {
+func CloudBackupsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "cloudBackups",
 		Short:   "Manages Cloud Backup snapshots, snapshot export buckets, restore jobs, and schedules. This resource applies only to clusters that use Cloud Backups.",
 	}
 	cmd.AddCommand(

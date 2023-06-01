@@ -55,7 +55,7 @@ func DisableSlowOperationThresholdingBuilder() *cobra.Command {
 
 	opts := DisableSlowOperationThresholdingOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "disableSlowOperationThresholding",
 		// Aliases: []string{"?"},
 		Short:   "Disable Managed Slow Operation Threshold",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -112,7 +112,7 @@ func EnableSlowOperationThresholdingBuilder() *cobra.Command {
 
 	opts := EnableSlowOperationThresholdingOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "enableSlowOperationThresholding",
 		// Aliases: []string{"?"},
 		Short:   "Enable Managed Slow Operation Threshold",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -179,7 +179,7 @@ func ListSlowQueriesBuilder() *cobra.Command {
 
 	opts := ListSlowQueriesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listSlowQueries",
 		// Aliases: []string{"?"},
 		Short:   "Return Slow Queries",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -248,7 +248,7 @@ func ListSlowQueryNamespacesBuilder() *cobra.Command {
 
 	opts := ListSlowQueryNamespacesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listSlowQueryNamespaces",
 		// Aliases: []string{"?"},
 		Short:   "Return All Namespaces for One Host",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -327,7 +327,7 @@ func ListSuggestedIndexesBuilder() *cobra.Command {
 
 	opts := ListSuggestedIndexesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listSuggestedIndexes",
 		// Aliases: []string{"?"},
 		Short:   "Return Suggested Indexes",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -363,9 +363,9 @@ func ListSuggestedIndexesBuilder() *cobra.Command {
 	return cmd
 }
 
-func PerformanceAdvisorApiBuilder() *cobra.Command {
+func PerformanceAdvisorBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "performanceAdvisor",
 		Short:   "Returns suggested indexes and slow query data for a database deployment. Also enables or disables MongoDB Cloud-managed slow operation thresholds. To view field values in a sample query, you must have the Project Data Access Read Only role or higher. Otherwise, MongoDB Cloud returns redacted data rather than the field values.",
 	}
 	cmd.AddCommand(

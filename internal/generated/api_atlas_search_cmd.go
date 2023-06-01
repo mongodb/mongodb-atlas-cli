@@ -57,7 +57,7 @@ func CreateAtlasSearchIndexBuilder() *cobra.Command {
 
 	opts := CreateAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createAtlasSearchIndex",
 		// Aliases: []string{"?"},
 		Short:   "Create One Atlas Search Index",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -120,7 +120,7 @@ func DeleteAtlasSearchIndexBuilder() *cobra.Command {
 
 	opts := DeleteAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteAtlasSearchIndex",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Atlas Search Index",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -185,7 +185,7 @@ func GetAtlasSearchIndexBuilder() *cobra.Command {
 
 	opts := GetAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getAtlasSearchIndex",
 		// Aliases: []string{"?"},
 		Short:   "Return One Atlas Search Index",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -252,7 +252,7 @@ func ListAtlasSearchIndexesBuilder() *cobra.Command {
 
 	opts := ListAtlasSearchIndexesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listAtlasSearchIndexes",
 		// Aliases: []string{"?"},
 		Short:   "Return All Atlas Search Indexes for One Collection",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -319,7 +319,7 @@ func UpdateAtlasSearchIndexBuilder() *cobra.Command {
 
 	opts := UpdateAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateAtlasSearchIndex",
 		// Aliases: []string{"?"},
 		Short:   "Update One Atlas Search Index",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -349,9 +349,9 @@ func UpdateAtlasSearchIndexBuilder() *cobra.Command {
 	return cmd
 }
 
-func AtlasSearchApiBuilder() *cobra.Command {
+func AtlasSearchBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "atlasSearch",
 		Short:   "Returns, adds, edits, and removes Atlas Search indexes for the specified cluster. Also returns and updates user-defined analyzers for the specified cluster.",
 	}
 	cmd.AddCommand(

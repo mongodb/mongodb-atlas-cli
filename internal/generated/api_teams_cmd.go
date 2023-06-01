@@ -55,7 +55,7 @@ func AddAllTeamsToProjectBuilder() *cobra.Command {
 
 	opts := AddAllTeamsToProjectOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "addAllTeamsToProject",
 		// Aliases: []string{"?"},
 		Short:   "Add One or More Teams to One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -114,7 +114,7 @@ func AddTeamUserBuilder() *cobra.Command {
 
 	opts := AddTeamUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "addTeamUser",
 		// Aliases: []string{"?"},
 		Short:   "Assign MongoDB Cloud Users from One Organization to One Team",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -173,7 +173,7 @@ func CreateTeamBuilder() *cobra.Command {
 
 	opts := CreateTeamOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createTeam",
 		// Aliases: []string{"?"},
 		Short:   "Create One Team in One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -232,7 +232,7 @@ func DeleteTeamBuilder() *cobra.Command {
 
 	opts := DeleteTeamOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteTeam",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Team from One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -293,7 +293,7 @@ func GetTeamByIdBuilder() *cobra.Command {
 
 	opts := GetTeamByIdOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getTeamById",
 		// Aliases: []string{"?"},
 		Short:   "Return One Team using its ID",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -354,7 +354,7 @@ func GetTeamByNameBuilder() *cobra.Command {
 
 	opts := GetTeamByNameOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getTeamByName",
 		// Aliases: []string{"?"},
 		Short:   "Return One Team using its Name",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -419,7 +419,7 @@ func ListOrganizationTeamsBuilder() *cobra.Command {
 
 	opts := ListOrganizationTeamsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listOrganizationTeams",
 		// Aliases: []string{"?"},
 		Short:   "Return All Teams in One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -485,7 +485,7 @@ func ListProjectTeamsBuilder() *cobra.Command {
 
 	opts := ListProjectTeamsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listProjectTeams",
 		// Aliases: []string{"?"},
 		Short:   "Return All Teams in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -551,7 +551,7 @@ func ListTeamUsersBuilder() *cobra.Command {
 
 	opts := ListTeamUsersOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listTeamUsers",
 		// Aliases: []string{"?"},
 		Short:   "Return All MongoDB Cloud Users Assigned to One Team",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -614,7 +614,7 @@ func RemoveProjectTeamBuilder() *cobra.Command {
 
 	opts := RemoveProjectTeamOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "removeProjectTeam",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Team from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -677,7 +677,7 @@ func RemoveTeamUserBuilder() *cobra.Command {
 
 	opts := RemoveTeamUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "removeTeamUser",
 		// Aliases: []string{"?"},
 		Short:   "Remove One MongoDB Cloud User from One Team",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -740,7 +740,7 @@ func RenameTeamBuilder() *cobra.Command {
 
 	opts := RenameTeamOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "renameTeam",
 		// Aliases: []string{"?"},
 		Short:   "Rename One Team",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -801,7 +801,7 @@ func UpdateTeamRolesBuilder() *cobra.Command {
 
 	opts := UpdateTeamRolesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateTeamRoles",
 		// Aliases: []string{"?"},
 		Short:   "Update Team Roles in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -829,9 +829,9 @@ func UpdateTeamRolesBuilder() *cobra.Command {
 	return cmd
 }
 
-func TeamsApiBuilder() *cobra.Command {
+func TeamsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "teams",
 		Short:   "Returns, adds, edits, or removes teams.",
 	}
 	cmd.AddCommand(

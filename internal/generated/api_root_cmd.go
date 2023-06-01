@@ -53,7 +53,7 @@ func GetSystemStatusBuilder() *cobra.Command {
 
 	opts := GetSystemStatusOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getSystemStatus",
 		// Aliases: []string{"?"},
 		Short:   "Return the status of this MongoDB application",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -77,9 +77,9 @@ func GetSystemStatusBuilder() *cobra.Command {
 	return cmd
 }
 
-func RootApiBuilder() *cobra.Command {
+func RootBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "root",
 		Short:   "Returns details that describe the MongoDB Cloud build and the access token that requests this resource. This starts the MongoDB Cloud API.",
 	}
 	cmd.AddCommand(

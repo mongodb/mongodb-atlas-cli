@@ -61,7 +61,7 @@ func CreateProjectIpAccessListBuilder() *cobra.Command {
 
 	opts := CreateProjectIpAccessListOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createProjectIpAccessList",
 		// Aliases: []string{"?"},
 		Short:   "Add Entries to Project IP Access List",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -123,7 +123,7 @@ func DeleteProjectIpAccessListBuilder() *cobra.Command {
 
 	opts := DeleteProjectIpAccessListOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteProjectIpAccessList",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Entry from One Project IP Access List",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -184,7 +184,7 @@ func GetProjectIpAccessListStatusBuilder() *cobra.Command {
 
 	opts := GetProjectIpAccessListStatusOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getProjectIpAccessListStatus",
 		// Aliases: []string{"?"},
 		Short:   "Return Status of One Project IP Access List Entry",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -245,7 +245,7 @@ func GetProjectIpListBuilder() *cobra.Command {
 
 	opts := GetProjectIpListOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getProjectIpList",
 		// Aliases: []string{"?"},
 		Short:   "Return One Project IP Access List Entry",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -310,7 +310,7 @@ func ListProjectIpAccessListsBuilder() *cobra.Command {
 
 	opts := ListProjectIpAccessListsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listProjectIpAccessLists",
 		// Aliases: []string{"?"},
 		Short:   "Return Project IP Access List",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -339,9 +339,9 @@ func ListProjectIpAccessListsBuilder() *cobra.Command {
 	return cmd
 }
 
-func ProjectIPAccessListApiBuilder() *cobra.Command {
+func ProjectIPAccessListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "projectIPAccessList",
 		Short:   "Returns, adds, edits, and removes network access limits to database deployments in Atlas. This resource replaces the whitelist resource. Atlas removed whitelists in July 2021. Update your applications to use this new resource. This resource manages a project&#39;s IP Access List and supports creating temporary Access List entries that automatically expire within a user-configurable 7-day period.",
 	}
 	cmd.AddCommand(

@@ -55,7 +55,7 @@ func CreateAlertConfigurationBuilder() *cobra.Command {
 
 	opts := CreateAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createAlertConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Create One Alert Configuration in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -114,7 +114,7 @@ func DeleteAlertConfigurationBuilder() *cobra.Command {
 
 	opts := DeleteAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteAlertConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Alert Configuration from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -175,7 +175,7 @@ func GetAlertConfigurationBuilder() *cobra.Command {
 
 	opts := GetAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getAlertConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Return One Alert Configuration from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -232,7 +232,7 @@ func ListAlertConfigurationMatchersFieldNamesBuilder() *cobra.Command {
 
 	opts := ListAlertConfigurationMatchersFieldNamesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listAlertConfigurationMatchersFieldNames",
 		// Aliases: []string{"?"},
 		Short:   "Get All Alert Configuration Matchers Field Names",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -293,7 +293,7 @@ func ListAlertConfigurationsBuilder() *cobra.Command {
 
 	opts := ListAlertConfigurationsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listAlertConfigurations",
 		// Aliases: []string{"?"},
 		Short:   "Return All Alert Configurations for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -361,7 +361,7 @@ func ListAlertConfigurationsByAlertIdBuilder() *cobra.Command {
 
 	opts := ListAlertConfigurationsByAlertIdOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listAlertConfigurationsByAlertId",
 		// Aliases: []string{"?"},
 		Short:   "Return All Alert Configurations Set for One Alert",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -425,7 +425,7 @@ func ToggleAlertConfigurationBuilder() *cobra.Command {
 
 	opts := ToggleAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "toggleAlertConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Toggle One State of One Alert Configuration in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -486,7 +486,7 @@ func UpdateAlertConfigurationBuilder() *cobra.Command {
 
 	opts := UpdateAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateAlertConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Update One Alert Configuration for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -514,9 +514,9 @@ func UpdateAlertConfigurationBuilder() *cobra.Command {
 	return cmd
 }
 
-func AlertConfigurationsApiBuilder() *cobra.Command {
+func AlertConfigurationsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "alertConfigurations",
 		Short:   "Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users. This collection remains under revision and may change.",
 	}
 	cmd.AddCommand(

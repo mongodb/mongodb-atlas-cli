@@ -55,7 +55,7 @@ func CreateLinkTokenBuilder() *cobra.Command {
 
 	opts := CreateLinkTokenOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createLinkToken",
 		// Aliases: []string{"?"},
 		Short:   "Create One Link-Token",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -112,7 +112,7 @@ func CreatePushMigrationBuilder() *cobra.Command {
 
 	opts := CreatePushMigrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createPushMigration",
 		// Aliases: []string{"?"},
 		Short:   "Migrate One Local Managed Cluster to MongoDB Atlas",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -171,7 +171,7 @@ func CutoverMigrationBuilder() *cobra.Command {
 
 	opts := CutoverMigrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "cutoverMigration",
 		// Aliases: []string{"?"},
 		Short:   "Cut Over the Migrated Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -230,7 +230,7 @@ func DeleteLinkTokenBuilder() *cobra.Command {
 
 	opts := DeleteLinkTokenOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteLinkToken",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Link-Token",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -289,7 +289,7 @@ func GetPushMigrationBuilder() *cobra.Command {
 
 	opts := GetPushMigrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getPushMigration",
 		// Aliases: []string{"?"},
 		Short:   "Return One Migration Job",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -350,7 +350,7 @@ func GetValidationStatusBuilder() *cobra.Command {
 
 	opts := GetValidationStatusOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getValidationStatus",
 		// Aliases: []string{"?"},
 		Short:   "Return One Migration Validation Job",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -409,7 +409,7 @@ func ListSourceProjectsBuilder() *cobra.Command {
 
 	opts := ListSourceProjectsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listSourceProjects",
 		// Aliases: []string{"?"},
 		Short:   "Return All Projects Available for Migration",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -466,7 +466,7 @@ func ValidateMigrationBuilder() *cobra.Command {
 
 	opts := ValidateMigrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "validateMigration",
 		// Aliases: []string{"?"},
 		Short:   "Validate One Migration Request",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -492,9 +492,9 @@ func ValidateMigrationBuilder() *cobra.Command {
 	return cmd
 }
 
-func CloudMigrationServiceApiBuilder() *cobra.Command {
+func CloudMigrationServiceBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "cloudMigrationService",
 		Short:   "Manages the Cloud Migration Service. Source organizations, projects, and MongoDB clusters reside on Cloud Manager or Ops Manager. Destination organizations, projects, and MongoDB clusters reside on MongoDB Cloud. Source databases can&#39;t use any authentication except SCRAM-SHA.",
 	}
 	cmd.AddCommand(

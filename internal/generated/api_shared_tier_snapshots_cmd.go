@@ -57,7 +57,7 @@ func DownloadSharedClusterBackupBuilder() *cobra.Command {
 
 	opts := DownloadSharedClusterBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "downloadSharedClusterBackup",
 		// Aliases: []string{"?"},
 		Short:   "Download One M2 or M5 Cluster Snapshot",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -120,7 +120,7 @@ func GetSharedClusterBackupBuilder() *cobra.Command {
 
 	opts := GetSharedClusterBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getSharedClusterBackup",
 		// Aliases: []string{"?"},
 		Short:   "Return One Snapshot for One M2 or M5 Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -183,7 +183,7 @@ func ListSharedClusterBackupsBuilder() *cobra.Command {
 
 	opts := ListSharedClusterBackupsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listSharedClusterBackups",
 		// Aliases: []string{"?"},
 		Short:   "Return All Snapshots for One M2 or M5 Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -211,9 +211,9 @@ func ListSharedClusterBackupsBuilder() *cobra.Command {
 	return cmd
 }
 
-func SharedTierSnapshotsApiBuilder() *cobra.Command {
+func SharedTierSnapshotsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "sharedTierSnapshots",
 		Short:   "Returns and requests to download shared-tier database deployment snapshots.",
 	}
 	cmd.AddCommand(

@@ -55,7 +55,7 @@ func GetAWSCustomDNSBuilder() *cobra.Command {
 
 	opts := GetAWSCustomDNSOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getAWSCustomDNS",
 		// Aliases: []string{"?"},
 		Short:   "Return One Custom DNS Configuration for Atlas Clusters on AWS",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -112,7 +112,7 @@ func ToggleAWSCustomDNSBuilder() *cobra.Command {
 
 	opts := ToggleAWSCustomDNSOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "toggleAWSCustomDNS",
 		// Aliases: []string{"?"},
 		Short:   "Toggle State of One Custom DNS Configuration for Atlas Clusters on AWS",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -138,9 +138,9 @@ func ToggleAWSCustomDNSBuilder() *cobra.Command {
 	return cmd
 }
 
-func AWSClustersDNSApiBuilder() *cobra.Command {
+func AWSClustersDNSBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "aWSClustersDNS",
 		Short:   "Returns and edits custom DNS configurations for MongoDB Cloud database deployments on AWS. The resource requires your Project ID. If you use the VPC peering on AWS and you use your own DNS servers instead of Amazon Route 53, enable custom DNS. Before 31 March 2020, applications deployed within AWS using custom DNS services and VPC-peered with MongoDB Cloud couldn&#39;t connect over private IP addresses. Custom DNS resolved to public IP addresses. AWS internal DNS resolved to private IP addresses. Applications deployed with custom DNS services in AWS should use Private IP for Peering connection strings.",
 	}
 	cmd.AddCommand(

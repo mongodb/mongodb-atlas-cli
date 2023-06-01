@@ -57,7 +57,7 @@ func EndOutageSimulationBuilder() *cobra.Command {
 
 	opts := EndOutageSimulationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "endOutageSimulation",
 		// Aliases: []string{"?"},
 		Short:   "End an Outage Simulation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -118,7 +118,7 @@ func GetOutageSimulationBuilder() *cobra.Command {
 
 	opts := GetOutageSimulationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getOutageSimulation",
 		// Aliases: []string{"?"},
 		Short:   "Return One Outage Simulation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -179,7 +179,7 @@ func StartOutageSimulationBuilder() *cobra.Command {
 
 	opts := StartOutageSimulationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "startOutageSimulation",
 		// Aliases: []string{"?"},
 		Short:   "Start an Outage Simulation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -207,9 +207,9 @@ func StartOutageSimulationBuilder() *cobra.Command {
 	return cmd
 }
 
-func ClusterOutageSimulationApiBuilder() *cobra.Command {
+func ClusterOutageSimulationBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "clusterOutageSimulation",
 		Short:   "Returns, starts, or ends a cluster outage simulation.",
 	}
 	cmd.AddCommand(

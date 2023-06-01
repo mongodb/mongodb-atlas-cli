@@ -55,7 +55,7 @@ func CreateDataFederationPrivateEndpointBuilder() *cobra.Command {
 
 	opts := CreateDataFederationPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createDataFederationPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Create One Federated Database Instance and Online Archive Private Endpoint for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -114,7 +114,7 @@ func CreateFederatedDatabaseBuilder() *cobra.Command {
 
 	opts := CreateFederatedDatabaseOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createFederatedDatabase",
 		// Aliases: []string{"?"},
 		Short:   "Create One Federated Database Instance in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -176,7 +176,7 @@ func CreateOneDataFederationQueryLimitBuilder() *cobra.Command {
 
 	opts := CreateOneDataFederationQueryLimitOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createOneDataFederationQueryLimit",
 		// Aliases: []string{"?"},
 		Short:   "Configure One Query Limit for One Federated Database Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -239,7 +239,7 @@ func DeleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 
 	opts := DeleteDataFederationPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteDataFederationPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Federated Database Instance and Online Archive Private Endpoint from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -300,7 +300,7 @@ func DeleteFederatedDatabaseBuilder() *cobra.Command {
 
 	opts := DeleteFederatedDatabaseOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteFederatedDatabase",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Federated Database Instance from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -363,7 +363,7 @@ func DeleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 
 	opts := DeleteOneDataFederationInstanceQueryLimitOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteOneDataFederationInstanceQueryLimit",
 		// Aliases: []string{"?"},
 		Short:   "Delete One Query Limit For One Federated Database Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -430,7 +430,7 @@ func DownloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 
 	opts := DownloadFederatedDatabaseQueryLogsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "downloadFederatedDatabaseQueryLogs",
 		// Aliases: []string{"?"},
 		Short:   "Download Query Logs for One Federated Database Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -493,7 +493,7 @@ func GetDataFederationPrivateEndpointBuilder() *cobra.Command {
 
 	opts := GetDataFederationPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getDataFederationPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Return One Federated Database Instance and Online Archive Private Endpoint in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -554,7 +554,7 @@ func GetFederatedDatabaseBuilder() *cobra.Command {
 
 	opts := GetFederatedDatabaseOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getFederatedDatabase",
 		// Aliases: []string{"?"},
 		Short:   "Return One Federated Database Instance in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -619,7 +619,7 @@ func ListDataFederationPrivateEndpointsBuilder() *cobra.Command {
 
 	opts := ListDataFederationPrivateEndpointsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listDataFederationPrivateEndpoints",
 		// Aliases: []string{"?"},
 		Short:   "Return All Federated Database Instance and Online Archive Private Endpoints in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -681,7 +681,7 @@ func ListFederatedDatabasesBuilder() *cobra.Command {
 
 	opts := ListFederatedDatabasesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listFederatedDatabases",
 		// Aliases: []string{"?"},
 		Short:   "Return All Federated Database Instances in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -743,7 +743,7 @@ func ReturnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 
 	opts := ReturnFederatedDatabaseQueryLimitOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "returnFederatedDatabaseQueryLimit",
 		// Aliases: []string{"?"},
 		Short:   "Return One Federated Database Instance Query Limit for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -806,7 +806,7 @@ func ReturnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 
 	opts := ReturnFederatedDatabaseQueryLimitsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "returnFederatedDatabaseQueryLimits",
 		// Aliases: []string{"?"},
 		Short:   "Return All Query Limits for One Federated Database Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -869,7 +869,7 @@ func UpdateFederatedDatabaseBuilder() *cobra.Command {
 
 	opts := UpdateFederatedDatabaseOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateFederatedDatabase",
 		// Aliases: []string{"?"},
 		Short:   "Update One Federated Database Instance in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -899,9 +899,9 @@ func UpdateFederatedDatabaseBuilder() *cobra.Command {
 	return cmd
 }
 
-func DataFederationApiBuilder() *cobra.Command {
+func DataFederationBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "dataFederation",
 		Short:   "Returns, adds, edits, and removes Federated Database Instances. This resource requires your project ID. Changes to federated database instance configurations can affect costs.",
 	}
 	cmd.AddCommand(

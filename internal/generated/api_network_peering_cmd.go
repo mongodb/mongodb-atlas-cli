@@ -55,7 +55,7 @@ func CreatePeeringConnectionBuilder() *cobra.Command {
 
 	opts := CreatePeeringConnectionOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createPeeringConnection",
 		// Aliases: []string{"?"},
 		Short:   "Create One New Network Peering Connection",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -112,7 +112,7 @@ func CreatePeeringContainerBuilder() *cobra.Command {
 
 	opts := CreatePeeringContainerOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createPeeringContainer",
 		// Aliases: []string{"?"},
 		Short:   "Create One New Network Peering Container",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -171,7 +171,7 @@ func DeletePeeringConnectionBuilder() *cobra.Command {
 
 	opts := DeletePeeringConnectionOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deletePeeringConnection",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Existing Network Peering Connection",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -232,7 +232,7 @@ func DeletePeeringContainerBuilder() *cobra.Command {
 
 	opts := DeletePeeringContainerOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deletePeeringContainer",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Network Peering Container",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -291,7 +291,7 @@ func DisablePeeringBuilder() *cobra.Command {
 
 	opts := DisablePeeringOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "disablePeering",
 		// Aliases: []string{"?"},
 		Short:   "Disable Connect via Peering Only Mode for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -350,7 +350,7 @@ func GetPeeringConnectionBuilder() *cobra.Command {
 
 	opts := GetPeeringConnectionOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getPeeringConnection",
 		// Aliases: []string{"?"},
 		Short:   "Return One Network Peering Connection in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -411,7 +411,7 @@ func GetPeeringContainerBuilder() *cobra.Command {
 
 	opts := GetPeeringContainerOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getPeeringContainer",
 		// Aliases: []string{"?"},
 		Short:   "Return One Network Peering Container",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -478,7 +478,7 @@ func ListPeeringConnectionsBuilder() *cobra.Command {
 
 	opts := ListPeeringConnectionsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listPeeringConnections",
 		// Aliases: []string{"?"},
 		Short:   "Return All Network Peering Connections in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -547,7 +547,7 @@ func ListPeeringContainerByCloudProviderBuilder() *cobra.Command {
 
 	opts := ListPeeringContainerByCloudProviderOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listPeeringContainerByCloudProvider",
 		// Aliases: []string{"?"},
 		Short:   "Return All Network Peering Containers in One Project for One Cloud Provider",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -615,7 +615,7 @@ func ListPeeringContainersBuilder() *cobra.Command {
 
 	opts := ListPeeringContainersOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listPeeringContainers",
 		// Aliases: []string{"?"},
 		Short:   "Return All Network Peering Containers in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -677,7 +677,7 @@ func UpdatePeeringConnectionBuilder() *cobra.Command {
 
 	opts := UpdatePeeringConnectionOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updatePeeringConnection",
 		// Aliases: []string{"?"},
 		Short:   "Update One New Network Peering Connection",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -738,7 +738,7 @@ func UpdatePeeringContainerBuilder() *cobra.Command {
 
 	opts := UpdatePeeringContainerOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updatePeeringContainer",
 		// Aliases: []string{"?"},
 		Short:   "Update One Network Peering Container",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -797,7 +797,7 @@ func VerifyConnectViaPeeringOnlyModeForOneProjectBuilder() *cobra.Command {
 
 	opts := VerifyConnectViaPeeringOnlyModeForOneProjectOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "verifyConnectViaPeeringOnlyModeForOneProject",
 		// Aliases: []string{"?"},
 		Short:   "Verify Connect via Peering Only Mode for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -823,9 +823,9 @@ func VerifyConnectViaPeeringOnlyModeForOneProjectBuilder() *cobra.Command {
 	return cmd
 }
 
-func NetworkPeeringApiBuilder() *cobra.Command {
+func NetworkPeeringBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "networkPeering",
 		Short:   "Returns, adds, edits, and removes network peering containers and peering connections.
 When you deploy an M10+ dedicated cluster, Atlas creates a VPC for the selected provider and region or regions if no existing VPC or VPC peering connection exists for that provider and region. Atlas assigns the VPC a Classless Inter-Domain Routing (CIDR) block.",
 	}

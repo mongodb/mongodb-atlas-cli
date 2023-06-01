@@ -57,7 +57,7 @@ func CreateRollingIndexBuilder() *cobra.Command {
 
 	opts := CreateRollingIndexOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createRollingIndex",
 		// Aliases: []string{"?"},
 		Short:   "Create One Rolling Index",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -85,9 +85,9 @@ func CreateRollingIndexBuilder() *cobra.Command {
 	return cmd
 }
 
-func RollingIndexApiBuilder() *cobra.Command {
+func RollingIndexBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "rollingIndex",
 		Short:   "Creates one index to a database deployment in a rolling manner. You can&#39;t create a rolling index on an &#x60;M0&#x60; free cluster or &#x60;M2/M5&#x60; shared cluster.",
 	}
 	cmd.AddCommand(

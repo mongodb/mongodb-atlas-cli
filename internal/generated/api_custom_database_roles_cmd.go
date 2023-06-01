@@ -55,7 +55,7 @@ func CreateCustomDatabaseRoleBuilder() *cobra.Command {
 
 	opts := CreateCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createCustomDatabaseRole",
 		// Aliases: []string{"?"},
 		Short:   "Create One Custom Role",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -114,7 +114,7 @@ func DeleteCustomDatabaseRoleBuilder() *cobra.Command {
 
 	opts := DeleteCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteCustomDatabaseRole",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Custom Role from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -175,7 +175,7 @@ func GetCustomDatabaseRoleBuilder() *cobra.Command {
 
 	opts := GetCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getCustomDatabaseRole",
 		// Aliases: []string{"?"},
 		Short:   "Return One Custom Role in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -234,7 +234,7 @@ func ListCustomDatabaseRolesBuilder() *cobra.Command {
 
 	opts := ListCustomDatabaseRolesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listCustomDatabaseRoles",
 		// Aliases: []string{"?"},
 		Short:   "Return All Custom Roles in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -293,7 +293,7 @@ func UpdateCustomDatabaseRoleBuilder() *cobra.Command {
 
 	opts := UpdateCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateCustomDatabaseRole",
 		// Aliases: []string{"?"},
 		Short:   "Update One Custom Role in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -321,9 +321,9 @@ func UpdateCustomDatabaseRoleBuilder() *cobra.Command {
 	return cmd
 }
 
-func CustomDatabaseRolesApiBuilder() *cobra.Command {
+func CustomDatabaseRolesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "customDatabaseRoles",
 		Short:   "Returns, adds, edits, and removes custom database user privilege roles. Use custom roles to specify custom sets of actions that the MongoDB Cloud built-in roles can&#39;t describe. You define custom roles at the project level, for all clusters in the project. This resource supports a subset of MongoDB privilege actions. You can create a subset of custom role actions. To create a wider list of custom role actions, use the MongoDB Cloud user interface. Custom roles must include actions that all project&#39;s clusters support, and that are compatible with each MongoDB version that your project&#39;s clusters use. For example, if your project has MongoDB 4.2 clusters, you can&#39;t create custom roles that use actions introduced in MongoDB 4.4.",
 	}
 	cmd.AddCommand(

@@ -57,7 +57,7 @@ func CreateOnlineArchiveBuilder() *cobra.Command {
 
 	opts := CreateOnlineArchiveOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createOnlineArchive",
 		// Aliases: []string{"?"},
 		Short:   "Create One Online Archive",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -120,7 +120,7 @@ func DeleteOnlineArchiveBuilder() *cobra.Command {
 
 	opts := DeleteOnlineArchiveOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteOnlineArchive",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Online Archive",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -189,7 +189,7 @@ func DownloadOnlineArchiveQueryLogsBuilder() *cobra.Command {
 
 	opts := DownloadOnlineArchiveQueryLogsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "downloadOnlineArchiveQueryLogs",
 		// Aliases: []string{"?"},
 		Short:   "Download Online Archive Query Logs",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -255,7 +255,7 @@ func GetOnlineArchiveBuilder() *cobra.Command {
 
 	opts := GetOnlineArchiveOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getOnlineArchive",
 		// Aliases: []string{"?"},
 		Short:   "Return One Online Archive",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -324,7 +324,7 @@ func ListOnlineArchivesBuilder() *cobra.Command {
 
 	opts := ListOnlineArchivesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listOnlineArchives",
 		// Aliases: []string{"?"},
 		Short:   "Return All Online Archives for One Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -390,7 +390,7 @@ func UpdateOnlineArchiveBuilder() *cobra.Command {
 
 	opts := UpdateOnlineArchiveOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateOnlineArchive",
 		// Aliases: []string{"?"},
 		Short:   "Update One Online Archive",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -420,9 +420,9 @@ func UpdateOnlineArchiveBuilder() *cobra.Command {
 	return cmd
 }
 
-func OnlineArchiveApiBuilder() *cobra.Command {
+func OnlineArchiveBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "onlineArchive",
 		Short:   "Returns, adds, edits, or removes an online archive.",
 	}
 	cmd.AddCommand(

@@ -55,7 +55,7 @@ func CreatePipelineBuilder() *cobra.Command {
 
 	opts := CreatePipelineOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createPipeline",
 		// Aliases: []string{"?"},
 		Short:   "Create One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -114,7 +114,7 @@ func DeletePipelineBuilder() *cobra.Command {
 
 	opts := DeletePipelineOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deletePipeline",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -177,7 +177,7 @@ func DeletePipelineRunDatasetBuilder() *cobra.Command {
 
 	opts := DeletePipelineRunDatasetOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deletePipelineRunDataset",
 		// Aliases: []string{"?"},
 		Short:   "Delete Pipeline Run Dataset",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -240,7 +240,7 @@ func GetPipelineBuilder() *cobra.Command {
 
 	opts := GetPipelineOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getPipeline",
 		// Aliases: []string{"?"},
 		Short:   "Return One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -303,7 +303,7 @@ func GetPipelineRunBuilder() *cobra.Command {
 
 	opts := GetPipelineRunOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getPipelineRun",
 		// Aliases: []string{"?"},
 		Short:   "Return One Data Lake Pipeline Run",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -374,7 +374,7 @@ func ListPipelineRunsBuilder() *cobra.Command {
 
 	opts := ListPipelineRunsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listPipelineRuns",
 		// Aliases: []string{"?"},
 		Short:   "Return All Data Lake Pipeline Runs from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -439,7 +439,7 @@ func ListPipelineSchedulesBuilder() *cobra.Command {
 
 	opts := ListPipelineSchedulesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listPipelineSchedules",
 		// Aliases: []string{"?"},
 		Short:   "Return Available Ingestion Schedules for One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -508,7 +508,7 @@ func ListPipelineSnapshotsBuilder() *cobra.Command {
 
 	opts := ListPipelineSnapshotsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listPipelineSnapshots",
 		// Aliases: []string{"?"},
 		Short:   "Return Available Backup Snapshots for One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -571,7 +571,7 @@ func ListPipelinesBuilder() *cobra.Command {
 
 	opts := ListPipelinesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listPipelines",
 		// Aliases: []string{"?"},
 		Short:   "Return All Data Lake Pipelines from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -630,7 +630,7 @@ func PausePipelineBuilder() *cobra.Command {
 
 	opts := PausePipelineOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "pausePipeline",
 		// Aliases: []string{"?"},
 		Short:   "Pause One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -691,7 +691,7 @@ func ResumePipelineBuilder() *cobra.Command {
 
 	opts := ResumePipelineOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "resumePipeline",
 		// Aliases: []string{"?"},
 		Short:   "Resume One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -752,7 +752,7 @@ func TriggerSnapshotIngestionBuilder() *cobra.Command {
 
 	opts := TriggerSnapshotIngestionOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "triggerSnapshotIngestion",
 		// Aliases: []string{"?"},
 		Short:   "Trigger on demand snapshot ingestion",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -813,7 +813,7 @@ func UpdatePipelineBuilder() *cobra.Command {
 
 	opts := UpdatePipelineOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updatePipeline",
 		// Aliases: []string{"?"},
 		Short:   "Update One Data Lake Pipeline",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -841,9 +841,9 @@ func UpdatePipelineBuilder() *cobra.Command {
 	return cmd
 }
 
-func DataLakePipelinesApiBuilder() *cobra.Command {
+func DataLakePipelinesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "dataLakePipelines",
 		Short:   "Returns, adds, edits, and removes Atlas Data Lake Pipelines and associated runs.",
 	}
 	cmd.AddCommand(

@@ -57,7 +57,7 @@ func CreateRoleMappingBuilder() *cobra.Command {
 
 	opts := CreateRoleMappingOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createRoleMapping",
 		// Aliases: []string{"?"},
 		Short:   "Add One Role Mapping to One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -116,7 +116,7 @@ func DeleteFederationAppBuilder() *cobra.Command {
 
 	opts := DeleteFederationAppOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteFederationApp",
 		// Aliases: []string{"?"},
 		Short:   "Delete the federation settings instance.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -177,7 +177,7 @@ func DeleteRoleMappingBuilder() *cobra.Command {
 
 	opts := DeleteRoleMappingOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteRoleMapping",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Role Mapping from One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -240,7 +240,7 @@ func GetConnectedOrgConfigBuilder() *cobra.Command {
 
 	opts := GetConnectedOrgConfigOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getConnectedOrgConfig",
 		// Aliases: []string{"?"},
 		Short:   "Return One Org Config Connected to One Federation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -299,7 +299,7 @@ func GetFederationSettingsBuilder() *cobra.Command {
 
 	opts := GetFederationSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getFederationSettings",
 		// Aliases: []string{"?"},
 		Short:   "Return Federation Settings for One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -358,7 +358,7 @@ func GetIdentityProviderBuilder() *cobra.Command {
 
 	opts := GetIdentityProviderOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getIdentityProvider",
 		// Aliases: []string{"?"},
 		Short:   "Return one identity provider from the specified federation.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -419,7 +419,7 @@ func GetIdentityProviderMetadataBuilder() *cobra.Command {
 
 	opts := GetIdentityProviderMetadataOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getIdentityProviderMetadata",
 		// Aliases: []string{"?"},
 		Short:   "Return the metadata of one identity provider in the specified federation.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -482,7 +482,7 @@ func GetRoleMappingBuilder() *cobra.Command {
 
 	opts := GetRoleMappingOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getRoleMapping",
 		// Aliases: []string{"?"},
 		Short:   "Return One Role Mapping from One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -543,7 +543,7 @@ func ListConnectedOrgConfigsBuilder() *cobra.Command {
 
 	opts := ListConnectedOrgConfigsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listConnectedOrgConfigs",
 		// Aliases: []string{"?"},
 		Short:   "Return All Connected Org Configs from the Federation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -600,7 +600,7 @@ func ListIdentityProvidersBuilder() *cobra.Command {
 
 	opts := ListIdentityProvidersOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listIdentityProviders",
 		// Aliases: []string{"?"},
 		Short:   "Return all identity providers from the specified federation.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -659,7 +659,7 @@ func ListRoleMappingsBuilder() *cobra.Command {
 
 	opts := ListRoleMappingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listRoleMappings",
 		// Aliases: []string{"?"},
 		Short:   "Return All Role Mappings from One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -720,7 +720,7 @@ func RemoveConnectedOrgConfigBuilder() *cobra.Command {
 
 	opts := RemoveConnectedOrgConfigOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "removeConnectedOrgConfig",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Org Config Connected to One Federation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -781,7 +781,7 @@ func UpdateConnectedOrgConfigBuilder() *cobra.Command {
 
 	opts := UpdateConnectedOrgConfigOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateConnectedOrgConfig",
 		// Aliases: []string{"?"},
 		Short:   "Update One Org Config Connected to One Federation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -842,7 +842,7 @@ func UpdateIdentityProviderBuilder() *cobra.Command {
 
 	opts := UpdateIdentityProviderOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateIdentityProvider",
 		// Aliases: []string{"?"},
 		Short:   "Update the identity provider.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -905,7 +905,7 @@ func UpdateRoleMappingBuilder() *cobra.Command {
 
 	opts := UpdateRoleMappingOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateRoleMapping",
 		// Aliases: []string{"?"},
 		Short:   "Update One Role Mapping in One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -935,9 +935,9 @@ func UpdateRoleMappingBuilder() *cobra.Command {
 	return cmd
 }
 
-func FederatedAuthenticationApiBuilder() *cobra.Command {
+func FederatedAuthenticationBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "federatedAuthentication",
 		Short:   "Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.",
 	}
 	cmd.AddCommand(

@@ -55,7 +55,7 @@ func GetEncryptionAtRestBuilder() *cobra.Command {
 
 	opts := GetEncryptionAtRestOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getEncryptionAtRest",
 		// Aliases: []string{"?"},
 		Short:   "Return One Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -112,7 +112,7 @@ func UpdateEncryptionAtRestBuilder() *cobra.Command {
 
 	opts := UpdateEncryptionAtRestOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateEncryptionAtRest",
 		// Aliases: []string{"?"},
 		Short:   "Update Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -138,9 +138,9 @@ func UpdateEncryptionAtRestBuilder() *cobra.Command {
 	return cmd
 }
 
-func EncryptionAtRestUsingCustomerKeyManagementApiBuilder() *cobra.Command {
+func EncryptionAtRestUsingCustomerKeyManagementBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "encryptionAtRestUsingCustomerKeyManagement",
 		Short:   "Returns and edits the Encryption at Rest using Customer Key Management configuration. MongoDB Cloud encrypts all storage whether or not you use your own key management.",
 	}
 	cmd.AddCommand(

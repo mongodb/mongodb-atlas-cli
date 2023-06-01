@@ -55,7 +55,7 @@ func DeferMaintenanceWindowBuilder() *cobra.Command {
 
 	opts := DeferMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deferMaintenanceWindow",
 		// Aliases: []string{"?"},
 		Short:   "Defer One Maintenance Window for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -112,7 +112,7 @@ func GetMaintenanceWindowBuilder() *cobra.Command {
 
 	opts := GetMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getMaintenanceWindow",
 		// Aliases: []string{"?"},
 		Short:   "Return One Maintenance Window for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -169,7 +169,7 @@ func ResetMaintenanceWindowBuilder() *cobra.Command {
 
 	opts := ResetMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "resetMaintenanceWindow",
 		// Aliases: []string{"?"},
 		Short:   "Reset One Maintenance Window for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -226,7 +226,7 @@ func ToggleMaintenanceAutoDeferBuilder() *cobra.Command {
 
 	opts := ToggleMaintenanceAutoDeferOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "toggleMaintenanceAutoDefer",
 		// Aliases: []string{"?"},
 		Short:   "Toggle Automatic Deferral of Maintenance for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -283,7 +283,7 @@ func UpdateMaintenanceWindowBuilder() *cobra.Command {
 
 	opts := UpdateMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateMaintenanceWindow",
 		// Aliases: []string{"?"},
 		Short:   "Update Maintenance Window for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -309,9 +309,9 @@ func UpdateMaintenanceWindowBuilder() *cobra.Command {
 	return cmd
 }
 
-func MaintenanceWindowsApiBuilder() *cobra.Command {
+func MaintenanceWindowsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "maintenanceWindows",
 		Short:   "Returns, edits, and removes maintenance windows. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. You can defer a scheduled maintenance event for a project up to two times. Deferred maintenance events occur during your preferred maintenance window exactly one week after the previously scheduled date and time.",
 	}
 	cmd.AddCommand(

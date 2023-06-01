@@ -67,7 +67,7 @@ func ListAccessLogsByClusterNameBuilder() *cobra.Command {
 
 	opts := ListAccessLogsByClusterNameOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listAccessLogsByClusterName",
 		// Aliases: []string{"?"},
 		Short:   "Return Database Access History for One Cluster using Its Cluster Name",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -143,7 +143,7 @@ func ListAccessLogsByHostnameBuilder() *cobra.Command {
 
 	opts := ListAccessLogsByHostnameOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listAccessLogsByHostname",
 		// Aliases: []string{"?"},
 		Short:   "Return Database Access History for One Cluster using Its Hostname",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -176,9 +176,9 @@ func ListAccessLogsByHostnameBuilder() *cobra.Command {
 	return cmd
 }
 
-func AccessTrackingApiBuilder() *cobra.Command {
+func AccessTrackingBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "accessTracking",
 		Short:   "Returns access logs for authentication attempts made to Atlas database deployments. To view database access history, you must have either the Project Owner or Organization Owner role.",
 	}
 	cmd.AddCommand(

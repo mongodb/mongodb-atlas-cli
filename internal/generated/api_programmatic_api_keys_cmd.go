@@ -57,7 +57,7 @@ func AddProjectApiKeyBuilder() *cobra.Command {
 
 	opts := AddProjectApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "addProjectApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Assign One Organization API Key to One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -116,7 +116,7 @@ func CreateApiKeyBuilder() *cobra.Command {
 
 	opts := CreateApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Create One Organization API Key",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -181,7 +181,7 @@ func CreateApiKeyAccessListBuilder() *cobra.Command {
 
 	opts := CreateApiKeyAccessListOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createApiKeyAccessList",
 		// Aliases: []string{"?"},
 		Short:   "Create Access List Entries for One Organization API Key",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -243,7 +243,7 @@ func CreateProjectApiKeyBuilder() *cobra.Command {
 
 	opts := CreateProjectApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createProjectApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Create and Assign One Organization API Key to One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -302,7 +302,7 @@ func DeleteApiKeyBuilder() *cobra.Command {
 
 	opts := DeleteApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Organization API Key",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -365,7 +365,7 @@ func DeleteApiKeyAccessListEntryBuilder() *cobra.Command {
 
 	opts := DeleteApiKeyAccessListEntryOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteApiKeyAccessListEntry",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Access List Entry for One Organization API Key",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -428,7 +428,7 @@ func GetApiKeyBuilder() *cobra.Command {
 
 	opts := GetApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Return One Organization API Key",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -491,7 +491,7 @@ func GetApiKeyAccessListBuilder() *cobra.Command {
 
 	opts := GetApiKeyAccessListOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getApiKeyAccessList",
 		// Aliases: []string{"?"},
 		Short:   "Return One Access List Entry for One Organization API Key",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -560,7 +560,7 @@ func ListApiKeyAccessListsEntriesBuilder() *cobra.Command {
 
 	opts := ListApiKeyAccessListsEntriesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listApiKeyAccessListsEntries",
 		// Aliases: []string{"?"},
 		Short:   "Return All Access List Entries for One Organization API Key",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -628,7 +628,7 @@ func ListApiKeysBuilder() *cobra.Command {
 
 	opts := ListApiKeysOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listApiKeys",
 		// Aliases: []string{"?"},
 		Short:   "Return All Organization API Keys",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -694,7 +694,7 @@ func ListProjectApiKeysBuilder() *cobra.Command {
 
 	opts := ListProjectApiKeysOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listProjectApiKeys",
 		// Aliases: []string{"?"},
 		Short:   "Return All Organization API Keys Assigned to One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -756,7 +756,7 @@ func RemoveProjectApiKeyBuilder() *cobra.Command {
 
 	opts := RemoveProjectApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "removeProjectApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Unassign One Organization API Key from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -817,7 +817,7 @@ func UpdateApiKeyBuilder() *cobra.Command {
 
 	opts := UpdateApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Update One Organization API Key",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -884,7 +884,7 @@ func UpdateApiKeyRolesBuilder() *cobra.Command {
 
 	opts := UpdateApiKeyRolesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateApiKeyRoles",
 		// Aliases: []string{"?"},
 		Short:   "Update Roles of One Organization API Key to One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -915,9 +915,9 @@ func UpdateApiKeyRolesBuilder() *cobra.Command {
 	return cmd
 }
 
-func ProgrammaticAPIKeysApiBuilder() *cobra.Command {
+func ProgrammaticAPIKeysBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "programmaticAPIKeys",
 		Short:   "Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API. MongoDB Cloud applies these keys to organizations. These resources can return, assign, or revoke use of these keys within a specified project.",
 	}
 	cmd.AddCommand(

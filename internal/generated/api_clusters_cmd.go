@@ -57,7 +57,7 @@ func GetClusterAdvancedConfigurationBuilder() *cobra.Command {
 
 	opts := GetClusterAdvancedConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getClusterAdvancedConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Return One Advanced Configuration Options for One Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -118,7 +118,7 @@ func GetClusterStatusBuilder() *cobra.Command {
 
 	opts := GetClusterStatusOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getClusterStatus",
 		// Aliases: []string{"?"},
 		Short:   "Return Status of All Cluster Operations",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -179,7 +179,7 @@ func GetSampleDatasetLoadStatusBuilder() *cobra.Command {
 
 	opts := GetSampleDatasetLoadStatusOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getSampleDatasetLoadStatus",
 		// Aliases: []string{"?"},
 		Short:   "Check Status of Cluster Sample Dataset Request",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -248,7 +248,7 @@ func ListCloudProviderRegionsBuilder() *cobra.Command {
 
 	opts := ListCloudProviderRegionsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listCloudProviderRegions",
 		// Aliases: []string{"?"},
 		Short:   "Return All Cloud Provider Regions",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -314,7 +314,7 @@ func ListClustersForAllProjectsBuilder() *cobra.Command {
 
 	opts := ListClustersForAllProjectsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listClustersForAllProjects",
 		// Aliases: []string{"?"},
 		Short:   "Return All Authorized Clusters in All Projects",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -374,7 +374,7 @@ func LoadSampleDatasetBuilder() *cobra.Command {
 
 	opts := LoadSampleDatasetOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "loadSampleDataset",
 		// Aliases: []string{"?"},
 		Short:   "Load Sample Dataset Request into Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -435,7 +435,7 @@ func UpdateClusterAdvancedConfigurationBuilder() *cobra.Command {
 
 	opts := UpdateClusterAdvancedConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateClusterAdvancedConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Update Advanced Configuration Options for One Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -494,7 +494,7 @@ func UpgradeSharedClusterBuilder() *cobra.Command {
 
 	opts := UpgradeSharedClusterOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "upgradeSharedCluster",
 		// Aliases: []string{"?"},
 		Short:   "Upgrade One Shared-tier Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -551,7 +551,7 @@ func UpgradeSharedClusterToServerlessBuilder() *cobra.Command {
 
 	opts := UpgradeSharedClusterToServerlessOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "upgradeSharedClusterToServerless",
 		// Aliases: []string{"?"},
 		Short:   "Upgrades One Shared-Tier Cluster to the Serverless Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -577,9 +577,9 @@ func UpgradeSharedClusterToServerlessBuilder() *cobra.Command {
 	return cmd
 }
 
-func ClustersApiBuilder() *cobra.Command {
+func ClustersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "clusters",
 		Short:   "Returns, adds, edits, and removes database deployments. Changes to cluster configurations can affect costs. This resource requires your Project ID.",
 	}
 	cmd.AddCommand(

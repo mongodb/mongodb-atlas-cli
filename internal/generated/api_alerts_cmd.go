@@ -57,7 +57,7 @@ func AcknowledgeAlertBuilder() *cobra.Command {
 
 	opts := AcknowledgeAlertOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "acknowledgeAlert",
 		// Aliases: []string{"?"},
 		Short:   "Acknowledge One Alert from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -118,7 +118,7 @@ func GetAlertBuilder() *cobra.Command {
 
 	opts := GetAlertOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getAlert",
 		// Aliases: []string{"?"},
 		Short:   "Return One Alert from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -185,7 +185,7 @@ func ListAlertsBuilder() *cobra.Command {
 
 	opts := ListAlertsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listAlerts",
 		// Aliases: []string{"?"},
 		Short:   "Return All Alerts from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -254,7 +254,7 @@ func ListAlertsByAlertConfigurationIdBuilder() *cobra.Command {
 
 	opts := ListAlertsByAlertConfigurationIdOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listAlertsByAlertConfigurationId",
 		// Aliases: []string{"?"},
 		Short:   "Return All Open Alerts for Alert Configuration",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -285,9 +285,9 @@ func ListAlertsByAlertConfigurationIdBuilder() *cobra.Command {
 	return cmd
 }
 
-func AlertsApiBuilder() *cobra.Command {
+func AlertsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "alerts",
 		Short:   "Returns and acknowledges alerts that MongoDB Cloud triggers based on the alert conditions that you define. This collection remains under revision and may change.",
 	}
 	cmd.AddCommand(

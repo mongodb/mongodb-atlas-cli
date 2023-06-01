@@ -55,7 +55,7 @@ func VersionedExampleBuilder() *cobra.Command {
 
 	opts := VersionedExampleOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "versionedExample",
 		// Aliases: []string{"?"},
 		Short:   "Example resource info for versioning of the Atlas API",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -80,9 +80,9 @@ func VersionedExampleBuilder() *cobra.Command {
 	return cmd
 }
 
-func TestApiBuilder() *cobra.Command {
+func TestBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "test",
 		Short:   "Atlas test endpoints.",
 	}
 	cmd.AddCommand(

@@ -53,7 +53,7 @@ func CreateUserBuilder() *cobra.Command {
 
 	opts := CreateUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createUser",
 		// Aliases: []string{"?"},
 		Short:   "Create One MongoDB Cloud User",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -108,7 +108,7 @@ func GetUserBuilder() *cobra.Command {
 
 	opts := GetUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getUser",
 		// Aliases: []string{"?"},
 		Short:   "Return One MongoDB Cloud User using Its ID",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -165,7 +165,7 @@ func GetUserByUsernameBuilder() *cobra.Command {
 
 	opts := GetUserByUsernameOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getUserByUsername",
 		// Aliases: []string{"?"},
 		Short:   "Return One MongoDB Cloud User using Their Username",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -191,9 +191,9 @@ func GetUserByUsernameBuilder() *cobra.Command {
 	return cmd
 }
 
-func MongoDBCloudUsersApiBuilder() *cobra.Command {
+func MongoDBCloudUsersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "mongoDBCloudUsers",
 		Short:   "Returns, adds, and edits MongoDB Cloud users.",
 	}
 	cmd.AddCommand(

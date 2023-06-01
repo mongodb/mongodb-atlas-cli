@@ -55,7 +55,7 @@ func GetAuditingConfigurationBuilder() *cobra.Command {
 
 	opts := GetAuditingConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getAuditingConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Return the Auditing Configuration for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -112,7 +112,7 @@ func UpdateAuditingConfigurationBuilder() *cobra.Command {
 
 	opts := UpdateAuditingConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateAuditingConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Update Auditing Configuration for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -138,9 +138,9 @@ func UpdateAuditingConfigurationBuilder() *cobra.Command {
 	return cmd
 }
 
-func AuditingApiBuilder() *cobra.Command {
+func AuditingBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "auditing",
 		Short:   "Returns and edits database auditing settings for MongoDB Cloud projects.",
 	}
 	cmd.AddCommand(

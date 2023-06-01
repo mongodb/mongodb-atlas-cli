@@ -53,7 +53,7 @@ func CreateOrganizationBuilder() *cobra.Command {
 
 	opts := CreateOrganizationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createOrganization",
 		// Aliases: []string{"?"},
 		Short:   "Create One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -108,7 +108,7 @@ func CreateOrganizationInvitationBuilder() *cobra.Command {
 
 	opts := CreateOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createOrganizationInvitation",
 		// Aliases: []string{"?"},
 		Short:   "Invite One MongoDB Cloud User to Join One Atlas Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -165,7 +165,7 @@ func DeleteOrganizationBuilder() *cobra.Command {
 
 	opts := DeleteOrganizationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteOrganization",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -224,7 +224,7 @@ func DeleteOrganizationInvitationBuilder() *cobra.Command {
 
 	opts := DeleteOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteOrganizationInvitation",
 		// Aliases: []string{"?"},
 		Short:   "Cancel One Organization Invitation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -283,7 +283,7 @@ func GetOrganizationBuilder() *cobra.Command {
 
 	opts := GetOrganizationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getOrganization",
 		// Aliases: []string{"?"},
 		Short:   "Return One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -342,7 +342,7 @@ func GetOrganizationInvitationBuilder() *cobra.Command {
 
 	opts := GetOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getOrganizationInvitation",
 		// Aliases: []string{"?"},
 		Short:   "Return One Organization Invitation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -401,7 +401,7 @@ func GetOrganizationSettingsBuilder() *cobra.Command {
 
 	opts := GetOrganizationSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getOrganizationSettings",
 		// Aliases: []string{"?"},
 		Short:   "Return Settings for One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -460,7 +460,7 @@ func ListOrganizationInvitationsBuilder() *cobra.Command {
 
 	opts := ListOrganizationInvitationsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listOrganizationInvitations",
 		// Aliases: []string{"?"},
 		Short:   "Return All Organization Invitations",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -526,7 +526,7 @@ func ListOrganizationProjectsBuilder() *cobra.Command {
 
 	opts := ListOrganizationProjectsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listOrganizationProjects",
 		// Aliases: []string{"?"},
 		Short:   "Return One or More Projects in One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -593,7 +593,7 @@ func ListOrganizationUsersBuilder() *cobra.Command {
 
 	opts := ListOrganizationUsersOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listOrganizationUsers",
 		// Aliases: []string{"?"},
 		Short:   "Return All MongoDB Cloud Users in One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -659,7 +659,7 @@ func ListOrganizationsBuilder() *cobra.Command {
 
 	opts := ListOrganizationsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listOrganizations",
 		// Aliases: []string{"?"},
 		Short:   "Return All Organizations",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -718,7 +718,7 @@ func RenameOrganizationBuilder() *cobra.Command {
 
 	opts := RenameOrganizationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "renameOrganization",
 		// Aliases: []string{"?"},
 		Short:   "Rename One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -775,7 +775,7 @@ func UpdateOrganizationInvitationBuilder() *cobra.Command {
 
 	opts := UpdateOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateOrganizationInvitation",
 		// Aliases: []string{"?"},
 		Short:   "Update One Organization Invitation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -834,7 +834,7 @@ func UpdateOrganizationInvitationByIdBuilder() *cobra.Command {
 
 	opts := UpdateOrganizationInvitationByIdOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateOrganizationInvitationById",
 		// Aliases: []string{"?"},
 		Short:   "Update One Organization Invitation by Invitation ID",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -893,7 +893,7 @@ func UpdateOrganizationSettingsBuilder() *cobra.Command {
 
 	opts := UpdateOrganizationSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateOrganizationSettings",
 		// Aliases: []string{"?"},
 		Short:   "Update Settings for One Organization",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -919,9 +919,9 @@ func UpdateOrganizationSettingsBuilder() *cobra.Command {
 	return cmd
 }
 
-func OrganizationsApiBuilder() *cobra.Command {
+func OrganizationsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "organizations",
 		Short:   "Returns, adds, and edits organizational units in MongoDB Cloud.",
 	}
 	cmd.AddCommand(

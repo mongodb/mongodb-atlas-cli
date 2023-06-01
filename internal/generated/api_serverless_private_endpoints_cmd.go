@@ -57,7 +57,7 @@ func CreateServerlessPrivateEndpointBuilder() *cobra.Command {
 
 	opts := CreateServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createServerlessPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Create One Private Endpoint for One Serverless Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -120,7 +120,7 @@ func DeleteServerlessPrivateEndpointBuilder() *cobra.Command {
 
 	opts := DeleteServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteServerlessPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Private Endpoint for One Serverless Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -185,7 +185,7 @@ func GetServerlessPrivateEndpointBuilder() *cobra.Command {
 
 	opts := GetServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getServerlessPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Return One Private Endpoint for One Serverless Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -248,7 +248,7 @@ func ListServerlessPrivateEndpointsBuilder() *cobra.Command {
 
 	opts := ListServerlessPrivateEndpointsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listServerlessPrivateEndpoints",
 		// Aliases: []string{"?"},
 		Short:   "Return All Private Endpoints for One Serverless Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -311,7 +311,7 @@ func UpdateServerlessPrivateEndpointBuilder() *cobra.Command {
 
 	opts := UpdateServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateServerlessPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Update One Private Endpoint for One Serverless Instance",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -341,9 +341,9 @@ func UpdateServerlessPrivateEndpointBuilder() *cobra.Command {
 	return cmd
 }
 
-func ServerlessPrivateEndpointsApiBuilder() *cobra.Command {
+func ServerlessPrivateEndpointsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "serverlessPrivateEndpoints",
 		Short:   "Returns, adds, edits, and removes private endpoints for serverless instances. To learn more, see the Atlas Administration API tab on the following tutorial.",
 	}
 	cmd.AddCommand(

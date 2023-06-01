@@ -59,7 +59,7 @@ func CreatePrivateEndpointBuilder() *cobra.Command {
 
 	opts := CreatePrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Create One Private Endpoint for One Provider",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -120,7 +120,7 @@ func CreatePrivateEndpointServiceBuilder() *cobra.Command {
 
 	opts := CreatePrivateEndpointServiceOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createPrivateEndpointService",
 		// Aliases: []string{"?"},
 		Short:   "Create One Private Endpoint Service for One Provider",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -183,7 +183,7 @@ func DeletePrivateEndpointBuilder() *cobra.Command {
 
 	opts := DeletePrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deletePrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Private Endpoint for One Provider",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -250,7 +250,7 @@ func DeletePrivateEndpointServiceBuilder() *cobra.Command {
 
 	opts := DeletePrivateEndpointServiceOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deletePrivateEndpointService",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Private Endpoint Service for One Provider",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -317,7 +317,7 @@ func GetPrivateEndpointBuilder() *cobra.Command {
 
 	opts := GetPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Return One Private Endpoint for One Provider",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -384,7 +384,7 @@ func GetPrivateEndpointServiceBuilder() *cobra.Command {
 
 	opts := GetPrivateEndpointServiceOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getPrivateEndpointService",
 		// Aliases: []string{"?"},
 		Short:   "Return One Private Endpoint Service for One Provider",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -445,7 +445,7 @@ func GetRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 
 	opts := GetRegionalizedPrivateEndpointSettingOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getRegionalizedPrivateEndpointSetting",
 		// Aliases: []string{"?"},
 		Short:   "Return Regionalized Private Endpoint Status",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -504,7 +504,7 @@ func ListPrivateEndpointServicesBuilder() *cobra.Command {
 
 	opts := ListPrivateEndpointServicesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listPrivateEndpointServices",
 		// Aliases: []string{"?"},
 		Short:   "Return All Private Endpoint Services for One Provider",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -563,7 +563,7 @@ func ToggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 
 	opts := ToggleRegionalizedPrivateEndpointSettingOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "toggleRegionalizedPrivateEndpointSetting",
 		// Aliases: []string{"?"},
 		Short:   "Toggle Regionalized Private Endpoint Status",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -589,9 +589,9 @@ func ToggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 	return cmd
 }
 
-func PrivateEndpointServicesApiBuilder() *cobra.Command {
+func PrivateEndpointServicesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "privateEndpointServices",
 		Short:   "Returns, adds, edits, and removes private endpoint services.",
 	}
 	cmd.AddCommand(

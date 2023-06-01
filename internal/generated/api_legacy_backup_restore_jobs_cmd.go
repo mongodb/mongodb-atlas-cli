@@ -57,7 +57,7 @@ func CreateLegacyBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := CreateLegacyBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createLegacyBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Create One Legacy Backup Restore Job",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -85,9 +85,9 @@ func CreateLegacyBackupRestoreJobBuilder() *cobra.Command {
 	return cmd
 }
 
-func LegacyBackupRestoreJobsApiBuilder() *cobra.Command {
+func LegacyBackupRestoreJobsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "legacyBackupRestoreJobs",
 		Short:   "",
 	}
 	cmd.AddCommand(

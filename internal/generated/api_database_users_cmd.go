@@ -55,7 +55,7 @@ func CreateDatabaseUserBuilder() *cobra.Command {
 
 	opts := CreateDatabaseUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createDatabaseUser",
 		// Aliases: []string{"?"},
 		Short:   "Create One Database User in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -116,7 +116,7 @@ func DeleteDatabaseUserBuilder() *cobra.Command {
 
 	opts := DeleteDatabaseUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteDatabaseUser",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Database User from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -181,7 +181,7 @@ func GetDatabaseUserBuilder() *cobra.Command {
 
 	opts := GetDatabaseUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getDatabaseUser",
 		// Aliases: []string{"?"},
 		Short:   "Return One Database User from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -248,7 +248,7 @@ func ListDatabaseUsersBuilder() *cobra.Command {
 
 	opts := ListDatabaseUsersOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listDatabaseUsers",
 		// Aliases: []string{"?"},
 		Short:   "Return All Database Users from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -312,7 +312,7 @@ func UpdateDatabaseUserBuilder() *cobra.Command {
 
 	opts := UpdateDatabaseUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateDatabaseUser",
 		// Aliases: []string{"?"},
 		Short:   "Update One Database User in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -342,9 +342,9 @@ func UpdateDatabaseUserBuilder() *cobra.Command {
 	return cmd
 }
 
-func DatabaseUsersApiBuilder() *cobra.Command {
+func DatabaseUsersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "databaseUsers",
 		Short:   "Returns, adds, edits, and removes database users.",
 	}
 	cmd.AddCommand(

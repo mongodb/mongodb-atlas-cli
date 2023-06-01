@@ -52,7 +52,7 @@ func {{operationId}}Builder() *cobra.Command {
 
 	opts := {{operationId}}Opts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}",
 		// Aliases: []string{"?"},
 		Short:   "{{ summary }}",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -86,12 +86,12 @@ func {{operationId}}Builder() *cobra.Command {
 {{/operation}}
 {{/operations}}
 
-func {{classname}}Builder() *cobra.Command {
+func {{baseName}}Builder() *cobra.Command {
 {{#operations}}
 {{#operation}}
 {{#-first}}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "{{#lambda.camelcase}}{{baseName}}{{/lambda.camelcase}}",
 		Short:   "{{#tags}}{{#-first}}{{description}}{{/-first}}{{/tags}}",
 	}
 	cmd.AddCommand(

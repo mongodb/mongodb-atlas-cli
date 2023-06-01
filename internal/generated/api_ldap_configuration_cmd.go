@@ -55,7 +55,7 @@ func DeleteLDAPConfigurationBuilder() *cobra.Command {
 
 	opts := DeleteLDAPConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteLDAPConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Remove the Current LDAP User to DN Mapping",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -112,7 +112,7 @@ func GetLDAPConfigurationBuilder() *cobra.Command {
 
 	opts := GetLDAPConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getLDAPConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Return the Current LDAP or X.509 Configuration",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -171,7 +171,7 @@ func GetLDAPConfigurationStatusBuilder() *cobra.Command {
 
 	opts := GetLDAPConfigurationStatusOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getLDAPConfigurationStatus",
 		// Aliases: []string{"?"},
 		Short:   "Return the Status of One Verify LDAP Configuration Request",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -230,7 +230,7 @@ func SaveLDAPConfigurationBuilder() *cobra.Command {
 
 	opts := SaveLDAPConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "saveLDAPConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Edit the LDAP or X.509 Configuration",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -287,7 +287,7 @@ func VerifyLDAPConfigurationBuilder() *cobra.Command {
 
 	opts := VerifyLDAPConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "verifyLDAPConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Verify the LDAP Configuration in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -313,9 +313,9 @@ func VerifyLDAPConfigurationBuilder() *cobra.Command {
 	return cmd
 }
 
-func LDAPConfigurationApiBuilder() *cobra.Command {
+func LDAPConfigurationBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "lDAPConfiguration",
 		Short:   "Returns, edits, verifies, and removes LDAP configurations. An LDAP configuration defines settings for MongoDB Cloud to connect to your LDAP server over TLS for user authentication and authorization. Your LDAP server must be visible to the internet or connected to your MongoDB Cloud cluster with VPC Peering. Also, your LDAP server must use TLS. You must have the MongoDB Cloud admin user privilege to use these endpoints. Also, to configure user authentication and authorization with LDAPS, your cluster must run MongoDB 3.6 or higher. Groups for which you have configured LDAPS can&#39;t create a cluster using a version of MongoDB 3.6 or lower.",
 	}
 	cmd.AddCommand(

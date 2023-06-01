@@ -57,7 +57,7 @@ func CreateSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := CreateSharedClusterBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createSharedClusterBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Create One Restore Job from One M2 or M5 Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -120,7 +120,7 @@ func GetSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := GetSharedClusterBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getSharedClusterBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Return One Restore Job for One M2 or M5 Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -183,7 +183,7 @@ func ListSharedClusterBackupRestoreJobsBuilder() *cobra.Command {
 
 	opts := ListSharedClusterBackupRestoreJobsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listSharedClusterBackupRestoreJobs",
 		// Aliases: []string{"?"},
 		Short:   "Return All Restore Jobs for One M2 or M5 Cluster",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -211,9 +211,9 @@ func ListSharedClusterBackupRestoreJobsBuilder() *cobra.Command {
 	return cmd
 }
 
-func SharedTierRestoreJobsApiBuilder() *cobra.Command {
+func SharedTierRestoreJobsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "sharedTierRestoreJobs",
 		Short:   "Returns and adds restore jobs for shared-tier database deployments.",
 	}
 	cmd.AddCommand(

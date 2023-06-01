@@ -55,7 +55,7 @@ func CreateServerlessInstanceBuilder() *cobra.Command {
 
 	opts := CreateServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createServerlessInstance",
 		// Aliases: []string{"?"},
 		Short:   "Create One Serverless Instance in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -114,7 +114,7 @@ func DeleteServerlessInstanceBuilder() *cobra.Command {
 
 	opts := DeleteServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteServerlessInstance",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Serverless Instance from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -175,7 +175,7 @@ func GetServerlessInstanceBuilder() *cobra.Command {
 
 	opts := GetServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getServerlessInstance",
 		// Aliases: []string{"?"},
 		Short:   "Return One Serverless Instance from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -240,7 +240,7 @@ func ListServerlessInstancesBuilder() *cobra.Command {
 
 	opts := ListServerlessInstancesOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listServerlessInstances",
 		// Aliases: []string{"?"},
 		Short:   "Return All Serverless Instances from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -302,7 +302,7 @@ func UpdateServerlessInstanceBuilder() *cobra.Command {
 
 	opts := UpdateServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateServerlessInstance",
 		// Aliases: []string{"?"},
 		Short:   "Update One Serverless Instance in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -330,9 +330,9 @@ func UpdateServerlessInstanceBuilder() *cobra.Command {
 	return cmd
 }
 
-func ServerlessInstancesApiBuilder() *cobra.Command {
+func ServerlessInstancesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "serverlessInstances",
 		Short:   "Returns, adds, edits, and removes serverless instances.",
 	}
 	cmd.AddCommand(

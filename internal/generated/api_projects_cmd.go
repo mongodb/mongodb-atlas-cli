@@ -55,7 +55,7 @@ func CreateProjectBuilder() *cobra.Command {
 
 	opts := CreateProjectOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createProject",
 		// Aliases: []string{"?"},
 		Short:   "Create One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -111,7 +111,7 @@ func CreateProjectInvitationBuilder() *cobra.Command {
 
 	opts := CreateProjectInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "createProjectInvitation",
 		// Aliases: []string{"?"},
 		Short:   "Invite One MongoDB Cloud User to Join One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -168,7 +168,7 @@ func DeleteProjectBuilder() *cobra.Command {
 
 	opts := DeleteProjectOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteProject",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -227,7 +227,7 @@ func DeleteProjectInvitationBuilder() *cobra.Command {
 
 	opts := DeleteProjectInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteProjectInvitation",
 		// Aliases: []string{"?"},
 		Short:   "Cancel One Project Invitation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -288,7 +288,7 @@ func DeleteProjectLimitBuilder() *cobra.Command {
 
 	opts := DeleteProjectLimitOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "deleteProjectLimit",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Project Limit",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -347,7 +347,7 @@ func GetProjectBuilder() *cobra.Command {
 
 	opts := GetProjectOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getProject",
 		// Aliases: []string{"?"},
 		Short:   "Return One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -404,7 +404,7 @@ func GetProjectByNameBuilder() *cobra.Command {
 
 	opts := GetProjectByNameOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getProjectByName",
 		// Aliases: []string{"?"},
 		Short:   "Return One Project using Its Name",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -463,7 +463,7 @@ func GetProjectInvitationBuilder() *cobra.Command {
 
 	opts := GetProjectInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getProjectInvitation",
 		// Aliases: []string{"?"},
 		Short:   "Return One Project Invitation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -524,7 +524,7 @@ func GetProjectLimitBuilder() *cobra.Command {
 
 	opts := GetProjectLimitOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getProjectLimit",
 		// Aliases: []string{"?"},
 		Short:   "Return One Limit for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -583,7 +583,7 @@ func GetProjectSettingsBuilder() *cobra.Command {
 
 	opts := GetProjectSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "getProjectSettings",
 		// Aliases: []string{"?"},
 		Short:   "Return One Project Settings",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -642,7 +642,7 @@ func ListProjectInvitationsBuilder() *cobra.Command {
 
 	opts := ListProjectInvitationsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listProjectInvitations",
 		// Aliases: []string{"?"},
 		Short:   "Return All Project Invitations",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -700,7 +700,7 @@ func ListProjectLimitsBuilder() *cobra.Command {
 
 	opts := ListProjectLimitsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listProjectLimits",
 		// Aliases: []string{"?"},
 		Short:   "Return All Limits for One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -767,7 +767,7 @@ func ListProjectUsersBuilder() *cobra.Command {
 
 	opts := ListProjectUsersOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listProjectUsers",
 		// Aliases: []string{"?"},
 		Short:   "Return All Users in One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -833,7 +833,7 @@ func ListProjectsBuilder() *cobra.Command {
 
 	opts := ListProjectsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "listProjects",
 		// Aliases: []string{"?"},
 		Short:   "Return All Projects",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -893,7 +893,7 @@ func RemoveProjectUserBuilder() *cobra.Command {
 
 	opts := RemoveProjectUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "removeProjectUser",
 		// Aliases: []string{"?"},
 		Short:   "Remove One User from One Project",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -954,7 +954,7 @@ func SetProjectLimitBuilder() *cobra.Command {
 
 	opts := SetProjectLimitOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "setProjectLimit",
 		// Aliases: []string{"?"},
 		Short:   "Set One Project Limit",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1013,7 +1013,7 @@ func UpdateProjectBuilder() *cobra.Command {
 
 	opts := UpdateProjectOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateProject",
 		// Aliases: []string{"?"},
 		Short:   "Update One Project Name",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1070,7 +1070,7 @@ func UpdateProjectInvitationBuilder() *cobra.Command {
 
 	opts := UpdateProjectInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateProjectInvitation",
 		// Aliases: []string{"?"},
 		Short:   "Update One Project Invitation",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1129,7 +1129,7 @@ func UpdateProjectInvitationByIdBuilder() *cobra.Command {
 
 	opts := UpdateProjectInvitationByIdOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateProjectInvitationById",
 		// Aliases: []string{"?"},
 		Short:   "Update One Project Invitation by Invitation ID",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1188,7 +1188,7 @@ func UpdateProjectSettingsBuilder() *cobra.Command {
 
 	opts := UpdateProjectSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "updateProjectSettings",
 		// Aliases: []string{"?"},
 		Short:   "Update One Project Settings",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
@@ -1214,9 +1214,9 @@ func UpdateProjectSettingsBuilder() *cobra.Command {
 	return cmd
 }
 
-func ProjectsApiBuilder() *cobra.Command {
+func ProjectsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "<<use>>",
+		Use:     "projects",
 		Short:   "Returns, adds, and edits collections of clusters and users in MongoDB Cloud.",
 	}
 	cmd.AddCommand(

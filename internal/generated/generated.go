@@ -18,19 +18,20 @@ package generated
 
 import (
 	"time"
-    "net"
-    "net/http"
+	"net"
+	"net/http"
 
-    "github.com/mongodb-forks/digest"
+	"github.com/spf13/cobra"
+	"github.com/mongodb-forks/digest"
 	"go.mongodb.org/atlas-sdk/admin"
-    "go.mongodb.org/atlas/auth"
+	"go.mongodb.org/atlas/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 )
 
 const (
-    cloudGovServiceURL    = "https://cloud.mongodbgov.com/"
-    timeout               = 5 * time.Second
+	cloudGovServiceURL    = "https://cloud.mongodbgov.com/"
+	timeout               = 5 * time.Second
 	keepAlive             = 30 * time.Second
 	maxIdleConns          = 5
 	maxIdleConnsPerHost   = 4
@@ -40,18 +41,18 @@ const (
 
 func httpClient(username, password string, accessToken *auth.Token) (*http.Client, error) {
 	httpTransport := &http.Transport{
-        DialContext: (&net.Dialer{
-            Timeout:   timeout,
-            KeepAlive: keepAlive,
-        }).DialContext,
-        MaxIdleConns:          maxIdleConns,
-        MaxIdleConnsPerHost:   maxIdleConnsPerHost,
-        Proxy:                 http.ProxyFromEnvironment,
-        IdleConnTimeout:       idleConnTimeout,
-        ExpectContinueTimeout: expectContinueTimeout,
-    }
+		DialContext: (&net.Dialer{
+			Timeout:   timeout,
+			KeepAlive: keepAlive,
+		}).DialContext,
+		MaxIdleConns:          maxIdleConns,
+		MaxIdleConnsPerHost:   maxIdleConnsPerHost,
+		Proxy:                 http.ProxyFromEnvironment,
+		IdleConnTimeout:       idleConnTimeout,
+		ExpectContinueTimeout: expectContinueTimeout,
+	}
 
-    if username == "" && password == "" && accessToken == nil {
+	if username == "" && password == "" && accessToken == nil {
 		return &http.Client{Transport: httpTransport}, nil
 	}
 	if username != "" && password != "" {
@@ -71,32 +72,32 @@ func httpClient(username, password string, accessToken *auth.Token) (*http.Clien
 }
 
 func NewClientWithAuth() (*admin.APIClient, error) {
-    profile := config.Default()
+	profile := config.Default()
 
-    var authToken *auth.Token
+	var authToken *auth.Token
 
-    username := profile.PublicAPIKey()
-    password := profile.PrivateAPIKey()
+	username := profile.PublicAPIKey()
+	password := profile.PrivateAPIKey()
 
-    if username == "" && password == "" {
-        var err error
-        authToken, err = profile.Token()
-        if err != nil {
-            return nil, err
-        }
-    }
+	if username == "" && password == "" {
+		var err error
+		authToken, err = profile.Token()
+		if err != nil {
+			return nil, err
+		}
+	}
 
-    baseURL := profile.OpsManagerURL()
-    if baseURL == "" && profile.Service() == config.CloudGovService {
-        baseURL = cloudGovServiceURL
-    }
+	baseURL := profile.OpsManagerURL()
+	if baseURL == "" && profile.Service() == config.CloudGovService {
+		baseURL = cloudGovServiceURL
+	}
 
-    client, err := httpClient(username, password, authToken)
+	client, err := httpClient(username, password, authToken)
 	if err != nil {
 		return nil, err
 	}
 
-    opts := []admin.ClientModifier{
+	opts := []admin.ClientModifier{
 		admin.UseHTTPClient(client),
 		admin.UseUserAgent(config.UserAgent),
 		admin.UseDebug(log.IsDebugLevel())}
@@ -119,4 +120,54 @@ type Transport struct {
 func (tr *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	tr.token.SetAuthHeader(req)
 	return tr.base.RoundTrip(req)
+}
+
+func Commands() []*cobra.Command {
+	return []*cobra.Command {
+		AWSClustersDNSBuilder(),
+		AccessTrackingBuilder(),
+		AlertConfigurationsBuilder(),
+		AlertsBuilder(),
+		AtlasSearchBuilder(),
+		AuditingBuilder(),
+		CloudBackupsBuilder(),
+		CloudMigrationServiceBuilder(),
+		CloudProviderAccessBuilder(),
+		ClusterOutageSimulationBuilder(),
+		ClustersBuilder(),
+		CustomDatabaseRolesBuilder(),
+		DataFederationBuilder(),
+		DataLakePipelinesBuilder(),
+		DatabaseUsersBuilder(),
+		EncryptionAtRestUsingCustomerKeyManagementBuilder(),
+		EventsBuilder(),
+		FederatedAuthenticationBuilder(),
+		GlobalClustersBuilder(),
+		InvoicesBuilder(),
+		LDAPConfigurationBuilder(),
+		LegacyBackupBuilder(),
+		LegacyBackupRestoreJobsBuilder(),
+		MaintenanceWindowsBuilder(),
+		MongoDBCloudUsersBuilder(),
+		MonitoringAndLogsBuilder(),
+		MultiCloudClustersBuilder(),
+		NetworkPeeringBuilder(),
+		OnlineArchiveBuilder(),
+		OrganizationsBuilder(),
+		PerformanceAdvisorBuilder(),
+		PrivateEndpointServicesBuilder(),
+		ProgrammaticAPIKeysBuilder(),
+		ProjectIPAccessListBuilder(),
+		ProjectsBuilder(),
+		RollingIndexBuilder(),
+		RootBuilder(),
+		ServerlessInstancesBuilder(),
+		ServerlessPrivateEndpointsBuilder(),
+		SharedTierRestoreJobsBuilder(),
+		SharedTierSnapshotsBuilder(),
+		TeamsBuilder(),
+		TestBuilder(),
+		ThirdPartyIntegrationsBuilder(),
+		X509AuthenticationBuilder(),
+	}
 }

@@ -80,7 +80,7 @@ func GetOrganizationEventBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 	cmd.Flags().StringVar(&opts.eventId, "eventId", , "Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listOrganizationEvents) endpoint to retrieve all events to which the authenticated user has access.")
-	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
+	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("eventId")
@@ -144,7 +144,7 @@ func GetProjectEventBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 	cmd.Flags().StringVar(&opts.eventId, "eventId", , "Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listProjectEvents) endpoint to retrieve all events to which the authenticated user has access.")
-	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
+	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("eventId")
@@ -217,13 +217,13 @@ func ListOrganizationEventsBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
-	cmd.Flags().StringVar(&opts.eventType, "eventType", , "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")
-	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
-	cmd.Flags().StringVar(&opts.maxDate, "maxDate", , "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
-	cmd.Flags().StringVar(&opts.minDate, "minDate", , "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().[]stringVar(&opts.eventType, "eventType", , "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")
+	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
+	cmd.Flags().Time.TimeVar(&opts.maxDate, "maxDate", , "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
+	cmd.Flags().Time.TimeVar(&opts.minDate, "minDate", , "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
 
 	_ = cmd.MarkFlagRequired("orgId")
 
@@ -297,14 +297,14 @@ func ListProjectEventsBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().StringVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().StringVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
-	cmd.Flags().StringVar(&opts.clusterNames, "clusterNames", , "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.eventType, "eventType", , "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")
-	cmd.Flags().StringVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
-	cmd.Flags().StringVar(&opts.maxDate, "maxDate", , "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
-	cmd.Flags().StringVar(&opts.minDate, "minDate", , "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().[]stringVar(&opts.clusterNames, "clusterNames", , "Human-readable label that identifies the cluster.")
+	cmd.Flags().[]stringVar(&opts.eventType, "eventType", , "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")
+	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
+	cmd.Flags().Time.TimeVar(&opts.maxDate, "maxDate", , "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
+	cmd.Flags().Time.TimeVar(&opts.minDate, "minDate", , "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 

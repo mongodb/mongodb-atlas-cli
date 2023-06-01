@@ -74,7 +74,7 @@ func VersionedExampleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.additionalInfo, "additionalInfo", false, "")
+	cmd.Flags().BoolVar(&opts.additionalInfo, "additionalInfo", false, "")
 
 
 	return cmd

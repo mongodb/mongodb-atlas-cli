@@ -22,17 +22,16 @@ import (
 )
 
 const (
-	datadog  = "DATADOG"
-	slack    = "SLACK"
-	victor   = "VICTOR_OPS"
-	flowdock = "FLOWDOCK"
-	email    = "EMAIL"
-	ops      = "OPS_GENIE"
-	pager    = "PAGER_DUTY"
-	sms      = "SMS"
-	group    = "GROUP"
-	user     = "USER"
-	org      = "ORG"
+	datadog = "DATADOG"
+	slack   = "SLACK"
+	victor  = "VICTOR_OPS"
+	email   = "EMAIL"
+	ops     = "OPS_GENIE"
+	pager   = "PAGER_DUTY"
+	sms     = "SMS"
+	group   = "GROUP"
+	user    = "USER"
+	org     = "ORG"
 )
 
 // ConfigOpts contains all the information and functions to manage an alert configuration.
@@ -49,10 +48,8 @@ type ConfigOpts struct {
 	notificationChannelName         string
 	apiKey                          string // notificationsDatadogApiKey, notificationsOpsGenieApiKey, notificationsVictorOpsApiKey
 	notificationEmailAddress        string
-	notificationFlowName            string
 	notificationMobileNumber        string
 	notificationRegion              string // notificationsOpsGenieRegion, notificationsDatadogRegion
-	notificationOrgName             string
 	notificationServiceKey          string
 	notificationTeamID              string
 	notificationType                string
@@ -111,11 +108,6 @@ func (opts *ConfigOpts) newNotification() *atlas.Notification {
 
 	case email:
 		out.EmailAddress = opts.notificationEmailAddress
-
-	case flowdock:
-		out.FlowdockAPIToken = opts.notificationToken
-		out.FlowName = opts.notificationFlowName
-		out.OrgName = opts.notificationOrgName
 
 	case sms:
 		out.MobileNumber = opts.notificationMobileNumber

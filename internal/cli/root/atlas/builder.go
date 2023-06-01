@@ -25,41 +25,14 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslists"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslogs"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/alerts"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/cloudproviders"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters"
 	atlasConfig "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdbroles"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdns"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalake"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalakepipelines"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/dbusers"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/events"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/integrations"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/kubernetes"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/livemigrations"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/logs"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/maintenance"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/metrics"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/networking"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/organizations"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/performanceadvisor"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/processes"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/teams"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/users"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/figautocomplete"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/generated"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
@@ -186,44 +159,55 @@ Use the --help flag with any command for more info on that command.`,
 	registerCmd := auth.RegisterBuilder()
 	registerCmd.Hidden = true
 
-	rootCmd.AddCommand(
+	cmdList := append([]*cobra.Command{
 		atlasConfig.Builder(),
 		auth.Builder(),
 		quickstart.Builder(),
 		setup.Builder(),
-		projects.Builder(),
-		organizations.Builder(),
-		users.Builder(),
-		teams.Builder(),
-		clusters.Builder(),
-		dbusers.Builder(),
-		customdbroles.Builder(),
-		accesslists.Builder(),
-		datalake.Builder(),
-		datalakepipelines.Builder(),
-		alerts.Builder(),
-		backup.Builder(),
-		events.Builder(),
-		metrics.Builder(),
-		performanceadvisor.Builder(),
-		logs.Builder(),
-		processes.Builder(),
-		privateendpoints.Builder(),
-		networking.Builder(),
-		security.Builder(),
-		integrations.Builder(),
-		maintenance.Builder(),
-		customdns.Builder(),
-		cloudproviders.Builder(),
-		serverless.Builder(),
-		livemigrations.Builder(),
-		accesslogs.Builder(),
 		loginCmd,
 		logoutCmd,
 		whoCmd,
 		registerCmd,
-		figautocomplete.Builder(),
-		kubernetes.Builder(),
+	}, generated.Commands()...)
+	rootCmd.AddCommand(
+		cmdList...,
+	/*atlasConfig.Builder(),
+	auth.Builder(),
+	quickstart.Builder(),
+	setup.Builder(),
+	projects.Builder(),
+	organizations.Builder(),
+	users.Builder(),
+	teams.Builder(),
+	clusters.Builder(),
+	dbusers.Builder(),
+	customdbroles.Builder(),
+	accesslists.Builder(),
+	datalake.Builder(),
+	datalakepipelines.Builder(),
+	alerts.Builder(),
+	backup.Builder(),
+	events.Builder(),
+	metrics.Builder(),
+	performanceadvisor.Builder(),
+	logs.Builder(),
+	processes.Builder(),
+	privateendpoints.Builder(),
+	networking.Builder(),
+	security.Builder(),
+	integrations.Builder(),
+	maintenance.Builder(),
+	customdns.Builder(),
+	cloudproviders.Builder(),
+	serverless.Builder(),
+	livemigrations.Builder(),
+	accesslogs.Builder(),
+	loginCmd,
+	logoutCmd,
+	whoCmd,
+	registerCmd,
+	figautocomplete.Builder(),
+	kubernetes.Builder(),*/
 	)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)

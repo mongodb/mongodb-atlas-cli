@@ -350,108 +350,65 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 
 		replicationSpec.RegionConfigs = make([]*atlasV1.AdvancedRegionConfig, 0, len(replicationSpec.RegionConfigs))
 		for _, rc := range rs.RegionConfigs {
-			var configAnalyticsSpecs *atlasv2.DedicatedHardwareSpec
-			var configElectableSpecs *atlasv2.HardwareSpec
-			var configReadOnlySpecs *atlasv2.DedicatedHardwareSpec
-			var configAutoScaling *atlasv2.AutoScalingV15
-			var priority *int
-			var providerName string
-			var regionName string
-			var backingProviderName string
-
-			switch {
-			case rc.AWSRegionConfig != nil:
-				configAnalyticsSpecs = rc.AWSRegionConfig.AnalyticsSpecs
-				configElectableSpecs = rc.AWSRegionConfig.ElectableSpecs
-				configReadOnlySpecs = rc.AWSRegionConfig.ReadOnlySpecs
-				configAutoScaling = rc.AWSRegionConfig.AutoScaling
-				priority = rc.AWSRegionConfig.Priority
-				providerName = rc.AWSRegionConfig.GetProviderName()
-				regionName = rc.AWSRegionConfig.GetRegionName()
-			case rc.AzureRegionConfig != nil:
-				configAnalyticsSpecs = rc.AzureRegionConfig.AnalyticsSpecs
-				configElectableSpecs = rc.AzureRegionConfig.ElectableSpecs
-				configReadOnlySpecs = rc.AzureRegionConfig.ReadOnlySpecs
-				configAutoScaling = rc.AzureRegionConfig.AutoScaling
-				priority = rc.AzureRegionConfig.Priority
-				providerName = rc.AzureRegionConfig.GetProviderName()
-				regionName = rc.AzureRegionConfig.GetRegionName()
-			case rc.GCPRegionConfig != nil:
-				configAnalyticsSpecs = rc.GCPRegionConfig.AnalyticsSpecs
-				configElectableSpecs = rc.GCPRegionConfig.ElectableSpecs
-				configReadOnlySpecs = rc.GCPRegionConfig.ReadOnlySpecs
-				configAutoScaling = rc.GCPRegionConfig.AutoScaling
-				priority = rc.GCPRegionConfig.Priority
-				providerName = rc.GCPRegionConfig.GetProviderName()
-				regionName = rc.GCPRegionConfig.GetRegionName()
-			case rc.TenantRegionConfig != nil:
-				configElectableSpecs = rc.TenantRegionConfig.ElectableSpecs
-				backingProviderName = rc.TenantRegionConfig.GetBackingProviderName()
-				priority = rc.TenantRegionConfig.Priority
-				providerName = rc.TenantRegionConfig.GetProviderName()
-				regionName = rc.TenantRegionConfig.GetRegionName()
-			}
-
 			var analyticsSpecs *atlasV1.Specs
-			if configAnalyticsSpecs != nil {
+			if rc.AnalyticsSpecs != nil {
 				analyticsSpecs = &atlasV1.Specs{
-					DiskIOPS:      pointer.Get(int64(configAnalyticsSpecs.GetDiskIOPS())),
-					EbsVolumeType: configAnalyticsSpecs.GetEbsVolumeType(),
-					InstanceSize:  configAnalyticsSpecs.GetInstanceSize(),
-					NodeCount:     configAnalyticsSpecs.NodeCount,
+					DiskIOPS:      pointer.Get(int64(rc.AnalyticsSpecs.GetDiskIOPS())),
+					EbsVolumeType: rc.AnalyticsSpecs.GetEbsVolumeType(),
+					InstanceSize:  rc.AnalyticsSpecs.GetInstanceSize(),
+					NodeCount:     rc.AnalyticsSpecs.NodeCount,
 				}
 			}
 			var electableSpecs *atlasV1.Specs
-			if configElectableSpecs != nil {
+			if rc.ElectableSpecs != nil {
 				electableSpecs = &atlasV1.Specs{
-					DiskIOPS:      pointer.Get(int64(configElectableSpecs.GetDiskIOPS())),
-					EbsVolumeType: configElectableSpecs.GetEbsVolumeType(),
-					InstanceSize:  configElectableSpecs.GetInstanceSize(),
-					NodeCount:     configElectableSpecs.NodeCount,
+					DiskIOPS:      pointer.Get(int64(rc.ElectableSpecs.GetDiskIOPS())),
+					EbsVolumeType: rc.ElectableSpecs.GetEbsVolumeType(),
+					InstanceSize:  rc.ElectableSpecs.GetInstanceSize(),
+					NodeCount:     rc.ElectableSpecs.NodeCount,
 				}
 			}
 
 			var readOnlySpecs *atlasV1.Specs
-			if configReadOnlySpecs != nil {
+			if rc.ReadOnlySpecs != nil {
 				readOnlySpecs = &atlasV1.Specs{
-					DiskIOPS:      pointer.Get(int64(configReadOnlySpecs.GetDiskIOPS())),
-					EbsVolumeType: configReadOnlySpecs.GetEbsVolumeType(),
-					InstanceSize:  configReadOnlySpecs.GetInstanceSize(),
-					NodeCount:     configReadOnlySpecs.NodeCount,
+					DiskIOPS:      pointer.Get(int64(rc.ReadOnlySpecs.GetDiskIOPS())),
+					EbsVolumeType: rc.ReadOnlySpecs.GetEbsVolumeType(),
+					InstanceSize:  rc.ReadOnlySpecs.GetInstanceSize(),
+					NodeCount:     rc.ReadOnlySpecs.NodeCount,
 				}
 			}
 
 			var autoscalingSpec *atlasV1.AdvancedAutoScalingSpec
-			if configAutoScaling != nil {
+			if rc.AutoScaling != nil {
 				var compute *atlasV1.ComputeSpec
-				if configAutoScaling.Compute != nil {
+				if rc.AutoScaling.Compute != nil {
 					compute = &atlasV1.ComputeSpec{
-						Enabled:          configAutoScaling.Compute.Enabled,
-						ScaleDownEnabled: configAutoScaling.Compute.ScaleDownEnabled,
-						MinInstanceSize:  GetInstanceSizeStringIfNotNil(configAutoScaling.Compute.MinInstanceSize),
-						MaxInstanceSize:  GetInstanceSizeStringIfNotNil(configAutoScaling.Compute.MaxInstanceSize),
+						Enabled:          rc.AutoScaling.Compute.Enabled,
+						ScaleDownEnabled: rc.AutoScaling.Compute.ScaleDownEnabled,
+						MinInstanceSize:  GetInstanceSizeStringIfNotNil(rc.AutoScaling.Compute.MinInstanceSize),
+						MaxInstanceSize:  GetInstanceSizeStringIfNotNil(rc.AutoScaling.Compute.MaxInstanceSize),
 					}
 				}
 
 				var diskGB *atlasV1.DiskGB
-				if configAutoScaling.DiskGB != nil {
-					diskGB = &atlasV1.DiskGB{Enabled: configAutoScaling.DiskGB.Enabled}
+				if rc.AutoScaling.DiskGB != nil {
+					diskGB = &atlasV1.DiskGB{Enabled: rc.AutoScaling.DiskGB.Enabled}
 				}
 				autoscalingSpec = &atlasV1.AdvancedAutoScalingSpec{
 					DiskGB:  diskGB,
 					Compute: compute,
 				}
 			}
-
 			replicationSpec.RegionConfigs = append(replicationSpec.RegionConfigs, &atlasV1.AdvancedRegionConfig{
 				AnalyticsSpecs:      analyticsSpecs,
 				ElectableSpecs:      electableSpecs,
 				ReadOnlySpecs:       readOnlySpecs,
 				AutoScaling:         autoscalingSpec,
-				BackingProviderName: backingProviderName,
-				Priority:            priority,
-				ProviderName:        providerName,
-				RegionName:          regionName,
+				BackingProviderName: rc.GetBackingProviderName(),
+				Priority:            rc.Priority,
+				ProviderName:        rc.GetProviderName(),
+				RegionName:          rc.GetRegionName(),
 			})
 		}
 		result = append(result, replicationSpec)

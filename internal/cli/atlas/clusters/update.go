@@ -109,46 +109,15 @@ func (opts *UpdateOpts) patchOpts(out *atlasv2.ClusterDescriptionV15) {
 func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasv2.ClusterDescriptionV15) {
 	for _, replicationSpec := range out.ReplicationSpecs {
 		for _, regionConf := range replicationSpec.RegionConfigs {
-			opts.setRegionConf(regionConf)
-		}
-	}
-}
-
-func (opts *UpdateOpts) setRegionConf(regionConf atlasv2.RegionConfig) {
-	switch {
-	case regionConf.AWSRegionConfig != nil:
-		if regionConf.AWSRegionConfig.ReadOnlySpecs != nil {
-			regionConf.AWSRegionConfig.ReadOnlySpecs.InstanceSize = &opts.tier
-		}
-		if regionConf.AWSRegionConfig.AnalyticsSpecs != nil {
-			regionConf.AWSRegionConfig.AnalyticsSpecs.InstanceSize = &opts.tier
-		}
-		if regionConf.AWSRegionConfig.ElectableSpecs != nil {
-			regionConf.AWSRegionConfig.ElectableSpecs.InstanceSize = &opts.tier
-		}
-	case regionConf.AzureRegionConfig != nil:
-		if regionConf.AzureRegionConfig.ReadOnlySpecs != nil {
-			regionConf.AzureRegionConfig.ReadOnlySpecs.InstanceSize = &opts.tier
-		}
-		if regionConf.AzureRegionConfig.AnalyticsSpecs != nil {
-			regionConf.AzureRegionConfig.AnalyticsSpecs.InstanceSize = &opts.tier
-		}
-		if regionConf.AzureRegionConfig.ElectableSpecs != nil {
-			regionConf.AzureRegionConfig.ElectableSpecs.InstanceSize = &opts.tier
-		}
-	case regionConf.GCPRegionConfig != nil:
-		if regionConf.GCPRegionConfig.ReadOnlySpecs != nil {
-			regionConf.GCPRegionConfig.ReadOnlySpecs.InstanceSize = &opts.tier
-		}
-		if regionConf.GCPRegionConfig.AnalyticsSpecs != nil {
-			regionConf.GCPRegionConfig.AnalyticsSpecs.InstanceSize = &opts.tier
-		}
-		if regionConf.GCPRegionConfig.ElectableSpecs != nil {
-			regionConf.GCPRegionConfig.ElectableSpecs.InstanceSize = &opts.tier
-		}
-	case regionConf.TenantRegionConfig != nil:
-		if regionConf.TenantRegionConfig.ElectableSpecs != nil {
-			regionConf.AWSRegionConfig.ElectableSpecs.InstanceSize = &opts.tier
+			if regionConf.ReadOnlySpecs != nil {
+				regionConf.ReadOnlySpecs.InstanceSize = &opts.tier
+			}
+			if regionConf.AnalyticsSpecs != nil {
+				regionConf.AnalyticsSpecs.InstanceSize = &opts.tier
+			}
+			if regionConf.ElectableSpecs != nil {
+				regionConf.ElectableSpecs.InstanceSize = &opts.tier
+			}
 		}
 	}
 }

@@ -139,21 +139,14 @@ func RemoveReadOnlyAttributes(out *atlasv2.ClusterDescriptionV15) {
 	for i, spec := range out.ReplicationSpecs {
 		out.ReplicationSpecs[i].Id = nil
 		for j, config := range spec.RegionConfigs {
-			c := config
-			providerName := getProviderName(&c)
-			switch providerName {
-			case tenant:
-				out.ReplicationSpecs[i].RegionConfigs[j].TenantRegionConfig.ProviderName = pointer.Get(tenant)
+			out.ReplicationSpecs[i].RegionConfigs[j].ProviderName = config.ProviderName
+			if config.GetProviderName() == tenant {
 				isTenant = true
-			case awsProviderName:
-				out.ReplicationSpecs[i].RegionConfigs[j].AWSRegionConfig.ProviderName = pointer.Get(awsProviderName)
-			case gcpProviderName:
-				out.ReplicationSpecs[i].RegionConfigs[j].GCPRegionConfig.ProviderName = pointer.Get(gcpProviderName)
-			case azureProviderName:
-				out.ReplicationSpecs[i].RegionConfigs[j].AzureRegionConfig.ProviderName = pointer.Get(azureProviderName)
+				break
 			}
 		}
 	}
+
 	if isTenant {
 		out.BiConnector = nil
 		out.EncryptionAtRestProvider = nil
@@ -162,20 +155,6 @@ func RemoveReadOnlyAttributes(out *atlasv2.ClusterDescriptionV15) {
 		out.PitEnabled = nil
 		out.BackupEnabled = nil
 	}
-}
-
-func getProviderName(out *atlasv2.RegionConfig) string {
-	switch {
-	case out.GCPRegionConfig != nil:
-		return gcpProviderName
-	case out.AWSRegionConfig != nil:
-		return awsProviderName
-	case out.AzureRegionConfig != nil:
-		return azureProviderName
-	case out.TenantRegionConfig != nil:
-		return tenant
-	}
-	return ""
 }
 
 func RemoveReadOnlyAttributesSharedCluster(out *atlas.Cluster) {

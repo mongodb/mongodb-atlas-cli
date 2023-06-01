@@ -136,64 +136,31 @@ func (opts *Opts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
 }
 
 const (
-	tenant            = "TENANT"
-	atlasM2           = "M2"
-	atlasM5           = "M5"
-	awsProviderName   = "AWS"
-	gcpProviderName   = "GCP"
-	azureProviderName = "Azure"
+	tenant  = "TENANT"
+	atlasM2 = "M2"
+	atlasM5 = "M5"
 )
 
 func (opts *Opts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 	providerName := opts.providerName()
 
 	priority := 7
-	regionConfig := atlasv2.RegionConfig{}
-
-	members := 3
-
-	switch providerName {
-	case tenant:
-		regionConfig.TenantRegionConfig = &atlasv2.TenantRegionConfig{
-			ProviderName: &providerName,
-			Priority:     &priority,
-			RegionName:   &opts.Region,
-			ElectableSpecs: &atlasv2.HardwareSpec{
-				InstanceSize: &opts.Tier,
-			},
-			BackingProviderName: &opts.Provider,
-		}
-	case awsProviderName:
-		regionConfig.AWSRegionConfig = &atlasv2.AWSRegionConfig{
-			ProviderName: &providerName,
-			Priority:     &priority,
-			RegionName:   &opts.Region,
-			ElectableSpecs: &atlasv2.HardwareSpec{
-				InstanceSize: &opts.Tier,
-				NodeCount:    &members,
-			},
-		}
-	case azureProviderName:
-		regionConfig.AzureRegionConfig = &atlasv2.AzureRegionConfig{
-			ProviderName: &providerName,
-			Priority:     &priority,
-			RegionName:   &opts.Region,
-			ElectableSpecs: &atlasv2.HardwareSpec{
-				InstanceSize: &opts.Tier,
-				NodeCount:    &members,
-			},
-		}
-	case gcpProviderName:
-		regionConfig.GCPRegionConfig = &atlasv2.GCPRegionConfig{
-			ProviderName: &providerName,
-			Priority:     &priority,
-			RegionName:   &opts.Region,
-			ElectableSpecs: &atlasv2.HardwareSpec{
-				InstanceSize: &opts.Tier,
-				NodeCount:    &members,
-			},
-		}
+	regionConfig := atlasv2.RegionConfig{
+		ProviderName: &providerName,
+		Priority:     &priority,
+		RegionName:   &opts.Region,
 	}
+
+	regionConfig.ElectableSpecs = &atlasv2.HardwareSpec{
+		InstanceSize: &opts.Tier,
+	}
+	members := 3
+	if providerName == tenant {
+		regionConfig.BackingProviderName = &opts.Provider
+	} else {
+		regionConfig.ElectableSpecs.NodeCount = &members
+	}
+
 	return regionConfig
 }
 

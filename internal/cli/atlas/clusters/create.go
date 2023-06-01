@@ -35,15 +35,12 @@ import (
 )
 
 const (
-	replicaSet        = "REPLICASET"
-	tenant            = "TENANT"
-	atlasM0           = "M0"
-	atlasM2           = "M2"
-	atlasM5           = "M5"
-	zoneName          = "Zone 1"
-	awsProviderName   = "AWS"
-	gcpProviderName   = "GCP"
-	azureProviderName = "Azure"
+	replicaSet = "REPLICASET"
+	tenant     = "TENANT"
+	atlasM0    = "M0"
+	atlasM2    = "M2"
+	atlasM5    = "M5"
+	zoneName   = "Zone 1"
 )
 
 type CreateOpts struct {
@@ -162,57 +159,28 @@ func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 	priority := 7
 	readOnlyNode := 0
 	providerName := opts.providerName()
+
+	regionConfig := atlasv2.RegionConfig{
+		Priority:     &priority,
+		RegionName:   &opts.region,
+		ProviderName: &providerName,
+	}
+
+	regionConfig.ElectableSpecs = &atlasv2.HardwareSpec{
+		InstanceSize: &opts.tier,
+	}
+
+	if providerName == tenant {
+		regionConfig.BackingProviderName = &opts.provider
+	} else {
+		regionConfig.ElectableSpecs.NodeCount = &opts.members
+	}
+
 	readOnlySpec := &atlasv2.DedicatedHardwareSpec{
 		InstanceSize: &opts.tier,
 		NodeCount:    &readOnlyNode,
 	}
-	regionConfig := atlasv2.RegionConfig{}
-
-	switch providerName {
-	case tenant:
-		regionConfig.TenantRegionConfig = &atlasv2.TenantRegionConfig{
-			ProviderName: &providerName,
-			Priority:     &priority,
-			RegionName:   &opts.region,
-			ElectableSpecs: &atlasv2.HardwareSpec{
-				InstanceSize: &opts.tier,
-			},
-			BackingProviderName: &opts.provider,
-		}
-	case awsProviderName:
-		regionConfig.AWSRegionConfig = &atlasv2.AWSRegionConfig{
-			ProviderName: &providerName,
-			Priority:     &priority,
-			RegionName:   &opts.region,
-			ElectableSpecs: &atlasv2.HardwareSpec{
-				InstanceSize: &opts.tier,
-				NodeCount:    &opts.members,
-			},
-			ReadOnlySpecs: readOnlySpec,
-		}
-	case azureProviderName:
-		regionConfig.AzureRegionConfig = &atlasv2.AzureRegionConfig{
-			ProviderName: &providerName,
-			Priority:     &priority,
-			RegionName:   &opts.region,
-			ElectableSpecs: &atlasv2.HardwareSpec{
-				InstanceSize: &opts.tier,
-				NodeCount:    &opts.members,
-			},
-			ReadOnlySpecs: readOnlySpec,
-		}
-	case gcpProviderName:
-		regionConfig.GCPRegionConfig = &atlasv2.GCPRegionConfig{
-			ProviderName: &providerName,
-			Priority:     &priority,
-			RegionName:   &opts.region,
-			ElectableSpecs: &atlasv2.HardwareSpec{
-				InstanceSize: &opts.tier,
-				NodeCount:    &opts.members,
-			},
-			ReadOnlySpecs: readOnlySpec,
-		}
-	}
+	regionConfig.ReadOnlySpecs = readOnlySpec
 
 	return regionConfig
 }

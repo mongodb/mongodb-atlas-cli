@@ -427,6 +427,5 @@ dbName and collection are required only for built-in roles.`
 	Pipeline                                  = "Name of the Data lake pipeline."
 	CompletedAfter                            = "Date filter of which the backup snapshots where completed. Format must be YYYY-MM-DD"
 	Tag                                       = "List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the cluster."
-	ServerlessTag                             = "List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the serverless instance."
 	UpdateWarning                             = " Passing this flag replaces preexisting data."
 )

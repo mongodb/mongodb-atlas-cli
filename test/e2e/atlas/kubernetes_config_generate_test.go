@@ -706,6 +706,16 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 		expectedProject.Spec.PrivateEndpoints[0].ID = createdNetworkPeer.GetId()
 
 		cmd = exec.Command(cliPath,
+			privateEndpointsEntity,
+			azureEntity,
+			"watch",
+			createdNetworkPeer.GetId(),
+			"--projectId", generator.projectID)
+		cmd.Env = os.Environ()
+		_, err = cmd.CombinedOutput()
+		require.NoError(t, err)
+
+		cmd = exec.Command(cliPath,
 			"kubernetes",
 			"config",
 			"generate",

@@ -45,6 +45,7 @@ type UpdateOpts struct {
 	enableTerminationProtection  bool
 	disableTerminationProtection bool
 	filename                     string
+	tag                          map[string]string
 	fs                           afero.Fs
 	store                        store.AtlasClusterGetterUpdater
 }
@@ -121,7 +122,7 @@ func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlas.AdvancedCluster) {
 	}
 }
 
-// UpdateBuilder atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].
+// UpdateBuilder atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{
 		fs: afero.NewOsFs(),
@@ -136,6 +137,12 @@ You can't change the name of the cluster or downgrade the MongoDB version of you
 ` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"), "Atlas supports this command only for M10+ clusters"),
 		Example: fmt.Sprintf(`  # Update the tier for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
   %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50
+
+  # Replace tags cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tag key1=value1
+
+  # Remove all tags from cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tag =
 
   # Update the disk size for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
   %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --diskSizeGB 20
@@ -174,12 +181,19 @@ You can't change the name of the cluster or downgrade the MongoDB version of you
 	cmd.Flags().BoolVar(&opts.enableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
 	cmd.Flags().BoolVar(&opts.disableTerminationProtection, flag.DisableTerminationProtection, false, usage.DisableTerminationProtection)
 	cmd.MarkFlagsMutuallyExclusive(flag.EnableTerminationProtection, flag.DisableTerminationProtection)
+	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.Tag+usage.UpdateWarning)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagFilename(flag.File)
+
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tier)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DiskSizeGB)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.EnableTerminationProtection)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DisableTerminationProtection)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tag)
 
 	autocomplete := &autoCompleteOpts{}
 	_ = cmd.RegisterFlagCompletionFunc(flag.Tier, autocomplete.autocompleteTier())

@@ -59,6 +59,7 @@ func TestClustersFlags(t *testing.T) {
 			"--diskSizeGB", diskSizeGB30,
 			"--enableTerminationProtection",
 			"--projectId", g.projectID,
+			"--tag", "env=test",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

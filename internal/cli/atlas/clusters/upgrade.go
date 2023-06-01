@@ -42,6 +42,7 @@ type UpgradeOpts struct {
 	filename                     string
 	enableTerminationProtection  bool
 	disableTerminationProtection bool
+	tag                          map[string]string
 	fs                           afero.Fs
 	store                        store.AtlasSharedClusterGetterUpgrader
 }
@@ -105,10 +106,14 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 	}
 	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection)
 
+	for k, v := range opts.tag {
+		out.Tags = append(out.Tags, &atlas.Tag{Key: k, Value: v})
+	}
+
 	AddLabelSharedCluster(out, NewCLILabel())
 }
 
-// mongocli atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].
+// mongocli atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
 func UpgradeBuilder() *cobra.Command {
 	opts := UpgradeOpts{
 		fs: afero.NewOsFs(),
@@ -120,7 +125,7 @@ func UpgradeBuilder() *cobra.Command {
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"),
 		Example: fmt.Sprintf(`  # Upgrade the tier, disk size, and MongoDB version for the shared cluster named myCluster in the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s cluster upgrade myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50 --diskSizeGB 20 --mdbVersion 4.2`,
+  %s cluster upgrade myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50 --diskSizeGB 20 --mdbVersion 4.2 --tag env=dev`,
 			cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -150,6 +155,15 @@ func UpgradeBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.enableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
 	cmd.Flags().BoolVar(&opts.disableTerminationProtection, flag.DisableTerminationProtection, false, usage.DisableTerminationProtection)
 	cmd.MarkFlagsMutuallyExclusive(flag.EnableTerminationProtection, flag.DisableTerminationProtection)
+
+	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.Tag+usage.UpdateWarning)
+
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tier)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DiskSizeGB)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.MDBVersion)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.EnableTerminationProtection)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DisableTerminationProtection)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tag)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

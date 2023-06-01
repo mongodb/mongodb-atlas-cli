@@ -100,6 +100,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 			"--mdbVersion=6.0",
 			"--disableTerminationProtection",
 			"--projectId", g.projectID,
+			"--tag", "env=e2e",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

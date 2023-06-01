@@ -339,8 +339,8 @@ type ListPipelineRunsOpts struct {
 	groupId string
 	pipelineName string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 	createdBefore time.Time
 }
 
@@ -473,8 +473,8 @@ type ListPipelineSnapshotsOpts struct {
 	groupId string
 	pipelineName string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 	completedAfter time.Time
 }
 

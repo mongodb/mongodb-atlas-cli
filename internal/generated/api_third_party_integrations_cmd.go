@@ -30,8 +30,8 @@ type CreateThirdPartyIntegrationOpts struct {
 	integrationType string
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *CreateThirdPartyIntegrationOpts) initClient(ctx context.Context) func() error {
@@ -221,8 +221,8 @@ type ListThirdPartyIntegrationsOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListThirdPartyIntegrationsOpts) initClient(ctx context.Context) func() error {
@@ -288,8 +288,8 @@ type UpdateThirdPartyIntegrationOpts struct {
 	integrationType string
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *UpdateThirdPartyIntegrationOpts) initClient(ctx context.Context) func() error {

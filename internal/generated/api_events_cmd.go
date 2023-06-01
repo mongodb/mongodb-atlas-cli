@@ -157,8 +157,8 @@ type ListOrganizationEventsOpts struct {
 	client *admin.APIClient
 	orgId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 	eventType []string
 	includeRaw bool
 	maxDate time.Time
@@ -235,8 +235,8 @@ type ListProjectEventsOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 	clusterNames []string
 	eventType []string
 	includeRaw bool

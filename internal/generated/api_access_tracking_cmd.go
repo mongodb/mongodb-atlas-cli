@@ -32,7 +32,7 @@ type ListAccessLogsByClusterNameOpts struct {
 	authResult bool
 	end int64
 	ipAddress string
-	nLogs int32
+	nLogs int
 	start int64
 }
 
@@ -108,7 +108,7 @@ type ListAccessLogsByHostnameOpts struct {
 	authResult bool
 	end int64
 	ipAddress string
-	nLogs int32
+	nLogs int
 	start int64
 }
 

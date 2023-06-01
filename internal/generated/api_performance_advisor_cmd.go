@@ -284,8 +284,8 @@ type ListSuggestedIndexesOpts struct {
 	groupId string
 	processId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 	duration int64
 	namespaces []string
 	nExamples int64

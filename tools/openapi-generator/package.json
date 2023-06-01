@@ -5,7 +5,7 @@
   "scripts": {
     "generate:clear": "rm -rf ../../internal/generated",
     "generate:init": "mkdir -p ../../internal/generated && cp ./config/.openapi-generator-ignore ../../internal/generated/.openapi-generator-ignore",
-    "generate:run": "openapi-generator-cli generate -c './config/config.yaml' -o ../../internal/generated",
+    "generate:run": "openapi-generator-cli generate -c './config/config.yaml' --type-mappings=integer=int -o ../../internal/generated",
     "generate": "npm run generate:clear && npm run generate:init && npm run generate:run"
   },
   "repository": {

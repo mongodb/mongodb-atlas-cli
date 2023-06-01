@@ -148,8 +148,8 @@ type CreateApiKeyAccessListOpts struct {
 	orgId string
 	apiUserId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *CreateApiKeyAccessListOpts) initClient(ctx context.Context) func() error {
@@ -527,8 +527,8 @@ type ListApiKeyAccessListsEntriesOpts struct {
 	orgId string
 	apiUserId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListApiKeyAccessListsEntriesOpts) initClient(ctx context.Context) func() error {
@@ -596,8 +596,8 @@ type ListApiKeysOpts struct {
 	client *admin.APIClient
 	orgId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListApiKeysOpts) initClient(ctx context.Context) func() error {
@@ -662,8 +662,8 @@ type ListProjectApiKeysOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListProjectApiKeysOpts) initClient(ctx context.Context) func() error {
@@ -850,8 +850,8 @@ type UpdateApiKeyRolesOpts struct {
 	client *admin.APIClient
 	groupId string
 	apiUserId string
-	pageNum int32
-	itemsPerPage int32
+	pageNum int
+	itemsPerPage int
 	includeCount bool
 }
 

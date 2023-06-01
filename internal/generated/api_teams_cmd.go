@@ -386,9 +386,9 @@ type ListOrganizationTeamsOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	orgId string
-	itemsPerPage int32
+	itemsPerPage int
 	includeCount bool
-	pageNum int32
+	pageNum int
 }
 
 func (opts *ListOrganizationTeamsOpts) initClient(ctx context.Context) func() error {
@@ -453,8 +453,8 @@ type ListProjectTeamsOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListProjectTeamsOpts) initClient(ctx context.Context) func() error {
@@ -519,8 +519,8 @@ type ListTeamUsersOpts struct {
 	client *admin.APIClient
 	orgId string
 	teamId string
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListTeamUsersOpts) initClient(ctx context.Context) func() error {

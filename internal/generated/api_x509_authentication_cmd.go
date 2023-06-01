@@ -148,8 +148,8 @@ type ListDatabaseUserCertificatesOpts struct {
 	groupId string
 	username string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListDatabaseUserCertificatesOpts) initClient(ctx context.Context) func() error {

@@ -29,8 +29,8 @@ type CreateProjectIpAccessListOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *CreateProjectIpAccessListOpts) initClient(ctx context.Context) func() error {
@@ -278,8 +278,8 @@ type ListProjectIpAccessListsOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListProjectIpAccessListsOpts) initClient(ctx context.Context) func() error {

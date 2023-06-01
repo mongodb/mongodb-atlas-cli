@@ -633,8 +633,8 @@ type ListAtlasProcessesOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListAtlasProcessesOpts) initClient(ctx context.Context) func() error {
@@ -700,8 +700,8 @@ type ListDatabasesOpts struct {
 	groupId string
 	processId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListDatabasesOpts) initClient(ctx context.Context) func() error {
@@ -835,8 +835,8 @@ type ListDiskPartitionsOpts struct {
 	groupId string
 	processId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListDiskPartitionsOpts) initClient(ctx context.Context) func() error {

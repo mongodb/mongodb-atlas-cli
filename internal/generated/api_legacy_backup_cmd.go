@@ -351,8 +351,8 @@ type ListLegacyBackupCheckpointsOpts struct {
 	groupId string
 	clusterName string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListLegacyBackupCheckpointsOpts) initClient(ctx context.Context) func() error {
@@ -421,8 +421,8 @@ type ListLegacyBackupRestoreJobsOpts struct {
 	groupId string
 	clusterName string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 	batchId string
 }
 
@@ -494,8 +494,8 @@ type ListLegacySnapshotsOpts struct {
 	groupId string
 	clusterName string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 	completed string
 }
 

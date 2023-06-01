@@ -151,8 +151,8 @@ type ListInvoicesOpts struct {
 	client *admin.APIClient
 	orgId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListInvoicesOpts) initClient(ctx context.Context) func() error {

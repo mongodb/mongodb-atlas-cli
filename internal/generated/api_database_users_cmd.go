@@ -216,8 +216,8 @@ type ListDatabaseUsersOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListDatabaseUsersOpts) initClient(ctx context.Context) func() error {

@@ -1156,8 +1156,8 @@ type ListBackupExportJobsOpts struct {
 	groupId string
 	clusterName string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListBackupExportJobsOpts) initClient(ctx context.Context) func() error {
@@ -1226,8 +1226,8 @@ type ListBackupRestoreJobsOpts struct {
 	groupId string
 	clusterName string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListBackupRestoreJobsOpts) initClient(ctx context.Context) func() error {
@@ -1295,8 +1295,8 @@ type ListExportBucketsOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListExportBucketsOpts) initClient(ctx context.Context) func() error {
@@ -1362,8 +1362,8 @@ type ListReplicaSetBackupsOpts struct {
 	groupId string
 	clusterName string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListReplicaSetBackupsOpts) initClient(ctx context.Context) func() error {
@@ -1432,8 +1432,8 @@ type ListServerlessBackupRestoreJobsOpts struct {
 	groupId string
 	clusterName string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListServerlessBackupRestoreJobsOpts) initClient(ctx context.Context) func() error {
@@ -1502,8 +1502,8 @@ type ListServerlessBackupsOpts struct {
 	groupId string
 	clusterName string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListServerlessBackupsOpts) initClient(ctx context.Context) func() error {

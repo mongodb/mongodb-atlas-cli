@@ -151,8 +151,8 @@ type ListAlertsOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 	status string
 }
 
@@ -221,8 +221,8 @@ type ListAlertsByAlertConfigurationIdOpts struct {
 	groupId string
 	alertConfigId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListAlertsByAlertConfigurationIdOpts) initClient(ctx context.Context) func() error {

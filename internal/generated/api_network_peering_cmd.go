@@ -444,8 +444,8 @@ type ListPeeringConnectionsOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 	providerName string
 }
 
@@ -513,8 +513,8 @@ type ListPeeringContainerByCloudProviderOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 	providerName string
 }
 
@@ -583,8 +583,8 @@ type ListPeeringContainersOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListPeeringContainersOpts) initClient(ctx context.Context) func() error {

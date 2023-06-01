@@ -212,8 +212,8 @@ type ListCloudProviderRegionsOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 	providers []string
 	tier string
 }
@@ -283,8 +283,8 @@ type ListClustersForAllProjectsOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListClustersForAllProjectsOpts) initClient(ctx context.Context) func() error {

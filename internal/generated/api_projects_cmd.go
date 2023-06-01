@@ -731,8 +731,8 @@ type ListProjectUsersOpts struct {
 	client *admin.APIClient
 	groupId string
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 	flattenTeams bool
 	includeOrgUsers bool
 }
@@ -802,8 +802,8 @@ type ListProjectsOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	includeCount bool
-	itemsPerPage int32
-	pageNum int32
+	itemsPerPage int
+	pageNum int
 }
 
 func (opts *ListProjectsOpts) initClient(ctx context.Context) func() error {

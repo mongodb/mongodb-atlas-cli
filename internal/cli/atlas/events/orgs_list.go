@@ -17,12 +17,12 @@ package events
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -57,9 +57,6 @@ func (opts *orgListOpts) Run() error {
 }
 
 func (opts *orgListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiParams {
-	minDate, _ := time.Parse(time.RFC3339, opts.MinDate)
-	maxDate, _ := time.Parse(time.RFC3339, opts.MaxDate)
-
 	var eventType *[]string
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
@@ -69,8 +66,8 @@ func (opts *orgListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiPara
 		ItemsPerPage: &opts.ItemsPerPage,
 		PageNum:      &opts.PageNum,
 		EventType:    eventType,
-		MaxDate:      &minDate,
-		MinDate:      &maxDate,
+		MaxDate:      pointer.StringToTimePointer(opts.MaxDate),
+		MinDate:      pointer.StringToTimePointer(opts.MinDate),
 	}
 	return listEventsAPIParams
 }

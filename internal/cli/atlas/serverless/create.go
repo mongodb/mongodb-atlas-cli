@@ -39,7 +39,6 @@ type CreateOpts struct {
 	instanceName string
 	provider     string
 	region       string
-	tag          map[string]string
 	store        store.ServerlessInstanceCreator
 }
 
@@ -65,7 +64,7 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newServerlessCreateRequestParams() *atlasv2.ServerlessInstanceDescriptionCreate {
-	req := &atlasv2.ServerlessInstanceDescriptionCreate{
+	return &atlasv2.ServerlessInstanceDescriptionCreate{
 		Name: opts.instanceName,
 		ProviderSettings: atlasv2.ServerlessProviderSettings{
 			BackingProviderName: opts.provider,
@@ -73,12 +72,6 @@ func (opts *CreateOpts) newServerlessCreateRequestParams() *atlasv2.ServerlessIn
 			RegionName:          opts.region,
 		},
 	}
-
-	for k, v := range opts.tag {
-		req.Tags = append(req.Tags, atlasv2.Tag{Key: pointer.Get(k), Value: pointer.Get(v)})
-	}
-
-	return req
 }
 
 // mongocli atlas serverless|sl create <instanceName> --backingProviderName backingProviderName --providerName providerName --regionName regionName [--projectId projectId].
@@ -108,7 +101,6 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.ServerlessProvider)
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.ServerlessRegion)
-	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.ServerlessTag)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

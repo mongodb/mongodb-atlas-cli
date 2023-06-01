@@ -51,6 +51,6 @@ func TestUpdateBuilder(t *testing.T) {
 		t,
 		UpdateBuilder(),
 		0,
-		[]string{flag.EnableTerminationProtection, flag.DisableTerminationProtection, flag.EnableServerlessContinuousBackup, flag.DisableServerlessContinuousBackup, flag.Tag},
+		[]string{flag.EnableTerminationProtection, flag.DisableTerminationProtection, flag.EnableServerlessContinuousBackup, flag.DisableServerlessContinuousBackup},
 	)
 }

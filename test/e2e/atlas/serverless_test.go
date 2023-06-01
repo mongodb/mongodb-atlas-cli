@@ -46,7 +46,6 @@ func TestServerless(t *testing.T) {
 			clusterName,
 			"--region=US_EAST_1",
 			"--provider=AWS",
-			"--tag", "env=test",
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -82,7 +81,6 @@ func TestServerless(t *testing.T) {
 			"update",
 			clusterName,
 			"--disableTerminationProtection",
-			"--tag", "env=e2e",
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()

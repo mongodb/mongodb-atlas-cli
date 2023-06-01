@@ -28,9 +28,10 @@ type CreateServerlessInstanceOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	groupId string
+	
 }
 
-func (opts *CreateServerlessInstanceOpts) initClient(ctx context.Context) func() error {
+func (opts *CreateServerlessInstanceOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -41,6 +42,7 @@ func (opts *CreateServerlessInstanceOpts) initClient(ctx context.Context) func()
 func (opts *CreateServerlessInstanceOpts) Run(ctx context.Context) error {
 	params := &admin.CreateServerlessInstanceApiParams{
 		GroupId: opts.groupId,
+		
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.CreateServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
@@ -66,7 +68,7 @@ func CreateServerlessInstanceBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -74,10 +76,10 @@ func CreateServerlessInstanceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type DeleteServerlessInstanceOpts struct {
@@ -88,7 +90,7 @@ type DeleteServerlessInstanceOpts struct {
 	name string
 }
 
-func (opts *DeleteServerlessInstanceOpts) initClient(ctx context.Context) func() error {
+func (opts *DeleteServerlessInstanceOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -125,7 +127,7 @@ func DeleteServerlessInstanceBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -133,12 +135,11 @@ func DeleteServerlessInstanceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.name, "name", , "Human-readable label that identifies the serverless instance.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.name, "name", "", "Human-readable label that identifies the serverless instance.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
-
 	return cmd
 }
 type GetServerlessInstanceOpts struct {
@@ -149,7 +150,7 @@ type GetServerlessInstanceOpts struct {
 	name string
 }
 
-func (opts *GetServerlessInstanceOpts) initClient(ctx context.Context) func() error {
+func (opts *GetServerlessInstanceOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -186,7 +187,7 @@ func GetServerlessInstanceBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -194,12 +195,11 @@ func GetServerlessInstanceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.name, "name", , "Human-readable label that identifies the serverless instance.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.name, "name", "", "Human-readable label that identifies the serverless instance.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
-
 	return cmd
 }
 type ListServerlessInstancesOpts struct {
@@ -212,7 +212,7 @@ type ListServerlessInstancesOpts struct {
 	pageNum int
 }
 
-func (opts *ListServerlessInstancesOpts) initClient(ctx context.Context) func() error {
+func (opts *ListServerlessInstancesOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -251,7 +251,7 @@ func ListServerlessInstancesBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -259,13 +259,12 @@ func ListServerlessInstancesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type UpdateServerlessInstanceOpts struct {
@@ -274,9 +273,10 @@ type UpdateServerlessInstanceOpts struct {
 	client *admin.APIClient
 	groupId string
 	name string
+	
 }
 
-func (opts *UpdateServerlessInstanceOpts) initClient(ctx context.Context) func() error {
+func (opts *UpdateServerlessInstanceOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -288,6 +288,7 @@ func (opts *UpdateServerlessInstanceOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateServerlessInstanceApiParams{
 		GroupId: opts.groupId,
 		Name: opts.name,
+		
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.UpdateServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
@@ -313,7 +314,7 @@ func UpdateServerlessInstanceBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -321,12 +322,12 @@ func UpdateServerlessInstanceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.name, "name", , "Human-readable label that identifies the serverless instance.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.name, "name", "", "Human-readable label that identifies the serverless instance.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
-
 	return cmd
 }
 
@@ -344,3 +345,4 @@ func ServerlessInstancesBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

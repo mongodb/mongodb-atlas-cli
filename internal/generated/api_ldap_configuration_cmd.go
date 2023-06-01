@@ -30,7 +30,7 @@ type DeleteLDAPConfigurationOpts struct {
 	groupId string
 }
 
-func (opts *DeleteLDAPConfigurationOpts) initClient(ctx context.Context) func() error {
+func (opts *DeleteLDAPConfigurationOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -66,7 +66,7 @@ func DeleteLDAPConfigurationBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -74,10 +74,9 @@ func DeleteLDAPConfigurationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type GetLDAPConfigurationOpts struct {
@@ -87,7 +86,7 @@ type GetLDAPConfigurationOpts struct {
 	groupId string
 }
 
-func (opts *GetLDAPConfigurationOpts) initClient(ctx context.Context) func() error {
+func (opts *GetLDAPConfigurationOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -123,7 +122,7 @@ func GetLDAPConfigurationBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -131,10 +130,9 @@ func GetLDAPConfigurationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type GetLDAPConfigurationStatusOpts struct {
@@ -145,7 +143,7 @@ type GetLDAPConfigurationStatusOpts struct {
 	requestId string
 }
 
-func (opts *GetLDAPConfigurationStatusOpts) initClient(ctx context.Context) func() error {
+func (opts *GetLDAPConfigurationStatusOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -182,7 +180,7 @@ func GetLDAPConfigurationStatusBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -190,12 +188,11 @@ func GetLDAPConfigurationStatusBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.requestId, "requestId", , "Unique string that identifies the request to verify an &lt;abbr title&#x3D;\&quot;Lightweight Directory Access Protocol\&quot;&gt;LDAP&lt;/abbr&gt; configuration.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.requestId, "requestId", "", "Unique string that identifies the request to verify an &lt;abbr title&#x3D;\&quot;Lightweight Directory Access Protocol\&quot;&gt;LDAP&lt;/abbr&gt; configuration.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("requestId")
-
 	return cmd
 }
 type SaveLDAPConfigurationOpts struct {
@@ -203,9 +200,10 @@ type SaveLDAPConfigurationOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	groupId string
+	
 }
 
-func (opts *SaveLDAPConfigurationOpts) initClient(ctx context.Context) func() error {
+func (opts *SaveLDAPConfigurationOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -216,6 +214,7 @@ func (opts *SaveLDAPConfigurationOpts) initClient(ctx context.Context) func() er
 func (opts *SaveLDAPConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.SaveLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
+		
 	}
 	resp, _, err := opts.client.LDAPConfigurationApi.SaveLDAPConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -241,7 +240,7 @@ func SaveLDAPConfigurationBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -249,10 +248,10 @@ func SaveLDAPConfigurationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type VerifyLDAPConfigurationOpts struct {
@@ -260,9 +259,10 @@ type VerifyLDAPConfigurationOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	groupId string
+	
 }
 
-func (opts *VerifyLDAPConfigurationOpts) initClient(ctx context.Context) func() error {
+func (opts *VerifyLDAPConfigurationOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -273,6 +273,7 @@ func (opts *VerifyLDAPConfigurationOpts) initClient(ctx context.Context) func() 
 func (opts *VerifyLDAPConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.VerifyLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
+		
 	}
 	resp, _, err := opts.client.LDAPConfigurationApi.VerifyLDAPConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -298,7 +299,7 @@ func VerifyLDAPConfigurationBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -306,10 +307,10 @@ func VerifyLDAPConfigurationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 
@@ -327,3 +328,4 @@ func LDAPConfigurationBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

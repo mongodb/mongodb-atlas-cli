@@ -29,9 +29,10 @@ type CreateLegacyBackupRestoreJobOpts struct {
 	client *admin.APIClient
 	groupId string
 	clusterName string
+	
 }
 
-func (opts *CreateLegacyBackupRestoreJobOpts) initClient(ctx context.Context) func() error {
+func (opts *CreateLegacyBackupRestoreJobOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -43,6 +44,7 @@ func (opts *CreateLegacyBackupRestoreJobOpts) Run(ctx context.Context) error {
 	params := &admin.CreateLegacyBackupRestoreJobApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
+		
 	}
 	resp, _, err := opts.client.LegacyBackupRestoreJobsApi.CreateLegacyBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
@@ -68,7 +70,7 @@ func CreateLegacyBackupRestoreJobBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -76,12 +78,12 @@ func CreateLegacyBackupRestoreJobBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster with the snapshot you want to return.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster with the snapshot you want to return.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 
@@ -95,3 +97,4 @@ func LegacyBackupRestoreJobsBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

@@ -28,9 +28,10 @@ type CreateLinkTokenOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	orgId string
+	
 }
 
-func (opts *CreateLinkTokenOpts) initClient(ctx context.Context) func() error {
+func (opts *CreateLinkTokenOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -41,6 +42,7 @@ func (opts *CreateLinkTokenOpts) initClient(ctx context.Context) func() error {
 func (opts *CreateLinkTokenOpts) Run(ctx context.Context) error {
 	params := &admin.CreateLinkTokenApiParams{
 		OrgId: opts.orgId,
+		
 	}
 	resp, _, err := opts.client.CloudMigrationServiceApi.CreateLinkTokenWithParams(ctx, params).Execute()
 	if err != nil {
@@ -66,7 +68,7 @@ func CreateLinkTokenBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -74,10 +76,10 @@ func CreateLinkTokenBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	
 
 	_ = cmd.MarkFlagRequired("orgId")
-
 	return cmd
 }
 type CreatePushMigrationOpts struct {
@@ -85,9 +87,10 @@ type CreatePushMigrationOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	groupId string
+	
 }
 
-func (opts *CreatePushMigrationOpts) initClient(ctx context.Context) func() error {
+func (opts *CreatePushMigrationOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -98,6 +101,7 @@ func (opts *CreatePushMigrationOpts) initClient(ctx context.Context) func() erro
 func (opts *CreatePushMigrationOpts) Run(ctx context.Context) error {
 	params := &admin.CreatePushMigrationApiParams{
 		GroupId: opts.groupId,
+		
 	}
 	resp, _, err := opts.client.CloudMigrationServiceApi.CreatePushMigrationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -123,7 +127,7 @@ func CreatePushMigrationBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -131,10 +135,10 @@ func CreatePushMigrationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type CutoverMigrationOpts struct {
@@ -145,7 +149,7 @@ type CutoverMigrationOpts struct {
 	liveMigrationId string
 }
 
-func (opts *CutoverMigrationOpts) initClient(ctx context.Context) func() error {
+func (opts *CutoverMigrationOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -182,7 +186,7 @@ func CutoverMigrationBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -190,12 +194,11 @@ func CutoverMigrationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.liveMigrationId, "liveMigrationId", , "Unique 24-hexadecimal digit string that identifies the migration.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.liveMigrationId, "liveMigrationId", "", "Unique 24-hexadecimal digit string that identifies the migration.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("liveMigrationId")
-
 	return cmd
 }
 type DeleteLinkTokenOpts struct {
@@ -205,7 +208,7 @@ type DeleteLinkTokenOpts struct {
 	orgId string
 }
 
-func (opts *DeleteLinkTokenOpts) initClient(ctx context.Context) func() error {
+func (opts *DeleteLinkTokenOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -241,7 +244,7 @@ func DeleteLinkTokenBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -249,10 +252,9 @@ func DeleteLinkTokenBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
 	_ = cmd.MarkFlagRequired("orgId")
-
 	return cmd
 }
 type GetPushMigrationOpts struct {
@@ -263,7 +265,7 @@ type GetPushMigrationOpts struct {
 	liveMigrationId string
 }
 
-func (opts *GetPushMigrationOpts) initClient(ctx context.Context) func() error {
+func (opts *GetPushMigrationOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -300,7 +302,7 @@ func GetPushMigrationBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -308,12 +310,11 @@ func GetPushMigrationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.liveMigrationId, "liveMigrationId", , "Unique 24-hexadecimal digit string that identifies the migration.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.liveMigrationId, "liveMigrationId", "", "Unique 24-hexadecimal digit string that identifies the migration.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("liveMigrationId")
-
 	return cmd
 }
 type GetValidationStatusOpts struct {
@@ -324,7 +325,7 @@ type GetValidationStatusOpts struct {
 	validationId string
 }
 
-func (opts *GetValidationStatusOpts) initClient(ctx context.Context) func() error {
+func (opts *GetValidationStatusOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -361,7 +362,7 @@ func GetValidationStatusBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -369,12 +370,11 @@ func GetValidationStatusBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.validationId, "validationId", , "Unique 24-hexadecimal digit string that identifies the validation job.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.validationId, "validationId", "", "Unique 24-hexadecimal digit string that identifies the validation job.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("validationId")
-
 	return cmd
 }
 type ListSourceProjectsOpts struct {
@@ -384,7 +384,7 @@ type ListSourceProjectsOpts struct {
 	orgId string
 }
 
-func (opts *ListSourceProjectsOpts) initClient(ctx context.Context) func() error {
+func (opts *ListSourceProjectsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -420,7 +420,7 @@ func ListSourceProjectsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -428,10 +428,9 @@ func ListSourceProjectsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
 	_ = cmd.MarkFlagRequired("orgId")
-
 	return cmd
 }
 type ValidateMigrationOpts struct {
@@ -439,9 +438,10 @@ type ValidateMigrationOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	groupId string
+	
 }
 
-func (opts *ValidateMigrationOpts) initClient(ctx context.Context) func() error {
+func (opts *ValidateMigrationOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -452,6 +452,7 @@ func (opts *ValidateMigrationOpts) initClient(ctx context.Context) func() error 
 func (opts *ValidateMigrationOpts) Run(ctx context.Context) error {
 	params := &admin.ValidateMigrationApiParams{
 		GroupId: opts.groupId,
+		
 	}
 	resp, _, err := opts.client.CloudMigrationServiceApi.ValidateMigrationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -477,7 +478,7 @@ func ValidateMigrationBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -485,10 +486,10 @@ func ValidateMigrationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 
@@ -509,3 +510,4 @@ func CloudMigrationServiceBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

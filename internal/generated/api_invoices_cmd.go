@@ -31,7 +31,7 @@ type DownloadInvoiceCSVOpts struct {
 	invoiceId string
 }
 
-func (opts *DownloadInvoiceCSVOpts) initClient(ctx context.Context) func() error {
+func (opts *DownloadInvoiceCSVOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -68,7 +68,7 @@ func DownloadInvoiceCSVBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -76,12 +76,11 @@ func DownloadInvoiceCSVBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", , "Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", "", "Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.")
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invoiceId")
-
 	return cmd
 }
 type GetInvoiceOpts struct {
@@ -92,7 +91,7 @@ type GetInvoiceOpts struct {
 	invoiceId string
 }
 
-func (opts *GetInvoiceOpts) initClient(ctx context.Context) func() error {
+func (opts *GetInvoiceOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -129,7 +128,7 @@ func GetInvoiceBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -137,12 +136,11 @@ func GetInvoiceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", , "Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", "", "Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.")
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invoiceId")
-
 	return cmd
 }
 type ListInvoicesOpts struct {
@@ -155,7 +153,7 @@ type ListInvoicesOpts struct {
 	pageNum int
 }
 
-func (opts *ListInvoicesOpts) initClient(ctx context.Context) func() error {
+func (opts *ListInvoicesOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -194,7 +192,7 @@ func ListInvoicesBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -202,13 +200,12 @@ func ListInvoicesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
 
 	_ = cmd.MarkFlagRequired("orgId")
-
 	return cmd
 }
 type ListPendingInvoicesOpts struct {
@@ -218,7 +215,7 @@ type ListPendingInvoicesOpts struct {
 	orgId string
 }
 
-func (opts *ListPendingInvoicesOpts) initClient(ctx context.Context) func() error {
+func (opts *ListPendingInvoicesOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -254,7 +251,7 @@ func ListPendingInvoicesBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -262,10 +259,9 @@ func ListPendingInvoicesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", , "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
 
 	_ = cmd.MarkFlagRequired("orgId")
-
 	return cmd
 }
 
@@ -282,3 +278,4 @@ func InvoicesBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

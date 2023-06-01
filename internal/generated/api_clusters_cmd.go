@@ -31,7 +31,7 @@ type GetClusterAdvancedConfigurationOpts struct {
 	clusterName string
 }
 
-func (opts *GetClusterAdvancedConfigurationOpts) initClient(ctx context.Context) func() error {
+func (opts *GetClusterAdvancedConfigurationOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -68,7 +68,7 @@ func GetClusterAdvancedConfigurationBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -76,12 +76,11 @@ func GetClusterAdvancedConfigurationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 type GetClusterStatusOpts struct {
@@ -92,7 +91,7 @@ type GetClusterStatusOpts struct {
 	clusterName string
 }
 
-func (opts *GetClusterStatusOpts) initClient(ctx context.Context) func() error {
+func (opts *GetClusterStatusOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -129,7 +128,7 @@ func GetClusterStatusBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -137,12 +136,11 @@ func GetClusterStatusBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 type GetSampleDatasetLoadStatusOpts struct {
@@ -153,7 +151,7 @@ type GetSampleDatasetLoadStatusOpts struct {
 	sampleDatasetId string
 }
 
-func (opts *GetSampleDatasetLoadStatusOpts) initClient(ctx context.Context) func() error {
+func (opts *GetSampleDatasetLoadStatusOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -190,7 +188,7 @@ func GetSampleDatasetLoadStatusBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -198,12 +196,11 @@ func GetSampleDatasetLoadStatusBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.sampleDatasetId, "sampleDatasetId", , "Unique 24-hexadecimal digit string that identifies the loaded sample dataset.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.sampleDatasetId, "sampleDatasetId", "", "Unique 24-hexadecimal digit string that identifies the loaded sample dataset.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("sampleDatasetId")
-
 	return cmd
 }
 type ListCloudProviderRegionsOpts struct {
@@ -218,7 +215,7 @@ type ListCloudProviderRegionsOpts struct {
 	tier string
 }
 
-func (opts *ListCloudProviderRegionsOpts) initClient(ctx context.Context) func() error {
+func (opts *ListCloudProviderRegionsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -259,7 +256,7 @@ func ListCloudProviderRegionsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -267,15 +264,14 @@ func ListCloudProviderRegionsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
 	cmd.Flags().[]stringVar(&opts.providers, "providers", , "Cloud providers whose regions to retrieve. When you specify multiple providers, the response can return only tiers and regions that support multi-cloud clusters.")
-	cmd.Flags().StringVar(&opts.tier, "tier", , "Cluster tier for which to retrieve the regions.")
+	cmd.Flags().StringVar(&opts.tier, "tier", "", "Cluster tier for which to retrieve the regions.")
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type ListClustersForAllProjectsOpts struct {
@@ -287,7 +283,7 @@ type ListClustersForAllProjectsOpts struct {
 	pageNum int
 }
 
-func (opts *ListClustersForAllProjectsOpts) initClient(ctx context.Context) func() error {
+func (opts *ListClustersForAllProjectsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -325,7 +321,7 @@ func ListClustersForAllProjectsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -337,7 +333,6 @@ func ListClustersForAllProjectsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
 
-
 	return cmd
 }
 type LoadSampleDatasetOpts struct {
@@ -348,7 +343,7 @@ type LoadSampleDatasetOpts struct {
 	name string
 }
 
-func (opts *LoadSampleDatasetOpts) initClient(ctx context.Context) func() error {
+func (opts *LoadSampleDatasetOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -385,7 +380,7 @@ func LoadSampleDatasetBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -393,12 +388,11 @@ func LoadSampleDatasetBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.name, "name", , "Human-readable label that identifies the cluster into which you load the sample dataset.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.name, "name", "", "Human-readable label that identifies the cluster into which you load the sample dataset.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
-
 	return cmd
 }
 type UpdateClusterAdvancedConfigurationOpts struct {
@@ -407,9 +401,10 @@ type UpdateClusterAdvancedConfigurationOpts struct {
 	client *admin.APIClient
 	groupId string
 	clusterName string
+	
 }
 
-func (opts *UpdateClusterAdvancedConfigurationOpts) initClient(ctx context.Context) func() error {
+func (opts *UpdateClusterAdvancedConfigurationOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -421,6 +416,7 @@ func (opts *UpdateClusterAdvancedConfigurationOpts) Run(ctx context.Context) err
 	params := &admin.UpdateClusterAdvancedConfigurationApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
+		
 	}
 	resp, _, err := opts.client.ClustersApi.UpdateClusterAdvancedConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -446,7 +442,7 @@ func UpdateClusterAdvancedConfigurationBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -454,12 +450,12 @@ func UpdateClusterAdvancedConfigurationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 type UpgradeSharedClusterOpts struct {
@@ -467,9 +463,10 @@ type UpgradeSharedClusterOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	groupId string
+	
 }
 
-func (opts *UpgradeSharedClusterOpts) initClient(ctx context.Context) func() error {
+func (opts *UpgradeSharedClusterOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -480,6 +477,7 @@ func (opts *UpgradeSharedClusterOpts) initClient(ctx context.Context) func() err
 func (opts *UpgradeSharedClusterOpts) Run(ctx context.Context) error {
 	params := &admin.UpgradeSharedClusterApiParams{
 		GroupId: opts.groupId,
+		
 	}
 	resp, _, err := opts.client.ClustersApi.UpgradeSharedClusterWithParams(ctx, params).Execute()
 	if err != nil {
@@ -505,7 +503,7 @@ func UpgradeSharedClusterBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -513,10 +511,10 @@ func UpgradeSharedClusterBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type UpgradeSharedClusterToServerlessOpts struct {
@@ -524,9 +522,10 @@ type UpgradeSharedClusterToServerlessOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	groupId string
+	
 }
 
-func (opts *UpgradeSharedClusterToServerlessOpts) initClient(ctx context.Context) func() error {
+func (opts *UpgradeSharedClusterToServerlessOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -537,6 +536,7 @@ func (opts *UpgradeSharedClusterToServerlessOpts) initClient(ctx context.Context
 func (opts *UpgradeSharedClusterToServerlessOpts) Run(ctx context.Context) error {
 	params := &admin.UpgradeSharedClusterToServerlessApiParams{
 		GroupId: opts.groupId,
+		
 	}
 	resp, _, err := opts.client.ClustersApi.UpgradeSharedClusterToServerlessWithParams(ctx, params).Execute()
 	if err != nil {
@@ -562,7 +562,7 @@ func UpgradeSharedClusterToServerlessBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -570,10 +570,10 @@ func UpgradeSharedClusterToServerlessBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 
@@ -595,3 +595,4 @@ func ClustersBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

@@ -29,9 +29,10 @@ type CreateCustomZoneMappingOpts struct {
 	client *admin.APIClient
 	groupId string
 	clusterName string
+	
 }
 
-func (opts *CreateCustomZoneMappingOpts) initClient(ctx context.Context) func() error {
+func (opts *CreateCustomZoneMappingOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -43,6 +44,7 @@ func (opts *CreateCustomZoneMappingOpts) Run(ctx context.Context) error {
 	params := &admin.CreateCustomZoneMappingApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
+		
 	}
 	resp, _, err := opts.client.GlobalClustersApi.CreateCustomZoneMappingWithParams(ctx, params).Execute()
 	if err != nil {
@@ -68,7 +70,7 @@ func CreateCustomZoneMappingBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -76,12 +78,12 @@ func CreateCustomZoneMappingBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies this advanced cluster.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies this advanced cluster.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 type CreateManagedNamespaceOpts struct {
@@ -90,9 +92,10 @@ type CreateManagedNamespaceOpts struct {
 	client *admin.APIClient
 	groupId string
 	clusterName string
+	
 }
 
-func (opts *CreateManagedNamespaceOpts) initClient(ctx context.Context) func() error {
+func (opts *CreateManagedNamespaceOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -104,6 +107,7 @@ func (opts *CreateManagedNamespaceOpts) Run(ctx context.Context) error {
 	params := &admin.CreateManagedNamespaceApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
+		
 	}
 	resp, _, err := opts.client.GlobalClustersApi.CreateManagedNamespaceWithParams(ctx, params).Execute()
 	if err != nil {
@@ -129,7 +133,7 @@ func CreateManagedNamespaceBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -137,12 +141,12 @@ func CreateManagedNamespaceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies this advanced cluster.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies this advanced cluster.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 type DeleteAllCustomZoneMappingsOpts struct {
@@ -153,7 +157,7 @@ type DeleteAllCustomZoneMappingsOpts struct {
 	clusterName string
 }
 
-func (opts *DeleteAllCustomZoneMappingsOpts) initClient(ctx context.Context) func() error {
+func (opts *DeleteAllCustomZoneMappingsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -190,7 +194,7 @@ func DeleteAllCustomZoneMappingsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -198,12 +202,11 @@ func DeleteAllCustomZoneMappingsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies this advanced cluster.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies this advanced cluster.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 type DeleteManagedNamespaceOpts struct {
@@ -216,7 +219,7 @@ type DeleteManagedNamespaceOpts struct {
 	collection string
 }
 
-func (opts *DeleteManagedNamespaceOpts) initClient(ctx context.Context) func() error {
+func (opts *DeleteManagedNamespaceOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -255,7 +258,7 @@ func DeleteManagedNamespaceBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -263,14 +266,13 @@ func DeleteManagedNamespaceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies this advanced cluster.")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.db, "db", , "Human-readable label that identifies the database that contains the collection.")
-	cmd.Flags().StringVar(&opts.collection, "collection", , "Human-readable label that identifies the collection associated with the managed namespace.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies this advanced cluster.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.db, "db", "", "Human-readable label that identifies the database that contains the collection.")
+	cmd.Flags().StringVar(&opts.collection, "collection", "", "Human-readable label that identifies the collection associated with the managed namespace.")
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type GetManagedNamespaceOpts struct {
@@ -281,7 +283,7 @@ type GetManagedNamespaceOpts struct {
 	clusterName string
 }
 
-func (opts *GetManagedNamespaceOpts) initClient(ctx context.Context) func() error {
+func (opts *GetManagedNamespaceOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -318,7 +320,7 @@ func GetManagedNamespaceBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -326,12 +328,11 @@ func GetManagedNamespaceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies this advanced cluster.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies this advanced cluster.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 
@@ -350,3 +351,4 @@ MongoDB Cloud shards the empty collection using the required location field and 
 	)
 	return cmd
 }
+

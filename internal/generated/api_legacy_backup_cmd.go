@@ -32,7 +32,7 @@ type DeleteLegacySnapshotOpts struct {
 	snapshotId string
 }
 
-func (opts *DeleteLegacySnapshotOpts) initClient(ctx context.Context) func() error {
+func (opts *DeleteLegacySnapshotOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -70,7 +70,7 @@ func DeleteLegacySnapshotBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -78,14 +78,13 @@ func DeleteLegacySnapshotBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", , "Unique 24-hexadecimal digit string that identifies the desired snapshot.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
+	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "Unique 24-hexadecimal digit string that identifies the desired snapshot.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
-
 	return cmd
 }
 type GetLegacyBackupCheckpointOpts struct {
@@ -97,7 +96,7 @@ type GetLegacyBackupCheckpointOpts struct {
 	clusterName string
 }
 
-func (opts *GetLegacyBackupCheckpointOpts) initClient(ctx context.Context) func() error {
+func (opts *GetLegacyBackupCheckpointOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -135,7 +134,7 @@ func GetLegacyBackupCheckpointBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -143,14 +142,13 @@ func GetLegacyBackupCheckpointBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.checkpointId, "checkpointId", , "Unique 24-hexadecimal digit string that identifies the checkpoint.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster that contains the checkpoints that you want to return.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.checkpointId, "checkpointId", "", "Unique 24-hexadecimal digit string that identifies the checkpoint.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster that contains the checkpoints that you want to return.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("checkpointId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 type GetLegacyBackupRestoreJobOpts struct {
@@ -162,7 +160,7 @@ type GetLegacyBackupRestoreJobOpts struct {
 	jobId string
 }
 
-func (opts *GetLegacyBackupRestoreJobOpts) initClient(ctx context.Context) func() error {
+func (opts *GetLegacyBackupRestoreJobOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -200,7 +198,7 @@ func GetLegacyBackupRestoreJobBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -208,14 +206,13 @@ func GetLegacyBackupRestoreJobBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster with the snapshot you want to return.")
-	cmd.Flags().StringVar(&opts.jobId, "jobId", , "Unique 24-hexadecimal digit string that identifies the restore job.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster with the snapshot you want to return.")
+	cmd.Flags().StringVar(&opts.jobId, "jobId", "", "Unique 24-hexadecimal digit string that identifies the restore job.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("jobId")
-
 	return cmd
 }
 type GetLegacySnapshotOpts struct {
@@ -227,7 +224,7 @@ type GetLegacySnapshotOpts struct {
 	snapshotId string
 }
 
-func (opts *GetLegacySnapshotOpts) initClient(ctx context.Context) func() error {
+func (opts *GetLegacySnapshotOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -265,7 +262,7 @@ func GetLegacySnapshotBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -273,14 +270,13 @@ func GetLegacySnapshotBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", , "Unique 24-hexadecimal digit string that identifies the desired snapshot.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
+	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "Unique 24-hexadecimal digit string that identifies the desired snapshot.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
-
 	return cmd
 }
 type GetLegacySnapshotScheduleOpts struct {
@@ -291,7 +287,7 @@ type GetLegacySnapshotScheduleOpts struct {
 	clusterName string
 }
 
-func (opts *GetLegacySnapshotScheduleOpts) initClient(ctx context.Context) func() error {
+func (opts *GetLegacySnapshotScheduleOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -328,7 +324,7 @@ func GetLegacySnapshotScheduleBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -336,12 +332,11 @@ func GetLegacySnapshotScheduleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster with the snapshot you want to return.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster with the snapshot you want to return.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 type ListLegacyBackupCheckpointsOpts struct {
@@ -355,7 +350,7 @@ type ListLegacyBackupCheckpointsOpts struct {
 	pageNum int
 }
 
-func (opts *ListLegacyBackupCheckpointsOpts) initClient(ctx context.Context) func() error {
+func (opts *ListLegacyBackupCheckpointsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -395,7 +390,7 @@ func ListLegacyBackupCheckpointsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -403,15 +398,14 @@ func ListLegacyBackupCheckpointsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster that contains the checkpoints that you want to return.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster that contains the checkpoints that you want to return.")
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 type ListLegacyBackupRestoreJobsOpts struct {
@@ -426,7 +420,7 @@ type ListLegacyBackupRestoreJobsOpts struct {
 	batchId string
 }
 
-func (opts *ListLegacyBackupRestoreJobsOpts) initClient(ctx context.Context) func() error {
+func (opts *ListLegacyBackupRestoreJobsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -467,7 +461,7 @@ func ListLegacyBackupRestoreJobsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -475,16 +469,15 @@ func ListLegacyBackupRestoreJobsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster with the snapshot you want to return.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster with the snapshot you want to return.")
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
-	cmd.Flags().StringVar(&opts.batchId, "batchId", , "Unique 24-hexadecimal digit string that identifies the batch of restore jobs to return. Timestamp in ISO 8601 date and time format in UTC when creating a restore job for a sharded cluster, Application creates a separate job for each shard, plus another for the config host. Each of these jobs comprise one batch. A restore job for a replica set can&#39;t be part of a batch.")
+	cmd.Flags().StringVar(&opts.batchId, "batchId", "", "Unique 24-hexadecimal digit string that identifies the batch of restore jobs to return. Timestamp in ISO 8601 date and time format in UTC when creating a restore job for a sharded cluster, Application creates a separate job for each shard, plus another for the config host. Each of these jobs comprise one batch. A restore job for a replica set can&#39;t be part of a batch.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 type ListLegacySnapshotsOpts struct {
@@ -499,7 +492,7 @@ type ListLegacySnapshotsOpts struct {
 	completed string
 }
 
-func (opts *ListLegacySnapshotsOpts) initClient(ctx context.Context) func() error {
+func (opts *ListLegacySnapshotsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -540,7 +533,7 @@ func ListLegacySnapshotsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -548,16 +541,15 @@ func ListLegacySnapshotsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
-	cmd.Flags().StringVar(&opts.completed, "completed", &quot;true&quot;, "Human-readable label that specifies whether to return only completed, incomplete, or all snapshots. By default, MongoDB Cloud only returns completed snapshots.")
+	cmd.Flags().StringVar(&opts.completed, "completed", "&quot;true&quot;", "Human-readable label that specifies whether to return only completed, incomplete, or all snapshots. By default, MongoDB Cloud only returns completed snapshots.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 type UpdateLegacySnapshotRetentionOpts struct {
@@ -567,9 +559,10 @@ type UpdateLegacySnapshotRetentionOpts struct {
 	groupId string
 	clusterName string
 	snapshotId string
+	
 }
 
-func (opts *UpdateLegacySnapshotRetentionOpts) initClient(ctx context.Context) func() error {
+func (opts *UpdateLegacySnapshotRetentionOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -582,6 +575,7 @@ func (opts *UpdateLegacySnapshotRetentionOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId: opts.snapshotId,
+		
 	}
 	resp, _, err := opts.client.LegacyBackupApi.UpdateLegacySnapshotRetentionWithParams(ctx, params).Execute()
 	if err != nil {
@@ -607,7 +601,7 @@ func UpdateLegacySnapshotRetentionBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -615,14 +609,14 @@ func UpdateLegacySnapshotRetentionBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", , "Unique 24-hexadecimal digit string that identifies the desired snapshot.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
+	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "Unique 24-hexadecimal digit string that identifies the desired snapshot.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
-
 	return cmd
 }
 type UpdateLegacySnapshotScheduleOpts struct {
@@ -631,9 +625,10 @@ type UpdateLegacySnapshotScheduleOpts struct {
 	client *admin.APIClient
 	groupId string
 	clusterName string
+	
 }
 
-func (opts *UpdateLegacySnapshotScheduleOpts) initClient(ctx context.Context) func() error {
+func (opts *UpdateLegacySnapshotScheduleOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -645,6 +640,7 @@ func (opts *UpdateLegacySnapshotScheduleOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateLegacySnapshotScheduleApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
+		
 	}
 	resp, _, err := opts.client.LegacyBackupApi.UpdateLegacySnapshotScheduleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -670,7 +666,7 @@ func UpdateLegacySnapshotScheduleBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -678,12 +674,12 @@ func UpdateLegacySnapshotScheduleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Human-readable label that identifies the cluster with the snapshot you want to return.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster with the snapshot you want to return.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 
@@ -706,3 +702,4 @@ func LegacyBackupBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

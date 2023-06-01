@@ -30,7 +30,7 @@ type GetEncryptionAtRestOpts struct {
 	groupId string
 }
 
-func (opts *GetEncryptionAtRestOpts) initClient(ctx context.Context) func() error {
+func (opts *GetEncryptionAtRestOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -66,7 +66,7 @@ func GetEncryptionAtRestBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -74,10 +74,9 @@ func GetEncryptionAtRestBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type UpdateEncryptionAtRestOpts struct {
@@ -85,9 +84,10 @@ type UpdateEncryptionAtRestOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	groupId string
+	
 }
 
-func (opts *UpdateEncryptionAtRestOpts) initClient(ctx context.Context) func() error {
+func (opts *UpdateEncryptionAtRestOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -98,6 +98,7 @@ func (opts *UpdateEncryptionAtRestOpts) initClient(ctx context.Context) func() e
 func (opts *UpdateEncryptionAtRestOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateEncryptionAtRestApiParams{
 		GroupId: opts.groupId,
+		
 	}
 	resp, _, err := opts.client.EncryptionAtRestUsingCustomerKeyManagementApi.UpdateEncryptionAtRestWithParams(ctx, params).Execute()
 	if err != nil {
@@ -123,7 +124,7 @@ func UpdateEncryptionAtRestBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -131,10 +132,10 @@ func UpdateEncryptionAtRestBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 
@@ -149,3 +150,4 @@ func EncryptionAtRestUsingCustomerKeyManagementBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

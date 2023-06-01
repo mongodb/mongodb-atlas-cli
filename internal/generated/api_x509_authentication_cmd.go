@@ -29,9 +29,10 @@ type CreateDatabaseUserCertificateOpts struct {
 	client *admin.APIClient
 	groupId string
 	username string
+	
 }
 
-func (opts *CreateDatabaseUserCertificateOpts) initClient(ctx context.Context) func() error {
+func (opts *CreateDatabaseUserCertificateOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -43,6 +44,7 @@ func (opts *CreateDatabaseUserCertificateOpts) Run(ctx context.Context) error {
 	params := &admin.CreateDatabaseUserCertificateApiParams{
 		GroupId: opts.groupId,
 		Username: opts.username,
+		
 	}
 	_, err := opts.client.X509AuthenticationApi.CreateDatabaseUserCertificateWithParams(ctx, params).Execute()
 	if err != nil {
@@ -68,7 +70,7 @@ func CreateDatabaseUserCertificateBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -76,12 +78,12 @@ func CreateDatabaseUserCertificateBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.username, "username", , "Human-readable label that represents the MongoDB database user account for whom to create a certificate.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.username, "username", "", "Human-readable label that represents the MongoDB database user account for whom to create a certificate.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("username")
-
 	return cmd
 }
 type DisableCustomerManagedX509Opts struct {
@@ -91,7 +93,7 @@ type DisableCustomerManagedX509Opts struct {
 	groupId string
 }
 
-func (opts *DisableCustomerManagedX509Opts) initClient(ctx context.Context) func() error {
+func (opts *DisableCustomerManagedX509Opts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -127,7 +129,7 @@ func DisableCustomerManagedX509Builder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -135,10 +137,9 @@ func DisableCustomerManagedX509Builder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type ListDatabaseUserCertificatesOpts struct {
@@ -152,7 +153,7 @@ type ListDatabaseUserCertificatesOpts struct {
 	pageNum int
 }
 
-func (opts *ListDatabaseUserCertificatesOpts) initClient(ctx context.Context) func() error {
+func (opts *ListDatabaseUserCertificatesOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -192,7 +193,7 @@ func ListDatabaseUserCertificatesBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -200,15 +201,14 @@ func ListDatabaseUserCertificatesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.username, "username", , "Human-readable label that represents the MongoDB database user account whose certificates you want to return.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.username, "username", "", "Human-readable label that represents the MongoDB database user account whose certificates you want to return.")
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("username")
-
 	return cmd
 }
 
@@ -224,3 +224,4 @@ func X509AuthenticationBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

@@ -27,9 +27,10 @@ type CreateUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
+	
 }
 
-func (opts *CreateUserOpts) initClient(ctx context.Context) func() error {
+func (opts *CreateUserOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -39,6 +40,7 @@ func (opts *CreateUserOpts) initClient(ctx context.Context) func() error {
 
 func (opts *CreateUserOpts) Run(ctx context.Context) error {
 	params := &admin.CreateUserApiParams{
+		
 	}
 	resp, _, err := opts.client.MongoDBCloudUsersApi.CreateUserWithParams(ctx, params).Execute()
 	if err != nil {
@@ -64,7 +66,7 @@ func CreateUserBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -72,7 +74,7 @@ func CreateUserBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-
+	
 
 	return cmd
 }
@@ -83,7 +85,7 @@ type GetUserOpts struct {
 	userId string
 }
 
-func (opts *GetUserOpts) initClient(ctx context.Context) func() error {
+func (opts *GetUserOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -119,7 +121,7 @@ func GetUserBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -127,10 +129,9 @@ func GetUserBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.userId, "userId", , "Unique 24-hexadecimal digit string that identifies this user.")
+	cmd.Flags().StringVar(&opts.userId, "userId", "", "Unique 24-hexadecimal digit string that identifies this user.")
 
 	_ = cmd.MarkFlagRequired("userId")
-
 	return cmd
 }
 type GetUserByUsernameOpts struct {
@@ -140,7 +141,7 @@ type GetUserByUsernameOpts struct {
 	userName string
 }
 
-func (opts *GetUserByUsernameOpts) initClient(ctx context.Context) func() error {
+func (opts *GetUserByUsernameOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -176,7 +177,7 @@ func GetUserByUsernameBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -184,10 +185,9 @@ func GetUserByUsernameBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.userName, "userName", , "Email address that belongs to the MongoDB Cloud user account. You cannot modify this address after creating the user.")
+	cmd.Flags().StringVar(&opts.userName, "userName", "", "Email address that belongs to the MongoDB Cloud user account. You cannot modify this address after creating the user.")
 
 	_ = cmd.MarkFlagRequired("userName")
-
 	return cmd
 }
 
@@ -203,3 +203,4 @@ func MongoDBCloudUsersBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

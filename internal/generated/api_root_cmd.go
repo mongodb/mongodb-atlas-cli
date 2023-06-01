@@ -29,7 +29,7 @@ type GetSystemStatusOpts struct {
 	client *admin.APIClient
 }
 
-func (opts *GetSystemStatusOpts) initClient(ctx context.Context) func() error {
+func (opts *GetSystemStatusOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -64,7 +64,7 @@ func GetSystemStatusBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -72,7 +72,6 @@ func GetSystemStatusBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-
 
 	return cmd
 }
@@ -87,3 +86,4 @@ func RootBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

@@ -29,9 +29,10 @@ type CreateAtlasSearchIndexOpts struct {
 	client *admin.APIClient
 	groupId string
 	clusterName string
+	
 }
 
-func (opts *CreateAtlasSearchIndexOpts) initClient(ctx context.Context) func() error {
+func (opts *CreateAtlasSearchIndexOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -43,6 +44,7 @@ func (opts *CreateAtlasSearchIndexOpts) Run(ctx context.Context) error {
 	params := &admin.CreateAtlasSearchIndexApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
+		
 	}
 	resp, _, err := opts.client.AtlasSearchApi.CreateAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
@@ -68,7 +70,7 @@ func CreateAtlasSearchIndexBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -76,12 +78,12 @@ func CreateAtlasSearchIndexBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Name of the cluster that contains the collection on which to create an Atlas Search index.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Name of the cluster that contains the collection on which to create an Atlas Search index.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
-
 	return cmd
 }
 type DeleteAtlasSearchIndexOpts struct {
@@ -93,7 +95,7 @@ type DeleteAtlasSearchIndexOpts struct {
 	indexId string
 }
 
-func (opts *DeleteAtlasSearchIndexOpts) initClient(ctx context.Context) func() error {
+func (opts *DeleteAtlasSearchIndexOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -131,7 +133,7 @@ func DeleteAtlasSearchIndexBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -139,14 +141,13 @@ func DeleteAtlasSearchIndexBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Name of the cluster that contains the database and collection with one or more Application Search indexes.")
-	cmd.Flags().StringVar(&opts.indexId, "indexId", , "Unique 24-hexadecimal digit string that identifies the Atlas Search index. Use the [Get All Atlas Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Atlas Search indexes.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Name of the cluster that contains the database and collection with one or more Application Search indexes.")
+	cmd.Flags().StringVar(&opts.indexId, "indexId", "", "Unique 24-hexadecimal digit string that identifies the Atlas Search index. Use the [Get All Atlas Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Atlas Search indexes.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
-
 	return cmd
 }
 type GetAtlasSearchIndexOpts struct {
@@ -158,7 +159,7 @@ type GetAtlasSearchIndexOpts struct {
 	indexId string
 }
 
-func (opts *GetAtlasSearchIndexOpts) initClient(ctx context.Context) func() error {
+func (opts *GetAtlasSearchIndexOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -196,7 +197,7 @@ func GetAtlasSearchIndexBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -204,14 +205,13 @@ func GetAtlasSearchIndexBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Name of the cluster that contains the collection with one or more Atlas Search indexes.")
-	cmd.Flags().StringVar(&opts.indexId, "indexId", , "Unique 24-hexadecimal digit string that identifies the Application Search [index](https://docs.atlas.mongodb.com/reference/atlas-search/index-definitions/). Use the [Get All Application Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Application Search indexes.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Name of the cluster that contains the collection with one or more Atlas Search indexes.")
+	cmd.Flags().StringVar(&opts.indexId, "indexId", "", "Unique 24-hexadecimal digit string that identifies the Application Search [index](https://docs.atlas.mongodb.com/reference/atlas-search/index-definitions/). Use the [Get All Application Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Application Search indexes.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
-
 	return cmd
 }
 type ListAtlasSearchIndexesOpts struct {
@@ -224,7 +224,7 @@ type ListAtlasSearchIndexesOpts struct {
 	databaseName string
 }
 
-func (opts *ListAtlasSearchIndexesOpts) initClient(ctx context.Context) func() error {
+func (opts *ListAtlasSearchIndexesOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -263,7 +263,7 @@ func ListAtlasSearchIndexesBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -271,16 +271,15 @@ func ListAtlasSearchIndexesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Name of the cluster that contains the collection with one or more Atlas Search indexes.")
-	cmd.Flags().StringVar(&opts.collectionName, "collectionName", , "Name of the collection that contains one or more Atlas Search indexes.")
-	cmd.Flags().StringVar(&opts.databaseName, "databaseName", , "Human-readable label that identifies the database that contains the collection with one or more Atlas Search indexes.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Name of the cluster that contains the collection with one or more Atlas Search indexes.")
+	cmd.Flags().StringVar(&opts.collectionName, "collectionName", "", "Name of the collection that contains one or more Atlas Search indexes.")
+	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "Human-readable label that identifies the database that contains the collection with one or more Atlas Search indexes.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("collectionName")
 	_ = cmd.MarkFlagRequired("databaseName")
-
 	return cmd
 }
 type UpdateAtlasSearchIndexOpts struct {
@@ -290,9 +289,10 @@ type UpdateAtlasSearchIndexOpts struct {
 	groupId string
 	clusterName string
 	indexId string
+	
 }
 
-func (opts *UpdateAtlasSearchIndexOpts) initClient(ctx context.Context) func() error {
+func (opts *UpdateAtlasSearchIndexOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -305,6 +305,7 @@ func (opts *UpdateAtlasSearchIndexOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 		IndexId: opts.indexId,
+		
 	}
 	resp, _, err := opts.client.AtlasSearchApi.UpdateAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
@@ -330,7 +331,7 @@ func UpdateAtlasSearchIndexBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -338,14 +339,14 @@ func UpdateAtlasSearchIndexBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", , "Name of the cluster that contains the collection whose Atlas Search index to update.")
-	cmd.Flags().StringVar(&opts.indexId, "indexId", , "Unique 24-hexadecimal digit string that identifies the Atlas Search [index](https://docs.atlas.mongodb.com/reference/atlas-search/index-definitions/). Use the [Get All Atlas Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Atlas Search indexes.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Name of the cluster that contains the collection whose Atlas Search index to update.")
+	cmd.Flags().StringVar(&opts.indexId, "indexId", "", "Unique 24-hexadecimal digit string that identifies the Atlas Search [index](https://docs.atlas.mongodb.com/reference/atlas-search/index-definitions/). Use the [Get All Atlas Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Atlas Search indexes.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
-
 	return cmd
 }
 
@@ -363,3 +364,4 @@ func AtlasSearchBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

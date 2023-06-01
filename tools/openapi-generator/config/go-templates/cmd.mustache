@@ -14,15 +14,12 @@ type {{operationId}}Opts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	{{#pathParams}}
-	{{paramName}} {{{dataType}}}
-	{{/pathParams}}
-	{{#queryParams}}
-	{{paramName}} {{{dataType}}}
-	{{/queryParams}}
+	{{#allParams}}
+	{{^isBodyParam}}{{paramName}} {{{dataType}}}{{/isBodyParam}}
+	{{/allParams}}
 }
 
-func (opts *{{operationId}}Opts) initClient(ctx context.Context) func() error {
+func (opts *{{operationId}}Opts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -32,12 +29,9 @@ func (opts *{{operationId}}Opts) initClient(ctx context.Context) func() error {
 
 func (opts *{{operationId}}Opts) Run(ctx context.Context) error {
 	params := &admin.{{operationId}}ApiParams{
-		{{#pathParams}}
-		{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: opts.{{paramName}},
-		{{/pathParams}}
-		{{#queryParams}}
-		{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: opts.{{paramName}},
-		{{/queryParams}}
+		{{#allParams}}
+		{{^isBodyParam}}{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: opts.{{paramName}},{{/isBodyParam}}
+		{{/allParams}}
 	}
 	{{#returnType}}resp, {{/returnType}}_, err := opts.client.{{classname}}.{{operationId}}WithParams(ctx, params).Execute()
 	if err != nil {
@@ -63,7 +57,7 @@ func {{operationId}}Builder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -71,16 +65,11 @@ func {{operationId}}Builder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-{{#pathParams}}
-	cmd.Flags().{{#lambda.titlecase}}{{dataType}}{{/lambda.titlecase}}Var(&opts.{{paramName}}, "{{paramName}}", {{defaultValue}}, "{{description}}")
-{{/pathParams}}
-{{#queryParams}}
-	cmd.Flags().{{#lambda.titlecase}}{{dataType}}{{/lambda.titlecase}}Var(&opts.{{paramName}}, "{{paramName}}", {{defaultValue}}, "{{description}}")
-{{/queryParams}}
-{{#pathParams}}{{#required}}
-	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/pathParams}}
-{{#queryParams}}{{#required}}
-	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/queryParams}}
+{{#allParams}}
+	{{^isBodyParam}}cmd.Flags().{{#lambda.titlecase}}{{dataType}}{{/lambda.titlecase}}Var(&opts.{{paramName}}, "{{paramName}}", {{#isString}}"{{/isString}}{{^defaultValue}}{{#isNumeric}}0{{/isNumeric}}{{#isInteger}}0{{/isInteger}}{{#isShort}}0{{/isShort}}{{#isLong}}0{{/isLong}}{{#isUnboundedInteger}}0{{/isUnboundedInteger}}{{#isNumber}}0{{/isNumber}}{{#isFloat}}0{{/isFloat}}{{#isDouble}}0{{/isDouble}}{{#isDecimal}}0{{/isDecimal}}{{#isBoolean}}false{{/isBoolean}}{{/defaultValue}}{{defaultValue}}{{#isString}}"{{/isString}}, "{{description}}"){{/isBodyParam}}
+{{/allParams}}
+{{#allParams}}{{^isBodyParam}}{{#required}}
+	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/isBodyParam}}{{/allParams}}
 	return cmd
 }
 {{/operation}}
@@ -102,3 +91,4 @@ func {{baseName}}Builder() *cobra.Command {
 	)
 	return cmd
 }
+

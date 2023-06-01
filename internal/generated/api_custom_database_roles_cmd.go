@@ -28,9 +28,10 @@ type CreateCustomDatabaseRoleOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	groupId string
+	
 }
 
-func (opts *CreateCustomDatabaseRoleOpts) initClient(ctx context.Context) func() error {
+func (opts *CreateCustomDatabaseRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -41,6 +42,7 @@ func (opts *CreateCustomDatabaseRoleOpts) initClient(ctx context.Context) func()
 func (opts *CreateCustomDatabaseRoleOpts) Run(ctx context.Context) error {
 	params := &admin.CreateCustomDatabaseRoleApiParams{
 		GroupId: opts.groupId,
+		
 	}
 	resp, _, err := opts.client.CustomDatabaseRolesApi.CreateCustomDatabaseRoleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -66,7 +68,7 @@ func CreateCustomDatabaseRoleBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -74,10 +76,10 @@ func CreateCustomDatabaseRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type DeleteCustomDatabaseRoleOpts struct {
@@ -88,7 +90,7 @@ type DeleteCustomDatabaseRoleOpts struct {
 	roleName string
 }
 
-func (opts *DeleteCustomDatabaseRoleOpts) initClient(ctx context.Context) func() error {
+func (opts *DeleteCustomDatabaseRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -125,7 +127,7 @@ func DeleteCustomDatabaseRoleBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -133,12 +135,11 @@ func DeleteCustomDatabaseRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.roleName, "roleName", , "Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.roleName, "roleName", "", "Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleName")
-
 	return cmd
 }
 type GetCustomDatabaseRoleOpts struct {
@@ -149,7 +150,7 @@ type GetCustomDatabaseRoleOpts struct {
 	roleName string
 }
 
-func (opts *GetCustomDatabaseRoleOpts) initClient(ctx context.Context) func() error {
+func (opts *GetCustomDatabaseRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -186,7 +187,7 @@ func GetCustomDatabaseRoleBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -194,12 +195,11 @@ func GetCustomDatabaseRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.roleName, "roleName", , "Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.roleName, "roleName", "", "Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleName")
-
 	return cmd
 }
 type ListCustomDatabaseRolesOpts struct {
@@ -209,7 +209,7 @@ type ListCustomDatabaseRolesOpts struct {
 	groupId string
 }
 
-func (opts *ListCustomDatabaseRolesOpts) initClient(ctx context.Context) func() error {
+func (opts *ListCustomDatabaseRolesOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -245,7 +245,7 @@ func ListCustomDatabaseRolesBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -253,10 +253,9 @@ func ListCustomDatabaseRolesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type UpdateCustomDatabaseRoleOpts struct {
@@ -265,9 +264,10 @@ type UpdateCustomDatabaseRoleOpts struct {
 	client *admin.APIClient
 	groupId string
 	roleName string
+	
 }
 
-func (opts *UpdateCustomDatabaseRoleOpts) initClient(ctx context.Context) func() error {
+func (opts *UpdateCustomDatabaseRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -279,6 +279,7 @@ func (opts *UpdateCustomDatabaseRoleOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateCustomDatabaseRoleApiParams{
 		GroupId: opts.groupId,
 		RoleName: opts.roleName,
+		
 	}
 	resp, _, err := opts.client.CustomDatabaseRolesApi.UpdateCustomDatabaseRoleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -304,7 +305,7 @@ func UpdateCustomDatabaseRoleBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -312,12 +313,12 @@ func UpdateCustomDatabaseRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.roleName, "roleName", , "Human-readable label that identifies the role for the request. This name must beunique for this custom role in this project.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.roleName, "roleName", "", "Human-readable label that identifies the role for the request. This name must beunique for this custom role in this project.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleName")
-
 	return cmd
 }
 
@@ -335,3 +336,4 @@ func CustomDatabaseRolesBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

@@ -29,9 +29,10 @@ type AuthorizeCloudProviderAccessRoleOpts struct {
 	client *admin.APIClient
 	groupId string
 	roleId string
+	
 }
 
-func (opts *AuthorizeCloudProviderAccessRoleOpts) initClient(ctx context.Context) func() error {
+func (opts *AuthorizeCloudProviderAccessRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -43,6 +44,7 @@ func (opts *AuthorizeCloudProviderAccessRoleOpts) Run(ctx context.Context) error
 	params := &admin.AuthorizeCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
 		RoleId: opts.roleId,
+		
 	}
 	resp, _, err := opts.client.CloudProviderAccessApi.AuthorizeCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -68,7 +70,7 @@ func AuthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -76,12 +78,12 @@ func AuthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.roleId, "roleId", , "Unique 24-hexadecimal digit string that identifies the role.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.roleId, "roleId", "", "Unique 24-hexadecimal digit string that identifies the role.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleId")
-
 	return cmd
 }
 type CreateCloudProviderAccessRoleOpts struct {
@@ -89,9 +91,10 @@ type CreateCloudProviderAccessRoleOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	groupId string
+	
 }
 
-func (opts *CreateCloudProviderAccessRoleOpts) initClient(ctx context.Context) func() error {
+func (opts *CreateCloudProviderAccessRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -102,6 +105,7 @@ func (opts *CreateCloudProviderAccessRoleOpts) initClient(ctx context.Context) f
 func (opts *CreateCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
 	params := &admin.CreateCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
+		
 	}
 	resp, _, err := opts.client.CloudProviderAccessApi.CreateCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -127,7 +131,7 @@ func CreateCloudProviderAccessRoleBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -135,10 +139,10 @@ func CreateCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type DeauthorizeCloudProviderAccessRoleOpts struct {
@@ -150,7 +154,7 @@ type DeauthorizeCloudProviderAccessRoleOpts struct {
 	roleId string
 }
 
-func (opts *DeauthorizeCloudProviderAccessRoleOpts) initClient(ctx context.Context) func() error {
+func (opts *DeauthorizeCloudProviderAccessRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -188,7 +192,7 @@ func DeauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -196,14 +200,13 @@ func DeauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", , "Human-readable label that identifies the cloud provider of the role to deauthorize.")
-	cmd.Flags().StringVar(&opts.roleId, "roleId", , "Unique 24-hexadecimal digit string that identifies the role.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "", "Human-readable label that identifies the cloud provider of the role to deauthorize.")
+	cmd.Flags().StringVar(&opts.roleId, "roleId", "", "Unique 24-hexadecimal digit string that identifies the role.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("cloudProvider")
 	_ = cmd.MarkFlagRequired("roleId")
-
 	return cmd
 }
 type GetCloudProviderAccessRoleOpts struct {
@@ -214,7 +217,7 @@ type GetCloudProviderAccessRoleOpts struct {
 	roleId string
 }
 
-func (opts *GetCloudProviderAccessRoleOpts) initClient(ctx context.Context) func() error {
+func (opts *GetCloudProviderAccessRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -251,7 +254,7 @@ func GetCloudProviderAccessRoleBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -259,12 +262,11 @@ func GetCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.roleId, "roleId", , "Unique 24-hexadecimal digit string that identifies the role.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.roleId, "roleId", "", "Unique 24-hexadecimal digit string that identifies the role.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleId")
-
 	return cmd
 }
 type ListCloudProviderAccessRolesOpts struct {
@@ -274,7 +276,7 @@ type ListCloudProviderAccessRolesOpts struct {
 	groupId string
 }
 
-func (opts *ListCloudProviderAccessRolesOpts) initClient(ctx context.Context) func() error {
+func (opts *ListCloudProviderAccessRolesOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -310,7 +312,7 @@ func ListCloudProviderAccessRolesBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -318,10 +320,9 @@ func ListCloudProviderAccessRolesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 
@@ -339,3 +340,4 @@ func CloudProviderAccessBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

@@ -31,7 +31,7 @@ type GetAtlasProcessOpts struct {
 	processId string
 }
 
-func (opts *GetAtlasProcessOpts) initClient(ctx context.Context) func() error {
+func (opts *GetAtlasProcessOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -68,7 +68,7 @@ func GetAtlasProcessBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -76,12 +76,11 @@ func GetAtlasProcessBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.processId, "processId", "", "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
-
 	return cmd
 }
 type GetDatabaseOpts struct {
@@ -93,7 +92,7 @@ type GetDatabaseOpts struct {
 	processId string
 }
 
-func (opts *GetDatabaseOpts) initClient(ctx context.Context) func() error {
+func (opts *GetDatabaseOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -131,7 +130,7 @@ func GetDatabaseBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -139,14 +138,13 @@ func GetDatabaseBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.databaseName, "databaseName", , "Human-readable label that identifies the database that the specified MongoDB process serves.")
-	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "Human-readable label that identifies the database that the specified MongoDB process serves.")
+	cmd.Flags().StringVar(&opts.processId, "processId", "", "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("processId")
-
 	return cmd
 }
 type GetDatabaseMeasurementsOpts struct {
@@ -156,14 +154,14 @@ type GetDatabaseMeasurementsOpts struct {
 	groupId string
 	databaseName string
 	processId string
-	m []string
 	granularity string
+	m []string
 	period string
 	start time.Time
 	end time.Time
 }
 
-func (opts *GetDatabaseMeasurementsOpts) initClient(ctx context.Context) func() error {
+func (opts *GetDatabaseMeasurementsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -176,8 +174,8 @@ func (opts *GetDatabaseMeasurementsOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		DatabaseName: opts.databaseName,
 		ProcessId: opts.processId,
-		M: opts.m,
 		Granularity: opts.granularity,
+		M: opts.m,
 		Period: opts.period,
 		Start: opts.start,
 		End: opts.end,
@@ -206,7 +204,7 @@ func GetDatabaseMeasurementsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -214,19 +212,18 @@ func GetDatabaseMeasurementsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.databaseName, "databaseName", , "Human-readable label that identifies the database that the specified MongoDB process serves.")
-	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "Human-readable label that identifies the database that the specified MongoDB process serves.")
+	cmd.Flags().StringVar(&opts.processId, "processId", "", "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
 	cmd.Flags().[]stringVar(&opts.m, "m", , "One or more types of measurement to request for this MongoDB process. If omitted, the resource returns all measurements. To specify multiple values for &#x60;m&#x60;, repeat the &#x60;m&#x60; parameter for each value. Specify measurements that apply to the specified host. MongoDB Cloud returns an error if you specified any invalid measurements.")
-	cmd.Flags().StringVar(&opts.granularity, "granularity", , "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
-	cmd.Flags().StringVar(&opts.period, "period", , "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
+	cmd.Flags().StringVar(&opts.period, "period", "", "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
 	cmd.Flags().Time.TimeVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 	cmd.Flags().Time.TimeVar(&opts.end, "end", , "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("processId")
-
 	_ = cmd.MarkFlagRequired("granularity")
 	return cmd
 }
@@ -237,14 +234,14 @@ type GetDiskMeasurementsOpts struct {
 	groupId string
 	partitionName string
 	processId string
-	m []string
 	granularity string
+	m []string
 	period string
 	start time.Time
 	end time.Time
 }
 
-func (opts *GetDiskMeasurementsOpts) initClient(ctx context.Context) func() error {
+func (opts *GetDiskMeasurementsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -257,8 +254,8 @@ func (opts *GetDiskMeasurementsOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		PartitionName: opts.partitionName,
 		ProcessId: opts.processId,
-		M: opts.m,
 		Granularity: opts.granularity,
+		M: opts.m,
 		Period: opts.period,
 		Start: opts.start,
 		End: opts.end,
@@ -287,7 +284,7 @@ func GetDiskMeasurementsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -295,19 +292,18 @@ func GetDiskMeasurementsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.partitionName, "partitionName", , "Human-readable label of the disk or partition to which the measurements apply.")
-	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.partitionName, "partitionName", "", "Human-readable label of the disk or partition to which the measurements apply.")
+	cmd.Flags().StringVar(&opts.processId, "processId", "", "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
 	cmd.Flags().[]stringVar(&opts.m, "m", , "One or more types of measurement to request for this MongoDB process. If omitted, the resource returns all measurements. To specify multiple values for &#x60;m&#x60;, repeat the &#x60;m&#x60; parameter for each value. Specify measurements that apply to the specified host. MongoDB Cloud returns an error if you specified any invalid measurements.")
-	cmd.Flags().StringVar(&opts.granularity, "granularity", , "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
-	cmd.Flags().StringVar(&opts.period, "period", , "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
+	cmd.Flags().StringVar(&opts.period, "period", "", "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
 	cmd.Flags().Time.TimeVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 	cmd.Flags().Time.TimeVar(&opts.end, "end", , "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("partitionName")
 	_ = cmd.MarkFlagRequired("processId")
-
 	_ = cmd.MarkFlagRequired("granularity")
 	return cmd
 }
@@ -322,7 +318,7 @@ type GetHostLogsOpts struct {
 	startDate int64
 }
 
-func (opts *GetHostLogsOpts) initClient(ctx context.Context) func() error {
+func (opts *GetHostLogsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -362,7 +358,7 @@ func GetHostLogsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -370,16 +366,15 @@ func GetHostLogsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.hostName, "hostName", , "Fully qualified domain name or IP address of the MongoDB host that stores the log files that you want to download.")
-	cmd.Flags().StringVar(&opts.logName, "logName", , "Human-readable label of the log file that you want to return. You can return audit logs only if you enable Database Auditing for the specified project.")
-	cmd.Flags().Int64Var(&opts.endDate, "endDate", , "Date and time when the period specifies the inclusive ending point for the range of log messages to retrieve. This parameter expresses its value in the number of seconds that have elapsed since the UNIX epoch.")
-	cmd.Flags().Int64Var(&opts.startDate, "startDate", , "Date and time when the period specifies the inclusive starting point for the range of log messages to retrieve. This parameter expresses its value in the number of seconds that have elapsed since the UNIX epoch.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.hostName, "hostName", "", "Fully qualified domain name or IP address of the MongoDB host that stores the log files that you want to download.")
+	cmd.Flags().StringVar(&opts.logName, "logName", "", "Human-readable label of the log file that you want to return. You can return audit logs only if you enable Database Auditing for the specified project.")
+	cmd.Flags().Int64Var(&opts.endDate, "endDate", 0, "Date and time when the period specifies the inclusive ending point for the range of log messages to retrieve. This parameter expresses its value in the number of seconds that have elapsed since the UNIX epoch.")
+	cmd.Flags().Int64Var(&opts.startDate, "startDate", 0, "Date and time when the period specifies the inclusive starting point for the range of log messages to retrieve. This parameter expresses its value in the number of seconds that have elapsed since the UNIX epoch.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("hostName")
 	_ = cmd.MarkFlagRequired("logName")
-
 	return cmd
 }
 type GetHostMeasurementsOpts struct {
@@ -388,14 +383,14 @@ type GetHostMeasurementsOpts struct {
 	client *admin.APIClient
 	groupId string
 	processId string
+	granularity string
 	m []string
 	period string
-	granularity string
 	start time.Time
 	end time.Time
 }
 
-func (opts *GetHostMeasurementsOpts) initClient(ctx context.Context) func() error {
+func (opts *GetHostMeasurementsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -407,9 +402,9 @@ func (opts *GetHostMeasurementsOpts) Run(ctx context.Context) error {
 	params := &admin.GetHostMeasurementsApiParams{
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
+		Granularity: opts.granularity,
 		M: opts.m,
 		Period: opts.period,
-		Granularity: opts.granularity,
 		Start: opts.start,
 		End: opts.end,
 	}
@@ -437,7 +432,7 @@ func GetHostMeasurementsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -445,17 +440,16 @@ func GetHostMeasurementsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.processId, "processId", "", "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
 	cmd.Flags().[]stringVar(&opts.m, "m", , "One or more types of measurement to request for this MongoDB process. If omitted, the resource returns all measurements. To specify multiple values for &#x60;m&#x60;, repeat the &#x60;m&#x60; parameter for each value. Specify measurements that apply to the specified host. MongoDB Cloud returns an error if you specified any invalid measurements.")
-	cmd.Flags().StringVar(&opts.period, "period", , "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
-	cmd.Flags().StringVar(&opts.granularity, "granularity", , "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
+	cmd.Flags().StringVar(&opts.period, "period", "", "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
 	cmd.Flags().Time.TimeVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 	cmd.Flags().Time.TimeVar(&opts.end, "end", , "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
-
 	_ = cmd.MarkFlagRequired("granularity")
 	return cmd
 }
@@ -469,13 +463,13 @@ type GetIndexMetricsOpts struct {
 	collectionName string
 	groupId string
 	granularity string
+	metrics []string
 	period string
 	start time.Time
 	end time.Time
-	metrics []string
 }
 
-func (opts *GetIndexMetricsOpts) initClient(ctx context.Context) func() error {
+func (opts *GetIndexMetricsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -491,10 +485,10 @@ func (opts *GetIndexMetricsOpts) Run(ctx context.Context) error {
 		CollectionName: opts.collectionName,
 		GroupId: opts.groupId,
 		Granularity: opts.granularity,
+		Metrics: opts.metrics,
 		Period: opts.period,
 		Start: opts.start,
 		End: opts.end,
-		Metrics: opts.metrics,
 	}
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetIndexMetricsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -520,7 +514,7 @@ func GetIndexMetricsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -528,23 +522,22 @@ func GetIndexMetricsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.")
-	cmd.Flags().StringVar(&opts.indexName, "indexName", , "Human-readable label that identifies the index.")
-	cmd.Flags().StringVar(&opts.databaseName, "databaseName", , "Human-readable label that identifies the database.")
-	cmd.Flags().StringVar(&opts.collectionName, "collectionName", , "Human-readable label that identifies the collection.")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.granularity, "granularity", , "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
-	cmd.Flags().StringVar(&opts.period, "period", , "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
+	cmd.Flags().StringVar(&opts.processId, "processId", "", "Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.indexName, "indexName", "", "Human-readable label that identifies the index.")
+	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "Human-readable label that identifies the database.")
+	cmd.Flags().StringVar(&opts.collectionName, "collectionName", "", "Human-readable label that identifies the collection.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
+	cmd.Flags().[]stringVar(&opts.metrics, "metrics", , "List that contains the measurements that MongoDB Atlas reports for the associated data series.")
+	cmd.Flags().StringVar(&opts.period, "period", "", "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
 	cmd.Flags().Time.TimeVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 	cmd.Flags().Time.TimeVar(&opts.end, "end", , "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
-	cmd.Flags().[]stringVar(&opts.metrics, "metrics", , "List that contains the measurements that MongoDB Atlas reports for the associated data series.")
 
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("indexName")
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("collectionName")
 	_ = cmd.MarkFlagRequired("groupId")
-
 	_ = cmd.MarkFlagRequired("granularity")
 	_ = cmd.MarkFlagRequired("metrics")
 	return cmd
@@ -556,13 +549,13 @@ type GetMeasurementsOpts struct {
 	processId string
 	groupId string
 	granularity string
+	metrics []string
 	period string
 	start time.Time
 	end time.Time
-	metrics []string
 }
 
-func (opts *GetMeasurementsOpts) initClient(ctx context.Context) func() error {
+func (opts *GetMeasurementsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -575,10 +568,10 @@ func (opts *GetMeasurementsOpts) Run(ctx context.Context) error {
 		ProcessId: opts.processId,
 		GroupId: opts.groupId,
 		Granularity: opts.granularity,
+		Metrics: opts.metrics,
 		Period: opts.period,
 		Start: opts.start,
 		End: opts.end,
-		Metrics: opts.metrics,
 	}
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetMeasurementsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -604,7 +597,7 @@ func GetMeasurementsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -612,17 +605,16 @@ func GetMeasurementsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.granularity, "granularity", , "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
-	cmd.Flags().StringVar(&opts.period, "period", , "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
+	cmd.Flags().StringVar(&opts.processId, "processId", "", "Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
+	cmd.Flags().[]stringVar(&opts.metrics, "metrics", , "List that contains the metrics that you want MongoDB Atlas to report for the associated data series. If you don&#39;t set this parameter, this resource returns all hardware and status metrics for the associated data series.")
+	cmd.Flags().StringVar(&opts.period, "period", "", "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
 	cmd.Flags().Time.TimeVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 	cmd.Flags().Time.TimeVar(&opts.end, "end", , "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
-	cmd.Flags().[]stringVar(&opts.metrics, "metrics", , "List that contains the metrics that you want MongoDB Atlas to report for the associated data series. If you don&#39;t set this parameter, this resource returns all hardware and status metrics for the associated data series.")
 
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("groupId")
-
 	_ = cmd.MarkFlagRequired("granularity")
 	_ = cmd.MarkFlagRequired("metrics")
 	return cmd
@@ -637,7 +629,7 @@ type ListAtlasProcessesOpts struct {
 	pageNum int
 }
 
-func (opts *ListAtlasProcessesOpts) initClient(ctx context.Context) func() error {
+func (opts *ListAtlasProcessesOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -676,7 +668,7 @@ func ListAtlasProcessesBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -684,13 +676,12 @@ func ListAtlasProcessesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
 
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 type ListDatabasesOpts struct {
@@ -704,7 +695,7 @@ type ListDatabasesOpts struct {
 	pageNum int
 }
 
-func (opts *ListDatabasesOpts) initClient(ctx context.Context) func() error {
+func (opts *ListDatabasesOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -744,7 +735,7 @@ func ListDatabasesBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -752,15 +743,14 @@ func ListDatabasesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.processId, "processId", "", "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
-
 	return cmd
 }
 type ListDiskMeasurementsOpts struct {
@@ -772,7 +762,7 @@ type ListDiskMeasurementsOpts struct {
 	processId string
 }
 
-func (opts *ListDiskMeasurementsOpts) initClient(ctx context.Context) func() error {
+func (opts *ListDiskMeasurementsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -810,7 +800,7 @@ func ListDiskMeasurementsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -818,14 +808,13 @@ func ListDiskMeasurementsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.partitionName, "partitionName", , "Human-readable label of the disk or partition to which the measurements apply.")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.partitionName, "partitionName", "", "Human-readable label of the disk or partition to which the measurements apply.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.processId, "processId", "", "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
 
 	_ = cmd.MarkFlagRequired("partitionName")
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
-
 	return cmd
 }
 type ListDiskPartitionsOpts struct {
@@ -839,7 +828,7 @@ type ListDiskPartitionsOpts struct {
 	pageNum int
 }
 
-func (opts *ListDiskPartitionsOpts) initClient(ctx context.Context) func() error {
+func (opts *ListDiskPartitionsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -879,7 +868,7 @@ func ListDiskPartitionsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -887,15 +876,14 @@ func ListDiskPartitionsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.processId, "processId", "", "Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.")
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
-
 	return cmd
 }
 type ListIndexMetricsOpts struct {
@@ -907,13 +895,13 @@ type ListIndexMetricsOpts struct {
 	collectionName string
 	groupId string
 	granularity string
+	metrics []string
 	period string
 	start time.Time
 	end time.Time
-	metrics []string
 }
 
-func (opts *ListIndexMetricsOpts) initClient(ctx context.Context) func() error {
+func (opts *ListIndexMetricsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -928,10 +916,10 @@ func (opts *ListIndexMetricsOpts) Run(ctx context.Context) error {
 		CollectionName: opts.collectionName,
 		GroupId: opts.groupId,
 		Granularity: opts.granularity,
+		Metrics: opts.metrics,
 		Period: opts.period,
 		Start: opts.start,
 		End: opts.end,
-		Metrics: opts.metrics,
 	}
 	resp, _, err := opts.client.MonitoringAndLogsApi.ListIndexMetricsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -957,7 +945,7 @@ func ListIndexMetricsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -965,21 +953,20 @@ func ListIndexMetricsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.")
-	cmd.Flags().StringVar(&opts.databaseName, "databaseName", , "Human-readable label that identifies the database.")
-	cmd.Flags().StringVar(&opts.collectionName, "collectionName", , "Human-readable label that identifies the collection.")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.granularity, "granularity", , "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
-	cmd.Flags().StringVar(&opts.period, "period", , "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
+	cmd.Flags().StringVar(&opts.processId, "processId", "", "Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "Human-readable label that identifies the database.")
+	cmd.Flags().StringVar(&opts.collectionName, "collectionName", "", "Human-readable label that identifies the collection.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
+	cmd.Flags().[]stringVar(&opts.metrics, "metrics", , "List that contains the measurements that MongoDB Atlas reports for the associated data series.")
+	cmd.Flags().StringVar(&opts.period, "period", "", "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
 	cmd.Flags().Time.TimeVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 	cmd.Flags().Time.TimeVar(&opts.end, "end", , "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
-	cmd.Flags().[]stringVar(&opts.metrics, "metrics", , "List that contains the measurements that MongoDB Atlas reports for the associated data series.")
 
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("collectionName")
 	_ = cmd.MarkFlagRequired("groupId")
-
 	_ = cmd.MarkFlagRequired("granularity")
 	_ = cmd.MarkFlagRequired("metrics")
 	return cmd
@@ -992,7 +979,7 @@ type ListMetricTypesOpts struct {
 	groupId string
 }
 
-func (opts *ListMetricTypesOpts) initClient(ctx context.Context) func() error {
+func (opts *ListMetricTypesOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -1029,7 +1016,7 @@ func ListMetricTypesBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -1037,12 +1024,11 @@ func ListMetricTypesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.processId, "processId", , "Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", , "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.processId, "processId", "", "Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
 
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("groupId")
-
 	return cmd
 }
 
@@ -1069,3 +1055,4 @@ func MonitoringAndLogsBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

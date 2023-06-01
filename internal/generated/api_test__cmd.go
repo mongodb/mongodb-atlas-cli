@@ -30,7 +30,7 @@ type VersionedExampleOpts struct {
 	additionalInfo bool
 }
 
-func (opts *VersionedExampleOpts) initClient(ctx context.Context) func() error {
+func (opts *VersionedExampleOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = NewClientWithAuth()
@@ -66,7 +66,7 @@ func VersionedExampleBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				//opts.ValidateProjectID,
-				opts.initClient(cmd.Context()),
+				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
@@ -75,7 +75,6 @@ func VersionedExampleBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().BoolVar(&opts.additionalInfo, "additionalInfo", false, "")
-
 
 	return cmd
 }
@@ -90,3 +89,4 @@ func TestBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

@@ -312,8 +312,7 @@ func (opts *Opts) createResources() error {
 	}
 
 	if err := opts.createCluster(); err != nil {
-		var target *admin.Error
-		_ = errors.As(err, &target)
+		target, _ := admin.AsError(err)
 		if target.GetErrorCode() == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" && strings.Contains(strings.ToLower(target.GetDetail()), cli.ErrFreeClusterAlreadyExists.Error()) {
 			return cli.ErrFreeClusterAlreadyExists
 		} else if target.GetErrorCode() == "INVALID_ATTRIBUTE" && strings.Contains(target.GetDetail(), "regionName") {

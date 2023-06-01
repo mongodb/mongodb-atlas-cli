@@ -74,7 +74,7 @@ func (m *MockProjectAPIKeyCreator) EXPECT() *MockProjectAPIKeyCreatorMockRecorde
 }
 
 // CreateProjectAPIKey mocks base method.
-func (m *MockProjectAPIKeyCreator) CreateProjectAPIKey(arg0 string, arg1 *admin.CreateProjectApiKey) (*admin.ApiUser, error) {
+func (m *MockProjectAPIKeyCreator) CreateProjectAPIKey(arg0 string, arg1 *admin.CreateApiKey) (*admin.ApiUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProjectAPIKey", arg0, arg1)
 	ret0, _ := ret[0].(*admin.ApiUser)
@@ -188,7 +188,7 @@ func (m *MockOrganizationAPIKeyUpdater) EXPECT() *MockOrganizationAPIKeyUpdaterM
 }
 
 // UpdateOrganizationAPIKey mocks base method.
-func (m *MockOrganizationAPIKeyUpdater) UpdateOrganizationAPIKey(arg0, arg1 string, arg2 *admin.CreateOrganizationApiKey) (*admin.ApiUser, error) {
+func (m *MockOrganizationAPIKeyUpdater) UpdateOrganizationAPIKey(arg0, arg1 string, arg2 *admin.CreateApiKey) (*admin.ApiUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOrganizationAPIKey", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.ApiUser)
@@ -226,7 +226,7 @@ func (m *MockOrganizationAPIKeyCreator) EXPECT() *MockOrganizationAPIKeyCreatorM
 }
 
 // CreateOrganizationAPIKey mocks base method.
-func (m *MockOrganizationAPIKeyCreator) CreateOrganizationAPIKey(arg0 string, arg1 *admin.CreateOrganizationApiKey) (*admin.ApiUser, error) {
+func (m *MockOrganizationAPIKeyCreator) CreateOrganizationAPIKey(arg0 string, arg1 *admin.CreateApiKey) (*admin.ApiUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOrganizationAPIKey", arg0, arg1)
 	ret0, _ := ret[0].(*admin.ApiUser)
@@ -338,7 +338,7 @@ func (m *MockProjectAPIKeyAssigner) EXPECT() *MockProjectAPIKeyAssignerMockRecor
 }
 
 // AssignProjectAPIKey mocks base method.
-func (m *MockProjectAPIKeyAssigner) AssignProjectAPIKey(arg0, arg1 string, arg2 *admin.CreateProjectApiKey) error {
+func (m *MockProjectAPIKeyAssigner) AssignProjectAPIKey(arg0, arg1 string, arg2 *admin.CreateApiKey) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AssignProjectAPIKey", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)

@@ -58,8 +58,6 @@ func DisableSlowOperationThresholdingBuilder() *cobra.Command {
 		Use:     "disableSlowOperationThresholding",
 		// Aliases: []string{"?"},
 		Short:   "Disable Managed Slow Operation Threshold",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -114,8 +112,6 @@ func EnableSlowOperationThresholdingBuilder() *cobra.Command {
 		Use:     "enableSlowOperationThresholding",
 		// Aliases: []string{"?"},
 		Short:   "Enable Managed Slow Operation Threshold",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -180,8 +176,6 @@ func ListSlowQueriesBuilder() *cobra.Command {
 		Use:     "listSlowQueries",
 		// Aliases: []string{"?"},
 		Short:   "Return Slow Queries",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -248,8 +242,6 @@ func ListSlowQueryNamespacesBuilder() *cobra.Command {
 		Use:     "listSlowQueryNamespaces",
 		// Aliases: []string{"?"},
 		Short:   "Return All Namespaces for One Host",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -326,8 +318,6 @@ func ListSuggestedIndexesBuilder() *cobra.Command {
 		Use:     "listSuggestedIndexes",
 		// Aliases: []string{"?"},
 		Short:   "Return Suggested Indexes",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

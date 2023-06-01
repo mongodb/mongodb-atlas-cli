@@ -68,8 +68,6 @@ func CreateThirdPartyIntegrationBuilder() *cobra.Command {
 		Use:     "createThirdPartyIntegration",
 		// Aliases: []string{"?"},
 		Short:   "Configure One Third-Party Service Integration",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -132,8 +130,6 @@ func DeleteThirdPartyIntegrationBuilder() *cobra.Command {
 		Use:     "deleteThirdPartyIntegration",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Third-Party Service Integration",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -192,8 +188,6 @@ func GetThirdPartyIntegrationBuilder() *cobra.Command {
 		Use:     "getThirdPartyIntegration",
 		// Aliases: []string{"?"},
 		Short:   "Return One Third-Party Service Integration",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -256,8 +250,6 @@ func ListThirdPartyIntegrationsBuilder() *cobra.Command {
 		Use:     "listThirdPartyIntegrations",
 		// Aliases: []string{"?"},
 		Short:   "Return All Active Third-Party Service Integrations",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -325,8 +317,6 @@ func UpdateThirdPartyIntegrationBuilder() *cobra.Command {
 		Use:     "updateThirdPartyIntegration",
 		// Aliases: []string{"?"},
 		Short:   "Update One Third-Party Service Integration",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

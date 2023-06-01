@@ -58,8 +58,6 @@ func DeleteLDAPConfigurationBuilder() *cobra.Command {
 		Use:     "deleteLDAPConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Remove the Current LDAP User to DN Mapping",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -114,8 +112,6 @@ func GetLDAPConfigurationBuilder() *cobra.Command {
 		Use:     "getLDAPConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Return the Current LDAP or X.509 Configuration",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -172,8 +168,6 @@ func GetLDAPConfigurationStatusBuilder() *cobra.Command {
 		Use:     "getLDAPConfigurationStatus",
 		// Aliases: []string{"?"},
 		Short:   "Return the Status of One Verify LDAP Configuration Request",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -232,8 +226,6 @@ func SaveLDAPConfigurationBuilder() *cobra.Command {
 		Use:     "saveLDAPConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Edit the LDAP or X.509 Configuration",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -291,8 +283,6 @@ func VerifyLDAPConfigurationBuilder() *cobra.Command {
 		Use:     "verifyLDAPConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Verify the LDAP Configuration in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

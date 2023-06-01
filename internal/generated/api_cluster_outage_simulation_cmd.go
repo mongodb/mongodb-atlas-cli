@@ -60,8 +60,6 @@ func EndOutageSimulationBuilder() *cobra.Command {
 		Use:     "endOutageSimulation",
 		// Aliases: []string{"?"},
 		Short:   "End an Outage Simulation",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -120,8 +118,6 @@ func GetOutageSimulationBuilder() *cobra.Command {
 		Use:     "getOutageSimulation",
 		// Aliases: []string{"?"},
 		Short:   "Return One Outage Simulation",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -182,8 +178,6 @@ func StartOutageSimulationBuilder() *cobra.Command {
 		Use:     "startOutageSimulation",
 		// Aliases: []string{"?"},
 		Short:   "Start an Outage Simulation",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

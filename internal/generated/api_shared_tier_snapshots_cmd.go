@@ -62,8 +62,6 @@ func DownloadSharedClusterBackupBuilder() *cobra.Command {
 		Use:     "downloadSharedClusterBackup",
 		// Aliases: []string{"?"},
 		Short:   "Download One M2 or M5 Cluster Snapshot",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -125,8 +123,6 @@ func GetSharedClusterBackupBuilder() *cobra.Command {
 		Use:     "getSharedClusterBackup",
 		// Aliases: []string{"?"},
 		Short:   "Return One Snapshot for One M2 or M5 Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -187,8 +183,6 @@ func ListSharedClusterBackupsBuilder() *cobra.Command {
 		Use:     "listSharedClusterBackups",
 		// Aliases: []string{"?"},
 		Short:   "Return All Snapshots for One M2 or M5 Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

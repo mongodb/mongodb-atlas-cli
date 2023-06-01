@@ -58,8 +58,6 @@ func CreateOrganizationBuilder() *cobra.Command {
 		Use:     "createOrganization",
 		// Aliases: []string{"?"},
 		Short:   "Create One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -115,8 +113,6 @@ func CreateOrganizationInvitationBuilder() *cobra.Command {
 		Use:     "createOrganizationInvitation",
 		// Aliases: []string{"?"},
 		Short:   "Invite One MongoDB Cloud User to Join One Atlas Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -172,8 +168,6 @@ func DeleteOrganizationBuilder() *cobra.Command {
 		Use:     "deleteOrganization",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -230,8 +224,6 @@ func DeleteOrganizationInvitationBuilder() *cobra.Command {
 		Use:     "deleteOrganizationInvitation",
 		// Aliases: []string{"?"},
 		Short:   "Cancel One Organization Invitation",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -288,8 +280,6 @@ func GetOrganizationBuilder() *cobra.Command {
 		Use:     "getOrganization",
 		// Aliases: []string{"?"},
 		Short:   "Return One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -346,8 +336,6 @@ func GetOrganizationInvitationBuilder() *cobra.Command {
 		Use:     "getOrganizationInvitation",
 		// Aliases: []string{"?"},
 		Short:   "Return One Organization Invitation",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -404,8 +392,6 @@ func GetOrganizationSettingsBuilder() *cobra.Command {
 		Use:     "getOrganizationSettings",
 		// Aliases: []string{"?"},
 		Short:   "Return Settings for One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -462,8 +448,6 @@ func ListOrganizationInvitationsBuilder() *cobra.Command {
 		Use:     "listOrganizationInvitations",
 		// Aliases: []string{"?"},
 		Short:   "Return All Organization Invitations",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -527,8 +511,6 @@ func ListOrganizationProjectsBuilder() *cobra.Command {
 		Use:     "listOrganizationProjects",
 		// Aliases: []string{"?"},
 		Short:   "Return One or More Projects in One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -593,8 +575,6 @@ func ListOrganizationUsersBuilder() *cobra.Command {
 		Use:     "listOrganizationUsers",
 		// Aliases: []string{"?"},
 		Short:   "Return All MongoDB Cloud Users in One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -658,8 +638,6 @@ func ListOrganizationsBuilder() *cobra.Command {
 		Use:     "listOrganizations",
 		// Aliases: []string{"?"},
 		Short:   "Return All Organizations",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -718,8 +696,6 @@ func RenameOrganizationBuilder() *cobra.Command {
 		Use:     "renameOrganization",
 		// Aliases: []string{"?"},
 		Short:   "Rename One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -777,8 +753,6 @@ func UpdateOrganizationInvitationBuilder() *cobra.Command {
 		Use:     "updateOrganizationInvitation",
 		// Aliases: []string{"?"},
 		Short:   "Update One Organization Invitation",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -838,8 +812,6 @@ func UpdateOrganizationInvitationByIdBuilder() *cobra.Command {
 		Use:     "updateOrganizationInvitationById",
 		// Aliases: []string{"?"},
 		Short:   "Update One Organization Invitation by Invitation ID",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -899,8 +871,6 @@ func UpdateOrganizationSettingsBuilder() *cobra.Command {
 		Use:     "updateOrganizationSettings",
 		// Aliases: []string{"?"},
 		Short:   "Update Settings for One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

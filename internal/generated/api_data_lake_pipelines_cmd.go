@@ -60,8 +60,6 @@ func CreatePipelineBuilder() *cobra.Command {
 		Use:     "createPipeline",
 		// Aliases: []string{"?"},
 		Short:   "Create One Data Lake Pipeline",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -119,8 +117,6 @@ func DeletePipelineBuilder() *cobra.Command {
 		Use:     "deletePipeline",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Data Lake Pipeline",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -181,8 +177,6 @@ func DeletePipelineRunDatasetBuilder() *cobra.Command {
 		Use:     "deletePipelineRunDataset",
 		// Aliases: []string{"?"},
 		Short:   "Delete Pipeline Run Dataset",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -243,8 +237,6 @@ func GetPipelineBuilder() *cobra.Command {
 		Use:     "getPipeline",
 		// Aliases: []string{"?"},
 		Short:   "Return One Data Lake Pipeline",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -305,8 +297,6 @@ func GetPipelineRunBuilder() *cobra.Command {
 		Use:     "getPipelineRun",
 		// Aliases: []string{"?"},
 		Short:   "Return One Data Lake Pipeline Run",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -375,8 +365,6 @@ func ListPipelineRunsBuilder() *cobra.Command {
 		Use:     "listPipelineRuns",
 		// Aliases: []string{"?"},
 		Short:   "Return All Data Lake Pipeline Runs from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -439,8 +427,6 @@ func ListPipelineSchedulesBuilder() *cobra.Command {
 		Use:     "listPipelineSchedules",
 		// Aliases: []string{"?"},
 		Short:   "Return Available Ingestion Schedules for One Data Lake Pipeline",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -507,8 +493,6 @@ func ListPipelineSnapshotsBuilder() *cobra.Command {
 		Use:     "listPipelineSnapshots",
 		// Aliases: []string{"?"},
 		Short:   "Return Available Backup Snapshots for One Data Lake Pipeline",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -569,8 +553,6 @@ func ListPipelinesBuilder() *cobra.Command {
 		Use:     "listPipelines",
 		// Aliases: []string{"?"},
 		Short:   "Return All Data Lake Pipelines from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -627,8 +609,6 @@ func PausePipelineBuilder() *cobra.Command {
 		Use:     "pausePipeline",
 		// Aliases: []string{"?"},
 		Short:   "Pause One Data Lake Pipeline",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -687,8 +667,6 @@ func ResumePipelineBuilder() *cobra.Command {
 		Use:     "resumePipeline",
 		// Aliases: []string{"?"},
 		Short:   "Resume One Data Lake Pipeline",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -749,8 +727,6 @@ func TriggerSnapshotIngestionBuilder() *cobra.Command {
 		Use:     "triggerSnapshotIngestion",
 		// Aliases: []string{"?"},
 		Short:   "Trigger on demand snapshot ingestion",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -812,8 +788,6 @@ func UpdatePipelineBuilder() *cobra.Command {
 		Use:     "updatePipeline",
 		// Aliases: []string{"?"},
 		Short:   "Update One Data Lake Pipeline",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

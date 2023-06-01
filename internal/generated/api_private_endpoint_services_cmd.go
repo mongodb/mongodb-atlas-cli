@@ -64,8 +64,6 @@ func CreatePrivateEndpointBuilder() *cobra.Command {
 		Use:     "createPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Create One Private Endpoint for One Provider",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -127,8 +125,6 @@ func CreatePrivateEndpointServiceBuilder() *cobra.Command {
 		Use:     "createPrivateEndpointService",
 		// Aliases: []string{"?"},
 		Short:   "Create One Private Endpoint Service for One Provider",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -190,8 +186,6 @@ func DeletePrivateEndpointBuilder() *cobra.Command {
 		Use:     "deletePrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Private Endpoint for One Provider",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -256,8 +250,6 @@ func DeletePrivateEndpointServiceBuilder() *cobra.Command {
 		Use:     "deletePrivateEndpointService",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Private Endpoint Service for One Provider",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -322,8 +314,6 @@ func GetPrivateEndpointBuilder() *cobra.Command {
 		Use:     "getPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Return One Private Endpoint for One Provider",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -388,8 +378,6 @@ func GetPrivateEndpointServiceBuilder() *cobra.Command {
 		Use:     "getPrivateEndpointService",
 		// Aliases: []string{"?"},
 		Short:   "Return One Private Endpoint Service for One Provider",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -448,8 +436,6 @@ func GetRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 		Use:     "getRegionalizedPrivateEndpointSetting",
 		// Aliases: []string{"?"},
 		Short:   "Return Regionalized Private Endpoint Status",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -506,8 +492,6 @@ func ListPrivateEndpointServicesBuilder() *cobra.Command {
 		Use:     "listPrivateEndpointServices",
 		// Aliases: []string{"?"},
 		Short:   "Return All Private Endpoint Services for One Provider",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -566,8 +550,6 @@ func ToggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 		Use:     "toggleRegionalizedPrivateEndpointSetting",
 		// Aliases: []string{"?"},
 		Short:   "Toggle Regionalized Private Endpoint Status",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

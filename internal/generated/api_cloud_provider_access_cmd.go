@@ -62,8 +62,6 @@ func AuthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 		Use:     "authorizeCloudProviderAccessRole",
 		// Aliases: []string{"?"},
 		Short:   "Authorize One Cloud Provider Access Role",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -123,8 +121,6 @@ func CreateCloudProviderAccessRoleBuilder() *cobra.Command {
 		Use:     "createCloudProviderAccessRole",
 		// Aliases: []string{"?"},
 		Short:   "Create One Cloud Provider Access Role",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -184,8 +180,6 @@ func DeauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 		Use:     "deauthorizeCloudProviderAccessRole",
 		// Aliases: []string{"?"},
 		Short:   "Deauthorize One Cloud Provider Access Role",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -246,8 +240,6 @@ func GetCloudProviderAccessRoleBuilder() *cobra.Command {
 		Use:     "getCloudProviderAccessRole",
 		// Aliases: []string{"?"},
 		Short:   "Return specified Cloud Provider Access Role",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -304,8 +296,6 @@ func ListCloudProviderAccessRolesBuilder() *cobra.Command {
 		Use:     "listCloudProviderAccessRoles",
 		// Aliases: []string{"?"},
 		Short:   "Return All Cloud Provider Access Roles",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

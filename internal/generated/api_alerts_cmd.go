@@ -62,8 +62,6 @@ func AcknowledgeAlertBuilder() *cobra.Command {
 		Use:     "acknowledgeAlert",
 		// Aliases: []string{"?"},
 		Short:   "Acknowledge One Alert from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -123,8 +121,6 @@ func GetAlertBuilder() *cobra.Command {
 		Use:     "getAlert",
 		// Aliases: []string{"?"},
 		Short:   "Return One Alert from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -189,8 +185,6 @@ func ListAlertsBuilder() *cobra.Command {
 		Use:     "listAlerts",
 		// Aliases: []string{"?"},
 		Short:   "Return All Alerts from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -257,8 +251,6 @@ func ListAlertsByAlertConfigurationIdBuilder() *cobra.Command {
 		Use:     "listAlertsByAlertConfigurationId",
 		// Aliases: []string{"?"},
 		Short:   "Return All Open Alerts for Alert Configuration",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

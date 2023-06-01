@@ -60,8 +60,6 @@ func GetClusterAdvancedConfigurationBuilder() *cobra.Command {
 		Use:     "getClusterAdvancedConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Return One Advanced Configuration Options for One Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -120,8 +118,6 @@ func GetClusterStatusBuilder() *cobra.Command {
 		Use:     "getClusterStatus",
 		// Aliases: []string{"?"},
 		Short:   "Return Status of All Cluster Operations",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -180,8 +176,6 @@ func GetSampleDatasetLoadStatusBuilder() *cobra.Command {
 		Use:     "getSampleDatasetLoadStatus",
 		// Aliases: []string{"?"},
 		Short:   "Check Status of Cluster Sample Dataset Request",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -248,8 +242,6 @@ func ListCloudProviderRegionsBuilder() *cobra.Command {
 		Use:     "listCloudProviderRegions",
 		// Aliases: []string{"?"},
 		Short:   "Return All Cloud Provider Regions",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -313,8 +305,6 @@ func ListClustersForAllProjectsBuilder() *cobra.Command {
 		Use:     "listClustersForAllProjects",
 		// Aliases: []string{"?"},
 		Short:   "Return All Authorized Clusters in All Projects",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -372,8 +362,6 @@ func LoadSampleDatasetBuilder() *cobra.Command {
 		Use:     "loadSampleDataset",
 		// Aliases: []string{"?"},
 		Short:   "Load Sample Dataset Request into Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -434,8 +422,6 @@ func UpdateClusterAdvancedConfigurationBuilder() *cobra.Command {
 		Use:     "updateClusterAdvancedConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Update Advanced Configuration Options for One Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -495,8 +481,6 @@ func UpgradeSharedClusterBuilder() *cobra.Command {
 		Use:     "upgradeSharedCluster",
 		// Aliases: []string{"?"},
 		Short:   "Upgrade One Shared-tier Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -554,8 +538,6 @@ func UpgradeSharedClusterToServerlessBuilder() *cobra.Command {
 		Use:     "upgradeSharedClusterToServerless",
 		// Aliases: []string{"?"},
 		Short:   "Upgrades One Shared-Tier Cluster to the Serverless Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

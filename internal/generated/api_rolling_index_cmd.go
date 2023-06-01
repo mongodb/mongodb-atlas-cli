@@ -62,8 +62,6 @@ func CreateRollingIndexBuilder() *cobra.Command {
 		Use:     "createRollingIndex",
 		// Aliases: []string{"?"},
 		Short:   "Create One Rolling Index",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

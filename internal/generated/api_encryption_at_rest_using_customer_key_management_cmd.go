@@ -58,8 +58,6 @@ func GetEncryptionAtRestBuilder() *cobra.Command {
 		Use:     "getEncryptionAtRest",
 		// Aliases: []string{"?"},
 		Short:   "Return One Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -116,8 +114,6 @@ func UpdateEncryptionAtRestBuilder() *cobra.Command {
 		Use:     "updateEncryptionAtRest",
 		// Aliases: []string{"?"},
 		Short:   "Update Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

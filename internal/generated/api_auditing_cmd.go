@@ -58,8 +58,6 @@ func GetAuditingConfigurationBuilder() *cobra.Command {
 		Use:     "getAuditingConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Return the Auditing Configuration for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -116,8 +114,6 @@ func UpdateAuditingConfigurationBuilder() *cobra.Command {
 		Use:     "updateAuditingConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Update Auditing Configuration for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

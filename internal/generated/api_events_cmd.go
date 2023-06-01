@@ -62,8 +62,6 @@ func GetOrganizationEventBuilder() *cobra.Command {
 		Use:     "getOrganizationEvent",
 		// Aliases: []string{"?"},
 		Short:   "Return One Event from One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -125,8 +123,6 @@ func GetProjectEventBuilder() *cobra.Command {
 		Use:     "getProjectEvent",
 		// Aliases: []string{"?"},
 		Short:   "Return One Event from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -198,8 +194,6 @@ func ListOrganizationEventsBuilder() *cobra.Command {
 		Use:     "listOrganizationEvents",
 		// Aliases: []string{"?"},
 		Short:   "Return All Events from One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -277,8 +271,6 @@ func ListProjectEventsBuilder() *cobra.Command {
 		Use:     "listProjectEvents",
 		// Aliases: []string{"?"},
 		Short:   "Return All Events from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

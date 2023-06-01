@@ -60,8 +60,6 @@ func AddAllTeamsToProjectBuilder() *cobra.Command {
 		Use:     "addAllTeamsToProject",
 		// Aliases: []string{"?"},
 		Short:   "Add One or More Teams to One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -121,8 +119,6 @@ func AddTeamUserBuilder() *cobra.Command {
 		Use:     "addTeamUser",
 		// Aliases: []string{"?"},
 		Short:   "Assign MongoDB Cloud Users from One Organization to One Team",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -182,8 +178,6 @@ func CreateTeamBuilder() *cobra.Command {
 		Use:     "createTeam",
 		// Aliases: []string{"?"},
 		Short:   "Create One Team in One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -241,8 +235,6 @@ func DeleteTeamBuilder() *cobra.Command {
 		Use:     "deleteTeam",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Team from One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -301,8 +293,6 @@ func GetTeamByIdBuilder() *cobra.Command {
 		Use:     "getTeamById",
 		// Aliases: []string{"?"},
 		Short:   "Return One Team using its ID",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -361,8 +351,6 @@ func GetTeamByNameBuilder() *cobra.Command {
 		Use:     "getTeamByName",
 		// Aliases: []string{"?"},
 		Short:   "Return One Team using its Name",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -425,8 +413,6 @@ func ListOrganizationTeamsBuilder() *cobra.Command {
 		Use:     "listOrganizationTeams",
 		// Aliases: []string{"?"},
 		Short:   "Return All Teams in One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -490,8 +476,6 @@ func ListProjectTeamsBuilder() *cobra.Command {
 		Use:     "listProjectTeams",
 		// Aliases: []string{"?"},
 		Short:   "Return All Teams in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -555,8 +539,6 @@ func ListTeamUsersBuilder() *cobra.Command {
 		Use:     "listTeamUsers",
 		// Aliases: []string{"?"},
 		Short:   "Return All MongoDB Cloud Users Assigned to One Team",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -617,8 +599,6 @@ func RemoveProjectTeamBuilder() *cobra.Command {
 		Use:     "removeProjectTeam",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Team from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -679,8 +659,6 @@ func RemoveTeamUserBuilder() *cobra.Command {
 		Use:     "removeTeamUser",
 		// Aliases: []string{"?"},
 		Short:   "Remove One MongoDB Cloud User from One Team",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -743,8 +721,6 @@ func RenameTeamBuilder() *cobra.Command {
 		Use:     "renameTeam",
 		// Aliases: []string{"?"},
 		Short:   "Rename One Team",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -806,8 +782,6 @@ func UpdateTeamRolesBuilder() *cobra.Command {
 		Use:     "updateTeamRoles",
 		// Aliases: []string{"?"},
 		Short:   "Update Team Roles in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

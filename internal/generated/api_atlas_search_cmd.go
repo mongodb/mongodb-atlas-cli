@@ -62,8 +62,6 @@ func CreateAtlasSearchIndexBuilder() *cobra.Command {
 		Use:     "createAtlasSearchIndex",
 		// Aliases: []string{"?"},
 		Short:   "Create One Atlas Search Index",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -125,8 +123,6 @@ func DeleteAtlasSearchIndexBuilder() *cobra.Command {
 		Use:     "deleteAtlasSearchIndex",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Atlas Search Index",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -189,8 +185,6 @@ func GetAtlasSearchIndexBuilder() *cobra.Command {
 		Use:     "getAtlasSearchIndex",
 		// Aliases: []string{"?"},
 		Short:   "Return One Atlas Search Index",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -255,8 +249,6 @@ func ListAtlasSearchIndexesBuilder() *cobra.Command {
 		Use:     "listAtlasSearchIndexes",
 		// Aliases: []string{"?"},
 		Short:   "Return All Atlas Search Indexes for One Collection",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -323,8 +315,6 @@ func UpdateAtlasSearchIndexBuilder() *cobra.Command {
 		Use:     "updateAtlasSearchIndex",
 		// Aliases: []string{"?"},
 		Short:   "Update One Atlas Search Index",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

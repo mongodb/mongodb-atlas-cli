@@ -58,8 +58,6 @@ func CreateUserBuilder() *cobra.Command {
 		Use:     "createUser",
 		// Aliases: []string{"?"},
 		Short:   "Create One MongoDB Cloud User",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -113,8 +111,6 @@ func GetUserBuilder() *cobra.Command {
 		Use:     "getUser",
 		// Aliases: []string{"?"},
 		Short:   "Return One MongoDB Cloud User using Its ID",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -169,8 +165,6 @@ func GetUserByUsernameBuilder() *cobra.Command {
 		Use:     "getUserByUsername",
 		// Aliases: []string{"?"},
 		Short:   "Return One MongoDB Cloud User using Their Username",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

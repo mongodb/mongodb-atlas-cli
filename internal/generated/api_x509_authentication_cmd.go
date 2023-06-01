@@ -62,8 +62,6 @@ func CreateDatabaseUserCertificateBuilder() *cobra.Command {
 		Use:     "createDatabaseUserCertificate",
 		// Aliases: []string{"?"},
 		Short:   "Create One X.509 Certificate for One MongoDB User",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -121,8 +119,6 @@ func DisableCustomerManagedX509Builder() *cobra.Command {
 		Use:     "disableCustomerManagedX509",
 		// Aliases: []string{"?"},
 		Short:   "Disable Customer-Managed X.509",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -185,8 +181,6 @@ func ListDatabaseUserCertificatesBuilder() *cobra.Command {
 		Use:     "listDatabaseUserCertificates",
 		// Aliases: []string{"?"},
 		Short:   "Return All X.509 Certificates Assigned to One MongoDB User",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

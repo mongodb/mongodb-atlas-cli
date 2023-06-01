@@ -60,8 +60,6 @@ func CreateDatabaseUserBuilder() *cobra.Command {
 		Use:     "createDatabaseUser",
 		// Aliases: []string{"?"},
 		Short:   "Create One Database User in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -121,8 +119,6 @@ func DeleteDatabaseUserBuilder() *cobra.Command {
 		Use:     "deleteDatabaseUser",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Database User from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -185,8 +181,6 @@ func GetDatabaseUserBuilder() *cobra.Command {
 		Use:     "getDatabaseUser",
 		// Aliases: []string{"?"},
 		Short:   "Return One Database User from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -251,8 +245,6 @@ func ListDatabaseUsersBuilder() *cobra.Command {
 		Use:     "listDatabaseUsers",
 		// Aliases: []string{"?"},
 		Short:   "Return All Database Users from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -316,8 +308,6 @@ func UpdateDatabaseUserBuilder() *cobra.Command {
 		Use:     "updateDatabaseUser",
 		// Aliases: []string{"?"},
 		Short:   "Update One Database User in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

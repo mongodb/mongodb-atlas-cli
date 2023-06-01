@@ -60,8 +60,6 @@ func CreateClusterBuilder() *cobra.Command {
 		Use:     "createCluster",
 		// Aliases: []string{"?"},
 		Short:   "Create One Multi-Cloud Cluster from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -121,8 +119,6 @@ func DeleteClusterBuilder() *cobra.Command {
 		Use:     "deleteCluster",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Multi-Cloud Cluster from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -182,8 +178,6 @@ func GetClusterBuilder() *cobra.Command {
 		Use:     "getCluster",
 		// Aliases: []string{"?"},
 		Short:   "Return One Multi-Cloud Cluster from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -246,8 +240,6 @@ func ListClustersBuilder() *cobra.Command {
 		Use:     "listClusters",
 		// Aliases: []string{"?"},
 		Short:   "Return All Multi-Cloud Clusters from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -307,8 +299,6 @@ func TestFailoverBuilder() *cobra.Command {
 		Use:     "testFailover",
 		// Aliases: []string{"?"},
 		Short:   "Test Failover for One Multi-Cloud Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -369,8 +359,6 @@ func UpdateClusterBuilder() *cobra.Command {
 		Use:     "updateCluster",
 		// Aliases: []string{"?"},
 		Short:   "Modify One Multi-Cloud Cluster from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

@@ -60,8 +60,6 @@ func CreateCustomDatabaseRoleBuilder() *cobra.Command {
 		Use:     "createCustomDatabaseRole",
 		// Aliases: []string{"?"},
 		Short:   "Create One Custom Role",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -119,8 +117,6 @@ func DeleteCustomDatabaseRoleBuilder() *cobra.Command {
 		Use:     "deleteCustomDatabaseRole",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Custom Role from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -179,8 +175,6 @@ func GetCustomDatabaseRoleBuilder() *cobra.Command {
 		Use:     "getCustomDatabaseRole",
 		// Aliases: []string{"?"},
 		Short:   "Return One Custom Role in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -237,8 +231,6 @@ func ListCustomDatabaseRolesBuilder() *cobra.Command {
 		Use:     "listCustomDatabaseRoles",
 		// Aliases: []string{"?"},
 		Short:   "Return All Custom Roles in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -297,8 +289,6 @@ func UpdateCustomDatabaseRoleBuilder() *cobra.Command {
 		Use:     "updateCustomDatabaseRole",
 		// Aliases: []string{"?"},
 		Short:   "Update One Custom Role in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

@@ -60,8 +60,6 @@ func CreateDataFederationPrivateEndpointBuilder() *cobra.Command {
 		Use:     "createDataFederationPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Create One Federated Database Instance and Online Archive Private Endpoint for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -121,8 +119,6 @@ func CreateFederatedDatabaseBuilder() *cobra.Command {
 		Use:     "createFederatedDatabase",
 		// Aliases: []string{"?"},
 		Short:   "Create One Federated Database Instance in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -185,8 +181,6 @@ func CreateOneDataFederationQueryLimitBuilder() *cobra.Command {
 		Use:     "createOneDataFederationQueryLimit",
 		// Aliases: []string{"?"},
 		Short:   "Configure One Query Limit for One Federated Database Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -248,8 +242,6 @@ func DeleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 		Use:     "deleteDataFederationPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Federated Database Instance and Online Archive Private Endpoint from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -308,8 +300,6 @@ func DeleteFederatedDatabaseBuilder() *cobra.Command {
 		Use:     "deleteFederatedDatabase",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Federated Database Instance from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -370,8 +360,6 @@ func DeleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 		Use:     "deleteOneDataFederationInstanceQueryLimit",
 		// Aliases: []string{"?"},
 		Short:   "Delete One Query Limit For One Federated Database Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -436,8 +424,6 @@ func DownloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 		Use:     "downloadFederatedDatabaseQueryLogs",
 		// Aliases: []string{"?"},
 		Short:   "Download Query Logs for One Federated Database Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -498,8 +484,6 @@ func GetDataFederationPrivateEndpointBuilder() *cobra.Command {
 		Use:     "getDataFederationPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Return One Federated Database Instance and Online Archive Private Endpoint in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -558,8 +542,6 @@ func GetFederatedDatabaseBuilder() *cobra.Command {
 		Use:     "getFederatedDatabase",
 		// Aliases: []string{"?"},
 		Short:   "Return One Federated Database Instance in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -622,8 +604,6 @@ func ListDataFederationPrivateEndpointsBuilder() *cobra.Command {
 		Use:     "listDataFederationPrivateEndpoints",
 		// Aliases: []string{"?"},
 		Short:   "Return All Federated Database Instance and Online Archive Private Endpoints in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -683,8 +663,6 @@ func ListFederatedDatabasesBuilder() *cobra.Command {
 		Use:     "listFederatedDatabases",
 		// Aliases: []string{"?"},
 		Short:   "Return All Federated Database Instances in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -744,8 +722,6 @@ func ReturnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 		Use:     "returnFederatedDatabaseQueryLimit",
 		// Aliases: []string{"?"},
 		Short:   "Return One Federated Database Instance Query Limit for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -806,8 +782,6 @@ func ReturnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 		Use:     "returnFederatedDatabaseQueryLimits",
 		// Aliases: []string{"?"},
 		Short:   "Return All Query Limits for One Federated Database Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -870,8 +844,6 @@ func UpdateFederatedDatabaseBuilder() *cobra.Command {
 		Use:     "updateFederatedDatabase",
 		// Aliases: []string{"?"},
 		Short:   "Update One Federated Database Instance in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

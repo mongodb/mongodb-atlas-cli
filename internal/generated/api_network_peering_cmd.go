@@ -60,8 +60,6 @@ func CreatePeeringConnectionBuilder() *cobra.Command {
 		Use:     "createPeeringConnection",
 		// Aliases: []string{"?"},
 		Short:   "Create One New Network Peering Connection",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -119,8 +117,6 @@ func CreatePeeringContainerBuilder() *cobra.Command {
 		Use:     "createPeeringContainer",
 		// Aliases: []string{"?"},
 		Short:   "Create One New Network Peering Container",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -178,8 +174,6 @@ func DeletePeeringConnectionBuilder() *cobra.Command {
 		Use:     "deletePeeringConnection",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Existing Network Peering Connection",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -238,8 +232,6 @@ func DeletePeeringContainerBuilder() *cobra.Command {
 		Use:     "deletePeeringContainer",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Network Peering Container",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -298,8 +290,6 @@ func DisablePeeringBuilder() *cobra.Command {
 		Use:     "disablePeering",
 		// Aliases: []string{"?"},
 		Short:   "Disable Connect via Peering Only Mode for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -357,8 +347,6 @@ func GetPeeringConnectionBuilder() *cobra.Command {
 		Use:     "getPeeringConnection",
 		// Aliases: []string{"?"},
 		Short:   "Return One Network Peering Connection in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -417,8 +405,6 @@ func GetPeeringContainerBuilder() *cobra.Command {
 		Use:     "getPeeringContainer",
 		// Aliases: []string{"?"},
 		Short:   "Return One Network Peering Container",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -483,8 +469,6 @@ func ListPeeringConnectionsBuilder() *cobra.Command {
 		Use:     "listPeeringConnections",
 		// Aliases: []string{"?"},
 		Short:   "Return All Network Peering Connections in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -551,8 +535,6 @@ func ListPeeringContainerByCloudProviderBuilder() *cobra.Command {
 		Use:     "listPeeringContainerByCloudProvider",
 		// Aliases: []string{"?"},
 		Short:   "Return All Network Peering Containers in One Project for One Cloud Provider",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -618,8 +600,6 @@ func ListPeeringContainersBuilder() *cobra.Command {
 		Use:     "listPeeringContainers",
 		// Aliases: []string{"?"},
 		Short:   "Return All Network Peering Containers in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -681,8 +661,6 @@ func UpdatePeeringConnectionBuilder() *cobra.Command {
 		Use:     "updatePeeringConnection",
 		// Aliases: []string{"?"},
 		Short:   "Update One New Network Peering Connection",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -744,8 +722,6 @@ func UpdatePeeringContainerBuilder() *cobra.Command {
 		Use:     "updatePeeringContainer",
 		// Aliases: []string{"?"},
 		Short:   "Update One Network Peering Container",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -803,8 +779,6 @@ func VerifyConnectViaPeeringOnlyModeForOneProjectBuilder() *cobra.Command {
 		Use:     "verifyConnectViaPeeringOnlyModeForOneProject",
 		// Aliases: []string{"?"},
 		Short:   "Verify Connect via Peering Only Mode for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

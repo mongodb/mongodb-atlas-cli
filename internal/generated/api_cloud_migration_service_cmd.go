@@ -60,8 +60,6 @@ func CreateLinkTokenBuilder() *cobra.Command {
 		Use:     "createLinkToken",
 		// Aliases: []string{"?"},
 		Short:   "Create One Link-Token",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -119,8 +117,6 @@ func CreatePushMigrationBuilder() *cobra.Command {
 		Use:     "createPushMigration",
 		// Aliases: []string{"?"},
 		Short:   "Migrate One Local Managed Cluster to MongoDB Atlas",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -178,8 +174,6 @@ func CutoverMigrationBuilder() *cobra.Command {
 		Use:     "cutoverMigration",
 		// Aliases: []string{"?"},
 		Short:   "Cut Over the Migrated Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -236,8 +230,6 @@ func DeleteLinkTokenBuilder() *cobra.Command {
 		Use:     "deleteLinkToken",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Link-Token",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -294,8 +286,6 @@ func GetPushMigrationBuilder() *cobra.Command {
 		Use:     "getPushMigration",
 		// Aliases: []string{"?"},
 		Short:   "Return One Migration Job",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -354,8 +344,6 @@ func GetValidationStatusBuilder() *cobra.Command {
 		Use:     "getValidationStatus",
 		// Aliases: []string{"?"},
 		Short:   "Return One Migration Validation Job",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -412,8 +400,6 @@ func ListSourceProjectsBuilder() *cobra.Command {
 		Use:     "listSourceProjects",
 		// Aliases: []string{"?"},
 		Short:   "Return All Projects Available for Migration",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -470,8 +456,6 @@ func ValidateMigrationBuilder() *cobra.Command {
 		Use:     "validateMigration",
 		// Aliases: []string{"?"},
 		Short:   "Validate One Migration Request",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

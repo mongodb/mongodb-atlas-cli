@@ -62,8 +62,6 @@ func AddProjectApiKeyBuilder() *cobra.Command {
 		Use:     "addProjectApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Assign One Organization API Key to One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -123,8 +121,6 @@ func CreateApiKeyBuilder() *cobra.Command {
 		Use:     "createApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Create One Organization API Key",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -190,8 +186,6 @@ func CreateApiKeyAccessListBuilder() *cobra.Command {
 		Use:     "createApiKeyAccessList",
 		// Aliases: []string{"?"},
 		Short:   "Create Access List Entries for One Organization API Key",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -254,8 +248,6 @@ func CreateProjectApiKeyBuilder() *cobra.Command {
 		Use:     "createProjectApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Create and Assign One Organization API Key to One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -313,8 +305,6 @@ func DeleteApiKeyBuilder() *cobra.Command {
 		Use:     "deleteApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Organization API Key",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -375,8 +365,6 @@ func DeleteApiKeyAccessListEntryBuilder() *cobra.Command {
 		Use:     "deleteApiKeyAccessListEntry",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Access List Entry for One Organization API Key",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -437,8 +425,6 @@ func GetApiKeyBuilder() *cobra.Command {
 		Use:     "getApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Return One Organization API Key",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -499,8 +485,6 @@ func GetApiKeyAccessListBuilder() *cobra.Command {
 		Use:     "getApiKeyAccessList",
 		// Aliases: []string{"?"},
 		Short:   "Return One Access List Entry for One Organization API Key",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -567,8 +551,6 @@ func ListApiKeyAccessListsEntriesBuilder() *cobra.Command {
 		Use:     "listApiKeyAccessListsEntries",
 		// Aliases: []string{"?"},
 		Short:   "Return All Access List Entries for One Organization API Key",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -634,8 +616,6 @@ func ListApiKeysBuilder() *cobra.Command {
 		Use:     "listApiKeys",
 		// Aliases: []string{"?"},
 		Short:   "Return All Organization API Keys",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -699,8 +679,6 @@ func ListProjectApiKeysBuilder() *cobra.Command {
 		Use:     "listProjectApiKeys",
 		// Aliases: []string{"?"},
 		Short:   "Return All Organization API Keys Assigned to One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -760,8 +738,6 @@ func RemoveProjectApiKeyBuilder() *cobra.Command {
 		Use:     "removeProjectApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Unassign One Organization API Key from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -822,8 +798,6 @@ func UpdateApiKeyBuilder() *cobra.Command {
 		Use:     "updateApiKey",
 		// Aliases: []string{"?"},
 		Short:   "Update One Organization API Key",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -891,8 +865,6 @@ func UpdateApiKeyRolesBuilder() *cobra.Command {
 		Use:     "updateApiKeyRoles",
 		// Aliases: []string{"?"},
 		Short:   "Update Roles of One Organization API Key to One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

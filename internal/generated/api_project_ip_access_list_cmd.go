@@ -66,8 +66,6 @@ func CreateProjectIpAccessListBuilder() *cobra.Command {
 		Use:     "createProjectIpAccessList",
 		// Aliases: []string{"?"},
 		Short:   "Add Entries to Project IP Access List",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -128,8 +126,6 @@ func DeleteProjectIpAccessListBuilder() *cobra.Command {
 		Use:     "deleteProjectIpAccessList",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Entry from One Project IP Access List",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -188,8 +184,6 @@ func GetProjectIpAccessListStatusBuilder() *cobra.Command {
 		Use:     "getProjectIpAccessListStatus",
 		// Aliases: []string{"?"},
 		Short:   "Return Status of One Project IP Access List Entry",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -248,8 +242,6 @@ func GetProjectIpListBuilder() *cobra.Command {
 		Use:     "getProjectIpList",
 		// Aliases: []string{"?"},
 		Short:   "Return One Project IP Access List Entry",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -312,8 +304,6 @@ func ListProjectIpAccessListsBuilder() *cobra.Command {
 		Use:     "listProjectIpAccessLists",
 		// Aliases: []string{"?"},
 		Short:   "Return Project IP Access List",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

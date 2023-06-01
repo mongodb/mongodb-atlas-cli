@@ -62,8 +62,6 @@ func CreateCustomZoneMappingBuilder() *cobra.Command {
 		Use:     "createCustomZoneMapping",
 		// Aliases: []string{"?"},
 		Short:   "Add One Entry to One Custom Zone Mapping",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -125,8 +123,6 @@ func CreateManagedNamespaceBuilder() *cobra.Command {
 		Use:     "createManagedNamespace",
 		// Aliases: []string{"?"},
 		Short:   "Create One Managed Namespace in One Global Multi-Cloud Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -186,8 +182,6 @@ func DeleteAllCustomZoneMappingsBuilder() *cobra.Command {
 		Use:     "deleteAllCustomZoneMappings",
 		// Aliases: []string{"?"},
 		Short:   "Remove All Custom Zone Mappings from One Global Multi-Cloud Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -250,8 +244,6 @@ func DeleteManagedNamespaceBuilder() *cobra.Command {
 		Use:     "deleteManagedNamespace",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Managed Namespace from One Global Multi-Cloud Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -312,8 +304,6 @@ func GetManagedNamespaceBuilder() *cobra.Command {
 		Use:     "getManagedNamespace",
 		// Aliases: []string{"?"},
 		Short:   "Return One Managed Namespace in One Global Multi-Cloud Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

@@ -62,8 +62,6 @@ func CreateRoleMappingBuilder() *cobra.Command {
 		Use:     "createRoleMapping",
 		// Aliases: []string{"?"},
 		Short:   "Add One Role Mapping to One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -121,8 +119,6 @@ func DeleteFederationAppBuilder() *cobra.Command {
 		Use:     "deleteFederationApp",
 		// Aliases: []string{"?"},
 		Short:   "Delete the federation settings instance.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -181,8 +177,6 @@ func DeleteRoleMappingBuilder() *cobra.Command {
 		Use:     "deleteRoleMapping",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Role Mapping from One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -243,8 +237,6 @@ func GetConnectedOrgConfigBuilder() *cobra.Command {
 		Use:     "getConnectedOrgConfig",
 		// Aliases: []string{"?"},
 		Short:   "Return One Org Config Connected to One Federation",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -301,8 +293,6 @@ func GetFederationSettingsBuilder() *cobra.Command {
 		Use:     "getFederationSettings",
 		// Aliases: []string{"?"},
 		Short:   "Return Federation Settings for One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -359,8 +349,6 @@ func GetIdentityProviderBuilder() *cobra.Command {
 		Use:     "getIdentityProvider",
 		// Aliases: []string{"?"},
 		Short:   "Return one identity provider from the specified federation.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -419,8 +407,6 @@ func GetIdentityProviderMetadataBuilder() *cobra.Command {
 		Use:     "getIdentityProviderMetadata",
 		// Aliases: []string{"?"},
 		Short:   "Return the metadata of one identity provider in the specified federation.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -481,8 +467,6 @@ func GetRoleMappingBuilder() *cobra.Command {
 		Use:     "getRoleMapping",
 		// Aliases: []string{"?"},
 		Short:   "Return One Role Mapping from One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -541,8 +525,6 @@ func ListConnectedOrgConfigsBuilder() *cobra.Command {
 		Use:     "listConnectedOrgConfigs",
 		// Aliases: []string{"?"},
 		Short:   "Return All Connected Org Configs from the Federation",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -597,8 +579,6 @@ func ListIdentityProvidersBuilder() *cobra.Command {
 		Use:     "listIdentityProviders",
 		// Aliases: []string{"?"},
 		Short:   "Return all identity providers from the specified federation.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -655,8 +635,6 @@ func ListRoleMappingsBuilder() *cobra.Command {
 		Use:     "listRoleMappings",
 		// Aliases: []string{"?"},
 		Short:   "Return All Role Mappings from One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -715,8 +693,6 @@ func RemoveConnectedOrgConfigBuilder() *cobra.Command {
 		Use:     "removeConnectedOrgConfig",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Org Config Connected to One Federation",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -777,8 +753,6 @@ func UpdateConnectedOrgConfigBuilder() *cobra.Command {
 		Use:     "updateConnectedOrgConfig",
 		// Aliases: []string{"?"},
 		Short:   "Update One Org Config Connected to One Federation",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -840,8 +814,6 @@ func UpdateIdentityProviderBuilder() *cobra.Command {
 		Use:     "updateIdentityProvider",
 		// Aliases: []string{"?"},
 		Short:   "Update the identity provider.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -905,8 +877,6 @@ func UpdateRoleMappingBuilder() *cobra.Command {
 		Use:     "updateRoleMapping",
 		// Aliases: []string{"?"},
 		Short:   "Update One Role Mapping in One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

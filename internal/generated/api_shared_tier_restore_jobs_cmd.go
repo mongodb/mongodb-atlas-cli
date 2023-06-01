@@ -62,8 +62,6 @@ func CreateSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 		Use:     "createSharedClusterBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Create One Restore Job from One M2 or M5 Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -125,8 +123,6 @@ func GetSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 		Use:     "getSharedClusterBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Return One Restore Job for One M2 or M5 Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -187,8 +183,6 @@ func ListSharedClusterBackupRestoreJobsBuilder() *cobra.Command {
 		Use:     "listSharedClusterBackupRestoreJobs",
 		// Aliases: []string{"?"},
 		Short:   "Return All Restore Jobs for One M2 or M5 Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

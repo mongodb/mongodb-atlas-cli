@@ -60,8 +60,6 @@ func GetAtlasProcessBuilder() *cobra.Command {
 		Use:     "getAtlasProcess",
 		// Aliases: []string{"?"},
 		Short:   "Return One MongoDB Process by ID",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -122,8 +120,6 @@ func GetDatabaseBuilder() *cobra.Command {
 		Use:     "getDatabase",
 		// Aliases: []string{"?"},
 		Short:   "Return One Database for a MongoDB Process",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -196,8 +192,6 @@ func GetDatabaseMeasurementsBuilder() *cobra.Command {
 		Use:     "getDatabaseMeasurements",
 		// Aliases: []string{"?"},
 		Short:   "Return Measurements of One Database for One MongoDB Process",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -276,8 +270,6 @@ func GetDiskMeasurementsBuilder() *cobra.Command {
 		Use:     "getDiskMeasurements",
 		// Aliases: []string{"?"},
 		Short:   "Return Measurements of One Disk for One MongoDB Process",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -350,8 +342,6 @@ func GetHostLogsBuilder() *cobra.Command {
 		Use:     "getHostLogs",
 		// Aliases: []string{"?"},
 		Short:   "Download Logs for One Multi-Cloud Cluster Host in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -424,8 +414,6 @@ func GetHostMeasurementsBuilder() *cobra.Command {
 		Use:     "getHostMeasurements",
 		// Aliases: []string{"?"},
 		Short:   "Return Measurements for One MongoDB Process",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -506,8 +494,6 @@ func GetIndexMetricsBuilder() *cobra.Command {
 		Use:     "getIndexMetrics",
 		// Aliases: []string{"?"},
 		Short:   "Return Atlas Search Metrics for One Index in One Specified Namespace",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -589,8 +575,6 @@ func GetMeasurementsBuilder() *cobra.Command {
 		Use:     "getMeasurements",
 		// Aliases: []string{"?"},
 		Short:   "Return Atlas Search Hardware and Status Metrics",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -660,8 +644,6 @@ func ListAtlasProcessesBuilder() *cobra.Command {
 		Use:     "listAtlasProcesses",
 		// Aliases: []string{"?"},
 		Short:   "Return All MongoDB Processes in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -727,8 +709,6 @@ func ListDatabasesBuilder() *cobra.Command {
 		Use:     "listDatabases",
 		// Aliases: []string{"?"},
 		Short:   "Return Available Databases for One MongoDB Process",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -792,8 +772,6 @@ func ListDiskMeasurementsBuilder() *cobra.Command {
 		Use:     "listDiskMeasurements",
 		// Aliases: []string{"?"},
 		Short:   "Return Measurements of One Disk",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -860,8 +838,6 @@ func ListDiskPartitionsBuilder() *cobra.Command {
 		Use:     "listDiskPartitions",
 		// Aliases: []string{"?"},
 		Short:   "Return Available Disks for One MongoDB Process",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -937,8 +913,6 @@ func ListIndexMetricsBuilder() *cobra.Command {
 		Use:     "listIndexMetrics",
 		// Aliases: []string{"?"},
 		Short:   "Return All Atlas Search Index Metrics for One Namespace",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1008,8 +982,6 @@ func ListMetricTypesBuilder() *cobra.Command {
 		Use:     "listMetricTypes",
 		// Aliases: []string{"?"},
 		Short:   "Return All Atlas Search Metric Types for One Process",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

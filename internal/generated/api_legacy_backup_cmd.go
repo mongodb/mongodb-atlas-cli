@@ -62,8 +62,6 @@ func DeleteLegacySnapshotBuilder() *cobra.Command {
 		Use:     "deleteLegacySnapshot",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Legacy Backup Snapshot",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -126,8 +124,6 @@ func GetLegacyBackupCheckpointBuilder() *cobra.Command {
 		Use:     "getLegacyBackupCheckpoint",
 		// Aliases: []string{"?"},
 		Short:   "Return One Legacy Backup Checkpoint",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -190,8 +186,6 @@ func GetLegacyBackupRestoreJobBuilder() *cobra.Command {
 		Use:     "getLegacyBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Return One Legacy Backup Restore Job",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -254,8 +248,6 @@ func GetLegacySnapshotBuilder() *cobra.Command {
 		Use:     "getLegacySnapshot",
 		// Aliases: []string{"?"},
 		Short:   "Return One Legacy Backup Snapshot",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -316,8 +308,6 @@ func GetLegacySnapshotScheduleBuilder() *cobra.Command {
 		Use:     "getLegacySnapshotSchedule",
 		// Aliases: []string{"?"},
 		Short:   "Return One Snapshot Schedule",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -382,8 +372,6 @@ func ListLegacyBackupCheckpointsBuilder() *cobra.Command {
 		Use:     "listLegacyBackupCheckpoints",
 		// Aliases: []string{"?"},
 		Short:   "Return All Legacy Backup Checkpoints",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -453,8 +441,6 @@ func ListLegacyBackupRestoreJobsBuilder() *cobra.Command {
 		Use:     "listLegacyBackupRestoreJobs",
 		// Aliases: []string{"?"},
 		Short:   "Return All Legacy Backup Restore Jobs",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -525,8 +511,6 @@ func ListLegacySnapshotsBuilder() *cobra.Command {
 		Use:     "listLegacySnapshots",
 		// Aliases: []string{"?"},
 		Short:   "Return All Legacy Backup Snapshots",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -593,8 +577,6 @@ func UpdateLegacySnapshotRetentionBuilder() *cobra.Command {
 		Use:     "updateLegacySnapshotRetention",
 		// Aliases: []string{"?"},
 		Short:   "Change One Legacy Backup Snapshot Expiration",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -658,8 +640,6 @@ func UpdateLegacySnapshotScheduleBuilder() *cobra.Command {
 		Use:     "updateLegacySnapshotSchedule",
 		// Aliases: []string{"?"},
 		Short:   "Update Snapshot Schedule for One Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

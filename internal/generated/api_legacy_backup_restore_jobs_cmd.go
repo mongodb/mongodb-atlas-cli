@@ -62,8 +62,6 @@ func CreateLegacyBackupRestoreJobBuilder() *cobra.Command {
 		Use:     "createLegacyBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Create One Legacy Backup Restore Job",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

@@ -58,8 +58,6 @@ func VersionedExampleBuilder() *cobra.Command {
 		Use:     "versionedExample",
 		// Aliases: []string{"?"},
 		Short:   "Example resource info for versioning of the Atlas API",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

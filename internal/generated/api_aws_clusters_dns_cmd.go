@@ -58,8 +58,6 @@ func GetAWSCustomDNSBuilder() *cobra.Command {
 		Use:     "getAWSCustomDNS",
 		// Aliases: []string{"?"},
 		Short:   "Return One Custom DNS Configuration for Atlas Clusters on AWS",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -116,8 +114,6 @@ func ToggleAWSCustomDNSBuilder() *cobra.Command {
 		Use:     "toggleAWSCustomDNS",
 		// Aliases: []string{"?"},
 		Short:   "Toggle State of One Custom DNS Configuration for Atlas Clusters on AWS",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

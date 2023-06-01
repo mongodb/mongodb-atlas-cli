@@ -62,8 +62,6 @@ func CreateServerlessPrivateEndpointBuilder() *cobra.Command {
 		Use:     "createServerlessPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Create One Private Endpoint for One Serverless Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -125,8 +123,6 @@ func DeleteServerlessPrivateEndpointBuilder() *cobra.Command {
 		Use:     "deleteServerlessPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Private Endpoint for One Serverless Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -189,8 +185,6 @@ func GetServerlessPrivateEndpointBuilder() *cobra.Command {
 		Use:     "getServerlessPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Return One Private Endpoint for One Serverless Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -251,8 +245,6 @@ func ListServerlessPrivateEndpointsBuilder() *cobra.Command {
 		Use:     "listServerlessPrivateEndpoints",
 		// Aliases: []string{"?"},
 		Short:   "Return All Private Endpoints for One Serverless Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -315,8 +307,6 @@ func UpdateServerlessPrivateEndpointBuilder() *cobra.Command {
 		Use:     "updateServerlessPrivateEndpoint",
 		// Aliases: []string{"?"},
 		Short:   "Update One Private Endpoint for One Serverless Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

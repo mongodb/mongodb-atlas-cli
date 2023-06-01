@@ -60,8 +60,6 @@ func DownloadInvoiceCSVBuilder() *cobra.Command {
 		Use:     "downloadInvoiceCSV",
 		// Aliases: []string{"?"},
 		Short:   "Return One Organization Invoice as CSV",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -120,8 +118,6 @@ func GetInvoiceBuilder() *cobra.Command {
 		Use:     "getInvoice",
 		// Aliases: []string{"?"},
 		Short:   "Return One Organization Invoice",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -184,8 +180,6 @@ func ListInvoicesBuilder() *cobra.Command {
 		Use:     "listInvoices",
 		// Aliases: []string{"?"},
 		Short:   "Return All Invoices for One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -243,8 +237,6 @@ func ListPendingInvoicesBuilder() *cobra.Command {
 		Use:     "listPendingInvoices",
 		// Aliases: []string{"?"},
 		Short:   "Return All Pending Invoices for One Organization",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

@@ -60,8 +60,6 @@ func CreateServerlessInstanceBuilder() *cobra.Command {
 		Use:     "createServerlessInstance",
 		// Aliases: []string{"?"},
 		Short:   "Create One Serverless Instance in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -119,8 +117,6 @@ func DeleteServerlessInstanceBuilder() *cobra.Command {
 		Use:     "deleteServerlessInstance",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Serverless Instance from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -179,8 +175,6 @@ func GetServerlessInstanceBuilder() *cobra.Command {
 		Use:     "getServerlessInstance",
 		// Aliases: []string{"?"},
 		Short:   "Return One Serverless Instance from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -243,8 +237,6 @@ func ListServerlessInstancesBuilder() *cobra.Command {
 		Use:     "listServerlessInstances",
 		// Aliases: []string{"?"},
 		Short:   "Return All Serverless Instances from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -306,8 +298,6 @@ func UpdateServerlessInstanceBuilder() *cobra.Command {
 		Use:     "updateServerlessInstance",
 		// Aliases: []string{"?"},
 		Short:   "Update One Serverless Instance in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

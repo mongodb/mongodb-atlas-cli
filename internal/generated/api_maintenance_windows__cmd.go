@@ -58,8 +58,6 @@ func DeferMaintenanceWindowBuilder() *cobra.Command {
 		Use:     "deferMaintenanceWindow",
 		// Aliases: []string{"?"},
 		Short:   "Defer One Maintenance Window for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -114,8 +112,6 @@ func GetMaintenanceWindowBuilder() *cobra.Command {
 		Use:     "getMaintenanceWindow",
 		// Aliases: []string{"?"},
 		Short:   "Return One Maintenance Window for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -170,8 +166,6 @@ func ResetMaintenanceWindowBuilder() *cobra.Command {
 		Use:     "resetMaintenanceWindow",
 		// Aliases: []string{"?"},
 		Short:   "Reset One Maintenance Window for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -226,8 +220,6 @@ func ToggleMaintenanceAutoDeferBuilder() *cobra.Command {
 		Use:     "toggleMaintenanceAutoDefer",
 		// Aliases: []string{"?"},
 		Short:   "Toggle Automatic Deferral of Maintenance for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -284,8 +276,6 @@ func UpdateMaintenanceWindowBuilder() *cobra.Command {
 		Use:     "updateMaintenanceWindow",
 		// Aliases: []string{"?"},
 		Short:   "Update Maintenance Window for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

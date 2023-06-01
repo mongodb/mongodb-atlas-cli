@@ -70,8 +70,6 @@ func ListAccessLogsByClusterNameBuilder() *cobra.Command {
 		Use:     "listAccessLogsByClusterName",
 		// Aliases: []string{"?"},
 		Short:   "Return Database Access History for One Cluster using Its Cluster Name",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -145,8 +143,6 @@ func ListAccessLogsByHostnameBuilder() *cobra.Command {
 		Use:     "listAccessLogsByHostname",
 		// Aliases: []string{"?"},
 		Short:   "Return Database Access History for One Cluster using Its Hostname",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

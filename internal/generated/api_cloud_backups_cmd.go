@@ -62,8 +62,6 @@ func CancelBackupRestoreJobBuilder() *cobra.Command {
 		Use:     "cancelBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Cancel One Restore Job of One Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -126,8 +124,6 @@ func CreateBackupExportJobBuilder() *cobra.Command {
 		Use:     "createBackupExportJob",
 		// Aliases: []string{"?"},
 		Short:   "Create One Cloud Backup Snapshot Export Job",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -189,8 +185,6 @@ func CreateBackupRestoreJobBuilder() *cobra.Command {
 		Use:     "createBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Restore One Snapshot of One Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -250,8 +244,6 @@ func CreateExportBucketBuilder() *cobra.Command {
 		Use:     "createExportBucket",
 		// Aliases: []string{"?"},
 		Short:   "Grant Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -311,8 +303,6 @@ func CreateServerlessBackupRestoreJobBuilder() *cobra.Command {
 		Use:     "createServerlessBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Restore One Snapshot of One Serverless Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -372,8 +362,6 @@ func DeleteAllBackupSchedulesBuilder() *cobra.Command {
 		Use:     "deleteAllBackupSchedules",
 		// Aliases: []string{"?"},
 		Short:   "Remove All Cloud Backup Schedules",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -432,8 +420,6 @@ func DeleteExportBucketBuilder() *cobra.Command {
 		Use:     "deleteExportBucket",
 		// Aliases: []string{"?"},
 		Short:   "Revoke Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -494,8 +480,6 @@ func DeleteReplicaSetBackupBuilder() *cobra.Command {
 		Use:     "deleteReplicaSetBackup",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Replica Set Cloud Backup",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -558,8 +542,6 @@ func DeleteShardedClusterBackupBuilder() *cobra.Command {
 		Use:     "deleteShardedClusterBackup",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Sharded Cluster Cloud Backup",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -622,8 +604,6 @@ func GetBackupExportJobBuilder() *cobra.Command {
 		Use:     "getBackupExportJob",
 		// Aliases: []string{"?"},
 		Short:   "Return One Cloud Backup Snapshot Export Job",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -686,8 +666,6 @@ func GetBackupRestoreJobBuilder() *cobra.Command {
 		Use:     "getBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Return One Restore Job of One Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -748,8 +726,6 @@ func GetBackupScheduleBuilder() *cobra.Command {
 		Use:     "getBackupSchedule",
 		// Aliases: []string{"?"},
 		Short:   "Return One Cloud Backup Schedule",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -806,8 +782,6 @@ func GetDataProtectionSettingsBuilder() *cobra.Command {
 		Use:     "getDataProtectionSettings",
 		// Aliases: []string{"?"},
 		Short:   "Return the Backup Compliance Policy settings",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -864,8 +838,6 @@ func GetExportBucketBuilder() *cobra.Command {
 		Use:     "getExportBucket",
 		// Aliases: []string{"?"},
 		Short:   "Return One AWS S3 Bucket Used for Cloud Backup Snapshot Exports",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -926,8 +898,6 @@ func GetReplicaSetBackupBuilder() *cobra.Command {
 		Use:     "getReplicaSetBackup",
 		// Aliases: []string{"?"},
 		Short:   "Return One Replica Set Cloud Backup",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -990,8 +960,6 @@ func GetServerlessBackupBuilder() *cobra.Command {
 		Use:     "getServerlessBackup",
 		// Aliases: []string{"?"},
 		Short:   "Return One Snapshot of One Serverless Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1054,8 +1022,6 @@ func GetServerlessBackupRestoreJobBuilder() *cobra.Command {
 		Use:     "getServerlessBackupRestoreJob",
 		// Aliases: []string{"?"},
 		Short:   "Return One Restore Job for One Serverless Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1118,8 +1084,6 @@ func GetShardedClusterBackupBuilder() *cobra.Command {
 		Use:     "getShardedClusterBackup",
 		// Aliases: []string{"?"},
 		Short:   "Return One Sharded Cluster Cloud Backup",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1186,8 +1150,6 @@ func ListBackupExportJobsBuilder() *cobra.Command {
 		Use:     "listBackupExportJobs",
 		// Aliases: []string{"?"},
 		Short:   "Return All Cloud Backup Snapshot Export Jobs",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1255,8 +1217,6 @@ func ListBackupRestoreJobsBuilder() *cobra.Command {
 		Use:     "listBackupRestoreJobs",
 		// Aliases: []string{"?"},
 		Short:   "Return All Restore Jobs for One Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1322,8 +1282,6 @@ func ListExportBucketsBuilder() *cobra.Command {
 		Use:     "listExportBuckets",
 		// Aliases: []string{"?"},
 		Short:   "Return All AWS S3 Buckets Used for Cloud Backup Snapshot Exports",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1389,8 +1347,6 @@ func ListReplicaSetBackupsBuilder() *cobra.Command {
 		Use:     "listReplicaSetBackups",
 		// Aliases: []string{"?"},
 		Short:   "Return All Replica Set Cloud Backups",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1458,8 +1414,6 @@ func ListServerlessBackupRestoreJobsBuilder() *cobra.Command {
 		Use:     "listServerlessBackupRestoreJobs",
 		// Aliases: []string{"?"},
 		Short:   "Return All Restore Jobs for One Serverless Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1527,8 +1481,6 @@ func ListServerlessBackupsBuilder() *cobra.Command {
 		Use:     "listServerlessBackups",
 		// Aliases: []string{"?"},
 		Short:   "Return All Snapshots of One Serverless Instance",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1590,8 +1542,6 @@ func ListShardedClusterBackupsBuilder() *cobra.Command {
 		Use:     "listShardedClusterBackups",
 		// Aliases: []string{"?"},
 		Short:   "Return All Sharded Cluster Cloud Backups",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1652,8 +1602,6 @@ func TakeSnapshotBuilder() *cobra.Command {
 		Use:     "takeSnapshot",
 		// Aliases: []string{"?"},
 		Short:   "Take One On-Demand Snapshot",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1715,8 +1663,6 @@ func UpdateBackupScheduleBuilder() *cobra.Command {
 		Use:     "updateBackupSchedule",
 		// Aliases: []string{"?"},
 		Short:   "Update Cloud Backup Schedule for One Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1776,8 +1722,6 @@ func UpdateDataProtectionSettingsBuilder() *cobra.Command {
 		Use:     "updateDataProtectionSettings",
 		// Aliases: []string{"?"},
 		Short:   "Update or enable the Backup Compliance Policy settings",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1839,8 +1783,6 @@ func UpdateSnapshotRetentionBuilder() *cobra.Command {
 		Use:     "updateSnapshotRetention",
 		// Aliases: []string{"?"},
 		Short:   "Change Expiration Date for One Cloud Backup",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

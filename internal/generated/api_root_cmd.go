@@ -56,8 +56,6 @@ func GetSystemStatusBuilder() *cobra.Command {
 		Use:     "getSystemStatus",
 		// Aliases: []string{"?"},
 		Short:   "Return the status of this MongoDB application",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

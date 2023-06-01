@@ -62,8 +62,6 @@ func CreateOnlineArchiveBuilder() *cobra.Command {
 		Use:     "createOnlineArchive",
 		// Aliases: []string{"?"},
 		Short:   "Create One Online Archive",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -125,8 +123,6 @@ func DeleteOnlineArchiveBuilder() *cobra.Command {
 		Use:     "deleteOnlineArchive",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Online Archive",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -193,8 +189,6 @@ func DownloadOnlineArchiveQueryLogsBuilder() *cobra.Command {
 		Use:     "downloadOnlineArchiveQueryLogs",
 		// Aliases: []string{"?"},
 		Short:   "Download Online Archive Query Logs",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -258,8 +252,6 @@ func GetOnlineArchiveBuilder() *cobra.Command {
 		Use:     "getOnlineArchive",
 		// Aliases: []string{"?"},
 		Short:   "Return One Online Archive",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -326,8 +318,6 @@ func ListOnlineArchivesBuilder() *cobra.Command {
 		Use:     "listOnlineArchives",
 		// Aliases: []string{"?"},
 		Short:   "Return All Online Archives for One Cluster",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -393,8 +383,6 @@ func UpdateOnlineArchiveBuilder() *cobra.Command {
 		Use:     "updateOnlineArchive",
 		// Aliases: []string{"?"},
 		Short:   "Update One Online Archive",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

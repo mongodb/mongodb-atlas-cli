@@ -60,8 +60,6 @@ func CreateAlertConfigurationBuilder() *cobra.Command {
 		Use:     "createAlertConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Create One Alert Configuration in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -119,8 +117,6 @@ func DeleteAlertConfigurationBuilder() *cobra.Command {
 		Use:     "deleteAlertConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Remove One Alert Configuration from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -179,8 +175,6 @@ func GetAlertConfigurationBuilder() *cobra.Command {
 		Use:     "getAlertConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Return One Alert Configuration from One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -235,8 +229,6 @@ func ListAlertConfigurationMatchersFieldNamesBuilder() *cobra.Command {
 		Use:     "listAlertConfigurationMatchersFieldNames",
 		// Aliases: []string{"?"},
 		Short:   "Get All Alert Configuration Matchers Field Names",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -295,8 +287,6 @@ func ListAlertConfigurationsBuilder() *cobra.Command {
 		Use:     "listAlertConfigurations",
 		// Aliases: []string{"?"},
 		Short:   "Return All Alert Configurations for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -362,8 +352,6 @@ func ListAlertConfigurationsByAlertIdBuilder() *cobra.Command {
 		Use:     "listAlertConfigurationsByAlertId",
 		// Aliases: []string{"?"},
 		Short:   "Return All Alert Configurations Set for One Alert",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -427,8 +415,6 @@ func ToggleAlertConfigurationBuilder() *cobra.Command {
 		Use:     "toggleAlertConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Toggle One State of One Alert Configuration in One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -490,8 +476,6 @@ func UpdateAlertConfigurationBuilder() *cobra.Command {
 		Use:     "updateAlertConfiguration",
 		// Aliases: []string{"?"},
 		Short:   "Update One Alert Configuration for One Project",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"), // how to tell?
-		Args:    require.NoArgs,
 		Annotations: map[string]string{
 			"output":      template,
 		},

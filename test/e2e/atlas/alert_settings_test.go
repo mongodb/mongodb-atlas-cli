@@ -133,12 +133,12 @@ func TestAlertConfig(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err)
 
-		var fields []admin.MatcherField
+		var fields []string
 		if err := json.Unmarshal(resp, &fields); err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		expected := []admin.MatcherField{
+		expected := []string{
 			"TYPE_NAME",
 			"HOSTNAME",
 			"PORT",

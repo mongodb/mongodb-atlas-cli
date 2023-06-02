@@ -280,8 +280,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 										Compute: &atlasV1.ComputeSpec{
 											Enabled:          cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.Enabled,
 											ScaleDownEnabled: cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.ScaleDownEnabled,
-											MinInstanceSize:  string(*cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.MinInstanceSize),
-											MaxInstanceSize:  string(*cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.MaxInstanceSize),
+											MinInstanceSize:  *cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.MinInstanceSize,
+											MaxInstanceSize:  *cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.MaxInstanceSize,
 										},
 									},
 									Priority:     cluster.ReplicationSpecs[0].RegionConfigs[0].Priority,

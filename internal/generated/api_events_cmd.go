@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -44,7 +47,7 @@ func (opts *GetOrganizationEventOpts) Run(ctx context.Context) error {
 	params := &admin.GetOrganizationEventApiParams{
 		OrgId: opts.orgId,
 		EventId: opts.eventId,
-		IncludeRaw: opts.includeRaw,
+		IncludeRaw: &opts.includeRaw,
 	}
 	resp, _, err := opts.client.EventsApi.GetOrganizationEventWithParams(ctx, params).Execute()
 	if err != nil {
@@ -59,9 +62,8 @@ func GetOrganizationEventBuilder() *cobra.Command {
 
 	opts := GetOrganizationEventOpts{}
 	cmd := &cobra.Command{
-		Use:     "getOrganizationEvent",
-		// Aliases: []string{"?"},
-		Short:   "Return One Event from One Organization",
+		Use: "getOrganizationEvent",
+		Short: "Return One Event from One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -104,7 +106,7 @@ func (opts *GetProjectEventOpts) Run(ctx context.Context) error {
 	params := &admin.GetProjectEventApiParams{
 		GroupId: opts.groupId,
 		EventId: opts.eventId,
-		IncludeRaw: opts.includeRaw,
+		IncludeRaw: &opts.includeRaw,
 	}
 	resp, _, err := opts.client.EventsApi.GetProjectEventWithParams(ctx, params).Execute()
 	if err != nil {
@@ -119,9 +121,8 @@ func GetProjectEventBuilder() *cobra.Command {
 
 	opts := GetProjectEventOpts{}
 	cmd := &cobra.Command{
-		Use:     "getProjectEvent",
-		// Aliases: []string{"?"},
-		Short:   "Return One Event from One Project",
+		Use: "getProjectEvent",
+		Short: "Return One Event from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -153,8 +154,8 @@ type ListOrganizationEventsOpts struct {
 	pageNum int
 	eventType []string
 	includeRaw bool
-	maxDate time.Time
-	minDate time.Time
+	maxDate string
+	minDate string
 }
 
 func (opts *ListOrganizationEventsOpts) initClient() func() error {
@@ -168,13 +169,13 @@ func (opts *ListOrganizationEventsOpts) initClient() func() error {
 func (opts *ListOrganizationEventsOpts) Run(ctx context.Context) error {
 	params := &admin.ListOrganizationEventsApiParams{
 		OrgId: opts.orgId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
-		EventType: opts.eventType,
-		IncludeRaw: opts.includeRaw,
-		MaxDate: opts.maxDate,
-		MinDate: opts.minDate,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
+		EventType: &opts.eventType,
+		IncludeRaw: &opts.includeRaw,
+		MaxDate: convertTime(&opts.maxDate),
+		MinDate: convertTime(&opts.minDate),
 	}
 	resp, _, err := opts.client.EventsApi.ListOrganizationEventsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -189,9 +190,8 @@ func ListOrganizationEventsBuilder() *cobra.Command {
 
 	opts := ListOrganizationEventsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listOrganizationEvents",
-		// Aliases: []string{"?"},
-		Short:   "Return All Events from One Organization",
+		Use: "listOrganizationEvents",
+		Short: "Return All Events from One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -211,8 +211,8 @@ func ListOrganizationEventsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
 	cmd.Flags().StringSliceVar(&opts.eventType, "eventType", nil, "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")
 	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
-	cmd.Flags().Time.TimeVar(&opts.maxDate, "maxDate", , "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
-	cmd.Flags().Time.TimeVar(&opts.minDate, "minDate", , "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
+	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
+	cmd.Flags().StringVar(&opts.minDate, "minDate", "", "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -228,8 +228,8 @@ type ListProjectEventsOpts struct {
 	clusterNames []string
 	eventType []string
 	includeRaw bool
-	maxDate time.Time
-	minDate time.Time
+	maxDate string
+	minDate string
 }
 
 func (opts *ListProjectEventsOpts) initClient() func() error {
@@ -243,14 +243,14 @@ func (opts *ListProjectEventsOpts) initClient() func() error {
 func (opts *ListProjectEventsOpts) Run(ctx context.Context) error {
 	params := &admin.ListProjectEventsApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
-		ClusterNames: opts.clusterNames,
-		EventType: opts.eventType,
-		IncludeRaw: opts.includeRaw,
-		MaxDate: opts.maxDate,
-		MinDate: opts.minDate,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
+		ClusterNames: &opts.clusterNames,
+		EventType: &opts.eventType,
+		IncludeRaw: &opts.includeRaw,
+		MaxDate: convertTime(&opts.maxDate),
+		MinDate: convertTime(&opts.minDate),
 	}
 	resp, _, err := opts.client.EventsApi.ListProjectEventsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -265,9 +265,8 @@ func ListProjectEventsBuilder() *cobra.Command {
 
 	opts := ListProjectEventsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listProjectEvents",
-		// Aliases: []string{"?"},
-		Short:   "Return All Events from One Project",
+		Use: "listProjectEvents",
+		Short: "Return All Events from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -288,8 +287,8 @@ func ListProjectEventsBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.clusterNames, "clusterNames", nil, "Human-readable label that identifies the cluster.")
 	cmd.Flags().StringSliceVar(&opts.eventType, "eventType", nil, "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")
 	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
-	cmd.Flags().Time.TimeVar(&opts.maxDate, "maxDate", , "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
-	cmd.Flags().Time.TimeVar(&opts.minDate, "minDate", , "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
+	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
+	cmd.Flags().StringVar(&opts.minDate, "minDate", "", "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd

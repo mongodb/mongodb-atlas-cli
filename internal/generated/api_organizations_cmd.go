@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -55,9 +58,8 @@ func CreateOrganizationBuilder() *cobra.Command {
 
 	opts := CreateOrganizationOpts{}
 	cmd := &cobra.Command{
-		Use:     "createOrganization",
-		// Aliases: []string{"?"},
-		Short:   "Create One Organization",
+		Use: "createOrganization",
+		Short: "Create One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -109,9 +111,8 @@ func CreateOrganizationInvitationBuilder() *cobra.Command {
 
 	opts := CreateOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "createOrganizationInvitation",
-		// Aliases: []string{"?"},
-		Short:   "Invite One MongoDB Cloud User to Join One Atlas Organization",
+		Use: "createOrganizationInvitation",
+		Short: "Invite One MongoDB Cloud User to Join One Atlas Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -163,9 +164,8 @@ func DeleteOrganizationBuilder() *cobra.Command {
 
 	opts := DeleteOrganizationOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteOrganization",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Organization",
+		Use: "deleteOrganization",
+		Short: "Remove One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -218,9 +218,8 @@ func DeleteOrganizationInvitationBuilder() *cobra.Command {
 
 	opts := DeleteOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteOrganizationInvitation",
-		// Aliases: []string{"?"},
-		Short:   "Cancel One Organization Invitation",
+		Use: "deleteOrganizationInvitation",
+		Short: "Cancel One Organization Invitation",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -273,9 +272,8 @@ func GetOrganizationBuilder() *cobra.Command {
 
 	opts := GetOrganizationOpts{}
 	cmd := &cobra.Command{
-		Use:     "getOrganization",
-		// Aliases: []string{"?"},
-		Short:   "Return One Organization",
+		Use: "getOrganization",
+		Short: "Return One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -328,9 +326,8 @@ func GetOrganizationInvitationBuilder() *cobra.Command {
 
 	opts := GetOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "getOrganizationInvitation",
-		// Aliases: []string{"?"},
-		Short:   "Return One Organization Invitation",
+		Use: "getOrganizationInvitation",
+		Short: "Return One Organization Invitation",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -383,9 +380,8 @@ func GetOrganizationSettingsBuilder() *cobra.Command {
 
 	opts := GetOrganizationSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "getOrganizationSettings",
-		// Aliases: []string{"?"},
-		Short:   "Return Settings for One Organization",
+		Use: "getOrganizationSettings",
+		Short: "Return Settings for One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -423,7 +419,7 @@ func (opts *ListOrganizationInvitationsOpts) initClient() func() error {
 func (opts *ListOrganizationInvitationsOpts) Run(ctx context.Context) error {
 	params := &admin.ListOrganizationInvitationsApiParams{
 		OrgId: opts.orgId,
-		Username: opts.username,
+		Username: &opts.username,
 	}
 	resp, _, err := opts.client.OrganizationsApi.ListOrganizationInvitationsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -438,9 +434,8 @@ func ListOrganizationInvitationsBuilder() *cobra.Command {
 
 	opts := ListOrganizationInvitationsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listOrganizationInvitations",
-		// Aliases: []string{"?"},
-		Short:   "Return All Organization Invitations",
+		Use: "listOrganizationInvitations",
+		Short: "Return All Organization Invitations",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -482,10 +477,10 @@ func (opts *ListOrganizationProjectsOpts) initClient() func() error {
 func (opts *ListOrganizationProjectsOpts) Run(ctx context.Context) error {
 	params := &admin.ListOrganizationProjectsApiParams{
 		OrgId: opts.orgId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
-		Name: opts.name,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
+		Name: &opts.name,
 	}
 	resp, _, err := opts.client.OrganizationsApi.ListOrganizationProjectsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -500,9 +495,8 @@ func ListOrganizationProjectsBuilder() *cobra.Command {
 
 	opts := ListOrganizationProjectsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listOrganizationProjects",
-		// Aliases: []string{"?"},
-		Short:   "Return One or More Projects in One Organization",
+		Use: "listOrganizationProjects",
+		Short: "Return One or More Projects in One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -546,9 +540,9 @@ func (opts *ListOrganizationUsersOpts) initClient() func() error {
 func (opts *ListOrganizationUsersOpts) Run(ctx context.Context) error {
 	params := &admin.ListOrganizationUsersApiParams{
 		OrgId: opts.orgId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.OrganizationsApi.ListOrganizationUsersWithParams(ctx, params).Execute()
 	if err != nil {
@@ -563,9 +557,8 @@ func ListOrganizationUsersBuilder() *cobra.Command {
 
 	opts := ListOrganizationUsersOpts{}
 	cmd := &cobra.Command{
-		Use:     "listOrganizationUsers",
-		// Aliases: []string{"?"},
-		Short:   "Return All MongoDB Cloud Users in One Organization",
+		Use: "listOrganizationUsers",
+		Short: "Return All MongoDB Cloud Users in One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -607,10 +600,10 @@ func (opts *ListOrganizationsOpts) initClient() func() error {
 
 func (opts *ListOrganizationsOpts) Run(ctx context.Context) error {
 	params := &admin.ListOrganizationsApiParams{
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
-		Name: opts.name,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
+		Name: &opts.name,
 	}
 	resp, _, err := opts.client.OrganizationsApi.ListOrganizationsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -625,9 +618,8 @@ func ListOrganizationsBuilder() *cobra.Command {
 
 	opts := ListOrganizationsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listOrganizations",
-		// Aliases: []string{"?"},
-		Short:   "Return All Organizations",
+		Use: "listOrganizations",
+		Short: "Return All Organizations",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -682,9 +674,8 @@ func RenameOrganizationBuilder() *cobra.Command {
 
 	opts := RenameOrganizationOpts{}
 	cmd := &cobra.Command{
-		Use:     "renameOrganization",
-		// Aliases: []string{"?"},
-		Short:   "Rename One Organization",
+		Use: "renameOrganization",
+		Short: "Rename One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -738,9 +729,8 @@ func UpdateOrganizationInvitationBuilder() *cobra.Command {
 
 	opts := UpdateOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateOrganizationInvitation",
-		// Aliases: []string{"?"},
-		Short:   "Update One Organization Invitation",
+		Use: "updateOrganizationInvitation",
+		Short: "Update One Organization Invitation",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -796,9 +786,8 @@ func UpdateOrganizationInvitationByIdBuilder() *cobra.Command {
 
 	opts := UpdateOrganizationInvitationByIdOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateOrganizationInvitationById",
-		// Aliases: []string{"?"},
-		Short:   "Update One Organization Invitation by Invitation ID",
+		Use: "updateOrganizationInvitationById",
+		Short: "Update One Organization Invitation by Invitation ID",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -854,9 +843,8 @@ func UpdateOrganizationSettingsBuilder() *cobra.Command {
 
 	opts := UpdateOrganizationSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateOrganizationSettings",
-		// Aliases: []string{"?"},
-		Short:   "Update Settings for One Organization",
+		Use: "updateOrganizationSettings",
+		Short: "Update Settings for One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},

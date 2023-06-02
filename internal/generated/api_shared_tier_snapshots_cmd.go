@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func DownloadSharedClusterBackupBuilder() *cobra.Command {
 
 	opts := DownloadSharedClusterBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "downloadSharedClusterBackup",
-		// Aliases: []string{"?"},
-		Short:   "Download One M2 or M5 Cluster Snapshot",
+		Use: "downloadSharedClusterBackup",
+		Short: "Download One M2 or M5 Cluster Snapshot",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -119,9 +121,8 @@ func GetSharedClusterBackupBuilder() *cobra.Command {
 
 	opts := GetSharedClusterBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "getSharedClusterBackup",
-		// Aliases: []string{"?"},
-		Short:   "Return One Snapshot for One M2 or M5 Cluster",
+		Use: "getSharedClusterBackup",
+		Short: "Return One Snapshot for One M2 or M5 Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -178,9 +179,8 @@ func ListSharedClusterBackupsBuilder() *cobra.Command {
 
 	opts := ListSharedClusterBackupsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listSharedClusterBackups",
-		// Aliases: []string{"?"},
-		Short:   "Return All Snapshots for One M2 or M5 Cluster",
+		Use: "listSharedClusterBackups",
+		Short: "Return All Snapshots for One M2 or M5 Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},

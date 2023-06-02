@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -55,9 +58,8 @@ func DeferMaintenanceWindowBuilder() *cobra.Command {
 
 	opts := DeferMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
-		Use:     "deferMaintenanceWindow",
-		// Aliases: []string{"?"},
-		Short:   "Defer One Maintenance Window for One Project",
+		Use: "deferMaintenanceWindow",
+		Short: "Defer One Maintenance Window for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -108,9 +110,8 @@ func GetMaintenanceWindowBuilder() *cobra.Command {
 
 	opts := GetMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
-		Use:     "getMaintenanceWindow",
-		// Aliases: []string{"?"},
-		Short:   "Return One Maintenance Window for One Project",
+		Use: "getMaintenanceWindow",
+		Short: "Return One Maintenance Window for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -161,9 +162,8 @@ func ResetMaintenanceWindowBuilder() *cobra.Command {
 
 	opts := ResetMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
-		Use:     "resetMaintenanceWindow",
-		// Aliases: []string{"?"},
-		Short:   "Reset One Maintenance Window for One Project",
+		Use: "resetMaintenanceWindow",
+		Short: "Reset One Maintenance Window for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -214,9 +214,8 @@ func ToggleMaintenanceAutoDeferBuilder() *cobra.Command {
 
 	opts := ToggleMaintenanceAutoDeferOpts{}
 	cmd := &cobra.Command{
-		Use:     "toggleMaintenanceAutoDefer",
-		// Aliases: []string{"?"},
-		Short:   "Toggle Automatic Deferral of Maintenance for One Project",
+		Use: "toggleMaintenanceAutoDefer",
+		Short: "Toggle Automatic Deferral of Maintenance for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -269,9 +268,8 @@ func UpdateMaintenanceWindowBuilder() *cobra.Command {
 
 	opts := UpdateMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateMaintenanceWindow",
-		// Aliases: []string{"?"},
-		Short:   "Update Maintenance Window for One Project",
+		Use: "updateMaintenanceWindow",
+		Short: "Update Maintenance Window for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},

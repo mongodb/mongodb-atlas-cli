@@ -3,6 +3,9 @@ package {{packageName}}
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/internal/cli"
@@ -30,7 +33,7 @@ func (opts *{{operationId}}Opts) initClient() func() error {
 func (opts *{{operationId}}Opts) Run(ctx context.Context) error {
 	params := &admin.{{operationId}}ApiParams{
 		{{#allParams}}
-		{{^isBodyParam}}{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: opts.{{paramName}},{{/isBodyParam}}
+		{{^isBodyParam}}{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: {{#isDateTime}}convertTime({{/isDateTime}}{{^required}}&{{/required}}opts.{{paramName}}{{#isDateTime}}){{/isDateTime}},{{/isBodyParam}}
 		{{/allParams}}
 	}
 	{{#returnType}}resp, {{/returnType}}_, err := opts.client.{{classname}}.{{operationId}}WithParams(ctx, params).Execute()
@@ -46,9 +49,8 @@ func {{operationId}}Builder() *cobra.Command {
 
 	opts := {{operationId}}Opts{}
 	cmd := &cobra.Command{
-		Use:     "{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}",
-		// Aliases: []string{"?"},
-		Short:   "{{ summary }}",
+		Use: "{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}",
+		Short: "{{ summary }}",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -63,7 +65,7 @@ func {{operationId}}Builder() *cobra.Command {
 		},
 	}
 {{#allParams}}
-	{{^isBodyParam}}cmd.Flags().{{#isArray}}{{#lambda.titlecase}}{{baseType}}{{/lambda.titlecase}}Slice{{/isArray}}{{^isArray}}{{#lambda.titlecase}}{{dataType}}{{/lambda.titlecase}}{{/isArray}}Var(&opts.{{paramName}}, "{{paramName}}", {{#isString}}"{{/isString}}{{^defaultValue}}{{#isArray}}nil{{/isArray}}{{#isNumeric}}0{{/isNumeric}}{{#isInteger}}0{{/isInteger}}{{#isShort}}0{{/isShort}}{{#isLong}}0{{/isLong}}{{#isUnboundedInteger}}0{{/isUnboundedInteger}}{{#isNumber}}0{{/isNumber}}{{#isFloat}}0{{/isFloat}}{{#isDouble}}0{{/isDouble}}{{#isDecimal}}0{{/isDecimal}}{{#isBoolean}}false{{/isBoolean}}{{/defaultValue}}{{defaultValue}}{{#isString}}"{{/isString}}, "{{description}}"){{/isBodyParam}}
+	{{^isBodyParam}}cmd.Flags().{{#isArray}}{{#lambda.titlecase}}{{baseType}}{{/lambda.titlecase}}Slice{{/isArray}}{{^isArray}}{{#lambda.titlecase}}{{dataType}}{{/lambda.titlecase}}{{/isArray}}Var(&opts.{{paramName}}, "{{paramName}}", {{#isDateTime}}""{{/isDateTime}}{{#isString}}"{{/isString}}{{^defaultValue}}{{#isArray}}nil{{/isArray}}{{#isNumeric}}0{{/isNumeric}}{{#isInteger}}0{{/isInteger}}{{#isShort}}0{{/isShort}}{{#isLong}}0{{/isLong}}{{#isUnboundedInteger}}0{{/isUnboundedInteger}}{{#isNumber}}0{{/isNumber}}{{#isFloat}}0{{/isFloat}}{{#isDouble}}0{{/isDouble}}{{#isDecimal}}0{{/isDecimal}}{{#isBoolean}}false{{/isBoolean}}{{/defaultValue}}{{defaultValue}}{{#isString}}"{{/isString}}, "{{description}}"){{/isBodyParam}}
 {{/allParams}}
 {{#allParams}}{{^isBodyParam}}{{#required}}
 	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/isBodyParam}}{{/allParams}}

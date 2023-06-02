@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func CreateRollingIndexBuilder() *cobra.Command {
 
 	opts := CreateRollingIndexOpts{}
 	cmd := &cobra.Command{
-		Use:     "createRollingIndex",
-		// Aliases: []string{"?"},
-		Short:   "Create One Rolling Index",
+		Use: "createRollingIndex",
+		Short: "Create One Rolling Index",
 		Annotations: map[string]string{
 			"output":      template,
 		},

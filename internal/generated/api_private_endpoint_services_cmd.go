@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -61,9 +64,8 @@ func CreatePrivateEndpointBuilder() *cobra.Command {
 
 	opts := CreatePrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "createPrivateEndpoint",
-		// Aliases: []string{"?"},
-		Short:   "Create One Private Endpoint for One Provider",
+		Use: "createPrivateEndpoint",
+		Short: "Create One Private Endpoint for One Provider",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -121,9 +123,8 @@ func CreatePrivateEndpointServiceBuilder() *cobra.Command {
 
 	opts := CreatePrivateEndpointServiceOpts{}
 	cmd := &cobra.Command{
-		Use:     "createPrivateEndpointService",
-		// Aliases: []string{"?"},
-		Short:   "Create One Private Endpoint Service for One Provider",
+		Use: "createPrivateEndpointService",
+		Short: "Create One Private Endpoint Service for One Provider",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -181,9 +182,8 @@ func DeletePrivateEndpointBuilder() *cobra.Command {
 
 	opts := DeletePrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "deletePrivateEndpoint",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Private Endpoint for One Provider",
+		Use: "deletePrivateEndpoint",
+		Short: "Remove One Private Endpoint for One Provider",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -244,9 +244,8 @@ func DeletePrivateEndpointServiceBuilder() *cobra.Command {
 
 	opts := DeletePrivateEndpointServiceOpts{}
 	cmd := &cobra.Command{
-		Use:     "deletePrivateEndpointService",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Private Endpoint Service for One Provider",
+		Use: "deletePrivateEndpointService",
+		Short: "Remove One Private Endpoint Service for One Provider",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -307,9 +306,8 @@ func GetPrivateEndpointBuilder() *cobra.Command {
 
 	opts := GetPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "getPrivateEndpoint",
-		// Aliases: []string{"?"},
-		Short:   "Return One Private Endpoint for One Provider",
+		Use: "getPrivateEndpoint",
+		Short: "Return One Private Endpoint for One Provider",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -370,9 +368,8 @@ func GetPrivateEndpointServiceBuilder() *cobra.Command {
 
 	opts := GetPrivateEndpointServiceOpts{}
 	cmd := &cobra.Command{
-		Use:     "getPrivateEndpointService",
-		// Aliases: []string{"?"},
-		Short:   "Return One Private Endpoint Service for One Provider",
+		Use: "getPrivateEndpointService",
+		Short: "Return One Private Endpoint Service for One Provider",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -427,9 +424,8 @@ func GetRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 
 	opts := GetRegionalizedPrivateEndpointSettingOpts{}
 	cmd := &cobra.Command{
-		Use:     "getRegionalizedPrivateEndpointSetting",
-		// Aliases: []string{"?"},
-		Short:   "Return Regionalized Private Endpoint Status",
+		Use: "getRegionalizedPrivateEndpointSetting",
+		Short: "Return Regionalized Private Endpoint Status",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -482,9 +478,8 @@ func ListPrivateEndpointServicesBuilder() *cobra.Command {
 
 	opts := ListPrivateEndpointServicesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listPrivateEndpointServices",
-		// Aliases: []string{"?"},
-		Short:   "Return All Private Endpoint Services for One Provider",
+		Use: "listPrivateEndpointServices",
+		Short: "Return All Private Endpoint Services for One Provider",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -539,9 +534,8 @@ func ToggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 
 	opts := ToggleRegionalizedPrivateEndpointSettingOpts{}
 	cmd := &cobra.Command{
-		Use:     "toggleRegionalizedPrivateEndpointSetting",
-		// Aliases: []string{"?"},
-		Short:   "Toggle Regionalized Private Endpoint Status",
+		Use: "toggleRegionalizedPrivateEndpointSetting",
+		Short: "Toggle Regionalized Private Endpoint Status",
 		Annotations: map[string]string{
 			"output":      template,
 		},

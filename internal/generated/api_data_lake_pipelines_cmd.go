@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func CreatePipelineBuilder() *cobra.Command {
 
 	opts := CreatePipelineOpts{}
 	cmd := &cobra.Command{
-		Use:     "createPipeline",
-		// Aliases: []string{"?"},
-		Short:   "Create One Data Lake Pipeline",
+		Use: "createPipeline",
+		Short: "Create One Data Lake Pipeline",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -113,9 +115,8 @@ func DeletePipelineBuilder() *cobra.Command {
 
 	opts := DeletePipelineOpts{}
 	cmd := &cobra.Command{
-		Use:     "deletePipeline",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Data Lake Pipeline",
+		Use: "deletePipeline",
+		Short: "Remove One Data Lake Pipeline",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -172,9 +173,8 @@ func DeletePipelineRunDatasetBuilder() *cobra.Command {
 
 	opts := DeletePipelineRunDatasetOpts{}
 	cmd := &cobra.Command{
-		Use:     "deletePipelineRunDataset",
-		// Aliases: []string{"?"},
-		Short:   "Delete Pipeline Run Dataset",
+		Use: "deletePipelineRunDataset",
+		Short: "Delete Pipeline Run Dataset",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -231,9 +231,8 @@ func GetPipelineBuilder() *cobra.Command {
 
 	opts := GetPipelineOpts{}
 	cmd := &cobra.Command{
-		Use:     "getPipeline",
-		// Aliases: []string{"?"},
-		Short:   "Return One Data Lake Pipeline",
+		Use: "getPipeline",
+		Short: "Return One Data Lake Pipeline",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -290,9 +289,8 @@ func GetPipelineRunBuilder() *cobra.Command {
 
 	opts := GetPipelineRunOpts{}
 	cmd := &cobra.Command{
-		Use:     "getPipelineRun",
-		// Aliases: []string{"?"},
-		Short:   "Return One Data Lake Pipeline Run",
+		Use: "getPipelineRun",
+		Short: "Return One Data Lake Pipeline Run",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -324,7 +322,7 @@ type ListPipelineRunsOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum int
-	createdBefore time.Time
+	createdBefore string
 }
 
 func (opts *ListPipelineRunsOpts) initClient() func() error {
@@ -339,10 +337,10 @@ func (opts *ListPipelineRunsOpts) Run(ctx context.Context) error {
 	params := &admin.ListPipelineRunsApiParams{
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
-		CreatedBefore: opts.createdBefore,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
+		CreatedBefore: convertTime(&opts.createdBefore),
 	}
 	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelineRunsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -357,9 +355,8 @@ func ListPipelineRunsBuilder() *cobra.Command {
 
 	opts := ListPipelineRunsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listPipelineRuns",
-		// Aliases: []string{"?"},
-		Short:   "Return All Data Lake Pipeline Runs from One Project",
+		Use: "listPipelineRuns",
+		Short: "Return All Data Lake Pipeline Runs from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -378,7 +375,7 @@ func ListPipelineRunsBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
-	cmd.Flags().Time.TimeVar(&opts.createdBefore, "createdBefore", , "If specified, Atlas returns only Data Lake Pipeline runs initiated before this time and date.")
+	cmd.Flags().StringVar(&opts.createdBefore, "createdBefore", "", "If specified, Atlas returns only Data Lake Pipeline runs initiated before this time and date.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("pipelineName")
@@ -418,9 +415,8 @@ func ListPipelineSchedulesBuilder() *cobra.Command {
 
 	opts := ListPipelineSchedulesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listPipelineSchedules",
-		// Aliases: []string{"?"},
-		Short:   "Return Available Ingestion Schedules for One Data Lake Pipeline",
+		Use: "listPipelineSchedules",
+		Short: "Return Available Ingestion Schedules for One Data Lake Pipeline",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -450,7 +446,7 @@ type ListPipelineSnapshotsOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum int
-	completedAfter time.Time
+	completedAfter string
 }
 
 func (opts *ListPipelineSnapshotsOpts) initClient() func() error {
@@ -465,10 +461,10 @@ func (opts *ListPipelineSnapshotsOpts) Run(ctx context.Context) error {
 	params := &admin.ListPipelineSnapshotsApiParams{
 		GroupId: opts.groupId,
 		PipelineName: opts.pipelineName,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
-		CompletedAfter: opts.completedAfter,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
+		CompletedAfter: convertTime(&opts.completedAfter),
 	}
 	resp, _, err := opts.client.DataLakePipelinesApi.ListPipelineSnapshotsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -483,9 +479,8 @@ func ListPipelineSnapshotsBuilder() *cobra.Command {
 
 	opts := ListPipelineSnapshotsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listPipelineSnapshots",
-		// Aliases: []string{"?"},
-		Short:   "Return Available Backup Snapshots for One Data Lake Pipeline",
+		Use: "listPipelineSnapshots",
+		Short: "Return Available Backup Snapshots for One Data Lake Pipeline",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -504,7 +499,7 @@ func ListPipelineSnapshotsBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
-	cmd.Flags().Time.TimeVar(&opts.completedAfter, "completedAfter", , "Date and time after which MongoDB Cloud created the snapshot. If specified, MongoDB Cloud returns available backup snapshots created after this time and date only. This parameter expresses its value in the ISO 8601 timestamp format in UTC.")
+	cmd.Flags().StringVar(&opts.completedAfter, "completedAfter", "", "Date and time after which MongoDB Cloud created the snapshot. If specified, MongoDB Cloud returns available backup snapshots created after this time and date only. This parameter expresses its value in the ISO 8601 timestamp format in UTC.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("pipelineName")
@@ -542,9 +537,8 @@ func ListPipelinesBuilder() *cobra.Command {
 
 	opts := ListPipelinesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listPipelines",
-		// Aliases: []string{"?"},
-		Short:   "Return All Data Lake Pipelines from One Project",
+		Use: "listPipelines",
+		Short: "Return All Data Lake Pipelines from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -597,9 +591,8 @@ func PausePipelineBuilder() *cobra.Command {
 
 	opts := PausePipelineOpts{}
 	cmd := &cobra.Command{
-		Use:     "pausePipeline",
-		// Aliases: []string{"?"},
-		Short:   "Pause One Data Lake Pipeline",
+		Use: "pausePipeline",
+		Short: "Pause One Data Lake Pipeline",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -654,9 +647,8 @@ func ResumePipelineBuilder() *cobra.Command {
 
 	opts := ResumePipelineOpts{}
 	cmd := &cobra.Command{
-		Use:     "resumePipeline",
-		// Aliases: []string{"?"},
-		Short:   "Resume One Data Lake Pipeline",
+		Use: "resumePipeline",
+		Short: "Resume One Data Lake Pipeline",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -713,9 +705,8 @@ func TriggerSnapshotIngestionBuilder() *cobra.Command {
 
 	opts := TriggerSnapshotIngestionOpts{}
 	cmd := &cobra.Command{
-		Use:     "triggerSnapshotIngestion",
-		// Aliases: []string{"?"},
-		Short:   "Trigger on demand snapshot ingestion",
+		Use: "triggerSnapshotIngestion",
+		Short: "Trigger on demand snapshot ingestion",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -773,9 +764,8 @@ func UpdatePipelineBuilder() *cobra.Command {
 
 	opts := UpdatePipelineOpts{}
 	cmd := &cobra.Command{
-		Use:     "updatePipeline",
-		// Aliases: []string{"?"},
-		Short:   "Update One Data Lake Pipeline",
+		Use: "updatePipeline",
+		Short: "Update One Data Lake Pipeline",
 		Annotations: map[string]string{
 			"output":      template,
 		},

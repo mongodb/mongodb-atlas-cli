@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func AuthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 
 	opts := AuthorizeCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "authorizeCloudProviderAccessRole",
-		// Aliases: []string{"?"},
-		Short:   "Authorize One Cloud Provider Access Role",
+		Use: "authorizeCloudProviderAccessRole",
+		Short: "Authorize One Cloud Provider Access Role",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -117,9 +119,8 @@ func CreateCloudProviderAccessRoleBuilder() *cobra.Command {
 
 	opts := CreateCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "createCloudProviderAccessRole",
-		// Aliases: []string{"?"},
-		Short:   "Create One Cloud Provider Access Role",
+		Use: "createCloudProviderAccessRole",
+		Short: "Create One Cloud Provider Access Role",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -175,9 +176,8 @@ func DeauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 
 	opts := DeauthorizeCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "deauthorizeCloudProviderAccessRole",
-		// Aliases: []string{"?"},
-		Short:   "Deauthorize One Cloud Provider Access Role",
+		Use: "deauthorizeCloudProviderAccessRole",
+		Short: "Deauthorize One Cloud Provider Access Role",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -234,9 +234,8 @@ func GetCloudProviderAccessRoleBuilder() *cobra.Command {
 
 	opts := GetCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "getCloudProviderAccessRole",
-		// Aliases: []string{"?"},
-		Short:   "Return specified Cloud Provider Access Role",
+		Use: "getCloudProviderAccessRole",
+		Short: "Return specified Cloud Provider Access Role",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -289,9 +288,8 @@ func ListCloudProviderAccessRolesBuilder() *cobra.Command {
 
 	opts := ListCloudProviderAccessRolesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listCloudProviderAccessRoles",
-		// Aliases: []string{"?"},
-		Short:   "Return All Cloud Provider Access Roles",
+		Use: "listCloudProviderAccessRoles",
+		Short: "Return All Cloud Provider Access Roles",
 		Annotations: map[string]string{
 			"output":      template,
 		},

@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func AcknowledgeAlertBuilder() *cobra.Command {
 
 	opts := AcknowledgeAlertOpts{}
 	cmd := &cobra.Command{
-		Use:     "acknowledgeAlert",
-		// Aliases: []string{"?"},
-		Short:   "Acknowledge One Alert from One Project",
+		Use: "acknowledgeAlert",
+		Short: "Acknowledge One Alert from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -117,9 +119,8 @@ func GetAlertBuilder() *cobra.Command {
 
 	opts := GetAlertOpts{}
 	cmd := &cobra.Command{
-		Use:     "getAlert",
-		// Aliases: []string{"?"},
-		Short:   "Return One Alert from One Project",
+		Use: "getAlert",
+		Short: "Return One Alert from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -162,10 +163,10 @@ func (opts *ListAlertsOpts) initClient() func() error {
 func (opts *ListAlertsOpts) Run(ctx context.Context) error {
 	params := &admin.ListAlertsApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
-		Status: opts.status,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
+		Status: &opts.status,
 	}
 	resp, _, err := opts.client.AlertsApi.ListAlertsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -180,9 +181,8 @@ func ListAlertsBuilder() *cobra.Command {
 
 	opts := ListAlertsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listAlerts",
-		// Aliases: []string{"?"},
-		Short:   "Return All Alerts from One Project",
+		Use: "listAlerts",
+		Short: "Return All Alerts from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -228,9 +228,9 @@ func (opts *ListAlertsByAlertConfigurationIdOpts) Run(ctx context.Context) error
 	params := &admin.ListAlertsByAlertConfigurationIdApiParams{
 		GroupId: opts.groupId,
 		AlertConfigId: opts.alertConfigId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.AlertsApi.ListAlertsByAlertConfigurationIdWithParams(ctx, params).Execute()
 	if err != nil {
@@ -245,9 +245,8 @@ func ListAlertsByAlertConfigurationIdBuilder() *cobra.Command {
 
 	opts := ListAlertsByAlertConfigurationIdOpts{}
 	cmd := &cobra.Command{
-		Use:     "listAlertsByAlertConfigurationId",
-		// Aliases: []string{"?"},
-		Short:   "Return All Open Alerts for Alert Configuration",
+		Use: "listAlertsByAlertConfigurationId",
+		Short: "Return All Open Alerts for Alert Configuration",
 		Annotations: map[string]string{
 			"output":      template,
 		},

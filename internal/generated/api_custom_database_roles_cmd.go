@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func CreateCustomDatabaseRoleBuilder() *cobra.Command {
 
 	opts := CreateCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "createCustomDatabaseRole",
-		// Aliases: []string{"?"},
-		Short:   "Create One Custom Role",
+		Use: "createCustomDatabaseRole",
+		Short: "Create One Custom Role",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -113,9 +115,8 @@ func DeleteCustomDatabaseRoleBuilder() *cobra.Command {
 
 	opts := DeleteCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteCustomDatabaseRole",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Custom Role from One Project",
+		Use: "deleteCustomDatabaseRole",
+		Short: "Remove One Custom Role from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -170,9 +171,8 @@ func GetCustomDatabaseRoleBuilder() *cobra.Command {
 
 	opts := GetCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "getCustomDatabaseRole",
-		// Aliases: []string{"?"},
-		Short:   "Return One Custom Role in One Project",
+		Use: "getCustomDatabaseRole",
+		Short: "Return One Custom Role in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -225,9 +225,8 @@ func ListCustomDatabaseRolesBuilder() *cobra.Command {
 
 	opts := ListCustomDatabaseRolesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listCustomDatabaseRoles",
-		// Aliases: []string{"?"},
-		Short:   "Return All Custom Roles in One Project",
+		Use: "listCustomDatabaseRoles",
+		Short: "Return All Custom Roles in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -282,9 +281,8 @@ func UpdateCustomDatabaseRoleBuilder() *cobra.Command {
 
 	opts := UpdateCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateCustomDatabaseRole",
-		// Aliases: []string{"?"},
-		Short:   "Update One Custom Role in One Project",
+		Use: "updateCustomDatabaseRole",
+		Short: "Update One Custom Role in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},

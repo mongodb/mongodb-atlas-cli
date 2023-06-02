@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -55,9 +58,8 @@ func GetAWSCustomDNSBuilder() *cobra.Command {
 
 	opts := GetAWSCustomDNSOpts{}
 	cmd := &cobra.Command{
-		Use:     "getAWSCustomDNS",
-		// Aliases: []string{"?"},
-		Short:   "Return One Custom DNS Configuration for Atlas Clusters on AWS",
+		Use: "getAWSCustomDNS",
+		Short: "Return One Custom DNS Configuration for Atlas Clusters on AWS",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -110,9 +112,8 @@ func ToggleAWSCustomDNSBuilder() *cobra.Command {
 
 	opts := ToggleAWSCustomDNSOpts{}
 	cmd := &cobra.Command{
-		Use:     "toggleAWSCustomDNS",
-		// Aliases: []string{"?"},
-		Short:   "Toggle State of One Custom DNS Configuration for Atlas Clusters on AWS",
+		Use: "toggleAWSCustomDNS",
+		Short: "Toggle State of One Custom DNS Configuration for Atlas Clusters on AWS",
 		Annotations: map[string]string{
 			"output":      template,
 		},

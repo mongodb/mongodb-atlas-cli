@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -48,11 +51,11 @@ func (opts *ListAccessLogsByClusterNameOpts) Run(ctx context.Context) error {
 	params := &admin.ListAccessLogsByClusterNameApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		AuthResult: opts.authResult,
-		End: opts.end,
-		IpAddress: opts.ipAddress,
-		NLogs: opts.nLogs,
-		Start: opts.start,
+		AuthResult: &opts.authResult,
+		End: &opts.end,
+		IpAddress: &opts.ipAddress,
+		NLogs: &opts.nLogs,
+		Start: &opts.start,
 	}
 	resp, _, err := opts.client.AccessTrackingApi.ListAccessLogsByClusterNameWithParams(ctx, params).Execute()
 	if err != nil {
@@ -67,9 +70,8 @@ func ListAccessLogsByClusterNameBuilder() *cobra.Command {
 
 	opts := ListAccessLogsByClusterNameOpts{}
 	cmd := &cobra.Command{
-		Use:     "listAccessLogsByClusterName",
-		// Aliases: []string{"?"},
-		Short:   "Return Database Access History for One Cluster using Its Cluster Name",
+		Use: "listAccessLogsByClusterName",
+		Short: "Return Database Access History for One Cluster using Its Cluster Name",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -120,11 +122,11 @@ func (opts *ListAccessLogsByHostnameOpts) Run(ctx context.Context) error {
 	params := &admin.ListAccessLogsByHostnameApiParams{
 		GroupId: opts.groupId,
 		Hostname: opts.hostname,
-		AuthResult: opts.authResult,
-		End: opts.end,
-		IpAddress: opts.ipAddress,
-		NLogs: opts.nLogs,
-		Start: opts.start,
+		AuthResult: &opts.authResult,
+		End: &opts.end,
+		IpAddress: &opts.ipAddress,
+		NLogs: &opts.nLogs,
+		Start: &opts.start,
 	}
 	resp, _, err := opts.client.AccessTrackingApi.ListAccessLogsByHostnameWithParams(ctx, params).Execute()
 	if err != nil {
@@ -139,9 +141,8 @@ func ListAccessLogsByHostnameBuilder() *cobra.Command {
 
 	opts := ListAccessLogsByHostnameOpts{}
 	cmd := &cobra.Command{
-		Use:     "listAccessLogsByHostname",
-		// Aliases: []string{"?"},
-		Short:   "Return Database Access History for One Cluster using Its Hostname",
+		Use: "listAccessLogsByHostname",
+		Short: "Return Database Access History for One Cluster using Its Hostname",
 		Annotations: map[string]string{
 			"output":      template,
 		},

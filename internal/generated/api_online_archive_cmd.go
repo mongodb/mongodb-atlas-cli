@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func CreateOnlineArchiveBuilder() *cobra.Command {
 
 	opts := CreateOnlineArchiveOpts{}
 	cmd := &cobra.Command{
-		Use:     "createOnlineArchive",
-		// Aliases: []string{"?"},
-		Short:   "Create One Online Archive",
+		Use: "createOnlineArchive",
+		Short: "Create One Online Archive",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -119,9 +121,8 @@ func DeleteOnlineArchiveBuilder() *cobra.Command {
 
 	opts := DeleteOnlineArchiveOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteOnlineArchive",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Online Archive",
+		Use: "deleteOnlineArchive",
+		Short: "Remove One Online Archive",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -167,9 +168,9 @@ func (opts *DownloadOnlineArchiveQueryLogsOpts) Run(ctx context.Context) error {
 	params := &admin.DownloadOnlineArchiveQueryLogsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		StartDate: opts.startDate,
-		EndDate: opts.endDate,
-		ArchiveOnly: opts.archiveOnly,
+		StartDate: &opts.startDate,
+		EndDate: &opts.endDate,
+		ArchiveOnly: &opts.archiveOnly,
 	}
 	resp, _, err := opts.client.OnlineArchiveApi.DownloadOnlineArchiveQueryLogsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -184,9 +185,8 @@ func DownloadOnlineArchiveQueryLogsBuilder() *cobra.Command {
 
 	opts := DownloadOnlineArchiveQueryLogsOpts{}
 	cmd := &cobra.Command{
-		Use:     "downloadOnlineArchiveQueryLogs",
-		// Aliases: []string{"?"},
-		Short:   "Download Online Archive Query Logs",
+		Use: "downloadOnlineArchiveQueryLogs",
+		Short: "Download Online Archive Query Logs",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -246,9 +246,8 @@ func GetOnlineArchiveBuilder() *cobra.Command {
 
 	opts := GetOnlineArchiveOpts{}
 	cmd := &cobra.Command{
-		Use:     "getOnlineArchive",
-		// Aliases: []string{"?"},
-		Short:   "Return One Online Archive",
+		Use: "getOnlineArchive",
+		Short: "Return One Online Archive",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -294,9 +293,9 @@ func (opts *ListOnlineArchivesOpts) Run(ctx context.Context) error {
 	params := &admin.ListOnlineArchivesApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.OnlineArchiveApi.ListOnlineArchivesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -311,9 +310,8 @@ func ListOnlineArchivesBuilder() *cobra.Command {
 
 	opts := ListOnlineArchivesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listOnlineArchives",
-		// Aliases: []string{"?"},
-		Short:   "Return All Online Archives for One Cluster",
+		Use: "listOnlineArchives",
+		Short: "Return All Online Archives for One Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -375,9 +373,8 @@ func UpdateOnlineArchiveBuilder() *cobra.Command {
 
 	opts := UpdateOnlineArchiveOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateOnlineArchive",
-		// Aliases: []string{"?"},
-		Short:   "Update One Online Archive",
+		Use: "updateOnlineArchive",
+		Short: "Update One Online Archive",
 		Annotations: map[string]string{
 			"output":      template,
 		},

@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func CreateRoleMappingBuilder() *cobra.Command {
 
 	opts := CreateRoleMappingOpts{}
 	cmd := &cobra.Command{
-		Use:     "createRoleMapping",
-		// Aliases: []string{"?"},
-		Short:   "Add One Role Mapping to One Organization",
+		Use: "createRoleMapping",
+		Short: "Add One Role Mapping to One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -115,9 +117,8 @@ func DeleteFederationAppBuilder() *cobra.Command {
 
 	opts := DeleteFederationAppOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteFederationApp",
-		// Aliases: []string{"?"},
-		Short:   "Delete the federation settings instance.",
+		Use: "deleteFederationApp",
+		Short: "Delete the federation settings instance.",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -172,9 +173,8 @@ func DeleteRoleMappingBuilder() *cobra.Command {
 
 	opts := DeleteRoleMappingOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteRoleMapping",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Role Mapping from One Organization",
+		Use: "deleteRoleMapping",
+		Short: "Remove One Role Mapping from One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -231,9 +231,8 @@ func GetConnectedOrgConfigBuilder() *cobra.Command {
 
 	opts := GetConnectedOrgConfigOpts{}
 	cmd := &cobra.Command{
-		Use:     "getConnectedOrgConfig",
-		// Aliases: []string{"?"},
-		Short:   "Return One Org Config Connected to One Federation",
+		Use: "getConnectedOrgConfig",
+		Short: "Return One Org Config Connected to One Federation",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -286,9 +285,8 @@ func GetFederationSettingsBuilder() *cobra.Command {
 
 	opts := GetFederationSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "getFederationSettings",
-		// Aliases: []string{"?"},
-		Short:   "Return Federation Settings for One Organization",
+		Use: "getFederationSettings",
+		Short: "Return Federation Settings for One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -341,9 +339,8 @@ func GetIdentityProviderBuilder() *cobra.Command {
 
 	opts := GetIdentityProviderOpts{}
 	cmd := &cobra.Command{
-		Use:     "getIdentityProvider",
-		// Aliases: []string{"?"},
-		Short:   "Return one identity provider from the specified federation.",
+		Use: "getIdentityProvider",
+		Short: "Return one identity provider from the specified federation.",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -398,9 +395,8 @@ func GetIdentityProviderMetadataBuilder() *cobra.Command {
 
 	opts := GetIdentityProviderMetadataOpts{}
 	cmd := &cobra.Command{
-		Use:     "getIdentityProviderMetadata",
-		// Aliases: []string{"?"},
-		Short:   "Return the metadata of one identity provider in the specified federation.",
+		Use: "getIdentityProviderMetadata",
+		Short: "Return the metadata of one identity provider in the specified federation.",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -457,9 +453,8 @@ func GetRoleMappingBuilder() *cobra.Command {
 
 	opts := GetRoleMappingOpts{}
 	cmd := &cobra.Command{
-		Use:     "getRoleMapping",
-		// Aliases: []string{"?"},
-		Short:   "Return One Role Mapping from One Organization",
+		Use: "getRoleMapping",
+		Short: "Return One Role Mapping from One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -514,9 +509,8 @@ func ListConnectedOrgConfigsBuilder() *cobra.Command {
 
 	opts := ListConnectedOrgConfigsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listConnectedOrgConfigs",
-		// Aliases: []string{"?"},
-		Short:   "Return All Connected Org Configs from the Federation",
+		Use: "listConnectedOrgConfigs",
+		Short: "Return All Connected Org Configs from the Federation",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -567,9 +561,8 @@ func ListIdentityProvidersBuilder() *cobra.Command {
 
 	opts := ListIdentityProvidersOpts{}
 	cmd := &cobra.Command{
-		Use:     "listIdentityProviders",
-		// Aliases: []string{"?"},
-		Short:   "Return all identity providers from the specified federation.",
+		Use: "listIdentityProviders",
+		Short: "Return all identity providers from the specified federation.",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -622,9 +615,8 @@ func ListRoleMappingsBuilder() *cobra.Command {
 
 	opts := ListRoleMappingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listRoleMappings",
-		// Aliases: []string{"?"},
-		Short:   "Return All Role Mappings from One Organization",
+		Use: "listRoleMappings",
+		Short: "Return All Role Mappings from One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -679,9 +671,8 @@ func RemoveConnectedOrgConfigBuilder() *cobra.Command {
 
 	opts := RemoveConnectedOrgConfigOpts{}
 	cmd := &cobra.Command{
-		Use:     "removeConnectedOrgConfig",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Org Config Connected to One Federation",
+		Use: "removeConnectedOrgConfig",
+		Short: "Remove One Org Config Connected to One Federation",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -738,9 +729,8 @@ func UpdateConnectedOrgConfigBuilder() *cobra.Command {
 
 	opts := UpdateConnectedOrgConfigOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateConnectedOrgConfig",
-		// Aliases: []string{"?"},
-		Short:   "Update One Org Config Connected to One Federation",
+		Use: "updateConnectedOrgConfig",
+		Short: "Update One Org Config Connected to One Federation",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -798,9 +788,8 @@ func UpdateIdentityProviderBuilder() *cobra.Command {
 
 	opts := UpdateIdentityProviderOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateIdentityProvider",
-		// Aliases: []string{"?"},
-		Short:   "Update the identity provider.",
+		Use: "updateIdentityProvider",
+		Short: "Update the identity provider.",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -860,9 +849,8 @@ func UpdateRoleMappingBuilder() *cobra.Command {
 
 	opts := UpdateRoleMappingOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateRoleMapping",
-		// Aliases: []string{"?"},
-		Short:   "Update One Role Mapping in One Organization",
+		Use: "updateRoleMapping",
+		Short: "Update One Role Mapping in One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},

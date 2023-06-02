@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -55,9 +58,8 @@ func GetEncryptionAtRestBuilder() *cobra.Command {
 
 	opts := GetEncryptionAtRestOpts{}
 	cmd := &cobra.Command{
-		Use:     "getEncryptionAtRest",
-		// Aliases: []string{"?"},
-		Short:   "Return One Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
+		Use: "getEncryptionAtRest",
+		Short: "Return One Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -110,9 +112,8 @@ func UpdateEncryptionAtRestBuilder() *cobra.Command {
 
 	opts := UpdateEncryptionAtRestOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateEncryptionAtRest",
-		// Aliases: []string{"?"},
-		Short:   "Update Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
+		Use: "updateEncryptionAtRest",
+		Short: "Update Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},

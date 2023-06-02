@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func CancelBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := CancelBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "cancelBackupRestoreJob",
-		// Aliases: []string{"?"},
-		Short:   "Cancel One Restore Job of One Cluster",
+		Use: "cancelBackupRestoreJob",
+		Short: "Cancel One Restore Job of One Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -120,9 +122,8 @@ func CreateBackupExportJobBuilder() *cobra.Command {
 
 	opts := CreateBackupExportJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "createBackupExportJob",
-		// Aliases: []string{"?"},
-		Short:   "Create One Cloud Backup Snapshot Export Job",
+		Use: "createBackupExportJob",
+		Short: "Create One Cloud Backup Snapshot Export Job",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -180,9 +181,8 @@ func CreateBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := CreateBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "createBackupRestoreJob",
-		// Aliases: []string{"?"},
-		Short:   "Restore One Snapshot of One Cluster",
+		Use: "createBackupRestoreJob",
+		Short: "Restore One Snapshot of One Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -238,9 +238,8 @@ func CreateExportBucketBuilder() *cobra.Command {
 
 	opts := CreateExportBucketOpts{}
 	cmd := &cobra.Command{
-		Use:     "createExportBucket",
-		// Aliases: []string{"?"},
-		Short:   "Grant Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
+		Use: "createExportBucket",
+		Short: "Grant Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -296,9 +295,8 @@ func CreateServerlessBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := CreateServerlessBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "createServerlessBackupRestoreJob",
-		// Aliases: []string{"?"},
-		Short:   "Restore One Snapshot of One Serverless Instance",
+		Use: "createServerlessBackupRestoreJob",
+		Short: "Restore One Snapshot of One Serverless Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -354,9 +352,8 @@ func DeleteAllBackupSchedulesBuilder() *cobra.Command {
 
 	opts := DeleteAllBackupSchedulesOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteAllBackupSchedules",
-		// Aliases: []string{"?"},
-		Short:   "Remove All Cloud Backup Schedules",
+		Use: "deleteAllBackupSchedules",
+		Short: "Remove All Cloud Backup Schedules",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -411,9 +408,8 @@ func DeleteExportBucketBuilder() *cobra.Command {
 
 	opts := DeleteExportBucketOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteExportBucket",
-		// Aliases: []string{"?"},
-		Short:   "Revoke Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
+		Use: "deleteExportBucket",
+		Short: "Revoke Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -470,9 +466,8 @@ func DeleteReplicaSetBackupBuilder() *cobra.Command {
 
 	opts := DeleteReplicaSetBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteReplicaSetBackup",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Replica Set Cloud Backup",
+		Use: "deleteReplicaSetBackup",
+		Short: "Remove One Replica Set Cloud Backup",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -531,9 +526,8 @@ func DeleteShardedClusterBackupBuilder() *cobra.Command {
 
 	opts := DeleteShardedClusterBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteShardedClusterBackup",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Sharded Cluster Cloud Backup",
+		Use: "deleteShardedClusterBackup",
+		Short: "Remove One Sharded Cluster Cloud Backup",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -592,9 +586,8 @@ func GetBackupExportJobBuilder() *cobra.Command {
 
 	opts := GetBackupExportJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "getBackupExportJob",
-		// Aliases: []string{"?"},
-		Short:   "Return One Cloud Backup Snapshot Export Job",
+		Use: "getBackupExportJob",
+		Short: "Return One Cloud Backup Snapshot Export Job",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -653,9 +646,8 @@ func GetBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := GetBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "getBackupRestoreJob",
-		// Aliases: []string{"?"},
-		Short:   "Return One Restore Job of One Cluster",
+		Use: "getBackupRestoreJob",
+		Short: "Return One Restore Job of One Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -712,9 +704,8 @@ func GetBackupScheduleBuilder() *cobra.Command {
 
 	opts := GetBackupScheduleOpts{}
 	cmd := &cobra.Command{
-		Use:     "getBackupSchedule",
-		// Aliases: []string{"?"},
-		Short:   "Return One Cloud Backup Schedule",
+		Use: "getBackupSchedule",
+		Short: "Return One Cloud Backup Schedule",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -767,9 +758,8 @@ func GetDataProtectionSettingsBuilder() *cobra.Command {
 
 	opts := GetDataProtectionSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "getDataProtectionSettings",
-		// Aliases: []string{"?"},
-		Short:   "Return the Backup Compliance Policy settings",
+		Use: "getDataProtectionSettings",
+		Short: "Return the Backup Compliance Policy settings",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -822,9 +812,8 @@ func GetExportBucketBuilder() *cobra.Command {
 
 	opts := GetExportBucketOpts{}
 	cmd := &cobra.Command{
-		Use:     "getExportBucket",
-		// Aliases: []string{"?"},
-		Short:   "Return One AWS S3 Bucket Used for Cloud Backup Snapshot Exports",
+		Use: "getExportBucket",
+		Short: "Return One AWS S3 Bucket Used for Cloud Backup Snapshot Exports",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -881,9 +870,8 @@ func GetReplicaSetBackupBuilder() *cobra.Command {
 
 	opts := GetReplicaSetBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "getReplicaSetBackup",
-		// Aliases: []string{"?"},
-		Short:   "Return One Replica Set Cloud Backup",
+		Use: "getReplicaSetBackup",
+		Short: "Return One Replica Set Cloud Backup",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -942,9 +930,8 @@ func GetServerlessBackupBuilder() *cobra.Command {
 
 	opts := GetServerlessBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "getServerlessBackup",
-		// Aliases: []string{"?"},
-		Short:   "Return One Snapshot of One Serverless Instance",
+		Use: "getServerlessBackup",
+		Short: "Return One Snapshot of One Serverless Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1003,9 +990,8 @@ func GetServerlessBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := GetServerlessBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "getServerlessBackupRestoreJob",
-		// Aliases: []string{"?"},
-		Short:   "Return One Restore Job for One Serverless Instance",
+		Use: "getServerlessBackupRestoreJob",
+		Short: "Return One Restore Job for One Serverless Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1064,9 +1050,8 @@ func GetShardedClusterBackupBuilder() *cobra.Command {
 
 	opts := GetShardedClusterBackupOpts{}
 	cmd := &cobra.Command{
-		Use:     "getShardedClusterBackup",
-		// Aliases: []string{"?"},
-		Short:   "Return One Sharded Cluster Cloud Backup",
+		Use: "getShardedClusterBackup",
+		Short: "Return One Sharded Cluster Cloud Backup",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1112,9 +1097,9 @@ func (opts *ListBackupExportJobsOpts) Run(ctx context.Context) error {
 	params := &admin.ListBackupExportJobsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.ListBackupExportJobsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1129,9 +1114,8 @@ func ListBackupExportJobsBuilder() *cobra.Command {
 
 	opts := ListBackupExportJobsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listBackupExportJobs",
-		// Aliases: []string{"?"},
-		Short:   "Return All Cloud Backup Snapshot Export Jobs",
+		Use: "listBackupExportJobs",
+		Short: "Return All Cloud Backup Snapshot Export Jobs",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1178,9 +1162,9 @@ func (opts *ListBackupRestoreJobsOpts) Run(ctx context.Context) error {
 	params := &admin.ListBackupRestoreJobsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.ListBackupRestoreJobsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1195,9 +1179,8 @@ func ListBackupRestoreJobsBuilder() *cobra.Command {
 
 	opts := ListBackupRestoreJobsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listBackupRestoreJobs",
-		// Aliases: []string{"?"},
-		Short:   "Return All Restore Jobs for One Cluster",
+		Use: "listBackupRestoreJobs",
+		Short: "Return All Restore Jobs for One Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1242,9 +1225,9 @@ func (opts *ListExportBucketsOpts) initClient() func() error {
 func (opts *ListExportBucketsOpts) Run(ctx context.Context) error {
 	params := &admin.ListExportBucketsApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.ListExportBucketsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1259,9 +1242,8 @@ func ListExportBucketsBuilder() *cobra.Command {
 
 	opts := ListExportBucketsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listExportBuckets",
-		// Aliases: []string{"?"},
-		Short:   "Return All AWS S3 Buckets Used for Cloud Backup Snapshot Exports",
+		Use: "listExportBuckets",
+		Short: "Return All AWS S3 Buckets Used for Cloud Backup Snapshot Exports",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1306,9 +1288,9 @@ func (opts *ListReplicaSetBackupsOpts) Run(ctx context.Context) error {
 	params := &admin.ListReplicaSetBackupsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.ListReplicaSetBackupsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1323,9 +1305,8 @@ func ListReplicaSetBackupsBuilder() *cobra.Command {
 
 	opts := ListReplicaSetBackupsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listReplicaSetBackups",
-		// Aliases: []string{"?"},
-		Short:   "Return All Replica Set Cloud Backups",
+		Use: "listReplicaSetBackups",
+		Short: "Return All Replica Set Cloud Backups",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1372,9 +1353,9 @@ func (opts *ListServerlessBackupRestoreJobsOpts) Run(ctx context.Context) error 
 	params := &admin.ListServerlessBackupRestoreJobsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.ListServerlessBackupRestoreJobsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1389,9 +1370,8 @@ func ListServerlessBackupRestoreJobsBuilder() *cobra.Command {
 
 	opts := ListServerlessBackupRestoreJobsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listServerlessBackupRestoreJobs",
-		// Aliases: []string{"?"},
-		Short:   "Return All Restore Jobs for One Serverless Instance",
+		Use: "listServerlessBackupRestoreJobs",
+		Short: "Return All Restore Jobs for One Serverless Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1438,9 +1418,9 @@ func (opts *ListServerlessBackupsOpts) Run(ctx context.Context) error {
 	params := &admin.ListServerlessBackupsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.ListServerlessBackupsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1455,9 +1435,8 @@ func ListServerlessBackupsBuilder() *cobra.Command {
 
 	opts := ListServerlessBackupsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listServerlessBackups",
-		// Aliases: []string{"?"},
-		Short:   "Return All Snapshots of One Serverless Instance",
+		Use: "listServerlessBackups",
+		Short: "Return All Snapshots of One Serverless Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1515,9 +1494,8 @@ func ListShardedClusterBackupsBuilder() *cobra.Command {
 
 	opts := ListShardedClusterBackupsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listShardedClusterBackups",
-		// Aliases: []string{"?"},
-		Short:   "Return All Sharded Cluster Cloud Backups",
+		Use: "listShardedClusterBackups",
+		Short: "Return All Sharded Cluster Cloud Backups",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1574,9 +1552,8 @@ func TakeSnapshotBuilder() *cobra.Command {
 
 	opts := TakeSnapshotOpts{}
 	cmd := &cobra.Command{
-		Use:     "takeSnapshot",
-		// Aliases: []string{"?"},
-		Short:   "Take One On-Demand Snapshot",
+		Use: "takeSnapshot",
+		Short: "Take One On-Demand Snapshot",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1634,9 +1611,8 @@ func UpdateBackupScheduleBuilder() *cobra.Command {
 
 	opts := UpdateBackupScheduleOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateBackupSchedule",
-		// Aliases: []string{"?"},
-		Short:   "Update Cloud Backup Schedule for One Cluster",
+		Use: "updateBackupSchedule",
+		Short: "Update Cloud Backup Schedule for One Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1692,9 +1668,8 @@ func UpdateDataProtectionSettingsBuilder() *cobra.Command {
 
 	opts := UpdateDataProtectionSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateDataProtectionSettings",
-		// Aliases: []string{"?"},
-		Short:   "Update or enable the Backup Compliance Policy settings",
+		Use: "updateDataProtectionSettings",
+		Short: "Update or enable the Backup Compliance Policy settings",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1752,9 +1727,8 @@ func UpdateSnapshotRetentionBuilder() *cobra.Command {
 
 	opts := UpdateSnapshotRetentionOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateSnapshotRetention",
-		// Aliases: []string{"?"},
-		Short:   "Change Expiration Date for One Cloud Backup",
+		Use: "updateSnapshotRetention",
+		Short: "Change Expiration Date for One Cloud Backup",
 		Annotations: map[string]string{
 			"output":      template,
 		},

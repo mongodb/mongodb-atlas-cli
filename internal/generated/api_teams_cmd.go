@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func AddAllTeamsToProjectBuilder() *cobra.Command {
 
 	opts := AddAllTeamsToProjectOpts{}
 	cmd := &cobra.Command{
-		Use:     "addAllTeamsToProject",
-		// Aliases: []string{"?"},
-		Short:   "Add One or More Teams to One Project",
+		Use: "addAllTeamsToProject",
+		Short: "Add One or More Teams to One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -115,9 +117,8 @@ func AddTeamUserBuilder() *cobra.Command {
 
 	opts := AddTeamUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "addTeamUser",
-		// Aliases: []string{"?"},
-		Short:   "Assign MongoDB Cloud Users from One Organization to One Team",
+		Use: "addTeamUser",
+		Short: "Assign MongoDB Cloud Users from One Organization to One Team",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -173,9 +174,8 @@ func CreateTeamBuilder() *cobra.Command {
 
 	opts := CreateTeamOpts{}
 	cmd := &cobra.Command{
-		Use:     "createTeam",
-		// Aliases: []string{"?"},
-		Short:   "Create One Team in One Organization",
+		Use: "createTeam",
+		Short: "Create One Team in One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -229,9 +229,8 @@ func DeleteTeamBuilder() *cobra.Command {
 
 	opts := DeleteTeamOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteTeam",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Team from One Organization",
+		Use: "deleteTeam",
+		Short: "Remove One Team from One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -286,9 +285,8 @@ func GetTeamByIdBuilder() *cobra.Command {
 
 	opts := GetTeamByIdOpts{}
 	cmd := &cobra.Command{
-		Use:     "getTeamById",
-		// Aliases: []string{"?"},
-		Short:   "Return One Team using its ID",
+		Use: "getTeamById",
+		Short: "Return One Team using its ID",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -343,9 +341,8 @@ func GetTeamByNameBuilder() *cobra.Command {
 
 	opts := GetTeamByNameOpts{}
 	cmd := &cobra.Command{
-		Use:     "getTeamByName",
-		// Aliases: []string{"?"},
-		Short:   "Return One Team using its Name",
+		Use: "getTeamByName",
+		Short: "Return One Team using its Name",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -387,9 +384,9 @@ func (opts *ListOrganizationTeamsOpts) initClient() func() error {
 func (opts *ListOrganizationTeamsOpts) Run(ctx context.Context) error {
 	params := &admin.ListOrganizationTeamsApiParams{
 		OrgId: opts.orgId,
-		ItemsPerPage: opts.itemsPerPage,
-		IncludeCount: opts.includeCount,
-		PageNum: opts.pageNum,
+		ItemsPerPage: &opts.itemsPerPage,
+		IncludeCount: &opts.includeCount,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.TeamsApi.ListOrganizationTeamsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -404,9 +401,8 @@ func ListOrganizationTeamsBuilder() *cobra.Command {
 
 	opts := ListOrganizationTeamsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listOrganizationTeams",
-		// Aliases: []string{"?"},
-		Short:   "Return All Teams in One Organization",
+		Use: "listOrganizationTeams",
+		Short: "Return All Teams in One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -449,9 +445,9 @@ func (opts *ListProjectTeamsOpts) initClient() func() error {
 func (opts *ListProjectTeamsOpts) Run(ctx context.Context) error {
 	params := &admin.ListProjectTeamsApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.TeamsApi.ListProjectTeamsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -466,9 +462,8 @@ func ListProjectTeamsBuilder() *cobra.Command {
 
 	opts := ListProjectTeamsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listProjectTeams",
-		// Aliases: []string{"?"},
-		Short:   "Return All Teams in One Project",
+		Use: "listProjectTeams",
+		Short: "Return All Teams in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -512,8 +507,8 @@ func (opts *ListTeamUsersOpts) Run(ctx context.Context) error {
 	params := &admin.ListTeamUsersApiParams{
 		OrgId: opts.orgId,
 		TeamId: opts.teamId,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.TeamsApi.ListTeamUsersWithParams(ctx, params).Execute()
 	if err != nil {
@@ -528,9 +523,8 @@ func ListTeamUsersBuilder() *cobra.Command {
 
 	opts := ListTeamUsersOpts{}
 	cmd := &cobra.Command{
-		Use:     "listTeamUsers",
-		// Aliases: []string{"?"},
-		Short:   "Return All MongoDB Cloud Users Assigned to One Team",
+		Use: "listTeamUsers",
+		Short: "Return All MongoDB Cloud Users Assigned to One Team",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -587,9 +581,8 @@ func RemoveProjectTeamBuilder() *cobra.Command {
 
 	opts := RemoveProjectTeamOpts{}
 	cmd := &cobra.Command{
-		Use:     "removeProjectTeam",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Team from One Project",
+		Use: "removeProjectTeam",
+		Short: "Remove One Team from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -646,9 +639,8 @@ func RemoveTeamUserBuilder() *cobra.Command {
 
 	opts := RemoveTeamUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "removeTeamUser",
-		// Aliases: []string{"?"},
-		Short:   "Remove One MongoDB Cloud User from One Team",
+		Use: "removeTeamUser",
+		Short: "Remove One MongoDB Cloud User from One Team",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -707,9 +699,8 @@ func RenameTeamBuilder() *cobra.Command {
 
 	opts := RenameTeamOpts{}
 	cmd := &cobra.Command{
-		Use:     "renameTeam",
-		// Aliases: []string{"?"},
-		Short:   "Rename One Team",
+		Use: "renameTeam",
+		Short: "Rename One Team",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -767,9 +758,8 @@ func UpdateTeamRolesBuilder() *cobra.Command {
 
 	opts := UpdateTeamRolesOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateTeamRoles",
-		// Aliases: []string{"?"},
-		Short:   "Update Team Roles in One Project",
+		Use: "updateTeamRoles",
+		Short: "Update Team Roles in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},

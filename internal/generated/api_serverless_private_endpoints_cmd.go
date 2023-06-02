@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func CreateServerlessPrivateEndpointBuilder() *cobra.Command {
 
 	opts := CreateServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "createServerlessPrivateEndpoint",
-		// Aliases: []string{"?"},
-		Short:   "Create One Private Endpoint for One Serverless Instance",
+		Use: "createServerlessPrivateEndpoint",
+		Short: "Create One Private Endpoint for One Serverless Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -119,9 +121,8 @@ func DeleteServerlessPrivateEndpointBuilder() *cobra.Command {
 
 	opts := DeleteServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteServerlessPrivateEndpoint",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Private Endpoint for One Serverless Instance",
+		Use: "deleteServerlessPrivateEndpoint",
+		Short: "Remove One Private Endpoint for One Serverless Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -180,9 +181,8 @@ func GetServerlessPrivateEndpointBuilder() *cobra.Command {
 
 	opts := GetServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "getServerlessPrivateEndpoint",
-		// Aliases: []string{"?"},
-		Short:   "Return One Private Endpoint for One Serverless Instance",
+		Use: "getServerlessPrivateEndpoint",
+		Short: "Return One Private Endpoint for One Serverless Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -239,9 +239,8 @@ func ListServerlessPrivateEndpointsBuilder() *cobra.Command {
 
 	opts := ListServerlessPrivateEndpointsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listServerlessPrivateEndpoints",
-		// Aliases: []string{"?"},
-		Short:   "Return All Private Endpoints for One Serverless Instance",
+		Use: "listServerlessPrivateEndpoints",
+		Short: "Return All Private Endpoints for One Serverless Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -300,9 +299,8 @@ func UpdateServerlessPrivateEndpointBuilder() *cobra.Command {
 
 	opts := UpdateServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateServerlessPrivateEndpoint",
-		// Aliases: []string{"?"},
-		Short:   "Update One Private Endpoint for One Serverless Instance",
+		Use: "updateServerlessPrivateEndpoint",
+		Short: "Update One Private Endpoint for One Serverless Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},

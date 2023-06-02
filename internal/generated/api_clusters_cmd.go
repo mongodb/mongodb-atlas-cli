@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func GetClusterAdvancedConfigurationBuilder() *cobra.Command {
 
 	opts := GetClusterAdvancedConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "getClusterAdvancedConfiguration",
-		// Aliases: []string{"?"},
-		Short:   "Return One Advanced Configuration Options for One Cluster",
+		Use: "getClusterAdvancedConfiguration",
+		Short: "Return One Advanced Configuration Options for One Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -114,9 +116,8 @@ func GetClusterStatusBuilder() *cobra.Command {
 
 	opts := GetClusterStatusOpts{}
 	cmd := &cobra.Command{
-		Use:     "getClusterStatus",
-		// Aliases: []string{"?"},
-		Short:   "Return Status of All Cluster Operations",
+		Use: "getClusterStatus",
+		Short: "Return Status of All Cluster Operations",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -171,9 +172,8 @@ func GetSampleDatasetLoadStatusBuilder() *cobra.Command {
 
 	opts := GetSampleDatasetLoadStatusOpts{}
 	cmd := &cobra.Command{
-		Use:     "getSampleDatasetLoadStatus",
-		// Aliases: []string{"?"},
-		Short:   "Check Status of Cluster Sample Dataset Request",
+		Use: "getSampleDatasetLoadStatus",
+		Short: "Check Status of Cluster Sample Dataset Request",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -217,11 +217,11 @@ func (opts *ListCloudProviderRegionsOpts) initClient() func() error {
 func (opts *ListCloudProviderRegionsOpts) Run(ctx context.Context) error {
 	params := &admin.ListCloudProviderRegionsApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
-		Providers: opts.providers,
-		Tier: opts.tier,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
+		Providers: &opts.providers,
+		Tier: &opts.tier,
 	}
 	resp, _, err := opts.client.ClustersApi.ListCloudProviderRegionsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -236,9 +236,8 @@ func ListCloudProviderRegionsBuilder() *cobra.Command {
 
 	opts := ListCloudProviderRegionsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listCloudProviderRegions",
-		// Aliases: []string{"?"},
-		Short:   "Return All Cloud Provider Regions",
+		Use: "listCloudProviderRegions",
+		Short: "Return All Cloud Provider Regions",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -281,9 +280,9 @@ func (opts *ListClustersForAllProjectsOpts) initClient() func() error {
 
 func (opts *ListClustersForAllProjectsOpts) Run(ctx context.Context) error {
 	params := &admin.ListClustersForAllProjectsApiParams{
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.ClustersApi.ListClustersForAllProjectsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -298,9 +297,8 @@ func ListClustersForAllProjectsBuilder() *cobra.Command {
 
 	opts := ListClustersForAllProjectsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listClustersForAllProjects",
-		// Aliases: []string{"?"},
-		Short:   "Return All Authorized Clusters in All Projects",
+		Use: "listClustersForAllProjects",
+		Short: "Return All Authorized Clusters in All Projects",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -354,9 +352,8 @@ func LoadSampleDatasetBuilder() *cobra.Command {
 
 	opts := LoadSampleDatasetOpts{}
 	cmd := &cobra.Command{
-		Use:     "loadSampleDataset",
-		// Aliases: []string{"?"},
-		Short:   "Load Sample Dataset Request into Cluster",
+		Use: "loadSampleDataset",
+		Short: "Load Sample Dataset Request into Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -413,9 +410,8 @@ func UpdateClusterAdvancedConfigurationBuilder() *cobra.Command {
 
 	opts := UpdateClusterAdvancedConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateClusterAdvancedConfiguration",
-		// Aliases: []string{"?"},
-		Short:   "Update Advanced Configuration Options for One Cluster",
+		Use: "updateClusterAdvancedConfiguration",
+		Short: "Update Advanced Configuration Options for One Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -471,9 +467,8 @@ func UpgradeSharedClusterBuilder() *cobra.Command {
 
 	opts := UpgradeSharedClusterOpts{}
 	cmd := &cobra.Command{
-		Use:     "upgradeSharedCluster",
-		// Aliases: []string{"?"},
-		Short:   "Upgrade One Shared-tier Cluster",
+		Use: "upgradeSharedCluster",
+		Short: "Upgrade One Shared-tier Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -527,9 +522,8 @@ func UpgradeSharedClusterToServerlessBuilder() *cobra.Command {
 
 	opts := UpgradeSharedClusterToServerlessOpts{}
 	cmd := &cobra.Command{
-		Use:     "upgradeSharedClusterToServerless",
-		// Aliases: []string{"?"},
-		Short:   "Upgrades One Shared-Tier Cluster to the Serverless Instance",
+		Use: "upgradeSharedClusterToServerless",
+		Short: "Upgrades One Shared-Tier Cluster to the Serverless Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},

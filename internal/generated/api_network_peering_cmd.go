@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func CreatePeeringConnectionBuilder() *cobra.Command {
 
 	opts := CreatePeeringConnectionOpts{}
 	cmd := &cobra.Command{
-		Use:     "createPeeringConnection",
-		// Aliases: []string{"?"},
-		Short:   "Create One New Network Peering Connection",
+		Use: "createPeeringConnection",
+		Short: "Create One New Network Peering Connection",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -113,9 +115,8 @@ func CreatePeeringContainerBuilder() *cobra.Command {
 
 	opts := CreatePeeringContainerOpts{}
 	cmd := &cobra.Command{
-		Use:     "createPeeringContainer",
-		// Aliases: []string{"?"},
-		Short:   "Create One New Network Peering Container",
+		Use: "createPeeringContainer",
+		Short: "Create One New Network Peering Container",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -169,9 +170,8 @@ func DeletePeeringConnectionBuilder() *cobra.Command {
 
 	opts := DeletePeeringConnectionOpts{}
 	cmd := &cobra.Command{
-		Use:     "deletePeeringConnection",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Existing Network Peering Connection",
+		Use: "deletePeeringConnection",
+		Short: "Remove One Existing Network Peering Connection",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -226,9 +226,8 @@ func DeletePeeringContainerBuilder() *cobra.Command {
 
 	opts := DeletePeeringContainerOpts{}
 	cmd := &cobra.Command{
-		Use:     "deletePeeringContainer",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Network Peering Container",
+		Use: "deletePeeringContainer",
+		Short: "Remove One Network Peering Container",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -283,9 +282,8 @@ func DisablePeeringBuilder() *cobra.Command {
 
 	opts := DisablePeeringOpts{}
 	cmd := &cobra.Command{
-		Use:     "disablePeering",
-		// Aliases: []string{"?"},
-		Short:   "Disable Connect via Peering Only Mode for One Project",
+		Use: "disablePeering",
+		Short: "Disable Connect via Peering Only Mode for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -339,9 +337,8 @@ func GetPeeringConnectionBuilder() *cobra.Command {
 
 	opts := GetPeeringConnectionOpts{}
 	cmd := &cobra.Command{
-		Use:     "getPeeringConnection",
-		// Aliases: []string{"?"},
-		Short:   "Return One Network Peering Connection in One Project",
+		Use: "getPeeringConnection",
+		Short: "Return One Network Peering Connection in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -396,9 +393,8 @@ func GetPeeringContainerBuilder() *cobra.Command {
 
 	opts := GetPeeringContainerOpts{}
 	cmd := &cobra.Command{
-		Use:     "getPeeringContainer",
-		// Aliases: []string{"?"},
-		Short:   "Return One Network Peering Container",
+		Use: "getPeeringContainer",
+		Short: "Return One Network Peering Container",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -441,10 +437,10 @@ func (opts *ListPeeringConnectionsOpts) initClient() func() error {
 func (opts *ListPeeringConnectionsOpts) Run(ctx context.Context) error {
 	params := &admin.ListPeeringConnectionsApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
-		ProviderName: opts.providerName,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
+		ProviderName: &opts.providerName,
 	}
 	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringConnectionsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -459,9 +455,8 @@ func ListPeeringConnectionsBuilder() *cobra.Command {
 
 	opts := ListPeeringConnectionsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listPeeringConnections",
-		// Aliases: []string{"?"},
-		Short:   "Return All Network Peering Connections in One Project",
+		Use: "listPeeringConnections",
+		Short: "Return All Network Peering Connections in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -507,9 +502,9 @@ func (opts *ListPeeringContainerByCloudProviderOpts) Run(ctx context.Context) er
 	params := &admin.ListPeeringContainerByCloudProviderApiParams{
 		GroupId: opts.groupId,
 		ProviderName: opts.providerName,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringContainerByCloudProviderWithParams(ctx, params).Execute()
 	if err != nil {
@@ -524,9 +519,8 @@ func ListPeeringContainerByCloudProviderBuilder() *cobra.Command {
 
 	opts := ListPeeringContainerByCloudProviderOpts{}
 	cmd := &cobra.Command{
-		Use:     "listPeeringContainerByCloudProvider",
-		// Aliases: []string{"?"},
-		Short:   "Return All Network Peering Containers in One Project for One Cloud Provider",
+		Use: "listPeeringContainerByCloudProvider",
+		Short: "Return All Network Peering Containers in One Project for One Cloud Provider",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -571,9 +565,9 @@ func (opts *ListPeeringContainersOpts) initClient() func() error {
 func (opts *ListPeeringContainersOpts) Run(ctx context.Context) error {
 	params := &admin.ListPeeringContainersApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringContainersWithParams(ctx, params).Execute()
 	if err != nil {
@@ -588,9 +582,8 @@ func ListPeeringContainersBuilder() *cobra.Command {
 
 	opts := ListPeeringContainersOpts{}
 	cmd := &cobra.Command{
-		Use:     "listPeeringContainers",
-		// Aliases: []string{"?"},
-		Short:   "Return All Network Peering Containers in One Project",
+		Use: "listPeeringContainers",
+		Short: "Return All Network Peering Containers in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -648,9 +641,8 @@ func UpdatePeeringConnectionBuilder() *cobra.Command {
 
 	opts := UpdatePeeringConnectionOpts{}
 	cmd := &cobra.Command{
-		Use:     "updatePeeringConnection",
-		// Aliases: []string{"?"},
-		Short:   "Update One New Network Peering Connection",
+		Use: "updatePeeringConnection",
+		Short: "Update One New Network Peering Connection",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -708,9 +700,8 @@ func UpdatePeeringContainerBuilder() *cobra.Command {
 
 	opts := UpdatePeeringContainerOpts{}
 	cmd := &cobra.Command{
-		Use:     "updatePeeringContainer",
-		// Aliases: []string{"?"},
-		Short:   "Update One Network Peering Container",
+		Use: "updatePeeringContainer",
+		Short: "Update One Network Peering Container",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -764,9 +755,8 @@ func VerifyConnectViaPeeringOnlyModeForOneProjectBuilder() *cobra.Command {
 
 	opts := VerifyConnectViaPeeringOnlyModeForOneProjectOpts{}
 	cmd := &cobra.Command{
-		Use:     "verifyConnectViaPeeringOnlyModeForOneProject",
-		// Aliases: []string{"?"},
-		Short:   "Verify Connect via Peering Only Mode for One Project",
+		Use: "verifyConnectViaPeeringOnlyModeForOneProject",
+		Short: "Verify Connect via Peering Only Mode for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},

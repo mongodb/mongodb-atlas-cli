@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -55,9 +58,8 @@ func CreateUserBuilder() *cobra.Command {
 
 	opts := CreateUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "createUser",
-		// Aliases: []string{"?"},
-		Short:   "Create One MongoDB Cloud User",
+		Use: "createUser",
+		Short: "Create One MongoDB Cloud User",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -107,9 +109,8 @@ func GetUserBuilder() *cobra.Command {
 
 	opts := GetUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "getUser",
-		// Aliases: []string{"?"},
-		Short:   "Return One MongoDB Cloud User using Its ID",
+		Use: "getUser",
+		Short: "Return One MongoDB Cloud User using Its ID",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -160,9 +161,8 @@ func GetUserByUsernameBuilder() *cobra.Command {
 
 	opts := GetUserByUsernameOpts{}
 	cmd := &cobra.Command{
-		Use:     "getUserByUsername",
-		// Aliases: []string{"?"},
-		Short:   "Return One MongoDB Cloud User using Their Username",
+		Use: "getUserByUsername",
+		Short: "Return One MongoDB Cloud User using Their Username",
 		Annotations: map[string]string{
 			"output":      template,
 		},

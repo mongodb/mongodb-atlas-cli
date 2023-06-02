@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func CreateAtlasSearchIndexBuilder() *cobra.Command {
 
 	opts := CreateAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use:     "createAtlasSearchIndex",
-		// Aliases: []string{"?"},
-		Short:   "Create One Atlas Search Index",
+		Use: "createAtlasSearchIndex",
+		Short: "Create One Atlas Search Index",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -119,9 +121,8 @@ func DeleteAtlasSearchIndexBuilder() *cobra.Command {
 
 	opts := DeleteAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteAtlasSearchIndex",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Atlas Search Index",
+		Use: "deleteAtlasSearchIndex",
+		Short: "Remove One Atlas Search Index",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -180,9 +181,8 @@ func GetAtlasSearchIndexBuilder() *cobra.Command {
 
 	opts := GetAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use:     "getAtlasSearchIndex",
-		// Aliases: []string{"?"},
-		Short:   "Return One Atlas Search Index",
+		Use: "getAtlasSearchIndex",
+		Short: "Return One Atlas Search Index",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -243,9 +243,8 @@ func ListAtlasSearchIndexesBuilder() *cobra.Command {
 
 	opts := ListAtlasSearchIndexesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listAtlasSearchIndexes",
-		// Aliases: []string{"?"},
-		Short:   "Return All Atlas Search Indexes for One Collection",
+		Use: "listAtlasSearchIndexes",
+		Short: "Return All Atlas Search Indexes for One Collection",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -308,9 +307,8 @@ func UpdateAtlasSearchIndexBuilder() *cobra.Command {
 
 	opts := UpdateAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateAtlasSearchIndex",
-		// Aliases: []string{"?"},
-		Short:   "Update One Atlas Search Index",
+		Use: "updateAtlasSearchIndex",
+		Short: "Update One Atlas Search Index",
 		Annotations: map[string]string{
 			"output":      template,
 		},

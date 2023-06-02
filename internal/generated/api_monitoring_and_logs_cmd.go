@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func GetAtlasProcessBuilder() *cobra.Command {
 
 	opts := GetAtlasProcessOpts{}
 	cmd := &cobra.Command{
-		Use:     "getAtlasProcess",
-		// Aliases: []string{"?"},
-		Short:   "Return One MongoDB Process by ID",
+		Use: "getAtlasProcess",
+		Short: "Return One MongoDB Process by ID",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -116,9 +118,8 @@ func GetDatabaseBuilder() *cobra.Command {
 
 	opts := GetDatabaseOpts{}
 	cmd := &cobra.Command{
-		Use:     "getDatabase",
-		// Aliases: []string{"?"},
-		Short:   "Return One Database for a MongoDB Process",
+		Use: "getDatabase",
+		Short: "Return One Database for a MongoDB Process",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -151,8 +152,8 @@ type GetDatabaseMeasurementsOpts struct {
 	granularity string
 	m []string
 	period string
-	start time.Time
-	end time.Time
+	start string
+	end string
 }
 
 func (opts *GetDatabaseMeasurementsOpts) initClient() func() error {
@@ -169,10 +170,10 @@ func (opts *GetDatabaseMeasurementsOpts) Run(ctx context.Context) error {
 		DatabaseName: opts.databaseName,
 		ProcessId: opts.processId,
 		Granularity: opts.granularity,
-		M: opts.m,
-		Period: opts.period,
-		Start: opts.start,
-		End: opts.end,
+		M: &opts.m,
+		Period: &opts.period,
+		Start: convertTime(&opts.start),
+		End: convertTime(&opts.end),
 	}
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetDatabaseMeasurementsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -187,9 +188,8 @@ func GetDatabaseMeasurementsBuilder() *cobra.Command {
 
 	opts := GetDatabaseMeasurementsOpts{}
 	cmd := &cobra.Command{
-		Use:     "getDatabaseMeasurements",
-		// Aliases: []string{"?"},
-		Short:   "Return Measurements of One Database for One MongoDB Process",
+		Use: "getDatabaseMeasurements",
+		Short: "Return Measurements of One Database for One MongoDB Process",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -209,8 +209,8 @@ func GetDatabaseMeasurementsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
 	cmd.Flags().StringSliceVar(&opts.m, "m", nil, "One or more types of measurement to request for this MongoDB process. If omitted, the resource returns all measurements. To specify multiple values for &#x60;m&#x60;, repeat the &#x60;m&#x60; parameter for each value. Specify measurements that apply to the specified host. MongoDB Cloud returns an error if you specified any invalid measurements.")
 	cmd.Flags().StringVar(&opts.period, "period", "", "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
-	cmd.Flags().Time.TimeVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
-	cmd.Flags().Time.TimeVar(&opts.end, "end", , "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
+	cmd.Flags().StringVar(&opts.start, "start", "", "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
+	cmd.Flags().StringVar(&opts.end, "end", "", "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")
@@ -228,8 +228,8 @@ type GetDiskMeasurementsOpts struct {
 	granularity string
 	m []string
 	period string
-	start time.Time
-	end time.Time
+	start string
+	end string
 }
 
 func (opts *GetDiskMeasurementsOpts) initClient() func() error {
@@ -246,10 +246,10 @@ func (opts *GetDiskMeasurementsOpts) Run(ctx context.Context) error {
 		PartitionName: opts.partitionName,
 		ProcessId: opts.processId,
 		Granularity: opts.granularity,
-		M: opts.m,
-		Period: opts.period,
-		Start: opts.start,
-		End: opts.end,
+		M: &opts.m,
+		Period: &opts.period,
+		Start: convertTime(&opts.start),
+		End: convertTime(&opts.end),
 	}
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetDiskMeasurementsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -264,9 +264,8 @@ func GetDiskMeasurementsBuilder() *cobra.Command {
 
 	opts := GetDiskMeasurementsOpts{}
 	cmd := &cobra.Command{
-		Use:     "getDiskMeasurements",
-		// Aliases: []string{"?"},
-		Short:   "Return Measurements of One Disk for One MongoDB Process",
+		Use: "getDiskMeasurements",
+		Short: "Return Measurements of One Disk for One MongoDB Process",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -286,8 +285,8 @@ func GetDiskMeasurementsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
 	cmd.Flags().StringSliceVar(&opts.m, "m", nil, "One or more types of measurement to request for this MongoDB process. If omitted, the resource returns all measurements. To specify multiple values for &#x60;m&#x60;, repeat the &#x60;m&#x60; parameter for each value. Specify measurements that apply to the specified host. MongoDB Cloud returns an error if you specified any invalid measurements.")
 	cmd.Flags().StringVar(&opts.period, "period", "", "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
-	cmd.Flags().Time.TimeVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
-	cmd.Flags().Time.TimeVar(&opts.end, "end", , "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
+	cmd.Flags().StringVar(&opts.start, "start", "", "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
+	cmd.Flags().StringVar(&opts.end, "end", "", "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("partitionName")
@@ -319,8 +318,8 @@ func (opts *GetHostLogsOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		HostName: opts.hostName,
 		LogName: opts.logName,
-		EndDate: opts.endDate,
-		StartDate: opts.startDate,
+		EndDate: &opts.endDate,
+		StartDate: &opts.startDate,
 	}
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetHostLogsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -335,9 +334,8 @@ func GetHostLogsBuilder() *cobra.Command {
 
 	opts := GetHostLogsOpts{}
 	cmd := &cobra.Command{
-		Use:     "getHostLogs",
-		// Aliases: []string{"?"},
-		Short:   "Download Logs for One Multi-Cloud Cluster Host in One Project",
+		Use: "getHostLogs",
+		Short: "Download Logs for One Multi-Cloud Cluster Host in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -371,8 +369,8 @@ type GetHostMeasurementsOpts struct {
 	granularity string
 	m []string
 	period string
-	start time.Time
-	end time.Time
+	start string
+	end string
 }
 
 func (opts *GetHostMeasurementsOpts) initClient() func() error {
@@ -388,10 +386,10 @@ func (opts *GetHostMeasurementsOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
 		Granularity: opts.granularity,
-		M: opts.m,
-		Period: opts.period,
-		Start: opts.start,
-		End: opts.end,
+		M: &opts.m,
+		Period: &opts.period,
+		Start: convertTime(&opts.start),
+		End: convertTime(&opts.end),
 	}
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetHostMeasurementsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -406,9 +404,8 @@ func GetHostMeasurementsBuilder() *cobra.Command {
 
 	opts := GetHostMeasurementsOpts{}
 	cmd := &cobra.Command{
-		Use:     "getHostMeasurements",
-		// Aliases: []string{"?"},
-		Short:   "Return Measurements for One MongoDB Process",
+		Use: "getHostMeasurements",
+		Short: "Return Measurements for One MongoDB Process",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -427,8 +424,8 @@ func GetHostMeasurementsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
 	cmd.Flags().StringSliceVar(&opts.m, "m", nil, "One or more types of measurement to request for this MongoDB process. If omitted, the resource returns all measurements. To specify multiple values for &#x60;m&#x60;, repeat the &#x60;m&#x60; parameter for each value. Specify measurements that apply to the specified host. MongoDB Cloud returns an error if you specified any invalid measurements.")
 	cmd.Flags().StringVar(&opts.period, "period", "", "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
-	cmd.Flags().Time.TimeVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
-	cmd.Flags().Time.TimeVar(&opts.end, "end", , "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
+	cmd.Flags().StringVar(&opts.start, "start", "", "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
+	cmd.Flags().StringVar(&opts.end, "end", "", "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
@@ -447,8 +444,8 @@ type GetIndexMetricsOpts struct {
 	granularity string
 	metrics []string
 	period string
-	start time.Time
-	end time.Time
+	start string
+	end string
 }
 
 func (opts *GetIndexMetricsOpts) initClient() func() error {
@@ -468,9 +465,9 @@ func (opts *GetIndexMetricsOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		Granularity: opts.granularity,
 		Metrics: opts.metrics,
-		Period: opts.period,
-		Start: opts.start,
-		End: opts.end,
+		Period: &opts.period,
+		Start: convertTime(&opts.start),
+		End: convertTime(&opts.end),
 	}
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetIndexMetricsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -485,9 +482,8 @@ func GetIndexMetricsBuilder() *cobra.Command {
 
 	opts := GetIndexMetricsOpts{}
 	cmd := &cobra.Command{
-		Use:     "getIndexMetrics",
-		// Aliases: []string{"?"},
-		Short:   "Return Atlas Search Metrics for One Index in One Specified Namespace",
+		Use: "getIndexMetrics",
+		Short: "Return Atlas Search Metrics for One Index in One Specified Namespace",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -509,8 +505,8 @@ func GetIndexMetricsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
 	cmd.Flags().StringSliceVar(&opts.metrics, "metrics", nil, "List that contains the measurements that MongoDB Atlas reports for the associated data series.")
 	cmd.Flags().StringVar(&opts.period, "period", "", "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
-	cmd.Flags().Time.TimeVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
-	cmd.Flags().Time.TimeVar(&opts.end, "end", , "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
+	cmd.Flags().StringVar(&opts.start, "start", "", "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
+	cmd.Flags().StringVar(&opts.end, "end", "", "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("indexName")
@@ -530,8 +526,8 @@ type GetMeasurementsOpts struct {
 	granularity string
 	metrics []string
 	period string
-	start time.Time
-	end time.Time
+	start string
+	end string
 }
 
 func (opts *GetMeasurementsOpts) initClient() func() error {
@@ -548,9 +544,9 @@ func (opts *GetMeasurementsOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		Granularity: opts.granularity,
 		Metrics: opts.metrics,
-		Period: opts.period,
-		Start: opts.start,
-		End: opts.end,
+		Period: &opts.period,
+		Start: convertTime(&opts.start),
+		End: convertTime(&opts.end),
 	}
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetMeasurementsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -565,9 +561,8 @@ func GetMeasurementsBuilder() *cobra.Command {
 
 	opts := GetMeasurementsOpts{}
 	cmd := &cobra.Command{
-		Use:     "getMeasurements",
-		// Aliases: []string{"?"},
-		Short:   "Return Atlas Search Hardware and Status Metrics",
+		Use: "getMeasurements",
+		Short: "Return Atlas Search Hardware and Status Metrics",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -586,8 +581,8 @@ func GetMeasurementsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
 	cmd.Flags().StringSliceVar(&opts.metrics, "metrics", nil, "List that contains the metrics that you want MongoDB Atlas to report for the associated data series. If you don&#39;t set this parameter, this resource returns all hardware and status metrics for the associated data series.")
 	cmd.Flags().StringVar(&opts.period, "period", "", "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
-	cmd.Flags().Time.TimeVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
-	cmd.Flags().Time.TimeVar(&opts.end, "end", , "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
+	cmd.Flags().StringVar(&opts.start, "start", "", "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
+	cmd.Flags().StringVar(&opts.end, "end", "", "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("groupId")
@@ -616,9 +611,9 @@ func (opts *ListAtlasProcessesOpts) initClient() func() error {
 func (opts *ListAtlasProcessesOpts) Run(ctx context.Context) error {
 	params := &admin.ListAtlasProcessesApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.MonitoringAndLogsApi.ListAtlasProcessesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -633,9 +628,8 @@ func ListAtlasProcessesBuilder() *cobra.Command {
 
 	opts := ListAtlasProcessesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listAtlasProcesses",
-		// Aliases: []string{"?"},
-		Short:   "Return All MongoDB Processes in One Project",
+		Use: "listAtlasProcesses",
+		Short: "Return All MongoDB Processes in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -680,9 +674,9 @@ func (opts *ListDatabasesOpts) Run(ctx context.Context) error {
 	params := &admin.ListDatabasesApiParams{
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.MonitoringAndLogsApi.ListDatabasesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -697,9 +691,8 @@ func ListDatabasesBuilder() *cobra.Command {
 
 	opts := ListDatabasesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listDatabases",
-		// Aliases: []string{"?"},
-		Short:   "Return Available Databases for One MongoDB Process",
+		Use: "listDatabases",
+		Short: "Return Available Databases for One MongoDB Process",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -759,9 +752,8 @@ func ListDiskMeasurementsBuilder() *cobra.Command {
 
 	opts := ListDiskMeasurementsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listDiskMeasurements",
-		// Aliases: []string{"?"},
-		Short:   "Return Measurements of One Disk",
+		Use: "listDiskMeasurements",
+		Short: "Return Measurements of One Disk",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -807,9 +799,9 @@ func (opts *ListDiskPartitionsOpts) Run(ctx context.Context) error {
 	params := &admin.ListDiskPartitionsApiParams{
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.MonitoringAndLogsApi.ListDiskPartitionsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -824,9 +816,8 @@ func ListDiskPartitionsBuilder() *cobra.Command {
 
 	opts := ListDiskPartitionsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listDiskPartitions",
-		// Aliases: []string{"?"},
-		Short:   "Return Available Disks for One MongoDB Process",
+		Use: "listDiskPartitions",
+		Short: "Return Available Disks for One MongoDB Process",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -861,8 +852,8 @@ type ListIndexMetricsOpts struct {
 	granularity string
 	metrics []string
 	period string
-	start time.Time
-	end time.Time
+	start string
+	end string
 }
 
 func (opts *ListIndexMetricsOpts) initClient() func() error {
@@ -881,9 +872,9 @@ func (opts *ListIndexMetricsOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		Granularity: opts.granularity,
 		Metrics: opts.metrics,
-		Period: opts.period,
-		Start: opts.start,
-		End: opts.end,
+		Period: &opts.period,
+		Start: convertTime(&opts.start),
+		End: convertTime(&opts.end),
 	}
 	resp, _, err := opts.client.MonitoringAndLogsApi.ListIndexMetricsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -898,9 +889,8 @@ func ListIndexMetricsBuilder() *cobra.Command {
 
 	opts := ListIndexMetricsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listIndexMetrics",
-		// Aliases: []string{"?"},
-		Short:   "Return All Atlas Search Index Metrics for One Namespace",
+		Use: "listIndexMetrics",
+		Short: "Return All Atlas Search Index Metrics for One Namespace",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -921,8 +911,8 @@ func ListIndexMetricsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.granularity, "granularity", "", "Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.")
 	cmd.Flags().StringSliceVar(&opts.metrics, "metrics", nil, "List that contains the measurements that MongoDB Atlas reports for the associated data series.")
 	cmd.Flags().StringVar(&opts.period, "period", "", "Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.")
-	cmd.Flags().Time.TimeVar(&opts.start, "start", , "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
-	cmd.Flags().Time.TimeVar(&opts.end, "end", , "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
+	cmd.Flags().StringVar(&opts.start, "start", "", "Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
+	cmd.Flags().StringVar(&opts.end, "end", "", "Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.")
 
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("databaseName")
@@ -966,9 +956,8 @@ func ListMetricTypesBuilder() *cobra.Command {
 
 	opts := ListMetricTypesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listMetricTypes",
-		// Aliases: []string{"?"},
-		Short:   "Return All Atlas Search Metric Types for One Process",
+		Use: "listMetricTypes",
+		Short: "Return All Atlas Search Metric Types for One Process",
 		Annotations: map[string]string{
 			"output":      template,
 		},

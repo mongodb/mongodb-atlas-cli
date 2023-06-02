@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func CreateAlertConfigurationBuilder() *cobra.Command {
 
 	opts := CreateAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "createAlertConfiguration",
-		// Aliases: []string{"?"},
-		Short:   "Create One Alert Configuration in One Project",
+		Use: "createAlertConfiguration",
+		Short: "Create One Alert Configuration in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -113,9 +115,8 @@ func DeleteAlertConfigurationBuilder() *cobra.Command {
 
 	opts := DeleteAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteAlertConfiguration",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Alert Configuration from One Project",
+		Use: "deleteAlertConfiguration",
+		Short: "Remove One Alert Configuration from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -170,9 +171,8 @@ func GetAlertConfigurationBuilder() *cobra.Command {
 
 	opts := GetAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "getAlertConfiguration",
-		// Aliases: []string{"?"},
-		Short:   "Return One Alert Configuration from One Project",
+		Use: "getAlertConfiguration",
+		Short: "Return One Alert Configuration from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -223,9 +223,8 @@ func ListAlertConfigurationMatchersFieldNamesBuilder() *cobra.Command {
 
 	opts := ListAlertConfigurationMatchersFieldNamesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listAlertConfigurationMatchersFieldNames",
-		// Aliases: []string{"?"},
-		Short:   "Get All Alert Configuration Matchers Field Names",
+		Use: "listAlertConfigurationMatchersFieldNames",
+		Short: "Get All Alert Configuration Matchers Field Names",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -263,9 +262,9 @@ func (opts *ListAlertConfigurationsOpts) initClient() func() error {
 func (opts *ListAlertConfigurationsOpts) Run(ctx context.Context) error {
 	params := &admin.ListAlertConfigurationsApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.AlertConfigurationsApi.ListAlertConfigurationsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -280,9 +279,8 @@ func ListAlertConfigurationsBuilder() *cobra.Command {
 
 	opts := ListAlertConfigurationsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listAlertConfigurations",
-		// Aliases: []string{"?"},
-		Short:   "Return All Alert Configurations for One Project",
+		Use: "listAlertConfigurations",
+		Short: "Return All Alert Configurations for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -327,9 +325,9 @@ func (opts *ListAlertConfigurationsByAlertIdOpts) Run(ctx context.Context) error
 	params := &admin.ListAlertConfigurationsByAlertIdApiParams{
 		GroupId: opts.groupId,
 		AlertId: opts.alertId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.AlertConfigurationsApi.ListAlertConfigurationsByAlertIdWithParams(ctx, params).Execute()
 	if err != nil {
@@ -344,9 +342,8 @@ func ListAlertConfigurationsByAlertIdBuilder() *cobra.Command {
 
 	opts := ListAlertConfigurationsByAlertIdOpts{}
 	cmd := &cobra.Command{
-		Use:     "listAlertConfigurationsByAlertId",
-		// Aliases: []string{"?"},
-		Short:   "Return All Alert Configurations Set for One Alert",
+		Use: "listAlertConfigurationsByAlertId",
+		Short: "Return All Alert Configurations Set for One Alert",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -406,9 +403,8 @@ func ToggleAlertConfigurationBuilder() *cobra.Command {
 
 	opts := ToggleAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "toggleAlertConfiguration",
-		// Aliases: []string{"?"},
-		Short:   "Toggle One State of One Alert Configuration in One Project",
+		Use: "toggleAlertConfiguration",
+		Short: "Toggle One State of One Alert Configuration in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -466,9 +462,8 @@ func UpdateAlertConfigurationBuilder() *cobra.Command {
 
 	opts := UpdateAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateAlertConfiguration",
-		// Aliases: []string{"?"},
-		Short:   "Update One Alert Configuration for One Project",
+		Use: "updateAlertConfiguration",
+		Short: "Update One Alert Configuration for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},

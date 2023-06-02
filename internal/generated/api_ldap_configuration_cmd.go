@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -55,9 +58,8 @@ func DeleteLDAPConfigurationBuilder() *cobra.Command {
 
 	opts := DeleteLDAPConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteLDAPConfiguration",
-		// Aliases: []string{"?"},
-		Short:   "Remove the Current LDAP User to DN Mapping",
+		Use: "deleteLDAPConfiguration",
+		Short: "Remove the Current LDAP User to DN Mapping",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -108,9 +110,8 @@ func GetLDAPConfigurationBuilder() *cobra.Command {
 
 	opts := GetLDAPConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "getLDAPConfiguration",
-		// Aliases: []string{"?"},
-		Short:   "Return the Current LDAP or X.509 Configuration",
+		Use: "getLDAPConfiguration",
+		Short: "Return the Current LDAP or X.509 Configuration",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -163,9 +164,8 @@ func GetLDAPConfigurationStatusBuilder() *cobra.Command {
 
 	opts := GetLDAPConfigurationStatusOpts{}
 	cmd := &cobra.Command{
-		Use:     "getLDAPConfigurationStatus",
-		// Aliases: []string{"?"},
-		Short:   "Return the Status of One Verify LDAP Configuration Request",
+		Use: "getLDAPConfigurationStatus",
+		Short: "Return the Status of One Verify LDAP Configuration Request",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -220,9 +220,8 @@ func SaveLDAPConfigurationBuilder() *cobra.Command {
 
 	opts := SaveLDAPConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "saveLDAPConfiguration",
-		// Aliases: []string{"?"},
-		Short:   "Edit the LDAP or X.509 Configuration",
+		Use: "saveLDAPConfiguration",
+		Short: "Edit the LDAP or X.509 Configuration",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -276,9 +275,8 @@ func VerifyLDAPConfigurationBuilder() *cobra.Command {
 
 	opts := VerifyLDAPConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "verifyLDAPConfiguration",
-		// Aliases: []string{"?"},
-		Short:   "Verify the LDAP Configuration in One Project",
+		Use: "verifyLDAPConfiguration",
+		Short: "Verify the LDAP Configuration in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},

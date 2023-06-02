@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func CreateLinkTokenBuilder() *cobra.Command {
 
 	opts := CreateLinkTokenOpts{}
 	cmd := &cobra.Command{
-		Use:     "createLinkToken",
-		// Aliases: []string{"?"},
-		Short:   "Create One Link-Token",
+		Use: "createLinkToken",
+		Short: "Create One Link-Token",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -113,9 +115,8 @@ func CreatePushMigrationBuilder() *cobra.Command {
 
 	opts := CreatePushMigrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "createPushMigration",
-		// Aliases: []string{"?"},
-		Short:   "Migrate One Local Managed Cluster to MongoDB Atlas",
+		Use: "createPushMigration",
+		Short: "Migrate One Local Managed Cluster to MongoDB Atlas",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -169,9 +170,8 @@ func CutoverMigrationBuilder() *cobra.Command {
 
 	opts := CutoverMigrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "cutoverMigration",
-		// Aliases: []string{"?"},
-		Short:   "Cut Over the Migrated Cluster",
+		Use: "cutoverMigration",
+		Short: "Cut Over the Migrated Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -224,9 +224,8 @@ func DeleteLinkTokenBuilder() *cobra.Command {
 
 	opts := DeleteLinkTokenOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteLinkToken",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Link-Token",
+		Use: "deleteLinkToken",
+		Short: "Remove One Link-Token",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -279,9 +278,8 @@ func GetPushMigrationBuilder() *cobra.Command {
 
 	opts := GetPushMigrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "getPushMigration",
-		// Aliases: []string{"?"},
-		Short:   "Return One Migration Job",
+		Use: "getPushMigration",
+		Short: "Return One Migration Job",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -336,9 +334,8 @@ func GetValidationStatusBuilder() *cobra.Command {
 
 	opts := GetValidationStatusOpts{}
 	cmd := &cobra.Command{
-		Use:     "getValidationStatus",
-		// Aliases: []string{"?"},
-		Short:   "Return One Migration Validation Job",
+		Use: "getValidationStatus",
+		Short: "Return One Migration Validation Job",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -391,9 +388,8 @@ func ListSourceProjectsBuilder() *cobra.Command {
 
 	opts := ListSourceProjectsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listSourceProjects",
-		// Aliases: []string{"?"},
-		Short:   "Return All Projects Available for Migration",
+		Use: "listSourceProjects",
+		Short: "Return All Projects Available for Migration",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -446,9 +442,8 @@ func ValidateMigrationBuilder() *cobra.Command {
 
 	opts := ValidateMigrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "validateMigration",
-		// Aliases: []string{"?"},
-		Short:   "Validate One Migration Request",
+		Use: "validateMigration",
+		Short: "Validate One Migration Request",
 		Annotations: map[string]string{
 			"output":      template,
 		},

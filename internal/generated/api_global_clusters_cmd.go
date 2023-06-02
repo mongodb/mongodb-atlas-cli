@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func CreateCustomZoneMappingBuilder() *cobra.Command {
 
 	opts := CreateCustomZoneMappingOpts{}
 	cmd := &cobra.Command{
-		Use:     "createCustomZoneMapping",
-		// Aliases: []string{"?"},
-		Short:   "Add One Entry to One Custom Zone Mapping",
+		Use: "createCustomZoneMapping",
+		Short: "Add One Entry to One Custom Zone Mapping",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -119,9 +121,8 @@ func CreateManagedNamespaceBuilder() *cobra.Command {
 
 	opts := CreateManagedNamespaceOpts{}
 	cmd := &cobra.Command{
-		Use:     "createManagedNamespace",
-		// Aliases: []string{"?"},
-		Short:   "Create One Managed Namespace in One Global Multi-Cloud Cluster",
+		Use: "createManagedNamespace",
+		Short: "Create One Managed Namespace in One Global Multi-Cloud Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -177,9 +178,8 @@ func DeleteAllCustomZoneMappingsBuilder() *cobra.Command {
 
 	opts := DeleteAllCustomZoneMappingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteAllCustomZoneMappings",
-		// Aliases: []string{"?"},
-		Short:   "Remove All Custom Zone Mappings from One Global Multi-Cloud Cluster",
+		Use: "deleteAllCustomZoneMappings",
+		Short: "Remove All Custom Zone Mappings from One Global Multi-Cloud Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -222,8 +222,8 @@ func (opts *DeleteManagedNamespaceOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteManagedNamespaceApiParams{
 		ClusterName: opts.clusterName,
 		GroupId: opts.groupId,
-		Db: opts.db,
-		Collection: opts.collection,
+		Db: &opts.db,
+		Collection: &opts.collection,
 	}
 	resp, _, err := opts.client.GlobalClustersApi.DeleteManagedNamespaceWithParams(ctx, params).Execute()
 	if err != nil {
@@ -238,9 +238,8 @@ func DeleteManagedNamespaceBuilder() *cobra.Command {
 
 	opts := DeleteManagedNamespaceOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteManagedNamespace",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Managed Namespace from One Global Multi-Cloud Cluster",
+		Use: "deleteManagedNamespace",
+		Short: "Remove One Managed Namespace from One Global Multi-Cloud Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -297,9 +296,8 @@ func GetManagedNamespaceBuilder() *cobra.Command {
 
 	opts := GetManagedNamespaceOpts{}
 	cmd := &cobra.Command{
-		Use:     "getManagedNamespace",
-		// Aliases: []string{"?"},
-		Short:   "Return One Managed Namespace in One Global Multi-Cloud Cluster",
+		Use: "getManagedNamespace",
+		Short: "Return One Managed Namespace in One Global Multi-Cloud Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},

@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -40,7 +43,7 @@ func (opts *VersionedExampleOpts) initClient() func() error {
 
 func (opts *VersionedExampleOpts) Run(ctx context.Context) error {
 	params := &admin.VersionedExampleApiParams{
-		AdditionalInfo: opts.additionalInfo,
+		AdditionalInfo: &opts.additionalInfo,
 	}
 	resp, _, err := opts.client.TestApi.VersionedExampleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -55,9 +58,8 @@ func VersionedExampleBuilder() *cobra.Command {
 
 	opts := VersionedExampleOpts{}
 	cmd := &cobra.Command{
-		Use:     "versionedExample",
-		// Aliases: []string{"?"},
-		Short:   "Example resource info for versioning of the Atlas API",
+		Use: "versionedExample",
+		Short: "Example resource info for versioning of the Atlas API",
 		Annotations: map[string]string{
 			"output":      template,
 		},

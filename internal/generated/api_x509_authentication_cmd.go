@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func CreateDatabaseUserCertificateBuilder() *cobra.Command {
 
 	opts := CreateDatabaseUserCertificateOpts{}
 	cmd := &cobra.Command{
-		Use:     "createDatabaseUserCertificate",
-		// Aliases: []string{"?"},
-		Short:   "Create One X.509 Certificate for One MongoDB User",
+		Use: "createDatabaseUserCertificate",
+		Short: "Create One X.509 Certificate for One MongoDB User",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -115,9 +117,8 @@ func DisableCustomerManagedX509Builder() *cobra.Command {
 
 	opts := DisableCustomerManagedX509Opts{}
 	cmd := &cobra.Command{
-		Use:     "disableCustomerManagedX509",
-		// Aliases: []string{"?"},
-		Short:   "Disable Customer-Managed X.509",
+		Use: "disableCustomerManagedX509",
+		Short: "Disable Customer-Managed X.509",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -159,9 +160,9 @@ func (opts *ListDatabaseUserCertificatesOpts) Run(ctx context.Context) error {
 	params := &admin.ListDatabaseUserCertificatesApiParams{
 		GroupId: opts.groupId,
 		Username: opts.username,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.X509AuthenticationApi.ListDatabaseUserCertificatesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -176,9 +177,8 @@ func ListDatabaseUserCertificatesBuilder() *cobra.Command {
 
 	opts := ListDatabaseUserCertificatesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listDatabaseUserCertificates",
-		// Aliases: []string{"?"},
-		Short:   "Return All X.509 Certificates Assigned to One MongoDB User",
+		Use: "listDatabaseUserCertificates",
+		Short: "Return All X.509 Certificates Assigned to One MongoDB User",
 		Annotations: map[string]string{
 			"output":      template,
 		},

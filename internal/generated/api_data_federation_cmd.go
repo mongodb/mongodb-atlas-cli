@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func CreateDataFederationPrivateEndpointBuilder() *cobra.Command {
 
 	opts := CreateDataFederationPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "createDataFederationPrivateEndpoint",
-		// Aliases: []string{"?"},
-		Short:   "Create One Federated Database Instance and Online Archive Private Endpoint for One Project",
+		Use: "createDataFederationPrivateEndpoint",
+		Short: "Create One Federated Database Instance and Online Archive Private Endpoint for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -100,7 +102,7 @@ func (opts *CreateFederatedDatabaseOpts) Run(ctx context.Context) error {
 	params := &admin.CreateFederatedDatabaseApiParams{
 		GroupId: opts.groupId,
 		
-		SkipRoleValidation: opts.skipRoleValidation,
+		SkipRoleValidation: &opts.skipRoleValidation,
 	}
 	resp, _, err := opts.client.DataFederationApi.CreateFederatedDatabaseWithParams(ctx, params).Execute()
 	if err != nil {
@@ -115,9 +117,8 @@ func CreateFederatedDatabaseBuilder() *cobra.Command {
 
 	opts := CreateFederatedDatabaseOpts{}
 	cmd := &cobra.Command{
-		Use:     "createFederatedDatabase",
-		// Aliases: []string{"?"},
-		Short:   "Create One Federated Database Instance in One Project",
+		Use: "createFederatedDatabase",
+		Short: "Create One Federated Database Instance in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -176,9 +177,8 @@ func CreateOneDataFederationQueryLimitBuilder() *cobra.Command {
 
 	opts := CreateOneDataFederationQueryLimitOpts{}
 	cmd := &cobra.Command{
-		Use:     "createOneDataFederationQueryLimit",
-		// Aliases: []string{"?"},
-		Short:   "Configure One Query Limit for One Federated Database Instance",
+		Use: "createOneDataFederationQueryLimit",
+		Short: "Configure One Query Limit for One Federated Database Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -236,9 +236,8 @@ func DeleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 
 	opts := DeleteDataFederationPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteDataFederationPrivateEndpoint",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Federated Database Instance and Online Archive Private Endpoint from One Project",
+		Use: "deleteDataFederationPrivateEndpoint",
+		Short: "Remove One Federated Database Instance and Online Archive Private Endpoint from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -293,9 +292,8 @@ func DeleteFederatedDatabaseBuilder() *cobra.Command {
 
 	opts := DeleteFederatedDatabaseOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteFederatedDatabase",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Federated Database Instance from One Project",
+		Use: "deleteFederatedDatabase",
+		Short: "Remove One Federated Database Instance from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -352,9 +350,8 @@ func DeleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 
 	opts := DeleteOneDataFederationInstanceQueryLimitOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteOneDataFederationInstanceQueryLimit",
-		// Aliases: []string{"?"},
-		Short:   "Delete One Query Limit For One Federated Database Instance",
+		Use: "deleteOneDataFederationInstanceQueryLimit",
+		Short: "Delete One Query Limit For One Federated Database Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -399,8 +396,8 @@ func (opts *DownloadFederatedDatabaseQueryLogsOpts) Run(ctx context.Context) err
 	params := &admin.DownloadFederatedDatabaseQueryLogsApiParams{
 		GroupId: opts.groupId,
 		TenantName: opts.tenantName,
-		EndDate: opts.endDate,
-		StartDate: opts.startDate,
+		EndDate: &opts.endDate,
+		StartDate: &opts.startDate,
 	}
 	resp, _, err := opts.client.DataFederationApi.DownloadFederatedDatabaseQueryLogsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -415,9 +412,8 @@ func DownloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 
 	opts := DownloadFederatedDatabaseQueryLogsOpts{}
 	cmd := &cobra.Command{
-		Use:     "downloadFederatedDatabaseQueryLogs",
-		// Aliases: []string{"?"},
-		Short:   "Download Query Logs for One Federated Database Instance",
+		Use: "downloadFederatedDatabaseQueryLogs",
+		Short: "Download Query Logs for One Federated Database Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -474,9 +470,8 @@ func GetDataFederationPrivateEndpointBuilder() *cobra.Command {
 
 	opts := GetDataFederationPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "getDataFederationPrivateEndpoint",
-		// Aliases: []string{"?"},
-		Short:   "Return One Federated Database Instance and Online Archive Private Endpoint in One Project",
+		Use: "getDataFederationPrivateEndpoint",
+		Short: "Return One Federated Database Instance and Online Archive Private Endpoint in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -531,9 +526,8 @@ func GetFederatedDatabaseBuilder() *cobra.Command {
 
 	opts := GetFederatedDatabaseOpts{}
 	cmd := &cobra.Command{
-		Use:     "getFederatedDatabase",
-		// Aliases: []string{"?"},
-		Short:   "Return One Federated Database Instance in One Project",
+		Use: "getFederatedDatabase",
+		Short: "Return One Federated Database Instance in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -575,9 +569,9 @@ func (opts *ListDataFederationPrivateEndpointsOpts) initClient() func() error {
 func (opts *ListDataFederationPrivateEndpointsOpts) Run(ctx context.Context) error {
 	params := &admin.ListDataFederationPrivateEndpointsApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.DataFederationApi.ListDataFederationPrivateEndpointsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -592,9 +586,8 @@ func ListDataFederationPrivateEndpointsBuilder() *cobra.Command {
 
 	opts := ListDataFederationPrivateEndpointsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listDataFederationPrivateEndpoints",
-		// Aliases: []string{"?"},
-		Short:   "Return All Federated Database Instance and Online Archive Private Endpoints in One Project",
+		Use: "listDataFederationPrivateEndpoints",
+		Short: "Return All Federated Database Instance and Online Archive Private Endpoints in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -635,7 +628,7 @@ func (opts *ListFederatedDatabasesOpts) initClient() func() error {
 func (opts *ListFederatedDatabasesOpts) Run(ctx context.Context) error {
 	params := &admin.ListFederatedDatabasesApiParams{
 		GroupId: opts.groupId,
-		Type_: opts.type_,
+		Type_: &opts.type_,
 	}
 	resp, _, err := opts.client.DataFederationApi.ListFederatedDatabasesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -650,9 +643,8 @@ func ListFederatedDatabasesBuilder() *cobra.Command {
 
 	opts := ListFederatedDatabasesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listFederatedDatabases",
-		// Aliases: []string{"?"},
-		Short:   "Return All Federated Database Instances in One Project",
+		Use: "listFederatedDatabases",
+		Short: "Return All Federated Database Instances in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -708,9 +700,8 @@ func ReturnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 
 	opts := ReturnFederatedDatabaseQueryLimitOpts{}
 	cmd := &cobra.Command{
-		Use:     "returnFederatedDatabaseQueryLimit",
-		// Aliases: []string{"?"},
-		Short:   "Return One Federated Database Instance Query Limit for One Project",
+		Use: "returnFederatedDatabaseQueryLimit",
+		Short: "Return One Federated Database Instance Query Limit for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -767,9 +758,8 @@ func ReturnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 
 	opts := ReturnFederatedDatabaseQueryLimitsOpts{}
 	cmd := &cobra.Command{
-		Use:     "returnFederatedDatabaseQueryLimits",
-		// Aliases: []string{"?"},
-		Short:   "Return All Query Limits for One Federated Database Instance",
+		Use: "returnFederatedDatabaseQueryLimits",
+		Short: "Return All Query Limits for One Federated Database Instance",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -828,9 +818,8 @@ func UpdateFederatedDatabaseBuilder() *cobra.Command {
 
 	opts := UpdateFederatedDatabaseOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateFederatedDatabase",
-		// Aliases: []string{"?"},
-		Short:   "Update One Federated Database Instance in One Project",
+		Use: "updateFederatedDatabase",
+		Short: "Update One Federated Database Instance in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},

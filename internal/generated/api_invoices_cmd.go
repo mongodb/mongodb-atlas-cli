@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func DownloadInvoiceCSVBuilder() *cobra.Command {
 
 	opts := DownloadInvoiceCSVOpts{}
 	cmd := &cobra.Command{
-		Use:     "downloadInvoiceCSV",
-		// Aliases: []string{"?"},
-		Short:   "Return One Organization Invoice as CSV",
+		Use: "downloadInvoiceCSV",
+		Short: "Return One Organization Invoice as CSV",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -114,9 +116,8 @@ func GetInvoiceBuilder() *cobra.Command {
 
 	opts := GetInvoiceOpts{}
 	cmd := &cobra.Command{
-		Use:     "getInvoice",
-		// Aliases: []string{"?"},
-		Short:   "Return One Organization Invoice",
+		Use: "getInvoice",
+		Short: "Return One Organization Invoice",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -158,9 +159,9 @@ func (opts *ListInvoicesOpts) initClient() func() error {
 func (opts *ListInvoicesOpts) Run(ctx context.Context) error {
 	params := &admin.ListInvoicesApiParams{
 		OrgId: opts.orgId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.InvoicesApi.ListInvoicesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -175,9 +176,8 @@ func ListInvoicesBuilder() *cobra.Command {
 
 	opts := ListInvoicesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listInvoices",
-		// Aliases: []string{"?"},
-		Short:   "Return All Invoices for One Organization",
+		Use: "listInvoices",
+		Short: "Return All Invoices for One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -231,9 +231,8 @@ func ListPendingInvoicesBuilder() *cobra.Command {
 
 	opts := ListPendingInvoicesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listPendingInvoices",
-		// Aliases: []string{"?"},
-		Short:   "Return All Pending Invoices for One Organization",
+		Use: "listPendingInvoices",
+		Short: "Return All Pending Invoices for One Organization",
 		Annotations: map[string]string{
 			"output":      template,
 		},

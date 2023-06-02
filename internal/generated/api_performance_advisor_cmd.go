@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -55,9 +58,8 @@ func DisableSlowOperationThresholdingBuilder() *cobra.Command {
 
 	opts := DisableSlowOperationThresholdingOpts{}
 	cmd := &cobra.Command{
-		Use:     "disableSlowOperationThresholding",
-		// Aliases: []string{"?"},
-		Short:   "Disable Managed Slow Operation Threshold",
+		Use: "disableSlowOperationThresholding",
+		Short: "Disable Managed Slow Operation Threshold",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -108,9 +110,8 @@ func EnableSlowOperationThresholdingBuilder() *cobra.Command {
 
 	opts := EnableSlowOperationThresholdingOpts{}
 	cmd := &cobra.Command{
-		Use:     "enableSlowOperationThresholding",
-		// Aliases: []string{"?"},
-		Short:   "Enable Managed Slow Operation Threshold",
+		Use: "enableSlowOperationThresholding",
+		Short: "Enable Managed Slow Operation Threshold",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -153,10 +154,10 @@ func (opts *ListSlowQueriesOpts) Run(ctx context.Context) error {
 	params := &admin.ListSlowQueriesApiParams{
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
-		Duration: opts.duration,
-		Namespaces: opts.namespaces,
-		NLogs: opts.nLogs,
-		Since: opts.since,
+		Duration: &opts.duration,
+		Namespaces: &opts.namespaces,
+		NLogs: &opts.nLogs,
+		Since: &opts.since,
 	}
 	resp, _, err := opts.client.PerformanceAdvisorApi.ListSlowQueriesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -171,9 +172,8 @@ func ListSlowQueriesBuilder() *cobra.Command {
 
 	opts := ListSlowQueriesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listSlowQueries",
-		// Aliases: []string{"?"},
-		Short:   "Return Slow Queries",
+		Use: "listSlowQueries",
+		Short: "Return Slow Queries",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -220,8 +220,8 @@ func (opts *ListSlowQueryNamespacesOpts) Run(ctx context.Context) error {
 	params := &admin.ListSlowQueryNamespacesApiParams{
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
-		Duration: opts.duration,
-		Since: opts.since,
+		Duration: &opts.duration,
+		Since: &opts.since,
 	}
 	resp, _, err := opts.client.PerformanceAdvisorApi.ListSlowQueryNamespacesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -236,9 +236,8 @@ func ListSlowQueryNamespacesBuilder() *cobra.Command {
 
 	opts := ListSlowQueryNamespacesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listSlowQueryNamespaces",
-		// Aliases: []string{"?"},
-		Short:   "Return All Namespaces for One Host",
+		Use: "listSlowQueryNamespaces",
+		Short: "Return All Namespaces for One Host",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -289,14 +288,14 @@ func (opts *ListSuggestedIndexesOpts) Run(ctx context.Context) error {
 	params := &admin.ListSuggestedIndexesApiParams{
 		GroupId: opts.groupId,
 		ProcessId: opts.processId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
-		Duration: opts.duration,
-		Namespaces: opts.namespaces,
-		NExamples: opts.nExamples,
-		NIndexes: opts.nIndexes,
-		Since: opts.since,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
+		Duration: &opts.duration,
+		Namespaces: &opts.namespaces,
+		NExamples: &opts.nExamples,
+		NIndexes: &opts.nIndexes,
+		Since: &opts.since,
 	}
 	resp, _, err := opts.client.PerformanceAdvisorApi.ListSuggestedIndexesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -311,9 +310,8 @@ func ListSuggestedIndexesBuilder() *cobra.Command {
 
 	opts := ListSuggestedIndexesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listSuggestedIndexes",
-		// Aliases: []string{"?"},
-		Short:   "Return Suggested Indexes",
+		Use: "listSuggestedIndexes",
+		Short: "Return Suggested Indexes",
 		Annotations: map[string]string{
 			"output":      template,
 		},

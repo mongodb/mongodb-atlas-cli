@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func AddProjectApiKeyBuilder() *cobra.Command {
 
 	opts := AddProjectApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "addProjectApiKey",
-		// Aliases: []string{"?"},
-		Short:   "Assign One Organization API Key to One Project",
+		Use: "addProjectApiKey",
+		Short: "Assign One Organization API Key to One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -117,9 +119,8 @@ func CreateApiKeyBuilder() *cobra.Command {
 
 	opts := CreateApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "createApiKey",
-		// Aliases: []string{"?"},
-		Short:   "Create One Organization API Key",
+		Use: "createApiKey",
+		Short: "Create One Organization API Key",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -164,9 +165,9 @@ func (opts *CreateApiKeyAccessListOpts) Run(ctx context.Context) error {
 		OrgId: opts.orgId,
 		ApiUserId: opts.apiUserId,
 		
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.CreateApiKeyAccessListWithParams(ctx, params).Execute()
 	if err != nil {
@@ -181,9 +182,8 @@ func CreateApiKeyAccessListBuilder() *cobra.Command {
 
 	opts := CreateApiKeyAccessListOpts{}
 	cmd := &cobra.Command{
-		Use:     "createApiKeyAccessList",
-		// Aliases: []string{"?"},
-		Short:   "Create Access List Entries for One Organization API Key",
+		Use: "createApiKeyAccessList",
+		Short: "Create Access List Entries for One Organization API Key",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -242,9 +242,8 @@ func CreateProjectApiKeyBuilder() *cobra.Command {
 
 	opts := CreateProjectApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "createProjectApiKey",
-		// Aliases: []string{"?"},
-		Short:   "Create and Assign One Organization API Key to One Project",
+		Use: "createProjectApiKey",
+		Short: "Create and Assign One Organization API Key to One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -298,9 +297,8 @@ func DeleteApiKeyBuilder() *cobra.Command {
 
 	opts := DeleteApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteApiKey",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Organization API Key",
+		Use: "deleteApiKey",
+		Short: "Remove One Organization API Key",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -357,9 +355,8 @@ func DeleteApiKeyAccessListEntryBuilder() *cobra.Command {
 
 	opts := DeleteApiKeyAccessListEntryOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteApiKeyAccessListEntry",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Access List Entry for One Organization API Key",
+		Use: "deleteApiKeyAccessListEntry",
+		Short: "Remove One Access List Entry for One Organization API Key",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -416,9 +413,8 @@ func GetApiKeyBuilder() *cobra.Command {
 
 	opts := GetApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "getApiKey",
-		// Aliases: []string{"?"},
-		Short:   "Return One Organization API Key",
+		Use: "getApiKey",
+		Short: "Return One Organization API Key",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -475,9 +471,8 @@ func GetApiKeyAccessListBuilder() *cobra.Command {
 
 	opts := GetApiKeyAccessListOpts{}
 	cmd := &cobra.Command{
-		Use:     "getApiKeyAccessList",
-		// Aliases: []string{"?"},
-		Short:   "Return One Access List Entry for One Organization API Key",
+		Use: "getApiKeyAccessList",
+		Short: "Return One Access List Entry for One Organization API Key",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -523,9 +518,9 @@ func (opts *ListApiKeyAccessListsEntriesOpts) Run(ctx context.Context) error {
 	params := &admin.ListApiKeyAccessListsEntriesApiParams{
 		OrgId: opts.orgId,
 		ApiUserId: opts.apiUserId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.ListApiKeyAccessListsEntriesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -540,9 +535,8 @@ func ListApiKeyAccessListsEntriesBuilder() *cobra.Command {
 
 	opts := ListApiKeyAccessListsEntriesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listApiKeyAccessListsEntries",
-		// Aliases: []string{"?"},
-		Short:   "Return All Access List Entries for One Organization API Key",
+		Use: "listApiKeyAccessListsEntries",
+		Short: "Return All Access List Entries for One Organization API Key",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -587,9 +581,9 @@ func (opts *ListApiKeysOpts) initClient() func() error {
 func (opts *ListApiKeysOpts) Run(ctx context.Context) error {
 	params := &admin.ListApiKeysApiParams{
 		OrgId: opts.orgId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.ListApiKeysWithParams(ctx, params).Execute()
 	if err != nil {
@@ -604,9 +598,8 @@ func ListApiKeysBuilder() *cobra.Command {
 
 	opts := ListApiKeysOpts{}
 	cmd := &cobra.Command{
-		Use:     "listApiKeys",
-		// Aliases: []string{"?"},
-		Short:   "Return All Organization API Keys",
+		Use: "listApiKeys",
+		Short: "Return All Organization API Keys",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -649,9 +642,9 @@ func (opts *ListProjectApiKeysOpts) initClient() func() error {
 func (opts *ListProjectApiKeysOpts) Run(ctx context.Context) error {
 	params := &admin.ListProjectApiKeysApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.ListProjectApiKeysWithParams(ctx, params).Execute()
 	if err != nil {
@@ -666,9 +659,8 @@ func ListProjectApiKeysBuilder() *cobra.Command {
 
 	opts := ListProjectApiKeysOpts{}
 	cmd := &cobra.Command{
-		Use:     "listProjectApiKeys",
-		// Aliases: []string{"?"},
-		Short:   "Return All Organization API Keys Assigned to One Project",
+		Use: "listProjectApiKeys",
+		Short: "Return All Organization API Keys Assigned to One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -724,9 +716,8 @@ func RemoveProjectApiKeyBuilder() *cobra.Command {
 
 	opts := RemoveProjectApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "removeProjectApiKey",
-		// Aliases: []string{"?"},
-		Short:   "Unassign One Organization API Key from One Project",
+		Use: "removeProjectApiKey",
+		Short: "Unassign One Organization API Key from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -783,9 +774,8 @@ func UpdateApiKeyBuilder() *cobra.Command {
 
 	opts := UpdateApiKeyOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateApiKey",
-		// Aliases: []string{"?"},
-		Short:   "Update One Organization API Key",
+		Use: "updateApiKey",
+		Short: "Update One Organization API Key",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -832,9 +822,9 @@ func (opts *UpdateApiKeyRolesOpts) Run(ctx context.Context) error {
 		GroupId: opts.groupId,
 		ApiUserId: opts.apiUserId,
 		
-		PageNum: opts.pageNum,
-		ItemsPerPage: opts.itemsPerPage,
-		IncludeCount: opts.includeCount,
+		PageNum: &opts.pageNum,
+		ItemsPerPage: &opts.itemsPerPage,
+		IncludeCount: &opts.includeCount,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.UpdateApiKeyRolesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -849,9 +839,8 @@ func UpdateApiKeyRolesBuilder() *cobra.Command {
 
 	opts := UpdateApiKeyRolesOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateApiKeyRoles",
-		// Aliases: []string{"?"},
-		Short:   "Update Roles of One Organization API Key to One Project",
+		Use: "updateApiKeyRoles",
+		Short: "Update Roles of One Organization API Key to One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},

@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -53,9 +56,8 @@ func GetSystemStatusBuilder() *cobra.Command {
 
 	opts := GetSystemStatusOpts{}
 	cmd := &cobra.Command{
-		Use:     "getSystemStatus",
-		// Aliases: []string{"?"},
-		Short:   "Return the status of this MongoDB application",
+		Use: "getSystemStatus",
+		Short: "Return the status of this MongoDB application",
 		Annotations: map[string]string{
 			"output":      template,
 		},

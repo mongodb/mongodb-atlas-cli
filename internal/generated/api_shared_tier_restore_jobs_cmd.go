@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func CreateSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := CreateSharedClusterBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "createSharedClusterBackupRestoreJob",
-		// Aliases: []string{"?"},
-		Short:   "Create One Restore Job from One M2 or M5 Cluster",
+		Use: "createSharedClusterBackupRestoreJob",
+		Short: "Create One Restore Job from One M2 or M5 Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -119,9 +121,8 @@ func GetSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := GetSharedClusterBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "getSharedClusterBackupRestoreJob",
-		// Aliases: []string{"?"},
-		Short:   "Return One Restore Job for One M2 or M5 Cluster",
+		Use: "getSharedClusterBackupRestoreJob",
+		Short: "Return One Restore Job for One M2 or M5 Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -178,9 +179,8 @@ func ListSharedClusterBackupRestoreJobsBuilder() *cobra.Command {
 
 	opts := ListSharedClusterBackupRestoreJobsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listSharedClusterBackupRestoreJobs",
-		// Aliases: []string{"?"},
-		Short:   "Return All Restore Jobs for One M2 or M5 Cluster",
+		Use: "listSharedClusterBackupRestoreJobs",
+		Short: "Return All Restore Jobs for One M2 or M5 Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},

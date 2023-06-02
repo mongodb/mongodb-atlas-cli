@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -42,7 +45,7 @@ func (opts *CreateProjectOpts) initClient() func() error {
 func (opts *CreateProjectOpts) Run(ctx context.Context) error {
 	params := &admin.CreateProjectApiParams{
 		
-		ProjectOwnerId: opts.projectOwnerId,
+		ProjectOwnerId: &opts.projectOwnerId,
 	}
 	resp, _, err := opts.client.ProjectsApi.CreateProjectWithParams(ctx, params).Execute()
 	if err != nil {
@@ -57,9 +60,8 @@ func CreateProjectBuilder() *cobra.Command {
 
 	opts := CreateProjectOpts{}
 	cmd := &cobra.Command{
-		Use:     "createProject",
-		// Aliases: []string{"?"},
-		Short:   "Create One Project",
+		Use: "createProject",
+		Short: "Create One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -112,9 +114,8 @@ func CreateProjectInvitationBuilder() *cobra.Command {
 
 	opts := CreateProjectInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "createProjectInvitation",
-		// Aliases: []string{"?"},
-		Short:   "Invite One MongoDB Cloud User to Join One Project",
+		Use: "createProjectInvitation",
+		Short: "Invite One MongoDB Cloud User to Join One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -166,9 +167,8 @@ func DeleteProjectBuilder() *cobra.Command {
 
 	opts := DeleteProjectOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteProject",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Project",
+		Use: "deleteProject",
+		Short: "Remove One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -221,9 +221,8 @@ func DeleteProjectInvitationBuilder() *cobra.Command {
 
 	opts := DeleteProjectInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteProjectInvitation",
-		// Aliases: []string{"?"},
-		Short:   "Cancel One Project Invitation",
+		Use: "deleteProjectInvitation",
+		Short: "Cancel One Project Invitation",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -278,9 +277,8 @@ func DeleteProjectLimitBuilder() *cobra.Command {
 
 	opts := DeleteProjectLimitOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteProjectLimit",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Project Limit",
+		Use: "deleteProjectLimit",
+		Short: "Remove One Project Limit",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -333,9 +331,8 @@ func GetProjectBuilder() *cobra.Command {
 
 	opts := GetProjectOpts{}
 	cmd := &cobra.Command{
-		Use:     "getProject",
-		// Aliases: []string{"?"},
-		Short:   "Return One Project",
+		Use: "getProject",
+		Short: "Return One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -386,9 +383,8 @@ func GetProjectByNameBuilder() *cobra.Command {
 
 	opts := GetProjectByNameOpts{}
 	cmd := &cobra.Command{
-		Use:     "getProjectByName",
-		// Aliases: []string{"?"},
-		Short:   "Return One Project using Its Name",
+		Use: "getProjectByName",
+		Short: "Return One Project using Its Name",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -441,9 +437,8 @@ func GetProjectInvitationBuilder() *cobra.Command {
 
 	opts := GetProjectInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "getProjectInvitation",
-		// Aliases: []string{"?"},
-		Short:   "Return One Project Invitation",
+		Use: "getProjectInvitation",
+		Short: "Return One Project Invitation",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -498,9 +493,8 @@ func GetProjectLimitBuilder() *cobra.Command {
 
 	opts := GetProjectLimitOpts{}
 	cmd := &cobra.Command{
-		Use:     "getProjectLimit",
-		// Aliases: []string{"?"},
-		Short:   "Return One Limit for One Project",
+		Use: "getProjectLimit",
+		Short: "Return One Limit for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -553,9 +547,8 @@ func GetProjectSettingsBuilder() *cobra.Command {
 
 	opts := GetProjectSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "getProjectSettings",
-		// Aliases: []string{"?"},
-		Short:   "Return One Project Settings",
+		Use: "getProjectSettings",
+		Short: "Return One Project Settings",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -593,7 +586,7 @@ func (opts *ListProjectInvitationsOpts) initClient() func() error {
 func (opts *ListProjectInvitationsOpts) Run(ctx context.Context) error {
 	params := &admin.ListProjectInvitationsApiParams{
 		GroupId: opts.groupId,
-		Username: opts.username,
+		Username: &opts.username,
 	}
 	resp, _, err := opts.client.ProjectsApi.ListProjectInvitationsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -608,9 +601,8 @@ func ListProjectInvitationsBuilder() *cobra.Command {
 
 	opts := ListProjectInvitationsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listProjectInvitations",
-		// Aliases: []string{"?"},
-		Short:   "Return All Project Invitations",
+		Use: "listProjectInvitations",
+		Short: "Return All Project Invitations",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -662,9 +654,8 @@ func ListProjectLimitsBuilder() *cobra.Command {
 
 	opts := ListProjectLimitsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listProjectLimits",
-		// Aliases: []string{"?"},
-		Short:   "Return All Limits for One Project",
+		Use: "listProjectLimits",
+		Short: "Return All Limits for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -706,11 +697,11 @@ func (opts *ListProjectUsersOpts) initClient() func() error {
 func (opts *ListProjectUsersOpts) Run(ctx context.Context) error {
 	params := &admin.ListProjectUsersApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
-		FlattenTeams: opts.flattenTeams,
-		IncludeOrgUsers: opts.includeOrgUsers,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
+		FlattenTeams: &opts.flattenTeams,
+		IncludeOrgUsers: &opts.includeOrgUsers,
 	}
 	resp, _, err := opts.client.ProjectsApi.ListProjectUsersWithParams(ctx, params).Execute()
 	if err != nil {
@@ -725,9 +716,8 @@ func ListProjectUsersBuilder() *cobra.Command {
 
 	opts := ListProjectUsersOpts{}
 	cmd := &cobra.Command{
-		Use:     "listProjectUsers",
-		// Aliases: []string{"?"},
-		Short:   "Return All Users in One Project",
+		Use: "listProjectUsers",
+		Short: "Return All Users in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -770,9 +760,9 @@ func (opts *ListProjectsOpts) initClient() func() error {
 
 func (opts *ListProjectsOpts) Run(ctx context.Context) error {
 	params := &admin.ListProjectsApiParams{
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.ProjectsApi.ListProjectsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -787,9 +777,8 @@ func ListProjectsBuilder() *cobra.Command {
 
 	opts := ListProjectsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listProjects",
-		// Aliases: []string{"?"},
-		Short:   "Return All Projects",
+		Use: "listProjects",
+		Short: "Return All Projects",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -843,9 +832,8 @@ func RemoveProjectUserBuilder() *cobra.Command {
 
 	opts := RemoveProjectUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "removeProjectUser",
-		// Aliases: []string{"?"},
-		Short:   "Remove One User from One Project",
+		Use: "removeProjectUser",
+		Short: "Remove One User from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -902,9 +890,8 @@ func SetProjectLimitBuilder() *cobra.Command {
 
 	opts := SetProjectLimitOpts{}
 	cmd := &cobra.Command{
-		Use:     "setProjectLimit",
-		// Aliases: []string{"?"},
-		Short:   "Set One Project Limit",
+		Use: "setProjectLimit",
+		Short: "Set One Project Limit",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -960,9 +947,8 @@ func UpdateProjectBuilder() *cobra.Command {
 
 	opts := UpdateProjectOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateProject",
-		// Aliases: []string{"?"},
-		Short:   "Update One Project Name",
+		Use: "updateProject",
+		Short: "Update One Project Name",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1016,9 +1002,8 @@ func UpdateProjectInvitationBuilder() *cobra.Command {
 
 	opts := UpdateProjectInvitationOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateProjectInvitation",
-		// Aliases: []string{"?"},
-		Short:   "Update One Project Invitation",
+		Use: "updateProjectInvitation",
+		Short: "Update One Project Invitation",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1074,9 +1059,8 @@ func UpdateProjectInvitationByIdBuilder() *cobra.Command {
 
 	opts := UpdateProjectInvitationByIdOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateProjectInvitationById",
-		// Aliases: []string{"?"},
-		Short:   "Update One Project Invitation by Invitation ID",
+		Use: "updateProjectInvitationById",
+		Short: "Update One Project Invitation by Invitation ID",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -1132,9 +1116,8 @@ func UpdateProjectSettingsBuilder() *cobra.Command {
 
 	opts := UpdateProjectSettingsOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateProjectSettings",
-		// Aliases: []string{"?"},
-		Short:   "Update One Project Settings",
+		Use: "updateProjectSettings",
+		Short: "Update One Project Settings",
 		Annotations: map[string]string{
 			"output":      template,
 		},

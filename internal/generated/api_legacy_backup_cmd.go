@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func DeleteLegacySnapshotBuilder() *cobra.Command {
 
 	opts := DeleteLegacySnapshotOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteLegacySnapshot",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Legacy Backup Snapshot",
+		Use: "deleteLegacySnapshot",
+		Short: "Remove One Legacy Backup Snapshot",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -120,9 +122,8 @@ func GetLegacyBackupCheckpointBuilder() *cobra.Command {
 
 	opts := GetLegacyBackupCheckpointOpts{}
 	cmd := &cobra.Command{
-		Use:     "getLegacyBackupCheckpoint",
-		// Aliases: []string{"?"},
-		Short:   "Return One Legacy Backup Checkpoint",
+		Use: "getLegacyBackupCheckpoint",
+		Short: "Return One Legacy Backup Checkpoint",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -181,9 +182,8 @@ func GetLegacyBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := GetLegacyBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "getLegacyBackupRestoreJob",
-		// Aliases: []string{"?"},
-		Short:   "Return One Legacy Backup Restore Job",
+		Use: "getLegacyBackupRestoreJob",
+		Short: "Return One Legacy Backup Restore Job",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -242,9 +242,8 @@ func GetLegacySnapshotBuilder() *cobra.Command {
 
 	opts := GetLegacySnapshotOpts{}
 	cmd := &cobra.Command{
-		Use:     "getLegacySnapshot",
-		// Aliases: []string{"?"},
-		Short:   "Return One Legacy Backup Snapshot",
+		Use: "getLegacySnapshot",
+		Short: "Return One Legacy Backup Snapshot",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -301,9 +300,8 @@ func GetLegacySnapshotScheduleBuilder() *cobra.Command {
 
 	opts := GetLegacySnapshotScheduleOpts{}
 	cmd := &cobra.Command{
-		Use:     "getLegacySnapshotSchedule",
-		// Aliases: []string{"?"},
-		Short:   "Return One Snapshot Schedule",
+		Use: "getLegacySnapshotSchedule",
+		Short: "Return One Snapshot Schedule",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -347,9 +345,9 @@ func (opts *ListLegacyBackupCheckpointsOpts) Run(ctx context.Context) error {
 	params := &admin.ListLegacyBackupCheckpointsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.LegacyBackupApi.ListLegacyBackupCheckpointsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -364,9 +362,8 @@ func ListLegacyBackupCheckpointsBuilder() *cobra.Command {
 
 	opts := ListLegacyBackupCheckpointsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listLegacyBackupCheckpoints",
-		// Aliases: []string{"?"},
-		Short:   "Return All Legacy Backup Checkpoints",
+		Use: "listLegacyBackupCheckpoints",
+		Short: "Return All Legacy Backup Checkpoints",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -414,10 +411,10 @@ func (opts *ListLegacyBackupRestoreJobsOpts) Run(ctx context.Context) error {
 	params := &admin.ListLegacyBackupRestoreJobsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
-		BatchId: opts.batchId,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
+		BatchId: &opts.batchId,
 	}
 	resp, _, err := opts.client.LegacyBackupApi.ListLegacyBackupRestoreJobsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -432,9 +429,8 @@ func ListLegacyBackupRestoreJobsBuilder() *cobra.Command {
 
 	opts := ListLegacyBackupRestoreJobsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listLegacyBackupRestoreJobs",
-		// Aliases: []string{"?"},
-		Short:   "Return All Legacy Backup Restore Jobs",
+		Use: "listLegacyBackupRestoreJobs",
+		Short: "Return All Legacy Backup Restore Jobs",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -483,10 +479,10 @@ func (opts *ListLegacySnapshotsOpts) Run(ctx context.Context) error {
 	params := &admin.ListLegacySnapshotsApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
-		Completed: opts.completed,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
+		Completed: &opts.completed,
 	}
 	resp, _, err := opts.client.LegacyBackupApi.ListLegacySnapshotsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -501,9 +497,8 @@ func ListLegacySnapshotsBuilder() *cobra.Command {
 
 	opts := ListLegacySnapshotsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listLegacySnapshots",
-		// Aliases: []string{"?"},
-		Short:   "Return All Legacy Backup Snapshots",
+		Use: "listLegacySnapshots",
+		Short: "Return All Legacy Backup Snapshots",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -566,9 +561,8 @@ func UpdateLegacySnapshotRetentionBuilder() *cobra.Command {
 
 	opts := UpdateLegacySnapshotRetentionOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateLegacySnapshotRetention",
-		// Aliases: []string{"?"},
-		Short:   "Change One Legacy Backup Snapshot Expiration",
+		Use: "updateLegacySnapshotRetention",
+		Short: "Change One Legacy Backup Snapshot Expiration",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -628,9 +622,8 @@ func UpdateLegacySnapshotScheduleBuilder() *cobra.Command {
 
 	opts := UpdateLegacySnapshotScheduleOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateLegacySnapshotSchedule",
-		// Aliases: []string{"?"},
-		Short:   "Update Snapshot Schedule for One Cluster",
+		Use: "updateLegacySnapshotSchedule",
+		Short: "Update Snapshot Schedule for One Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},

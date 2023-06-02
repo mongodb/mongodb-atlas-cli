@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func EndOutageSimulationBuilder() *cobra.Command {
 
 	opts := EndOutageSimulationOpts{}
 	cmd := &cobra.Command{
-		Use:     "endOutageSimulation",
-		// Aliases: []string{"?"},
-		Short:   "End an Outage Simulation",
+		Use: "endOutageSimulation",
+		Short: "End an Outage Simulation",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -114,9 +116,8 @@ func GetOutageSimulationBuilder() *cobra.Command {
 
 	opts := GetOutageSimulationOpts{}
 	cmd := &cobra.Command{
-		Use:     "getOutageSimulation",
-		// Aliases: []string{"?"},
-		Short:   "Return One Outage Simulation",
+		Use: "getOutageSimulation",
+		Short: "Return One Outage Simulation",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -173,9 +174,8 @@ func StartOutageSimulationBuilder() *cobra.Command {
 
 	opts := StartOutageSimulationOpts{}
 	cmd := &cobra.Command{
-		Use:     "startOutageSimulation",
-		// Aliases: []string{"?"},
-		Short:   "Start an Outage Simulation",
+		Use: "startOutageSimulation",
+		Short: "Start an Outage Simulation",
 		Annotations: map[string]string{
 			"output":      template,
 		},

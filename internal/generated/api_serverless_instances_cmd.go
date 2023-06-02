@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func CreateServerlessInstanceBuilder() *cobra.Command {
 
 	opts := CreateServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:     "createServerlessInstance",
-		// Aliases: []string{"?"},
-		Short:   "Create One Serverless Instance in One Project",
+		Use: "createServerlessInstance",
+		Short: "Create One Serverless Instance in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -113,9 +115,8 @@ func DeleteServerlessInstanceBuilder() *cobra.Command {
 
 	opts := DeleteServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteServerlessInstance",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Serverless Instance from One Project",
+		Use: "deleteServerlessInstance",
+		Short: "Remove One Serverless Instance from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -170,9 +171,8 @@ func GetServerlessInstanceBuilder() *cobra.Command {
 
 	opts := GetServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:     "getServerlessInstance",
-		// Aliases: []string{"?"},
-		Short:   "Return One Serverless Instance from One Project",
+		Use: "getServerlessInstance",
+		Short: "Return One Serverless Instance from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -214,9 +214,9 @@ func (opts *ListServerlessInstancesOpts) initClient() func() error {
 func (opts *ListServerlessInstancesOpts) Run(ctx context.Context) error {
 	params := &admin.ListServerlessInstancesApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.ListServerlessInstancesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -231,9 +231,8 @@ func ListServerlessInstancesBuilder() *cobra.Command {
 
 	opts := ListServerlessInstancesOpts{}
 	cmd := &cobra.Command{
-		Use:     "listServerlessInstances",
-		// Aliases: []string{"?"},
-		Short:   "Return All Serverless Instances from One Project",
+		Use: "listServerlessInstances",
+		Short: "Return All Serverless Instances from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -291,9 +290,8 @@ func UpdateServerlessInstanceBuilder() *cobra.Command {
 
 	opts := UpdateServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateServerlessInstance",
-		// Aliases: []string{"?"},
-		Short:   "Update One Serverless Instance in One Project",
+		Use: "updateServerlessInstance",
+		Short: "Update One Serverless Instance in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},

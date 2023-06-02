@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -55,9 +58,8 @@ func GetAuditingConfigurationBuilder() *cobra.Command {
 
 	opts := GetAuditingConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "getAuditingConfiguration",
-		// Aliases: []string{"?"},
-		Short:   "Return the Auditing Configuration for One Project",
+		Use: "getAuditingConfiguration",
+		Short: "Return the Auditing Configuration for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -110,9 +112,8 @@ func UpdateAuditingConfigurationBuilder() *cobra.Command {
 
 	opts := UpdateAuditingConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateAuditingConfiguration",
-		// Aliases: []string{"?"},
-		Short:   "Update Auditing Configuration for One Project",
+		Use: "updateAuditingConfiguration",
+		Short: "Update Auditing Configuration for One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},

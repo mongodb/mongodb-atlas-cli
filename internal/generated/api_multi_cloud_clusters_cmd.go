@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func CreateClusterBuilder() *cobra.Command {
 
 	opts := CreateClusterOpts{}
 	cmd := &cobra.Command{
-		Use:     "createCluster",
-		// Aliases: []string{"?"},
-		Short:   "Create One Multi-Cloud Cluster from One Project",
+		Use: "createCluster",
+		Short: "Create One Multi-Cloud Cluster from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -100,7 +102,7 @@ func (opts *DeleteClusterOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteClusterApiParams{
 		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		RetainBackups: opts.retainBackups,
+		RetainBackups: &opts.retainBackups,
 	}
 	_, err := opts.client.MultiCloudClustersApi.DeleteClusterWithParams(ctx, params).Execute()
 	if err != nil {
@@ -115,9 +117,8 @@ func DeleteClusterBuilder() *cobra.Command {
 
 	opts := DeleteClusterOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteCluster",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Multi-Cloud Cluster from One Project",
+		Use: "deleteCluster",
+		Short: "Remove One Multi-Cloud Cluster from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -173,9 +174,8 @@ func GetClusterBuilder() *cobra.Command {
 
 	opts := GetClusterOpts{}
 	cmd := &cobra.Command{
-		Use:     "getCluster",
-		// Aliases: []string{"?"},
-		Short:   "Return One Multi-Cloud Cluster from One Project",
+		Use: "getCluster",
+		Short: "Return One Multi-Cloud Cluster from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -217,9 +217,9 @@ func (opts *ListClustersOpts) initClient() func() error {
 func (opts *ListClustersOpts) Run(ctx context.Context) error {
 	params := &admin.ListClustersApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.MultiCloudClustersApi.ListClustersWithParams(ctx, params).Execute()
 	if err != nil {
@@ -234,9 +234,8 @@ func ListClustersBuilder() *cobra.Command {
 
 	opts := ListClustersOpts{}
 	cmd := &cobra.Command{
-		Use:     "listClusters",
-		// Aliases: []string{"?"},
-		Short:   "Return All Multi-Cloud Clusters from One Project",
+		Use: "listClusters",
+		Short: "Return All Multi-Cloud Clusters from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -292,9 +291,8 @@ func TestFailoverBuilder() *cobra.Command {
 
 	opts := TestFailoverOpts{}
 	cmd := &cobra.Command{
-		Use:     "testFailover",
-		// Aliases: []string{"?"},
-		Short:   "Test Failover for One Multi-Cloud Cluster",
+		Use: "testFailover",
+		Short: "Test Failover for One Multi-Cloud Cluster",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -351,9 +349,8 @@ func UpdateClusterBuilder() *cobra.Command {
 
 	opts := UpdateClusterOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateCluster",
-		// Aliases: []string{"?"},
-		Short:   "Modify One Multi-Cloud Cluster from One Project",
+		Use: "updateCluster",
+		Short: "Modify One Multi-Cloud Cluster from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},

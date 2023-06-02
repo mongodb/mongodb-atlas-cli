@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,9 +62,8 @@ func CreateLegacyBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := CreateLegacyBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:     "createLegacyBackupRestoreJob",
-		// Aliases: []string{"?"},
-		Short:   "Create One Legacy Backup Restore Job",
+		Use: "createLegacyBackupRestoreJob",
+		Short: "Create One Legacy Backup Restore Job",
 		Annotations: map[string]string{
 			"output":      template,
 		},

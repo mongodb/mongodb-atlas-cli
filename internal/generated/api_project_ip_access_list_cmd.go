@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -46,9 +49,9 @@ func (opts *CreateProjectIpAccessListOpts) Run(ctx context.Context) error {
 	params := &admin.CreateProjectIpAccessListApiParams{
 		GroupId: opts.groupId,
 		
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.ProjectIPAccessListApi.CreateProjectIpAccessListWithParams(ctx, params).Execute()
 	if err != nil {
@@ -63,9 +66,8 @@ func CreateProjectIpAccessListBuilder() *cobra.Command {
 
 	opts := CreateProjectIpAccessListOpts{}
 	cmd := &cobra.Command{
-		Use:     "createProjectIpAccessList",
-		// Aliases: []string{"?"},
-		Short:   "Add Entries to Project IP Access List",
+		Use: "createProjectIpAccessList",
+		Short: "Add Entries to Project IP Access List",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -122,9 +124,8 @@ func DeleteProjectIpAccessListBuilder() *cobra.Command {
 
 	opts := DeleteProjectIpAccessListOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteProjectIpAccessList",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Entry from One Project IP Access List",
+		Use: "deleteProjectIpAccessList",
+		Short: "Remove One Entry from One Project IP Access List",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -179,9 +180,8 @@ func GetProjectIpAccessListStatusBuilder() *cobra.Command {
 
 	opts := GetProjectIpAccessListStatusOpts{}
 	cmd := &cobra.Command{
-		Use:     "getProjectIpAccessListStatus",
-		// Aliases: []string{"?"},
-		Short:   "Return Status of One Project IP Access List Entry",
+		Use: "getProjectIpAccessListStatus",
+		Short: "Return Status of One Project IP Access List Entry",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -236,9 +236,8 @@ func GetProjectIpListBuilder() *cobra.Command {
 
 	opts := GetProjectIpListOpts{}
 	cmd := &cobra.Command{
-		Use:     "getProjectIpList",
-		// Aliases: []string{"?"},
-		Short:   "Return One Project IP Access List Entry",
+		Use: "getProjectIpList",
+		Short: "Return One Project IP Access List Entry",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -280,9 +279,9 @@ func (opts *ListProjectIpAccessListsOpts) initClient() func() error {
 func (opts *ListProjectIpAccessListsOpts) Run(ctx context.Context) error {
 	params := &admin.ListProjectIpAccessListsApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.ProjectIPAccessListApi.ListProjectIpAccessListsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -297,9 +296,8 @@ func ListProjectIpAccessListsBuilder() *cobra.Command {
 
 	opts := ListProjectIpAccessListsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listProjectIpAccessLists",
-		// Aliases: []string{"?"},
-		Short:   "Return Project IP Access List",
+		Use: "listProjectIpAccessLists",
+		Short: "Return Project IP Access List",
 		Annotations: map[string]string{
 			"output":      template,
 		},

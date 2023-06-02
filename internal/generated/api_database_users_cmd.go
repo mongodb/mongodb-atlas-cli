@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -57,9 +60,8 @@ func CreateDatabaseUserBuilder() *cobra.Command {
 
 	opts := CreateDatabaseUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "createDatabaseUser",
-		// Aliases: []string{"?"},
-		Short:   "Create One Database User in One Project",
+		Use: "createDatabaseUser",
+		Short: "Create One Database User in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -115,9 +117,8 @@ func DeleteDatabaseUserBuilder() *cobra.Command {
 
 	opts := DeleteDatabaseUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteDatabaseUser",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Database User from One Project",
+		Use: "deleteDatabaseUser",
+		Short: "Remove One Database User from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -176,9 +177,8 @@ func GetDatabaseUserBuilder() *cobra.Command {
 
 	opts := GetDatabaseUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "getDatabaseUser",
-		// Aliases: []string{"?"},
-		Short:   "Return One Database User from One Project",
+		Use: "getDatabaseUser",
+		Short: "Return One Database User from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -222,9 +222,9 @@ func (opts *ListDatabaseUsersOpts) initClient() func() error {
 func (opts *ListDatabaseUsersOpts) Run(ctx context.Context) error {
 	params := &admin.ListDatabaseUsersApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.DatabaseUsersApi.ListDatabaseUsersWithParams(ctx, params).Execute()
 	if err != nil {
@@ -239,9 +239,8 @@ func ListDatabaseUsersBuilder() *cobra.Command {
 
 	opts := ListDatabaseUsersOpts{}
 	cmd := &cobra.Command{
-		Use:     "listDatabaseUsers",
-		// Aliases: []string{"?"},
-		Short:   "Return All Database Users from One Project",
+		Use: "listDatabaseUsers",
+		Short: "Return All Database Users from One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -301,9 +300,8 @@ func UpdateDatabaseUserBuilder() *cobra.Command {
 
 	opts := UpdateDatabaseUserOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateDatabaseUser",
-		// Aliases: []string{"?"},
-		Short:   "Update One Database User in One Project",
+		Use: "updateDatabaseUser",
+		Short: "Update One Database User in One Project",
 		Annotations: map[string]string{
 			"output":      template,
 		},

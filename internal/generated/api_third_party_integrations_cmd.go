@@ -18,6 +18,9 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -48,9 +51,9 @@ func (opts *CreateThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 		IntegrationType: opts.integrationType,
 		GroupId: opts.groupId,
 		
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.CreateThirdPartyIntegrationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -65,9 +68,8 @@ func CreateThirdPartyIntegrationBuilder() *cobra.Command {
 
 	opts := CreateThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "createThirdPartyIntegration",
-		// Aliases: []string{"?"},
-		Short:   "Configure One Third-Party Service Integration",
+		Use: "createThirdPartyIntegration",
+		Short: "Configure One Third-Party Service Integration",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -126,9 +128,8 @@ func DeleteThirdPartyIntegrationBuilder() *cobra.Command {
 
 	opts := DeleteThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "deleteThirdPartyIntegration",
-		// Aliases: []string{"?"},
-		Short:   "Remove One Third-Party Service Integration",
+		Use: "deleteThirdPartyIntegration",
+		Short: "Remove One Third-Party Service Integration",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -183,9 +184,8 @@ func GetThirdPartyIntegrationBuilder() *cobra.Command {
 
 	opts := GetThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "getThirdPartyIntegration",
-		// Aliases: []string{"?"},
-		Short:   "Return One Third-Party Service Integration",
+		Use: "getThirdPartyIntegration",
+		Short: "Return One Third-Party Service Integration",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -227,9 +227,9 @@ func (opts *ListThirdPartyIntegrationsOpts) initClient() func() error {
 func (opts *ListThirdPartyIntegrationsOpts) Run(ctx context.Context) error {
 	params := &admin.ListThirdPartyIntegrationsApiParams{
 		GroupId: opts.groupId,
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.ListThirdPartyIntegrationsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -244,9 +244,8 @@ func ListThirdPartyIntegrationsBuilder() *cobra.Command {
 
 	opts := ListThirdPartyIntegrationsOpts{}
 	cmd := &cobra.Command{
-		Use:     "listThirdPartyIntegrations",
-		// Aliases: []string{"?"},
-		Short:   "Return All Active Third-Party Service Integrations",
+		Use: "listThirdPartyIntegrations",
+		Short: "Return All Active Third-Party Service Integrations",
 		Annotations: map[string]string{
 			"output":      template,
 		},
@@ -293,9 +292,9 @@ func (opts *UpdateThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 		IntegrationType: opts.integrationType,
 		GroupId: opts.groupId,
 		
-		IncludeCount: opts.includeCount,
-		ItemsPerPage: opts.itemsPerPage,
-		PageNum: opts.pageNum,
+		IncludeCount: &opts.includeCount,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.UpdateThirdPartyIntegrationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -310,9 +309,8 @@ func UpdateThirdPartyIntegrationBuilder() *cobra.Command {
 
 	opts := UpdateThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
-		Use:     "updateThirdPartyIntegration",
-		// Aliases: []string{"?"},
-		Short:   "Update One Third-Party Service Integration",
+		Use: "updateThirdPartyIntegration",
+		Short: "Update One Third-Party Service Integration",
 		Annotations: map[string]string{
 			"output":      template,
 		},

@@ -161,7 +161,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			InterfaceEndpoints:  nil,
 			Status:              nil,
 		}
-		privateEndpoints := []interface{}{&privateAWSEndpoint}
+		privateEndpoints := []atlasv2.EndpointService{privateAWSEndpoint}
 
 		alertConfigs := []mongodbatlas.AlertConfiguration{
 			{
@@ -1100,7 +1100,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 			Status:              nil,
 		}
 
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]interface{}{&privateEndpoint}, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]atlasv2.EndpointService{privateEndpoint}, nil)
 		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAzure)).Return(nil, nil)
 		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP)).Return(nil, nil)
 
@@ -1139,7 +1139,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 			Status:                       nil,
 		}
 
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]interface{}{&privateEndpoint}, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]atlasv2.EndpointService{privateEndpoint}, nil)
 		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAWS)).Return(nil, nil)
 		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP)).Return(nil, nil)
 

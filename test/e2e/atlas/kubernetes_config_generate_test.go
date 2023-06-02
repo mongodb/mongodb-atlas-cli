@@ -700,7 +700,7 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 		t.Cleanup(func() {
 			deleteAllPrivateEndpoints(t, cliPath, generator.projectID, azureEntity)
 		})
-		var createdNetworkPeer atlasv2.EndpointService
+		var createdNetworkPeer *atlasv2.EndpointService
 		err = json.Unmarshal(resp, &createdNetworkPeer)
 		require.NoError(t, err)
 		expectedProject.Spec.PrivateEndpoints[0].ID = createdNetworkPeer.GetId()

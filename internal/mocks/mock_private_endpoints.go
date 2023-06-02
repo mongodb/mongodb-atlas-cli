@@ -35,10 +35,10 @@ func (m *MockPrivateEndpointLister) EXPECT() *MockPrivateEndpointListerMockRecor
 }
 
 // PrivateEndpoints mocks base method.
-func (m *MockPrivateEndpointLister) PrivateEndpoints(arg0, arg1 string) ([]interface{}, error) {
+func (m *MockPrivateEndpointLister) PrivateEndpoints(arg0, arg1 string) ([]admin.EndpointService, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PrivateEndpoints", arg0, arg1)
-	ret0, _ := ret[0].([]interface{})
+	ret0, _ := ret[0].([]admin.EndpointService)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

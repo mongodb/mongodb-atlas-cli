@@ -24,7 +24,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_private_endpoints.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PrivateEndpointLister,PrivateEndpointDescriber,PrivateEndpointCreator,PrivateEndpointDeleter,InterfaceEndpointDescriber,InterfaceEndpointCreator,InterfaceEndpointDeleter,RegionalizedPrivateEndpointSettingUpdater,RegionalizedPrivateEndpointSettingDescriber,DataLakePrivateEndpointLister,DataLakePrivateEndpointCreator,DataLakePrivateEndpointDeleter,DataLakePrivateEndpointDescriber
 
 type PrivateEndpointLister interface {
-	PrivateEndpoints(string, string) ([]interface{}, error)
+	PrivateEndpoints(string, string) ([]atlasv2.EndpointService, error)
 }
 
 type DataLakePrivateEndpointLister interface {
@@ -76,16 +76,11 @@ type RegionalizedPrivateEndpointSettingDescriber interface {
 }
 
 // PrivateEndpoints encapsulates the logic to manage different cloud providers.
-func (s *Store) PrivateEndpoints(projectID, provider string) ([]interface{}, error) {
+func (s *Store) PrivateEndpoints(projectID, provider string) ([]atlasv2.EndpointService, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.PrivateEndpointServicesApi.ListPrivateEndpointServices(s.ctx, projectID, provider).Execute()
-
-		endpointServices := make([]interface{}, len(result))
-		for i, service := range result {
-			endpointServices[i] = service
-		}
-		return endpointServices, err
+		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

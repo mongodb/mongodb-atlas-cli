@@ -76,7 +76,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.Label, flag.Label, []string{}, usage.Label)
+	cmd.Flags().StringSliceVar(&opts.Label, flag.Label, []string{}, usage.Label+usage.UpdateWarning)
 	cmd.Flags().BoolVar(&opts.Assignment, flag.Assignment, false, usage.OplogAssignment)
 	cmd.Flags().Int64Var(&opts.MaxCapacityGB, flag.MaxCapacityGB, 0, usage.MaxCapacityGB)
 	cmd.Flags().StringVar(&opts.URI, flag.URI, "", usage.BlockstoreURI)

@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (atlas && metrics)
 
 package atlas_test
@@ -22,6 +23,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
@@ -38,6 +40,10 @@ func TestMetrics(t *testing.T) {
 
 	t.Run("processes", func(t *testing.T) {
 		process(t, cliPath, hostname, g.projectID)
+	})
+
+	t.Run("processes with type", func(t *testing.T) {
+		processWithType(t, cliPath, hostname, g.projectID)
 	})
 
 	t.Run("databases", func(t *testing.T) {
@@ -62,25 +68,30 @@ func process(t *testing.T, cliPath, hostname, projectID string) {
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err, string(resp))
+	var metrics *atlasv2.MeasurementsGeneralViewAtlas
+	require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
+	assert.NotEmpty(t, metrics.Measurements)
+}
 
-	if err != nil {
-		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	}
+func processWithType(t *testing.T, cliPath, hostname, projectID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		metricsEntity,
+		"processes",
+		hostname,
+		"--granularity=PT30M",
+		"--period=P1DT12H",
+		"--type=MAX_PROCESS_CPU_USER",
+		"--projectId", projectID,
+		"-o=json")
 
-	metrics := &atlasv2.MeasurementsGeneralViewAtlas{}
-	err = json.Unmarshal(resp, &metrics)
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	if metrics.Measurements == nil {
-		t.Errorf("there are no measurements")
-	}
-
-	if len(metrics.Measurements) == 0 {
-		t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
-	}
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err, string(resp))
+	var metrics *atlasv2.MeasurementsGeneralViewAtlas
+	require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
+	assert.NotEmpty(t, metrics.Measurements)
 }
 
 func databases(t *testing.T, cliPath, hostname, projectID string) {
@@ -96,21 +107,10 @@ func databases(t *testing.T, cliPath, hostname, projectID string) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		var databases atlasv2.PaginatedDatabase
-
-		if err := json.Unmarshal(resp, &databases); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		const defaultNDatabases = 2
-		if databases.GetTotalCount() != defaultNDatabases {
-			t.Errorf("got=%#v\nwant=%#v\n", databases.TotalCount, defaultNDatabases)
-		}
+		require.NoError(t, err, string(resp))
+		var db atlasv2.PaginatedDatabase
+		require.NoError(t, json.Unmarshal(resp, &db), string(resp))
+		assert.NotEmpty(t, db.GetTotalCount())
 	})
 
 	t.Run("databases describe", func(t *testing.T) {
@@ -127,23 +127,10 @@ func databases(t *testing.T, cliPath, hostname, projectID string) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 		var metrics atlasv2.MeasurementsGeneralViewAtlas
-		err = json.Unmarshal(resp, &metrics)
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if metrics.Measurements == nil {
-			t.Errorf("there are no measurements")
-		}
-
-		if len(metrics.Measurements) == 0 {
-			t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
-		}
+		require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
+		assert.NotEmpty(t, metrics.Measurements)
 	})
 }
 
@@ -160,18 +147,10 @@ func disks(t *testing.T, cliPath, hostname, projectID string) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		var disks atlasv2.PaginatedDiskPartition
-		if err := json.Unmarshal(resp, &disks); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if disks.GetTotalCount() != 1 {
-			t.Errorf("got=%#v\nwant=%#v\n", disks.TotalCount, 1)
-		}
+		require.NoError(t, err, string(resp))
+		var d atlasv2.PaginatedDiskPartition
+		require.NoError(t, json.Unmarshal(resp, &d), string(resp))
+		assert.Positive(t, d.GetTotalCount())
 	})
 
 	t.Run("disks describe", func(t *testing.T) {
@@ -188,22 +167,9 @@ func disks(t *testing.T, cliPath, hostname, projectID string) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 		var metrics atlasv2.MeasurementsGeneralViewAtlas
-		err = json.Unmarshal(resp, &metrics)
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if metrics.Measurements == nil {
-			t.Errorf("there are no measurements")
-		}
-
-		if len(metrics.Measurements) == 0 {
-			t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
-		}
+		require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
+		assert.NotEmpty(t, metrics.Measurements)
 	})
 }

@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 type projectListOpts struct {
@@ -44,17 +45,35 @@ func (opts *projectListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *projectListOpts) Run() error {
-	listOpts := opts.newEventListOptions()
-
-	var r *atlas.EventResponse
+	var r interface{}
 	var err error
-	r, err = opts.store.ProjectEvents(opts.ConfigProjectID(), listOpts)
+	listEventsAPIParams := opts.NewProjectListOptions()
+	r, err = opts.store.ProjectEvents(&listEventsAPIParams)
+	if err != nil {
+		return err
+	}
 
 	if err != nil {
 		return err
 	}
 
 	return opts.Print(r)
+}
+
+func (opts *projectListOpts) NewProjectListOptions() admin.ListProjectEventsApiParams {
+	var eventType *[]string
+	if len(opts.EventType) > 0 {
+		eventType = &opts.EventType
+	}
+	listEventsAPIParams := admin.ListProjectEventsApiParams{
+		GroupId:      opts.ConfigProjectID(),
+		ItemsPerPage: &opts.ItemsPerPage,
+		PageNum:      &opts.PageNum,
+		EventType:    eventType,
+		MaxDate:      pointer.StringToTimePointer(opts.MaxDate),
+		MinDate:      pointer.StringToTimePointer(opts.MinDate),
+	}
+	return listEventsAPIParams
 }
 
 // ProjectListBuilder

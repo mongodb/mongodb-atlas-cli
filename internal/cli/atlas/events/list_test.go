@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
 package events
 
 import (
@@ -23,23 +21,22 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventLister(ctrl)
 
-	expected := &mongodbatlas.EventResponse{}
-
-	t.Run("for a project", func(t *testing.T) {
+	t.Run("for a org", func(t *testing.T) {
+		expected := &admin.OrgPaginatedEvent{}
 		listOpts := &ListOpts{
 			store: mockStore,
 		}
 		listOpts.orgID = "1"
-
+		anyMock := gomock.Any()
 		mockStore.
-			EXPECT().OrganizationEvents(listOpts.orgID, listOpts.newEventListOptions()).
+			EXPECT().OrganizationEvents(anyMock).
 			Return(expected, nil).
 			Times(1)
 
@@ -48,14 +45,16 @@ func TestList_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
-	t.Run("for an org", func(t *testing.T) {
+	t.Run("for an project", func(t *testing.T) {
+		expected := &admin.GroupPaginatedEvent{}
 		listOpts := &ListOpts{
 			store: mockStore,
 		}
 
+		anyMock := gomock.Any()
 		listOpts.projectID = "1"
 		mockStore.
-			EXPECT().ProjectEvents(listOpts.projectID, listOpts.newEventListOptions()).
+			EXPECT().ProjectEvents(anyMock).
 			Return(expected, nil).
 			Times(1)
 

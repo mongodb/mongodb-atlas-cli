@@ -20,7 +20,6 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -31,6 +30,7 @@ const (
 	scopeSep            = ":"
 	collectionSep       = "."
 	defaultUserDatabase = "admin"
+	userLdapAuthType    = "USER"
 	defaultResourceType = "CLUSTER"
 )
 
@@ -112,44 +112,29 @@ func BuildAtlasScopes(r []string) []atlasv2.UserScope {
 	return scopes
 }
 
-// BuildLegacyAtlasScopes converts the scopes inside the array of string in an array of mongodbatlas.Scope structs.
-// r contains resources in the format resourceName:resourceType.
-// currently required for dbusers update only :: remove after CLOUDP-176215 is closed.
-func BuildLegacyAtlasScopes(r []string) []atlas.Scope {
-	scopes := make([]atlas.Scope, len(r))
-	for i, scopeP := range r {
-		scope := strings.Split(scopeP, scopeSep)
-		resourceType := defaultResourceType
-		if len(scope) > 1 {
-			resourceType = scope[1]
-		}
+// GetAuthDB determines the authentication database based on the type of user.
+// LDAP, X509 and AWSIAM should all use $external.
+// SCRAM-SHA should use admin.
+func GetAuthDB(user *atlasv2.DatabaseUser) string {
+	// base documentation https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/database_user
+	_, isX509 := adminX509Type[pointer.GetOrDefault(user.X509Type, "")]
+	_, isIAM := awsIAMType[pointer.GetOrDefault(user.AwsIAMType, "")]
 
-		scopes[i] = atlas.Scope{
-			Name: scope[0],
-			Type: strings.ToUpper(resourceType),
-		}
+	// just USER is external
+	isLDAP := user.LdapAuthType != nil && *user.LdapAuthType == userLdapAuthType
+
+	if isX509 || isIAM || isLDAP {
+		return ExternalAuthDB
 	}
-	return scopes
+	return defaultUserDatabase
 }
 
-// BuildLegacyAtlasRoles converts the roles inside the array of string in an array of mongodbatlas.Role structs.
-// r contains roles in the format roleName@dbName.
-// currently required for dbusers update only :: remove after CLOUDP-176215 is closed.
-func BuildLegacyAtlasRoles(r []string) []atlas.Role {
-	roles := make([]atlas.Role, len(r))
-	for i, roleP := range r {
-		roleName, databaseName := splitRoleAndDBName(roleP)
-		var collectionName string
-		dbCollection := strings.Split(databaseName, collectionSep)
-		databaseName = dbCollection[0]
-		if len(dbCollection) > 1 {
-			collectionName = strings.Join(dbCollection[1:], ".")
-		}
-		roles[i] = atlas.Role{
-			RoleName:       roleName,
-			DatabaseName:   databaseName,
-			CollectionName: collectionName,
-		}
-	}
-	return roles
+var adminX509Type = map[string]struct{}{
+	"MANAGED":  {},
+	"CUSTOMER": {},
+}
+
+var awsIAMType = map[string]struct{}{
+	"USER": {},
+	"ROLE": {},
 }

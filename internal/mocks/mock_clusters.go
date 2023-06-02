@@ -75,10 +75,10 @@ func (m *MockAtlasClusterDescriber) EXPECT() *MockAtlasClusterDescriberMockRecor
 }
 
 // AtlasCluster mocks base method.
-func (m *MockAtlasClusterDescriber) AtlasCluster(arg0, arg1 string) (*mongodbatlas.AdvancedCluster, error) {
+func (m *MockAtlasClusterDescriber) AtlasCluster(arg0, arg1 string) (*admin.ClusterDescriptionV15, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AtlasCluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret0, _ := ret[0].(*admin.ClusterDescriptionV15)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -151,10 +151,10 @@ func (m *MockClusterCreator) EXPECT() *MockClusterCreatorMockRecorder {
 }
 
 // CreateCluster mocks base method.
-func (m *MockClusterCreator) CreateCluster(arg0 *mongodbatlas.AdvancedCluster) (*mongodbatlas.AdvancedCluster, error) {
+func (m *MockClusterCreator) CreateCluster(arg0 *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateCluster", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret0, _ := ret[0].(*admin.ClusterDescriptionV15)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -226,10 +226,10 @@ func (m *MockClusterUpdater) EXPECT() *MockClusterUpdaterMockRecorder {
 }
 
 // UpdateCluster mocks base method.
-func (m *MockClusterUpdater) UpdateCluster(arg0, arg1 string, arg2 *mongodbatlas.AdvancedCluster) (*mongodbatlas.AdvancedCluster, error) {
+func (m *MockClusterUpdater) UpdateCluster(arg0, arg1 string, arg2 *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateCluster", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret0, _ := ret[0].(*admin.ClusterDescriptionV15)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -264,10 +264,10 @@ func (m *MockAtlasClusterGetterUpdater) EXPECT() *MockAtlasClusterGetterUpdaterM
 }
 
 // AtlasCluster mocks base method.
-func (m *MockAtlasClusterGetterUpdater) AtlasCluster(arg0, arg1 string) (*mongodbatlas.AdvancedCluster, error) {
+func (m *MockAtlasClusterGetterUpdater) AtlasCluster(arg0, arg1 string) (*admin.ClusterDescriptionV15, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AtlasCluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret0, _ := ret[0].(*admin.ClusterDescriptionV15)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -279,10 +279,10 @@ func (mr *MockAtlasClusterGetterUpdaterMockRecorder) AtlasCluster(arg0, arg1 int
 }
 
 // UpdateCluster mocks base method.
-func (m *MockAtlasClusterGetterUpdater) UpdateCluster(arg0, arg1 string, arg2 *mongodbatlas.AdvancedCluster) (*mongodbatlas.AdvancedCluster, error) {
+func (m *MockAtlasClusterGetterUpdater) UpdateCluster(arg0, arg1 string, arg2 *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateCluster", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret0, _ := ret[0].(*admin.ClusterDescriptionV15)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -317,10 +317,10 @@ func (m *MockClusterPauser) EXPECT() *MockClusterPauserMockRecorder {
 }
 
 // PauseCluster mocks base method.
-func (m *MockClusterPauser) PauseCluster(arg0, arg1 string) (*mongodbatlas.AdvancedCluster, error) {
+func (m *MockClusterPauser) PauseCluster(arg0, arg1 string) (*admin.ClusterDescriptionV15, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PauseCluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret0, _ := ret[0].(*admin.ClusterDescriptionV15)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -355,10 +355,10 @@ func (m *MockClusterStarter) EXPECT() *MockClusterStarterMockRecorder {
 }
 
 // StartCluster mocks base method.
-func (m *MockClusterStarter) StartCluster(arg0, arg1 string) (*mongodbatlas.AdvancedCluster, error) {
+func (m *MockClusterStarter) StartCluster(arg0, arg1 string) (*admin.ClusterDescriptionV15, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StartCluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret0, _ := ret[0].(*admin.ClusterDescriptionV15)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -393,10 +393,10 @@ func (m *MockAtlasClusterQuickStarter) EXPECT() *MockAtlasClusterQuickStarterMoc
 }
 
 // AddSampleData mocks base method.
-func (m *MockAtlasClusterQuickStarter) AddSampleData(arg0, arg1 string) (*mongodbatlas.SampleDatasetJob, error) {
+func (m *MockAtlasClusterQuickStarter) AddSampleData(arg0, arg1 string) (*admin.SampleDatasetStatus, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddSampleData", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.SampleDatasetJob)
+	ret0, _ := ret[0].(*admin.SampleDatasetStatus)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -408,10 +408,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) AddSampleData(arg0, arg1 int
 }
 
 // AtlasCluster mocks base method.
-func (m *MockAtlasClusterQuickStarter) AtlasCluster(arg0, arg1 string) (*mongodbatlas.AdvancedCluster, error) {
+func (m *MockAtlasClusterQuickStarter) AtlasCluster(arg0, arg1 string) (*admin.ClusterDescriptionV15, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AtlasCluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret0, _ := ret[0].(*admin.ClusterDescriptionV15)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -423,7 +423,7 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) AtlasCluster(arg0, arg1 inte
 }
 
 // CloudProviderRegions mocks base method.
-func (m *MockAtlasClusterQuickStarter) CloudProviderRegions(arg0, arg1 string, arg2 *[]string) (*admin.PaginatedApiAtlasProviderRegions, error) {
+func (m *MockAtlasClusterQuickStarter) CloudProviderRegions(arg0, arg1 string, arg2 []string) (*admin.PaginatedApiAtlasProviderRegions, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CloudProviderRegions", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.PaginatedApiAtlasProviderRegions)
@@ -438,10 +438,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) CloudProviderRegions(arg0, a
 }
 
 // CreateCluster mocks base method.
-func (m *MockAtlasClusterQuickStarter) CreateCluster(arg0 *mongodbatlas.AdvancedCluster) (*mongodbatlas.AdvancedCluster, error) {
+func (m *MockAtlasClusterQuickStarter) CreateCluster(arg0 *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateCluster", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret0, _ := ret[0].(*admin.ClusterDescriptionV15)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -551,10 +551,10 @@ func (m *MockSampleDataAdder) EXPECT() *MockSampleDataAdderMockRecorder {
 }
 
 // AddSampleData mocks base method.
-func (m *MockSampleDataAdder) AddSampleData(arg0, arg1 string) (*mongodbatlas.SampleDatasetJob, error) {
+func (m *MockSampleDataAdder) AddSampleData(arg0, arg1 string) (*admin.SampleDatasetStatus, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddSampleData", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.SampleDatasetJob)
+	ret0, _ := ret[0].(*admin.SampleDatasetStatus)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

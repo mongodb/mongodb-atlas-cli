@@ -1041,6 +1041,7 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 func referenceSharedCluster(name, region, namespace, projectName string, labels map[string]string) *atlasV1.AtlasDeployment {
 	cluster := referenceAdvancedCluster(name, region, namespace, projectName, labels)
 	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs = &atlasV1.Specs{
+		DiskIOPS:     pointer.Get(int64(0)),
 		InstanceSize: e2eSharedClusterTier,
 	}
 	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs = nil

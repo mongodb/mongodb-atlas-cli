@@ -65,7 +65,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster *mongodbatlas.AdvancedCluster
+		var cluster *atlasv2.ClusterDescriptionV15
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -99,12 +99,12 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var job *mongodbatlas.SampleDatasetJob
+		var job *atlasv2.SampleDatasetStatus
 		err = json.Unmarshal(resp, &job)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.Equal(clusterName, job.ClusterName)
+		a.Equal(clusterName, job.GetClusterName())
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -117,7 +117,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var clusters mongodbatlas.AdvancedClustersResponse
+		var clusters atlasv2.PaginatedClusterDescriptionV15
 		err = json.Unmarshal(resp, &clusters)
 		req.NoError(err)
 
@@ -136,12 +136,12 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster mongodbatlas.AdvancedCluster
+		var cluster atlasv2.ClusterDescriptionV15
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.Equal(clusterName, cluster.Name)
+		a.Equal(clusterName, cluster.GetName())
 	})
 
 	t.Run("Describe Connection String", func(t *testing.T) {
@@ -244,7 +244,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster mongodbatlas.AdvancedCluster
+		var cluster atlasv2.ClusterDescriptionV15
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 

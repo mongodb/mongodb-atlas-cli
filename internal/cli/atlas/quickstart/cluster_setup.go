@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -96,16 +97,16 @@ func defaultDiskSizeGB(provider, tier string) float64 {
 	return atlas.DefaultDiskSizeGB[strings.ToUpper(provider)][tier]
 }
 
-func (opts *Opts) newCluster() *atlas.AdvancedCluster {
-	cluster := &atlas.AdvancedCluster{
-		GroupID:          opts.ConfigProjectID(),
-		ClusterType:      replicaSet,
-		ReplicationSpecs: []*atlas.AdvancedReplicationSpec{opts.newAdvanceReplicationSpec()},
-		Name:             opts.ClusterName,
-		Labels: []atlas.Label{
+func (opts *Opts) newCluster() *atlasv2.ClusterDescriptionV15 {
+	cluster := &atlasv2.ClusterDescriptionV15{
+		GroupId:          pointer.Get(opts.ConfigProjectID()),
+		ClusterType:      pointer.Get(replicaSet),
+		ReplicationSpecs: []atlasv2.ReplicationSpec{opts.newAdvanceReplicationSpec()},
+		Name:             &opts.ClusterName,
+		Labels: []atlasv2.NDSLabel{
 			{
-				Key:   opts.LabelKey,
-				Value: opts.LabelValue,
+				Key:   &opts.LabelKey,
+				Value: &opts.LabelValue,
 			},
 		},
 		TerminationProtectionEnabled: &opts.EnableTerminationProtection,
@@ -115,22 +116,22 @@ func (opts *Opts) newCluster() *atlas.AdvancedCluster {
 		diskSizeGB := defaultDiskSizeGB(opts.providerName(), opts.Tier)
 		mdbVersion, _ := cli.DefaultMongoDBMajorVersion()
 		cluster.DiskSizeGB = &diskSizeGB
-		cluster.MongoDBMajorVersion = mdbVersion
+		cluster.MongoDBMajorVersion = &mdbVersion
 	}
 
 	return cluster
 }
 
-const (
+var (
 	shards   = 1
 	zoneName = "Zone 1"
 )
 
-func (opts *Opts) newAdvanceReplicationSpec() *atlas.AdvancedReplicationSpec {
-	return &atlas.AdvancedReplicationSpec{
-		NumShards:     shards,
-		ZoneName:      zoneName,
-		RegionConfigs: []*atlas.AdvancedRegionConfig{opts.newAdvancedRegionConfig()},
+func (opts *Opts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
+	return atlasv2.ReplicationSpec{
+		NumShards:     &shards,
+		ZoneName:      &zoneName,
+		RegionConfigs: []atlasv2.RegionConfig{opts.newAdvancedRegionConfig()},
 	}
 }
 
@@ -140,28 +141,27 @@ const (
 	atlasM5 = "M5"
 )
 
-func (opts *Opts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
+func (opts *Opts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 	providerName := opts.providerName()
 
 	priority := 7
-	regionConfig := atlas.AdvancedRegionConfig{
-		RegionName: opts.Region,
-		Priority:   &priority,
+	regionConfig := atlasv2.RegionConfig{
+		ProviderName: &providerName,
+		Priority:     &priority,
+		RegionName:   &opts.Region,
 	}
 
-	regionConfig.ProviderName = providerName
-	regionConfig.ElectableSpecs = &atlas.Specs{
-		InstanceSize: opts.Tier,
+	regionConfig.ElectableSpecs = &atlasv2.HardwareSpec{
+		InstanceSize: &opts.Tier,
 	}
-
 	members := 3
 	if providerName == tenant {
-		regionConfig.BackingProviderName = opts.Provider
+		regionConfig.BackingProviderName = &opts.Provider
 	} else {
 		regionConfig.ElectableSpecs.NodeCount = &members
 	}
 
-	return &regionConfig
+	return regionConfig
 }
 
 func providerName(tier, provider string) string {
@@ -183,7 +183,7 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 	cloudProviders, err := opts.store.CloudProviderRegions(
 		opts.ConfigProjectID(),
 		opts.Tier,
-		pointer.Get([]string{opts.Provider}),
+		[]string{opts.Provider},
 	)
 
 	if err != nil {
@@ -194,7 +194,7 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 		return nil, errors.New("no regions available")
 	}
 
-	availableRegions := cloudProviders.Results[0].InstanceSizes[0].AvailableRegions
+	availableRegions := cloudProviders.Results[0].InstanceSizes[0].GetAvailableRegions()
 
 	defaultRegions := make([]string, 0, len(availableRegions))
 	popularRegionIndex := search.DefaultRegion(availableRegions)
@@ -202,14 +202,14 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 	if popularRegionIndex != -1 {
 		// the most popular region must be the first in the list
 		popularRegion := availableRegions[popularRegionIndex]
-		defaultRegions = append(defaultRegions, *popularRegion.Name)
+		defaultRegions = append(defaultRegions, popularRegion.GetName())
 
 		// remove popular region from availableRegions
 		availableRegions = append(availableRegions[:popularRegionIndex], availableRegions[popularRegionIndex+1:]...)
 	}
 
 	for _, v := range availableRegions {
-		defaultRegions = append(defaultRegions, *v.Name)
+		defaultRegions = append(defaultRegions, v.GetName())
 	}
 
 	return defaultRegions, nil

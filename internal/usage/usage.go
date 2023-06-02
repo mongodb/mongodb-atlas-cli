@@ -147,7 +147,7 @@ dbName and collection are required only for built-in roles.`
 	MetricThreshold                           = "Threshold value outside of which an alert will be triggered."
 	MetricUnits                               = "Units for the threshold value. Valid values are BITS, BYTES, DAYS, GIGABITS, GIGABYTES, HOURS, KILOBITS, KILOBYTES, MEGABITS, MEGABYTES, MILLISECONDS, MINUTES, PETABYTES, RAW, SECONDS, TERABYTES."
 	MetricMode                                = "If specified, Atlas computes the current metric value as an average. Valid value is AVERAGE."
-	NotificationToken                         = "Slack API token, Bot token, or Flowdock personal API token." //nolint:gosec // This is just a message not a password
+	NotificationToken                         = "Slack API token, or Bot token." //nolint:gosec // This is just a message not a password
 	NotificationsChannelName                  = "Slack channel name. Required for the SLACK notifications type."
 	AlertConfigAPIKey                         = "Datadog API Key, Opsgenie API Key, or VictorOps API key. Required if the notificationType is DATADOG, OPS_GENIE, or VICTOR_OPS, respectively." //nolint:gosec // This is just a message not a credential
 	APIKey                                    = "Unique 24-digit string that identifies your API key."                                                                                          //nolint:gosec // This is just a message not a credential
@@ -204,7 +204,7 @@ dbName and collection are required only for built-in roles.`
 	NotificationServiceKey                    = "PagerDuty service key."
 	NotificationSmsEnabled                    = "Flag that enables text message notifications."
 	NotificationTeamID                        = "Unique identifier of a team."
-	NotificationType                          = "Type of alert notification. Valid values are DATADOG, EMAIL, FLOWDOCK, GROUP (Project), ORG, OPS_GENIE, PAGER_DUTY, SLACK, SMS, USER, or VICTOR_OPS."
+	NotificationType                          = "Type of alert notification. Valid values are DATADOG, EMAIL, GROUP (Project), ORG, OPS_GENIE, PAGER_DUTY, SLACK, SMS, USER, or VICTOR_OPS."
 	NotificationUsername                      = "Name of the Atlas user to which to send notifications."
 	NotificationVictorOpsRoutingKey           = "Routing key associated with your Splunk On-Call account."
 	SnapshotID                                = "Unique identifier of the snapshot."

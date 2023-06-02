@@ -23,10 +23,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
@@ -51,10 +52,16 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	current := new(atlas.DatabaseUser)
+	current := new(admin.DatabaseUser)
 	opts.update(current)
 
-	r, err := opts.store.UpdateDatabaseUser(current, opts.currentUsername)
+	params := &admin.UpdateDatabaseUserApiParams{
+		GroupId:      current.GroupId,
+		DatabaseName: current.DatabaseName,
+		Username:     opts.currentUsername,
+		DatabaseUser: current,
+	}
+	r, err := opts.store.UpdateDatabaseUser(params)
 
 	if err != nil {
 		return err
@@ -63,18 +70,19 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) update(out *atlas.DatabaseUser) {
-	out.GroupID = opts.ConfigProjectID()
+func (opts *UpdateOpts) update(out *admin.DatabaseUser) {
+	out.GroupId = opts.ConfigProjectID()
 	out.Username = opts.username
 	if opts.username == "" {
 		out.Username = opts.currentUsername
 	}
 	if opts.password != "" {
-		out.Password = opts.password
+		out.Password = pointer.GetStringPointerIfNotEmpty(opts.password)
 	}
 
-	out.Scopes = convert.BuildLegacyAtlasScopes(opts.scopes)
-	out.Roles = convert.BuildLegacyAtlasRoles(opts.roles)
+	out.Scopes = convert.BuildAtlasScopes(opts.scopes)
+	out.Roles = convert.BuildAtlasRoles(opts.roles)
+	out.DatabaseName = convert.GetAuthDB(out)
 }
 
 // atlas dbuser(s) update <username> [--password password] [--role roleName@dbName] [--projectId projectId].

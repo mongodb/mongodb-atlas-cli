@@ -71,7 +71,7 @@ func httpClient(username, password string, accessToken *auth.Token) (*http.Clien
 	return &http.Client{Transport: tr}, nil
 }
 
-func NewClientWithAuth() (*admin.APIClient, error) {
+func newClientWithAuth() (*admin.APIClient, error) {
 	profile := config.Default()
 
 	var authToken *auth.Token
@@ -127,59 +127,59 @@ func convertTime(s *string) *time.Time {
 		return nil
 	}
 
-	r, err := time.Parse(time.RFC3339, s)
+	r, err := time.Parse(time.RFC3339, *s)
 	if err != nil {
 		return nil
 	}
-	return r
+	return &r
 }
 
 func Commands() []*cobra.Command {
 	return []*cobra.Command {
-		AWSClustersDNSBuilder(),
-		AccessTrackingBuilder(),
-		AlertConfigurationsBuilder(),
-		AlertsBuilder(),
-		AtlasSearchBuilder(),
-		AuditingBuilder(),
-		CloudBackupsBuilder(),
-		CloudMigrationServiceBuilder(),
-		CloudProviderAccessBuilder(),
-		ClusterOutageSimulationBuilder(),
-		ClustersBuilder(),
-		CustomDatabaseRolesBuilder(),
-		DataFederationBuilder(),
-		DataLakePipelinesBuilder(),
-		DatabaseUsersBuilder(),
-		EncryptionAtRestUsingCustomerKeyManagementBuilder(),
-		EventsBuilder(),
-		FederatedAuthenticationBuilder(),
-		GlobalClustersBuilder(),
-		InvoicesBuilder(),
-		LDAPConfigurationBuilder(),
-		LegacyBackupBuilder(),
-		LegacyBackupRestoreJobsBuilder(),
-		MaintenanceWindowsBuilder(),
-		MongoDBCloudUsersBuilder(),
-		MonitoringAndLogsBuilder(),
-		MultiCloudClustersBuilder(),
-		NetworkPeeringBuilder(),
-		OnlineArchiveBuilder(),
-		OrganizationsBuilder(),
-		PerformanceAdvisorBuilder(),
-		PrivateEndpointServicesBuilder(),
-		ProgrammaticAPIKeysBuilder(),
-		ProjectIPAccessListBuilder(),
-		ProjectsBuilder(),
-		RollingIndexBuilder(),
-		RootBuilder(),
-		ServerlessInstancesBuilder(),
-		ServerlessPrivateEndpointsBuilder(),
-		SharedTierRestoreJobsBuilder(),
-		SharedTierSnapshotsBuilder(),
-		TeamsBuilder(),
-		TestBuilder(),
-		ThirdPartyIntegrationsBuilder(),
-		X509AuthenticationBuilder(),
+		aWSClustersDNSBuilder(),
+		accessTrackingBuilder(),
+		alertConfigurationsBuilder(),
+		alertsBuilder(),
+		atlasSearchBuilder(),
+		auditingBuilder(),
+		cloudBackupsBuilder(),
+		cloudMigrationServiceBuilder(),
+		cloudProviderAccessBuilder(),
+		clusterOutageSimulationBuilder(),
+		clustersBuilder(),
+		customDatabaseRolesBuilder(),
+		dataFederationBuilder(),
+		dataLakePipelinesBuilder(),
+		databaseUsersBuilder(),
+		encryptionAtRestUsingCustomerKeyManagementBuilder(),
+		eventsBuilder(),
+		federatedAuthenticationBuilder(),
+		globalClustersBuilder(),
+		invoicesBuilder(),
+		lDAPConfigurationBuilder(),
+		legacyBackupBuilder(),
+		legacyBackupRestoreJobsBuilder(),
+		maintenanceWindowsBuilder(),
+		mongoDBCloudUsersBuilder(),
+		monitoringAndLogsBuilder(),
+		multiCloudClustersBuilder(),
+		networkPeeringBuilder(),
+		onlineArchiveBuilder(),
+		organizationsBuilder(),
+		performanceAdvisorBuilder(),
+		privateEndpointServicesBuilder(),
+		programmaticAPIKeysBuilder(),
+		projectIPAccessListBuilder(),
+		projectsBuilder(),
+		rollingIndexBuilder(),
+		rootBuilder(),
+		serverlessInstancesBuilder(),
+		serverlessPrivateEndpointsBuilder(),
+		sharedTierRestoreJobsBuilder(),
+		sharedTierSnapshotsBuilder(),
+		teamsBuilder(),
+		testBuilder(),
+		thirdPartyIntegrationsBuilder(),
+		x509AuthenticationBuilder(),
 	}
 }

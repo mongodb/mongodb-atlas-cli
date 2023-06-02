@@ -18,30 +18,28 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type GetAuditingConfigurationOpts struct {
+type getAuditingConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *GetAuditingConfigurationOpts) initClient() func() error {
+func (opts *getAuditingConfigurationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetAuditingConfigurationOpts) Run(ctx context.Context) error {
+func (opts *getAuditingConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.GetAuditingConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
@@ -53,15 +51,15 @@ func (opts *GetAuditingConfigurationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetAuditingConfigurationBuilder() *cobra.Command {
+func getAuditingConfigurationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetAuditingConfigurationOpts{}
+	opts := getAuditingConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use: "getAuditingConfiguration",
+		Use:   "getAuditingConfiguration",
 		Short: "Return the Auditing Configuration for One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -73,31 +71,32 @@ func GetAuditingConfigurationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type UpdateAuditingConfigurationOpts struct {
+
+type updateAuditingConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
 }
 
-func (opts *UpdateAuditingConfigurationOpts) initClient() func() error {
+func (opts *updateAuditingConfigurationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateAuditingConfigurationOpts) Run(ctx context.Context) error {
+func (opts *updateAuditingConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateAuditingConfigurationApiParams{
 		GroupId: opts.groupId,
-		
 	}
 	resp, _, err := opts.client.AuditingApi.UpdateAuditingConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -107,15 +106,15 @@ func (opts *UpdateAuditingConfigurationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func UpdateAuditingConfigurationBuilder() *cobra.Command {
+func updateAuditingConfigurationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateAuditingConfigurationOpts{}
+	opts := updateAuditingConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use: "updateAuditingConfiguration",
+		Use:   "updateAuditingConfiguration",
 		Short: "Update Auditing Configuration for One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -127,22 +126,22 @@ func UpdateAuditingConfigurationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
-func AuditingBuilder() *cobra.Command {
+func auditingBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "auditing",
-		Short:   "Returns and edits database auditing settings for MongoDB Cloud projects.",
+		Use:   "auditing",
+		Short: `Returns and edits database auditing settings for MongoDB Cloud projects.`,
 	}
 	cmd.AddCommand(
-		GetAuditingConfigurationBuilder(),
-		UpdateAuditingConfigurationBuilder(),
+		getAuditingConfigurationBuilder(),
+		updateAuditingConfigurationBuilder(),
 	)
 	return cmd
 }
-

@@ -13,7 +13,7 @@ import (
 
 {{#operations}}
 {{#operation}}
-type {{operationId}}Opts struct {
+type {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
@@ -22,18 +22,18 @@ type {{operationId}}Opts struct {
 	{{/allParams}}
 }
 
-func (opts *{{operationId}}Opts) initClient() func() error {
+func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *{{operationId}}Opts) Run(ctx context.Context) error {
+func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) Run(ctx context.Context) error {
 	params := &admin.{{operationId}}ApiParams{
 		{{#allParams}}
-		{{^isBodyParam}}{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: {{#isDateTime}}convertTime({{/isDateTime}}{{^required}}&{{/required}}opts.{{paramName}}{{#isDateTime}}){{/isDateTime}},{{/isBodyParam}}
+		{{^isBodyParam}}{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: {{#isDateTime}}convertTime({{/isDateTime}}{{^isPathParam}}&{{/isPathParam}}opts.{{paramName}}{{#isDateTime}}){{/isDateTime}},{{/isBodyParam}}
 		{{/allParams}}
 	}
 	{{#returnType}}resp, {{/returnType}}_, err := opts.client.{{classname}}.{{operationId}}WithParams(ctx, params).Execute()
@@ -44,10 +44,10 @@ func (opts *{{operationId}}Opts) Run(ctx context.Context) error {
 	return opts.Print({{#returnType}}resp{{/returnType}}{{^returnType}}nil{{/returnType}})
 }
 
-func {{operationId}}Builder() *cobra.Command {
+func {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Builder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := {{operationId}}Opts{}
+	opts := {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts{}
 	cmd := &cobra.Command{
 		Use: "{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}",
 		Short: "{{ summary }}",
@@ -65,7 +65,7 @@ func {{operationId}}Builder() *cobra.Command {
 		},
 	}
 {{#allParams}}
-	{{^isBodyParam}}cmd.Flags().{{#isArray}}{{#lambda.titlecase}}{{baseType}}{{/lambda.titlecase}}Slice{{/isArray}}{{^isArray}}{{#lambda.titlecase}}{{dataType}}{{/lambda.titlecase}}{{/isArray}}Var(&opts.{{paramName}}, "{{paramName}}", {{#isDateTime}}""{{/isDateTime}}{{#isString}}"{{/isString}}{{^defaultValue}}{{#isArray}}nil{{/isArray}}{{#isNumeric}}0{{/isNumeric}}{{#isInteger}}0{{/isInteger}}{{#isShort}}0{{/isShort}}{{#isLong}}0{{/isLong}}{{#isUnboundedInteger}}0{{/isUnboundedInteger}}{{#isNumber}}0{{/isNumber}}{{#isFloat}}0{{/isFloat}}{{#isDouble}}0{{/isDouble}}{{#isDecimal}}0{{/isDecimal}}{{#isBoolean}}false{{/isBoolean}}{{/defaultValue}}{{defaultValue}}{{#isString}}"{{/isString}}, "{{description}}"){{/isBodyParam}}
+	{{^isBodyParam}}cmd.Flags().{{#isArray}}{{#lambda.titlecase}}{{baseType}}{{/lambda.titlecase}}Slice{{/isArray}}{{^isArray}}{{#lambda.titlecase}}{{dataType}}{{/lambda.titlecase}}{{/isArray}}Var(&opts.{{paramName}}, "{{paramName}}", {{#isDateTime}}""{{/isDateTime}}{{#isString}}"{{/isString}}{{^defaultValue}}{{#isArray}}nil{{/isArray}}{{#isNumeric}}0{{/isNumeric}}{{#isInteger}}0{{/isInteger}}{{#isShort}}0{{/isShort}}{{#isLong}}0{{/isLong}}{{#isUnboundedInteger}}0{{/isUnboundedInteger}}{{#isNumber}}0{{/isNumber}}{{#isFloat}}0{{/isFloat}}{{#isDouble}}0{{/isDouble}}{{#isDecimal}}0{{/isDecimal}}{{#isBoolean}}false{{/isBoolean}}{{/defaultValue}}{{defaultValue}}{{#isString}}"{{/isString}}, `{{unescapedDescription}}`){{/isBodyParam}}
 {{/allParams}}
 {{#allParams}}{{^isBodyParam}}{{#required}}
 	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/isBodyParam}}{{/allParams}}
@@ -74,17 +74,17 @@ func {{operationId}}Builder() *cobra.Command {
 {{/operation}}
 {{/operations}}
 
-func {{baseName}}Builder() *cobra.Command {
+func {{#lambda.camelcase}}{{baseName}}{{/lambda.camelcase}}Builder() *cobra.Command {
 {{#operations}}
 {{#operation}}
 {{#-first}}
 	cmd := &cobra.Command{
 		Use:     "{{#lambda.camelcase}}{{baseName}}{{/lambda.camelcase}}",
-		Short:   "{{#tags}}{{#-first}}{{description}}{{/-first}}{{/tags}}",
+		Short:   `{{#tags}}{{#-first}}{{description}}{{/-first}}{{/tags}}`,
 	}
 	cmd.AddCommand(
 {{/-first}}
-		{{operationId}}Builder(),
+		{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Builder(),
 {{/operation}}
 {{/operations}}
 	)

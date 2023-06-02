@@ -18,30 +18,28 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type DeferMaintenanceWindowOpts struct {
+type deferMaintenanceWindowOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *DeferMaintenanceWindowOpts) initClient() func() error {
+func (opts *deferMaintenanceWindowOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeferMaintenanceWindowOpts) Run(ctx context.Context) error {
+func (opts *deferMaintenanceWindowOpts) Run(ctx context.Context) error {
 	params := &admin.DeferMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
@@ -53,15 +51,15 @@ func (opts *DeferMaintenanceWindowOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-func DeferMaintenanceWindowBuilder() *cobra.Command {
+func deferMaintenanceWindowBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeferMaintenanceWindowOpts{}
+	opts := deferMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
-		Use: "deferMaintenanceWindow",
+		Use:   "deferMaintenanceWindow",
 		Short: "Defer One Maintenance Window for One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -73,27 +71,30 @@ func DeferMaintenanceWindowBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type GetMaintenanceWindowOpts struct {
+
+type getMaintenanceWindowOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *GetMaintenanceWindowOpts) initClient() func() error {
+func (opts *getMaintenanceWindowOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetMaintenanceWindowOpts) Run(ctx context.Context) error {
+func (opts *getMaintenanceWindowOpts) Run(ctx context.Context) error {
 	params := &admin.GetMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
@@ -105,15 +106,15 @@ func (opts *GetMaintenanceWindowOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetMaintenanceWindowBuilder() *cobra.Command {
+func getMaintenanceWindowBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetMaintenanceWindowOpts{}
+	opts := getMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
-		Use: "getMaintenanceWindow",
+		Use:   "getMaintenanceWindow",
 		Short: "Return One Maintenance Window for One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -125,27 +126,30 @@ func GetMaintenanceWindowBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type ResetMaintenanceWindowOpts struct {
+
+type resetMaintenanceWindowOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *ResetMaintenanceWindowOpts) initClient() func() error {
+func (opts *resetMaintenanceWindowOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ResetMaintenanceWindowOpts) Run(ctx context.Context) error {
+func (opts *resetMaintenanceWindowOpts) Run(ctx context.Context) error {
 	params := &admin.ResetMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
@@ -157,15 +161,15 @@ func (opts *ResetMaintenanceWindowOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ResetMaintenanceWindowBuilder() *cobra.Command {
+func resetMaintenanceWindowBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ResetMaintenanceWindowOpts{}
+	opts := resetMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
-		Use: "resetMaintenanceWindow",
+		Use:   "resetMaintenanceWindow",
 		Short: "Reset One Maintenance Window for One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -177,27 +181,30 @@ func ResetMaintenanceWindowBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type ToggleMaintenanceAutoDeferOpts struct {
+
+type toggleMaintenanceAutoDeferOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *ToggleMaintenanceAutoDeferOpts) initClient() func() error {
+func (opts *toggleMaintenanceAutoDeferOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ToggleMaintenanceAutoDeferOpts) Run(ctx context.Context) error {
+func (opts *toggleMaintenanceAutoDeferOpts) Run(ctx context.Context) error {
 	params := &admin.ToggleMaintenanceAutoDeferApiParams{
 		GroupId: opts.groupId,
 	}
@@ -209,15 +216,15 @@ func (opts *ToggleMaintenanceAutoDeferOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-func ToggleMaintenanceAutoDeferBuilder() *cobra.Command {
+func toggleMaintenanceAutoDeferBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ToggleMaintenanceAutoDeferOpts{}
+	opts := toggleMaintenanceAutoDeferOpts{}
 	cmd := &cobra.Command{
-		Use: "toggleMaintenanceAutoDefer",
+		Use:   "toggleMaintenanceAutoDefer",
 		Short: "Toggle Automatic Deferral of Maintenance for One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -229,31 +236,32 @@ func ToggleMaintenanceAutoDeferBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type UpdateMaintenanceWindowOpts struct {
+
+type updateMaintenanceWindowOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
 }
 
-func (opts *UpdateMaintenanceWindowOpts) initClient() func() error {
+func (opts *updateMaintenanceWindowOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateMaintenanceWindowOpts) Run(ctx context.Context) error {
+func (opts *updateMaintenanceWindowOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
-		
 	}
 	resp, _, err := opts.client.MaintenanceWindowsApi.UpdateMaintenanceWindowWithParams(ctx, params).Execute()
 	if err != nil {
@@ -263,15 +271,15 @@ func (opts *UpdateMaintenanceWindowOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func UpdateMaintenanceWindowBuilder() *cobra.Command {
+func updateMaintenanceWindowBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateMaintenanceWindowOpts{}
+	opts := updateMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
-		Use: "updateMaintenanceWindow",
+		Use:   "updateMaintenanceWindow",
 		Short: "Update Maintenance Window for One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -283,25 +291,25 @@ func UpdateMaintenanceWindowBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
-func MaintenanceWindowsBuilder() *cobra.Command {
+func maintenanceWindowsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "maintenanceWindows",
-		Short:   "Returns, edits, and removes maintenance windows. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. You can defer a scheduled maintenance event for a project up to two times. Deferred maintenance events occur during your preferred maintenance window exactly one week after the previously scheduled date and time.",
+		Use:   "maintenanceWindows",
+		Short: `Returns, edits, and removes maintenance windows. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. You can defer a scheduled maintenance event for a project up to two times. Deferred maintenance events occur during your preferred maintenance window exactly one week after the previously scheduled date and time.`,
 	}
 	cmd.AddCommand(
-		DeferMaintenanceWindowBuilder(),
-		GetMaintenanceWindowBuilder(),
-		ResetMaintenanceWindowBuilder(),
-		ToggleMaintenanceAutoDeferBuilder(),
-		UpdateMaintenanceWindowBuilder(),
+		deferMaintenanceWindowBuilder(),
+		getMaintenanceWindowBuilder(),
+		resetMaintenanceWindowBuilder(),
+		toggleMaintenanceAutoDeferBuilder(),
+		updateMaintenanceWindowBuilder(),
 	)
 	return cmd
 }
-

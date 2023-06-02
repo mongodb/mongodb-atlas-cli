@@ -18,35 +18,33 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type GetOrganizationEventOpts struct {
+type getOrganizationEventOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	orgId string
-	eventId string
+	client     *admin.APIClient
+	orgId      string
+	eventId    string
 	includeRaw bool
 }
 
-func (opts *GetOrganizationEventOpts) initClient() func() error {
+func (opts *getOrganizationEventOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetOrganizationEventOpts) Run(ctx context.Context) error {
+func (opts *getOrganizationEventOpts) Run(ctx context.Context) error {
 	params := &admin.GetOrganizationEventApiParams{
-		OrgId: opts.orgId,
-		EventId: opts.eventId,
+		OrgId:      opts.orgId,
+		EventId:    opts.eventId,
 		IncludeRaw: &opts.includeRaw,
 	}
 	resp, _, err := opts.client.EventsApi.GetOrganizationEventWithParams(ctx, params).Execute()
@@ -57,15 +55,15 @@ func (opts *GetOrganizationEventOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetOrganizationEventBuilder() *cobra.Command {
+func getOrganizationEventBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetOrganizationEventOpts{}
+	opts := getOrganizationEventOpts{}
 	cmd := &cobra.Command{
-		Use: "getOrganizationEvent",
+		Use:   "getOrganizationEvent",
 		Short: "Return One Event from One Organization",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -77,35 +75,36 @@ func GetOrganizationEventBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	cmd.Flags().StringVar(&opts.eventId, "eventId", "", "Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listOrganizationEvents) endpoint to retrieve all events to which the authenticated user has access.")
-	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.eventId, "eventId", "", `Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listOrganizationEvents) endpoint to retrieve all events to which the authenticated user has access.`)
+	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("eventId")
 	return cmd
 }
-type GetProjectEventOpts struct {
+
+type getProjectEventOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	eventId string
+	client     *admin.APIClient
+	groupId    string
+	eventId    string
 	includeRaw bool
 }
 
-func (opts *GetProjectEventOpts) initClient() func() error {
+func (opts *getProjectEventOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetProjectEventOpts) Run(ctx context.Context) error {
+func (opts *getProjectEventOpts) Run(ctx context.Context) error {
 	params := &admin.GetProjectEventApiParams{
-		GroupId: opts.groupId,
-		EventId: opts.eventId,
+		GroupId:    opts.groupId,
+		EventId:    opts.eventId,
 		IncludeRaw: &opts.includeRaw,
 	}
 	resp, _, err := opts.client.EventsApi.GetProjectEventWithParams(ctx, params).Execute()
@@ -116,15 +115,15 @@ func (opts *GetProjectEventOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetProjectEventBuilder() *cobra.Command {
+func getProjectEventBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetProjectEventOpts{}
+	opts := getProjectEventOpts{}
 	cmd := &cobra.Command{
-		Use: "getProjectEvent",
+		Use:   "getProjectEvent",
 		Short: "Return One Event from One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -136,46 +135,49 @@ func GetProjectEventBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.eventId, "eventId", "", "Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listProjectEvents) endpoint to retrieve all events to which the authenticated user has access.")
-	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.eventId, "eventId", "", `Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listProjectEvents) endpoint to retrieve all events to which the authenticated user has access.`)
+	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("eventId")
 	return cmd
 }
-type ListOrganizationEventsOpts struct {
+
+type listOrganizationEventsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	orgId string
+	client       *admin.APIClient
+	orgId        string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
-	eventType []string
-	includeRaw bool
-	maxDate string
-	minDate string
+	pageNum      int
+	eventType    []string
+	includeRaw   bool
+	maxDate      string
+	minDate      string
 }
 
-func (opts *ListOrganizationEventsOpts) initClient() func() error {
+func (opts *listOrganizationEventsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListOrganizationEventsOpts) Run(ctx context.Context) error {
+func (opts *listOrganizationEventsOpts) Run(ctx context.Context) error {
 	params := &admin.ListOrganizationEventsApiParams{
-		OrgId: opts.orgId,
+		OrgId:        opts.orgId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
-		EventType: &opts.eventType,
-		IncludeRaw: &opts.includeRaw,
-		MaxDate: convertTime(&opts.maxDate),
-		MinDate: convertTime(&opts.minDate),
+		PageNum:      &opts.pageNum,
+		EventType:    &opts.eventType,
+		IncludeRaw:   &opts.includeRaw,
+		MaxDate:      convertTime(&opts.maxDate),
+		MinDate:      convertTime(&opts.minDate),
 	}
 	resp, _, err := opts.client.EventsApi.ListOrganizationEventsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -185,15 +187,15 @@ func (opts *ListOrganizationEventsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListOrganizationEventsBuilder() *cobra.Command {
+func listOrganizationEventsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListOrganizationEventsOpts{}
+	opts := listOrganizationEventsOpts{}
 	cmd := &cobra.Command{
-		Use: "listOrganizationEvents",
+		Use:   "listOrganizationEvents",
 		Short: "Return All Events from One Organization",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -205,52 +207,55 @@ func ListOrganizationEventsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
-	cmd.Flags().StringSliceVar(&opts.eventType, "eventType", nil, "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")
-	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
-	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
-	cmd.Flags().StringVar(&opts.minDate, "minDate", "", "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+	cmd.Flags().StringSliceVar(&opts.eventType, "eventType", nil, `Category of incident recorded at this moment in time.
+
+**IMPORTANT**: The complete list of event type values changes frequently.`)
+	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`)
+	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", `Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
+	cmd.Flags().StringVar(&opts.minDate, "minDate", "", `Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
-type ListProjectEventsOpts struct {
+
+type listProjectEventsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 	clusterNames []string
-	eventType []string
-	includeRaw bool
-	maxDate string
-	minDate string
+	eventType    []string
+	includeRaw   bool
+	maxDate      string
+	minDate      string
 }
 
-func (opts *ListProjectEventsOpts) initClient() func() error {
+func (opts *listProjectEventsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListProjectEventsOpts) Run(ctx context.Context) error {
+func (opts *listProjectEventsOpts) Run(ctx context.Context) error {
 	params := &admin.ListProjectEventsApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 		ClusterNames: &opts.clusterNames,
-		EventType: &opts.eventType,
-		IncludeRaw: &opts.includeRaw,
-		MaxDate: convertTime(&opts.maxDate),
-		MinDate: convertTime(&opts.minDate),
+		EventType:    &opts.eventType,
+		IncludeRaw:   &opts.includeRaw,
+		MaxDate:      convertTime(&opts.maxDate),
+		MinDate:      convertTime(&opts.minDate),
 	}
 	resp, _, err := opts.client.EventsApi.ListProjectEventsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -260,15 +265,15 @@ func (opts *ListProjectEventsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListProjectEventsBuilder() *cobra.Command {
+func listProjectEventsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListProjectEventsOpts{}
+	opts := listProjectEventsOpts{}
 	cmd := &cobra.Command{
-		Use: "listProjectEvents",
+		Use:   "listProjectEvents",
 		Short: "Return All Events from One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -280,31 +285,34 @@ func ListProjectEventsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
-	cmd.Flags().StringSliceVar(&opts.clusterNames, "clusterNames", nil, "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringSliceVar(&opts.eventType, "eventType", nil, "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")
-	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
-	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
-	cmd.Flags().StringVar(&opts.minDate, "minDate", "", "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+	cmd.Flags().StringSliceVar(&opts.clusterNames, "clusterNames", nil, `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringSliceVar(&opts.eventType, "eventType", nil, `Category of incident recorded at this moment in time.
+
+**IMPORTANT**: The complete list of event type values changes frequently.`)
+	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`)
+	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", `Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
+	cmd.Flags().StringVar(&opts.minDate, "minDate", "", `Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
-func EventsBuilder() *cobra.Command {
+func eventsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "events",
-		Short:   "Returns events. This collection remains under revision and may change.",
+		Use:   "events",
+		Short: `Returns events. This collection remains under revision and may change.`,
 	}
 	cmd.AddCommand(
-		GetOrganizationEventBuilder(),
-		GetProjectEventBuilder(),
-		ListOrganizationEventsBuilder(),
-		ListProjectEventsBuilder(),
+		getOrganizationEventBuilder(),
+		getProjectEventBuilder(),
+		listOrganizationEventsBuilder(),
+		listProjectEventsBuilder(),
 	)
 	return cmd
 }
-

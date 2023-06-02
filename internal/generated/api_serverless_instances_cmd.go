@@ -18,34 +18,30 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type CreateServerlessInstanceOpts struct {
+type createServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
 }
 
-func (opts *CreateServerlessInstanceOpts) initClient() func() error {
+func (opts *createServerlessInstanceOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateServerlessInstanceOpts) Run(ctx context.Context) error {
+func (opts *createServerlessInstanceOpts) Run(ctx context.Context) error {
 	params := &admin.CreateServerlessInstanceApiParams{
 		GroupId: opts.groupId,
-		
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.CreateServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
@@ -55,15 +51,15 @@ func (opts *CreateServerlessInstanceOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CreateServerlessInstanceBuilder() *cobra.Command {
+func createServerlessInstanceBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateServerlessInstanceOpts{}
+	opts := createServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use: "createServerlessInstance",
+		Use:   "createServerlessInstance",
 		Short: "Create One Serverless Instance in One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -75,32 +71,34 @@ func CreateServerlessInstanceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type DeleteServerlessInstanceOpts struct {
+
+type deleteServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	name string
+	name    string
 }
 
-func (opts *DeleteServerlessInstanceOpts) initClient() func() error {
+func (opts *deleteServerlessInstanceOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteServerlessInstanceOpts) Run(ctx context.Context) error {
+func (opts *deleteServerlessInstanceOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteServerlessInstanceApiParams{
 		GroupId: opts.groupId,
-		Name: opts.name,
+		Name:    opts.name,
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.DeleteServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
@@ -110,15 +108,15 @@ func (opts *DeleteServerlessInstanceOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func DeleteServerlessInstanceBuilder() *cobra.Command {
+func deleteServerlessInstanceBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteServerlessInstanceOpts{}
+	opts := deleteServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteServerlessInstance",
+		Use:   "deleteServerlessInstance",
 		Short: "Remove One Serverless Instance from One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -130,33 +128,36 @@ func DeleteServerlessInstanceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.name, "name", "", "Human-readable label that identifies the serverless instance.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }
-type GetServerlessInstanceOpts struct {
+
+type getServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	name string
+	name    string
 }
 
-func (opts *GetServerlessInstanceOpts) initClient() func() error {
+func (opts *getServerlessInstanceOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetServerlessInstanceOpts) Run(ctx context.Context) error {
+func (opts *getServerlessInstanceOpts) Run(ctx context.Context) error {
 	params := &admin.GetServerlessInstanceApiParams{
 		GroupId: opts.groupId,
-		Name: opts.name,
+		Name:    opts.name,
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.GetServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
@@ -166,15 +167,15 @@ func (opts *GetServerlessInstanceOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetServerlessInstanceBuilder() *cobra.Command {
+func getServerlessInstanceBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetServerlessInstanceOpts{}
+	opts := getServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use: "getServerlessInstance",
+		Use:   "getServerlessInstance",
 		Short: "Return One Serverless Instance from One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -186,37 +187,40 @@ func GetServerlessInstanceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.name, "name", "", "Human-readable label that identifies the serverless instance.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }
-type ListServerlessInstancesOpts struct {
+
+type listServerlessInstancesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *ListServerlessInstancesOpts) initClient() func() error {
+func (opts *listServerlessInstancesOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListServerlessInstancesOpts) Run(ctx context.Context) error {
+func (opts *listServerlessInstancesOpts) Run(ctx context.Context) error {
 	params := &admin.ListServerlessInstancesApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.ListServerlessInstancesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -226,15 +230,15 @@ func (opts *ListServerlessInstancesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListServerlessInstancesBuilder() *cobra.Command {
+func listServerlessInstancesBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListServerlessInstancesOpts{}
+	opts := listServerlessInstancesOpts{}
 	cmd := &cobra.Command{
-		Use: "listServerlessInstances",
+		Use:   "listServerlessInstances",
 		Short: "Return All Serverless Instances from One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -246,36 +250,37 @@ func ListServerlessInstancesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type UpdateServerlessInstanceOpts struct {
+
+type updateServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	name string
-	
+	name    string
 }
 
-func (opts *UpdateServerlessInstanceOpts) initClient() func() error {
+func (opts *updateServerlessInstanceOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateServerlessInstanceOpts) Run(ctx context.Context) error {
+func (opts *updateServerlessInstanceOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateServerlessInstanceApiParams{
 		GroupId: opts.groupId,
-		Name: opts.name,
-		
+		Name:    opts.name,
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.UpdateServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
@@ -285,15 +290,15 @@ func (opts *UpdateServerlessInstanceOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func UpdateServerlessInstanceBuilder() *cobra.Command {
+func updateServerlessInstanceBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateServerlessInstanceOpts{}
+	opts := updateServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use: "updateServerlessInstance",
+		Use:   "updateServerlessInstance",
 		Short: "Update One Serverless Instance in One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -305,27 +310,27 @@ func UpdateServerlessInstanceBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.name, "name", "", "Human-readable label that identifies the serverless instance.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }
 
-func ServerlessInstancesBuilder() *cobra.Command {
+func serverlessInstancesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "serverlessInstances",
-		Short:   "Returns, adds, edits, and removes serverless instances.",
+		Use:   "serverlessInstances",
+		Short: `Returns, adds, edits, and removes serverless instances.`,
 	}
 	cmd.AddCommand(
-		CreateServerlessInstanceBuilder(),
-		DeleteServerlessInstanceBuilder(),
-		GetServerlessInstanceBuilder(),
-		ListServerlessInstancesBuilder(),
-		UpdateServerlessInstanceBuilder(),
+		createServerlessInstanceBuilder(),
+		deleteServerlessInstanceBuilder(),
+		getServerlessInstanceBuilder(),
+		listServerlessInstancesBuilder(),
+		updateServerlessInstanceBuilder(),
 	)
 	return cmd
 }
-

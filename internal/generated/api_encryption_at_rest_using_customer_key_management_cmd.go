@@ -18,30 +18,28 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type GetEncryptionAtRestOpts struct {
+type getEncryptionAtRestOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *GetEncryptionAtRestOpts) initClient() func() error {
+func (opts *getEncryptionAtRestOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetEncryptionAtRestOpts) Run(ctx context.Context) error {
+func (opts *getEncryptionAtRestOpts) Run(ctx context.Context) error {
 	params := &admin.GetEncryptionAtRestApiParams{
 		GroupId: opts.groupId,
 	}
@@ -53,15 +51,15 @@ func (opts *GetEncryptionAtRestOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetEncryptionAtRestBuilder() *cobra.Command {
+func getEncryptionAtRestBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetEncryptionAtRestOpts{}
+	opts := getEncryptionAtRestOpts{}
 	cmd := &cobra.Command{
-		Use: "getEncryptionAtRest",
+		Use:   "getEncryptionAtRest",
 		Short: "Return One Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -73,31 +71,32 @@ func GetEncryptionAtRestBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type UpdateEncryptionAtRestOpts struct {
+
+type updateEncryptionAtRestOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
 }
 
-func (opts *UpdateEncryptionAtRestOpts) initClient() func() error {
+func (opts *updateEncryptionAtRestOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateEncryptionAtRestOpts) Run(ctx context.Context) error {
+func (opts *updateEncryptionAtRestOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateEncryptionAtRestApiParams{
 		GroupId: opts.groupId,
-		
 	}
 	resp, _, err := opts.client.EncryptionAtRestUsingCustomerKeyManagementApi.UpdateEncryptionAtRestWithParams(ctx, params).Execute()
 	if err != nil {
@@ -107,15 +106,15 @@ func (opts *UpdateEncryptionAtRestOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func UpdateEncryptionAtRestBuilder() *cobra.Command {
+func updateEncryptionAtRestBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateEncryptionAtRestOpts{}
+	opts := updateEncryptionAtRestOpts{}
 	cmd := &cobra.Command{
-		Use: "updateEncryptionAtRest",
+		Use:   "updateEncryptionAtRest",
 		Short: "Update Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -127,22 +126,22 @@ func UpdateEncryptionAtRestBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
-func EncryptionAtRestUsingCustomerKeyManagementBuilder() *cobra.Command {
+func encryptionAtRestUsingCustomerKeyManagementBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "encryptionAtRestUsingCustomerKeyManagement",
-		Short:   "Returns and edits the Encryption at Rest using Customer Key Management configuration. MongoDB Cloud encrypts all storage whether or not you use your own key management.",
+		Use:   "encryptionAtRestUsingCustomerKeyManagement",
+		Short: `Returns and edits the Encryption at Rest using Customer Key Management configuration. MongoDB Cloud encrypts all storage whether or not you use your own key management.`,
 	}
 	cmd.AddCommand(
-		GetEncryptionAtRestBuilder(),
-		UpdateEncryptionAtRestBuilder(),
+		getEncryptionAtRestBuilder(),
+		updateEncryptionAtRestBuilder(),
 	)
 	return cmd
 }
-

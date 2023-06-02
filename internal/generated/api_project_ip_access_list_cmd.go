@@ -18,40 +18,38 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type CreateProjectIpAccessListOpts struct {
+type createProjectIpAccessListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
+
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *CreateProjectIpAccessListOpts) initClient() func() error {
+func (opts *createProjectIpAccessListOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateProjectIpAccessListOpts) Run(ctx context.Context) error {
+func (opts *createProjectIpAccessListOpts) Run(ctx context.Context) error {
 	params := &admin.CreateProjectIpAccessListApiParams{
 		GroupId: opts.groupId,
-		
+
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.ProjectIPAccessListApi.CreateProjectIpAccessListWithParams(ctx, params).Execute()
 	if err != nil {
@@ -61,15 +59,15 @@ func (opts *CreateProjectIpAccessListOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CreateProjectIpAccessListBuilder() *cobra.Command {
+func createProjectIpAccessListBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateProjectIpAccessListOpts{}
+	opts := createProjectIpAccessListOpts{}
 	cmd := &cobra.Command{
-		Use: "createProjectIpAccessList",
+		Use:   "createProjectIpAccessList",
 		Short: "Add Entries to Project IP Access List",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -81,34 +79,37 @@ func CreateProjectIpAccessListBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type DeleteProjectIpAccessListOpts struct {
+
+type deleteProjectIpAccessListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client     *admin.APIClient
+	groupId    string
 	entryValue string
 }
 
-func (opts *DeleteProjectIpAccessListOpts) initClient() func() error {
+func (opts *deleteProjectIpAccessListOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteProjectIpAccessListOpts) Run(ctx context.Context) error {
+func (opts *deleteProjectIpAccessListOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteProjectIpAccessListApiParams{
-		GroupId: opts.groupId,
+		GroupId:    opts.groupId,
 		EntryValue: opts.entryValue,
 	}
 	resp, _, err := opts.client.ProjectIPAccessListApi.DeleteProjectIpAccessListWithParams(ctx, params).Execute()
@@ -119,15 +120,15 @@ func (opts *DeleteProjectIpAccessListOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func DeleteProjectIpAccessListBuilder() *cobra.Command {
+func deleteProjectIpAccessListBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteProjectIpAccessListOpts{}
+	opts := deleteProjectIpAccessListOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteProjectIpAccessList",
+		Use:   "deleteProjectIpAccessList",
 		Short: "Remove One Entry from One Project IP Access List",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -139,32 +140,39 @@ func DeleteProjectIpAccessListBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.entryValue, "entryValue", "", "Access list entry that you want to remove from the project&#39;s IP access list. This value can use one of the following: one AWS security group ID, one IP address, or one CIDR block of addresses. For CIDR blocks that use a subnet mask, replace the forward slash (&#x60;/&#x60;) with its URL-encoded value (&#x60;%2F&#x60;). When you remove an entry from the IP access list, existing connections from the removed address or addresses may remain open for a variable amount of time. The amount of time it takes MongoDB Cloud to close the connection depends upon several factors, including:  - how your application established the connection, - how MongoDB Cloud or the driver using the address behaves, and - which protocol (like TCP or UDP) the connection uses.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.entryValue, "entryValue", "", `Access list entry that you want to remove from the project&#39;s IP access list. This value can use one of the following: one AWS security group ID, one IP address, or one CIDR block of addresses. For CIDR blocks that use a subnet mask, replace the forward slash (&#x60;/&#x60;) with its URL-encoded value (&#x60;%2F&#x60;). When you remove an entry from the IP access list, existing connections from the removed address or addresses may remain open for a variable amount of time. The amount of time it takes MongoDB Cloud to close the connection depends upon several factors, including:
+
+- how your application established the connection,
+- how MongoDB Cloud or the driver using the address behaves, and
+- which protocol (like TCP or UDP) the connection uses.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("entryValue")
 	return cmd
 }
-type GetProjectIpAccessListStatusOpts struct {
+
+type getProjectIpAccessListStatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client     *admin.APIClient
+	groupId    string
 	entryValue string
 }
 
-func (opts *GetProjectIpAccessListStatusOpts) initClient() func() error {
+func (opts *getProjectIpAccessListStatusOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetProjectIpAccessListStatusOpts) Run(ctx context.Context) error {
+func (opts *getProjectIpAccessListStatusOpts) Run(ctx context.Context) error {
 	params := &admin.GetProjectIpAccessListStatusApiParams{
-		GroupId: opts.groupId,
+		GroupId:    opts.groupId,
 		EntryValue: opts.entryValue,
 	}
 	resp, _, err := opts.client.ProjectIPAccessListApi.GetProjectIpAccessListStatusWithParams(ctx, params).Execute()
@@ -175,15 +183,15 @@ func (opts *GetProjectIpAccessListStatusOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetProjectIpAccessListStatusBuilder() *cobra.Command {
+func getProjectIpAccessListStatusBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetProjectIpAccessListStatusOpts{}
+	opts := getProjectIpAccessListStatusOpts{}
 	cmd := &cobra.Command{
-		Use: "getProjectIpAccessListStatus",
+		Use:   "getProjectIpAccessListStatus",
 		Short: "Return Status of One Project IP Access List Entry",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -195,32 +203,35 @@ func GetProjectIpAccessListStatusBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.entryValue, "entryValue", "", "Network address or cloud provider security construct that identifies which project access list entry to be verified.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.entryValue, "entryValue", "", `Network address or cloud provider security construct that identifies which project access list entry to be verified.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("entryValue")
 	return cmd
 }
-type GetProjectIpListOpts struct {
+
+type getProjectIpListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client     *admin.APIClient
+	groupId    string
 	entryValue string
 }
 
-func (opts *GetProjectIpListOpts) initClient() func() error {
+func (opts *getProjectIpListOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetProjectIpListOpts) Run(ctx context.Context) error {
+func (opts *getProjectIpListOpts) Run(ctx context.Context) error {
 	params := &admin.GetProjectIpListApiParams{
-		GroupId: opts.groupId,
+		GroupId:    opts.groupId,
 		EntryValue: opts.entryValue,
 	}
 	resp, _, err := opts.client.ProjectIPAccessListApi.GetProjectIpListWithParams(ctx, params).Execute()
@@ -231,15 +242,15 @@ func (opts *GetProjectIpListOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetProjectIpListBuilder() *cobra.Command {
+func getProjectIpListBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetProjectIpListOpts{}
+	opts := getProjectIpListOpts{}
 	cmd := &cobra.Command{
-		Use: "getProjectIpList",
+		Use:   "getProjectIpList",
 		Short: "Return One Project IP Access List Entry",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -251,37 +262,40 @@ func GetProjectIpListBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.entryValue, "entryValue", "", "Access list entry that you want to return from the project&#39;s IP access list. This value can use one of the following: one AWS security group ID, one IP address, or one CIDR block of addresses. For CIDR blocks that use a subnet mask, replace the forward slash (&#x60;/&#x60;) with its URL-encoded value (&#x60;%2F&#x60;).")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.entryValue, "entryValue", "", `Access list entry that you want to return from the project&#39;s IP access list. This value can use one of the following: one AWS security group ID, one IP address, or one CIDR block of addresses. For CIDR blocks that use a subnet mask, replace the forward slash (&#x60;/&#x60;) with its URL-encoded value (&#x60;%2F&#x60;).`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("entryValue")
 	return cmd
 }
-type ListProjectIpAccessListsOpts struct {
+
+type listProjectIpAccessListsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *ListProjectIpAccessListsOpts) initClient() func() error {
+func (opts *listProjectIpAccessListsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListProjectIpAccessListsOpts) Run(ctx context.Context) error {
+func (opts *listProjectIpAccessListsOpts) Run(ctx context.Context) error {
 	params := &admin.ListProjectIpAccessListsApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.ProjectIPAccessListApi.ListProjectIpAccessListsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -291,15 +305,15 @@ func (opts *ListProjectIpAccessListsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListProjectIpAccessListsBuilder() *cobra.Command {
+func listProjectIpAccessListsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListProjectIpAccessListsOpts{}
+	opts := listProjectIpAccessListsOpts{}
 	cmd := &cobra.Command{
-		Use: "listProjectIpAccessLists",
+		Use:   "listProjectIpAccessLists",
 		Short: "Return Project IP Access List",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -311,27 +325,28 @@ func ListProjectIpAccessListsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
-func ProjectIPAccessListBuilder() *cobra.Command {
+func projectIPAccessListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "projectIPAccessList",
-		Short:   "Returns, adds, edits, and removes network access limits to database deployments in Atlas. This resource replaces the whitelist resource. Atlas removed whitelists in July 2021. Update your applications to use this new resource. This resource manages a project&#39;s IP Access List and supports creating temporary Access List entries that automatically expire within a user-configurable 7-day period.",
+		Use:   "projectIPAccessList",
+		Short: `Returns, adds, edits, and removes network access limits to database deployments in Atlas. This resource replaces the whitelist resource. Atlas removed whitelists in July 2021. Update your applications to use this new resource. This resource manages a project&#39;s IP Access List and supports creating temporary Access List entries that automatically expire within a user-configurable 7-day period.`,
 	}
 	cmd.AddCommand(
-		CreateProjectIpAccessListBuilder(),
-		DeleteProjectIpAccessListBuilder(),
-		GetProjectIpAccessListStatusBuilder(),
-		GetProjectIpListBuilder(),
-		ListProjectIpAccessListsBuilder(),
+		createProjectIpAccessListBuilder(),
+		deleteProjectIpAccessListBuilder(),
+		getProjectIpAccessListStatusBuilder(),
+		getProjectIpListBuilder(),
+		listProjectIpAccessListsBuilder(),
 	)
 	return cmd
 }
-

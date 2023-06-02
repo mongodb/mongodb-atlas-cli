@@ -18,36 +18,32 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type AuthorizeCloudProviderAccessRoleOpts struct {
+type authorizeCloudProviderAccessRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	roleId string
-	
+	roleId  string
 }
 
-func (opts *AuthorizeCloudProviderAccessRoleOpts) initClient() func() error {
+func (opts *authorizeCloudProviderAccessRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *AuthorizeCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
+func (opts *authorizeCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
 	params := &admin.AuthorizeCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
-		RoleId: opts.roleId,
-		
+		RoleId:  opts.roleId,
 	}
 	resp, _, err := opts.client.CloudProviderAccessApi.AuthorizeCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -57,15 +53,15 @@ func (opts *AuthorizeCloudProviderAccessRoleOpts) Run(ctx context.Context) error
 	return opts.Print(resp)
 }
 
-func AuthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
+func authorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := AuthorizeCloudProviderAccessRoleOpts{}
+	opts := authorizeCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
-		Use: "authorizeCloudProviderAccessRole",
+		Use:   "authorizeCloudProviderAccessRole",
 		Short: "Authorize One Cloud Provider Access Role",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -77,34 +73,34 @@ func AuthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.roleId, "roleId", "", "Unique 24-hexadecimal digit string that identifies the role.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.roleId, "roleId", "", `Unique 24-hexadecimal digit string that identifies the role.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleId")
 	return cmd
 }
-type CreateCloudProviderAccessRoleOpts struct {
+
+type createCloudProviderAccessRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
 }
 
-func (opts *CreateCloudProviderAccessRoleOpts) initClient() func() error {
+func (opts *createCloudProviderAccessRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
+func (opts *createCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
 	params := &admin.CreateCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
-		
 	}
 	resp, _, err := opts.client.CloudProviderAccessApi.CreateCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -114,15 +110,15 @@ func (opts *CreateCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CreateCloudProviderAccessRoleBuilder() *cobra.Command {
+func createCloudProviderAccessRoleBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateCloudProviderAccessRoleOpts{}
+	opts := createCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
-		Use: "createCloudProviderAccessRole",
+		Use:   "createCloudProviderAccessRole",
 		Short: "Create One Cloud Provider Access Role",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -134,34 +130,36 @@ func CreateCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type DeauthorizeCloudProviderAccessRoleOpts struct {
+
+type deauthorizeCloudProviderAccessRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client        *admin.APIClient
+	groupId       string
 	cloudProvider string
-	roleId string
+	roleId        string
 }
 
-func (opts *DeauthorizeCloudProviderAccessRoleOpts) initClient() func() error {
+func (opts *deauthorizeCloudProviderAccessRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeauthorizeCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
+func (opts *deauthorizeCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
 	params := &admin.DeauthorizeCloudProviderAccessRoleApiParams{
-		GroupId: opts.groupId,
+		GroupId:       opts.groupId,
 		CloudProvider: opts.cloudProvider,
-		RoleId: opts.roleId,
+		RoleId:        opts.roleId,
 	}
 	_, err := opts.client.CloudProviderAccessApi.DeauthorizeCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -171,15 +169,15 @@ func (opts *DeauthorizeCloudProviderAccessRoleOpts) Run(ctx context.Context) err
 	return opts.Print(nil)
 }
 
-func DeauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
+func deauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeauthorizeCloudProviderAccessRoleOpts{}
+	opts := deauthorizeCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
-		Use: "deauthorizeCloudProviderAccessRole",
+		Use:   "deauthorizeCloudProviderAccessRole",
 		Short: "Deauthorize One Cloud Provider Access Role",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -191,35 +189,38 @@ func DeauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "", "Human-readable label that identifies the cloud provider of the role to deauthorize.")
-	cmd.Flags().StringVar(&opts.roleId, "roleId", "", "Unique 24-hexadecimal digit string that identifies the role.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "", `Human-readable label that identifies the cloud provider of the role to deauthorize.`)
+	cmd.Flags().StringVar(&opts.roleId, "roleId", "", `Unique 24-hexadecimal digit string that identifies the role.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("cloudProvider")
 	_ = cmd.MarkFlagRequired("roleId")
 	return cmd
 }
-type GetCloudProviderAccessRoleOpts struct {
+
+type getCloudProviderAccessRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	roleId string
+	roleId  string
 }
 
-func (opts *GetCloudProviderAccessRoleOpts) initClient() func() error {
+func (opts *getCloudProviderAccessRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
+func (opts *getCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
 	params := &admin.GetCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
-		RoleId: opts.roleId,
+		RoleId:  opts.roleId,
 	}
 	resp, _, err := opts.client.CloudProviderAccessApi.GetCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -229,15 +230,15 @@ func (opts *GetCloudProviderAccessRoleOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetCloudProviderAccessRoleBuilder() *cobra.Command {
+func getCloudProviderAccessRoleBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetCloudProviderAccessRoleOpts{}
+	opts := getCloudProviderAccessRoleOpts{}
 	cmd := &cobra.Command{
-		Use: "getCloudProviderAccessRole",
+		Use:   "getCloudProviderAccessRole",
 		Short: "Return specified Cloud Provider Access Role",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -249,29 +250,32 @@ func GetCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.roleId, "roleId", "", "Unique 24-hexadecimal digit string that identifies the role.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.roleId, "roleId", "", `Unique 24-hexadecimal digit string that identifies the role.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleId")
 	return cmd
 }
-type ListCloudProviderAccessRolesOpts struct {
+
+type listCloudProviderAccessRolesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *ListCloudProviderAccessRolesOpts) initClient() func() error {
+func (opts *listCloudProviderAccessRolesOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListCloudProviderAccessRolesOpts) Run(ctx context.Context) error {
+func (opts *listCloudProviderAccessRolesOpts) Run(ctx context.Context) error {
 	params := &admin.ListCloudProviderAccessRolesApiParams{
 		GroupId: opts.groupId,
 	}
@@ -283,15 +287,15 @@ func (opts *ListCloudProviderAccessRolesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListCloudProviderAccessRolesBuilder() *cobra.Command {
+func listCloudProviderAccessRolesBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListCloudProviderAccessRolesOpts{}
+	opts := listCloudProviderAccessRolesOpts{}
 	cmd := &cobra.Command{
-		Use: "listCloudProviderAccessRoles",
+		Use:   "listCloudProviderAccessRoles",
 		Short: "Return All Cloud Provider Access Roles",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -303,24 +307,25 @@ func ListCloudProviderAccessRolesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
-func CloudProviderAccessBuilder() *cobra.Command {
+func cloudProviderAccessBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "cloudProviderAccess",
-		Short:   "Returns, adds, authorizes, and removes AWS IAM roles in Atlas.",
+		Use:   "cloudProviderAccess",
+		Short: `Returns, adds, authorizes, and removes AWS IAM roles in Atlas.`,
 	}
 	cmd.AddCommand(
-		AuthorizeCloudProviderAccessRoleBuilder(),
-		CreateCloudProviderAccessRoleBuilder(),
-		DeauthorizeCloudProviderAccessRoleBuilder(),
-		GetCloudProviderAccessRoleBuilder(),
-		ListCloudProviderAccessRolesBuilder(),
+		authorizeCloudProviderAccessRoleBuilder(),
+		createCloudProviderAccessRoleBuilder(),
+		deauthorizeCloudProviderAccessRoleBuilder(),
+		getCloudProviderAccessRoleBuilder(),
+		listCloudProviderAccessRolesBuilder(),
 	)
 	return cmd
 }
-

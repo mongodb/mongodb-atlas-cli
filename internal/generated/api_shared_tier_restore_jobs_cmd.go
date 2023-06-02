@@ -18,36 +18,32 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type CreateSharedClusterBackupRestoreJobOpts struct {
+type createSharedClusterBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client      *admin.APIClient
 	clusterName string
-	groupId string
-	
+	groupId     string
 }
 
-func (opts *CreateSharedClusterBackupRestoreJobOpts) initClient() func() error {
+func (opts *createSharedClusterBackupRestoreJobOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateSharedClusterBackupRestoreJobOpts) Run(ctx context.Context) error {
+func (opts *createSharedClusterBackupRestoreJobOpts) Run(ctx context.Context) error {
 	params := &admin.CreateSharedClusterBackupRestoreJobApiParams{
 		ClusterName: opts.clusterName,
-		GroupId: opts.groupId,
-		
+		GroupId:     opts.groupId,
 	}
 	resp, _, err := opts.client.SharedTierRestoreJobsApi.CreateSharedClusterBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
@@ -57,15 +53,15 @@ func (opts *CreateSharedClusterBackupRestoreJobOpts) Run(ctx context.Context) er
 	return opts.Print(resp)
 }
 
-func CreateSharedClusterBackupRestoreJobBuilder() *cobra.Command {
+func createSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateSharedClusterBackupRestoreJobOpts{}
+	opts := createSharedClusterBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use: "createSharedClusterBackupRestoreJob",
+		Use:   "createSharedClusterBackupRestoreJob",
 		Short: "Create One Restore Job from One M2 or M5 Cluster",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -77,36 +73,38 @@ func CreateSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type GetSharedClusterBackupRestoreJobOpts struct {
+
+type getSharedClusterBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client      *admin.APIClient
 	clusterName string
-	groupId string
-	restoreId string
+	groupId     string
+	restoreId   string
 }
 
-func (opts *GetSharedClusterBackupRestoreJobOpts) initClient() func() error {
+func (opts *getSharedClusterBackupRestoreJobOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetSharedClusterBackupRestoreJobOpts) Run(ctx context.Context) error {
+func (opts *getSharedClusterBackupRestoreJobOpts) Run(ctx context.Context) error {
 	params := &admin.GetSharedClusterBackupRestoreJobApiParams{
 		ClusterName: opts.clusterName,
-		GroupId: opts.groupId,
-		RestoreId: opts.restoreId,
+		GroupId:     opts.groupId,
+		RestoreId:   opts.restoreId,
 	}
 	resp, _, err := opts.client.SharedTierRestoreJobsApi.GetSharedClusterBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
@@ -116,15 +114,15 @@ func (opts *GetSharedClusterBackupRestoreJobOpts) Run(ctx context.Context) error
 	return opts.Print(resp)
 }
 
-func GetSharedClusterBackupRestoreJobBuilder() *cobra.Command {
+func getSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetSharedClusterBackupRestoreJobOpts{}
+	opts := getSharedClusterBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use: "getSharedClusterBackupRestoreJob",
+		Use:   "getSharedClusterBackupRestoreJob",
 		Short: "Return One Restore Job for One M2 or M5 Cluster",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -136,35 +134,38 @@ func GetSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.restoreId, "restoreId", "", "Unique 24-hexadecimal digit string that identifies the restore job to return.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.restoreId, "restoreId", "", `Unique 24-hexadecimal digit string that identifies the restore job to return.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("restoreId")
 	return cmd
 }
-type ListSharedClusterBackupRestoreJobsOpts struct {
+
+type listSharedClusterBackupRestoreJobsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client      *admin.APIClient
 	clusterName string
-	groupId string
+	groupId     string
 }
 
-func (opts *ListSharedClusterBackupRestoreJobsOpts) initClient() func() error {
+func (opts *listSharedClusterBackupRestoreJobsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListSharedClusterBackupRestoreJobsOpts) Run(ctx context.Context) error {
+func (opts *listSharedClusterBackupRestoreJobsOpts) Run(ctx context.Context) error {
 	params := &admin.ListSharedClusterBackupRestoreJobsApiParams{
 		ClusterName: opts.clusterName,
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 	}
 	resp, _, err := opts.client.SharedTierRestoreJobsApi.ListSharedClusterBackupRestoreJobsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -174,15 +175,15 @@ func (opts *ListSharedClusterBackupRestoreJobsOpts) Run(ctx context.Context) err
 	return opts.Print(resp)
 }
 
-func ListSharedClusterBackupRestoreJobsBuilder() *cobra.Command {
+func listSharedClusterBackupRestoreJobsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListSharedClusterBackupRestoreJobsOpts{}
+	opts := listSharedClusterBackupRestoreJobsOpts{}
 	cmd := &cobra.Command{
-		Use: "listSharedClusterBackupRestoreJobs",
+		Use:   "listSharedClusterBackupRestoreJobs",
 		Short: "Return All Restore Jobs for One M2 or M5 Cluster",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -194,24 +195,25 @@ func ListSharedClusterBackupRestoreJobsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
-func SharedTierRestoreJobsBuilder() *cobra.Command {
+func sharedTierRestoreJobsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "sharedTierRestoreJobs",
-		Short:   "Returns and adds restore jobs for shared-tier database deployments.",
+		Use:   "sharedTierRestoreJobs",
+		Short: `Returns and adds restore jobs for shared-tier database deployments.`,
 	}
 	cmd.AddCommand(
-		CreateSharedClusterBackupRestoreJobBuilder(),
-		GetSharedClusterBackupRestoreJobBuilder(),
-		ListSharedClusterBackupRestoreJobsBuilder(),
+		createSharedClusterBackupRestoreJobBuilder(),
+		getSharedClusterBackupRestoreJobBuilder(),
+		listSharedClusterBackupRestoreJobsBuilder(),
 	)
 	return cmd
 }
-

@@ -18,36 +18,32 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type DownloadSharedClusterBackupOpts struct {
+type downloadSharedClusterBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client      *admin.APIClient
 	clusterName string
-	groupId string
-	
+	groupId     string
 }
 
-func (opts *DownloadSharedClusterBackupOpts) initClient() func() error {
+func (opts *downloadSharedClusterBackupOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DownloadSharedClusterBackupOpts) Run(ctx context.Context) error {
+func (opts *downloadSharedClusterBackupOpts) Run(ctx context.Context) error {
 	params := &admin.DownloadSharedClusterBackupApiParams{
 		ClusterName: opts.clusterName,
-		GroupId: opts.groupId,
-		
+		GroupId:     opts.groupId,
 	}
 	resp, _, err := opts.client.SharedTierSnapshotsApi.DownloadSharedClusterBackupWithParams(ctx, params).Execute()
 	if err != nil {
@@ -57,15 +53,15 @@ func (opts *DownloadSharedClusterBackupOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func DownloadSharedClusterBackupBuilder() *cobra.Command {
+func downloadSharedClusterBackupBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DownloadSharedClusterBackupOpts{}
+	opts := downloadSharedClusterBackupOpts{}
 	cmd := &cobra.Command{
-		Use: "downloadSharedClusterBackup",
+		Use:   "downloadSharedClusterBackup",
 		Short: "Download One M2 or M5 Cluster Snapshot",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -77,36 +73,38 @@ func DownloadSharedClusterBackupBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type GetSharedClusterBackupOpts struct {
+
+type getSharedClusterBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	snapshotId string
+	snapshotId  string
 }
 
-func (opts *GetSharedClusterBackupOpts) initClient() func() error {
+func (opts *getSharedClusterBackupOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetSharedClusterBackupOpts) Run(ctx context.Context) error {
+func (opts *getSharedClusterBackupOpts) Run(ctx context.Context) error {
 	params := &admin.GetSharedClusterBackupApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		SnapshotId: opts.snapshotId,
+		SnapshotId:  opts.snapshotId,
 	}
 	resp, _, err := opts.client.SharedTierSnapshotsApi.GetSharedClusterBackupWithParams(ctx, params).Execute()
 	if err != nil {
@@ -116,15 +114,15 @@ func (opts *GetSharedClusterBackupOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetSharedClusterBackupBuilder() *cobra.Command {
+func getSharedClusterBackupBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetSharedClusterBackupOpts{}
+	opts := getSharedClusterBackupOpts{}
 	cmd := &cobra.Command{
-		Use: "getSharedClusterBackup",
+		Use:   "getSharedClusterBackup",
 		Short: "Return One Snapshot for One M2 or M5 Cluster",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -136,34 +134,37 @@ func GetSharedClusterBackupBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "Unique 24-hexadecimal digit string that identifies the desired snapshot.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
 }
-type ListSharedClusterBackupsOpts struct {
+
+type listSharedClusterBackupsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
 }
 
-func (opts *ListSharedClusterBackupsOpts) initClient() func() error {
+func (opts *listSharedClusterBackupsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListSharedClusterBackupsOpts) Run(ctx context.Context) error {
+func (opts *listSharedClusterBackupsOpts) Run(ctx context.Context) error {
 	params := &admin.ListSharedClusterBackupsApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
 	resp, _, err := opts.client.SharedTierSnapshotsApi.ListSharedClusterBackupsWithParams(ctx, params).Execute()
@@ -174,15 +175,15 @@ func (opts *ListSharedClusterBackupsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListSharedClusterBackupsBuilder() *cobra.Command {
+func listSharedClusterBackupsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListSharedClusterBackupsOpts{}
+	opts := listSharedClusterBackupsOpts{}
 	cmd := &cobra.Command{
-		Use: "listSharedClusterBackups",
+		Use:   "listSharedClusterBackups",
 		Short: "Return All Snapshots for One M2 or M5 Cluster",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -194,24 +195,25 @@ func ListSharedClusterBackupsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
 
-func SharedTierSnapshotsBuilder() *cobra.Command {
+func sharedTierSnapshotsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "sharedTierSnapshots",
-		Short:   "Returns and requests to download shared-tier database deployment snapshots.",
+		Use:   "sharedTierSnapshots",
+		Short: `Returns and requests to download shared-tier database deployment snapshots.`,
 	}
 	cmd.AddCommand(
-		DownloadSharedClusterBackupBuilder(),
-		GetSharedClusterBackupBuilder(),
-		ListSharedClusterBackupsBuilder(),
+		downloadSharedClusterBackupBuilder(),
+		getSharedClusterBackupBuilder(),
+		listSharedClusterBackupsBuilder(),
 	)
 	return cmd
 }
-

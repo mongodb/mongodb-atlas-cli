@@ -18,36 +18,32 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type CreateDatabaseUserCertificateOpts struct {
+type createDatabaseUserCertificateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client   *admin.APIClient
+	groupId  string
 	username string
-	
 }
 
-func (opts *CreateDatabaseUserCertificateOpts) initClient() func() error {
+func (opts *createDatabaseUserCertificateOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateDatabaseUserCertificateOpts) Run(ctx context.Context) error {
+func (opts *createDatabaseUserCertificateOpts) Run(ctx context.Context) error {
 	params := &admin.CreateDatabaseUserCertificateApiParams{
-		GroupId: opts.groupId,
+		GroupId:  opts.groupId,
 		Username: opts.username,
-		
 	}
 	_, err := opts.client.X509AuthenticationApi.CreateDatabaseUserCertificateWithParams(ctx, params).Execute()
 	if err != nil {
@@ -57,15 +53,15 @@ func (opts *CreateDatabaseUserCertificateOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-func CreateDatabaseUserCertificateBuilder() *cobra.Command {
+func createDatabaseUserCertificateBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateDatabaseUserCertificateOpts{}
+	opts := createDatabaseUserCertificateOpts{}
 	cmd := &cobra.Command{
-		Use: "createDatabaseUserCertificate",
+		Use:   "createDatabaseUserCertificate",
 		Short: "Create One X.509 Certificate for One MongoDB User",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -77,30 +73,32 @@ func CreateDatabaseUserCertificateBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.username, "username", "", "Human-readable label that represents the MongoDB database user account for whom to create a certificate.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.username, "username", "", `Human-readable label that represents the MongoDB database user account for whom to create a certificate.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("username")
 	return cmd
 }
-type DisableCustomerManagedX509Opts struct {
+
+type disableCustomerManagedX509Opts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *DisableCustomerManagedX509Opts) initClient() func() error {
+func (opts *disableCustomerManagedX509Opts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DisableCustomerManagedX509Opts) Run(ctx context.Context) error {
+func (opts *disableCustomerManagedX509Opts) Run(ctx context.Context) error {
 	params := &admin.DisableCustomerManagedX509ApiParams{
 		GroupId: opts.groupId,
 	}
@@ -112,15 +110,15 @@ func (opts *DisableCustomerManagedX509Opts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func DisableCustomerManagedX509Builder() *cobra.Command {
+func disableCustomerManagedX509Builder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DisableCustomerManagedX509Opts{}
+	opts := disableCustomerManagedX509Opts{}
 	cmd := &cobra.Command{
-		Use: "disableCustomerManagedX509",
+		Use:   "disableCustomerManagedX509",
 		Short: "Disable Customer-Managed X.509",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -132,37 +130,40 @@ func DisableCustomerManagedX509Builder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type ListDatabaseUserCertificatesOpts struct {
+
+type listDatabaseUserCertificatesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	username string
+	client       *admin.APIClient
+	groupId      string
+	username     string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *ListDatabaseUserCertificatesOpts) initClient() func() error {
+func (opts *listDatabaseUserCertificatesOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListDatabaseUserCertificatesOpts) Run(ctx context.Context) error {
+func (opts *listDatabaseUserCertificatesOpts) Run(ctx context.Context) error {
 	params := &admin.ListDatabaseUserCertificatesApiParams{
-		GroupId: opts.groupId,
-		Username: opts.username,
+		GroupId:      opts.groupId,
+		Username:     opts.username,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.X509AuthenticationApi.ListDatabaseUserCertificatesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -172,15 +173,15 @@ func (opts *ListDatabaseUserCertificatesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListDatabaseUserCertificatesBuilder() *cobra.Command {
+func listDatabaseUserCertificatesBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListDatabaseUserCertificatesOpts{}
+	opts := listDatabaseUserCertificatesOpts{}
 	cmd := &cobra.Command{
-		Use: "listDatabaseUserCertificates",
+		Use:   "listDatabaseUserCertificates",
 		Short: "Return All X.509 Certificates Assigned to One MongoDB User",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -192,27 +193,28 @@ func ListDatabaseUserCertificatesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.username, "username", "", "Human-readable label that represents the MongoDB database user account whose certificates you want to return.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.username, "username", "", `Human-readable label that represents the MongoDB database user account whose certificates you want to return.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("username")
 	return cmd
 }
 
-func X509AuthenticationBuilder() *cobra.Command {
+func x509AuthenticationBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "x509Authentication",
-		Short:   "Returns, edits, and removes user-managed X.509 configurations. Also returns and generates MongoDB Cloud-managed X.509 certificates for database users. The following resources help manage database users who authenticate using X.509 certificates. You can manage these X.509 certificates or let MongoDB Cloud do it for you. If MongoDB Cloud manages your certificates, it also manages your Certificate Authority and can generate certificates for your database users. No additional X.509 configuration is required. If you manage your certificates, you must provide a Certificate Authority and generate certificates for your database users.",
+		Use:   "x509Authentication",
+		Short: `Returns, edits, and removes user-managed X.509 configurations. Also returns and generates MongoDB Cloud-managed X.509 certificates for database users. The following resources help manage database users who authenticate using X.509 certificates. You can manage these X.509 certificates or let MongoDB Cloud do it for you. If MongoDB Cloud manages your certificates, it also manages your Certificate Authority and can generate certificates for your database users. No additional X.509 configuration is required. If you manage your certificates, you must provide a Certificate Authority and generate certificates for your database users.`,
 	}
 	cmd.AddCommand(
-		CreateDatabaseUserCertificateBuilder(),
-		DisableCustomerManagedX509Builder(),
-		ListDatabaseUserCertificatesBuilder(),
+		createDatabaseUserCertificateBuilder(),
+		disableCustomerManagedX509Builder(),
+		listDatabaseUserCertificatesBuilder(),
 	)
 	return cmd
 }
-

@@ -18,34 +18,30 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type CreateDatabaseUserOpts struct {
+type createDatabaseUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
 }
 
-func (opts *CreateDatabaseUserOpts) initClient() func() error {
+func (opts *createDatabaseUserOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateDatabaseUserOpts) Run(ctx context.Context) error {
+func (opts *createDatabaseUserOpts) Run(ctx context.Context) error {
 	params := &admin.CreateDatabaseUserApiParams{
 		GroupId: opts.groupId,
-		
 	}
 	resp, _, err := opts.client.DatabaseUsersApi.CreateDatabaseUserWithParams(ctx, params).Execute()
 	if err != nil {
@@ -55,15 +51,15 @@ func (opts *CreateDatabaseUserOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CreateDatabaseUserBuilder() *cobra.Command {
+func createDatabaseUserBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateDatabaseUserOpts{}
+	opts := createDatabaseUserOpts{}
 	cmd := &cobra.Command{
-		Use: "createDatabaseUser",
+		Use:   "createDatabaseUser",
 		Short: "Create One Database User in One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -75,34 +71,36 @@ func CreateDatabaseUserBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type DeleteDatabaseUserOpts struct {
+
+type deleteDatabaseUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	databaseName string
-	username string
+	username     string
 }
 
-func (opts *DeleteDatabaseUserOpts) initClient() func() error {
+func (opts *deleteDatabaseUserOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteDatabaseUserOpts) Run(ctx context.Context) error {
+func (opts *deleteDatabaseUserOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteDatabaseUserApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		DatabaseName: opts.databaseName,
-		Username: opts.username,
+		Username:     opts.username,
 	}
 	resp, _, err := opts.client.DatabaseUsersApi.DeleteDatabaseUserWithParams(ctx, params).Execute()
 	if err != nil {
@@ -112,15 +110,15 @@ func (opts *DeleteDatabaseUserOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func DeleteDatabaseUserBuilder() *cobra.Command {
+func deleteDatabaseUserBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteDatabaseUserOpts{}
+	opts := deleteDatabaseUserOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteDatabaseUser",
+		Use:   "deleteDatabaseUser",
 		Short: "Remove One Database User from One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -132,37 +130,51 @@ func DeleteDatabaseUserBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "Human-readable label that identifies the database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be &#x60;$external&#x60;. If the user authenticates with SCRAM-SHA, this value should be &#x60;admin&#x60;.")
-	cmd.Flags().StringVar(&opts.username, "username", "", "Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:  | Authentication Method | Parameter Needed | Parameter Value | username Format | |---|---|---|---| | AWS IAM | awsType | ROLE | &lt;abbr title&#x3D;\&quot;Amazon Resource Name\&quot;&gt;ARN&lt;/abbr&gt; | | AWS IAM | awsType | USER | &lt;abbr title&#x3D;\&quot;Amazon Resource Name\&quot;&gt;ARN&lt;/abbr&gt; | | x.509 | x509Type | CUSTOMER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name | | x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name | | LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name | | LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name | | SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string | ")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", `Human-readable label that identifies the database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be &#x60;$external&#x60;. If the user authenticates with SCRAM-SHA, this value should be &#x60;admin&#x60;.`)
+	cmd.Flags().StringVar(&opts.username, "username", "", `Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:
+
+| Authentication Method | Parameter Needed | Parameter Value | username Format |
+|---|---|---|---|
+| AWS IAM | awsType | ROLE | &lt;abbr title&#x3D;&quot;Amazon Resource Name&quot;&gt;ARN&lt;/abbr&gt; |
+| AWS IAM | awsType | USER | &lt;abbr title&#x3D;&quot;Amazon Resource Name&quot;&gt;ARN&lt;/abbr&gt; |
+| x.509 | x509Type | CUSTOMER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string |
+`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("username")
 	return cmd
 }
-type GetDatabaseUserOpts struct {
+
+type getDatabaseUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	databaseName string
-	username string
+	username     string
 }
 
-func (opts *GetDatabaseUserOpts) initClient() func() error {
+func (opts *getDatabaseUserOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetDatabaseUserOpts) Run(ctx context.Context) error {
+func (opts *getDatabaseUserOpts) Run(ctx context.Context) error {
 	params := &admin.GetDatabaseUserApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		DatabaseName: opts.databaseName,
-		Username: opts.username,
+		Username:     opts.username,
 	}
 	resp, _, err := opts.client.DatabaseUsersApi.GetDatabaseUserWithParams(ctx, params).Execute()
 	if err != nil {
@@ -172,15 +184,15 @@ func (opts *GetDatabaseUserOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetDatabaseUserBuilder() *cobra.Command {
+func getDatabaseUserBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetDatabaseUserOpts{}
+	opts := getDatabaseUserOpts{}
 	cmd := &cobra.Command{
-		Use: "getDatabaseUser",
+		Use:   "getDatabaseUser",
 		Short: "Return One Database User from One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -192,39 +204,53 @@ func GetDatabaseUserBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "Human-readable label that identifies the database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be &#x60;$external&#x60;. If the user authenticates with SCRAM-SHA, this value should be &#x60;admin&#x60;.")
-	cmd.Flags().StringVar(&opts.username, "username", "", "Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:  | Authentication Method | Parameter Needed | Parameter Value | username Format | |---|---|---|---| | AWS IAM | awsType | ROLE | &lt;abbr title&#x3D;\&quot;Amazon Resource Name\&quot;&gt;ARN&lt;/abbr&gt; | | AWS IAM | awsType | USER | &lt;abbr title&#x3D;\&quot;Amazon Resource Name\&quot;&gt;ARN&lt;/abbr&gt; | | x.509 | x509Type | CUSTOMER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name | | x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name | | LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name | | LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name | | SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string | ")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", `Human-readable label that identifies the database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be &#x60;$external&#x60;. If the user authenticates with SCRAM-SHA, this value should be &#x60;admin&#x60;.`)
+	cmd.Flags().StringVar(&opts.username, "username", "", `Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:
+
+| Authentication Method | Parameter Needed | Parameter Value | username Format |
+|---|---|---|---|
+| AWS IAM | awsType | ROLE | &lt;abbr title&#x3D;&quot;Amazon Resource Name&quot;&gt;ARN&lt;/abbr&gt; |
+| AWS IAM | awsType | USER | &lt;abbr title&#x3D;&quot;Amazon Resource Name&quot;&gt;ARN&lt;/abbr&gt; |
+| x.509 | x509Type | CUSTOMER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string |
+`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("username")
 	return cmd
 }
-type ListDatabaseUsersOpts struct {
+
+type listDatabaseUsersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *ListDatabaseUsersOpts) initClient() func() error {
+func (opts *listDatabaseUsersOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListDatabaseUsersOpts) Run(ctx context.Context) error {
+func (opts *listDatabaseUsersOpts) Run(ctx context.Context) error {
 	params := &admin.ListDatabaseUsersApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.DatabaseUsersApi.ListDatabaseUsersWithParams(ctx, params).Execute()
 	if err != nil {
@@ -234,15 +260,15 @@ func (opts *ListDatabaseUsersOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListDatabaseUsersBuilder() *cobra.Command {
+func listDatabaseUsersBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListDatabaseUsersOpts{}
+	opts := listDatabaseUsersOpts{}
 	cmd := &cobra.Command{
-		Use: "listDatabaseUsers",
+		Use:   "listDatabaseUsers",
 		Short: "Return All Database Users from One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -254,38 +280,39 @@ func ListDatabaseUsersBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type UpdateDatabaseUserOpts struct {
+
+type updateDatabaseUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	databaseName string
-	username string
-	
+	username     string
 }
 
-func (opts *UpdateDatabaseUserOpts) initClient() func() error {
+func (opts *updateDatabaseUserOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateDatabaseUserOpts) Run(ctx context.Context) error {
+func (opts *updateDatabaseUserOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateDatabaseUserApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		DatabaseName: opts.databaseName,
-		Username: opts.username,
-		
+		Username:     opts.username,
 	}
 	resp, _, err := opts.client.DatabaseUsersApi.UpdateDatabaseUserWithParams(ctx, params).Execute()
 	if err != nil {
@@ -295,15 +322,15 @@ func (opts *UpdateDatabaseUserOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func UpdateDatabaseUserBuilder() *cobra.Command {
+func updateDatabaseUserBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateDatabaseUserOpts{}
+	opts := updateDatabaseUserOpts{}
 	cmd := &cobra.Command{
-		Use: "updateDatabaseUser",
+		Use:   "updateDatabaseUser",
 		Short: "Update One Database User in One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -315,10 +342,22 @@ func UpdateDatabaseUserBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", "Human-readable label that identifies the database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be &#x60;$external&#x60;. If the user authenticates with SCRAM-SHA, this value should be &#x60;admin&#x60;.")
-	cmd.Flags().StringVar(&opts.username, "username", "", "Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:  | Authentication Method | Parameter Needed | Parameter Value | username Format | |---|---|---|---| | AWS IAM | awsType | ROLE | &lt;abbr title&#x3D;\&quot;Amazon Resource Name\&quot;&gt;ARN&lt;/abbr&gt; | | AWS IAM | awsType | USER | &lt;abbr title&#x3D;\&quot;Amazon Resource Name\&quot;&gt;ARN&lt;/abbr&gt; | | x.509 | x509Type | CUSTOMER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name | | x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name | | LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name | | LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name | | SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string | ")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", `Human-readable label that identifies the database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be &#x60;$external&#x60;. If the user authenticates with SCRAM-SHA, this value should be &#x60;admin&#x60;.`)
+	cmd.Flags().StringVar(&opts.username, "username", "", `Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:
+
+| Authentication Method | Parameter Needed | Parameter Value | username Format |
+|---|---|---|---|
+| AWS IAM | awsType | ROLE | &lt;abbr title&#x3D;&quot;Amazon Resource Name&quot;&gt;ARN&lt;/abbr&gt; |
+| AWS IAM | awsType | USER | &lt;abbr title&#x3D;&quot;Amazon Resource Name&quot;&gt;ARN&lt;/abbr&gt; |
+| x.509 | x509Type | CUSTOMER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string |
+`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")
@@ -326,18 +365,17 @@ func UpdateDatabaseUserBuilder() *cobra.Command {
 	return cmd
 }
 
-func DatabaseUsersBuilder() *cobra.Command {
+func databaseUsersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "databaseUsers",
-		Short:   "Returns, adds, edits, and removes database users.",
+		Use:   "databaseUsers",
+		Short: `Returns, adds, edits, and removes database users.`,
 	}
 	cmd.AddCommand(
-		CreateDatabaseUserBuilder(),
-		DeleteDatabaseUserBuilder(),
-		GetDatabaseUserBuilder(),
-		ListDatabaseUsersBuilder(),
-		UpdateDatabaseUserBuilder(),
+		createDatabaseUserBuilder(),
+		deleteDatabaseUserBuilder(),
+		getDatabaseUserBuilder(),
+		listDatabaseUsersBuilder(),
+		updateDatabaseUserBuilder(),
 	)
 	return cmd
 }
-

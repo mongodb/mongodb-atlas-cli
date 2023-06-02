@@ -18,31 +18,28 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type GetSystemStatusOpts struct {
+type getSystemStatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
 }
 
-func (opts *GetSystemStatusOpts) initClient() func() error {
+func (opts *getSystemStatusOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetSystemStatusOpts) Run(ctx context.Context) error {
-	params := &admin.GetSystemStatusApiParams{
-	}
+func (opts *getSystemStatusOpts) Run(ctx context.Context) error {
+	params := &admin.GetSystemStatusApiParams{}
 	resp, _, err := opts.client.RootApi.GetSystemStatusWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
@@ -51,15 +48,15 @@ func (opts *GetSystemStatusOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetSystemStatusBuilder() *cobra.Command {
+func getSystemStatusBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetSystemStatusOpts{}
+	opts := getSystemStatusOpts{}
 	cmd := &cobra.Command{
-		Use: "getSystemStatus",
+		Use:   "getSystemStatus",
 		Short: "Return the status of this MongoDB application",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -75,14 +72,13 @@ func GetSystemStatusBuilder() *cobra.Command {
 	return cmd
 }
 
-func RootBuilder() *cobra.Command {
+func rootBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "root",
-		Short:   "Returns details that describe the MongoDB Cloud build and the access token that requests this resource. This starts the MongoDB Cloud API.",
+		Use:   "root",
+		Short: `Returns details that describe the MongoDB Cloud build and the access token that requests this resource. This starts the MongoDB Cloud API.`,
 	}
 	cmd.AddCommand(
-		GetSystemStatusBuilder(),
+		getSystemStatusBuilder(),
 	)
 	return cmd
 }
-

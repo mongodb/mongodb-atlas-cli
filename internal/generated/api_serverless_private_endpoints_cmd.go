@@ -18,36 +18,32 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type CreateServerlessPrivateEndpointOpts struct {
+type createServerlessPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	instanceName string
-	
 }
 
-func (opts *CreateServerlessPrivateEndpointOpts) initClient() func() error {
+func (opts *createServerlessPrivateEndpointOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
+func (opts *createServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
 	params := &admin.CreateServerlessPrivateEndpointApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		InstanceName: opts.instanceName,
-		
 	}
 	resp, _, err := opts.client.ServerlessPrivateEndpointsApi.CreateServerlessPrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
@@ -57,15 +53,15 @@ func (opts *CreateServerlessPrivateEndpointOpts) Run(ctx context.Context) error 
 	return opts.Print(resp)
 }
 
-func CreateServerlessPrivateEndpointBuilder() *cobra.Command {
+func createServerlessPrivateEndpointBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateServerlessPrivateEndpointOpts{}
+	opts := createServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use: "createServerlessPrivateEndpoint",
+		Use:   "createServerlessPrivateEndpoint",
 		Short: "Create One Private Endpoint for One Serverless Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -77,36 +73,38 @@ func CreateServerlessPrivateEndpointBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", "Human-readable label that identifies the serverless instance for which the tenant endpoint will be created.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance for which the tenant endpoint will be created.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("instanceName")
 	return cmd
 }
-type DeleteServerlessPrivateEndpointOpts struct {
+
+type deleteServerlessPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	instanceName string
-	endpointId string
+	endpointId   string
 }
 
-func (opts *DeleteServerlessPrivateEndpointOpts) initClient() func() error {
+func (opts *deleteServerlessPrivateEndpointOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
+func (opts *deleteServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteServerlessPrivateEndpointApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		InstanceName: opts.instanceName,
-		EndpointId: opts.endpointId,
+		EndpointId:   opts.endpointId,
 	}
 	resp, _, err := opts.client.ServerlessPrivateEndpointsApi.DeleteServerlessPrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
@@ -116,15 +114,15 @@ func (opts *DeleteServerlessPrivateEndpointOpts) Run(ctx context.Context) error 
 	return opts.Print(resp)
 }
 
-func DeleteServerlessPrivateEndpointBuilder() *cobra.Command {
+func deleteServerlessPrivateEndpointBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteServerlessPrivateEndpointOpts{}
+	opts := deleteServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteServerlessPrivateEndpoint",
+		Use:   "deleteServerlessPrivateEndpoint",
 		Short: "Remove One Private Endpoint for One Serverless Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -136,37 +134,40 @@ func DeleteServerlessPrivateEndpointBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", "Human-readable label that identifies the serverless instance from which the tenant endpoint will be removed.")
-	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", "Unique 24-hexadecimal digit string that identifies the tenant endpoint which will be removed.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance from which the tenant endpoint will be removed.`)
+	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 24-hexadecimal digit string that identifies the tenant endpoint which will be removed.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("instanceName")
 	_ = cmd.MarkFlagRequired("endpointId")
 	return cmd
 }
-type GetServerlessPrivateEndpointOpts struct {
+
+type getServerlessPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	instanceName string
-	endpointId string
+	endpointId   string
 }
 
-func (opts *GetServerlessPrivateEndpointOpts) initClient() func() error {
+func (opts *getServerlessPrivateEndpointOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
+func (opts *getServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
 	params := &admin.GetServerlessPrivateEndpointApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		InstanceName: opts.instanceName,
-		EndpointId: opts.endpointId,
+		EndpointId:   opts.endpointId,
 	}
 	resp, _, err := opts.client.ServerlessPrivateEndpointsApi.GetServerlessPrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
@@ -176,15 +177,15 @@ func (opts *GetServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetServerlessPrivateEndpointBuilder() *cobra.Command {
+func getServerlessPrivateEndpointBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetServerlessPrivateEndpointOpts{}
+	opts := getServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use: "getServerlessPrivateEndpoint",
+		Use:   "getServerlessPrivateEndpoint",
 		Short: "Return One Private Endpoint for One Serverless Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -196,34 +197,37 @@ func GetServerlessPrivateEndpointBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", "Human-readable label that identifies the serverless instance associated with the tenant endpoint.")
-	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", "Unique 24-hexadecimal digit string that identifies the tenant endpoint.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance associated with the tenant endpoint.`)
+	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 24-hexadecimal digit string that identifies the tenant endpoint.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("instanceName")
 	_ = cmd.MarkFlagRequired("endpointId")
 	return cmd
 }
-type ListServerlessPrivateEndpointsOpts struct {
+
+type listServerlessPrivateEndpointsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	instanceName string
 }
 
-func (opts *ListServerlessPrivateEndpointsOpts) initClient() func() error {
+func (opts *listServerlessPrivateEndpointsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListServerlessPrivateEndpointsOpts) Run(ctx context.Context) error {
+func (opts *listServerlessPrivateEndpointsOpts) Run(ctx context.Context) error {
 	params := &admin.ListServerlessPrivateEndpointsApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		InstanceName: opts.instanceName,
 	}
 	resp, _, err := opts.client.ServerlessPrivateEndpointsApi.ListServerlessPrivateEndpointsWithParams(ctx, params).Execute()
@@ -234,15 +238,15 @@ func (opts *ListServerlessPrivateEndpointsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListServerlessPrivateEndpointsBuilder() *cobra.Command {
+func listServerlessPrivateEndpointsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListServerlessPrivateEndpointsOpts{}
+	opts := listServerlessPrivateEndpointsOpts{}
 	cmd := &cobra.Command{
-		Use: "listServerlessPrivateEndpoints",
+		Use:   "listServerlessPrivateEndpoints",
 		Short: "Return All Private Endpoints for One Serverless Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -254,37 +258,38 @@ func ListServerlessPrivateEndpointsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", "Human-readable label that identifies the serverless instance associated with the tenant endpoint.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance associated with the tenant endpoint.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("instanceName")
 	return cmd
 }
-type UpdateServerlessPrivateEndpointOpts struct {
+
+type updateServerlessPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	instanceName string
-	endpointId string
-	
+	endpointId   string
 }
 
-func (opts *UpdateServerlessPrivateEndpointOpts) initClient() func() error {
+func (opts *updateServerlessPrivateEndpointOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
+func (opts *updateServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateServerlessPrivateEndpointApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		InstanceName: opts.instanceName,
-		EndpointId: opts.endpointId,
-		
+		EndpointId:   opts.endpointId,
 	}
 	resp, _, err := opts.client.ServerlessPrivateEndpointsApi.UpdateServerlessPrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
@@ -294,15 +299,15 @@ func (opts *UpdateServerlessPrivateEndpointOpts) Run(ctx context.Context) error 
 	return opts.Print(resp)
 }
 
-func UpdateServerlessPrivateEndpointBuilder() *cobra.Command {
+func updateServerlessPrivateEndpointBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateServerlessPrivateEndpointOpts{}
+	opts := updateServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use: "updateServerlessPrivateEndpoint",
+		Use:   "updateServerlessPrivateEndpoint",
 		Short: "Update One Private Endpoint for One Serverless Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -314,10 +319,11 @@ func UpdateServerlessPrivateEndpointBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", "Human-readable label that identifies the serverless instance associated with the tenant endpoint that will be updated.")
-	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", "Unique 24-hexadecimal digit string that identifies the tenant endpoint which will be updated.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance associated with the tenant endpoint that will be updated.`)
+	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 24-hexadecimal digit string that identifies the tenant endpoint which will be updated.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("instanceName")
@@ -325,18 +331,17 @@ func UpdateServerlessPrivateEndpointBuilder() *cobra.Command {
 	return cmd
 }
 
-func ServerlessPrivateEndpointsBuilder() *cobra.Command {
+func serverlessPrivateEndpointsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "serverlessPrivateEndpoints",
-		Short:   "Returns, adds, edits, and removes private endpoints for serverless instances. To learn more, see the Atlas Administration API tab on the following tutorial.",
+		Use:   "serverlessPrivateEndpoints",
+		Short: `Returns, adds, edits, and removes private endpoints for serverless instances. To learn more, see the Atlas Administration API tab on the following tutorial.`,
 	}
 	cmd.AddCommand(
-		CreateServerlessPrivateEndpointBuilder(),
-		DeleteServerlessPrivateEndpointBuilder(),
-		GetServerlessPrivateEndpointBuilder(),
-		ListServerlessPrivateEndpointsBuilder(),
-		UpdateServerlessPrivateEndpointBuilder(),
+		createServerlessPrivateEndpointBuilder(),
+		deleteServerlessPrivateEndpointBuilder(),
+		getServerlessPrivateEndpointBuilder(),
+		listServerlessPrivateEndpointsBuilder(),
+		updateServerlessPrivateEndpointBuilder(),
 	)
 	return cmd
 }
-

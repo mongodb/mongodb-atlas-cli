@@ -5,7 +5,7 @@
   "scripts": {
     "generate:clear": "rm -rf ../../internal/generated",
     "generate:init": "mkdir -p ../../internal/generated && cp ./config/.openapi-generator-ignore ../../internal/generated/.openapi-generator-ignore",
-    "generate:run": "openapi-generator-cli generate -c './config/config.yaml' --type-mappings=integer=int --type-mappings=DateTime=string -o ../../internal/generated",
+    "generate:run": "GO_POST_PROCESS_FILE='goimports -w' openapi-generator-cli generate --enable-post-process-file -c './config/config.yaml' --type-mappings=integer=int --type-mappings=DateTime=string -o ../../internal/generated",
     "generate": "npm run generate:clear && npm run generate:init && npm run generate:run"
   },
   "repository": {

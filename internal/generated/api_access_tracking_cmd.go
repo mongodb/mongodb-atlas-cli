@@ -18,44 +18,42 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type ListAccessLogsByClusterNameOpts struct {
+type listAccessLogsByClusterNameOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	authResult bool
-	end int64
-	ipAddress string
-	nLogs int
-	start int64
+	authResult  bool
+	end         int64
+	ipAddress   string
+	nLogs       int
+	start       int64
 }
 
-func (opts *ListAccessLogsByClusterNameOpts) initClient() func() error {
+func (opts *listAccessLogsByClusterNameOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListAccessLogsByClusterNameOpts) Run(ctx context.Context) error {
+func (opts *listAccessLogsByClusterNameOpts) Run(ctx context.Context) error {
 	params := &admin.ListAccessLogsByClusterNameApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		AuthResult: &opts.authResult,
-		End: &opts.end,
-		IpAddress: &opts.ipAddress,
-		NLogs: &opts.nLogs,
-		Start: &opts.start,
+		AuthResult:  &opts.authResult,
+		End:         &opts.end,
+		IpAddress:   &opts.ipAddress,
+		NLogs:       &opts.nLogs,
+		Start:       &opts.start,
 	}
 	resp, _, err := opts.client.AccessTrackingApi.ListAccessLogsByClusterNameWithParams(ctx, params).Execute()
 	if err != nil {
@@ -65,15 +63,15 @@ func (opts *ListAccessLogsByClusterNameOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListAccessLogsByClusterNameBuilder() *cobra.Command {
+func listAccessLogsByClusterNameBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListAccessLogsByClusterNameOpts{}
+	opts := listAccessLogsByClusterNameOpts{}
 	cmd := &cobra.Command{
-		Use: "listAccessLogsByClusterName",
+		Use:   "listAccessLogsByClusterName",
 		Short: "Return Database Access History for One Cluster using Its Cluster Name",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -85,48 +83,51 @@ func ListAccessLogsByClusterNameBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().BoolVar(&opts.authResult, "authResult", false, "Flag that indicates whether the response returns the successful authentication attempts only.")
-	cmd.Flags().Int64Var(&opts.end, "end", 0, "Date and time when to stop retrieving database history. If you specify **end**, you must also specify **start**. This parameter uses UNIX epoch time in milliseconds.")
-	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", "One Internet Protocol address that attempted to authenticate with the database.")
-	cmd.Flags().IntVar(&opts.nLogs, "nLogs", 20000, "Maximum number of lines from the log to return.")
-	cmd.Flags().Int64Var(&opts.start, "start", 0, "Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().BoolVar(&opts.authResult, "authResult", false, `Flag that indicates whether the response returns the successful authentication attempts only.`)
+	cmd.Flags().Int64Var(&opts.end, "end", 0, `Date and time when to stop retrieving database history. If you specify **end**, you must also specify **start**. This parameter uses UNIX epoch time in milliseconds.`)
+	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", `One Internet Protocol address that attempted to authenticate with the database.`)
+	cmd.Flags().IntVar(&opts.nLogs, "nLogs", 20000, `Maximum number of lines from the log to return.`)
+	cmd.Flags().Int64Var(&opts.start, "start", 0, `Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type ListAccessLogsByHostnameOpts struct {
+
+type listAccessLogsByHostnameOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	hostname string
+	client     *admin.APIClient
+	groupId    string
+	hostname   string
 	authResult bool
-	end int64
-	ipAddress string
-	nLogs int
-	start int64
+	end        int64
+	ipAddress  string
+	nLogs      int
+	start      int64
 }
 
-func (opts *ListAccessLogsByHostnameOpts) initClient() func() error {
+func (opts *listAccessLogsByHostnameOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListAccessLogsByHostnameOpts) Run(ctx context.Context) error {
+func (opts *listAccessLogsByHostnameOpts) Run(ctx context.Context) error {
 	params := &admin.ListAccessLogsByHostnameApiParams{
-		GroupId: opts.groupId,
-		Hostname: opts.hostname,
+		GroupId:    opts.groupId,
+		Hostname:   opts.hostname,
 		AuthResult: &opts.authResult,
-		End: &opts.end,
-		IpAddress: &opts.ipAddress,
-		NLogs: &opts.nLogs,
-		Start: &opts.start,
+		End:        &opts.end,
+		IpAddress:  &opts.ipAddress,
+		NLogs:      &opts.nLogs,
+		Start:      &opts.start,
 	}
 	resp, _, err := opts.client.AccessTrackingApi.ListAccessLogsByHostnameWithParams(ctx, params).Execute()
 	if err != nil {
@@ -136,15 +137,15 @@ func (opts *ListAccessLogsByHostnameOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListAccessLogsByHostnameBuilder() *cobra.Command {
+func listAccessLogsByHostnameBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListAccessLogsByHostnameOpts{}
+	opts := listAccessLogsByHostnameOpts{}
 	cmd := &cobra.Command{
-		Use: "listAccessLogsByHostname",
+		Use:   "listAccessLogsByHostname",
 		Short: "Return Database Access History for One Cluster using Its Hostname",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -156,28 +157,29 @@ func ListAccessLogsByHostnameBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.hostname, "hostname", "", "Fully qualified domain name or IP address of the MongoDB host that stores the log files that you want to download.")
-	cmd.Flags().BoolVar(&opts.authResult, "authResult", false, "Flag that indicates whether the response returns the successful authentication attempts only.")
-	cmd.Flags().Int64Var(&opts.end, "end", 0, "Date and time when to stop retrieving database history. If you specify **end**, you must also specify **start**. This parameter uses UNIX epoch time in milliseconds.")
-	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", "One Internet Protocol address that attempted to authenticate with the database.")
-	cmd.Flags().IntVar(&opts.nLogs, "nLogs", 20000, "Maximum number of lines from the log to return.")
-	cmd.Flags().Int64Var(&opts.start, "start", 0, "Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.hostname, "hostname", "", `Fully qualified domain name or IP address of the MongoDB host that stores the log files that you want to download.`)
+	cmd.Flags().BoolVar(&opts.authResult, "authResult", false, `Flag that indicates whether the response returns the successful authentication attempts only.`)
+	cmd.Flags().Int64Var(&opts.end, "end", 0, `Date and time when to stop retrieving database history. If you specify **end**, you must also specify **start**. This parameter uses UNIX epoch time in milliseconds.`)
+	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", `One Internet Protocol address that attempted to authenticate with the database.`)
+	cmd.Flags().IntVar(&opts.nLogs, "nLogs", 20000, `Maximum number of lines from the log to return.`)
+	cmd.Flags().Int64Var(&opts.start, "start", 0, `Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("hostname")
 	return cmd
 }
 
-func AccessTrackingBuilder() *cobra.Command {
+func accessTrackingBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "accessTracking",
-		Short:   "Returns access logs for authentication attempts made to Atlas database deployments. To view database access history, you must have either the Project Owner or Organization Owner role.",
+		Use:   "accessTracking",
+		Short: `Returns access logs for authentication attempts made to Atlas database deployments. To view database access history, you must have either the Project Owner or Organization Owner role.`,
 	}
 	cmd.AddCommand(
-		ListAccessLogsByClusterNameBuilder(),
-		ListAccessLogsByHostnameBuilder(),
+		listAccessLogsByClusterNameBuilder(),
+		listAccessLogsByHostnameBuilder(),
 	)
 	return cmd
 }
-

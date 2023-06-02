@@ -18,34 +18,30 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type CreateCustomDatabaseRoleOpts struct {
+type createCustomDatabaseRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
 }
 
-func (opts *CreateCustomDatabaseRoleOpts) initClient() func() error {
+func (opts *createCustomDatabaseRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateCustomDatabaseRoleOpts) Run(ctx context.Context) error {
+func (opts *createCustomDatabaseRoleOpts) Run(ctx context.Context) error {
 	params := &admin.CreateCustomDatabaseRoleApiParams{
 		GroupId: opts.groupId,
-		
 	}
 	resp, _, err := opts.client.CustomDatabaseRolesApi.CreateCustomDatabaseRoleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -55,15 +51,15 @@ func (opts *CreateCustomDatabaseRoleOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CreateCustomDatabaseRoleBuilder() *cobra.Command {
+func createCustomDatabaseRoleBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateCustomDatabaseRoleOpts{}
+	opts := createCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
-		Use: "createCustomDatabaseRole",
+		Use:   "createCustomDatabaseRole",
 		Short: "Create One Custom Role",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -75,31 +71,33 @@ func CreateCustomDatabaseRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type DeleteCustomDatabaseRoleOpts struct {
+
+type deleteCustomDatabaseRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client   *admin.APIClient
+	groupId  string
 	roleName string
 }
 
-func (opts *DeleteCustomDatabaseRoleOpts) initClient() func() error {
+func (opts *deleteCustomDatabaseRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteCustomDatabaseRoleOpts) Run(ctx context.Context) error {
+func (opts *deleteCustomDatabaseRoleOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteCustomDatabaseRoleApiParams{
-		GroupId: opts.groupId,
+		GroupId:  opts.groupId,
 		RoleName: opts.roleName,
 	}
 	_, err := opts.client.CustomDatabaseRolesApi.DeleteCustomDatabaseRoleWithParams(ctx, params).Execute()
@@ -110,15 +108,15 @@ func (opts *DeleteCustomDatabaseRoleOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-func DeleteCustomDatabaseRoleBuilder() *cobra.Command {
+func deleteCustomDatabaseRoleBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteCustomDatabaseRoleOpts{}
+	opts := deleteCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteCustomDatabaseRole",
+		Use:   "deleteCustomDatabaseRole",
 		Short: "Remove One Custom Role from One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -130,32 +128,35 @@ func DeleteCustomDatabaseRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.roleName, "roleName", "", "Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.roleName, "roleName", "", `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleName")
 	return cmd
 }
-type GetCustomDatabaseRoleOpts struct {
+
+type getCustomDatabaseRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client   *admin.APIClient
+	groupId  string
 	roleName string
 }
 
-func (opts *GetCustomDatabaseRoleOpts) initClient() func() error {
+func (opts *getCustomDatabaseRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetCustomDatabaseRoleOpts) Run(ctx context.Context) error {
+func (opts *getCustomDatabaseRoleOpts) Run(ctx context.Context) error {
 	params := &admin.GetCustomDatabaseRoleApiParams{
-		GroupId: opts.groupId,
+		GroupId:  opts.groupId,
 		RoleName: opts.roleName,
 	}
 	resp, _, err := opts.client.CustomDatabaseRolesApi.GetCustomDatabaseRoleWithParams(ctx, params).Execute()
@@ -166,15 +167,15 @@ func (opts *GetCustomDatabaseRoleOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetCustomDatabaseRoleBuilder() *cobra.Command {
+func getCustomDatabaseRoleBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetCustomDatabaseRoleOpts{}
+	opts := getCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
-		Use: "getCustomDatabaseRole",
+		Use:   "getCustomDatabaseRole",
 		Short: "Return One Custom Role in One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -186,29 +187,32 @@ func GetCustomDatabaseRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.roleName, "roleName", "", "Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.roleName, "roleName", "", `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleName")
 	return cmd
 }
-type ListCustomDatabaseRolesOpts struct {
+
+type listCustomDatabaseRolesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *ListCustomDatabaseRolesOpts) initClient() func() error {
+func (opts *listCustomDatabaseRolesOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListCustomDatabaseRolesOpts) Run(ctx context.Context) error {
+func (opts *listCustomDatabaseRolesOpts) Run(ctx context.Context) error {
 	params := &admin.ListCustomDatabaseRolesApiParams{
 		GroupId: opts.groupId,
 	}
@@ -220,15 +224,15 @@ func (opts *ListCustomDatabaseRolesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListCustomDatabaseRolesBuilder() *cobra.Command {
+func listCustomDatabaseRolesBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListCustomDatabaseRolesOpts{}
+	opts := listCustomDatabaseRolesOpts{}
 	cmd := &cobra.Command{
-		Use: "listCustomDatabaseRoles",
+		Use:   "listCustomDatabaseRoles",
 		Short: "Return All Custom Roles in One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -240,33 +244,34 @@ func ListCustomDatabaseRolesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type UpdateCustomDatabaseRoleOpts struct {
+
+type updateCustomDatabaseRoleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client   *admin.APIClient
+	groupId  string
 	roleName string
-	
 }
 
-func (opts *UpdateCustomDatabaseRoleOpts) initClient() func() error {
+func (opts *updateCustomDatabaseRoleOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateCustomDatabaseRoleOpts) Run(ctx context.Context) error {
+func (opts *updateCustomDatabaseRoleOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateCustomDatabaseRoleApiParams{
-		GroupId: opts.groupId,
+		GroupId:  opts.groupId,
 		RoleName: opts.roleName,
-		
 	}
 	resp, _, err := opts.client.CustomDatabaseRolesApi.UpdateCustomDatabaseRoleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -276,15 +281,15 @@ func (opts *UpdateCustomDatabaseRoleOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func UpdateCustomDatabaseRoleBuilder() *cobra.Command {
+func updateCustomDatabaseRoleBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateCustomDatabaseRoleOpts{}
+	opts := updateCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
-		Use: "updateCustomDatabaseRole",
+		Use:   "updateCustomDatabaseRole",
 		Short: "Update One Custom Role in One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -296,27 +301,27 @@ func UpdateCustomDatabaseRoleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.roleName, "roleName", "", "Human-readable label that identifies the role for the request. This name must beunique for this custom role in this project.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.roleName, "roleName", "", `Human-readable label that identifies the role for the request. This name must beunique for this custom role in this project.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleName")
 	return cmd
 }
 
-func CustomDatabaseRolesBuilder() *cobra.Command {
+func customDatabaseRolesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "customDatabaseRoles",
-		Short:   "Returns, adds, edits, and removes custom database user privilege roles. Use custom roles to specify custom sets of actions that the MongoDB Cloud built-in roles can&#39;t describe. You define custom roles at the project level, for all clusters in the project. This resource supports a subset of MongoDB privilege actions. You can create a subset of custom role actions. To create a wider list of custom role actions, use the MongoDB Cloud user interface. Custom roles must include actions that all project&#39;s clusters support, and that are compatible with each MongoDB version that your project&#39;s clusters use. For example, if your project has MongoDB 4.2 clusters, you can&#39;t create custom roles that use actions introduced in MongoDB 4.4.",
+		Use:   "customDatabaseRoles",
+		Short: `Returns, adds, edits, and removes custom database user privilege roles. Use custom roles to specify custom sets of actions that the MongoDB Cloud built-in roles can&#39;t describe. You define custom roles at the project level, for all clusters in the project. This resource supports a subset of MongoDB privilege actions. You can create a subset of custom role actions. To create a wider list of custom role actions, use the MongoDB Cloud user interface. Custom roles must include actions that all project&#39;s clusters support, and that are compatible with each MongoDB version that your project&#39;s clusters use. For example, if your project has MongoDB 4.2 clusters, you can&#39;t create custom roles that use actions introduced in MongoDB 4.4.`,
 	}
 	cmd.AddCommand(
-		CreateCustomDatabaseRoleBuilder(),
-		DeleteCustomDatabaseRoleBuilder(),
-		GetCustomDatabaseRoleBuilder(),
-		ListCustomDatabaseRolesBuilder(),
-		UpdateCustomDatabaseRoleBuilder(),
+		createCustomDatabaseRoleBuilder(),
+		deleteCustomDatabaseRoleBuilder(),
+		getCustomDatabaseRoleBuilder(),
+		listCustomDatabaseRolesBuilder(),
+		updateCustomDatabaseRoleBuilder(),
 	)
 	return cmd
 }
-

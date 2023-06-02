@@ -18,34 +18,30 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type CreateDataFederationPrivateEndpointOpts struct {
+type createDataFederationPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
 }
 
-func (opts *CreateDataFederationPrivateEndpointOpts) initClient() func() error {
+func (opts *createDataFederationPrivateEndpointOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateDataFederationPrivateEndpointOpts) Run(ctx context.Context) error {
+func (opts *createDataFederationPrivateEndpointOpts) Run(ctx context.Context) error {
 	params := &admin.CreateDataFederationPrivateEndpointApiParams{
 		GroupId: opts.groupId,
-		
 	}
 	resp, _, err := opts.client.DataFederationApi.CreateDataFederationPrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
@@ -55,15 +51,15 @@ func (opts *CreateDataFederationPrivateEndpointOpts) Run(ctx context.Context) er
 	return opts.Print(resp)
 }
 
-func CreateDataFederationPrivateEndpointBuilder() *cobra.Command {
+func createDataFederationPrivateEndpointBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateDataFederationPrivateEndpointOpts{}
+	opts := createDataFederationPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use: "createDataFederationPrivateEndpoint",
+		Use:   "createDataFederationPrivateEndpoint",
 		Short: "Create One Federated Database Instance and Online Archive Private Endpoint for One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -75,33 +71,35 @@ func CreateDataFederationPrivateEndpointBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type CreateFederatedDatabaseOpts struct {
+
+type createFederatedDatabaseOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
+
 	skipRoleValidation bool
 }
 
-func (opts *CreateFederatedDatabaseOpts) initClient() func() error {
+func (opts *createFederatedDatabaseOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateFederatedDatabaseOpts) Run(ctx context.Context) error {
+func (opts *createFederatedDatabaseOpts) Run(ctx context.Context) error {
 	params := &admin.CreateFederatedDatabaseApiParams{
 		GroupId: opts.groupId,
-		
+
 		SkipRoleValidation: &opts.skipRoleValidation,
 	}
 	resp, _, err := opts.client.DataFederationApi.CreateFederatedDatabaseWithParams(ctx, params).Execute()
@@ -112,15 +110,15 @@ func (opts *CreateFederatedDatabaseOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CreateFederatedDatabaseBuilder() *cobra.Command {
+func createFederatedDatabaseBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateFederatedDatabaseOpts{}
+	opts := createFederatedDatabaseOpts{}
 	cmd := &cobra.Command{
-		Use: "createFederatedDatabase",
+		Use:   "createFederatedDatabase",
 		Short: "Create One Federated Database Instance in One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -132,37 +130,38 @@ func CreateFederatedDatabaseBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
-	cmd.Flags().BoolVar(&opts.skipRoleValidation, "skipRoleValidation", false, "Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().BoolVar(&opts.skipRoleValidation, "skipRoleValidation", false, `Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type CreateOneDataFederationQueryLimitOpts struct {
+
+type createOneDataFederationQueryLimitOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client     *admin.APIClient
+	groupId    string
 	tenantName string
-	limitName string
-	
+	limitName  string
 }
 
-func (opts *CreateOneDataFederationQueryLimitOpts) initClient() func() error {
+func (opts *createOneDataFederationQueryLimitOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateOneDataFederationQueryLimitOpts) Run(ctx context.Context) error {
+func (opts *createOneDataFederationQueryLimitOpts) Run(ctx context.Context) error {
 	params := &admin.CreateOneDataFederationQueryLimitApiParams{
-		GroupId: opts.groupId,
+		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
-		LimitName: opts.limitName,
-		
+		LimitName:  opts.limitName,
 	}
 	resp, _, err := opts.client.DataFederationApi.CreateOneDataFederationQueryLimitWithParams(ctx, params).Execute()
 	if err != nil {
@@ -172,15 +171,15 @@ func (opts *CreateOneDataFederationQueryLimitOpts) Run(ctx context.Context) erro
 	return opts.Print(resp)
 }
 
-func CreateOneDataFederationQueryLimitBuilder() *cobra.Command {
+func createOneDataFederationQueryLimitBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateOneDataFederationQueryLimitOpts{}
+	opts := createOneDataFederationQueryLimitOpts{}
 	cmd := &cobra.Command{
-		Use: "createOneDataFederationQueryLimit",
+		Use:   "createOneDataFederationQueryLimit",
 		Short: "Configure One Query Limit for One Federated Database Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -192,35 +191,45 @@ func CreateOneDataFederationQueryLimitBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "Human-readable label that identifies the federated database instance to which the query limit applies.")
-	cmd.Flags().StringVar(&opts.limitName, "limitName", "", "Human-readable label that identifies this data federation instance limit.  | Limit Name | Description | Default | | --- | --- | --- | | bytesProcessed.query | Limit on the number of bytes processed during a single data federation query | N/A | | bytesProcessed.daily | Limit on the number of bytes processed for the data federation instance for the current day | N/A | | bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A | | bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A | ")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance to which the query limit applies.`)
+	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this data federation instance limit.
+
+| Limit Name | Description | Default |
+| --- | --- | --- |
+| bytesProcessed.query | Limit on the number of bytes processed during a single data federation query | N/A |
+| bytesProcessed.daily | Limit on the number of bytes processed for the data federation instance for the current day | N/A |
+| bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
+| bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
+`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("limitName")
 	return cmd
 }
-type DeleteDataFederationPrivateEndpointOpts struct {
+
+type deleteDataFederationPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client     *admin.APIClient
+	groupId    string
 	endpointId string
 }
 
-func (opts *DeleteDataFederationPrivateEndpointOpts) initClient() func() error {
+func (opts *deleteDataFederationPrivateEndpointOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteDataFederationPrivateEndpointOpts) Run(ctx context.Context) error {
+func (opts *deleteDataFederationPrivateEndpointOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteDataFederationPrivateEndpointApiParams{
-		GroupId: opts.groupId,
+		GroupId:    opts.groupId,
 		EndpointId: opts.endpointId,
 	}
 	resp, _, err := opts.client.DataFederationApi.DeleteDataFederationPrivateEndpointWithParams(ctx, params).Execute()
@@ -231,15 +240,15 @@ func (opts *DeleteDataFederationPrivateEndpointOpts) Run(ctx context.Context) er
 	return opts.Print(resp)
 }
 
-func DeleteDataFederationPrivateEndpointBuilder() *cobra.Command {
+func deleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteDataFederationPrivateEndpointOpts{}
+	opts := deleteDataFederationPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteDataFederationPrivateEndpoint",
+		Use:   "deleteDataFederationPrivateEndpoint",
 		Short: "Remove One Federated Database Instance and Online Archive Private Endpoint from One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -251,32 +260,35 @@ func DeleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", "Unique 22-character alphanumeric string that identifies the private endpoint to remove. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 22-character alphanumeric string that identifies the private endpoint to remove. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("endpointId")
 	return cmd
 }
-type DeleteFederatedDatabaseOpts struct {
+
+type deleteFederatedDatabaseOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client     *admin.APIClient
+	groupId    string
 	tenantName string
 }
 
-func (opts *DeleteFederatedDatabaseOpts) initClient() func() error {
+func (opts *deleteFederatedDatabaseOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteFederatedDatabaseOpts) Run(ctx context.Context) error {
+func (opts *deleteFederatedDatabaseOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteFederatedDatabaseApiParams{
-		GroupId: opts.groupId,
+		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 	}
 	resp, _, err := opts.client.DataFederationApi.DeleteFederatedDatabaseWithParams(ctx, params).Execute()
@@ -287,15 +299,15 @@ func (opts *DeleteFederatedDatabaseOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func DeleteFederatedDatabaseBuilder() *cobra.Command {
+func deleteFederatedDatabaseBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteFederatedDatabaseOpts{}
+	opts := deleteFederatedDatabaseOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteFederatedDatabase",
+		Use:   "deleteFederatedDatabase",
 		Short: "Remove One Federated Database Instance from One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -307,35 +319,38 @@ func DeleteFederatedDatabaseBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "Human-readable label that identifies the federated database instance to remove.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance to remove.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
-type DeleteOneDataFederationInstanceQueryLimitOpts struct {
+
+type deleteOneDataFederationInstanceQueryLimitOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client     *admin.APIClient
+	groupId    string
 	tenantName string
-	limitName string
+	limitName  string
 }
 
-func (opts *DeleteOneDataFederationInstanceQueryLimitOpts) initClient() func() error {
+func (opts *deleteOneDataFederationInstanceQueryLimitOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteOneDataFederationInstanceQueryLimitOpts) Run(ctx context.Context) error {
+func (opts *deleteOneDataFederationInstanceQueryLimitOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteOneDataFederationInstanceQueryLimitApiParams{
-		GroupId: opts.groupId,
+		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
-		LimitName: opts.limitName,
+		LimitName:  opts.limitName,
 	}
 	resp, _, err := opts.client.DataFederationApi.DeleteOneDataFederationInstanceQueryLimitWithParams(ctx, params).Execute()
 	if err != nil {
@@ -345,15 +360,15 @@ func (opts *DeleteOneDataFederationInstanceQueryLimitOpts) Run(ctx context.Conte
 	return opts.Print(resp)
 }
 
-func DeleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
+func deleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteOneDataFederationInstanceQueryLimitOpts{}
+	opts := deleteOneDataFederationInstanceQueryLimitOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteOneDataFederationInstanceQueryLimit",
+		Use:   "deleteOneDataFederationInstanceQueryLimit",
 		Short: "Delete One Query Limit For One Federated Database Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -365,39 +380,50 @@ func DeleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "Human-readable label that identifies the federated database instance to which the query limit applies.")
-	cmd.Flags().StringVar(&opts.limitName, "limitName", "", "Human-readable label that identifies this data federation instance limit.  | Limit Name | Description | Default | | --- | --- | --- | | bytesProcessed.query | Limit on the number of bytes processed during a single data federation query | N/A | | bytesProcessed.daily | Limit on the number of bytes processed for the data federation instance for the current day | N/A | | bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A | | bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A | ")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance to which the query limit applies.`)
+	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this data federation instance limit.
+
+| Limit Name | Description | Default |
+| --- | --- | --- |
+| bytesProcessed.query | Limit on the number of bytes processed during a single data federation query | N/A |
+| bytesProcessed.daily | Limit on the number of bytes processed for the data federation instance for the current day | N/A |
+| bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
+| bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
+`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("limitName")
 	return cmd
 }
-type DownloadFederatedDatabaseQueryLogsOpts struct {
+
+type downloadFederatedDatabaseQueryLogsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client     *admin.APIClient
+	groupId    string
 	tenantName string
-	endDate int64
-	startDate int64
+	endDate    int64
+	startDate  int64
 }
 
-func (opts *DownloadFederatedDatabaseQueryLogsOpts) initClient() func() error {
+func (opts *downloadFederatedDatabaseQueryLogsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DownloadFederatedDatabaseQueryLogsOpts) Run(ctx context.Context) error {
+func (opts *downloadFederatedDatabaseQueryLogsOpts) Run(ctx context.Context) error {
 	params := &admin.DownloadFederatedDatabaseQueryLogsApiParams{
-		GroupId: opts.groupId,
+		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
-		EndDate: &opts.endDate,
-		StartDate: &opts.startDate,
+		EndDate:    &opts.endDate,
+		StartDate:  &opts.startDate,
 	}
 	resp, _, err := opts.client.DataFederationApi.DownloadFederatedDatabaseQueryLogsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -407,15 +433,15 @@ func (opts *DownloadFederatedDatabaseQueryLogsOpts) Run(ctx context.Context) err
 	return opts.Print(resp)
 }
 
-func DownloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
+func downloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DownloadFederatedDatabaseQueryLogsOpts{}
+	opts := downloadFederatedDatabaseQueryLogsOpts{}
 	cmd := &cobra.Command{
-		Use: "downloadFederatedDatabaseQueryLogs",
+		Use:   "downloadFederatedDatabaseQueryLogs",
 		Short: "Download Query Logs for One Federated Database Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -427,34 +453,37 @@ func DownloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "Human-readable label that identifies the federated database instance for which you want to download query logs.")
-	cmd.Flags().Int64Var(&opts.endDate, "endDate", 0, "Timestamp that specifies the end point for the range of log messages to download.  MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.")
-	cmd.Flags().Int64Var(&opts.startDate, "startDate", 0, "Timestamp that specifies the starting point for the range of log messages to download. MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance for which you want to download query logs.`)
+	cmd.Flags().Int64Var(&opts.endDate, "endDate", 0, `Timestamp that specifies the end point for the range of log messages to download.  MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`)
+	cmd.Flags().Int64Var(&opts.startDate, "startDate", 0, `Timestamp that specifies the starting point for the range of log messages to download. MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
-type GetDataFederationPrivateEndpointOpts struct {
+
+type getDataFederationPrivateEndpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client     *admin.APIClient
+	groupId    string
 	endpointId string
 }
 
-func (opts *GetDataFederationPrivateEndpointOpts) initClient() func() error {
+func (opts *getDataFederationPrivateEndpointOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetDataFederationPrivateEndpointOpts) Run(ctx context.Context) error {
+func (opts *getDataFederationPrivateEndpointOpts) Run(ctx context.Context) error {
 	params := &admin.GetDataFederationPrivateEndpointApiParams{
-		GroupId: opts.groupId,
+		GroupId:    opts.groupId,
 		EndpointId: opts.endpointId,
 	}
 	resp, _, err := opts.client.DataFederationApi.GetDataFederationPrivateEndpointWithParams(ctx, params).Execute()
@@ -465,15 +494,15 @@ func (opts *GetDataFederationPrivateEndpointOpts) Run(ctx context.Context) error
 	return opts.Print(resp)
 }
 
-func GetDataFederationPrivateEndpointBuilder() *cobra.Command {
+func getDataFederationPrivateEndpointBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetDataFederationPrivateEndpointOpts{}
+	opts := getDataFederationPrivateEndpointOpts{}
 	cmd := &cobra.Command{
-		Use: "getDataFederationPrivateEndpoint",
+		Use:   "getDataFederationPrivateEndpoint",
 		Short: "Return One Federated Database Instance and Online Archive Private Endpoint in One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -485,32 +514,35 @@ func GetDataFederationPrivateEndpointBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", "Unique 22-character alphanumeric string that identifies the private endpoint to return. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 22-character alphanumeric string that identifies the private endpoint to return. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("endpointId")
 	return cmd
 }
-type GetFederatedDatabaseOpts struct {
+
+type getFederatedDatabaseOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client     *admin.APIClient
+	groupId    string
 	tenantName string
 }
 
-func (opts *GetFederatedDatabaseOpts) initClient() func() error {
+func (opts *getFederatedDatabaseOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetFederatedDatabaseOpts) Run(ctx context.Context) error {
+func (opts *getFederatedDatabaseOpts) Run(ctx context.Context) error {
 	params := &admin.GetFederatedDatabaseApiParams{
-		GroupId: opts.groupId,
+		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 	}
 	resp, _, err := opts.client.DataFederationApi.GetFederatedDatabaseWithParams(ctx, params).Execute()
@@ -521,15 +553,15 @@ func (opts *GetFederatedDatabaseOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetFederatedDatabaseBuilder() *cobra.Command {
+func getFederatedDatabaseBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetFederatedDatabaseOpts{}
+	opts := getFederatedDatabaseOpts{}
 	cmd := &cobra.Command{
-		Use: "getFederatedDatabase",
+		Use:   "getFederatedDatabase",
 		Short: "Return One Federated Database Instance in One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -541,37 +573,40 @@ func GetFederatedDatabaseBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "Human-readable label that identifies the Federated Database to return.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the Federated Database to return.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
-type ListDataFederationPrivateEndpointsOpts struct {
+
+type listDataFederationPrivateEndpointsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *ListDataFederationPrivateEndpointsOpts) initClient() func() error {
+func (opts *listDataFederationPrivateEndpointsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListDataFederationPrivateEndpointsOpts) Run(ctx context.Context) error {
+func (opts *listDataFederationPrivateEndpointsOpts) Run(ctx context.Context) error {
 	params := &admin.ListDataFederationPrivateEndpointsApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.DataFederationApi.ListDataFederationPrivateEndpointsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -581,15 +616,15 @@ func (opts *ListDataFederationPrivateEndpointsOpts) Run(ctx context.Context) err
 	return opts.Print(resp)
 }
 
-func ListDataFederationPrivateEndpointsBuilder() *cobra.Command {
+func listDataFederationPrivateEndpointsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListDataFederationPrivateEndpointsOpts{}
+	opts := listDataFederationPrivateEndpointsOpts{}
 	cmd := &cobra.Command{
-		Use: "listDataFederationPrivateEndpoints",
+		Use:   "listDataFederationPrivateEndpoints",
 		Short: "Return All Federated Database Instance and Online Archive Private Endpoints in One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -601,34 +636,37 @@ func ListDataFederationPrivateEndpointsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type ListFederatedDatabasesOpts struct {
+
+type listFederatedDatabasesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	type_ string
+	type_   string
 }
 
-func (opts *ListFederatedDatabasesOpts) initClient() func() error {
+func (opts *listFederatedDatabasesOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListFederatedDatabasesOpts) Run(ctx context.Context) error {
+func (opts *listFederatedDatabasesOpts) Run(ctx context.Context) error {
 	params := &admin.ListFederatedDatabasesApiParams{
 		GroupId: opts.groupId,
-		Type_: &opts.type_,
+		Type_:   &opts.type_,
 	}
 	resp, _, err := opts.client.DataFederationApi.ListFederatedDatabasesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -638,15 +676,15 @@ func (opts *ListFederatedDatabasesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListFederatedDatabasesBuilder() *cobra.Command {
+func listFederatedDatabasesBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListFederatedDatabasesOpts{}
+	opts := listFederatedDatabasesOpts{}
 	cmd := &cobra.Command{
-		Use: "listFederatedDatabases",
+		Use:   "listFederatedDatabases",
 		Short: "Return All Federated Database Instances in One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -658,34 +696,37 @@ func ListFederatedDatabasesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.type_, "type_", "&quot;USER&quot;", "Type of Federated Database Instances to return.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.type_, "type_", "&quot;USER&quot;", `Type of Federated Database Instances to return.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type ReturnFederatedDatabaseQueryLimitOpts struct {
+
+type returnFederatedDatabaseQueryLimitOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client     *admin.APIClient
+	groupId    string
 	tenantName string
-	limitName string
+	limitName  string
 }
 
-func (opts *ReturnFederatedDatabaseQueryLimitOpts) initClient() func() error {
+func (opts *returnFederatedDatabaseQueryLimitOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ReturnFederatedDatabaseQueryLimitOpts) Run(ctx context.Context) error {
+func (opts *returnFederatedDatabaseQueryLimitOpts) Run(ctx context.Context) error {
 	params := &admin.ReturnFederatedDatabaseQueryLimitApiParams{
-		GroupId: opts.groupId,
+		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
-		LimitName: opts.limitName,
+		LimitName:  opts.limitName,
 	}
 	resp, _, err := opts.client.DataFederationApi.ReturnFederatedDatabaseQueryLimitWithParams(ctx, params).Execute()
 	if err != nil {
@@ -695,15 +736,15 @@ func (opts *ReturnFederatedDatabaseQueryLimitOpts) Run(ctx context.Context) erro
 	return opts.Print(resp)
 }
 
-func ReturnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
+func returnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ReturnFederatedDatabaseQueryLimitOpts{}
+	opts := returnFederatedDatabaseQueryLimitOpts{}
 	cmd := &cobra.Command{
-		Use: "returnFederatedDatabaseQueryLimit",
+		Use:   "returnFederatedDatabaseQueryLimit",
 		Short: "Return One Federated Database Instance Query Limit for One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -715,34 +756,45 @@ func ReturnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "Human-readable label that identifies the federated database instance to which the query limit applies.")
-	cmd.Flags().StringVar(&opts.limitName, "limitName", "", "Human-readable label that identifies this data federation instance limit.  | Limit Name | Description | Default | | --- | --- | --- | | bytesProcessed.query | Limit on the number of bytes processed during a single data federation query | N/A | | bytesProcessed.daily | Limit on the number of bytes processed for the data federation instance for the current day | N/A | | bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A | | bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A | ")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance to which the query limit applies.`)
+	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this data federation instance limit.
+
+| Limit Name | Description | Default |
+| --- | --- | --- |
+| bytesProcessed.query | Limit on the number of bytes processed during a single data federation query | N/A |
+| bytesProcessed.daily | Limit on the number of bytes processed for the data federation instance for the current day | N/A |
+| bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
+| bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
+`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("limitName")
 	return cmd
 }
-type ReturnFederatedDatabaseQueryLimitsOpts struct {
+
+type returnFederatedDatabaseQueryLimitsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client     *admin.APIClient
+	groupId    string
 	tenantName string
 }
 
-func (opts *ReturnFederatedDatabaseQueryLimitsOpts) initClient() func() error {
+func (opts *returnFederatedDatabaseQueryLimitsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ReturnFederatedDatabaseQueryLimitsOpts) Run(ctx context.Context) error {
+func (opts *returnFederatedDatabaseQueryLimitsOpts) Run(ctx context.Context) error {
 	params := &admin.ReturnFederatedDatabaseQueryLimitsApiParams{
-		GroupId: opts.groupId,
+		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 	}
 	resp, _, err := opts.client.DataFederationApi.ReturnFederatedDatabaseQueryLimitsWithParams(ctx, params).Execute()
@@ -753,15 +805,15 @@ func (opts *ReturnFederatedDatabaseQueryLimitsOpts) Run(ctx context.Context) err
 	return opts.Print(resp)
 }
 
-func ReturnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
+func returnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ReturnFederatedDatabaseQueryLimitsOpts{}
+	opts := returnFederatedDatabaseQueryLimitsOpts{}
 	cmd := &cobra.Command{
-		Use: "returnFederatedDatabaseQueryLimits",
+		Use:   "returnFederatedDatabaseQueryLimits",
 		Short: "Return All Query Limits for One Federated Database Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -773,37 +825,38 @@ func ReturnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "Human-readable label that identifies the federated database instance for which you want to retrieve query limits.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance for which you want to retrieve query limits.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
-type UpdateFederatedDatabaseOpts struct {
+
+type updateFederatedDatabaseOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	tenantName string
+	client             *admin.APIClient
+	groupId            string
+	tenantName         string
 	skipRoleValidation bool
-	
 }
 
-func (opts *UpdateFederatedDatabaseOpts) initClient() func() error {
+func (opts *updateFederatedDatabaseOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateFederatedDatabaseOpts) Run(ctx context.Context) error {
+func (opts *updateFederatedDatabaseOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateFederatedDatabaseApiParams{
-		GroupId: opts.groupId,
-		TenantName: opts.tenantName,
-		SkipRoleValidation: opts.skipRoleValidation,
-		
+		GroupId:            opts.groupId,
+		TenantName:         opts.tenantName,
+		SkipRoleValidation: &opts.skipRoleValidation,
 	}
 	resp, _, err := opts.client.DataFederationApi.UpdateFederatedDatabaseWithParams(ctx, params).Execute()
 	if err != nil {
@@ -813,15 +866,15 @@ func (opts *UpdateFederatedDatabaseOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func UpdateFederatedDatabaseBuilder() *cobra.Command {
+func updateFederatedDatabaseBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateFederatedDatabaseOpts{}
+	opts := updateFederatedDatabaseOpts{}
 	cmd := &cobra.Command{
-		Use: "updateFederatedDatabase",
+		Use:   "updateFederatedDatabase",
 		Short: "Update One Federated Database Instance in One Project",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -833,10 +886,11 @@ func UpdateFederatedDatabaseBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", "Human-readable label that identifies the federated database instance to update.")
-	cmd.Flags().BoolVar(&opts.skipRoleValidation, "skipRoleValidation", false, "Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance to update.`)
+	cmd.Flags().BoolVar(&opts.skipRoleValidation, "skipRoleValidation", false, `Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
@@ -844,27 +898,26 @@ func UpdateFederatedDatabaseBuilder() *cobra.Command {
 	return cmd
 }
 
-func DataFederationBuilder() *cobra.Command {
+func dataFederationBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "dataFederation",
-		Short:   "Returns, adds, edits, and removes Federated Database Instances. This resource requires your project ID. Changes to federated database instance configurations can affect costs.",
+		Use:   "dataFederation",
+		Short: `Returns, adds, edits, and removes Federated Database Instances. This resource requires your project ID. Changes to federated database instance configurations can affect costs.`,
 	}
 	cmd.AddCommand(
-		CreateDataFederationPrivateEndpointBuilder(),
-		CreateFederatedDatabaseBuilder(),
-		CreateOneDataFederationQueryLimitBuilder(),
-		DeleteDataFederationPrivateEndpointBuilder(),
-		DeleteFederatedDatabaseBuilder(),
-		DeleteOneDataFederationInstanceQueryLimitBuilder(),
-		DownloadFederatedDatabaseQueryLogsBuilder(),
-		GetDataFederationPrivateEndpointBuilder(),
-		GetFederatedDatabaseBuilder(),
-		ListDataFederationPrivateEndpointsBuilder(),
-		ListFederatedDatabasesBuilder(),
-		ReturnFederatedDatabaseQueryLimitBuilder(),
-		ReturnFederatedDatabaseQueryLimitsBuilder(),
-		UpdateFederatedDatabaseBuilder(),
+		createDataFederationPrivateEndpointBuilder(),
+		createFederatedDatabaseBuilder(),
+		createOneDataFederationQueryLimitBuilder(),
+		deleteDataFederationPrivateEndpointBuilder(),
+		deleteFederatedDatabaseBuilder(),
+		deleteOneDataFederationInstanceQueryLimitBuilder(),
+		downloadFederatedDatabaseQueryLogsBuilder(),
+		getDataFederationPrivateEndpointBuilder(),
+		getFederatedDatabaseBuilder(),
+		listDataFederationPrivateEndpointsBuilder(),
+		listFederatedDatabasesBuilder(),
+		returnFederatedDatabaseQueryLimitBuilder(),
+		returnFederatedDatabaseQueryLimitsBuilder(),
+		updateFederatedDatabaseBuilder(),
 	)
 	return cmd
 }
-

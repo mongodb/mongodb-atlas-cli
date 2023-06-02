@@ -18,30 +18,28 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type VersionedExampleOpts struct {
+type versionedExampleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client         *admin.APIClient
 	additionalInfo bool
 }
 
-func (opts *VersionedExampleOpts) initClient() func() error {
+func (opts *versionedExampleOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *VersionedExampleOpts) Run(ctx context.Context) error {
+func (opts *versionedExampleOpts) Run(ctx context.Context) error {
 	params := &admin.VersionedExampleApiParams{
 		AdditionalInfo: &opts.additionalInfo,
 	}
@@ -53,15 +51,15 @@ func (opts *VersionedExampleOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func VersionedExampleBuilder() *cobra.Command {
+func versionedExampleBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := VersionedExampleOpts{}
+	opts := versionedExampleOpts{}
 	cmd := &cobra.Command{
-		Use: "versionedExample",
+		Use:   "versionedExample",
 		Short: "Example resource info for versioning of the Atlas API",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -73,19 +71,18 @@ func VersionedExampleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().BoolVar(&opts.additionalInfo, "additionalInfo", false, "")
+	cmd.Flags().BoolVar(&opts.additionalInfo, "additionalInfo", false, ``)
 
 	return cmd
 }
 
-func TestBuilder() *cobra.Command {
+func testBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "test",
-		Short:   "Atlas test endpoints.",
+		Use:   "test",
+		Short: `Atlas test endpoints.`,
 	}
 	cmd.AddCommand(
-		VersionedExampleBuilder(),
+		versionedExampleBuilder(),
 	)
 	return cmd
 }
-

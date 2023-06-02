@@ -18,36 +18,32 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type CreateRollingIndexOpts struct {
+type createRollingIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	
 }
 
-func (opts *CreateRollingIndexOpts) initClient() func() error {
+func (opts *createRollingIndexOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateRollingIndexOpts) Run(ctx context.Context) error {
+func (opts *createRollingIndexOpts) Run(ctx context.Context) error {
 	params := &admin.CreateRollingIndexApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		
 	}
 	_, err := opts.client.RollingIndexApi.CreateRollingIndexWithParams(ctx, params).Execute()
 	if err != nil {
@@ -57,15 +53,15 @@ func (opts *CreateRollingIndexOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
-func CreateRollingIndexBuilder() *cobra.Command {
+func createRollingIndexBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateRollingIndexOpts{}
+	opts := createRollingIndexOpts{}
 	cmd := &cobra.Command{
-		Use: "createRollingIndex",
+		Use:   "createRollingIndex",
 		Short: "Create One Rolling Index",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -77,23 +73,23 @@ func CreateRollingIndexBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster on which MongoDB Cloud creates an index.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster on which MongoDB Cloud creates an index.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
 
-func RollingIndexBuilder() *cobra.Command {
+func rollingIndexBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "rollingIndex",
-		Short:   "Creates one index to a database deployment in a rolling manner. You can&#39;t create a rolling index on an &#x60;M0&#x60; free cluster or &#x60;M2/M5&#x60; shared cluster.",
+		Use:   "rollingIndex",
+		Short: `Creates one index to a database deployment in a rolling manner. You can&#39;t create a rolling index on an &#x60;M0&#x60; free cluster or &#x60;M2/M5&#x60; shared cluster.`,
 	}
 	cmd.AddCommand(
-		CreateRollingIndexBuilder(),
+		createRollingIndexBuilder(),
 	)
 	return cmd
 }
-

@@ -18,33 +18,28 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type CreateOrganizationOpts struct {
+type createOrganizationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	
 }
 
-func (opts *CreateOrganizationOpts) initClient() func() error {
+func (opts *createOrganizationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateOrganizationOpts) Run(ctx context.Context) error {
-	params := &admin.CreateOrganizationApiParams{
-		
-	}
+func (opts *createOrganizationOpts) Run(ctx context.Context) error {
+	params := &admin.CreateOrganizationApiParams{}
 	resp, _, err := opts.client.OrganizationsApi.CreateOrganizationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
@@ -53,15 +48,15 @@ func (opts *CreateOrganizationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CreateOrganizationBuilder() *cobra.Command {
+func createOrganizationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateOrganizationOpts{}
+	opts := createOrganizationOpts{}
 	cmd := &cobra.Command{
-		Use: "createOrganization",
+		Use:   "createOrganization",
 		Short: "Create One Organization",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -73,30 +68,28 @@ func CreateOrganizationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	
 
 	return cmd
 }
-type CreateOrganizationInvitationOpts struct {
+
+type createOrganizationInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	orgId string
-	
+	orgId  string
 }
 
-func (opts *CreateOrganizationInvitationOpts) initClient() func() error {
+func (opts *createOrganizationInvitationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateOrganizationInvitationOpts) Run(ctx context.Context) error {
+func (opts *createOrganizationInvitationOpts) Run(ctx context.Context) error {
 	params := &admin.CreateOrganizationInvitationApiParams{
 		OrgId: opts.orgId,
-		
 	}
 	resp, _, err := opts.client.OrganizationsApi.CreateOrganizationInvitationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -106,15 +99,15 @@ func (opts *CreateOrganizationInvitationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CreateOrganizationInvitationBuilder() *cobra.Command {
+func createOrganizationInvitationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateOrganizationInvitationOpts{}
+	opts := createOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
-		Use: "createOrganizationInvitation",
+		Use:   "createOrganizationInvitation",
 		Short: "Invite One MongoDB Cloud User to Join One Atlas Organization",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -126,28 +119,28 @@ func CreateOrganizationInvitationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
-type DeleteOrganizationOpts struct {
+
+type deleteOrganizationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	orgId string
+	orgId  string
 }
 
-func (opts *DeleteOrganizationOpts) initClient() func() error {
+func (opts *deleteOrganizationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteOrganizationOpts) Run(ctx context.Context) error {
+func (opts *deleteOrganizationOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteOrganizationApiParams{
 		OrgId: opts.orgId,
 	}
@@ -159,15 +152,15 @@ func (opts *DeleteOrganizationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func DeleteOrganizationBuilder() *cobra.Command {
+func deleteOrganizationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteOrganizationOpts{}
+	opts := deleteOrganizationOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteOrganization",
+		Use:   "deleteOrganization",
 		Short: "Remove One Organization",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -179,30 +172,31 @@ func DeleteOrganizationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
-type DeleteOrganizationInvitationOpts struct {
+
+type deleteOrganizationInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	orgId string
+	client       *admin.APIClient
+	orgId        string
 	invitationId string
 }
 
-func (opts *DeleteOrganizationInvitationOpts) initClient() func() error {
+func (opts *deleteOrganizationInvitationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteOrganizationInvitationOpts) Run(ctx context.Context) error {
+func (opts *deleteOrganizationInvitationOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteOrganizationInvitationApiParams{
-		OrgId: opts.orgId,
+		OrgId:        opts.orgId,
 		InvitationId: opts.invitationId,
 	}
 	resp, _, err := opts.client.OrganizationsApi.DeleteOrganizationInvitationWithParams(ctx, params).Execute()
@@ -213,15 +207,15 @@ func (opts *DeleteOrganizationInvitationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func DeleteOrganizationInvitationBuilder() *cobra.Command {
+func deleteOrganizationInvitationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteOrganizationInvitationOpts{}
+	opts := deleteOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteOrganizationInvitation",
+		Use:   "deleteOrganizationInvitation",
 		Short: "Cancel One Organization Invitation",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -233,29 +227,30 @@ func DeleteOrganizationInvitationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "Unique 24-hexadecimal digit string that identifies the invitation.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invitationId")
 	return cmd
 }
-type GetOrganizationOpts struct {
+
+type getOrganizationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	orgId string
+	orgId  string
 }
 
-func (opts *GetOrganizationOpts) initClient() func() error {
+func (opts *getOrganizationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetOrganizationOpts) Run(ctx context.Context) error {
+func (opts *getOrganizationOpts) Run(ctx context.Context) error {
 	params := &admin.GetOrganizationApiParams{
 		OrgId: opts.orgId,
 	}
@@ -267,15 +262,15 @@ func (opts *GetOrganizationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetOrganizationBuilder() *cobra.Command {
+func getOrganizationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetOrganizationOpts{}
+	opts := getOrganizationOpts{}
 	cmd := &cobra.Command{
-		Use: "getOrganization",
+		Use:   "getOrganization",
 		Short: "Return One Organization",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -287,30 +282,31 @@ func GetOrganizationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
-type GetOrganizationInvitationOpts struct {
+
+type getOrganizationInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	orgId string
+	client       *admin.APIClient
+	orgId        string
 	invitationId string
 }
 
-func (opts *GetOrganizationInvitationOpts) initClient() func() error {
+func (opts *getOrganizationInvitationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetOrganizationInvitationOpts) Run(ctx context.Context) error {
+func (opts *getOrganizationInvitationOpts) Run(ctx context.Context) error {
 	params := &admin.GetOrganizationInvitationApiParams{
-		OrgId: opts.orgId,
+		OrgId:        opts.orgId,
 		InvitationId: opts.invitationId,
 	}
 	resp, _, err := opts.client.OrganizationsApi.GetOrganizationInvitationWithParams(ctx, params).Execute()
@@ -321,15 +317,15 @@ func (opts *GetOrganizationInvitationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetOrganizationInvitationBuilder() *cobra.Command {
+func getOrganizationInvitationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetOrganizationInvitationOpts{}
+	opts := getOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
-		Use: "getOrganizationInvitation",
+		Use:   "getOrganizationInvitation",
 		Short: "Return One Organization Invitation",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -341,29 +337,30 @@ func GetOrganizationInvitationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "Unique 24-hexadecimal digit string that identifies the invitation.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invitationId")
 	return cmd
 }
-type GetOrganizationSettingsOpts struct {
+
+type getOrganizationSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	orgId string
+	orgId  string
 }
 
-func (opts *GetOrganizationSettingsOpts) initClient() func() error {
+func (opts *getOrganizationSettingsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetOrganizationSettingsOpts) Run(ctx context.Context) error {
+func (opts *getOrganizationSettingsOpts) Run(ctx context.Context) error {
 	params := &admin.GetOrganizationSettingsApiParams{
 		OrgId: opts.orgId,
 	}
@@ -375,15 +372,15 @@ func (opts *GetOrganizationSettingsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetOrganizationSettingsBuilder() *cobra.Command {
+func getOrganizationSettingsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetOrganizationSettingsOpts{}
+	opts := getOrganizationSettingsOpts{}
 	cmd := &cobra.Command{
-		Use: "getOrganizationSettings",
+		Use:   "getOrganizationSettings",
 		Short: "Return Settings for One Organization",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -395,30 +392,31 @@ func GetOrganizationSettingsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
-type ListOrganizationInvitationsOpts struct {
+
+type listOrganizationInvitationsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	orgId string
+	client   *admin.APIClient
+	orgId    string
 	username string
 }
 
-func (opts *ListOrganizationInvitationsOpts) initClient() func() error {
+func (opts *listOrganizationInvitationsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListOrganizationInvitationsOpts) Run(ctx context.Context) error {
+func (opts *listOrganizationInvitationsOpts) Run(ctx context.Context) error {
 	params := &admin.ListOrganizationInvitationsApiParams{
-		OrgId: opts.orgId,
+		OrgId:    opts.orgId,
 		Username: &opts.username,
 	}
 	resp, _, err := opts.client.OrganizationsApi.ListOrganizationInvitationsWithParams(ctx, params).Execute()
@@ -429,15 +427,15 @@ func (opts *ListOrganizationInvitationsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListOrganizationInvitationsBuilder() *cobra.Command {
+func listOrganizationInvitationsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListOrganizationInvitationsOpts{}
+	opts := listOrganizationInvitationsOpts{}
 	cmd := &cobra.Command{
-		Use: "listOrganizationInvitations",
+		Use:   "listOrganizationInvitations",
 		Short: "Return All Organization Invitations",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -449,38 +447,39 @@ func ListOrganizationInvitationsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	cmd.Flags().StringVar(&opts.username, "username", "", "Email address of the user account invited to this organization. If you exclude this parameter, this resource returns all pending invitations.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.username, "username", "", `Email address of the user account invited to this organization. If you exclude this parameter, this resource returns all pending invitations.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
-type ListOrganizationProjectsOpts struct {
+
+type listOrganizationProjectsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	orgId string
+	client       *admin.APIClient
+	orgId        string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
-	name string
+	pageNum      int
+	name         string
 }
 
-func (opts *ListOrganizationProjectsOpts) initClient() func() error {
+func (opts *listOrganizationProjectsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListOrganizationProjectsOpts) Run(ctx context.Context) error {
+func (opts *listOrganizationProjectsOpts) Run(ctx context.Context) error {
 	params := &admin.ListOrganizationProjectsApiParams{
-		OrgId: opts.orgId,
+		OrgId:        opts.orgId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
-		Name: &opts.name,
+		PageNum:      &opts.pageNum,
+		Name:         &opts.name,
 	}
 	resp, _, err := opts.client.OrganizationsApi.ListOrganizationProjectsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -490,15 +489,15 @@ func (opts *ListOrganizationProjectsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListOrganizationProjectsBuilder() *cobra.Command {
+func listOrganizationProjectsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListOrganizationProjectsOpts{}
+	opts := listOrganizationProjectsOpts{}
 	cmd := &cobra.Command{
-		Use: "listOrganizationProjects",
+		Use:   "listOrganizationProjects",
 		Short: "Return One or More Projects in One Organization",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -510,39 +509,40 @@ func ListOrganizationProjectsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
-	cmd.Flags().StringVar(&opts.name, "name", "", "Human-readable label of the project to use to filter the returned list. Performs a case-insensitive search for a project within the organization which is prefixed by the specified name.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label of the project to use to filter the returned list. Performs a case-insensitive search for a project within the organization which is prefixed by the specified name.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
-type ListOrganizationUsersOpts struct {
+
+type listOrganizationUsersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	orgId string
+	client       *admin.APIClient
+	orgId        string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *ListOrganizationUsersOpts) initClient() func() error {
+func (opts *listOrganizationUsersOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListOrganizationUsersOpts) Run(ctx context.Context) error {
+func (opts *listOrganizationUsersOpts) Run(ctx context.Context) error {
 	params := &admin.ListOrganizationUsersApiParams{
-		OrgId: opts.orgId,
+		OrgId:        opts.orgId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.OrganizationsApi.ListOrganizationUsersWithParams(ctx, params).Execute()
 	if err != nil {
@@ -552,15 +552,15 @@ func (opts *ListOrganizationUsersOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListOrganizationUsersBuilder() *cobra.Command {
+func listOrganizationUsersBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListOrganizationUsersOpts{}
+	opts := listOrganizationUsersOpts{}
 	cmd := &cobra.Command{
-		Use: "listOrganizationUsers",
+		Use:   "listOrganizationUsers",
 		Short: "Return All MongoDB Cloud Users in One Organization",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -572,38 +572,39 @@ func ListOrganizationUsersBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
-type ListOrganizationsOpts struct {
+
+type listOrganizationsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client       *admin.APIClient
 	includeCount bool
 	itemsPerPage int
-	pageNum int
-	name string
+	pageNum      int
+	name         string
 }
 
-func (opts *ListOrganizationsOpts) initClient() func() error {
+func (opts *listOrganizationsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListOrganizationsOpts) Run(ctx context.Context) error {
+func (opts *listOrganizationsOpts) Run(ctx context.Context) error {
 	params := &admin.ListOrganizationsApiParams{
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
-		Name: &opts.name,
+		PageNum:      &opts.pageNum,
+		Name:         &opts.name,
 	}
 	resp, _, err := opts.client.OrganizationsApi.ListOrganizationsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -613,15 +614,15 @@ func (opts *ListOrganizationsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListOrganizationsBuilder() *cobra.Command {
+func listOrganizationsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListOrganizationsOpts{}
+	opts := listOrganizationsOpts{}
 	cmd := &cobra.Command{
-		Use: "listOrganizations",
+		Use:   "listOrganizations",
 		Short: "Return All Organizations",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -633,33 +634,32 @@ func ListOrganizationsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
-	cmd.Flags().StringVar(&opts.name, "name", "", "Human-readable label of the organization to use to filter the returned list. Performs a case-insensitive search for an organization that starts with the specified name.")
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label of the organization to use to filter the returned list. Performs a case-insensitive search for an organization that starts with the specified name.`)
 
 	return cmd
 }
-type RenameOrganizationOpts struct {
+
+type renameOrganizationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	orgId string
-	
+	orgId  string
 }
 
-func (opts *RenameOrganizationOpts) initClient() func() error {
+func (opts *renameOrganizationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *RenameOrganizationOpts) Run(ctx context.Context) error {
+func (opts *renameOrganizationOpts) Run(ctx context.Context) error {
 	params := &admin.RenameOrganizationApiParams{
 		OrgId: opts.orgId,
-		
 	}
 	resp, _, err := opts.client.OrganizationsApi.RenameOrganizationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -669,15 +669,15 @@ func (opts *RenameOrganizationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func RenameOrganizationBuilder() *cobra.Command {
+func renameOrganizationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := RenameOrganizationOpts{}
+	opts := renameOrganizationOpts{}
 	cmd := &cobra.Command{
-		Use: "renameOrganization",
+		Use:   "renameOrganization",
 		Short: "Rename One Organization",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -689,32 +689,30 @@ func RenameOrganizationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
-type UpdateOrganizationInvitationOpts struct {
+
+type updateOrganizationInvitationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	orgId string
-	
+	orgId  string
 }
 
-func (opts *UpdateOrganizationInvitationOpts) initClient() func() error {
+func (opts *updateOrganizationInvitationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateOrganizationInvitationOpts) Run(ctx context.Context) error {
+func (opts *updateOrganizationInvitationOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateOrganizationInvitationApiParams{
 		OrgId: opts.orgId,
-		
 	}
 	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationInvitationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -724,15 +722,15 @@ func (opts *UpdateOrganizationInvitationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func UpdateOrganizationInvitationBuilder() *cobra.Command {
+func updateOrganizationInvitationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateOrganizationInvitationOpts{}
+	opts := updateOrganizationInvitationOpts{}
 	cmd := &cobra.Command{
-		Use: "updateOrganizationInvitation",
+		Use:   "updateOrganizationInvitation",
 		Short: "Update One Organization Invitation",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -744,34 +742,32 @@ func UpdateOrganizationInvitationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
-type UpdateOrganizationInvitationByIdOpts struct {
+
+type updateOrganizationInvitationByIdOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	orgId string
+	client       *admin.APIClient
+	orgId        string
 	invitationId string
-	
 }
 
-func (opts *UpdateOrganizationInvitationByIdOpts) initClient() func() error {
+func (opts *updateOrganizationInvitationByIdOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateOrganizationInvitationByIdOpts) Run(ctx context.Context) error {
+func (opts *updateOrganizationInvitationByIdOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateOrganizationInvitationByIdApiParams{
-		OrgId: opts.orgId,
+		OrgId:        opts.orgId,
 		InvitationId: opts.invitationId,
-		
 	}
 	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationInvitationByIdWithParams(ctx, params).Execute()
 	if err != nil {
@@ -781,15 +777,15 @@ func (opts *UpdateOrganizationInvitationByIdOpts) Run(ctx context.Context) error
 	return opts.Print(resp)
 }
 
-func UpdateOrganizationInvitationByIdBuilder() *cobra.Command {
+func updateOrganizationInvitationByIdBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateOrganizationInvitationByIdOpts{}
+	opts := updateOrganizationInvitationByIdOpts{}
 	cmd := &cobra.Command{
-		Use: "updateOrganizationInvitationById",
+		Use:   "updateOrganizationInvitationById",
 		Short: "Update One Organization Invitation by Invitation ID",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -801,34 +797,32 @@ func UpdateOrganizationInvitationByIdBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", "Unique 24-hexadecimal digit string that identifies the invitation.")
-	
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invitationId")
 	return cmd
 }
-type UpdateOrganizationSettingsOpts struct {
+
+type updateOrganizationSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	orgId string
-	
+	orgId  string
 }
 
-func (opts *UpdateOrganizationSettingsOpts) initClient() func() error {
+func (opts *updateOrganizationSettingsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateOrganizationSettingsOpts) Run(ctx context.Context) error {
+func (opts *updateOrganizationSettingsOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateOrganizationSettingsApiParams{
 		OrgId: opts.orgId,
-		
 	}
 	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationSettingsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -838,15 +832,15 @@ func (opts *UpdateOrganizationSettingsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func UpdateOrganizationSettingsBuilder() *cobra.Command {
+func updateOrganizationSettingsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateOrganizationSettingsOpts{}
+	opts := updateOrganizationSettingsOpts{}
 	cmd := &cobra.Command{
-		Use: "updateOrganizationSettings",
+		Use:   "updateOrganizationSettings",
 		Short: "Update Settings for One Organization",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -858,35 +852,33 @@ func UpdateOrganizationSettingsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", "Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.")
-	
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
-func OrganizationsBuilder() *cobra.Command {
+func organizationsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "organizations",
-		Short:   "Returns, adds, and edits organizational units in MongoDB Cloud.",
+		Use:   "organizations",
+		Short: `Returns, adds, and edits organizational units in MongoDB Cloud.`,
 	}
 	cmd.AddCommand(
-		CreateOrganizationBuilder(),
-		CreateOrganizationInvitationBuilder(),
-		DeleteOrganizationBuilder(),
-		DeleteOrganizationInvitationBuilder(),
-		GetOrganizationBuilder(),
-		GetOrganizationInvitationBuilder(),
-		GetOrganizationSettingsBuilder(),
-		ListOrganizationInvitationsBuilder(),
-		ListOrganizationProjectsBuilder(),
-		ListOrganizationUsersBuilder(),
-		ListOrganizationsBuilder(),
-		RenameOrganizationBuilder(),
-		UpdateOrganizationInvitationBuilder(),
-		UpdateOrganizationInvitationByIdBuilder(),
-		UpdateOrganizationSettingsBuilder(),
+		createOrganizationBuilder(),
+		createOrganizationInvitationBuilder(),
+		deleteOrganizationBuilder(),
+		deleteOrganizationInvitationBuilder(),
+		getOrganizationBuilder(),
+		getOrganizationInvitationBuilder(),
+		getOrganizationSettingsBuilder(),
+		listOrganizationInvitationsBuilder(),
+		listOrganizationProjectsBuilder(),
+		listOrganizationUsersBuilder(),
+		listOrganizationsBuilder(),
+		renameOrganizationBuilder(),
+		updateOrganizationInvitationBuilder(),
+		updateOrganizationInvitationByIdBuilder(),
+		updateOrganizationSettingsBuilder(),
 	)
 	return cmd
 }
-

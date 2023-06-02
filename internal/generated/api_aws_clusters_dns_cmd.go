@@ -18,30 +18,28 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type GetAWSCustomDNSOpts struct {
+type getAWSCustomDNSOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *GetAWSCustomDNSOpts) initClient() func() error {
+func (opts *getAWSCustomDNSOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetAWSCustomDNSOpts) Run(ctx context.Context) error {
+func (opts *getAWSCustomDNSOpts) Run(ctx context.Context) error {
 	params := &admin.GetAWSCustomDNSApiParams{
 		GroupId: opts.groupId,
 	}
@@ -53,15 +51,15 @@ func (opts *GetAWSCustomDNSOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetAWSCustomDNSBuilder() *cobra.Command {
+func getAWSCustomDNSBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetAWSCustomDNSOpts{}
+	opts := getAWSCustomDNSOpts{}
 	cmd := &cobra.Command{
-		Use: "getAWSCustomDNS",
+		Use:   "getAWSCustomDNS",
 		Short: "Return One Custom DNS Configuration for Atlas Clusters on AWS",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -73,31 +71,32 @@ func GetAWSCustomDNSBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type ToggleAWSCustomDNSOpts struct {
+
+type toggleAWSCustomDNSOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
 }
 
-func (opts *ToggleAWSCustomDNSOpts) initClient() func() error {
+func (opts *toggleAWSCustomDNSOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ToggleAWSCustomDNSOpts) Run(ctx context.Context) error {
+func (opts *toggleAWSCustomDNSOpts) Run(ctx context.Context) error {
 	params := &admin.ToggleAWSCustomDNSApiParams{
 		GroupId: opts.groupId,
-		
 	}
 	resp, _, err := opts.client.AWSClustersDNSApi.ToggleAWSCustomDNSWithParams(ctx, params).Execute()
 	if err != nil {
@@ -107,15 +106,15 @@ func (opts *ToggleAWSCustomDNSOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ToggleAWSCustomDNSBuilder() *cobra.Command {
+func toggleAWSCustomDNSBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ToggleAWSCustomDNSOpts{}
+	opts := toggleAWSCustomDNSOpts{}
 	cmd := &cobra.Command{
-		Use: "toggleAWSCustomDNS",
+		Use:   "toggleAWSCustomDNS",
 		Short: "Toggle State of One Custom DNS Configuration for Atlas Clusters on AWS",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -127,22 +126,22 @@ func ToggleAWSCustomDNSBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
-func AWSClustersDNSBuilder() *cobra.Command {
+func aWSClustersDNSBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "aWSClustersDNS",
-		Short:   "Returns and edits custom DNS configurations for MongoDB Cloud database deployments on AWS. The resource requires your Project ID. If you use the VPC peering on AWS and you use your own DNS servers instead of Amazon Route 53, enable custom DNS. Before 31 March 2020, applications deployed within AWS using custom DNS services and VPC-peered with MongoDB Cloud couldn&#39;t connect over private IP addresses. Custom DNS resolved to public IP addresses. AWS internal DNS resolved to private IP addresses. Applications deployed with custom DNS services in AWS should use Private IP for Peering connection strings.",
+		Use:   "aWSClustersDNS",
+		Short: `Returns and edits custom DNS configurations for MongoDB Cloud database deployments on AWS. The resource requires your Project ID. If you use the VPC peering on AWS and you use your own DNS servers instead of Amazon Route 53, enable custom DNS. Before 31 March 2020, applications deployed within AWS using custom DNS services and VPC-peered with MongoDB Cloud couldn&#39;t connect over private IP addresses. Custom DNS resolved to public IP addresses. AWS internal DNS resolved to private IP addresses. Applications deployed with custom DNS services in AWS should use Private IP for Peering connection strings.`,
 	}
 	cmd.AddCommand(
-		GetAWSCustomDNSBuilder(),
-		ToggleAWSCustomDNSBuilder(),
+		getAWSCustomDNSBuilder(),
+		toggleAWSCustomDNSBuilder(),
 	)
 	return cmd
 }
-

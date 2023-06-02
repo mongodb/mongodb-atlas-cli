@@ -18,42 +18,40 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type CreateThirdPartyIntegrationOpts struct {
+type createThirdPartyIntegrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client          *admin.APIClient
 	integrationType string
-	groupId string
-	
+	groupId         string
+
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *CreateThirdPartyIntegrationOpts) initClient() func() error {
+func (opts *createThirdPartyIntegrationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateThirdPartyIntegrationOpts) Run(ctx context.Context) error {
+func (opts *createThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 	params := &admin.CreateThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
-		GroupId: opts.groupId,
-		
+		GroupId:         opts.groupId,
+
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.CreateThirdPartyIntegrationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -63,15 +61,15 @@ func (opts *CreateThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CreateThirdPartyIntegrationBuilder() *cobra.Command {
+func createThirdPartyIntegrationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateThirdPartyIntegrationOpts{}
+	opts := createThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
-		Use: "createThirdPartyIntegration",
+		Use:   "createThirdPartyIntegration",
 		Short: "Configure One Third-Party Service Integration",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -83,37 +81,40 @@ func CreateThirdPartyIntegrationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", "Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("integrationType")
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type DeleteThirdPartyIntegrationOpts struct {
+
+type deleteThirdPartyIntegrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client          *admin.APIClient
 	integrationType string
-	groupId string
+	groupId         string
 }
 
-func (opts *DeleteThirdPartyIntegrationOpts) initClient() func() error {
+func (opts *deleteThirdPartyIntegrationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteThirdPartyIntegrationOpts) Run(ctx context.Context) error {
+func (opts *deleteThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
-		GroupId: opts.groupId,
+		GroupId:         opts.groupId,
 	}
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.DeleteThirdPartyIntegrationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -123,15 +124,15 @@ func (opts *DeleteThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func DeleteThirdPartyIntegrationBuilder() *cobra.Command {
+func deleteThirdPartyIntegrationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteThirdPartyIntegrationOpts{}
+	opts := deleteThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteThirdPartyIntegration",
+		Use:   "deleteThirdPartyIntegration",
 		Short: "Remove One Third-Party Service Integration",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -143,32 +144,35 @@ func DeleteThirdPartyIntegrationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", "Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("integrationType")
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type GetThirdPartyIntegrationOpts struct {
+
+type getThirdPartyIntegrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client          *admin.APIClient
+	groupId         string
 	integrationType string
 }
 
-func (opts *GetThirdPartyIntegrationOpts) initClient() func() error {
+func (opts *getThirdPartyIntegrationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetThirdPartyIntegrationOpts) Run(ctx context.Context) error {
+func (opts *getThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 	params := &admin.GetThirdPartyIntegrationApiParams{
-		GroupId: opts.groupId,
+		GroupId:         opts.groupId,
 		IntegrationType: opts.integrationType,
 	}
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.GetThirdPartyIntegrationWithParams(ctx, params).Execute()
@@ -179,15 +183,15 @@ func (opts *GetThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetThirdPartyIntegrationBuilder() *cobra.Command {
+func getThirdPartyIntegrationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetThirdPartyIntegrationOpts{}
+	opts := getThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
-		Use: "getThirdPartyIntegration",
+		Use:   "getThirdPartyIntegration",
 		Short: "Return One Third-Party Service Integration",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -199,37 +203,40 @@ func GetThirdPartyIntegrationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", "Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("integrationType")
 	return cmd
 }
-type ListThirdPartyIntegrationsOpts struct {
+
+type listThirdPartyIntegrationsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *ListThirdPartyIntegrationsOpts) initClient() func() error {
+func (opts *listThirdPartyIntegrationsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListThirdPartyIntegrationsOpts) Run(ctx context.Context) error {
+func (opts *listThirdPartyIntegrationsOpts) Run(ctx context.Context) error {
 	params := &admin.ListThirdPartyIntegrationsApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.ListThirdPartyIntegrationsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -239,15 +246,15 @@ func (opts *ListThirdPartyIntegrationsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListThirdPartyIntegrationsBuilder() *cobra.Command {
+func listThirdPartyIntegrationsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListThirdPartyIntegrationsOpts{}
+	opts := listThirdPartyIntegrationsOpts{}
 	cmd := &cobra.Command{
-		Use: "listThirdPartyIntegrations",
+		Use:   "listThirdPartyIntegrations",
 		Short: "Return All Active Third-Party Service Integrations",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -259,42 +266,45 @@ func ListThirdPartyIntegrationsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type UpdateThirdPartyIntegrationOpts struct {
+
+type updateThirdPartyIntegrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client          *admin.APIClient
 	integrationType string
-	groupId string
-	
+	groupId         string
+
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *UpdateThirdPartyIntegrationOpts) initClient() func() error {
+func (opts *updateThirdPartyIntegrationOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateThirdPartyIntegrationOpts) Run(ctx context.Context) error {
+func (opts *updateThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
-		GroupId: opts.groupId,
-		
+		GroupId:         opts.groupId,
+
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.UpdateThirdPartyIntegrationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -304,15 +314,15 @@ func (opts *UpdateThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func UpdateThirdPartyIntegrationBuilder() *cobra.Command {
+func updateThirdPartyIntegrationBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateThirdPartyIntegrationOpts{}
+	opts := updateThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
-		Use: "updateThirdPartyIntegration",
+		Use:   "updateThirdPartyIntegration",
 		Short: "Update One Third-Party Service Integration",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -324,32 +334,33 @@ func UpdateThirdPartyIntegrationBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", "Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.")
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("integrationType")
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
-func ThirdPartyIntegrationsBuilder() *cobra.Command {
+func thirdPartyIntegrationsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "thirdPartyIntegrations",
-		Short:   "Returns, adds, edits, and removes third-party service integration configurations. MongoDB Cloud sends alerts to each third-party service that you configure.
+		Use: "thirdPartyIntegrations",
+		Short: `Returns, adds, edits, and removes third-party service integration configurations. MongoDB Cloud sends alerts to each third-party service that you configure.
 
-**IMPORTANT**: Each project can only have one configuration per integrationType.",
+**IMPORTANT**: Each project can only have one configuration per integrationType.`,
 	}
 	cmd.AddCommand(
-		CreateThirdPartyIntegrationBuilder(),
-		DeleteThirdPartyIntegrationBuilder(),
-		GetThirdPartyIntegrationBuilder(),
-		ListThirdPartyIntegrationsBuilder(),
-		UpdateThirdPartyIntegrationBuilder(),
+		createThirdPartyIntegrationBuilder(),
+		deleteThirdPartyIntegrationBuilder(),
+		getThirdPartyIntegrationBuilder(),
+		listThirdPartyIntegrationsBuilder(),
+		updateThirdPartyIntegrationBuilder(),
 	)
 	return cmd
 }
-

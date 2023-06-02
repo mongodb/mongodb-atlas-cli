@@ -18,33 +18,28 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type CreateUserOpts struct {
+type createUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	
 }
 
-func (opts *CreateUserOpts) initClient() func() error {
+func (opts *createUserOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateUserOpts) Run(ctx context.Context) error {
-	params := &admin.CreateUserApiParams{
-		
-	}
+func (opts *createUserOpts) Run(ctx context.Context) error {
+	params := &admin.CreateUserApiParams{}
 	resp, _, err := opts.client.MongoDBCloudUsersApi.CreateUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
@@ -53,15 +48,15 @@ func (opts *CreateUserOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CreateUserBuilder() *cobra.Command {
+func createUserBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateUserOpts{}
+	opts := createUserOpts{}
 	cmd := &cobra.Command{
-		Use: "createUser",
+		Use:   "createUser",
 		Short: "Create One MongoDB Cloud User",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -73,26 +68,26 @@ func CreateUserBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	
 
 	return cmd
 }
-type GetUserOpts struct {
+
+type getUserOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
 	userId string
 }
 
-func (opts *GetUserOpts) initClient() func() error {
+func (opts *getUserOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetUserOpts) Run(ctx context.Context) error {
+func (opts *getUserOpts) Run(ctx context.Context) error {
 	params := &admin.GetUserApiParams{
 		UserId: opts.userId,
 	}
@@ -104,15 +99,15 @@ func (opts *GetUserOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetUserBuilder() *cobra.Command {
+func getUserBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetUserOpts{}
+	opts := getUserOpts{}
 	cmd := &cobra.Command{
-		Use: "getUser",
+		Use:   "getUser",
 		Short: "Return One MongoDB Cloud User using Its ID",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -124,27 +119,28 @@ func GetUserBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.userId, "userId", "", "Unique 24-hexadecimal digit string that identifies this user.")
+	cmd.Flags().StringVar(&opts.userId, "userId", "", `Unique 24-hexadecimal digit string that identifies this user.`)
 
 	_ = cmd.MarkFlagRequired("userId")
 	return cmd
 }
-type GetUserByUsernameOpts struct {
+
+type getUserByUsernameOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client   *admin.APIClient
 	userName string
 }
 
-func (opts *GetUserByUsernameOpts) initClient() func() error {
+func (opts *getUserByUsernameOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetUserByUsernameOpts) Run(ctx context.Context) error {
+func (opts *getUserByUsernameOpts) Run(ctx context.Context) error {
 	params := &admin.GetUserByUsernameApiParams{
 		UserName: opts.userName,
 	}
@@ -156,15 +152,15 @@ func (opts *GetUserByUsernameOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetUserByUsernameBuilder() *cobra.Command {
+func getUserByUsernameBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetUserByUsernameOpts{}
+	opts := getUserByUsernameOpts{}
 	cmd := &cobra.Command{
-		Use: "getUserByUsername",
+		Use:   "getUserByUsername",
 		Short: "Return One MongoDB Cloud User using Their Username",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -176,22 +172,21 @@ func GetUserByUsernameBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.userName, "userName", "", "Email address that belongs to the MongoDB Cloud user account. You cannot modify this address after creating the user.")
+	cmd.Flags().StringVar(&opts.userName, "userName", "", `Email address that belongs to the MongoDB Cloud user account. You cannot modify this address after creating the user.`)
 
 	_ = cmd.MarkFlagRequired("userName")
 	return cmd
 }
 
-func MongoDBCloudUsersBuilder() *cobra.Command {
+func mongoDBCloudUsersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "mongoDBCloudUsers",
-		Short:   "Returns, adds, and edits MongoDB Cloud users.",
+		Use:   "mongoDBCloudUsers",
+		Short: `Returns, adds, and edits MongoDB Cloud users.`,
 	}
 	cmd.AddCommand(
-		CreateUserBuilder(),
-		GetUserBuilder(),
-		GetUserByUsernameBuilder(),
+		createUserBuilder(),
+		getUserBuilder(),
+		getUserByUsernameBuilder(),
 	)
 	return cmd
 }
-

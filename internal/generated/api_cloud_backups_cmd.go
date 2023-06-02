@@ -18,35 +18,33 @@ package generated
 
 import (
 	"context"
-	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
-type CancelBackupRestoreJobOpts struct {
+type cancelBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	clusterName string
+	client       *admin.APIClient
+	groupId      string
+	clusterName  string
 	restoreJobId string
 }
 
-func (opts *CancelBackupRestoreJobOpts) initClient() func() error {
+func (opts *cancelBackupRestoreJobOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CancelBackupRestoreJobOpts) Run(ctx context.Context) error {
+func (opts *cancelBackupRestoreJobOpts) Run(ctx context.Context) error {
 	params := &admin.CancelBackupRestoreJobApiParams{
-		GroupId: opts.groupId,
-		ClusterName: opts.clusterName,
+		GroupId:      opts.groupId,
+		ClusterName:  opts.clusterName,
 		RestoreJobId: opts.restoreJobId,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.CancelBackupRestoreJobWithParams(ctx, params).Execute()
@@ -57,15 +55,15 @@ func (opts *CancelBackupRestoreJobOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CancelBackupRestoreJobBuilder() *cobra.Command {
+func cancelBackupRestoreJobBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CancelBackupRestoreJobOpts{}
+	opts := cancelBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use: "cancelBackupRestoreJob",
+		Use:   "cancelBackupRestoreJob",
 		Short: "Cancel One Restore Job of One Cluster",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -77,37 +75,38 @@ func CancelBackupRestoreJobBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.restoreJobId, "restoreJobId", "", "Unique 24-hexadecimal digit string that identifies the restore job to remove.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringVar(&opts.restoreJobId, "restoreJobId", "", `Unique 24-hexadecimal digit string that identifies the restore job to remove.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("restoreJobId")
 	return cmd
 }
-type CreateBackupExportJobOpts struct {
+
+type createBackupExportJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	
 }
 
-func (opts *CreateBackupExportJobOpts) initClient() func() error {
+func (opts *createBackupExportJobOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateBackupExportJobOpts) Run(ctx context.Context) error {
+func (opts *createBackupExportJobOpts) Run(ctx context.Context) error {
 	params := &admin.CreateBackupExportJobApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		
 	}
 	resp, _, err := opts.client.CloudBackupsApi.CreateBackupExportJobWithParams(ctx, params).Execute()
 	if err != nil {
@@ -117,15 +116,15 @@ func (opts *CreateBackupExportJobOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CreateBackupExportJobBuilder() *cobra.Command {
+func createBackupExportJobBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateBackupExportJobOpts{}
+	opts := createBackupExportJobOpts{}
 	cmd := &cobra.Command{
-		Use: "createBackupExportJob",
+		Use:   "createBackupExportJob",
 		Short: "Create One Cloud Backup Snapshot Export Job",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -137,36 +136,36 @@ func CreateBackupExportJobBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type CreateBackupRestoreJobOpts struct {
+
+type createBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	
 }
 
-func (opts *CreateBackupRestoreJobOpts) initClient() func() error {
+func (opts *createBackupRestoreJobOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateBackupRestoreJobOpts) Run(ctx context.Context) error {
+func (opts *createBackupRestoreJobOpts) Run(ctx context.Context) error {
 	params := &admin.CreateBackupRestoreJobApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		
 	}
 	resp, _, err := opts.client.CloudBackupsApi.CreateBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
@@ -176,15 +175,15 @@ func (opts *CreateBackupRestoreJobOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CreateBackupRestoreJobBuilder() *cobra.Command {
+func createBackupRestoreJobBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateBackupRestoreJobOpts{}
+	opts := createBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use: "createBackupRestoreJob",
+		Use:   "createBackupRestoreJob",
 		Short: "Restore One Snapshot of One Cluster",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -196,34 +195,34 @@ func CreateBackupRestoreJobBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type CreateExportBucketOpts struct {
+
+type createExportBucketOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
 }
 
-func (opts *CreateExportBucketOpts) initClient() func() error {
+func (opts *createExportBucketOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateExportBucketOpts) Run(ctx context.Context) error {
+func (opts *createExportBucketOpts) Run(ctx context.Context) error {
 	params := &admin.CreateExportBucketApiParams{
 		GroupId: opts.groupId,
-		
 	}
 	resp, _, err := opts.client.CloudBackupsApi.CreateExportBucketWithParams(ctx, params).Execute()
 	if err != nil {
@@ -233,15 +232,15 @@ func (opts *CreateExportBucketOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func CreateExportBucketBuilder() *cobra.Command {
+func createExportBucketBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateExportBucketOpts{}
+	opts := createExportBucketOpts{}
 	cmd := &cobra.Command{
-		Use: "createExportBucket",
+		Use:   "createExportBucket",
 		Short: "Grant Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -253,34 +252,34 @@ func CreateExportBucketBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type CreateServerlessBackupRestoreJobOpts struct {
+
+type createServerlessBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	
 }
 
-func (opts *CreateServerlessBackupRestoreJobOpts) initClient() func() error {
+func (opts *createServerlessBackupRestoreJobOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *CreateServerlessBackupRestoreJobOpts) Run(ctx context.Context) error {
+func (opts *createServerlessBackupRestoreJobOpts) Run(ctx context.Context) error {
 	params := &admin.CreateServerlessBackupRestoreJobApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		
 	}
 	resp, _, err := opts.client.CloudBackupsApi.CreateServerlessBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
@@ -290,15 +289,15 @@ func (opts *CreateServerlessBackupRestoreJobOpts) Run(ctx context.Context) error
 	return opts.Print(resp)
 }
 
-func CreateServerlessBackupRestoreJobBuilder() *cobra.Command {
+func createServerlessBackupRestoreJobBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := CreateServerlessBackupRestoreJobOpts{}
+	opts := createServerlessBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use: "createServerlessBackupRestoreJob",
+		Use:   "createServerlessBackupRestoreJob",
 		Short: "Restore One Snapshot of One Serverless Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -310,33 +309,35 @@ func CreateServerlessBackupRestoreJobBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the serverless instance whose snapshot you want to restore.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the serverless instance whose snapshot you want to restore.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type DeleteAllBackupSchedulesOpts struct {
+
+type deleteAllBackupSchedulesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
 }
 
-func (opts *DeleteAllBackupSchedulesOpts) initClient() func() error {
+func (opts *deleteAllBackupSchedulesOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteAllBackupSchedulesOpts) Run(ctx context.Context) error {
+func (opts *deleteAllBackupSchedulesOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteAllBackupSchedulesApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.DeleteAllBackupSchedulesWithParams(ctx, params).Execute()
@@ -347,15 +348,15 @@ func (opts *DeleteAllBackupSchedulesOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func DeleteAllBackupSchedulesBuilder() *cobra.Command {
+func deleteAllBackupSchedulesBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteAllBackupSchedulesOpts{}
+	opts := deleteAllBackupSchedulesOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteAllBackupSchedules",
+		Use:   "deleteAllBackupSchedules",
 		Short: "Remove All Cloud Backup Schedules",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -367,32 +368,35 @@ func DeleteAllBackupSchedulesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type DeleteExportBucketOpts struct {
+
+type deleteExportBucketOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client         *admin.APIClient
+	groupId        string
 	exportBucketId string
 }
 
-func (opts *DeleteExportBucketOpts) initClient() func() error {
+func (opts *deleteExportBucketOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteExportBucketOpts) Run(ctx context.Context) error {
+func (opts *deleteExportBucketOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteExportBucketApiParams{
-		GroupId: opts.groupId,
+		GroupId:        opts.groupId,
 		ExportBucketId: opts.exportBucketId,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.DeleteExportBucketWithParams(ctx, params).Execute()
@@ -403,15 +407,15 @@ func (opts *DeleteExportBucketOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func DeleteExportBucketBuilder() *cobra.Command {
+func deleteExportBucketBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteExportBucketOpts{}
+	opts := deleteExportBucketOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteExportBucket",
+		Use:   "deleteExportBucket",
 		Short: "Revoke Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -423,35 +427,38 @@ func DeleteExportBucketBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.exportBucketId, "exportBucketId", "", "Unique string that identifies the AWS S3 bucket to which you export your snapshots.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.exportBucketId, "exportBucketId", "", `Unique string that identifies the AWS S3 bucket to which you export your snapshots.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("exportBucketId")
 	return cmd
 }
-type DeleteReplicaSetBackupOpts struct {
+
+type deleteReplicaSetBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	snapshotId string
+	snapshotId  string
 }
 
-func (opts *DeleteReplicaSetBackupOpts) initClient() func() error {
+func (opts *deleteReplicaSetBackupOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteReplicaSetBackupOpts) Run(ctx context.Context) error {
+func (opts *deleteReplicaSetBackupOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteReplicaSetBackupApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		SnapshotId: opts.snapshotId,
+		SnapshotId:  opts.snapshotId,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.DeleteReplicaSetBackupWithParams(ctx, params).Execute()
 	if err != nil {
@@ -461,15 +468,15 @@ func (opts *DeleteReplicaSetBackupOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func DeleteReplicaSetBackupBuilder() *cobra.Command {
+func deleteReplicaSetBackupBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteReplicaSetBackupOpts{}
+	opts := deleteReplicaSetBackupOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteReplicaSetBackup",
+		Use:   "deleteReplicaSetBackup",
 		Short: "Remove One Replica Set Cloud Backup",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -481,37 +488,40 @@ func DeleteReplicaSetBackupBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "Unique 24-hexadecimal digit string that identifies the desired snapshot.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
 }
-type DeleteShardedClusterBackupOpts struct {
+
+type deleteShardedClusterBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	snapshotId string
+	snapshotId  string
 }
 
-func (opts *DeleteShardedClusterBackupOpts) initClient() func() error {
+func (opts *deleteShardedClusterBackupOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *DeleteShardedClusterBackupOpts) Run(ctx context.Context) error {
+func (opts *deleteShardedClusterBackupOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteShardedClusterBackupApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		SnapshotId: opts.snapshotId,
+		SnapshotId:  opts.snapshotId,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.DeleteShardedClusterBackupWithParams(ctx, params).Execute()
 	if err != nil {
@@ -521,15 +531,15 @@ func (opts *DeleteShardedClusterBackupOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func DeleteShardedClusterBackupBuilder() *cobra.Command {
+func deleteShardedClusterBackupBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := DeleteShardedClusterBackupOpts{}
+	opts := deleteShardedClusterBackupOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteShardedClusterBackup",
+		Use:   "deleteShardedClusterBackup",
 		Short: "Remove One Sharded Cluster Cloud Backup",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -541,37 +551,40 @@ func DeleteShardedClusterBackupBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "Unique 24-hexadecimal digit string that identifies the desired snapshot.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
 }
-type GetBackupExportJobOpts struct {
+
+type getBackupExportJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	exportId string
+	exportId    string
 }
 
-func (opts *GetBackupExportJobOpts) initClient() func() error {
+func (opts *getBackupExportJobOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetBackupExportJobOpts) Run(ctx context.Context) error {
+func (opts *getBackupExportJobOpts) Run(ctx context.Context) error {
 	params := &admin.GetBackupExportJobApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		ExportId: opts.exportId,
+		ExportId:    opts.exportId,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.GetBackupExportJobWithParams(ctx, params).Execute()
 	if err != nil {
@@ -581,15 +594,15 @@ func (opts *GetBackupExportJobOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetBackupExportJobBuilder() *cobra.Command {
+func getBackupExportJobBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetBackupExportJobOpts{}
+	opts := getBackupExportJobOpts{}
 	cmd := &cobra.Command{
-		Use: "getBackupExportJob",
+		Use:   "getBackupExportJob",
 		Short: "Return One Cloud Backup Snapshot Export Job",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -601,36 +614,39 @@ func GetBackupExportJobBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.exportId, "exportId", "", "Unique string that identifies the AWS S3 bucket to which you export your snapshots.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringVar(&opts.exportId, "exportId", "", `Unique string that identifies the AWS S3 bucket to which you export your snapshots.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("exportId")
 	return cmd
 }
-type GetBackupRestoreJobOpts struct {
+
+type getBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	clusterName string
+	client       *admin.APIClient
+	groupId      string
+	clusterName  string
 	restoreJobId string
 }
 
-func (opts *GetBackupRestoreJobOpts) initClient() func() error {
+func (opts *getBackupRestoreJobOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetBackupRestoreJobOpts) Run(ctx context.Context) error {
+func (opts *getBackupRestoreJobOpts) Run(ctx context.Context) error {
 	params := &admin.GetBackupRestoreJobApiParams{
-		GroupId: opts.groupId,
-		ClusterName: opts.clusterName,
+		GroupId:      opts.groupId,
+		ClusterName:  opts.clusterName,
 		RestoreJobId: opts.restoreJobId,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.GetBackupRestoreJobWithParams(ctx, params).Execute()
@@ -641,15 +657,15 @@ func (opts *GetBackupRestoreJobOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetBackupRestoreJobBuilder() *cobra.Command {
+func getBackupRestoreJobBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetBackupRestoreJobOpts{}
+	opts := getBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use: "getBackupRestoreJob",
+		Use:   "getBackupRestoreJob",
 		Short: "Return One Restore Job of One Cluster",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -661,34 +677,37 @@ func GetBackupRestoreJobBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster with the restore jobs you want to return.")
-	cmd.Flags().StringVar(&opts.restoreJobId, "restoreJobId", "", "Unique 24-hexadecimal digit string that identifies the restore job to return.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster with the restore jobs you want to return.`)
+	cmd.Flags().StringVar(&opts.restoreJobId, "restoreJobId", "", `Unique 24-hexadecimal digit string that identifies the restore job to return.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("restoreJobId")
 	return cmd
 }
-type GetBackupScheduleOpts struct {
+
+type getBackupScheduleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
 }
 
-func (opts *GetBackupScheduleOpts) initClient() func() error {
+func (opts *getBackupScheduleOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetBackupScheduleOpts) Run(ctx context.Context) error {
+func (opts *getBackupScheduleOpts) Run(ctx context.Context) error {
 	params := &admin.GetBackupScheduleApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.GetBackupScheduleWithParams(ctx, params).Execute()
@@ -699,15 +718,15 @@ func (opts *GetBackupScheduleOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetBackupScheduleBuilder() *cobra.Command {
+func getBackupScheduleBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetBackupScheduleOpts{}
+	opts := getBackupScheduleOpts{}
 	cmd := &cobra.Command{
-		Use: "getBackupSchedule",
+		Use:   "getBackupSchedule",
 		Short: "Return One Cloud Backup Schedule",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -719,29 +738,32 @@ func GetBackupScheduleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type GetDataProtectionSettingsOpts struct {
+
+type getDataProtectionSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *GetDataProtectionSettingsOpts) initClient() func() error {
+func (opts *getDataProtectionSettingsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetDataProtectionSettingsOpts) Run(ctx context.Context) error {
+func (opts *getDataProtectionSettingsOpts) Run(ctx context.Context) error {
 	params := &admin.GetDataProtectionSettingsApiParams{
 		GroupId: opts.groupId,
 	}
@@ -753,15 +775,15 @@ func (opts *GetDataProtectionSettingsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetDataProtectionSettingsBuilder() *cobra.Command {
+func getDataProtectionSettingsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetDataProtectionSettingsOpts{}
+	opts := getDataProtectionSettingsOpts{}
 	cmd := &cobra.Command{
-		Use: "getDataProtectionSettings",
+		Use:   "getDataProtectionSettings",
 		Short: "Return the Backup Compliance Policy settings",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -773,30 +795,33 @@ func GetDataProtectionSettingsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type GetExportBucketOpts struct {
+
+type getExportBucketOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client         *admin.APIClient
+	groupId        string
 	exportBucketId string
 }
 
-func (opts *GetExportBucketOpts) initClient() func() error {
+func (opts *getExportBucketOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetExportBucketOpts) Run(ctx context.Context) error {
+func (opts *getExportBucketOpts) Run(ctx context.Context) error {
 	params := &admin.GetExportBucketApiParams{
-		GroupId: opts.groupId,
+		GroupId:        opts.groupId,
 		ExportBucketId: opts.exportBucketId,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.GetExportBucketWithParams(ctx, params).Execute()
@@ -807,15 +832,15 @@ func (opts *GetExportBucketOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetExportBucketBuilder() *cobra.Command {
+func getExportBucketBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetExportBucketOpts{}
+	opts := getExportBucketOpts{}
 	cmd := &cobra.Command{
-		Use: "getExportBucket",
+		Use:   "getExportBucket",
 		Short: "Return One AWS S3 Bucket Used for Cloud Backup Snapshot Exports",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -827,35 +852,38 @@ func GetExportBucketBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.exportBucketId, "exportBucketId", "", "Unique string that identifies the AWS S3 bucket to which you export your snapshots.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.exportBucketId, "exportBucketId", "", `Unique string that identifies the AWS S3 bucket to which you export your snapshots.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("exportBucketId")
 	return cmd
 }
-type GetReplicaSetBackupOpts struct {
+
+type getReplicaSetBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	snapshotId string
+	snapshotId  string
 }
 
-func (opts *GetReplicaSetBackupOpts) initClient() func() error {
+func (opts *getReplicaSetBackupOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetReplicaSetBackupOpts) Run(ctx context.Context) error {
+func (opts *getReplicaSetBackupOpts) Run(ctx context.Context) error {
 	params := &admin.GetReplicaSetBackupApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		SnapshotId: opts.snapshotId,
+		SnapshotId:  opts.snapshotId,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.GetReplicaSetBackupWithParams(ctx, params).Execute()
 	if err != nil {
@@ -865,15 +893,15 @@ func (opts *GetReplicaSetBackupOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetReplicaSetBackupBuilder() *cobra.Command {
+func getReplicaSetBackupBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetReplicaSetBackupOpts{}
+	opts := getReplicaSetBackupOpts{}
 	cmd := &cobra.Command{
-		Use: "getReplicaSetBackup",
+		Use:   "getReplicaSetBackup",
 		Short: "Return One Replica Set Cloud Backup",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -885,37 +913,40 @@ func GetReplicaSetBackupBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "Unique 24-hexadecimal digit string that identifies the desired snapshot.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
 }
-type GetServerlessBackupOpts struct {
+
+type getServerlessBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	snapshotId string
+	snapshotId  string
 }
 
-func (opts *GetServerlessBackupOpts) initClient() func() error {
+func (opts *getServerlessBackupOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetServerlessBackupOpts) Run(ctx context.Context) error {
+func (opts *getServerlessBackupOpts) Run(ctx context.Context) error {
 	params := &admin.GetServerlessBackupApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		SnapshotId: opts.snapshotId,
+		SnapshotId:  opts.snapshotId,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.GetServerlessBackupWithParams(ctx, params).Execute()
 	if err != nil {
@@ -925,15 +956,15 @@ func (opts *GetServerlessBackupOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetServerlessBackupBuilder() *cobra.Command {
+func getServerlessBackupBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetServerlessBackupOpts{}
+	opts := getServerlessBackupOpts{}
 	cmd := &cobra.Command{
-		Use: "getServerlessBackup",
+		Use:   "getServerlessBackup",
 		Short: "Return One Snapshot of One Serverless Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -945,36 +976,39 @@ func GetServerlessBackupBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the serverless instance.")
-	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "Unique 24-hexadecimal digit string that identifies the desired snapshot.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the serverless instance.`)
+	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
 }
-type GetServerlessBackupRestoreJobOpts struct {
+
+type getServerlessBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	clusterName string
+	client       *admin.APIClient
+	groupId      string
+	clusterName  string
 	restoreJobId string
 }
 
-func (opts *GetServerlessBackupRestoreJobOpts) initClient() func() error {
+func (opts *getServerlessBackupRestoreJobOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetServerlessBackupRestoreJobOpts) Run(ctx context.Context) error {
+func (opts *getServerlessBackupRestoreJobOpts) Run(ctx context.Context) error {
 	params := &admin.GetServerlessBackupRestoreJobApiParams{
-		GroupId: opts.groupId,
-		ClusterName: opts.clusterName,
+		GroupId:      opts.groupId,
+		ClusterName:  opts.clusterName,
 		RestoreJobId: opts.restoreJobId,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.GetServerlessBackupRestoreJobWithParams(ctx, params).Execute()
@@ -985,15 +1019,15 @@ func (opts *GetServerlessBackupRestoreJobOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetServerlessBackupRestoreJobBuilder() *cobra.Command {
+func getServerlessBackupRestoreJobBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetServerlessBackupRestoreJobOpts{}
+	opts := getServerlessBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use: "getServerlessBackupRestoreJob",
+		Use:   "getServerlessBackupRestoreJob",
 		Short: "Return One Restore Job for One Serverless Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -1005,37 +1039,40 @@ func GetServerlessBackupRestoreJobBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the serverless instance.")
-	cmd.Flags().StringVar(&opts.restoreJobId, "restoreJobId", "", "Unique 24-hexadecimal digit string that identifies the restore job to return.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the serverless instance.`)
+	cmd.Flags().StringVar(&opts.restoreJobId, "restoreJobId", "", `Unique 24-hexadecimal digit string that identifies the restore job to return.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("restoreJobId")
 	return cmd
 }
-type GetShardedClusterBackupOpts struct {
+
+type getShardedClusterBackupOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	snapshotId string
+	snapshotId  string
 }
 
-func (opts *GetShardedClusterBackupOpts) initClient() func() error {
+func (opts *getShardedClusterBackupOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *GetShardedClusterBackupOpts) Run(ctx context.Context) error {
+func (opts *getShardedClusterBackupOpts) Run(ctx context.Context) error {
 	params := &admin.GetShardedClusterBackupApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		SnapshotId: opts.snapshotId,
+		SnapshotId:  opts.snapshotId,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.GetShardedClusterBackupWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1045,15 +1082,15 @@ func (opts *GetShardedClusterBackupOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func GetShardedClusterBackupBuilder() *cobra.Command {
+func getShardedClusterBackupBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := GetShardedClusterBackupOpts{}
+	opts := getShardedClusterBackupOpts{}
 	cmd := &cobra.Command{
-		Use: "getShardedClusterBackup",
+		Use:   "getShardedClusterBackup",
 		Short: "Return One Sharded Cluster Cloud Backup",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -1065,41 +1102,44 @@ func GetShardedClusterBackupBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "Unique 24-hexadecimal digit string that identifies the desired snapshot.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
 }
-type ListBackupExportJobsOpts struct {
+
+type listBackupExportJobsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	clusterName string
+	client       *admin.APIClient
+	groupId      string
+	clusterName  string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *ListBackupExportJobsOpts) initClient() func() error {
+func (opts *listBackupExportJobsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListBackupExportJobsOpts) Run(ctx context.Context) error {
+func (opts *listBackupExportJobsOpts) Run(ctx context.Context) error {
 	params := &admin.ListBackupExportJobsApiParams{
-		GroupId: opts.groupId,
-		ClusterName: opts.clusterName,
+		GroupId:      opts.groupId,
+		ClusterName:  opts.clusterName,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.ListBackupExportJobsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1109,15 +1149,15 @@ func (opts *ListBackupExportJobsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListBackupExportJobsBuilder() *cobra.Command {
+func listBackupExportJobsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListBackupExportJobsOpts{}
+	opts := listBackupExportJobsOpts{}
 	cmd := &cobra.Command{
-		Use: "listBackupExportJobs",
+		Use:   "listBackupExportJobs",
 		Short: "Return All Cloud Backup Snapshot Export Jobs",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -1129,42 +1169,45 @@ func ListBackupExportJobsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type ListBackupRestoreJobsOpts struct {
+
+type listBackupRestoreJobsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	clusterName string
+	client       *admin.APIClient
+	groupId      string
+	clusterName  string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *ListBackupRestoreJobsOpts) initClient() func() error {
+func (opts *listBackupRestoreJobsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListBackupRestoreJobsOpts) Run(ctx context.Context) error {
+func (opts *listBackupRestoreJobsOpts) Run(ctx context.Context) error {
 	params := &admin.ListBackupRestoreJobsApiParams{
-		GroupId: opts.groupId,
-		ClusterName: opts.clusterName,
+		GroupId:      opts.groupId,
+		ClusterName:  opts.clusterName,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.ListBackupRestoreJobsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1174,15 +1217,15 @@ func (opts *ListBackupRestoreJobsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListBackupRestoreJobsBuilder() *cobra.Command {
+func listBackupRestoreJobsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListBackupRestoreJobsOpts{}
+	opts := listBackupRestoreJobsOpts{}
 	cmd := &cobra.Command{
-		Use: "listBackupRestoreJobs",
+		Use:   "listBackupRestoreJobs",
 		Short: "Return All Restore Jobs for One Cluster",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -1194,40 +1237,43 @@ func ListBackupRestoreJobsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster with the restore jobs you want to return.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster with the restore jobs you want to return.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type ListExportBucketsOpts struct {
+
+type listExportBucketsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *ListExportBucketsOpts) initClient() func() error {
+func (opts *listExportBucketsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListExportBucketsOpts) Run(ctx context.Context) error {
+func (opts *listExportBucketsOpts) Run(ctx context.Context) error {
 	params := &admin.ListExportBucketsApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.ListExportBucketsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1237,15 +1283,15 @@ func (opts *ListExportBucketsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListExportBucketsBuilder() *cobra.Command {
+func listExportBucketsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListExportBucketsOpts{}
+	opts := listExportBucketsOpts{}
 	cmd := &cobra.Command{
-		Use: "listExportBuckets",
+		Use:   "listExportBuckets",
 		Short: "Return All AWS S3 Buckets Used for Cloud Backup Snapshot Exports",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -1257,40 +1303,43 @@ func ListExportBucketsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type ListReplicaSetBackupsOpts struct {
+
+type listReplicaSetBackupsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	clusterName string
+	client       *admin.APIClient
+	groupId      string
+	clusterName  string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *ListReplicaSetBackupsOpts) initClient() func() error {
+func (opts *listReplicaSetBackupsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListReplicaSetBackupsOpts) Run(ctx context.Context) error {
+func (opts *listReplicaSetBackupsOpts) Run(ctx context.Context) error {
 	params := &admin.ListReplicaSetBackupsApiParams{
-		GroupId: opts.groupId,
-		ClusterName: opts.clusterName,
+		GroupId:      opts.groupId,
+		ClusterName:  opts.clusterName,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.ListReplicaSetBackupsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1300,15 +1349,15 @@ func (opts *ListReplicaSetBackupsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListReplicaSetBackupsBuilder() *cobra.Command {
+func listReplicaSetBackupsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListReplicaSetBackupsOpts{}
+	opts := listReplicaSetBackupsOpts{}
 	cmd := &cobra.Command{
-		Use: "listReplicaSetBackups",
+		Use:   "listReplicaSetBackups",
 		Short: "Return All Replica Set Cloud Backups",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -1320,42 +1369,45 @@ func ListReplicaSetBackupsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type ListServerlessBackupRestoreJobsOpts struct {
+
+type listServerlessBackupRestoreJobsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	clusterName string
+	client       *admin.APIClient
+	groupId      string
+	clusterName  string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *ListServerlessBackupRestoreJobsOpts) initClient() func() error {
+func (opts *listServerlessBackupRestoreJobsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListServerlessBackupRestoreJobsOpts) Run(ctx context.Context) error {
+func (opts *listServerlessBackupRestoreJobsOpts) Run(ctx context.Context) error {
 	params := &admin.ListServerlessBackupRestoreJobsApiParams{
-		GroupId: opts.groupId,
-		ClusterName: opts.clusterName,
+		GroupId:      opts.groupId,
+		ClusterName:  opts.clusterName,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.ListServerlessBackupRestoreJobsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1365,15 +1417,15 @@ func (opts *ListServerlessBackupRestoreJobsOpts) Run(ctx context.Context) error 
 	return opts.Print(resp)
 }
 
-func ListServerlessBackupRestoreJobsBuilder() *cobra.Command {
+func listServerlessBackupRestoreJobsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListServerlessBackupRestoreJobsOpts{}
+	opts := listServerlessBackupRestoreJobsOpts{}
 	cmd := &cobra.Command{
-		Use: "listServerlessBackupRestoreJobs",
+		Use:   "listServerlessBackupRestoreJobs",
 		Short: "Return All Restore Jobs for One Serverless Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -1385,42 +1437,45 @@ func ListServerlessBackupRestoreJobsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the serverless instance.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the serverless instance.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type ListServerlessBackupsOpts struct {
+
+type listServerlessBackupsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	clusterName string
+	client       *admin.APIClient
+	groupId      string
+	clusterName  string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
-func (opts *ListServerlessBackupsOpts) initClient() func() error {
+func (opts *listServerlessBackupsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListServerlessBackupsOpts) Run(ctx context.Context) error {
+func (opts *listServerlessBackupsOpts) Run(ctx context.Context) error {
 	params := &admin.ListServerlessBackupsApiParams{
-		GroupId: opts.groupId,
-		ClusterName: opts.clusterName,
+		GroupId:      opts.groupId,
+		ClusterName:  opts.clusterName,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.ListServerlessBackupsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1430,15 +1485,15 @@ func (opts *ListServerlessBackupsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListServerlessBackupsBuilder() *cobra.Command {
+func listServerlessBackupsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListServerlessBackupsOpts{}
+	opts := listServerlessBackupsOpts{}
 	cmd := &cobra.Command{
-		Use: "listServerlessBackups",
+		Use:   "listServerlessBackups",
 		Short: "Return All Snapshots of One Serverless Instance",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -1450,35 +1505,38 @@ func ListServerlessBackupsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the serverless instance.")
-	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
-	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
-	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the serverless instance.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type ListShardedClusterBackupsOpts struct {
+
+type listShardedClusterBackupsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
 }
 
-func (opts *ListShardedClusterBackupsOpts) initClient() func() error {
+func (opts *listShardedClusterBackupsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *ListShardedClusterBackupsOpts) Run(ctx context.Context) error {
+func (opts *listShardedClusterBackupsOpts) Run(ctx context.Context) error {
 	params := &admin.ListShardedClusterBackupsApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.ListShardedClusterBackupsWithParams(ctx, params).Execute()
@@ -1489,15 +1547,15 @@ func (opts *ListShardedClusterBackupsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func ListShardedClusterBackupsBuilder() *cobra.Command {
+func listShardedClusterBackupsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := ListShardedClusterBackupsOpts{}
+	opts := listShardedClusterBackupsOpts{}
 	cmd := &cobra.Command{
-		Use: "listShardedClusterBackups",
+		Use:   "listShardedClusterBackups",
 		Short: "Return All Sharded Cluster Cloud Backups",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -1509,35 +1567,36 @@ func ListShardedClusterBackupsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type TakeSnapshotOpts struct {
+
+type takeSnapshotOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	
 }
 
-func (opts *TakeSnapshotOpts) initClient() func() error {
+func (opts *takeSnapshotOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *TakeSnapshotOpts) Run(ctx context.Context) error {
+func (opts *takeSnapshotOpts) Run(ctx context.Context) error {
 	params := &admin.TakeSnapshotApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		
 	}
 	resp, _, err := opts.client.CloudBackupsApi.TakeSnapshotWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1547,15 +1606,15 @@ func (opts *TakeSnapshotOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func TakeSnapshotBuilder() *cobra.Command {
+func takeSnapshotBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := TakeSnapshotOpts{}
+	opts := takeSnapshotOpts{}
 	cmd := &cobra.Command{
-		Use: "takeSnapshot",
+		Use:   "takeSnapshot",
 		Short: "Take One On-Demand Snapshot",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -1567,36 +1626,36 @@ func TakeSnapshotBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type UpdateBackupScheduleOpts struct {
+
+type updateBackupScheduleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	
 }
 
-func (opts *UpdateBackupScheduleOpts) initClient() func() error {
+func (opts *updateBackupScheduleOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateBackupScheduleOpts) Run(ctx context.Context) error {
+func (opts *updateBackupScheduleOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateBackupScheduleApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		
 	}
 	resp, _, err := opts.client.CloudBackupsApi.UpdateBackupScheduleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1606,15 +1665,15 @@ func (opts *UpdateBackupScheduleOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func UpdateBackupScheduleBuilder() *cobra.Command {
+func updateBackupScheduleBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateBackupScheduleOpts{}
+	opts := updateBackupScheduleOpts{}
 	cmd := &cobra.Command{
-		Use: "updateBackupSchedule",
+		Use:   "updateBackupSchedule",
 		Short: "Update Cloud Backup Schedule for One Cluster",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -1626,34 +1685,34 @@ func UpdateBackupScheduleBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-type UpdateDataProtectionSettingsOpts struct {
+
+type updateDataProtectionSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
 }
 
-func (opts *UpdateDataProtectionSettingsOpts) initClient() func() error {
+func (opts *updateDataProtectionSettingsOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateDataProtectionSettingsOpts) Run(ctx context.Context) error {
+func (opts *updateDataProtectionSettingsOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateDataProtectionSettingsApiParams{
 		GroupId: opts.groupId,
-		
 	}
 	resp, _, err := opts.client.CloudBackupsApi.UpdateDataProtectionSettingsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1663,15 +1722,15 @@ func (opts *UpdateDataProtectionSettingsOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func UpdateDataProtectionSettingsBuilder() *cobra.Command {
+func updateDataProtectionSettingsBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateDataProtectionSettingsOpts{}
+	opts := updateDataProtectionSettingsOpts{}
 	cmd := &cobra.Command{
-		Use: "updateDataProtectionSettings",
+		Use:   "updateDataProtectionSettings",
 		Short: "Update or enable the Backup Compliance Policy settings",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -1683,36 +1742,36 @@ func UpdateDataProtectionSettingsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-type UpdateSnapshotRetentionOpts struct {
+
+type updateSnapshotRetentionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	snapshotId string
-	
+	snapshotId  string
 }
 
-func (opts *UpdateSnapshotRetentionOpts) initClient() func() error {
+func (opts *updateSnapshotRetentionOpts) initClient() func() error {
 	return func() error {
 		var err error
-		opts.client, err = NewClientWithAuth()
+		opts.client, err = newClientWithAuth()
 		return err
 	}
 }
 
-func (opts *UpdateSnapshotRetentionOpts) Run(ctx context.Context) error {
+func (opts *updateSnapshotRetentionOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateSnapshotRetentionApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		SnapshotId: opts.snapshotId,
-		
+		SnapshotId:  opts.snapshotId,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.UpdateSnapshotRetentionWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1722,15 +1781,15 @@ func (opts *UpdateSnapshotRetentionOpts) Run(ctx context.Context) error {
 	return opts.Print(resp)
 }
 
-func UpdateSnapshotRetentionBuilder() *cobra.Command {
+func updateSnapshotRetentionBuilder() *cobra.Command {
 	const template = "<<some template>>"
 
-	opts := UpdateSnapshotRetentionOpts{}
+	opts := updateSnapshotRetentionOpts{}
 	cmd := &cobra.Command{
-		Use: "updateSnapshotRetention",
+		Use:   "updateSnapshotRetention",
 		Short: "Change Expiration Date for One Cloud Backup",
 		Annotations: map[string]string{
-			"output":      template,
+			"output": template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -1742,10 +1801,11 @@ func UpdateSnapshotRetentionBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", "Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.  **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.")
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", "Human-readable label that identifies the cluster.")
-	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", "Unique 24-hexadecimal digit string that identifies the desired snapshot.")
-	
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -1753,42 +1813,41 @@ func UpdateSnapshotRetentionBuilder() *cobra.Command {
 	return cmd
 }
 
-func CloudBackupsBuilder() *cobra.Command {
+func cloudBackupsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "cloudBackups",
-		Short:   "Manages Cloud Backup snapshots, snapshot export buckets, restore jobs, and schedules. This resource applies only to clusters that use Cloud Backups.",
+		Use:   "cloudBackups",
+		Short: `Manages Cloud Backup snapshots, snapshot export buckets, restore jobs, and schedules. This resource applies only to clusters that use Cloud Backups.`,
 	}
 	cmd.AddCommand(
-		CancelBackupRestoreJobBuilder(),
-		CreateBackupExportJobBuilder(),
-		CreateBackupRestoreJobBuilder(),
-		CreateExportBucketBuilder(),
-		CreateServerlessBackupRestoreJobBuilder(),
-		DeleteAllBackupSchedulesBuilder(),
-		DeleteExportBucketBuilder(),
-		DeleteReplicaSetBackupBuilder(),
-		DeleteShardedClusterBackupBuilder(),
-		GetBackupExportJobBuilder(),
-		GetBackupRestoreJobBuilder(),
-		GetBackupScheduleBuilder(),
-		GetDataProtectionSettingsBuilder(),
-		GetExportBucketBuilder(),
-		GetReplicaSetBackupBuilder(),
-		GetServerlessBackupBuilder(),
-		GetServerlessBackupRestoreJobBuilder(),
-		GetShardedClusterBackupBuilder(),
-		ListBackupExportJobsBuilder(),
-		ListBackupRestoreJobsBuilder(),
-		ListExportBucketsBuilder(),
-		ListReplicaSetBackupsBuilder(),
-		ListServerlessBackupRestoreJobsBuilder(),
-		ListServerlessBackupsBuilder(),
-		ListShardedClusterBackupsBuilder(),
-		TakeSnapshotBuilder(),
-		UpdateBackupScheduleBuilder(),
-		UpdateDataProtectionSettingsBuilder(),
-		UpdateSnapshotRetentionBuilder(),
+		cancelBackupRestoreJobBuilder(),
+		createBackupExportJobBuilder(),
+		createBackupRestoreJobBuilder(),
+		createExportBucketBuilder(),
+		createServerlessBackupRestoreJobBuilder(),
+		deleteAllBackupSchedulesBuilder(),
+		deleteExportBucketBuilder(),
+		deleteReplicaSetBackupBuilder(),
+		deleteShardedClusterBackupBuilder(),
+		getBackupExportJobBuilder(),
+		getBackupRestoreJobBuilder(),
+		getBackupScheduleBuilder(),
+		getDataProtectionSettingsBuilder(),
+		getExportBucketBuilder(),
+		getReplicaSetBackupBuilder(),
+		getServerlessBackupBuilder(),
+		getServerlessBackupRestoreJobBuilder(),
+		getShardedClusterBackupBuilder(),
+		listBackupExportJobsBuilder(),
+		listBackupRestoreJobsBuilder(),
+		listExportBucketsBuilder(),
+		listReplicaSetBackupsBuilder(),
+		listServerlessBackupRestoreJobsBuilder(),
+		listServerlessBackupsBuilder(),
+		listShardedClusterBackupsBuilder(),
+		takeSnapshotBuilder(),
+		updateBackupScheduleBuilder(),
+		updateDataProtectionSettingsBuilder(),
+		updateSnapshotRetentionBuilder(),
 	)
 	return cmd
 }
-

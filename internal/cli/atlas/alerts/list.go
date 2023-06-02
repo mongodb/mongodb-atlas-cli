@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 type ListOpts struct {
@@ -44,28 +45,25 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	TYPE	STATUS{{range .Results}}
-{{.ID}}	{{.EventTypeName}}	{{.Status}}{{end}}
+var listTemplate = `ID	TYPE   	STATUS{{range .Results}}
+{{.Id}}	{{.EventTypeName}}	{{.Status}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.newAlertsListOptions()
-	r, err := opts.store.Alerts(opts.ConfigProjectID(), listOpts)
+	params := &admin.ListAlertsApiParams{
+		GroupId:      opts.ConfigProjectID(),
+		ItemsPerPage: &opts.ItemsPerPage,
+		PageNum:      &opts.PageNum,
+		Status:       pointer.GetStringPointerIfNotEmpty(opts.status),
+	}
+
+	r, err := opts.store.Alerts(params)
 
 	if err != nil {
 		return err
 	}
 
 	return opts.Print(r)
-}
-
-func (opts *ListOpts) newAlertsListOptions() *atlas.AlertsListOptions {
-	o := &atlas.AlertsListOptions{
-		Status:      opts.status,
-		ListOptions: *opts.NewListOptions(),
-	}
-
-	return o
 }
 
 // atlas alerts list [--status status] [--projectId projectId] [--page N] [--limit N].

@@ -15,37 +15,37 @@
 package atlas
 
 import (
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_alerts.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas AlertDescriber,AlertLister,AlertAcknowledger
 
 type AlertDescriber interface {
-	Alert(string, string) (*atlas.Alert, error)
+	Alert(*admin.GetAlertApiParams) (*admin.AlertViewForNdsGroup, error)
 }
 
 type AlertLister interface {
-	Alerts(string, *atlas.AlertsListOptions) (*atlas.AlertsResponse, error)
+	Alerts(*admin.ListAlertsApiParams) (*admin.PaginatedAlert, error)
 }
 
 type AlertAcknowledger interface {
-	AcknowledgeAlert(string, string, *atlas.AcknowledgeRequest) (*atlas.Alert, error)
+	AcknowledgeAlert(*admin.AcknowledgeAlertApiParams) (*admin.AlertViewForNdsGroup, error)
 }
 
 // Alert encapsulate the logic to manage different cloud providers.
-func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
-	result, _, err := s.client.Alerts.Get(s.ctx, projectID, alertID)
+func (s *Store) Alert(params *admin.GetAlertApiParams) (*admin.AlertViewForNdsGroup, error) {
+	result, _, err := s.clientv2.AlertsApi.GetAlertWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // Alerts encapsulate the logic to manage different cloud providers.
-func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.AlertsResponse, error) {
-	result, _, err := s.client.Alerts.List(s.ctx, projectID, opts)
+func (s *Store) Alerts(params *admin.ListAlertsApiParams) (*admin.PaginatedAlert, error) {
+	result, _, err := s.clientv2.AlertsApi.ListAlertsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // Acknowledge encapsulate the logic to manage different cloud providers.
-func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlas.AcknowledgeRequest) (*atlas.Alert, error) {
-	result, _, err := s.client.Alerts.Acknowledge(s.ctx, projectID, alertID, body)
+func (s *Store) AcknowledgeAlert(params *admin.AcknowledgeAlertApiParams) (*admin.AlertViewForNdsGroup, error) {
+	result, _, err := s.clientv2.AlertsApi.AcknowledgeAlertWithParams(s.ctx, params).Execute()
 	return result, err
 }

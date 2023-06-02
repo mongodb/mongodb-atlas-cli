@@ -639,13 +639,13 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 	for _, endpoint := range privateEndpoints {
 		var endpointID string
 
-		switch v := endpoint.GetActualInstance().(type) {
-		case *atlasv2.AWSPrivateLinkConnection:
-			endpointID = v.GetId()
-		case *atlasv2.AzurePrivateLinkConnection:
-			endpointID = v.GetId()
-		case *atlasv2.GCPEndpointService:
-			endpointID = v.GetId()
+		switch endpoint.CloudProvider {
+		case "AWS":
+			endpointID = endpoint.GetId()
+		case "AZURE":
+			endpointID = endpoint.GetId()
+		case "GCP":
+			endpointID = endpoint.GetId()
 		}
 		require.NotEmpty(t, endpointID)
 		deletePrivateEndpoint(t, cliPath, projectID, provider, endpointID)

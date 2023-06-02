@@ -60,10 +60,10 @@ func TestAlertConfig(t *testing.T) {
 			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
 				a.Equal(eventTypeName, alert.GetEventTypeName())
 				a.NotEmpty(alert.Notifications)
-				a.Equal(delayMin, alert.Notifications[0].GroupNotification.GetDelayMin())
-				a.Equal(group, alert.Notifications[0].GroupNotification.GetTypeName())
-				a.Equal(intervalMin, alert.Notifications[0].GroupNotification.GetIntervalMin())
-				a.False(alert.Notifications[0].GroupNotification.GetSmsEnabled())
+				a.Equal(delayMin, alert.Notifications[0].GetDelayMin())
+				a.Equal(group, alert.Notifications[0].GetTypeName())
+				a.Equal(intervalMin, alert.Notifications[0].GetIntervalMin())
+				a.False(alert.Notifications[0].GetSmsEnabled())
 				alertID = alert.GetId()
 			}
 		}
@@ -109,8 +109,8 @@ func TestAlertConfig(t *testing.T) {
 			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
 				a.False(alert.GetEnabled())
 				a.NotEmpty(alert.Notifications)
-				a.True(alert.Notifications[0].GroupNotification.GetSmsEnabled())
-				a.True(alert.Notifications[0].GroupNotification.GetEmailEnabled())
+				a.True(alert.Notifications[0].GetSmsEnabled())
+				a.True(alert.Notifications[0].GetEmailEnabled())
 			}
 		}
 	})

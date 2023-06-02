@@ -50,10 +50,8 @@ type ConfigOpts struct {
 	notificationChannelName         string
 	apiKey                          string // notificationsDatadogApiKey, notificationsOpsGenieApiKey, notificationsVictorOpsApiKey
 	notificationEmailAddress        string
-	notificationFlowName            string
 	notificationMobileNumber        string
 	notificationRegion              string // notificationsOpsGenieRegion, notificationsDatadogRegion
-	notificationOrgName             string
 	notificationServiceKey          string
 	notificationTeamID              string
 	notificationType                string
@@ -89,107 +87,36 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.AlertConf
 
 func (opts *ConfigOpts) newNotification() *admin.NotificationViewForNdsGroup {
 	out := new(admin.NotificationViewForNdsGroup)
-	typeName := strings.ToUpper(opts.notificationType)
+	out.TypeName = pointer.Get(strings.ToUpper(opts.notificationType))
+	out.DelayMin = &opts.notificationDelayMin
+	out.IntervalMin = &opts.notificationIntervalMin
+	out.TeamId = &opts.notificationTeamID
+	out.Username = &opts.notificationUsername
+	out.ChannelName = &opts.notificationChannelName
 
-	switch typeName {
+	switch out.GetTypeName() {
 	case victor:
-		out.VictorOpsNotification = &admin.VictorOpsNotification{
-			VictorOpsApiKey:     &opts.apiKey,
-			VictorOpsRoutingKey: &opts.notificationVictorOpsRoutingKey,
-			TypeName:            typeName,
-			DelayMin:            &opts.notificationDelayMin,
-			IntervalMin:         &opts.notificationIntervalMin,
-		}
-
+		out.VictorOpsApiKey = &opts.apiKey
+		out.VictorOpsRoutingKey = &opts.notificationVictorOpsRoutingKey
 	case slack:
-		out.SlackNotification = &admin.SlackNotification{
-			ApiToken:    &opts.apiKey,
-			TypeName:    typeName,
-			DelayMin:    &opts.notificationDelayMin,
-			IntervalMin: &opts.notificationIntervalMin,
-			ChannelName: &opts.notificationChannelName,
-		}
-
+		out.VictorOpsApiKey = &opts.apiKey
+		out.VictorOpsRoutingKey = &opts.notificationVictorOpsRoutingKey
+		out.ApiToken = &opts.notificationToken
 	case datadog:
-		out.DatadogNotification = &admin.DatadogNotification{
-			DatadogApiKey: &opts.apiKey,
-			DatadogRegion: pointer.Get(strings.ToUpper(opts.notificationRegion)),
-			TypeName:      typeName,
-			DelayMin:      &opts.notificationDelayMin,
-			IntervalMin:   &opts.notificationIntervalMin,
-		}
-
+		out.DatadogApiKey = &opts.apiKey
+		out.DatadogRegion = pointer.Get(strings.ToUpper(opts.notificationRegion))
 	case email:
-		out.EmailNotification = &admin.EmailNotification{
-			EmailAddress: &opts.notificationEmailAddress,
-			TypeName:     typeName,
-			DelayMin:     &opts.notificationDelayMin,
-			IntervalMin:  &opts.notificationIntervalMin,
-		}
-
+		out.EmailAddress = &opts.notificationEmailAddress
 	case sms:
-		out.SMSNotification = &admin.SMSNotification{
-			MobileNumber: &opts.notificationMobileNumber,
-			TypeName:     typeName,
-			DelayMin:     &opts.notificationDelayMin,
-			IntervalMin:  &opts.notificationIntervalMin,
-		}
-
-	case group:
-		out.GroupNotification = &admin.GroupNotification{
-			SmsEnabled:   &opts.notificationSmsEnabled,
-			EmailEnabled: &opts.notificationEmailEnabled,
-			TypeName:     typeName,
-			DelayMin:     &opts.notificationDelayMin,
-			IntervalMin:  &opts.notificationIntervalMin,
-		}
-
-	case user:
-		out.UserNotification = &admin.UserNotification{
-			SmsEnabled:   &opts.notificationSmsEnabled,
-			EmailEnabled: &opts.notificationEmailEnabled,
-			TypeName:     typeName,
-			DelayMin:     &opts.notificationDelayMin,
-			IntervalMin:  &opts.notificationIntervalMin,
-			Username:     &opts.notificationUsername,
-		}
-
-	case org:
-		out.OrgNotification = &admin.OrgNotification{
-			SmsEnabled:   &opts.notificationSmsEnabled,
-			EmailEnabled: &opts.notificationEmailEnabled,
-			TypeName:     typeName,
-			DelayMin:     &opts.notificationDelayMin,
-			IntervalMin:  &opts.notificationIntervalMin,
-		}
-
+		out.MobileNumber = &opts.notificationMobileNumber
+	case group, user, org:
+		out.SmsEnabled = &opts.notificationSmsEnabled
+		out.EmailEnabled = &opts.notificationEmailEnabled
 	case ops:
-		out.OpsGenieNotification = &admin.OpsGenieNotification{
-			OpsGenieApiKey: &opts.apiKey,
-			OpsGenieRegion: &opts.notificationRegion,
-			TypeName:       typeName,
-			DelayMin:       &opts.notificationDelayMin,
-			IntervalMin:    &opts.notificationIntervalMin,
-		}
-
+		out.OpsGenieApiKey = &opts.apiKey
+		out.OpsGenieRegion = &opts.notificationRegion
 	case pager:
-		out.PagerDutyNotification = &admin.PagerDutyNotification{
-			ServiceKey:  &opts.notificationServiceKey,
-			Region:      &opts.notificationRegion,
-			TypeName:    typeName,
-			DelayMin:    &opts.notificationDelayMin,
-			IntervalMin: &opts.notificationIntervalMin,
-		}
-
-	case team:
-		out.TeamNotification = &admin.TeamNotification{
-			EmailEnabled: &opts.notificationEmailEnabled,
-			SmsEnabled:   &opts.notificationSmsEnabled,
-			TypeName:     typeName,
-			DelayMin:     &opts.notificationDelayMin,
-			IntervalMin:  &opts.notificationIntervalMin,
-			TeamId:       &opts.notificationTeamID,
-		}
+		out.ServiceKey = &opts.notificationServiceKey
 	}
 
 	return out

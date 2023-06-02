@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -524,20 +523,20 @@ func buildServerlessPrivateEndpoints(deploymentStore store.ServerlessPrivateEndp
 	result := make([]atlasV1.ServerlessPrivateEndpoint, 0, len(endpoints))
 
 	for i := range endpoints {
-		endpoint := endpoints[i].GetActualInstance()
+		endpoint := endpoints[i]
 
-		switch v := endpoint.(type) {
-		case *atlasv2.ServerlessAWSTenantEndpoint:
+		switch endpoint.GetProviderName() {
+		case "AWS":
 			result = append(result, atlasV1.ServerlessPrivateEndpoint{
-				Name:                     *v.Comment,
-				CloudProviderEndpointID:  *v.CloudProviderEndpointId,
+				Name:                     endpoint.GetComment(),
+				CloudProviderEndpointID:  endpoint.GetCloudProviderEndpointId(),
 				PrivateEndpointIPAddress: "",
 			})
-		case *atlasv2.ServerlessAzureTenantEndpoint:
+		case "AZURE":
 			result = append(result, atlasV1.ServerlessPrivateEndpoint{
-				Name:                     *v.Comment,
-				CloudProviderEndpointID:  *v.CloudProviderEndpointId,
-				PrivateEndpointIPAddress: *v.PrivateEndpointIpAddress,
+				Name:                     endpoint.GetComment(),
+				CloudProviderEndpointID:  endpoint.GetCloudProviderEndpointId(),
+				PrivateEndpointIPAddress: endpoint.GetPrivateEndpointIpAddress(),
 			})
 		}
 	}

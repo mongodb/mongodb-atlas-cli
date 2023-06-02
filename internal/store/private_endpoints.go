@@ -83,7 +83,7 @@ func (s *Store) PrivateEndpoints(projectID, provider string) ([]interface{}, err
 
 		endpointServices := make([]interface{}, len(result))
 		for i, service := range result {
-			endpointServices[i] = service.GetActualInstance()
+			endpointServices[i] = service
 		}
 		return endpointServices, err
 	default:
@@ -107,7 +107,7 @@ func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (inte
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.PrivateEndpointServicesApi.GetPrivateEndpointService(s.ctx, projectID, provider, privateLinkID).Execute()
-		return result.GetActualInstance(), err
+		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -130,7 +130,7 @@ func (s *Store) CreatePrivateEndpoint(projectID string, r *atlasv2.CreateEndpoin
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.PrivateEndpointServicesApi.CreatePrivateEndpointService(s.ctx, projectID, r).
 			Execute()
-		return result.GetActualInstance(), err
+		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

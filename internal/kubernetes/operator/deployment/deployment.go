@@ -386,8 +386,8 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 					compute = &atlasV1.ComputeSpec{
 						Enabled:          rc.AutoScaling.Compute.Enabled,
 						ScaleDownEnabled: rc.AutoScaling.Compute.ScaleDownEnabled,
-						MinInstanceSize:  GetInstanceSizeStringIfNotNil(rc.AutoScaling.Compute.MinInstanceSize),
-						MaxInstanceSize:  GetInstanceSizeStringIfNotNil(rc.AutoScaling.Compute.MaxInstanceSize),
+						MinInstanceSize:  rc.AutoScaling.Compute.GetMinInstanceSize(),
+						MaxInstanceSize:  rc.AutoScaling.Compute.GetMaxInstanceSize(),
 					}
 				}
 
@@ -414,14 +414,6 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 		result = append(result, replicationSpec)
 	}
 	return result
-}
-
-func GetInstanceSizeStringIfNotNil(instanceSize *atlasv2.InstanceSize) string {
-	if instanceSize == nil {
-		return ""
-	}
-	stringInstanceSize := string(*instanceSize)
-	return stringInstanceSize
 }
 
 func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*atlasV1.AtlasDeployment, error) {

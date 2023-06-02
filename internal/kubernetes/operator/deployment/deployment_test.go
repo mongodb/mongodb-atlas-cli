@@ -110,8 +110,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 								Compute: &atlasv2.ComputeAutoScalingV15{
 									Enabled:          pointer.Get(true),
 									ScaleDownEnabled: pointer.Get(true),
-									MinInstanceSize:  pointer.Get(atlasv2.INSTANCESIZE_M20),
-									MaxInstanceSize:  pointer.Get(atlasv2.INSTANCESIZE_M40),
+									MinInstanceSize:  pointer.Get("M20"),
+									MaxInstanceSize:  pointer.Get("M40"),
 								},
 							},
 							Priority:     pointer.Get(1),

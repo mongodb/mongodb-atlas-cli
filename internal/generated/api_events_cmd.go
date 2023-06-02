@@ -67,7 +67,6 @@ func GetOrganizationEventBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -128,7 +127,6 @@ func GetProjectEventBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -199,7 +197,6 @@ func ListOrganizationEventsBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -212,7 +209,7 @@ func ListOrganizationEventsBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
-	cmd.Flags().[]stringVar(&opts.eventType, "eventType", , "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")
+	cmd.Flags().StringSliceVar(&opts.eventType, "eventType", nil, "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")
 	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
 	cmd.Flags().Time.TimeVar(&opts.maxDate, "maxDate", , "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
 	cmd.Flags().Time.TimeVar(&opts.minDate, "minDate", , "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
@@ -276,7 +273,6 @@ func ListProjectEventsBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -289,8 +285,8 @@ func ListProjectEventsBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, "Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.")
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, "Number of items that the response returns per page.")
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, "Number of the page that displays the current set of the total objects that the response returns.")
-	cmd.Flags().[]stringVar(&opts.clusterNames, "clusterNames", , "Human-readable label that identifies the cluster.")
-	cmd.Flags().[]stringVar(&opts.eventType, "eventType", , "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")
+	cmd.Flags().StringSliceVar(&opts.clusterNames, "clusterNames", nil, "Human-readable label that identifies the cluster.")
+	cmd.Flags().StringSliceVar(&opts.eventType, "eventType", nil, "Category of incident recorded at this moment in time.  **IMPORTANT**: The complete list of event type values changes frequently.")
 	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, "Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.")
 	cmd.Flags().Time.TimeVar(&opts.maxDate, "maxDate", , "Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")
 	cmd.Flags().Time.TimeVar(&opts.minDate, "minDate", , "Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;\&quot;https://en.wikipedia.org/wiki/ISO_8601\&quot; target&#x3D;\&quot;_blank\&quot; rel&#x3D;\&quot;noopener noreferrer\&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.")

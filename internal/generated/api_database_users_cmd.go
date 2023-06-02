@@ -65,7 +65,6 @@ func CreateDatabaseUserBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -124,7 +123,6 @@ func DeleteDatabaseUserBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -186,7 +184,6 @@ func GetDatabaseUserBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -250,7 +247,6 @@ func ListDatabaseUsersBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -313,7 +309,6 @@ func UpdateDatabaseUserBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)

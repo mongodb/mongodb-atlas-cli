@@ -65,7 +65,6 @@ func DownloadInvoiceCSVBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -123,7 +122,6 @@ func GetInvoiceBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -185,7 +183,6 @@ func ListInvoicesBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -242,7 +239,6 @@ func ListPendingInvoicesBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)

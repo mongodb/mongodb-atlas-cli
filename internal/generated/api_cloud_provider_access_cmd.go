@@ -67,7 +67,6 @@ func AuthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -126,7 +125,6 @@ func CreateCloudProviderAccessRoleBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -185,7 +183,6 @@ func DeauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -245,7 +242,6 @@ func GetCloudProviderAccessRoleBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -301,7 +297,6 @@ func ListCloudProviderAccessRolesBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)

@@ -65,7 +65,6 @@ func CreateClusterBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -124,7 +123,6 @@ func DeleteClusterBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -183,7 +181,6 @@ func GetClusterBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -245,7 +242,6 @@ func ListClustersBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -304,7 +300,6 @@ func TestFailoverBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -364,7 +359,6 @@ func UpdateClusterBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)

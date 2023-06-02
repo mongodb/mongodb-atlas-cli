@@ -54,7 +54,6 @@ func {{operationId}}Builder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				//opts.ValidateProjectID,
 				opts.initClient(),
 				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
@@ -64,7 +63,7 @@ func {{operationId}}Builder() *cobra.Command {
 		},
 	}
 {{#allParams}}
-	{{^isBodyParam}}cmd.Flags().{{#lambda.titlecase}}{{dataType}}{{/lambda.titlecase}}Var(&opts.{{paramName}}, "{{paramName}}", {{#isString}}"{{/isString}}{{^defaultValue}}{{#isNumeric}}0{{/isNumeric}}{{#isInteger}}0{{/isInteger}}{{#isShort}}0{{/isShort}}{{#isLong}}0{{/isLong}}{{#isUnboundedInteger}}0{{/isUnboundedInteger}}{{#isNumber}}0{{/isNumber}}{{#isFloat}}0{{/isFloat}}{{#isDouble}}0{{/isDouble}}{{#isDecimal}}0{{/isDecimal}}{{#isBoolean}}false{{/isBoolean}}{{/defaultValue}}{{defaultValue}}{{#isString}}"{{/isString}}, "{{description}}"){{/isBodyParam}}
+	{{^isBodyParam}}cmd.Flags().{{#isArray}}{{#lambda.titlecase}}{{baseType}}{{/lambda.titlecase}}Slice{{/isArray}}{{^isArray}}{{#lambda.titlecase}}{{dataType}}{{/lambda.titlecase}}{{/isArray}}Var(&opts.{{paramName}}, "{{paramName}}", {{#isString}}"{{/isString}}{{^defaultValue}}{{#isArray}}nil{{/isArray}}{{#isNumeric}}0{{/isNumeric}}{{#isInteger}}0{{/isInteger}}{{#isShort}}0{{/isShort}}{{#isLong}}0{{/isLong}}{{#isUnboundedInteger}}0{{/isUnboundedInteger}}{{#isNumber}}0{{/isNumber}}{{#isFloat}}0{{/isFloat}}{{#isDouble}}0{{/isDouble}}{{#isDecimal}}0{{/isDecimal}}{{#isBoolean}}false{{/isBoolean}}{{/defaultValue}}{{defaultValue}}{{#isString}}"{{/isString}}, "{{description}}"){{/isBodyParam}}
 {{/allParams}}
 {{#allParams}}{{^isBodyParam}}{{#required}}
 	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/isBodyParam}}{{/allParams}}

@@ -42,7 +42,7 @@ func (opts *LoadSampleDataOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var addTmpl = "Sample Data Job {{.ID}} created.\n"
+var addTmpl = "Sample Data Job {{.Id}} created.\n"
 
 func (opts *LoadSampleDataOpts) Run() error {
 	r, err := opts.store.AddSampleData(opts.ConfigProjectID(), opts.name)

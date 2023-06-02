@@ -54,12 +54,10 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 func (opts *UpdateOpts) Run() error {
 	current := new(admin.DatabaseUser)
 	opts.update(current)
-	database := convert.GetAuthDB(current)
-	current.DatabaseName = database
 
 	params := &admin.UpdateDatabaseUserApiParams{
 		GroupId:      current.GroupId,
-		DatabaseName: database,
+		DatabaseName: current.DatabaseName,
 		Username:     opts.currentUsername,
 		DatabaseUser: current,
 	}
@@ -84,7 +82,7 @@ func (opts *UpdateOpts) update(out *admin.DatabaseUser) {
 
 	out.Scopes = convert.BuildAtlasScopes(opts.scopes)
 	out.Roles = convert.BuildAtlasRoles(opts.roles)
-	out.DatabaseName = out.Roles[0].DatabaseName
+	out.DatabaseName = convert.GetAuthDB(out)
 }
 
 // atlas dbuser(s) update <username> [--password password] [--role roleName@dbName] [--projectId projectId].

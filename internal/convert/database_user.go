@@ -30,6 +30,7 @@ const (
 	scopeSep            = ":"
 	collectionSep       = "."
 	defaultUserDatabase = "admin"
+	userLdapAuthType    = "USER"
 	defaultResourceType = "CLUSTER"
 )
 
@@ -120,12 +121,12 @@ func GetAuthDB(user *atlasv2.DatabaseUser) string {
 	_, isIAM := awsIAMType[pointer.GetOrDefault(user.AwsIAMType, "")]
 
 	// just USER is external
-	isLDAP := user.LdapAuthType != nil && *user.LdapAuthType == "USER"
+	isLDAP := user.LdapAuthType != nil && *user.LdapAuthType == userLdapAuthType
 
 	if isX509 || isIAM || isLDAP {
-		return "$external"
+		return ExternalAuthDB
 	}
-	return "admin"
+	return defaultUserDatabase
 }
 
 var adminX509Type = map[string]struct{}{

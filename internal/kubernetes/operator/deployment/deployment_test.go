@@ -427,14 +427,13 @@ func TestBuildServerlessDeployments(t *testing.T) {
 		spePrivateEndpointIPAddress := ""
 
 		spe := []atlasv2.ServerlessTenantEndpoint{
-			atlasv2.ServerlessAzureTenantEndpointAsServerlessTenantEndpoint(
-				&atlasv2.ServerlessAzureTenantEndpoint{
-					Id:                       &speID,
-					CloudProviderEndpointId:  &speCloudProviderEndpointID,
-					Comment:                  &speComment,
-					PrivateEndpointIpAddress: &spePrivateEndpointIPAddress,
-				},
-			),
+			{
+				Id:                       &speID,
+				CloudProviderEndpointId:  &speCloudProviderEndpointID,
+				Comment:                  &speComment,
+				PrivateEndpointIpAddress: &spePrivateEndpointIPAddress,
+				ProviderName:             pointer.Get("AZURE"),
+			},
 		}
 
 		cluster := &mongodbatlas.Cluster{

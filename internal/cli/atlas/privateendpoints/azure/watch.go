@@ -51,7 +51,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 		return false, err
 	}
 
-	endpointService := result.(*atlasv2.AzurePrivateLinkConnection)
+	endpointService := result.(*atlasv2.EndpointService)
 	return endpointService.GetStatus() == "AVAILABLE" || endpointService.GetStatus() == "FAILED", nil
 }
 

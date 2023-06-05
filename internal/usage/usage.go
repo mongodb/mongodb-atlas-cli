@@ -427,4 +427,6 @@ dbName and collection are required only for built-in roles.`
 	Pipeline                                  = "Name of the Data lake pipeline."
 	CompletedAfter                            = "Date filter of which the backup snapshots where completed. Format must be YYYY-MM-DD"
 	UpdateWarning                             = " Passing this flag replaces preexisting data."
+	EnableWatch                               = "Watch the command until it completes its execution."
+	WatchTimeout                              = "Time in seconds after a watch command times out."
 )

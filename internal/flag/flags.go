@@ -346,4 +346,7 @@ const (
 	Transform                                 = "transform"                                 // Transform flag
 	Pipeline                                  = "pipeline"                                  // Pipeline flag
 	CompletedAfter                            = "completedAfter"                            // CompletedAfter flag
+	EnableWatch                               = "watch"                                     // EnableWatch flag
+	EnableWatchShort                          = "w"                                         // EnableWatchShort flag
+	WatchTimeout                              = "watchTimeout"                              // WatchTimeout flag
 )

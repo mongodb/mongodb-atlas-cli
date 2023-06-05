@@ -25,6 +25,8 @@ import (
 type WatchOpts struct {
 	OutputOpts
 	s              *spinner.Spinner
+	EnbaleWatch    bool
+	Timeout        uint
 	IsRetryableErr func(err error) bool
 }
 

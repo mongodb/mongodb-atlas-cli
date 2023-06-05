@@ -29,6 +29,7 @@ import (
 
 type DeleteOpts struct {
 	cli.GlobalOpts
+	cli.WatchOpts
 	*cli.DeleteOpts
 	store store.ClusterDeleter
 }
@@ -84,6 +85,9 @@ Deleting a cluster also deletes any backup snapshots for that cluster.
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+
+	cmd.Flags().BoolVarP(&opts.EnbaleWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
+	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

@@ -25,10 +25,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -57,6 +59,7 @@ type CreateOpts struct {
 	enableTerminationProtection bool
 	mdbVersion                  string
 	filename                    string
+	tag                         map[string]string
 	fs                          afero.Fs
 	store                       store.ClusterCreator
 }
@@ -88,8 +91,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCluster() (*atlas.AdvancedCluster, error) {
-	cluster := new(atlas.AdvancedCluster)
+func (opts *CreateOpts) newCluster() (*atlasv2.ClusterDescriptionV15, error) {
+	cluster := new(atlasv2.ClusterDescriptionV15)
 	if opts.filename != "" {
 		if err := file.Load(opts.fs, opts.filename, cluster); err != nil {
 			return nil, err
@@ -100,33 +103,37 @@ func (opts *CreateOpts) newCluster() (*atlas.AdvancedCluster, error) {
 	}
 
 	if opts.name != "" {
-		cluster.Name = opts.name
+		cluster.Name = &opts.name
 	}
 
 	AddLabel(cluster, NewCLILabel())
 
-	cluster.GroupID = opts.ConfigProjectID()
+	cluster.GroupId = pointer.Get(opts.ConfigProjectID())
 	return cluster, nil
 }
 
-func (opts *CreateOpts) applyOpts(out *atlas.AdvancedCluster) {
+func (opts *CreateOpts) applyOpts(out *atlasv2.ClusterDescriptionV15) {
 	replicationSpec := opts.newAdvanceReplicationSpec()
 	if opts.backup {
 		out.BackupEnabled = &opts.backup
 		out.PitEnabled = &opts.backup
 	}
 	if opts.biConnector {
-		out.BiConnector = &atlas.BiConnector{Enabled: &opts.biConnector}
+		out.BiConnector = &atlasv2.BiConnector{Enabled: &opts.biConnector}
 	}
 	out.TerminationProtectionEnabled = &opts.enableTerminationProtection
-	out.ClusterType = opts.clusterType
+	out.ClusterType = &opts.clusterType
 
 	if !opts.isTenant() {
 		out.DiskSizeGB = &opts.diskSizeGB
-		out.MongoDBMajorVersion = opts.mdbVersion
+		out.MongoDBMajorVersion = &opts.mdbVersion
 	}
 
-	out.ReplicationSpecs = []*atlas.AdvancedReplicationSpec{replicationSpec}
+	out.ReplicationSpecs = []atlasv2.ReplicationSpec{replicationSpec}
+
+	for k, v := range opts.tag {
+		out.Tags = append(out.Tags, atlasv2.Tag{Key: pointer.Get(k), Value: pointer.Get(v)})
+	}
 }
 
 func (opts *CreateOpts) isTenant() bool {
@@ -140,46 +147,46 @@ func (opts *CreateOpts) providerName() string {
 	return opts.provider
 }
 
-func (opts *CreateOpts) newAdvanceReplicationSpec() *atlas.AdvancedReplicationSpec {
-	return &atlas.AdvancedReplicationSpec{
-		NumShards:     opts.shards,
-		ZoneName:      zoneName,
-		RegionConfigs: []*atlas.AdvancedRegionConfig{opts.newAdvancedRegionConfig()},
+func (opts *CreateOpts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
+	return atlasv2.ReplicationSpec{
+		NumShards:     &opts.shards,
+		ZoneName:      pointer.Get(zoneName),
+		RegionConfigs: []atlasv2.RegionConfig{opts.newAdvancedRegionConfig()},
 	}
 }
 
-func (opts *CreateOpts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
+func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.RegionConfig {
 	priority := 7
 	readOnlyNode := 0
 	providerName := opts.providerName()
 
-	regionConfig := atlas.AdvancedRegionConfig{
-		RegionName: opts.region,
-		Priority:   &priority,
+	regionConfig := atlasv2.RegionConfig{
+		Priority:     &priority,
+		RegionName:   &opts.region,
+		ProviderName: &providerName,
 	}
 
-	regionConfig.ProviderName = providerName
-	regionConfig.ElectableSpecs = &atlas.Specs{
-		InstanceSize: opts.tier,
+	regionConfig.ElectableSpecs = &atlasv2.HardwareSpec{
+		InstanceSize: &opts.tier,
 	}
 
 	if providerName == tenant {
-		regionConfig.BackingProviderName = opts.provider
+		regionConfig.BackingProviderName = &opts.provider
 	} else {
 		regionConfig.ElectableSpecs.NodeCount = &opts.members
 	}
 
-	readOnlySpec := &atlas.Specs{
-		InstanceSize: opts.tier,
+	readOnlySpec := &atlasv2.DedicatedHardwareSpec{
+		InstanceSize: &opts.tier,
 		NodeCount:    &readOnlyNode,
 	}
 	regionConfig.ReadOnlySpecs = readOnlySpec
 
-	return &regionConfig
+	return regionConfig
 }
 
 // CreateBuilder builds a cobra.Command that can run as:
-// create <name> --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--tier M#] [--diskSizeGB N] [--backup] [--mdbVersion].
+// create <name> --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--tier M#] [--diskSizeGB N] [--backup] [--mdbVersion] [--tag key=value].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{
 		fs: afero.NewOsFs(),
@@ -194,6 +201,9 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  # Deploy a free cluster named myCluster for the project with the ID 5e2211c17a3e5a48f5497de3:
   %[1]s cluster create myCluster --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region US_EAST_1 --tier M0
+
+  # Deploy a free cluster named myCluster for the project with the ID 5e2211c17a3e5a48f5497de3 and tag "env=dev":
+  %[1]s cluster create myCluster --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region US_EAST_1 --tier M0 --tag env=dev
 
   # Deploy a three-member replica set named myRS in AWS for the project with the ID 5e2211c17a3e5a48f5497de3:
   %[1]s cluster create myRS --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 5.0 --diskSizeGB 10
@@ -252,6 +262,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 	cmd.Flags().StringVar(&opts.clusterType, flag.TypeFlag, replicaSet, usage.ClusterTypes)
 	cmd.Flags().IntVarP(&opts.shards, flag.Shards, flag.ShardsShort, defaultShardSize, usage.Shards)
 	cmd.Flags().BoolVar(&opts.enableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
+	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.Tag)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
@@ -268,6 +279,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.BIConnector)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.TypeFlag)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Shards)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tag)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"REPLICASET", "SHARDED", "GEOSHARDED"}, cobra.ShellCompDirectiveDefault

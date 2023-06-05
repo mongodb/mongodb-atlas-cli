@@ -36,7 +36,7 @@ func TestCreate_Run(t *testing.T) {
 		region: "region",
 	}
 
-	expected := &atlasv2.AWSPrivateLinkConnection{}
+	expected := &atlasv2.EndpointService{}
 	mockStore.
 		EXPECT().
 		CreatePrivateEndpoint(createOpts.ProjectID, createOpts.newPrivateEndpointConnection()).

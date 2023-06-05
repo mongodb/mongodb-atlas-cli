@@ -478,26 +478,16 @@ func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID str
 			return nil, err
 		}
 		for i := range peList {
-			peResult := atlasV1.PrivateEndpoint{
+			pe := &peList[i]
+			result = append(result, atlasV1.PrivateEndpoint{
 				Provider:          cloudProvider,
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",
 				Endpoints:         atlasV1.GCPEndpoints{},
-			}
-
-			switch v := peList[i].(type) {
-			case *atlasv2.AWSPrivateLinkConnection:
-				peResult.ID = *v.Id
-				peResult.Region = *v.RegionName
-			case *atlasv2.AzurePrivateLinkConnection:
-				peResult.ID = *v.Id
-				peResult.Region = *v.RegionName
-			case *atlasv2.GCPEndpointService:
-				peResult.ID = *v.Id
-				peResult.Region = *v.RegionName
-			}
-			result = append(result, peResult)
+				ID:                pe.GetId(),
+				Region:            pe.GetRegionName(),
+			})
 		}
 	}
 	return result, nil

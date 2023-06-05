@@ -21,21 +21,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func Test_orgListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationEventLister(ctrl)
 
-	expected := &mongodbatlas.EventResponse{}
+	expected := &admin.OrgPaginatedEvent{}
 	listOpts := &orgListOpts{
 		store: mockStore,
 	}
 	listOpts.OrgID = "1"
-
+	anyMock := gomock.Any()
 	mockStore.
-		EXPECT().OrganizationEvents(listOpts.OrgID, listOpts.newEventListOptions()).
+		EXPECT().OrganizationEvents(anyMock).
 		Return(expected, nil).
 		Times(1)
 

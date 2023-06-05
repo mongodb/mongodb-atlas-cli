@@ -164,6 +164,6 @@ func TestUpgradeBuilder(t *testing.T) {
 		0,
 		[]string{flag.Tier, flag.DiskSizeGB, flag.MDBVersion,
 			flag.EnableTerminationProtection, flag.DisableTerminationProtection,
-			flag.File, flag.ProjectID, flag.Output},
+			flag.File, flag.Tag, flag.ProjectID, flag.Output},
 	)
 }

@@ -35,7 +35,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.GCPEndpointService{}
+	expected := &atlasv2.EndpointService{}
 
 	mockStore.
 		EXPECT().

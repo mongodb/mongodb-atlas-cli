@@ -124,7 +124,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 	})
 
 	t.Run("should install latest major version of operator in its own namespace with namespaced config", func(t *testing.T) {
-		clusterName := "install-namespaced"
+		clusterName := "single-namespace"
 		operatorWatch1 := "atlas-watch1"
 		operatorWatch2 := "atlas-watch2"
 		operator := setupCluster(t, clusterName, operatorNamespace, operatorWatch1, operatorWatch2)
@@ -137,6 +137,27 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--operatorVersion", features.LatestOperatorMajorVersion,
 			"--targetNamespace", operatorNamespace,
 			"--watchNamespace", fmt.Sprintf("%s,%s", operatorWatch1, operatorWatch2),
+			"--kubeContext", context)
+		cmd.Env = os.Environ()
+		resp, inErr := cmd.CombinedOutput()
+		req.NoError(inErr, string(resp))
+		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+
+		checkDeployment(t, operator, operatorNamespace)
+	})
+
+	t.Run("should install latest major version of operator in a single namespaced config", func(t *testing.T) {
+		clusterName := "install-namespaced"
+		operator := setupCluster(t, clusterName, operatorNamespace)
+		context := fmt.Sprintf("kind-%s", clusterName)
+
+		cmd := exec.Command(cliPath,
+			"kubernetes",
+			"operator",
+			"install",
+			"--operatorVersion", features.LatestOperatorMajorVersion,
+			"--targetNamespace", operatorNamespace,
+			"--watchNamespace", operatorNamespace,
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()

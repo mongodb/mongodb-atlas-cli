@@ -54,5 +54,11 @@
       ]
     }
   ],
-  "rootCertType": "ISRGROOTX1"
+  "rootCertType": "ISRGROOTX1",
+  "tags": [
+    {
+      "key": "env",
+      "value": "e2e-gov"
+    }
+  ]
 }

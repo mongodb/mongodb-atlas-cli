@@ -24,6 +24,7 @@ import (
 	"os"
 	"os/exec"
 	"testing"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
@@ -633,6 +634,40 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 
 func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string) {
 	t.Helper()
+
+	privateEndpoints := listPrivateEndpointsByProject(t, cliPath, projectID, provider)
+	for _, endpoint := range privateEndpoints {
+		var endpointID string
+
+		switch endpoint.CloudProvider {
+		case "AWS":
+			endpointID = endpoint.GetId()
+		case "AZURE":
+			endpointID = endpoint.GetId()
+		case "GCP":
+			endpointID = endpoint.GetId()
+		}
+		require.NotEmpty(t, endpointID)
+		deletePrivateEndpoint(t, cliPath, projectID, provider, endpointID)
+	}
+
+	clear := false
+	for attempt := 0; attempt < 10; attempt++ {
+		privateEndpoints = listPrivateEndpointsByProject(t, cliPath, projectID, provider)
+		if len(privateEndpoints) == 0 {
+			t.Logf("all %s private endpoints successfully deleted", provider)
+			clear = true
+			break
+		}
+
+		time.Sleep(10 * time.Second)
+	}
+
+	require.True(t, clear)
+}
+
+func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider string) []atlasv2.EndpointService {
+	t.Helper()
 	cmd := exec.Command(cliPath,
 		privateEndpointsEntity,
 		provider,
@@ -648,31 +683,25 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 	var privateEndpoints []atlasv2.EndpointService
 	err = json.Unmarshal(resp, &privateEndpoints)
 	require.NoError(t, err)
-	for _, endpoint := range privateEndpoints {
-		var endpointID string
 
-		switch v := endpoint.GetActualInstance().(type) {
-		case *atlasv2.AWSPrivateLinkConnection:
-			endpointID = v.GetId()
-		case *atlasv2.AzurePrivateLinkConnection:
-			endpointID = v.GetId()
-		case *atlasv2.GCPEndpointService:
-			endpointID = v.GetId()
-		}
-		require.NotEmpty(t, endpointID)
-		cmd = exec.Command(cliPath,
-			privateEndpointsEntity,
-			provider,
-			"delete",
-			endpointID,
-			"--projectId",
-			projectID,
-			"--force",
-		)
-		cmd.Env = os.Environ()
-		resp, err = cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
-	}
+	return privateEndpoints
+}
+
+func deletePrivateEndpoint(t *testing.T, cliPath, projectID, provider, endpointID string) {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		privateEndpointsEntity,
+		provider,
+		"delete",
+		endpointID,
+		"--projectId",
+		projectID,
+		"--force",
+	)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	assert.NoError(t, err, string(resp))
 }
 
 func deleteTeam(teamID string) error {
@@ -733,13 +762,13 @@ func createDBUserWithCert(projectID, username string) error {
 	return nil
 }
 
-func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
+func ensureCluster(t *testing.T, cluster *atlasv2.ClusterDescriptionV15, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
-	a.Equal(clusterName, cluster.Name)
-	a.Equal(version, cluster.MongoDBMajorVersion)
-	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
-	a.Equal(terminationProtection, *cluster.TerminationProtectionEnabled)
+	a.Equal(clusterName, cluster.GetName())
+	a.Equal(version, cluster.GetMongoDBMajorVersion())
+	a.Equal(diskSizeGB, cluster.GetDiskSizeGB())
+	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 
 func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, tier string, diskSizeGB float64, terminationProtection bool) {

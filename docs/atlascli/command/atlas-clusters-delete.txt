@@ -69,6 +69,14 @@ Options
      - string
      - false
      - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
+   * - -w, --watch
+     - 
+     - false
+     - Watch the command until it completes its execution.
+   * - --watchTimeout
+     - uint
+     - false
+     - Time in seconds after a watch command times out.
 
 Inherited Options
 -----------------

@@ -17,6 +17,7 @@ package clusters
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -24,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 	"github.com/spf13/cobra"
 )
 
@@ -43,7 +45,25 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID())
+	err := opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID())
+	if err != nil {
+		return err
+	}
+
+	if opts.EnbaleWatch {
+		return opts.WatchWatcher(
+			&watchers.Watcher{
+				Timeout: time.Duration(opts.Timeout),
+				Describer: watchers.NewAtlasClusterStatusDescriber(
+					opts.store.(store.AtlasClusterDescriber),
+					opts.ProjectID,
+					opts.Entry,
+				),
+			},
+		)
+	}
+
+	return nil
 }
 
 // DeleteBuilder

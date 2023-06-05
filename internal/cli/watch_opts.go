@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"github.com/briandowns/spinner"
+	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 )
 
 type WatchOpts struct {
@@ -73,6 +74,13 @@ func (opts *WatchOpts) exponentialBackoff(f Watcher) (bool, error) {
 	}
 	// Should only happen after trying three times (>14 seconds)
 	return f()
+}
+
+func (opts *WatchOpts) WatchWatcher(w *watchers.Watcher) error {
+	opts.start()
+	err := w.Watch()
+	opts.stop()
+	return err
 }
 
 func (opts *WatchOpts) start() {

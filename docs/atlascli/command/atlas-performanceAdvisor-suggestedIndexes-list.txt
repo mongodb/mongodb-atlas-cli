@@ -70,7 +70,7 @@ Options
    * - --processName
      - string
      - false
-     - Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}.
+     - Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}. List of possible values can be obtained by running: atlas processes list | jq '.results[].id'
    * - --projectId
      - string
      - false

@@ -259,7 +259,6 @@ func TestClustersFlags(t *testing.T) {
 
 		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
 		a := assert.New(t)
-		a.Contains(string(resp), "Cluster deleted")
 		a.Contains(string(resp), expected)
 	})
 

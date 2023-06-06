@@ -60,8 +60,13 @@ func (opts *DeleteOpts) PostRun() error {
 		)
 
 		watcher.Timeout = time.Duration(opts.Timeout)
-		return opts.WatchWatcher(watcher)
+		if err := opts.WatchWatcher(watcher); err != nil {
+			return err
+		}
+
+		return opts.Print(nil)
 	}
+
 	return nil
 }
 

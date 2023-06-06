@@ -36,7 +36,7 @@ type StateDescriber interface {
 }
 
 type Watcher struct {
-	Timeout            time.Duration
+	Timeout            time.Duration // TODO: CLOUDP-181597
 	ExponentialBackoff bool
 	stateTransition    StateTransition
 	describer          StateDescriber

@@ -103,11 +103,11 @@ func (opts *IndexOpts) newSearchIndex() (*atlasv2.FTSIndex, error) {
 // indexFieldParts index field should be fieldName:analyzer:fieldType.
 const indexFieldParts = 2
 
-func (opts *IndexOpts) indexFields() (map[string]map[string]interface{}, error) {
+func (opts *IndexOpts) indexFields() (map[string]interface{}, error) {
 	if len(opts.fields) == 0 {
 		return nil, nil
 	}
-	fields := make(map[string]map[string]interface{})
+	fields := make(map[string]interface{})
 	for _, p := range opts.fields {
 		f := strings.Split(p, ":")
 		if len(f) != indexFieldParts {

@@ -148,15 +148,21 @@ func InstallBuilder() *cobra.Command {
 		Args:    require.NoArgs,
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Install Atlas Kubernetes Operator to a cluster.",
-		Long:    `This command installs one of the supported versions of Atlas Kubernetes Operator to an existing cluster, as well as automatically import Atlas resources to be managed by the operator.`,
+		Long:    `This command installs a supported versions of Atlas Kubernetes Operator to an existing cluster, and optionally imports Atlas resources to be managed by the operator.`,
 		Example: `# Install latest version of the operator into the default namespace:
   atlas kubernetes operator install
 
-  # Install an specific version of the operator:
+  # Install a specific version of the operator:
   atlas kubernetes operator install --operatorVersion=1.7.0
 
-  # Install an specific version of the operator to a namespace and watch only this namespace and a second one
-  atlas kubernetes operator install --operatorVersion=1.7.0 --targetNamespace=<namespace> --watchNamespace=<namespace>,<secondNamespace>`,
+  # Install a specific version of the operator to a namespace and watch only this namespace and a second one
+  atlas kubernetes operator install --operatorVersion=1.7.0 --targetNamespace=<namespace> --watchNamespace=<namespace>,<secondNamespace>
+
+  # Install and import all objects from an org
+  atlas kubernetes operator install --targetNamespace=<namespace> --orgID <orgID> --import
+
+  # Install and import and import objects from a specific project
+  atlas kubernetes operator install --targetNamespace=<namespace> --orgID <orgID> --projectName <project> --import`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.versionProvider = version.NewOperatorVersion(github.NewClient(nil))
 

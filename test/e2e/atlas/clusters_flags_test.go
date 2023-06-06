@@ -252,14 +252,15 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force")
+		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force", "-w")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
 		a := assert.New(t)
-		a.Equal(expected, string(resp))
+		a.Contains(string(resp), "Cluster deleted")
+		a.Contains(string(resp), expected)
 	})
 
 	t.Run("Watch deletion", func(t *testing.T) {

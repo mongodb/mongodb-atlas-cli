@@ -48,19 +48,19 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID())
 }
 
-func (opts *DeleteOpts) watch() error {
+func (opts *DeleteOpts) PostRun() error {
 	if opts.EnbaleWatch {
-		return opts.WatchWatcher(
-			&watchers.Watcher{
-				Timeout:         time.Duration(opts.Timeout),
-				StateTransition: *watchers.ClusterDeleted,
-				Describer: watchers.NewAtlasClusterStatusDescriber(
-					opts.store.(store.AtlasClusterDescriber),
-					opts.ProjectID,
-					opts.Entry,
-				),
-			},
+		watcher := watchers.NewWatcher(
+			*watchers.ClusterDeleted,
+			watchers.NewAtlasClusterStateDescriber(
+				opts.store.(store.AtlasClusterDescriber),
+				opts.ProjectID,
+				opts.Entry,
+			),
 		)
+
+		watcher.Timeout = time.Duration(opts.Timeout)
+		return opts.WatchWatcher(watcher)
 	}
 	return nil
 }
@@ -70,7 +70,7 @@ func (opts *DeleteOpts) watch() error {
 // mongocli atlas cluster(s) delete <clusterName> --projectId projectId [--confirm].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Cluster '%s' deleted\n", "Cluster not deleted"),
+		DeleteOpts: cli.NewDeleteOpts("Deleting cluster '%s'", "Cluster not deleted"),
 	}
 	cmd := &cobra.Command{
 		Use:     "delete <clusterName>",
@@ -95,7 +95,7 @@ Deleting a cluster also deletes any backup snapshots for that cluster.
 			if err := opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "Cluster deleted")); err != nil {
+				opts.InitOutput(cmd.OutOrStdout(), "Cluster deleted\n")); err != nil {
 				return err
 			}
 			opts.Entry = args[0]
@@ -105,7 +105,7 @@ Deleting a cluster also deletes any backup snapshots for that cluster.
 			return opts.Run()
 		},
 		PostRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.watch()
+			return opts.PostRun()
 		},
 	}
 

@@ -84,9 +84,7 @@ func (opts *WatchOpts) WatchWatcher(w *watchers.Watcher) error {
 }
 
 func (opts *WatchOpts) start() {
-	fmt.Printf("Are we spinnnnnnnnn")
 	if opts.IsTerminal() {
-		fmt.Printf("Starting spinnnnnnnnn")
 		opts.s = spinner.New(spinner.CharSets[9], speed)
 		opts.s.Start()
 	}
@@ -94,7 +92,6 @@ func (opts *WatchOpts) start() {
 
 func (opts *WatchOpts) stop() {
 	if opts.IsTerminal() {
-		fmt.Printf("Ending spinnnnnnnnn")
 		opts.s.Stop()
 	}
 }

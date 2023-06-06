@@ -48,11 +48,12 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID())
 }
 
-func (opts *DeleteOpts) Watch() error {
+func (opts *DeleteOpts) watch() error {
 	if opts.EnbaleWatch {
 		return opts.WatchWatcher(
 			&watchers.Watcher{
-				Timeout: time.Duration(opts.Timeout),
+				Timeout:         time.Duration(opts.Timeout),
+				StateTransition: *watchers.ClusterDeleted,
 				Describer: watchers.NewAtlasClusterStatusDescriber(
 					opts.store.(store.AtlasClusterDescriber),
 					opts.ProjectID,
@@ -91,7 +92,10 @@ Deleting a cluster also deletes any backup snapshots for that cluster.
 			"output":          opts.SuccessMessage(),
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
+			if err := opts.PreRunE(
+				opts.ValidateProjectID,
+				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), "Cluster deleted")); err != nil {
 				return err
 			}
 			opts.Entry = args[0]
@@ -101,7 +105,7 @@ Deleting a cluster also deletes any backup snapshots for that cluster.
 			return opts.Run()
 		},
 		PostRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Watch()
+			return opts.watch()
 		},
 	}
 

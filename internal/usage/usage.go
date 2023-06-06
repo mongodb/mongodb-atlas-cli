@@ -46,7 +46,7 @@ const (
 	Status                       = "State of this alert. Valid values are TRACKING, OPEN, CLOSED, and CANCELLED."
 	Until                        = "ISO 8601-formatted time until which the alert has been acknowledged. This command returns this value if a MongoDB user previously acknowledged this alert. After this date, the alert becomes unacknowledged."
 	ConnectionStringType         = "When set to 'private', retrieves the connection string for the network peering endpoint."
-	Limit                        = "Number of items per results page."
+	Limit                        = "Number of items per results page, up to a maximum of 500. If you have more than 500 results, specify the --page option to change the results page."
 	Username                     = "Username that identifies the user. This value must be a valid email address."
 	BackupStatus                 = "Current (or desired) status of the backup configuration."
 	StorageEngine                = "Storage engine used for the backup."

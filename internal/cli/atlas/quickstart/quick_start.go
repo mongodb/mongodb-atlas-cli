@@ -282,7 +282,7 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	fmt.Printf("Your connection string: %v\n", cluster.ConnectionStrings.StandardSrv)
+	fmt.Printf("Your connection string: %v\n", cluster.ConnectionStrings.GetStandardSrv())
 
 	if err := opts.loadSampleData(); err != nil {
 		return err

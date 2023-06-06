@@ -158,13 +158,13 @@ The key is scoped to the project when --projectName is passed and at org level w
   # Install a specific version of the operator:
   atlas kubernetes operator install --operatorVersion=1.7.0
 
-  # Install a specific version of the operator to a namespace and watch only this namespace and a second one
+  # Install a specific version of the operator to a namespace and watch only this namespace and a second one:
   atlas kubernetes operator install --operatorVersion=1.7.0 --targetNamespace=<namespace> --watchNamespace=<namespace>,<secondNamespace>
 
-  # Install and import all objects from an org
+  # Install and import all objects from an org:
   atlas kubernetes operator install --targetNamespace=<namespace> --orgID <orgID> --import
 
-  # Install and import and import objects from a specific project
+  # Install and import objects from a specific project:
   atlas kubernetes operator install --targetNamespace=<namespace> --orgID <orgID> --projectName <project> --import`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.versionProvider = version.NewOperatorVersion(github.NewClient(nil))

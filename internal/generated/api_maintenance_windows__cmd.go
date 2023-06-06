@@ -295,6 +295,25 @@ func updateMaintenanceWindowBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
+	cmd.Flags().BoolVar(&opts.autoDeferOnceEnabled, "autoDeferOnceEnabled", false, `Flag that indicates whether MongoDB Cloud should defer all maintenance windows for one week after you enable them.`)
+
+	cmd.Flags().IntVar(&opts.dayOfWeek, "dayOfWeek", 000, `One-based integer that represents the day of the week that the maintenance window starts.
+
+| Value | Day of Week |
+|---|---|
+| &#x60;1&#x60; | Sunday |
+| &#x60;2&#x60; | Monday |
+| &#x60;3&#x60; | Tuesday |
+| &#x60;4&#x60; | Wednesday |
+| &#x60;5&#x60; | Thursday |
+| &#x60;6&#x60; | Friday |
+| &#x60;7&#x60; | Saturday |
+`)
+
+	cmd.Flags().IntVar(&opts.hourOfDay, "hourOfDay", 000, `Zero-based integer that represents the hour of the of the day that the maintenance window starts according to a 24-hour clock. Use &#x60;0&#x60; for midnight and &#x60;12&#x60; for noon.`)
+
+	cmd.Flags().BoolVar(&opts.startASAP, "startASAP", false, `Flag that indicates whether MongoDB Cloud starts the maintenance window immediately upon receiving this request. To start the maintenance window immediately for your project, MongoDB Cloud must have maintenance scheduled and you must set a maintenance window. This flag resets to &#x60;false&#x60; after MongoDB Cloud completes maintenance.`)
+
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }

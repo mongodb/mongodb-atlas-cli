@@ -76,6 +76,22 @@ func createProjectBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.projectOwnerId, "projectOwnerId", "", `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud user to whom to grant the Project Owner role on the specified project. If you set this parameter, it overrides the default value of the oldest Organization Owner. `)
 
+	cmd.Flags().Int64Var(&opts.clusterCount, "clusterCount", 00, `Quantity of MongoDB Cloud clusters deployed in this project.`)
+
+	cmd.Flags().StringVar(&opts.created, "created", "", `Date and time when MongoDB Cloud created this project. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+
+	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud project.`)
+
+	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+
+	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the project included in the MongoDB Cloud organization.`)
+
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud organization to which the project belongs.`)
+
+	cmd.Flags().StringVar(&opts.regionUsageRestrictions, "regionUsageRestrictions", "&quot;NONE&quot;", `Region usage restrictions that designate the project&#39;s AWS region.`)
+
+	cmd.Flags().BoolVar(&opts.withDefaultAlertsSettings, "withDefaultAlertsSettings", false, `Flag that indicates whether to create the project with default alert settings.`)
+
 	return cmd
 }
 
@@ -129,6 +145,10 @@ func createProjectInvitationBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().SetSliceVar(&opts.roles, "roles", nil, `One or more organization or project level roles to assign to the MongoDB Cloud user.`)
+
+	cmd.Flags().StringVar(&opts.username, "username", "", `Email address of the MongoDB Cloud user invited to the specified project.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -1040,6 +1060,8 @@ func updateProjectBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
+	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the project included in the MongoDB Cloud organization.`)
+
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
@@ -1094,6 +1116,10 @@ func updateProjectInvitationBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().SetSliceVar(&opts.roles, "roles", nil, `One or more organization or project level roles to assign to the MongoDB Cloud user.`)
+
+	cmd.Flags().StringVar(&opts.username, "username", "", `Email address of the MongoDB Cloud user invited to the specified project.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -1153,6 +1179,8 @@ func updateProjectInvitationByIdBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
 
+	cmd.Flags().SetSliceVar(&opts.roles, "roles", nil, `One or more organization or project level roles to assign to the MongoDB Cloud user.`)
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("invitationId")
 	return cmd
@@ -1208,6 +1236,18 @@ func updateProjectSettingsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().BoolVar(&opts.isCollectDatabaseSpecificsStatisticsEnabled, "isCollectDatabaseSpecificsStatisticsEnabled", false, `Flag that indicates whether to collect database-specific metrics  for the specified project.`)
+
+	cmd.Flags().BoolVar(&opts.isDataExplorerEnabled, "isDataExplorerEnabled", false, `Flag that indicates whether to enable the Data Explorer for the specified project.`)
+
+	cmd.Flags().BoolVar(&opts.isExtendedStorageSizesEnabled, "isExtendedStorageSizesEnabled", false, `Flag that indicates whether to enable extended storage sizes  for the specified project.`)
+
+	cmd.Flags().BoolVar(&opts.isPerformanceAdvisorEnabled, "isPerformanceAdvisorEnabled", false, `Flag that indicates whether to enable the Performance Advisor and Profiler  for the specified project.`)
+
+	cmd.Flags().BoolVar(&opts.isRealtimePerformancePanelEnabled, "isRealtimePerformancePanelEnabled", false, `Flag that indicates whether to enable the Real Time Performance Panel for the specified project.`)
+
+	cmd.Flags().BoolVar(&opts.isSchemaAdvisorEnabled, "isSchemaAdvisorEnabled", false, `Flag that indicates whether to enable the Schema Advisor for the specified project.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd

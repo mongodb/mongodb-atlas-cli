@@ -303,6 +303,8 @@ func disablePeeringBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
+	cmd.Flags().BoolVar(&opts.enabled, "enabled", false, `Flag that indicates whether someone enabled **Connect via Peering Only** mode for the specified project.`)
+
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }

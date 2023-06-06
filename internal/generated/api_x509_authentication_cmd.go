@@ -78,6 +78,20 @@ func createDatabaseUserCertificateBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.username, "username", "", `Human-readable label that represents the MongoDB database user account for whom to create a certificate.`)
 
+	cmd.Flags().Int64Var(&opts._id, "_id", 00, `Unique 24-hexadecimal character string that identifies this certificate.`)
+
+	cmd.Flags().StringVar(&opts.createdAt, "createdAt", "", `Date and time when MongoDB Cloud created this certificate. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal character string that identifies the project.`)
+
+	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+
+	cmd.Flags().IntVar(&opts.monthsUntilExpiration, "monthsUntilExpiration", 3, `Number of months that the certificate remains valid until it expires.`)
+
+	cmd.Flags().StringVar(&opts.notAfter, "notAfter", "", `Date and time when this certificate expires. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+
+	cmd.Flags().StringVar(&opts.subject, "subject", "", `Subject Alternative Name associated with this certificate. This parameter expresses its value as a distinguished name as defined in [RFC 2253](https://tools.ietf.org/html/2253).`)
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("username")
 	return cmd

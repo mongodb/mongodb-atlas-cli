@@ -69,6 +69,32 @@ func createUserBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.country, "country", "", `Two alphabet characters that identifies MongoDB Cloud user&#39;s geographic location. This parameter uses the ISO 3166-1a2 code format.`)
+
+	cmd.Flags().StringVar(&opts.createdAt, "createdAt", "", `Date and time when the current account is created. This value is in the ISO 8601 timestamp format in UTC.`)
+
+	cmd.Flags().StringVar(&opts.emailAddress, "emailAddress", "", `Email address that belongs to the MongoDB Cloud user.`)
+
+	cmd.Flags().StringVar(&opts.firstName, "firstName", "", `First or given name that belongs to the MongoDB Cloud user.`)
+
+	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud user.`)
+
+	cmd.Flags().StringVar(&opts.lastAuth, "lastAuth", "", `Date and time when the current account last authenticated. This value is in the ISO 8601 timestamp format in UTC.`)
+
+	cmd.Flags().StringVar(&opts.lastName, "lastName", "", `Last name, family name, or surname that belongs to the MongoDB Cloud user.`)
+
+	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+
+	cmd.Flags().StringVar(&opts.mobileNumber, "mobileNumber", "", `Mobile phone number that belongs to the MongoDB Cloud user.`)
+
+	cmd.Flags().StringVar(&opts.password, "password", "", `Password applied with the username to log in to MongoDB Cloud. MongoDB Cloud does not return this parameter except in response to creating a new MongoDB Cloud user. Only the MongoDB Cloud user can update their password after it has been set from the MongoDB Cloud console.`)
+
+	cmd.Flags().ArraySliceVar(&opts.roles, "roles", nil, `List of objects that display the MongoDB Cloud user&#39;s roles and the corresponding organization or project to which that role applies. A role can apply to one organization or one project but not both.`)
+
+	cmd.Flags().SetSliceVar(&opts.teamIds, "teamIds", nil, `List of unique 24-hexadecimal digit strings that identifies the teams to which this MongoDB Cloud user belongs.`)
+
+	cmd.Flags().StringVar(&opts.username, "username", "", `Email address that represents the username of the MongoDB Cloud user.`)
+
 	return cmd
 }
 

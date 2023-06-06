@@ -18,17 +18,20 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type createAlertConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client  *admin.APIClient
+	client *admin.APIClient
 	groupId string
+	
 }
 
 func (opts *createAlertConfigurationOpts) initClient() func() error {
@@ -42,6 +45,7 @@ func (opts *createAlertConfigurationOpts) initClient() func() error {
 func (opts *createAlertConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.CreateAlertConfigurationApiParams{
 		GroupId: opts.groupId,
+		
 	}
 	resp, _, err := opts.client.AlertConfigurationsApi.CreateAlertConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -56,10 +60,10 @@ func createAlertConfigurationBuilder() *cobra.Command {
 
 	opts := createAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:   "createAlertConfiguration",
+		Use: "createAlertConfiguration",
 		Short: "Create One Alert Configuration in One Project",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -74,16 +78,39 @@ func createAlertConfigurationBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	
+
+	cmd.Flags().StringVar(&opts.created, "created", "", `Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
+
+	cmd.Flags().BoolVar(&opts.enabled, "enabled", false, `Flag that indicates whether someone enabled this alert configuration for the specified project.`)
+
+	cmd.Flags().StringVar(&opts.eventTypeName, "eventTypeName", "", `Event type that triggers an alert.`)
+
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies the project that owns this alert configuration.`)
+
+	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies this alert configuration.`)
+
+	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+
+	cmd.Flags().ArraySliceVar(&opts.matchers, "matchers", nil, `No matchers are available for these alert types. The list is always empty.`)
+
+	cmd.Flags().ArraySliceVar(&opts.notifications, "notifications", nil, `List that contains the targets that MongoDB Cloud sends notifications.`)
+
+	cmd.Flags().StringVar(&opts.updated, "updated", "", `Date and time when someone last updated this alert configuration. This parameter expresses its value in the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
+
+	cmd.Flags().ServerlessMetricThresholdVar(&opts.metricThreshold, "metricThreshold", , ``)
+
+	cmd.Flags().ThresholdViewIntegerVar(&opts.threshold, "threshold", , ``)
+
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-
 type deleteAlertConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client        *admin.APIClient
-	groupId       string
+	client *admin.APIClient
+	groupId string
 	alertConfigId string
 }
 
@@ -97,7 +124,7 @@ func (opts *deleteAlertConfigurationOpts) initClient() func() error {
 
 func (opts *deleteAlertConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteAlertConfigurationApiParams{
-		GroupId:       opts.groupId,
+		GroupId: opts.groupId,
 		AlertConfigId: opts.alertConfigId,
 	}
 	_, err := opts.client.AlertConfigurationsApi.DeleteAlertConfigurationWithParams(ctx, params).Execute()
@@ -113,10 +140,10 @@ func deleteAlertConfigurationBuilder() *cobra.Command {
 
 	opts := deleteAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:   "deleteAlertConfiguration",
+		Use: "deleteAlertConfiguration",
 		Short: "Remove One Alert Configuration from One Project",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -133,16 +160,16 @@ func deleteAlertConfigurationBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.alertConfigId, "alertConfigId", "", `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("alertConfigId")
 	return cmd
 }
-
 type getAlertConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client        *admin.APIClient
-	groupId       string
+	client *admin.APIClient
+	groupId string
 	alertConfigId string
 }
 
@@ -156,7 +183,7 @@ func (opts *getAlertConfigurationOpts) initClient() func() error {
 
 func (opts *getAlertConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.GetAlertConfigurationApiParams{
-		GroupId:       opts.groupId,
+		GroupId: opts.groupId,
 		AlertConfigId: opts.alertConfigId,
 	}
 	resp, _, err := opts.client.AlertConfigurationsApi.GetAlertConfigurationWithParams(ctx, params).Execute()
@@ -172,10 +199,10 @@ func getAlertConfigurationBuilder() *cobra.Command {
 
 	opts := getAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:   "getAlertConfiguration",
+		Use: "getAlertConfiguration",
 		Short: "Return One Alert Configuration from One Project",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -192,11 +219,11 @@ func getAlertConfigurationBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.alertConfigId, "alertConfigId", "", `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("alertConfigId")
 	return cmd
 }
-
 type listAlertConfigurationMatchersFieldNamesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -212,7 +239,8 @@ func (opts *listAlertConfigurationMatchersFieldNamesOpts) initClient() func() er
 }
 
 func (opts *listAlertConfigurationMatchersFieldNamesOpts) Run(ctx context.Context) error {
-	params := &admin.ListAlertConfigurationMatchersFieldNamesApiParams{}
+	params := &admin.ListAlertConfigurationMatchersFieldNamesApiParams{
+	}
 	resp, _, err := opts.client.AlertConfigurationsApi.ListAlertConfigurationMatchersFieldNamesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
@@ -226,10 +254,10 @@ func listAlertConfigurationMatchersFieldNamesBuilder() *cobra.Command {
 
 	opts := listAlertConfigurationMatchersFieldNamesOpts{}
 	cmd := &cobra.Command{
-		Use:   "listAlertConfigurationMatchersFieldNames",
+		Use: "listAlertConfigurationMatchersFieldNames",
 		Short: "Get All Alert Configuration Matchers Field Names",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -242,17 +270,17 @@ func listAlertConfigurationMatchersFieldNamesBuilder() *cobra.Command {
 		},
 	}
 
+
 	return cmd
 }
-
 type listAlertConfigurationsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client       *admin.APIClient
-	groupId      string
+	client *admin.APIClient
+	groupId string
 	includeCount bool
 	itemsPerPage int
-	pageNum      int
+	pageNum int
 }
 
 func (opts *listAlertConfigurationsOpts) initClient() func() error {
@@ -265,10 +293,10 @@ func (opts *listAlertConfigurationsOpts) initClient() func() error {
 
 func (opts *listAlertConfigurationsOpts) Run(ctx context.Context) error {
 	params := &admin.ListAlertConfigurationsApiParams{
-		GroupId:      opts.groupId,
+		GroupId: opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum:      &opts.pageNum,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.AlertConfigurationsApi.ListAlertConfigurationsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -283,10 +311,10 @@ func listAlertConfigurationsBuilder() *cobra.Command {
 
 	opts := listAlertConfigurationsOpts{}
 	cmd := &cobra.Command{
-		Use:   "listAlertConfigurations",
+		Use: "listAlertConfigurations",
 		Short: "Return All Alert Configurations for One Project",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -305,19 +333,19 @@ func listAlertConfigurationsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-
 type listAlertConfigurationsByAlertIdOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client       *admin.APIClient
-	groupId      string
-	alertId      string
+	client *admin.APIClient
+	groupId string
+	alertId string
 	includeCount bool
 	itemsPerPage int
-	pageNum      int
+	pageNum int
 }
 
 func (opts *listAlertConfigurationsByAlertIdOpts) initClient() func() error {
@@ -330,11 +358,11 @@ func (opts *listAlertConfigurationsByAlertIdOpts) initClient() func() error {
 
 func (opts *listAlertConfigurationsByAlertIdOpts) Run(ctx context.Context) error {
 	params := &admin.ListAlertConfigurationsByAlertIdApiParams{
-		GroupId:      opts.groupId,
-		AlertId:      opts.alertId,
+		GroupId: opts.groupId,
+		AlertId: opts.alertId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum:      &opts.pageNum,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.AlertConfigurationsApi.ListAlertConfigurationsByAlertIdWithParams(ctx, params).Execute()
 	if err != nil {
@@ -349,10 +377,10 @@ func listAlertConfigurationsByAlertIdBuilder() *cobra.Command {
 
 	opts := listAlertConfigurationsByAlertIdOpts{}
 	cmd := &cobra.Command{
-		Use:   "listAlertConfigurationsByAlertId",
+		Use: "listAlertConfigurationsByAlertId",
 		Short: "Return All Alert Configurations Set for One Alert",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -372,17 +400,18 @@ func listAlertConfigurationsByAlertIdBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("alertId")
 	return cmd
 }
-
 type toggleAlertConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client        *admin.APIClient
-	groupId       string
+	client *admin.APIClient
+	groupId string
 	alertConfigId string
+	
 }
 
 func (opts *toggleAlertConfigurationOpts) initClient() func() error {
@@ -395,8 +424,9 @@ func (opts *toggleAlertConfigurationOpts) initClient() func() error {
 
 func (opts *toggleAlertConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.ToggleAlertConfigurationApiParams{
-		GroupId:       opts.groupId,
+		GroupId: opts.groupId,
 		AlertConfigId: opts.alertConfigId,
+		
 	}
 	resp, _, err := opts.client.AlertConfigurationsApi.ToggleAlertConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -411,10 +441,10 @@ func toggleAlertConfigurationBuilder() *cobra.Command {
 
 	opts := toggleAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:   "toggleAlertConfiguration",
+		Use: "toggleAlertConfiguration",
 		Short: "Toggle One State of One Alert Configuration in One Project",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -430,18 +460,22 @@ func toggleAlertConfigurationBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.alertConfigId, "alertConfigId", "", `Unique 24-hexadecimal digit string that identifies the alert configuration that triggered this alert. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.`)
+	
+
+	cmd.Flags().BoolVar(&opts.enabled, "enabled", false, `Flag that indicates whether to enable or disable the specified alert configuration in the specified project.`)
+
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("alertConfigId")
 	return cmd
 }
-
 type updateAlertConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client        *admin.APIClient
-	groupId       string
+	client *admin.APIClient
+	groupId string
 	alertConfigId string
+	
 }
 
 func (opts *updateAlertConfigurationOpts) initClient() func() error {
@@ -454,8 +488,9 @@ func (opts *updateAlertConfigurationOpts) initClient() func() error {
 
 func (opts *updateAlertConfigurationOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateAlertConfigurationApiParams{
-		GroupId:       opts.groupId,
+		GroupId: opts.groupId,
 		AlertConfigId: opts.alertConfigId,
+		
 	}
 	resp, _, err := opts.client.AlertConfigurationsApi.UpdateAlertConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -470,10 +505,10 @@ func updateAlertConfigurationBuilder() *cobra.Command {
 
 	opts := updateAlertConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use:   "updateAlertConfiguration",
+		Use: "updateAlertConfiguration",
 		Short: "Update One Alert Configuration for One Project",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -489,6 +524,30 @@ func updateAlertConfigurationBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.alertConfigId, "alertConfigId", "", `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.`)
+	
+
+	cmd.Flags().StringVar(&opts.created, "created", "", `Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
+
+	cmd.Flags().BoolVar(&opts.enabled, "enabled", false, `Flag that indicates whether someone enabled this alert configuration for the specified project.`)
+
+	cmd.Flags().StringVar(&opts.eventTypeName, "eventTypeName", "", `Event type that triggers an alert.`)
+
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies the project that owns this alert configuration.`)
+
+	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies this alert configuration.`)
+
+	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+
+	cmd.Flags().ArraySliceVar(&opts.matchers, "matchers", nil, `No matchers are available for these alert types. The list is always empty.`)
+
+	cmd.Flags().ArraySliceVar(&opts.notifications, "notifications", nil, `List that contains the targets that MongoDB Cloud sends notifications.`)
+
+	cmd.Flags().StringVar(&opts.updated, "updated", "", `Date and time when someone last updated this alert configuration. This parameter expresses its value in the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
+
+	cmd.Flags().ServerlessMetricThresholdVar(&opts.metricThreshold, "metricThreshold", , ``)
+
+	cmd.Flags().ThresholdViewIntegerVar(&opts.threshold, "threshold", , ``)
+
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("alertConfigId")
@@ -497,8 +556,8 @@ func updateAlertConfigurationBuilder() *cobra.Command {
 
 func alertConfigurationsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "alertConfigurations",
-		Short: `Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users. This collection remains under revision and may change.`,
+		Use:     "alertConfigurations",
+		Short:   `Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users. This collection remains under revision and may change.`,
 	}
 	cmd.AddCommand(
 		createAlertConfigurationBuilder(),
@@ -512,3 +571,4 @@ func alertConfigurationsBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

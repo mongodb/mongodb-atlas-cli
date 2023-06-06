@@ -18,17 +18,20 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type createServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client  *admin.APIClient
+	client *admin.APIClient
 	groupId string
+	
 }
 
 func (opts *createServerlessInstanceOpts) initClient() func() error {
@@ -42,6 +45,7 @@ func (opts *createServerlessInstanceOpts) initClient() func() error {
 func (opts *createServerlessInstanceOpts) Run(ctx context.Context) error {
 	params := &admin.CreateServerlessInstanceApiParams{
 		GroupId: opts.groupId,
+		
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.CreateServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
@@ -56,10 +60,10 @@ func createServerlessInstanceBuilder() *cobra.Command {
 
 	opts := createServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:   "createServerlessInstance",
+		Use: "createServerlessInstance",
 		Short: "Create One Serverless Instance in One Project",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -74,17 +78,28 @@ func createServerlessInstanceBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	
+
+	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
+
+	cmd.Flags().ServerlessProviderSettingsVar(&opts.providerSettings, "providerSettings", , ``)
+
+	cmd.Flags().ServerlessBackupOptionsVar(&opts.serverlessBackupOptions, "serverlessBackupOptions", , ``)
+
+	cmd.Flags().StringVar(&opts.stateName, "stateName", "", `Human-readable label that indicates the current operating condition of the serverless instance.`)
+
+	cmd.Flags().BoolVar(&opts.terminationProtectionEnabled, "terminationProtectionEnabled", false, `Flag that indicates whether termination protection is enabled on the serverless instance. If set to &#x60;true&#x60;, MongoDB Cloud won&#39;t delete the serverless instance. If set to &#x60;false&#x60;, MongoDB Cloud will delete the serverless instance.`)
+
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-
 type deleteServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client  *admin.APIClient
+	client *admin.APIClient
 	groupId string
-	name    string
+	name string
 }
 
 func (opts *deleteServerlessInstanceOpts) initClient() func() error {
@@ -98,7 +113,7 @@ func (opts *deleteServerlessInstanceOpts) initClient() func() error {
 func (opts *deleteServerlessInstanceOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteServerlessInstanceApiParams{
 		GroupId: opts.groupId,
-		Name:    opts.name,
+		Name: opts.name,
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.DeleteServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
@@ -113,10 +128,10 @@ func deleteServerlessInstanceBuilder() *cobra.Command {
 
 	opts := deleteServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:   "deleteServerlessInstance",
+		Use: "deleteServerlessInstance",
 		Short: "Remove One Serverless Instance from One Project",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -133,17 +148,17 @@ func deleteServerlessInstanceBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }
-
 type getServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client  *admin.APIClient
+	client *admin.APIClient
 	groupId string
-	name    string
+	name string
 }
 
 func (opts *getServerlessInstanceOpts) initClient() func() error {
@@ -157,7 +172,7 @@ func (opts *getServerlessInstanceOpts) initClient() func() error {
 func (opts *getServerlessInstanceOpts) Run(ctx context.Context) error {
 	params := &admin.GetServerlessInstanceApiParams{
 		GroupId: opts.groupId,
-		Name:    opts.name,
+		Name: opts.name,
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.GetServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
@@ -172,10 +187,10 @@ func getServerlessInstanceBuilder() *cobra.Command {
 
 	opts := getServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:   "getServerlessInstance",
+		Use: "getServerlessInstance",
 		Short: "Return One Serverless Instance from One Project",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -192,19 +207,19 @@ func getServerlessInstanceBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }
-
 type listServerlessInstancesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client       *admin.APIClient
-	groupId      string
+	client *admin.APIClient
+	groupId string
 	includeCount bool
 	itemsPerPage int
-	pageNum      int
+	pageNum int
 }
 
 func (opts *listServerlessInstancesOpts) initClient() func() error {
@@ -217,10 +232,10 @@ func (opts *listServerlessInstancesOpts) initClient() func() error {
 
 func (opts *listServerlessInstancesOpts) Run(ctx context.Context) error {
 	params := &admin.ListServerlessInstancesApiParams{
-		GroupId:      opts.groupId,
+		GroupId: opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum:      &opts.pageNum,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.ListServerlessInstancesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -235,10 +250,10 @@ func listServerlessInstancesBuilder() *cobra.Command {
 
 	opts := listServerlessInstancesOpts{}
 	cmd := &cobra.Command{
-		Use:   "listServerlessInstances",
+		Use: "listServerlessInstances",
 		Short: "Return All Serverless Instances from One Project",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -257,16 +272,17 @@ func listServerlessInstancesBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-
 type updateServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client  *admin.APIClient
+	client *admin.APIClient
 	groupId string
-	name    string
+	name string
+	
 }
 
 func (opts *updateServerlessInstanceOpts) initClient() func() error {
@@ -280,7 +296,8 @@ func (opts *updateServerlessInstanceOpts) initClient() func() error {
 func (opts *updateServerlessInstanceOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateServerlessInstanceApiParams{
 		GroupId: opts.groupId,
-		Name:    opts.name,
+		Name: opts.name,
+		
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.UpdateServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
@@ -295,10 +312,10 @@ func updateServerlessInstanceBuilder() *cobra.Command {
 
 	opts := updateServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:   "updateServerlessInstance",
+		Use: "updateServerlessInstance",
 		Short: "Update One Serverless Instance in One Project",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -314,6 +331,12 @@ func updateServerlessInstanceBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
+	
+
+	cmd.Flags().ServerlessBackupOptionsVar(&opts.serverlessBackupOptions, "serverlessBackupOptions", , ``)
+
+	cmd.Flags().BoolVar(&opts.terminationProtectionEnabled, "terminationProtectionEnabled", false, `Flag that indicates whether termination protection is enabled on the serverless instance. If set to &#x60;true&#x60;, MongoDB Cloud won&#39;t delete the serverless instance. If set to &#x60;false&#x60;, MongoDB Cloud will delete the serverless instance.`)
+
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
@@ -322,8 +345,8 @@ func updateServerlessInstanceBuilder() *cobra.Command {
 
 func serverlessInstancesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "serverlessInstances",
-		Short: `Returns, adds, edits, and removes serverless instances.`,
+		Use:     "serverlessInstances",
+		Short:   `Returns, adds, edits, and removes serverless instances.`,
 	}
 	cmd.AddCommand(
 		createServerlessInstanceBuilder(),
@@ -334,3 +357,4 @@ func serverlessInstancesBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

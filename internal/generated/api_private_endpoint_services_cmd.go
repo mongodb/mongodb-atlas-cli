@@ -138,6 +138,10 @@ func createPrivateEndpointServiceBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
+	cmd.Flags().StringVar(&opts.providerName, "providerName", "", `Human-readable label that identifies the cloud service provider for which you want to create the private endpoint service.`)
+
+	cmd.Flags().StringVar(&opts.region, "region", "", `Cloud provider region in which you want to create the private endpoint service. Regions accepted as values differ for [Amazon Web Services](https://docs.atlas.mongodb.com/reference/amazon-aws/), [Google Cloud Platform](https://docs.atlas.mongodb.com/reference/google-gcp/), and [Microsoft Azure](https://docs.atlas.mongodb.com/reference/microsoft-azure/).`)
+
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
@@ -566,6 +570,18 @@ func toggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().BoolVar(&opts.enabled, "enabled", false, `Flag that indicates whether someone enabled the regionalized private endpoint setting for the specified project.
+
+- Set this value to &#x60;true&#x60; to enable regionalized private endpoints. This allows you to create more than one private endpoint in a cloud provider region. You need to enable this setting to connect to multi-region and global MongoDB Cloud sharded clusters. Enabling regionalized private endpoints introduces the following limitations:
+  - Your applications must use the new connection strings for existing multi-region and global sharded clusters. This might cause downtime.
+  - Your MongoDB Cloud project can&#39;t contain replica sets nor can you create new replica sets in this project.
+
+  - You can&#39;t disable this setting if you have:
+    - more than one private endpoint in more than one region
+    - more than one private endpoint in one region and one private endpoint in one or more regions.
+
+- Set this value to &#x60;false&#x60; to disable regionalized private endpoints.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd

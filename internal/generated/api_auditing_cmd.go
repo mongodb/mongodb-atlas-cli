@@ -130,6 +130,14 @@ func updateAuditingConfigurationBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
+	cmd.Flags().BoolVar(&opts.auditAuthorizationSuccess, "auditAuthorizationSuccess", false, `Flag that indicates whether someone set auditing to track successful authentications. This only applies to the &#x60;&quot;atype&quot; : &quot;authCheck&quot;&#x60; audit filter. Setting this parameter to &#x60;true&#x60; degrades cluster performance.`)
+
+	cmd.Flags().StringVar(&opts.auditFilter, "auditFilter", "", `JSON document that specifies which events to record. Escape any characters that may prevent parsing, such as single or double quotes, using a backslash (&#x60;\&#x60;).`)
+
+	cmd.Flags().StringVar(&opts.configurationType, "configurationType", "", `Human-readable label that displays how to configure the audit filter.`)
+
+	cmd.Flags().BoolVar(&opts.enabled, "enabled", false, `Flag that indicates whether someone enabled database auditing for the specified project.`)
+
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }

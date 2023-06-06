@@ -78,6 +78,8 @@ func createServerlessPrivateEndpointBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance for which the tenant endpoint will be created.`)
 
+	cmd.Flags().StringVar(&opts.comment, "comment", "", `Human-readable comment associated with the private endpoint.`)
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("instanceName")
 	return cmd

@@ -75,6 +75,12 @@ func createCustomDatabaseRoleBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
+	cmd.Flags().ArraySliceVar(&opts.actions, "actions", nil, `List of the individual privilege actions that the role grants.`)
+
+	cmd.Flags().SetSliceVar(&opts.inheritedRoles, "inheritedRoles", nil, `List of the built-in roles that this custom role inherits.`)
+
+	cmd.Flags().StringVar(&opts.roleName, "roleName", "", `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`)
+
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
@@ -305,6 +311,10 @@ func updateCustomDatabaseRoleBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.roleName, "roleName", "", `Human-readable label that identifies the role for the request. This name must beunique for this custom role in this project.`)
+
+	cmd.Flags().ArraySliceVar(&opts.actions, "actions", nil, `List of the individual privilege actions that the role grants.`)
+
+	cmd.Flags().SetSliceVar(&opts.inheritedRoles, "inheritedRoles", nil, `List of the built-in roles that this custom role inherits.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleName")

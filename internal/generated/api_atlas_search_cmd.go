@@ -18,18 +18,21 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type createAtlasSearchIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client      *admin.APIClient
-	groupId     string
+	client *admin.APIClient
+	groupId string
 	clusterName string
+	
 }
 
 func (opts *createAtlasSearchIndexOpts) initClient() func() error {
@@ -42,8 +45,9 @@ func (opts *createAtlasSearchIndexOpts) initClient() func() error {
 
 func (opts *createAtlasSearchIndexOpts) Run(ctx context.Context) error {
 	params := &admin.CreateAtlasSearchIndexApiParams{
-		GroupId:     opts.groupId,
+		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
+		
 	}
 	resp, _, err := opts.client.AtlasSearchApi.CreateAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
@@ -58,10 +62,10 @@ func createAtlasSearchIndexBuilder() *cobra.Command {
 
 	opts := createAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use:   "createAtlasSearchIndex",
+		Use: "createAtlasSearchIndex",
 		Short: "Create One Atlas Search Index",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -77,19 +81,58 @@ func createAtlasSearchIndexBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Name of the cluster that contains the collection on which to create an Atlas Search index.`)
+	
+
+	cmd.Flags().StringVar(&opts.analyzer, "analyzer", "&quot;lucene.standard&quot;", `Specific pre-defined method chosen to convert database field text into searchable words. This conversion reduces the text of fields into the smallest units of text. These units are called a **term** or **token**. This process, known as tokenization, involves a variety of changes made to the text in fields:
+
+- extracting words
+- removing punctuation
+- removing accents
+- changing to lowercase
+- removing common words
+- reducing words to their root form (stemming)
+- changing words to their base form (lemmatization)
+ MongoDB Cloud uses the selected process to build the Atlas Search index.`)
+
+	cmd.Flags().ArraySliceVar(&opts.analyzers, "analyzers", nil, `List of user-defined methods to convert database field text into searchable words.`)
+
+	cmd.Flags().StringVar(&opts.collectionName, "collectionName", "", `Human-readable label that identifies the collection that contains one or more Atlas Search indexes.`)
+
+	cmd.Flags().StringVar(&opts.database, "database", "", `Human-readable label that identifies the database that contains the collection with one or more Atlas Search indexes.`)
+
+	cmd.Flags().StringVar(&opts.indexID, "indexID", "", `Unique 24-hexadecimal digit string that identifies this Atlas Search index.`)
+
+	cmd.Flags().FTSMappingsVar(&opts.mappings, "mappings", , ``)
+
+	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies this index. Within each namespace, names of all indexes in the namespace must be unique.`)
+
+	cmd.Flags().StringVar(&opts.searchAnalyzer, "searchAnalyzer", "&quot;lucene.standard&quot;", `Method applied to identify words when searching this index.`)
+
+	cmd.Flags().StringVar(&opts.status, "status", "", `Condition of the search index when you made this request.
+
+| Status | Index Condition |
+ |---|---|
+ | IN_PROGRESS | Atlas is building or re-building the index after an edit. |
+ | STEADY | You can use this search index. |
+ | FAILED | Atlas could not build the index. |
+ | MIGRATING | Atlas is upgrading the underlying cluster tier and migrating indexes. |
+ | PAUSED | The cluster is paused. |
+`)
+
+	cmd.Flags().ArraySliceVar(&opts.synonyms, "synonyms", nil, `Rule sets that map words to their synonyms in this index.`)
+
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-
 type deleteAtlasSearchIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client      *admin.APIClient
-	groupId     string
+	client *admin.APIClient
+	groupId string
 	clusterName string
-	indexId     string
+	indexId string
 }
 
 func (opts *deleteAtlasSearchIndexOpts) initClient() func() error {
@@ -102,9 +145,9 @@ func (opts *deleteAtlasSearchIndexOpts) initClient() func() error {
 
 func (opts *deleteAtlasSearchIndexOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteAtlasSearchIndexApiParams{
-		GroupId:     opts.groupId,
+		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		IndexId:     opts.indexId,
+		IndexId: opts.indexId,
 	}
 	resp, _, err := opts.client.AtlasSearchApi.DeleteAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
@@ -119,10 +162,10 @@ func deleteAtlasSearchIndexBuilder() *cobra.Command {
 
 	opts := deleteAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use:   "deleteAtlasSearchIndex",
+		Use: "deleteAtlasSearchIndex",
 		Short: "Remove One Atlas Search Index",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -140,19 +183,19 @@ func deleteAtlasSearchIndexBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Name of the cluster that contains the database and collection with one or more Application Search indexes.`)
 	cmd.Flags().StringVar(&opts.indexId, "indexId", "", `Unique 24-hexadecimal digit string that identifies the Atlas Search index. Use the [Get All Atlas Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Atlas Search indexes.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
 	return cmd
 }
-
 type getAtlasSearchIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client      *admin.APIClient
-	groupId     string
+	client *admin.APIClient
+	groupId string
 	clusterName string
-	indexId     string
+	indexId string
 }
 
 func (opts *getAtlasSearchIndexOpts) initClient() func() error {
@@ -165,9 +208,9 @@ func (opts *getAtlasSearchIndexOpts) initClient() func() error {
 
 func (opts *getAtlasSearchIndexOpts) Run(ctx context.Context) error {
 	params := &admin.GetAtlasSearchIndexApiParams{
-		GroupId:     opts.groupId,
+		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		IndexId:     opts.indexId,
+		IndexId: opts.indexId,
 	}
 	resp, _, err := opts.client.AtlasSearchApi.GetAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
@@ -182,10 +225,10 @@ func getAtlasSearchIndexBuilder() *cobra.Command {
 
 	opts := getAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use:   "getAtlasSearchIndex",
+		Use: "getAtlasSearchIndex",
 		Short: "Return One Atlas Search Index",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -203,20 +246,20 @@ func getAtlasSearchIndexBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Name of the cluster that contains the collection with one or more Atlas Search indexes.`)
 	cmd.Flags().StringVar(&opts.indexId, "indexId", "", `Unique 24-hexadecimal digit string that identifies the Application Search [index](https://docs.atlas.mongodb.com/reference/atlas-search/index-definitions/). Use the [Get All Application Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Application Search indexes.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
 	return cmd
 }
-
 type listAtlasSearchIndexesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client         *admin.APIClient
-	groupId        string
-	clusterName    string
+	client *admin.APIClient
+	groupId string
+	clusterName string
 	collectionName string
-	databaseName   string
+	databaseName string
 }
 
 func (opts *listAtlasSearchIndexesOpts) initClient() func() error {
@@ -229,10 +272,10 @@ func (opts *listAtlasSearchIndexesOpts) initClient() func() error {
 
 func (opts *listAtlasSearchIndexesOpts) Run(ctx context.Context) error {
 	params := &admin.ListAtlasSearchIndexesApiParams{
-		GroupId:        opts.groupId,
-		ClusterName:    opts.clusterName,
+		GroupId: opts.groupId,
+		ClusterName: opts.clusterName,
 		CollectionName: opts.collectionName,
-		DatabaseName:   opts.databaseName,
+		DatabaseName: opts.databaseName,
 	}
 	resp, _, err := opts.client.AtlasSearchApi.ListAtlasSearchIndexesWithParams(ctx, params).Execute()
 	if err != nil {
@@ -247,10 +290,10 @@ func listAtlasSearchIndexesBuilder() *cobra.Command {
 
 	opts := listAtlasSearchIndexesOpts{}
 	cmd := &cobra.Command{
-		Use:   "listAtlasSearchIndexes",
+		Use: "listAtlasSearchIndexes",
 		Short: "Return All Atlas Search Indexes for One Collection",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -269,20 +312,21 @@ func listAtlasSearchIndexesBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.collectionName, "collectionName", "", `Name of the collection that contains one or more Atlas Search indexes.`)
 	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", `Human-readable label that identifies the database that contains the collection with one or more Atlas Search indexes.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("collectionName")
 	_ = cmd.MarkFlagRequired("databaseName")
 	return cmd
 }
-
 type updateAtlasSearchIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client      *admin.APIClient
-	groupId     string
+	client *admin.APIClient
+	groupId string
 	clusterName string
-	indexId     string
+	indexId string
+	
 }
 
 func (opts *updateAtlasSearchIndexOpts) initClient() func() error {
@@ -295,9 +339,10 @@ func (opts *updateAtlasSearchIndexOpts) initClient() func() error {
 
 func (opts *updateAtlasSearchIndexOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateAtlasSearchIndexApiParams{
-		GroupId:     opts.groupId,
+		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		IndexId:     opts.indexId,
+		IndexId: opts.indexId,
+		
 	}
 	resp, _, err := opts.client.AtlasSearchApi.UpdateAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
@@ -312,10 +357,10 @@ func updateAtlasSearchIndexBuilder() *cobra.Command {
 
 	opts := updateAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use:   "updateAtlasSearchIndex",
+		Use: "updateAtlasSearchIndex",
 		Short: "Update One Atlas Search Index",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -332,6 +377,46 @@ func updateAtlasSearchIndexBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Name of the cluster that contains the collection whose Atlas Search index to update.`)
 	cmd.Flags().StringVar(&opts.indexId, "indexId", "", `Unique 24-hexadecimal digit string that identifies the Atlas Search [index](https://docs.atlas.mongodb.com/reference/atlas-search/index-definitions/). Use the [Get All Atlas Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Atlas Search indexes.`)
+	
+
+	cmd.Flags().StringVar(&opts.analyzer, "analyzer", "&quot;lucene.standard&quot;", `Specific pre-defined method chosen to convert database field text into searchable words. This conversion reduces the text of fields into the smallest units of text. These units are called a **term** or **token**. This process, known as tokenization, involves a variety of changes made to the text in fields:
+
+- extracting words
+- removing punctuation
+- removing accents
+- changing to lowercase
+- removing common words
+- reducing words to their root form (stemming)
+- changing words to their base form (lemmatization)
+ MongoDB Cloud uses the selected process to build the Atlas Search index.`)
+
+	cmd.Flags().ArraySliceVar(&opts.analyzers, "analyzers", nil, `List of user-defined methods to convert database field text into searchable words.`)
+
+	cmd.Flags().StringVar(&opts.collectionName, "collectionName", "", `Human-readable label that identifies the collection that contains one or more Atlas Search indexes.`)
+
+	cmd.Flags().StringVar(&opts.database, "database", "", `Human-readable label that identifies the database that contains the collection with one or more Atlas Search indexes.`)
+
+	cmd.Flags().StringVar(&opts.indexID, "indexID", "", `Unique 24-hexadecimal digit string that identifies this Atlas Search index.`)
+
+	cmd.Flags().FTSMappingsVar(&opts.mappings, "mappings", , ``)
+
+	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies this index. Within each namespace, names of all indexes in the namespace must be unique.`)
+
+	cmd.Flags().StringVar(&opts.searchAnalyzer, "searchAnalyzer", "&quot;lucene.standard&quot;", `Method applied to identify words when searching this index.`)
+
+	cmd.Flags().StringVar(&opts.status, "status", "", `Condition of the search index when you made this request.
+
+| Status | Index Condition |
+ |---|---|
+ | IN_PROGRESS | Atlas is building or re-building the index after an edit. |
+ | STEADY | You can use this search index. |
+ | FAILED | Atlas could not build the index. |
+ | MIGRATING | Atlas is upgrading the underlying cluster tier and migrating indexes. |
+ | PAUSED | The cluster is paused. |
+`)
+
+	cmd.Flags().ArraySliceVar(&opts.synonyms, "synonyms", nil, `Rule sets that map words to their synonyms in this index.`)
+
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -341,8 +426,8 @@ func updateAtlasSearchIndexBuilder() *cobra.Command {
 
 func atlasSearchBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "atlasSearch",
-		Short: `Returns, adds, edits, and removes Atlas Search indexes for the specified cluster. Also returns and updates user-defined analyzers for the specified cluster.`,
+		Use:     "atlasSearch",
+		Short:   `Returns, adds, edits, and removes Atlas Search indexes for the specified cluster. Also returns and updates user-defined analyzers for the specified cluster.`,
 	}
 	cmd.AddCommand(
 		createAtlasSearchIndexBuilder(),
@@ -353,3 +438,4 @@ func atlasSearchBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

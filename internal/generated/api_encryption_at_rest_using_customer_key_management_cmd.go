@@ -18,16 +18,18 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type getEncryptionAtRestOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client  *admin.APIClient
+	client *admin.APIClient
 	groupId string
 }
 
@@ -56,10 +58,10 @@ func getEncryptionAtRestBuilder() *cobra.Command {
 
 	opts := getEncryptionAtRestOpts{}
 	cmd := &cobra.Command{
-		Use:   "getEncryptionAtRest",
+		Use: "getEncryptionAtRest",
 		Short: "Return One Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -75,15 +77,16 @@ func getEncryptionAtRestBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
-
 type updateEncryptionAtRestOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client  *admin.APIClient
+	client *admin.APIClient
 	groupId string
+	
 }
 
 func (opts *updateEncryptionAtRestOpts) initClient() func() error {
@@ -97,6 +100,7 @@ func (opts *updateEncryptionAtRestOpts) initClient() func() error {
 func (opts *updateEncryptionAtRestOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateEncryptionAtRestApiParams{
 		GroupId: opts.groupId,
+		
 	}
 	resp, _, err := opts.client.EncryptionAtRestUsingCustomerKeyManagementApi.UpdateEncryptionAtRestWithParams(ctx, params).Execute()
 	if err != nil {
@@ -111,10 +115,10 @@ func updateEncryptionAtRestBuilder() *cobra.Command {
 
 	opts := updateEncryptionAtRestOpts{}
 	cmd := &cobra.Command{
-		Use:   "updateEncryptionAtRest",
+		Use: "updateEncryptionAtRest",
 		Short: "Update Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -129,6 +133,14 @@ func updateEncryptionAtRestBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	
+
+	cmd.Flags().AWSKMSVar(&opts.awsKms, "awsKms", , ``)
+
+	cmd.Flags().AzureKeyVaultVar(&opts.azureKeyVault, "azureKeyVault", , ``)
+
+	cmd.Flags().GoogleCloudKMSVar(&opts.googleCloudKms, "googleCloudKms", , ``)
+
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -136,8 +148,8 @@ func updateEncryptionAtRestBuilder() *cobra.Command {
 
 func encryptionAtRestUsingCustomerKeyManagementBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "encryptionAtRestUsingCustomerKeyManagement",
-		Short: `Returns and edits the Encryption at Rest using Customer Key Management configuration. MongoDB Cloud encrypts all storage whether or not you use your own key management.`,
+		Use:     "encryptionAtRestUsingCustomerKeyManagement",
+		Short:   `Returns and edits the Encryption at Rest using Customer Key Management configuration. MongoDB Cloud encrypts all storage whether or not you use your own key management.`,
 	}
 	cmd.AddCommand(
 		getEncryptionAtRestBuilder(),
@@ -145,3 +157,4 @@ func encryptionAtRestUsingCustomerKeyManagementBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

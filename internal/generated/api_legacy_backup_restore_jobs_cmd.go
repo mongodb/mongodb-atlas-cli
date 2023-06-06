@@ -18,18 +18,21 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type createLegacyBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client      *admin.APIClient
-	groupId     string
+	client *admin.APIClient
+	groupId string
 	clusterName string
+	
 }
 
 func (opts *createLegacyBackupRestoreJobOpts) initClient() func() error {
@@ -42,8 +45,9 @@ func (opts *createLegacyBackupRestoreJobOpts) initClient() func() error {
 
 func (opts *createLegacyBackupRestoreJobOpts) Run(ctx context.Context) error {
 	params := &admin.CreateLegacyBackupRestoreJobApiParams{
-		GroupId:     opts.groupId,
+		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
+		
 	}
 	resp, _, err := opts.client.LegacyBackupRestoreJobsApi.CreateLegacyBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
@@ -58,10 +62,10 @@ func createLegacyBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := createLegacyBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:   "createLegacyBackupRestoreJob",
+		Use: "createLegacyBackupRestoreJob",
 		Short: "Create One Legacy Backup Restore Job",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -77,6 +81,56 @@ func createLegacyBackupRestoreJobBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster with the snapshot you want to return.`)
+	
+
+	cmd.Flags().StringVar(&opts.batchId, "batchId", "", `Unique 24-hexadecimal digit string that identifies the batch to which this restore job belongs. This parameter exists only for a sharded cluster restore.`)
+
+	cmd.Flags().StringVar(&opts.checkpointId, "checkpointId", "", `Unique 24-hexadecimal digit string that identifies the sharded cluster checkpoint. The checkpoint represents the point in time back to which you want to restore you data. This parameter applies when &#x60;&quot;delivery.methodName&quot; : &quot;AUTOMATED_RESTORE&quot;&#x60;. Use this parameter with sharded clusters only.
+
+- If you set **checkpointId**, you can&#39;t set **oplogInc**, **oplogTs**, **snapshotId**, or **pointInTimeUTCMillis**.
+- If you provide this parameter, this endpoint restores all data up to this checkpoint to the database you specify in the **delivery** object.`)
+
+	cmd.Flags().StringVar(&opts.clusterId, "clusterId", "", `Unique 24-hexadecimal digit string that identifies the cluster with the snapshot you want to return. This parameter returns for restore clusters.`)
+
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster containing the snapshots you want to retrieve.`)
+
+	cmd.Flags().StringVar(&opts.created, "created", "", `Date and time when someone requested this restore job. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+
+	cmd.Flags().RestoreJobDeliveryVar(&opts.delivery, "delivery", , ``)
+
+	cmd.Flags().BoolVar(&opts.encryptionEnabled, "encryptionEnabled", false, `Flag that indicates whether someone encrypted the data in the restored snapshot.`)
+
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies the project that owns the snapshots.`)
+
+	cmd.Flags().ArraySliceVar(&opts.hashes, "hashes", nil, `List that contains documents mapping each restore file to a hashed checksum. This parameter applies after you download the corresponding **delivery.url**. If &#x60;&quot;methodName&quot; : &quot;HTTP&quot;&#x60;, this list contains one object that represents the hash of the **.tar.gz** file.`)
+
+	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the restore job.`)
+
+	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+
+	cmd.Flags().StringVar(&opts.masterKeyUUID, "masterKeyUUID", "", `Universally Unique Identifier (UUID) that identifies the Key Management Interoperability (KMIP) master key used to encrypt the snapshot data. This parameter applies only when &#x60;&quot;encryptionEnabled&quot; : &quot;true&quot;&#x60;.`)
+
+	cmd.Flags().IntVar(&opts.oplogInc, "oplogInc", 000, `Thirty-two-bit incrementing ordinal that represents operations within a given second. When paired with **oplogTs**, this represents the point in time to which MongoDB Cloud restores your data. This parameter applies when &#x60;&quot;delivery.methodName&quot; : &quot;AUTOMATED_RESTORE&quot;&#x60;.
+
+- If you set **oplogInc**, you must set **oplogTs**, and can&#39;t set **checkpointId**, **snapshotId**, or **pointInTimeUTCMillis**.
+- If you provide this parameter, this endpoint restores all data up to and including this Oplog timestamp to the database you specified in the **delivery** object.`)
+
+	cmd.Flags().StringVar(&opts.oplogTs, "oplogTs", "", `Date and time from which you want to restore this snapshot. This parameter expresses its value in ISO 8601 format in UTC. This represents the first part of an Oplog timestamp. When paired with **oplogInc**, they represent the last database operation to which you want to restore your data. This parameter applies when &#x60;&quot;delivery.methodName&quot; : &quot;AUTOMATED_RESTORE&quot;&#x60;. Run a query against **local.oplog.rs** on your replica set to find the desired timestamp.
+
+- If you set **oplogTs**, you must set **oplogInc**, and you can&#39;t set **checkpointId**, **snapshotId**, or **pointInTimeUTCMillis**.
+- If you provide this parameter, this endpoint restores all data up to and including this Oplog timestamp to the database you specified in the **delivery** object.`)
+
+	cmd.Flags().Int64Var(&opts.pointInTimeUTCMillis, "pointInTimeUTCMillis", 00, `Timestamp from which you want to restore this snapshot. This parameter expresses its value in the number of milliseconds elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time). This timestamp must fall within the last 24 hours of the current time. This parameter applies when &#x60;&quot;delivery.methodName&quot; : &quot;AUTOMATED_RESTORE&quot;&#x60;.
+
+- If you provide this parameter, this endpoint restores all data up to this point in time to the database you specified in the **delivery** object.
+- If you set **pointInTimeUTCMillis**, you can&#39;t set **oplogInc**, **oplogTs**, **snapshotId**, or **checkpointId**.`)
+
+	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the snapshot to restore. If you set **snapshotId**, you can&#39;t set **oplogInc**, **oplogTs**, **pointInTimeUTCMillis**, or **checkpointId**.`)
+
+	cmd.Flags().StringVar(&opts.statusName, "statusName", "", `Human-readable label that identifies the status of the downloadable file at the time of the request.`)
+
+	cmd.Flags().BSONTimestampVar(&opts.timestamp, "timestamp", , ``)
+
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -85,11 +139,12 @@ func createLegacyBackupRestoreJobBuilder() *cobra.Command {
 
 func legacyBackupRestoreJobsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "legacyBackupRestoreJobs",
-		Short: ``,
+		Use:     "legacyBackupRestoreJobs",
+		Short:   ``,
 	}
 	cmd.AddCommand(
 		createLegacyBackupRestoreJobBuilder(),
 	)
 	return cmd
 }
+

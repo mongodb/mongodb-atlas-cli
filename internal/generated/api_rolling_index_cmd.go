@@ -18,18 +18,21 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type createRollingIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client      *admin.APIClient
-	groupId     string
+	client *admin.APIClient
+	groupId string
 	clusterName string
+	
 }
 
 func (opts *createRollingIndexOpts) initClient() func() error {
@@ -42,8 +45,9 @@ func (opts *createRollingIndexOpts) initClient() func() error {
 
 func (opts *createRollingIndexOpts) Run(ctx context.Context) error {
 	params := &admin.CreateRollingIndexApiParams{
-		GroupId:     opts.groupId,
+		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
+		
 	}
 	_, err := opts.client.RollingIndexApi.CreateRollingIndexWithParams(ctx, params).Execute()
 	if err != nil {
@@ -58,10 +62,10 @@ func createRollingIndexBuilder() *cobra.Command {
 
 	opts := createRollingIndexOpts{}
 	cmd := &cobra.Command{
-		Use:   "createRollingIndex",
+		Use: "createRollingIndex",
 		Short: "Create One Rolling Index",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -77,6 +81,18 @@ func createRollingIndexBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster on which MongoDB Cloud creates an index.`)
+	
+
+	cmd.Flags().CollationVar(&opts.collation, "collation", , ``)
+
+	cmd.Flags().StringVar(&opts.collection, "collection", "", `Human-readable label of the collection for which MongoDB Cloud creates an index.`)
+
+	cmd.Flags().StringVar(&opts.db, "db", "", `Human-readable label of the database that holds the collection on which MongoDB Cloud creates an index.`)
+
+	cmd.Flags().ArraySliceVar(&opts.keys, "keys", nil, `List that contains one or more objects that describe the parameters that you want to index.`)
+
+	cmd.Flags().IndexOptionsVar(&opts.options, "options", , ``)
+
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -85,11 +101,12 @@ func createRollingIndexBuilder() *cobra.Command {
 
 func rollingIndexBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "rollingIndex",
-		Short: `Creates one index to a database deployment in a rolling manner. You can&#39;t create a rolling index on an &#x60;M0&#x60; free cluster or &#x60;M2/M5&#x60; shared cluster.`,
+		Use:     "rollingIndex",
+		Short:   `Creates one index to a database deployment in a rolling manner. You can&#39;t create a rolling index on an &#x60;M0&#x60; free cluster or &#x60;M2/M5&#x60; shared cluster.`,
 	}
 	cmd.AddCommand(
 		createRollingIndexBuilder(),
 	)
 	return cmd
 }
+

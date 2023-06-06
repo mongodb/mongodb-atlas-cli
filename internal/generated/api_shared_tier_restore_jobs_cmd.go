@@ -78,6 +78,34 @@ func createSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the source cluster.`)
+
+	cmd.Flags().StringVar(&opts.deliveryType, "deliveryType", "", `Means by which this resource returns the snapshot to the requesting MongoDB Cloud user.`)
+
+	cmd.Flags().StringVar(&opts.expirationDate, "expirationDate", "", `Date and time when the download link no longer works. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+
+	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the restore job.`)
+
+	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+
+	cmd.Flags().StringVar(&opts.projectId, "projectId", "", `Unique 24-hexadecimal digit string that identifies the project from which the restore job originated.`)
+
+	cmd.Flags().StringVar(&opts.restoreFinishedDate, "restoreFinishedDate", "", `Date and time when MongoDB Cloud completed writing this snapshot. MongoDB Cloud changes the status of the restore job to &#x60;CLOSED&#x60;. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+
+	cmd.Flags().StringVar(&opts.restoreScheduledDate, "restoreScheduledDate", "", `Date and time when MongoDB Cloud will restore this snapshot. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+
+	cmd.Flags().StringVar(&opts.snapshotFinishedDate, "snapshotFinishedDate", "", `Date and time when MongoDB Cloud completed writing this snapshot. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+
+	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the snapshot to restore.`)
+
+	cmd.Flags().StringVar(&opts.snapshotUrl, "snapshotUrl", "", `Internet address from which you can download the compressed snapshot files. The resource returns this parameter when  &#x60;&quot;deliveryType&quot; : &quot;DOWNLOAD&quot;&#x60;.`)
+
+	cmd.Flags().StringVar(&opts.status, "status", "", `Phase of the restore workflow for this job at the time this resource made this request.`)
+
+	cmd.Flags().StringVar(&opts.targetDeploymentItemName, "targetDeploymentItemName", "", `Human-readable label that identifies the cluster on the target project to which you want to restore the snapshot. You can restore the snapshot to a cluster tier *M2* or greater.`)
+
+	cmd.Flags().StringVar(&opts.targetProjectId, "targetProjectId", "", `Unique 24-hexadecimal digit string that identifies the project that contains the cluster to which you want to restore the snapshot.`)
+
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd

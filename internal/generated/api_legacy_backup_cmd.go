@@ -18,19 +18,21 @@ package generated
 
 import (
 	"context"
+	"os"
+	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type deleteLegacySnapshotOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client      *admin.APIClient
-	groupId     string
+	client *admin.APIClient
+	groupId string
 	clusterName string
-	snapshotId  string
+	snapshotId string
 }
 
 func (opts *deleteLegacySnapshotOpts) initClient() func() error {
@@ -43,9 +45,9 @@ func (opts *deleteLegacySnapshotOpts) initClient() func() error {
 
 func (opts *deleteLegacySnapshotOpts) Run(ctx context.Context) error {
 	params := &admin.DeleteLegacySnapshotApiParams{
-		GroupId:     opts.groupId,
+		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		SnapshotId:  opts.snapshotId,
+		SnapshotId: opts.snapshotId,
 	}
 	resp, _, err := opts.client.LegacyBackupApi.DeleteLegacySnapshotWithParams(ctx, params).Execute()
 	if err != nil {
@@ -60,10 +62,10 @@ func deleteLegacySnapshotBuilder() *cobra.Command {
 
 	opts := deleteLegacySnapshotOpts{}
 	cmd := &cobra.Command{
-		Use:   "deleteLegacySnapshot",
+		Use: "deleteLegacySnapshot",
 		Short: "Remove One Legacy Backup Snapshot",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -81,19 +83,19 @@ func deleteLegacySnapshotBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
 }
-
 type getLegacyBackupCheckpointOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client       *admin.APIClient
-	groupId      string
+	client *admin.APIClient
+	groupId string
 	checkpointId string
-	clusterName  string
+	clusterName string
 }
 
 func (opts *getLegacyBackupCheckpointOpts) initClient() func() error {
@@ -106,9 +108,9 @@ func (opts *getLegacyBackupCheckpointOpts) initClient() func() error {
 
 func (opts *getLegacyBackupCheckpointOpts) Run(ctx context.Context) error {
 	params := &admin.GetLegacyBackupCheckpointApiParams{
-		GroupId:      opts.groupId,
+		GroupId: opts.groupId,
 		CheckpointId: opts.checkpointId,
-		ClusterName:  opts.clusterName,
+		ClusterName: opts.clusterName,
 	}
 	resp, _, err := opts.client.LegacyBackupApi.GetLegacyBackupCheckpointWithParams(ctx, params).Execute()
 	if err != nil {
@@ -123,10 +125,10 @@ func getLegacyBackupCheckpointBuilder() *cobra.Command {
 
 	opts := getLegacyBackupCheckpointOpts{}
 	cmd := &cobra.Command{
-		Use:   "getLegacyBackupCheckpoint",
+		Use: "getLegacyBackupCheckpoint",
 		Short: "Return One Legacy Backup Checkpoint",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -144,19 +146,19 @@ func getLegacyBackupCheckpointBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.checkpointId, "checkpointId", "", `Unique 24-hexadecimal digit string that identifies the checkpoint.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster that contains the checkpoints that you want to return.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("checkpointId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-
 type getLegacyBackupRestoreJobOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client      *admin.APIClient
-	groupId     string
+	client *admin.APIClient
+	groupId string
 	clusterName string
-	jobId       string
+	jobId string
 }
 
 func (opts *getLegacyBackupRestoreJobOpts) initClient() func() error {
@@ -169,9 +171,9 @@ func (opts *getLegacyBackupRestoreJobOpts) initClient() func() error {
 
 func (opts *getLegacyBackupRestoreJobOpts) Run(ctx context.Context) error {
 	params := &admin.GetLegacyBackupRestoreJobApiParams{
-		GroupId:     opts.groupId,
+		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		JobId:       opts.jobId,
+		JobId: opts.jobId,
 	}
 	resp, _, err := opts.client.LegacyBackupApi.GetLegacyBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
@@ -186,10 +188,10 @@ func getLegacyBackupRestoreJobBuilder() *cobra.Command {
 
 	opts := getLegacyBackupRestoreJobOpts{}
 	cmd := &cobra.Command{
-		Use:   "getLegacyBackupRestoreJob",
+		Use: "getLegacyBackupRestoreJob",
 		Short: "Return One Legacy Backup Restore Job",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -207,19 +209,19 @@ func getLegacyBackupRestoreJobBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster with the snapshot you want to return.`)
 	cmd.Flags().StringVar(&opts.jobId, "jobId", "", `Unique 24-hexadecimal digit string that identifies the restore job.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("jobId")
 	return cmd
 }
-
 type getLegacySnapshotOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client      *admin.APIClient
-	groupId     string
+	client *admin.APIClient
+	groupId string
 	clusterName string
-	snapshotId  string
+	snapshotId string
 }
 
 func (opts *getLegacySnapshotOpts) initClient() func() error {
@@ -232,9 +234,9 @@ func (opts *getLegacySnapshotOpts) initClient() func() error {
 
 func (opts *getLegacySnapshotOpts) Run(ctx context.Context) error {
 	params := &admin.GetLegacySnapshotApiParams{
-		GroupId:     opts.groupId,
+		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		SnapshotId:  opts.snapshotId,
+		SnapshotId: opts.snapshotId,
 	}
 	resp, _, err := opts.client.LegacyBackupApi.GetLegacySnapshotWithParams(ctx, params).Execute()
 	if err != nil {
@@ -249,10 +251,10 @@ func getLegacySnapshotBuilder() *cobra.Command {
 
 	opts := getLegacySnapshotOpts{}
 	cmd := &cobra.Command{
-		Use:   "getLegacySnapshot",
+		Use: "getLegacySnapshot",
 		Short: "Return One Legacy Backup Snapshot",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -270,17 +272,17 @@ func getLegacySnapshotBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
 }
-
 type getLegacySnapshotScheduleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client      *admin.APIClient
-	groupId     string
+	client *admin.APIClient
+	groupId string
 	clusterName string
 }
 
@@ -294,7 +296,7 @@ func (opts *getLegacySnapshotScheduleOpts) initClient() func() error {
 
 func (opts *getLegacySnapshotScheduleOpts) Run(ctx context.Context) error {
 	params := &admin.GetLegacySnapshotScheduleApiParams{
-		GroupId:     opts.groupId,
+		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
 	}
 	resp, _, err := opts.client.LegacyBackupApi.GetLegacySnapshotScheduleWithParams(ctx, params).Execute()
@@ -310,10 +312,10 @@ func getLegacySnapshotScheduleBuilder() *cobra.Command {
 
 	opts := getLegacySnapshotScheduleOpts{}
 	cmd := &cobra.Command{
-		Use:   "getLegacySnapshotSchedule",
+		Use: "getLegacySnapshotSchedule",
 		Short: "Return One Snapshot Schedule",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -330,20 +332,20 @@ func getLegacySnapshotScheduleBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster with the snapshot you want to return.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-
 type listLegacyBackupCheckpointsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client       *admin.APIClient
-	groupId      string
-	clusterName  string
+	client *admin.APIClient
+	groupId string
+	clusterName string
 	includeCount bool
 	itemsPerPage int
-	pageNum      int
+	pageNum int
 }
 
 func (opts *listLegacyBackupCheckpointsOpts) initClient() func() error {
@@ -356,11 +358,11 @@ func (opts *listLegacyBackupCheckpointsOpts) initClient() func() error {
 
 func (opts *listLegacyBackupCheckpointsOpts) Run(ctx context.Context) error {
 	params := &admin.ListLegacyBackupCheckpointsApiParams{
-		GroupId:      opts.groupId,
-		ClusterName:  opts.clusterName,
+		GroupId: opts.groupId,
+		ClusterName: opts.clusterName,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum:      &opts.pageNum,
+		PageNum: &opts.pageNum,
 	}
 	resp, _, err := opts.client.LegacyBackupApi.ListLegacyBackupCheckpointsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -375,10 +377,10 @@ func listLegacyBackupCheckpointsBuilder() *cobra.Command {
 
 	opts := listLegacyBackupCheckpointsOpts{}
 	cmd := &cobra.Command{
-		Use:   "listLegacyBackupCheckpoints",
+		Use: "listLegacyBackupCheckpoints",
 		Short: "Return All Legacy Backup Checkpoints",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -398,21 +400,21 @@ func listLegacyBackupCheckpointsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-
 type listLegacyBackupRestoreJobsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client       *admin.APIClient
-	groupId      string
-	clusterName  string
+	client *admin.APIClient
+	groupId string
+	clusterName string
 	includeCount bool
 	itemsPerPage int
-	pageNum      int
-	batchId      string
+	pageNum int
+	batchId string
 }
 
 func (opts *listLegacyBackupRestoreJobsOpts) initClient() func() error {
@@ -425,12 +427,12 @@ func (opts *listLegacyBackupRestoreJobsOpts) initClient() func() error {
 
 func (opts *listLegacyBackupRestoreJobsOpts) Run(ctx context.Context) error {
 	params := &admin.ListLegacyBackupRestoreJobsApiParams{
-		GroupId:      opts.groupId,
-		ClusterName:  opts.clusterName,
+		GroupId: opts.groupId,
+		ClusterName: opts.clusterName,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum:      &opts.pageNum,
-		BatchId:      &opts.batchId,
+		PageNum: &opts.pageNum,
+		BatchId: &opts.batchId,
 	}
 	resp, _, err := opts.client.LegacyBackupApi.ListLegacyBackupRestoreJobsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -445,10 +447,10 @@ func listLegacyBackupRestoreJobsBuilder() *cobra.Command {
 
 	opts := listLegacyBackupRestoreJobsOpts{}
 	cmd := &cobra.Command{
-		Use:   "listLegacyBackupRestoreJobs",
+		Use: "listLegacyBackupRestoreJobs",
 		Short: "Return All Legacy Backup Restore Jobs",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -469,21 +471,21 @@ func listLegacyBackupRestoreJobsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 	cmd.Flags().StringVar(&opts.batchId, "batchId", "", `Unique 24-hexadecimal digit string that identifies the batch of restore jobs to return. Timestamp in ISO 8601 date and time format in UTC when creating a restore job for a sharded cluster, Application creates a separate job for each shard, plus another for the config host. Each of these jobs comprise one batch. A restore job for a replica set can&#39;t be part of a batch.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-
 type listLegacySnapshotsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client       *admin.APIClient
-	groupId      string
-	clusterName  string
+	client *admin.APIClient
+	groupId string
+	clusterName string
 	includeCount bool
 	itemsPerPage int
-	pageNum      int
-	completed    string
+	pageNum int
+	completed string
 }
 
 func (opts *listLegacySnapshotsOpts) initClient() func() error {
@@ -496,12 +498,12 @@ func (opts *listLegacySnapshotsOpts) initClient() func() error {
 
 func (opts *listLegacySnapshotsOpts) Run(ctx context.Context) error {
 	params := &admin.ListLegacySnapshotsApiParams{
-		GroupId:      opts.groupId,
-		ClusterName:  opts.clusterName,
+		GroupId: opts.groupId,
+		ClusterName: opts.clusterName,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum:      &opts.pageNum,
-		Completed:    &opts.completed,
+		PageNum: &opts.pageNum,
+		Completed: &opts.completed,
 	}
 	resp, _, err := opts.client.LegacyBackupApi.ListLegacySnapshotsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -516,10 +518,10 @@ func listLegacySnapshotsBuilder() *cobra.Command {
 
 	opts := listLegacySnapshotsOpts{}
 	cmd := &cobra.Command{
-		Use:   "listLegacySnapshots",
+		Use: "listLegacySnapshots",
 		Short: "Return All Legacy Backup Snapshots",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -540,18 +542,19 @@ func listLegacySnapshotsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 	cmd.Flags().StringVar(&opts.completed, "completed", "&quot;true&quot;", `Human-readable label that specifies whether to return only completed, incomplete, or all snapshots. By default, MongoDB Cloud only returns completed snapshots.`)
 
+
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
-
 type updateLegacySnapshotRetentionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client      *admin.APIClient
-	groupId     string
+	client *admin.APIClient
+	groupId string
 	clusterName string
-	snapshotId  string
+	snapshotId string
+	
 }
 
 func (opts *updateLegacySnapshotRetentionOpts) initClient() func() error {
@@ -564,9 +567,10 @@ func (opts *updateLegacySnapshotRetentionOpts) initClient() func() error {
 
 func (opts *updateLegacySnapshotRetentionOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateLegacySnapshotRetentionApiParams{
-		GroupId:     opts.groupId,
+		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
-		SnapshotId:  opts.snapshotId,
+		SnapshotId: opts.snapshotId,
+		
 	}
 	resp, _, err := opts.client.LegacyBackupApi.UpdateLegacySnapshotRetentionWithParams(ctx, params).Execute()
 	if err != nil {
@@ -581,10 +585,10 @@ func updateLegacySnapshotRetentionBuilder() *cobra.Command {
 
 	opts := updateLegacySnapshotRetentionOpts{}
 	cmd := &cobra.Command{
-		Use:   "updateLegacySnapshotRetention",
+		Use: "updateLegacySnapshotRetention",
 		Short: "Change One Legacy Backup Snapshot Expiration",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -601,19 +605,46 @@ func updateLegacySnapshotRetentionBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
+	
+
+	cmd.Flags().StringVar(&opts.clusterId, "clusterId", "", `Unique 24-hexadecimal digit string that identifies the cluster with the snapshots you want to return.`)
+
+	cmd.Flags().BoolVar(&opts.complete, "complete", false, `Flag that indicates whether the snapshot exists. This flag returns &#x60;false&#x60; while MongoDB Cloud creates the snapshot.`)
+
+	cmd.Flags().BSONTimestampVar(&opts.created, "created", , ``)
+
+	cmd.Flags().BoolVar(&opts.doNotDelete, "doNotDelete", false, `Flag that indicates whether someone can delete this snapshot. You can&#39;t set &#x60;&quot;doNotDelete&quot; : true&#x60; and set a timestamp for **expires** in the same request.`)
+
+	cmd.Flags().StringVar(&opts.expires, "expires", "", `Date and time when MongoDB Cloud deletes the snapshot. If &#x60;&quot;doNotDelete&quot; : true&#x60;, MongoDB Cloud removes any value set for this parameter.`)
+
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies the project that owns the snapshots.`)
+
+	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the snapshot.`)
+
+	cmd.Flags().BoolVar(&opts.incremental, "incremental", false, `Flag indicating if this is an incremental or a full snapshot.`)
+
+	cmd.Flags().BSONTimestampVar(&opts.lastOplogAppliedTimestamp, "lastOplogAppliedTimestamp", , ``)
+
+	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+
+	cmd.Flags().ArraySliceVar(&opts.parts, "parts", nil, `Metadata that describes the complete snapshot.
+
+- For a replica set, this array contains a single document.
+- For a sharded cluster, this array contains one document for each shard plus one document for the config host.`)
+
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
 }
-
 type updateLegacySnapshotScheduleOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client      *admin.APIClient
-	groupId     string
+	client *admin.APIClient
+	groupId string
 	clusterName string
+	
 }
 
 func (opts *updateLegacySnapshotScheduleOpts) initClient() func() error {
@@ -626,8 +657,9 @@ func (opts *updateLegacySnapshotScheduleOpts) initClient() func() error {
 
 func (opts *updateLegacySnapshotScheduleOpts) Run(ctx context.Context) error {
 	params := &admin.UpdateLegacySnapshotScheduleApiParams{
-		GroupId:     opts.groupId,
+		GroupId: opts.groupId,
 		ClusterName: opts.clusterName,
+		
 	}
 	resp, _, err := opts.client.LegacyBackupApi.UpdateLegacySnapshotScheduleWithParams(ctx, params).Execute()
 	if err != nil {
@@ -642,10 +674,10 @@ func updateLegacySnapshotScheduleBuilder() *cobra.Command {
 
 	opts := updateLegacySnapshotScheduleOpts{}
 	cmd := &cobra.Command{
-		Use:   "updateLegacySnapshotSchedule",
+		Use: "updateLegacySnapshotSchedule",
 		Short: "Update Snapshot Schedule for One Cluster",
 		Annotations: map[string]string{
-			"output": template,
+			"output":      template,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -661,6 +693,28 @@ func updateLegacySnapshotScheduleBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster with the snapshot you want to return.`)
+	
+
+	cmd.Flags().IntVar(&opts.clusterCheckpointIntervalMin, "clusterCheckpointIntervalMin", 000, `Quantity of time expressed in minutes between successive cluster checkpoints. This parameter applies only to sharded clusters. This number determines the granularity of continuous cloud backups for sharded clusters.`)
+
+	cmd.Flags().StringVar(&opts.clusterId, "clusterId", "", `Unique 24-hexadecimal digit string that identifies the cluster with the snapshot you want to return.`)
+
+	cmd.Flags().IntVar(&opts.dailySnapshotRetentionDays, "dailySnapshotRetentionDays", 000, `Quantity of time to keep daily snapshots. MongoDB Cloud expresses this value in days. Set this value to &#x60;0&#x60; to disable daily snapshot retention.`)
+
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies the project that contains the cluster.`)
+
+	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+
+	cmd.Flags().IntVar(&opts.monthlySnapshotRetentionMonths, "monthlySnapshotRetentionMonths", 000, `Number of months that MongoDB Cloud must keep monthly snapshots. Set this value to &#x60;0&#x60; to disable monthly snapshot retention.`)
+
+	cmd.Flags().IntVar(&opts.pointInTimeWindowHours, "pointInTimeWindowHours", 000, `Number of hours before the current time from which MongoDB Cloud can create a Continuous Cloud Backup snapshot.`)
+
+	cmd.Flags().IntVar(&opts.snapshotIntervalHours, "snapshotIntervalHours", 000, `Number of hours that must elapse before taking another snapshot.`)
+
+	cmd.Flags().IntVar(&opts.snapshotRetentionDays, "snapshotRetentionDays", 000, `Number of days that MongoDB Cloud must keep recent snapshots.`)
+
+	cmd.Flags().IntVar(&opts.weeklySnapshotRetentionWeeks, "weeklySnapshotRetentionWeeks", 000, `Number of weeks that MongoDB Cloud must keep weekly snapshots. Set this value to &#x60;0&#x60; to disable weekly snapshot retention.`)
+
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -669,8 +723,8 @@ func updateLegacySnapshotScheduleBuilder() *cobra.Command {
 
 func legacyBackupBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "legacyBackup",
-		Short: `Manages Legacy Backup snapshots, restore jobs, schedules and checkpoints.`,
+		Use:     "legacyBackup",
+		Short:   `Manages Legacy Backup snapshots, restore jobs, schedules and checkpoints.`,
 	}
 	cmd.AddCommand(
 		deleteLegacySnapshotBuilder(),
@@ -686,3 +740,4 @@ func legacyBackupBuilder() *cobra.Command {
 	)
 	return cmd
 }
+

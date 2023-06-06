@@ -130,6 +130,9 @@ func toggleAWSCustomDNSBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
+	cmd.Flags().BoolVar(&opts.enabled, "enabled", false, `Flag that indicates whether the project&#39;s clusters deployed to Amazon Web Services (AWS) use a custom Domain Name System (DNS).
+When &#x60;&quot;enabled&quot;: true&#x60;, connect to your cluster using Private IP for Peering connection strings.`)
+
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }

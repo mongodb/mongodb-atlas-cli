@@ -45,11 +45,10 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	err := opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID())
-	if err != nil {
-		return err
-	}
+	return opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID())
+}
 
+func (opts *DeleteOpts) Watch() error {
 	if opts.EnbaleWatch {
 		return opts.WatchWatcher(
 			&watchers.Watcher{
@@ -62,7 +61,6 @@ func (opts *DeleteOpts) Run() error {
 			},
 		)
 	}
-
 	return nil
 }
 
@@ -101,6 +99,9 @@ Deleting a cluster also deletes any backup snapshots for that cluster.
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Watch()
 		},
 	}
 

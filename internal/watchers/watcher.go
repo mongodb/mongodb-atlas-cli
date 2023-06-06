@@ -62,21 +62,25 @@ func (watcher *Watcher) linearBackoff() error {
 }
 
 func (watcher *Watcher) IsDone() (bool, error) {
-	if !watcher.StateTransition.HasStartState() {
-		watcher.hasStarted = true
-	}
+	// if !watcher.StateTransition.HasStartState() {
+	// 	watcher.hasStarted = true
+	// }
 
 	state, err := watcher.Describer.GetStatus()
+	fmt.Println(state)
+	fmt.Println(err)
 
-	if !watcher.hasStarted {
-		if watcher.StateTransition.IsStartState(state) {
-			watcher.hasStarted = true
-		}
+	// if !watcher.hasStarted {
+	// 	if !watcher.StateTransition.IsStartState(state) {
+	// 		return false, &InvalidStateError{State: state}
+	// 	}
+	// 	watcher.hasStarted = true
 
-		return false, nil
-	}
+	// 	return false, nil
+	// }
 
 	if err != nil {
+		fmt.Println("ERROR FOUND")
 		if watcher.StateTransition.IsRetryableError(err) {
 			return false, nil
 		} else if watcher.StateTransition.IsEndError(err) {

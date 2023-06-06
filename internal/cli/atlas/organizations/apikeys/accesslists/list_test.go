@@ -22,8 +22,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -33,12 +34,20 @@ func TestListOpts_Run(t *testing.T) {
 	opts := &ListOpts{
 		store: mockStore,
 	}
+	listOpts := opts.NewListOptions()
+
+	params := &admin.ListApiKeyAccessListsEntriesApiParams{
+		OrgId:        opts.OrgID,
+		ApiUserId:    opts.id,
+		PageNum:      pointer.Get(listOpts.PageNum),
+		ItemsPerPage: pointer.Get(listOpts.ItemsPerPage),
+	}
 
 	mockStore.
 		EXPECT().
-		OrganizationAPIKeyAccessLists(opts.OrgID, opts.id, opts.NewListOptions()).
-		Return(&atlas.AccessListAPIKeys{
-			Results: []*atlas.AccessListAPIKey{},
+		OrganizationAPIKeyAccessLists(params).
+		Return(&admin.PaginatedApiUserAccessList{
+			Results: []admin.UserAccessList{},
 		}, nil).
 		Times(1)
 

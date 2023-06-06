@@ -22,7 +22,7 @@ const (
 	Members                      = "Number of members in the replica set."
 	Shards                       = "Number of shards in the cluster."
 	ProcessName                  = "Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}."
-	ProcessNameAtlasCLI          = "Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}. List of possible values can be obtained by running: atlas processes list | jq '.results[].id'"
+	ProcessNameAtlasCLI          = "Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}. List of possible values can be obtained by retrieving one of the 'id' fields from 'atlas processes list' command."
 	Since                        = "Date and time from which the query retrieves the suggested indexes. Specify as the number of seconds that have elapsed since the UNIX epoch. If you don't set the duration option, this command returns data from the since value to the current time."
 	HostID                       = "Unique identifier for the host of a MongoDB process."
 	Duration                     = "Length of time in milliseconds for which you want to return results. If you set the since option, duration starts at the since date and time. If you don't set the since option, this command returns data from the duration before the current time."

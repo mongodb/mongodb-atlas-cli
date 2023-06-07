@@ -101,6 +101,9 @@ func (s *Store) DownloadLog(groupID, host, name string, out io.Writer, opts *atl
 		if err != nil {
 			return err
 		}
+		if logs == nil {
+			return fmt.Errorf("Returned file is empty")
+		}
 		_, err = io.Copy(out, logs)
 		return err
 	default:

@@ -20,6 +20,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -109,7 +110,12 @@ func dumpMmsConfig() error {
 	}
 	return nil
 }
-func seed(script string) error {
+
+func connString(caFilename string) string {
+	return "mongodb://__system:keyfile@localhost:37017/admin?authSource=local&tls=true&tlsCAFile=" + caFilename
+}
+
+func (opts *StartOpts) waitConnection() error {
 	caFilename, err := dumpTempFile("ca", CaContents)
 	if caFilename != "" {
 		defer os.Remove(caFilename)
@@ -118,7 +124,26 @@ func seed(script string) error {
 		return err
 	}
 
-	return mongosh.Exec("mongodb://__system:keyfile@localhost:37017/admin?authSource=local&tls=true&tlsCAFile="+caFilename, "--eval", script)
+	for i := 0; i < 60; i++ { // 60 seconds
+		err = mongosh.Exec(opts.debug, connString(caFilename), "--eval", "db.runCommand('ping').ok")
+		if err == nil {
+			return nil
+		}
+		time.Sleep(1 * time.Second)
+	}
+	return err
+}
+
+func (opts *StartOpts) seed(script string) error {
+	caFilename, err := dumpTempFile("ca", CaContents)
+	if caFilename != "" {
+		defer os.Remove(caFilename)
+	}
+	if err != nil {
+		return err
+	}
+
+	return mongosh.Exec(opts.debug, connString(caFilename), "--eval", script)
 }
 
 func (opts *StartOpts) Run(_ context.Context) error {
@@ -130,8 +155,12 @@ func (opts *StartOpts) Run(_ context.Context) error {
 		return err
 	}
 
+	if err := opts.waitConnection(); err != nil {
+		return err
+	}
+
 	for _, seedScriptContents := range []string{string(SeedRsContents), string(SeedUserContents)} {
-		if err := seed(seedScriptContents); err != nil {
+		if err := opts.seed(seedScriptContents); err != nil {
 			return err
 		}
 	}

@@ -78,13 +78,18 @@ func (opts *DownloadOpts) initDefaultOut() error {
 
 func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
 	fileBaseName := strings.TrimSuffix(opts.name, filepath.Ext(opts.name))
-	return &admin.GetHostLogsApiParams{
-		GroupId:   opts.ConfigProjectID(),
-		HostName:  opts.host,
-		LogName:   fileBaseName,
-		StartDate: &opts.start,
-		EndDate:   &opts.end,
+	params := &admin.GetHostLogsApiParams{
+		GroupId:  opts.ConfigProjectID(),
+		HostName: opts.host,
+		LogName:  fileBaseName,
 	}
+	if opts.start > 0 {
+		params.StartDate = &opts.start
+	}
+	if opts.end > 0 {
+		params.StartDate = &opts.end
+	}
+	return params
 }
 
 // mongocli atlas logs download <hostname> <mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz> [--force] [--output destination] [--projectId projectId].

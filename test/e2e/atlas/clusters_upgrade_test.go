@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -130,7 +131,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var clusterResponse *mongodbatlas.AdvancedCluster
+		var clusterResponse *atlasv2.ClusterDescriptionV15
 		err = json.Unmarshal(resp, &clusterResponse)
 		req.NoError(err)
 

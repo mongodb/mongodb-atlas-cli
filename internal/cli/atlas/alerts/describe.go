@@ -25,6 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 type DescribeOpts struct {
@@ -43,11 +44,15 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplate = `ID	TYPE	METRIC	STATUS
-{{.ID}}	{{.EventTypeName}}	{{.MetricName}}	{{.Status}}
+{{.Id}}	{{.EventTypeName}}	{{.MetricName}}	{{.Status}}
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.Alert(opts.ConfigProjectID(), opts.alertID)
+	params := &admin.GetAlertApiParams{
+		GroupId: opts.ConfigProjectID(),
+		AlertId: opts.alertID,
+	}
+	r, err := opts.store.Alert(params)
 
 	if err != nil {
 		return err

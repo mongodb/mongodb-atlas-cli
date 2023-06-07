@@ -35,7 +35,7 @@ func (m *MockCloudProviderRegionsLister) EXPECT() *MockCloudProviderRegionsListe
 }
 
 // CloudProviderRegions mocks base method.
-func (m *MockCloudProviderRegionsLister) CloudProviderRegions(arg0, arg1 string, arg2 *[]string) (*admin.PaginatedApiAtlasProviderRegions, error) {
+func (m *MockCloudProviderRegionsLister) CloudProviderRegions(arg0, arg1 string, arg2 []string) (*admin.PaginatedApiAtlasProviderRegions, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CloudProviderRegions", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.PaginatedApiAtlasProviderRegions)

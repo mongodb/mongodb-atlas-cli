@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -41,7 +41,7 @@ func (opts *EnableOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var enableTemplate = "Alert configuration '{{.ID}}' enabled\n"
+var enableTemplate = "Alert configuration '{{.Id}}' enabled\n"
 
 func (opts *EnableOpts) Run() error {
 	r, err := opts.store.EnableAlertConfiguration(opts.ConfigProjectID(), opts.alertID)

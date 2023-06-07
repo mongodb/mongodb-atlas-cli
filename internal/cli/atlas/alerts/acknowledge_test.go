@@ -25,7 +25,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestAcknowledgeBuilder(t *testing.T) {
@@ -58,6 +58,7 @@ func TestAcknowledgeOpts_Run(t *testing.T) {
 				alertID: "533dc40ae4b00835ff81eaee",
 				comment: "Test",
 				store:   mockStore,
+				until:   "2123-06-30T13:13:09+01:00",
 			},
 			wantErr: false,
 		},
@@ -86,19 +87,24 @@ func TestAcknowledgeOpts_Run(t *testing.T) {
 		opts := tt.opts
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
-			ackReq := opts.newAcknowledgeRequest()
+			ackReq, _ := opts.newAcknowledgeRequest()
+			params := &admin.AcknowledgeAlertApiParams{
+				GroupId:              opts.ProjectID,
+				AlertId:              opts.alertID,
+				AlertViewForNdsGroup: ackReq,
+			}
 			if wantErr {
 				mockStore.
 					EXPECT().
-					AcknowledgeAlert(opts.ProjectID, opts.alertID, ackReq).
+					AcknowledgeAlert(params).
 					Return(nil, errors.New("fake")).
 					Times(1)
 				assert.Error(t, opts.Run())
 			} else {
-				expected := &mongodbatlas.Alert{}
+				expected := &admin.AlertViewForNdsGroup{}
 				mockStore.
 					EXPECT().
-					AcknowledgeAlert(opts.ProjectID, opts.alertID, ackReq).
+					AcknowledgeAlert(params).
 					Return(expected, nil).
 					Times(1)
 				assert.NoError(t, opts.Run())

@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -43,11 +43,11 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var updateTemplate = "Alert configuration '{{.ID}}' updated.\n"
+var updateTemplate = "Alert configuration '{{.Id}}' updated.\n"
 
 func (opts *UpdateOpts) Run() error {
 	alert := opts.NewAlertConfiguration(opts.ConfigProjectID())
-	alert.ID = opts.alertID
+	alert.Id = &opts.alertID
 	r, err := opts.store.UpdateAlertConfiguration(alert)
 	if err != nil {
 		return err
@@ -106,10 +106,8 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.notificationDelayMin, flag.NotificationDelayMin, 0, usage.NotificationDelayMin)
 	cmd.Flags().StringVar(&opts.notificationEmailAddress, flag.NotificationEmailAddress, "", usage.NotificationEmailAddress)
 	cmd.Flags().BoolVar(&opts.notificationEmailEnabled, flag.NotificationEmailEnabled, false, usage.NotificationEmailEnabled)
-	cmd.Flags().StringVar(&opts.notificationFlowName, flag.NotificationFlowName, "", usage.NotificationFlowName)
 	cmd.Flags().IntVar(&opts.notificationIntervalMin, flag.NotificationIntervalMin, 0, usage.NotificationIntervalMin)
 	cmd.Flags().StringVar(&opts.notificationMobileNumber, flag.NotificationMobileNumber, "", usage.NotificationMobileNumber)
-	cmd.Flags().StringVar(&opts.notificationOrgName, flag.NotificationOrgName, "", usage.NotificationOrgName)
 	cmd.Flags().StringVar(&opts.notificationServiceKey, flag.NotificationServiceKey, "", usage.NotificationServiceKey)
 	cmd.Flags().BoolVar(&opts.notificationSmsEnabled, flag.NotificationSmsEnabled, false, usage.NotificationSmsEnabled)
 	cmd.Flags().StringVar(&opts.notificationTeamID, flag.NotificationTeamID, "", usage.NotificationTeamID)

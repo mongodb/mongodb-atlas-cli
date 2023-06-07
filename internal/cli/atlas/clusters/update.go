@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 const (
@@ -75,25 +75,25 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) cluster() (*atlas.AdvancedCluster, error) {
-	var cluster *atlas.AdvancedCluster
+func (opts *UpdateOpts) cluster() (*atlasv2.ClusterDescriptionV15, error) {
+	var cluster *atlasv2.ClusterDescriptionV15
 	if opts.filename != "" {
 		err := file.Load(opts.fs, opts.filename, &cluster)
 		if err != nil {
 			return nil, err
 		}
 		if opts.name == "" {
-			opts.name = cluster.Name
+			opts.name = cluster.GetName()
 		}
 		return cluster, nil
 	}
 	return opts.store.AtlasCluster(opts.ProjectID, opts.name)
 }
 
-func (opts *UpdateOpts) patchOpts(out *atlas.AdvancedCluster) {
+func (opts *UpdateOpts) patchOpts(out *atlasv2.ClusterDescriptionV15) {
 	RemoveReadOnlyAttributes(out)
 	if opts.mdbVersion != "" {
-		out.MongoDBMajorVersion = opts.mdbVersion
+		out.MongoDBMajorVersion = &opts.mdbVersion
 	}
 	if opts.diskSizeGB > 0 {
 		out.DiskSizeGB = &opts.diskSizeGB
@@ -106,17 +106,17 @@ func (opts *UpdateOpts) patchOpts(out *atlas.AdvancedCluster) {
 	AddLabel(out, NewCLILabel())
 }
 
-func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlas.AdvancedCluster) {
+func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasv2.ClusterDescriptionV15) {
 	for _, replicationSpec := range out.ReplicationSpecs {
 		for _, regionConf := range replicationSpec.RegionConfigs {
 			if regionConf.ReadOnlySpecs != nil {
-				regionConf.ReadOnlySpecs.InstanceSize = opts.tier
+				regionConf.ReadOnlySpecs.InstanceSize = &opts.tier
 			}
 			if regionConf.AnalyticsSpecs != nil {
-				regionConf.AnalyticsSpecs.InstanceSize = opts.tier
+				regionConf.AnalyticsSpecs.InstanceSize = &opts.tier
 			}
 			if regionConf.ElectableSpecs != nil {
-				regionConf.ElectableSpecs.InstanceSize = opts.tier
+				regionConf.ElectableSpecs.InstanceSize = &opts.tier
 			}
 		}
 	}

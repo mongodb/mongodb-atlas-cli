@@ -36,7 +36,7 @@ func TestWatch_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.AWSPrivateLinkConnection{Status: pointer.Get("AVAILABLE")}
+	expected := &atlasv2.EndpointService{CloudProvider: "AWS", Status: pointer.Get("AVAILABLE")}
 
 	mockStore.
 		EXPECT().

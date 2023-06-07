@@ -639,13 +639,13 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 	for _, endpoint := range privateEndpoints {
 		var endpointID string
 
-		switch v := endpoint.GetActualInstance().(type) {
-		case *atlasv2.AWSPrivateLinkConnection:
-			endpointID = v.GetId()
-		case *atlasv2.AzurePrivateLinkConnection:
-			endpointID = v.GetId()
-		case *atlasv2.GCPEndpointService:
-			endpointID = v.GetId()
+		switch endpoint.CloudProvider {
+		case "AWS":
+			endpointID = endpoint.GetId()
+		case "AZURE":
+			endpointID = endpoint.GetId()
+		case "GCP":
+			endpointID = endpoint.GetId()
 		}
 		require.NotEmpty(t, endpointID)
 		deletePrivateEndpoint(t, cliPath, projectID, provider, endpointID)
@@ -762,13 +762,13 @@ func createDBUserWithCert(projectID, username string) error {
 	return nil
 }
 
-func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
+func ensureCluster(t *testing.T, cluster *atlasv2.ClusterDescriptionV15, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
-	a.Equal(clusterName, cluster.Name)
-	a.Equal(version, cluster.MongoDBMajorVersion)
-	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
-	a.Equal(terminationProtection, *cluster.TerminationProtectionEnabled)
+	a.Equal(clusterName, cluster.GetName())
+	a.Equal(version, cluster.GetMongoDBMajorVersion())
+	a.Equal(diskSizeGB, cluster.GetDiskSizeGB())
+	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 
 func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, tier string, diskSizeGB float64, terminationProtection bool) {

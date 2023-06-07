@@ -24,13 +24,13 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestBuilder(t *testing.T) {
@@ -59,10 +59,10 @@ func TestQuickstartOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 
-	expectedCluster := &mongodbatlas.AdvancedCluster{
-		StateName: "IDLE",
-		ConnectionStrings: &mongodbatlas.ConnectionStrings{
-			StandardSrv: "",
+	expectedCluster := &atlasv2.ClusterDescriptionV15{
+		StateName: pointer.Get("IDLE"),
+		ConnectionStrings: &atlasv2.ClusterDescriptionConnectionStrings{
+			StandardSrv: pointer.Get(""),
 		},
 	}
 
@@ -143,10 +143,10 @@ func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	defer ctrl.Finish()
 
-	expectedCluster := &mongodbatlas.AdvancedCluster{
-		StateName: "IDLE",
-		ConnectionStrings: &mongodbatlas.ConnectionStrings{
-			StandardSrv: "",
+	expectedCluster := &atlasv2.ClusterDescriptionV15{
+		StateName: pointer.Get("IDLE"),
+		ConnectionStrings: &atlasv2.ClusterDescriptionConnectionStrings{
+			StandardSrv: pointer.Get(""),
 		},
 	}
 

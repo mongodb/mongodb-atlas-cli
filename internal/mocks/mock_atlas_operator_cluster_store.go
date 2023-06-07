@@ -36,10 +36,10 @@ func (m *MockAtlasOperatorClusterStore) EXPECT() *MockAtlasOperatorClusterStoreM
 }
 
 // AtlasCluster mocks base method.
-func (m *MockAtlasOperatorClusterStore) AtlasCluster(arg0, arg1 string) (*mongodbatlas.AdvancedCluster, error) {
+func (m *MockAtlasOperatorClusterStore) AtlasCluster(arg0, arg1 string) (*admin.ClusterDescriptionV15, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AtlasCluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret0, _ := ret[0].(*admin.ClusterDescriptionV15)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

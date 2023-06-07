@@ -38,7 +38,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../../../mocks/mock_quick_start.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart Flow
@@ -282,7 +282,7 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	fmt.Printf("Your connection string: %v\n", cluster.ConnectionStrings.StandardSrv)
+	fmt.Printf("Your connection string: %v\n", cluster.ConnectionStrings.GetStandardSrv())
 
 	if err := opts.loadSampleData(); err != nil {
 		return err
@@ -293,13 +293,13 @@ func (opts *Opts) Run() error {
 	}
 
 	if !mongosh.Detect() {
-		fmt.Printf(quickstartTemplateMongoshNotDetected, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
+		fmt.Printf(quickstartTemplateMongoshNotDetected, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.GetStandardSrv())
 
 		return nil
 	}
 
-	fmt.Printf(quickstartTemplateMongoshDetected, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
-	return mongosh.Run(opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
+	fmt.Printf(quickstartTemplateMongoshDetected, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.GetStandardSrv())
+	return mongosh.Run(opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.GetStandardSrv())
 }
 
 func (opts *Opts) createResources() error {
@@ -312,11 +312,10 @@ func (opts *Opts) createResources() error {
 	}
 
 	if err := opts.createCluster(); err != nil {
-		var target *atlas.ErrorResponse
-		_ = errors.As(err, &target)
-		if target.ErrorCode == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" && strings.Contains(strings.ToLower(target.Detail), cli.ErrFreeClusterAlreadyExists.Error()) {
+		target, _ := admin.AsError(err)
+		if target.GetErrorCode() == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" && strings.Contains(strings.ToLower(target.GetDetail()), cli.ErrFreeClusterAlreadyExists.Error()) {
 			return cli.ErrFreeClusterAlreadyExists
-		} else if target.ErrorCode == "INVALID_ATTRIBUTE" && strings.Contains(target.Detail, "regionName") {
+		} else if target.GetErrorCode() == "INVALID_ATTRIBUTE" && strings.Contains(target.GetDetail(), "regionName") {
 			return cli.ErrNoRegionExistsTryCommand
 		}
 		return err
@@ -338,7 +337,7 @@ Loading sample data into your cluster... [It's safe to 'Ctrl + C']
 		return nil
 	}
 
-	opts.SampleDataJobID = sampleDataJob.ID
+	opts.SampleDataJobID = sampleDataJob.GetId()
 
 	return opts.Watch(opts.sampleDataWatcher)
 }
@@ -359,7 +358,7 @@ func (opts *Opts) clusterCreationWatcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return result.StateName == "IDLE", nil
+	return result.GetStateName() == "IDLE", nil
 }
 
 func (opts *Opts) askSampleDataQuestion() error {

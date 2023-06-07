@@ -107,5 +107,4 @@ func downloadLog(t *testing.T, cliPath, hostname, logFile, projectID string) {
 		_ = os.Remove(outputFile)
 	}
 	_ = os.Remove(logFile)
-
 }

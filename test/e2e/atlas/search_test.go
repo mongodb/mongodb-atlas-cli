@@ -394,6 +394,9 @@ func TestSearch(t *testing.T) {
 	})
 
 	t.Run("Create array mapping", func(t *testing.T) {
+		n, err := e2e.RandInt(1000)
+		r.NoError(err)
+		indexName := fmt.Sprintf("index-array-%v", n)
 		fileName := fmt.Sprintf("create_index_search_test-array-%v.json", n)
 
 		file, err := os.Create(fileName)

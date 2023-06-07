@@ -17,19 +17,16 @@ package store
 import (
 	"fmt"
 	"io"
-	"path/filepath"
-	"strconv"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LogsDownloader,LogJobsDownloader,LogCollector,LogJobLister,LogJobDeleter
 
 type LogsDownloader interface {
-	DownloadLog(string, string, string, io.Writer, *atlas.DateRangetOptions) error
+	DownloadLog(io.Writer, *admin.GetHostLogsApiParams) error
 }
 
 type LogJobsDownloader interface {
@@ -82,29 +79,17 @@ func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsm
 }
 
 // DownloadLog encapsulates the logic to manage different cloud providers.
-func (s *Store) DownloadLog(groupID, host, name string, out io.Writer, opts *atlas.DateRangetOptions) error {
+func (s *Store) DownloadLog(out io.Writer, params *admin.GetHostLogsApiParams) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		fileBaseName := strings.TrimSuffix(name, filepath.Ext(name))
-		result := s.clientv2.MonitoringAndLogsApi.GetHostLogs(s.ctx, groupID, host, fileBaseName)
-		if opts != nil {
-			if opts.StartDate != "" {
-				start, _ := strconv.ParseInt(opts.StartDate, 10, 64)
-				result = result.StartDate(start)
-			}
-			if opts.EndDate != "" {
-				end, _ := strconv.ParseInt(opts.EndDate, 10, 64)
-				result = result.EndDate(end)
-			}
-		}
-		logs, _, err := result.Execute()
+		result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostLogsWithParams(s.ctx, params).Execute()
 		if err != nil {
 			return err
 		}
-		if logs == nil {
+		if result == nil {
 			return fmt.Errorf("returned file is empty")
 		}
-		_, err = io.Copy(out, logs)
+		_, err = io.Copy(out, result)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

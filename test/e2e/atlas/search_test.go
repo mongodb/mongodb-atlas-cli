@@ -312,7 +312,7 @@ func TestSearch(t *testing.T) {
 	})
 
 	t.Run("Create staticMapping", func(t *testing.T) {
-		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
+		fileName := fmt.Sprintf("create_index_search_test-array-%v.json", n)
 
 		file, err := os.Create(fileName)
 		r.NoError(err)
@@ -394,7 +394,7 @@ func TestSearch(t *testing.T) {
 	})
 
 	t.Run("Create array mapping", func(t *testing.T) {
-		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
+		fileName := fmt.Sprintf("create_index_search_test-array-%v.json", n)
 
 		file, err := os.Create(fileName)
 		r.NoError(err)

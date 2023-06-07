@@ -80,14 +80,19 @@ func (opts *CreateOpts) Run() error {
 	}
 
 	r, err := opts.store.CreateCluster(cluster)
-	apiError, ok := atlasv2.AsError(err);
-	code := apiError.GetErrorCode();
-	if ok && apiError.GetErrorCode() == "INVALID_ATTRIBUTE" && strings.Contains(apiError.GetDetail(), "regionName") {
-		return cli.ErrNoRegionExistsTryCommand
-	}else if ok && code == "DUPLICATE_CLUSTER_NAME" {
+	apiError, ok := atlasv2.AsError(err)
+	code := apiError.GetErrorCode()
+	if ok {
+		if apiError.GetErrorCode() == "INVALID_ATTRIBUTE" && strings.Contains(apiError.GetDetail(), "regionName") {
+			return cli.ErrNoRegionExistsTryCommand
+		}
+		if ok && code == "DUPLICATE_CLUSTER_NAME" {
 			return cli.ErrNameExists
-	} else if err != nil {
-	return err
+		}
+	}
+
+	if err != nil {
+		return err
 	}
 
 	return opts.Print(r)

@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 const (
@@ -45,6 +45,7 @@ type UpdateOpts struct {
 	enableTerminationProtection  bool
 	disableTerminationProtection bool
 	filename                     string
+	tag                          map[string]string
 	fs                           afero.Fs
 	store                        store.AtlasClusterGetterUpdater
 }
@@ -74,25 +75,25 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) cluster() (*atlas.AdvancedCluster, error) {
-	var cluster *atlas.AdvancedCluster
+func (opts *UpdateOpts) cluster() (*atlasv2.ClusterDescriptionV15, error) {
+	var cluster *atlasv2.ClusterDescriptionV15
 	if opts.filename != "" {
 		err := file.Load(opts.fs, opts.filename, &cluster)
 		if err != nil {
 			return nil, err
 		}
 		if opts.name == "" {
-			opts.name = cluster.Name
+			opts.name = cluster.GetName()
 		}
 		return cluster, nil
 	}
 	return opts.store.AtlasCluster(opts.ProjectID, opts.name)
 }
 
-func (opts *UpdateOpts) patchOpts(out *atlas.AdvancedCluster) {
+func (opts *UpdateOpts) patchOpts(out *atlasv2.ClusterDescriptionV15) {
 	RemoveReadOnlyAttributes(out)
 	if opts.mdbVersion != "" {
-		out.MongoDBMajorVersion = opts.mdbVersion
+		out.MongoDBMajorVersion = &opts.mdbVersion
 	}
 	if opts.diskSizeGB > 0 {
 		out.DiskSizeGB = &opts.diskSizeGB
@@ -105,23 +106,23 @@ func (opts *UpdateOpts) patchOpts(out *atlas.AdvancedCluster) {
 	AddLabel(out, NewCLILabel())
 }
 
-func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlas.AdvancedCluster) {
+func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasv2.ClusterDescriptionV15) {
 	for _, replicationSpec := range out.ReplicationSpecs {
 		for _, regionConf := range replicationSpec.RegionConfigs {
 			if regionConf.ReadOnlySpecs != nil {
-				regionConf.ReadOnlySpecs.InstanceSize = opts.tier
+				regionConf.ReadOnlySpecs.InstanceSize = &opts.tier
 			}
 			if regionConf.AnalyticsSpecs != nil {
-				regionConf.AnalyticsSpecs.InstanceSize = opts.tier
+				regionConf.AnalyticsSpecs.InstanceSize = &opts.tier
 			}
 			if regionConf.ElectableSpecs != nil {
-				regionConf.ElectableSpecs.InstanceSize = opts.tier
+				regionConf.ElectableSpecs.InstanceSize = &opts.tier
 			}
 		}
 	}
 }
 
-// UpdateBuilder atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].
+// UpdateBuilder atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{
 		fs: afero.NewOsFs(),
@@ -136,6 +137,12 @@ You can't change the name of the cluster or downgrade the MongoDB version of you
 ` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"), "Atlas supports this command only for M10+ clusters"),
 		Example: fmt.Sprintf(`  # Update the tier for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
   %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50
+
+  # Replace tags cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tag key1=value1
+
+  # Remove all tags from cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tag =
 
   # Update the disk size for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
   %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --diskSizeGB 20
@@ -174,12 +181,19 @@ You can't change the name of the cluster or downgrade the MongoDB version of you
 	cmd.Flags().BoolVar(&opts.enableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
 	cmd.Flags().BoolVar(&opts.disableTerminationProtection, flag.DisableTerminationProtection, false, usage.DisableTerminationProtection)
 	cmd.MarkFlagsMutuallyExclusive(flag.EnableTerminationProtection, flag.DisableTerminationProtection)
+	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.Tag+usage.UpdateWarning)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagFilename(flag.File)
+
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tier)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DiskSizeGB)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.EnableTerminationProtection)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DisableTerminationProtection)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tag)
 
 	autocomplete := &autoCompleteOpts{}
 	_ = cmd.RegisterFlagCompletionFunc(flag.Tier, autocomplete.autocompleteTier())

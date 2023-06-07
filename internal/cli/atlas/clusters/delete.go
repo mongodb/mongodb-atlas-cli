@@ -17,6 +17,7 @@ package clusters
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -24,11 +25,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 	"github.com/spf13/cobra"
 )
 
 type DeleteOpts struct {
 	cli.GlobalOpts
+	cli.WatchOpts
 	*cli.DeleteOpts
 	store store.ClusterDeleter
 }
@@ -45,12 +48,34 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID())
 }
 
+func (opts *DeleteOpts) PostRun() error {
+	if !opts.EnableWatch {
+		return nil
+	}
+
+	watcher := watchers.NewWatcher(
+		*watchers.ClusterDeleted,
+		watchers.NewAtlasClusterStateDescriber(
+			opts.store.(store.AtlasClusterDescriber),
+			opts.ProjectID,
+			opts.Entry,
+		),
+	)
+
+	watcher.Timeout = time.Duration(opts.Timeout)
+	if err := opts.WatchWatcher(watcher); err != nil {
+		return err
+	}
+
+	return opts.Print(nil)
+}
+
 // DeleteBuilder
 //
 // mongocli atlas cluster(s) delete <clusterName> --projectId projectId [--confirm].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Cluster '%s' deleted\n", "Cluster not deleted"),
+		DeleteOpts: cli.NewDeleteOpts("Deleting cluster '%s'", "Cluster not deleted"),
 	}
 	cmd := &cobra.Command{
 		Use:     "delete <clusterName>",
@@ -72,7 +97,10 @@ Deleting a cluster also deletes any backup snapshots for that cluster.
 			"output":          opts.SuccessMessage(),
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
+			if err := opts.PreRunE(
+				opts.ValidateProjectID,
+				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), "Cluster deleted\n")); err != nil {
 				return err
 			}
 			opts.Entry = args[0]
@@ -81,9 +109,15 @@ Deleting a cluster also deletes any backup snapshots for that cluster.
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PostRun()
+		},
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
+	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

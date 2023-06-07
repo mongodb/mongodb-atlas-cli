@@ -252,27 +252,13 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force")
+		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force", "-w")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
 		a := assert.New(t)
-		a.Equal(expected, string(resp))
-	})
-
-	t.Run("Watch deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		// this command will fail with 404 once the cluster is deleted
-		// we just need to wait for this to close the project
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
+		a.Contains(string(resp), expected)
 	})
 }

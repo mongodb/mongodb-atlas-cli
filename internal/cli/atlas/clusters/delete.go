@@ -49,25 +49,25 @@ func (opts *DeleteOpts) Run() error {
 }
 
 func (opts *DeleteOpts) PostRun() error {
-	if opts.EnbaleWatch {
-		watcher := watchers.NewWatcher(
-			*watchers.ClusterDeleted,
-			watchers.NewAtlasClusterStateDescriber(
-				opts.store.(store.AtlasClusterDescriber),
-				opts.ProjectID,
-				opts.Entry,
-			),
-		)
-
-		watcher.Timeout = time.Duration(opts.Timeout)
-		if err := opts.WatchWatcher(watcher); err != nil {
-			return err
-		}
-
-		return opts.Print(nil)
+	if !opts.EnableWatch {
+		return nil
 	}
 
-	return nil
+	watcher := watchers.NewWatcher(
+		*watchers.ClusterDeleted,
+		watchers.NewAtlasClusterStateDescriber(
+			opts.store.(store.AtlasClusterDescriber),
+			opts.ProjectID,
+			opts.Entry,
+		),
+	)
+
+	watcher.Timeout = time.Duration(opts.Timeout)
+	if err := opts.WatchWatcher(watcher); err != nil {
+		return err
+	}
+
+	return opts.Print(nil)
 }
 
 // DeleteBuilder
@@ -116,7 +116,7 @@ Deleting a cluster also deletes any backup snapshots for that cluster.
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
-	cmd.Flags().BoolVarP(&opts.EnbaleWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
 	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

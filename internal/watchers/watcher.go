@@ -24,11 +24,36 @@ import (
 )
 
 type InvalidStateError struct {
-	State string
+	State             *string
+	ErrorCode         *string
+	ExpectedState     *string
+	ExpectedErrorCode *string
 }
 
 func (err *InvalidStateError) Error() string {
-	return fmt.Sprintf("Invalid state reached: %s", err.State)
+	const (
+		stateTemplate     = "Invalid state reached: %s."
+		expectedTemplate  = "Expected state: %s."
+		errorCodeTemplate = "Invalid error reached: %s."
+		expectedErrorCode = "Expected error code: %s."
+	)
+
+	var got string
+	var expected string
+
+	if err.State != nil {
+		got = fmt.Sprintf(stateTemplate, *err.State)
+	} else {
+		got = fmt.Sprintf(errorCodeTemplate, *err.ErrorCode)
+	}
+
+	if err.State != nil {
+		expected = fmt.Sprintf(expectedTemplate, *err.State)
+	} else {
+		expected = fmt.Sprintf(expectedErrorCode, *err.ErrorCode)
+	}
+
+	return fmt.Sprintf("%s %s", got, expected)
 }
 
 type StateDescriber interface {
@@ -36,8 +61,8 @@ type StateDescriber interface {
 }
 
 type Watcher struct {
-	Timeout            time.Duration // TODO: CLOUDP-181597
-	ExponentialBackoff bool
+	Timeout            time.Duration // TODO: Timeout support - CLOUDP-181597
+	NonConstantBackoff bool
 	stateTransition    StateTransition
 	describer          StateDescriber
 	hasStarted         bool
@@ -54,26 +79,29 @@ func NewWatcher(stateTransition StateTransition, describer StateDescriber) *Watc
 
 func (watcher *Watcher) Watch() error {
 	watcher.hasStarted = false
-	if watcher.ExponentialBackoff {
-		return watcher.exponentialBackoff()
+	if watcher.NonConstantBackoff {
+		return watcher.fibonacciBackoff()
 	}
 
-	return watcher.linearBackoff()
+	return watcher.constantBackoff()
 }
 
-func (watcher *Watcher) exponentialBackoff() error {
-	backoff := defaultWait
+func (watcher *Watcher) fibonacciBackoff() error {
+	previousBackoff := 0 * time.Second
+	currentBackoff := defaultWait
+
 	for {
 		done, err := watcher.IsDone()
 		if err != nil || done {
 			return err
 		}
-		time.Sleep(backoff)
-		backoff *= 2
+		time.Sleep(currentBackoff)
+		currentBackoff += previousBackoff
+		previousBackoff = currentBackoff - previousBackoff
 	}
 }
 
-func (watcher *Watcher) linearBackoff() error {
+func (watcher *Watcher) constantBackoff() error {
 	for {
 		done, err := watcher.IsDone()
 		if err != nil || done {
@@ -92,7 +120,7 @@ func (watcher *Watcher) IsDone() (bool, error) {
 
 	if !watcher.hasStarted {
 		if !watcher.stateTransition.IsStartState(state) {
-			return false, &InvalidStateError{State: state}
+			return false, &InvalidStateError{State: &state, ExpectedState: watcher.stateTransition.StartState}
 		}
 		watcher.hasStarted = true
 
@@ -114,7 +142,11 @@ func (watcher *Watcher) IsDone() (bool, error) {
 		watcher.stateTransition.IsStartState(state) {
 		return false, nil
 	}
-	return false, &InvalidStateError{State: state}
+
+	if watcher.stateTransition.HasEndState() {
+		return false, &InvalidStateError{State: &state, ExpectedState: watcher.stateTransition.EndState}
+	}
+	return false, &InvalidStateError{State: &state, ExpectedErrorCode: watcher.stateTransition.EndErrorCode}
 }
 
 type StateTransition struct {
@@ -131,6 +163,10 @@ func (st *StateTransition) HasStartState() bool {
 
 func (st *StateTransition) IsStartState(state string) bool {
 	return st.StartState != nil && state == *st.StartState
+}
+
+func (st *StateTransition) HasEndState() bool {
+	return st.EndState != nil
 }
 
 func (st *StateTransition) IsEndState(state string) bool {
@@ -160,6 +196,10 @@ func (st *StateTransition) IsEndError(err error) bool {
 	}
 
 	return errCode == *st.EndErrorCode
+}
+
+func (st *StateTransition) HasEndError() bool {
+	return st.EndErrorCode != nil
 }
 
 func (st *StateTransition) IsRetryableError(err error) bool {

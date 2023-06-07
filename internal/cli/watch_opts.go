@@ -26,7 +26,7 @@ import (
 type WatchOpts struct {
 	OutputOpts
 	s              *spinner.Spinner
-	EnbaleWatch    bool
+	EnableWatch    bool
 	Timeout        uint
 	IsRetryableErr func(err error) bool
 }
@@ -77,10 +77,14 @@ func (opts *WatchOpts) exponentialBackoff(f Watcher) (bool, error) {
 }
 
 func (opts *WatchOpts) WatchWatcher(w *watchers.Watcher) error {
-	opts.start()
-	err := w.Watch()
-	opts.stop()
-	return err
+	if opts.EnableWatch {
+		opts.start()
+		err := w.Watch()
+		opts.stop()
+		return err
+	}
+
+	return nil
 }
 
 func (opts *WatchOpts) start() {

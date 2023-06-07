@@ -31,7 +31,6 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
@@ -81,10 +80,18 @@ func (opts *CreateOpts) Run() error {
 	}
 
 	r, err := opts.store.CreateCluster(cluster)
-	var target *atlas.ErrorResponse
-	if errors.As(err, &target) && target.ErrorCode == "INVALID_ATTRIBUTE" && strings.Contains(target.Detail, "regionName") {
-		return cli.ErrNoRegionExistsTryCommand
-	} else if err != nil {
+	apiError, ok := atlasv2.AsError(err)
+	code := apiError.GetErrorCode()
+	if ok {
+		if apiError.GetErrorCode() == "INVALID_ATTRIBUTE" && strings.Contains(apiError.GetDetail(), "regionName") {
+			return cli.ErrNoRegionExistsTryCommand
+		}
+		if ok && code == "DUPLICATE_CLUSTER_NAME" {
+			return cli.ErrNameExists
+		}
+	}
+
+	if err != nil {
 		return err
 	}
 

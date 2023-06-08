@@ -17,6 +17,7 @@ package invitations
 import (
 	"context"
 	"fmt"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -25,7 +26,6 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const createTemplate = "User '{{.Username}}' invited.\n"
@@ -57,11 +57,11 @@ func (opts *InviteOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *InviteOpts) newInvitation() *atlas.Invitation {
-	return &atlas.Invitation{
-		Username: opts.username,
+func (opts *InviteOpts) newInvitation() *atlasv2.OrganizationInvitationRequest {
+	return &atlasv2.OrganizationInvitationRequest{
+		Username: &opts.username,
 		Roles:    opts.roles,
-		TeamIDs:  opts.teamIds,
+		TeamIds:  opts.teamIds,
 	}
 }
 

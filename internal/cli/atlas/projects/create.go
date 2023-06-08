@@ -17,6 +17,7 @@ package projects
 import (
 	"context"
 	"fmt"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -27,7 +28,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const atlasCreateTemplate = "Project '{{.Id}}' created.\n"
@@ -58,7 +58,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateProject(opts.newCreateProjectGroup(), opts.newCreateProjectOptions())
+	r, err := opts.store.CreateProject(opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err
@@ -90,8 +90,8 @@ func (opts *CreateOpts) newRegionUsageRestrictions() *string {
 	return nil
 }
 
-func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {
-	return &atlas.CreateProjectOptions{ProjectOwnerID: opts.projectOwnerID}
+func (opts *CreateOpts) newCreateProjectOptions() *atlasv2.CreateProjectApiParams {
+	return &atlasv2.CreateProjectApiParams{ProjectOwnerId: &opts.projectOwnerID, Group: pointer.Get(opts.newCreateProjectGroup())}
 }
 
 func (opts *CreateOpts) validateOwnerID() error {

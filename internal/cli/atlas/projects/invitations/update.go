@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -25,7 +26,6 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const updateTemplate = "Invitation {{.Id}} updated.\n"
@@ -56,9 +56,9 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newInvitation() *atlas.Invitation {
-	return &atlas.Invitation{
-		Username: opts.username,
+func (opts *UpdateOpts) newInvitation() *atlasv2.GroupInvitationRequest {
+	return &atlasv2.GroupInvitationRequest{
+		Username: &opts.username,
 		Roles:    opts.roles,
 	}
 }

@@ -15,7 +15,6 @@
 package quickstart
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -26,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/randgen"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func (opts *Opts) createDatabaseUser() error {
@@ -84,8 +82,8 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 
 	_, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), username)
 	if err != nil {
-		var target *atlas.ErrorResponse
-		if errors.As(err, &target) && target.ErrorCode == "USERNAME_NOT_FOUND" {
+		target, ok := atlasv2.AsError(err)
+		if ok && target.GetErrorCode() == "USERNAME_NOT_FOUND" {
 			return nil
 		}
 		return err

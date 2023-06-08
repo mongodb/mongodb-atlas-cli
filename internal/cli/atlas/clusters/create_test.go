@@ -22,6 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/spf13/afero"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
@@ -104,6 +105,28 @@ func TestCreateOpts_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
+}
+
+func TestCreateOpts_PostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
+
+	expected := &atlasv2.ClusterDescriptionV15{StateName: pointer.Get("IDLE")}
+
+	opts := &WatchOpts{
+		name:  "test",
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		AtlasCluster(opts.ProjectID, opts.name).
+		Return(expected, nil).
+		Times(1)
+
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }
 
 func TestCreateBuilder(t *testing.T) {

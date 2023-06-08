@@ -59,7 +59,7 @@ func TestClustersFlags(t *testing.T) {
 			"--diskSizeGB", diskSizeGB30,
 			"--enableTerminationProtection",
 			"--projectId", g.projectID,
-			"--tag", "env=test",
+			"--tag", "env=test", "-w",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -70,21 +70,6 @@ func TestClustersFlags(t *testing.T) {
 		req.NoError(err)
 
 		ensureCluster(t, cluster, clusterName, e2eMDBVer, 30, true)
-	})
-
-	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		a := assert.New(t)
-		a.Contains(string(resp), "Cluster available")
 	})
 
 	t.Run("Load Sample Data", func(t *testing.T) {

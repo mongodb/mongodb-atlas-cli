@@ -51,8 +51,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-kubernetes-config-apply` - Generate and apply Kubernetes configuration resources for use with Atlas Kubernetes Operator. For more information, see https://www.mongodb.com/docs/atlas/atlas-operator/.
-* :ref:`atlas-kubernetes-config-generate` - Generate Kubernetes configuration resources for use with Atlas Kubernetes Operator. For more information, see https://www.mongodb.com/docs/atlas/atlas-operator/.
+* :ref:`atlas-kubernetes-config-apply` - Generate and apply Kubernetes configuration resources for use with Atlas Kubernetes Operator.
+* :ref:`atlas-kubernetes-config-generate` - Generate Kubernetes configuration resources for use with Atlas Kubernetes Operator.
 
 
 .. toctree::

@@ -342,7 +342,7 @@ func TestSearch(t *testing.T) {
           },
           "author": {
             "type": "string",
-            "analyzer": "lucene.english"
+            "analyzer": "keywordLowerCase"
           }
         }
       },
@@ -352,16 +352,46 @@ func TestSearch(t *testing.T) {
         "multi": {
           "mySecondaryAnalyzer": {
             "type": "string",
-            "analyzer": "lucene.french"
+            "analyzer": "keywordLowerCase"
           }
         }
       },
       "tags": {
         "type": "string",
-        "analyzer": "lucene.standard"
+        "analyzer": "standardLowerCase"
       }
     }
-  }
+  },
+"analyzers":[
+      {
+         "charFilters":[
+            
+         ],
+         "name":"keywordLowerCase",
+         "tokenFilters":[
+            {
+               "type":"lowercase"
+            }
+         ],
+         "tokenizer":{
+            "type":"keyword"
+         }
+      },
+      {
+         "charFilters":[
+            
+         ],
+         "name":"standardLowerCase",
+         "tokenFilters":[
+            {
+               "type":"lowercase"
+            }
+         ],
+         "tokenizer":{
+            "type":"standard"
+         }
+      }
+   ]
 }`))
 		err = tpl.Execute(file, map[string]string{
 			"indexName": indexName,
@@ -455,6 +485,31 @@ func TestSearch(t *testing.T) {
 		var index atlasv2.FTSIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			assert.Equal(t, index.Name, indexName)
+		}
+	})
+
+	t.Run("list Again", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			searchEntity,
+			indexEntity,
+			"list",
+			"--clusterName", g.clusterName,
+			"--db=test",
+			"--collection", collectionName,
+			"--projectId", g.projectID,
+			"-o=json")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		var indexes []atlasv2.FTSIndex
+		if err := json.Unmarshal(resp, &indexes); assert.NoError(t, err) {
+			assert.NotEmpty(t, indexes)
 		}
 	})
 }

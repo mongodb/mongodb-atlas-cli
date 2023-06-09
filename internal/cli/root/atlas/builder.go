@@ -56,6 +56,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/streams"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/teams"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/users"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
@@ -129,7 +130,6 @@ func Builder() *cobra.Command {
 		Use:     atlas,
 		Short:   "CLI tool to manage MongoDB Atlas.",
 		Long: `The Atlas CLI is a command line interface built specifically for MongoDB Atlas. You can manage your Atlas database deployments and Atlas Search from the terminal with short, intuitive commands.
-		
 Use the --help flag with any command for more info on that command.`,
 		Example: `  # Display the help menu for the config command:
   atlas config --help
@@ -234,6 +234,7 @@ Use the --help flag with any command for more info on that command.`,
 		customdns.Builder(),
 		cloudproviders.Builder(),
 		serverless.Builder(),
+		streams.Builder(),
 		livemigrations.Builder(),
 		accesslogs.Builder(),
 		loginCmd,

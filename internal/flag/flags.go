@@ -44,6 +44,7 @@ const (
 	AuthenticationEnabled                     = "authenticationEnabled"                     // AuthenticationEnabled flag
 	AuthorizationEnabled                      = "authorizationEnabled"                      // AuthorizationEnabled flag
 	Provider                                  = "provider"                                  // Provider flag
+	ProviderShort                             = "p"                                         // ProviderShort flag
 	Region                                    = "region"                                    // Region flag
 	RegionShort                               = "r"                                         // RegionShort flag
 	Members                                   = "members"                                   // Members flag

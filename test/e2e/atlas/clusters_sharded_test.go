@@ -77,7 +77,7 @@ func TestShardedCluster(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", shardedClusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'", shardedClusterName)
 		a.Equal(expected, string(resp))
 	})
 

@@ -74,6 +74,8 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 var createTmpl = "Deploying cluster '{{.Name}}'.\n"
+var createWatchTmpl = "Cluster '{{.Name}}' created successfully.\n"
+var clusterObj *atlasv2.ClusterDescriptionV15
 
 func (opts *CreateOpts) Run() error {
 	cluster, err := opts.newCluster()
@@ -81,7 +83,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	r, err := opts.store.CreateCluster(cluster)
+	clusterObj, err = opts.store.CreateCluster(cluster)
 	apiError, ok := atlasv2.AsError(err)
 	code := apiError.GetErrorCode()
 	if ok {
@@ -97,12 +99,12 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return opts.Print(r)
+	return nil
 }
 
 func (opts *CreateOpts) PostRun() error {
 	if !opts.EnableWatch {
-		return nil
+		return opts.Print(clusterObj)
 	}
 
 	watcher := watchers.NewWatcher(
@@ -119,7 +121,7 @@ func (opts *CreateOpts) PostRun() error {
 		return err
 	}
 
-	return opts.Print(nil)
+	return opts.Print(clusterObj)
 }
 
 func (opts *CreateOpts) newCluster() (*atlasv2.ClusterDescriptionV15, error) {
@@ -262,7 +264,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), createTmpl),
+				opts.InitOutput(cmd.OutOrStdout(), createWatchTmpl),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -59,10 +59,12 @@ func TestClustersFlags(t *testing.T) {
 			"--diskSizeGB", diskSizeGB30,
 			"--enableTerminationProtection",
 			"--projectId", g.projectID,
-			"--tag", "env=test", "-w",
+			"--tag", "env=test",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		t.Log(string(resp))
+		t.Log(err.Error())
 		req.NoError(err, string(resp))
 
 		var cluster *atlasv2.ClusterDescriptionV15
@@ -70,6 +72,21 @@ func TestClustersFlags(t *testing.T) {
 		req.NoError(err)
 
 		ensureCluster(t, cluster, clusterName, e2eMDBVer, 30, true)
+	})
+
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			clusterName,
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		a := assert.New(t)
+		a.Contains(string(resp), "Cluster available")
 	})
 
 	t.Run("Load Sample Data", func(t *testing.T) {
@@ -237,13 +254,27 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force", "-w")
+		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
 		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
 		a := assert.New(t)
-		a.Contains(string(resp), expected)
+		a.Equal(expected, string(resp))
+	})
+
+	t.Run("Watch deletion", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			clusterName,
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		// this command will fail with 404 once the cluster is deleted
+		// we just need to wait for this to close the project
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
 	})
 }

@@ -118,6 +118,8 @@ Deleting a cluster also deletes any backup snapshots for that cluster.
 
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
 	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
+	_ = cmd.Flags().MarkHidden(flag.EnableWatch)
+	_ = cmd.Flags().MarkHidden(flag.WatchTimeout)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

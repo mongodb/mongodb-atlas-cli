@@ -14,10 +14,10 @@ atlas kubernetes operator install
 
 Install Atlas Kubernetes Operator to a cluster.
 
-This command installs a supported versions of Atlas Kubernetes Operator to an existing cluster, and optionally imports Atlas resources to be managed by the operator.
+This command installs a supported version of Atlas Kubernetes Operator to an existing cluster, and optionally imports Atlas resources that are managed by the operator.
 
-This command creates an API key for the Operator and adds it to Kubernetes as a secret which the Operator then uses to make Atlas Admin API calls.
-The key is scoped to the project when --projectName is passed and at org level when --projectName is omitted.
+This command creates an API key for the Operator and adds it to Kubernetes as a secret, which the Operator then uses to make Atlas Admin API calls.
+The key is scoped to the project when you specify the --projectName option and to the organization when you omit the --projectName option.
 
 Syntax
 ------
@@ -116,7 +116,7 @@ Examples
    
 .. code-block::
 
-   # Install and import all objects from an org:
+   # Install and import all objects from an organization:
    atlas kubernetes operator install --targetNamespace=<namespace> --orgID <orgID> --import
 
    

@@ -273,7 +273,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 			return opts.PostRun()
 		},
 		Annotations: map[string]string{
-			"nameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphens.",
+			"nameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphens. You must specify the cluster name argument if you don't use the --file option.",
 			"output":   createWatchTmpl,
 		},
 	}

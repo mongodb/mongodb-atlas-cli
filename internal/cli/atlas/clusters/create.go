@@ -73,7 +73,6 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTmpl = "Deploying cluster '{{.Name}}'.\n"
 var createWatchTmpl = "Cluster '{{.Name}}' created successfully.\n"
 var clusterObj *atlasv2.ClusterDescriptionV15
 
@@ -275,7 +274,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 		},
 		Annotations: map[string]string{
 			"nameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphens.",
-			"output":   createTmpl,
+			"output":   createWatchTmpl,
 		},
 	}
 

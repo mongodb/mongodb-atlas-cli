@@ -104,7 +104,7 @@ func TestClustersFile(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterFileName)
+		expected := fmt.Sprintf("Deleting cluster '%s'", clusterFileName)
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})

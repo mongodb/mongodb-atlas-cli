@@ -100,7 +100,7 @@ func TestQuickstart(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
 		assert.Equal(t, expected, string(resp))
 	})
 

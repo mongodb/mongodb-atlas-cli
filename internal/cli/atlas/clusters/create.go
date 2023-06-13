@@ -285,8 +285,8 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 		defaultDiskSize    = 2
 		defaultShardSize   = 1
 	)
-	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
-	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.Region)
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.CreateProvider)
+	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.CreateRegion)
 	cmd.Flags().IntVarP(&opts.members, flag.Members, flag.MembersShort, defaultMembersSize, usage.Members)
 	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasM2, usage.Tier)
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, defaultDiskSize, usage.DiskSizeGB)

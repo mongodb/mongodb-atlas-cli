@@ -55,7 +55,7 @@ func TestClustersFlags(t *testing.T) {
 			"--provider", e2eClusterProvider,
 			"--mdbVersion", e2eMDBVer,
 			"--diskSizeGB", diskSizeGB30,
-			//"--enableTerminationProtection",
+			"--enableTerminationProtection",
 			"--projectId", g.projectID,
 			"--tag", "env=test", "-w",
 			"-o=json")
@@ -67,7 +67,7 @@ func TestClustersFlags(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, cluster, clusterName, e2eMDBVer, 30, false)
+		ensureCluster(t, cluster, clusterName, e2eMDBVer, 30, true)
 	})
 
 	t.Run("Load Sample Data", func(t *testing.T) {
@@ -200,18 +200,18 @@ func TestClustersFlags(t *testing.T) {
 		req.NoError(err, string(resp))
 	})
 
-	//t.Run("Fail Delete for Termination Protection enabled", func(t *testing.T) {
-	//	cmd := exec.Command(cliPath,
-	//		clustersEntity,
-	//		"delete",
-	//		clusterName,
-	//		"--force",
-	//		"--projectId", g.projectID)
-	//
-	//	cmd.Env = os.Environ()
-	//	resp, err := cmd.CombinedOutput()
-	//	req.Error(err, string(resp))
-	//})
+	t.Run("Fail Delete for Termination Protection enabled", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"delete",
+			clusterName,
+			"--force",
+			"--projectId", g.projectID)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.Error(err, string(resp))
+	})
 
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -242,6 +242,6 @@ func TestClustersFlags(t *testing.T) {
 
 		expected := "Cluster deleted"
 		a := assert.New(t)
-		a.Equal(expected, string(resp))
+		a.Contains(string(resp), expected)
 	})
 }

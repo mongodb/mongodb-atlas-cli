@@ -17,6 +17,7 @@ package pointer
 import (
 	"time"
 
+	customTime "github.com/mongodb/mongodb-atlas-cli/internal/time"
 	"golang.org/x/exp/constraints"
 )
 
@@ -47,7 +48,7 @@ func GetArrayPointerIfNotEmpty(input []string) *[]string {
 
 func StringToTimePointer(value string) *time.Time {
 	var result *time.Time
-	if completedAfter, err := time.Parse(time.RFC3339, value); err == nil {
+	if completedAfter, err := customTime.ParseTimestamp(value); err == nil {
 		result = &completedAfter
 	}
 	return result

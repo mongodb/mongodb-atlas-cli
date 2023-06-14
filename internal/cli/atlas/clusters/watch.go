@@ -46,8 +46,8 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 }
 
 func isRetryable(err error) bool {
-	apiError, ok := admin.AsError(err)
-	return ok && apiError.GetErrorCode() == "CLUSTER_NOT_FOUND"
+	atlasErr, ok := admin.AsError(err)
+	return ok && atlasErr.GetErrorCode() == "CLUSTER_NOT_FOUND"
 }
 
 func (opts *WatchOpts) watcher() (bool, error) {

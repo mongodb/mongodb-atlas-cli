@@ -17,8 +17,6 @@ package store
 import (
 	"context"
 	"fmt"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
@@ -38,7 +36,6 @@ func (s *Store) LiveMigrationCreate(groupID string, liveMigrationRequest *atlasv
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.CloudMigrationServiceApi.CreatePushMigration(context.Background(), groupID, liveMigrationRequest).Execute()
-		result, _, err := s.client.(*atlas.Client).LiveMigration.Create(s.ctx, groupID, liveMigration)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

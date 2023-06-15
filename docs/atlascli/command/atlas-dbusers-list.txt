@@ -37,6 +37,10 @@ Options
      - Type
      - Required
      - Description
+   * - -c, --compact
+     - 
+     - false
+     - Flag that enables the compact array response structure for json output on applicable list commands.
    * - -h, --help
      - 
      - false

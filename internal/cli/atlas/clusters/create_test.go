@@ -147,7 +147,6 @@ func TestCreateOpts_PostRun(t *testing.T) {
 	assert.Contains(t, `Cluster 'ProjectBar' created successfully.
 `, buf.String())
 	t.Log(buf.String())
-
 }
 
 func TestCreateBuilder(t *testing.T) {

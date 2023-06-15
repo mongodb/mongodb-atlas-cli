@@ -59,7 +59,7 @@ func TestProcesses(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			processesEntity,
 			"list",
-			"-p",
+			"-c",
 			"--projectId", g.projectID,
 			"-o=json")
 

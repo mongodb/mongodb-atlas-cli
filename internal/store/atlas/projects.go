@@ -137,6 +137,6 @@ func (s *Store) AddTeamsToProject(projectID string, teams []atlasv2.TeamRole) (*
 
 // DeleteTeamFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
-	_, _, err := s.clientv2.TeamsApi.RemoveProjectTeam(s.ctx, projectID, teamID).Execute()
+	_, err := s.clientv2.TeamsApi.RemoveProjectTeam(s.ctx, projectID, teamID).Execute()
 	return err
 }

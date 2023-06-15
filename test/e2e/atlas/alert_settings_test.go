@@ -81,6 +81,28 @@ func TestAlertConfig(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		var config admin.PaginatedAlertConfig
+		if err := json.Unmarshal(resp, &config); a.NoError(err) {
+			a.NotEmpty(config.Results)
+		}
+	})
+
+	t.Run("List Compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			alertsEntity,
+			configEntity,
+			"ls",
+			"-c",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		var config []admin.AlertConfigViewForNdsGroup
+		if err := json.Unmarshal(resp, &config); a.NoError(err) {
+			a.NotEmpty(config)
+		}
 	})
 
 	t.Run("Update", func(t *testing.T) {

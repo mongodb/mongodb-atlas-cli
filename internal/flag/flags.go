@@ -350,4 +350,6 @@ const (
 	EnableWatch                               = "watch"                                     // EnableWatch flag
 	EnableWatchShort                          = "w"                                         // EnableWatchShort flag
 	WatchTimeout                              = "watchTimeout"                              // WatchTimeout flag
+	CompactResponse                           = "compact"                                   // CompactResponse flag to return compacted list response
+	CompactResponseShort                      = "c"                                         // CompactResponseShort flag
 )

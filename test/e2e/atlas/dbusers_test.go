@@ -82,6 +82,24 @@ func TestDBUserWithFlags(t *testing.T) {
 		}
 	})
 
+	t.Run("List Compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			dbusersEntity,
+			"ls",
+			"-c",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+
+		var users []atlasv2.DatabaseUser
+		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
+
+		if len(users) == 0 {
+			t.Fatalf("expected len(users) > 0, got 0")
+		}
+	})
+
 	t.Run("Describe", func(t *testing.T) {
 		testDescribeUser(t, cliPath, username)
 	})

@@ -20,7 +20,6 @@ func ParseTimestamp(timestamp string) (time.Time, error) {
 	layouts := []string{
 		time.RFC3339,
 		"2006-01-02T15:04:05-0700",
-		"2006-01-02T15:04:05Z07:00",
 	}
 
 	var parsedTime time.Time

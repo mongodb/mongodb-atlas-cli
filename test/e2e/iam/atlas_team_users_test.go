@@ -95,6 +95,25 @@ func TestAtlasTeamUsers(t *testing.T) {
 		}
 	})
 
+	t.Run("List Compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			teamsEntity,
+			usersEntity,
+			"ls",
+			"-c",
+			"--teamId",
+			teamID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		a := assert.New(t)
+		var teams []atlasv2.AppUser
+		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
+			a.NotEmpty(teams)
+		}
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,

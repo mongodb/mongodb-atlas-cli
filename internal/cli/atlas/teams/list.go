@@ -35,7 +35,8 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.TeamLister
+	CompactResponse bool
+	store           store.TeamLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -52,6 +53,10 @@ func (opts *ListOpts) Run() error {
 	r, err := opts.store.Teams(opts.ConfigOrgID(), listOptions)
 	if err != nil {
 		return err
+	}
+
+	if opts.CompactResponse {
+		return opts.PrintForCompactResultsResponse(r)
 	}
 
 	return opts.Print(r)
@@ -85,6 +90,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().BoolVarP(&opts.CompactResponse, flag.CompactResponse, flag.CompactResponseShort, false, usage.CompactResponse)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd

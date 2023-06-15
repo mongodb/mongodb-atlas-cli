@@ -55,6 +55,27 @@ func TestProcesses(t *testing.T) {
 		}
 	})
 
+	t.Run("list compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			processesEntity,
+			"list",
+			"-c",
+			"--projectId", g.projectID,
+			"-o=json")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+		var hostViewsCompact []atlasv2.HostViewAtlas
+
+		if err := json.Unmarshal(resp, &hostViewsCompact); assert.NoError(t, err) {
+			require.NotEmpty(t, hostViewsCompact)
+		}
+	})
+
 	t.Run("describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			processesEntity,

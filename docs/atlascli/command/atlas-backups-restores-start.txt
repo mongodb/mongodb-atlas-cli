@@ -94,7 +94,7 @@ Options
      - Name of the target cluster. For use only with automated restore jobs. You must specify a targetClusterName for automated restores.
    * - --targetProjectId
      - string
-     - false
+     - true
      - Unique identifier of the project that contains the destination cluster for the restore job. You must specify a targetProjectId for automated restores.
 
 Inherited Options

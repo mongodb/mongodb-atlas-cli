@@ -215,6 +215,7 @@ func StartBuilder() *cobra.Command {
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
+	_ = cmd.MarkFlagRequired(flag.TargetProjectID)
 
 	return cmd
 }

@@ -19,6 +19,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	customTime "github.com/mongodb/mongodb-atlas-cli/internal/time"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -60,7 +61,7 @@ func buildCollectionName(dbCollection []string) *string {
 }
 
 func ParseDeleteAfter(deleteAfter string) *time.Time {
-	deleteAfterDate, err := time.Parse(time.RFC3339, deleteAfter)
+	deleteAfterDate, err := customTime.ParseTimestamp(deleteAfter)
 
 	if err == nil {
 		return &deleteAfterDate

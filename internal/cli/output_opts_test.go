@@ -87,9 +87,9 @@ func TestOutputOpts_mapReduceResults(t *testing.T) {
 		}
 
 		mapArrayResponse := reflect.ValueOf(compactResults).Interface().([]interface{})
-		mapResponse, _ := mapArrayResponse[0].(map[string]interface{})
-		gotID, _ := mapResponse["id"]
-		gotName, _ := mapResponse["name"]
+		mapResponse := mapArrayResponse[0].(map[string]interface{})
+		gotID := mapResponse["id"]
+		gotName := mapResponse["name"]
 		if gotID != wantID {
 			t.Errorf("mapReduceResults() got = %v, want %v", gotID, wantID)
 		}

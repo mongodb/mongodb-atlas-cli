@@ -92,8 +92,8 @@ func TestAlertConfig(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			configEntity,
-			"-c",
 			"ls",
+			"-c",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

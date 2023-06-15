@@ -23,7 +23,6 @@ import (
 	"strings"
 
 	"github.com/PaesslerAG/jsonpath"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonpathwriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
@@ -118,17 +117,17 @@ func (opts *OutputOpts) Print(o interface{}) error {
 
 func (opts *OutputOpts) PrintForCompactResultsResponse(o interface{}) error {
 	if opts.ConfigOutput() == jsonFormat {
-		o, err := mapReduceResults(o)
+		compactResponse, err := mapReduceResults(o)
 		if err == nil {
-			return jsonwriter.Print(opts.ConfigWriter(), o)
+			return jsonwriter.Print(opts.ConfigWriter(), compactResponse)
 		}
 	}
 
 	outputType, val := opts.outputTypeAndValue()
 	if outputType == jsonPath {
-		o, err := mapReduceResults(o)
+		compactResponse, err := mapReduceResults(o)
 		if err == nil {
-			return jsonpathwriter.Print(opts.ConfigWriter(), val, o)
+			return jsonpathwriter.Print(opts.ConfigWriter(), val, compactResponse)
 		}
 	}
 

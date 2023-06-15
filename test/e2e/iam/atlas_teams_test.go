@@ -126,8 +126,8 @@ func TestAtlasTeams(t *testing.T) {
 	t.Run("List Compact", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,
-			"-c",
 			"ls",
+			"-c",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

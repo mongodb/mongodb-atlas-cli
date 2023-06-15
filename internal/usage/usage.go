@@ -433,4 +433,5 @@ dbName and collection are required only for built-in roles.`
 	UpdateWarning                             = " Passing this flag replaces preexisting data."
 	EnableWatch                               = "Watch the command until it completes its execution or the watch times out. To set the time that the watch times out, use the --watchTimeout option."
 	WatchTimeout                              = "Time in seconds until a watch times out. After a watch times out, the CLI no longer watches the command."
+	CompactResponse                           = "Flag that enables the compact array response structure for json output on applicable list commands."
 )

@@ -123,6 +123,24 @@ func TestAtlasTeams(t *testing.T) {
 		}
 	})
 
+	t.Run("List Compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			teamsEntity,
+			"-c",
+			"ls",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var teams []atlasv2.TeamResponse
+		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
+			a.NotEmpty(t, teams)
+		}
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,

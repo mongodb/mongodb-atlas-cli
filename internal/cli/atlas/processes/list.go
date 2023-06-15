@@ -37,7 +37,8 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.ProcessLister
+	CompactResponse bool
+	store           store.ProcessLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -53,6 +54,10 @@ func (opts *ListOpts) Run() error {
 	r, err := opts.store.Processes(listParams)
 	if err != nil {
 		return err
+	}
+
+	if opts.CompactResponse {
+		return opts.PrintForCompactResultsResponse(r)
 	}
 
 	return opts.Print(r)
@@ -100,6 +105,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().BoolVarP(&opts.CompactResponse, flag.CompactResponse, flag.CompactResponseShort, false, usage.CompactResponse)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd

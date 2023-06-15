@@ -102,6 +102,26 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 		assert.NotEmpty(t, keys.Results)
 	})
 
+	t.Run("List Compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			projectsEntity,
+			apiKeysEntity,
+			"ls",
+			"-c",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+		var keys []atlasv2.ApiUser
+		if err := json.Unmarshal(resp, &keys); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		assert.NotEmpty(t, keys)
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			projectsEntity,

@@ -47,10 +47,8 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	var r interface{}
-	var err error
 	listOptions := opts.NewListOptions()
-	r, err = opts.store.Projects(listOptions)
+	r, err := opts.store.Projects(listOptions)
 	if err != nil {
 		return err
 	}

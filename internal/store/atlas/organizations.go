@@ -16,13 +16,12 @@ package atlas
 
 import (
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_organizations.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationLister,OrganizationDeleter,OrganizationDescriber,OrganizationCreator
 
 type OrganizationLister interface {
-	Organizations(*atlas.OrganizationsListOptions) (*atlasv2.PaginatedOrganization, error)
+	Organizations(*atlasv2.ListOrganizationsApiParams) (*atlasv2.PaginatedOrganization, error)
 }
 
 type OrganizationDescriber interface {
@@ -38,12 +37,8 @@ type OrganizationDeleter interface {
 }
 
 // Organizations encapsulate the logic to manage different cloud providers.
-func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlasv2.PaginatedOrganization, error) {
-	res := s.clientv2.OrganizationsApi.ListOrganizations(s.ctx)
-	if opts != nil {
-		res = res.Name(opts.Name).PageNum(opts.PageNum)
-	}
-	result, _, err := res.Execute()
+func (s *Store) Organizations(params *atlasv2.ListOrganizationsApiParams) (*atlasv2.PaginatedOrganization, error) {
+	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 

@@ -21,8 +21,8 @@ import (
 	"os/exec"
 )
 
-func update(path, secret string) error {
-	cmd := exec.Command("choco", "push", path, "--api-key", secret)
+func update(path, secret string, sourcePath string) error {
+	cmd := exec.Command("choco", "push", path, "--api-key", secret, "--source", sourcePath)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
@@ -31,16 +31,18 @@ func update(path, secret string) error {
 
 func main() {
 	var packagePath string
+	var sourcePath string
 	secret := os.Getenv("SECRET_API_KEY")
 
 	flag.StringVar(&packagePath, "path", "", "Chocolatey package path")
+	flag.StringVar(&sourcePath, "source", "https://push.chocolatey.org/", "Chocolatey source path")
 	flag.Parse()
 
 	if packagePath == "" {
 		log.Fatalln("You must specify Chocolatey package path")
 	}
 
-	err := update(packagePath, secret)
+	err := update(packagePath, secret, sourcePath)
 	if err != nil {
 		log.Fatal(err)
 	}

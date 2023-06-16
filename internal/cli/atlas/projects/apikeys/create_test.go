@@ -36,7 +36,7 @@ func TestCreate_Run(t *testing.T) {
 
 	createOpts.ProjectID = "5a0a1e7e0f2912c554080adc"
 
-	apiKey := &atlasv2.CreateApiKey{
+	apiKey := &atlasv2.CreateProjectApiKey{
 		Desc:  &createOpts.description,
 		Roles: []string{},
 	}

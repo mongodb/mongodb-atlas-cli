@@ -127,7 +127,7 @@ func (m *MockTeamCreator) EXPECT() *MockTeamCreatorMockRecorder {
 }
 
 // CreateTeam mocks base method.
-func (m *MockTeamCreator) CreateTeam(arg0 string, arg1 *mongodbatlas.Team) (*admin.Team, error) {
+func (m *MockTeamCreator) CreateTeam(arg0 string, arg1 *admin.Team) (*admin.Team, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateTeam", arg0, arg1)
 	ret0, _ := ret[0].(*admin.Team)

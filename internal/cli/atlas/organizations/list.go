@@ -17,7 +17,6 @@ package organizations
 import (
 	"context"
 	"fmt"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -26,6 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 const listTemplate = `ID	NAME{{range .Results}}

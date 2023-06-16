@@ -74,8 +74,8 @@ func (s *Store) Projects(opts *atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup,
 }
 
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
-func (s *Store) GetOrgProjects(orgId string) (*atlasv2.PaginatedAtlasGroup, error) {
-	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationProjects(s.ctx, orgId).Execute()
+func (s *Store) GetOrgProjects(orgID string) (*atlasv2.PaginatedAtlasGroup, error) {
+	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationProjects(s.ctx, orgID).Execute()
 	return result, err
 }
 

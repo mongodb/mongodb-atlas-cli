@@ -17,7 +17,6 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -26,7 +25,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const writeConcern = "majority"
@@ -59,7 +57,7 @@ func TestClustersFlags(t *testing.T) {
 			"--diskSizeGB", diskSizeGB30,
 			"--enableTerminationProtection",
 			"--projectId", g.projectID,
-			"--tag", "env=test",
+			"--tag", "env=test", "-w",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -70,21 +68,6 @@ func TestClustersFlags(t *testing.T) {
 		req.NoError(err)
 
 		ensureCluster(t, cluster, clusterName, e2eMDBVer, 30, true)
-	})
-
-	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		a := assert.New(t)
-		a.Contains(string(resp), "Cluster available")
 	})
 
 	t.Run("Load Sample Data", func(t *testing.T) {
@@ -156,13 +139,13 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var connectionString mongodbatlas.ConnectionStrings
+		var connectionString atlasv2.ClusterDescriptionConnectionStrings
 		err = json.Unmarshal(resp, &connectionString)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.NotEmpty(connectionString.Standard)
-		a.NotEmpty(connectionString.StandardSrv)
+		a.NotEmpty(connectionString.GetStandard())
+		a.NotEmpty(connectionString.GetStandardSrv())
 	})
 
 	t.Run("Update Advanced Configuration Settings", func(t *testing.T) {
@@ -257,7 +240,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
+		expected := "Cluster deleted"
 		a := assert.New(t)
 		a.Contains(string(resp), expected)
 	})

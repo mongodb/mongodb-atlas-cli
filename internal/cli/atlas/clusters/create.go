@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -28,6 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
@@ -44,7 +46,7 @@ const (
 
 type CreateOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
+	cli.WatchOpts
 	name                        string
 	provider                    string
 	region                      string
@@ -71,7 +73,8 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTmpl = "Deploying cluster '{{.Name}}'.\n"
+var createWatchTmpl = "Cluster '{{.Name}}' created successfully.\n"
+var clusterObj *atlasv2.ClusterDescriptionV15
 
 func (opts *CreateOpts) Run() error {
 	cluster, err := opts.newCluster()
@@ -79,7 +82,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	r, err := opts.store.CreateCluster(cluster)
+	clusterObj, err = opts.store.CreateCluster(cluster)
 	apiError, ok := atlasv2.AsError(err)
 	code := apiError.GetErrorCode()
 	if ok {
@@ -95,7 +98,29 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return opts.Print(r)
+	return nil
+}
+
+func (opts *CreateOpts) PostRun() error {
+	if !opts.EnableWatch {
+		return opts.Print(clusterObj)
+	}
+
+	watcher := watchers.NewWatcher(
+		*watchers.ClusterCreated,
+		watchers.NewAtlasClusterStateDescriber(
+			opts.store.(store.AtlasClusterDescriber),
+			opts.ProjectID,
+			opts.name,
+		),
+	)
+
+	watcher.Timeout = time.Duration(opts.Timeout)
+	if err := opts.WatchWatcher(watcher); err != nil {
+		return err
+	}
+
+	return opts.Print(clusterObj)
 }
 
 func (opts *CreateOpts) newCluster() (*atlasv2.ClusterDescriptionV15, error) {
@@ -238,15 +263,18 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), createTmpl),
+				opts.InitOutput(cmd.OutOrStdout(), createWatchTmpl),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PostRun()
+		},
 		Annotations: map[string]string{
 			"nameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphens. You must specify the cluster name argument if you don't use the --file option.",
-			"output":   createTmpl,
+			"output":   createWatchTmpl,
 		},
 	}
 
@@ -270,6 +298,9 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 	cmd.Flags().IntVarP(&opts.shards, flag.Shards, flag.ShardsShort, defaultShardSize, usage.Shards)
 	cmd.Flags().BoolVar(&opts.enableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
 	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.Tag)
+
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
+	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

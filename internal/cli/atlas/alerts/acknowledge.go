@@ -24,9 +24,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
+	customTime "github.com/mongodb/mongodb-atlas-cli/internal/time"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 type AcknowledgeOpts struct {
@@ -48,11 +49,20 @@ func (opts *AcknowledgeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var ackTemplate = "Alert '{{.ID}}' acknowledged until {{.AcknowledgedUntil}}\n"
+var ackTemplate = "Alert '{{.Id}}' acknowledged until {{.AcknowledgedUntil}}\n"
 
 func (opts *AcknowledgeOpts) Run() error {
-	body := opts.newAcknowledgeRequest()
-	r, err := opts.store.AcknowledgeAlert(opts.ConfigProjectID(), opts.alertID, body)
+	body, err := opts.newAcknowledgeRequest()
+	if err != nil {
+		return err
+	}
+	params := &admin.AcknowledgeAlertApiParams{
+		GroupId:              opts.ConfigProjectID(),
+		AlertId:              opts.alertID,
+		AlertViewForNdsGroup: body,
+	}
+
+	r, err := opts.store.AcknowledgeAlert(params)
 	if err != nil {
 		return err
 	}
@@ -60,17 +70,20 @@ func (opts *AcknowledgeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *AcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
+func (opts *AcknowledgeOpts) newAcknowledgeRequest() (*admin.AlertViewForNdsGroup, error) {
 	if opts.forever {
 		// To acknowledge an alert “forever”, set the field value to 100 years in the future.
 		const years = 100
 		opts.until = time.Now().AddDate(years, 1, 1).Format(time.RFC3339)
 	}
-
-	return &atlas.AcknowledgeRequest{
-		AcknowledgedUntil:      &opts.until,
-		AcknowledgementComment: opts.comment,
+	time, err := customTime.ParseTimestamp(opts.until)
+	if err != nil {
+		return nil, err
 	}
+	return &admin.AlertViewForNdsGroup{
+		AcknowledgedUntil:      &time,
+		AcknowledgementComment: &opts.comment,
+	}, nil
 }
 
 // atlas alerts acknowledge <ID> --projectId projectId --forever --comment comment --until until.

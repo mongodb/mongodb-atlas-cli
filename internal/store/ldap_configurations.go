@@ -82,7 +82,7 @@ func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlasv2.UserSecuri
 func (s *Store) DeleteLDAPConfiguration(projectID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.LDAPConfigurationApi.DeleteLDAPConfiguration(s.ctx, projectID).Execute()
+		_, _, err := s.clientv2.LDAPConfigurationApi.DeleteLDAPConfiguration(s.ctx, projectID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

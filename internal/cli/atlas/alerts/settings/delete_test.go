@@ -21,7 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 )
 
 func TestConfigsDelete_Run(t *testing.T) {

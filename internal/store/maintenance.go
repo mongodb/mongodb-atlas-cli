@@ -75,7 +75,7 @@ func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atl
 func (s *Store) ClearMaintenanceWindow(projectID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, _, err := s.clientv2.MaintenanceWindowsApi.ResetMaintenanceWindow(s.ctx, projectID).Execute()
+		_, err := s.clientv2.MaintenanceWindowsApi.ResetMaintenanceWindow(s.ctx, projectID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

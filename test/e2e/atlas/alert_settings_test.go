@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestAlertConfig(t *testing.T) {
@@ -56,15 +56,15 @@ func TestAlertConfig(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.AlertConfiguration
+			var alert admin.AlertConfigViewForNdsGroup
 			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
-				a.Equal(eventTypeName, alert.EventTypeName)
+				a.Equal(eventTypeName, alert.GetEventTypeName())
 				a.NotEmpty(alert.Notifications)
-				a.Equal(delayMin, *alert.Notifications[0].DelayMin)
-				a.Equal(group, alert.Notifications[0].TypeName)
-				a.Equal(intervalMin, alert.Notifications[0].IntervalMin)
-				a.False(*alert.Notifications[0].SMSEnabled)
-				alertID = alert.ID
+				a.Equal(delayMin, alert.Notifications[0].GetDelayMin())
+				a.Equal(group, alert.Notifications[0].GetTypeName())
+				a.Equal(intervalMin, alert.Notifications[0].GetIntervalMin())
+				a.False(alert.Notifications[0].GetSmsEnabled())
+				alertID = alert.GetId()
 			}
 		}
 	})
@@ -81,6 +81,28 @@ func TestAlertConfig(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		var config admin.PaginatedAlertConfig
+		if err := json.Unmarshal(resp, &config); a.NoError(err) {
+			a.NotEmpty(config.Results)
+		}
+	})
+
+	t.Run("List Compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			alertsEntity,
+			configEntity,
+			"ls",
+			"-c",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		var config []admin.AlertConfigViewForNdsGroup
+		if err := json.Unmarshal(resp, &config); a.NoError(err) {
+			a.NotEmpty(config)
+		}
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -105,12 +127,12 @@ func TestAlertConfig(t *testing.T) {
 
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.AlertConfiguration
+			var alert admin.AlertConfigViewForNdsGroup
 			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
-				a.False(*alert.Enabled)
+				a.False(alert.GetEnabled())
 				a.NotEmpty(alert.Notifications)
-				a.True(*alert.Notifications[0].SMSEnabled)
-				a.True(*alert.Notifications[0].EmailEnabled)
+				a.True(alert.Notifications[0].GetSmsEnabled())
+				a.True(alert.Notifications[0].GetEmailEnabled())
 			}
 		}
 	})

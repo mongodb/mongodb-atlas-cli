@@ -31,7 +31,7 @@ type OrgProjectLister interface {
 }
 
 type ProjectCreator interface {
-	CreateProject(atlasv2.Group, *atlas.CreateProjectOptions) (*atlasv2.Group, error)
+	CreateProject(*atlasv2.CreateProjectApiParams) (*atlasv2.Group, error)
 	ServiceVersionDescriber
 }
 
@@ -96,12 +96,8 @@ func (s *Store) ProjectByName(name string) (interface{}, error) {
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateProject(group atlasv2.Group, opts *atlas.CreateProjectOptions) (*atlasv2.Group, error) {
-	res := s.clientv2.ProjectsApi.CreateProject(s.ctx, &group)
-	if opts != nil {
-		res = res.ProjectOwnerId(opts.ProjectOwnerID)
-	}
-	result, _, err := res.Execute()
+func (s *Store) CreateProject(params *atlasv2.CreateProjectApiParams) (*atlasv2.Group, error) {
+	result, _, err := s.clientv2.ProjectsApi.CreateProjectWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
@@ -141,6 +137,6 @@ func (s *Store) AddTeamsToProject(projectID string, teams []atlasv2.TeamRole) (*
 
 // DeleteTeamFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
-	_, _, err := s.clientv2.TeamsApi.RemoveProjectTeam(s.ctx, projectID, teamID).Execute()
+	_, err := s.clientv2.TeamsApi.RemoveProjectTeam(s.ctx, projectID, teamID).Execute()
 	return err
 }

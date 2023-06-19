@@ -36,8 +36,8 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = `ID	PROJECT ID	SOURCE PROJECT ID	STATUS
-{{.Id}}	{{.Destination.GroupId}}	{{.Source.GroupId}}	{{.Status}}`
+var createTemplate = `ID	LAGTIME	READY FOR CUTOVER	STATUS
+{{.Id}}	{{.LagTimeSeconds}}	{{.ReadyForCutover}}	{{.Status}}`
 
 func (opts *CreateOpts) Run() error {
 	if err := opts.Prompt(); err != nil {

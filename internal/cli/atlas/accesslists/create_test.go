@@ -38,9 +38,11 @@ func TestWhitelistCreate_Run(t *testing.T) {
 		store:     mockStore,
 	}
 
+	projectIPAccessList, _ := createOpts.newProjectIPAccessList()
+
 	mockStore.
 		EXPECT().
-		CreateProjectIPAccessList(createOpts.newProjectIPAccessList()).Return(expected, nil).
+		CreateProjectIPAccessList(projectIPAccessList).Return(expected, nil).
 		Times(1)
 
 	if err := createOpts.Run(); err != nil {

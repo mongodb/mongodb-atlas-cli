@@ -700,10 +700,20 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 		t.Cleanup(func() {
 			deleteAllPrivateEndpoints(t, cliPath, generator.projectID, azureEntity)
 		})
-		var createdNetworkPeer atlasv2.AzurePrivateLinkConnection
+		var createdNetworkPeer *atlasv2.EndpointService
 		err = json.Unmarshal(resp, &createdNetworkPeer)
 		require.NoError(t, err)
 		expectedProject.Spec.PrivateEndpoints[0].ID = createdNetworkPeer.GetId()
+
+		cmd = exec.Command(cliPath,
+			privateEndpointsEntity,
+			azureEntity,
+			"watch",
+			createdNetworkPeer.GetId(),
+			"--projectId", generator.projectID)
+		cmd.Env = os.Environ()
+		_, err = cmd.CombinedOutput()
+		require.NoError(t, err)
 
 		cmd = exec.Command(cliPath,
 			"kubernetes",
@@ -1031,6 +1041,7 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 func referenceSharedCluster(name, region, namespace, projectName string, labels map[string]string) *atlasV1.AtlasDeployment {
 	cluster := referenceAdvancedCluster(name, region, namespace, projectName, labels)
 	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs = &atlasV1.Specs{
+		DiskIOPS:     pointer.Get(int64(0)),
 		InstanceSize: e2eSharedClusterTier,
 	}
 	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs = nil

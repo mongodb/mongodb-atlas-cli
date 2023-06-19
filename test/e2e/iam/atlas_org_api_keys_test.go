@@ -81,6 +81,26 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 		assert.NotEmpty(t, keys.Results)
 	})
 
+	t.Run("List Compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			orgEntity,
+			apiKeysEntity,
+			"ls",
+			"-c",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+		var keys []atlasv2.ApiUser
+		if err := json.Unmarshal(resp, &keys); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		assert.NotEmpty(t, keys)
+	})
+
 	t.Run("Update", func(t *testing.T) {
 		newDesc := "e2e-test-atlas-org-updated"
 		cmd := exec.Command(cliPath,

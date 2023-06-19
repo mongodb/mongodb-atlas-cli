@@ -127,18 +127,18 @@ func (m *MockProjectCreator) EXPECT() *MockProjectCreatorMockRecorder {
 }
 
 // CreateProject mocks base method.
-func (m *MockProjectCreator) CreateProject(arg0 admin.Group, arg1 *mongodbatlas.CreateProjectOptions) (*admin.Group, error) {
+func (m *MockProjectCreator) CreateProject(arg0 *admin.CreateProjectApiParams) (*admin.Group, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateProject", arg0, arg1)
+	ret := m.ctrl.Call(m, "CreateProject", arg0)
 	ret0, _ := ret[0].(*admin.Group)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateProject indicates an expected call of CreateProject.
-func (mr *MockProjectCreatorMockRecorder) CreateProject(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockProjectCreatorMockRecorder) CreateProject(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockProjectCreator)(nil).CreateProject), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockProjectCreator)(nil).CreateProject), arg0)
 }
 
 // ServiceVersion mocks base method.

@@ -22,6 +22,7 @@ const (
 	Members                      = "Number of members in the replica set."
 	Shards                       = "Number of shards in the cluster."
 	ProcessName                  = "Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}."
+	ProcessNameAtlasCLI          = "Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}. You can obtain a list of possible values from the 'id' field when you run the 'atlas processes list' command."
 	Since                        = "Date and time from which the query retrieves the suggested indexes. Specify as the number of seconds that have elapsed since the UNIX epoch. If you don't set the duration option, this command returns data from the since value to the current time."
 	HostID                       = "Unique identifier for the host of a MongoDB process."
 	Duration                     = "Length of time in milliseconds for which you want to return results. If you set the since option, duration starts at the since date and time. If you don't set the since option, this command returns data from the duration before the current time."
@@ -45,7 +46,7 @@ const (
 	Status                       = "State of this alert. Valid values are TRACKING, OPEN, CLOSED, and CANCELLED."
 	Until                        = "ISO 8601-formatted time until which the alert has been acknowledged. This command returns this value if a MongoDB user previously acknowledged this alert. After this date, the alert becomes unacknowledged."
 	ConnectionStringType         = "When set to 'private', retrieves the connection string for the network peering endpoint."
-	Limit                        = "Number of items per results page."
+	Limit                        = "Number of items per results page, up to a maximum of 500. If you have more than 500 results, specify the --page option to change the results page."
 	Username                     = "Username that identifies the user. This value must be a valid email address."
 	BackupStatus                 = "Current (or desired) status of the backup configuration."
 	StorageEngine                = "Storage engine used for the backup."
@@ -147,7 +148,7 @@ dbName and collection are required only for built-in roles.`
 	MetricThreshold                           = "Threshold value outside of which an alert will be triggered."
 	MetricUnits                               = "Units for the threshold value. Valid values are BITS, BYTES, DAYS, GIGABITS, GIGABYTES, HOURS, KILOBITS, KILOBYTES, MEGABITS, MEGABYTES, MILLISECONDS, MINUTES, PETABYTES, RAW, SECONDS, TERABYTES."
 	MetricMode                                = "If specified, Atlas computes the current metric value as an average. Valid value is AVERAGE."
-	NotificationToken                         = "Slack API token, Bot token, or Flowdock personal API token." //nolint:gosec // This is just a message not a password
+	NotificationToken                         = "Slack API token, or Bot token." //nolint:gosec // This is just a message not a password
 	NotificationsChannelName                  = "Slack channel name. Required for the SLACK notifications type."
 	AlertConfigAPIKey                         = "Datadog API Key, Opsgenie API Key, or VictorOps API key. Required if the notificationType is DATADOG, OPS_GENIE, or VICTOR_OPS, respectively." //nolint:gosec // This is just a message not a credential
 	APIKey                                    = "Unique 24-digit string that identifies your API key."                                                                                          //nolint:gosec // This is just a message not a credential
@@ -204,7 +205,7 @@ dbName and collection are required only for built-in roles.`
 	NotificationServiceKey                    = "PagerDuty service key."
 	NotificationSmsEnabled                    = "Flag that enables text message notifications."
 	NotificationTeamID                        = "Unique identifier of a team."
-	NotificationType                          = "Type of alert notification. Valid values are DATADOG, EMAIL, FLOWDOCK, GROUP (Project), ORG, OPS_GENIE, PAGER_DUTY, SLACK, SMS, USER, or VICTOR_OPS."
+	NotificationType                          = "Type of alert notification. Valid values are DATADOG, EMAIL, GROUP (Project), ORG, OPS_GENIE, PAGER_DUTY, SLACK, SMS, USER, or VICTOR_OPS."
 	NotificationUsername                      = "Name of the Atlas user to which to send notifications."
 	NotificationVictorOpsRoutingKey           = "Routing key associated with your Splunk On-Call account."
 	SnapshotID                                = "Unique identifier of the snapshot."
@@ -319,8 +320,10 @@ dbName and collection are required only for built-in roles.`
 	AccessListType                            = "Type of access list entry. Valid values are cidrBlock, ipAddress, or awsSecurityGroup."
 	Service                                   = "Type of MongoDB service. Valid values are cloud, cloudgov, cloud-manager, or ops-manager."
 	Provider                                  = "Name of your cloud service provider. Valid values are AWS, AZURE, or GCP."
+	CreateProvider                            = "Name of your cloud service provider. Valid values are AWS, AZURE, or GCP. You must specify the provider option if you don't use the --file option."
 	ClusterTypes                              = "Type of the cluster that you want to create. Valid values are REPLICASET or SHARDED."
 	Region                                    = "Physical location of your MongoDB cluster. For a complete list of supported AWS regions, see: https://www.mongodb.com/docs/atlas/reference/amazon-aws/. For a complete list of supported Azure regions, see: https://www.mongodb.com/docs/atlas/reference/microsoft-azure/#microsoft-azure. For a complete list of supported GCP regions, see: https://www.mongodb.com/docs/atlas/reference/google-gcp/.."
+	CreateRegion                              = "Physical location of your MongoDB cluster. You must specify the region option if you don't use the --file option. For a complete list of supported AWS regions, see: https://www.mongodb.com/docs/atlas/reference/amazon-aws/. For a complete list of supported Azure regions, see: https://www.mongodb.com/docs/atlas/reference/microsoft-azure/#microsoft-azure. For a complete list of supported GCP regions, see: https://www.mongodb.com/docs/atlas/reference/google-gcp/."
 	AWSIAMType                                = "AWS IAM method by which the provided username is authenticated. Valid values are NONE, USER, or ROLE. If you set this to USER or ROLE, the user authenticates with IAM credentials and doesn't need a password. If you set this to USER or ROLE, you can't set --x509Type or --ldapType to any value other than NONE."
 	X509Type                                  = "X.509 method by which the provided username is authenticated.  Valid values are NONE, MANAGED, or CUSTOMER. If you set this to MANAGED the user authenticates with an Atlas-managed X.509 certificate. If you set this to CUSTOMER, the user authenticates with a self-managed X.509 certificate. If you set this to MANAGED or CUSTOMER, you can't set --awsIAMType or --ldapType to any value other than NONE."
 	LDAPType                                  = "LDAP method by which the provided username is authenticated. Valid values are NONE, USER, or GROUP. If you set this to USER or GROUP, the user authenticates with LDAP. If you set this to USER or GROUP, you can't set --x509Type or --awsIAMType to any value other than NONE."
@@ -429,4 +432,7 @@ dbName and collection are required only for built-in roles.`
 	Tag                                       = "List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the cluster."
 	ServerlessTag                             = "List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the serverless instance."
 	UpdateWarning                             = " Passing this flag replaces preexisting data."
+	EnableWatch                               = "Watch the command until it completes its execution or the watch times out. To set the time that the watch times out, use the --watchTimeout option."
+	WatchTimeout                              = "Time in seconds until a watch times out. After a watch times out, the CLI no longer watches the command."
+	CompactResponse                           = "Flag that enables the compact array response structure for a json output. The --compact option returns array objects as top-level responses and allows backward compatibility for scripts based on previous CLI versions. Omitting the --compact option for a json output returns array objects within a 'results' sub-array. You must specify --output json to use this option."
 )

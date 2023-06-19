@@ -24,11 +24,11 @@ import (
 //go:generate mockgen -destination=../mocks/mock_indexes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store IndexCreator
 
 type IndexCreator interface {
-	CreateIndex(string, string, *atlasv2.RollingIndexRequest) error
+	CreateIndex(string, string, *atlasv2. DatabaseRollingIndexRequest) error
 }
 
 // CreateIndex encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateIndex(projectID, clusterName string, index *atlasv2.RollingIndexRequest) error {
+func (s *Store) CreateIndex(projectID, clusterName string, index *atlasv2. DatabaseRollingIndexRequest) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		_, err := s.clientv2.RollingIndexApi.CreateRollingIndex(s.ctx, projectID, clusterName, index).Execute()

@@ -81,7 +81,7 @@ func (opts *CreateOpts) Run() error {
 		UserAccessList: req,
 	}
 
-	result, err := opts.store.CreateOrganizationAPIKeyAccessList(params)
+	result, err := opts.store.CreateAtlasOrganizationApiKeyAccessList(params)
 	if err != nil {
 		return err
 	}

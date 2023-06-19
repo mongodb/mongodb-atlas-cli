@@ -57,7 +57,7 @@ func (opts *CreateAtlasOpts) Run() error {
 		o.OrgOwnerId = &opts.ownerID
 	}
 	if len(opts.apiKeyRole) > 0 {
-		o.ApiKey = &atlasv2.CreateOrganizationKey{}
+		o.ApiKey = &atlasv2.CreateAtlasOrganizationApiKey{}
 		o.ApiKey.Roles = opts.apiKeyRole
 		o.ApiKey.Desc = &opts.apiKeyDescription
 	}

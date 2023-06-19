@@ -50,7 +50,7 @@ type PipelineAvailableSnapshotsLister interface {
 }
 
 type PipelineAvailableSchedulesLister interface {
-	PipelineAvailableSchedules(string, string) ([]atlasv2.ApiPolicyItem, error)
+	PipelineAvailableSchedules(string, string) ([]atlasv2.DiskBackupApiPolicyItem, error)
 }
 
 type PipelinesTriggerer interface {
@@ -96,7 +96,7 @@ func (s *Store) DeletePipeline(projectID, id string) error {
 }
 
 // PipelineAvailableSchedules encapsulates the logic to manage different cloud providers.
-func (s *Store) PipelineAvailableSchedules(projectID, pipelineName string) ([]atlasv2.ApiPolicyItem, error) {
+func (s *Store) PipelineAvailableSchedules(projectID, pipelineName string) ([]atlasv2.DiskBackupApiPolicyItem, error) {
 	result, _, err := s.clientv2.DataLakePipelinesApi.ListPipelineSchedules(s.ctx, projectID, pipelineName).Execute()
 	return result, err
 }

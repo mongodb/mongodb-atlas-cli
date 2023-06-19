@@ -236,7 +236,7 @@ func (m *MockOrganizationAPIKeyCreator) CreateOrganizationAPIKey(arg0 string, ar
 // CreateOrganizationAPIKey indicates an expected call of CreateOrganizationAPIKey.
 func (mr *MockOrganizationAPIKeyCreatorMockRecorder) CreateOrganizationAPIKey(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationAPIKey", reflect.TypeOf((*MockOrganizationAPIKeyCreator)(nil).CreateOrganizationAPIKey), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationAPIKey", reflect.TypeOf((*MockOrganizationAPIKeyCreator)(nil).CreateAtlasOrganizationApiKey), arg0, arg1)
 }
 
 // MockOrganizationAPIKeyDeleter is a mock of OrganizationAPIKeyDeleter interface.

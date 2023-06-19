@@ -27,7 +27,7 @@ func TestDescribe_Run_ByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserDescriber(ctrl)
 
-	var expected *atlasv2.CloudUser
+	var expected *atlasv2.CloudAppUser
 
 	descOpts := &DescribeOpts{
 		store: mockStore,
@@ -49,7 +49,7 @@ func TestDescribe_Run_ByName(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserDescriber(ctrl)
 
-	var expected *atlasv2.CloudUser
+	var expected *atlasv2.CloudAppUser
 
 	descOpts := &DescribeOpts{
 		store:    mockStore,

@@ -103,7 +103,7 @@ func normalizeAtlasRegion(region string) string {
 	return strings.ReplaceAll(region, "-", "_")
 }
 
-func (opts *AWSOpts) newPeer(containerID string) *atlasv2.NetworkContainerPeer {
+func (opts *AWSOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringConnectionSettings {
 	a := atlasv2.AWSPeerVpcAsNetworkContainerPeer(opts.newAWSPeer(containerID))
 	return &a
 }

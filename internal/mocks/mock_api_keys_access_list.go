@@ -46,7 +46,7 @@ func (m *MockOrganizationAPIKeyAccessListCreator) CreateOrganizationAPIKeyAccess
 // CreateOrganizationAPIKeyAccessList indicates an expected call of CreateOrganizationAPIKeyAccessList.
 func (mr *MockOrganizationAPIKeyAccessListCreatorMockRecorder) CreateOrganizationAPIKeyAccessList(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationAPIKeyAccessList", reflect.TypeOf((*MockOrganizationAPIKeyAccessListCreator)(nil).CreateOrganizationAPIKeyAccessList), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationAPIKeyAccessList", reflect.TypeOf((*MockOrganizationAPIKeyAccessListCreator)(nil).CreateAtlasOrganizationApiKeyAccessList), arg0, arg1, arg2)
 }
 
 // MockOrganizationAPIKeyAccessListDeleter is a mock of OrganizationAPIKeyAccessListDeleter interface.

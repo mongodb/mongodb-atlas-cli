@@ -35,7 +35,7 @@ func (m *MockIndexCreator) EXPECT() *MockIndexCreatorMockRecorder {
 }
 
 // CreateIndex mocks base method.
-func (m *MockIndexCreator) CreateIndex(arg0, arg1 string, arg2 *admin.RollingIndexRequest) error {
+func (m *MockIndexCreator) CreateIndex(arg0, arg1 string, arg2 *admin. DatabaseRollingIndexRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateIndex", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)

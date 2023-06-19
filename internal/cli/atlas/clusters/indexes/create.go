@@ -60,12 +60,12 @@ func (opts *CreateOpts) Run() error {
 	return nil
 }
 
-func (opts *CreateOpts) newIndex() (*atlasv2.RollingIndexRequest, error) {
+func (opts *CreateOpts) newIndex() (*atlasv2.DatabaseRollingIndexRequest, error) {
 	keys, err := opts.indexKeys()
 	if err != nil {
 		return nil, err
 	}
-	i := new(atlasv2.RollingIndexRequest)
+	i := new(atlasv2. DatabaseRollingIndexRequest)
 	i.Db = opts.db
 	i.Collection = opts.collection
 	i.Keys = keys

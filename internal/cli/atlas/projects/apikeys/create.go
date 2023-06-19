@@ -50,7 +50,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	apiKeyInput := &atlasv2.CreateProjectKey{
+	apiKeyInput := &atlasv2.CreateAtlasProjectApiKey{
 		Desc:  &opts.description,
 		Roles: opts.roles,
 	}

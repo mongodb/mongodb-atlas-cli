@@ -264,10 +264,10 @@ func (m *MockPipelineAvailableSchedulesLister) EXPECT() *MockPipelineAvailableSc
 }
 
 // PipelineAvailableSchedules mocks base method.
-func (m *MockPipelineAvailableSchedulesLister) PipelineAvailableSchedules(arg0, arg1 string) ([]admin.ApiPolicyItem, error) {
+func (m *MockPipelineAvailableSchedulesLister) PipelineAvailableSchedules(arg0, arg1 string) ([]admin.DiskBackupApiPolicyItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PipelineAvailableSchedules", arg0, arg1)
-	ret0, _ := ret[0].([]admin.ApiPolicyItem)
+	ret0, _ := ret[0].([]admin.DiskBackupApiPolicyItem)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

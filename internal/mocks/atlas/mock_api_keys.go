@@ -74,10 +74,10 @@ func (m *MockProjectAPIKeyCreator) EXPECT() *MockProjectAPIKeyCreatorMockRecorde
 }
 
 // CreateProjectAPIKey mocks base method.
-func (m *MockProjectAPIKeyCreator) CreateProjectAPIKey(arg0 string, arg1 *admin.CreateProjectKey) (*admin.ApiKeyUser, error) {
+func (m *MockProjectAPIKeyCreator) CreateProjectAPIKey(arg0 string, arg1 *admin.CreateProjectKey) (*admin.ApiKeyUserDetails, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProjectAPIKey", arg0, arg1)
-	ret0, _ := ret[0].(*admin.ApiKeyUser)
+	ret0, _ := ret[0].(*admin.ApiKeyUserDetails)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -150,10 +150,10 @@ func (m *MockOrganizationAPIKeyDescriber) EXPECT() *MockOrganizationAPIKeyDescri
 }
 
 // OrganizationAPIKey mocks base method.
-func (m *MockOrganizationAPIKeyDescriber) OrganizationAPIKey(arg0, arg1 string) (*admin.ApiKeyUser, error) {
+func (m *MockOrganizationAPIKeyDescriber) OrganizationAPIKey(arg0, arg1 string) (*admin.ApiKeyUserDetails, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationAPIKey", arg0, arg1)
-	ret0, _ := ret[0].(*admin.ApiKeyUser)
+	ret0, _ := ret[0].(*admin.ApiKeyUserDetails)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -188,10 +188,10 @@ func (m *MockOrganizationAPIKeyUpdater) EXPECT() *MockOrganizationAPIKeyUpdaterM
 }
 
 // UpdateOrganizationAPIKey mocks base method.
-func (m *MockOrganizationAPIKeyUpdater) UpdateOrganizationAPIKey(arg0, arg1 string, arg2 *admin.CreateOrganizationKey) (*admin.ApiKeyUser, error) {
+func (m *MockOrganizationAPIKeyUpdater) UpdateOrganizationAPIKey(arg0, arg1 string, arg2 *admin.CreateAtlasOrganizationApiKey) (*admin.ApiKeyUserDetails, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOrganizationAPIKey", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*admin.ApiKeyUser)
+	ret0, _ := ret[0].(*admin.ApiKeyUserDetails)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -226,10 +226,10 @@ func (m *MockOrganizationAPIKeyCreator) EXPECT() *MockOrganizationAPIKeyCreatorM
 }
 
 // CreateOrganizationKey mocks base method.
-func (m *MockOrganizationAPIKeyCreator) CreateOrganizationKey(arg0 string, arg1 *admin.CreateOrganizationKey) (*admin.ApiKeyUser, error) {
+func (m *MockOrganizationAPIKeyCreator) CreateOrganizationKey(arg0 string, arg1 *admin.CreateAtlasOrganizationApiKey) (*admin.ApiKeyUserDetails, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOrganizationKey", arg0, arg1)
-	ret0, _ := ret[0].(*admin.ApiKeyUser)
+	ret0, _ := ret[0].(*admin.ApiKeyUserDetails)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -237,7 +237,7 @@ func (m *MockOrganizationAPIKeyCreator) CreateOrganizationKey(arg0 string, arg1 
 // CreateOrganizationKey indicates an expected call of CreateOrganizationKey.
 func (mr *MockOrganizationAPIKeyCreatorMockRecorder) CreateOrganizationKey(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationKey", reflect.TypeOf((*MockOrganizationAPIKeyCreator)(nil).CreateOrganizationKey), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationKey", reflect.TypeOf((*MockOrganizationAPIKeyCreator)(nil).CreateAtlasOrganizationApiKey), arg0, arg1)
 }
 
 // MockOrganizationAPIKeyDeleter is a mock of OrganizationAPIKeyDeleter interface.

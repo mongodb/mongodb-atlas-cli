@@ -103,7 +103,7 @@ func (opts *AzureOpts) newContainer() *atlasv2.CloudProviderContainer {
 	return &w
 }
 
-func (opts *AzureOpts) newPeer(containerID string) *atlasv2.NetworkContainerPeer {
+func (opts *AzureOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringConnectionSettings {
 	a := atlasv2.AzurePeerNetworkAsNetworkContainerPeer(opts.newAzurePeer((containerID)))
 	return &a
 }

@@ -154,7 +154,6 @@ func newAtlasProjectRole(role string) (atlasv2.CloudRoleAssignment, error) {
 	}
 	atlasRole := atlasv2.CloudRoleAssignment{
 		GroupId: &value[0], 
-		// TODO fix this
 		RoleName:    pointer.Get(strings.ToUpper(value[1])),
 	}
 

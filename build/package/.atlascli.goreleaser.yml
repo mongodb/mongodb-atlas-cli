@@ -24,7 +24,9 @@ builds:
     goarch: [amd64,arm64]
     hooks:
       # This will notarize Apple binaries and replace goreleaser bins with the notarized ones
-      post: ./build/package/atlascli_mac_notarize.sh
+      post:
+        - cmd: ./build/package/atlascli_mac_notarize.sh
+          output: true
   - <<: *build_defaults
     id: windows
     goos: [windows]

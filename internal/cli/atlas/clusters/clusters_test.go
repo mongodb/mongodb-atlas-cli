@@ -46,7 +46,7 @@ func TestMongoCLIBuilder(t *testing.T) {
 
 func TestAddLabel(t *testing.T) {
 	type args struct {
-		out   *atlasv2.ClusterDescriptionV15
+		out   *atlasv2.AdvancedClusterDescription
 		label atlasv2.NDSLabel
 	}
 	tests := []struct {
@@ -57,7 +57,7 @@ func TestAddLabel(t *testing.T) {
 		{
 			name: "adds",
 			args: args{
-				out: &atlasv2.ClusterDescriptionV15{
+				out: &atlasv2.AdvancedClusterDescription{
 					Labels: []atlasv2.NDSLabel{},
 				},
 				label: atlasv2.NDSLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
@@ -67,7 +67,7 @@ func TestAddLabel(t *testing.T) {
 		{
 			name: "doesn't adds",
 			args: args{
-				out: &atlasv2.ClusterDescriptionV15{
+				out: &atlasv2.AdvancedClusterDescription{
 					Labels: []atlasv2.NDSLabel{{Key: pointer.Get("test"), Value: pointer.Get("test")}},
 				},
 				label: atlasv2.NDSLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
@@ -149,12 +149,12 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 	)
 	tests := []struct {
 		name string
-		args *atlasv2.ClusterDescriptionV15
-		want *atlasv2.ClusterDescriptionV15
+		args *atlasv2.AdvancedClusterDescription
+		want *atlasv2.AdvancedClusterDescription
 	}{
 		{
 			name: "One AdvancedReplicationSpec",
-			args: &atlasv2.ClusterDescriptionV15{
+			args: &atlasv2.AdvancedClusterDescription{
 				Id:             &id,
 				MongoDBVersion: &testVar,
 				StateName:      &testVar,
@@ -167,7 +167,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 				},
 				CreateDate: &timeStamp,
 			},
-			want: &atlasv2.ClusterDescriptionV15{
+			want: &atlasv2.AdvancedClusterDescription{
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
 						NumShards: &shards,
@@ -178,7 +178,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 		},
 		{
 			name: "More AdvancedReplicationSpecs",
-			args: &atlasv2.ClusterDescriptionV15{
+			args: &atlasv2.AdvancedClusterDescription{
 				Id:             &id,
 				MongoDBVersion: &testVar,
 				StateName:      &testVar,
@@ -201,7 +201,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 				},
 				CreateDate: &timeStamp,
 			},
-			want: &atlasv2.ClusterDescriptionV15{
+			want: &atlasv2.AdvancedClusterDescription{
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
 						NumShards: &shards,
@@ -220,7 +220,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 		},
 		{
 			name: "Nothing to remove",
-			args: &atlasv2.ClusterDescriptionV15{
+			args: &atlasv2.AdvancedClusterDescription{
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
 						NumShards: &shards,
@@ -236,7 +236,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 					},
 				},
 			},
-			want: &atlasv2.ClusterDescriptionV15{
+			want: &atlasv2.AdvancedClusterDescription{
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
 						NumShards: &shards,

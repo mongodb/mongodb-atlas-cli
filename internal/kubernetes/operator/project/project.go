@@ -445,7 +445,7 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	return result, intSecrets, nil
 }
 
-func getIntegrationType(val atlasv2.Integration) string {
+func getIntegrationType(val atlasv2.ThridPartyIntegration) string {
 	switch {
 	case val.Datadog != nil:
 		return datadogIntegrationType

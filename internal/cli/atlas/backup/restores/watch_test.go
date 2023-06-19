@@ -44,7 +44,7 @@ func TestWatchOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockRestoreJobsDescriber(ctrl)
 
-	expected := &atlasv2.DiskBackupRestoreJob{
+	expected := &admin. DiskBackupSnapshotRestoreJob{
 		Failed: pointer.Get(true),
 	}
 

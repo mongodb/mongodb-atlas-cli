@@ -131,7 +131,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var clusterResponse *atlasv2.ClusterDescriptionV15
+		var clusterResponse *atlasv2.AdvancedClusterDescription
 		err = json.Unmarshal(resp, &clusterResponse)
 		req.NoError(err)
 

@@ -30,7 +30,7 @@ type ClusterLister interface {
 }
 
 type AtlasClusterDescriber interface {
-	AtlasCluster(string, string) (*admin.ClusterDescriptionV15, error)
+	AtlasCluster(string, string) (*admin.AdvancedClusterDescription, error)
 }
 
 type AtlasClusterConfigurationOptionsDescriber interface {
@@ -50,7 +50,7 @@ type AtlasSharedClusterDescriber interface {
 }
 
 type ClusterCreator interface {
-	CreateCluster(v15 *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error)
+	CreateCluster(v15 *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error)
 }
 
 type ClusterDeleter interface {
@@ -58,15 +58,15 @@ type ClusterDeleter interface {
 }
 
 type ClusterUpdater interface {
-	UpdateCluster(string, string, *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error)
+	UpdateCluster(string, string, *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error)
 }
 
 type ClusterPauser interface {
-	PauseCluster(string, string) (*admin.ClusterDescriptionV15, error)
+	PauseCluster(string, string) (*admin.AdvancedClusterDescription, error)
 }
 
 type ClusterStarter interface {
-	StartCluster(string, string) (*admin.ClusterDescriptionV15, error)
+	StartCluster(string, string) (*admin.AdvancedClusterDescription, error)
 }
 
 type ClusterUpgrader interface {
@@ -130,7 +130,7 @@ func (s *Store) SampleDataStatus(groupID, id string) (*admin.SampleDatasetStatus
 }
 
 // CreateCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateCluster(cluster *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error) {
+func (s *Store) CreateCluster(cluster *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.MultiCloudClustersApi.CreateCluster(s.ctx, cluster.GetGroupId(), cluster).Execute()
@@ -141,7 +141,7 @@ func (s *Store) CreateCluster(cluster *admin.ClusterDescriptionV15) (*admin.Clus
 }
 
 // UpdateCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateCluster(projectID, name string, cluster *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error) {
+func (s *Store) UpdateCluster(projectID, name string, cluster *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.MultiCloudClustersApi.UpdateCluster(s.ctx, projectID, name, cluster).Execute()
@@ -152,18 +152,18 @@ func (s *Store) UpdateCluster(projectID, name string, cluster *admin.ClusterDesc
 }
 
 // PauseCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) PauseCluster(projectID, name string) (*admin.ClusterDescriptionV15, error) {
+func (s *Store) PauseCluster(projectID, name string) (*admin.AdvancedClusterDescription, error) {
 	paused := true
-	cluster := &admin.ClusterDescriptionV15{
+	cluster := &admin.AdvancedClusterDescription{
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
 }
 
 // StartCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) StartCluster(projectID, name string) (*admin.ClusterDescriptionV15, error) {
+func (s *Store) StartCluster(projectID, name string) (*admin.AdvancedClusterDescription, error) {
 	paused := false
-	cluster := &admin.ClusterDescriptionV15{
+	cluster := &admin.AdvancedClusterDescription{
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
@@ -221,7 +221,7 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (inte
 }
 
 // AtlasCluster encapsulates the logic to manage different cloud providers.
-func (s *Store) AtlasCluster(projectID, name string) (*admin.ClusterDescriptionV15, error) {
+func (s *Store) AtlasCluster(projectID, name string) (*admin.AdvancedClusterDescription, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.MultiCloudClustersApi.GetCluster(s.ctx, projectID, name).Execute()

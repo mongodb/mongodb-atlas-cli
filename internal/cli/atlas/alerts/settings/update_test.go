@@ -28,7 +28,7 @@ func TestUpdates_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationUpdater(ctrl)
 
-	expected := &atlasv2.AlertConfigViewForNdsGroup{}
+	expected := &atlasv2.GroupAlertsConfig{}
 
 	updateOpts := &UpdateOpts{
 		ConfigOpts: ConfigOpts{

@@ -88,8 +88,8 @@ func TestBuildAtlasProject(t *testing.T) {
 		authDate, _ := time.Parse(time.RFC3339, "01-01-2001")
 		createDate, _ := time.Parse(time.RFC3339, "01-02-2001")
 
-		cpas := &atlasv2.CloudProviderAccess{
-			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
+		cpas := &atlasv2. CloudProviderAccessRole{
+			AwsIamRoles: []atlasv2. CloudProviderAccessRoleAWSIAMRole{
 				{
 					AtlasAWSAccountArn:         pointer.Get("TestARN"),
 					AtlasAssumedRoleExternalId: pointer.Get("TestExternalRoleID"),
@@ -115,7 +115,7 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		thirdPartyIntegrations := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []atlasv2.Integration{
+			Results: []atlasv2.ThridPartyIntegration{
 				{
 					Prometheus: &atlasv2.Prometheus{
 						Type:             pointer.Get("PROMETHEUS"),
@@ -700,8 +700,8 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 
 	cpaProvider := mocks.NewMockCloudProviderAccessRoleLister(ctl)
 	t.Run("Can convert CPA roles", func(t *testing.T) {
-		data := &atlasv2.CloudProviderAccess{
-			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
+		data := &atlasv2. CloudProviderAccessRole{
+			AwsIamRoles: []atlasv2. CloudProviderAccessRoleAWSIAMRole{
 				{
 					AtlasAWSAccountArn:         pointer.Get("TestARN"),
 					AtlasAssumedRoleExternalId: pointer.Get("TestRoleID"),
@@ -866,7 +866,7 @@ func Test_buildIntegrations(t *testing.T) {
 		const includeSecrets = true
 		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []atlasv2.Integration{
+			Results: []atlasv2.ThridPartyIntegration{
 				{
 					Prometheus: &atlasv2.Prometheus{
 						Type:             pointer.Get("PROMETHEUS"),
@@ -934,7 +934,7 @@ func Test_buildIntegrations(t *testing.T) {
 		const includeSecrets = false
 		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []atlasv2.Integration{
+			Results: []atlasv2.ThridPartyIntegration{
 				{
 					Prometheus: &atlasv2.Prometheus{
 						Type:             pointer.Get("PROMETHEUS"),

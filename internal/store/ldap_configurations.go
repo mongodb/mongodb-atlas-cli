@@ -24,11 +24,11 @@ import (
 //go:generate mockgen -destination=../mocks/mock_ldap_configurations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LDAPConfigurationVerifier,LDAPConfigurationDescriber,LDAPConfigurationSaver,LDAPConfigurationDeleter,LDAPConfigurationGetter
 
 type LDAPConfigurationVerifier interface {
-	VerifyLDAPConfiguration(string, *atlasv2.NDSLDAPVerifyConnectivityJobRequestParams) (*atlasv2.NDSLDAPVerifyConnectivityJobRequest, error)
+	VerifyLDAPConfiguration(string, *atlasv2.LDAPVerifyConnectivityJobRequestParams) (*atlasv2.LDAPVerifyConnectivityJobRequest, error)
 }
 
 type LDAPConfigurationDescriber interface {
-	GetStatusLDAPConfiguration(string, string) (*atlasv2.NDSLDAPVerifyConnectivityJobRequest, error)
+	GetStatusLDAPConfiguration(string, string) (*atlasv2.LDAPVerifyConnectivityJobRequest, error)
 }
 
 type LDAPConfigurationDeleter interface {
@@ -44,7 +44,7 @@ type LDAPConfigurationGetter interface {
 }
 
 // VerifyLDAPConfiguration encapsulates the logic to manage different cloud providers.
-func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlasv2.NDSLDAPVerifyConnectivityJobRequestParams) (*atlasv2.NDSLDAPVerifyConnectivityJobRequest, error) {
+func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlasv2.LDAPVerifyConnectivityJobRequestParams) (*atlasv2.LDAPVerifyConnectivityJobRequest, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.clientv2.LDAPConfigurationApi.VerifyLDAPConfiguration(s.ctx, projectID, ldap).
@@ -56,7 +56,7 @@ func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlasv2.NDSLDAPV
 }
 
 // GetStatusLDAPConfiguration encapsulates the logic to manage different cloud providers.
-func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlasv2.NDSLDAPVerifyConnectivityJobRequest, error) {
+func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlasv2.LDAPVerifyConnectivityJobRequest, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.clientv2.LDAPConfigurationApi.GetLDAPConfigurationStatus(s.ctx, projectID, requestID).Execute()

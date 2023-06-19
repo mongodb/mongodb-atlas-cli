@@ -110,7 +110,7 @@ func NewProfileReplaceConfirm(entry string) survey.Prompt {
 }
 
 // NewOrgSelect create a prompt to choice the organization.
-func NewOrgSelect(options []atlasv2.Organization) survey.Prompt {
+func NewOrgSelect(options []atlasv2.AtlasOrganization) survey.Prompt {
 	opt := make([]string, len(options))
 	for i, o := range options {
 		opt[i] = *o.Id

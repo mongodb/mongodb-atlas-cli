@@ -17,7 +17,6 @@ package clusters
 import (
 	"context"
 	"sort"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -69,9 +68,10 @@ func (opts *autoCompleteOpts) tierSuggestions(toComplete string) ([]string, erro
 	availableTiers := map[string]bool{}
 	for _, p := range result.Results {
 		for _, i := range p.InstanceSizes {
-			if _, ok := availableTiers[i.GetName()]; !ok && strings.HasPrefix(i.GetName(), strings.ToUpper(toComplete)) {
-				availableTiers[i.GetName()] = true
-			}
+			_ = i; // TODO fix this
+			// if _, ok := availableTiers[i.GetName()]; !ok && strings.HasPrefix(i.GetName(), strings.ToUpper(toComplete)) {
+			// 	availableTiers[i.GetName()] = true
+			// }
 		}
 	}
 	suggestion := make([]string, len(availableTiers))
@@ -115,13 +115,15 @@ func (opts *autoCompleteOpts) regionSuggestions(toComplete string) ([]string, er
 	}
 	availableRegions := map[string]bool{}
 	for _, p := range result.Results {
-		for _, i := range p.InstanceSizes {
-			for _, r := range i.AvailableRegions {
-				if _, ok := availableRegions[r.GetName()]; !ok && strings.HasPrefix(r.GetName(), strings.ToUpper(toComplete)) {
-					availableRegions[r.GetName()] = true
-				}
-			}
-		}
+		// TODO fix this
+		_ = p.InstanceSizes
+		// for _, i := range p.InstanceSizes {
+		// 	// for _, r := range i.AvailableRegions {
+		// 	// 	if _, ok := availableRegions[r.GetName()]; !ok && strings.HasPrefix(r.GetName(), strings.ToUpper(toComplete)) {
+		// 	// 		availableRegions[r.GetName()] = true
+		// 	// 	}
+		// 	// }
+		// }
 	}
 	suggestion := make([]string, len(availableRegions))
 	i := 0

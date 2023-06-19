@@ -44,7 +44,7 @@ func TestDescribe_Run(t *testing.T) {
 		},
 	}
 
-	expected := &atlasv2.Integration{
+	expected := &atlasv2.ThridPartyIntegration{
 		Slack: &atlasv2.Slack{
 			ApiToken: "testToken",
 			TeamName: pointer.Get("testTeam"),

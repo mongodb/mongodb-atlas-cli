@@ -49,15 +49,15 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *CreateOpts) newAPIKeyInput() *atlasv2.CreateOrganizationApiKey {
-	return &atlasv2.CreateOrganizationApiKey{
+func (opts *CreateOpts) newAPIKeyInput() *atlasv2.CreateOrganizationKey {
+	return &atlasv2.CreateOrganizationKey{
 		Desc:  &opts.desc,
 		Roles: opts.roles,
 	}
 }
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateOrganizationAPIKey(opts.ConfigOrgID(), opts.newAPIKeyInput())
+	r, err := opts.store.CreateOrganizationKey(opts.ConfigOrgID(), opts.newAPIKeyInput())
 
 	if err != nil {
 		return err

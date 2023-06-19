@@ -199,7 +199,7 @@ func TestIntegrations(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var thirdPartyIntegration atlasv2.Integration
+		var thirdPartyIntegration atlasv2.ThridPartyIntegration
 		if err := json.Unmarshal(resp, &thirdPartyIntegration); a.NoError(err) {
 			a.Equal(webhookEntity, thirdPartyIntegration.Webhook.GetType())
 		}

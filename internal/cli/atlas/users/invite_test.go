@@ -32,7 +32,7 @@ func TestInvite_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserCreator(ctrl)
 
-	expected := &atlasv2.AppUser{
+	expected := &atlasv2.CloudUser{
 		Username: "testUser",
 	}
 	opts := &InviteOpts{

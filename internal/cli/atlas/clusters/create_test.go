@@ -35,7 +35,7 @@ func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterCreator(ctrl)
 
-	expected := &atlasv2.ClusterDescriptionV15{}
+	expected := &atlasv2.AdvancedClusterDescription{}
 
 	t.Run("flags run", func(t *testing.T) {
 		createOpts := &CreateOpts{
@@ -114,7 +114,7 @@ func TestCreateOpts_PostRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterCreator(ctrl)
 
-	expected := &atlasv2.ClusterDescriptionV15{
+	expected := &atlasv2.AdvancedClusterDescription{
 		Name: pointer.Get("ProjectBar"),
 	}
 

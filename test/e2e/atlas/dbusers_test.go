@@ -92,7 +92,7 @@ func TestDBUserWithFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var users []atlasv2.DatabaseUser
+		var users []atlasv2.CloudDatabaseUser
 		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
 
 		if len(users) == 0 {
@@ -187,7 +187,7 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	resp, err := cmd.CombinedOutput()
 	require.NoError(t, err, string(resp))
 
-	var user atlasv2.DatabaseUser
+	var user atlasv2.CloudDatabaseUser
 	require.NoError(t, json.Unmarshal(resp, &user), string(resp))
 
 	a := assert.New(t)
@@ -212,7 +212,7 @@ func testDescribeUser(t *testing.T, cliPath, username string) {
 	resp, err := cmd.CombinedOutput()
 	require.NoError(t, err, string(resp))
 
-	var user atlasv2.DatabaseUser
+	var user atlasv2.CloudDatabaseUser
 	require.NoError(t, json.Unmarshal(resp, &user), string(resp))
 	if user.Username != username {
 		t.Fatalf("expected username to match %v, got %v", username, user.Username)
@@ -226,7 +226,7 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	resp, err := cmd.CombinedOutput()
 	require.NoError(t, err, string(resp))
 
-	var user atlasv2.DatabaseUser
+	var user atlasv2.CloudDatabaseUser
 	require.NoError(t, json.Unmarshal(resp, &user), string(resp))
 
 	a := assert.New(t)

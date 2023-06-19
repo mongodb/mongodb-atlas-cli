@@ -58,13 +58,13 @@ func (opts *InviteOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *InviteOpts) newUserRequest() (*atlasv2.AppUser, error) {
+func (opts *InviteOpts) newUserRequest() (*atlasv2.CloudUser, error) {
 	roles, err := opts.createRoles()
 	if err != nil {
 		return nil, err
 	}
 
-	user := atlasv2.AppUser{
+	user := atlasv2.CloudUser{
 		Username:     opts.username,
 		Password:     opts.password,
 		FirstName:    opts.firstName,
@@ -94,12 +94,12 @@ func (opts *InviteOpts) Run() error {
 
 const keyParts = 2
 
-func (opts *InviteOpts) createRoles() ([]atlasv2.RoleAssignment, error) {
+func (opts *InviteOpts) createRoles() ([]atlasv2.CloudRoleAssignment, error) {
 	if !config.IsCloud() {
 		return nil, nil
 	}
 
-	atlasRoles := make([]atlasv2.RoleAssignment, len(opts.orgRoles)+len(opts.projectRoles))
+	atlasRoles := make([]atlasv2.CloudRoleAssignment, len(opts.orgRoles)+len(opts.projectRoles))
 
 	i := 0
 	for _, role := range opts.orgRoles {
@@ -147,27 +147,28 @@ func splitRole(role string) ([]string, error) {
 	return value, nil
 }
 
-func newAtlasProjectRole(role string) (atlasv2.RoleAssignment, error) {
+func newAtlasProjectRole(role string) (atlasv2.CloudRoleAssignment, error) {
 	value, err := splitRole(role)
 	if err != nil {
-		return atlasv2.RoleAssignment{}, err
+		return atlasv2.CloudRoleAssignment{}, err
 	}
-	atlasRole := atlasv2.RoleAssignment{
-		GroupId: &value[0],
-		Role:    pointer.Get(strings.ToUpper(value[1])),
+	atlasRole := atlasv2.CloudRoleAssignment{
+		GroupId: &value[0], 
+		// TODO fix this
+		RoleName:    pointer.Get(strings.ToUpper(value[1])),
 	}
 
 	return atlasRole, nil
 }
 
-func newAtlasOrgRole(role string) (atlasv2.RoleAssignment, error) {
+func newAtlasOrgRole(role string) (atlasv2.CloudRoleAssignment, error) {
 	value, err := splitRole(role)
 	if err != nil {
-		return atlasv2.RoleAssignment{}, err
+		return atlasv2.CloudRoleAssignment{}, err
 	}
-	atlasRole := atlasv2.RoleAssignment{
+	atlasRole := atlasv2.CloudRoleAssignment{
 		OrgId: &value[0],
-		Role:  pointer.Get(strings.ToUpper(value[1])),
+		RoleName:  pointer.Get(strings.ToUpper(value[1])),
 	}
 	return atlasRole, nil
 }

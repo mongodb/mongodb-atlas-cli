@@ -56,8 +56,8 @@ func (opts *OpsGenieOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlasv2.Integration {
-	return &atlasv2.Integration{
+func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlasv2.ThridPartyIntegration {
+	return &atlasv2.ThridPartyIntegration{
 		OpsGenie: &atlasv2.OpsGenie{
 			Type:   &opsGenieType,
 			Region: &opts.region,

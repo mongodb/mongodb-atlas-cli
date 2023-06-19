@@ -93,8 +93,8 @@ func (opts *GCPOpts) newContainer() *atlasv2.CloudProviderContainer {
 	return &w
 }
 
-func (opts *GCPOpts) newPeer(containerID string) *atlasv2.ContainerPeer {
-	a := atlasv2.GCPPeerVpcAsContainerPeer(opts.newGCPPeer(containerID))
+func (opts *GCPOpts) newPeer(containerID string) *atlasv2.NetworkContainerPeer {
+	a := atlasv2.GCPPeerVpcAsNetworkContainerPeer(opts.newGCPPeer(containerID))
 	return &a
 }
 

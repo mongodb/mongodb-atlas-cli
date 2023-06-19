@@ -26,7 +26,7 @@ type ProjectAPIKeyLister interface {
 }
 
 type ProjectAPIKeyCreator interface {
-	CreateProjectAPIKey(string, *atlasv2.CreateProjectApiKey) (*atlasv2.ApiUser, error)
+	CreateProjectAPIKey(string, *atlasv2.CreateProjectKey) (*atlasv2.ApiKeyUser, error)
 }
 
 type ProjectAPIKeyDeleter interface {
@@ -34,7 +34,7 @@ type ProjectAPIKeyDeleter interface {
 }
 
 type ProjectAPIKeyAssigner interface {
-	AssignProjectAPIKey(string, string, *atlasv2.CreateProjectApiKey) error
+	AssignProjectAPIKey(string, string, *atlasv2.CreateProjectKey) error
 }
 
 type OrganizationAPIKeyLister interface {
@@ -42,15 +42,15 @@ type OrganizationAPIKeyLister interface {
 }
 
 type OrganizationAPIKeyDescriber interface {
-	OrganizationAPIKey(string, string) (*atlasv2.ApiUser, error)
+	OrganizationAPIKey(string, string) (*atlasv2.ApiKeyUser, error)
 }
 
 type OrganizationAPIKeyUpdater interface {
-	UpdateOrganizationAPIKey(string, string, *atlasv2.CreateOrganizationApiKey) (*atlasv2.ApiUser, error)
+	UpdateOrganizationAPIKey(string, string, *atlasv2.CreateOrganizationKey) (*atlasv2.ApiKeyUser, error)
 }
 
 type OrganizationAPIKeyCreator interface {
-	CreateOrganizationAPIKey(string, *atlasv2.CreateOrganizationApiKey) (*atlasv2.ApiUser, error)
+	CreateOrganizationKey(string, *atlasv2.CreateOrganizationKey) (*atlasv2.ApiKeyUser, error)
 }
 
 type OrganizationAPIKeyDeleter interface {
@@ -68,19 +68,19 @@ func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) (*atl
 }
 
 // OrganizationAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlasv2.ApiUser, error) {
+func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlasv2.ApiKeyUser, error) {
 	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.GetApiKey(s.ctx, orgID, apiKeyID).Execute()
 	return result, err
 }
 
 // UpdateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlasv2.CreateOrganizationApiKey) (*atlasv2.ApiUser, error) {
+func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlasv2.CreateOrganizationKey) (*atlasv2.ApiKeyUser, error) {
 	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKey(s.ctx, orgID, apiKeyID, input).Execute()
 	return result, err
 }
 
-// CreateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlasv2.CreateOrganizationApiKey) (*atlasv2.ApiUser, error) {
+// CreateOrganizationKey encapsulates the logic to manage different cloud providers.
+func (s *Store) CreateOrganizationKey(orgID string, input *atlasv2.CreateOrganizationKey) (*atlasv2.ApiKeyUser, error) {
 	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateApiKey(s.ctx, orgID, input).Execute()
 	return result, err
 }
@@ -102,13 +102,13 @@ func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) (*atla
 }
 
 // CreateProjectAPIKey creates an API Keys for a project.
-func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlasv2.CreateProjectApiKey) (*atlasv2.ApiUser, error) {
+func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlasv2.CreateProjectKey) (*atlasv2.ApiKeyUser, error) {
 	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateProjectApiKey(s.ctx, projectID, apiKeyInput).Execute()
 	return result, err
 }
 
 // AssignProjectAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlasv2.CreateProjectApiKey) error {
+func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlasv2.CreateProjectKey) error {
 	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKeyRoles(s.ctx, projectID, apiKeyID, input).Execute()
 	return err
 }

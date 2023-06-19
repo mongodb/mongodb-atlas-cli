@@ -56,8 +56,8 @@ func (opts *WebhookOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *WebhookOpts) newWebhookIntegration() *atlasv2.Integration {
-	return &atlasv2.Integration{
+func (opts *WebhookOpts) newWebhookIntegration() *atlasv2.ThridPartyIntegration {
+	return &atlasv2.ThridPartyIntegration{
 		Webhook: &atlasv2.Webhook{
 			Type:   &webhookIntegrationType,
 			Url:    opts.url,

@@ -61,9 +61,9 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newExportJob() *atlasv2.DiskBackupExportJobRequest {
-	customData := make([]atlasv2.Label, 0, len(opts.customData))
+	customData := make([]atlasv2.BackupLabel, 0, len(opts.customData))
 	for key, value := range opts.customData {
-		pair := atlasv2.Label{}
+		pair := atlasv2.BackupLabel{}
 		pair.Key, pair.Value = pointer.Get(key), pointer.Get(value)
 		customData = append(customData, pair)
 	}

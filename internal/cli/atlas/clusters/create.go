@@ -74,7 +74,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 var createWatchTmpl = "Cluster '{{.Name}}' created successfully.\n"
-var clusterObj *atlasv2.ClusterDescriptionV15
+var clusterObj *atlasv2.AdvancedClusterDescription
 
 func (opts *CreateOpts) Run() error {
 	cluster, err := opts.newCluster()
@@ -123,8 +123,8 @@ func (opts *CreateOpts) PostRun() error {
 	return opts.Print(clusterObj)
 }
 
-func (opts *CreateOpts) newCluster() (*atlasv2.ClusterDescriptionV15, error) {
-	cluster := new(atlasv2.ClusterDescriptionV15)
+func (opts *CreateOpts) newCluster() (*atlasv2.AdvancedClusterDescription, error) {
+	cluster := new(atlasv2.AdvancedClusterDescription)
 	if opts.filename != "" {
 		if err := file.Load(opts.fs, opts.filename, cluster); err != nil {
 			return nil, err
@@ -144,7 +144,7 @@ func (opts *CreateOpts) newCluster() (*atlasv2.ClusterDescriptionV15, error) {
 	return cluster, nil
 }
 
-func (opts *CreateOpts) applyOpts(out *atlasv2.ClusterDescriptionV15) {
+func (opts *CreateOpts) applyOpts(out *atlasv2.AdvancedClusterDescription) {
 	replicationSpec := opts.newAdvanceReplicationSpec()
 	if opts.backup {
 		out.BackupEnabled = &opts.backup
@@ -164,7 +164,7 @@ func (opts *CreateOpts) applyOpts(out *atlasv2.ClusterDescriptionV15) {
 	out.ReplicationSpecs = []atlasv2.ReplicationSpec{replicationSpec}
 
 	for k, v := range opts.tag {
-		out.Tags = append(out.Tags, atlasv2.Tag{Key: pointer.Get(k), Value: pointer.Get(v)})
+		out.Tags = append(out.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
 	}
 }
 
@@ -183,16 +183,16 @@ func (opts *CreateOpts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
 	return atlasv2.ReplicationSpec{
 		NumShards:     &opts.shards,
 		ZoneName:      pointer.Get(zoneName),
-		RegionConfigs: []atlasv2.RegionConfig{opts.newAdvancedRegionConfig()},
+		RegionConfigs: []atlasv2.CloudRegionConfig{opts.newAdvancedRegionConfig()},
 	}
 }
 
-func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.RegionConfig {
+func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.CloudRegionConfig {
 	priority := 7
 	readOnlyNode := 0
 	providerName := opts.providerName()
 
-	regionConfig := atlasv2.RegionConfig{
+	regionConfig := atlasv2.CloudRegionConfig{
 		Priority:     &priority,
 		RegionName:   &opts.region,
 		ProviderName: &providerName,

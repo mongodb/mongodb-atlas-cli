@@ -74,10 +74,10 @@ func (m *MockRestoreJobsDescriber) EXPECT() *MockRestoreJobsDescriberMockRecorde
 }
 
 // RestoreJob mocks base method.
-func (m *MockRestoreJobsDescriber) RestoreJob(arg0, arg1, arg2 string) (*admin.DiskBackupRestoreJob, error) {
+func (m *MockRestoreJobsDescriber) RestoreJob(arg0, arg1, arg2 string) (*admin.DiskBackupSnapshotRestoreJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RestoreJob", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*admin.DiskBackupRestoreJob)
+	ret0, _ := ret[0].(*admin.DiskBackupSnapshotRestoreJob)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -112,10 +112,10 @@ func (m *MockRestoreJobsCreator) EXPECT() *MockRestoreJobsCreatorMockRecorder {
 }
 
 // CreateRestoreJobs mocks base method.
-func (m *MockRestoreJobsCreator) CreateRestoreJobs(arg0, arg1 string, arg2 *admin.DiskBackupRestoreJob) (*admin.DiskBackupRestoreJob, error) {
+func (m *MockRestoreJobsCreator) CreateRestoreJobs(arg0, arg1 string, arg2 *admin.DiskBackupSnapshotRestoreJob) (*admin.DiskBackupSnapshotRestoreJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateRestoreJobs", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*admin.DiskBackupRestoreJob)
+	ret0, _ := ret[0].(*admin.DiskBackupSnapshotRestoreJob)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

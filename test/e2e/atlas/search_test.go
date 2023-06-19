@@ -103,7 +103,7 @@ func TestSearch(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var index atlasv2.FTSIndex
+		var index atlasv2.ClusterSearchIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			assert.Equal(t, index.GetName(), indexName)
 			indexID = index.GetIndexID()
@@ -127,7 +127,7 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var index atlasv2.FTSIndex
+		var index atlasv2.ClusterSearchIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			assert.Equal(t, indexID, index.GetIndexID())
 		}
@@ -184,7 +184,7 @@ func TestSearch(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var index atlasv2.FTSIndex
+		var index atlasv2.ClusterSearchIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			a := assert.New(t)
 			a.Equal(indexID, index.GetIndexID())
@@ -280,7 +280,7 @@ func TestSearch(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var index atlasv2.FTSIndex
+		var index atlasv2.ClusterSearchIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			assert.Equal(t, index.Name, indexName)
 		}
@@ -392,7 +392,7 @@ func TestSearch(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var index atlasv2.FTSIndex
+		var index atlasv2.ClusterSearchIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			assert.Equal(t, index.Name, indexName)
 		}
@@ -457,7 +457,7 @@ func TestSearch(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var index atlasv2.FTSIndex
+		var index atlasv2.ClusterSearchIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			assert.Equal(t, index.Name, indexName)
 		}
@@ -482,7 +482,7 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var indexes []atlasv2.FTSIndex
+		var indexes []atlasv2.ClusterSearchIndex
 		if err := json.Unmarshal(resp, &indexes); assert.NoError(t, err) {
 			assert.NotEmpty(t, indexes)
 		}

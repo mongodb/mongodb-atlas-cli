@@ -36,10 +36,10 @@ func (m *MockUserCreator) EXPECT() *MockUserCreatorMockRecorder {
 }
 
 // CreateUser mocks base method.
-func (m *MockUserCreator) CreateUser(arg0 *admin.AppUser) (*admin.AppUser, error) {
+func (m *MockUserCreator) CreateUser(arg0 *admin.CloudUser) (*admin.CloudUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", arg0)
-	ret0, _ := ret[0].(*admin.AppUser)
+	ret0, _ := ret[0].(*admin.CloudUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -74,10 +74,10 @@ func (m *MockUserDescriber) EXPECT() *MockUserDescriberMockRecorder {
 }
 
 // UserByID mocks base method.
-func (m *MockUserDescriber) UserByID(arg0 string) (*admin.AppUser, error) {
+func (m *MockUserDescriber) UserByID(arg0 string) (*admin.CloudUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserByID", arg0)
-	ret0, _ := ret[0].(*admin.AppUser)
+	ret0, _ := ret[0].(*admin.CloudUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -89,10 +89,10 @@ func (mr *MockUserDescriberMockRecorder) UserByID(arg0 interface{}) *gomock.Call
 }
 
 // UserByName mocks base method.
-func (m *MockUserDescriber) UserByName(arg0 string) (*admin.AppUser, error) {
+func (m *MockUserDescriber) UserByName(arg0 string) (*admin.CloudUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserByName", arg0)
-	ret0, _ := ret[0].(*admin.AppUser)
+	ret0, _ := ret[0].(*admin.CloudUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -25,11 +25,11 @@ import (
 //go:generate mockgen -destination=../mocks/mock_access_role.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store CloudProviderAccessRoleCreator,CloudProviderAccessRoleAuthorizer,CloudProviderAccessRoleLister,CloudProviderAccessRoleDeauthorizer
 
 type CloudProviderAccessRoleCreator interface {
-	CreateCloudProviderAccessRole(string, string) (*atlasv2.CloudProviderAccessRole, error)
+	CreateCloudProviderAccessRole(string, string) (*atlasv2. CloudProviderAccessRole, error)
 }
 
 type CloudProviderAccessRoleLister interface {
-	CloudProviderAccessRoles(string) (*atlasv2.CloudProviderAccess, error)
+	CloudProviderAccessRoles(string) (*atlasv2.CloudProviderAccessRoles, error)
 }
 
 type CloudProviderAccessRoleDeauthorizer interface {
@@ -38,14 +38,14 @@ type CloudProviderAccessRoleDeauthorizer interface {
 
 // CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 type CloudProviderAccessRoleAuthorizer interface {
-	AuthorizeCloudProviderAccessRole(string, string, *atlas.CloudProviderAuthorizationRequest) (*atlasv2.CloudProviderAccessRole, error)
+	AuthorizeCloudProviderAccessRole(string, string, *atlas.CloudProviderAuthorizationRequest) (*atlasv2. CloudProviderAccessRole, error)
 }
 
 // CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlasv2.CloudProviderAccessRole, error) {
+func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlasv2. CloudProviderAccessRole, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		req := atlasv2.CloudProviderAccessRole{
+		req := atlasv2. CloudProviderAccessRole{
 			CloudProviderAccessAWSIAMRole: &atlasv2.CloudProviderAccessAWSIAMRole{
 				ProviderName: provider,
 			},
@@ -58,7 +58,7 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlasv
 }
 
 // CloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
-func (s *Store) CloudProviderAccessRoles(groupID string) (*atlasv2.CloudProviderAccess, error) {
+func (s *Store) CloudProviderAccessRoles(groupID string) (*atlasv2.CloudProviderAccessRoles, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.CloudProviderAccessApi.ListCloudProviderAccessRoles(s.ctx, groupID).Execute()
@@ -84,7 +84,7 @@ func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *at
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		role := atlasv2.CloudProviderAccessRole{
-			CloudProviderAccessAWSIAMRole: &atlasv2.CloudProviderAccessAWSIAMRole{
+			CloudProviderAccessAWSIAMRole: &atlasv2. CloudProviderAccessAWSIAMRole{
 				ProviderName:      req.ProviderName,
 				IamAssumedRoleArn: &req.IAMAssumedRoleARN,
 			},

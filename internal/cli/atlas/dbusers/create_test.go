@@ -28,7 +28,7 @@ func TestDBUserCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseUserCreator(ctrl)
 
-	expected := &atlasv2.DatabaseUser{}
+	expected := &atlasv2.CloudDatabaseUser{}
 
 	createOpts := &CreateOpts{
 		username: "ProjectBar",

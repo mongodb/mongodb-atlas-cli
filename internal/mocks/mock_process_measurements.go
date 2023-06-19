@@ -35,10 +35,10 @@ func (m *MockProcessMeasurementLister) EXPECT() *MockProcessMeasurementListerMoc
 }
 
 // ProcessMeasurements mocks base method.
-func (m *MockProcessMeasurementLister) ProcessMeasurements(arg0 *admin.GetHostMeasurementsApiParams) (*admin.MeasurementsGeneralViewAtlas, error) {
+func (m *MockProcessMeasurementLister) ProcessMeasurements(arg0 *admin.GetHostMeasurementsApiParams) (*admin.ApiMeasurementsGeneralViewAtlas, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessMeasurements", arg0)
-	ret0, _ := ret[0].(*admin.MeasurementsGeneralViewAtlas)
+	ret0, _ := ret[0].(*admin.ApiMeasurementsGeneralViewAtlas)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

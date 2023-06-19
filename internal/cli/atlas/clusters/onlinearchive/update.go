@@ -58,8 +58,8 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newOnlineArchive() *atlasv2.OnlineArchive {
-	archive := &atlasv2.OnlineArchive{
+func (opts *UpdateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchive {
+	archive := &atlasv2.BackupOnlineArchive{
 		Id: &opts.id,
 		Criteria: &atlasv2.Criteria{
 			DateCriteria: &atlasv2.DateCriteria{

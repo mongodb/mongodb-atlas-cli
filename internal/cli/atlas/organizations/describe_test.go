@@ -31,7 +31,7 @@ func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationDescriber(ctrl)
 	stringVal := "test"
-	expected := &atlasv2.Organization{
+	expected := &atlasv2.AtlasOrganization{
 		Links: nil,
 		Id:    &stringVal,
 		Name:  stringVal,

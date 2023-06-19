@@ -112,10 +112,10 @@ func (m *MockCloudProviderAccessRoleLister) EXPECT() *MockCloudProviderAccessRol
 }
 
 // CloudProviderAccessRoles mocks base method.
-func (m *MockCloudProviderAccessRoleLister) CloudProviderAccessRoles(arg0 string) (*admin.CloudProviderAccess, error) {
+func (m *MockCloudProviderAccessRoleLister) CloudProviderAccessRoles(arg0 string) (*admin.CloudProviderAccessRoles, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CloudProviderAccessRoles", arg0)
-	ret0, _ := ret[0].(*admin.CloudProviderAccess)
+	ret0, _ := ret[0].(*admin.CloudProviderAccessRoles)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

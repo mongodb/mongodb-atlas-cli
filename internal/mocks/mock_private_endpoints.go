@@ -111,7 +111,7 @@ func (m *MockPrivateEndpointCreator) EXPECT() *MockPrivateEndpointCreatorMockRec
 }
 
 // CreatePrivateEndpoint mocks base method.
-func (m *MockPrivateEndpointCreator) CreatePrivateEndpoint(arg0 string, arg1 *admin.CreateEndpointServiceRequest) (interface{}, error) {
+func (m *MockPrivateEndpointCreator) CreatePrivateEndpoint(arg0 string, arg1 *admin.CloudProviderEndpointServiceRequest) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePrivateEndpoint", arg0, arg1)
 	ret0, _ := ret[0].(interface{})

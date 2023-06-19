@@ -37,7 +37,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 		updateOpts.name = testName
 		updateOpts.id = "1"
 
-		expected := &atlasv2.FTSIndex{}
+		expected := &atlasv2.ClusterSearchIndex{}
 
 		request, err := updateOpts.newSearchIndex()
 		if err != nil {
@@ -65,7 +65,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 		updateOpts.filename = fileName
 		updateOpts.fs = appFS
 
-		expected := &atlasv2.FTSIndex{}
+		expected := &atlasv2.ClusterSearchIndex{}
 
 		request, err := updateOpts.newSearchIndex()
 		if err != nil {

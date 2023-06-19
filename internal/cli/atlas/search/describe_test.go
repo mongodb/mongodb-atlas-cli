@@ -34,7 +34,7 @@ func TestDescribe_Run(t *testing.T) {
 		store:       mockStore,
 	}
 
-	expected := &atlasv2.FTSIndex{}
+	expected := &atlasv2.ClusterSearchIndex{}
 	mockStore.
 		EXPECT().
 		SearchIndex(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.indexID).

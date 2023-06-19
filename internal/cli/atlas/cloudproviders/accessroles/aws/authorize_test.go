@@ -30,7 +30,7 @@ func TestAuthorizeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderAccessRoleAuthorizer(ctrl)
 
-	expected := &atlasv2.CloudProviderAccessRole{}
+	expected := &atlasv2. CloudProviderAccessRoleRole{}
 
 	opts := &AuthorizeOpts{
 		store: mockStore,

@@ -56,7 +56,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			firstLocation = "CA"
 		)
 
-		cluster := &atlasv2.ClusterDescriptionV15{
+		cluster := &atlasv2.AdvancedClusterDescription{
 			BackupEnabled: pointer.Get(true),
 			BiConnector: &atlasv2.BiConnector{
 				Enabled:        pointer.Get(true),

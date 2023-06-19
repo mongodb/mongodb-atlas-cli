@@ -135,7 +135,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			AutoDeferOnceEnabled: pointer.Get(false),
 		}
 
-		peeringConnectionAWS := &atlasv2.AWSPeerVpc{
+		peeringConnectionAWS := &atlasv2.AwsNetworkPeeringConnectionSettings{
 			AccepterRegionName:  "TestRegionName",
 			AwsAccountId:        "TestAWSAccountID",
 			ConnectionId:        pointer.Get("TestConnID"),
@@ -1035,7 +1035,7 @@ func Test_buildNetworkPeering(t *testing.T) {
 
 	peerProvider := mocks.NewMockPeeringConnectionLister(ctl)
 	t.Run("Can convert Peering connections", func(t *testing.T) {
-		peeringConnectionAWS := &atlasv2.AWSPeerVpc{
+		peeringConnectionAWS := &atlasv2.AwsNetworkPeeringConnectionSettings{
 			AccepterRegionName:  "TestRegionName",
 			AwsAccountId:        "TestAWSAccountID",
 			ConnectionId:        pointer.Get("TestConnID"),

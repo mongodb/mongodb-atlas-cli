@@ -42,7 +42,7 @@ func TestWatchOpts_Run(t *testing.T) {
 		},
 		{
 			name:     "AZURE",
-			expected: &atlasv2.AzurePeerNetwork{Status: pointer.Get("AVAILABLE")},
+			expected: &atlasv2.AzureNetworkPeeringConnectionSettings{Status: pointer.Get("AVAILABLE")},
 		},
 		{
 			name:     "GCP",

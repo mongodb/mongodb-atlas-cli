@@ -69,8 +69,8 @@ func TestCreateRoles(t *testing.T) {
 				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER"},
 			},
 			want: []atlasv2.CloudAccessRoleAssignment{{
-				OrgId: pointer.Get("5e4e593f70dfbf1010295836"),
-				RoleName:  pointer.Get("ORG_OWNER"),
+				OrgId:    pointer.Get("5e4e593f70dfbf1010295836"),
+				RoleName: pointer.Get("ORG_OWNER"),
 			}},
 		},
 		{
@@ -80,12 +80,12 @@ func TestCreateRoles(t *testing.T) {
 			},
 			want: []atlasv2.CloudAccessRoleAssignment{
 				{
-					OrgId: pointer.Get("5e4e593f70dfbf1010295836"),
-					RoleName:  pointer.Get("ORG_OWNER"),
+					OrgId:    pointer.Get("5e4e593f70dfbf1010295836"),
+					RoleName: pointer.Get("ORG_OWNER"),
 				},
 				{
-					OrgId: pointer.Get("5e4e593f70dfbf1010295836"),
-					RoleName:  pointer.Get("ORG_GROUP_CREATOR"),
+					OrgId:    pointer.Get("5e4e593f70dfbf1010295836"),
+					RoleName: pointer.Get("ORG_GROUP_CREATOR"),
 				},
 			},
 		},
@@ -97,20 +97,20 @@ func TestCreateRoles(t *testing.T) {
 			},
 			want: []atlasv2.CloudAccessRoleAssignment{
 				{
-					OrgId: pointer.Get("5e4e593f70dfbf1010295836"),
-					RoleName:  pointer.Get("ORG_OWNER"),
+					OrgId:    pointer.Get("5e4e593f70dfbf1010295836"),
+					RoleName: pointer.Get("ORG_OWNER"),
 				},
 				{
-					OrgId: pointer.Get("5e4e593f70dfbf1010295836"),
-					RoleName:  pointer.Get("ORG_GROUP_CREATOR"),
+					OrgId:    pointer.Get("5e4e593f70dfbf1010295836"),
+					RoleName: pointer.Get("ORG_GROUP_CREATOR"),
 				},
 				{
-					GroupId: pointer.Get("5e4e593f70dfbf1010295836"),
-					RoleName:    pointer.Get("GROUP_OWNER"),
+					GroupId:  pointer.Get("5e4e593f70dfbf1010295836"),
+					RoleName: pointer.Get("GROUP_OWNER"),
 				},
 				{
-					GroupId: pointer.Get("5e4e593f70dfbf1010295836"),
-					RoleName:    pointer.Get("GROUP_CLUSTER_MANAGER"),
+					GroupId:  pointer.Get("5e4e593f70dfbf1010295836"),
+					RoleName: pointer.Get("GROUP_CLUSTER_MANAGER"),
 				},
 			},
 		},

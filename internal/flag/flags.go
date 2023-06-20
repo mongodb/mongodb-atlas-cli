@@ -352,4 +352,6 @@ const (
 	WatchTimeout                              = "watchTimeout"                              // WatchTimeout flag
 	CompactResponse                           = "compact"                                   // CompactResponse flag to return compacted list response
 	CompactResponseShort                      = "c"                                         // CompactResponseShort flag
+	AWSRoleID                                 = "awsRoleId"                                 // AWSRoleID flag
+	AWSTestS3Bucket                           = "awsTestS3Bucket"                           // AWSTestS3Bucket flag
 )

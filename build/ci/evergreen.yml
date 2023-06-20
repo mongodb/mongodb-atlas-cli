@@ -826,6 +826,27 @@ tasks:
           E2E_TAGS: atlas,datalake
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+  # datafederation requires cloud provider role authentication and an s3 bucket created
+  - name: atlas_datafederation_e2e
+    tags: ["e2e","datafederation","atlas"]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,datafederation
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # datalakepipeline requires cloud provider role authentication and an s3 bucket created
   - name: atlas_datalakepipeline_e2e
     tags: ["e2e","datalakepipeline","atlas"]
@@ -1463,6 +1484,16 @@ buildvariants:
       go_base_path: ""
     tasks:
       - name: ".e2e .datalake .atlas"
+  - name: e2e_atlas_datafederation
+    display_name: "E2E Atlas Data Federation Tests"
+    run_on:
+      - rhel80-small
+    expansions:
+      go_root: "/opt/golang/go1.19"
+      go_bin: "/opt/golang/go1.19/bin"
+      go_base_path: ""
+    tasks:
+      - name: ".e2e .datafederation .atlas"
   - name: e2e_atlas_datalakepipeline
     display_name: "E2E Atlas Datalake Pipeline Tests"
     run_on:

@@ -51,7 +51,7 @@ commands:
         id_name: pipelineName
         id_description: Label that identifies the pipeline
         output_template: Pipeline {{.Name}} created.
-        request_type: 'atlasv2.IngestionPipeline'
+        request_type: 'admin.IngestionPipeline'
         example: |
           # create data lake pipeline:
             atlas dataLakePipelines create Pipeline1 --sinkType CPS --sinkMetadataProvider AWS --sinkMetadataRegion us-east-1 --sinkPartitionField name:0,summary:1 --sourceType PERIODIC_CPS --sourceClusterName Cluster1 --sourceDatabaseName sample_airbnb --sourceCollectionName listingsAndReviews --sourcePolicyItemId 507f1f77bcf86cd799439011 --transform EXCLUDE:space,EXCLUDE:notes
@@ -64,7 +64,7 @@ commands:
         id_name: pipelineName
         id_description: Label that identifies the pipeline
         output_template: Pipeline {{.Name}} updated.
-        request_type: 'atlasv2.IngestionPipeline'
+        request_type: 'admin.IngestionPipeline'
         example: |
           # update data lake pipeline:
             atlas dataLakePipelines update Pipeline1 --sinkType CPS --sinkMetadataProvider AWS --sinkMetadataRegion us-east-1 --sinkPartitionField name:0,summary:1 --sourceType PERIODIC_CPS --sourceClusterName Cluster1 --sourceDatabaseName sample_airbnb --sourceCollectionName listingsAndReviews --sourcePolicyItemId 507f1f77bcf86cd799439011 --transform EXCLUDE:space,EXCLUDE:notes
@@ -150,6 +150,75 @@ commands:
             example: |
               # delete dataset '507f1f77bcf86cd799439011' for data lake pipeline called 'Pipeline1':
                 atlas dataLakePipelines datasets delete 507f1f77bcf86cd799439011 --pipeline Pipeline1
+  - command_path: atlas dataFederation
+    package_name: datafederation
+    description: Data federation.
+    template: parent
+    sub_commands:
+      - command_path: atlas dataFederation list
+        package_name: datafederation
+        store_name: DataFederationLister
+        store_method: DataFederationList
+        description: Returns all data federation databases for your project.
+        template: list
+        output_template: |
+          NAME	STATE{{range .}}
+          {{.Name}}	{{.State}}
+          {{end}}
+        example: |
+          # list all data federation databases:
+            atlas dataFederation list
+      - command_path: atlas dataFederation describe
+        package_name: datafederation
+        store_name: DataFederationDescriber
+        store_method: DataFederation
+        description: Return the details for the specified data federation database for your project.
+        template: describe
+        id_name: name
+        id_description: Name of the data federation database
+        output_template: |
+          NAME	STATE
+          {{.Name}}	{{.State}}
+        example: |
+          # retrieves data federation 'DataFederation1':
+            atlas dataFederation describe DataFederation1
+      - command_path: atlas dataFederation delete
+        package_name: datafederation
+        store_name: DataFederationDeleter
+        store_method: DeleteDataFederation
+        template: delete
+        description: Remove the specified data federation database from your project.
+        id_name: name
+        id_description: Name of the data federation database
+        example: |
+          # deletes data federation 'DataFederation1':
+            atlas dataFederation delete DataFederation1
+      - command_path: atlas dataFederation create
+        package_name: datafederation
+        store_name: DataFederationCreator
+        store_method: CreateDataFederation
+        template: create
+        description: Creates a new Data Federation database.
+        id_name: name
+        id_description: Name of the data federation database
+        output_template: Data federation {{.Name}} created.
+        request_type: 'admin.DataLakeTenant'
+        example: |
+          # create data federation database:
+            atlas dataFederation create DataFederation1
+      - command_path: atlas dataFederation update
+        package_name: datafederation
+        store_name: DataFederationUpdater
+        store_method: UpdateDataFederation
+        template: update
+        description: Modify the details of the specified data federation database for your project.
+        id_name: name
+        id_description: Name of the data federation database
+        output_template: Pipeline {{.Name}} updated.
+        request_type: 'admin.DataLakeTenant'
+        example: |
+          # update data lake pipeline:
+            atlas dataFederation update DataFederation1
 stores:
   - base_file_name: data_lake_pipelines
     template: store
@@ -157,26 +226,24 @@ stores:
       name: PipelinesLister
       method: Pipelines
       sdk_method: DataLakePipelinesApi.ListPipelines
-      return_type: '[]atlasv2.IngestionPipeline'
+      return_type: '[]admin.IngestionPipeline'
     describer:
       name: PipelinesDescriber
       method: Pipeline
       sdk_method: DataLakePipelinesApi.GetPipeline
-      return_type: '*atlasv2.IngestionPipeline'
+      return_type: '*admin.IngestionPipeline'
     creator:
       name: PipelinesCreator
       method: CreatePipeline
       sdk_method: DataLakePipelinesApi.CreatePipeline
-      arg_type: 'atlasv2.IngestionPipeline'
-      arg_name: IngestionPipeline
-      return_type: '*atlasv2.IngestionPipeline'
+      arg_type: '*admin.IngestionPipeline'
+      return_type: '*admin.IngestionPipeline'
     updater:
       name: PipelinesUpdater
       method: UpdatePipeline
       sdk_method: DataLakePipelinesApi.UpdatePipeline
-      arg_type: 'atlasv2.IngestionPipeline'
-      arg_name: IngestionPipeline
-      return_type: '*atlasv2.IngestionPipeline'
+      arg_type: '*admin.IngestionPipeline'
+      return_type: '*admin.IngestionPipeline'
     deleter:
       name: PipelinesDeleter
       method: DeletePipeline
@@ -187,15 +254,43 @@ stores:
       name: PipelineRunsLister
       method: PipelineRuns
       sdk_method: DataLakePipelinesApi.ListPipelineRuns
-      return_type: '*atlasv2.PaginatedPipelineRun'
+      return_type: '*admin.PaginatedPipelineRun'
     describer:
       name: PipelineRunsDescriber
       method: PipelineRun
       sdk_method: DataLakePipelinesApi.GetPipelineRun
-      return_type: '*atlasv2.IngestionPipelineRun'
+      return_type: '*admin.IngestionPipelineRun'
   - base_file_name: data_lake_pipelines_datasets
     template: store
     deleter:
       name: PipelineDatasetDeleter
       method: DeletePipelineDataset
       sdk_method: DataLakePipelinesApi.DeletePipelineRunDataset
+  - base_file_name: data_federation
+    template: store
+    lister:
+      name: DataFederationLister
+      method: DataFederationList
+      sdk_method: DataFederationApi.ListFederatedDatabases
+      return_type: '[]admin.DataLakeTenant'
+    describer:
+      name: DataFederationDescriber
+      method: DataFederation
+      sdk_method: DataFederationApi.GetFederatedDatabase
+      return_type: '*admin.DataLakeTenant'
+    creator:
+      name: DataFederationCreator
+      method: CreateDataFederation
+      sdk_method: DataFederationApi.CreateFederatedDatabase
+      arg_type: '*admin.DataLakeTenant'
+      return_type: '*admin.DataLakeTenant'
+    updater:
+      name: DataFederationUpdater
+      method: UpdateDataFederation
+      sdk_method: DataFederationApi.UpdateFederatedDatabase
+      arg_type: '*admin.DataLakeTenant'
+      return_type: '*admin.DataLakeTenant'
+    deleter:
+      name: DataFederationDeleter
+      method: DeleteDataFederation
+      sdk_method: DataFederationApi.DeleteFederatedDatabase

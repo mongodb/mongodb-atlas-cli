@@ -98,7 +98,7 @@ func (opts *GCPOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringConn
 	return &a
 }
 
-func (opts *GCPOpts) newGCPPeer(containerID string) *atlasv2.GCPNetworkPeeringConnectionSettings{
+func (opts *GCPOpts) newGCPPeer(containerID string) *atlasv2.GCPNetworkPeeringConnectionSettings {
 	provider := "GCP"
 	return &atlasv2.GCPNetworkPeeringConnectionSettings{
 		ContainerId:  containerID,

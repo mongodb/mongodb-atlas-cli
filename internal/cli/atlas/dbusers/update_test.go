@@ -41,9 +41,9 @@ func TestDBUserUpdate_Run(t *testing.T) {
 	updateOpts.update(&dbUser)
 
 	params := &admin.UpdateDatabaseUserApiParams{
-		GroupId:      dbUser.GroupId,
-		DatabaseName: dbUser.DatabaseName,
-		Username:     updateOpts.currentUsername,
+		GroupId:           dbUser.GroupId,
+		DatabaseName:      dbUser.DatabaseName,
+		Username:          updateOpts.currentUsername,
 		CloudDatabaseUser: &dbUser,
 	}
 

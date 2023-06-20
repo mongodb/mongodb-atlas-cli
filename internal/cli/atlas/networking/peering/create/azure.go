@@ -108,7 +108,7 @@ func (opts *AzureOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringCo
 	return &a
 }
 
-func (opts *AzureOpts) newAzurePeer(containerID string) *atlasv2.AzureNetworkPeeringConnectionSettings{
+func (opts *AzureOpts) newAzurePeer(containerID string) *atlasv2.AzureNetworkPeeringConnectionSettings {
 	provider := "AZURE"
 	return &atlasv2.AzureNetworkPeeringConnectionSettings{
 		AzureDirectoryId:    opts.directoryID,

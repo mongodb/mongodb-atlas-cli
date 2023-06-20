@@ -30,7 +30,7 @@ func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderAccessRoleCreator(ctrl)
 
-	expected := &atlasv2. CloudProviderAccessRole{}
+	expected := &atlasv2.CloudProviderAccessRole{}
 
 	createOpts := &CreateOpts{
 		store: mockStore,

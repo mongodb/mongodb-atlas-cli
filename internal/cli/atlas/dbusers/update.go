@@ -56,9 +56,9 @@ func (opts *UpdateOpts) Run() error {
 	opts.update(current)
 
 	params := &admin.UpdateDatabaseUserApiParams{
-		GroupId:      current.GroupId,
-		DatabaseName: current.DatabaseName,
-		Username:     opts.currentUsername,
+		GroupId:           current.GroupId,
+		DatabaseName:      current.DatabaseName,
+		Username:          opts.currentUsername,
 		CloudDatabaseUser: current,
 	}
 	r, err := opts.store.UpdateDatabaseUser(params)

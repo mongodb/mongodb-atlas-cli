@@ -70,8 +70,8 @@ func (opts *StartOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *StartOpts) newCloudProviderSnapshotRestoreJob() *admin. DiskBackupSnapshotRestoreJob {
-	request := new(admin. DiskBackupSnapshotRestoreJob)
+func (opts *StartOpts) newCloudProviderSnapshotRestoreJob() *admin.DiskBackupSnapshotRestoreJob {
+	request := new(admin.DiskBackupSnapshotRestoreJob)
 	request.DeliveryType = opts.method
 
 	if opts.targetProjectID != "" {

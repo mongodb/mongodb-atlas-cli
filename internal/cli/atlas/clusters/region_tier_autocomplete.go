@@ -69,7 +69,7 @@ func (opts *autoCompleteOpts) tierSuggestions(toComplete string) ([]string, erro
 	availableTiers := map[string]bool{}
 	for _, p := range result.Results {
 		for _, i := range p.InstanceSizes {
-			_ = i;
+			_ = i
 			if _, ok := availableTiers[i.GetName()]; !ok && strings.HasPrefix(i.GetName(), strings.ToUpper(toComplete)) {
 				availableTiers[i.GetName()] = true
 			}

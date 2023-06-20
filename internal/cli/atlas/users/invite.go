@@ -153,8 +153,8 @@ func newAtlasProjectRole(role string) (atlasv2.CloudAccessRoleAssignment, error)
 		return atlasv2.CloudAccessRoleAssignment{}, err
 	}
 	atlasRole := atlasv2.CloudAccessRoleAssignment{
-		GroupId: &value[0], 
-		RoleName:    pointer.Get(strings.ToUpper(value[1])),
+		GroupId:  &value[0],
+		RoleName: pointer.Get(strings.ToUpper(value[1])),
 	}
 
 	return atlasRole, nil
@@ -166,8 +166,8 @@ func newAtlasOrgRole(role string) (atlasv2.CloudAccessRoleAssignment, error) {
 		return atlasv2.CloudAccessRoleAssignment{}, err
 	}
 	atlasRole := atlasv2.CloudAccessRoleAssignment{
-		OrgId: &value[0],
-		RoleName:  pointer.Get(strings.ToUpper(value[1])),
+		OrgId:    &value[0],
+		RoleName: pointer.Get(strings.ToUpper(value[1])),
 	}
 	return atlasRole, nil
 }

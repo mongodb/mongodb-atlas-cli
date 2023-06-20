@@ -71,7 +71,7 @@ func TestAccessRoles(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var roles atlasv2. CloudProviderAccessRole
+		var roles atlasv2.CloudProviderAccessRole
 		if err := json.Unmarshal(resp, &roles); a.NoError(err) {
 			a.Len(roles.CloudProviderAccessAWSIAMRole, 1)
 		}

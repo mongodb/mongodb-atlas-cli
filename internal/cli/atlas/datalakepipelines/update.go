@@ -111,7 +111,7 @@ func (opts *UpdateOpts) newUpdateRequest() (*atlasv2.DataLakeIngestionPipeline, 
 	}
 
 	for i, fieldName := range opts.sinkPartitionField {
-		pipeline.Sink.DLSIngestionSink.PartitionFields = append(pipeline.Sink.DLSIngestionSink.PartitionFields, 
+		pipeline.Sink.DLSIngestionSink.PartitionFields = append(pipeline.Sink.DLSIngestionSink.PartitionFields,
 			*atlasv2.NewDataLakePipelinesPartitionField(fieldName, i))
 	}
 

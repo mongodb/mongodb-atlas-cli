@@ -63,7 +63,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 		return watcherAWS(v), nil
 	case *atlasv2.AzureNetworkPeeringConnectionSettings:
 		return watcherAzure(v), nil
-	case *atlasv2.GCPNetworkPeeringConnectionSettings :
+	case *atlasv2.GCPNetworkPeeringConnectionSettings:
 		return watcherGCP(v), nil
 	}
 	return false, nil

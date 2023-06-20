@@ -179,7 +179,7 @@ func (opts *quickstart) providerName() string {
 	return providerName(opts.Tier, opts.Provider)
 }
 
-// Regions overlap
+// Regions overlap.
 func (opts *Opts) defaultRegions() ([]string, error) {
 	cloudProviders, err := opts.store.CloudProviderRegions(
 		opts.ConfigProjectID(),

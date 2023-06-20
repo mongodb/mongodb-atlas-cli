@@ -33,7 +33,7 @@ func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPipelinesCreator(ctrl)
 
-	var expected *atlasv2.IngestionPipelineRun
+	var expected *atlasv2.DataLakeIngestionPipeline
 
 	createOpts := &CreateOpts{
 		store: mockStore,

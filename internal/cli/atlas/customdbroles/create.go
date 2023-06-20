@@ -30,7 +30,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
-const createTemplate = "Custom database role '{{.DatabaseUserRoleName}}' successfully created.\n"
+const createTemplate = "Custom database role '{{.RoleName}}' successfully created.\n"
 
 type CreateOpts struct {
 	cli.GlobalOpts

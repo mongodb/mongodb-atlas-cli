@@ -30,7 +30,7 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderAccessRoleLister(ctrl)
 
-	var expected *atlasv2.CloudProviderAccessRole
+	var expected *atlasv2.CloudProviderAccessRoles
 
 	listOpts := &ListOpts{
 		store: mockStore,

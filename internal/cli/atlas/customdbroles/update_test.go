@@ -30,7 +30,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseRoleUpdater(ctrl)
 
-	expected := &atlasv2.CustomDBRole{}
+	expected := &atlasv2.UserCustomDBRole{}
 
 	updateOpts := &UpdateOpts{
 		store: mockStore,
@@ -39,7 +39,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 	t.Run("default", func(t *testing.T) {
 		mockStore.
 			EXPECT().
-			UpdateDatabaseRole(updateOpts.ConfigProjectID(), updateopts.roleName, updateOpts.newCustomDBRole(expected)).Return(expected, nil).
+			UpdateDatabaseRole(updateOpts.ConfigProjectID(), updateOpts.roleName, updateOpts.newCustomDBRole(expected)).Return(expected, nil).
 			Times(1)
 
 		if err := updateOpts.Run(); err != nil {
@@ -50,11 +50,11 @@ func TestUpdateOpts_Run(t *testing.T) {
 		updateOpts.append = true
 		mockStore.
 			EXPECT().
-			DatabaseRole(updateOpts.ConfigProjectID(), updateopts.roleName).Return(expected, nil).
+			DatabaseRole(updateOpts.ConfigProjectID(), updateOpts.roleName).Return(expected, nil).
 			Times(1)
 		mockStore.
 			EXPECT().
-			UpdateDatabaseRole(updateOpts.ConfigProjectID(), updateopts.roleName, updateOpts.newCustomDBRole(expected)).Return(expected, nil).
+			UpdateDatabaseRole(updateOpts.ConfigProjectID(), updateOpts.roleName, updateOpts.newCustomDBRole(expected)).Return(expected, nil).
 			Times(1)
 
 		if err := updateOpts.Run(); err != nil {

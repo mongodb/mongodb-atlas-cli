@@ -49,7 +49,7 @@ func TestDescribe_Run(t *testing.T) {
 		store:       mockStore,
 	}
 
-	expected := &atlasv2.OnlineArchive{}
+	expected := &atlasv2.BackupOnlineArchive{}
 	mockStore.
 		EXPECT().
 		OnlineArchive(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.archiveID).

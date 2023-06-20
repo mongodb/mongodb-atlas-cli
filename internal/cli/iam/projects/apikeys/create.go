@@ -52,7 +52,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 func (opts *CreateOpts) Run() error {
 	apiKeyInput := &mongodbatlas.APIKeyInput{
 		Desc:  opts.description,
-		Roles: opts.role,
+		Roles: opts.roles,
 	}
 
 	r, err := opts.store.CreateProjectAPIKey(opts.ProjectID, apiKeyInput)

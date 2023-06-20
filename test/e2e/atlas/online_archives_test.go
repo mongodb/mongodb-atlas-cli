@@ -169,7 +169,7 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
-	var archive atlasv2.OnlineArchive
+	var archive atlasv2.BackupOnlineArchive
 	if err = json.Unmarshal(resp, &archive); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -193,7 +193,7 @@ func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiv
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
 
-	var archive atlasv2.OnlineArchive
+	var archive atlasv2.BackupOnlineArchive
 	if err = json.Unmarshal(resp, &archive); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -244,7 +244,7 @@ func createOnlineArchive(t *testing.T, cliPath, projectID, clusterName string) s
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
 
-	var archive atlasv2.OnlineArchive
+	var archive atlasv2.BackupOnlineArchive
 	if err = json.Unmarshal(resp, &archive); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

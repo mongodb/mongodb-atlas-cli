@@ -59,7 +59,7 @@ func (opts *UpdateOpts) Run() error {
 func (opts *UpdateOpts) newInvitation() *atlas.Invitation {
 	return &atlas.Invitation{
 		Username: opts.username,
-		Roles:    opts.role,
+		Roles:    opts.roles,
 	}
 }
 

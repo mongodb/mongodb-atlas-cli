@@ -36,7 +36,7 @@ func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPipelinesLister(ctrl)
 
-	expected := []atlasv2.IngestionPipeline{
+	expected := []atlasv2.DataLakeIngestionPipeline{
 		{
 			Id:    pointer.Get("2a5cbd92c036a0eb288"),
 			Name:  pointer.Get("pipeline 2"),

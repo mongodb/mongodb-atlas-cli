@@ -51,7 +51,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var key atlasv2.ApiUser
+			var key atlasv2.ApiKeyUserDetails
 			if err := json.Unmarshal(resp, &key); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
@@ -115,7 +115,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var keys []atlasv2.ApiUser
+		var keys []atlasv2.ApiKeyUserDetails
 		if err := json.Unmarshal(resp, &keys); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

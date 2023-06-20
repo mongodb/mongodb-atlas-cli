@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
@@ -65,24 +66,24 @@ func (opts *Opts) askClusterOptions() error {
 
 	// We need the provider to ask for the region
 	if opts.shouldAskForValue(flag.Region) {
-		// return opts.askClusterRegion()
+		return opts.askClusterRegion()
 	}
 	return nil
 }
 
-// func (opts *Opts) askClusterRegion() error {
-// 	regions, err := opts.defaultRegions()
-// 	if err != nil {
-// 		return err
-// 	}
+func (opts *Opts) askClusterRegion() error {
+	regions, err := opts.defaultRegions()
+	if err != nil {
+		return err
+	}
 
-// 	if len(regions) == 0 {
-// 		return fmt.Errorf("%w: %v", ErrNoRegions, opts.Provider)
-// 	}
+	if len(regions) == 0 {
+		return fmt.Errorf("%w: %v", ErrNoRegions, opts.Provider)
+	}
 
-// 	regionQ := newRegionQuestions(regions)
-// 	return telemetry.TrackAskOne(regionQ, &opts.Region, survey.WithValidator(survey.Required))
-// }
+	regionQ := newRegionQuestions(regions)
+	return telemetry.TrackAskOne(regionQ, &opts.Region, survey.WithValidator(survey.Required))
+}
 
 func newRegionQuestions(defaultRegions []string) survey.Prompt {
 	return &survey.Select{
@@ -179,38 +180,38 @@ func (opts *quickstart) providerName() string {
 }
 
 // Regions overlap
-// func (opts *Opts) defaultRegions() ([]string, error) {
-// 	cloudProviders, err := opts.store.CloudProviderRegions(
-// 		opts.ConfigProjectID(),
-// 		opts.Tier,
-// 		[]string{opts.Provider},
-// 	)
+func (opts *Opts) defaultRegions() ([]string, error) {
+	cloudProviders, err := opts.store.CloudProviderRegions(
+		opts.ConfigProjectID(),
+		opts.Tier,
+		[]string{opts.Provider},
+	)
 
-// 	if err != nil {
-// 		return nil, err
-// 	}
+	if err != nil {
+		return nil, err
+	}
 
-// 	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
-// 		return nil, errors.New("no regions available")
-// 	}
+	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
+		return nil, errors.New("no regions available")
+	}
 
-// 	availableRegions := cloudProviders.Results[0].InstanceSizes[0].GetAvailableRegions()
+	availableRegions := cloudProviders.Results[0].InstanceSizes[0].GetAvailableRegions()
 
-// 	defaultRegions := make([]string, 0, len(availableRegions))
-// 	popularRegionIndex := search.DefaultRegion(availableRegions)
+	defaultRegions := make([]string, 0, len(availableRegions))
+	popularRegionIndex := search.DefaultRegion(availableRegions)
 
-// 	if popularRegionIndex != -1 {
-// 		// the most popular region must be the first in the list
-// 		popularRegion := availableRegions[popularRegionIndex]
-// 		defaultRegions = append(defaultRegions, popularRegion.GetName())
+	if popularRegionIndex != -1 {
+		// the most popular region must be the first in the list
+		popularRegion := availableRegions[popularRegionIndex]
+		defaultRegions = append(defaultRegions, popularRegion.GetName())
 
-// 		// remove popular region from availableRegions
-// 		availableRegions = append(availableRegions[:popularRegionIndex], availableRegions[popularRegionIndex+1:]...)
-// 	}
+		// remove popular region from availableRegions
+		availableRegions = append(availableRegions[:popularRegionIndex], availableRegions[popularRegionIndex+1:]...)
+	}
 
-// 	for _, v := range availableRegions {
-// 		defaultRegions = append(defaultRegions, v.GetName())
-// 	}
+	for _, v := range availableRegions {
+		defaultRegions = append(defaultRegions, v.GetName())
+	}
 
-// 	return defaultRegions, nil
-// }
+	return defaultRegions, nil
+}

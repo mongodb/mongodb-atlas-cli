@@ -60,7 +60,7 @@ func TestAddLabel(t *testing.T) {
 				out: &atlasv2.AdvancedClusterDescription{
 					Labels: []atlasv2.ComponentLabel{},
 				},
-				label: atlasv2.BaseLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
+				label: atlasv2.ComponentLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
 			},
 			wantsAdd: true,
 		},

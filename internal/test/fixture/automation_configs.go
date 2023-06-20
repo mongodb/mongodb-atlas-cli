@@ -404,7 +404,7 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 func MongoDBUsers() *opsmngr.MongoDBUser {
 	return &opsmngr.MongoDBUser{
 		Mechanisms: &[]string{"SCRAM-SHA-1"},
-		Roles: []*opsmngr.DatabaseUserRole{
+		Roles: []*opsmngr.Role{
 			{
 				Role:     "test",
 				Database: "test",

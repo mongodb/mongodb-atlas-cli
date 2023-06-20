@@ -31,7 +31,7 @@ func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLDAPConfigurationDescriber(ctrl)
 
-	expected := &atlasv2.NDSLDAPVerifyConnectivityJobRequest{Status: pointer.Get("SUCCESS")}
+	expected := &atlasv2.LDAPVerifyConnectivityJobRequest{Status: pointer.Get("SUCCESS")}
 
 	opts := &WatchOpts{
 		id:    "213122131232132",

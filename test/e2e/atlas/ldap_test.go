@@ -97,7 +97,7 @@ func TestLDAPWithFlags(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		var configuration atlasv2.NDSLDAPVerifyConnectivityJobRequest
+		var configuration atlasv2.LDAPVerifyConnectivityJobRequest
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 			a.Equal(requestID, *configuration.RequestId)
 		}
@@ -238,7 +238,7 @@ func testLDAPVerifyCmd(t *testing.T, cmd *exec.Cmd) string {
 	require.NoError(t, err, string(resp))
 
 	a := assert.New(t)
-	var configuration atlasv2.NDSLDAPVerifyConnectivityJobRequest
+	var configuration atlasv2.LDAPVerifyConnectivityJobRequest
 	if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 		a.Equal(pending, *configuration.Status)
 		return *configuration.RequestId

@@ -108,8 +108,8 @@ func TestProjectTeams(t *testing.T) {
 
 			role := roles[0]
 			a.Equal(teamID, role.TeamID)
-			a.Len(role.DatabaseUserRoleNames, 2)
-			a.ElementsMatch([]string{roleName1, roleName2}, role.DatabaseUserRoleNames)
+			a.Len(role.RoleNames, 2)
+			a.ElementsMatch([]string{roleName1, roleName2}, role.RoleNames)
 		}
 	})
 

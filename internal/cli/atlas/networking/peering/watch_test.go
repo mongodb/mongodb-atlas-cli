@@ -38,7 +38,7 @@ func TestWatchOpts_Run(t *testing.T) {
 	}{
 		{
 			name:     "AWS",
-			expected: &atlasv2.AWSPeerVpc{StatusName: pointer.Get("PENDING_ACCEPTANCE")},
+			expected: &atlasv2.AwsNetworkPeeringConnectionSettings{StatusName: pointer.Get("PENDING_ACCEPTANCE")},
 		},
 		{
 			name:     "AZURE",
@@ -46,7 +46,7 @@ func TestWatchOpts_Run(t *testing.T) {
 		},
 		{
 			name:     "GCP",
-			expected: &atlasv2.GCPPeerVpc{Status: pointer.Get("WAITING_FOR_USER")},
+			expected: &atlasv2.GCPNetworkPeeringConnectionSettings{Status: pointer.Get("WAITING_FOR_USER")},
 		},
 	}
 	for _, tt := range tests {

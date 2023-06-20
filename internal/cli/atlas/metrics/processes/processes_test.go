@@ -32,7 +32,7 @@ func TestProcess_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessMeasurementLister(ctrl)
 
-	expected := &atlasv2.MeasurementsGeneralViewAtlas{}
+	expected := &atlasv2.ApiMeasurementsGeneralViewAtlas{}
 
 	listOpts := &Opts{
 		host:  "hard-00-00.mongodb.net",

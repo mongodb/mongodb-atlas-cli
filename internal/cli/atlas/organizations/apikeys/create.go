@@ -57,7 +57,7 @@ func (opts *CreateOpts) newAPIKeyInput() *atlasv2.CreateAtlasOrganizationApiKey 
 }
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateOrganizationKey(opts.ConfigOrgID(), opts.newAPIKeyInput())
+	r, err := opts.store.CreateOrganizationAPIKey(opts.ConfigOrgID(), opts.newAPIKeyInput())
 
 	if err != nil {
 		return err

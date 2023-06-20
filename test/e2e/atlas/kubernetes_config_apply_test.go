@@ -277,7 +277,7 @@ func referenceExportedDBUser(projectName, dbUser string) *akov1.AtlasDatabaseUse
 				Name:      prepareK8sName(projectName),
 				Namespace: "mongodb-atlas-system",
 			},
-			Roles: []akov1.DatabaseUserRoleSpec{
+			Roles: []akov1.RoleSpec{
 				{
 					RoleName:     "readAnyDatabase",
 					DatabaseName: "admin",

@@ -88,8 +88,8 @@ func TestBuildAtlasProject(t *testing.T) {
 		authDate, _ := time.Parse(time.RFC3339, "01-01-2001")
 		createDate, _ := time.Parse(time.RFC3339, "01-02-2001")
 
-		cpas := &atlasv2. CloudProviderAccessRole{
-			AwsIamRoles: []atlasv2. CloudProviderAccessRoleAWSIAMRole{
+		cpas := &atlasv2.CloudProviderAccessRoles{
+			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
 				{
 					AtlasAWSAccountArn:         pointer.Get("TestARN"),
 					AtlasAssumedRoleExternalId: pointer.Get("TestExternalRoleID"),
@@ -104,7 +104,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 
 		encryptionAtRest := &atlasv2.EncryptionAtRest{
-			AwsKms:        &atlasv2.AWSKMS{},
+			AwsKms:        &atlasv2.AWSKMSConfiguration{},
 			AzureKeyVault: &atlasv2.AzureKeyVault{},
 			GoogleCloudKms: &atlasv2.GoogleCloudKMS{
 				Enabled:              pointer.Get(true),
@@ -224,12 +224,12 @@ func TestBuildAtlasProject(t *testing.T) {
 			IsSchemaAdvisorEnabled:                      pointer.Get(true),
 		}
 
-		customRoles := []atlasv2.CustomDBRole{
+		customRoles := []atlasv2.UserCustomDBRole{
 			{
-				Actions: []atlasv2.DBAction{
+				Actions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "Action-1",
-						Resources: []atlasv2.DBResource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: "Collection-1",
 								Db:         "DB-1",
@@ -238,7 +238,7 @@ func TestBuildAtlasProject(t *testing.T) {
 						},
 					},
 				},
-				InheritedRoles: []atlasv2.InheritedRole{
+				InheritedRoles: []atlasv2.DatabaseInheritedRole{
 					{
 						Db:   "Inherited-DB",
 						Role: "Inherited-ROLE",
@@ -700,8 +700,8 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 
 	cpaProvider := mocks.NewMockCloudProviderAccessRoleLister(ctl)
 	t.Run("Can convert CPA roles", func(t *testing.T) {
-		data := &atlasv2. CloudProviderAccessRole{
-			AwsIamRoles: []atlasv2. CloudProviderAccessRoleAWSIAMRole{
+		data := &atlasv2.CloudProviderAccessRoles{
+			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
 				{
 					AtlasAWSAccountArn:         pointer.Get("TestARN"),
 					AtlasAssumedRoleExternalId: pointer.Get("TestRoleID"),
@@ -741,7 +741,7 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 	dataProvider := mocks.NewMockEncryptionAtRestDescriber(ctl)
 	t.Run("Can convert Encryption at REST AWS", func(t *testing.T) {
 		data := &atlasv2.EncryptionAtRest{
-			AwsKms: &atlasv2.AWSKMS{
+			AwsKms: &atlasv2.AWSKMSConfiguration{
 				Enabled:             pointer.Get(true),
 				AccessKeyID:         pointer.Get("TestAccessKey"),
 				SecretAccessKey:     pointer.Get("TestSecretAccessKey"),
@@ -781,7 +781,7 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 	})
 	t.Run("Can convert Encryption at REST GCP", func(t *testing.T) {
 		data := &atlasv2.EncryptionAtRest{
-			AwsKms:        &atlasv2.AWSKMS{},
+			AwsKms:        &atlasv2.AWSKMSConfiguration{},
 			AzureKeyVault: &atlasv2.AzureKeyVault{},
 			GoogleCloudKms: &atlasv2.GoogleCloudKMS{
 				Enabled:              pointer.Get(true),
@@ -812,7 +812,7 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 	})
 	t.Run("Can convert Encryption at REST Azure", func(t *testing.T) {
 		data := atlasv2.EncryptionAtRest{
-			AwsKms: &atlasv2.AWSKMS{},
+			AwsKms: &atlasv2.AWSKMSConfiguration{},
 			AzureKeyVault: &atlasv2.AzureKeyVault{
 				Enabled:           pointer.Get(true),
 				ClientID:          pointer.Get("TestClientID"),
@@ -1202,12 +1202,12 @@ func Test_buildCustomRoles(t *testing.T) {
 
 	rolesProvider := mocks.NewMockDatabaseRoleLister(ctl)
 	t.Run("Can build custom roles", func(t *testing.T) {
-		data := []atlasv2.CustomDBRole{
+		data := []atlasv2.UserCustomDBRole{
 			{
-				Actions: []atlasv2.DBAction{
+				Actions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TestAction",
-						Resources: []atlasv2.DBResource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: "TestCollection",
 								Db:         "TestDB",
@@ -1216,7 +1216,7 @@ func Test_buildCustomRoles(t *testing.T) {
 						},
 					},
 				},
-				InheritedRoles: []atlasv2.InheritedRole{
+				InheritedRoles: []atlasv2.DatabaseInheritedRole{
 					{
 						Db:   "TestDBMAIN",
 						Role: "ADMIN",

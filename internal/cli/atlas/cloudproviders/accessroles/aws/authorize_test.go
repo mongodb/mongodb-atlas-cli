@@ -30,7 +30,7 @@ func TestAuthorizeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderAccessRoleAuthorizer(ctrl)
 
-	expected := &atlasv2.CloudProviderAccessRoleRole{}
+	expected := &atlasv2.CloudProviderAccessRole{}
 
 	opts := &AuthorizeOpts{
 		store: mockStore,
@@ -38,7 +38,7 @@ func TestAuthorizeOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		AuthorizeCloudProviderAccessRole(opts.ProjectID, opts.RoleID, opts.newCloudProviderAuthorizationRequest()).
+		AuthorizeCloudProviderAccessRole(opts.ProjectID, opts.roleID, opts.newCloudProviderAuthorizationRequest()).
 		Return(expected, nil).
 		Times(1)
 

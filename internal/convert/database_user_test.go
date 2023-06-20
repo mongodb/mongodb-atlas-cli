@@ -101,13 +101,13 @@ func TestBuildAtlasRoles(t *testing.T) {
 func TestBuildOMRoles(t *testing.T) {
 	type test struct {
 		input []string
-		want  []*opsmngr.DatabaseUserRole
+		want  []*opsmngr.Role
 	}
 
 	tests := []test{
 		{
 			input: []string{"admin"},
-			want: []*opsmngr.DatabaseUserRole{
+			want: []*opsmngr.Role{
 				{
 					Role:     "admin",
 					Database: "admin",
@@ -116,7 +116,7 @@ func TestBuildOMRoles(t *testing.T) {
 		},
 		{
 			input: []string{"admin@test"},
-			want: []*opsmngr.DatabaseUserRole{
+			want: []*opsmngr.Role{
 				{
 					Role:     "admin",
 					Database: "test",
@@ -125,7 +125,7 @@ func TestBuildOMRoles(t *testing.T) {
 		},
 		{
 			input: []string{"admin@test", "something"},
-			want: []*opsmngr.DatabaseUserRole{
+			want: []*opsmngr.Role{
 				{
 					Role:     "admin",
 					Database: "test",

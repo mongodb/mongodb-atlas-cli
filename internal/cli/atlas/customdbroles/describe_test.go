@@ -33,11 +33,11 @@ func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseRoleDescriber(ctrl)
 
-	expected := atlasv2.CustomDBRole{
-		Actions: []atlasv2.DBAction{
+	expected := atlasv2.UserCustomDBRole{
+		Actions: []atlasv2.DatabasePrivilegeAction{
 			{
 				Action: "test",
-				Resources: []atlasv2.DBResource{
+				Resources: []atlasv2.DatabasePermittedNamespaceResource{
 					{
 						Collection: "test",
 						Db:         "test",
@@ -45,7 +45,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 				},
 			},
 		},
-		InheritedRoles: []atlasv2.InheritedRole{
+		InheritedRoles: []atlasv2.DatabaseInheritedRole{
 			{
 				Db:   "test",
 				Role: "test",
@@ -66,7 +66,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DatabaseRole(describeOpts.ConfigProjectID(), describeopts.roleName).
+		DatabaseRole(describeOpts.ConfigProjectID(), describeOpts.roleName).
 		Return(&expected, nil).
 		Times(1)
 

@@ -231,9 +231,9 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 
 	a := assert.New(t)
 	a.Equal(username, user.Username)
-	if a.Len(user.DatabaseUserRoles, 1) {
-		a.Equal("admin", user.DatabaseUserRoles[0].DatabaseName)
-		a.Equal(roleReadWrite, user.DatabaseUserRoles[0].DatabaseUserRoleName)
+	if a.Len(user.Roles, 1) {
+		a.Equal("admin", user.Roles[0].DatabaseName)
+		a.Equal(roleReadWrite, user.Roles[0].RoleName)
 	}
 
 	a.Len(user.Scopes, 1)

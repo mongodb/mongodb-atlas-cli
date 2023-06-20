@@ -187,7 +187,7 @@ func TestCreateOpts_validate(t *testing.T) {
 				x509Type:   fields.x509Type,
 				awsIamType: fields.awsIamType,
 				ldapType:   fields.ldapType,
-				roles:      fields.DatabaseUserRoles,
+				roles:      fields.roles,
 				password:   fields.password,
 			}
 			if err := opts.validate(); (err != nil) != wantErr {

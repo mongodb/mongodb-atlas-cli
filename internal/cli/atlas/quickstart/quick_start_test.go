@@ -145,7 +145,7 @@ func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 
 	expectedCluster := &atlasv2.AdvancedClusterDescription{
 		StateName: pointer.Get("IDLE"),
-		ConnectionStrings: &atlasv2.ClusterDescriptionConnectionString{
+		ConnectionStrings: &atlasv2.ClusterConnectionStrings{
 			StandardSrv: pointer.Get(""),
 		},
 	}

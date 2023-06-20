@@ -57,7 +57,7 @@ func (opts *UpdateOpts) Run() error {
 
 func (opts *UpdateOpts) newTeamUpdateRoles() *atlas.TeamUpdateRoles {
 	return &atlas.TeamUpdateRoles{
-		RoleNames: opts.role,
+		RoleNames: opts.roles,
 	}
 }
 

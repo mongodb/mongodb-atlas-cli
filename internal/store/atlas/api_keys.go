@@ -50,7 +50,7 @@ type OrganizationAPIKeyUpdater interface {
 }
 
 type OrganizationAPIKeyCreator interface {
-	CreateOrganizationKey(string, *atlasv2.CreateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error)
+	CreateOrganizationAPIKey(string, *atlasv2.CreateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error)
 }
 
 type OrganizationAPIKeyDeleter interface {
@@ -79,8 +79,8 @@ func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlasv2.
 	return result, err
 }
 
-// CreateOrganizationKey encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateOrganizationKey(orgID string, input *atlasv2.CreateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error) {
+// CreateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
+func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlasv2.CreateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error) {
 	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateApiKey(s.ctx, orgID, input).Execute()
 	return result, err
 }

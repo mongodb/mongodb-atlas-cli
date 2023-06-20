@@ -30,7 +30,7 @@ func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseRoleCreator(ctrl)
 
-	expected := &atlasv2.CustomDBRole{}
+	expected := &atlasv2.UserCustomDBRole{}
 
 	createOpts := &CreateOpts{
 		store: mockStore,

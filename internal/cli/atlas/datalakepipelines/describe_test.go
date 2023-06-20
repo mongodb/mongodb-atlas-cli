@@ -36,7 +36,7 @@ func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPipelinesDescriber(ctrl)
 
-	expected := &atlasv2.IngestionPipeline{
+	expected := &atlasv2.DataLakeIngestionPipeline{
 		Id:    pointer.Get("1a5cbd92c036a0eb288"),
 		Name:  pointer.Get("pipeline 1"),
 		State: pointer.Get("PENDING"),

@@ -31,7 +31,7 @@ func TestValidationDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLiveMigrationValidationsDescriber(ctrl)
 
-	expected := atlasv2.Validation{}
+	expected := atlasv2.LiveImportValidation{}
 
 	describeOpts := &DescribeOpts{
 		GlobalOpts:   cli.GlobalOpts{ProjectID: "2"},

@@ -123,7 +123,7 @@ func TestOrgInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(emailOrg, invitation.Username)
-			a.ElementsMatch([]string{roleNameOrg}, invitation.DatabaseUserRoles)
+			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
 		}
 	})
 
@@ -145,7 +145,7 @@ func TestOrgInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(emailOrg, invitation.Username)
-			a.ElementsMatch([]string{roleNameOrg}, invitation.DatabaseUserRoles)
+			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
 		}
 	})
 

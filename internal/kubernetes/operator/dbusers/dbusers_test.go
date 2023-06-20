@@ -70,7 +70,7 @@ func Test_convertUserLabels(t *testing.T) {
 func Test_convertUserRoles(t *testing.T) {
 	t.Run("Can convert user labels from Atlas to the Operator format", func(t *testing.T) {
 		atlasUser := &atlasv2.CloudDatabaseUser{
-			Roles: []atlasv2.Role{
+			Roles: []atlasv2.DatabaseUserRole{
 				{
 					RoleName:       "TestRole",
 					DatabaseName:   "TestDB",
@@ -148,7 +148,7 @@ func TestBuildDBUsers(t *testing.T) {
 			X509Type:     pointer.Get("TestX509"),
 			AwsIAMType:   pointer.Get("TestAWSIAMType"),
 			GroupId:      "0",
-			Roles: []atlasv2.Role{
+			Roles: []atlasv2.DatabaseUserRole{
 				{
 					RoleName:       "TestRoleName",
 					DatabaseName:   "TestRoleDatabaseName",
@@ -267,7 +267,7 @@ func TestBuildDBUsers(t *testing.T) {
 					X509Type:     pointer.Get("TestX509"),
 					AwsIAMType:   pointer.Get("TestAWSIAMType"),
 					GroupId:      "0",
-					Roles: []atlasv2.Role{
+					Roles: []atlasv2.DatabaseUserRole{
 						{
 							RoleName:       "TestRoleName",
 							DatabaseName:   "TestRoleDatabaseName",
@@ -296,7 +296,7 @@ func TestBuildDBUsers(t *testing.T) {
 					X509Type:     pointer.Get("TestX509"),
 					AwsIAMType:   pointer.Get("TestAWSIAMType"),
 					GroupId:      "0",
-					Roles: []atlasv2.Role{
+					Roles: []atlasv2.DatabaseUserRole{
 						{
 							RoleName:       "TestRoleName",
 							DatabaseName:   "TestRoleDatabaseName",

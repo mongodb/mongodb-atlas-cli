@@ -100,7 +100,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var clusters atlasv2.PaginatedClusterDescriptionV15
+		var clusters atlasv2.PaginatedAdvancedClusterDescription
 		err = json.Unmarshal(resp, &clusters)
 		req.NoError(err)
 
@@ -139,7 +139,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var connectionString atlasv2.ClusterDescriptionConnectionStrings
+		var connectionString atlasv2.ClusterConnectionStrings
 		err = json.Unmarshal(resp, &connectionString)
 		req.NoError(err)
 

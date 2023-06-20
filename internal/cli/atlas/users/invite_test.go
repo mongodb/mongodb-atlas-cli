@@ -59,7 +59,7 @@ func TestCreateRoles(t *testing.T) {
 	type test struct {
 		name  string
 		input InviteOpts
-		want  []atlasv2.DatabaseUserRoleAssignment
+		want  []atlasv2.RoleAssignment
 	}
 
 	tests := []test{
@@ -68,7 +68,7 @@ func TestCreateRoles(t *testing.T) {
 			input: InviteOpts{
 				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER"},
 			},
-			want: []atlasv2.DatabaseUserRoleAssignment{{
+			want: []atlasv2.RoleAssignment{{
 				OrgId: pointer.Get("5e4e593f70dfbf1010295836"),
 				Role:  pointer.Get("ORG_OWNER"),
 			}},
@@ -78,7 +78,7 @@ func TestCreateRoles(t *testing.T) {
 			input: InviteOpts{
 				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
 			},
-			want: []atlasv2.DatabaseUserRoleAssignment{
+			want: []atlasv2.RoleAssignment{
 				{
 					OrgId: pointer.Get("5e4e593f70dfbf1010295836"),
 					Role:  pointer.Get("ORG_OWNER"),
@@ -95,7 +95,7 @@ func TestCreateRoles(t *testing.T) {
 				orgRoles:     []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
 				projectRoles: []string{"5e4e593f70dfbf1010295836:GROUP_OWNER", "5e4e593f70dfbf1010295836:GROUP_CLUSTER_MANAGER"},
 			},
-			want: []atlasv2.DatabaseUserRoleAssignment{
+			want: []atlasv2.RoleAssignment{
 				{
 					OrgId: pointer.Get("5e4e593f70dfbf1010295836"),
 					Role:  pointer.Get("ORG_OWNER"),
@@ -117,7 +117,7 @@ func TestCreateRoles(t *testing.T) {
 		{
 			name:  "empty",
 			input: InviteOpts{},
-			want:  []atlasv2.DatabaseUserRoleAssignment{},
+			want:  []atlasv2.RoleAssignment{},
 		},
 	}
 

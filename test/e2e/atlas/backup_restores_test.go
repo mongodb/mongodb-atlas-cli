@@ -104,7 +104,7 @@ func TestRestores(t *testing.T) {
 
 		r.NoError(err, string(resp))
 		a := assert.New(t)
-		var result admin. DiskBackupSnapshotRestoreJob
+		var result atlasv2.DiskBackupSnapshotRestoreJob
 		if err = json.Unmarshal(resp, &result); a.NoError(err) {
 			restoreJobID = result.GetId()
 		}
@@ -165,7 +165,7 @@ func TestRestores(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var result admin. DiskBackupSnapshotRestoreJob
+		var result atlasv2.DiskBackupSnapshotRestoreJob
 		if err = json.Unmarshal(resp, &result); a.NoError(err, string(resp)) {
 			a.NotEmpty(result)
 		}

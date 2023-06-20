@@ -135,7 +135,7 @@ func TestProjectInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(emailProject, invitation.Username)
-			a.ElementsMatch([]string{roleName1, roleName2}, invitation.DatabaseUserRoles)
+			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
 		}
 	})
 
@@ -161,7 +161,7 @@ func TestProjectInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(emailProject, invitation.Username)
-			a.ElementsMatch([]string{roleName1, roleName2}, invitation.DatabaseUserRoles)
+			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
 		}
 	})
 

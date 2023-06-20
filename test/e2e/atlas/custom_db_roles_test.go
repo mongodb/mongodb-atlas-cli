@@ -57,15 +57,15 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var role atlasv2.CustomDBRole
+		var role atlasv2.UserCustomDBRole
 		require.NoError(t, json.Unmarshal(resp, &role))
 
 		a := assert.New(t)
-		a.Equal(roleName, role.DatabaseUserRoleName)
+		a.Equal(roleName, role.RoleName)
 		a.Len(role.Actions, 1)
 		a.Equal(createPrivilege, role.Actions[0].Action)
 		a.Len(role.InheritedRoles, 1)
-		a.Equal(enableSharding, role.InheritedRoles[0].DatabaseUserRole)
+		a.Equal(enableSharding, role.InheritedRoles[0].Role)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -77,7 +77,7 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var roles []atlasv2.CustomDBRole
+		var roles []atlasv2.UserCustomDBRole
 		require.NoError(t, json.Unmarshal(resp, &roles))
 
 		assert.NotEmpty(t, roles)
@@ -93,15 +93,15 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var role atlasv2.CustomDBRole
+		var role atlasv2.UserCustomDBRole
 		require.NoError(t, json.Unmarshal(resp, &role))
 
 		a := assert.New(t)
-		a.Equal(roleName, role.DatabaseUserRoleName)
+		a.Equal(roleName, role.RoleName)
 		a.Len(role.Actions, 1)
 		a.Equal(createPrivilege, role.Actions[0].Action)
 		a.Len(role.InheritedRoles, 1)
-		a.Equal(enableSharding, role.InheritedRoles[0].DatabaseUserRole)
+		a.Equal(enableSharding, role.InheritedRoles[0].Role)
 	})
 
 	t.Run("Update with append", func(t *testing.T) {
@@ -117,17 +117,17 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var role atlasv2.CustomDBRole
+		var role atlasv2.UserCustomDBRole
 		require.NoError(t, json.Unmarshal(resp, &role))
 
 		a := assert.New(t)
-		a.Equal(roleName, role.DatabaseUserRoleName)
+		a.Equal(roleName, role.RoleName)
 		a.Len(role.Actions, 2)
 		a.ElementsMatch(
 			[]string{role.Actions[0].Action, role.Actions[1].Action},
 			[]string{updatePrivilege, createPrivilege})
 		a.Len(role.InheritedRoles, 1)
-		a.Equal(enableSharding, role.InheritedRoles[0].DatabaseUserRole)
+		a.Equal(enableSharding, role.InheritedRoles[0].Role)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -141,11 +141,11 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var role atlasv2.CustomDBRole
+		var role atlasv2.UserCustomDBRole
 		require.NoError(t, json.Unmarshal(resp, &role))
 
 		a := assert.New(t)
-		a.Equal(roleName, role.DatabaseUserRoleName)
+		a.Equal(roleName, role.RoleName)
 		a.Len(role.Actions, 1)
 		a.Equal(updatePrivilege, role.Actions[0].Action)
 	})

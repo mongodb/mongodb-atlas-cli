@@ -128,15 +128,15 @@ func TestAtlasClusterExists(t *testing.T) {
 
 func TestDefaultRegion(t *testing.T) {
 	tests := []struct {
-		input []atlasv2.AvailableRegion
+		input []atlasv2.AvailableCloudProviderRegion
 		want  int
 	}{
 		{
-			input: []atlasv2.AvailableRegion{},
+			input: []atlasv2.AvailableCloudProviderRegion{},
 			want:  -1,
 		},
 		{
-			input: []atlasv2.AvailableRegion{
+			input: []atlasv2.AvailableCloudProviderRegion{
 				{
 					Name:    pointer.Get("test"),
 					Default: pointer.Get(false),
@@ -145,7 +145,7 @@ func TestDefaultRegion(t *testing.T) {
 			want: -1,
 		},
 		{
-			input: []atlasv2.AvailableRegion{
+			input: []atlasv2.AvailableCloudProviderRegion{
 				{
 					Name:    pointer.Get("test"),
 					Default: pointer.Get(true),
@@ -154,7 +154,7 @@ func TestDefaultRegion(t *testing.T) {
 			want: 0,
 		},
 		{
-			input: []atlasv2.AvailableRegion{
+			input: []atlasv2.AvailableCloudProviderRegion{
 				{
 					Name:    pointer.Get("test"),
 					Default: pointer.Get(false),
@@ -171,7 +171,7 @@ func TestDefaultRegion(t *testing.T) {
 			want: 1,
 		},
 		{
-			input: []atlasv2.AvailableRegion{
+			input: []atlasv2.AvailableCloudProviderRegion{
 				{
 					Name:    pointer.Get("test"),
 					Default: pointer.Get(false),

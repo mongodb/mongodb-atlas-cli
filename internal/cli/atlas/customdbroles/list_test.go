@@ -33,12 +33,12 @@ func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseRoleLister(ctrl)
 
-	expected := []atlasv2.CustomDBRole{
+	expected := []atlasv2.UserCustomDBRole{
 		{
-			Actions: []atlasv2.DBAction{
+			Actions: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "test",
-					Resources: []atlasv2.DBResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Collection: "test",
 							Db:         "test",
@@ -47,7 +47,7 @@ func TestListOpts_Run(t *testing.T) {
 					},
 				},
 			},
-			InheritedRoles: []atlasv2.InheritedRole{
+			InheritedRoles: []atlasv2.DatabaseInheritedRole{
 				{
 					Db:   "pandas",
 					Role: "dbAdmin",

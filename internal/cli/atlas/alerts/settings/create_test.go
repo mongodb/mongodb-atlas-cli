@@ -30,7 +30,7 @@ func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationCreator(ctrl)
 
-	expected := &admin.AlertConfigViewForNdsGroup{}
+	expected := &admin.GroupAlertsConfig{}
 
 	createOpts := &CreateOpts{
 		ConfigOpts: ConfigOpts{

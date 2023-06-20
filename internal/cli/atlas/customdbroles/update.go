@@ -30,7 +30,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
-const updateTemplate = "Custom database role '{{.RoleName}}' successfully updated.\n"
+const updateTemplate = "Custom database role '{{.DatabaseUserRoleName}}' successfully updated.\n"
 
 type UpdateOpts struct {
 	cli.GlobalOpts

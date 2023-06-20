@@ -60,7 +60,7 @@ func (opts *InviteOpts) Run() error {
 func (opts *InviteOpts) newInvitation() *atlas.Invitation {
 	return &atlas.Invitation{
 		Username: opts.username,
-		Roles:    opts.roles,
+		Roles:    opts.role,
 		TeamIDs:  opts.teamIds,
 	}
 }

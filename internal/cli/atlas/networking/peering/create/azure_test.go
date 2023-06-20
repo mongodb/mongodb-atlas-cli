@@ -52,7 +52,7 @@ func TestAzureOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			CreatePeeringConnection(opts.ProjectID, request).
-			Return(&atlasv2.AzurePeerNetwork{}, nil).
+			Return(&atlasv2.AzureNetworkPeeringConnectionSettings{}, nil).
 			Times(1)
 		if err := opts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
@@ -75,7 +75,7 @@ func TestAzureOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			CreatePeeringConnection(opts.ProjectID, request).
-			Return(&atlasv2.AzurePeerNetwork{}, nil).
+			Return(&atlasv2.AzureNetworkPeeringConnectionSettings{}, nil).
 			Times(1)
 		if err := opts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)

@@ -35,7 +35,7 @@ func Test_autoCompleteOpts_tierSuggestions(t *testing.T) {
 		store: mockStore,
 	}
 	expected := &admin.PaginatedApiAtlasProviderRegions{
-		Results: []admin.ProviderRegions{
+		Results: []admin.CloudProviderRegions{
 			{
 				Provider: pointer.Get("AWS"),
 				InstanceSizes: []admin.ProviderInstanceSize{
@@ -67,7 +67,7 @@ func Test_autoCompleteOpts_regionSuggestions(t *testing.T) {
 		store: mockStore,
 	}
 	expected := &admin.PaginatedApiAtlasProviderRegions{
-		Results: []admin.ProviderRegions{
+		Results: []admin.CloudProviderRegions{
 			{
 				Provider: pointer.Get("AWS"),
 				InstanceSizes: []admin.ProviderInstanceSize{

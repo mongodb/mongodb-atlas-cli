@@ -29,7 +29,7 @@ import (
 
 const (
 	provider       = "AWS"
-	createTemplate = `AWS IAM role '{{.CloudProviderAccessAWSIAMRole.RoleId}}' successfully created.
+	createTemplate = `AWS IAM role '{{.CloudProviderAccessAWSIAMRole.RoleID}}' successfully created.
 Atlas AWS Account ARN: {{.CloudProviderAccessAWSIAMRole.AtlasAWSAccountArn}}
 Unique External ID: {{.CloudProviderAccessAWSIAMRole.AtlasAssumedRoleExternalId}}
 `

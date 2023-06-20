@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `NAME	ACTION	DB	COLLECTION	CLUSTER {{- $roleName := .RoleName }} {{range .Actions}} 
+const describeTemplate = `NAME	ACTION	DB	COLLECTION	CLUSTER {{- $roleName := .DatabaseUserRoleName }} {{range .Actions}} 
 {{- $actionName := .Action }} {{- range .Resources}}
 {{ $roleName }}	{{ $actionName }}{{if .Db }}	{{ .Db }}{{else}}	N/A{{end}}{{if .Collection }}	{{ .Collection }}{{else if .Cluster}}	N/A{{else}}	ALL COLLECTIONS{{end}}{{if .Cluster}}	{{ .Cluster }}{{else}}	N/A	{{end}}{{end}}{{end}}
 `

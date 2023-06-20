@@ -68,7 +68,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			EncryptionAtRestProvider: pointer.Get("TestProvider"),
 			GroupId:                  pointer.Get("TestGroupID"),
 			Id:                       pointer.Get("TestID"),
-			Labels: []atlasv2.NDSLabel{
+			Labels: []atlasv2.ComponentLabel{
 				{
 					Key:   pointer.Get("TestKey"),
 					Value: pointer.Get("TestValue"),

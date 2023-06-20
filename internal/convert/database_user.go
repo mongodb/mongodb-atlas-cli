@@ -35,7 +35,7 @@ const (
 	defaultResourceType = "CLUSTER"
 )
 
-// BuildAtlasRoles converts the roles inside the array of string in an array of mongodbatlas.Role structs.
+// BuildAtlasRoles converts the roles inside the array of string in an array of mongodbatlas.DatabaseUserRole structs.
 // r contains roles in the format roleName@dbName.
 func BuildAtlasRoles(r []string) []atlasv2.DatabaseUserRole {
 	roles := make([]atlasv2.DatabaseUserRole, len(r))
@@ -79,7 +79,7 @@ func splitRoleAndDBName(roleAndDBNAme string) (role, dbName string) {
 	return
 }
 
-// BuildOMRoles converts the roles inside the array of string in an array of opsmngr.Role structs.
+// BuildOMRoles converts the roles inside the array of string in an array of opsmngr.DatabaseUserRole structs.
 // r contains roles in the format roleName@dbName.
 func BuildOMRoles(r []string) []*opsmngr.Role {
 	roles := make([]*opsmngr.Role, len(r))

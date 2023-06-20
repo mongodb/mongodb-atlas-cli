@@ -46,7 +46,7 @@ const resourceVersion = "x.y.z"
 func Test_convertUserLabels(t *testing.T) {
 	t.Run("Can convert user labels from Atlas to the Operator format", func(t *testing.T) {
 		atlasUser := &atlasv2.CloudDatabaseUser{
-			Labels: []atlasv2.NDSLabel{
+			Labels: []atlasv2.ComponentLabel{
 				{
 					Key:   pointer.Get("TestKey"),
 					Value: pointer.Get("TestValue"),
@@ -138,7 +138,7 @@ func TestBuildDBUsers(t *testing.T) {
 		user := atlasv2.CloudDatabaseUser{
 			DatabaseName:    "TestDB",
 			DeleteAfterDate: pointer.Get(time.Now()),
-			Labels: []atlasv2.NDSLabel{
+			Labels: []atlasv2.ComponentLabel{
 				{
 					Key:   pointer.Get("TestLabelKey"),
 					Value: pointer.Get("TestLabelValue"),
@@ -257,7 +257,7 @@ func TestBuildDBUsers(t *testing.T) {
 				{
 					DatabaseName:    "TestDB",
 					DeleteAfterDate: pointer.Get(time.Now()),
-					Labels: []atlasv2.NDSLabel{
+					Labels: []atlasv2.ComponentLabel{
 						{
 							Key:   pointer.Get("TestLabelKey"),
 							Value: pointer.Get("TestLabelValue"),
@@ -286,7 +286,7 @@ func TestBuildDBUsers(t *testing.T) {
 				{
 					DatabaseName:    "TestDB",
 					DeleteAfterDate: pointer.Get(time.Now()),
-					Labels: []atlasv2.NDSLabel{
+					Labels: []atlasv2.ComponentLabel{
 						{
 							Key:   pointer.Get("TestLabelKey"),
 							Value: pointer.Get("TestLabelValue"),

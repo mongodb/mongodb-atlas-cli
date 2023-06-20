@@ -52,7 +52,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 func (opts *CreateOpts) newAPIKeyInput() *atlas.APIKeyInput {
 	return &atlas.APIKeyInput{
 		Desc:  opts.desc,
-		Roles: opts.roles,
+		Roles: opts.role,
 	}
 }
 

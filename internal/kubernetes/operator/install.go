@@ -153,7 +153,7 @@ func (i *Install) generateKeys(orgID string) (*mongodbatlas.APIKey, error) {
 				roleOrgGroupCreator,
 			},
 		}
-		keys, err := i.atlasStore.CreateAtlasOrganizationApiKey(orgID, input)
+		keys, err := i.atlasStore.CreateOrganizationAPIKey(orgID, input)
 		if err != nil {
 			return nil, fmt.Errorf("failed to generate org keys: %w", err)
 		}

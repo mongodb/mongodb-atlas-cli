@@ -74,7 +74,7 @@ func (m *MockProjectAPIKeyCreator) EXPECT() *MockProjectAPIKeyCreatorMockRecorde
 }
 
 // CreateProjectAPIKey mocks base method.
-func (m *MockProjectAPIKeyCreator) CreateProjectAPIKey(arg0 string, arg1 *admin.CreateProjectKey) (*admin.ApiKeyUserDetails, error) {
+func (m *MockProjectAPIKeyCreator) CreateProjectAPIKey(arg0 string, arg1 *admin.CreateAtlasProjectApiKey) (*admin.ApiKeyUserDetails, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProjectAPIKey", arg0, arg1)
 	ret0, _ := ret[0].(*admin.ApiKeyUserDetails)
@@ -237,7 +237,7 @@ func (m *MockOrganizationAPIKeyCreator) CreateOrganizationKey(arg0 string, arg1 
 // CreateOrganizationKey indicates an expected call of CreateOrganizationKey.
 func (mr *MockOrganizationAPIKeyCreatorMockRecorder) CreateOrganizationKey(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationKey", reflect.TypeOf((*MockOrganizationAPIKeyCreator)(nil).CreateAtlasOrganizationApiKey), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationKey", reflect.TypeOf((*MockOrganizationAPIKeyCreator)(nil).CreateOrganizationKey), arg0, arg1)
 }
 
 // MockOrganizationAPIKeyDeleter is a mock of OrganizationAPIKeyDeleter interface.
@@ -338,7 +338,7 @@ func (m *MockProjectAPIKeyAssigner) EXPECT() *MockProjectAPIKeyAssignerMockRecor
 }
 
 // AssignProjectAPIKey mocks base method.
-func (m *MockProjectAPIKeyAssigner) AssignProjectAPIKey(arg0, arg1 string, arg2 *admin.CreateProjectKey) error {
+func (m *MockProjectAPIKeyAssigner) AssignProjectAPIKey(arg0, arg1 string, arg2 *admin.CreateAtlasProjectApiKey) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AssignProjectAPIKey", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)

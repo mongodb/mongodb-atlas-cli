@@ -61,11 +61,11 @@ func TestDBRoles(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &role))
 
 		a := assert.New(t)
-		a.Equal(roleName, role.RoleName)
+		a.Equal(roleName, role.DatabaseUserRoleName)
 		a.Len(role.Actions, 1)
 		a.Equal(createPrivilege, role.Actions[0].Action)
 		a.Len(role.InheritedRoles, 1)
-		a.Equal(enableSharding, role.InheritedRoles[0].Role)
+		a.Equal(enableSharding, role.InheritedRoles[0].DatabaseUserRole)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -97,11 +97,11 @@ func TestDBRoles(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &role))
 
 		a := assert.New(t)
-		a.Equal(roleName, role.RoleName)
+		a.Equal(roleName, role.DatabaseUserRoleName)
 		a.Len(role.Actions, 1)
 		a.Equal(createPrivilege, role.Actions[0].Action)
 		a.Len(role.InheritedRoles, 1)
-		a.Equal(enableSharding, role.InheritedRoles[0].Role)
+		a.Equal(enableSharding, role.InheritedRoles[0].DatabaseUserRole)
 	})
 
 	t.Run("Update with append", func(t *testing.T) {
@@ -121,13 +121,13 @@ func TestDBRoles(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &role))
 
 		a := assert.New(t)
-		a.Equal(roleName, role.RoleName)
+		a.Equal(roleName, role.DatabaseUserRoleName)
 		a.Len(role.Actions, 2)
 		a.ElementsMatch(
 			[]string{role.Actions[0].Action, role.Actions[1].Action},
 			[]string{updatePrivilege, createPrivilege})
 		a.Len(role.InheritedRoles, 1)
-		a.Equal(enableSharding, role.InheritedRoles[0].Role)
+		a.Equal(enableSharding, role.InheritedRoles[0].DatabaseUserRole)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -145,7 +145,7 @@ func TestDBRoles(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &role))
 
 		a := assert.New(t)
-		a.Equal(roleName, role.RoleName)
+		a.Equal(roleName, role.DatabaseUserRoleName)
 		a.Len(role.Actions, 1)
 		a.Equal(updatePrivilege, role.Actions[0].Action)
 	})

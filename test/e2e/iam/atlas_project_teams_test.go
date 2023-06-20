@@ -105,8 +105,8 @@ func TestAtlasProjectTeams(t *testing.T) {
 
 			role := roles.Results[0]
 			a.Equal(teamID, *role.TeamId)
-			a.Len(role.RoleNames, 2)
-			a.ElementsMatch([]string{roleName1, roleName2}, role.RoleNames)
+			a.Len(role.DatabaseUserRoleNames, 2)
+			a.ElementsMatch([]string{roleName1, roleName2}, role.DatabaseUserRoleNames)
 		}
 	})
 

@@ -30,7 +30,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockRestoreJobsDescriber(ctrl)
 
-	expected := &admin. DiskBackupSnapshotRestoreJob{}
+	expected := &atlasv2.DiskBackupSnapshotRestoreJob{}
 
 	describeOpts := &DescribeOpts{
 		store:       mockStore,

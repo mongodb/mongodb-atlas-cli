@@ -40,7 +40,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessDescriber(ctrl)
 
-	expected := atlasv2.HostViewAtlas{}
+	expected := atlasv2.ApiHostViewAtlas{}
 
 	opts := &DescribeOpts{
 		store: mockStore,

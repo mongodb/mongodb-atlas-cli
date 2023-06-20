@@ -66,7 +66,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DatabaseRole(describeOpts.ConfigProjectID(), describeOpts.roleName).
+		DatabaseRole(describeOpts.ConfigProjectID(), describeopts.roleName).
 		Return(&expected, nil).
 		Times(1)
 

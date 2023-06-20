@@ -30,7 +30,7 @@ func TestStart_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockRestoreJobsCreator(ctrl)
 
-	expected := &admin. DiskBackupSnapshotRestoreJob{}
+	expected := &atlasv2.DiskBackupSnapshotRestoreJob{}
 
 	t.Run(automatedRestore, func(t *testing.T) {
 		listOpts := &StartOpts{

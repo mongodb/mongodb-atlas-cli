@@ -47,7 +47,7 @@ func TestMongoCLIBuilder(t *testing.T) {
 func TestAddLabel(t *testing.T) {
 	type args struct {
 		out   *atlasv2.AdvancedClusterDescription
-		label atlasv2.NDSLabel
+		label atlasv2.ComponentLabel
 	}
 	tests := []struct {
 		name     string
@@ -58,9 +58,9 @@ func TestAddLabel(t *testing.T) {
 			name: "adds",
 			args: args{
 				out: &atlasv2.AdvancedClusterDescription{
-					Labels: []atlasv2.NDSLabel{},
+					Labels: []atlasv2.ComponentLabel{},
 				},
-				label: atlasv2.NDSLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
+				label: atlasv2.BaseLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
 			},
 			wantsAdd: true,
 		},
@@ -68,9 +68,9 @@ func TestAddLabel(t *testing.T) {
 			name: "doesn't adds",
 			args: args{
 				out: &atlasv2.AdvancedClusterDescription{
-					Labels: []atlasv2.NDSLabel{{Key: pointer.Get("test"), Value: pointer.Get("test")}},
+					Labels: []atlasv2.ComponentLabel{{Key: pointer.Get("test"), Value: pointer.Get("test")}},
 				},
-				label: atlasv2.NDSLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
+				label: atlasv2.ComponentLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
 			},
 			wantsAdd: true,
 		},
@@ -90,8 +90,8 @@ func TestAddLabel(t *testing.T) {
 
 func TestLabelExists(t *testing.T) {
 	type args struct {
-		labels []atlasv2.NDSLabel
-		l      atlasv2.NDSLabel
+		labels []atlasv2.ComponentLabel
+		l      atlasv2.ComponentLabel
 	}
 	tests := []struct {
 		name string
@@ -101,8 +101,8 @@ func TestLabelExists(t *testing.T) {
 		{
 			name: "label doesn't exist",
 			args: args{
-				labels: []atlasv2.NDSLabel{},
-				l: atlasv2.NDSLabel{
+				labels: []atlasv2.ComponentLabel{},
+				l: atlasv2.ComponentLabel{
 					Key:   pointer.Get("test"),
 					Value: pointer.Get("test"),
 				},
@@ -112,13 +112,13 @@ func TestLabelExists(t *testing.T) {
 		{
 			name: "label exist",
 			args: args{
-				labels: []atlasv2.NDSLabel{
+				labels: []atlasv2.ComponentLabel{
 					{
 						Key:   pointer.Get("test"),
 						Value: pointer.Get("test"),
 					},
 				},
-				l: atlasv2.NDSLabel{
+				l: atlasv2.ComponentLabel{
 					Key:   pointer.Get("test"),
 					Value: pointer.Get("test"),
 				},

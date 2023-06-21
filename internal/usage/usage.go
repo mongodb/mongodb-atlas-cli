@@ -436,4 +436,5 @@ dbName and collection are required only for built-in roles.`
 	WatchTimeout                              = "Time in seconds until a watch times out. After a watch times out, the CLI no longer watches the command."
 	CompactResponse                           = "Flag that enables the compact array response structure for a json output. The --compact option returns array objects as top-level responses and allows backward compatibility for scripts based on previous CLI versions. Omitting the --compact option for a json output returns array objects within a 'results' sub-array. You must specify --output json to use this option."
 	DataFederationFile                        = "Path to an optional JSON configuration file that defines data federation settings."
+	DataFederationType                        = "Type of Federated Database Instances to return"
 )

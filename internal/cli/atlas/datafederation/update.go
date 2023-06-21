@@ -40,7 +40,7 @@ type UpdateOpts struct {
 	name          string
 	filename      string
 	region        string
-	awsRoleId     string
+	awsRoleID     string
 	awsTestBucket string
 }
 
@@ -86,7 +86,7 @@ func (opts *UpdateOpts) newUpdateRequest() (*admin.DataLakeTenant, error) {
 		},
 		CloudProviderConfig: &admin.DataLakeCloudProviderConfig{
 			Aws: admin.DataLakeAWSCloudProviderConfig{
-				RoleId:       opts.awsRoleId,
+				RoleId:       opts.awsRoleID,
 				TestS3Bucket: opts.awsTestBucket,
 			},
 		},
@@ -124,7 +124,7 @@ func UpdateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.DataLakeRegion)
-	cmd.Flags().StringVar(&opts.awsRoleId, flag.AWSRoleID, "", usage.DataLakeRole)
+	cmd.Flags().StringVar(&opts.awsRoleID, flag.AWSRoleID, "", usage.DataLakeRole)
 	cmd.Flags().StringVar(&opts.awsTestBucket, flag.AWSTestS3Bucket, "", usage.DataLakeTestBucket)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.DataFederationFile)
 

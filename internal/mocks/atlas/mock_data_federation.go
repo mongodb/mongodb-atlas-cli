@@ -35,18 +35,18 @@ func (m *MockDataFederationLister) EXPECT() *MockDataFederationListerMockRecorde
 }
 
 // DataFederationList mocks base method.
-func (m *MockDataFederationLister) DataFederationList(arg0 string) ([]admin.DataLakeTenant, error) {
+func (m *MockDataFederationLister) DataFederationList(arg0, arg1 string) ([]admin.DataLakeTenant, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DataFederationList", arg0)
+	ret := m.ctrl.Call(m, "DataFederationList", arg0, arg1)
 	ret0, _ := ret[0].([]admin.DataLakeTenant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // DataFederationList indicates an expected call of DataFederationList.
-func (mr *MockDataFederationListerMockRecorder) DataFederationList(arg0 interface{}) *gomock.Call {
+func (mr *MockDataFederationListerMockRecorder) DataFederationList(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DataFederationList", reflect.TypeOf((*MockDataFederationLister)(nil).DataFederationList), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DataFederationList", reflect.TypeOf((*MockDataFederationLister)(nil).DataFederationList), arg0, arg1)
 }
 
 // MockDataFederationDescriber is a mock of DataFederationDescriber interface.

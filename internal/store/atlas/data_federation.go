@@ -23,7 +23,7 @@ import (
 //go:generate mockgen -destination=../../mocks/atlas/mock_data_federation.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas DataFederationLister,DataFederationDescriber,DataFederationCreator,DataFederationUpdater,DataFederationDeleter
 
 type DataFederationLister interface {
-	DataFederationList(string) ([]admin.DataLakeTenant, error)
+	DataFederationList(string, string) ([]admin.DataLakeTenant, error)
 }
 
 type DataFederationCreator interface {
@@ -43,8 +43,12 @@ type DataFederationUpdater interface {
 }
 
 // DataFederationList encapsulates the logic to manage different cloud providers.
-func (s *Store) DataFederationList(projectID string) ([]admin.DataLakeTenant, error) {
-	result, _, err := s.clientv2.DataFederationApi.ListFederatedDatabases(s.ctx, projectID).Execute()
+func (s *Store) DataFederationList(projectID string, typeFlag string) ([]admin.DataLakeTenant, error) {
+	req := s.clientv2.DataFederationApi.ListFederatedDatabases(s.ctx, projectID)
+	if typeFlag != "" {
+		req = req.Type_(typeFlag)
+	}
+	result, _, err := req.Execute()
 	return result, err
 }
 

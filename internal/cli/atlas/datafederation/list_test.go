@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas-sdk/admin"
@@ -37,7 +38,8 @@ func TestListOpts_Run(t *testing.T) {
 
 	expected := []admin.DataLakeTenant{
 		{
-			Name: "test",
+			Name:  pointer.Get("test"),
+			State: pointer.Get("state"),
 		},
 	}
 
@@ -52,7 +54,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DataFederationList(listOpts.ProjectID).
+		DataFederationList(listOpts.ProjectID, listOpts.typeFlag).
 		Return(expected, nil).
 		Times(1)
 
@@ -60,7 +62,10 @@ func TestListOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, ``, buf.String()) // TODO change here
+	assert.Equal(t, `NAME   STATE
+test   state
+
+`, buf.String())
 	t.Log(buf.String())
 }
 

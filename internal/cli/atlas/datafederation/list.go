@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-
 	"github.com/spf13/cobra"
 )
 
@@ -38,7 +37,8 @@ var listTemplate = `NAME	STATE{{range .}}
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DataFederationLister
+	store    store.DataFederationLister
+	typeFlag string
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -50,7 +50,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.DataFederationList(opts.ConfigProjectID())
+	r, err := opts.store.DataFederationList(opts.ConfigProjectID(), opts.typeFlag)
 	if err != nil {
 		return err
 	}
@@ -81,6 +81,8 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.typeFlag, flag.TypeFlag, "", usage.DataFederationType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

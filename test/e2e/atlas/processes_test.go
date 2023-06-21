@@ -69,7 +69,7 @@ func TestProcesses(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var hostViewsCompact []atlasv2.HostViewAtlas
+		var hostViewsCompact []atlasv2.ApiHostViewAtlas
 
 		if err := json.Unmarshal(resp, &hostViewsCompact); assert.NoError(t, err) {
 			require.NotEmpty(t, hostViewsCompact)
@@ -91,7 +91,7 @@ func TestProcesses(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var process *atlasv2.HostViewAtlas
+		var process *atlasv2.ApiHostViewAtlas
 		if err := json.Unmarshal(resp, &process); assert.NoError(t, err) {
 			assert.Equal(t, *process.Id, *processes.Results[0].Id)
 		}

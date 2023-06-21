@@ -66,10 +66,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) Auditing(arg0 interface{}) 
 }
 
 // CloudProviderAccessRoles mocks base method.
-func (m *MockAtlasOperatorProjectStore) CloudProviderAccessRoles(arg0 string) (*admin.CloudProviderAccess, error) {
+func (m *MockAtlasOperatorProjectStore) CloudProviderAccessRoles(arg0 string) (*admin.CloudProviderAccessRoles, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CloudProviderAccessRoles", arg0)
-	ret0, _ := ret[0].(*admin.CloudProviderAccess)
+	ret0, _ := ret[0].(*admin.CloudProviderAccessRoles)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) CreateProjectAPIKey(arg0, a
 }
 
 // DatabaseRoles mocks base method.
-func (m *MockAtlasOperatorProjectStore) DatabaseRoles(arg0 string) ([]admin.CustomDBRole, error) {
+func (m *MockAtlasOperatorProjectStore) DatabaseRoles(arg0 string) ([]admin.UserCustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseRoles", arg0)
-	ret0, _ := ret[0].([]admin.CustomDBRole)
+	ret0, _ := ret[0].([]admin.UserCustomDBRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -59,14 +59,14 @@ func TestQuickstartOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 
-	expectedCluster := &atlasv2.ClusterDescriptionV15{
+	expectedCluster := &atlasv2.AdvancedClusterDescription{
 		StateName: pointer.Get("IDLE"),
-		ConnectionStrings: &atlasv2.ClusterDescriptionConnectionStrings{
+		ConnectionStrings: &atlasv2.ClusterConnectionStrings{
 			StandardSrv: pointer.Get(""),
 		},
 	}
 
-	expectedDBUser := &atlasv2.DatabaseUser{}
+	expectedDBUser := &atlasv2.CloudDatabaseUser{}
 
 	var expectedProjectAccessLists *atlasv2.PaginatedNetworkAccess
 
@@ -143,14 +143,14 @@ func TestQuickstartOpts_Run_CheckFlagsSet(t *testing.T) {
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	defer ctrl.Finish()
 
-	expectedCluster := &atlasv2.ClusterDescriptionV15{
+	expectedCluster := &atlasv2.AdvancedClusterDescription{
 		StateName: pointer.Get("IDLE"),
-		ConnectionStrings: &atlasv2.ClusterDescriptionConnectionStrings{
+		ConnectionStrings: &atlasv2.ClusterConnectionStrings{
 			StandardSrv: pointer.Get(""),
 		},
 	}
 
-	expectedDBUser := &atlasv2.DatabaseUser{}
+	expectedDBUser := &atlasv2.CloudDatabaseUser{}
 
 	var expectedProjectAccessLists *atlasv2.PaginatedNetworkAccess
 

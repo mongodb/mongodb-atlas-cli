@@ -51,7 +51,7 @@ func TestEnableOpts_Run(t *testing.T) {
 		},
 		store: mockStore,
 	}
-	expected := &admin.AlertConfigViewForNdsGroup{}
+	expected := &admin.GroupAlertsConfig{}
 	mockStore.
 		EXPECT().
 		EnableAlertConfiguration(opts.ProjectID, opts.alertID).

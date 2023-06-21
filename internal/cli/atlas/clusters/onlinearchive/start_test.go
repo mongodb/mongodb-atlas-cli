@@ -48,7 +48,7 @@ func TestStart_Run(t *testing.T) {
 		id:    "1",
 		store: mockStore,
 	}
-	expected := &atlasv2.OnlineArchive{
+	expected := &atlasv2.BackupOnlineArchive{
 		Id:    &updateOpts.id,
 		State: pointer.Get("ACTIVE"),
 	}

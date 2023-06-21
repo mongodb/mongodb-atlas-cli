@@ -68,7 +68,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 		}
 	}
 
-	convertLabels := func(labels []atlasv2.NDSLabel) []common.LabelSpec {
+	convertLabels := func(labels []atlasv2.ComponentLabel) []common.LabelSpec {
 		result := make([]common.LabelSpec, 0, len(labels))
 
 		for _, atlasLabel := range labels {
@@ -225,7 +225,7 @@ func buildProcessArgs(configOptsProvider store.AtlasClusterConfigurationOptionsD
 	}, nil
 }
 
-func isAdvancedDeploymentExportable(deployments *atlasv2.ClusterDescriptionV15) bool {
+func isAdvancedDeploymentExportable(deployments *atlasv2.AdvancedClusterDescription) bool {
 	if deployments.GetStateName() == DeletingState || deployments.GetStateName() == DeletedState {
 		return false
 	}

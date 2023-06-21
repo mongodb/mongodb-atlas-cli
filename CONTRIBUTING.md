@@ -91,6 +91,16 @@ We provide a git pre-commit hook to format and check the code, to install it run
 We use [mockgen](https://github.com/golang/mock) to handle mocking in our unit tests.
 If you need a new mock please update or add the `//go:generate` instruction to the appropriate file.
 
+#### Compilation in VSCode
+
+Please add following line to your settings.json file :
+```
+    "go.buildTags": "unit,e2e",
+    "go.testTags": "unit,e2e"
+```
+
+This will enable compilation for unit test and end to end tests.
+
 #### Debugging in VSCode
 
 To debut in VSCode you need to create an debug configuration for the command with required arguments.
@@ -121,6 +131,7 @@ Review and replace command name and arguments depending on the command you are u
 } 
 
 ```
+
 
 ### API Interactions
 

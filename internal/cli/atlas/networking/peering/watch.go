@@ -59,25 +59,25 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	}
 
 	switch v := result.(type) {
-	case *atlasv2.AWSPeerVpc:
+	case *atlasv2.AwsNetworkPeeringConnectionSettings:
 		return watcherAWS(v), nil
-	case *atlasv2.AzurePeerNetwork:
+	case *atlasv2.AzureNetworkPeeringConnectionSettings:
 		return watcherAzure(v), nil
-	case *atlasv2.GCPPeerVpc:
+	case *atlasv2.GCPNetworkPeeringConnectionSettings:
 		return watcherGCP(v), nil
 	}
 	return false, nil
 }
 
-func watcherGCP(peer *atlasv2.GCPPeerVpc) bool {
+func watcherGCP(peer *atlasv2.GCPNetworkPeeringConnectionSettings) bool {
 	return *peer.Status == waitingForUser || *peer.Status == failed || *peer.Status == available
 }
 
-func watcherAzure(peer *atlasv2.AzurePeerNetwork) bool {
+func watcherAzure(peer *atlasv2.AzureNetworkPeeringConnectionSettings) bool {
 	return *peer.Status == waitingForUser || *peer.Status == failed || *peer.Status == available
 }
 
-func watcherAWS(peer *atlasv2.AWSPeerVpc) bool {
+func watcherAWS(peer *atlasv2.AwsNetworkPeeringConnectionSettings) bool {
 	return *peer.StatusName == pendingAcceptance || *peer.StatusName == failed || *peer.StatusName == available
 }
 

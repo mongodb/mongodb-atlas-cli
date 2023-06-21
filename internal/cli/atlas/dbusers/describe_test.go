@@ -29,7 +29,7 @@ func TestDBUserDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseUserDescriber(ctrl)
 
-	var expected atlasv2.DatabaseUser
+	var expected atlasv2.CloudDatabaseUser
 
 	username := "user"
 	authDB := convert.AdminDB

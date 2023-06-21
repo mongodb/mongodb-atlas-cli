@@ -91,9 +91,9 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 	return fmt.Errorf("a user with this username %s already exists", username)
 }
 
-func (opts *Opts) newDatabaseUser() *atlasv2.DatabaseUser {
+func (opts *Opts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 	var none = "NONE"
-	return &atlasv2.DatabaseUser{
+	return &atlasv2.CloudDatabaseUser{
 		Roles:        convert.BuildAtlasRoles([]string{atlasAdmin}),
 		GroupId:      opts.ConfigProjectID(),
 		Password:     pointer.GetStringPointerIfNotEmpty(opts.DBUserPassword),

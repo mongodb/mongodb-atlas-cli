@@ -31,7 +31,7 @@ func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterGetterUpdater(ctrl)
 
-	expected := &atlasv2.ClusterDescriptionV15{}
+	expected := &atlasv2.AdvancedClusterDescription{}
 
 	t.Run("flags run", func(t *testing.T) {
 		updateOpts := &UpdateOpts{

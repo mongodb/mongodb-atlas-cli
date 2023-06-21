@@ -75,8 +75,8 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) cluster() (*atlasv2.ClusterDescriptionV15, error) {
-	var cluster *atlasv2.ClusterDescriptionV15
+func (opts *UpdateOpts) cluster() (*atlasv2.AdvancedClusterDescription, error) {
+	var cluster *atlasv2.AdvancedClusterDescription
 	if opts.filename != "" {
 		err := file.Load(opts.fs, opts.filename, &cluster)
 		if err != nil {
@@ -90,7 +90,7 @@ func (opts *UpdateOpts) cluster() (*atlasv2.ClusterDescriptionV15, error) {
 	return opts.store.AtlasCluster(opts.ProjectID, opts.name)
 }
 
-func (opts *UpdateOpts) patchOpts(out *atlasv2.ClusterDescriptionV15) {
+func (opts *UpdateOpts) patchOpts(out *atlasv2.AdvancedClusterDescription) {
 	RemoveReadOnlyAttributes(out)
 	if opts.mdbVersion != "" {
 		out.MongoDBMajorVersion = &opts.mdbVersion
@@ -106,7 +106,7 @@ func (opts *UpdateOpts) patchOpts(out *atlasv2.ClusterDescriptionV15) {
 	AddLabel(out, NewCLILabel())
 }
 
-func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasv2.ClusterDescriptionV15) {
+func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasv2.AdvancedClusterDescription) {
 	for _, replicationSpec := range out.ReplicationSpecs {
 		for _, regionConf := range replicationSpec.RegionConfigs {
 			if regionConf.ReadOnlySpecs != nil {

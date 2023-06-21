@@ -49,7 +49,7 @@ func TestPause_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.OnlineArchive{
+	expected := &atlasv2.BackupOnlineArchive{
 		Id:    &updateOpts.id,
 		State: pointer.Get("PAUSING"),
 	}

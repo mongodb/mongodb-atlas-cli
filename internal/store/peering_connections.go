@@ -34,7 +34,7 @@ type PeeringConnectionDescriber interface {
 
 type PeeringConnectionCreator interface {
 	CreateContainer(string, *atlasv2.CloudProviderContainer) (interface{}, error)
-	CreatePeeringConnection(string, *atlasv2.ContainerPeer) (interface{}, error)
+	CreatePeeringConnection(string, *atlasv2.BaseNetworkPeeringConnectionSettings) (interface{}, error)
 }
 
 type AzurePeeringConnectionCreator interface {
@@ -98,7 +98,7 @@ func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 }
 
 // CreatePeeringConnection encapsulates the logic to manage different cloud providers.
-func (s *Store) CreatePeeringConnection(projectID string, peer *atlasv2.ContainerPeer) (interface{}, error) {
+func (s *Store) CreatePeeringConnection(projectID string, peer *atlasv2.BaseNetworkPeeringConnectionSettings) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringConnection(s.ctx, projectID, peer).Execute()

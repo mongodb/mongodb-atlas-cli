@@ -73,7 +73,7 @@ func (opts *CreateOpts) newServerlessCreateRequestParams() *atlasv2.ServerlessIn
 	}
 
 	for k, v := range opts.tag {
-		req.Tags = append(req.Tags, atlasv2.Tag{Key: pointer.Get(k), Value: pointer.Get(v)})
+		req.Tags = append(req.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
 	}
 
 	return req

@@ -108,7 +108,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		var teams []atlasv2.AppUser
+		var teams []atlasv2.CloudAppUser
 		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
 			a.NotEmpty(teams)
 		}

@@ -30,7 +30,7 @@ func TestDisksDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessDiskMeasurementsLister(ctrl)
 
-	expected := &atlasv2.MeasurementsGeneralViewAtlas{}
+	expected := &atlasv2.ApiMeasurementsGeneralViewAtlas{}
 
 	listOpts := &DescribeOpts{
 		host:  "hard-00-00.mongodb.net",

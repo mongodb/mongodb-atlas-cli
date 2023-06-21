@@ -56,7 +56,7 @@ func TestAlertConfig(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert admin.AlertConfigViewForNdsGroup
+			var alert admin.GroupAlertsConfig
 			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
 				a.Equal(eventTypeName, alert.GetEventTypeName())
 				a.NotEmpty(alert.Notifications)
@@ -99,7 +99,7 @@ func TestAlertConfig(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err, string(resp))
 		a := assert.New(t)
-		var config []admin.AlertConfigViewForNdsGroup
+		var config []admin.GroupAlertsConfig
 		if err := json.Unmarshal(resp, &config); a.NoError(err) {
 			a.NotEmpty(config)
 		}
@@ -127,7 +127,7 @@ func TestAlertConfig(t *testing.T) {
 
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert admin.AlertConfigViewForNdsGroup
+			var alert admin.GroupAlertsConfig
 			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
 				a.False(alert.GetEnabled())
 				a.NotEmpty(alert.Notifications)

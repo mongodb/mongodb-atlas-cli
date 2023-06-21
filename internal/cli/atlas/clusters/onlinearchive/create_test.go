@@ -55,7 +55,7 @@ func TestCreateOpts_Run(t *testing.T) {
 
 	request := opts.newOnlineArchive()
 
-	expected := &atlasv2.OnlineArchive{}
+	expected := &atlasv2.BackupOnlineArchive{}
 	mockStore.
 		EXPECT().
 		CreateOnlineArchive(opts.ProjectID, opts.clusterName, request).

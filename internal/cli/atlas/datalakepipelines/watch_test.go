@@ -38,7 +38,7 @@ func TestWatch_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.IngestionPipeline{Name: pointer.Get("Pipeline1"), State: pointer.Get("ACTIVE")}
+	expected := &atlasv2.DataLakeIngestionPipeline{Name: pointer.Get("Pipeline1"), State: pointer.Get("ACTIVE")}
 
 	mockStore.
 		EXPECT().

@@ -111,10 +111,10 @@ func (m *MockOrganizationDescriber) EXPECT() *MockOrganizationDescriberMockRecor
 }
 
 // Organization mocks base method.
-func (m *MockOrganizationDescriber) Organization(arg0 string) (*admin.Organization, error) {
+func (m *MockOrganizationDescriber) Organization(arg0 string) (*admin.AtlasOrganization, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organization", arg0)
-	ret0, _ := ret[0].(*admin.Organization)
+	ret0, _ := ret[0].(*admin.AtlasOrganization)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

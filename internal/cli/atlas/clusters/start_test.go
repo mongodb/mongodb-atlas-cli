@@ -35,7 +35,7 @@ func TestStart_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.ClusterDescriptionV15{}
+	expected := &atlasv2.AdvancedClusterDescription{}
 	mockStore.
 		EXPECT().
 		StartCluster(updateOpts.ConfigProjectID(), updateOpts.name).

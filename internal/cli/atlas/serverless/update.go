@@ -65,7 +65,7 @@ func (opts *UpdateOpts) newServerlessUpdateRequestParams() *atlasv2.ServerlessIn
 
 	serverlessContinuousBackupEnabled := cli.ReturnValueForSetting(opts.enableServerlessContinuousBackup, opts.disableServerlessContinuousBackup)
 	if serverlessContinuousBackupEnabled != nil {
-		params.ServerlessBackupOptions = &atlasv2.ServerlessBackupOptions{
+		params.ServerlessBackupOptions = &atlasv2.ClusterServerlessBackupOptions{
 			ServerlessContinuousBackupEnabled: serverlessContinuousBackupEnabled,
 		}
 	}

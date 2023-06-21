@@ -28,11 +28,11 @@ type ProcessLister interface {
 }
 
 type ProcessDescriber interface {
-	Process(*atlasv2.GetAtlasProcessApiParams) (*atlasv2.HostViewAtlas, error)
+	Process(*atlasv2.GetAtlasProcessApiParams) (*atlasv2.ApiHostViewAtlas, error)
 }
 
 // Process encapsulate the logic to manage different cloud providers.
-func (s *Store) Process(params *atlasv2.GetAtlasProcessApiParams) (*atlasv2.HostViewAtlas, error) {
+func (s *Store) Process(params *atlasv2.GetAtlasProcessApiParams) (*atlasv2.ApiHostViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.MonitoringAndLogsApi.GetAtlasProcessWithParams(s.ctx, params).Execute()

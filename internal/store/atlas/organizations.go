@@ -26,7 +26,7 @@ type OrganizationLister interface {
 }
 
 type OrganizationDescriber interface {
-	Organization(string) (*atlasv2.Organization, error)
+	Organization(string) (*atlasv2.AtlasOrganization, error)
 }
 
 type OrganizationCreator interface {
@@ -48,7 +48,7 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlasv2.Pa
 }
 
 // Organization encapsulate the logic to manage different cloud providers.
-func (s *Store) Organization(id string) (*atlasv2.Organization, error) {
+func (s *Store) Organization(id string) (*atlasv2.AtlasOrganization, error) {
 	result, _, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
 	return result, err
 }

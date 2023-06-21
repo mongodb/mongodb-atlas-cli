@@ -57,7 +57,7 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlasv2.U
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		userCertificate := atlasv2.UserSecurity{
-			CustomerX509: &atlasv2.CustomerX509{
+			CustomerX509: &atlasv2.DBUserTLSX509Settings{
 				Cas: &certificate,
 			},
 		}

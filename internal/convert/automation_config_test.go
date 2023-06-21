@@ -167,7 +167,7 @@ func TestFromAutomationConfig(t *testing.T) {
 	})
 	t.Run("Sharded multi mongos cluster", func(t *testing.T) {
 		t.Parallel()
-		config := fixture.HELPConfig()
+		config := fixture.MultiMongosAutomationConfig()
 
 		engineConfig := make(map[string]interface{})
 		engineConfig["cacheSizeGB"] = 0.5

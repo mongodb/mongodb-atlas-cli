@@ -32,7 +32,7 @@ func FromAutomationConfig(c *opsmngr.AutomationConfig) []*ClusterConfig {
 
 		newSC.Config = newRSConfig(c, s.ConfigServerReplica)
 		for _, p := range c.Processes {
-			if p.ProcessType == "mongos" {
+			if p.Cluster == s.Name && p.ProcessType == "mongos" {
 				newSC.Mongos = append(newSC.Mongos, newMongosProcessConfig(p))
 				newSC.addToMongoURI(p)
 			}

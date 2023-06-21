@@ -436,7 +436,7 @@ func EmptyAutomationConfig() *opsmngr.AutomationConfig {
 	}
 }
 
-func HELPConfig() *opsmngr.AutomationConfig {
+func MultiMongosAutomationConfig() *opsmngr.AutomationConfig {
 	engineConfig := make(map[string]interface{})
 	engineConfig["cacheSizeGB"] = 0.5
 

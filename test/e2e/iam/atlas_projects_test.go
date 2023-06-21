@@ -19,13 +19,13 @@ package iam_test
 import (
 	"encoding/json"
 	"fmt"
-	"go.mongodb.org/atlas-sdk/admin"
 	"os"
 	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestAtlasProjects(t *testing.T) {

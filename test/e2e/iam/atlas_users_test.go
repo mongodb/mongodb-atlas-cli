@@ -112,6 +112,7 @@ func TestAtlasUsers(t *testing.T) {
 
 	t.Run("Invite", func(t *testing.T) {
 		n, err := e2e.RandInt(1000)
+		assert.NoError(t, err)
 		emailUser := fmt.Sprintf("test-%v@moongodb.com", n)
 		cmd := exec.Command(cliPath,
 			usersEntity,

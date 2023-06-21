@@ -32,6 +32,7 @@ func Bin() (string, error) {
 	if _, err := os.Stat(cliPath); err != nil {
 		return "", fmt.Errorf("%w: invalid bin %q", err, path)
 	}
+	cliPath = cliPath + " --debug"
 	return cliPath, nil
 }
 
@@ -45,6 +46,7 @@ func AtlasCLIBin() (string, error) {
 	if _, err := os.Stat(cliPath); err != nil {
 		return "", fmt.Errorf("%w: invalid bin %q", err, path)
 	}
+	cliPath = cliPath + " --debug"
 	return cliPath, nil
 }
 

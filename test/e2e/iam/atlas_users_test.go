@@ -22,6 +22,7 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
@@ -111,18 +112,17 @@ func TestAtlasUsers(t *testing.T) {
 
 	t.Run("Invite", func(t *testing.T) {
 		n, err := e2e.RandInt(1000)
-		emailUser := fmt.Sprintf("test-%v@mongodb.com", n)
+		emailUser := fmt.Sprintf("test-%v@moongodb.com", n)
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			usersEntity,
 			"invite",
 			"--username", emailUser,
 			"--password", "passW0rd",
 			"--country", "US",
 			"--email", emailUser,
-			"--firstName", "ExampleUser",
-			"--lastName", "ExampleUser",
-			"--orgRoles", orgID+":ORG_MEMBER",
+			"--firstName", "TestFirstName",
+			"--lastName", "TestLastName",
+			"--orgRole", orgID+":ORG_MEMBER",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -132,7 +132,7 @@ func TestAtlasUsers(t *testing.T) {
 		if err := json.Unmarshal(resp, &user); assert.NoError(t, err) {
 			assert.Equal(t, emailUser, user.GetUsername())
 			assert.NotEmpty(t, user.GetId())
-			assert.Equal(t, []string{"ORG_MEMBER"}, user.GetRoles())
+			assert.Equal(t, []atlasv2.CloudAccessRoleAssignment{{RoleName: pointer.Get("ORG_MEMBER")}}, user.GetRoles())
 		}
 	})
 }

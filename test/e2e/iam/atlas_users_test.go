@@ -17,6 +17,7 @@ package iam_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -24,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestAtlasUsers(t *testing.T) {
@@ -34,6 +34,7 @@ func TestAtlasUsers(t *testing.T) {
 	}
 	var username string
 	var userID string
+	var orgID string
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -57,8 +58,8 @@ func TestAtlasUsers(t *testing.T) {
 			t.Fatalf("expected len(users) > 0, got %v", len(users.Results))
 		}
 
-		username = users.Results[0].Username
-		userID = *users.Results[0].Id
+		username = users.Results[0].GetUsername()
+		userID = users.Results[0].GetId()
 	})
 
 	t.Run("Describe by username", func(t *testing.T) {
@@ -75,13 +76,14 @@ func TestAtlasUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var user mongodbatlas.AtlasUser
+		var user atlasv2.CloudAppUser
 
 		if err := json.Unmarshal(resp, &user); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		assert.Equal(t, username, user.Username)
+		assert.Equal(t, username, user.GetUsername())
+		orgID = user.GetRoles()[0].GetOrgId()
 	})
 
 	t.Run("Describe by id", func(t *testing.T) {
@@ -98,12 +100,39 @@ func TestAtlasUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var user mongodbatlas.AtlasUser
+		var user atlasv2.CloudAppUser
 
 		if err := json.Unmarshal(resp, &user); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		assert.Equal(t, userID, user.ID)
+		assert.Equal(t, userID, user.GetId())
+	})
+
+	t.Run("Invite", func(t *testing.T) {
+		n, err := e2e.RandInt(1000)
+		emailUser := fmt.Sprintf("test-%v@mongodb.com", n)
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			usersEntity,
+			"invite",
+			"--username", emailUser,
+			"--password", "passW0rd",
+			"--country", "US",
+			"--email", emailUser,
+			"--firstName", "ExampleUser",
+			"--lastName", "ExampleUser",
+			"--orgRoles", orgID+":ORG_MEMBER",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+
+		var user atlasv2.CloudAppUser
+		if err := json.Unmarshal(resp, &user); assert.NoError(t, err) {
+			assert.Equal(t, emailUser, user.GetUsername())
+			assert.NotEmpty(t, user.GetId())
+			assert.Equal(t, []string{"ORG_MEMBER"}, user.GetRoles())
+		}
 	})
 }

@@ -78,19 +78,26 @@ func (opts *CreateOpts) newCreateRequest() (*admin.DataLakeTenant, error) {
 		return &tenant, nil
 	}
 
-	return &admin.DataLakeTenant{
-		Name: &opts.name,
-		DataProcessRegion: &admin.DataLakeDataProcessRegion{
+	ret := admin.NewDataLakeTenant()
+	ret.Name = &opts.name
+
+	if opts.region != "" {
+		ret.DataProcessRegion = &admin.DataLakeDataProcessRegion{
 			CloudProvider: "AWS",
 			Region:        opts.region,
-		},
-		CloudProviderConfig: &admin.DataLakeCloudProviderConfig{
+		}
+	}
+
+	if opts.awsRoleID != "" || opts.awsTestBucket != "" {
+		ret.CloudProviderConfig = &admin.DataLakeCloudProviderConfig{
 			Aws: admin.DataLakeAWSCloudProviderConfig{
 				RoleId:       opts.awsRoleID,
 				TestS3Bucket: opts.awsTestBucket,
 			},
-		},
-	}, nil
+		}
+	}
+
+	return ret, nil
 }
 
 // atlas dataFederation create <name> [--projectId projectId].

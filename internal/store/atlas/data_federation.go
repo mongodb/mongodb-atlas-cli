@@ -60,13 +60,13 @@ func (s *Store) DataFederation(projectID, id string) (*admin.DataLakeTenant, err
 
 // CreateDataFederation encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateDataFederation(projectID string, opts *admin.DataLakeTenant) (*admin.DataLakeTenant, error) {
-	result, _, err := s.clientv2.DataFederationApi.CreateFederatedDatabase(s.ctx, projectID, opts).Execute()
+	result, _, err := s.clientv2.DataFederationApi.CreateFederatedDatabase(s.ctx, projectID, opts).SkipRoleValidation(false).Execute()
 	return result, err
 }
 
 // UpdateDataFederation encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateDataFederation(projectID, id string, opts *admin.DataLakeTenant) (*admin.DataLakeTenant, error) {
-	result, _, err := s.clientv2.DataFederationApi.UpdateFederatedDatabase(s.ctx, projectID, id, opts).Execute()
+	result, _, err := s.clientv2.DataFederationApi.UpdateFederatedDatabase(s.ctx, projectID, id, opts).SkipRoleValidation(false).Execute()
 	return result, err
 }
 

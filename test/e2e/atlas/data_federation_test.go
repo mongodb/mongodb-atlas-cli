@@ -131,7 +131,7 @@ func TestDataFederation(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		r.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Data Lake '%s' deleted\n", dataFederationName)
+		expected := fmt.Sprintf("'%s' deleted\n", dataFederationName)
 		assert.Equal(t, expected, string(resp))
 	})
 }

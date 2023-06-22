@@ -173,7 +173,7 @@ func TestFromAutomationConfig(t *testing.T) {
 		engineConfig["cacheSizeGB"] = 0.5
 		expected := []*ClusterConfig{
 			{
-				MongoURI: "mongodb://ip-172-31-35-62.eu-west-1.compute.internal:27021,ip-172-31-37-180.eu-west-1.compute.internal:27021,ip-172-31-39-241.eu-west-1.compute.internal:27021,ip-172-31-43-144.eu-west-1.compute.internal:27021",
+				MongoURI: "mongodb://ip-172-31-43-144.eu-west-1.compute.internal:27021,ip-172-31-39-241.eu-west-1.compute.internal:27021,ip-172-31-37-180.eu-west-1.compute.internal:27021,ip-172-31-35-62.eu-west-1.compute.internal:27021",
 				RSConfig: RSConfig{
 					Name: "myCluster",
 				},
@@ -351,21 +351,10 @@ func TestFromAutomationConfig(t *testing.T) {
 					{
 						Disabled:                    false,
 						FeatureCompatibilityVersion: "6.0",
-						Hostname:                    "ip-172-31-35-62.eu-west-1.compute.internal",
+						Hostname:                    "ip-172-31-43-144.eu-west-1.compute.internal",
 						LogDestination:              "file",
 						LogPath:                     "/data/n1/mongodb.log",
-						Name:                        "myCluster_mongos_8",
-						Port:                        27021,
-						ProcessType:                 "mongos",
-						Version:                     "6.0.6-ent",
-					},
-					{
-						Disabled:                    false,
-						FeatureCompatibilityVersion: "6.0",
-						Hostname:                    "ip-172-31-37-180.eu-west-1.compute.internal",
-						LogDestination:              "file",
-						LogPath:                     "/data/n1/mongodb.log",
-						Name:                        "myCluster_mongos_9",
+						Name:                        "myCluster_mongos_11",
 						Port:                        27021,
 						ProcessType:                 "mongos",
 						Version:                     "6.0.6-ent",
@@ -384,10 +373,21 @@ func TestFromAutomationConfig(t *testing.T) {
 					{
 						Disabled:                    false,
 						FeatureCompatibilityVersion: "6.0",
-						Hostname:                    "ip-172-31-43-144.eu-west-1.compute.internal",
+						Hostname:                    "ip-172-31-37-180.eu-west-1.compute.internal",
 						LogDestination:              "file",
 						LogPath:                     "/data/n1/mongodb.log",
-						Name:                        "myCluster_mongos_11",
+						Name:                        "myCluster_mongos_9",
+						Port:                        27021,
+						ProcessType:                 "mongos",
+						Version:                     "6.0.6-ent",
+					},
+					{
+						Disabled:                    false,
+						FeatureCompatibilityVersion: "6.0",
+						Hostname:                    "ip-172-31-35-62.eu-west-1.compute.internal",
+						LogDestination:              "file",
+						LogPath:                     "/data/n1/mongodb.log",
+						Name:                        "myCluster_mongos_8",
 						Port:                        27021,
 						ProcessType:                 "mongos",
 						Version:                     "6.0.6-ent",

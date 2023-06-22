@@ -219,6 +219,62 @@ commands:
         example: |
           # update data lake pipeline:
             atlas dataFederation update DataFederation1
+      - command_path: atlas dataFederation privateEndpoints
+        package_name: privateendpoints
+        description: Data federation private endpoints.
+        template: parent
+        sub_commands:
+          - command_path: atlas dataFederation privateEndpoints list
+            package_name: privateendpoints
+            store_name: DataFederationPrivateEndpointLister
+            store_method: DataFederationPrivateEndpoints
+            description: Returns all data federation private endpoints for your project.
+            template: list
+            output_template: |
+              ENDPOINT ID	COMMENT	TYPE{{range .}}
+              {{.EndpointId}}	{{.Comment}}	{{.Type}}
+              {{end}}
+            example: |
+              # list all data federation private endpoints:
+                atlas dataFederation privateEndpoints list
+          - command_path: atlas dataFederation privateEndpoints describe
+            package_name: privateendpoints
+            store_name: DataFederationPrivateEndpointDescriber
+            store_method: DataFederationPrivateEndpoint
+            description: Return the details for the specified data federation private endpoints for your project.
+            template: describe
+            id_name: endpointId
+            id_description: Endpoint identifier of the data federation private endpoints
+            output_template: |
+              ENDPOINT ID	COMMENT	TYPE
+              {{.EndpointId}}	{{.Comment}}	{{.Type}}
+            example: |
+              # retrieves data federation private endpoint '507f1f77bcf86cd799439011':
+                atlas dataFederation privateEndpoints describe 507f1f77bcf86cd799439011
+          - command_path: atlas dataFederation privateEndpoints delete
+            package_name: privateendpoints
+            store_name: DataFederationPrivateEndpointDeleter
+            store_method: DeleteDataFederationPrivateEndpoint
+            template: delete
+            description: Remove the specified data federation private endpoints from your project.
+            id_name: endpointId
+            id_description: Endpoint identifier of the data federation private endpoints
+            example: |
+              # deletes data federation private endpoint '507f1f77bcf86cd799439011':
+                atlas dataFederation privateEndpoints delete 507f1f77bcf86cd799439011
+          - command_path: atlas dataFederation privateEndpoints create
+            package_name: privateendpoints
+            store_name: DataFederationPrivateEndpointCreator
+            store_method: CreateDataFederationPrivateEndpoint
+            template: create
+            description: Creates a new Data Federation private endpoints.
+            id_name: endpointId
+            id_description: Endpoint identifier of the data federation private endpoints
+            output_template: Data federation private endpoint {{.EndpointId}} created.
+            request_type: 'admin.PrivateNetworkEndpointIdEntry'
+            example: |
+              # create data federation private endpoint:
+                atlas dataFederation privateEndpoints create 507f1f77bcf86cd799439011 --comment "comment"
 stores:
   - base_file_name: data_lake_pipelines
     template: store
@@ -294,3 +350,25 @@ stores:
       name: DataFederationDeleter
       method: DeleteDataFederation
       sdk_method: DataFederationApi.DeleteFederatedDatabase
+  - base_file_name: data_federation_private_endpoint
+    template: store
+    lister:
+      name: DataFederationPrivateEndpointLister
+      method: DataFederationPrivateEndpoints
+      sdk_method: DataFederationApi.ListDataFederationPrivateEndpoints
+      return_type: '*admin.PaginatedPrivateNetworkEndpointIdEntry'
+    describer:
+      name: DataFederationPrivateEndpointDescriber
+      method: DataFederationPrivateEndpoint
+      sdk_method: DataFederationApi.GetDataFederationPrivateEndpoint
+      return_type: '*admin.PrivateNetworkEndpointIdEntry'
+    creator:
+      name: DataFederationPrivateEndpointCreator
+      method: CreateDataFederationPrivateEndpoint
+      sdk_method: DataFederationApi.CreateDataFederationPrivateEndpoint
+      arg_type: '*admin.PrivateNetworkEndpointIdEntry'
+      return_type: '*admin.PaginatedPrivateNetworkEndpointIdEntry'
+    deleter:
+      name: DataFederationPrivateEndpointDeleter
+      method: DeleteDataFederationPrivateEndpoint
+      sdk_method: DataFederationApi.DeleteDataFederationPrivateEndpoint

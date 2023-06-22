@@ -48,7 +48,7 @@ func TestExportJobs(t *testing.T) {
 	var snapshotID string
 
 	t.Run("Create cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"create",
 			clusterName,
@@ -70,7 +70,7 @@ func TestExportJobs(t *testing.T) {
 	})
 
 	t.Run("Watch create cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			clusterName,
@@ -81,7 +81,7 @@ func TestExportJobs(t *testing.T) {
 	})
 
 	t.Run("Create bucket", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			exportsEntity,
 			bucketsEntity,
@@ -106,7 +106,7 @@ func TestExportJobs(t *testing.T) {
 	})
 
 	t.Run("Create snapshot", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"create",
@@ -128,7 +128,7 @@ func TestExportJobs(t *testing.T) {
 	})
 
 	t.Run("Watch snapshot creation", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"watch",
@@ -141,7 +141,7 @@ func TestExportJobs(t *testing.T) {
 	})
 
 	t.Run("Create job", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			exportsEntity,
 			jobsEntity,
@@ -168,7 +168,7 @@ func TestExportJobs(t *testing.T) {
 	})
 
 	t.Run("Watch create job", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			exportsEntity,
 			jobsEntity,
@@ -182,7 +182,7 @@ func TestExportJobs(t *testing.T) {
 	})
 
 	t.Run("Describe job", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			exportsEntity,
 			jobsEntity,
@@ -205,7 +205,7 @@ func TestExportJobs(t *testing.T) {
 	})
 
 	t.Run("List jobs", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			exportsEntity,
 			jobsEntity,
@@ -224,7 +224,7 @@ func TestExportJobs(t *testing.T) {
 	})
 
 	t.Run("Delete snapshot", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"delete",
@@ -238,7 +238,7 @@ func TestExportJobs(t *testing.T) {
 	})
 
 	t.Run("Watch snapshot deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"watch",
@@ -251,7 +251,7 @@ func TestExportJobs(t *testing.T) {
 	})
 
 	t.Run("Delete cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"delete",
 			clusterName,
@@ -267,7 +267,7 @@ func TestExportJobs(t *testing.T) {
 	})
 
 	t.Run("Watch delete cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			clusterName,

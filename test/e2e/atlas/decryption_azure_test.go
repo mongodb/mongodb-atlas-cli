@@ -46,7 +46,7 @@ func TestDecryptWithAzure(t *testing.T) {
 	expectedContents, err := filesAzure.ReadFile(decryption.GenerateFileName(azureTestsInputDir, "output"))
 	req.NoError(err)
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		"logs",
 		"decrypt",
 		"--file",

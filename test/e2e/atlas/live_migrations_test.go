@@ -43,7 +43,7 @@ func TestLinkToken(t *testing.T) {
 	t.Logf("Cleanup complete.")
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			liveMigrationsEntity,
 			"link",
 			"create",
@@ -56,7 +56,7 @@ func TestLinkToken(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			liveMigrationsEntity,
 			"link",
 			"delete",

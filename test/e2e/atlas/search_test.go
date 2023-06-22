@@ -44,7 +44,7 @@ func TestSearch(t *testing.T) {
 	var indexID string
 
 	t.Run("Load Sample data", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"sampleData",
 			"load",
@@ -86,7 +86,7 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			searchEntity,
 			indexEntity,
@@ -111,7 +111,7 @@ func TestSearch(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			searchEntity,
 			indexEntity,
@@ -166,7 +166,7 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			searchEntity,
 			indexEntity,
@@ -193,7 +193,7 @@ func TestSearch(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			searchEntity,
 			indexEntity,
@@ -263,7 +263,7 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			searchEntity,
 			indexEntity,
@@ -375,7 +375,7 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			searchEntity,
 			indexEntity,
@@ -440,7 +440,7 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			searchEntity,
 			indexEntity,
@@ -464,7 +464,7 @@ func TestSearch(t *testing.T) {
 	})
 
 	t.Run("list", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			searchEntity,
 			indexEntity,

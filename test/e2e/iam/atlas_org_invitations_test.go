@@ -41,7 +41,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	var orgInvitationID string
 
 	t.Run("Invite", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			invitationsEntity,
 			"invite",
@@ -64,7 +64,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			invitationsEntity,
 			"ls",
@@ -82,7 +82,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			invitationsEntity,
 			"get",
@@ -101,7 +101,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	})
 
 	t.Run("Update by email", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			invitationsEntity,
 			"update",
@@ -124,7 +124,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	})
 
 	t.Run("Update by ID", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			invitationsEntity,
 			"update",
@@ -145,7 +145,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			invitationsEntity,
 			"delete",

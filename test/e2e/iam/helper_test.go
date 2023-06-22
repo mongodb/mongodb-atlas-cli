@@ -52,7 +52,7 @@ func createOrgAPIKey() (string, error) {
 		return "", err
 	}
 
-	cmd := exec.Command(cliPath, iamEntity,
+	cmd := exec.Command(cliPath, e2e.DebugFlag, iamEntity,
 		orgEntity,
 		apiKeysEntity,
 		"create",
@@ -83,7 +83,7 @@ func deleteOrgAPIKey(id string) error {
 	if err != nil {
 		return err
 	}
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		iamEntity,
 		orgEntity,
 		apiKeysEntity,
@@ -104,7 +104,7 @@ func createTeam(teamName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		iamEntity,
 		teamsEntity,
 		"create",
@@ -131,7 +131,7 @@ func deleteTeam(teamID string) error {
 	if err != nil {
 		return err
 	}
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		iamEntity,
 		teamsEntity,
 		"delete",
@@ -151,7 +151,7 @@ func OrgNUser(n int) (username, userID string, err error) {
 	if err != nil {
 		return "", "", err
 	}
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		iamEntity,
 		orgEntity,
 		usersEntity,

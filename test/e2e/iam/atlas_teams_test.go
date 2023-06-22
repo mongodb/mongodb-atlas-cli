@@ -48,7 +48,7 @@ func TestAtlasTeams(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			teamsEntity,
 			"create",
 			teamName,
@@ -69,7 +69,7 @@ func TestAtlasTeams(t *testing.T) {
 	})
 
 	t.Run("Describe By Id", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			teamsEntity,
 			"describe",
 			"--id",
@@ -88,7 +88,7 @@ func TestAtlasTeams(t *testing.T) {
 	})
 
 	t.Run("Describe By Name", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			teamsEntity,
 			"describe",
 			"--name",
@@ -107,7 +107,7 @@ func TestAtlasTeams(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			teamsEntity,
 			"ls",
 			"-o=json")
@@ -124,7 +124,7 @@ func TestAtlasTeams(t *testing.T) {
 	})
 
 	t.Run("List Compact", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			teamsEntity,
 			"ls",
 			"-c",
@@ -142,7 +142,7 @@ func TestAtlasTeams(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			teamsEntity,
 			"delete",
 			teamID,

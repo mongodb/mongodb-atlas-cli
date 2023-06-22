@@ -38,7 +38,7 @@ func TestSchedule(t *testing.T) {
 	var policy *atlasv2.DiskBackupSnapshotSchedule
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			"schedule",
 			"describe",
@@ -58,7 +58,7 @@ func TestSchedule(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			"schedule",
 			"update",
@@ -75,7 +75,7 @@ func TestSchedule(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			"schedule",
 			"delete",

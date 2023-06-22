@@ -47,7 +47,7 @@ func TestClustersM0Flags(t *testing.T) {
 	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"create",
 			clusterName,
@@ -69,7 +69,7 @@ func TestClustersM0Flags(t *testing.T) {
 	})
 
 	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			clusterName,
@@ -84,7 +84,7 @@ func TestClustersM0Flags(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"describe",
 			clusterName,
@@ -104,7 +104,7 @@ func TestClustersM0Flags(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"delete",
 			clusterName,
@@ -121,7 +121,7 @@ func TestClustersM0Flags(t *testing.T) {
 	})
 
 	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			clusterName,

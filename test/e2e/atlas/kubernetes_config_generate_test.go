@@ -139,7 +139,7 @@ func TestEmptyProject(t *testing.T) {
 	assertions := s.assertions
 
 	t.Run("Generate valid resources of ONE project", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"config",
 			"generate",
@@ -191,7 +191,7 @@ func TestProjectWithNonDefaultSettings(t *testing.T) {
 	expectedProject.Spec.Settings.IsCollectDatabaseSpecificsStatisticsEnabled = pointer.Get(false)
 
 	t.Run("Change project settings and generate", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			settingsEntity,
 			"update",
@@ -256,7 +256,7 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 	}
 
 	t.Run("Change project alert config and generate", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			alertsEntity,
 			configEntity,
 			"create",
@@ -321,7 +321,7 @@ func TestProjectWithAccessList(t *testing.T) {
 	}
 
 	t.Run("Add access list to the project", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			accessListEntity,
 			"create",
 			newIPAccess.IPAddress,
@@ -376,7 +376,7 @@ func TestProjectWithAccessRole(t *testing.T) {
 	}
 
 	t.Run("Add access role to the project", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			cloudProvidersEntity,
 			accessRolesEntity,
 			awsEntity,
@@ -441,7 +441,7 @@ func TestProjectWithCustomRole(t *testing.T) {
 	}
 
 	t.Run("Add custom role to the project", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			customDBRoleEntity,
 			"create",
 			newCustomRole.Name,
@@ -501,7 +501,7 @@ func TestProjectWithIntegration(t *testing.T) {
 	}
 
 	t.Run("Add integration to the project", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			integrationsEntity,
 			"create",
 			datadogEntity,
@@ -560,7 +560,7 @@ func TestProjectWithMaintenanceWindow(t *testing.T) {
 	expectedProject.Spec.AlertConfigurations = defaultMaintenanceWindowAlertConfigs()
 
 	t.Run("Add integration to the project", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			maintenanceEntity,
 			"update",
 			"--dayOfWeek",
@@ -618,7 +618,7 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 	}
 
 	t.Run("Add network peer to the project", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			networkingEntity,
 			networkPeeringEntity,
 			"create",
@@ -686,7 +686,7 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 	}
 
 	t.Run("Add network peer to the project", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			azureEntity,
 			"create",
@@ -767,7 +767,7 @@ func TestProjectAndTeams(t *testing.T) {
 			},
 		}
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			teamsEntity,
 			"add",
@@ -1212,7 +1212,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
 
 	t.Run("Update backup schedule", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			"schedule",
 			"update",
@@ -1233,7 +1233,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 	})
 
 	t.Run("Generate valid resources of ONE project and ONE cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"config",
 			"generate",
@@ -1310,7 +1310,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 	})
 
 	t.Run("Generate valid resources of ONE project and TWO clusters", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"config",
 			"generate",
@@ -1360,7 +1360,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 	})
 
 	t.Run("Generate valid resources of ONE project and TWO clusters without listing clusters", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"config",
 			"generate",
@@ -1431,7 +1431,7 @@ func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
 	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
 
 	t.Run("Generate valid resources of ONE project and TWO clusters without listing clusters", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"config",
 			"generate",

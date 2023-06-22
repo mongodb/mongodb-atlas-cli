@@ -44,7 +44,7 @@ func TestRestores(t *testing.T) {
 	require.NotEmpty(t, g2.clusterName)
 
 	t.Run("Create snapshot", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"create",
@@ -68,7 +68,7 @@ func TestRestores(t *testing.T) {
 	})
 
 	t.Run("Watch snapshot creation", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"watch",
@@ -83,7 +83,7 @@ func TestRestores(t *testing.T) {
 	})
 
 	t.Run("Restores Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			restoresEntity,
 			"start",
@@ -111,7 +111,7 @@ func TestRestores(t *testing.T) {
 	})
 
 	t.Run("Restores Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			restoresEntity,
 			"watch",
@@ -128,7 +128,7 @@ func TestRestores(t *testing.T) {
 	})
 
 	t.Run("Restores List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			restoresEntity,
 			"list",
@@ -149,7 +149,7 @@ func TestRestores(t *testing.T) {
 	})
 
 	t.Run("Restores Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			restoresEntity,
 			"describe",
@@ -172,7 +172,7 @@ func TestRestores(t *testing.T) {
 	})
 
 	t.Run("Delete snapshot", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"delete",
@@ -188,7 +188,7 @@ func TestRestores(t *testing.T) {
 	})
 
 	t.Run("Watch snapshot deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"watch",

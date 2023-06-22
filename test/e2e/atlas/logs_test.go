@@ -61,7 +61,7 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile, projectID stri
 	}
 	filepath := dir + logFile
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		logsEntity,
 		"download",
 		hostname,
@@ -86,7 +86,7 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile, projectID stri
 
 func downloadLog(t *testing.T, cliPath, hostname, logFile, projectID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		logsEntity,
 		"download",
 		hostname,

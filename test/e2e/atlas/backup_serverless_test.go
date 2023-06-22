@@ -42,7 +42,7 @@ func TestServerlessBackup(t *testing.T) {
 	g.generateServerlessCluster()
 
 	t.Run("Snapshot List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			serverlessEntity,
 			backupsEntity,
 			snapshotsEntity,
@@ -64,7 +64,7 @@ func TestServerlessBackup(t *testing.T) {
 	})
 
 	t.Run("Snapshot Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			serverlessEntity,
 			backupsEntity,
 			snapshotsEntity,
@@ -87,7 +87,7 @@ func TestServerlessBackup(t *testing.T) {
 	})
 
 	t.Run("Restores Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			serverlessEntity,
 			backupsEntity,
 			restoresEntity,
@@ -115,7 +115,7 @@ func TestServerlessBackup(t *testing.T) {
 	})
 
 	t.Run("Restores Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			serverlessEntity,
 			backupsEntity,
 			restoresEntity,
@@ -132,7 +132,7 @@ func TestServerlessBackup(t *testing.T) {
 	})
 
 	t.Run("Restores List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			serverlessEntity,
 			backupsEntity,
 			restoresEntity,
@@ -152,7 +152,7 @@ func TestServerlessBackup(t *testing.T) {
 	})
 
 	t.Run("Restores Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			serverlessEntity,
 			backupsEntity,
 			restoresEntity,

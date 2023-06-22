@@ -45,7 +45,7 @@ func TestAccessList(t *testing.T) {
 	req.NoError(err)
 
 	t.Run("Create Forever", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			accessListEntity,
 			"create",
 			entry,
@@ -73,7 +73,7 @@ func TestAccessList(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			accessListEntity,
 			"ls",
 			"--projectId",
@@ -88,7 +88,7 @@ func TestAccessList(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			accessListEntity,
 			"describe",
 			entry,
@@ -104,7 +104,7 @@ func TestAccessList(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			accessListEntity,
 			"delete",
 			entry,
@@ -120,7 +120,7 @@ func TestAccessList(t *testing.T) {
 	})
 
 	t.Run("Create Delete After", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			accessListEntity,
 			"create",
 			entry,
@@ -148,7 +148,7 @@ func TestAccessList(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			accessListEntity,
 			"delete",
 			entry,
@@ -164,7 +164,7 @@ func TestAccessList(t *testing.T) {
 	})
 
 	t.Run("Create with CurrentIp", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			accessListEntity,
 			"create",
 			"--currentIp",
@@ -187,7 +187,7 @@ func TestAccessList(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			accessListEntity,
 			"delete",
 			currentIPEntry,

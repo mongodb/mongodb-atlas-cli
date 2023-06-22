@@ -39,7 +39,7 @@ func TestAccessLogs(t *testing.T) {
 	req.NoError(err)
 
 	t.Run("List by clusterName", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			accessLogsEntity,
 			"ls",
 			"--clusterName", g.clusterName,
@@ -54,7 +54,7 @@ func TestAccessLogs(t *testing.T) {
 	})
 
 	t.Run("List by hostname", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			accessLogsEntity,
 			"ls",
 			"--hostname", h,

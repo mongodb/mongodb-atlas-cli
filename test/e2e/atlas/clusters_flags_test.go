@@ -45,7 +45,7 @@ func TestClustersFlags(t *testing.T) {
 	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"create",
 			clusterName,
@@ -71,7 +71,7 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Load Sample Data", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"sampleData",
 			"load",
@@ -91,7 +91,7 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"ls",
 			"--projectId", g.projectID,
@@ -109,7 +109,7 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"describe",
 			clusterName,
@@ -128,7 +128,7 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Describe Connection String", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"cs",
 			"describe",
@@ -149,7 +149,7 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Update Advanced Configuration Settings", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"advancedSettings",
 			"update",
@@ -164,7 +164,7 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Describe Advanced Configuration Settings", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"advancedSettings",
 			"describe",
@@ -185,7 +185,7 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Create Rolling Index", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"indexes",
 			"create",
@@ -201,7 +201,7 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Fail Delete for Termination Protection enabled", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"delete",
 			clusterName,
@@ -214,7 +214,7 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"update",
 			clusterName,
@@ -235,7 +235,7 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force", "-w")
+		cmd := exec.Command(cliPath, e2e.DebugFlag, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force", "-w")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)

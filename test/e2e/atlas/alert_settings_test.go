@@ -36,7 +36,7 @@ func TestAlertConfig(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			alertsEntity,
 			configEntity,
 			"create",
@@ -73,7 +73,7 @@ func TestAlertConfig(t *testing.T) {
 	}
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			alertsEntity,
 			configEntity,
 			"ls",
@@ -89,7 +89,7 @@ func TestAlertConfig(t *testing.T) {
 	})
 
 	t.Run("List Compact", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			alertsEntity,
 			configEntity,
 			"ls",
@@ -106,7 +106,7 @@ func TestAlertConfig(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			alertsEntity,
 			configEntity,
 			"update",
@@ -138,14 +138,14 @@ func TestAlertConfig(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, alertsEntity, configEntity, "delete", alertID, "--force")
+		cmd := exec.Command(cliPath, e2e.DebugFlag, alertsEntity, configEntity, "delete", alertID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("List Matcher Fields", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			alertsEntity,
 			configEntity,
 			"fields",

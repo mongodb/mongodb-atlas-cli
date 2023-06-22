@@ -37,7 +37,7 @@ func TestProcesses(t *testing.T) {
 	var processes *atlasv2.PaginatedHostViewAtlas
 
 	t.Run("list", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			processesEntity,
 			"list",
 			"--projectId", g.projectID,
@@ -56,7 +56,7 @@ func TestProcesses(t *testing.T) {
 	})
 
 	t.Run("list compact", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			processesEntity,
 			"list",
 			"-c",
@@ -77,7 +77,7 @@ func TestProcesses(t *testing.T) {
 	})
 
 	t.Run("describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			processesEntity,
 			"describe",
 			processes.Results[0].GetId(),

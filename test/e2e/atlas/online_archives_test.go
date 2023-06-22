@@ -78,7 +78,7 @@ func TestOnlineArchives(t *testing.T) {
 
 func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		clustersEntity,
 		onlineArchiveEntity,
 		"rm",
@@ -98,7 +98,7 @@ func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 
 func watchOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		clustersEntity,
 		onlineArchiveEntity,
 		"watch",
@@ -112,7 +112,7 @@ func watchOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 
 func startOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		clustersEntity,
 		onlineArchiveEntity,
 		"start",
@@ -132,7 +132,7 @@ func startOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 
 func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		clustersEntity,
 		onlineArchiveEntity,
 		"pause",
@@ -154,7 +154,7 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 	t.Helper()
 	const expireAfterDays = 4
 	expireAfterDaysStr := fmt.Sprintf("%d", expireAfterDays)
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		clustersEntity,
 		onlineArchiveEntity,
 		"update",
@@ -178,7 +178,7 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 
 func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		clustersEntity,
 		onlineArchiveEntity,
 		"describe",
@@ -202,7 +202,7 @@ func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiv
 
 func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		clustersEntity,
 		onlineArchiveEntity,
 		"list",
@@ -225,7 +225,7 @@ func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
 func createOnlineArchive(t *testing.T, cliPath, projectID, clusterName string) string {
 	t.Helper()
 	const dbName = "test"
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		clustersEntity,
 		onlineArchiveEntity,
 		"create",

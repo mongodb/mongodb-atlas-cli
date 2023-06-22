@@ -34,7 +34,7 @@ func TestAgents(t *testing.T) {
 
 	var hostname string
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			agentsEntity,
 			"list",
@@ -56,7 +56,7 @@ func TestAgents(t *testing.T) {
 	})
 
 	t.Run("Version List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			agentsEntity,
 			"version",
@@ -77,7 +77,7 @@ func TestAgents(t *testing.T) {
 	})
 
 	t.Run("Enable backup", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			backupEntity,
 			"enable",
@@ -88,7 +88,7 @@ func TestAgents(t *testing.T) {
 		assert.NoError(t, err, string(resp))
 	})
 	t.Run("Disable backup", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			backupEntity,
 			"disable",
@@ -100,7 +100,7 @@ func TestAgents(t *testing.T) {
 	})
 
 	t.Run("Enable monitoring", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			monitoringEntity,
 			"enable",
@@ -111,7 +111,7 @@ func TestAgents(t *testing.T) {
 		assert.NoError(t, err, string(resp))
 	})
 	t.Run("Disable monitoring", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			monitoringEntity,
 			"disable",

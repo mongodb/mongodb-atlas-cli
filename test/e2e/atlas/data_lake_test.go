@@ -45,7 +45,7 @@ func TestDataLakes(t *testing.T) {
 	r.NotEmpty(roleID)
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakeEntity,
 			"create",
 			dataLakeName,
@@ -67,7 +67,7 @@ func TestDataLakes(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakeEntity,
 			"describe",
 			dataLakeName,
@@ -85,7 +85,7 @@ func TestDataLakes(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakeEntity,
 			"ls",
 			"-o=json")
@@ -102,7 +102,7 @@ func TestDataLakes(t *testing.T) {
 
 	t.Run("Update", func(t *testing.T) {
 		const updateRegion = "VIRGINIA_USA"
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakeEntity,
 			"update",
 			dataLakeName,
@@ -121,7 +121,7 @@ func TestDataLakes(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakeEntity,
 			"delete",
 			dataLakeName,

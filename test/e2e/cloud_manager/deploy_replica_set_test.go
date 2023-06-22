@@ -50,7 +50,7 @@ func TestDeployReplicaSet(t *testing.T) {
 	}
 
 	t.Run("Apply", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"apply",
@@ -67,7 +67,7 @@ func TestDeployReplicaSet(t *testing.T) {
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"ls",
@@ -91,7 +91,7 @@ func TestDeployReplicaSet(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"describe",
@@ -120,7 +120,7 @@ func TestDeployReplicaSet(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"update",
@@ -140,7 +140,7 @@ func TestDeployReplicaSet(t *testing.T) {
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Reclaim free space", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"reclaimFreeSpace",
@@ -157,7 +157,7 @@ func TestDeployReplicaSet(t *testing.T) {
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Restart", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"restart",
@@ -174,7 +174,7 @@ func TestDeployReplicaSet(t *testing.T) {
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Shutdown", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"shutdown",
@@ -191,7 +191,7 @@ func TestDeployReplicaSet(t *testing.T) {
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Unmanage", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"unmanage",
@@ -213,7 +213,7 @@ func TestDeployReplicaSet(t *testing.T) {
 			t.Fatalf("unexpected error: %v\n", err)
 		}
 		for _, h := range hostIDs {
-			cmd := exec.Command(cliPath,
+			cmd := exec.Command(cliPath, e2e.DebugFlag,
 				entity,
 				monitoringEntity,
 				"rm",
@@ -254,7 +254,7 @@ func TestDeployAndDeleteReplicaSet(t *testing.T) {
 	}
 
 	t.Run("Apply", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"apply",
@@ -271,7 +271,7 @@ func TestDeployAndDeleteReplicaSet(t *testing.T) {
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Delete Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"delete",

@@ -35,7 +35,7 @@ func TestCustomDNS(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("Enable", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			customDNSEntity,
 			awsEntity,
 			"enable",
@@ -55,7 +55,7 @@ func TestCustomDNS(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			customDNSEntity,
 			awsEntity,
 			"describe",
@@ -75,7 +75,7 @@ func TestCustomDNS(t *testing.T) {
 	})
 
 	t.Run("Disable", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			customDNSEntity,
 			awsEntity,
 			"disable",

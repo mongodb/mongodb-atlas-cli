@@ -36,7 +36,7 @@ func TestOrgs(t *testing.T) {
 
 	// This test must run first to grab the ID of the org to later describe
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			orgEntity,
 			"ls",
@@ -54,7 +54,7 @@ func TestOrgs(t *testing.T) {
 	require.NotEmpty(t, orgID)
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			orgEntity,
 			"describe",
@@ -66,7 +66,7 @@ func TestOrgs(t *testing.T) {
 	})
 
 	t.Run("List Org Users", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			orgEntity,
 			usersEntity,

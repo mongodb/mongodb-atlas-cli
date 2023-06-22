@@ -36,7 +36,7 @@ func TestAtlasOrgs(t *testing.T) {
 	var orgID string
 	// This test must run first to grab the ID of the org to later describe
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			"ls",
 			"-o=json")
@@ -52,7 +52,7 @@ func TestAtlasOrgs(t *testing.T) {
 	require.NotEmpty(t, orgID)
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			"describe",
 			orgID,
@@ -64,7 +64,7 @@ func TestAtlasOrgs(t *testing.T) {
 
 	var userID string
 	t.Run("List Org Users", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			usersEntity,
 			"ls",
@@ -91,7 +91,7 @@ func TestAtlasOrgs(t *testing.T) {
 	)
 	t.Run("Create", func(t *testing.T) {
 		t.Skip("Skipping create org e2e test, exceeded max number of linked orgs. Will reenable post cleanup")
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			"create",
 			orgName,
@@ -123,7 +123,7 @@ func TestAtlasOrgs(t *testing.T) {
 		}
 		t.Setenv("MCLI_PUBLIC_API_KEY", publicAPIKey)
 		t.Setenv("MCLI_PRIVATE_API_KEY", privateAPIKey)
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			"delete",
 			orgID,

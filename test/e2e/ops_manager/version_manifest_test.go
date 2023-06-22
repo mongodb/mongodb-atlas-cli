@@ -32,7 +32,7 @@ func TestVersionManifest(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		"om",
 		"versionManifest",
 		"update",

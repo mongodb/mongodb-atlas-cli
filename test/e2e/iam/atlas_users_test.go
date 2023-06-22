@@ -36,7 +36,7 @@ func TestAtlasUsers(t *testing.T) {
 	var userID string
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			usersEntity,
 			"list",
@@ -62,7 +62,7 @@ func TestAtlasUsers(t *testing.T) {
 	})
 
 	t.Run("Describe by username", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			usersEntity,
 			"describe",
 			"--username",
@@ -85,7 +85,7 @@ func TestAtlasUsers(t *testing.T) {
 	})
 
 	t.Run("Describe by id", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			usersEntity,
 			"describe",
 			"--id",

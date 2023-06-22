@@ -22,6 +22,9 @@ import (
 	"path/filepath"
 )
 
+// Used for commands that are safe to return debug flag
+const DebugFlag = "--debug "
+
 func Bin() (string, error) {
 	path := os.Getenv("MCLI_E2E_BINARY")
 	cliPath, err := filepath.Abs(path)

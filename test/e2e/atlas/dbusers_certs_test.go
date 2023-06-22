@@ -40,7 +40,7 @@ func TestDBUserCerts(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	t.Run("Create DBUser", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			dbusersEntity,
 			"create",
 			"atlasAdmin",
@@ -64,7 +64,7 @@ func TestDBUserCerts(t *testing.T) {
 	})
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			dbusersEntity,
 			certsEntity,
 			"create",
@@ -85,7 +85,7 @@ func TestDBUserCerts(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			dbusersEntity,
 			certsEntity,
 			"list",
@@ -108,7 +108,7 @@ func TestDBUserCerts(t *testing.T) {
 	})
 
 	t.Run("Delete User", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			dbusersEntity,
 			"delete",
 			username,

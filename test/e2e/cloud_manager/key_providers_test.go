@@ -49,7 +49,7 @@ func TestKeyProviders(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			"logs",
 			"keyProviders",

@@ -45,7 +45,7 @@ func TestDBRoles(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			customDBRoleEntity,
 			"create",
 			roleName,
@@ -69,7 +69,7 @@ func TestDBRoles(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			customDBRoleEntity,
 			"ls",
 			"-o=json")
@@ -84,7 +84,7 @@ func TestDBRoles(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			customDBRoleEntity,
 			"describe",
 			roleName,
@@ -105,7 +105,7 @@ func TestDBRoles(t *testing.T) {
 	})
 
 	t.Run("Update with append", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			customDBRoleEntity,
 			"update",
 			roleName,
@@ -131,7 +131,7 @@ func TestDBRoles(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			customDBRoleEntity,
 			"update",
 			roleName,
@@ -151,7 +151,7 @@ func TestDBRoles(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			customDBRoleEntity,
 			"delete",
 			roleName,

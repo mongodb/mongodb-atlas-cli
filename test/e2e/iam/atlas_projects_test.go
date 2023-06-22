@@ -43,7 +43,7 @@ func TestAtlasProjects(t *testing.T) {
 	var projectID string
 	t.Run("Create", func(t *testing.T) {
 		// This depends on a ORG_ID ENV
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			"create",
 			projectName,
@@ -65,7 +65,7 @@ func TestAtlasProjects(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			"ls",
 			"-o=json")
@@ -76,7 +76,7 @@ func TestAtlasProjects(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			"describe",
 			projectID,
@@ -88,7 +88,7 @@ func TestAtlasProjects(t *testing.T) {
 	})
 
 	t.Run("Users", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			usersEntity,
 			"ls",
@@ -101,7 +101,7 @@ func TestAtlasProjects(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			"delete",
 			projectID,

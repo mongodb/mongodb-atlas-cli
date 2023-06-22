@@ -50,7 +50,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 	req.NoError(err)
 
 	t.Run("should failed to install old and not supported version of the operator", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"operator",
 			"install",
@@ -62,7 +62,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 	})
 
 	t.Run("should failed to install a non-existing version of the operator", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"operator",
 			"install",
@@ -74,7 +74,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 	})
 
 	t.Run("should failed when unable to setup connection to the cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"operator",
 			"install",
@@ -90,7 +90,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		operator := setupCluster(t, clusterName)
 		context := fmt.Sprintf("kind-%s", clusterName)
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"operator",
 			"install",
@@ -108,7 +108,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		operator := setupCluster(t, clusterName, operatorNamespace)
 		context := fmt.Sprintf("kind-%s", clusterName)
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"operator",
 			"install",
@@ -130,7 +130,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		operator := setupCluster(t, clusterName, operatorNamespace, operatorWatch1, operatorWatch2)
 		context := fmt.Sprintf("kind-%s", clusterName)
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"operator",
 			"install",
@@ -151,7 +151,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		operator := setupCluster(t, clusterName, operatorNamespace)
 		context := fmt.Sprintf("kind-%s", clusterName)
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"operator",
 			"install",
@@ -173,7 +173,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		context := fmt.Sprintf("kind-%s", clusterName)
 		projectName := "MyK8sProject"
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"operator",
 			"install",
@@ -248,7 +248,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		operator := setupCluster(t, clusterName, operatorNamespace)
 		context := fmt.Sprintf("kind-%s", clusterName)
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"operator",
 			"install",
@@ -439,7 +439,7 @@ func cleanUpKeys(t *testing.T, operator *operatorHelper, namespace string, cliPa
 		toDelete[secret.Name] = struct{}{}
 	}
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		orgEntity,
 		"apiKeys",
 		"ls",

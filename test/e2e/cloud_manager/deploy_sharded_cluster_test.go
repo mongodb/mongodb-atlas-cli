@@ -48,7 +48,7 @@ func TestDeployCluster(t *testing.T) {
 	}
 
 	t.Run("Apply", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"apply",
@@ -65,7 +65,7 @@ func TestDeployCluster(t *testing.T) {
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Restart", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"restart",
@@ -82,7 +82,7 @@ func TestDeployCluster(t *testing.T) {
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Reclaim free space", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"reclaimFreeSpace",
@@ -99,7 +99,7 @@ func TestDeployCluster(t *testing.T) {
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Shutdown", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"shutdown",
@@ -116,7 +116,7 @@ func TestDeployCluster(t *testing.T) {
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Unmanage", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"unmanage",
@@ -138,7 +138,7 @@ func TestDeployCluster(t *testing.T) {
 			t.Fatalf("unexpected error: %v\n", err)
 		}
 		for _, h := range hostIDs {
-			cmd := exec.Command(cliPath,
+			cmd := exec.Command(cliPath, e2e.DebugFlag,
 				entity,
 				monitoringEntity,
 				"rm",
@@ -179,7 +179,7 @@ func TestDeployDeleteCluster(t *testing.T) {
 	}
 
 	t.Run("Apply", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"apply",
@@ -196,7 +196,7 @@ func TestDeployDeleteCluster(t *testing.T) {
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Delete Sharded Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			clustersEntity,
 			"delete",

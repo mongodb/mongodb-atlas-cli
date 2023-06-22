@@ -39,7 +39,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 	}
 
 	t.Run("List namespaces", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			performanceAdvisorEntity,
 			namespacesEntity,
 			"list",
@@ -55,7 +55,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 	})
 
 	t.Run("List slow query logs", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			performanceAdvisorEntity,
 			slowQueryLogsEntity,
 			"list",
@@ -71,7 +71,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 	})
 
 	t.Run("List suggested indexes", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			performanceAdvisorEntity,
 			suggestedIndexesEntity,
 			"list",
@@ -87,7 +87,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 	})
 
 	t.Run("Enable Managed Slow Operation Threshold", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			performanceAdvisorEntity,
 			slowOperationThresholdEntity,
 			"enable",
@@ -101,7 +101,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 	})
 
 	t.Run("Disable Managed Slow Operation Threshold", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			performanceAdvisorEntity,
 			slowOperationThresholdEntity,
 			"disable",

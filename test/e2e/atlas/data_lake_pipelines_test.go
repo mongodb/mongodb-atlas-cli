@@ -39,7 +39,7 @@ func TestDataLakePipelines(t *testing.T) {
 	g.generateProjectAndCluster("dataLakePipeline")
 
 	t.Run("Load Sample Data", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"sampleData",
 			"load",
@@ -71,7 +71,7 @@ func TestDataLakePipelines(t *testing.T) {
 
 	var snapshotID string
 	t.Run("Generate Snapshot", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"create", g.clusterName,
@@ -104,7 +104,7 @@ func TestDataLakePipelines(t *testing.T) {
 	var pipelineID, pipelineRunID string
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"create", pipelineName,
 			"--sourceType", "ON_DEMAND_CPS",
@@ -132,7 +132,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"watch", pipelineName,
 			"--projectId", g.projectID)
@@ -143,7 +143,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"describe", pipelineName,
 			"--projectId", g.projectID,
@@ -160,7 +160,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"ls",
 			"--projectId", g.projectID,
@@ -177,7 +177,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"update", pipelineName,
 			"--sinkMetadataProvider", "AWS",
@@ -198,7 +198,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("Trigger", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"trigger", pipelineName,
 			"--snapshotId", snapshotID,
@@ -218,7 +218,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("Pause", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"pause", pipelineName,
 			"--projectId", g.projectID,
@@ -236,7 +236,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("Start", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"start", pipelineName,
 			"--projectId", g.projectID,
@@ -254,7 +254,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("Runs List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"runs",
 			"ls",
@@ -273,7 +273,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("Runs Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"runs",
 			"describe", pipelineRunID,
@@ -293,7 +293,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("Runs Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"runs",
 			"watch", pipelineRunID,
@@ -306,7 +306,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("Datasets Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"datasets",
 			"delete", pipelineRunID,
@@ -320,7 +320,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("AvailableSchedules List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"availableschedules",
 			"ls",
@@ -339,7 +339,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("AvailableSnapshots List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"availablesnapshots",
 			"ls",
@@ -358,7 +358,7 @@ func TestDataLakePipelines(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			datalakePipelineEntity,
 			"delete", pipelineName,
 			"--projectId", g.projectID,

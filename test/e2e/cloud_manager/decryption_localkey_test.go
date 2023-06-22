@@ -62,7 +62,7 @@ func TestDecrypt(t *testing.T) {
 			expectedContents, err := files.ReadFile(decryption.GenerateFileNameCase(localKeyTestsInputDir, i, "output"))
 			req.NoError(err)
 
-			cmd := exec.Command(cliPath,
+			cmd := exec.Command(cliPath, e2e.DebugFlag,
 				entity,
 				"logs",
 				"decrypt",

@@ -33,7 +33,7 @@ func TestAutocomplete(t *testing.T) {
 	options := []string{"zsh", "bash", "fish", "powershell"}
 	for _, option := range options {
 		t.Run(option, func(t *testing.T) {
-			cmd := exec.Command(cliPath, completionEntity, option)
+			cmd := exec.Command(cliPath, e2e.DebugFlag, completionEntity, option)
 			cmd.Env = os.Environ()
 			if resp, err := cmd.CombinedOutput(); err != nil {
 				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -50,7 +50,7 @@ func TestAtlasCLIAutocomplete(t *testing.T) {
 	options := []string{"zsh", "bash", "fish", "powershell"}
 	for _, option := range options {
 		t.Run(option, func(t *testing.T) {
-			cmd := exec.Command(cliPath, completionEntity, option)
+			cmd := exec.Command(cliPath, e2e.DebugFlag, completionEntity, option)
 			cmd.Env = os.Environ()
 			if resp, err := cmd.CombinedOutput(); err != nil {
 				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))

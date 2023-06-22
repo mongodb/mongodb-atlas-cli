@@ -28,6 +28,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -59,7 +60,7 @@ var (
 // automationServerHostname tries to list available server running the automation agent
 // and returns the first available hostname for deployments.
 func automationServerHostname(cliPath string) (string, error) {
-	cmd := exec.Command(cliPath, entity, serversEntity, "list", "-o=json")
+	cmd := exec.Command(cliPath, e2e.DebugFlag, entity, serversEntity, "list", "-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	if err != nil {
@@ -88,7 +89,7 @@ func (s byLastConf) Less(i, j int) bool {
 }
 
 func hostIDs(cliPath string) ([]string, error) {
-	cmd := exec.Command(cliPath, entity, processesEntity, "list", "-o=json")
+	cmd := exec.Command(cliPath, e2e.DebugFlag, entity, processesEntity, "list", "-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	if err != nil {
@@ -373,7 +374,7 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 func watchAutomation(cliPath string) func(t *testing.T) {
 	return func(t *testing.T) {
 		t.Helper()
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			"automation",
 			"watch",

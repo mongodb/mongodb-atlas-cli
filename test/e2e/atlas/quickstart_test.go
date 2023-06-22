@@ -44,7 +44,7 @@ func TestQuickstart(t *testing.T) {
 	req.NoError(err)
 
 	t.Run("Run", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"quickstart",
 			"--clusterName", clusterName,
 			"--username", dbUserUsername,
@@ -59,7 +59,7 @@ func TestQuickstart(t *testing.T) {
 	})
 
 	t.Run("Watch Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			clusterName,
@@ -72,7 +72,7 @@ func TestQuickstart(t *testing.T) {
 	})
 
 	t.Run("Describe DB User", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			dbusersEntity,
 			"describe",
 			dbUserUsername,
@@ -89,7 +89,7 @@ func TestQuickstart(t *testing.T) {
 	})
 
 	t.Run("Delete Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"delete",
 			clusterName,
@@ -105,7 +105,7 @@ func TestQuickstart(t *testing.T) {
 	})
 
 	t.Run("Watch cluster deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			clusterName,

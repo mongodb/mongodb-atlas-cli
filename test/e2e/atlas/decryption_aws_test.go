@@ -46,7 +46,7 @@ func TestDecryptWithAWS(t *testing.T) {
 	expectedContents, err := filesAWS.ReadFile(decryption.GenerateFileName(awsTestsInputDir, "output"))
 	req.NoError(err)
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		"logs",
 		"decrypt",
 		"--file",

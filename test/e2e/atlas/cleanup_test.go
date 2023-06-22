@@ -32,7 +32,7 @@ func TestCleanup(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	req.NoError(err)
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		projectEntity,
 		"list",
 		"-o=json")

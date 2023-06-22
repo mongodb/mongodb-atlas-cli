@@ -47,7 +47,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 	entry := fmt.Sprintf("192.168.0.%d", n)
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			apiKeysEntity,
 			apiKeyAccessListEntity,
@@ -69,7 +69,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			apiKeysEntity,
 			apiKeyAccessListEntity,
@@ -93,7 +93,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 
 	t.Run("Create Current IP", func(t *testing.T) {
 		t.Skip("400 (request \"CANNOT_REMOVE_CALLER_FROM_ACCESS_LIST\") Cannot remove caller's IP address from access list")
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			apiKeysEntity,
 			apiKeyAccessListEntity,
@@ -122,7 +122,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 
 func deleteAtlasAccessListEntry(t *testing.T, cliPath, entry, apiKeyID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		orgEntity,
 		apiKeysEntity,
 		apiKeyAccessListEntity,

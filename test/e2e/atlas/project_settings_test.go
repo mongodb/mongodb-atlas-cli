@@ -46,7 +46,7 @@ func TestProjectSettings(t *testing.T) {
 	}()
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			settingsEntity,
 			"get",
@@ -67,7 +67,7 @@ func TestProjectSettings(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			settingsEntity,
 			"update",

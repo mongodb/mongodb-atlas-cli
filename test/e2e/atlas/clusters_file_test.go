@@ -46,7 +46,7 @@ func TestClustersFile(t *testing.T) {
 	}
 
 	t.Run("Create via file", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"create",
 			clusterFileName,
@@ -65,7 +65,7 @@ func TestClustersFile(t *testing.T) {
 	})
 
 	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			"--projectId", g.projectID,
@@ -80,7 +80,7 @@ func TestClustersFile(t *testing.T) {
 	})
 
 	t.Run("Update via file", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"update",
 			clusterFileName,
@@ -99,7 +99,7 @@ func TestClustersFile(t *testing.T) {
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {
-		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterFileName, "--projectId", g.projectID, "--force")
+		cmd := exec.Command(cliPath, e2e.DebugFlag, clustersEntity, "delete", clusterFileName, "--projectId", g.projectID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
@@ -110,7 +110,7 @@ func TestClustersFile(t *testing.T) {
 	})
 
 	t.Run("Watch deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			clusterFileName,

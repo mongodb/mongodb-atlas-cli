@@ -45,7 +45,7 @@ func TestShardedCluster(t *testing.T) {
 	req.NoError(err)
 
 	t.Run("Create sharded cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"create",
 			shardedClusterName,
@@ -72,7 +72,7 @@ func TestShardedCluster(t *testing.T) {
 	})
 
 	t.Run("Delete sharded cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath, clustersEntity, "delete", shardedClusterName, "--projectId", g.projectID, "--force")
+		cmd := exec.Command(cliPath, e2e.DebugFlag, clustersEntity, "delete", shardedClusterName, "--projectId", g.projectID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
@@ -82,7 +82,7 @@ func TestShardedCluster(t *testing.T) {
 	})
 
 	t.Run("Watch deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			shardedClusterName,

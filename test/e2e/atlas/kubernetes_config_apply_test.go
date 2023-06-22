@@ -44,7 +44,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		g := newAtlasE2ETestGenerator(t)
 		g.generateProject("k8sConfigApplyWrongNs")
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"config",
 			"apply",
@@ -67,7 +67,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 			operator.restoreOperator()
 		})
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"config",
 			"apply",
@@ -89,7 +89,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 			operator.restoreOperatorImage()
 		})
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"config",
 			"apply",
@@ -111,7 +111,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 			operator.startOperator()
 		})
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			"kubernetes",
 			"config",
 			"apply",
@@ -204,7 +204,7 @@ func setupAtlasResources(t *testing.T) *atlasE2ETestGenerator {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		projectsEntity,
 		teamsEntity,
 		"add",
@@ -432,7 +432,7 @@ func referenceExportedDeployment(projectName, clusterName string) *akov1.AtlasDe
 func deleteTeamFromProject(t *testing.T, cliPath, projectID, teamID string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		projectsEntity,
 		teamsEntity,
 		"delete",

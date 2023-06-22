@@ -49,7 +49,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("Add", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			teamsEntity,
 			usersEntity,
 			"add",
@@ -78,7 +78,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			teamsEntity,
 			usersEntity,
 			"ls",
@@ -96,7 +96,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 	})
 
 	t.Run("List Compact", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			teamsEntity,
 			usersEntity,
 			"ls",
@@ -115,7 +115,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			teamsEntity,
 			usersEntity,
 			"delete",

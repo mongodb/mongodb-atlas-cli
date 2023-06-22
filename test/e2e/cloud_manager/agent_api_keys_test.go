@@ -38,7 +38,7 @@ func TestAgentAPIKeys(t *testing.T) {
 	}
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			agentsEntity,
 			apiKeys,

@@ -47,7 +47,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 	})
 
 	t.Run("Invite", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			projectsEntity,
 			invitationsEntity,
@@ -72,7 +72,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			projectsEntity,
 			invitationsEntity,
@@ -92,7 +92,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			projectsEntity,
 			invitationsEntity,
@@ -113,7 +113,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 	})
 
 	t.Run("Update by email", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			projectsEntity,
 			invitationsEntity,
@@ -140,7 +140,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 	})
 
 	t.Run("Update by ID", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			projectsEntity,
 			invitationsEntity,
@@ -166,7 +166,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			projectsEntity,
 			invitationsEntity,

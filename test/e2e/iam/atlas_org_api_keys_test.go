@@ -38,7 +38,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 	// This test must run first to grab the ID of the org to later describe
 	t.Run("Create", func(t *testing.T) {
 		desc := "e2e-test-atlas-org"
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			apiKeysEntity,
 			"create",
@@ -63,7 +63,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 	}
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			apiKeysEntity,
 			"ls",
@@ -82,7 +82,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 	})
 
 	t.Run("List Compact", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			apiKeysEntity,
 			"ls",
@@ -103,7 +103,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 
 	t.Run("Update", func(t *testing.T) {
 		newDesc := "e2e-test-atlas-org-updated"
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			apiKeysEntity,
 			"updates",
@@ -125,7 +125,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			apiKeysEntity,
 			"describe",
@@ -145,7 +145,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			orgEntity,
 			apiKeysEntity,
 			"rm",

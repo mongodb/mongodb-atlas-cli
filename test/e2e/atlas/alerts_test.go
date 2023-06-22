@@ -40,7 +40,7 @@ func TestAlerts(t *testing.T) {
 	}
 	// This test should be run before all other tests to grab an alert ID for all others tests
 	t.Run("List with status CLOSED", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			alertsEntity,
 			"list",
 			"--status",
@@ -61,7 +61,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("List with status OPEN", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			alertsEntity,
 			"list",
 			"--status",
@@ -75,7 +75,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("List with no status", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			alertsEntity,
 			"list",
 			"-o=json",
@@ -87,7 +87,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			alertsEntity,
 			"describe",
 			alertID,
@@ -107,7 +107,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("Acknowledge", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			alertsEntity,
 			"ack",
 			alertID,
@@ -127,7 +127,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("Acknowledge Forever", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			alertsEntity,
 			"ack",
 			alertID,
@@ -146,7 +146,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("UnAcknowledge", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			alertsEntity,
 			"unack",
 			alertID,

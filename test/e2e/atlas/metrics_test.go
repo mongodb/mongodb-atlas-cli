@@ -57,7 +57,7 @@ func TestMetrics(t *testing.T) {
 
 func process(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		metricsEntity,
 		"processes",
 		hostname,
@@ -76,7 +76,7 @@ func process(t *testing.T, cliPath, hostname, projectID string) {
 
 func processWithType(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		metricsEntity,
 		"processes",
 		hostname,
@@ -97,7 +97,7 @@ func processWithType(t *testing.T, cliPath, hostname, projectID string) {
 func databases(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
 	t.Run("databases list", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			metricsEntity,
 			"databases",
 			"list",
@@ -114,7 +114,7 @@ func databases(t *testing.T, cliPath, hostname, projectID string) {
 	})
 
 	t.Run("databases describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			metricsEntity,
 			"databases",
 			"describe",
@@ -137,7 +137,7 @@ func databases(t *testing.T, cliPath, hostname, projectID string) {
 func disks(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
 	t.Run("disks list", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			metricsEntity,
 			"disks",
 			"list",
@@ -154,7 +154,7 @@ func disks(t *testing.T, cliPath, hostname, projectID string) {
 	})
 
 	t.Run("disks describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			metricsEntity,
 			"disks",
 			"describe",

@@ -34,7 +34,7 @@ func TestEvents(t *testing.T) {
 	}
 
 	t.Run("List Project Event", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			eventsEntity,
 			projectsEntity,
@@ -55,7 +55,7 @@ func TestEvents(t *testing.T) {
 	})
 
 	t.Run("List Organization Event", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			eventsEntity,
 			orgsEntity,

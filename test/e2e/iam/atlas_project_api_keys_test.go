@@ -39,7 +39,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 	// This test must run first to grab the ID of the project to later describe
 	t.Run("Create", func(t *testing.T) {
 		const desc = "e2e-test"
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			apiKeysEntity,
 			"create",
@@ -71,7 +71,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 	}()
 
 	t.Run("Assign", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			apiKeysEntity,
 			"assign",
@@ -84,7 +84,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			apiKeysEntity,
 			"ls",
@@ -103,7 +103,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 	})
 
 	t.Run("List Compact", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			apiKeysEntity,
 			"ls",
@@ -123,7 +123,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			apiKeysEntity,
 			"rm",

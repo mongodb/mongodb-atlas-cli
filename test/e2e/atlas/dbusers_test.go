@@ -51,7 +51,7 @@ func TestDBUserWithFlags(t *testing.T) {
 	t.Run("Create", func(t *testing.T) {
 		pwd, err := generateRandomBase64String(14)
 		require.NoError(t, err)
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			dbusersEntity,
 			"create",
 			"atlasAdmin",
@@ -66,7 +66,7 @@ func TestDBUserWithFlags(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			dbusersEntity,
 			"ls",
 			"-o=json")
@@ -83,7 +83,7 @@ func TestDBUserWithFlags(t *testing.T) {
 	})
 
 	t.Run("List Compact", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			dbusersEntity,
 			"ls",
 			"-c",
@@ -107,7 +107,7 @@ func TestDBUserWithFlags(t *testing.T) {
 	t.Run("Update", func(t *testing.T) {
 		pwd, err := generateRandomBase64String(14)
 		require.NoError(t, err)
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			dbusersEntity,
 			"update",
 			username,
@@ -141,7 +141,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 	t.Run("Create", func(t *testing.T) {
 		pwd, err := generateRandomBase64String(14)
 		require.NoError(t, err)
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			dbusersEntity,
 			"create",
 			"atlasAdmin",
@@ -161,7 +161,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			dbusersEntity,
 			"update",
 			username,
@@ -203,7 +203,7 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 func testDescribeUser(t *testing.T, cliPath, username string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		dbusersEntity,
 		"describe",
 		username,
@@ -244,7 +244,7 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 func testDeleteUser(t *testing.T, cliPath, dbusersEntity, username string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		dbusersEntity,
 		"delete",
 		username,

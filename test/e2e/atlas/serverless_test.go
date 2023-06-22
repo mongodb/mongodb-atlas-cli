@@ -40,7 +40,7 @@ func TestServerless(t *testing.T) {
 	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			serverlessEntity,
 			"create",
 			clusterName,
@@ -62,7 +62,7 @@ func TestServerless(t *testing.T) {
 	})
 
 	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			serverlessEntity,
 			"watch",
 			"--projectId", g.projectID,
@@ -77,7 +77,7 @@ func TestServerless(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			serverlessEntity,
 			"update",
 			clusterName,
@@ -98,7 +98,7 @@ func TestServerless(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			serverlessEntity,
 			"ls",
 			"--projectId", g.projectID,
@@ -116,7 +116,7 @@ func TestServerless(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			serverlessEntity,
 			"describe",
 			clusterName,
@@ -152,7 +152,7 @@ func TestServerless(t *testing.T) {
 	})
 
 	t.Run("Watch deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			serverlessEntity,
 			"watch",
 			clusterName,

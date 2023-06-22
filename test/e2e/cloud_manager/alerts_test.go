@@ -42,7 +42,7 @@ func TestAlerts(t *testing.T) {
 	a := assert.New(t)
 
 	t.Run("List with status CLOSED", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			alertsEntity,
 			"list",
@@ -65,7 +65,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("List with status OPEN", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			alertsEntity,
 			"list",
@@ -80,7 +80,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			alertsEntity,
 			"describe",
@@ -102,7 +102,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("List with no status", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			alertsEntity,
 			"list",
@@ -121,7 +121,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("List with status CLOSED", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			alertsEntity,
 			"list",
@@ -142,7 +142,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("Acknowledge", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			alertsEntity,
 			"ack",
@@ -164,7 +164,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("Acknowledge Forever", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			alertsEntity,
 			"ack",
@@ -185,7 +185,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("UnAcknowledge", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			alertsEntity,
 			"unack",

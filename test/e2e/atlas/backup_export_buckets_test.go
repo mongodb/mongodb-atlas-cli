@@ -40,7 +40,7 @@ func TestExportBuckets(t *testing.T) {
 	var bucketID string
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			exportsEntity,
 			bucketsEntity,
@@ -65,7 +65,7 @@ func TestExportBuckets(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			exportsEntity,
 			bucketsEntity,
@@ -84,7 +84,7 @@ func TestExportBuckets(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			exportsEntity,
 			bucketsEntity,
@@ -105,7 +105,7 @@ func TestExportBuckets(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			exportsEntity,
 			bucketsEntity,

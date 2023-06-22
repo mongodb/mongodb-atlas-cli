@@ -53,7 +53,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 	})
 
 	t.Run("Add", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			teamsEntity,
 			"add",
@@ -82,7 +82,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			teamsEntity,
 			"update",
@@ -111,7 +111,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			teamsEntity,
 			"ls",
@@ -130,7 +130,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			projectsEntity,
 			teamsEntity,
 			"delete",

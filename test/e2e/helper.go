@@ -35,7 +35,7 @@ func CreateProject(projectName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, DebugFlag,
 		iamEntity,
 		projectsEntity,
 		"create",
@@ -60,7 +60,7 @@ func deleteProject(projectID string) error {
 	if err != nil {
 		return err
 	}
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, DebugFlag,
 		iamEntity,
 		projectsEntity,
 		"delete",

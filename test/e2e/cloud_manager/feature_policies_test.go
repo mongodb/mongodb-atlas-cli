@@ -49,7 +49,7 @@ func TestFeaturePolicies(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			featurePolicies,
 			"update",
@@ -79,7 +79,7 @@ func TestFeaturePolicies(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			entity,
 			featurePolicies,
 			"list",

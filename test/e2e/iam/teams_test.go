@@ -48,7 +48,7 @@ func TestTeams(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			teamsEntity,
 			"create",
@@ -70,7 +70,7 @@ func TestTeams(t *testing.T) {
 	})
 
 	t.Run("Describe By ID", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			teamsEntity,
 			"describe",
@@ -90,7 +90,7 @@ func TestTeams(t *testing.T) {
 	})
 
 	t.Run("Describe By Name", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			teamsEntity,
 			"describe",
@@ -110,7 +110,7 @@ func TestTeams(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			teamsEntity,
 			"ls",
@@ -128,7 +128,7 @@ func TestTeams(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			teamsEntity,
 			"delete",

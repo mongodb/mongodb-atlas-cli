@@ -41,7 +41,7 @@ func TestSnapshots(t *testing.T) {
 	var snapshotID string
 
 	t.Run("Create cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"create",
 			clusterName,
@@ -63,7 +63,7 @@ func TestSnapshots(t *testing.T) {
 	})
 
 	t.Run("Watch create cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			clusterName,
@@ -74,7 +74,7 @@ func TestSnapshots(t *testing.T) {
 	})
 
 	t.Run("Create snapshot", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"create",
@@ -96,7 +96,7 @@ func TestSnapshots(t *testing.T) {
 	})
 
 	t.Run("Watch creation", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"watch",
@@ -109,7 +109,7 @@ func TestSnapshots(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"list",
@@ -128,7 +128,7 @@ func TestSnapshots(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"describe",
@@ -149,7 +149,7 @@ func TestSnapshots(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"delete",
@@ -164,7 +164,7 @@ func TestSnapshots(t *testing.T) {
 	})
 
 	t.Run("Watch deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			backupsEntity,
 			snapshotsEntity,
 			"watch",
@@ -177,7 +177,7 @@ func TestSnapshots(t *testing.T) {
 	})
 
 	t.Run("Delete cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"delete",
 			clusterName,
@@ -193,7 +193,7 @@ func TestSnapshots(t *testing.T) {
 	})
 
 	t.Run("Watch delete cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			clusterName,

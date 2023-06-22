@@ -52,7 +52,7 @@ func TestProjectTeams(t *testing.T) {
 	})
 
 	t.Run("Add", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			projectsEntity,
 			teamsEntity,
@@ -84,7 +84,7 @@ func TestProjectTeams(t *testing.T) {
 	t.Run("Update", func(t *testing.T) {
 		roleName1 := "GROUP_READ_ONLY"
 		roleName2 := "GROUP_DATA_ACCESS_READ_ONLY"
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			projectsEntity,
 			teamsEntity,
@@ -114,7 +114,7 @@ func TestProjectTeams(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			projectsEntity,
 			teamsEntity,
@@ -134,7 +134,7 @@ func TestProjectTeams(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			iamEntity,
 			projectsEntity,
 			teamsEntity,

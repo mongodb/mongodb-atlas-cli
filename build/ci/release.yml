@@ -47,12 +47,6 @@ functions:
           set -Eeou pipefail
 
           curl -sL http://boxes.10gen.com/build/curator/curator-dist-rhel70-${curator_release|"latest"}.tar.gz | tar zx
-  "check license header":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        binary: build/ci/check-licenses.sh
   "generate notices":
     - command: subprocess.exec
       type: test

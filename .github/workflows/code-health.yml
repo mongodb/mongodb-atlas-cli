@@ -163,3 +163,10 @@ jobs:
             echo "Try running: go mod tidy"
             exit 1
           fi
+  licensecheck:
+    name: licensecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: make devtools
+      - run: ./build/ci/check-licenses.sh

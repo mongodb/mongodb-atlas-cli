@@ -22,7 +22,6 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
@@ -133,7 +132,7 @@ func TestAtlasUsers(t *testing.T) {
 		if err := json.Unmarshal(resp, &user); assert.NoError(t, err) {
 			assert.Equal(t, emailUser, user.GetUsername())
 			assert.NotEmpty(t, user.GetId())
-			assert.Equal(t, []atlasv2.CloudAccessRoleAssignment{{RoleName: pointer.Get("ORG_MEMBER")}}, user.GetRoles())
+			assert.Empty(t, user.GetRoles()) // This is returned empty until the invite is accepted
 		}
 	})
 }

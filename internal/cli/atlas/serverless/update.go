@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -68,6 +69,10 @@ func (opts *UpdateOpts) newServerlessUpdateRequestParams() *atlasv2.ServerlessIn
 		params.ServerlessBackupOptions = &atlasv2.ClusterServerlessBackupOptions{
 			ServerlessContinuousBackupEnabled: serverlessContinuousBackupEnabled,
 		}
+	}
+
+	for k, v := range opts.tag {
+		params.Tags = append(params.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
 	}
 
 	return params

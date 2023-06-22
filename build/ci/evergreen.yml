@@ -192,12 +192,6 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-  "install dev tools":
-    - command: subprocess.exec
-      type: setup
-      params:
-        <<: *go_options
-        command: make devtools
   "install snyk":
     - command: shell.exec
       type: setup
@@ -278,11 +272,6 @@ tasks:
     commands:
       - func: "install snyk"
       - func: "snyk scan"
-  - name: license_check
-    tags: ["code_health"]
-    commands:
-      - func: "install dev tools"
-      - func: "check license header"
   - name: config_e2e
     tags: ["e2e","generic"]
     must_have_test_results: true

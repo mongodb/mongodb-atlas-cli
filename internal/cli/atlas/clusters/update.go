@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
@@ -102,6 +103,10 @@ func (opts *UpdateOpts) patchOpts(out *atlasv2.AdvancedClusterDescription) {
 		opts.addTierToAdvancedCluster(out)
 	}
 	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection)
+
+	for k, v := range opts.tag {
+		out.Tags = append(out.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+	}
 
 	AddLabel(out, NewCLILabel())
 }

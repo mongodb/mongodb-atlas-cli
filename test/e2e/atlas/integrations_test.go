@@ -46,7 +46,7 @@ func TestIntegrations(t *testing.T) {
 		if IsGov() {
 			t.Skip("Skipping DATADOG integration test, cloudgov does not have an available datadog region")
 		}
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			integrationsEntity,
 			"create",
 			datadogEntity,
@@ -71,7 +71,7 @@ func TestIntegrations(t *testing.T) {
 		n, err := e2e.RandInt(9)
 		require.NoError(t, err)
 		opsGenieKey := "00000000-aaaa-2222-bbbb-3333333333" + n.String() + n.String()
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			integrationsEntity,
 			"create",
 			opsGenieEntity,
@@ -96,7 +96,7 @@ func TestIntegrations(t *testing.T) {
 		n, err := e2e.RandInt(9)
 		require.NoError(t, err)
 		pagerDutyKey := "000000000000000000000000000000" + n.String() + n.String()
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			integrationsEntity,
 			"create",
 			pagerDutyEntity,
@@ -121,7 +121,7 @@ func TestIntegrations(t *testing.T) {
 		n, err := e2e.RandInt(9)
 		require.NoError(t, err)
 		victorOpsKey := "fa07bbc8-eab2-4085-81af-daed47dc1c" + n.String() + n.String()
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			integrationsEntity,
 			"create",
 			victorOpsEntity,
@@ -145,7 +145,7 @@ func TestIntegrations(t *testing.T) {
 	})
 
 	t.Run("Create WEBHOOK", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			integrationsEntity,
 			"create",
 			webhookEntity,
@@ -169,7 +169,7 @@ func TestIntegrations(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			integrationsEntity,
 			"ls",
 			"--projectId",
@@ -187,7 +187,7 @@ func TestIntegrations(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			integrationsEntity,
 			"describe",
 			webhookEntity,
@@ -206,7 +206,7 @@ func TestIntegrations(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			integrationsEntity,
 			"delete",
 			webhookEntity,

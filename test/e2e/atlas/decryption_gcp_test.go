@@ -56,7 +56,7 @@ func TestDecryptWithGCP(t *testing.T) {
 	expectedContents, err := filesGCP.ReadFile(decryption.GenerateFileName(gcpTestsInputDir, "output"))
 	req.NoError(err)
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		"logs",
 		"decrypt",
 		"--file",

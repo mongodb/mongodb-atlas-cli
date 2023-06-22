@@ -52,7 +52,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	var id string
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			awsEntity,
 			"create",
@@ -73,7 +73,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	require.NotEmpty(t, id)
 
 	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			awsEntity,
 			"watch",
@@ -87,7 +87,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			awsEntity,
 			"describe",
@@ -106,7 +106,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			awsEntity,
 			"ls",
@@ -125,7 +125,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			awsEntity,
 			"delete",
@@ -143,7 +143,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	})
 
 	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			awsEntity,
 			"watch",
@@ -181,7 +181,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	var id string
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			azureEntity,
 			"create",
@@ -204,7 +204,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	}
 
 	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			azureEntity,
 			"watch",
@@ -219,7 +219,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			azureEntity,
 			"describe",
@@ -238,7 +238,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			azureEntity,
 			"ls",
@@ -257,7 +257,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			azureEntity,
 			"delete",
@@ -275,7 +275,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	})
 
 	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			azureEntity,
 			"watch",
@@ -321,7 +321,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 	var id string
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			gcpEntity,
 			"create",
@@ -342,7 +342,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 	})
 
 	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			gcpEntity,
 			"watch",
@@ -357,7 +357,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			gcpEntity,
 			"describe",
@@ -376,7 +376,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			gcpEntity,
 			"ls",
@@ -395,7 +395,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			gcpEntity,
 			"delete",
@@ -413,7 +413,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 	})
 
 	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			gcpEntity,
 			"watch",
@@ -438,7 +438,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("Enable regionalized private endpoint setting", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			regionalModeEntity,
 			"enable",
@@ -453,7 +453,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 	})
 
 	t.Run("Disable regionalized private endpoint setting", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			regionalModeEntity,
 			"disable",
@@ -468,7 +468,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 	})
 
 	t.Run("Get regionalized private endpoint setting", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			regionalModeEntity,
 			"get",

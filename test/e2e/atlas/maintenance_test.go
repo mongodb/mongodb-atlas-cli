@@ -35,7 +35,7 @@ func TestMaintenanceWindows(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("update", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			maintenanceEntity,
 			"update",
 			"--dayOfWeek",
@@ -55,7 +55,7 @@ func TestMaintenanceWindows(t *testing.T) {
 	})
 
 	t.Run("describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			maintenanceEntity,
 			"describe",
 			"-o",
@@ -76,7 +76,7 @@ func TestMaintenanceWindows(t *testing.T) {
 	})
 
 	t.Run("clear", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			maintenanceEntity,
 			"clear",
 			"--force",

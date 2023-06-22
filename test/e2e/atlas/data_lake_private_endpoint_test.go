@@ -40,7 +40,7 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 	vpcID := fmt.Sprintf("vpce-0fcd9d80bbafe%d", 1000+n.Int64())
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			datalakeEntity,
 			awsEntity,
@@ -62,7 +62,7 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			datalakeEntity,
 			awsEntity,
@@ -82,7 +82,7 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			datalakeEntity,
 			awsEntity,
@@ -102,7 +102,7 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			privateEndpointsEntity,
 			datalakeEntity,
 			awsEntity,

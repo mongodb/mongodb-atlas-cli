@@ -44,7 +44,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"create",
 			clusterName,
@@ -67,7 +67,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 	})
 
 	t.Run("Watch create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			clusterName,
@@ -79,7 +79,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 	})
 
 	t.Run("Fail Delete for Termination Protection", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"delete",
 			clusterName,
@@ -92,7 +92,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 	})
 
 	t.Run("Upgrade", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"upgrade",
 			clusterName,
@@ -109,7 +109,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 	})
 
 	t.Run("Watch upgrade", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			clusterName,
@@ -121,7 +121,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 	})
 
 	t.Run("Ensure upgrade", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"get",
 			clusterName,
@@ -139,7 +139,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"delete",
 			clusterName,
@@ -156,7 +156,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 	})
 
 	t.Run("Watch deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			clustersEntity,
 			"watch",
 			clusterName,

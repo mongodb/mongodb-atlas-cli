@@ -44,7 +44,7 @@ func TestLDAPWithFlags(t *testing.T) {
 
 	var requestID string
 	t.Run("Verify", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			securityEntity,
 			ldapEntity,
 			"verify",
@@ -66,7 +66,7 @@ func TestLDAPWithFlags(t *testing.T) {
 	require.NotEmpty(t, requestID)
 
 	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			securityEntity,
 			ldapEntity,
 			"verify",
@@ -82,7 +82,7 @@ func TestLDAPWithFlags(t *testing.T) {
 	})
 
 	t.Run("Get Status", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			securityEntity,
 			ldapEntity,
 			"verify",
@@ -104,7 +104,7 @@ func TestLDAPWithFlags(t *testing.T) {
 	})
 
 	t.Run("Save", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			securityEntity,
 			ldapEntity,
 			"save",
@@ -129,7 +129,7 @@ func TestLDAPWithFlags(t *testing.T) {
 	})
 
 	t.Run("Get", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			securityEntity,
 			ldapEntity,
 			"get",
@@ -162,7 +162,7 @@ func TestLDAPWithStdin(t *testing.T) {
 	var requestID string
 
 	t.Run("Verify", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			securityEntity,
 			ldapEntity,
 			"verify",
@@ -185,7 +185,7 @@ func TestLDAPWithStdin(t *testing.T) {
 	require.NotEmpty(t, requestID)
 
 	t.Run("Save", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, e2e.DebugFlag,
 			securityEntity,
 			ldapEntity,
 			"save",
@@ -218,7 +218,7 @@ func TestLDAPWithStdin(t *testing.T) {
 func testLDAPDelete(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, e2e.DebugFlag,
 		securityEntity,
 		ldapEntity,
 		"delete",

@@ -41,6 +41,7 @@ const (
 	searchEntity                 = "search"
 	indexEntity                  = "index"
 	datalakeEntity               = "datalake"
+	datafederationEntity         = "datafederation"
 	datalakePipelineEntity       = "datalakepipeline"
 	alertsEntity                 = "alerts"
 	configEntity                 = "settings"

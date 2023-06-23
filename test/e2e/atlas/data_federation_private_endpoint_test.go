@@ -44,7 +44,9 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			datafederationEntity,
 			privateEndpointsEntity,
 			"create",
-			"--privateEndpointId="+vpcID,
+			vpcID,
+			"--comment",
+			"comment",
 			"--projectId",
 			g.projectID,
 			"-o=json")

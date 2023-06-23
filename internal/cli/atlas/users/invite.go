@@ -172,9 +172,9 @@ func newAtlasOrgRole(role string) (atlasv2.CloudAccessRoleAssignment, error) {
 	return atlasRole, nil
 }
 
-// mongocli iam users(s) invite --username username --password password --country country --email email
-// --mobile mobile --firstName firstName --lastName lastName --team team1,team2 --orgRoles orgID:ROLE_NAME
-// --projectRoles projectID:ROLE_NAME
+// atlas users(s) invite --username username --password password --country country --email email
+// --mobile mobile --firstName firstName --lastName lastName --team team1,team2 --orgRole orgID:ROLE_NAME
+// --projectRole projectID:ROLE_NAME
 
 func InviteBuilder() *cobra.Command {
 	opts := &InviteOpts{}

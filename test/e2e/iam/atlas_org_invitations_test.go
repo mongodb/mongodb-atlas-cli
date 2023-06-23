@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestAtlasOrgInvitations(t *testing.T) {
@@ -54,13 +54,13 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
-		var invitation mongodbatlas.Invitation
+		var invitation admin.OrganizationInvitation
 		if err := json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailOrg, invitation.Username)
-			require.NotEmpty(t, invitation.ID)
+			a.Equal(emailOrg, invitation.GetUsername())
+			require.NotEmpty(t, invitation.GetId())
 		}
 
-		orgInvitationID = invitation.ID
+		orgInvitationID = invitation.GetId()
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -75,7 +75,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 
 		a := assert.New(t)
 
-		var invitations []mongodbatlas.Invitation
+		var invitations []admin.OrganizationInvitation
 		if err = json.Unmarshal(resp, &invitations); a.NoError(err) {
 			a.NotEmpty(invitations)
 		}
@@ -94,9 +94,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 
 		a := assert.New(t)
 
-		var invitation mongodbatlas.Invitation
+		var invitation admin.OrganizationInvitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(orgInvitationID, invitation.ID)
+			a.Equal(orgInvitationID, invitation.GetId())
+			a.Equal([]string{"ORG_MEMBER"}, invitation.GetRoles())
 		}
 	})
 
@@ -116,10 +117,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 
 		a := assert.New(t)
 
-		var invitation mongodbatlas.Invitation
+		var invitation admin.OrganizationInvitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailOrg, invitation.Username)
-			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
+			a.Equal(emailOrg, invitation.GetUsername())
+			a.ElementsMatch([]string{roleNameOrg}, invitation.GetRoles())
 		}
 	})
 
@@ -137,10 +138,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		var invitation mongodbatlas.Invitation
+		var invitation admin.OrganizationInvitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailOrg, invitation.Username)
-			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
+			a.Equal(emailOrg, invitation.GetUsername())
+			a.ElementsMatch([]string{roleNameOrg}, invitation.GetRoles())
 		}
 	})
 

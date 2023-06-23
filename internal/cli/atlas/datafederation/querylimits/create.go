@@ -77,11 +77,10 @@ func (opts *CreateOpts) newCreateRequest() *admin.DataFederationTenantQueryLimit
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "create <name>",
-		Aliases: []string{"update <name>"},
-		Short:   "Creates a new Data Federation query limit.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Args:    require.ExactArgs(1),
+		Use:   "create <name>",
+		Short: "Creates a new Data Federation query limit.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Identifier of the data federation query limit",
 			"output":   createTemplate,

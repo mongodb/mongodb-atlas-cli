@@ -62,12 +62,15 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newCreateRequest() *admin.DataFederationTenantQueryLimit {
-	return &admin.DataFederationTenantQueryLimit{
-		Name:          opts.limitName,
-		TenantName:    &opts.tenantName,
-		Value:         opts.value,
-		OverrunPolicy: &opts.overrunPolicy,
+	req := &admin.DataFederationTenantQueryLimit{
+		Name:       opts.limitName,
+		TenantName: &opts.tenantName,
+		Value:      opts.value,
 	}
+	if opts.overrunPolicy != "" {
+		req.OverrunPolicy = &opts.overrunPolicy
+	}
+	return req
 }
 
 // atlas dataFederation queryLimits create <name> [--projectId projectId].

@@ -114,7 +114,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", vpcID)
+		expected := fmt.Sprintf("'%s' deleted\n", vpcID)
 		a.Equal(expected, string(resp))
 	})
 }

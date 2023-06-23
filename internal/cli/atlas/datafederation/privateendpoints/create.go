@@ -34,7 +34,7 @@ type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	store      store.DataFederationPrivateEndpointCreator
-	endpointId string
+	endpointID string
 	comment    string
 }
 
@@ -46,7 +46,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = `Data federation private endpoint {{.EndpointId}} created.`
+var createTemplate = `Data federation private endpoint {{(index .Results 0).EndpointId}} created.`
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newCreateRequest()
@@ -61,7 +61,7 @@ func (opts *CreateOpts) Run() error {
 
 func (opts *CreateOpts) newCreateRequest() *admin.PrivateNetworkEndpointIdEntry {
 	return &admin.PrivateNetworkEndpointIdEntry{
-		EndpointId: opts.endpointId,
+		EndpointId: opts.endpointID,
 		Comment:    &opts.comment,
 	}
 }
@@ -82,7 +82,7 @@ func CreateBuilder() *cobra.Command {
   atlas dataFederation privateEndpoints create 507f1f77bcf86cd799439011 --comment "comment"
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.endpointId = args[0]
+			opts.endpointID = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),

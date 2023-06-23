@@ -62,7 +62,7 @@ func TestDescribe_Run(t *testing.T) {
 	}
 	assert.Equal(t, `NAME   STATE
 test   state
-`, buf.String()) // TODO change here
+`, buf.String())
 	t.Log(buf.String())
 }
 

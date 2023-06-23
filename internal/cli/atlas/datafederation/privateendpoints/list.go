@@ -26,11 +26,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ENDPOINT ID	COMMENT	TYPE{{range .}}
+var listTemplate = `ENDPOINT ID	COMMENT	TYPE{{range .Results}}
 {{.EndpointId}}	{{.Comment}}	{{.Type}}
 {{end}}
 `

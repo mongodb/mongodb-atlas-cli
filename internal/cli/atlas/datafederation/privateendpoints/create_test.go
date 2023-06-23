@@ -19,32 +19,53 @@
 package privateendpoints
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDataFederationPrivateEndpointCreator(ctrl)
 
-	var expected interface{} // TODO change here
+	buf := new(bytes.Buffer)
+	expected := &admin.PaginatedPrivateNetworkEndpointIdEntry{
+		TotalCount: pointer.Get(1),
+		Results: []admin.PrivateNetworkEndpointIdEntry{
+			{
+				EndpointId: "id",
+				Comment:    pointer.Get("comment"),
+			},
+		},
+	}
 
 	createOpts := &CreateOpts{
 		store: mockStore,
+		OutputOpts: cli.OutputOpts{
+			Template:  createTemplate,
+			OutWriter: buf,
+		},
 	}
 
 	mockStore.
 		EXPECT().
-		CreateDataFederationPrivateEndpoint(createOpts.ConfigProjectID(), *createOpts.newCreateRequest()).Return(expected, nil).
+		CreateDataFederationPrivateEndpoint(createOpts.ConfigProjectID(), createOpts.newCreateRequest()).Return(expected, nil).
 		Times(1)
 
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+
+	assert.Equal(t, `Data federation private endpoint id created.`, buf.String())
+	t.Log(buf.String())
 }
 
 func TestCreateBuilder(t *testing.T) {

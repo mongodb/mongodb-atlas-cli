@@ -26,15 +26,26 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDataFederationPrivateEndpointLister(ctrl)
 
-	var expected interface{} // TODO change here
+	expected := &admin.PaginatedPrivateNetworkEndpointIdEntry{
+		TotalCount: pointer.Get(1),
+		Results: []admin.PrivateNetworkEndpointIdEntry{
+			{
+				EndpointId: "id",
+				Comment:    pointer.Get("comment"),
+				Type:       pointer.Get("type"),
+			},
+		},
+	}
 
 	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{
@@ -55,7 +66,10 @@ func TestListOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, ``, buf.String()) // TODO change here
+	assert.Equal(t, `ENDPOINT ID   COMMENT   TYPE
+id            comment   type
+
+`, buf.String())
 	t.Log(buf.String())
 }
 

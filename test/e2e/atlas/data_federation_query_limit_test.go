@@ -56,6 +56,8 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			roleID,
 			"--awsTestS3Bucket",
 			testBucket,
+			"--projectId",
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -160,6 +162,8 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			datafederationEntity,
 			"delete",
 			dataFederationName,
+			"--projectId",
+			g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
 

@@ -30,9 +30,6 @@ import (
 )
 
 func TestDataFederationQueryLimit(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
-	g.generateProject("dataFederationQueryLimit")
-
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
@@ -56,8 +53,6 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			roleID,
 			"--awsTestS3Bucket",
 			testBucket,
-			"--projectId",
-			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -81,8 +76,6 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			"1000",
 			"--dataFederation",
 			dataFederationName,
-			"--projectId",
-			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 
@@ -103,8 +96,6 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			limitName,
 			"--dataFederation",
 			dataFederationName,
-			"--projectId",
-			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -123,8 +114,6 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			"ls",
 			"--dataFederation",
 			dataFederationName,
-			"--projectId",
-			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -145,8 +134,6 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			limitName,
 			"--dataFederation",
 			dataFederationName,
-			"--projectId",
-			g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
 
@@ -162,8 +149,6 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			datafederationEntity,
 			"delete",
 			dataFederationName,
-			"--projectId",
-			g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
 

@@ -61,9 +61,8 @@ func TestConfigList_Run(t *testing.T) {
 	}
 
 	params := &admin.ListAlertConfigurationsApiParams{
-		GroupId:      listOpts.ProjectID,
-		ItemsPerPage: &listOpts.ItemsPerPage,
-		PageNum:      &listOpts.PageNum,
+		GroupId: listOpts.ProjectID,
+		PageNum: &listOpts.PageNum,
 	}
 
 	mockStore.

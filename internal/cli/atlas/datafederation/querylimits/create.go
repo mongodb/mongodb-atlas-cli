@@ -106,8 +106,8 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
-	cmd.MarkFlagRequired(flag.DataFederation)
-	cmd.MarkFlagRequired(flag.Value)
+	_ = cmd.MarkFlagRequired(flag.DataFederation)
+	_ = cmd.MarkFlagRequired(flag.Value)
 
 	return cmd
 }

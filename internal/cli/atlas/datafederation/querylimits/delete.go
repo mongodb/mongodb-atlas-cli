@@ -84,7 +84,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
-	cmd.MarkFlagRequired(flag.DataFederation)
+	_ = cmd.MarkFlagRequired(flag.DataFederation)
 
 	return cmd
 }

@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-
 	"github.com/spf13/cobra"
 )
 
@@ -88,7 +87,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
-	cmd.MarkFlagRequired(flag.DataFederation)
+	_ = cmd.MarkFlagRequired(flag.DataFederation)
 
 	return cmd
 }

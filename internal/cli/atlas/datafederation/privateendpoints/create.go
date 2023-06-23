@@ -60,10 +60,9 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newCreateRequest() *admin.PrivateNetworkEndpointIdEntry {
-	return &admin.PrivateNetworkEndpointIdEntry{
-		EndpointId: opts.endpointID,
-		Comment:    &opts.comment,
-	}
+	p := admin.NewPrivateNetworkEndpointIdEntry(opts.endpointID)
+	p.Comment = &opts.comment
+	return p
 }
 
 // atlas dataFederation privateEndpoints create <endpointId> [--projectId projectId].

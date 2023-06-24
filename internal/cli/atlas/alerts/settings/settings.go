@@ -127,41 +127,14 @@ func (opts *ConfigOpts) newMetricThreshold() *admin.ServerlessMetricThreshold {
 	operator := strings.ToUpper(opts.metricThresholdOperator)
 	mode := strings.ToUpper(opts.metricThresholdMode)
 	units := strings.ToUpper(opts.metricThresholdUnits)
-	result := &admin.ServerlessMetricThreshold{}
-	switch metricName {
-	case "DATA":
-		result.DataMetricThreshold = &admin.DataMetricThreshold{
-			MetricName: &metricName,
-			Operator:   &operator,
-			Threshold:  &opts.metricThresholdThreshold,
-			Units:      &units,
-			Mode:       &mode,
-		}
-	case "RPU":
-		result.RPUMetricThreshold = &admin.RPUMetricThreshold{
-			MetricName: &metricName,
-			Operator:   &operator,
-			Threshold:  &opts.metricThresholdThreshold,
-			Units:      &units,
-			Mode:       &mode,
-		}
-	case "RAW":
-		result.RawMetricThreshold = &admin.RawMetricThreshold{
-			MetricName: &metricName,
-			Operator:   &operator,
-			Threshold:  &opts.metricThresholdThreshold,
-			Units:      &units,
-			Mode:       &mode,
-		}
-	case "TIME":
-		result.TimeMetricThreshold = &admin.TimeMetricThreshold{
-			MetricName: &metricName,
-			Operator:   &operator,
-			Threshold:  &opts.metricThresholdThreshold,
-			Units:      &units,
-			Mode:       &mode,
-		}
+	result := &admin.ServerlessMetricThreshold{
+		MetricName: &metricName,
+		Operator:   &operator,
+		Threshold:  &opts.metricThresholdThreshold,
+		Units:      &units,
+		Mode:       &mode,
 	}
+
 	return result
 }
 

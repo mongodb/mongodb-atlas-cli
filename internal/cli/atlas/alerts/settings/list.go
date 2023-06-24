@@ -50,9 +50,11 @@ var settingsListTemplate = `ID	TYPE	ENABLED{{range .Results}}
 
 func (opts *ListOpts) Run() error {
 	params := &admin.ListAlertConfigurationsApiParams{
-		GroupId:      opts.ConfigProjectID(),
-		ItemsPerPage: &opts.ItemsPerPage,
-		PageNum:      &opts.PageNum,
+		GroupId: opts.ConfigProjectID(),
+		PageNum: &opts.PageNum,
+	}
+	if opts.ItemsPerPage > 0 {
+		params.ItemsPerPage = &opts.ItemsPerPage
 	}
 	r, err := opts.store.AlertConfigurations(params)
 	if err != nil {

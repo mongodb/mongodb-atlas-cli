@@ -20,7 +20,9 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
@@ -118,6 +120,24 @@ func TestDataFederation(t *testing.T) {
 		if err = json.Unmarshal(resp, &dataLake); a.NoError(err) {
 			a.Equal(updateRegion, dataLake.DataProcessRegion.Region)
 		}
+	})
+
+	t.Run("Log", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			datafederationEntity,
+			"log",
+			dataFederationName,
+			"--out",
+			"-",
+			"--start",
+			strconv.FormatInt(time.Now().Add(-10*time.Second).Unix(), 10),
+			"--end",
+			strconv.FormatInt(time.Now().Unix(), 10),
+			"--force")
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		r.NoError(err, string(resp))
 	})
 
 	t.Run("Delete", func(t *testing.T) {

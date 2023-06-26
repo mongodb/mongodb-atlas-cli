@@ -85,7 +85,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
 			var r atlasv2.DataFederationTenantQueryLimit
 			if err = json.Unmarshal(resp, &r); a.NoError(err) {
-				a.Equal(dataFederationName, r.TenantName)
+				a.Equal(dataFederationName, *r.TenantName)
 			}
 		}
 	})

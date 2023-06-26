@@ -73,7 +73,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			"create",
 			limitName,
 			"--value",
-			"1000",
+			"118000000000",
 			"--dataFederation",
 			dataFederationName,
 			"--overrunPolicy",

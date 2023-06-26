@@ -76,6 +76,8 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			"1000",
 			"--dataFederation",
 			dataFederationName,
+			"--overrunPolicy",
+			"BLOCK",
 			"-o=json")
 		cmd.Env = os.Environ()
 

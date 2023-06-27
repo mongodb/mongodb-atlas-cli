@@ -71,7 +71,8 @@ func DescribeBuilder() *cobra.Command {
   %s streams describe myProcessor --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
-			"output": describeTemplate,
+			"nameDesc": "Name of the Atlas Streams processor instance.",
+			"output":   describeTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

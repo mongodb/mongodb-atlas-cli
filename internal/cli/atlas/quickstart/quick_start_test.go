@@ -49,6 +49,7 @@ func TestBuilder(t *testing.T) {
 			flag.EnableTerminationProtection,
 			flag.SkipMongosh,
 			flag.SkipSampleData,
+			flag.Tag,
 		},
 	)
 }
@@ -81,6 +82,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		SkipMongosh:    true,
 		SkipSampleData: true,
 		Confirm:        true,
+		Tag:            map[string]string{"env": "test"},
 	}
 	opts.WithFlow(mockFlow)
 

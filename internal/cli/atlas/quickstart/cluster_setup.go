@@ -112,6 +112,10 @@ func (opts *Opts) newCluster() *atlasv2.AdvancedClusterDescription {
 		TerminationProtectionEnabled: &opts.EnableTerminationProtection,
 	}
 
+	for k, v := range opts.Tag {
+		cluster.Tags = append(cluster.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+	}
+
 	if opts.providerName() != tenant {
 		diskSizeGB := defaultDiskSizeGB(opts.providerName(), opts.Tier)
 		mdbVersion, _ := cli.DefaultMongoDBMajorVersion()

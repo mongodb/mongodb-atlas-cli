@@ -44,6 +44,7 @@ func TestBuilder(t *testing.T) {
 			flag.Password,
 			flag.SkipMongosh,
 			flag.SkipSampleData,
+			flag.Tag,
 		},
 	)
 }

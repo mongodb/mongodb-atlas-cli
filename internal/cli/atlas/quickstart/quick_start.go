@@ -118,6 +118,7 @@ type Opts struct {
 	Confirm                     bool
 	CurrentIP                   bool
 	EnableTerminationProtection bool
+	Tag                         map[string]string
 	store                       store.AtlasClusterQuickStarter
 	shouldRunLogin              bool
 	flags                       *pflag.FlagSet
@@ -135,6 +136,7 @@ type quickstart struct {
 	EnableTerminationProtection bool
 	SkipSampleData              bool
 	SkipMongosh                 bool
+	Tag                         map[string]string
 }
 
 type Flow interface {
@@ -456,6 +458,7 @@ func (opts *Opts) newDefaultValues() (*quickstart, error) {
 
 	values.Tier = opts.Tier
 	values.EnableTerminationProtection = opts.EnableTerminationProtection
+	values.Tag = opts.Tag
 
 	return values, nil
 }
@@ -488,6 +491,7 @@ func (opts *Opts) replaceWithDefaultSettings(values *quickstart) {
 	opts.EnableTerminationProtection = values.EnableTerminationProtection
 	opts.SkipSampleData = values.SkipSampleData
 	opts.SkipMongosh = values.SkipMongosh
+	opts.Tag = values.Tag
 }
 
 func (opts *Opts) interactiveSetup() error {
@@ -565,6 +569,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.ForceQuickstart)
 	cmd.Flags().BoolVar(&opts.CurrentIP, flag.CurrentIP, false, usage.CurrentIPSimplified)
 	cmd.Flags().BoolVar(&opts.EnableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
+	cmd.Flags().StringToStringVar(&opts.Tag, flag.Tag, nil, usage.Tag)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

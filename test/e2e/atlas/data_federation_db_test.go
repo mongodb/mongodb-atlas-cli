@@ -125,7 +125,7 @@ func TestDataFederation(t *testing.T) {
 	t.Run("Log", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
-			"log",
+			"logs",
 			dataFederationName,
 			"--out",
 			"-",

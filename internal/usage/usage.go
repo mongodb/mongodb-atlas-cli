@@ -441,6 +441,6 @@ dbName and collection are required only for built-in roles.`
 	DataFederationFile                        = "Path to an optional JSON configuration file that defines data federation settings."
 	DataFederationType                        = "Type of Federated Database Instances to return."
 	DataFederation                            = "Identifier of the Federated Database Instance."
-	Value                                     = "Value given to the query limit."
+	DataFederationQueryLimitValue             = "Value given to the query limit."
 	OverrunPolicy                             = "Action to take when the usage limit is exceeded."
 )

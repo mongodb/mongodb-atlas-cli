@@ -34,8 +34,10 @@ import (
 	"golang.org/x/crypto/pbkdf2"
 )
 
-const pbkdf2Iterations = 1000
-const pbkdf2KeyLength = 16
+const (
+	pbkdf2Iterations = 1000
+	pbkdf2KeyLength  = 16
+)
 
 func generateAuthTokenString(authTokenPassword string) string {
 	salt := []byte(authTokenPassword)
@@ -86,6 +88,9 @@ func generateMultiPartForm(filePath string, fields map[string]string) (buffer *b
 		return nil, "", err
 	}
 	_, err = io.Copy(part, file)
+	if err != nil {
+		return nil, "", err
+	}
 	for k, v := range fields {
 		err = writer.WriteField(k, v)
 		if err != nil {
@@ -136,7 +141,7 @@ func sign(notaryURL, filePath, notarySigningKey, notarySigningComment, notaryAut
 }
 
 func downloadFile(ctx context.Context, url, localPath string) error {
-	req, err := http.NewRequestWithContext(ctx, "GET", url, http.NoBody)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, http.NoBody)
 	if err != nil {
 		return err
 	}

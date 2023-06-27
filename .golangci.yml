@@ -100,6 +100,8 @@ linters:
     - unconvert # Remove unnecessary type conversions [fast: false, auto-fix: false]
     - unparam # Reports unused function parameters [fast: false, auto-fix: false]
     - unused # (megacheck) Checks Go code for unused constants, variables, functions and types [fast: false, auto-fix: false]
+    - usestdlibvars # A linter that detect the possibility to use variables/constants from the Go standard library. [fast: true, auto-fix: false]
+    - wastedassign # wastedassign finds wasted assignment statements. [fast: false, auto-fix: false]
     - whitespace # Tool for detection of leading and trailing whitespace [fast: true, auto-fix: true]
 
   # don't enable:
@@ -159,10 +161,8 @@ linters:
   # - tagliatelle # Checks the struct tags. [fast: true, auto-fix: false]
   # - testpackage # linter that makes you use a separate _test package [fast: true, auto-fix: false]
   # - tparallel # tparallel detects inappropriate usage of t.Parallel() method in your Go test codes [fast: false, auto-fix: false]
-  # - usestdlibvars # A linter that detect the possibility to use variables/constants from the Go standard library. [fast: true, auto-fix: false]
   # - varcheck # [deprecated] Finds unused global variables and constants [fast: false, auto-fix: false]
   # - varnamelen # checks that the length of a variable's name matches its scope [fast: false, auto-fix: false]
-  # - wastedassign # wastedassign finds wasted assignment statements. [fast: false, auto-fix: false]
   # - wrapcheck # Checks that errors returned from external packages are wrapped [fast: false, auto-fix: false]
   # - wsl # Whitespace Linter - Forces you to use empty lines! [fast: true, auto-fix: false]
 

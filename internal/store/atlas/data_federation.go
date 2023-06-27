@@ -17,10 +17,12 @@
 package atlas
 
 import (
+	"os"
+
 	"go.mongodb.org/atlas-sdk/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_data_federation.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas DataFederationLister,DataFederationDescriber,DataFederationCreator,DataFederationUpdater,DataFederationDeleter
+//go:generate mockgen -destination=../../mocks/atlas/mock_data_federation.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas DataFederationLister,DataFederationDescriber,DataFederationCreator,DataFederationUpdater,DataFederationDeleter,DataFederationLogDownloader
 
 type DataFederationLister interface {
 	DataFederationList(string, string) ([]admin.DataLakeTenant, error)
@@ -40,6 +42,10 @@ type DataFederationDescriber interface {
 
 type DataFederationUpdater interface {
 	UpdateDataFederation(string, string, *admin.DataLakeTenant) (*admin.DataLakeTenant, error)
+}
+
+type DataFederationLogDownloader interface {
+	DataFederationLogs(string, string, int64, int64) (*os.File, error)
 }
 
 // DataFederationList encapsulates the logic to manage different cloud providers.
@@ -74,4 +80,17 @@ func (s *Store) UpdateDataFederation(projectID, id string, opts *admin.DataLakeT
 func (s *Store) DeleteDataFederation(projectID, id string) error {
 	_, _, err := s.clientv2.DataFederationApi.DeleteFederatedDatabase(s.ctx, projectID, id).Execute()
 	return err
+}
+
+// DataFederationLogs encapsulates the logic to manage different cloud providers.
+func (s *Store) DataFederationLogs(projectID, id string, startDate, endDate int64) (*os.File, error) {
+	req := s.clientv2.DataFederationApi.DownloadFederatedDatabaseQueryLogs(s.ctx, projectID, id)
+	if startDate != 0 {
+		req = req.StartDate(startDate)
+	}
+	if endDate != 0 {
+		req = req.EndDate(endDate)
+	}
+	result, _, err := req.Execute()
+	return result, err
 }

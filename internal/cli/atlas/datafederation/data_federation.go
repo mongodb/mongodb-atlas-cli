@@ -38,6 +38,7 @@ func Builder() *cobra.Command {
 		CreateBuilder(),
 		DeleteBuilder(),
 		UpdateBuilder(),
+		LogBuilder(),
 		privateendpoints.Builder(),
 		querylimits.Builder(),
 	)

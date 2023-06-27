@@ -1,8 +1,8 @@
-.. _atlas-privateEndpoints-onlineArchive-aws-create:
+.. _atlas-dataFederation-create:
 
-===============================================
-atlas privateEndpoints onlineArchive aws create
-===============================================
+===========================
+atlas dataFederation create
+===========================
 
 .. default-domain:: mongodb
 
@@ -12,13 +12,7 @@ atlas privateEndpoints onlineArchive aws create
    :depth: 1
    :class: singlecol
 
-Create a new Data Lake private endpoint for your project.
-
-When you run this command:
-- If the endpoint ID already exists and there is no change to the associated comment, Atlas Data Lake makes no change to the endpoint ID list.
-- If the endpoint ID already exists and there is a change to the associated comment, Atlas Data Lake updates the comment value only in the endpoint ID list.
-- If the endpoint ID doesn't exist, Atlas Data Lake appends the new endpoint to the list of endpoints in the endpoint ID list.
-Your API key must have the GROUP_ATLAS_ADMIN (Project Owner) role to create a private endpoint.
+Creates a new Data Federation database.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
@@ -28,9 +22,25 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas privateEndpoints onlineArchive aws create [options]
+   atlas dataFederation create <name> [options]
 
 .. Code end marker, please don't delete this comment
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - name
+     - string
+     - true
+     - Name of the data federation database
 
 Options
 -------
@@ -43,10 +53,18 @@ Options
      - Type
      - Required
      - Description
-   * - --comment
+   * - --awsRoleId
      - string
      - false
-     - Optional description or comment for the entry.
+     - Amazon Resource Name (ARN) of the role which Atlas Data Federation uses for accessing the data stores.
+   * - --awsTestS3Bucket
+     - string
+     - false
+     - Name of an Amazon S3 data bucket which Atlas Data Federation uses to validate the provided role.
+   * - -f, --file
+     - string
+     - false
+     - Path to an optional JSON configuration file that defines data federation settings.
    * - -h, --help
      - 
      - false
@@ -55,14 +73,14 @@ Options
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
-   * - --privateEndpointId
-     - string
-     - true
-     - Unique 22-character alphanumeric string that identifies the AWS PrivateLink connection in AWS. You can find this value on the AWS VPC Dashboard under Endpoints > VPC ID.
    * - --projectId
      - string
      - false
      - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
+   * - --region
+     - string
+     - false
+     - Name of the region to which Atlas Data Federation routes client connections for data processing.
 
 Inherited Options
 -----------------
@@ -87,6 +105,13 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   Data Lake private endpoint '{{ (index .Results 0).EndpointId >' created.
-   
+   Data federation <Name> created.
+
+Examples
+--------
+
+.. code-block::
+
+   # create data federation database:
+   atlas dataFederation create DataFederation1 --region us_east_1 --awsRoleId role --awsTestS3Bucket bucket
 

@@ -1,8 +1,8 @@
-.. _atlas-privateEndpoints-dataLakes-aws-describe:
+.. _atlas-dataFederation-privateEndpoints-describe:
 
-=============================================
-atlas privateEndpoints dataLakes aws describe
-=============================================
+==============================================
+atlas dataFederation privateEndpoints describe
+==============================================
 
 .. default-domain:: mongodb
 
@@ -12,9 +12,9 @@ atlas privateEndpoints dataLakes aws describe
    :depth: 1
    :class: singlecol
 
-Return a specific Data Lake private endpoint for your project.
+Return the details for the specified data federation private endpoints for your project.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
+To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas privateEndpoints dataLakes aws describe <privateEndpointId> [options]
+   atlas dataFederation privateEndpoints describe <endpointId> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -37,10 +37,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - privateEndpointId
+   * - endpointId
      - string
      - true
-     - Unique 22-character alphanumeric string that identifies the private endpoint.
+     - Endpoint identifier of the data federation private endpoints
 
 Options
 -------
@@ -82,21 +82,11 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
-Output
-------
-
-If the command succeeds, the CLI returns output similar to the following sample. Values in brackets represent your values.
-
-.. code-block::
-
-   ID             ENDPOINT PROVIDER   TYPE     COMMENT
-   <EndpointId>   <Provider>          <Type>   <Comment>
-   
-
 Examples
 --------
 
 .. code-block::
 
-   # This example uses the profile named "myprofile" for accessing Atlas.
-   atlas privateEndpoint dataLake aws describe vpce-abcdefg0123456789 -P myprofile
+   # retrieves data federation private endpoint '507f1f77bcf86cd799439011':
+   atlas dataFederation privateEndpoints describe 507f1f77bcf86cd799439011
+

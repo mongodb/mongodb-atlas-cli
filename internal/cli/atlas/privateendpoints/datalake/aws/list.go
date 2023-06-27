@@ -89,6 +89,11 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	if config.ToolName == config.AtlasCLI {
+		cmd.Deprecated = "Please use 'atlas datafederation privateendpoints list'"
+	}
+
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
 

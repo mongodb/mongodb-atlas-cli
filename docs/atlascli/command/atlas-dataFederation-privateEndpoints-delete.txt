@@ -1,8 +1,8 @@
-.. _atlas-dataLakes-describe:
+.. _atlas-dataFederation-privateEndpoints-delete:
 
-========================
-atlas dataLakes describe
-========================
+============================================
+atlas dataFederation privateEndpoints delete
+============================================
 
 .. default-domain:: mongodb
 
@@ -12,9 +12,9 @@ atlas dataLakes describe
    :depth: 1
    :class: singlecol
 
-Return the details for the specified federated database instance.
+Remove the specified data federation private endpoints from your project.
 
-To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.
+To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas dataLakes describe <name> [options]
+   atlas dataFederation privateEndpoints delete <endpointId> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -37,10 +37,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - name
+   * - endpointId
      - string
      - true
-     - Name of the federated database instance to retrieve.
+     - Endpoint identifier of the data federation private endpoints
 
 Options
 -------
@@ -53,14 +53,14 @@ Options
      - Type
      - Required
      - Description
+   * - --force
+     - 
+     - false
+     - Flag that indicates whether to skip the confirmation prompt before proceeding with the requested action.
    * - -h, --help
      - 
      - false
-     - help for describe
-   * - -o, --output
-     - string
-     - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - help for delete
    * - --projectId
      - string
      - false
@@ -89,8 +89,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   NAME     STATE
-   <Name>   <State>
+   '<Name>' deleted
    
 
 Examples
@@ -98,5 +97,6 @@ Examples
 
 .. code-block::
 
-   # Return the details for the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
-   atlas dataLakes describe myFDI --projectId 5e2211c17a3e5a48f5497de3 --output json
+   # deletes data federation private endpoint '507f1f77bcf86cd799439011':
+   atlas dataFederation privateEndpoints delete 507f1f77bcf86cd799439011
+

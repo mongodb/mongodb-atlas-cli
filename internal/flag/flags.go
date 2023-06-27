@@ -354,4 +354,7 @@ const (
 	CompactResponseShort                      = "c"                                         // CompactResponseShort flag
 	AWSRoleID                                 = "awsRoleId"                                 // AWSRoleID flag
 	AWSTestS3Bucket                           = "awsTestS3Bucket"                           // AWSTestS3Bucket flag
+	DataFederation                            = "dataFederation"                            // DataFederation flag
+	Value                                     = "value"                                     // Value flag
+	OverrunPolicy                             = "overrunPolicy"                             // OverrunPolicy flag
 )

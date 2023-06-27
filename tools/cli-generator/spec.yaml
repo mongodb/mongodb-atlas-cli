@@ -275,6 +275,62 @@ commands:
             example: |
               # create data federation private endpoint:
                 atlas dataFederation privateEndpoints create 507f1f77bcf86cd799439011 --comment "comment"
+      - command_path: atlas dataFederation queryLimits
+        package_name: querylimits
+        description: Data federation query limits.
+        template: parent
+        sub_commands:
+          - command_path: atlas dataFederation queryLimits list
+            package_name: querylimits
+            store_name: DataFederationQueryLimitLister
+            store_method: DataFederationQueryLimits
+            description: Returns all data federation query limits for your project.
+            template: list
+            output_template: |
+              TENANT NAME	NAME	VALUE{{range .}}
+              {{.TenantName}}	{{.Name}}	{{.Value}}
+              {{end}}
+            example: |
+              # list all data federation query limits:
+                atlas dataFederation queryLimits list
+          - command_path: atlas dataFederation queryLimits describe
+            package_name: querylimits
+            store_name: DataFederationQueryLimitDescriber
+            store_method: DataFederationQueryLimit
+            description: Return the details for the specified data federation query limit for your project.
+            template: describe
+            id_name: name
+            id_description: Identifier of the data federation query limit
+            output_template: |
+              TENANT NAME	NAME	VALUE
+              {{.TenantName}}	{{.Name}}	{{.Value}}
+            example: |
+              # retrieves data federation query limits "bytesProcessed.query" for 'DataFederation1':
+                atlas dataFederation queryLimits describe bytesProcessed.query --dataFederation DataFederation1
+          - command_path: atlas dataFederation queryLimits delete
+            package_name: querylimits
+            store_name: DataFederationQueryLimitDeleter
+            store_method: DeleteDataFederationQueryLimit
+            template: delete
+            description: Remove the specified data federation query limit from your project.
+            id_name: name
+            id_description: Identifier of the data federation query limit
+            example: |
+              # deletes data federation query limits "bytesProcessed.query" for 'DataFederation1':
+                atlas dataFederation queryLimits delete bytesProcessed.query --dataFederation DataFederation1
+          - command_path: atlas dataFederation queryLimits create
+            package_name: querylimits
+            store_name: DataFederationQueryLimitCreator
+            store_method: CreateDataFederationQueryLimit
+            template: create
+            description: Creates a new Data Federation query limit.
+            id_name: name
+            id_description: Identifier of the data federation query limit
+            output_template: Data federation query limit {{.Name}} created.
+            request_type: 'admin.PrivateNetworkEndpointIdEntry'
+            example: |
+              # create data federation query limit:
+                atlas dataFederation queryLimit create bytesProcessed.query --value 1000 --dataFederation DataFederation1
 stores:
   - base_file_name: data_lake_pipelines
     template: store
@@ -372,3 +428,25 @@ stores:
       name: DataFederationPrivateEndpointDeleter
       method: DeleteDataFederationPrivateEndpoint
       sdk_method: DataFederationApi.DeleteDataFederationPrivateEndpoint
+  - base_file_name: data_federation_query_limits
+    template: store
+    lister:
+      name: DataFederationQueryLimitLister
+      method: DataFederationQueryLimits
+      sdk_method: DataFederationApi.ReturnFederatedDatabaseQueryLimits
+      return_type: '[]admin.DataFederationTenantQueryLimit'
+    describer:
+      name: DataFederationQueryLimitDescriber
+      method: DataFederationQueryLimit
+      sdk_method: DataFederationApi.ReturnFederatedDatabaseQueryLimit
+      return_type: '*admin.DataFederationTenantQueryLimit'
+    creator:
+      name: DataFederationQueryLimitCreator
+      method: CreateDataFederationQueryLimit
+      sdk_method: DataFederationApi.CreateOneDataFederationQueryLimit
+      arg_type: '*admin.DataFederationTenantQueryLimit'
+      return_type: '*admin.DataFederationTenantQueryLimit'
+    deleter:
+      name: DataFederationQueryLimitDeleter
+      method: DeleteDataFederationQueryLimit
+      sdk_method: DataFederationApi.DeleteOneDataFederationInstanceQueryLimit

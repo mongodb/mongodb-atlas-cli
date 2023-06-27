@@ -19,6 +19,7 @@ package datafederation
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datafederation/privateendpoints"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datafederation/querylimits"
 	"github.com/spf13/cobra"
 )
 
@@ -38,6 +39,7 @@ func Builder() *cobra.Command {
 		DeleteBuilder(),
 		UpdateBuilder(),
 		privateendpoints.Builder(),
+		querylimits.Builder(),
 	)
 
 	return cmd

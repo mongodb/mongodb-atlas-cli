@@ -48,6 +48,7 @@ const (
 	dbusersEntity                = "dbusers"
 	certsEntity                  = "certs"
 	privateEndpointsEntity       = "privateendpoints"
+	queryLimitsEntity            = "querylimits"
 	onlineArchiveEntity          = "onlineArchives"
 	projectEntity                = "project"
 	orgEntity                    = "org"

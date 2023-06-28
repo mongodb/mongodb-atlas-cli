@@ -259,7 +259,7 @@ dbName and collection are required only for built-in roles.`
 	SystemID                                  = "Unique identifier of the external system that manages this Ops Manager Project."
 	ExternalSystemName                        = "Identifying label for the external system that manages this Ops Manager Project."
 	DateField                                 = "Name of an already indexed date field from the documents."
-	PartitionFields                           = "Fields to use to partition data. You can specify up to two frequently queried fields, separated by a comma, in the following format: <fieldname>:<datatype>. The data type must match the data type of the field in the document."
+	PartitionFields                           = "Fields to use to partition data. You can specify up to two frequently queried fields separated by a comma."
 	ArchiveAfter                              = "Number of days after which to archive cluster data."
 	TargetProjectID                           = "Unique identifier of the project that contains the destination cluster for the restore job. You must specify a targetProjectId for automated restores."
 	APIAccessListIPEntry                      = "IP address that you want to add to the access list for your API key. To add more than one IP address, you can specify each address with a separate ip flag or specify the all addresses as a comma-separated list using one ip flag. You can't set both ip and cidr in the same command."

@@ -67,9 +67,11 @@ func TestAtlasUsers(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var user atlasv2.CloudAppUser
-		require.NoError(t, json.Unmarshal(resp, &user), string(resp))
+		if err := json.Unmarshal(resp, &user); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
 		assert.Equal(t, username, user.GetUsername())
-		orgID = user.GetRoles()[0].GetOrgId()
+		orgID = user.Roles[0].GetOrgId()
 		require.NotEmpty(t, orgID)
 	})
 

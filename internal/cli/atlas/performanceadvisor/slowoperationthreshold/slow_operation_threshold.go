@@ -15,6 +15,7 @@
 package slowoperationthreshold
 
 import (
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +23,7 @@ func Builder() *cobra.Command {
 	const use = "slowOperationThreshold"
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: []string{"slowOT", "sot", "slowMS"},
+		Aliases: cli.GenerateAliases(use, "slowOT", "sot", "slowMS"),
 		Short:   "Enable or disable management of the slow operation threshold for your cluster.",
 	}
 	cmd.AddCommand(

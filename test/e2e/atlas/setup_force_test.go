@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -43,6 +44,9 @@ func TestSetup(t *testing.T) {
 	dbUserUsername, err := RandUsername()
 	req.NoError(err)
 
+	tagKey := "env"
+	tagValue := "e2etest"
+
 	t.Run("Run", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			"setup",
@@ -51,6 +55,7 @@ func TestSetup(t *testing.T) {
 			"--skipMongosh",
 			"--skipSampleData",
 			"--projectId", g.projectID,
+			"--tag", tagKey+"="+tagValue,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -86,6 +91,27 @@ func TestSetup(t *testing.T) {
 		var user mongodbatlas.DatabaseUser
 		require.NoError(t, json.Unmarshal(resp, &user), string(resp))
 		assert.Equal(t, dbUserUsername, user.Username)
+	})
+
+	t.Run("Describe Cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"describe",
+			clusterName,
+			"-o=json",
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+
+		var cluster atlasv2.AdvancedClusterDescription
+		require.NoError(t, json.Unmarshal(resp, &cluster), string(resp))
+		assert.Equal(t, clusterName, *cluster.Name)
+
+		assert.Len(t, cluster.Tags, 1)
+		assert.Equal(t, tagKey, *cluster.Tags[0].Key)
+		assert.Equal(t, tagValue, *cluster.Tags[0].Value)
 	})
 
 	t.Run("Delete Cluster", func(t *testing.T) {

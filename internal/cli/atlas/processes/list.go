@@ -22,7 +22,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -64,20 +63,20 @@ func (opts *ListOpts) Run() error {
 }
 
 func (opts *ListOpts) newProcessesListParams() *atlasv2.ListAtlasProcessesApiParams {
-	listOpts := *opts.NewListOptions()
+	listOpts := opts.NewListOptions()
 	processesList := &atlasv2.ListAtlasProcessesApiParams{
 		GroupId: opts.ConfigProjectID(),
 	}
 	if listOpts.PageNum > 0 {
-		processesList.PageNum = pointer.Get(listOpts.PageNum)
+		processesList.PageNum = &listOpts.PageNum
 	}
 	if listOpts.ItemsPerPage > 0 {
-		processesList.ItemsPerPage = pointer.Get(listOpts.ItemsPerPage)
+		processesList.ItemsPerPage = &listOpts.ItemsPerPage
 	}
 	return processesList
 }
 
-// ListBuilder mongocli atlas process(es) list --projectId projectId [--page N] [--limit N].
+// ListBuilder atlas process(es) list --projectId projectId [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

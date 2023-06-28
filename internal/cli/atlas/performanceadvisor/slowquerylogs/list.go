@@ -19,6 +19,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/processes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -129,6 +130,8 @@ If you don't set the duration option or the since option, this command returns d
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
+	autocomplete := &processes.AutoCompleteOpts{}
+	_ = cmd.RegisterFlagCompletionFunc(flag.ProcessName, autocomplete.AutocompleteProcesses())
 	return cmd
 }
 

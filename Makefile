@@ -111,12 +111,12 @@ gen-docs: gen-docs-mongocli gen-docs-atlascli ## Generate docs for commands
 .PHONY: gen-docs-mongocli
 gen-docs-mongocli: ## Generate docs for mongocli commands
 	@echo "==> Generating docs for mongocli"
-	go run ./tools/mongoclidocs/main.go
+	go run -ldflags "$(MCLI_LINKER_FLAGS)" ./tools/mongoclidocs/main.go
 
 .PHONY: gen-docs-atlascli
 gen-docs-atlascli: ## Generate docs for atlascli commands
 	@echo "==> Generating docs for atlascli"
-	go run ./tools/atlasclidocs/main.go
+	go run -ldflags "$(ATLAS_LINKER_FLAGS)" ./tools/atlasclidocs/main.go
 
 .PHONY: build
 build: build-mongocli ## Generate a binary for mongocli

@@ -95,6 +95,10 @@ Your API key must have the GROUP_ATLAS_ADMIN (Project Owner) role to create a pr
 		},
 	}
 
+	if config.ToolName == config.AtlasCLI {
+		cmd.Deprecated = "Please use 'atlas datafederation privateendpoints create'"
+	}
+
 	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)
 	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
 

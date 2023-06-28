@@ -116,6 +116,10 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
+	if config.ToolName == config.AtlasCLI {
+		cmd.Deprecated = "Please use 'atlas datafederation update'"
+	}
+
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.DataLakeRegion)
 	cmd.Flags().StringVar(&opts.role, flag.Role, "", usage.DataLakeRole)
 	cmd.Flags().StringVar(&opts.testBucket, flag.TestBucket, "", usage.DataLakeTestBucket)

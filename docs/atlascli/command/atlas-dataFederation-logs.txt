@@ -1,8 +1,8 @@
-.. _atlas-privateEndpoints-dataLakes-aws-delete:
+.. _atlas-dataFederation-logs:
 
-===========================================
-atlas privateEndpoints dataLakes aws delete
-===========================================
+=========================
+atlas dataFederation logs
+=========================
 
 .. default-domain:: mongodb
 
@@ -12,9 +12,9 @@ atlas privateEndpoints dataLakes aws delete
    :depth: 1
    :class: singlecol
 
-Delete a specific Data Lake private endpoint for your project.
+Returns logs of the specified data federation database for your project.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 
 Syntax
 ------
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas privateEndpoints dataLakes aws delete <privateEndpointId> [options]
+   atlas dataFederation logs <name> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -37,10 +37,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - privateEndpointId
+   * - name
      - string
      - true
-     - Unique 22-character alphanumeric string that identifies the private endpoint.
+     - Name of the data federation database.
 
 Options
 -------
@@ -53,18 +53,30 @@ Options
      - Type
      - Required
      - Description
+   * - --end
+     - int
+     - false
+     - Timestamp in UNIX epoch format when the logs end.
    * - --force
      - 
      - false
-     - Flag that indicates whether to skip the confirmation prompt before proceeding with the requested action.
+     - Overwrites the destination file.
    * - -h, --help
      - 
      - false
-     - help for delete
+     - help for logs
+   * - --out
+     - string
+     - true
+     - Output file name. Uses the log name if the output file's name is not specified.
    * - --projectId
      - string
      - false
      - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
+   * - --start
+     - int
+     - false
+     - Timestamp in UNIX epoch format when the logs start.
 
 Inherited Options
 -----------------
@@ -82,19 +94,11 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
-Output
-------
-
-If the command succeeds, the CLI returns output similar to the following sample. Values in brackets represent your values.
-
-.. code-block::
-
-   Private endpoint '<Name>' deleted
-   
-
 Examples
 --------
 
 .. code-block::
 
-   atlas privateEndpoint dataLake aws delete vpce-0fcd9d80bbafe1607 --force
+   # download logs of data federation database 'DataFederation1':
+   atlas dataFederation logs DataFederation1
+

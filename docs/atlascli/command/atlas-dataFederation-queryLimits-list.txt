@@ -1,8 +1,8 @@
-.. _atlas-dataLakes-list:
+.. _atlas-dataFederation-queryLimits-list:
 
-====================
-atlas dataLakes list
-====================
+=====================================
+atlas dataFederation queryLimits list
+=====================================
 
 .. default-domain:: mongodb
 
@@ -12,9 +12,9 @@ atlas dataLakes list
    :depth: 1
    :class: singlecol
 
-Return all federated database instances for your project.
+Returns all data federation query limits for your project.
 
-To learn more about Atlas Data Federation (previously named Atlas Data Lake), see https://www.mongodb.com/docs/atlas/data-federation/overview/.
+To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 
 Syntax
 ------
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas dataLakes list [options]
+   atlas dataFederation queryLimits list [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -37,6 +37,10 @@ Options
      - Type
      - Required
      - Description
+   * - --dataFederation
+     - string
+     - true
+     - Identifier of the Federated Database Instance.
    * - -h, --help
      - 
      - false
@@ -71,5 +75,6 @@ Examples
 
 .. code-block::
 
-   # Return a JSON-formatted list of all federated database instances in the project with the ID 5e2211c17a3e5a48f5497de3:
-   atlas dataLakes list --projectId 5e2211c17a3e5a48f5497de3 --output json
+   # list all data federation query limits:
+   atlas dataFederation queryLimits list
+

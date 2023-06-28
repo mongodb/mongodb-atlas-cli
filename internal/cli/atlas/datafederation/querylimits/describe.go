@@ -67,7 +67,7 @@ func DescribeBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"nameDesc": "Identifier of the data federation query limit",
+			"nameDesc": "Identifier of the data federation query limit.",
 		},
 		Example: `# retrieves data federation query limits "bytesProcessed.query" for 'DataFederation1':
   atlas dataFederation queryLimits describe bytesProcessed.query --tenantName DataFederation1

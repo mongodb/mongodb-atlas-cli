@@ -66,7 +66,7 @@ func DescribeBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"nameDesc": "Name of the data federation database",
+			"nameDesc": "Name of the data federation database.",
 		},
 		Example: `# retrieves data federation 'DataFederation1':
   atlas dataFederation describe DataFederation1

@@ -29,7 +29,6 @@ func Builder() *cobra.Command {
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Data federation.",
-		Hidden:  true,
 	}
 
 	cmd.AddCommand(

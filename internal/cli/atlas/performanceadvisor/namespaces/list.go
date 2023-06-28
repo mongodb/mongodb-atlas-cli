@@ -96,7 +96,6 @@ If you don't set the duration option or the since option, this command returns d
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-				opts.MarkRequiredFlagsByService(cmd),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

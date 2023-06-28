@@ -52,6 +52,20 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Duration, flag.Since, flag.ProcessName, flag.HostID},
+		[]string{
+			flag.ProjectID,
+			flag.Duration,
+			flag.Since,
+			flag.ProcessName,
+		},
+	)
+}
+
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		1,
+		[]string{},
 	)
 }

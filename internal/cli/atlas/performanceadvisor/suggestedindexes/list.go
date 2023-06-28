@@ -39,7 +39,7 @@ type ListOpts struct {
 	store      store.PerformanceAdvisorIndexesLister
 	since      int64
 	duration   int64
-	namespaces string
+	namespaces []string
 	nIndexes   int64
 	nExamples  int64
 }
@@ -67,23 +67,23 @@ func (opts *ListOpts) Run() error {
 
 func (opts *ListOpts) newSuggestedIndexOptions(project, host string) *atlasv2.ListSuggestedIndexesApiParams {
 	params := &atlasv2.ListSuggestedIndexesApiParams{
-		GroupId:    project,
-		ProcessId:  host,
-		Namespaces: &[]string{opts.namespaces},
+		GroupId:   project,
+		ProcessId: host,
 	}
 	if opts.since != 0 {
-		sinceWorkaround := opts.since
-		params.Since = &sinceWorkaround
+		params.Since = &opts.since
 	}
 	if opts.duration != 0 {
-		durationWorkaround := opts.duration
-		params.Duration = &durationWorkaround
+		params.Duration = &opts.duration
 	}
 	if opts.nExamples != 0 {
 		params.NExamples = &opts.nExamples
 	}
 	if opts.nIndexes != 0 {
 		params.NIndexes = &opts.nIndexes
+	}
+	if len(opts.namespaces) > 0 {
+		params.Namespaces = &opts.namespaces
 	}
 	return params
 }
@@ -106,7 +106,6 @@ func ListBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-				opts.MarkRequiredFlagsByService(cmd),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -115,16 +114,31 @@ func ListBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.HostID, flag.HostID, "", usage.HostID)
+	_ = cmd.Flags().MarkDeprecated(flag.HostID, "Flag is invalid for MongoDB Atlas")
 	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessNameAtlasCLI)
+	_ = cmd.MarkFlagRequired(flag.ProcessName)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
-	cmd.Flags().StringVar(&opts.namespaces, flag.Namespaces, "", usage.SuggestedIndexNamespaces)
+	cmd.Flags().StringSliceVar(&opts.namespaces, flag.Namespaces, []string{}, usage.SuggestedIndexNamespaces)
 	cmd.Flags().Int64Var(&opts.nExamples, flag.NExamples, 0, usage.NExamples)
 	cmd.Flags().Int64Var(&opts.nIndexes, flag.NIndexes, 0, usage.NIndexes)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	return cmd
+}
+
+func Builder() *cobra.Command {
+	const use = "suggestedIndexes"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Get suggested indexes for collections experiencing slow queries",
+	}
+	cmd.AddCommand(
+		ListBuilder())
 
 	return cmd
 }

@@ -28,13 +28,13 @@ import (
 func TestBuildAtlasRoles(t *testing.T) {
 	type test struct {
 		input []string
-		want  []atlasv2.Role
+		want  []atlasv2.DatabaseUserRole
 	}
 
 	tests := []test{
 		{
 			input: []string{"admin"},
-			want: []atlasv2.Role{
+			want: []atlasv2.DatabaseUserRole{
 				{
 					RoleName:     "admin",
 					DatabaseName: "admin",
@@ -43,7 +43,7 @@ func TestBuildAtlasRoles(t *testing.T) {
 		},
 		{
 			input: []string{"admin@test"},
-			want: []atlasv2.Role{
+			want: []atlasv2.DatabaseUserRole{
 				{
 					RoleName:     "admin",
 					DatabaseName: "test",
@@ -52,7 +52,7 @@ func TestBuildAtlasRoles(t *testing.T) {
 		},
 		{
 			input: []string{"admin@test", "something"},
-			want: []atlasv2.Role{
+			want: []atlasv2.DatabaseUserRole{
 				{
 					RoleName:     "admin",
 					DatabaseName: "test",
@@ -65,7 +65,7 @@ func TestBuildAtlasRoles(t *testing.T) {
 		},
 		{
 			input: []string{"admin@db.collection"},
-			want: []atlasv2.Role{
+			want: []atlasv2.DatabaseUserRole{
 				{
 					RoleName:       "admin",
 					DatabaseName:   "db",
@@ -75,7 +75,7 @@ func TestBuildAtlasRoles(t *testing.T) {
 		},
 		{
 			input: []string{"admin@db.collection.name"},
-			want: []atlasv2.Role{
+			want: []atlasv2.DatabaseUserRole{
 				{
 					RoleName:       "admin",
 					DatabaseName:   "db",

@@ -28,7 +28,7 @@ func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationAPIKeyCreator(ctrl)
 
-	expected := &atlasv2.ApiUser{
+	expected := &atlasv2.ApiKeyUserDetails{
 		Id: new(string),
 	}
 

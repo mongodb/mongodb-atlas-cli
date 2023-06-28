@@ -32,7 +32,7 @@ func TestList_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	var expected []atlasv2.FTSIndex
+	var expected []atlasv2.ClusterSearchIndex
 
 	mockStore.
 		EXPECT().

@@ -33,7 +33,7 @@ func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPipelinesUpdater(ctrl)
 
-	var expected *atlasv2.IngestionPipeline
+	var expected *atlasv2.DataLakeIngestionPipeline
 
 	updateOpts := &UpdateOpts{
 		pipelineName: "id",

@@ -30,7 +30,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseRoleUpdater(ctrl)
 
-	expected := &atlasv2.CustomDBRole{}
+	expected := &atlasv2.UserCustomDBRole{}
 
 	updateOpts := &UpdateOpts{
 		store: mockStore,

@@ -69,7 +69,7 @@ func process(t *testing.T, cliPath, hostname, projectID string) {
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	require.NoError(t, err, string(resp))
-	var metrics *atlasv2.MeasurementsGeneralViewAtlas
+	var metrics *atlasv2.ApiMeasurementsGeneralViewAtlas
 	require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
 	assert.NotEmpty(t, metrics.Measurements)
 }
@@ -89,7 +89,7 @@ func processWithType(t *testing.T, cliPath, hostname, projectID string) {
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	require.NoError(t, err, string(resp))
-	var metrics *atlasv2.MeasurementsGeneralViewAtlas
+	var metrics *atlasv2.ApiMeasurementsGeneralViewAtlas
 	require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
 	assert.NotEmpty(t, metrics.Measurements)
 }
@@ -128,7 +128,7 @@ func databases(t *testing.T, cliPath, hostname, projectID string) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var metrics atlasv2.MeasurementsGeneralViewAtlas
+		var metrics atlasv2.ApiMeasurementsGeneralViewAtlas
 		require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
 		assert.NotEmpty(t, metrics.Measurements)
 	})
@@ -168,7 +168,7 @@ func disks(t *testing.T, cliPath, hostname, projectID string) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var metrics atlasv2.MeasurementsGeneralViewAtlas
+		var metrics atlasv2.ApiMeasurementsGeneralViewAtlas
 		require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
 		assert.NotEmpty(t, metrics.Measurements)
 	})

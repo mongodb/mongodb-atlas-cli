@@ -283,7 +283,7 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 	}
 
 	switch o := orgs.(type) {
-	case []atlasv2.Organization:
+	case []atlasv2.AtlasOrganization:
 		return opts.selectOrg(o)
 	case []*atlas.Organization:
 		return opts.selectOnPremOrg(o)
@@ -308,7 +308,7 @@ func (opts *DefaultSetterOpts) manualOrgID() error {
 	return nil
 }
 
-func (opts *DefaultSetterOpts) selectOrg(orgs []atlasv2.Organization) error {
+func (opts *DefaultSetterOpts) selectOrg(orgs []atlasv2.AtlasOrganization) error {
 	if len(orgs) == 1 {
 		opts.OrgID = *orgs[0].Id
 		return nil

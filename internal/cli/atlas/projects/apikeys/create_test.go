@@ -36,11 +36,11 @@ func TestCreate_Run(t *testing.T) {
 
 	createOpts.ProjectID = "5a0a1e7e0f2912c554080adc"
 
-	apiKey := &atlasv2.CreateProjectApiKey{
+	apiKey := &atlasv2.CreateAtlasProjectApiKey{
 		Desc:  &createOpts.description,
 		Roles: []string{},
 	}
-	expected := &atlasv2.ApiUser{}
+	expected := &atlasv2.ApiKeyUserDetails{}
 
 	mockStore.
 		EXPECT().

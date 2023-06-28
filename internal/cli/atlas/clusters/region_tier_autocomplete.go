@@ -27,8 +27,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type autoFunc func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective)
-
 type autoCompleteOpts struct {
 	cli.GlobalOpts
 	providers []string
@@ -36,7 +34,7 @@ type autoCompleteOpts struct {
 	store     store.CloudProviderRegionsLister
 }
 
-func (opts *autoCompleteOpts) autocompleteTier() autoFunc {
+func (opts *autoCompleteOpts) autocompleteTier() cli.AutoFunc {
 	return func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		opts.parseFlags(cmd)
 		if err := validate.Credentials(); err != nil {
@@ -84,7 +82,7 @@ func (opts *autoCompleteOpts) tierSuggestions(toComplete string) ([]string, erro
 	return suggestion, nil
 }
 
-func (opts *autoCompleteOpts) autocompleteRegion() autoFunc {
+func (opts *autoCompleteOpts) autocompleteRegion() cli.AutoFunc {
 	return func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		opts.parseFlags(cmd)
 		if err := validate.Credentials(); err != nil {

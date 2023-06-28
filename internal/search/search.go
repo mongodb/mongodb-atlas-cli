@@ -55,7 +55,7 @@ func AtlasClusterExists(clusters []atlas.Cluster, name string) bool {
 }
 
 // DefaultRegion returns the index of the default region.
-func DefaultRegion(regions []atlasv2.AvailableRegion) int {
+func DefaultRegion(regions []atlasv2.AvailableCloudProviderRegion) int {
 	for i, v := range regions {
 		if v.GetDefault() {
 			return i

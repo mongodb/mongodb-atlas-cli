@@ -52,7 +52,7 @@ func TestGCPOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			CreatePeeringConnection(opts.ProjectID, request).
-			Return(&atlasv2.GCPPeerVpc{}, nil).
+			Return(&atlasv2.GCPNetworkPeeringConnectionSettings{}, nil).
 			Times(1)
 		if err := opts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
@@ -75,7 +75,7 @@ func TestGCPOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			CreatePeeringConnection(opts.ProjectID, request).
-			Return(&atlasv2.GCPPeerVpc{}, nil).
+			Return(&atlasv2.GCPNetworkPeeringConnectionSettings{}, nil).
 			Times(1)
 		if err := opts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)

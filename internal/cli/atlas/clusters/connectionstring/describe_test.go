@@ -31,7 +31,7 @@ func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
 
-	expected := &admin.ClusterDescriptionV15{}
+	expected := &admin.AdvancedClusterDescription{}
 
 	describeOpts := &DescribeOpts{
 		name:  "test",

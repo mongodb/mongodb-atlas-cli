@@ -215,7 +215,7 @@ func fetchClusterNames(clustersProvider store.AtlasAllClustersLister, projectID 
 		return nil, err
 	}
 
-	if clusters, ok := response.(*atlasv2.PaginatedClusterDescriptionV15); ok {
+	if clusters, ok := response.(*atlasv2.PaginatedAdvancedClusterDescription); ok {
 		if clusters == nil {
 			return nil, ErrNoCloudManagerClusters
 		}

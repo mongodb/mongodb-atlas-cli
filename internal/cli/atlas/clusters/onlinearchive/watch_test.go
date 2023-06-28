@@ -31,7 +31,7 @@ func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOnlineArchiveDescriber(ctrl)
 
-	expected := &atlasv2.OnlineArchive{State: pointer.Get("IDLE")}
+	expected := &atlasv2.BackupOnlineArchive{State: pointer.Get("IDLE")}
 
 	opts := &WatchOpts{
 		clusterName: "test",

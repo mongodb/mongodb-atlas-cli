@@ -34,6 +34,7 @@ import (
 	atlasConfig "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdbroles"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdns"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datafederation"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalake"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalakepipelines"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/dbusers"
@@ -224,6 +225,7 @@ Use the --help flag with any command for more info on that command.`,
 		registerCmd,
 		figautocomplete.Builder(),
 		kubernetes.Builder(),
+		datafederation.Builder(),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)

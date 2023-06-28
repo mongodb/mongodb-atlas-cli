@@ -96,16 +96,16 @@ func (opts *CreateOpts) validate() error {
 	return nil
 }
 
-func (opts *CreateOpts) newCreateRequest() (*atlasv2.IngestionPipeline, error) {
+func (opts *CreateOpts) newCreateRequest() (*atlasv2.DataLakeIngestionPipeline, error) {
 	if opts.filename != "" {
-		pipeline := &atlasv2.IngestionPipeline{}
+		pipeline := &atlasv2.DataLakeIngestionPipeline{}
 		if err := file.Load(opts.fs, opts.filename, pipeline); err != nil {
 			return nil, err
 		}
 		return pipeline, nil
 	}
 
-	pipeline := &atlasv2.IngestionPipeline{
+	pipeline := &atlasv2.DataLakeIngestionPipeline{
 		Name: &opts.pipelineName,
 		Sink: &atlasv2.IngestionSink{
 			DLSIngestionSink: &atlasv2.DLSIngestionSink{
@@ -117,7 +117,8 @@ func (opts *CreateOpts) newCreateRequest() (*atlasv2.IngestionPipeline, error) {
 	}
 
 	for i, fieldName := range opts.sinkPartitionField {
-		pipeline.Sink.DLSIngestionSink.PartitionFields = append(pipeline.Sink.DLSIngestionSink.PartitionFields, *atlasv2.NewPartitionField(fieldName, i))
+		pipeline.Sink.DLSIngestionSink.PartitionFields = append(pipeline.Sink.DLSIngestionSink.PartitionFields,
+			*atlasv2.NewDataLakePipelinesPartitionField(fieldName, i))
 	}
 
 	for _, entry := range opts.transform {

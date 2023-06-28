@@ -56,8 +56,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newPrivateEndpointConnection() *atlasv2.CreateEndpointServiceRequest {
-	createRequest := &atlasv2.CreateEndpointServiceRequest{
+func (opts *CreateOpts) newPrivateEndpointConnection() *atlasv2.CloudProviderEndpointServiceRequest {
+	createRequest := &atlasv2.CloudProviderEndpointServiceRequest{
 		Region:       opts.region,
 		ProviderName: provider,
 	}

@@ -51,7 +51,7 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	var role *atlasv2.CustomDBRole
+	var role *atlasv2.UserCustomDBRole
 	if opts.append {
 		var err error
 		if role, err = opts.store.DatabaseRole(opts.ConfigProjectID(), opts.roleName); err != nil {
@@ -67,8 +67,8 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(out)
 }
 
-func (opts *UpdateOpts) newCustomDBRole(existingRole *atlasv2.CustomDBRole) *atlasv2.CustomDBRole {
-	out := &atlasv2.CustomDBRole{
+func (opts *UpdateOpts) newCustomDBRole(existingRole *atlasv2.UserCustomDBRole) *atlasv2.UserCustomDBRole {
+	out := &atlasv2.UserCustomDBRole{
 		InheritedRoles: convert.BuildAtlasInheritedRoles(opts.inheritedRoles),
 	}
 	actions := joinActions(convert.BuildAtlasActions(opts.action))

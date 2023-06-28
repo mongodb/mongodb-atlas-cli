@@ -34,7 +34,7 @@ func TestConfigList_Run(t *testing.T) {
 	mockStore := mocks.NewMockAlertConfigurationLister(ctrl)
 
 	expected := &admin.PaginatedAlertConfig{
-		Results: []admin.AlertConfigViewForNdsGroup{
+		Results: []admin.GroupAlertsConfig{
 			{
 				Id:              pointer.Get("test"),
 				GroupId:         pointer.Get("test"),
@@ -61,9 +61,8 @@ func TestConfigList_Run(t *testing.T) {
 	}
 
 	params := &admin.ListAlertConfigurationsApiParams{
-		GroupId:      listOpts.ProjectID,
-		ItemsPerPage: &listOpts.ItemsPerPage,
-		PageNum:      &listOpts.PageNum,
+		GroupId: listOpts.ProjectID,
+		PageNum: &listOpts.PageNum,
 	}
 
 	mockStore.

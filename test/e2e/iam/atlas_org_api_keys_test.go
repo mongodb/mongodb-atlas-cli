@@ -24,6 +24,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
@@ -50,7 +51,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var key atlasv2.ApiUser
+			var key atlasv2.ApiKeyUserDetails
 			if err := json.Unmarshal(resp, &key); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
@@ -58,9 +59,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			ID = *key.Id
 		}
 	})
-	if ID == "" {
-		assert.FailNow(t, "Failed to create API key")
-	}
+	require.NotEmpty(t, ID)
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -70,10 +69,8 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
 		var keys atlasv2.PaginatedApiApiUser
 		if err := json.Unmarshal(resp, &keys); err != nil {
 			t.Fatalf("unexpected error: %v", err)
@@ -90,11 +87,9 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-		var keys []atlasv2.ApiUser
+		var keys []atlasv2.ApiKeyUserDetails
 		if err := json.Unmarshal(resp, &keys); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -102,7 +97,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		newDesc := "e2e-test-atlas-org-updated"
+		const newDesc = "e2e-test-atlas-org-updated"
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -116,7 +111,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var key atlasv2.ApiUser
+			var key atlasv2.ApiKeyUserDetails
 			if err := json.Unmarshal(resp, &key); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
@@ -136,7 +131,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var key atlasv2.ApiUser
+			var key atlasv2.ApiKeyUserDetails
 			if err := json.Unmarshal(resp, &key); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}

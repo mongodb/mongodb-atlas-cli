@@ -45,7 +45,7 @@ type atlasE2ETestGenerator struct {
 	dbUser         string
 	tier           string
 	enableBackup   bool
-	firstProcess   *atlasv2.HostViewAtlas
+	firstProcess   *atlasv2.ApiHostViewAtlas
 	t              *testing.T
 }
 
@@ -349,7 +349,7 @@ func (g *atlasE2ETestGenerator) getHostname() (string, error) {
 }
 
 // getFirstProcess returns the first process of the project.
-func (g *atlasE2ETestGenerator) getFirstProcess() (*atlasv2.HostViewAtlas, error) {
+func (g *atlasE2ETestGenerator) getFirstProcess() (*atlasv2.ApiHostViewAtlas, error) {
 	g.t.Helper()
 
 	if g.firstProcess != nil {
@@ -366,7 +366,7 @@ func (g *atlasE2ETestGenerator) getFirstProcess() (*atlasv2.HostViewAtlas, error
 }
 
 // getHostname returns the list of processes.
-func (g *atlasE2ETestGenerator) getProcesses() ([]atlasv2.HostViewAtlas, error) {
+func (g *atlasE2ETestGenerator) getProcesses() ([]atlasv2.ApiHostViewAtlas, error) {
 	g.t.Helper()
 
 	if g.projectID == "" {

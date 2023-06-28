@@ -31,7 +31,7 @@ func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
 
-	expected := &atlasv2.ClusterDescriptionV15{StateName: pointer.Get("IDLE")}
+	expected := &atlasv2.AdvancedClusterDescription{StateName: pointer.Get("IDLE")}
 
 	opts := &WatchOpts{
 		name:  "test",

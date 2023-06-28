@@ -45,7 +45,7 @@ func TestDBUserList_Run(t *testing.T) {
 	}
 
 	expected := &atlasv2.PaginatedIntegration{
-		Results: []atlasv2.Integration{
+		Results: []atlasv2.ThridPartyIntegration{
 			{
 				Datadog: &atlasv2.Datadog{
 					Type:   pointer.Get("DATADOG"),

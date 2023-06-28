@@ -89,8 +89,8 @@ func (opts *VerifyOpts) Prompt() error {
 	return nil
 }
 
-func (opts *VerifyOpts) newLDAP() *atlasv2.NDSLDAPVerifyConnectivityJobRequestParams {
-	return &atlasv2.NDSLDAPVerifyConnectivityJobRequestParams{
+func (opts *VerifyOpts) newLDAP() *atlasv2.LDAPVerifyConnectivityJobRequestParams {
+	return &atlasv2.LDAPVerifyConnectivityJobRequestParams{
 		Hostname:           opts.hostname,
 		Port:               opts.port,
 		BindUsername:       opts.bindUsername,

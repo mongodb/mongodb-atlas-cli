@@ -41,12 +41,14 @@ const (
 	searchEntity                 = "search"
 	indexEntity                  = "index"
 	datalakeEntity               = "datalake"
+	datafederationEntity         = "datafederation"
 	datalakePipelineEntity       = "datalakepipeline"
 	alertsEntity                 = "alerts"
 	configEntity                 = "settings"
 	dbusersEntity                = "dbusers"
 	certsEntity                  = "certs"
 	privateEndpointsEntity       = "privateendpoints"
+	queryLimitsEntity            = "querylimits"
 	onlineArchiveEntity          = "onlineArchives"
 	projectEntity                = "project"
 	orgEntity                    = "org"
@@ -430,7 +432,7 @@ func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedInte
 	return false
 }
 
-func getIntegrationType(val atlasv2.Integration) string {
+func getIntegrationType(val atlasv2.ThridPartyIntegration) string {
 	switch {
 	case val.Datadog != nil:
 		return datadogEntity
@@ -762,7 +764,7 @@ func createDBUserWithCert(projectID, username string) error {
 	return nil
 }
 
-func ensureCluster(t *testing.T, cluster *atlasv2.ClusterDescriptionV15, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
+func ensureCluster(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.GetName())

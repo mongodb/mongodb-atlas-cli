@@ -29,7 +29,7 @@ type CloudProviderAccessRoleCreator interface {
 }
 
 type CloudProviderAccessRoleLister interface {
-	CloudProviderAccessRoles(string) (*atlasv2.CloudProviderAccess, error)
+	CloudProviderAccessRoles(string) (*atlasv2.CloudProviderAccessRoles, error)
 }
 
 type CloudProviderAccessRoleDeauthorizer interface {
@@ -58,7 +58,7 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlasv
 }
 
 // CloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
-func (s *Store) CloudProviderAccessRoles(groupID string) (*atlasv2.CloudProviderAccess, error) {
+func (s *Store) CloudProviderAccessRoles(groupID string) (*atlasv2.CloudProviderAccessRoles, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.CloudProviderAccessApi.ListCloudProviderAccessRoles(s.ctx, groupID).Execute()

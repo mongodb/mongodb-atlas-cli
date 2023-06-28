@@ -99,14 +99,14 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newDatabaseUser() *atlasv2.DatabaseUser {
+func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 	authDB := convert.AdminDB
 
 	if opts.isExternal() && opts.ldapType != group {
 		authDB = convert.ExternalAuthDB
 	}
 
-	return &atlasv2.DatabaseUser{
+	return &atlasv2.CloudDatabaseUser{
 		Roles:           convert.BuildAtlasRoles(opts.roles),
 		Scopes:          convert.BuildAtlasScopes(opts.scopes),
 		GroupId:         opts.ConfigProjectID(),

@@ -97,13 +97,13 @@ func defaultDiskSizeGB(provider, tier string) float64 {
 	return atlas.DefaultDiskSizeGB[strings.ToUpper(provider)][tier]
 }
 
-func (opts *Opts) newCluster() *atlasv2.ClusterDescriptionV15 {
-	cluster := &atlasv2.ClusterDescriptionV15{
+func (opts *Opts) newCluster() *atlasv2.AdvancedClusterDescription {
+	cluster := &atlasv2.AdvancedClusterDescription{
 		GroupId:          pointer.Get(opts.ConfigProjectID()),
 		ClusterType:      pointer.Get(replicaSet),
 		ReplicationSpecs: []atlasv2.ReplicationSpec{opts.newAdvanceReplicationSpec()},
 		Name:             &opts.ClusterName,
-		Labels: []atlasv2.NDSLabel{
+		Labels: []atlasv2.ComponentLabel{
 			{
 				Key:   &opts.LabelKey,
 				Value: &opts.LabelValue,
@@ -131,7 +131,7 @@ func (opts *Opts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
 	return atlasv2.ReplicationSpec{
 		NumShards:     &shards,
 		ZoneName:      &zoneName,
-		RegionConfigs: []atlasv2.RegionConfig{opts.newAdvancedRegionConfig()},
+		RegionConfigs: []atlasv2.CloudRegionConfig{opts.newAdvancedRegionConfig()},
 	}
 }
 
@@ -141,11 +141,11 @@ const (
 	atlasM5 = "M5"
 )
 
-func (opts *Opts) newAdvancedRegionConfig() atlasv2.RegionConfig {
+func (opts *Opts) newAdvancedRegionConfig() atlasv2.CloudRegionConfig {
 	providerName := opts.providerName()
 
 	priority := 7
-	regionConfig := atlasv2.RegionConfig{
+	regionConfig := atlasv2.CloudRegionConfig{
 		ProviderName: &providerName,
 		Priority:     &priority,
 		RegionName:   &opts.Region,
@@ -179,6 +179,7 @@ func (opts *quickstart) providerName() string {
 	return providerName(opts.Tier, opts.Provider)
 }
 
+// Regions overlap.
 func (opts *Opts) defaultRegions() ([]string, error) {
 	cloudProviders, err := opts.store.CloudProviderRegions(
 		opts.ConfigProjectID(),

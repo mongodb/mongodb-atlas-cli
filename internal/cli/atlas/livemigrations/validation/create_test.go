@@ -32,7 +32,7 @@ func TestLiveMigrationValidationCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLiveMigrationValidationsCreator(ctrl)
 
-	expected := atlasv2.Validation{}
+	expected := atlasv2.LiveImportValidation{}
 
 	createOpts := &CreateOpts{
 		LiveMigrationsOpts: options.LiveMigrationsOpts{

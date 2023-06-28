@@ -36,7 +36,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		OrganizationAPIKey(opts.OrgID, opts.id).
-		Return(&atlasv2.ApiUser{}, nil).
+		Return(&atlasv2.ApiKeyUserDetails{}, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {

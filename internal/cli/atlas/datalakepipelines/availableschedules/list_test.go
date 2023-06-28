@@ -36,7 +36,7 @@ func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPipelineAvailableSchedulesLister(ctrl)
 
-	expected := []atlasv2.PolicyItem{
+	expected := []atlasv2.DiskBackupApiPolicyItem{
 		{
 			Id:                pointer.Get("5e4e593f70dfbf1010295836"),
 			FrequencyInterval: 1,

@@ -65,8 +65,8 @@ type ConfigOpts struct {
 	metricThresholdThreshold        float64
 }
 
-func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.AlertConfigViewForNdsGroup {
-	out := new(admin.AlertConfigViewForNdsGroup)
+func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.GroupAlertsConfig {
+	out := new(admin.GroupAlertsConfig)
 
 	out.GroupId = &projectID
 	out.EventTypeName = pointer.Get(strings.ToUpper(opts.event))
@@ -80,13 +80,13 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.AlertConf
 		out.MetricThreshold = opts.newMetricThreshold()
 	}
 
-	out.Notifications = []admin.NotificationViewForNdsGroup{*opts.newNotification()}
+	out.Notifications = []admin.AlertsNotificationRootForGroup{*opts.newNotification()}
 
 	return out
 }
 
-func (opts *ConfigOpts) newNotification() *admin.NotificationViewForNdsGroup {
-	out := new(admin.NotificationViewForNdsGroup)
+func (opts *ConfigOpts) newNotification() *admin.AlertsNotificationRootForGroup {
+	out := new(admin.AlertsNotificationRootForGroup)
 	out.TypeName = pointer.Get(strings.ToUpper(opts.notificationType))
 	out.DelayMin = &opts.notificationDelayMin
 	out.IntervalMin = &opts.notificationIntervalMin
@@ -127,41 +127,14 @@ func (opts *ConfigOpts) newMetricThreshold() *admin.ServerlessMetricThreshold {
 	operator := strings.ToUpper(opts.metricThresholdOperator)
 	mode := strings.ToUpper(opts.metricThresholdMode)
 	units := strings.ToUpper(opts.metricThresholdUnits)
-	result := &admin.ServerlessMetricThreshold{}
-	switch metricName {
-	case "DATA":
-		result.DataMetricThreshold = &admin.DataMetricThreshold{
-			MetricName: &metricName,
-			Operator:   &operator,
-			Threshold:  &opts.metricThresholdThreshold,
-			Units:      &units,
-			Mode:       &mode,
-		}
-	case "RPU":
-		result.RPUMetricThreshold = &admin.RPUMetricThreshold{
-			MetricName: &metricName,
-			Operator:   &operator,
-			Threshold:  &opts.metricThresholdThreshold,
-			Units:      &units,
-			Mode:       &mode,
-		}
-	case "RAW":
-		result.RawMetricThreshold = &admin.RawMetricThreshold{
-			MetricName: &metricName,
-			Operator:   &operator,
-			Threshold:  &opts.metricThresholdThreshold,
-			Units:      &units,
-			Mode:       &mode,
-		}
-	case "TIME":
-		result.TimeMetricThreshold = &admin.TimeMetricThreshold{
-			MetricName: &metricName,
-			Operator:   &operator,
-			Threshold:  &opts.metricThresholdThreshold,
-			Units:      &units,
-			Mode:       &mode,
-		}
+	result := &admin.ServerlessMetricThreshold{
+		MetricName: &metricName,
+		Operator:   &operator,
+		Threshold:  &opts.metricThresholdThreshold,
+		Units:      &units,
+		Mode:       &mode,
 	}
+
 	return result
 }
 

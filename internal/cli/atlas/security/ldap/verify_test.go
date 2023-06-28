@@ -30,7 +30,7 @@ func TestVerify_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLDAPConfigurationVerifier(ctrl)
 
-	var expected *atlasv2.NDSLDAPVerifyConnectivityJobRequest
+	var expected *atlasv2.LDAPVerifyConnectivityJobRequest
 
 	opts := &VerifyOpts{
 		store: mockStore,

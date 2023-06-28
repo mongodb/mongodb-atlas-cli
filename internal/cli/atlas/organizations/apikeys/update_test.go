@@ -28,7 +28,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationAPIKeyUpdater(ctrl)
 
-	expected := &atlasv2.ApiUser{
+	expected := &atlasv2.ApiKeyUserDetails{
 		Id: new(string),
 	}
 

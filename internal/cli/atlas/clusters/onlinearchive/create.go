@@ -63,9 +63,9 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newOnlineArchive() *atlasv2.OnlineArchive {
+func (opts *CreateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchive {
 	partitions := opts.partitionFields()
-	a := &atlasv2.OnlineArchive{
+	a := &atlasv2.BackupOnlineArchive{
 		CollName: &opts.collection,
 		Criteria: &atlasv2.Criteria{
 			DateCriteria: &atlasv2.DateCriteria{

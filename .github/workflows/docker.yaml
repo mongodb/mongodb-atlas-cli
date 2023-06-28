@@ -11,6 +11,9 @@ jobs:
   push_to_registry:
     name: Publish docker image
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        golang: [1.19]
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3 

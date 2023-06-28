@@ -70,11 +70,11 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <endpointId>",
-		Short: "Creates a new Data Federation private endpoints.",
+		Short: "Creates a new Data Federation private endpoint.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"endpointIdDesc": "Endpoint identifier of the data federation private endpoints",
+			"endpointIdDesc": "Endpoint identifier of the data federation private endpoint.",
 			"output":         createTemplate,
 		},
 		Example: `# create data federation private endpoint:

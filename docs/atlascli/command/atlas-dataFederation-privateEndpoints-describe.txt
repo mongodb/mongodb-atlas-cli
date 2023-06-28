@@ -12,7 +12,7 @@ atlas dataFederation privateEndpoints describe
    :depth: 1
    :class: singlecol
 
-Return the details for the specified data federation private endpoints for your project.
+Return the details for the specified data federation private endpoint for your project.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
@@ -40,7 +40,7 @@ Arguments
    * - endpointId
      - string
      - true
-     - Endpoint identifier of the data federation private endpoints
+     - Endpoint identifier of the data federation private endpoint.
 
 Options
 -------

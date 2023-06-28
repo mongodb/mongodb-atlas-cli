@@ -49,9 +49,9 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-dataFederation-privateEndpoints-create` - Creates a new Data Federation private endpoints.
-* :ref:`atlas-dataFederation-privateEndpoints-delete` - Remove the specified data federation private endpoints from your project.
-* :ref:`atlas-dataFederation-privateEndpoints-describe` - Return the details for the specified data federation private endpoints for your project.
+* :ref:`atlas-dataFederation-privateEndpoints-create` - Creates a new Data Federation private endpoint.
+* :ref:`atlas-dataFederation-privateEndpoints-delete` - Remove the specified data federation private endpoint from your project.
+* :ref:`atlas-dataFederation-privateEndpoints-describe` - Return the details for the specified data federation private endpoint for your project.
 * :ref:`atlas-dataFederation-privateEndpoints-list` - Returns all data federation private endpoints for your project.
 
 

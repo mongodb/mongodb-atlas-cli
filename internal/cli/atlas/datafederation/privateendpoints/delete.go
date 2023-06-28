@@ -54,11 +54,11 @@ func DeleteBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "delete <endpointId>",
-		Short: "Remove the specified data federation private endpoints from your project.",
+		Short: "Remove the specified data federation private endpoint from your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"endpointIdDesc": "Endpoint identifier of the data federation private endpoints",
+			"endpointIdDesc": "Endpoint identifier of the data federation private endpoint.",
 			"output":         opts.SuccessMessage(),
 		},
 		Example: `# deletes data federation private endpoint '507f1f77bcf86cd799439011':

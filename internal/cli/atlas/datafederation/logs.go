@@ -74,7 +74,7 @@ func LogBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"nameDesc": "Name of the data federation database",
+			"nameDesc": "Name of the data federation database.",
 		},
 		Example: `# download logs of data federation database 'DataFederation1':
   atlas dataFederation logs DataFederation1

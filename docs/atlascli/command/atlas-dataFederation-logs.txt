@@ -40,7 +40,7 @@ Arguments
    * - name
      - string
      - true
-     - Name of the data federation database
+     - Name of the data federation database.
 
 Options
 -------

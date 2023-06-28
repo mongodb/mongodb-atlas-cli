@@ -40,7 +40,7 @@ Arguments
    * - name
      - string
      - true
-     - Identifier of the data federation query limit
+     - Identifier of the data federation query limit.
 
 Options
 -------

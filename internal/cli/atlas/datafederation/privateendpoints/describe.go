@@ -62,11 +62,11 @@ func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
 		Use:   "describe <endpointId>",
-		Short: "Return the details for the specified data federation private endpoints for your project.",
+		Short: "Return the details for the specified data federation private endpoint for your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"endpointIdDesc": "Endpoint identifier of the data federation private endpoints",
+			"endpointIdDesc": "Endpoint identifier of the data federation private endpoint.",
 		},
 		Example: `# retrieves data federation private endpoint '507f1f77bcf86cd799439011':
   atlas dataFederation privateEndpoints describe 507f1f77bcf86cd799439011

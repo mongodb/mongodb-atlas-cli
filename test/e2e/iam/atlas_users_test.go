@@ -48,7 +48,7 @@ func TestAtlasUsers(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var users atlasv2.PaginatedApiAppUser
+		var users *atlasv2.PaginatedApiAppUser
 		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
 		require.NotEmpty(t, users.Results)
 		username = users.Results[0].GetUsername()
@@ -66,7 +66,7 @@ func TestAtlasUsers(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var user atlasv2.CloudAppUser
+		var user *atlasv2.CloudAppUser
 		if err := json.Unmarshal(resp, &user); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -86,7 +86,7 @@ func TestAtlasUsers(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var user atlasv2.CloudAppUser
+		var user *atlasv2.CloudAppUser
 		require.NoError(t, json.Unmarshal(resp, &user), string(resp))
 		assert.Equal(t, userID, user.GetId())
 	})
@@ -111,7 +111,7 @@ func TestAtlasUsers(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var user atlasv2.CloudAppUser
+		var user *atlasv2.CloudAppUser
 		if err := json.Unmarshal(resp, &user); assert.NoError(t, err) {
 			assert.Equal(t, emailUser, user.GetUsername())
 			assert.NotEmpty(t, user.GetId())

@@ -19,6 +19,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/processes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -126,6 +127,9 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	autocomplete := &processes.AutoCompleteOpts{}
+	_ = cmd.RegisterFlagCompletionFunc(flag.ProcessName, autocomplete.AutocompleteProcesses())
 
 	return cmd
 }

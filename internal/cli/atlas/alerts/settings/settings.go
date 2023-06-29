@@ -114,7 +114,6 @@ func (opts *ConfigOpts) newNotification() *admin.AlertsNotificationRootForGroup 
 		out.Roles = opts.notificationRoles
 	case microsoftTeams:
 		out.MicrosoftTeamsWebhookUrl = &opts.notificationWebhookURL
-		out.NotifierId = &opts.notifierID
 	case opsGenie:
 		out.OpsGenieApiKey = &opts.apiKey
 		region := strings.ToUpper(opts.notificationRegion)

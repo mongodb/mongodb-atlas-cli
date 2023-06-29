@@ -69,7 +69,12 @@ func TestAtlasUsers(t *testing.T) {
 		var user atlasv2.CloudAppUser
 		require.NoError(t, json.Unmarshal(resp, &user), string(resp))
 		assert.Equal(t, username, user.GetUsername())
-		orgID = user.GetRoles()[0].GetOrgId()
+		for i, item := range user.GetRoles() {
+			if item.HasOrgId() {
+				orgID = user.Roles[i].GetOrgId()
+				break
+			}
+		}
 		require.NotEmpty(t, orgID)
 	})
 

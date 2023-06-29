@@ -99,6 +99,7 @@ func TestDeployCluster(t *testing.T) {
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Shutdown", func(t *testing.T) {
+		t.Skip("Waiting for ManagedSharding API to get fixed") // CLOUDP-187091
 		cmd := exec.Command(cliPath,
 			entity,
 			clustersEntity,
@@ -157,6 +158,7 @@ func TestDeployCluster(t *testing.T) {
 }
 
 func TestDeployDeleteCluster(t *testing.T) {
+	t.Skip("Waiting for ManagedSharding API to get fixed") // CLOUDP-187091
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

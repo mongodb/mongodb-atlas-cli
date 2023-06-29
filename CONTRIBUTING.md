@@ -195,3 +195,15 @@ Reviewers, please ensure that the CLA has been signed by referring to [the contr
 
 For changes that involve user facing copy please include `docs-cloud-team` as a reviewer.
 
+## SDK integration
+
+Atlas CLI uses [atlas-sdk-go](https://github.com/mongodb/atlas-sdk-go) for API integration.
+Go SDK will be automatically updated for the new versions using dependabot.
+In situations when SDK does new major release developers need to specify version explicitly in the go update command. For example:
+
+```
+go get go.mongodb.org/atlas-sdk/v20230501001
+```
+
+Atlas CLI should be able to work with multiple versions of the SDK supporting various Resource Versions. 
+For more info please refer to the [SDK documentation](https://github.com/mongodb/atlas-sdk-go/blob/main/docs/doc_1_concepts.md#release-strategy-semantic-versioning)

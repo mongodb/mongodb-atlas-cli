@@ -997,9 +997,6 @@ tasks:
       - name: compile
         variant: "code_health"
         patch_optional: true
-      - name: cloud_manager_deploy_replica_set_e2e
-        variant: "e2e_cloud_manager_remote"
-        patch_optional: true
     commands:
       - func: "install gotestsum"
       - func: "build mongocli"

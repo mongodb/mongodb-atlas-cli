@@ -25,7 +25,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201001/admin"
 )
 
 func TestList_Run(t *testing.T) {

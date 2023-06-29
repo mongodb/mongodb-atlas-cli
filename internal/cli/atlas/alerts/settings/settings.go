@@ -17,23 +17,24 @@ package settings
 import (
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/admin"
 )
 
 const (
-	datadog = "DATADOG"
-	slack   = "SLACK"
-	victor  = "VICTOR_OPS"
-	email   = "EMAIL"
-	ops     = "OPS_GENIE"
-	pager   = "PAGER_DUTY"
-	sms     = "SMS"
-	group   = "GROUP"
-	user    = "USER"
-	org     = "ORG"
-	team    = "TEAM"
+	datadog        = "DATADOG"
+	slack          = "SLACK"
+	victor         = "VICTOR_OPS"
+	email          = "EMAIL"
+	opsGenie       = "OPS_GENIE"
+	pagerDuty      = "PAGER_DUTY"
+	sms            = "SMS"
+	group          = "GROUP"
+	user           = "USER"
+	org            = "ORG"
+	team           = "TEAM"
+	webhook        = "WEBHOOK"
+	microsoftTeams = "MICROSOFT_TEAMS"
 )
 
 // ConfigOpts contains all the information and functions to manage an alert configuration.
@@ -46,6 +47,7 @@ type ConfigOpts struct {
 	metricThresholdOperator         string
 	metricThresholdUnits            string
 	metricThresholdMode             string
+	notifierID                      string
 	notificationToken               string // notificationsApiToken, notificationsFlowdockApiToken
 	notificationChannelName         string
 	apiKey                          string // notificationsDatadogApiKey, notificationsOpsGenieApiKey, notificationsVictorOpsApiKey
@@ -57,6 +59,9 @@ type ConfigOpts struct {
 	notificationType                string
 	notificationUsername            string
 	notificationVictorOpsRoutingKey string
+	notificationWebhookURL          string
+	notificationWebhookSecret       string
+	notificationRoles               []string
 	notificationDelayMin            int
 	notificationIntervalMin         int
 	notificationSmsEnabled          bool
@@ -69,7 +74,8 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.GroupAler
 	out := new(admin.GroupAlertsConfig)
 
 	out.GroupId = &projectID
-	out.EventTypeName = pointer.Get(strings.ToUpper(opts.event))
+	eventType := strings.ToUpper(opts.event)
+	out.EventTypeName = &eventType
 	out.Enabled = &opts.enabled
 
 	if opts.matcherFieldName != "" {
@@ -87,36 +93,84 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.GroupAler
 
 func (opts *ConfigOpts) newNotification() *admin.AlertsNotificationRootForGroup {
 	out := new(admin.AlertsNotificationRootForGroup)
-	out.TypeName = pointer.Get(strings.ToUpper(opts.notificationType))
-	out.DelayMin = &opts.notificationDelayMin
-	out.IntervalMin = &opts.notificationIntervalMin
-	out.TeamId = &opts.notificationTeamID
-	out.Username = &opts.notificationUsername
-	out.ChannelName = &opts.notificationChannelName
-
+	notificationType := strings.ToUpper(opts.notificationType)
+	out.TypeName = &notificationType
 	switch out.GetTypeName() {
-	case victor:
-		out.VictorOpsApiKey = &opts.apiKey
-		out.VictorOpsRoutingKey = &opts.notificationVictorOpsRoutingKey
-	case slack:
-		out.VictorOpsApiKey = &opts.apiKey
-		out.VictorOpsRoutingKey = &opts.notificationVictorOpsRoutingKey
-		out.ApiToken = &opts.notificationToken
 	case datadog:
 		out.DatadogApiKey = &opts.apiKey
-		out.DatadogRegion = pointer.Get(strings.ToUpper(opts.notificationRegion))
+		region := strings.ToUpper(opts.notificationRegion)
+		out.DatadogRegion = &region
+		out.DelayMin = &opts.notificationDelayMin
+		out.IntervalMin = &opts.notificationIntervalMin
+		out.NotifierId = &opts.notifierID
 	case email:
+		out.DelayMin = &opts.notificationDelayMin
 		out.EmailAddress = &opts.notificationEmailAddress
-	case sms:
-		out.MobileNumber = &opts.notificationMobileNumber
-	case group, user, org:
-		out.SmsEnabled = &opts.notificationSmsEnabled
+		out.IntervalMin = &opts.notificationIntervalMin
+		out.NotifierId = &opts.notifierID
+	case group, org:
+		out.DelayMin = &opts.notificationDelayMin
 		out.EmailEnabled = &opts.notificationEmailEnabled
-	case ops:
+		out.NotifierId = &opts.notifierID
+		out.IntervalMin = &opts.notificationIntervalMin
+		out.SmsEnabled = &opts.notificationSmsEnabled
+		out.Roles = opts.notificationRoles
+	case microsoftTeams:
+		out.DelayMin = &opts.notificationDelayMin
+		out.IntervalMin = &opts.notificationIntervalMin
+		out.MicrosoftTeamsWebhookUrl = &opts.notificationWebhookURL
+		out.NotifierId = &opts.notifierID
+	case opsGenie:
+		out.DelayMin = &opts.notificationDelayMin
+		out.IntervalMin = &opts.notificationIntervalMin
+		out.NotifierId = &opts.notifierID
 		out.OpsGenieApiKey = &opts.apiKey
-		out.OpsGenieRegion = &opts.notificationRegion
-	case pager:
+		region := strings.ToUpper(opts.notificationRegion)
+		out.OpsGenieRegion = &region
+	case pagerDuty:
+		out.DelayMin = &opts.notificationDelayMin
+		out.IntervalMin = &opts.notificationIntervalMin
+		out.NotifierId = &opts.notifierID
+		region := strings.ToUpper(opts.notificationRegion)
+		out.Region = &region
 		out.ServiceKey = &opts.notificationServiceKey
+	case slack:
+		out.ApiToken = &opts.notificationToken
+		out.ChannelName = &opts.notificationChannelName
+		out.DelayMin = &opts.notificationDelayMin
+		out.IntervalMin = &opts.notificationIntervalMin
+		out.NotifierId = &opts.notifierID
+	case sms:
+		out.DelayMin = &opts.notificationDelayMin
+		out.IntervalMin = &opts.notificationIntervalMin
+		out.MobileNumber = &opts.notificationMobileNumber
+		out.NotifierId = &opts.notifierID
+	case team:
+		out.DelayMin = &opts.notificationDelayMin
+		out.EmailEnabled = &opts.notificationEmailEnabled
+		out.IntervalMin = &opts.notificationIntervalMin
+		out.NotifierId = &opts.notifierID
+		out.SmsEnabled = &opts.notificationSmsEnabled
+		out.TeamId = &opts.notificationTeamID
+	case user:
+		out.DelayMin = &opts.notificationDelayMin
+		out.EmailEnabled = &opts.notificationEmailEnabled
+		out.NotifierId = &opts.notifierID
+		out.IntervalMin = &opts.notificationIntervalMin
+		out.SmsEnabled = &opts.notificationSmsEnabled
+		out.Username = &opts.notificationUsername
+	case victor:
+		out.DelayMin = &opts.notificationDelayMin
+		out.IntervalMin = &opts.notificationIntervalMin
+		out.NotifierId = &opts.notifierID
+		out.VictorOpsApiKey = &opts.apiKey
+		out.VictorOpsRoutingKey = &opts.notificationVictorOpsRoutingKey
+	case webhook:
+		out.DelayMin = &opts.notificationDelayMin
+		out.IntervalMin = &opts.notificationIntervalMin
+		out.NotifierId = &opts.notifierID
+		out.WebhookUrl = &opts.notificationWebhookURL
+		out.WebhookSecret = &opts.notificationWebhookSecret
 	}
 
 	return out

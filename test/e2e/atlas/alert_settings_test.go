@@ -153,7 +153,7 @@ func TestAlertConfig(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		require.NoError(t, err, string(resp))
 
 		var fields []string
 		if err := json.Unmarshal(resp, &fields); err != nil {

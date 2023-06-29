@@ -146,6 +146,10 @@ const (
 	NotificationType                          = "notificationType"                          // NotificationType flag
 	NotificationUsername                      = "notificationUsername"                      // NotificationUsername flag
 	NotificationVictorOpsRoutingKey           = "notificationVictorOpsRoutingKey"           // NotificationVictorOpsRoutingKey flag
+	NotificationWebhookURL                    = "notificationWebhookUrl"                    // NotificationWebhookURL flag
+	NotificationWebhookSecret                 = "notificationWebhookSecret"                 // NotificationWebhookSecret flag
+	NotifierID                                = "notifierId"                                // NotifierID flag
+	NotificationRole                          = "notificationRole"                          // NotificationRoles flag
 	SnapshotID                                = "snapshotId"                                // SnapshotID flag
 	IndexName                                 = "indexName"                                 // IndexName flag
 	ClusterName                               = "clusterName"                               // ClusterName flag

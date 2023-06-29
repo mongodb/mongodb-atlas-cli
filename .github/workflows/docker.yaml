@@ -24,7 +24,7 @@ jobs:
       - name: Build
         run: make build-all                      
       - name: Build Image
-        run: docker build -t quay.io/mongodb/atlas-cli  .
+        run: docker buildx build -t atlas-cli --platform=linux/amd64 .
       ## Disabled for now
       # - name: Login
       #   run: docker login -u="${{secrets.CONTAINER_USER}}" -p="${{secrets.CONTAINER_SECRET}}" quay.io

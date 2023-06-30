@@ -163,8 +163,13 @@ func (opts *CreateOpts) applyOpts(out *atlasv2.AdvancedClusterDescription) {
 
 	out.ReplicationSpecs = []atlasv2.ReplicationSpec{replicationSpec}
 
+	if len(opts.tag) > 0 {
+		out.Tags = []atlasv2.ResourceTag{}
+	}
 	for k, v := range opts.tag {
-		out.Tags = append(out.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+		if k != "" && v != "" {
+			out.Tags = append(out.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+		}
 	}
 }
 

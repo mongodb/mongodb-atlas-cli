@@ -37,7 +37,7 @@ func TestCreate_Run(t *testing.T) {
 		interfaceEndpointID: "interfaceEndpointID",
 	}
 
-	expected := &atlasv2.AWSInterfaceEndpoint{}
+	expected := &atlasv2.CreateEndpointRequest{}
 	mockStore.
 		EXPECT().
 		CreateInterfaceEndpoint(createOpts.ProjectID, provider, createOpts.interfaceEndpointID, createOpts.newInterfaceEndpointConnection()).

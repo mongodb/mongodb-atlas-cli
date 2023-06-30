@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201001/admin"
 )
 
 type WatchOpts struct {
@@ -51,7 +50,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 		return false, err
 	}
 
-	endpointService := result.(*atlasv2.EndpointService)
+	endpointService := result
 	return endpointService.GetStatus() == "AVAILABLE" || endpointService.GetStatus() == "FAILED", nil
 }
 

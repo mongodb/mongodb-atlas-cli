@@ -58,11 +58,9 @@ func (opts *DatadogOpts) Run() error {
 
 func (opts *DatadogOpts) newDatadogIntegration() *atlasv2.ThridPartyIntegration {
 	return &atlasv2.ThridPartyIntegration{
-		Datadog: &atlasv2.Datadog{
-			Type:   &datadogType,
-			ApiKey: opts.apiKey,
-			Region: &opts.region,
-		},
+		Type:   &datadogType,
+		ApiKey: &opts.apiKey,
+		Region: &opts.region,
 	}
 }
 

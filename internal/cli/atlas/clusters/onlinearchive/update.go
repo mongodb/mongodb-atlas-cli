@@ -62,9 +62,7 @@ func (opts *UpdateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchive {
 	archive := &atlasv2.BackupOnlineArchive{
 		Id: &opts.id,
 		Criteria: &atlasv2.Criteria{
-			DateCriteria: &atlasv2.DateCriteria{
-				ExpireAfterDays: pointer.Get(opts.archiveAfter),
-			},
+			ExpireAfterDays: pointer.Get(opts.archiveAfter),
 		},
 	}
 	return archive

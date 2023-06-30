@@ -60,13 +60,11 @@ func (opts *NewRelicOpts) Run() error {
 
 func (opts *NewRelicOpts) newNewRelicIntegration() *atlasv2.ThridPartyIntegration {
 	return &atlasv2.ThridPartyIntegration{
-		NewRelic: &atlasv2.NewRelic{
-			Type:       &newRelicIntegrationType,
-			LicenseKey: opts.licenseKey,
-			AccountId:  opts.accountID,
-			WriteToken: opts.writeToken,
-			ReadToken:  opts.readToken,
-		},
+		Type:       &newRelicIntegrationType,
+		LicenseKey: &opts.licenseKey,
+		AccountId:  &opts.accountID,
+		WriteToken: &opts.writeToken,
+		ReadToken:  &opts.readToken,
 	}
 }
 

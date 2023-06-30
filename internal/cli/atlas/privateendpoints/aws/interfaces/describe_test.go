@@ -37,7 +37,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		privateEndpointServiceID: "id",
 	}
 
-	expected := &atlasv2.AWSInterfaceEndpoint{}
+	expected := &atlasv2.PrivateLinkEndpoint{}
 
 	mockStore.
 		EXPECT().

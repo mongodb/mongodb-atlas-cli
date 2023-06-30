@@ -638,7 +638,7 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 		t.Cleanup(func() {
 			deleteAllNetworkPeers(t, cliPath, generator.projectID, gcpEntity)
 		})
-		var createdNetworkPeer atlasv2.GCPNetworkPeeringConnectionSettings
+		var createdNetworkPeer atlasv2.BaseNetworkPeeringConnectionSettings
 		err = json.Unmarshal(resp, &createdNetworkPeer)
 		require.NoError(t, err)
 		expectedProject.Spec.NetworkPeers[0].ContainerID = createdNetworkPeer.ContainerId

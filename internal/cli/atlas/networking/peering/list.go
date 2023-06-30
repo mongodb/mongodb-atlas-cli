@@ -49,9 +49,8 @@ var listTemplate = `ID	STATUS	CONTAINER ID{{range .}}
 `
 
 func (opts *ListOpts) Run() error {
-	var r []interface{}
 	var err error
-	r, err = opts.store.PeeringConnections(opts.ConfigProjectID(), opts.newPeeringConnectionsListOptions())
+	r, err := opts.store.PeeringConnections(opts.ConfigProjectID(), opts.newPeeringConnectionsListOptions())
 	if err != nil {
 		return err
 	}

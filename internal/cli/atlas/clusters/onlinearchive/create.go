@@ -68,11 +68,9 @@ func (opts *CreateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchive {
 	a := &atlasv2.BackupOnlineArchive{
 		CollName: &opts.collection,
 		Criteria: &atlasv2.Criteria{
-			DateCriteria: &atlasv2.DateCriteria{
-				DateField:       &opts.dateField,
-				DateFormat:      &opts.dateFormat,
-				ExpireAfterDays: pointer.Get(opts.archiveAfter),
-			},
+			DateField:       &opts.dateField,
+			DateFormat:      &opts.dateFormat,
+			ExpireAfterDays: pointer.Get(opts.archiveAfter),
 		},
 		DbName:          &opts.dbName,
 		PartitionFields: partitions,

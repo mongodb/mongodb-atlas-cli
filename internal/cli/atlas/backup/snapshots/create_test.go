@@ -34,9 +34,7 @@ func TestCreateOpts_Run(t *testing.T) {
 
 	t.Run("diskBackupReplicaSet run", func(t *testing.T) {
 		expected := &atlasv2.DiskBackupSnapshot{
-			DiskBackupReplicaSet: &atlasv2.DiskBackupReplicaSet{
-				Id: pointer.Get("DiskBackupReplicaSetId"),
-			},
+			Id: pointer.Get("DiskBackupReplicaSetId"),
 		}
 		buf := new(bytes.Buffer)
 
@@ -66,9 +64,7 @@ func TestCreateOpts_Run(t *testing.T) {
 
 	t.Run("diskBackupReplicaSet run", func(t *testing.T) {
 		expected := &atlasv2.DiskBackupSnapshot{
-			DiskBackupShardedClusterSnapshot: &atlasv2.DiskBackupShardedClusterSnapshot{
-				Id: pointer.Get("DiskBackupShardedClusterSnapshotId"),
-			},
+			Id: pointer.Get("DiskBackupShardedClusterSnapshotId"),
 		}
 
 		buf := new(bytes.Buffer)

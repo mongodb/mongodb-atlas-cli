@@ -58,11 +58,9 @@ func (opts *OpsGenieOpts) Run() error {
 
 func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlasv2.ThridPartyIntegration {
 	return &atlasv2.ThridPartyIntegration{
-		OpsGenie: &atlasv2.OpsGenie{
-			Type:   &opsGenieType,
-			Region: &opts.region,
-			ApiKey: opts.apiKey,
-		},
+		Type:   &opsGenieType,
+		Region: &opts.region,
+		ApiKey: &opts.apiKey,
 	}
 }
 

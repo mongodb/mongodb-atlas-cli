@@ -56,9 +56,9 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newInterfaceEndpointConnection() *atlasv2.CreateEndpointRequest {
-	r := atlasv2.CreateAWSEndpointRequestAsCreateEndpointRequest(&atlasv2.CreateAWSEndpointRequest{
-		Id: opts.privateEndpointID,
-	})
+	r := atlasv2.CreateEndpointRequest{
+		Id: &opts.privateEndpointID,
+	}
 
 	return &r
 }

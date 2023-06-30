@@ -368,51 +368,51 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 		case pagerDutyIntegrationType:
 			integration.ServiceKeyRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.PagerDuty.ServiceKey)
+				secret.Data[secrets.PasswordField] = []byte(list.GetServiceKey())
 			}
 		case slackIntegrationType:
-			integration.TeamName = list.Slack.GetTeamName()
+			integration.TeamName = list.GetTeamName()
 			integration.APITokenRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.Slack.ApiToken)
+				secret.Data[secrets.PasswordField] = []byte(list.GetApiToken())
 			}
 		case datadogIntegrationType:
-			integration.Region = list.Datadog.GetRegion()
+			integration.Region = list.GetRegion()
 			integration.APIKeyRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.Datadog.ApiKey)
+				secret.Data[secrets.PasswordField] = []byte(list.GetApiKey())
 			}
 		case opsGenieIntegrationType:
-			integration.Region = list.OpsGenie.GetRegion()
+			integration.Region = list.GetRegion()
 			integration.APIKeyRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.OpsGenie.ApiKey)
+				secret.Data[secrets.PasswordField] = []byte(list.GetApiKey())
 			}
 		case webhookIntegrationType:
-			integration.URL = list.Webhook.Url
+			integration.URL = list.GetUrl()
 			integration.SecretRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.Webhook.GetSecret())
+				secret.Data[secrets.PasswordField] = []byte(list.GetSecret())
 			}
 		case microsoftTeamsIntegrationType:
-			integration.MicrosoftTeamsWebhookURL = list.MicrosoftTeams.MicrosoftTeamsWebhookUrl
+			integration.MicrosoftTeamsWebhookURL = list.GetMicrosoftTeamsWebhookUrl()
 		case prometheusIntegrationType:
-			integration.UserName = list.Prometheus.Username
+			integration.UserName = list.GetUsername()
 			integration.PasswordRef = secretRef
-			integration.ServiceDiscovery = list.Prometheus.ServiceDiscovery
-			integration.Enabled = list.Prometheus.Enabled
+			integration.ServiceDiscovery = list.GetServiceDiscovery()
+			integration.Enabled = list.GetEnabled()
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.Prometheus.GetPassword())
+				secret.Data[secrets.PasswordField] = []byte(list.GetPassword())
 			}
 		case victorOpsIntegrationType: // One more secret required
 			integration.APIKeyRef = secretRef
-			secret.Data[secrets.PasswordField] = []byte(list.VictorOps.ApiKey)
+			secret.Data[secrets.PasswordField] = []byte(list.GetApiKey())
 
 			var routingKeyData string
 			if includeSecrets {
-				routingKeyData = list.VictorOps.GetRoutingKey()
+				routingKeyData = list.GetRoutingKey()
 			}
-			if list.VictorOps.GetRoutingKey() != "" {
+			if list.GetRoutingKey() != "" {
 				// Secret with routing key
 				routingSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
 					targetNamespace,
@@ -421,12 +421,12 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 			}
 		case newRelicIntegrationType:
 			integration.LicenseKeyRef = secretRef
-			secret.Data[secrets.PasswordField] = []byte(list.NewRelic.LicenseKey)
+			secret.Data[secrets.PasswordField] = []byte(list.GetLicenseKey())
 			// Secrets with write and read tokens
 			var writeToken, readToken string
 			if includeSecrets {
-				writeToken = list.NewRelic.WriteToken
-				readToken = list.NewRelic.ReadToken
+				writeToken = list.GetWriteToken()
+				readToken = list.GetReadToken()
 			}
 			writeTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
 				targetNamespace,
@@ -446,28 +446,7 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 }
 
 func getIntegrationType(val atlasv2.ThridPartyIntegration) string {
-	switch {
-	case val.Datadog != nil:
-		return datadogIntegrationType
-	case val.MicrosoftTeams != nil:
-		return microsoftTeamsIntegrationType
-	case val.NewRelic != nil:
-		return newRelicIntegrationType
-	case val.OpsGenie != nil:
-		return opsGenieIntegrationType
-	case val.PagerDuty != nil:
-		return pagerDutyIntegrationType
-	case val.Prometheus != nil:
-		return prometheusIntegrationType
-	case val.Slack != nil:
-		return slackIntegrationType
-	case val.VictorOps != nil:
-		return victorOpsIntegrationType
-	case val.Webhook != nil:
-		return webhookIntegrationType
-	default:
-		return ""
-	}
+	return val.GetType()
 }
 
 func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID string) ([]atlasV1.PrivateEndpoint, error) {
@@ -545,49 +524,21 @@ func buildNetworkPeering(npProvider store.PeeringConnectionLister, projectID str
 	return result, nil
 }
 
-func convertNetworkPeer(np interface{}, providerName provider.ProviderName) atlasV1.NetworkPeer {
-	switch v := np.(type) {
-	case *atlasv2.AwsNetworkPeeringConnectionSettings:
-		return convertAWSNetworkPeer(v, providerName)
-	case *atlasv2.GCPNetworkPeeringConnectionSettings:
-		return convertGCPNetworkPeer(v, providerName)
-	case *atlasv2.AzureNetworkPeeringConnectionSettings:
-		return convertAzureNetworkPeer(v, providerName)
-	}
-	return atlasV1.NetworkPeer{}
-}
-
-func convertAWSNetworkPeer(np *atlasv2.AwsNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
+func convertNetworkPeer(np atlasv2.BaseNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
 	return atlasV1.NetworkPeer{
-		AccepterRegionName:  np.AccepterRegionName,
-		AWSAccountID:        np.AwsAccountId,
+		AzureDirectoryID:    np.GetAzureDirectoryId(),
+		AzureSubscriptionID: np.GetAzureSubscriptionId(),
 		ContainerRegion:     "",
 		ContainerID:         np.ContainerId,
 		ProviderName:        providerName,
-		RouteTableCIDRBlock: np.RouteTableCidrBlock,
-		VpcID:               np.VpcId,
-	}
-}
-
-func convertAzureNetworkPeer(np *atlasv2.AzureNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
-	return atlasV1.NetworkPeer{
-		AzureDirectoryID:    np.AzureDirectoryId,
-		AzureSubscriptionID: np.AzureSubscriptionId,
-		ContainerRegion:     "",
-		ContainerID:         np.ContainerId,
-		ProviderName:        providerName,
-		ResourceGroupName:   np.ResourceGroupName,
-		VNetName:            np.VnetName,
-	}
-}
-
-func convertGCPNetworkPeer(np *atlasv2.GCPNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
-	return atlasV1.NetworkPeer{
-		GCPProjectID:    np.GcpProjectId,
-		ContainerRegion: "",
-		ContainerID:     np.ContainerId,
-		ProviderName:    providerName,
-		NetworkName:     np.NetworkName,
+		ResourceGroupName:   np.GetResourceGroupName(),
+		VNetName:            np.GetVnetName(),
+		AccepterRegionName:  *np.AccepterRegionName,
+		AWSAccountID:        *np.AwsAccountId,
+		RouteTableCIDRBlock: *np.RouteTableCidrBlock,
+		VpcID:               *np.VpcId,
+		GCPProjectID:        np.GetGcpProjectId(),
+		NetworkName:         np.GetNetworkName(),
 	}
 }
 

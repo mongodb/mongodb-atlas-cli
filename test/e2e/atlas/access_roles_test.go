@@ -53,7 +53,7 @@ func TestAccessRoles(t *testing.T) {
 
 		var iamRole atlasv2.CloudProviderAccessRole
 		if err := json.Unmarshal(resp, &iamRole); a.NoError(err) {
-			a.Equal(aws, iamRole.CloudProviderAccessAWSIAMRole.ProviderName)
+			a.Equal(aws, iamRole.ProviderName)
 		}
 	})
 

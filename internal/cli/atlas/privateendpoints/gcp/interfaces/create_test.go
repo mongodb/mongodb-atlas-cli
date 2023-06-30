@@ -37,7 +37,7 @@ func TestCreate_Run(t *testing.T) {
 		privateEndpointGroupID:   "privateEndpointGroupID",
 	}
 
-	expected := &atlasv2.PrivateGCPEndpointGroup{}
+	expected := &atlasv2.PrivateLinkEndpoint{}
 	mockStore.
 		EXPECT().
 		CreateInterfaceEndpoint(createOpts.ProjectID, provider, createOpts.privateEndpointServiceID, createOpts.newInterfaceEndpointConnection()).

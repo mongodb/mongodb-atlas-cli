@@ -81,14 +81,11 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newInterfaceEndpointConnection() *atlasv2.CreateEndpointRequest {
-	r := atlasv2.CreateGCPEndpointGroupRequestAsCreateEndpointRequest(
-		&atlasv2.CreateGCPEndpointGroupRequest{
-			EndpointGroupName: opts.privateEndpointGroupID,
-			GcpProjectId:      opts.gcpProjectID,
-			Endpoints:         opts.parseEndpoints(),
-		},
-	)
-	return &r
+	return &atlasv2.CreateEndpointRequest{
+		EndpointGroupName: &opts.privateEndpointGroupID,
+		GcpProjectId:      &opts.gcpProjectID,
+		Endpoints:         opts.parseEndpoints(),
+	}
 }
 
 // mongocli atlas privateEndpoint(s) gcp interface(s) create <endpointGroupId> --endpointServiceId endpointServiceId --gcpProjectId gcpProjectId --endpoint endpointName1@ipAddress1,...,endpointNameN@ipAddressN [--projectId projectId].

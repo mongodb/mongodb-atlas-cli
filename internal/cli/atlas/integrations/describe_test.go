@@ -45,13 +45,11 @@ func TestDescribe_Run(t *testing.T) {
 	}
 
 	expected := &atlasv2.ThridPartyIntegration{
-		Slack: &atlasv2.Slack{
-			ApiToken: "testToken",
-			TeamName: pointer.Get("testTeam"),
-			Type:     pointer.Get("SLACK"),
-		},
+		ApiToken: pointer.Get("testToken"),
+		TeamName: pointer.Get("testTeam"),
+		Type:     pointer.Get("SLACK"),
 	}
-	expected.Slack.ChannelName.Set(pointer.Get("testChannel"))
+	expected.ChannelName.Set(pointer.Get("testChannel"))
 	mockStore.
 		EXPECT().
 		Integration(describeOpts.ProjectID, describeOpts.integrationType).

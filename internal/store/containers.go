@@ -45,7 +45,7 @@ func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersLis
 
 		containers := make([]interface{}, len(result.Results))
 		for i, container := range result.Results {
-			containers[i] = container.GetActualInstance()
+			containers[i] = &container
 		}
 
 		return containers, err
@@ -57,7 +57,7 @@ func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersLis
 const maxPerPage = 100
 
 // AzureContainers encapsulates the logic to manage different cloud providers.
-func (s *Store) AzureContainers(projectID string) ([]*atlasv2.AzureCloudProviderContainer, error) {
+func (s *Store) AzureContainers(projectID string) ([]atlasv2.CloudProviderContainer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
@@ -66,18 +66,14 @@ func (s *Store) AzureContainers(projectID string) ([]*atlasv2.AzureCloudProvider
 			ProviderName("Azure").
 			Execute()
 
-		containers := make([]*atlasv2.AzureCloudProviderContainer, len(result.Results))
-		for i, container := range result.Results {
-			containers[i] = container.GetActualInstance().(*atlasv2.AzureCloudProviderContainer)
-		}
-		return containers, err
+		return result.Results, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
 // AWSContainers encapsulates the logic to manage different cloud providers.
-func (s *Store) AWSContainers(projectID string) ([]*atlasv2.AWSCloudProviderContainer, error) {
+func (s *Store) AWSContainers(projectID string) ([]atlasv2.CloudProviderContainer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
@@ -86,18 +82,14 @@ func (s *Store) AWSContainers(projectID string) ([]*atlasv2.AWSCloudProviderCont
 			ProviderName("AWS").
 			Execute()
 
-		containers := make([]*atlasv2.AWSCloudProviderContainer, len(result.Results))
-		for i, container := range result.Results {
-			containers[i] = container.GetActualInstance().(*atlasv2.AWSCloudProviderContainer)
-		}
-		return containers, err
+		return result.Results, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
 // GCPContainers encapsulates the logic to manage different cloud providers.
-func (s *Store) GCPContainers(projectID string) ([]*atlasv2.GCPCloudProviderContainer, error) {
+func (s *Store) GCPContainers(projectID string) ([]atlasv2.CloudProviderContainer, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
@@ -106,11 +98,7 @@ func (s *Store) GCPContainers(projectID string) ([]*atlasv2.GCPCloudProviderCont
 			ProviderName("GCP").
 			Execute()
 
-		containers := make([]*atlasv2.GCPCloudProviderContainer, len(result.Results))
-		for i, container := range result.Results {
-			containers[i] = container.GetActualInstance().(*atlasv2.GCPCloudProviderContainer)
-		}
-		return containers, err
+		return result.Results, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -128,7 +116,7 @@ func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]inte
 
 		containers := make([]interface{}, len(result.Results))
 		for i, container := range result.Results {
-			containers[i] = container.GetActualInstance()
+			containers[i] = &container
 		}
 		return containers, err
 	default:
@@ -152,7 +140,7 @@ func (s *Store) Container(projectID, containerID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.NetworkPeeringApi.GetPeeringContainer(s.ctx, projectID, containerID).Execute()
-		return result.GetActualInstance(), err
+		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -163,7 +151,7 @@ func (s *Store) CreateContainer(projectID string, container *atlasv2.CloudProvid
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringContainer(s.ctx, projectID, container).Execute()
-		return result.GetActualInstance(), err
+		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

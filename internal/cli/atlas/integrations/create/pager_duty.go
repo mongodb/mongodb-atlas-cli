@@ -57,10 +57,8 @@ func (opts *PagerDutyOpts) Run() error {
 
 func (opts *PagerDutyOpts) newPagerDutyIntegration() *atlasv2.ThridPartyIntegration {
 	return &atlasv2.ThridPartyIntegration{
-		PagerDuty: &atlasv2.PagerDuty{
-			Type:       &pagerDutyIntegrationType,
-			ServiceKey: opts.serviceKey,
-		},
+		Type:       &pagerDutyIntegrationType,
+		ServiceKey: &opts.serviceKey,
 	}
 }
 

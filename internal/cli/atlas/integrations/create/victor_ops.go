@@ -58,11 +58,9 @@ func (opts *VictorOpsOpts) Run() error {
 
 func (opts *VictorOpsOpts) newVictorOpsIntegration() *atlasv2.ThridPartyIntegration {
 	return &atlasv2.ThridPartyIntegration{
-		VictorOps: &atlasv2.VictorOps{
-			Type:       &victorOpsIntegrationType,
-			ApiKey:     opts.apiKey,
-			RoutingKey: &opts.routingKey,
-		},
+		Type:       &victorOpsIntegrationType,
+		ApiKey:     &opts.apiKey,
+		RoutingKey: &opts.routingKey,
 	}
 }
 

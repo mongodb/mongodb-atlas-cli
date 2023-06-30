@@ -47,16 +47,13 @@ func TestDBUserList_Run(t *testing.T) {
 	expected := &atlasv2.PaginatedIntegration{
 		Results: []atlasv2.ThridPartyIntegration{
 			{
-				Datadog: &atlasv2.Datadog{
-					Type:   pointer.Get("DATADOG"),
-					ApiKey: "testsApiKey",
-				},
+				Type:   pointer.Get("DATADOG"),
+				ApiKey: pointer.Get("testsApiKey"),
 			},
 			{
-				MicrosoftTeams: &atlasv2.MicrosoftTeams{
-					Type:                     pointer.Get("MICROSOFT_TEAMS"),
-					MicrosoftTeamsWebhookUrl: "urlHook",
-				},
+
+				Type:                     pointer.Get("MICROSOFT_TEAMS"),
+				MicrosoftTeamsWebhookUrl: pointer.Get("urlHook"),
 			},
 		},
 	}

@@ -39,18 +39,14 @@ func TestListOpts_Run(t *testing.T) {
 	expected := &atlasv2.PaginatedBackupSnapshot{
 		Results: []atlasv2.DiskBackupSnapshot{
 			{
-				DiskBackupReplicaSet: &atlasv2.DiskBackupReplicaSet{
-					Id:          pointer.Get("5e4e593f70dfbf1010295836"),
-					Description: pointer.Get("test rs"),
-					Status:      pointer.Get("IDLE"),
-				},
+				Id:          pointer.Get("5e4e593f70dfbf1010295836"),
+				Description: pointer.Get("test rs"),
+				Status:      pointer.Get("IDLE"),
 			},
 			{
-				DiskBackupShardedClusterSnapshot: &atlasv2.DiskBackupShardedClusterSnapshot{
-					Id:          pointer.Get("5e4e593f70dfbf1010295638"),
-					Description: pointer.Get("test cluster"),
-					Status:      pointer.Get("IDLE"),
-				},
+				Id:          pointer.Get("5e4e593f70dfbf1010295638"),
+				Description: pointer.Get("test cluster"),
+				Status:      pointer.Get("IDLE"),
 			},
 		},
 		TotalCount: pointer.Get(2),

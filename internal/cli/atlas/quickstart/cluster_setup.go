@@ -112,8 +112,13 @@ func (opts *Opts) newCluster() *atlasv2.AdvancedClusterDescription {
 		TerminationProtectionEnabled: &opts.EnableTerminationProtection,
 	}
 
+	if len(opts.Tag) > 0 {
+		cluster.Tags = []atlasv2.ResourceTag{}
+	}
 	for k, v := range opts.Tag {
-		cluster.Tags = append(cluster.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+		if k != "" && v != "" {
+			cluster.Tags = append(cluster.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+		}
 	}
 
 	if opts.providerName() != tenant {

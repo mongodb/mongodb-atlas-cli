@@ -104,8 +104,13 @@ func (opts *UpdateOpts) patchOpts(out *atlasv2.AdvancedClusterDescription) {
 	}
 	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection)
 
+	if len(opts.tag) > 0 {
+		out.Tags = []atlasv2.ResourceTag{}
+	}
 	for k, v := range opts.tag {
-		out.Tags = append(out.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+		if k != "" && v != "" {
+			out.Tags = append(out.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+		}
 	}
 
 	AddLabel(out, NewCLILabel())

@@ -24,3 +24,6 @@ RUN microdnf install shadow-utils jq yum yum-utils &&\
     microdnf clean all
 
 RUN yum install -y mongodb-atlas
+
+ENTRYPOINT ["atlas"]
+CMD ["--help"]

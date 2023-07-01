@@ -25,8 +25,8 @@ import (
 //go:generate mockgen -destination=../mocks/mock_containers.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ContainersLister,ContainersDeleter
 
 type ContainersLister interface {
-	ContainersByProvider(string, *atlas.ContainersListOptions) ([]interface{}, error)
-	AllContainers(string, *atlas.ListOptions) ([]interface{}, error)
+	ContainersByProvider(string, *atlas.ContainersListOptions) ([]atlasv2.CloudProviderContainer, error)
+	AllContainers(string, *atlas.ListOptions) ([]atlasv2.CloudProviderContainer, error)
 }
 
 type ContainersDeleter interface {
@@ -34,7 +34,7 @@ type ContainersDeleter interface {
 }
 
 // ContainersByProvider encapsulates the logic to manage different cloud providers.
-func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersListOptions) ([]interface{}, error) {
+func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersListOptions) ([]atlasv2.CloudProviderContainer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID)
@@ -42,13 +42,7 @@ func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersLis
 			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).ProviderName(opts.ProviderName)
 		}
 		result, _, err := res.Execute()
-
-		containers := make([]interface{}, len(result.Results))
-		for i, container := range result.Results {
-			containers[i] = &container
-		}
-
-		return containers, err
+		return result.Results, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -105,7 +99,7 @@ func (s *Store) GCPContainers(projectID string) ([]atlasv2.CloudProviderContaine
 }
 
 // AllContainers encapsulates the logic to manage different cloud providers.
-func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]interface{}, error) {
+func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atlasv2.CloudProviderContainer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.NetworkPeeringApi.ListPeeringContainers(s.ctx, projectID)
@@ -113,12 +107,7 @@ func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]inte
 			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
 		result, _, err := res.Execute()
-
-		containers := make([]interface{}, len(result.Results))
-		for i, container := range result.Results {
-			containers[i] = &container
-		}
-		return containers, err
+		return result.Results, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

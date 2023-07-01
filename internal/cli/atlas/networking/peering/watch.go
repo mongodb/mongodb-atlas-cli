@@ -57,14 +57,14 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	
+
 	// TODO Need more context on what to do here
 	// switch v := result.(type) {
 	// 	// return watcherAWS(v), nil
 	// 	// return watcherAzure(v), nil
 	// 	// return watcherGCP(v), nil
 	// }
-	return watcherAWS(result) || watcherAzure(result) || watcherGCP(result) , nil
+	return watcherAWS(result) || watcherAzure(result) || watcherGCP(result), nil
 }
 
 func watcherGCP(peer *atlasv2.BaseNetworkPeeringConnectionSettings) bool {

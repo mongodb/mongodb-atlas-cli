@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/v20230201001/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -35,10 +36,10 @@ func (m *MockContainersLister) EXPECT() *MockContainersListerMockRecorder {
 }
 
 // AllContainers mocks base method.
-func (m *MockContainersLister) AllContainers(arg0 string, arg1 *mongodbatlas.ListOptions) ([]interface{}, error) {
+func (m *MockContainersLister) AllContainers(arg0 string, arg1 *mongodbatlas.ListOptions) ([]admin.CloudProviderContainer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AllContainers", arg0, arg1)
-	ret0, _ := ret[0].([]interface{})
+	ret0, _ := ret[0].([]admin.CloudProviderContainer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -50,10 +51,10 @@ func (mr *MockContainersListerMockRecorder) AllContainers(arg0, arg1 interface{}
 }
 
 // ContainersByProvider mocks base method.
-func (m *MockContainersLister) ContainersByProvider(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]interface{}, error) {
+func (m *MockContainersLister) ContainersByProvider(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]admin.CloudProviderContainer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ContainersByProvider", arg0, arg1)
-	ret0, _ := ret[0].([]interface{})
+	ret0, _ := ret[0].([]admin.CloudProviderContainer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

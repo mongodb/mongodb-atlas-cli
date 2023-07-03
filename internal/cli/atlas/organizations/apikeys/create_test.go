@@ -28,7 +28,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201001/admin"
 )
 
-
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationAPIKeyCreator(ctrl)

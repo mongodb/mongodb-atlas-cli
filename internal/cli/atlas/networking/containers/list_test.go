@@ -33,7 +33,7 @@ func TestList_Run(t *testing.T) {
 			store: mockStore,
 		}
 
-		var expected  []atlasv2.CloudProviderContainer;
+		var expected []atlasv2.CloudProviderContainer
 		mockStore.
 			EXPECT().
 			AllContainers(listOpts.ProjectID, listOpts.NewListOptions()).

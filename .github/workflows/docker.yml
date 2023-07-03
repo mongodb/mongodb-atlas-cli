@@ -13,4 +13,4 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3
       - name: Build Image
-        run: docker build --no-cache -t atlas .
+        run: docker buildx build --no-cache -t atlas .

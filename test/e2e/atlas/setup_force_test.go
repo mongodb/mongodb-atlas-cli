@@ -33,7 +33,6 @@ import (
 func TestSetup(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("setup")
-
 	cliPath, err := e2e.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
@@ -46,6 +45,24 @@ func TestSetup(t *testing.T) {
 
 	tagKey := "env"
 	tagValue := "e2etest"
+
+	t.Run("Incorrect Project ID Run", func(t *testing.T) {
+		incorrectProjectID := "111111111111111111111111" // this is 24 characters long, otherwise it will return an error early
+		cmd := exec.Command(cliPath,
+			"setup",
+			"--clusterName", clusterName,
+			"--username", dbUserUsername,
+			"--skipMongosh",
+			"--skipSampleData",
+			"--projectId", incorrectProjectID,
+			"--tag", tagKey+"="+tagValue,
+			"--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.Error(err)
+		t.Logf("response: %v", string(resp))
+		assert.Contains(t, string(resp), "GROUP_NOT_FOUND", "Expected incorrect Project ID error")
+	})
 
 	t.Run("Run", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

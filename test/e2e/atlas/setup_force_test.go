@@ -45,6 +45,7 @@ func TestSetup(t *testing.T) {
 
 	tagKey := "env"
 	tagValue := "e2etest"
+	accessListIP := "21.150.105.221" // randomly generated IP
 
 	t.Run("Run", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -55,11 +56,38 @@ func TestSetup(t *testing.T) {
 			"--skipSampleData",
 			"--projectId", g.projectID,
 			"--tag", tagKey+"="+tagValue,
+			"--accessListIp", accessListIP,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 		assert.Contains(t, string(resp), "Cluster created.", string(resp))
+	})
+
+	t.Run("Check accessListIp was correctly added", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			accessListEntity,
+			"ls",
+			"--projectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err)
+
+		var entries *atlasv2.PaginatedNetworkAccess
+		err = json.Unmarshal(resp, &entries)
+		req.NoError(err)
+
+		found := false
+		for i := range entries.Results {
+			if entries.Results[i].GetIpAddress() == accessListIP {
+				found = true
+				break
+			}
+		}
+
+		req.True(found)
 	})
 
 	t.Run("Watch Cluster", func(t *testing.T) {

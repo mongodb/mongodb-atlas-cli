@@ -65,6 +65,7 @@ func (opts *NewRelicOpts) newNewRelicIntegration() *atlasv2.ThridPartyIntegratio
 		AccountId:  &opts.accountID,
 		WriteToken: &opts.writeToken,
 		ReadToken:  &opts.readToken,
+		ChannelName: atlasv2.NullableString{},
 	}
 }
 

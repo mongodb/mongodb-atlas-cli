@@ -46,22 +46,57 @@ func TestSetup(t *testing.T) {
 	tagKey := "env"
 	tagValue := "e2etest"
 
-	t.Run("Incorrect Project ID Run", func(t *testing.T) {
-		incorrectProjectID := "111111111111111111111111" // this is 24 characters long, otherwise it will return an error early
+	t.Run("Invalid Public Key", func(t *testing.T) {
+		t.Setenv("MCLI_PUBLIC_API_KEY", "invalid_public_key")
 		cmd := exec.Command(cliPath,
 			"setup",
 			"--clusterName", clusterName,
 			"--username", dbUserUsername,
 			"--skipMongosh",
 			"--skipSampleData",
-			"--projectId", incorrectProjectID,
+			"--projectId", g.projectID,
 			"--tag", tagKey+"="+tagValue,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.Error(err)
-		t.Logf("response: %v", string(resp))
-		assert.Contains(t, string(resp), "GROUP_NOT_FOUND", "Expected incorrect Project ID error")
+		assert.Contains(t, string(resp), "Unauthorized", "Expected unauthorized error due to invalid public key.")
+	})
+
+	t.Run("Invalid Private Key", func(t *testing.T) {
+		t.Setenv("MCLI_PRIVATE_API_KEY", "invalid_private_key")
+		cmd := exec.Command(cliPath,
+			"setup",
+			"--clusterName", clusterName,
+			"--username", dbUserUsername,
+			"--skipMongosh",
+			"--skipSampleData",
+			"--projectId", g.projectID,
+			"--tag", tagKey+"="+tagValue,
+			"--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.Error(err)
+		assert.Contains(t, string(resp), "Unauthorized", "Expected unauthorized error due to invalid private key.")
+	})
+
+	t.Run("Invalid Project ID", func(t *testing.T) {
+		// The incorrect ProjectID should be 24 characters long, otherwise
+		// an error will be thrown about incorrect length.
+		invalidProjectID := "111111111111111111111111"
+		cmd := exec.Command(cliPath,
+			"setup",
+			"--clusterName", clusterName,
+			"--username", dbUserUsername,
+			"--skipMongosh",
+			"--skipSampleData",
+			"--projectId", invalidProjectID,
+			"--tag", tagKey+"="+tagValue,
+			"--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.Error(err)
+		assert.Contains(t, string(resp), "GROUP_NOT_FOUND", "Expected invalid Project ID error")
 	})
 
 	t.Run("Run", func(t *testing.T) {

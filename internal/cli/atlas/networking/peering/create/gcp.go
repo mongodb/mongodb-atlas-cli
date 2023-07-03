@@ -56,7 +56,7 @@ func (opts *GCPOpts) Run() error {
 	if container == nil {
 		var err2 error
 		r, err2 := opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
-		container = r.(*atlasv2.CloudProviderContainer)
+		container = r
 		if err2 != nil {
 			return err2
 		}

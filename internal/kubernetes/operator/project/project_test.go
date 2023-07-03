@@ -146,9 +146,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			VpcId:               pointer.Get("TestVPCID"),
 		}
 
-		peeringConnections := []interface{}{
-			peeringConnectionAWS,
-		}
+		peeringConnections := []atlasv2.BaseNetworkPeeringConnectionSettings{*peeringConnectionAWS}
 
 		privateAWSEndpoint := atlasv2.EndpointService{
 			Id:                  pointer.Get("TestID"),
@@ -1043,8 +1041,8 @@ func Test_buildNetworkPeering(t *testing.T) {
 			VpcId:               pointer.Get("TestVPCID"),
 		}
 
-		peeringConnections := []interface{}{
-			peeringConnectionAWS,
+		peeringConnections := []atlasv2.BaseNetworkPeeringConnectionSettings{
+			*peeringConnectionAWS,
 		}
 
 		listOptions := mongodbatlas.ListOptions{ItemsPerPage: MaxItems}

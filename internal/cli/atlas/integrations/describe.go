@@ -47,7 +47,7 @@ var describeTemplateSlack = `TYPE	API TOKEN	TEAM	CHANNEL
 {{.Slack.Type}}	{{.Slack.ApiToken}}	{{.Slack.TeamName}}	{{if .Slack.ChannelName.IsSet}} {{ .Slack.ChannelName.Get }} {{end}}
 `
 var describeTemplateDatadogOpsGenie = `TYPE	API KEY	REGION
-{{.GetActualInstance.Type}}	{{.GetActualInstance.ApiKey}}	{{.GetActualInstance.Region}}
+{{.Type}}	{{.ApiKey}}	{{.Region}}
 `
 var describeTemplateMicrosoftTeams = `TYPE	API TOKEN	FLOW NAME	ORGANIZATION
 {{.MicrosoftTeams.Type}}	{{.MicrosoftTeams.ApiToken}}	{{.MicrosoftTeams.FlowName}}	{{.MicrosoftTeams.OrgName}}

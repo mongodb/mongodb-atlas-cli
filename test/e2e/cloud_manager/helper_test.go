@@ -28,13 +28,14 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
 	alertsEntity      = "alerts"
-	testedMDBVersion  = "4.4.0"
-	testedMDBFCV      = "4.4"
+	testedMDBVersion  = "5.0.0"
+	testedMDBFCV      = "5.0"
 	entity            = "cloud-manager"
 	serversEntity     = "servers"
 	projectsEntity    = "projects"
@@ -296,7 +297,7 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 						WiredTiger: &map[string]interface{}{
 							"collectionConfig": map[string]interface{}{},
 							"engineConfig": map[string]interface{}{
-								"cacheSizeGB": 1,
+								"cacheSizeGB": 0.5,
 							},
 							"indexConfig": map[string]interface{}{},
 						},
@@ -311,7 +312,7 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 						WiredTiger: &map[string]interface{}{
 							"collectionConfig": map[string]interface{}{},
 							"engineConfig": map[string]interface{}{
-								"cacheSizeGB": 1,
+								"cacheSizeGB": 0.5,
 							},
 							"indexConfig": map[string]interface{}{},
 						},
@@ -326,7 +327,7 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 						WiredTiger: &map[string]interface{}{
 							"collectionConfig": map[string]interface{}{},
 							"engineConfig": map[string]interface{}{
-								"cacheSizeGB": 1,
+								"cacheSizeGB": 0.5,
 							},
 							"indexConfig": map[string]interface{}{},
 						},
@@ -343,6 +344,13 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 						Port:     28000,
 						Priority: pointer.Get[float64](1),
 						Votes:    pointer.Get[float64](1),
+						WiredTiger: &map[string]interface{}{
+							"collectionConfig": map[string]interface{}{},
+							"engineConfig": map[string]interface{}{
+								"cacheSizeGB": 0.5,
+							},
+							"indexConfig": map[string]interface{}{},
+						},
 					},
 					{
 						DBPath:   fmt.Sprintf("/data/%s/28001", clusterName),
@@ -351,6 +359,13 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 						Port:     28001,
 						Priority: pointer.Get[float64](1),
 						Votes:    pointer.Get[float64](1),
+						WiredTiger: &map[string]interface{}{
+							"collectionConfig": map[string]interface{}{},
+							"engineConfig": map[string]interface{}{
+								"cacheSizeGB": 0.5,
+							},
+							"indexConfig": map[string]interface{}{},
+						},
 					},
 					{
 						DBPath:   fmt.Sprintf("/data/%s/28002", clusterName),
@@ -359,6 +374,13 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 						Port:     28002,
 						Priority: pointer.Get[float64](1),
 						Votes:    pointer.Get[float64](1),
+						WiredTiger: &map[string]interface{}{
+							"collectionConfig": map[string]interface{}{},
+							"engineConfig": map[string]interface{}{
+								"cacheSizeGB": 0.5,
+							},
+							"indexConfig": map[string]interface{}{},
+						},
 					},
 				},
 			},
@@ -380,8 +402,7 @@ func watchAutomation(cliPath string) func(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	}
 }

@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
-var createTemplate = `API Key '{{.ID}}' created.
+var createTemplate = `API Key '{{.Id}}' created.
 Public API Key {{.PublicKey}}
 Private API Key {{.PrivateKey}}
 `

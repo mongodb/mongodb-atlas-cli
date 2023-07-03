@@ -2,8 +2,8 @@ name: Build CLI Docker image
 
 on:
   push:
-    branches:
-      - 'dockerfile-poc'
+    paths:
+      - 'Dockerfile'
 
 jobs:
   verify_image:

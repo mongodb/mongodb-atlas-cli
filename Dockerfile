@@ -23,7 +23,6 @@ RUN microdnf install jq yum &&\
     yum -y update &&\
     yum install -y mongodb-atlas &&\
     yum clean all &&\
-    microdnf clean all &&\
-    rm -rf /var/cache
+    microdnf clean all
 
 ENTRYPOINT ["/bin/bash"]

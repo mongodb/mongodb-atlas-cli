@@ -36,7 +36,7 @@ func TestAwsOpts_Run(t *testing.T) {
 		region: "TEST",
 	}
 	t.Run("container exists", func(t *testing.T) {
-		containers := []*atlasv2.CloudProviderContainer{
+		containers := []atlasv2.CloudProviderContainer{
 			{
 				Id:         pointer.Get("containerID"),
 				RegionName: &opts.region,

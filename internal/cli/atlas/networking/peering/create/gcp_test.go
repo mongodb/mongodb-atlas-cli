@@ -36,7 +36,7 @@ func TestGCPOpts_Run(t *testing.T) {
 		network: "test",
 	}
 	t.Run("container exists", func(t *testing.T) {
-		containers := []*atlasv2.CloudProviderContainer{
+		containers := []atlasv2.CloudProviderContainer{
 			{
 				Id:             pointer.Get("containerID"),
 				AtlasCidrBlock: &opts.atlasCIDRBlock,

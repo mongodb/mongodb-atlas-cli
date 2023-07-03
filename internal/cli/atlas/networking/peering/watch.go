@@ -57,26 +57,28 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-
-	// TODO Need more context on what to do here
-	// switch v := result.(type) {
-	// 	// return watcherAWS(v), nil
-	// 	// return watcherAzure(v), nil
-	// 	// return watcherGCP(v), nil
-	// }
-	return watcherAWS(result) || watcherAzure(result) || watcherGCP(result), nil
+	switch v := result.GetProviderName(); v {
+	case "AWS":
+		return watcherAWS(result), nil
+	case "AZURE":
+		return watcherAzure(result), nil
+	case "GCP":
+		return watcherGCP(result), nil
+	}
+	fmt.Print("Network peering changes completed.\n")
+	return false, nil
 }
 
 func watcherGCP(peer *atlasv2.BaseNetworkPeeringConnectionSettings) bool {
-	return *peer.Status == waitingForUser || *peer.Status == failed || *peer.Status == available
+	return peer.GetStatus() == waitingForUser || peer.GetStatus() == failed || peer.GetStatus() == available
 }
 
 func watcherAzure(peer *atlasv2.BaseNetworkPeeringConnectionSettings) bool {
-	return *peer.Status == waitingForUser || *peer.Status == failed || *peer.Status == available
+	return peer.GetStatus() == waitingForUser || peer.GetStatus() == failed || peer.GetStatus() == available
 }
 
 func watcherAWS(peer *atlasv2.BaseNetworkPeeringConnectionSettings) bool {
-	return *peer.StatusName == pendingAcceptance || *peer.StatusName == failed || *peer.StatusName == available
+	return peer.GetStatusName() == pendingAcceptance || peer.GetStatusName() == failed || peer.GetStatusName() == available
 }
 
 func (opts *WatchOpts) Run() error {

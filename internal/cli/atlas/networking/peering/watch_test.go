@@ -34,19 +34,26 @@ func TestWatchBuilder(t *testing.T) {
 func TestWatchOpts_Run(t *testing.T) {
 	tests := []struct {
 		name     string
-		expected interface{}
+		expected *atlasv2.BaseNetworkPeeringConnectionSettings
 	}{
 		{
 			name:     "AWS",
-			expected: &atlasv2.BaseNetworkPeeringConnectionSettings{StatusName: pointer.Get("PENDING_ACCEPTANCE")},
+			expected: &atlasv2.BaseNetworkPeeringConnectionSettings{
+				ProviderName: pointer.Get("AWS"),
+			 StatusName: pointer.Get("PENDING_ACCEPTANCE"),
+			},
 		},
 		{
 			name:     "AZURE",
-			expected: &atlasv2.BaseNetworkPeeringConnectionSettings{Status: pointer.Get("AVAILABLE")},
+			expected: &atlasv2.BaseNetworkPeeringConnectionSettings{
+				ProviderName: pointer.Get("AZURE"),
+				Status: pointer.Get("AVAILABLE")},
 		},
 		{
 			name:     "GCP",
-			expected: &atlasv2.BaseNetworkPeeringConnectionSettings{Status: pointer.Get("WAITING_FOR_USER")},
+			expected: &atlasv2.BaseNetworkPeeringConnectionSettings{	
+				ProviderName: pointer.Get("GCP"),
+			Status: pointer.Get("WAITING_FOR_USER")},
 		},
 	}
 	for _, tt := range tests {

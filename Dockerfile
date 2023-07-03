@@ -20,9 +20,9 @@ EOF
 
 RUN microdnf install shadow-utils jq yum yum-utils &&\
     yum -y update &&\
+    yum install -y mongodb-atlas &&\
     yum clean all &&\
-    microdnf clean all
-
-RUN yum install -y mongodb-atlas
+    microdnf clean all &&\
+    rm -rf /var/cache
 
 ENTRYPOINT ["/bin/bash"]

@@ -45,18 +45,18 @@ func TestSetup(t *testing.T) {
 
 	tagKey := "env"
 	tagValue := "e2etest"
-	randomAccessListIP := "21.150.105.221"
+	arbitraryAccessListIP := "21.150.105.221"
 
 	t.Run("Run", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			"setup",
+			setupEntity,
 			"--clusterName", clusterName,
 			"--username", dbUserUsername,
 			"--skipMongosh",
 			"--skipSampleData",
 			"--projectId", g.projectID,
 			"--tag", tagKey+"="+tagValue,
-			"--accessListIp", randomAccessListIP,
+			"--accessListIp", arbitraryAccessListIP,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -78,9 +78,8 @@ func TestSetup(t *testing.T) {
 		var entries *atlasv2.PaginatedNetworkAccess
 		err = json.Unmarshal(resp, &entries)
 		req.NoError(err)
-
-		found := false
-		req.Contains(entries.Results[i].GetIpAddress(), randomAccessListIP)
+		req.Len(entries.Results, 1, "Expected 1 IP in list of IP's")
+		req.Contains(entries.Results[0].GetIpAddress(), arbitraryAccessListIP, "IP from list does not match added IP")
 	})
 
 	t.Run("Watch Cluster", func(t *testing.T) {

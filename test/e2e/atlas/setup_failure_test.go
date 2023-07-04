@@ -36,7 +36,7 @@ func TestSetupFailureFlow(t *testing.T) {
 	t.Run("Invalid Public Key", func(t *testing.T) {
 		t.Setenv("MCLI_PUBLIC_API_KEY", "invalid_public_key")
 		cmd := exec.Command(cliPath,
-			"setup",
+			setupEntity,
 			"--skipMongosh",
 			"--skipSampleData",
 			"--force")
@@ -49,7 +49,7 @@ func TestSetupFailureFlow(t *testing.T) {
 	t.Run("Invalid Private Key", func(t *testing.T) {
 		t.Setenv("MCLI_PRIVATE_API_KEY", "invalid_private_key")
 		cmd := exec.Command(cliPath,
-			"setup",
+			setupEntity,
 			"--skipMongosh",
 			"--skipSampleData",
 			"--force")
@@ -64,7 +64,7 @@ func TestSetupFailureFlow(t *testing.T) {
 		// an early error will be thrown about incorrect length.
 		invalidProjectID := "111111111111111111111111"
 		cmd := exec.Command(cliPath,
-			"setup",
+			setupEntity,
 			"--skipMongosh",
 			"--skipSampleData",
 			"--projectId", invalidProjectID,

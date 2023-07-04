@@ -61,7 +61,7 @@ func (opts *VictorOpsOpts) newVictorOpsIntegration() *atlasv2.ThridPartyIntegrat
 		Type:       &victorOpsIntegrationType,
 		ApiKey:     &opts.apiKey,
 		RoutingKey: &opts.routingKey,
-		ChannelName: atlasv2.NullableString{},
+		
 	}
 }
 

@@ -61,7 +61,6 @@ func (opts *DatadogOpts) newDatadogIntegration() *atlasv2.ThridPartyIntegration 
 		Type:   &datadogType,
 		ApiKey: &opts.apiKey,
 		Region: &opts.region,
-		ChannelName: atlasv2.NullableString{},
 	}
 }
 

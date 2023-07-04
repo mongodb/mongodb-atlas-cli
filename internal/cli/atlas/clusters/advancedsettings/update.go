@@ -109,11 +109,11 @@ func (opts *UpdateOpts) newProcessArgs() *atlasv2.ClusterDescriptionProcessArgs 
 	}
 
 	if opts.oplogSizeMB != 0 {
-		args.OplogSizeMB.Set(&opts.oplogSizeMB)
+		args.OplogSizeMB = &opts.oplogSizeMB
 	}
 
 	if opts.oplogMinRetentionHours != 0 {
-		args.OplogMinRetentionHours.Set(&opts.oplogMinRetentionHours)
+		args.OplogMinRetentionHours = &opts.oplogMinRetentionHours
 	}
 
 	return args

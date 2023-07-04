@@ -61,7 +61,7 @@ func TestSetupFailing(t *testing.T) {
 
 	t.Run("Invalid Project ID", func(t *testing.T) {
 		// The incorrect ProjectID should be 24 characters long, otherwise
-		// an error will be thrown about incorrect length.
+		// an early error will be thrown about incorrect length.
 		invalidProjectID := "111111111111111111111111"
 		cmd := exec.Command(cliPath,
 			"setup",

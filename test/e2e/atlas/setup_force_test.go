@@ -45,7 +45,7 @@ func TestSetup(t *testing.T) {
 
 	tagKey := "env"
 	tagValue := "e2etest"
-	accessListIP := "21.150.105.221" // randomly generated IP
+	randomAccessListIP := "21.150.105.221"
 
 	t.Run("Run", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -56,7 +56,7 @@ func TestSetup(t *testing.T) {
 			"--skipSampleData",
 			"--projectId", g.projectID,
 			"--tag", tagKey+"="+tagValue,
-			"--accessListIp", accessListIP,
+			"--accessListIp", randomAccessListIP,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -81,7 +81,7 @@ func TestSetup(t *testing.T) {
 
 		found := false
 		for i := range entries.Results {
-			if entries.Results[i].GetIpAddress() == accessListIP {
+			if entries.Results[i].GetIpAddress() == randomAccessListIP {
 				found = true
 				break
 			}

@@ -73,6 +73,10 @@ Options
      - string
      - false
      - Password for the user.
+   * - --projectId
+     - string
+     - false
+     - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
    * - --provider
      - string
      - false

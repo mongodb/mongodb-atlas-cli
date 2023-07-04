@@ -80,14 +80,7 @@ func TestSetup(t *testing.T) {
 		req.NoError(err)
 
 		found := false
-		for i := range entries.Results {
-			if entries.Results[i].GetIpAddress() == randomAccessListIP {
-				found = true
-				break
-			}
-		}
-
-		req.True(found)
+		req.Contains(entries.Results[i].GetIpAddress(), randomAccessListIP)
 	})
 
 	t.Run("Watch Cluster", func(t *testing.T) {

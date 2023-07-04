@@ -19,7 +19,7 @@ enabled=1
 gpgkey=https://www.mongodb.org/static/pgp/server-6.0.asc
 EOF
 
-RUN microdnf install jq yum &&\
+RUN microdnf -y install jq yum &&\
     yum -y update &&\
     yum install -y mongodb-atlas &&\
     yum clean all &&\

@@ -26,7 +26,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestSetupFailing(t *testing.T) {
+func TestSetupFailureFlow(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("setup")
 	cliPath, err := e2e.AtlasCLIBin()
@@ -60,7 +60,7 @@ func TestSetupFailing(t *testing.T) {
 	})
 
 	t.Run("Invalid Project ID", func(t *testing.T) {
-		// The incorrect ProjectID should be 24 characters long, otherwise
+		// The invalid ProjectID should be 24 characters long, otherwise
 		// an early error will be thrown about incorrect length.
 		invalidProjectID := "111111111111111111111111"
 		cmd := exec.Command(cliPath,
@@ -72,6 +72,6 @@ func TestSetupFailing(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.Error(err)
-		assert.Contains(t, string(resp), "GROUP_NOT_FOUND", "Expected invalid Project ID error")
+		assert.Contains(t, string(resp), "GROUP_NOT_FOUND", "Expected GROUP_NOT_FOUND (invalid Project ID) error")
 	})
 }

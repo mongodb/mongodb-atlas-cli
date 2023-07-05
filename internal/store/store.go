@@ -269,7 +269,7 @@ func WithContext(ctx context.Context) Option {
 	}
 }
 
-// Appends user agent in container context for telemetry.
+// Appends user agent given a build context for telemetry.
 func appendUserAgent(buildContext string) {
 	if !strings.Contains(config.UserAgent, buildContext) {
 		config.UserAgent = fmt.Sprintf("%s-%s", config.UserAgent, buildContext)

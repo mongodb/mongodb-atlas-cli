@@ -269,8 +269,22 @@ func WithContext(ctx context.Context) Option {
 	}
 }
 
+// Appends user agent in container context for telemetry.
+func appendUserAgent(buildContext string) {
+	if !strings.Contains(config.UserAgent, buildContext) {
+		config.UserAgent = fmt.Sprintf("%s-%s", config.UserAgent, buildContext)
+	}
+}
+
 // setAtlasClient sets the internal client to use an Atlas client and methods.
 func (s *Store) setAtlasClient(client *http.Client) error {
+	buildContext, buildContextPresent := os.LookupEnv("BUILD_CONTEXT")
+
+	if buildContextPresent {
+		appendUserAgent(buildContext)
+	}
+
+	fmt.Println(config.UserAgent)
 	opts := []atlas.ClientOpt{atlas.SetUserAgent(config.UserAgent)}
 	if s.baseURL != "" {
 		opts = append(opts, atlas.SetBaseURL(s.baseURL))

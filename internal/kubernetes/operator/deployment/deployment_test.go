@@ -135,8 +135,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			SampleSizeBIConnector:            pointer.Get[int](10),
 			SampleRefreshIntervalBIConnector: pointer.Get[int](10),
 		}
-		processArgs.OplogSizeMB.Set(pointer.Get(10))
-		processArgs.OplogMinRetentionHours.Set(pointer.Get(float64(10.1)))
+		processArgs.OplogSizeMB = pointer.Get(10)
+		processArgs.OplogMinRetentionHours = pointer.Get(float64(10.1))
 		backupSchedule := &atlasv2.DiskBackupSnapshotSchedule{
 			ClusterId:             pointer.Get("testClusterID"),
 			ClusterName:           pointer.Get(clusterName),

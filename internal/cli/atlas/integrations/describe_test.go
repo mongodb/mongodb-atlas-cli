@@ -49,7 +49,7 @@ func TestDescribe_Run(t *testing.T) {
 		TeamName: pointer.Get("testTeam"),
 		Type:     pointer.Get("SLACK"),
 	}
-	expected.ChannelName.Set(pointer.Get("testChannel"))
+	expected.ChannelName = pointer.Get("testChannel")
 	mockStore.
 		EXPECT().
 		Integration(describeOpts.ProjectID, describeOpts.integrationType).
@@ -60,7 +60,7 @@ func TestDescribe_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	assert.Equal(t, `TYPE    API TOKEN   TEAM       CHANNEL
-SLACK   testToken   testTeam    testChannel 
+SLACK   testToken   testTeam   testChannel
 `, buf.String())
 	t.Log(buf.String())
 }

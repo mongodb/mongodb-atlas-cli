@@ -33,7 +33,6 @@ import (
 func TestSetup(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("setup")
-
 	cliPath, err := e2e.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
@@ -46,21 +45,41 @@ func TestSetup(t *testing.T) {
 
 	tagKey := "env"
 	tagValue := "e2etest"
+	arbitraryAccessListIP := "21.150.105.221"
 
 	t.Run("Run", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			"setup",
+			setupEntity,
 			"--clusterName", clusterName,
 			"--username", dbUserUsername,
 			"--skipMongosh",
 			"--skipSampleData",
 			"--projectId", g.projectID,
 			"--tag", tagKey+"="+tagValue,
+			"--accessListIp", arbitraryAccessListIP,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 		assert.Contains(t, string(resp), "Cluster created.", string(resp))
+	})
+
+	t.Run("Check accessListIp was correctly added", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			accessListEntity,
+			"ls",
+			"--projectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err)
+
+		var entries *atlasv2.PaginatedNetworkAccess
+		err = json.Unmarshal(resp, &entries)
+		req.NoError(err)
+		req.Len(entries.Results, 1, "Expected 1 IP in list of IP's")
+		req.Contains(entries.Results[0].GetIpAddress(), arbitraryAccessListIP, "IP from list does not match added IP")
 	})
 
 	t.Run("Watch Cluster", func(t *testing.T) {

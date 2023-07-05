@@ -199,7 +199,6 @@ func Builder() *cobra.Command {
 	cmd.Flags().BoolVarP(&qsOpts.DefaultValue, flag.Default, "Y", false, usage.QuickstartDefault)
 	_ = cmd.Flags().MarkDeprecated(flag.Default, "please use --force instead")
 	cmd.Flags().StringVar(&qsOpts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	_ = cmd.Flags().MarkHidden(flag.ProjectID)
 
 	cmd.MarkFlagsMutuallyExclusive(flag.CurrentIP, flag.AccessListIP)
 

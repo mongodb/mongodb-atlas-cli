@@ -60,11 +60,8 @@ const (
 	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
 )
 
-// Appends user agent if run from container.
-func maybeAddUserAgentPostfix() {
-	_, runningFromContainer := os.LookupEnv("BUILD_CONTEXT")
-
-	if runningFromContainer && !strings.Contains(config.UserAgent, userAgentContainerPostfix) {
+func addUserAgentContainerPostfix() {
+	if !strings.Contains(config.UserAgent, userAgentContainerPostfix) {
 		config.UserAgent = fmt.Sprintf("%s (%s)", config.UserAgent, userAgentContainerPostfix)
 	}
 }
@@ -79,7 +76,9 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	if c.ClientID() != "" {
 		id = c.ClientID()
 	}
-	maybeAddUserAgentPostfix()
+	if _, runningFromContainer := os.LookupEnv("BUILD_CONTEXT"); runningFromContainer {
+		addUserAgentContainerPostfix()
+	}
 
 	authOpts := []auth.ConfigOpt{
 		auth.SetUserAgent(config.UserAgent),

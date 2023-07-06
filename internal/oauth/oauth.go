@@ -63,7 +63,7 @@ const (
 	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
 )
 
-func addUserAgentPostfix() {
+func addUserAgentHostParameter() {
 	if !strings.Contains(config.UserAgent, userAgentPostfix) {
 		config.UserAgent = fmt.Sprintf("%s;%s)",
 			strings.TrimSuffix(config.UserAgent, ")"), userAgentPostfix)
@@ -83,7 +83,7 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	if _, runningFromContainer := os.LookupEnv("CONTAINER"); runningFromContainer {
 		userAgentPostfix = userAgentContainerPostfix
 	}
-	addUserAgentPostfix()
+	addUserAgentHostParameter()
 
 	authOpts := []auth.ConfigOpt{
 		auth.SetUserAgent(config.UserAgent),

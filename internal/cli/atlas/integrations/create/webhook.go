@@ -61,7 +61,6 @@ func (opts *WebhookOpts) newWebhookIntegration() *atlasv2.ThridPartyIntegration 
 		Type:   &webhookIntegrationType,
 		Url:    &opts.url,
 		Secret: &opts.secret,
-		
 	}
 }
 

@@ -61,7 +61,6 @@ func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlasv2.ThridPartyIntegratio
 		Type:   &opsGenieType,
 		Region: &opts.region,
 		ApiKey: &opts.apiKey,
-		
 	}
 }
 

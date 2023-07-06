@@ -59,7 +59,6 @@ func (opts *PagerDutyOpts) newPagerDutyIntegration() *atlasv2.ThridPartyIntegrat
 	return &atlasv2.ThridPartyIntegration{
 		Type:       &pagerDutyIntegrationType,
 		ServiceKey: &opts.serviceKey,
-		
 	}
 }
 

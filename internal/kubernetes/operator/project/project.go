@@ -525,20 +525,49 @@ func buildNetworkPeering(npProvider store.PeeringConnectionLister, projectID str
 }
 
 func convertNetworkPeer(np atlasv2.BaseNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
+	switch np.GetProviderName() {
+	case "AWS":
+		return convertAWSNetworkPeer(&np, providerName)
+	case "GCP":
+		return convertGCPNetworkPeer(&np, providerName)
+	case "Azure":
+		return convertAzureNetworkPeer(&np, providerName)
+	default:
+		return atlasV1.NetworkPeer{}
+	}
+}
+
+func convertAWSNetworkPeer(np *atlasv2.BaseNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
+	return atlasV1.NetworkPeer{
+		AccepterRegionName:  np.GetAccepterRegionName(),
+		AWSAccountID:        np.GetAwsAccountId(),
+		ContainerRegion:     "",
+		ContainerID:         np.ContainerId,
+		ProviderName:        providerName,
+		RouteTableCIDRBlock: np.GetRouteTableCidrBlock(),
+		VpcID:               np.GetVpcId(),
+	}
+}
+
+func convertAzureNetworkPeer(np *atlasv2.BaseNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
 	return atlasV1.NetworkPeer{
 		AzureDirectoryID:    np.GetAzureDirectoryId(),
 		AzureSubscriptionID: np.GetAzureSubscriptionId(),
 		ContainerRegion:     "",
-		ContainerID:         np.ContainerId,
+		ContainerID:         np.GetContainerId(),
 		ProviderName:        providerName,
 		ResourceGroupName:   np.GetResourceGroupName(),
 		VNetName:            np.GetVnetName(),
-		AccepterRegionName:  np.GetAccepterRegionName(),
-		AWSAccountID:        np.GetAwsAccountId(),
-		RouteTableCIDRBlock: np.GetRouteTableCidrBlock(),
-		VpcID:               np.GetVpcId(),
-		GCPProjectID:        np.GetGcpProjectId(),
-		NetworkName:         np.GetNetworkName(),
+	}
+}
+
+func convertGCPNetworkPeer(np *atlasv2.BaseNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
+	return atlasV1.NetworkPeer{
+		GCPProjectID:    np.GetGcpProjectId(),
+		ContainerRegion: "",
+		ContainerID:     np.ContainerId,
+		ProviderName:    providerName,
+		NetworkName:     np.GetNetworkName(),
 	}
 }
 

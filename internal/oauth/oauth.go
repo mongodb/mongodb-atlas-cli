@@ -27,13 +27,13 @@ import (
 )
 
 const (
-	timeout                   = 5 * time.Second
-	keepAlive                 = 30 * time.Second
-	maxIdleConns              = 5
-	maxIdleConnsPerHost       = 4
-	idleConnTimeout           = 30 * time.Second
-	expectContinueTimeout     = 1 * time.Second
-	cloudGovServiceURL        = "https://cloud.mongodbgov.com/"
+	timeout                    = 5 * time.Second
+	keepAlive                  = 30 * time.Second
+	maxIdleConns               = 5
+	maxIdleConnsPerHost        = 4
+	idleConnTimeout            = 30 * time.Second
+	expectContinueTimeout      = 1 * time.Second
+	cloudGovServiceURL         = "https://cloud.mongodbgov.com/"
 	userAgentContainerHostName = "container"
 	userAgentNativeHostName    = "native"
 )

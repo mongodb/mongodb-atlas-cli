@@ -27,13 +27,13 @@ import (
 )
 
 const (
-	timeout               = 5 * time.Second
-	keepAlive             = 30 * time.Second
-	maxIdleConns          = 5
-	maxIdleConnsPerHost   = 4
-	idleConnTimeout       = 30 * time.Second
-	expectContinueTimeout = 1 * time.Second
-	cloudGovServiceURL    = "https://cloud.mongodbgov.com/"
+	timeout                   = 5 * time.Second
+	keepAlive                 = 30 * time.Second
+	maxIdleConns              = 5
+	maxIdleConnsPerHost       = 4
+	idleConnTimeout           = 30 * time.Second
+	expectContinueTimeout     = 1 * time.Second
+	cloudGovServiceURL        = "https://cloud.mongodbgov.com/"
 	userAgentContainerPostfix = "container"
 )
 
@@ -64,8 +64,7 @@ const (
 func maybeAddUserAgentPostfix() {
 	_, runningFromContainer := os.LookupEnv("BUILD_CONTEXT")
 
-	if runningFromContainer &&
-		!strings.Contains(config.UserAgent, userAgentContainerPostfix) {
+	if runningFromContainer && !strings.Contains(config.UserAgent, userAgentContainerPostfix) {
 		config.UserAgent = fmt.Sprintf("%s (%s)", config.UserAgent, userAgentContainerPostfix)
 	}
 }

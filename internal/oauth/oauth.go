@@ -35,7 +35,10 @@ const (
 	expectContinueTimeout     = 1 * time.Second
 	cloudGovServiceURL        = "https://cloud.mongodbgov.com/"
 	userAgentContainerPostfix = "container"
+	userAgentNativePostfix    = "native"
 )
+
+var userAgentPostfix = userAgentNativePostfix
 
 var defaultTransport = &http.Transport{
 	DialContext: (&net.Dialer{
@@ -60,9 +63,9 @@ const (
 	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
 )
 
-func addUserAgentContainerPostfix() {
-	if !strings.Contains(config.UserAgent, userAgentContainerPostfix) {
-		config.UserAgent = fmt.Sprintf("%s (%s)", config.UserAgent, userAgentContainerPostfix)
+func addUserAgentPostfix() {
+	if !strings.Contains(config.UserAgent, userAgentPostfix) {
+		config.UserAgent = fmt.Sprintf("%s (%s)", config.UserAgent, userAgentPostfix)
 	}
 }
 
@@ -77,8 +80,9 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 		id = c.ClientID()
 	}
 	if _, runningFromContainer := os.LookupEnv("BUILD_CONTEXT"); runningFromContainer {
-		addUserAgentContainerPostfix()
+		userAgentPostfix = userAgentContainerPostfix
 	}
+	addUserAgentPostfix()
 
 	authOpts := []auth.ConfigOpt{
 		auth.SetUserAgent(config.UserAgent),

@@ -65,7 +65,8 @@ const (
 
 func addUserAgentPostfix() {
 	if !strings.Contains(config.UserAgent, userAgentPostfix) {
-		config.UserAgent = fmt.Sprintf("%s (%s)", config.UserAgent, userAgentPostfix)
+		config.UserAgent = fmt.Sprintf("%s;%s)",
+			strings.TrimSuffix(config.UserAgent, ")"), userAgentPostfix)
 	}
 }
 

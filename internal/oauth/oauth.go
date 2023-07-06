@@ -79,7 +79,7 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	if c.ClientID() != "" {
 		id = c.ClientID()
 	}
-	if _, runningFromContainer := os.LookupEnv("BUILD_CONTEXT"); runningFromContainer {
+	if _, runningFromContainer := os.LookupEnv("CONTAINER"); runningFromContainer {
 		userAgentPostfix = userAgentContainerPostfix
 	}
 	addUserAgentPostfix()

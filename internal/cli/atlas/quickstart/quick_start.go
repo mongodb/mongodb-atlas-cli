@@ -114,7 +114,7 @@ type Opts struct {
 	LabelValue                  string
 	SkipSampleData              bool
 	SkipMongosh                 bool
-	defaultValue                bool
+	DefaultValue                bool
 	Confirm                     bool
 	CurrentIP                   bool
 	EnableTerminationProtection bool
@@ -565,7 +565,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.DBUserPassword)
 	cmd.Flags().BoolVar(&opts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
 	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
-	cmd.Flags().BoolVarP(&opts.defaultValue, flag.Default, "Y", false, usage.QuickstartDefault)
+	cmd.Flags().BoolVarP(&opts.DefaultValue, flag.Default, "Y", false, usage.QuickstartDefault)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.ForceQuickstart)
 	cmd.Flags().BoolVar(&opts.CurrentIP, flag.CurrentIP, false, usage.CurrentIPSimplified)
 	cmd.Flags().BoolVar(&opts.EnableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)

@@ -89,6 +89,7 @@ const (
 	snapshotsEntity              = "snapshots"
 	restoresEntity               = "restores"
 	teamsEntity                  = "teams"
+	setupEntity                  = "setup"
 )
 
 // AlertConfig constants.

@@ -15,8 +15,11 @@
 package oauth
 
 import (
+	"fmt"
 	"net"
 	"net/http"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -31,6 +34,7 @@ const (
 	idleConnTimeout       = 30 * time.Second
 	expectContinueTimeout = 1 * time.Second
 	cloudGovServiceURL    = "https://cloud.mongodbgov.com/"
+	userAgentContainerPostfix = "container"
 )
 
 var defaultTransport = &http.Transport{
@@ -56,6 +60,16 @@ const (
 	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
 )
 
+// Appends user agent if run from container.
+func maybeAddUserAgentPostfix() {
+	_, runningFromContainer := os.LookupEnv("BUILD_CONTEXT")
+
+	if runningFromContainer &&
+		!strings.Contains(config.UserAgent, userAgentContainerPostfix) {
+		config.UserAgent = fmt.Sprintf("%s (%s)", config.UserAgent, userAgentContainerPostfix)
+	}
+}
+
 func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	client := http.DefaultClient
 	client.Transport = defaultTransport
@@ -66,6 +80,8 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	if c.ClientID() != "" {
 		id = c.ClientID()
 	}
+	maybeAddUserAgentPostfix()
+
 	authOpts := []auth.ConfigOpt{
 		auth.SetUserAgent(config.UserAgent),
 		auth.SetClientID(id),

@@ -50,7 +50,6 @@ const (
 	expectContinueTimeout     = 1 * time.Second
 	versionManifestStaticPath = "https://opsmanager.mongodb.com/"
 	cloudGovServiceURL        = "https://cloud.mongodbgov.com/"
-	userAgentContainerPostfix = "container"
 )
 
 var errUnsupportedService = errors.New("unsupported service")
@@ -270,22 +269,8 @@ func WithContext(ctx context.Context) Option {
 	}
 }
 
-// Appends user agent given a build context for telemetry.
-func appendUserAgent() {
-	if !strings.Contains(config.UserAgent, userAgentContainerPostfix) {
-		config.UserAgent = fmt.Sprintf("%s (%s)", config.UserAgent, userAgentContainerPostfix)
-	}
-}
-
 // setAtlasClient sets the internal client to use an Atlas client and methods.
 func (s *Store) setAtlasClient(client *http.Client) error {
-	_, buildContextPresent := os.LookupEnv("BUILD_CONTEXT")
-
-	if buildContextPresent {
-		appendUserAgent()
-	}
-
-	fmt.Println(config.UserAgent)
 	opts := []atlas.ClientOpt{atlas.SetUserAgent(config.UserAgent)}
 	if s.baseURL != "" {
 		opts = append(opts, atlas.SetBaseURL(s.baseURL))

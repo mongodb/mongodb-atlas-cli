@@ -20,13 +20,13 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201001/admin"
 )
 
@@ -59,9 +59,7 @@ func TestDescribe_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	assert.Equal(t, `TYPE    API TOKEN   TEAM       CHANNEL
-SLACK   testToken   testTeam   testChannel
-`, buf.String())
+	snaps.MatchSnapshot(t ,buf.String())
 	t.Log(buf.String())
 }
 

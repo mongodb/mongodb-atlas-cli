@@ -17,9 +17,13 @@
 package snapshots
 
 import (
+	"bytes"
 	"testing"
 
+	"github.com/brianvoe/gofakeit/v6"
+	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201001/admin"
 )
@@ -27,12 +31,19 @@ import (
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSnapshotsLister(ctrl)
+	buf := new(bytes.Buffer)
+	expected := &atlasv2.PaginatedCloudBackupReplicaSet{
+	}
 
-	expected := &atlasv2.PaginatedCloudBackupReplicaSet{}
+	gofakeit.Struct(&expected)
 
 	listOpts := &ListOpts{
 		store:       mockStore,
 		clusterName: "Cluster0",
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
 	}
 
 	mockStore.
@@ -44,4 +55,6 @@ func TestList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+
+	snaps.MatchSnapshot(t ,buf.String())
 }

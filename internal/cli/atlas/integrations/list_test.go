@@ -20,13 +20,13 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201001/admin"
 )
 
@@ -68,10 +68,7 @@ func TestDBUserList_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `TYPE
-DATADOG
-MICROSOFT_TEAMS
-`, buf.String())
+	snaps.MatchSnapshot(t ,buf.String())
 	t.Log(buf.String())
 }
 

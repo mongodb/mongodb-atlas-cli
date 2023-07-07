@@ -17,11 +17,15 @@
 package accessroles
 
 import (
+	"bytes"
 	"testing"
 
+	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201001/admin"
 )
@@ -30,10 +34,23 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderAccessRoleLister(ctrl)
 
-	var expected *atlasv2.CloudProviderAccessRoles
+	expected := &atlasv2.CloudProviderAccessRoles{
+		AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
+			{
+				ProviderName: "AWS",
+				Id:           pointer.Get("123"),
+			},
+		},
+	}
+
+	buf := new(bytes.Buffer)
 
 	listOpts := &ListOpts{
 		store: mockStore,
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
 	}
 
 	mockStore.
@@ -45,6 +62,8 @@ func TestList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+
+	snaps.MatchSnapshot(t, buf.String())
 }
 
 func TestListBuilder(t *testing.T) {

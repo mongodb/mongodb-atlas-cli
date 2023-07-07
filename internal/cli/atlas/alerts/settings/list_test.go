@@ -21,11 +21,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas-sdk/v20230201001/admin"
 )
 
@@ -75,8 +75,6 @@ func TestConfigList_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `ID     TYPE   ENABLED
-test   test   true
-`, buf.String())
+	snaps.MatchSnapshot(t, buf.String())
 	t.Log(buf.String())
 }

@@ -20,11 +20,11 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas-sdk/v20230201001/admin"
 )
 
@@ -72,8 +72,6 @@ func TestList_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `ID     TYPE         STATUS
-test   NO_PRIMARY   test
-`, buf.String())
+	snaps.MatchSnapshot(t, buf.String())
 	t.Log(buf.String())
 }

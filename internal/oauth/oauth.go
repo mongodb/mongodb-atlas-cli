@@ -27,18 +27,14 @@ import (
 )
 
 const (
-	timeout                    = 5 * time.Second
-	keepAlive                  = 30 * time.Second
-	maxIdleConns               = 5
-	maxIdleConnsPerHost        = 4
-	idleConnTimeout            = 30 * time.Second
-	expectContinueTimeout      = 1 * time.Second
-	cloudGovServiceURL         = "https://cloud.mongodbgov.com/"
-	userAgentContainerHostName = "container"
-	userAgentNativeHostName    = "native"
+	timeout               = 5 * time.Second
+	keepAlive             = 30 * time.Second
+	maxIdleConns          = 5
+	maxIdleConnsPerHost   = 4
+	idleConnTimeout       = 30 * time.Second
+	expectContinueTimeout = 1 * time.Second
+	cloudGovServiceURL    = "https://cloud.mongodbgov.com/"
 )
-
-var userAgentHostName = userAgentNativeHostName
 
 var defaultTransport = &http.Transport{
 	DialContext: (&net.Dialer{
@@ -63,10 +59,10 @@ const (
 	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
 )
 
-func addUserAgentHostParameter() {
-	if !strings.Contains(config.UserAgent, userAgentHostName) {
-		config.UserAgent = fmt.Sprintf("%s;%s)",
-			strings.TrimSuffix(config.UserAgent, ")"), userAgentHostName)
+func changeHostNameToContainer() {
+	if !strings.Contains(config.UserAgent, config.ContainerHostName) {
+		config.UserAgent = strings.ReplaceAll(config.UserAgent, config.HostName, config.ContainerHostName)
+		config.HostName = config.ContainerHostName
 	}
 }
 
@@ -82,9 +78,8 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	}
 	runningFromContainer, runningFromContainerIsSet := os.LookupEnv("MONGODB_ATLAS_RUNNING_FROM_CONTAINER")
 	if runningFromContainerIsSet && runningFromContainer == "true" {
-		userAgentHostName = userAgentContainerHostName
+		changeHostNameToContainer()
 	}
-	addUserAgentHostParameter()
 	fmt.Println(config.UserAgent)
 
 	authOpts := []auth.ConfigOpt{

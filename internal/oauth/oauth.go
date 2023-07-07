@@ -80,7 +80,7 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	if c.ClientID() != "" {
 		id = c.ClientID()
 	}
-	if _, runningFromContainer := os.LookupEnv("CONTAINER"); runningFromContainer {
+	if _, runningFromContainer := os.LookupEnv("MONGODB_ATLAS_RUNNING_FROM_CONTAINER"); runningFromContainer {
 		userAgentHostName = userAgentContainerHostName
 	}
 	addUserAgentHostParameter()

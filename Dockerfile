@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.3-labs
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
-ENV CONTAINER=""
+ENV MONGODB_ATLAS_RUNNING_FROM_CONTAINER=""
 
 COPY <<EOF /etc/yum.repos.d/mongodb-org-x86_64-6.0.repo
 [mongodb-org-x86_64-6.0]

@@ -50,8 +50,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 		return false, err
 	}
 
-	endpointService := result
-	return endpointService.GetStatus() == "AVAILABLE" || endpointService.GetStatus() == "FAILED", nil
+	return result.GetStatus() == "AVAILABLE" || result.GetStatus() == "FAILED", nil
 }
 
 func (opts *WatchOpts) Run() error {

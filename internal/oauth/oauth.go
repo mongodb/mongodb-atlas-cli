@@ -15,7 +15,6 @@
 package oauth
 
 import (
-	"fmt"
 	"net"
 	"net/http"
 	"os"
@@ -80,7 +79,6 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	if runningFromContainerIsSet && runningFromContainer == "true" {
 		changeHostNameToContainer()
 	}
-	fmt.Println(config.UserAgent)
 
 	authOpts := []auth.ConfigOpt{
 		auth.SetUserAgent(config.UserAgent),

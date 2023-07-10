@@ -202,7 +202,6 @@ functions:
           - revision
           - created_at
           - ext
-          - signing_auth_token_42
           - signing_auth_token_44
           - signing_auth_token_46
           - signing_auth_token_50

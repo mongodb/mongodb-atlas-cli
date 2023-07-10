@@ -28,7 +28,7 @@ require (
 	github.com/klauspost/compress v1.16.5
 	github.com/mattn/go-isatty v0.0.18
 	github.com/mongodb-forks/digest v1.0.4
-	github.com/mongodb-labs/cobra2snooty v0.15.0
+	github.com/mongodb-labs/cobra2snooty v0.16.0
 	github.com/mongodb/mongodb-atlas-kubernetes v1.8.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
@@ -39,10 +39,10 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
-	go.mongodb.org/atlas v0.29.0
+	go.mongodb.org/atlas v0.30.0
 	go.mongodb.org/atlas-sdk v0.15.0
 	go.mongodb.org/mongo-driver v1.11.7
-	go.mongodb.org/ops-manager v0.50.0
+	go.mongodb.org/ops-manager v0.53.0
 	golang.org/x/crypto v0.10.0
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
 	golang.org/x/mod v0.10.0

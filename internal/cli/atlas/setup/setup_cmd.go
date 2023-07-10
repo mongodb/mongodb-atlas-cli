@@ -98,7 +98,7 @@ We could not find your public IP address. To add your IP address run:
 
 `
 
-//go:generate mockgen -destination=../../../mocks/mock_setup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup ProfileReader,ClusterCreationFlow
+//go:generate mockgen -destination=../../../mocks/mock_setup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup ProfileReader
 
 type ProfileReader interface {
 	ProjectID() string
@@ -611,7 +611,7 @@ func Builder() *cobra.Command {
 	// Register and login related
 	cmd.Flags().BoolVar(&opts.register.IsGov, "gov", false, "Register with Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.register.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	// Quickstart related
+	// Setup related
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.Tier, flag.Tier, DefaultAtlasTier, usage.Tier)
 	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)

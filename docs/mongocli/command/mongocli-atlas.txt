@@ -69,7 +69,6 @@ Related Commands
 * :ref:`mongocli-atlas-performanceAdvisor` - Learn more about slow queries and get suggestions to improve database performance.
 * :ref:`mongocli-atlas-privateEndpoints` - Manage Atlas private endpoints.
 * :ref:`mongocli-atlas-processes` - Manage MongoDB processes for your project.
-* :ref:`mongocli-atlas-quickstart` - Create, configure, and connect to an Atlas cluster for your project.
 * :ref:`mongocli-atlas-security` - Manage security configuration for your project.
 * :ref:`mongocli-atlas-serverless` - Manage serverless instances for your project.
 
@@ -97,7 +96,6 @@ Related Commands
    performanceAdvisor </command/mongocli-atlas-performanceAdvisor>
    privateEndpoints </command/mongocli-atlas-privateEndpoints>
    processes </command/mongocli-atlas-processes>
-   quickstart </command/mongocli-atlas-quickstart>
    security </command/mongocli-atlas-security>
    serverless </command/mongocli-atlas-serverless>
 

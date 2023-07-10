@@ -75,7 +75,7 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	if c.ClientID() != "" {
 		id = c.ClientID()
 	}
-	runningFromContainer, runningFromContainerIsSet := os.LookupEnv("MONGODB_ATLAS_RUNNING_FROM_CONTAINER")
+	runningFromContainer, runningFromContainerIsSet := os.LookupEnv("MONGODB_ATLAS_IS_CONTAINERIZED")
 	if runningFromContainerIsSet && runningFromContainer == "true" {
 		changeHostNameToContainer()
 	}

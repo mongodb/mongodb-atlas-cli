@@ -41,7 +41,6 @@ require (
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
 	go.mongodb.org/atlas v0.30.0
-	go.mongodb.org/atlas-sdk/v20230201001 v20230201001.0.1-0.20230704132156-6560cf3b3bce
 	go.mongodb.org/mongo-driver v1.11.7
 	go.mongodb.org/ops-manager v0.53.0
 	golang.org/x/crypto v0.10.0
@@ -59,6 +58,8 @@ require (
 	sigs.k8s.io/kind v0.20.0
 	sigs.k8s.io/yaml v1.3.0
 )
+
+require go.mongodb.org/atlas-sdk/v20230201002 v20230201002.0.0
 
 require (
 	cloud.google.com/go/compute v1.20.0 // indirect

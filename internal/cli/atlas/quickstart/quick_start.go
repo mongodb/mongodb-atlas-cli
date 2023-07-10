@@ -38,7 +38,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"go.mongodb.org/atlas-sdk/v20230201001/admin"
+	"go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
 
 //go:generate mockgen -destination=../../../mocks/mock_quick_start.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart Flow

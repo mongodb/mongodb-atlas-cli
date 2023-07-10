@@ -1,0 +1,6 @@
+name: Daily build
+on:
+  push:
+    # TODO: change to daily cron job
+    branches:
+      - 'CLOUDP-188862'

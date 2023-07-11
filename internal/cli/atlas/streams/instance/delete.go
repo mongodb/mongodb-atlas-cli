@@ -35,10 +35,7 @@ type DeleteOpts struct {
 }
 
 func (opts *DeleteOpts) Run() error {
-	streamProcessor := new(store.StreamProcessorInstance)
-	streamProcessor.Name = opts.Entry
-
-	return opts.Delete(opts.store.DeleteStream, opts.ConfigProjectID())
+	return opts.Delete(opts.store.DeleteStream, opts.ConfigProjectID(), opts.Entry)
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

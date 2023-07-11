@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type CreateOpts struct {
@@ -43,14 +44,12 @@ const (
 )
 
 func (opts *CreateOpts) Run() error {
+	streamProcessor := atlasv2.NewStreamsTenant()
+	streamProcessor.Name = &opts.name
+	streamProcessor.GroupId = &opts.ProjectID
+	streamProcessor.DataProcessRegion = atlasv2.NewStreamsDataProcessRegion(opts.provider, opts.region)
 
-	streamProcessor := new(store.StreamProcessorInstance)
-	streamProcessor.Name = opts.name
-	streamProcessor.GroupID = opts.ProjectID
-	streamProcessor.DataProcessRegion.CloudProvider = opts.provider
-	streamProcessor.DataProcessRegion.Region = opts.region
-
-	r, err := opts.store.CreateStream(streamProcessor)
+	r, err := opts.store.CreateStream(opts.ProjectID, streamProcessor)
 
 	if err != nil {
 		return err
@@ -65,10 +64,6 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return err
 	}
-}
-
-func (opts *CreateOpts) validate() error {
-	return nil
 }
 
 // CreateBuilder
@@ -102,7 +97,6 @@ func CreateBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
-				opts.validate,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

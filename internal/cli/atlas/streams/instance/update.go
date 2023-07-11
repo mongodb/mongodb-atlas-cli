@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type UpdateOpts struct {
@@ -46,7 +47,7 @@ func (opts *UpdateOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	r, err := opts.store.UpdateStream(opts.ProjectID, opts.name, stream)
+	r, err := opts.store.UpdateStream(opts.ProjectID, opts.name, stream.DataProcessRegion)
 
 	if err != nil {
 		return err
@@ -55,11 +56,12 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) streams() (*store.StreamProcessorInstance, error) {
-	processor := new(store.StreamProcessorInstance)
-	processor.Name = opts.name
-	processor.GroupID = opts.ProjectID
+func (opts *UpdateOpts) streams() (*atlasv2.StreamsTenant, error) {
+	processor := atlasv2.NewStreamsTenant()
+	processor.Name = &opts.name
+	processor.GroupId = &opts.ProjectID
 
+	processor.DataProcessRegion = atlasv2.NewStreamsDataProcessRegionWithDefaults()
 	if opts.provider != "" {
 		processor.DataProcessRegion.CloudProvider = opts.provider
 	}

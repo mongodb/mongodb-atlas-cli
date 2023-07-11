@@ -20,9 +20,8 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
@@ -36,10 +35,10 @@ func TestCreateOpts_Run(t *testing.T) {
 		region:   "US-EAST-1",
 	}
 
-	expected := &store.StreamProcessorInstance{Name: "ExampleStream", GroupID: opts.ProjectID, DataProcessRegion: mongodbatlas.DataProcessRegion{CloudProvider: "AWS", Region: "US-EAST-1"}}
+	expected := &atlasv2.StreamsTenant{Name: &opts.name, GroupId: &opts.ProjectID, DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "US-EAST-1"}}
 	mockStore.
 		EXPECT().
-		CreateStream(expected).
+		CreateStream(opts.name, expected).
 		Return(expected, nil).
 		Times(1)
 

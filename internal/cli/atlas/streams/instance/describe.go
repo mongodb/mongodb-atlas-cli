@@ -16,6 +16,7 @@ package instance
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -36,7 +37,7 @@ type DescribeOpts struct {
 
 const (
 	describeTemplate = `ID	NAME	CLOUD	REGION
-{{.ID}}	{{.Name}}	{{.DataProcessRegion.CloudProvider}}	{{.DataProcessRegion.Region}}
+{{.Id}}	{{.Name}}	{{.DataProcessRegion.CloudProvider}}	{{.DataProcessRegion.Region}}
 `
 )
 
@@ -75,6 +76,14 @@ func DescribeBuilder() *cobra.Command {
 			"output":   describeTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if len(args) == 0 {
+				return errors.New("Atlas Streams Processor instance name missing")
+			}
+
+			if len(args) != 0 {
+				opts.name = args[0]
+			}
+
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),

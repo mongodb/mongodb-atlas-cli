@@ -8,8 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	admin "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 // MockStreamsLister is a mock of StreamsLister interface.
@@ -36,10 +35,10 @@ func (m *MockStreamsLister) EXPECT() *MockStreamsListerMockRecorder {
 }
 
 // ProjectStreams mocks base method.
-func (m *MockStreamsLister) ProjectStreams(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
+func (m *MockStreamsLister) ProjectStreams(arg0 string, arg1 *admin.ListStreamInstancesApiParams) (*admin.PaginatedApiStreamsTenant, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectStreams", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*admin.PaginatedApiStreamsTenant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -74,10 +73,10 @@ func (m *MockStreamsDescriber) EXPECT() *MockStreamsDescriberMockRecorder {
 }
 
 // AtlasStream mocks base method.
-func (m *MockStreamsDescriber) AtlasStream(arg0, arg1 string) (*store.StreamProcessorInstance, error) {
+func (m *MockStreamsDescriber) AtlasStream(arg0, arg1 string) (*admin.StreamsTenant, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AtlasStream", arg0, arg1)
-	ret0, _ := ret[0].(*store.StreamProcessorInstance)
+	ret0, _ := ret[0].(*admin.StreamsTenant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -112,18 +111,18 @@ func (m *MockStreamsCreator) EXPECT() *MockStreamsCreatorMockRecorder {
 }
 
 // CreateStream mocks base method.
-func (m *MockStreamsCreator) CreateStream(arg0 *store.StreamProcessorInstance) (*store.StreamProcessorInstance, error) {
+func (m *MockStreamsCreator) CreateStream(arg0 string, arg1 *admin.StreamsTenant) (*admin.StreamsTenant, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateStream", arg0)
-	ret0, _ := ret[0].(*store.StreamProcessorInstance)
+	ret := m.ctrl.Call(m, "CreateStream", arg0, arg1)
+	ret0, _ := ret[0].(*admin.StreamsTenant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateStream indicates an expected call of CreateStream.
-func (mr *MockStreamsCreatorMockRecorder) CreateStream(arg0 interface{}) *gomock.Call {
+func (mr *MockStreamsCreatorMockRecorder) CreateStream(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateStream", reflect.TypeOf((*MockStreamsCreator)(nil).CreateStream), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateStream", reflect.TypeOf((*MockStreamsCreator)(nil).CreateStream), arg0, arg1)
 }
 
 // MockStreamsDeleter is a mock of StreamsDeleter interface.
@@ -187,10 +186,10 @@ func (m *MockStreamsUpdater) EXPECT() *MockStreamsUpdaterMockRecorder {
 }
 
 // UpdateStream mocks base method.
-func (m *MockStreamsUpdater) UpdateStream(arg0, arg1 string, arg2 *store.StreamProcessorInstance) (*store.StreamProcessorInstance, error) {
+func (m *MockStreamsUpdater) UpdateStream(arg0, arg1 string, arg2 *admin.StreamsDataProcessRegion) (*admin.StreamsTenant, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateStream", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*store.StreamProcessorInstance)
+	ret0, _ := ret[0].(*admin.StreamsTenant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

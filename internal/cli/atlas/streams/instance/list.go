@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type ListOpts struct {
@@ -36,13 +37,17 @@ type ListOpts struct {
 
 const (
 	listTemplate = `ID	NAME	CLOUD	REGION{{range .Results}}
-{{.ID}}	{{.Name}}	{{.DataProcessRegion.CloudProvider}}	{{.DataProcessRegion.Region}}{{end}}
+{{.Id}}	{{.Name}}	{{.DataProcessRegion.CloudProvider}}	{{.DataProcessRegion.Region}}{{end}}
 `
 )
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.ProjectStreams(opts.ConfigProjectID(), listOpts)
+	listParams := new(atlasv2.ListStreamInstancesApiParams)
+	listParams.ItemsPerPage = &opts.ItemsPerPage
+	listParams.GroupId = opts.ProjectID
+	listParams.PageNum = &opts.PageNum
+
+	r, err := opts.store.ProjectStreams(opts.ConfigProjectID(), listParams)
 	if err != nil {
 		return err
 	}

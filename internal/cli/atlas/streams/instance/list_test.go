@@ -20,8 +20,8 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -32,7 +32,7 @@ func TestListOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &store.StreamsList{}
+	expected := &atlasv2.PaginatedApiStreamsTenant{}
 
 	mockStore.
 		EXPECT().

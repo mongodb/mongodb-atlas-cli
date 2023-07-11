@@ -15,37 +15,23 @@
 package store
 
 import (
-	"go.mongodb.org/atlas/mongodbatlas"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"fmt"
+
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
-
-// Stub types until I get the actual generated types
-type StreamProcessorInstance struct {
-	ID                string                         `json:"id,omitempty"`
-	Name              string                         `json:"name,omitempty"`
-	GroupID           string                         `json:"groupId,omitempty"`
-	DataProcessRegion mongodbatlas.DataProcessRegion `json:"dataProcessRegion,omitempty"`
-	Created           string                         `json:"created,omitempty"`
-	LastUpdated       string                         `json:"lastUpdated,omitempty"`
-	SRV               string                         `json:"standardSrv,omitempty"`
-}
-
-type StreamsList struct {
-	Results []StreamProcessorInstance
-}
 
 //go:generate mockgen -destination=../mocks/mock_streams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store StreamsLister,StreamsDescriber,StreamsCreator,StreamsDeleter,StreamsUpdater
 
 type StreamsLister interface {
-	ProjectStreams(string, *atlas.ListOptions) (interface{}, error)
+	ProjectStreams(string, *atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error)
 }
 
 type StreamsDescriber interface {
-	AtlasStream(string, string) (*StreamProcessorInstance, error)
+	AtlasStream(string, string) (*atlasv2.StreamsTenant, error)
 }
 
 type StreamsCreator interface {
-	CreateStream(*StreamProcessorInstance) (*StreamProcessorInstance, error)
+	CreateStream(string, *atlasv2.StreamsTenant) (*atlasv2.StreamsTenant, error)
 }
 
 type StreamsDeleter interface {
@@ -53,47 +39,81 @@ type StreamsDeleter interface {
 }
 
 type StreamsUpdater interface {
-	UpdateStream(string, string, *StreamProcessorInstance) (*StreamProcessorInstance, error)
+	UpdateStream(string, string, *atlasv2.StreamsDataProcessRegion) (*atlasv2.StreamsTenant, error)
 }
 
-// ProjectStreams encapsulate the logic to list all the streams of a given project
-// Probably shouldn't be interface{}, should be something with Results & the list properties
-func (s *Store) ProjectStreams(projectID string, opts *atlas.ListOptions) (interface{}, error) {
-	// We get
-	// opts.PageNum
-	// opts.ItemsPerPage
-	// projectId
-
-	streamProcessor := new(StreamProcessorInstance)
-	streamProcessor.ID = "SampleId"
-	streamProcessor.Name = "Processor1"
-	streamProcessor.DataProcessRegion = mongodbatlas.DataProcessRegion{CloudProvider: "AWS", Region: "US-EAST-1"}
-
-	streamProcessor2 := new(StreamProcessorInstance)
-	streamProcessor2.ID = "SampleId2"
-	streamProcessor2.Name = "Processor2"
-	streamProcessor2.DataProcessRegion = mongodbatlas.DataProcessRegion{CloudProvider: "AZURE", Region: "SYDNEY"}
-
-	return &StreamsList{Results: []StreamProcessorInstance{*streamProcessor, *streamProcessor2}}, nil
+type StreamsConnectionLister interface {
+	StreamsConnections(string) (*atlasv2.PaginatedApiStreamsConnection, error)
 }
 
-func (s *Store) AtlasStream(projectId, name string) (*StreamProcessorInstance, error) {
-	streamProcessor := new(StreamProcessorInstance)
-	streamProcessor.ID = "SampleId"
-	streamProcessor.Name = name
-	streamProcessor.DataProcessRegion = mongodbatlas.DataProcessRegion{CloudProvider: "AWS", Region: "US-EAST-1"}
-
-	return streamProcessor, nil
+type ConnectionCreator interface {
+	CreateConnection(string, *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error)
 }
 
-func (s *Store) CreateStream(processor *StreamProcessorInstance) (*StreamProcessorInstance, error) {
-	return processor, nil
+type ConnectionDeleter interface {
+	DeleteConnection(string, string) error
+}
+
+type StreamsConnectionDescriber interface {
+	StreamConnection(string, string) (*atlasv2.StreamsConnection, error)
+}
+
+type ConnectionUpdater interface {
+	UpdateConnection(string, string, *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error)
+}
+
+func (s *Store) ProjectStreams(projectID string, opts *atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error) {
+	result, _, err := s.clientv2.StreamsApi.ListStreamInstancesWithParams(s.ctx, opts).Execute()
+	return result, err
+}
+
+func (s *Store) AtlasStream(projectId, name string) (*atlasv2.StreamsTenant, error) {
+	result, _, err := s.clientv2.StreamsApi.GetStreamInstance(s.ctx, projectId, name).Execute()
+	return result, err
+}
+
+func (s *Store) CreateStream(projectId string, processor *atlasv2.StreamsTenant) (*atlasv2.StreamsTenant, error) {
+	fmt.Printf("%s  %+v %+v", projectId, processor, *processor.DataProcessRegion)
+	result, _, err := s.clientv2.StreamsApi.CreateStreamInstance(s.ctx, projectId, processor).Execute()
+	return result, err
 }
 
 func (s *Store) DeleteStream(projectId, name string) error {
-	return nil
+	_, _, err := s.clientv2.StreamsApi.DeleteStreamInstance(s.ctx, projectId, name).Execute()
+	return err
 }
 
-func (s *Store) UpdateStream(projectID, name string, processor *StreamProcessorInstance) (*StreamProcessorInstance, error) {
-	return processor, nil
+func (s *Store) UpdateStream(projectId, name string, streamsDataProcessRegion *atlasv2.StreamsDataProcessRegion) (*atlasv2.StreamsTenant, error) {
+	result, _, err := s.clientv2.StreamsApi.UpdateStreamInstance(s.ctx, projectId, name, streamsDataProcessRegion).Execute()
+	return result, err
+}
+
+// StreamsConnections encapsulates the logic to manage different cloud providers.
+func (s *Store) StreamsConnections(projectID, tenantName string) (*atlasv2.PaginatedApiStreamsConnection, error) {
+	result, _, err := s.clientv2.StreamsApi.ListStreamConnections(s.ctx, projectID, tenantName).Execute()
+	return result, err
+}
+
+// StreamConnection encapsulates the logic to manage different cloud providers.
+func (s *Store) StreamConnection(projectID, tenantName, connectionName string) (*atlasv2.StreamsConnection, error) {
+	result, _, err := s.clientv2.StreamsApi.GetStreamConnection(s.ctx, projectID, tenantName, connectionName).Execute()
+	return result, err
+}
+
+// CreateConnection encapsulates the logic to manage different cloud providers.
+func (s *Store) CreateConnection(projectID, tenantName string, opts *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error) {
+	result, _, err := s.clientv2.StreamsApi.CreateStreamConnection(s.ctx, projectID, tenantName, opts).Execute()
+	return result, err
+}
+
+// UpdateConnection encapsulates the logic to manage different cloud providers.
+func (s *Store) UpdateConnection(projectID, tenantName, connectionsName string, opts *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error) {
+	result, _, err := s.clientv2.StreamsApi.UpdateStreamConnection(s.ctx, projectID, tenantName, connectionsName, opts).Execute()
+	return result, err
+}
+
+// DeleteConnection encapsulates the logic to manage different cloud providers.
+func (s *Store) DeleteConnection(projectID, tenantName, connectionName string) error {
+	_, _, err := s.clientv2.StreamsApi.DeleteStreamConnection(s.ctx, projectID, tenantName, connectionName).Execute()
+	return err
 }

@@ -152,7 +152,7 @@ func TestCluster_Run(t *testing.T) {
 		CreateDatabaseUser(opts.newDatabaseUser()).Return(expectedDBUser, nil).
 		Times(1)
 
-	if err := opts.clusterRun(); err != nil {
+	if err := opts.setupCluster(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
@@ -220,7 +220,7 @@ func TestCluster_Run_CheckFlagsSet(t *testing.T) {
 
 	opts.flags = cmd.Flags()
 
-	if err := opts.clusterRun(); err != nil {
+	if err := opts.setupCluster(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 

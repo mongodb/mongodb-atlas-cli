@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 )
 
-func (opts *Opts) askConfirmDefaultQuestion(values *setup) error {
+func (opts *Opts) askConfirmDefaultQuestion(values *clusterSettings) error {
 	if opts.Confirm {
 		return nil
 	}

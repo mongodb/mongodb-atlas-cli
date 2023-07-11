@@ -108,39 +108,37 @@ type ProfileReader interface {
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	register            auth.RegisterOpts
-	config              ProfileReader
-	store               store.AtlasClusterQuickStarter
-	LabelKey            string
-	LabelValue          string
-	defaultName         string
-	ClusterName         string
-	Provider            string
-	Region              string
-	IPAddresses         []string
-	IPAddressesResponse string
-	DBUsername          string
-	DBUserPassword      string
-	SampleDataJobID     string
-	Tier                string
-	Tag                 map[string]string
-
+	register                    auth.RegisterOpts
+	config                      ProfileReader
+	store                       store.AtlasClusterQuickStarter
+	LabelKey                    string
+	LabelValue                  string
+	defaultName                 string
+	ClusterName                 string
+	Provider                    string
+	Region                      string
+	IPAddresses                 []string
+	IPAddressesResponse         string
+	DBUsername                  string
+	DBUserPassword              string
+	SampleDataJobID             string
+	Tier                        string
+	Tag                         map[string]string
 	SkipSampleData              bool
 	SkipMongosh                 bool
 	DefaultValue                bool
 	Confirm                     bool
 	CurrentIP                   bool
 	EnableTerminationProtection bool
-
-	flags   *pflag.FlagSet
-	flagSet map[string]struct{}
+	flags                       *pflag.FlagSet
+	flagSet                     map[string]struct{}
 
 	// control
 	skipRegister bool
 	skipLogin    bool
 }
 
-type setup struct {
+type clusterSettings struct {
 	ClusterName                 string
 	Provider                    string
 	Region                      string
@@ -171,8 +169,8 @@ func (opts *Opts) trackFlags() {
 	})
 }
 
-func (opts *Opts) newDefaultValues() (*setup, error) {
-	values := &setup{}
+func (opts *Opts) newDefaultValues() (*clusterSettings, error) {
+	values := &clusterSettings{}
 	values.SkipMongosh = opts.SkipMongosh
 	values.SkipSampleData = opts.SkipSampleData
 
@@ -339,7 +337,7 @@ func (opts *Opts) shouldAskForValue(f string) bool {
 	return !isFlagSet
 }
 
-func (opts *Opts) replaceWithDefaultSettings(values *setup) {
+func (opts *Opts) replaceWithDefaultSettings(values *clusterSettings) {
 	if values.ClusterName != "" {
 		opts.ClusterName = values.ClusterName
 	}
@@ -411,7 +409,7 @@ This command will help you
 	if opts.config.ProjectID() == "" || opts.config.OrgID() == "" {
 		return fmt.Errorf("%w: %s", errNeedsOrgAndProject, config.Default().Name())
 	}
-	return opts.clusterRun()
+	return opts.setupCluster()
 }
 
 func (opts *Opts) clusterPreRun(ctx context.Context, outWriter io.Writer) error {
@@ -426,7 +424,7 @@ func (opts *Opts) clusterPreRun(ctx context.Context, outWriter io.Writer) error 
 	)
 }
 
-func (opts *Opts) clusterRun() error {
+func (opts *Opts) setupCluster() error {
 	const base10 = 10
 	opts.defaultName = "Cluster" + strconv.FormatInt(time.Now().Unix(), base10)[5:]
 	opts.providerAndRegionToConstant()

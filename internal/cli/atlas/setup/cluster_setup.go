@@ -184,7 +184,7 @@ func (opts *Opts) providerName() string {
 	return providerName(opts.Tier, opts.Provider)
 }
 
-func (opts *setup) providerName() string {
+func (opts *clusterSettings) providerName() string {
 	return providerName(opts.Tier, opts.Provider)
 }
 

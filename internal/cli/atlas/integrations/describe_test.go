@@ -59,7 +59,13 @@ func TestDescribe_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	t.Log(buf.String())
-	test.VerifyOutputTemplate(t, listTemplate, expected)
+	test.VerifyOutputTemplate(t, describeTemplateDatadogOpsGenie, expected)
+	test.VerifyOutputTemplate(t, describeTemplateMicrosoftTeams, expected)
+	test.VerifyOutputTemplate(t, describeTemplateNewRelic, expected)
+	test.VerifyOutputTemplate(t, describeTemplatePagerDuty, expected)
+	test.VerifyOutputTemplate(t, describeTemplateSlack, expected)
+	test.VerifyOutputTemplate(t, describeTemplateVictorOps, expected)
+	test.VerifyOutputTemplate(t, describeTemplateWebhook, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

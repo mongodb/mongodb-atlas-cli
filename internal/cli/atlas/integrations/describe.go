@@ -49,8 +49,8 @@ var describeTemplateSlack = `TYPE	API TOKEN	TEAM	CHANNEL
 var describeTemplateDatadogOpsGenie = `TYPE	API KEY	REGION
 {{.Type}}	{{.ApiKey}}	{{.Region}}
 `
-var describeTemplateMicrosoftTeams = `TYPE	API TOKEN	FLOW NAME	ORGANIZATION
-{{.Type}}	{{.ApiToken}}	{{.FlowName}}	{{.OrgName}}
+var describeTemplateMicrosoftTeams = `TYPE	WEBHOOK URL
+{{.Type}}	{{.MicrosoftTeamsWebhookUrl}}
 `
 var describeTemplateNewRelic = `TYPE	ACCOUNT ID	LICENSE KEY	WRITE TOKEN	READ TOKEN
 {{.Type}}	{{.AccountId}}	{{.LicenseKey}}	{{.WriteToken}}	{{.ReadToken}}

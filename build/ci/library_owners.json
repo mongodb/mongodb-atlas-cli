@@ -44,6 +44,7 @@
 	"google.golang.org/protobuf": "mongocli",
 	"golang.org/x/mod": "mongocli",
 	"gopkg.in/yaml.v3": "mongocli",
+	"github.com/jba/templatecheck": "mongocli",
 	"github.com/mongodb/mongodb-atlas-kubernetes": "atlas_kubernetes_team",
 	"k8s.io/api": "atlas_kubernetes_team",
 	"k8s.io/apimachinery": "atlas_kubernetes_team",

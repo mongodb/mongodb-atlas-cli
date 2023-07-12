@@ -16,7 +16,9 @@ package test
 
 import (
 	"testing"
+	"text/template"
 
+	"github.com/jba/templatecheck"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
@@ -46,4 +48,17 @@ func CleanupConfig() {
 	config.SetPrivateAPIKey("")
 	config.SetOrgID("")
 	config.SetProjectID("")
+}
+
+// VerifyTemplate validates that the given template string is valid.
+func VerifyOutputTemplate(t *testing.T, templateString string, expected interface{}) {
+	t.Helper()
+	parsedTemplate, err := template.New("output").Parse(templateString)
+	if err != nil {
+		t.Fatalf("Failed to validate table format template: %v", err)
+	}
+	err = templatecheck.CheckText(parsedTemplate, expected)
+	if err != nil {
+		t.Fatalf("Failed to validate table format template: %v", err)
+	}
 }

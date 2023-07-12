@@ -12,7 +12,7 @@ jobs:
     name: Build and publish docker image
     runs-on: ubuntu-latest
     env:
-      IMAGE_REPOSITORY: mongodb/apix-test
+      IMAGE_REPOSITORY: nicohrubec266/mongodb-atlas-cli
       PLATFORMS: linux/amd64,linux/arm64
     steps:
       - name: Set up QEMU

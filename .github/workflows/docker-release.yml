@@ -5,7 +5,7 @@ on:
     #   - cron: "0 1 * * *"
     # TODO: cron job deactivated for now
     branches:
-      - 'CLOUDP-188862'
+      - 'CLOUDP-188862-personal'
 
 jobs:
   release_image:

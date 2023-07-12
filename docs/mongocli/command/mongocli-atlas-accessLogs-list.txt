@@ -93,3 +93,10 @@ Inherited Options
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return a JSON-formatted list of all access list entries for the project with ID 618d48e05277a606ed2496fe for the cluster named Cluster0:		
+   mongocli atlas accesslogs list --output json --projectId 618d48e05277a606ed2496fe --clusterName Cluster0

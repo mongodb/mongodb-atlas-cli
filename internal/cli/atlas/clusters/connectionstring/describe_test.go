@@ -46,6 +46,9 @@ func TestDescribe_Run(t *testing.T) {
 
 	err := describeOpts.Run()
 	assert.NoError(t, err)
+
+	test.VerifyOutputTemplate(t, describeTemplatePrivate, expected)
+	test.VerifyOutputTemplate(t, describeTemplateStandard, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

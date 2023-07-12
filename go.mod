@@ -59,7 +59,10 @@ require (
 	sigs.k8s.io/yaml v1.3.0
 )
 
-require go.mongodb.org/atlas-sdk/v20230201002 v20230201002.0.0
+require (
+	github.com/jba/templatecheck v0.6.0
+	go.mongodb.org/atlas-sdk/v20230201002 v20230201002.0.0
+)
 
 require (
 	cloud.google.com/go/compute v1.20.0 // indirect
@@ -104,6 +107,7 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/s2a-go v0.1.4 // indirect
+	github.com/google/safehtml v0.0.2 // indirect
 	github.com/google/safetext v0.0.0-20220905092116-b49f7bc46da2 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.4 // indirect
 	github.com/googleapis/gax-go/v2 v2.11.0 // indirect

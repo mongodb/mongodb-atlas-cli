@@ -17,10 +17,14 @@
 package containers
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
 
@@ -29,11 +33,23 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockContainersLister(ctrl)
 
 	t.Run("no provider", func(t *testing.T) {
+		buf := new(bytes.Buffer)
 		listOpts := &ListOpts{
 			store: mockStore,
+			OutputOpts: cli.OutputOpts{
+				Template:  listTemplate,
+				OutWriter: buf,
+			},
 		}
 
-		var expected []atlasv2.CloudProviderContainer
+		expected := []atlasv2.CloudProviderContainer{{
+			Id:             pointer.Get("1234567890"),
+			ProviderName:   pointer.Get("AWS"),
+			Region:         pointer.Get("US_EAST_1"),
+			AtlasCidrBlock: pointer.Get("Test"),
+			Provisioned:    pointer.Get(false),
+		}}
+
 		mockStore.
 			EXPECT().
 			AllContainers(listOpts.ProjectID, listOpts.NewListOptions()).
@@ -43,6 +59,8 @@ func TestList_Run(t *testing.T) {
 		if err := listOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
+
+		test.VerifyOutputTemplate(t, listTemplate, expected)
 	})
 	t.Run("with provider", func(t *testing.T) {
 		listOpts := &ListOpts{

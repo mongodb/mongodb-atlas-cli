@@ -18,11 +18,11 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
@@ -32,7 +32,12 @@ func TestListOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockExportBucketsLister(ctrl)
 
 	expected := &atlasv2.PaginatedBackupSnapshotExportBucket{
-		Results: []atlasv2.DiskBackupSnapshotAWSExportBucket{},
+		Results: []atlasv2.DiskBackupSnapshotAWSExportBucket{
+			{
+				Id:            pointer.Get("1"),
+				CloudProvider: pointer.Get("AWS"),
+			},
+		},
 	}
 	buf := new(bytes.Buffer)
 
@@ -54,7 +59,7 @@ func TestListOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	snaps.MatchSnapshot(t, buf.String())
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

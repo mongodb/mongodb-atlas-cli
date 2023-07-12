@@ -20,7 +20,6 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -68,8 +67,8 @@ func TestDBUserList_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	snaps.MatchSnapshot(t, buf.String())
 	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

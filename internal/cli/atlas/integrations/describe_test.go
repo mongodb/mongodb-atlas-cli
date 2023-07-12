@@ -20,7 +20,6 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -59,8 +58,8 @@ func TestDescribe_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	snaps.MatchSnapshot(t, buf.String())
 	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

@@ -86,6 +86,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 			wantErr: true,
 		},
 	}
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 	for _, tt := range tests {
 		cmd := tt.cmd
 		params := &admin.GetAlertApiParams{

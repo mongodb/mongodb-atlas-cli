@@ -21,11 +21,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
 
@@ -75,6 +75,6 @@ func TestConfigList_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	snaps.MatchSnapshot(t, buf.String())
+	test.VerifyOutputTemplate(t, settingsListTemplate, expected)
 	t.Log(buf.String())
 }

@@ -34,4 +34,5 @@ jobs:
           context: .
           platforms: ${{ env.PLATFORMS }}
           tags: ${{ env.IMAGE_REPOSITORY }}:mongodb-atlas-cli
+          file: Dockerfile
           push: true

@@ -389,7 +389,6 @@ func (*DefaultSetterOpts) DefaultQuestions() []*survey.Question {
 			Prompt: &survey.Select{
 				Message: "Default Output Format:",
 				Options: []string{plaintextFormat, jsonFormat},
-				Default: config.Output(),
 			},
 		},
 	}

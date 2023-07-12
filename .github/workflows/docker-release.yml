@@ -33,5 +33,5 @@ jobs:
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
-          tags: ${{ env.env.IMAGE_REPOSITORY }}:mongodb-atlas-cli
+          tags: ${{ env.IMAGE_REPOSITORY }}:mongodb-atlas-cli
           push: true

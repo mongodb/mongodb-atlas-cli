@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
 
 const aws = "AWS"
@@ -53,7 +53,7 @@ func TestAccessRoles(t *testing.T) {
 
 		var iamRole atlasv2.CloudProviderAccessRole
 		if err := json.Unmarshal(resp, &iamRole); a.NoError(err) {
-			a.Equal(aws, iamRole.CloudProviderAccessAWSIAMRole.ProviderName)
+			a.Equal(aws, iamRole.ProviderName)
 		}
 	})
 

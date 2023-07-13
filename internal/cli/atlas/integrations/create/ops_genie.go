@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
 
 var opsGenieType = "OPS_GENIE"
@@ -58,11 +58,9 @@ func (opts *OpsGenieOpts) Run() error {
 
 func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlasv2.ThridPartyIntegration {
 	return &atlasv2.ThridPartyIntegration{
-		OpsGenie: &atlasv2.OpsGenie{
-			Type:   &opsGenieType,
-			Region: &opts.region,
-			ApiKey: opts.apiKey,
-		},
+		Type:   &opsGenieType,
+		Region: &opts.region,
+		ApiKey: &opts.apiKey,
 	}
 }
 

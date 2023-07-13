@@ -130,7 +130,7 @@ commands:
             template: list
             output_template: |
               ID	STATUS{{range .Results}}
-              {{if .DiskBackupReplicaSet}}{{.DiskBackupReplicaSet.Id}}	{{.DiskBackupReplicaSet.Status}}{{else}}{{.DiskBackupShardedClusterSnapshot.Id}}	{{.DiskBackupShardedClusterSnapshot.Status}}{{end}}{{end}}
+              {{.Id}}	{{.Description}} {{.Status}}
             example: |
               # list available backup schedules for data lake pipeline called 'Pipeline1':
                 atlas dataLakePipelines availableSnapshots list Pipeline1

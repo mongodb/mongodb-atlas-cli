@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -435,28 +435,7 @@ func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedInte
 }
 
 func getIntegrationType(val atlasv2.ThridPartyIntegration) string {
-	switch {
-	case val.Datadog != nil:
-		return datadogEntity
-	case val.MicrosoftTeams != nil:
-		return microsoftTeamsEntity
-	case val.NewRelic != nil:
-		return newRelicEntity
-	case val.OpsGenie != nil:
-		return opsGenieEntity
-	case val.PagerDuty != nil:
-		return pagerDutyEntity
-	case val.Prometheus != nil:
-		return prometheusEntity
-	case val.Slack != nil:
-		return slackEntity
-	case val.VictorOps != nil:
-		return victorOpsEntity
-	case val.Webhook != nil:
-		return webhookEntity
-	default:
-		return ""
-	}
+	return val.GetType()
 }
 
 func IsGov() bool {

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -90,9 +90,9 @@ func TestSnapshots(t *testing.T) {
 		a := assert.New(t)
 		var snapshot atlasv2.DiskBackupSnapshot
 		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
-			a.Equal("test-snapshot", snapshot.DiskBackupReplicaSet.GetDescription())
+			a.Equal("test-snapshot", snapshot.GetDescription())
 		}
-		snapshotID = snapshot.DiskBackupReplicaSet.GetId()
+		snapshotID = snapshot.GetId()
 	})
 
 	t.Run("Watch creation", func(t *testing.T) {

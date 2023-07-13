@@ -33,7 +33,7 @@ import (
 )
 
 var listTemplate = `ID	DESCRIPTION	STATUS{{range .Results}}
-{{if .DiskBackupReplicaSet}}{{.DiskBackupReplicaSet.Id}}	{{.DiskBackupReplicaSet.Description}}	{{.DiskBackupReplicaSet.Status}}{{else}}{{.DiskBackupShardedClusterSnapshot.Id}}	{{.DiskBackupShardedClusterSnapshot.Description}}	{{.DiskBackupShardedClusterSnapshot.Status}}{{end}}{{end}}`
+{{.Id}}	{{.Description}}	{{.Status}}{{end}}`
 
 type ListOpts struct {
 	cli.GlobalOpts

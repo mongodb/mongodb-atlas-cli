@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
 
 var newRelicIntegrationType = "NEW_RELIC"
@@ -60,13 +60,11 @@ func (opts *NewRelicOpts) Run() error {
 
 func (opts *NewRelicOpts) newNewRelicIntegration() *atlasv2.ThridPartyIntegration {
 	return &atlasv2.ThridPartyIntegration{
-		NewRelic: &atlasv2.NewRelic{
-			Type:       &newRelicIntegrationType,
-			LicenseKey: opts.licenseKey,
-			AccountId:  opts.accountID,
-			WriteToken: opts.writeToken,
-			ReadToken:  opts.readToken,
-		},
+		Type:       &newRelicIntegrationType,
+		LicenseKey: &opts.licenseKey,
+		AccountId:  &opts.accountID,
+		WriteToken: &opts.writeToken,
+		ReadToken:  &opts.readToken,
 	}
 }
 

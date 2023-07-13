@@ -26,7 +26,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
 
 func TestOnlineArchives(t *testing.T) {
@@ -173,7 +173,7 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 	if err = json.Unmarshal(resp, &archive); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	assert.Equal(t, expireAfterDays, archive.Criteria.DateCriteria.GetExpireAfterDays())
+	assert.Equal(t, expireAfterDays, archive.Criteria.GetExpireAfterDays())
 }
 
 func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {

@@ -25,6 +25,7 @@ require (
 	github.com/google/go-github/v50 v50.2.0
 	github.com/google/uuid v1.3.0
 	github.com/hinshun/vt10x v0.0.0-20220119200601-820417d04eec
+	github.com/jba/templatecheck v0.6.0
 	github.com/klauspost/compress v1.16.5
 	github.com/mattn/go-isatty v0.0.18
 	github.com/mongodb-forks/digest v1.0.4
@@ -40,7 +41,7 @@ require (
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
 	go.mongodb.org/atlas v0.30.0
-	go.mongodb.org/atlas-sdk v0.15.0
+	go.mongodb.org/atlas-sdk/v20230201002 v20230201002.0.0
 	go.mongodb.org/mongo-driver v1.11.7
 	go.mongodb.org/ops-manager v0.53.0
 	golang.org/x/crypto v0.11.0
@@ -100,6 +101,7 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/s2a-go v0.1.4 // indirect
+	github.com/google/safehtml v0.0.2 // indirect
 	github.com/google/safetext v0.0.0-20220905092116-b49f7bc46da2 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.5 // indirect
 	github.com/googleapis/gax-go/v2 v2.11.0 // indirect
@@ -124,6 +126,7 @@ require (
 	github.com/spf13/cast v1.5.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
+	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect

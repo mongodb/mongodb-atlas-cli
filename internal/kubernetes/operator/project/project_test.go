@@ -34,7 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -117,12 +117,10 @@ func TestBuildAtlasProject(t *testing.T) {
 			Links: nil,
 			Results: []atlasv2.ThridPartyIntegration{
 				{
-					Prometheus: &atlasv2.Prometheus{
-						Type:             pointer.Get("PROMETHEUS"),
-						Username:         "TestPrometheusUserName",
-						Password:         pointer.Get("TestPrometheusPassword"),
-						ServiceDiscovery: "TestPrometheusServiceDiscovery",
-					},
+					Type:             pointer.Get("PROMETHEUS"),
+					Username:         pointer.Get("TestPrometheusUserName"),
+					Password:         pointer.Get("TestPrometheusPassword"),
+					ServiceDiscovery: pointer.Get("TestPrometheusServiceDiscovery"),
 				},
 			},
 			TotalCount: pointer.Get(1),
@@ -135,22 +133,20 @@ func TestBuildAtlasProject(t *testing.T) {
 			AutoDeferOnceEnabled: pointer.Get(false),
 		}
 
-		peeringConnectionAWS := &atlasv2.AwsNetworkPeeringConnectionSettings{
-			AccepterRegionName:  "TestRegionName",
-			AwsAccountId:        "TestAWSAccountID",
+		peeringConnectionAWS := &atlasv2.BaseNetworkPeeringConnectionSettings{
+			AccepterRegionName:  pointer.Get("TestRegionName"),
+			AwsAccountId:        pointer.Get("TestAWSAccountID"),
 			ConnectionId:        pointer.Get("TestConnID"),
 			ContainerId:         "TestContainerID",
 			ErrorStateName:      pointer.Get("TestErrStateName"),
 			Id:                  pointer.Get("TestID"),
 			ProviderName:        pointer.Get(string(provider.ProviderAWS)),
-			RouteTableCidrBlock: "0.0.0.0/0",
+			RouteTableCidrBlock: pointer.Get("0.0.0.0/0"),
 			StatusName:          pointer.Get("TestStatusName"),
-			VpcId:               "TestVPCID",
+			VpcId:               pointer.Get("TestVPCID"),
 		}
 
-		peeringConnections := []interface{}{
-			peeringConnectionAWS,
-		}
+		peeringConnections := []atlasv2.BaseNetworkPeeringConnectionSettings{*peeringConnectionAWS}
 
 		privateAWSEndpoint := atlasv2.EndpointService{
 			Id:                  pointer.Get("TestID"),
@@ -452,28 +448,28 @@ func TestBuildAtlasProject(t *testing.T) {
 				AlertConfigurationSyncEnabled: false,
 				NetworkPeers: []atlasV1.NetworkPeer{
 					{
-						AccepterRegionName:  peeringConnectionAWS.AccepterRegionName,
+						AccepterRegionName:  peeringConnectionAWS.GetAccepterRegionName(),
 						ContainerRegion:     "",
-						AWSAccountID:        peeringConnectionAWS.AwsAccountId,
+						AWSAccountID:        peeringConnectionAWS.GetAwsAccountId(),
 						ContainerID:         peeringConnectionAWS.ContainerId,
 						ProviderName:        provider.ProviderName(*peeringConnectionAWS.ProviderName),
-						RouteTableCIDRBlock: peeringConnectionAWS.RouteTableCidrBlock,
-						VpcID:               peeringConnectionAWS.VpcId,
+						RouteTableCIDRBlock: peeringConnectionAWS.GetRouteTableCidrBlock(),
+						VpcID:               peeringConnectionAWS.GetVpcId(),
 					},
 				},
 				WithDefaultAlertsSettings: false,
 				X509CertRef:               nil,
 				Integrations: []project.Integration{
 					{
-						Type:     thirdPartyIntegrations.Results[0].Prometheus.GetType(),
-						UserName: thirdPartyIntegrations.Results[0].Prometheus.GetUsername(),
+						Type:     thirdPartyIntegrations.Results[0].GetType(),
+						UserName: thirdPartyIntegrations.Results[0].GetUsername(),
 						PasswordRef: common.ResourceRefNamespaced{
 							Name: fmt.Sprintf("%s-integration-%s",
 								strings.ToLower(projectID),
-								strings.ToLower(thirdPartyIntegrations.Results[0].Prometheus.GetType())),
+								strings.ToLower(thirdPartyIntegrations.Results[0].GetType())),
 							Namespace: targetNamespace,
 						},
-						ServiceDiscovery: thirdPartyIntegrations.Results[0].Prometheus.ServiceDiscovery,
+						ServiceDiscovery: thirdPartyIntegrations.Results[0].GetServiceDiscovery(),
 					},
 				},
 				EncryptionAtRest: &atlasV1.EncryptionAtRest{
@@ -868,12 +864,10 @@ func Test_buildIntegrations(t *testing.T) {
 			Links: nil,
 			Results: []atlasv2.ThridPartyIntegration{
 				{
-					Prometheus: &atlasv2.Prometheus{
-						Type:             pointer.Get("PROMETHEUS"),
-						Password:         pointer.Get("PrometheusTestPassword"),
-						Username:         "PrometheusTestUserName",
-						ServiceDiscovery: "TestServiceDiscovery",
-					},
+					Type:             pointer.Get("PROMETHEUS"),
+					Password:         pointer.Get("PrometheusTestPassword"),
+					Username:         pointer.Get("PrometheusTestUserName"),
+					ServiceDiscovery: pointer.Get("TestServiceDiscovery"),
 				},
 			},
 			TotalCount: pointer.Get(0),
@@ -888,13 +882,13 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expected := []project.Integration{
 			{
-				Type:             ints.Results[0].Prometheus.GetType(),
-				ServiceDiscovery: ints.Results[0].Prometheus.ServiceDiscovery,
-				UserName:         ints.Results[0].Prometheus.Username,
+				Type:             ints.Results[0].GetType(),
+				ServiceDiscovery: ints.Results[0].GetServiceDiscovery(),
+				UserName:         ints.Results[0].GetUsername(),
 				PasswordRef: common.ResourceRefNamespaced{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Prometheus.GetType())),
+						strings.ToLower(ints.Results[0].GetType())),
 					Namespace: targetNamespace,
 				},
 			},
@@ -909,14 +903,14 @@ func Test_buildIntegrations(t *testing.T) {
 				ObjectMeta: v1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Prometheus.GetType())),
+						strings.ToLower(ints.Results[0].GetType())),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
 						secrets.TypeLabelKey: secrets.CredLabelVal,
 					},
 				},
 				Data: map[string][]byte{
-					secrets.PasswordField: []byte(ints.Results[0].Prometheus.GetPassword()),
+					secrets.PasswordField: []byte(ints.Results[0].GetPassword()),
 				},
 			},
 		}
@@ -936,12 +930,11 @@ func Test_buildIntegrations(t *testing.T) {
 			Links: nil,
 			Results: []atlasv2.ThridPartyIntegration{
 				{
-					Prometheus: &atlasv2.Prometheus{
-						Type:             pointer.Get("PROMETHEUS"),
-						Password:         pointer.Get("PrometheusTestPassword"),
-						Username:         "PrometheusTestUserName",
-						ServiceDiscovery: "TestServiceDiscovery",
-					},
+
+					Type:             pointer.Get("PROMETHEUS"),
+					Password:         pointer.Get("PrometheusTestPassword"),
+					Username:         pointer.Get("PrometheusTestUserName"),
+					ServiceDiscovery: pointer.Get("TestServiceDiscovery"),
 				},
 			},
 			TotalCount: pointer.Get(0),
@@ -954,13 +947,13 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expected := []project.Integration{
 			{
-				Type:             ints.Results[0].Prometheus.GetType(),
-				ServiceDiscovery: ints.Results[0].Prometheus.ServiceDiscovery,
-				UserName:         ints.Results[0].Prometheus.Username,
+				Type:             ints.Results[0].GetType(),
+				ServiceDiscovery: ints.Results[0].GetServiceDiscovery(),
+				UserName:         ints.Results[0].GetUsername(),
 				PasswordRef: common.ResourceRefNamespaced{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Prometheus.GetType())),
+						strings.ToLower(ints.Results[0].GetType())),
 					Namespace: targetNamespace,
 				},
 			},
@@ -975,7 +968,7 @@ func Test_buildIntegrations(t *testing.T) {
 				ObjectMeta: v1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Prometheus.GetType())),
+						strings.ToLower(ints.Results[0].GetType())),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
 						secrets.TypeLabelKey: secrets.CredLabelVal,
@@ -1035,21 +1028,21 @@ func Test_buildNetworkPeering(t *testing.T) {
 
 	peerProvider := mocks.NewMockPeeringConnectionLister(ctl)
 	t.Run("Can convert Peering connections", func(t *testing.T) {
-		peeringConnectionAWS := &atlasv2.AwsNetworkPeeringConnectionSettings{
-			AccepterRegionName:  "TestRegionName",
-			AwsAccountId:        "TestAWSAccountID",
+		peeringConnectionAWS := &atlasv2.BaseNetworkPeeringConnectionSettings{
+			AccepterRegionName:  pointer.Get("TestRegionName"),
+			AwsAccountId:        pointer.Get("TestAWSAccountID"),
 			ConnectionId:        pointer.Get("TestConnID"),
 			ContainerId:         "TestContainerID",
 			ErrorStateName:      pointer.Get("TestErrStateName"),
 			Id:                  pointer.Get("TestID"),
 			ProviderName:        pointer.Get(string(provider.ProviderAWS)),
-			RouteTableCidrBlock: "0.0.0.0/0",
+			RouteTableCidrBlock: pointer.Get("0.0.0.0/0"),
 			StatusName:          pointer.Get("TestStatusName"),
-			VpcId:               "TestVPCID",
+			VpcId:               pointer.Get("TestVPCID"),
 		}
 
-		peeringConnections := []interface{}{
-			peeringConnectionAWS,
+		peeringConnections := []atlasv2.BaseNetworkPeeringConnectionSettings{
+			*peeringConnectionAWS,
 		}
 
 		listOptions := mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
@@ -1068,13 +1061,13 @@ func Test_buildNetworkPeering(t *testing.T) {
 
 		expected := []atlasV1.NetworkPeer{
 			{
-				AccepterRegionName:  peeringConnectionAWS.AccepterRegionName,
+				AccepterRegionName:  peeringConnectionAWS.GetAccepterRegionName(),
 				ContainerRegion:     "",
-				AWSAccountID:        peeringConnectionAWS.AwsAccountId,
+				AWSAccountID:        peeringConnectionAWS.GetAwsAccountId(),
 				ContainerID:         peeringConnectionAWS.ContainerId,
 				ProviderName:        provider.ProviderName(*peeringConnectionAWS.ProviderName),
-				RouteTableCIDRBlock: peeringConnectionAWS.RouteTableCidrBlock,
-				VpcID:               peeringConnectionAWS.VpcId,
+				RouteTableCIDRBlock: peeringConnectionAWS.GetRouteTableCidrBlock(),
+				VpcID:               peeringConnectionAWS.GetVpcId(),
 			},
 		}
 

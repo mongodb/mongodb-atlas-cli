@@ -33,7 +33,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -135,8 +135,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			SampleSizeBIConnector:            pointer.Get[int](10),
 			SampleRefreshIntervalBIConnector: pointer.Get[int](10),
 		}
-		processArgs.OplogSizeMB.Set(pointer.Get(10))
-		processArgs.OplogMinRetentionHours.Set(pointer.Get(float64(10.1)))
+		processArgs.OplogSizeMB = pointer.Get(10)
+		processArgs.OplogMinRetentionHours = pointer.Get(float64(10.1))
 		backupSchedule := &atlasv2.DiskBackupSnapshotSchedule{
 			ClusterId:             pointer.Get("testClusterID"),
 			ClusterName:           pointer.Get(clusterName),

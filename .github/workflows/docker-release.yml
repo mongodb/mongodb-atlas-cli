@@ -25,8 +25,8 @@ jobs:
       - name: Extract version
         run: |
           prev_output=${{ steps.get-latest-tag.outputs.tag }}
-          extracted_version=$prev_output
-          echo "EXTRACTED_VERSION=p$extracted_version" >> $GITHUB_ENV
+          extracted_version=$prev_output#*/
+          echo "EXTRACTED_VERSION=$extracted_version" >> $GITHUB_ENV
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:

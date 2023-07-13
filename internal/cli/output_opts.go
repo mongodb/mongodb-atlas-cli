@@ -183,7 +183,7 @@ func template(outputType, value string) (string, error) {
 	if outputType == goTemplateFile {
 		data, err := os.ReadFile(value)
 		if err != nil {
-			return "", fmt.Errorf("%w: %s, %v", errTemplate, value, err.Error())
+			return "", fmt.Errorf("%w: %s, %w", errTemplate, value, err)
 		}
 
 		value = string(data)

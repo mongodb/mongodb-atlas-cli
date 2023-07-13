@@ -85,8 +85,8 @@ func TestPublishStableTasks(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := tt.args.c
 			PublishStableTasks(c, tt.args.toolName)
-			assert.Len(t, c.Tasks, 120)
-			assert.Len(t, c.Variants, 4)
+			assert.Len(t, c.Variants, 3)
+			assert.Len(t, c.Tasks, 90)
 		})
 	}
 }

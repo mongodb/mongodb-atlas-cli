@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package quickstart
+package setup
 
 import (
 	"errors"
@@ -184,7 +184,7 @@ func (opts *Opts) providerName() string {
 	return providerName(opts.Tier, opts.Provider)
 }
 
-func (opts *quickstart) providerName() string {
+func (opts *clusterSettings) providerName() string {
 	return providerName(opts.Tier, opts.Provider)
 }
 

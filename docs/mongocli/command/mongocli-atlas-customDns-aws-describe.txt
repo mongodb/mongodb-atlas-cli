@@ -71,4 +71,4 @@ Examples
 .. code-block::
 
    # Return the details for the custom DNS configuration deployed to AWS in the project with ID 618d48e05277a606ed2496fe:		
-   mongocli atlas customDns aws describe  --projectId 618d48e05277a606ed2496fe 
+   mongocli atlas customDns aws describe --projectId 618d48e05277a606ed2496fe 

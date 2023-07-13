@@ -51,7 +51,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/processes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
@@ -190,7 +189,6 @@ Use the --help flag with any command for more info on that command.`,
 	rootCmd.AddCommand(
 		atlasConfig.Builder(),
 		auth.Builder(),
-		quickstart.Builder(),
 		setup.Builder(),
 		projects.Builder(),
 		organizations.Builder(),

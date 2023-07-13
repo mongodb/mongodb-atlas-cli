@@ -12,7 +12,7 @@ mongocli atlas customDns aws describe
    :depth: 1
    :class: singlecol
 
-Describe the custom DNS configuration of an Atlas project’s cluster deployed to AWS.
+Describe the custom DNS configuration of an Atlas project's cluster deployed to AWS.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 
@@ -65,3 +65,10 @@ Inherited Options
      - false
      - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return the details for the custom DNS configuration deployed to AWS in the project with ID 618d48e05277a606ed2496fe:		
+   mongocli atlas customDns aws describe  --projectId 618d48e05277a606ed2496fe 

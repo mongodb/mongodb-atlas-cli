@@ -57,9 +57,11 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:     "describe",
-		Short:   "Describe the custom DNS configuration of an Atlas project’s cluster deployed to AWS.",
+		Short:   "Describe the custom DNS configuration of an Atlas project's cluster deployed to AWS.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"get"},
+		Example: fmt.Sprintf(`  # Return the details for the custom DNS configuration deployed to AWS in the project with ID 618d48e05277a606ed2496fe:		
+  %s customDns aws describe  --projectId 618d48e05277a606ed2496fe `, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

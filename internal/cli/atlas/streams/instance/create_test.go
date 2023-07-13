@@ -32,13 +32,15 @@ func TestCreateOpts_Run(t *testing.T) {
 		store:    mockStore,
 		name:     "ExampleStream",
 		provider: "AWS",
-		region:   "US-EAST-1",
+		region:   "VIRGINA_USA",
 	}
+	opts.ProjectID = "project-id"
 
-	expected := &atlasv2.StreamsTenant{Name: &opts.name, GroupId: &opts.ProjectID, DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "US-EAST-1"}}
+	expected := &atlasv2.StreamsTenant{Name: &opts.name, GroupId: &opts.ProjectID, DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINA_USA"}}
+
 	mockStore.
 		EXPECT().
-		CreateStream(opts.name, expected).
+		CreateStream(opts.ProjectID, expected).
 		Return(expected, nil).
 		Times(1)
 

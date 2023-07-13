@@ -31,12 +31,18 @@ func TestListOpts_Run(t *testing.T) {
 	listOpts := &ListOpts{
 		store: mockStore,
 	}
+	listOpts.ProjectID = "project-id"
+
+	listParams := new(atlasv2.ListStreamInstancesApiParams)
+	listParams.ItemsPerPage = &listOpts.ItemsPerPage
+	listParams.GroupId = listOpts.ProjectID
+	listParams.PageNum = &listOpts.PageNum
 
 	expected := &atlasv2.PaginatedApiStreamsTenant{}
 
 	mockStore.
 		EXPECT().
-		ProjectStreams(listOpts.ProjectID, listOpts.NewListOptions()).
+		ProjectStreams(listOpts.ProjectID, listParams).
 		Return(expected, nil).
 		Times(1)
 

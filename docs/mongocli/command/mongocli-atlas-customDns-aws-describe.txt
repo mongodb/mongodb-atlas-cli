@@ -12,7 +12,7 @@ mongocli atlas customDns aws describe
    :depth: 1
    :class: singlecol
 
-Describe the custom DNS configuration of an Atlas project's cluster deployed to AWS.
+Describe the custom DNS configuration of an Atlas cluster deployed to AWS in the specified project.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 

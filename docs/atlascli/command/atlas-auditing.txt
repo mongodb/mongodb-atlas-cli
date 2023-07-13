@@ -12,7 +12,7 @@ atlas auditing
    :depth: 1
    :class: singlecol
 
-Returns and edits database auditing settings for MongoDB Cloud projects.
+Returns database auditing settings for MongoDB Cloud projects.
 
 Options
 -------

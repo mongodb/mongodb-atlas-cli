@@ -21,7 +21,7 @@ import (
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "auditing",
-		Short: "Returns and edits database auditing settings for MongoDB Cloud projects.",
+		Short: "Returns database auditing settings for MongoDB Cloud projects.",
 	}
 	cmd.AddCommand(
 		DescribeBuilder(),

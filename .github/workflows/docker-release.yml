@@ -19,12 +19,9 @@ jobs:
         uses: actions/checkout@v3.5.3
         with:
           fetch-depth: 0
-      - name: Get latest release
-        id: get-latest-release
-        uses: pozetroninc/github-action-get-latest-release@master
-        with:
-          repository: ${{ github.repository }}
-          excludes: prerelease, draft
+      - name: 'Get latest tag'
+        id: get-latest-tag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
@@ -43,6 +40,6 @@ jobs:
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
-          tags: ${{ env.IMAGE_REPOSITORY }}:${{ steps.get-latest-release.outputs.release }}
+          tags: ${{ env.IMAGE_REPOSITORY }}:${{ steps.get-latest-tag.outputs.tag }}
           file: Dockerfile
           push: true

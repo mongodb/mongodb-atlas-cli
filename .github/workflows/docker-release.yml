@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
       - name: 'Get latest tag'
         id: get-latest-tag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        uses: actions-ecosystem/action-get-latest-tag@v1
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:

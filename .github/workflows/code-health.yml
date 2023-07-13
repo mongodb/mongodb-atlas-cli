@@ -1,0 +1,176 @@
+---
+name: Code Health
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+jobs:
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3.6.0
+        with:
+          version: v1.53.3
+  unit-tests:
+    env:
+      COVERAGE: coverage.out
+      TEST_CMD: gotestsum --junitfile unit-tests.xml --format standard-verbose --
+      UNIT_TAGS: unit
+      INTEGRATION_TAGS: integration
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+      - run: go install gotest.tools/gotestsum@latest
+      - run: make unit-test
+      - name: Test Summary
+        id: test_summary
+        uses: test-summary/action@v2.1
+        with:
+          paths: unit-tests.xml
+        if: always() && matrix.os == 'ubuntu-latest'
+  integration-tests:
+    env:
+      COVERAGE: coverage.out
+      TEST_CMD: gotestsum --format standard-verbose --
+      UNIT_TAGS: unit
+      INTEGRATION_TAGS: integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+      - run: go install gotest.tools/gotestsum@latest
+      - run: make integration-test
+  fuzz-tests:
+    env:
+      COVERAGE: coverage.out
+      TEST_CMD: gotestsum --format standard-verbose --
+      UNIT_TAGS: unit
+      INTEGRATION_TAGS: integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+      - run: go install gotest.tools/gotestsum@latest
+      - run: make fuzz-normalizer-test
+  libraryOwners:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+      - name: Run check-library-owners
+        run: make check-library-owners
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+      - name: Generate docs
+        run: make gen-docs > /dev/null
+      - name: Check for uncommited files
+        run: |
+          export FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
+          export LINES=$(echo "$FILES" | awk 'NF' | wc -l)
+          if [ $LINES -ne 0 ]; then
+            echo "Detected files that need to be committed:"
+            echo "$FILES" | sed -e "s/^/  /"
+            echo ""
+            echo "Try running: make gen-docs"
+            exit 1
+          fi
+  mocks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+      - name: Install go-mock
+        run: go install github.com/golang/mock/mockgen@latest
+      - name: Generate mocks
+        run: make gen-mocks
+      - name: Check for uncommited files
+        run: |
+          export FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
+          export LINES=$(echo "$FILES" | awk 'NF' | wc -l)
+          if [ $LINES -ne 0 ]; then
+            echo "Detected files that need to be committed:"
+            echo "$FILES" | sed -e "s/^/  /"
+            echo ""
+            echo "Try running: make gen-mocks"
+            exit 1
+          fi
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run ShellCheck
+        uses: bewuethr/shellcheck-action@v2
+  tidy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+      - name: Run 'go mod tidy'
+        run: go mod tidy
+      - name: Check for uncommited files
+        run: |
+          export FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
+          export LINES=$(echo "$FILES" | awk 'NF' | wc -l)
+          if [ $LINES -ne 0 ]; then
+            echo "Detected files that need to be committed:"
+            echo "$FILES" | sed -e "s/^/  /"
+            echo ""
+            echo "Try running: go mod tidy"
+            exit 1
+          fi
+  licensecheck:
+    name: licensecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+      - run: make devtools
+      - run: ./build/ci/check-licenses.sh

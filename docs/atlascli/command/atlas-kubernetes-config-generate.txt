@@ -12,14 +12,15 @@ atlas kubernetes config generate
    :depth: 1
    :class: singlecol
 
-Generate Kubernetes configuration resources.
+Generate Kubernetes configuration resources for use with Atlas Kubernetes Operator.
 
-This command provides your Kubernetes configuration access to Atlas. You can generate Atlas Operator resources for Atlas objects, including Projects, Deployments, and Users.
+This command exports configurations for Atlas objects including projects, deployments, and users in a Kubernetes-compatible format, allowing you to manage these resources using the Atlas Kubernetes Operator. For more information, see https://www.mongodb.com/docs/atlas/atlas-operator/
 
 Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas kubernetes config generate [options]
 
@@ -51,7 +52,7 @@ Options
    * - --operatorVersion
      - string
      - false
-     - Version of Atlas Kubernetes Operator to generate resources for. This value defaults to "1.6.0".
+     - Version of Atlas Kubernetes Operator to generate resources for. This value defaults to "1.8.0".
    * - --orgId
      - string
      - false
@@ -79,7 +80,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
 --------

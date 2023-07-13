@@ -28,7 +28,7 @@ import (
 )
 
 const listTemplate = `CIDR BLOCK	AWS SECURITY GROUP{{range .Results}}
-{{.CIDRBlock}}	{{if .AwsSecurityGroup}}{{.AwsSecurityGroup}} {{else}}N/A{{end}}{{end}}
+{{.CidrBlock}}	{{if .AwsSecurityGroup}}{{.AwsSecurityGroup}} {{else}}N/A{{end}}{{end}}
 `
 
 type ListOpts struct {

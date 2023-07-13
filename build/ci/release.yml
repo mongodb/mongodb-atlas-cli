@@ -1,4 +1,12 @@
 variables:
+  - &go_linux_version
+      go_root: "/opt/golang/go1.20"
+      go_bin: "/opt/golang/go1.20/bin"
+      go_base_path: ""
+  - &go_windows_version
+      go_root: "c:\\golang\\go1.19"
+      go_bin: "c:\\golang\\go1.19/bin"
+      go_base_path: "c:"
   - &go_env
       XDG_CONFIG_HOME: ${go_base_path}${workdir}
       GO111MODULE: "on"
@@ -47,12 +55,6 @@ functions:
           set -Eeou pipefail
 
           curl -sL http://boxes.10gen.com/build/curator/curator-dist-rhel70-${curator_release|"latest"}.tar.gz | tar zx
-  "check license header":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        binary: build/ci/check-licenses.sh
   "generate notices":
     - command: subprocess.exec
       type: test
@@ -131,6 +133,7 @@ functions:
         env:
           <<: *go_env
           TOOL_NAME: ${TOOL_NAME}
+          SECRET_API_KEY: ${chocolatey_api_key}
         command: bash.exe -c build/package/chocoupdate.sh
   "rename pkg":
     - command: subprocess.exec
@@ -207,7 +210,6 @@ functions:
           - revision
           - created_at
           - ext
-          - signing_auth_token_42
           - signing_auth_token_44
           - signing_auth_token_46
           - signing_auth_token_50
@@ -225,6 +227,7 @@ functions:
       type: test
       params:
         include_expansions_in_env:
+          - project
           - revision
           - created_at
           - image
@@ -236,6 +239,7 @@ functions:
       type: test
       params:
         include_expansions_in_env:
+          - project
           - revision
           - created_at
           - image
@@ -300,7 +304,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "install go-msi"
       - func: "generate msi"
         vars:
@@ -344,7 +347,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "clone"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -395,7 +397,6 @@ tasks:
     patchable: false
     stepback: false
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: mongocli
@@ -404,7 +405,6 @@ tasks:
     patchable: false
     stepback: false
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: atlascli
@@ -413,7 +413,6 @@ tasks:
     git_tag_only: true
     stepback: false
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: mongocli
@@ -422,7 +421,6 @@ tasks:
     git_tag_only: true
     stepback: false
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: atlascli
@@ -430,7 +428,6 @@ tasks:
   - name: pkg_test_mongocli_generate
     tags: [ "smoke-test", "mongocli", "pkg" ]
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: mongocli
@@ -438,7 +435,6 @@ tasks:
   - name: pkg_test_atlascli_generate
     tags: [ "smoke-test", "atlascli", "pkg" ]
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: atlascli
@@ -452,7 +448,6 @@ tasks:
       - name: release_msi
         variant: "release_mongocli_msi"
     commands:
-      - func: "clone"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -529,7 +524,6 @@ tasks:
       - name: release_msi
         variant: "release_atlascli_msi"
     commands:
-      - func: "clone"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -605,7 +599,6 @@ tasks:
       - name: compile
         variant: "code_health"
     commands:
-      - func: "clone"
       - func: "install go-msi"
       - func: "generate msi"
         vars:
@@ -664,7 +657,6 @@ tasks:
           variant: "release_atlascli_github"
     tags: [ "smoke-test", "generate", "repo", "atlascli" ]
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: atlascli
@@ -677,7 +669,6 @@ tasks:
           variant: "release_mongocli_github"
     tags: [ "smoke-test", "generate", "repo", "mongocli" ]
     commands:
-      - func: "clone"
       - func: "generate evergreen"
         vars:
           tool_name: mongocli
@@ -688,7 +679,6 @@ tasks:
       - name: package_msi
         variant: go_atlascli_msi_snapshot
     commands:
-      - func: "clone"
       - func: "powershell build"
         vars:
           file: windows_post_package_test
@@ -699,9 +689,7 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.19"
-      go_bin: "c:\\golang\\go1.19/bin"
-      go_base_path: "c:"
+      <<: *go_windows_version
       tool_name: "mongocli"
     tasks:
       - name: package_msi
@@ -710,9 +698,7 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.19"
-      go_bin: "c:\\golang\\go1.19/bin"
-      go_base_path: "c:"
+      <<: *go_windows_version
       tool_name: "atlascli"
     tasks:
       - name: package_msi
@@ -721,9 +707,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
       server_version: "4.4.0-rc3"
       goreleaser_file: "build/package/.mongocli.goreleaser.yml"
       package_name: "mongocli"
@@ -735,9 +719,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
       server_version: "4.4.0-rc3"
       goreleaser_file: "build/package/.atlascli.goreleaser.yml"
       package_name: "mongodb-atlas-cli"
@@ -750,9 +732,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
       server_version: "4.4.0-rc3"
     tasks:
       - name: push_mongocli_generate
@@ -761,9 +741,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: push_atlascli_generate
   - name: release_mongocli_msi
@@ -771,9 +749,7 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.19"
-      go_bin: "c:\\golang\\go1.19/bin"
-      go_base_path: "c:"
+      <<: *go_windows_version
       tool_name: "mongocli"
     tasks:
       - name: release_msi
@@ -782,9 +758,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: release_mongocli
   - name: release_atlascli_github
@@ -792,9 +766,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: release_atlascli
   - name: release_atlascli_msi
@@ -802,9 +774,7 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.19"
-      go_bin: "c:\\golang\\go1.19/bin"
-      go_base_path: "c:"
+      <<: *go_windows_version
       tool_name: "atlascli"
     tasks:
       - name: release_msi
@@ -813,9 +783,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: push_stable_mongocli_generate
   - name: release_atlascli_publish
@@ -823,27 +791,21 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: push_stable_atlascli_generate
   - name: pkg_smoke_tests_docker_mongocli
     display_name: "Post packaging smoke tests (Docker / MongoCLI)"
     run_on: ubuntu2004-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: .smoke-test .mongocli .pkg
   - name: pkg_smoke_tests_docker_atlascli
     display_name: "Post packaging smoke tests (Docker / AtlasCLI)"
     run_on: ubuntu2004-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: .smoke-test .atlascli .pkg
   - name: pkg_smoke_tests_windows_atlascli
@@ -854,9 +816,7 @@ buildvariants:
   - name: release_atlascli_repo_test
     display_name: "Test AtlasCLI repo"
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     run_on:
       - ubuntu2004-small
     tasks:
@@ -864,9 +824,7 @@ buildvariants:
   - name: release_mongocli_repo_test
     display_name: "Test MongoCLI repo"
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     run_on:
       - ubuntu2004-small
     tasks:

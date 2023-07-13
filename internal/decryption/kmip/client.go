@@ -21,7 +21,7 @@ import (
 	"errors"
 	"fmt"
 
-	kmip "github.com/gemalto/kmip-go"
+	"github.com/gemalto/kmip-go"
 	"github.com/gemalto/kmip-go/kmip14"
 	"github.com/gemalto/kmip-go/kmip20"
 	"github.com/gemalto/kmip-go/ttlv"
@@ -84,12 +84,7 @@ type DecryptResponse struct {
 	Data             []byte
 }
 
-// Symmetric key value.
-type KeyValue struct {
-	KeyMaterial []byte
-}
-
-// KMIP protocol version.
+// Version of the KMIP protocol.
 type Version struct {
 	Major int
 	Minor int
@@ -145,7 +140,6 @@ var (
 	ErrKMIPReqFailure                = errors.New("kmip request failure")
 	ErrKMIPGetOpFailure              = errors.New("failed to perform get operation")
 	ErrKMIPDecodeFailure             = errors.New("failed to decode")
-	ErrKMIPDecodeKeyBlockFailure     = errors.New("failed to decode key block")
 	ErrKMIPPerformCreateSymmetricKey = errors.New("failed to perform KMIP create symmetric key operation")
 	ErrKMIPDecodeCreateSymmetricKey  = errors.New("failed to decode KMIP create symmetric key response")
 	ErrKMIPPerformEncrypt            = errors.New("failed to perform KMIP encrypt operation")
@@ -298,22 +292,16 @@ func (kc *Client) GetSymmetricKey(keyID string) ([]byte, error) {
 
 	batchItem, decoder, err := kc.sendRequest(payload, kmip14.OperationGet)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %s", ErrKMIPGetOpFailure, err)
+		return nil, fmt.Errorf("%w: %w", ErrKMIPGetOpFailure, err)
 	}
 
 	var response GetResponse
 	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, fmt.Errorf("%w: %s", ErrKMIPDecodeFailure, err)
+		return nil, fmt.Errorf("%w: %w", ErrKMIPDecodeFailure, err)
 	}
-
-	var keyValue KeyValue
-	err = decoder.DecodeValue(&keyValue, response.SymmetricKey.KeyBlock.KeyValue.(ttlv.TTLV))
-	if err != nil {
-		return nil, fmt.Errorf("%w: %s", ErrKMIPDecodeKeyBlockFailure, err)
-	}
-
-	return keyValue.KeyMaterial, nil
+	keyValue := response.SymmetricKey.KeyBlock.KeyValue
+	return keyValue.KeyMaterial.([]byte), nil
 }
 
 // CreateSymmetricKey creates a symmetric key on KMIP server.
@@ -352,13 +340,13 @@ func (kc *Client) CreateSymmetricKey(length int32) (*string, error) {
 
 	batchItem, decoder, err := kc.sendRequest(payload, kmip14.OperationCreate)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrKMIPPerformCreateSymmetricKey, err)
+		return nil, fmt.Errorf("%w: %w", ErrKMIPPerformCreateSymmetricKey, err)
 	}
 
 	var response CreateResponse
 	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrKMIPDecodeCreateSymmetricKey, err)
+		return nil, fmt.Errorf("%w: %w", ErrKMIPDecodeCreateSymmetricKey, err)
 	}
 
 	return &response.UniqueIdentifier, nil
@@ -373,13 +361,13 @@ func (kc *Client) Encrypt(keyID string, data []byte) (*EncryptResponse, error) {
 
 	batchItem, decoder, err := kc.sendRequest(payload, kmip14.OperationEncrypt)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrKMIPPerformEncrypt, err)
+		return nil, fmt.Errorf("%w: %w", ErrKMIPPerformEncrypt, err)
 	}
 
 	var response EncryptResponse
 	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrKMIPDecodeEncrypt, err)
+		return nil, fmt.Errorf("%w: %w", ErrKMIPDecodeEncrypt, err)
 	}
 
 	return &response, nil
@@ -395,13 +383,13 @@ func (kc *Client) Decrypt(keyID string, data, iv []byte) (*DecryptResponse, erro
 
 	batchItem, decoder, err := kc.sendRequest(payLoad, kmip14.OperationDecrypt)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrKMIPPerformDecrypt, err)
+		return nil, fmt.Errorf("%w: %w", ErrKMIPPerformDecrypt, err)
 	}
 
 	var response DecryptResponse
 	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrKMIPDecodeDecrypt, err)
+		return nil, fmt.Errorf("%w: %w", ErrKMIPDecodeDecrypt, err)
 	}
 
 	return &response, nil

@@ -16,7 +16,6 @@ package clusters
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -26,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 type WatchOpts struct {
@@ -35,6 +34,8 @@ type WatchOpts struct {
 	name  string
 	store store.AtlasClusterDescriber
 }
+
+var watchTemplate = "\nCluster available.\n"
 
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -45,8 +46,8 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 }
 
 func isRetryable(err error) bool {
-	var atlasErr *atlas.ErrorResponse
-	return errors.As(err, &atlasErr) && atlasErr.ErrorCode == "CLUSTER_NOT_FOUND"
+	atlasErr, ok := admin.AsError(err)
+	return ok && atlasErr.GetErrorCode() == "CLUSTER_NOT_FOUND"
 }
 
 func (opts *WatchOpts) watcher() (bool, error) {
@@ -54,10 +55,10 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if result.StateName == "UPDATING" {
+	if result.GetStateName() == "UPDATING" {
 		opts.IsRetryableErr = isRetryable
 	}
-	return result.StateName == "IDLE", nil
+	return result.GetStateName() == "IDLE", nil
 }
 
 func (opts *WatchOpts) Run() error {
@@ -85,12 +86,13 @@ You can interrupt the command's polling at any time with CTRL-C.
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to watch.",
+			"output":          watchTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nCluster available.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

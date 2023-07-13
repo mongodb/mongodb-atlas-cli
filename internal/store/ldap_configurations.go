@@ -18,17 +18,17 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_ldap_configurations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LDAPConfigurationVerifier,LDAPConfigurationDescriber,LDAPConfigurationSaver,LDAPConfigurationDeleter,LDAPConfigurationGetter
 
 type LDAPConfigurationVerifier interface {
-	VerifyLDAPConfiguration(string, *atlas.LDAP) (*atlas.LDAPConfiguration, error)
+	VerifyLDAPConfiguration(string, *atlasv2.LDAPVerifyConnectivityJobRequestParams) (*atlasv2.LDAPVerifyConnectivityJobRequest, error)
 }
 
 type LDAPConfigurationDescriber interface {
-	GetStatusLDAPConfiguration(string, string) (*atlas.LDAPConfiguration, error)
+	GetStatusLDAPConfiguration(string, string) (*atlasv2.LDAPVerifyConnectivityJobRequest, error)
 }
 
 type LDAPConfigurationDeleter interface {
@@ -36,18 +36,19 @@ type LDAPConfigurationDeleter interface {
 }
 
 type LDAPConfigurationSaver interface {
-	SaveLDAPConfiguration(string, *atlas.LDAPConfiguration) (*atlas.LDAPConfiguration, error)
+	SaveLDAPConfiguration(string, *atlasv2.UserSecurity) (*atlasv2.UserSecurity, error)
 }
 
 type LDAPConfigurationGetter interface {
-	GetLDAPConfiguration(string) (*atlas.LDAPConfiguration, error)
+	GetLDAPConfiguration(string) (*atlasv2.UserSecurity, error)
 }
 
 // VerifyLDAPConfiguration encapsulates the logic to manage different cloud providers.
-func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlas.LDAP) (*atlas.LDAPConfiguration, error) {
+func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlasv2.LDAPVerifyConnectivityJobRequestParams) (*atlasv2.LDAPVerifyConnectivityJobRequest, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Verify(s.ctx, projectID, ldap)
+		resp, _, err := s.clientv2.LDAPConfigurationApi.VerifyLDAPConfiguration(s.ctx, projectID, ldap).
+			Execute()
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -55,10 +56,10 @@ func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlas.LDAP) (*at
 }
 
 // GetStatusLDAPConfiguration encapsulates the logic to manage different cloud providers.
-func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlas.LDAPConfiguration, error) {
+func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlasv2.LDAPVerifyConnectivityJobRequest, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.GetStatus(s.ctx, projectID, requestID)
+		resp, _, err := s.clientv2.LDAPConfigurationApi.GetLDAPConfigurationStatus(s.ctx, projectID, requestID).Execute()
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -66,10 +67,11 @@ func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlas.
 }
 
 // SaveLDAPConfiguration encapsulates the logic to manage different cloud providers.
-func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlas.LDAPConfiguration) (*atlas.LDAPConfiguration, error) {
+func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlasv2.UserSecurity) (*atlasv2.UserSecurity, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Save(s.ctx, projectID, ldap)
+		resp, _, err := s.clientv2.LDAPConfigurationApi.SaveLDAPConfiguration(s.ctx, projectID, ldap).
+			Execute()
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -80,7 +82,7 @@ func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlas.LDAPConfigur
 func (s *Store) DeleteLDAPConfiguration(projectID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, _, err := s.client.(*atlas.Client).LDAPConfigurations.Delete(s.ctx, projectID)
+		_, _, err := s.clientv2.LDAPConfigurationApi.DeleteLDAPConfiguration(s.ctx, projectID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -88,10 +90,10 @@ func (s *Store) DeleteLDAPConfiguration(projectID string) error {
 }
 
 // GetLDAPConfiguration encapsulates the logic to manage different cloud providers.
-func (s *Store) GetLDAPConfiguration(projectID string) (*atlas.LDAPConfiguration, error) {
+func (s *Store) GetLDAPConfiguration(projectID string) (*atlasv2.UserSecurity, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Get(s.ctx, projectID)
+		resp, _, err := s.clientv2.LDAPConfigurationApi.GetLDAPConfiguration(s.ctx, projectID).Execute()
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

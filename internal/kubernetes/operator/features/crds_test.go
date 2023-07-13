@@ -15,8 +15,12 @@
 package features
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
+
+	"github.com/Masterminds/semver/v3"
+	"github.com/stretchr/testify/assert"
 
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 )
@@ -260,4 +264,43 @@ func Test_pathExists(t *testing.T) {
 			}
 		})
 	}
+}
+
+func Test_CRDCompatibleVersion(t *testing.T) {
+	t.Run("should return error when operator version is invalid", func(t *testing.T) {
+		_, err := CRDCompatibleVersion("abc")
+		assert.Error(t, err)
+	})
+
+	t.Run("should return operator major version when it is less than supported CRD version", func(t *testing.T) {
+		crdVersion, err := semver.NewVersion(LatestOperatorMajorVersion)
+		assert.NoError(t, err)
+		operatorVersion := semver.New(crdVersion.Major(), crdVersion.Minor()-1, 2, "", "")
+
+		expected := fmt.Sprintf("%d.%d.0", operatorVersion.Major(), operatorVersion.Minor())
+		compatibleVersion, err := CRDCompatibleVersion(operatorVersion.String())
+		assert.NoError(t, err)
+		assert.Equal(t, expected, compatibleVersion)
+	})
+
+	t.Run("should return operator major version when it is equal than supported CRD version", func(t *testing.T) {
+		crdVersion, err := semver.NewVersion(LatestOperatorMajorVersion)
+		assert.NoError(t, err)
+		operatorVersion := semver.New(crdVersion.Major(), crdVersion.Minor(), crdVersion.Patch(), "", "")
+
+		expected := fmt.Sprintf("%d.%d.0", operatorVersion.Major(), operatorVersion.Minor())
+		compatibleVersion, err := CRDCompatibleVersion(operatorVersion.String())
+		assert.NoError(t, err)
+		assert.Equal(t, expected, compatibleVersion)
+	})
+
+	t.Run("should return CRD major version when it is less than operator version", func(t *testing.T) {
+		crdVersion, err := semver.NewVersion(LatestOperatorMajorVersion)
+		assert.NoError(t, err)
+		operatorVersion := semver.New(crdVersion.Major(), crdVersion.Minor()+1, 0, "", "")
+
+		compatibleVersion, err := CRDCompatibleVersion(operatorVersion.String())
+		assert.NoError(t, err)
+		assert.Equal(t, LatestOperatorMajorVersion, compatibleVersion)
+	})
 }

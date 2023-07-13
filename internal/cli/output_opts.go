@@ -15,12 +15,14 @@
 package cli
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"os"
 	"strings"
 
+	"github.com/PaesslerAG/jsonpath"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonpathwriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
@@ -113,6 +115,48 @@ func (opts *OutputOpts) Print(o interface{}) error {
 	return err
 }
 
+func (opts *OutputOpts) PrintForCompactResultsResponse(o interface{}) error {
+	if opts.ConfigOutput() == jsonFormat {
+		compactResponse, err := mapReduceResults(o)
+		if err == nil {
+			return jsonwriter.Print(opts.ConfigWriter(), compactResponse)
+		}
+	}
+
+	outputType, val := opts.outputTypeAndValue()
+	if outputType == jsonPath {
+		compactResponse, err := mapReduceResults(o)
+		if err == nil {
+			return jsonpathwriter.Print(opts.ConfigWriter(), val, compactResponse)
+		}
+	}
+
+	t, err := template(outputType, val)
+	if err != nil {
+		return err
+	}
+
+	if t != "" {
+		return templatewriter.Print(opts.ConfigWriter(), t, o)
+	}
+	_, err = fmt.Fprintln(opts.ConfigWriter(), o)
+	return err
+}
+
+func mapReduceResults(o interface{}) (interface{}, error) {
+	jsonString, err := json.Marshal(o)
+	if err != nil {
+		return nil, err
+	}
+
+	var val interface{}
+	if e := json.Unmarshal(jsonString, &val); e != nil {
+		return nil, e
+	}
+
+	return jsonpath.Get("results", val)
+}
+
 // outputTypeAndValue returns the output type and the associated value
 // Current available output types are:
 // "go-template=Template string",
@@ -139,7 +183,7 @@ func template(outputType, value string) (string, error) {
 	if outputType == goTemplateFile {
 		data, err := os.ReadFile(value)
 		if err != nil {
-			return "", fmt.Errorf("%w: %s, %v", errTemplate, value, err)
+			return "", fmt.Errorf("%w: %s, %w", errTemplate, value, err)
 		}
 
 		value = string(data)

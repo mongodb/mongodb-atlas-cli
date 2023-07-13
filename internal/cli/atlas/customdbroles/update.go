@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 const updateTemplate = "Custom database role '{{.RoleName}}' successfully updated.\n"
@@ -51,7 +51,7 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	var role *atlas.CustomDBRole
+	var role *atlasv2.UserCustomDBRole
 	if opts.append {
 		var err error
 		if role, err = opts.store.DatabaseRole(opts.ConfigProjectID(), opts.roleName); err != nil {
@@ -67,8 +67,8 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(out)
 }
 
-func (opts *UpdateOpts) newCustomDBRole(existingRole *atlas.CustomDBRole) *atlas.CustomDBRole {
-	out := &atlas.CustomDBRole{
+func (opts *UpdateOpts) newCustomDBRole(existingRole *atlasv2.UserCustomDBRole) *atlasv2.UserCustomDBRole {
+	out := &atlasv2.UserCustomDBRole{
 		InheritedRoles: convert.BuildAtlasInheritedRoles(opts.inheritedRoles),
 	}
 	actions := joinActions(convert.BuildAtlasActions(opts.action))
@@ -98,6 +98,7 @@ func UpdateBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"roleNameDesc": "Name of the custom role to update.",
+			"output":       updateTemplate,
 		},
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -114,8 +115,8 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.inheritedRoles, flag.InheritedRole, []string{}, usage.InheritedRoles)
-	cmd.Flags().StringSliceVar(&opts.action, flag.Privilege, []string{}, usage.PrivilegeAction)
+	cmd.Flags().StringSliceVar(&opts.inheritedRoles, flag.InheritedRole, []string{}, usage.InheritedRoles+usage.UpdateWarning)
+	cmd.Flags().StringSliceVar(&opts.action, flag.Privilege, []string{}, usage.PrivilegeAction+usage.UpdateWarning)
 	cmd.Flags().BoolVar(&opts.append, flag.Append, false, usage.Append)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

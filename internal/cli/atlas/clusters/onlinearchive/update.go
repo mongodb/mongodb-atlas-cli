@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type UpdateOpts struct {
@@ -33,7 +34,7 @@ type UpdateOpts struct {
 	cli.OutputOpts
 	id           string
 	clusterName  string
-	archiveAfter float64
+	archiveAfter int
 	store        store.OnlineArchiveUpdater
 }
 
@@ -45,7 +46,7 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var updateTemplate = "Online archive '{{.ID}}' updated.\n"
+var updateTemplate = "Online archive '{{.Id}}' updated.\n"
 
 func (opts *UpdateOpts) Run() error {
 	archive := opts.newOnlineArchive()
@@ -57,11 +58,13 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newOnlineArchive() *atlas.OnlineArchive {
-	archive := &atlas.OnlineArchive{
-		ID: opts.id,
-		Criteria: &atlas.OnlineArchiveCriteria{
-			ExpireAfterDays: &opts.archiveAfter,
+func (opts *UpdateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchive {
+	archive := &atlasv2.BackupOnlineArchive{
+		Id: &opts.id,
+		Criteria: &atlasv2.Criteria{
+			DateCriteria: &atlasv2.DateCriteria{
+				ExpireAfterDays: pointer.Get(opts.archiveAfter),
+			},
 		},
 	}
 	return archive
@@ -77,6 +80,7 @@ func UpdateBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to update.",
+			"output":        updateTemplate,
 		},
 		Example: fmt.Sprintf(`  # Update the archiving rule to archive after 5 days for the online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
   %s clusters onlineArchives update 5f189832e26ec075e10c32d3 --clusterName --archiveAfter 5 myCluster --output json`, cli.ExampleAtlasEntryPoint()),
@@ -94,7 +98,7 @@ func UpdateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().Float64Var(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
+	cmd.Flags().IntVar(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

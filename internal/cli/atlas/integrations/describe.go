@@ -44,25 +44,25 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplateSlack = `TYPE	API TOKEN	TEAM	CHANNEL
-{{.Type}}	{{.APIToken}}	{{.TeamName}}	{{.ChannelName}}
+{{.Slack.Type}}	{{.Slack.ApiToken}}	{{.Slack.TeamName}}	{{if .Slack.ChannelName.IsSet}} {{ .Slack.ChannelName.Get }} {{end}}
 `
 var describeTemplateDatadogOpsGenie = `TYPE	API KEY	REGION
-{{.Type}}	{{.APIKey}}	{{.Region}}
+{{.GetActualInstance.Type}}	{{.GetActualInstance.ApiKey}}	{{.GetActualInstance.Region}}
 `
-var describeTemplateFlowdog = `TYPE	API TOKEN	FLOW NAME	ORGANIZATION
-{{.Type}}	{{.APIToken}}	{{.FlowName}}	{{.OrgName}}
+var describeTemplateMicrosoftTeams = `TYPE	API TOKEN	FLOW NAME	ORGANIZATION
+{{.MicrosoftTeams.Type}}	{{.MicrosoftTeams.ApiToken}}	{{.MicrosoftTeams.FlowName}}	{{.MicrosoftTeams.OrgName}}
 `
 var describeTemplateNewRelic = `TYPE	ACCOUNT ID	LICENSE KEY	WRITE TOKEN	READ TOKEN
-{{.Type}}	{{.AccountID}}	{{.LicenseKey}}	{{.WriteToken}}	{{.ReadToken}}
+{{.NewRelic.Type}}	{{.NewRelic.AccountId}}	{{.NewRelic.LicenseKey}}	{{.NewRelic.WriteToken}}	{{.NewRelic.ReadToken}}
 `
 var describeTemplatePagerDuty = `TYPE	SERVICE KEY
-{{.Type}}	{{.ServiceKey}}
+{{.PagerDuty.Type}}	{{.PagerDuty.ServiceKey}}
 `
 var describeTemplateVictorOps = `TYPE	API KEY	ROUTING KEY
-{{.Type}}	{{.APIKey}}	{{.RoutingKey}}
+{{.VictorOps.Type}}	{{.VictorOps.ApiKey}}	{{.VictorOps.RoutingKey}}
 `
 var describeTemplateWebhook = `TYPE	URL	SECRET
-{{.Type}}	{{.URL}}	{{.Secret}}
+{{.Webhook.Type}}	{{.Webhook.Url}}	{{.Webhook.Secret}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -78,8 +78,8 @@ func (opts *DescribeOpts) template() string {
 	switch opts.integrationType {
 	case "DATADOG":
 		return describeTemplateDatadogOpsGenie
-	case "FLOWDOCK":
-		return describeTemplateFlowdog
+	case "MICROSOFT_TEAMS":
+		return describeTemplateMicrosoftTeams
 	case "NEW_RELIC":
 		return describeTemplateNewRelic
 	case "PAGER_DUTY":

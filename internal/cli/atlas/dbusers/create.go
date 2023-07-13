@@ -24,12 +24,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type CreateOpts struct {
@@ -98,23 +99,23 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
+func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 	authDB := convert.AdminDB
 
 	if opts.isExternal() && opts.ldapType != group {
 		authDB = convert.ExternalAuthDB
 	}
 
-	return &atlas.DatabaseUser{
+	return &atlasv2.CloudDatabaseUser{
 		Roles:           convert.BuildAtlasRoles(opts.roles),
 		Scopes:          convert.BuildAtlasScopes(opts.scopes),
-		GroupID:         opts.ConfigProjectID(),
+		GroupId:         opts.ConfigProjectID(),
 		Username:        opts.username,
-		Password:        opts.password,
-		X509Type:        opts.x509Type,
-		AWSIAMType:      opts.awsIamType,
-		LDAPAuthType:    opts.ldapType,
-		DeleteAfterDate: opts.deleteAfter,
+		Password:        pointer.GetStringPointerIfNotEmpty(opts.password),
+		X509Type:        pointer.GetStringPointerIfNotEmpty(opts.x509Type),
+		AwsIAMType:      pointer.GetStringPointerIfNotEmpty(opts.awsIamType),
+		LdapAuthType:    pointer.GetStringPointerIfNotEmpty(opts.ldapType),
+		DeleteAfterDate: convert.ParseDeleteAfter(opts.deleteAfter),
 		DatabaseName:    authDB,
 	}
 }
@@ -191,6 +192,7 @@ func CreateBuilder() *cobra.Command {
 		Args: cobra.OnlyValidArgs,
 		Annotations: map[string]string{
 			"builtInRoleDesc": "Atlas built-in role that you want to assign to the user.",
+			"output":          createTemplate,
 		},
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

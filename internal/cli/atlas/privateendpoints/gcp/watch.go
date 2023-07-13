@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type WatchOpts struct {
@@ -33,6 +34,8 @@ type WatchOpts struct {
 	id    string
 	store store.PrivateEndpointDescriber
 }
+
+var watchTemplate = "\nGCP Private endpoint changes completed.\n"
 
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -47,7 +50,9 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return result.Status == "AVAILABLE" || result.Status == "FAILED", nil
+
+	endpointService := result.(*atlasv2.EndpointService)
+	return endpointService.GetStatus() == "AVAILABLE" || endpointService.GetStatus() == "FAILED", nil
 }
 
 func (opts *WatchOpts) Run() error {
@@ -72,6 +77,7 @@ You can interrupt the command's polling at any time with CTRL-C.
 ` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+			"output":                watchTemplate,
 		},
 		Example: fmt.Sprintf(`  %s privateEndpoint gcp watch vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
@@ -79,7 +85,7 @@ You can interrupt the command's polling at any time with CTRL-C.
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nGCP Private endpoint changes completed.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

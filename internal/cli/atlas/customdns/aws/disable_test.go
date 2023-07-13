@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestDisableBuilder(t *testing.T) {
@@ -39,7 +39,7 @@ func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCustomDNSDisabler(ctrl)
 
-	expected := &atlas.AWSCustomDNSSetting{
+	expected := &atlasv2.AWSCustomDNSEnabled{
 		Enabled: false,
 	}
 

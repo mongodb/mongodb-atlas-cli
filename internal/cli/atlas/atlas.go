@@ -18,10 +18,8 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslogs"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/cloudproviders"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdbroles"
@@ -36,11 +34,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/networking"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/processes"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/events"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/performanceadvisor"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/alerts"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/backup"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/events"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/performanceadvisor"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
@@ -61,7 +60,7 @@ func Builder() *cobra.Command {
 			log.SetOutput(cmd.ErrOrStderr())
 
 			_, _ = log.Warning(deprecatedMessage)
-			if err := opts.InitFlow(); err != nil {
+			if err := opts.InitFlow(config.Default())(); err != nil {
 				return err
 			}
 			if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
@@ -77,7 +76,6 @@ func Builder() *cobra.Command {
 		},
 	}
 	cmd.AddCommand(
-		quickstart.Builder(),
 		clusters.MongoCLIBuilder(),
 		dbusers.Builder(),
 		customdbroles.Builder(),

@@ -24,14 +24,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPrivateEndpointLister(ctrl)
 
-	var expected []mongodbatlas.PrivateEndpointConnection
+	var expected []admin.EndpointService
 
 	listOpts := &ListOpts{
 		store: mockStore,
@@ -39,7 +39,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PrivateEndpoints(listOpts.ProjectID, provider, listOpts.NewListOptions()).
+		PrivateEndpoints(listOpts.ProjectID, provider).
 		Return(expected, nil).
 		Times(1)
 

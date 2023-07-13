@@ -23,10 +23,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type AzureOpts struct {
@@ -49,7 +50,7 @@ func (opts *AzureOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Network peering connection '{{.ID}}' created.\n"
+var createTemplate = "Network peering connection '{{.Id}}' created.\n"
 
 func (opts *AzureOpts) Run() error {
 	opts.region = strings.ToUpper(opts.region)
@@ -62,50 +63,61 @@ func (opts *AzureOpts) Run() error {
 
 	if container == nil {
 		var err2 error
-		container, err2 = opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		r, err2 := opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		container = r.(*atlasv2.AzureCloudProviderContainer)
 		if err2 != nil {
 			return err2
 		}
 	}
-	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(container.ID))
+	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(*container.Id))
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *AzureOpts) containerExists() (*atlas.Container, error) {
+func (opts *AzureOpts) containerExists() (*atlasv2.AzureCloudProviderContainer, error) {
 	r, err := opts.store.AzureContainers(opts.ConfigProjectID())
 	if err != nil {
 		return nil, err
 	}
 	for i := range r {
 		if r[i].Region == opts.region {
-			return &r[i], nil
+			return r[i], nil
 		}
 	}
 	return nil, nil
 }
 
-func (opts *AzureOpts) newContainer() *atlas.Container {
-	c := &atlas.Container{
-		AtlasCIDRBlock: opts.atlasCIDRBlock,
-		ProviderName:   "AZURE",
+func (opts *AzureOpts) newAzureContainer() *atlasv2.AzureCloudProviderContainer {
+	c := &atlasv2.AzureCloudProviderContainer{
+		AtlasCidrBlock: opts.atlasCIDRBlock,
+		ProviderName:   pointer.Get("AZURE"),
 		Region:         opts.region,
 	}
 	return c
 }
 
-func (opts *AzureOpts) newPeer(containerID string) *atlas.Peer {
-	a := &atlas.Peer{
-		AzureDirectoryID:    opts.directoryID,
-		AzureSubscriptionID: opts.subscriptionID,
-		ContainerID:         containerID,
-		ProviderName:        "AZURE",
+func (opts *AzureOpts) newContainer() *atlasv2.CloudProviderContainer {
+	w := atlasv2.AzureCloudProviderContainerAsCloudProviderContainer(opts.newAzureContainer())
+	return &w
+}
+
+func (opts *AzureOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringConnectionSettings {
+	a := atlasv2.AzureNetworkPeeringConnectionSettingsAsBaseNetworkPeeringConnectionSettings(opts.newAzurePeer((containerID)))
+	return &a
+}
+
+func (opts *AzureOpts) newAzurePeer(containerID string) *atlasv2.AzureNetworkPeeringConnectionSettings {
+	provider := "AZURE"
+	return &atlasv2.AzureNetworkPeeringConnectionSettings{
+		AzureDirectoryId:    opts.directoryID,
+		AzureSubscriptionId: opts.subscriptionID,
+		ContainerId:         containerID,
+		ProviderName:        &provider,
 		ResourceGroupName:   opts.resourceGroup,
-		VNetName:            opts.vNetName,
+		VnetName:            opts.vNetName,
 	}
-	return a
 }
 
 // mongocli atlas networking peering create azure
@@ -131,6 +143,9 @@ The network peering create command checks if a VNet exists in the region you spe
 To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		Example: fmt.Sprintf(`  # Create a network peering connection between the Atlas VPC in CIDR block 192.168.0.0/24 and your Azure VNet named atlascli-test in in US_EAST_2:
   %s networking peering create azure --atlasCidrBlock 192.168.0.0/24 --directoryId 56657fdb-ca45-40dc-fr56-77fd8b6d2b37 --subscriptionId 345654f3-77cf-4084-9e06-8943a079ed75 --resourceGroup atlascli-test --region US_EAST_2 --vnet atlascli-test`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,

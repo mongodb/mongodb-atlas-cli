@@ -18,19 +18,33 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_auditing.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AuditingDescriber
+//go:generate mockgen -destination=../mocks/mock_auditing.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AuditingDescriber,AuditingUpdater
 
 type AuditingDescriber interface {
-	Auditing(string) (*atlas.Auditing, error)
+	Auditing(string) (*atlasv2.AuditLog, error)
 }
 
-func (s *Store) Auditing(projectID string) (*atlas.Auditing, error) {
+type AuditingUpdater interface {
+	UpdateAuditingConfig(string, *atlasv2.AuditLog) (*atlasv2.AuditLog, error)
+}
+
+func (s *Store) Auditing(projectID string) (*atlasv2.AuditLog, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Auditing.Get(s.ctx, projectID)
+		result, _, err := s.clientv2.AuditingApi.GetAuditingConfiguration(s.ctx, projectID).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+func (s *Store) UpdateAuditingConfig(projectID string, r *atlasv2.AuditLog) (*atlasv2.AuditLog, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.AuditingApi.UpdateAuditingConfiguration(s.ctx, projectID, r).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

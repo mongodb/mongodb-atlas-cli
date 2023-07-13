@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -35,10 +36,10 @@ func (m *MockServerlessSnapshotsLister) EXPECT() *MockServerlessSnapshotsListerM
 }
 
 // ServerlessSnapshots mocks base method.
-func (m *MockServerlessSnapshotsLister) ServerlessSnapshots(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.CloudProviderSnapshots, error) {
+func (m *MockServerlessSnapshotsLister) ServerlessSnapshots(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*admin.PaginatedApiAtlasServerlessBackupSnapshot, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessSnapshots", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshots)
+	ret0, _ := ret[0].(*admin.PaginatedApiAtlasServerlessBackupSnapshot)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +74,10 @@ func (m *MockServerlessSnapshotsDescriber) EXPECT() *MockServerlessSnapshotsDesc
 }
 
 // ServerlessSnapshot mocks base method.
-func (m *MockServerlessSnapshotsDescriber) ServerlessSnapshot(arg0, arg1, arg2 string) (*mongodbatlas.CloudProviderSnapshot, error) {
+func (m *MockServerlessSnapshotsDescriber) ServerlessSnapshot(arg0, arg1, arg2 string) (*admin.ServerlessBackupSnapshot, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessSnapshot", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshot)
+	ret0, _ := ret[0].(*admin.ServerlessBackupSnapshot)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +112,10 @@ func (m *MockServerlessRestoreJobsLister) EXPECT() *MockServerlessRestoreJobsLis
 }
 
 // ServerlessRestoreJobs mocks base method.
-func (m *MockServerlessRestoreJobsLister) ServerlessRestoreJobs(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.CloudProviderSnapshotRestoreJobs, error) {
+func (m *MockServerlessRestoreJobsLister) ServerlessRestoreJobs(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*admin.PaginatedApiAtlasServerlessBackupRestoreJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessRestoreJobs", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotRestoreJobs)
+	ret0, _ := ret[0].(*admin.PaginatedApiAtlasServerlessBackupRestoreJob)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -149,10 +150,10 @@ func (m *MockServerlessRestoreJobsDescriber) EXPECT() *MockServerlessRestoreJobs
 }
 
 // ServerlessRestoreJob mocks base method.
-func (m *MockServerlessRestoreJobsDescriber) ServerlessRestoreJob(arg0, arg1, arg2 string) (*mongodbatlas.CloudProviderSnapshotRestoreJob, error) {
+func (m *MockServerlessRestoreJobsDescriber) ServerlessRestoreJob(arg0, arg1, arg2 string) (*admin.ServerlessBackupRestoreJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessRestoreJob", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotRestoreJob)
+	ret0, _ := ret[0].(*admin.ServerlessBackupRestoreJob)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -187,10 +188,10 @@ func (m *MockServerlessRestoreJobsCreator) EXPECT() *MockServerlessRestoreJobsCr
 }
 
 // ServerlessCreateRestoreJobs mocks base method.
-func (m *MockServerlessRestoreJobsCreator) ServerlessCreateRestoreJobs(arg0, arg1 string, arg2 *mongodbatlas.CloudProviderSnapshotRestoreJob) (*mongodbatlas.CloudProviderSnapshotRestoreJob, error) {
+func (m *MockServerlessRestoreJobsCreator) ServerlessCreateRestoreJobs(arg0, arg1 string, arg2 *admin.ServerlessBackupRestoreJob) (*admin.ServerlessBackupRestoreJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessCreateRestoreJobs", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotRestoreJob)
+	ret0, _ := ret[0].(*admin.ServerlessBackupRestoreJob)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

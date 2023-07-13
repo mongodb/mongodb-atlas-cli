@@ -18,19 +18,19 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_serverless_private_endpoints.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ServerlessPrivateEndpointsLister
 
 type ServerlessPrivateEndpointsLister interface {
-	ServerlessPrivateEndpoints(string, string, *atlas.ListOptions) ([]atlas.ServerlessPrivateEndpointConnection, error)
+	ServerlessPrivateEndpoints(string, string) ([]atlasv2.ServerlessTenantEndpoint, error)
 }
 
-func (s *Store) ServerlessPrivateEndpoints(projectID, instanceName string, listOptions *atlas.ListOptions) ([]atlas.ServerlessPrivateEndpointConnection, error) {
+func (s *Store) ServerlessPrivateEndpoints(projectID, instanceName string) ([]atlasv2.ServerlessTenantEndpoint, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ServerlessPrivateEndpoints.List(s.ctx, projectID, instanceName, listOptions)
+		result, _, err := s.clientv2.ServerlessPrivateEndpointsApi.ListServerlessPrivateEndpoints(s.ctx, projectID, instanceName).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

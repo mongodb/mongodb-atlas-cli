@@ -25,10 +25,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
-const opsGenieType = "OPS_GENIE"
+var opsGenieType = "OPS_GENIE"
 
 type OpsGenieOpts struct {
 	cli.GlobalOpts
@@ -56,11 +56,13 @@ func (opts *OpsGenieOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlas.ThirdPartyIntegration {
-	return &atlas.ThirdPartyIntegration{
-		Type:   opsGenieType,
-		Region: opts.region,
-		APIKey: opts.apiKey,
+func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlasv2.ThridPartyIntegration {
+	return &atlasv2.ThridPartyIntegration{
+		OpsGenie: &atlasv2.OpsGenie{
+			Type:   &opsGenieType,
+			Region: &opts.region,
+			ApiKey: opts.apiKey,
+		},
 	}
 }
 
@@ -74,6 +76,9 @@ func OpsGenieBuilder() *cobra.Command {
 		Long: `The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Opsgenie.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplateOpsGenie,
+		},
 		Example: fmt.Sprintf(`  # Integrate Opsgenie with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create OPS_GENIE --apiKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,

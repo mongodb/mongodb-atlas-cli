@@ -25,10 +25,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
-const newRelicIntegrationType = "NEW_RELIC"
+var newRelicIntegrationType = "NEW_RELIC"
 
 type NewRelicOpts struct {
 	cli.GlobalOpts
@@ -58,13 +58,15 @@ func (opts *NewRelicOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *NewRelicOpts) newNewRelicIntegration() *atlas.ThirdPartyIntegration {
-	return &atlas.ThirdPartyIntegration{
-		Type:       newRelicIntegrationType,
-		LicenseKey: opts.licenseKey,
-		AccountID:  opts.accountID,
-		WriteToken: opts.writeToken,
-		ReadToken:  opts.readToken,
+func (opts *NewRelicOpts) newNewRelicIntegration() *atlasv2.ThridPartyIntegration {
+	return &atlasv2.ThridPartyIntegration{
+		NewRelic: &atlasv2.NewRelic{
+			Type:       &newRelicIntegrationType,
+			LicenseKey: opts.licenseKey,
+			AccountId:  opts.accountID,
+			WriteToken: opts.writeToken,
+			ReadToken:  opts.readToken,
+		},
 	}
 }
 
@@ -77,6 +79,9 @@ func NewRelicBuilder() *cobra.Command {
 		Short:   "Create or update the New Relic integration.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": createTemplateNewRelic,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

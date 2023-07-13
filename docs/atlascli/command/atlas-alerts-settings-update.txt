@@ -20,6 +20,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas alerts settings update <alertConfigId> [options]
 
@@ -62,7 +63,7 @@ Options
      - Enables the alert configuration.
    * - --event
      - string
-     - false
+     - true
      - Type of event that triggered the alert. Valid values are AWS_ENCRYPTION_KEY_NEEDS_ROTATION, AZURE_ENCRYPTION_KEY_NEEDS_ROTATION, CLUSTER_MONGOS_IS_MISSING, CPS_RESTORE_FAILED, CPS_RESTORE_SUCCESSFUL, CPS_SNAPSHOT_BEHIND, CPS_SNAPSHOT_DOWNLOAD_REQUEST_FAILED, CPS_SNAPSHOT_FALLBACK_FAILED, CPS_SNAPSHOT_FALLBACK_SUCCESSFUL, CPS_SNAPSHOT_SUCCESSFUL, CREDIT_CARD_ABOUT_TO_EXPIRE, DAILY_BILL_OVER_THRESHOLD, GCP_ENCRYPTION_KEY_NEEDS_ROTATION, HOST_DOWN, JOINED_GROUP, NDS_X509_USER_AUTHENTICATION_CUSTOMER_CA_EXPIRATION_CHECK, NDS_X509_USER_AUTHENTICATION_MANAGED_USER_CERTS_EXPIRATION_CHECK, NO_PRIMARY, OUTSIDE_METRIC_THRESHOLD, OUTSIDE_SERVERLESS_METRIC_THRESHOLD, OUTSIDE_REALM_METRIC_THRESHOLD, PENDING_INVOICE_OVER_THRESHOLD, PRIMARY_ELECTED, REMOVED_FROM_GROUP, REPLICATION_OPLOG_WINDOW_RUNNING_OUT, TOO_MANY_ELECTIONS, USER_ROLES_CHANGED_AUDIT, USERS_WITHOUT_MULTIFACTOR_AUTH.
    * - -h, --help
      - 
@@ -116,10 +117,6 @@ Options
      - 
      - false
      - Flag that enables email notifications. Configurable for GROUP and USER notification types.
-   * - --notificationFlowName
-     - string
-     - false
-     - Flowdock Flow name in lower-case letters for sending alert notifications.
    * - --notificationIntervalMin
      - int
      - false
@@ -128,14 +125,14 @@ Options
      - string
      - false
      - Mobile number to which alert notifications are sent.
-   * - --notificationOrgName
-     - string
-     - false
-     - Flowdock organization's name in lower-case letters.
    * - --notificationRegion
      - string
      - false
      - Region that indicates which API URL to use.
+   * - --notificationRole
+     - strings
+     - false
+     - List that contains the one or more organization or project roles that receive the configured alert.
    * - --notificationServiceKey
      - string
      - false
@@ -151,11 +148,11 @@ Options
    * - --notificationToken
      - string
      - false
-     - Slack API token, Bot token, or Flowdock personal API token.
+     - Slack API token, or Bot token.
    * - --notificationType
      - string
      - false
-     - Type of alert notification. Valid values are DATADOG, EMAIL, FLOWDOCK, GROUP (Project), ORG, OPS_GENIE, PAGER_DUTY, SLACK, SMS, USER, or VICTOR_OPS.
+     - Type of alert notification. Valid values are DATADOG, EMAIL, GROUP (Project), MICROSOFT_TEAMS, ORG, OPS_GENIE, PAGER_DUTY, SLACK, SMS, TEAM, USER, VICTOR_OPS, or WEBHOOK.
    * - --notificationUsername
      - string
      - false
@@ -164,6 +161,18 @@ Options
      - string
      - false
      - Routing key associated with your Splunk On-Call account.
+   * - --notificationWebhookSecret
+     - string
+     - false
+     - Authentication secret for a webhook-based alert.
+   * - --notificationWebhookUrl
+     - string
+     - false
+     - Target URL for a webhook-based alert or Microsoft Teams alert.
+   * - --notifierId
+     - string
+     - false
+     - The notifierId is a system-generated unique identifier assigned to each notification method. This is needed when updating third-party notifications without requiring explicit authentication credentials.
    * - -o, --output
      - string
      - false
@@ -187,7 +196,17 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Output
+------
+
+If the command succeeds, the CLI returns output similar to the following sample. Values in brackets represent your values.
+
+.. code-block::
+
+   Alert configuration '<Id>' updated.
+   
 
 Examples
 --------

@@ -52,6 +52,9 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete",
 		Aliases: []string{"rm"},
 		Short:   "Delete one link-token.",
+		Annotations: map[string]string{
+			"output": opts.SuccessMessage(),
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

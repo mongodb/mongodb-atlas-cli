@@ -44,16 +44,14 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Related Commands
 ----------------
 
 * :ref:`atlas-privateEndpoints-aws` - Manage AWS Private Endpoints.
 * :ref:`atlas-privateEndpoints-azure` - Manage Azure Private Endpoints.
-* :ref:`atlas-privateEndpoints-dataLakes` - Manage Data Lake private endpoints.
 * :ref:`atlas-privateEndpoints-gcp` - Manage GCP private endpoints.
-* :ref:`atlas-privateEndpoints-onlineArchive` - Manage Online Archive private endpoints.
 * :ref:`atlas-privateEndpoints-regionalModes` - Manage regionalized private endpoint setting for your Atlas project.
 
 
@@ -62,8 +60,6 @@ Related Commands
 
    aws </command/atlas-privateEndpoints-aws>
    azure </command/atlas-privateEndpoints-azure>
-   dataLakes </command/atlas-privateEndpoints-dataLakes>
    gcp </command/atlas-privateEndpoints-gcp>
-   onlineArchive </command/atlas-privateEndpoints-onlineArchive>
    regionalModes </command/atlas-privateEndpoints-regionalModes>
 

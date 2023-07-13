@@ -29,6 +29,7 @@ import (
 	operatorProject "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,6 +51,15 @@ const (
 	featureCustomRoles              = "customRoles"
 	featureTeams                    = "teams"
 	cidrException                   = "/32"
+	datadogIntegrationType          = "DATADOG"
+	newRelicIntegrationType         = "NEW_RELIC"
+	opsGenieIntegrationType         = "OPS_GENIE"
+	pagerDutyIntegrationType        = "PAGER_DUTY"
+	victorOpsIntegrationType        = "VICTOR_OPS"
+	webhookIntegrationType          = "WEBHOOK"
+	microsoftTeamsIntegrationType   = "MICROSOFT_TEAMS"
+	slackIntegrationType            = "SLACK"
+	prometheusIntegrationType       = "PROMETHEUS"
 )
 
 var (
@@ -96,7 +106,7 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, validator f
 			AlertConfigurations:           nil,
 			AlertConfigurationSyncEnabled: false,
 			NetworkPeers:                  nil,
-			WithDefaultAlertsSettings:     pointer.GetOrDefault[bool](project.WithDefaultAlertsSettings, false),
+			WithDefaultAlertsSettings:     pointer.GetOrDefault(project.WithDefaultAlertsSettings, false),
 			X509CertRef:                   nil, // not available for import
 			Integrations:                  nil,
 			EncryptionAtRest:              nil,
@@ -243,7 +253,7 @@ func BuildProjectConnectionSecret(credsProvider store.CredentialsGetter, name, n
 }
 
 func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]atlasV1.CustomRole, error) {
-	dbRoles, err := crProvider.DatabaseRoles(projectID, &atlas.ListOptions{ItemsPerPage: MaxItems})
+	dbRoles, err := crProvider.DatabaseRoles(projectID)
 	if err != nil {
 		return nil, err
 	}
@@ -251,8 +261,8 @@ func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]
 		return nil, nil
 	}
 
-	result := make([]atlasV1.CustomRole, 0, len(*dbRoles))
-	roles := *dbRoles
+	result := make([]atlasV1.CustomRole, 0, len(dbRoles))
+	roles := dbRoles
 	for rIdx := range roles {
 		role := &roles[rIdx]
 
@@ -273,9 +283,9 @@ func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]
 			for resIdx := range action.Resources {
 				res := &action.Resources[resIdx]
 				resources = append(resources, atlasV1.Resource{
-					Cluster:    res.Cluster,
-					Database:   res.DB,
-					Collection: res.Collection,
+					Cluster:    &res.Cluster,
+					Database:   &res.Db,
+					Collection: &res.Collection,
 				})
 			}
 			actions = append(actions, atlasV1.Action{
@@ -301,15 +311,19 @@ func buildAccessLists(accessListProvider store.ProjectIPAccessListLister, projec
 
 	var result []operatorProject.IPAccessList
 	for _, list := range accessLists.Results {
-		if strings.HasSuffix(list.CIDRBlock, cidrException) && list.IPAddress != "" {
-			list.CIDRBlock = ""
+		if strings.HasSuffix(list.GetCidrBlock(), cidrException) && list.GetIpAddress() != "" {
+			list.CidrBlock = pointer.Get("")
+		}
+		deleteAfterDate := ""
+		if !list.GetDeleteAfterDate().IsZero() {
+			deleteAfterDate = list.GetDeleteAfterDate().String()
 		}
 		result = append(result, operatorProject.IPAccessList{
-			AwsSecurityGroup: list.AwsSecurityGroup,
-			CIDRBlock:        list.CIDRBlock,
-			Comment:          list.Comment,
-			DeleteAfterDate:  list.DeleteAfterDate,
-			IPAddress:        list.IPAddress,
+			AwsSecurityGroup: list.GetAwsSecurityGroup(),
+			CIDRBlock:        list.GetCidrBlock(),
+			Comment:          list.GetComment(),
+			DeleteAfterDate:  deleteAfterDate,
+			IPAddress:        list.GetIpAddress(),
 		})
 	}
 	return result, nil
@@ -323,7 +337,7 @@ func buildMaintenanceWindows(mwProvider store.MaintenanceWindowDescriber, projec
 
 	return operatorProject.MaintenanceWindow{
 		DayOfWeek: mw.DayOfWeek,
-		HourOfDay: pointer.GetOrDefault(mw.HourOfDay, 0),
+		HourOfDay: mw.HourOfDay,
 		AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
 		StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
 		Defer:     false,
@@ -339,87 +353,85 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	var intSecrets []*corev1.Secret
 
 	for _, list := range integrations.Results {
-		secret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s", projectID, strings.ToLower(list.Type)),
+		iType := getIntegrationType(list)
+		secret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s", projectID, strings.ToLower(iType)),
 			targetNamespace, map[string][]byte{secrets.PasswordField: []byte("")}, dictionary)
 
 		integration := operatorProject.Integration{
-			Type: list.Type,
+			Type: iType,
 		}
 		secretRef := common.ResourceRefNamespaced{
 			Name:      resources.NormalizeAtlasName(secret.Name, dictionary),
 			Namespace: targetNamespace,
 		}
-		switch list.Type {
-		case "PAGER_DUTY":
+		switch iType {
+		case pagerDutyIntegrationType:
 			integration.ServiceKeyRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.ServiceKey)
+				secret.Data[secrets.PasswordField] = []byte(list.PagerDuty.ServiceKey)
 			}
-		case "SLACK":
-			integration.TeamName = list.TeamName
+		case slackIntegrationType:
+			integration.TeamName = list.Slack.GetTeamName()
 			integration.APITokenRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.APIToken)
+				secret.Data[secrets.PasswordField] = []byte(list.Slack.ApiToken)
 			}
-		case "DATADOG", "OPS_GENIE":
-			integration.Region = list.Region
+		case datadogIntegrationType:
+			integration.Region = list.Datadog.GetRegion()
 			integration.APIKeyRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.APIKey)
+				secret.Data[secrets.PasswordField] = []byte(list.Datadog.ApiKey)
 			}
-		case "FLOWDOCK":
-			integration.FlowName = list.FlowName
-			integration.OrgName = list.OrgName
-			integration.APITokenRef = secretRef
+		case opsGenieIntegrationType:
+			integration.Region = list.OpsGenie.GetRegion()
+			integration.APIKeyRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.APIToken)
+				secret.Data[secrets.PasswordField] = []byte(list.OpsGenie.ApiKey)
 			}
-		case "WEBHOOK":
-			integration.URL = list.URL
+		case webhookIntegrationType:
+			integration.URL = list.Webhook.Url
 			integration.SecretRef = secretRef
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.Secret)
+				secret.Data[secrets.PasswordField] = []byte(list.Webhook.GetSecret())
 			}
-		case "MICROSOFT_TEAMS":
-			integration.MicrosoftTeamsWebhookURL = list.MicrosoftTeamsWebhookURL
-		case "PROMETHEUS":
-			integration.UserName = list.UserName
+		case microsoftTeamsIntegrationType:
+			integration.MicrosoftTeamsWebhookURL = list.MicrosoftTeams.MicrosoftTeamsWebhookUrl
+		case prometheusIntegrationType:
+			integration.UserName = list.Prometheus.Username
 			integration.PasswordRef = secretRef
-			integration.ServiceDiscovery = list.ServiceDiscovery
-			integration.Enabled = list.Enabled
+			integration.ServiceDiscovery = list.Prometheus.ServiceDiscovery
+			integration.Enabled = list.Prometheus.Enabled
 			if includeSecrets {
-				secret.Data[secrets.PasswordField] = []byte(list.Password)
+				secret.Data[secrets.PasswordField] = []byte(list.Prometheus.GetPassword())
 			}
-		case "VICTOR_OPS": // One more secret required
-			integration.Region = list.Region
+		case victorOpsIntegrationType: // One more secret required
 			integration.APIKeyRef = secretRef
-			secret.Data[secrets.PasswordField] = []byte(list.APIKey)
+			secret.Data[secrets.PasswordField] = []byte(list.VictorOps.ApiKey)
 
 			var routingKeyData string
 			if includeSecrets {
-				routingKeyData = list.RoutingKey
+				routingKeyData = list.VictorOps.GetRoutingKey()
 			}
-			if list.RoutingKey != "" {
+			if list.VictorOps.GetRoutingKey() != "" {
 				// Secret with routing key
-				routingSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(list.Type)),
+				routingSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
 					targetNamespace,
 					map[string][]byte{secrets.PasswordField: []byte(routingKeyData)}, dictionary)
 				intSecrets = append(intSecrets, routingSecret)
 			}
-		case "NEW_RELIC":
-			integration.Region = list.Region
+		case newRelicIntegrationType:
 			integration.LicenseKeyRef = secretRef
-			secret.Data[secrets.PasswordField] = []byte(list.LicenseKey)
+			secret.Data[secrets.PasswordField] = []byte(list.NewRelic.LicenseKey)
 			// Secrets with write and read tokens
 			var writeToken, readToken string
 			if includeSecrets {
-				writeToken = list.WriteToken
-				readToken = list.ReadToken
+				writeToken = list.NewRelic.WriteToken
+				readToken = list.NewRelic.ReadToken
 			}
-			writeTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(list.Type)),
+			writeTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
 				targetNamespace,
 				map[string][]byte{secrets.PasswordField: []byte(writeToken)}, dictionary)
-			readTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(list.Type)),
+			readTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
 				targetNamespace,
 				map[string][]byte{secrets.PasswordField: []byte(readToken)},
 				dictionary,
@@ -433,10 +445,35 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	return result, intSecrets, nil
 }
 
+func getIntegrationType(val atlasv2.ThridPartyIntegration) string {
+	switch {
+	case val.Datadog != nil:
+		return datadogIntegrationType
+	case val.MicrosoftTeams != nil:
+		return microsoftTeamsIntegrationType
+	case val.NewRelic != nil:
+		return newRelicIntegrationType
+	case val.OpsGenie != nil:
+		return opsGenieIntegrationType
+	case val.PagerDuty != nil:
+		return pagerDutyIntegrationType
+	case val.Prometheus != nil:
+		return prometheusIntegrationType
+	case val.Slack != nil:
+		return slackIntegrationType
+	case val.VictorOps != nil:
+		return victorOpsIntegrationType
+	case val.Webhook != nil:
+		return webhookIntegrationType
+	default:
+		return ""
+	}
+}
+
 func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID string) ([]atlasV1.PrivateEndpoint, error) {
 	var result []atlasV1.PrivateEndpoint
 	for _, cloudProvider := range []provider.ProviderName{provider.ProviderAWS, provider.ProviderGCP, provider.ProviderAzure} {
-		peList, err := peProvider.PrivateEndpoints(projectID, string(cloudProvider), &atlas.ListOptions{ItemsPerPage: MaxItems})
+		peList, err := peProvider.PrivateEndpoints(projectID, string(cloudProvider))
 		if err != nil {
 			return nil, err
 		}
@@ -444,12 +481,12 @@ func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID str
 			pe := &peList[i]
 			result = append(result, atlasV1.PrivateEndpoint{
 				Provider:          cloudProvider,
-				Region:            pe.Region,
-				ID:                pe.ID,
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",
 				Endpoints:         atlasV1.GCPEndpoints{},
+				ID:                pe.GetId(),
+				Region:            pe.GetRegionName(),
 			})
 		}
 	}
@@ -491,39 +528,66 @@ func buildNetworkPeering(npProvider store.PeeringConnectionLister, projectID str
 	result := make([]atlasV1.NetworkPeer, 0, len(npListAWS)+len(npListGCP)+len(npListAzure))
 
 	for i := range npListAWS {
-		np := &npListAWS[i]
+		np := npListAWS[i]
 		result = append(result, convertNetworkPeer(np, provider.ProviderAWS))
 	}
 
 	for i := range npListGCP {
-		np := &npListGCP[i]
+		np := npListGCP[i]
 		result = append(result, convertNetworkPeer(np, provider.ProviderGCP))
 	}
 
 	for i := range npListAzure {
-		np := &npListAzure[i]
+		np := npListAzure[i]
 		result = append(result, convertNetworkPeer(np, provider.ProviderAzure))
 	}
 
 	return result, nil
 }
 
-func convertNetworkPeer(np *atlas.Peer, providerName provider.ProviderName) atlasV1.NetworkPeer {
+func convertNetworkPeer(np interface{}, providerName provider.ProviderName) atlasV1.NetworkPeer {
+	switch v := np.(type) {
+	case *atlasv2.AwsNetworkPeeringConnectionSettings:
+		return convertAWSNetworkPeer(v, providerName)
+	case *atlasv2.GCPNetworkPeeringConnectionSettings:
+		return convertGCPNetworkPeer(v, providerName)
+	case *atlasv2.AzureNetworkPeeringConnectionSettings:
+		return convertAzureNetworkPeer(v, providerName)
+	}
+	return atlasV1.NetworkPeer{}
+}
+
+func convertAWSNetworkPeer(np *atlasv2.AwsNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
 	return atlasV1.NetworkPeer{
 		AccepterRegionName:  np.AccepterRegionName,
+		AWSAccountID:        np.AwsAccountId,
 		ContainerRegion:     "",
-		AWSAccountID:        np.AWSAccountID,
-		ContainerID:         np.ContainerID,
+		ContainerID:         np.ContainerId,
 		ProviderName:        providerName,
-		RouteTableCIDRBlock: np.RouteTableCIDRBlock,
-		VpcID:               np.VpcID,
-		AtlasCIDRBlock:      np.AtlasCIDRBlock,
-		AzureDirectoryID:    np.AzureDirectoryID,
-		AzureSubscriptionID: np.AzureSubscriptionID,
+		RouteTableCIDRBlock: np.RouteTableCidrBlock,
+		VpcID:               np.VpcId,
+	}
+}
+
+func convertAzureNetworkPeer(np *atlasv2.AzureNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
+	return atlasV1.NetworkPeer{
+		AzureDirectoryID:    np.AzureDirectoryId,
+		AzureSubscriptionID: np.AzureSubscriptionId,
+		ContainerRegion:     "",
+		ContainerID:         np.ContainerId,
+		ProviderName:        providerName,
 		ResourceGroupName:   np.ResourceGroupName,
-		VNetName:            np.VNetName,
-		GCPProjectID:        np.GCPProjectID,
-		NetworkName:         np.NetworkName,
+		VNetName:            np.VnetName,
+	}
+}
+
+func convertGCPNetworkPeer(np *atlasv2.GCPNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
+	return atlasV1.NetworkPeer{
+		GCPProjectID:    np.GcpProjectId,
+		ContainerRegion: "",
+		ContainerID:     np.ContainerId,
+		ProviderName:    providerName,
+		NetworkName:     np.NetworkName,
 	}
 }
 
@@ -536,28 +600,28 @@ func buildEncryptionAtRest(encProvider store.EncryptionAtRestDescriber, projectI
 	return &atlasV1.EncryptionAtRest{
 		AwsKms: atlasV1.AwsKms{
 			Enabled:             data.AwsKms.Enabled,
-			AccessKeyID:         data.AwsKms.AccessKeyID,
-			SecretAccessKey:     data.AwsKms.SecretAccessKey,
-			CustomerMasterKeyID: data.AwsKms.CustomerMasterKeyID,
-			Region:              data.AwsKms.Region,
-			RoleID:              data.AwsKms.RoleID,
+			AccessKeyID:         data.AwsKms.GetAccessKeyID(),
+			SecretAccessKey:     data.AwsKms.GetSecretAccessKey(),
+			CustomerMasterKeyID: data.AwsKms.GetCustomerMasterKeyID(),
+			Region:              data.AwsKms.GetRegion(),
+			RoleID:              data.AwsKms.GetRoleId(),
 			Valid:               data.AwsKms.Valid,
 		},
 		AzureKeyVault: atlasV1.AzureKeyVault{
 			Enabled:           data.AzureKeyVault.Enabled,
-			ClientID:          data.AzureKeyVault.ClientID,
-			AzureEnvironment:  data.AzureKeyVault.AzureEnvironment,
-			SubscriptionID:    data.AzureKeyVault.SubscriptionID,
-			ResourceGroupName: data.AzureKeyVault.ResourceGroupName,
-			KeyVaultName:      data.AzureKeyVault.KeyVaultName,
-			KeyIdentifier:     data.AzureKeyVault.KeyIdentifier,
-			Secret:            data.AzureKeyVault.Secret,
-			TenantID:          data.AzureKeyVault.TenantID,
+			ClientID:          data.AzureKeyVault.GetClientID(),
+			AzureEnvironment:  data.AzureKeyVault.GetAzureEnvironment(),
+			SubscriptionID:    data.AzureKeyVault.GetSubscriptionID(),
+			ResourceGroupName: data.AzureKeyVault.GetResourceGroupName(),
+			KeyVaultName:      data.AzureKeyVault.GetKeyVaultName(),
+			KeyIdentifier:     data.AzureKeyVault.GetKeyIdentifier(),
+			Secret:            data.AzureKeyVault.GetSecret(),
+			TenantID:          data.AzureKeyVault.GetTenantID(),
 		},
 		GoogleCloudKms: atlasV1.GoogleCloudKms{
 			Enabled:              data.GoogleCloudKms.Enabled,
-			ServiceAccountKey:    data.GoogleCloudKms.ServiceAccountKey,
-			KeyVersionResourceID: data.GoogleCloudKms.KeyVersionResourceID,
+			ServiceAccountKey:    data.GoogleCloudKms.GetServiceAccountKey(),
+			KeyVersionResourceID: data.GoogleCloudKms.GetKeyVersionResourceID(),
 		},
 	}, nil
 }
@@ -569,11 +633,11 @@ func buildCloudProviderAccessRoles(cpaProvider store.CloudProviderAccessRoleList
 	}
 
 	var result []atlasV1.CloudProviderAccessRole
-	for i := range data.AWSIAMRoles {
-		cpa := &data.AWSIAMRoles[i]
+	for i := range data.AwsIamRoles {
+		cpa := &data.AwsIamRoles[i]
 		result = append(result, atlasV1.CloudProviderAccessRole{
 			ProviderName:      cpa.ProviderName,
-			IamAssumedRoleArn: cpa.IAMAssumedRoleARN,
+			IamAssumedRoleArn: cpa.GetIamAssumedRoleArn(),
 		})
 	}
 
@@ -602,9 +666,9 @@ func buildAuditing(auditingProvider store.AuditingDescriber, projectID string) (
 	}
 
 	return &atlasV1.Auditing{
-		AuditAuthorizationSuccess: data.AuditAuthorizationSuccess,
+		AuditAuthorizationSuccess: &data.AuditAuthorizationSuccess,
 		AuditFilter:               data.AuditFilter,
-		Enabled:                   data.Enabled,
+		Enabled:                   &data.Enabled,
 	}, nil
 }
 

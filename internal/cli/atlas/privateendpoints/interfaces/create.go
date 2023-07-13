@@ -61,6 +61,9 @@ func CreateBuilder() *cobra.Command {
 		Aliases: []string{"add"},
 		Short:   "Add a new interface to a private endpoint.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

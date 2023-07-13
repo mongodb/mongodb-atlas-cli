@@ -57,6 +57,7 @@ func DeleteBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+			"output":                opts.SuccessMessage(),
 		},
 		Example: fmt.Sprintf(`  %s privateEndpoint dataLake aws delete vpce-0fcd9d80bbafe1607 --force`, cli.ExampleAtlasEntryPoint()),
 		Args:    require.ExactArgs(1),
@@ -70,6 +71,10 @@ func DeleteBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+	}
+
+	if config.ToolName == config.AtlasCLI {
+		cmd.Deprecated = "Please use 'atlas datafederation privateendpoints delete'"
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)

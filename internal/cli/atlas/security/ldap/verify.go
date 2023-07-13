@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type VerifyOpts struct {
@@ -52,7 +52,7 @@ func (opts *VerifyOpts) initStore(ctx context.Context) func() error {
 }
 
 var verifyTemplate = `REQUEST ID	PROJECT ID	STATUS
-{{.RequestID}}	{{.GroupID}}	{{.Status}}
+{{.RequestId}}	{{.GroupId}}	{{.Status}}
 `
 
 func (opts *VerifyOpts) Run() error {
@@ -89,12 +89,12 @@ func (opts *VerifyOpts) Prompt() error {
 	return nil
 }
 
-func (opts *VerifyOpts) newLDAP() *atlas.LDAP {
-	return &atlas.LDAP{
-		Hostname:           &opts.hostname,
-		Port:               &opts.port,
-		BindUsername:       &opts.bindUsername,
-		BindPassword:       &opts.bindPassword,
+func (opts *VerifyOpts) newLDAP() *atlasv2.LDAPVerifyConnectivityJobRequestParams {
+	return &atlasv2.LDAPVerifyConnectivityJobRequestParams{
+		Hostname:           opts.hostname,
+		Port:               opts.port,
+		BindUsername:       opts.bindUsername,
+		BindPassword:       opts.bindPassword,
 		CaCertificate:      &opts.caCertificate,
 		AuthzQueryTemplate: &opts.authzQueryTemplate,
 	}
@@ -107,6 +107,9 @@ func VerifyBuilder() *cobra.Command {
 		Use:   "verify",
 		Short: "Request verification of an LDAP configuration for your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": verifyTemplate,
+		},
 		Example: fmt.Sprintf(`  # Request the JSON-formatted verification of the LDAP configuration for the atlas-ldaps-01.ldap.myteam.com host in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s security ldap verify --hostname atlas-ldaps-01.ldap.myteam.com --bindUsername "CN=Administrator,CN=Users,DC=atlas-ldaps-01,DC=myteam,DC=com" --bindPassword changeMe --projectId 5e2211c17a3e5a48f5497de3 --output json
 `, cli.ExampleAtlasEntryPoint()),

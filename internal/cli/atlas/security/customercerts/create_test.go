@@ -22,7 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/spf13/afero"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
@@ -41,7 +41,7 @@ func TestCreateOpts_Run(t *testing.T) {
 		casPath: fileName,
 	}
 
-	expected := &mongodbatlas.CustomerX509{}
+	expected := &atlasv2.UserSecurity{}
 
 	mockStore.
 		EXPECT().

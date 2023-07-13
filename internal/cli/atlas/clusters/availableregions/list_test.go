@@ -23,15 +23,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestList_Run_NoFlags(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderRegionsLister(ctrl)
 
-	var expected *mongodbatlas.CloudProviders
-	var empty []*string
+	var expected *admin.PaginatedApiAtlasProviderRegions
+	var empty []string
 
 	listOpts := &ListOpts{
 		store: mockStore,
@@ -52,7 +52,7 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderRegionsLister(ctrl)
 
-	var expected *mongodbatlas.CloudProviders
+	var expected *admin.PaginatedApiAtlasProviderRegions
 
 	listOpts := &ListOpts{
 		store:    mockStore,
@@ -62,7 +62,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		CloudProviderRegions(listOpts.ProjectID, listOpts.tier, []*string{&listOpts.provider}).
+		CloudProviderRegions(listOpts.ProjectID, listOpts.tier, []string{listOpts.provider}).
 		Return(expected, nil).
 		Times(1)
 

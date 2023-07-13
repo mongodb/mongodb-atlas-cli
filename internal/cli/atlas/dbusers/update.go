@@ -23,10 +23,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
@@ -34,11 +35,12 @@ const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
 type UpdateOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
-	username string
-	password string
-	roles    []string
-	scopes   []string
-	store    store.DatabaseUserUpdater
+	username        string
+	currentUsername string
+	password        string
+	roles           []string
+	scopes          []string
+	store           store.DatabaseUserUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -50,10 +52,16 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	current := new(atlas.DatabaseUser)
+	current := new(admin.CloudDatabaseUser)
 	opts.update(current)
 
-	r, err := opts.store.UpdateDatabaseUser(current)
+	params := &admin.UpdateDatabaseUserApiParams{
+		GroupId:           current.GroupId,
+		DatabaseName:      current.DatabaseName,
+		Username:          opts.currentUsername,
+		CloudDatabaseUser: current,
+	}
+	r, err := opts.store.UpdateDatabaseUser(params)
 
 	if err != nil {
 		return err
@@ -62,18 +70,22 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) update(out *atlas.DatabaseUser) {
-	out.GroupID = opts.ConfigProjectID()
+func (opts *UpdateOpts) update(out *admin.CloudDatabaseUser) {
+	out.GroupId = opts.ConfigProjectID()
 	out.Username = opts.username
+	if opts.username == "" {
+		out.Username = opts.currentUsername
+	}
 	if opts.password != "" {
-		out.Password = opts.password
+		out.Password = pointer.GetStringPointerIfNotEmpty(opts.password)
 	}
 
 	out.Scopes = convert.BuildAtlasScopes(opts.scopes)
 	out.Roles = convert.BuildAtlasRoles(opts.roles)
+	out.DatabaseName = convert.GetAuthDB(out)
 }
 
-// mongocli atlas dbuser(s) update <username> [--password password] [--role roleName@dbName] [--projectId projectId].
+// atlas dbuser(s) update <username> [--password password] [--role roleName@dbName] [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
@@ -89,6 +101,7 @@ func UpdateBuilder() *cobra.Command {
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"usernameDesc": "Username to update in the MongoDB database.",
+			"output":       updateTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -98,15 +111,15 @@ func UpdateBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.username = args[0]
+			opts.currentUsername = args[0]
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.DBUsername)
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
-	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
-	cmd.Flags().StringSliceVar(&opts.scopes, flag.Scope, []string{}, usage.Scopes)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles+usage.UpdateWarning)
+	cmd.Flags().StringSliceVar(&opts.scopes, flag.Scope, []string{}, usage.Scopes+usage.UpdateWarning)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

@@ -16,17 +16,17 @@ package serverless
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 const providerName = "SERVERLESS"
@@ -37,6 +37,7 @@ type CreateOpts struct {
 	instanceName string
 	provider     string
 	region       string
+	tag          map[string]string
 	store        store.ServerlessInstanceCreator
 }
 
@@ -52,8 +53,8 @@ var createTemplate = "Serverless instance {{.Name}} created.\n"
 
 func (opts *CreateOpts) Run() error {
 	r, err := opts.store.CreateServerlessInstance(opts.ConfigProjectID(), opts.newServerlessCreateRequestParams())
-	var target *atlas.ErrorResponse
-	if errors.As(err, &target) && target.ErrorCode == "INVALID_REGION" {
+	target, ok := atlasv2.AsError(err)
+	if ok && target.GetErrorCode() == "INVALID_REGION" {
 		return cli.ErrNoRegionExistsTryCommand
 	} else if err != nil {
 		return err
@@ -61,15 +62,26 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newServerlessCreateRequestParams() *atlas.ServerlessCreateRequestParams {
-	return &atlas.ServerlessCreateRequestParams{
+func (opts *CreateOpts) newServerlessCreateRequestParams() *atlasv2.ServerlessInstanceDescriptionCreate {
+	req := &atlasv2.ServerlessInstanceDescriptionCreate{
 		Name: opts.instanceName,
-		ProviderSettings: &atlas.ServerlessProviderSettings{
+		ProviderSettings: atlasv2.ServerlessProviderSettings{
 			BackingProviderName: opts.provider,
-			ProviderName:        providerName,
+			ProviderName:        pointer.Get(providerName),
 			RegionName:          opts.region,
 		},
 	}
+
+	if len(opts.tag) > 0 {
+		req.Tags = []atlasv2.ResourceTag{}
+	}
+	for k, v := range opts.tag {
+		if k != "" && v != "" {
+			req.Tags = append(req.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+		}
+	}
+
+	return req
 }
 
 // mongocli atlas serverless|sl create <instanceName> --backingProviderName backingProviderName --providerName providerName --regionName regionName [--projectId projectId].
@@ -80,8 +92,11 @@ func CreateBuilder() *cobra.Command {
 		Short: "Creates one serverless instance in the specified project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
+		Example: fmt.Sprintf(`  # Deploy a serverlessIntance named myInstance for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %[1]s serverless create serverless myInstance --provider AWS --region US_EAST_1 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",
+			"output":           createTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -98,6 +113,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.ServerlessProvider)
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.ServerlessRegion)
+	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.ServerlessTag)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

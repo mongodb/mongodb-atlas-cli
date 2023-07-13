@@ -62,7 +62,10 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
-		Short:   "Return all IP access list entries for your global API key.",
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
+		Short: "Return all IP access list entries for your global API key.",
 		Example: `  # Return a JSON-formatted list of all access list entries for the global API key:
   mongocli iam globalAccessLists list --output json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -21,7 +21,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestList_Run(t *testing.T) {
@@ -33,7 +32,7 @@ func TestList_Run(t *testing.T) {
 			store: mockStore,
 		}
 
-		var expected []mongodbatlas.Container
+		var expected []interface{}
 		mockStore.
 			EXPECT().
 			AllContainers(listOpts.ProjectID, listOpts.NewListOptions()).
@@ -50,7 +49,7 @@ func TestList_Run(t *testing.T) {
 			provider: "test",
 		}
 
-		var expected []mongodbatlas.Container
+		var expected []interface{}
 		mockStore.
 			EXPECT().
 			ContainersByProvider(listOpts.ProjectID, listOpts.newContainerListOptions()).

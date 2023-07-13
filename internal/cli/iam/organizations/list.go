@@ -33,6 +33,7 @@ const listTemplate = `ID	NAME{{range .Results}}
 `
 
 type ListOpts struct {
+	cli.GlobalOpts
 	cli.ListOpts
 	cli.OutputOpts
 	store              store.OrganizationLister
@@ -67,21 +68,25 @@ func (opts *ListOpts) newOrganizationListOptions() *atlas.OrganizationsListOptio
 // mongocli iam organizations(s) list --name --includeDeletedOrgs.
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
-	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "Return all organizations.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all organizations:
   %[1]s organizations list --output json
   
   # Return a JSON-formatted list that includes the organizations named org1 and Org1, but doesn't return org123:
   %[1]s organizations list --name org1 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore(cmd.Context())()
+			return opts.PreRunE(
+				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestAccessList(t *testing.T) {
@@ -52,20 +52,18 @@ func TestAccessList(t *testing.T) {
 			"--comment=test",
 			"--projectId",
 			g.projectID,
-			"--projectId",
-			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var entries *mongodbatlas.ProjectIPAccessLists
+		var entries *atlasv2.PaginatedNetworkAccess
 		err = json.Unmarshal(resp, &entries)
 		req.NoError(err)
 
 		found := false
 		for i := range entries.Results {
-			if entries.Results[i].IPAddress == entry {
+			if entries.Results[i].GetIpAddress() == entry {
 				found = true
 				break
 			}
@@ -84,7 +82,7 @@ func TestAccessList(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
-		var entries *mongodbatlas.ProjectIPAccessLists
+		var entries *atlasv2.PaginatedNetworkAccess
 		err = json.Unmarshal(resp, &entries)
 		req.NoError(err)
 	})
@@ -100,7 +98,7 @@ func TestAccessList(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
-		var entry *mongodbatlas.ProjectIPAccessList
+		var entry *atlasv2.NetworkPermissionEntry
 		err = json.Unmarshal(resp, &entry)
 		req.NoError(err)
 	})
@@ -135,13 +133,13 @@ func TestAccessList(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var entries *mongodbatlas.ProjectIPAccessLists
+		var entries *atlasv2.PaginatedNetworkAccess
 		err = json.Unmarshal(resp, &entries)
 		req.NoError(err)
 
 		found := false
 		for i := range entries.Results {
-			if entries.Results[i].IPAddress == entry {
+			if entries.Results[i].GetIpAddress() == entry {
 				found = true
 				break
 			}
@@ -178,14 +176,14 @@ func TestAccessList(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var entries *mongodbatlas.ProjectIPAccessLists
+		var entries *atlasv2.PaginatedNetworkAccess
 		err = json.Unmarshal(resp, &entries)
 		req.NoError(err)
 
 		a.NotEmpty(entries.Results)
 		a.Len(entries.Results, 1)
 
-		currentIPEntry = entries.Results[0].IPAddress
+		currentIPEntry = entries.Results[0].GetIpAddress()
 	})
 
 	t.Run("Delete", func(t *testing.T) {

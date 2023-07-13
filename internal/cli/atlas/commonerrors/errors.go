@@ -17,11 +17,11 @@ package commonerrors
 import (
 	"errors"
 
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/admin"
 )
 
 var (
-	errClusterUnsupported = errors.New("cluster update is not supported, try 'atlas cluster upgrade' command")
+	errClusterUnsupported = errors.New("atlas supports this command only for M10+ clusters. You can upgrade your cluster by running the 'atlas cluster upgrade' command")
 )
 
 func Check(err error) error {
@@ -29,9 +29,9 @@ func Check(err error) error {
 		return nil
 	}
 
-	var atlasErr *atlas.ErrorResponse
-	if errors.As(err, &atlasErr) {
-		if atlasErr.ErrorCode == "TENANT_CLUSTER_UPDATE_UNSUPPORTED" {
+	apiError, ok := admin.AsError(err)
+	if ok {
+		if apiError.GetErrorCode() == "TENANT_CLUSTER_UPDATE_UNSUPPORTED" {
 			return errClusterUnsupported
 		}
 	}

@@ -55,7 +55,7 @@ func (opts *ListsOpts) Run() error {
 	return opts.Print(r)
 }
 
-var listTemplate = `{{range .Results}}
+var listTemplate = `PARTITION NAME{{range .Results}}
 {{.PartitionName}}{{end}}
 `
 
@@ -73,6 +73,7 @@ $ %s processes list
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"hostname:portDesc": "Hostname and port number of the instance running the MongoDB process.",
+			"output":            listTemplate,
 		},
 		Example: fmt.Sprintf(
 			`  # Return a JSON-formatted list of disks and partitions for the host atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017

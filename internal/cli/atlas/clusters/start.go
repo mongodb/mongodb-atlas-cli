@@ -60,10 +60,11 @@ func StartBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "start <clusterName>",
 		Short: "Start the specified paused MongoDB cluster.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"),
+		Long:  fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"), "Atlas supports this command only for M10+ clusters."),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to start.",
+			"output":          startTmpl,
 		},
 		Example: fmt.Sprintf(`  # Start a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
   %s clusters start myCluster --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),

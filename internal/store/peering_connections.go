@@ -18,36 +18,37 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_peering_connections.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PeeringConnectionLister,PeeringConnectionDescriber,PeeringConnectionDeleter,AzurePeeringConnectionCreator,AWSPeeringConnectionCreator,GCPPeeringConnectionCreator,PeeringConnectionCreator
 
 type PeeringConnectionLister interface {
-	PeeringConnections(string, *atlas.ContainersListOptions) ([]atlas.Peer, error)
+	PeeringConnections(string, *atlas.ContainersListOptions) ([]interface{}, error)
 }
 
 type PeeringConnectionDescriber interface {
-	PeeringConnection(string, string) (*atlas.Peer, error)
+	PeeringConnection(string, string) (interface{}, error)
 }
 
 type PeeringConnectionCreator interface {
-	CreateContainer(string, *atlas.Container) (*atlas.Container, error)
-	CreatePeeringConnection(string, *atlas.Peer) (*atlas.Peer, error)
+	CreateContainer(string, *atlasv2.CloudProviderContainer) (interface{}, error)
+	CreatePeeringConnection(string, *atlasv2.BaseNetworkPeeringConnectionSettings) (interface{}, error)
 }
 
 type AzurePeeringConnectionCreator interface {
-	AzureContainers(string) ([]atlas.Container, error)
+	AzureContainers(string) ([]*atlasv2.AzureCloudProviderContainer, error)
 	PeeringConnectionCreator
 }
 
 type AWSPeeringConnectionCreator interface {
-	AWSContainers(string) ([]atlas.Container, error)
+	AWSContainers(string) ([]*atlasv2.AWSCloudProviderContainer, error)
 	PeeringConnectionCreator
 }
 
 type GCPPeeringConnectionCreator interface {
-	GCPContainers(string) ([]atlas.Container, error)
+	GCPContainers(string) ([]*atlasv2.GCPCloudProviderContainer, error)
 	PeeringConnectionCreator
 }
 
@@ -56,22 +57,30 @@ type PeeringConnectionDeleter interface {
 }
 
 // PeeringConnections encapsulates the logic to manage different cloud providers.
-func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListOptions) ([]atlas.Peer, error) {
+func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListOptions) ([]interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Peers.List(s.ctx, projectID, opts)
-		return result, err
+		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).
+			ItemsPerPage(opts.ItemsPerPage).
+			PageNum(opts.PageNum).
+			ProviderName(opts.ProviderName).Execute()
+
+		peeringConnections := make([]interface{}, len(result.Results))
+		for i, peeringConnection := range result.Results {
+			peeringConnections[i] = peeringConnection.GetActualInstance()
+		}
+		return peeringConnections, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
 // PeeringConnections encapsulates the logic to manage different cloud providers.
-func (s *Store) PeeringConnection(projectID, peerID string) (*atlas.Peer, error) {
+func (s *Store) PeeringConnection(projectID, peerID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Peers.Get(s.ctx, projectID, peerID)
-		return result, err
+		result, _, err := s.clientv2.NetworkPeeringApi.GetPeeringConnection(s.ctx, projectID, peerID).Execute()
+		return result.GetActualInstance(), err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -81,7 +90,7 @@ func (s *Store) PeeringConnection(projectID, peerID string) (*atlas.Peer, error)
 func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Peers.Delete(s.ctx, projectID, peerID)
+		_, _, err := s.clientv2.NetworkPeeringApi.DeletePeeringConnection(s.ctx, projectID, peerID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -89,11 +98,11 @@ func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 }
 
 // CreatePeeringConnection encapsulates the logic to manage different cloud providers.
-func (s *Store) CreatePeeringConnection(projectID string, peer *atlas.Peer) (*atlas.Peer, error) {
+func (s *Store) CreatePeeringConnection(projectID string, peer *atlasv2.BaseNetworkPeeringConnectionSettings) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Peers.Create(s.ctx, projectID, peer)
-		return result, err
+		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringConnection(s.ctx, projectID, peer).Execute()
+		return result.GetActualInstance(), err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

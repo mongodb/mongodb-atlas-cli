@@ -18,20 +18,20 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_process_measurements.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessMeasurementLister
 
 type ProcessMeasurementLister interface {
-	ProcessMeasurements(string, string, int, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
+	ProcessMeasurements(*atlasv2.GetHostMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error)
 }
 
 // ProcessMeasurements encapsulate the logic to manage different cloud providers.
-func (s *Store) ProcessMeasurements(groupID, host string, port int, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
+func (s *Store) ProcessMeasurements(params *atlasv2.GetHostMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProcessMeasurements.List(s.ctx, groupID, host, port, opts)
+		result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostMeasurementsWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

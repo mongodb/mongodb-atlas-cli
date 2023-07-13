@@ -25,18 +25,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
-const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range .}}
-{{.ID}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}{{end}}
+const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range .Results}}
+{{.Id}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}{{end}}
 `
 
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.ProcessLister
+	CompactResponse bool
+	store           store.ProcessLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -48,22 +49,34 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.newProcessesListOptions()
-	r, err := opts.store.Processes(opts.ConfigProjectID(), listOpts)
+	listParams := opts.newProcessesListParams()
+	r, err := opts.store.Processes(listParams)
 	if err != nil {
 		return err
+	}
+
+	if opts.CompactResponse {
+		return opts.PrintForCompactResultsResponse(r)
 	}
 
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newProcessesListOptions() *atlas.ProcessesListOptions {
-	return &atlas.ProcessesListOptions{
-		ListOptions: *opts.NewListOptions(),
+func (opts *ListOpts) newProcessesListParams() *atlasv2.ListAtlasProcessesApiParams {
+	listOpts := opts.NewListOptions()
+	processesList := &atlasv2.ListAtlasProcessesApiParams{
+		GroupId: opts.ConfigProjectID(),
 	}
+	if listOpts.PageNum > 0 {
+		processesList.PageNum = &listOpts.PageNum
+	}
+	if listOpts.ItemsPerPage > 0 {
+		processesList.ItemsPerPage = &listOpts.ItemsPerPage
+	}
+	return processesList
 }
 
-// ListBuilder mongocli atlas process(es) list --projectId projectId [--page N] [--limit N].
+// ListBuilder atlas process(es) list --projectId projectId [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -91,6 +104,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().BoolVarP(&opts.CompactResponse, flag.CompactResponse, flag.CompactResponseShort, false, usage.CompactResponse)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd

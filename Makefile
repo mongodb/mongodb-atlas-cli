@@ -1,6 +1,6 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-GOLANGCI_VERSION=v1.50.1
+GOLANGCI_VERSION=v1.53.3
 COVERAGE=coverage.out
 
 MCLI_SOURCE_FILES?=./cmd/mongocli
@@ -92,6 +92,14 @@ check: test fix-lint ## Run tests and linters
 addcopy:
 	@scripts/add-copy.sh
 
+.PHONY: generate
+generate: gen-docs gen-mocks gen-code ## Generate docs, mocks, code, all auto generated assets
+
+.PHONY: gen-code
+gen-code: ## Generate code
+	@echo "==> Generating code"
+	go run ./tools/cli-generator
+
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
 	@echo "==> Generating mocks"
@@ -103,12 +111,12 @@ gen-docs: gen-docs-mongocli gen-docs-atlascli ## Generate docs for commands
 .PHONY: gen-docs-mongocli
 gen-docs-mongocli: ## Generate docs for mongocli commands
 	@echo "==> Generating docs for mongocli"
-	go run ./tools/mongoclidocs/main.go
+	go run -ldflags "$(MCLI_LINKER_FLAGS)" ./tools/mongoclidocs/main.go
 
 .PHONY: gen-docs-atlascli
 gen-docs-atlascli: ## Generate docs for atlascli commands
 	@echo "==> Generating docs for atlascli"
-	go run ./tools/atlasclidocs/main.go
+	go run -ldflags "$(ATLAS_LINKER_FLAGS)" ./tools/atlasclidocs/main.go
 
 .PHONY: build
 build: build-mongocli ## Generate a binary for mongocli

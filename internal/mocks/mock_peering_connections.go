@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -35,10 +36,10 @@ func (m *MockPeeringConnectionLister) EXPECT() *MockPeeringConnectionListerMockR
 }
 
 // PeeringConnections mocks base method.
-func (m *MockPeeringConnectionLister) PeeringConnections(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]mongodbatlas.Peer, error) {
+func (m *MockPeeringConnectionLister) PeeringConnections(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PeeringConnections", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.Peer)
+	ret0, _ := ret[0].([]interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +74,10 @@ func (m *MockPeeringConnectionDescriber) EXPECT() *MockPeeringConnectionDescribe
 }
 
 // PeeringConnection mocks base method.
-func (m *MockPeeringConnectionDescriber) PeeringConnection(arg0, arg1 string) (*mongodbatlas.Peer, error) {
+func (m *MockPeeringConnectionDescriber) PeeringConnection(arg0, arg1 string) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PeeringConnection", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Peer)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -148,10 +149,10 @@ func (m *MockAzurePeeringConnectionCreator) EXPECT() *MockAzurePeeringConnection
 }
 
 // AzureContainers mocks base method.
-func (m *MockAzurePeeringConnectionCreator) AzureContainers(arg0 string) ([]mongodbatlas.Container, error) {
+func (m *MockAzurePeeringConnectionCreator) AzureContainers(arg0 string) ([]*admin.AzureCloudProviderContainer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AzureContainers", arg0)
-	ret0, _ := ret[0].([]mongodbatlas.Container)
+	ret0, _ := ret[0].([]*admin.AzureCloudProviderContainer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -163,10 +164,10 @@ func (mr *MockAzurePeeringConnectionCreatorMockRecorder) AzureContainers(arg0 in
 }
 
 // CreateContainer mocks base method.
-func (m *MockAzurePeeringConnectionCreator) CreateContainer(arg0 string, arg1 *mongodbatlas.Container) (*mongodbatlas.Container, error) {
+func (m *MockAzurePeeringConnectionCreator) CreateContainer(arg0 string, arg1 *admin.CloudProviderContainer) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateContainer", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Container)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -178,10 +179,10 @@ func (mr *MockAzurePeeringConnectionCreatorMockRecorder) CreateContainer(arg0, a
 }
 
 // CreatePeeringConnection mocks base method.
-func (m *MockAzurePeeringConnectionCreator) CreatePeeringConnection(arg0 string, arg1 *mongodbatlas.Peer) (*mongodbatlas.Peer, error) {
+func (m *MockAzurePeeringConnectionCreator) CreatePeeringConnection(arg0 string, arg1 *admin.BaseNetworkPeeringConnectionSettings) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePeeringConnection", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Peer)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -216,10 +217,10 @@ func (m *MockAWSPeeringConnectionCreator) EXPECT() *MockAWSPeeringConnectionCrea
 }
 
 // AWSContainers mocks base method.
-func (m *MockAWSPeeringConnectionCreator) AWSContainers(arg0 string) ([]mongodbatlas.Container, error) {
+func (m *MockAWSPeeringConnectionCreator) AWSContainers(arg0 string) ([]*admin.AWSCloudProviderContainer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AWSContainers", arg0)
-	ret0, _ := ret[0].([]mongodbatlas.Container)
+	ret0, _ := ret[0].([]*admin.AWSCloudProviderContainer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -231,10 +232,10 @@ func (mr *MockAWSPeeringConnectionCreatorMockRecorder) AWSContainers(arg0 interf
 }
 
 // CreateContainer mocks base method.
-func (m *MockAWSPeeringConnectionCreator) CreateContainer(arg0 string, arg1 *mongodbatlas.Container) (*mongodbatlas.Container, error) {
+func (m *MockAWSPeeringConnectionCreator) CreateContainer(arg0 string, arg1 *admin.CloudProviderContainer) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateContainer", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Container)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -246,10 +247,10 @@ func (mr *MockAWSPeeringConnectionCreatorMockRecorder) CreateContainer(arg0, arg
 }
 
 // CreatePeeringConnection mocks base method.
-func (m *MockAWSPeeringConnectionCreator) CreatePeeringConnection(arg0 string, arg1 *mongodbatlas.Peer) (*mongodbatlas.Peer, error) {
+func (m *MockAWSPeeringConnectionCreator) CreatePeeringConnection(arg0 string, arg1 *admin.BaseNetworkPeeringConnectionSettings) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePeeringConnection", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Peer)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -284,10 +285,10 @@ func (m *MockGCPPeeringConnectionCreator) EXPECT() *MockGCPPeeringConnectionCrea
 }
 
 // CreateContainer mocks base method.
-func (m *MockGCPPeeringConnectionCreator) CreateContainer(arg0 string, arg1 *mongodbatlas.Container) (*mongodbatlas.Container, error) {
+func (m *MockGCPPeeringConnectionCreator) CreateContainer(arg0 string, arg1 *admin.CloudProviderContainer) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateContainer", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Container)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -299,10 +300,10 @@ func (mr *MockGCPPeeringConnectionCreatorMockRecorder) CreateContainer(arg0, arg
 }
 
 // CreatePeeringConnection mocks base method.
-func (m *MockGCPPeeringConnectionCreator) CreatePeeringConnection(arg0 string, arg1 *mongodbatlas.Peer) (*mongodbatlas.Peer, error) {
+func (m *MockGCPPeeringConnectionCreator) CreatePeeringConnection(arg0 string, arg1 *admin.BaseNetworkPeeringConnectionSettings) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePeeringConnection", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Peer)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -314,10 +315,10 @@ func (mr *MockGCPPeeringConnectionCreatorMockRecorder) CreatePeeringConnection(a
 }
 
 // GCPContainers mocks base method.
-func (m *MockGCPPeeringConnectionCreator) GCPContainers(arg0 string) ([]mongodbatlas.Container, error) {
+func (m *MockGCPPeeringConnectionCreator) GCPContainers(arg0 string) ([]*admin.GCPCloudProviderContainer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GCPContainers", arg0)
-	ret0, _ := ret[0].([]mongodbatlas.Container)
+	ret0, _ := ret[0].([]*admin.GCPCloudProviderContainer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -352,10 +353,10 @@ func (m *MockPeeringConnectionCreator) EXPECT() *MockPeeringConnectionCreatorMoc
 }
 
 // CreateContainer mocks base method.
-func (m *MockPeeringConnectionCreator) CreateContainer(arg0 string, arg1 *mongodbatlas.Container) (*mongodbatlas.Container, error) {
+func (m *MockPeeringConnectionCreator) CreateContainer(arg0 string, arg1 *admin.CloudProviderContainer) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateContainer", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Container)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -367,10 +368,10 @@ func (mr *MockPeeringConnectionCreatorMockRecorder) CreateContainer(arg0, arg1 i
 }
 
 // CreatePeeringConnection mocks base method.
-func (m *MockPeeringConnectionCreator) CreatePeeringConnection(arg0 string, arg1 *mongodbatlas.Peer) (*mongodbatlas.Peer, error) {
+func (m *MockPeeringConnectionCreator) CreatePeeringConnection(arg0 string, arg1 *admin.BaseNetworkPeeringConnectionSettings) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePeeringConnection", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Peer)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

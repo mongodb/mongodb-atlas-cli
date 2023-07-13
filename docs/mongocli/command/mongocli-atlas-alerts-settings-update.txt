@@ -20,6 +20,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli atlas alerts settings update <alertConfigId> [options]
 
@@ -116,10 +117,6 @@ Options
      - 
      - false
      - Flag that enables email notifications. Configurable for GROUP and USER notification types.
-   * - --notificationFlowName
-     - string
-     - false
-     - Flowdock Flow name in lower-case letters for sending alert notifications.
    * - --notificationIntervalMin
      - int
      - false
@@ -128,10 +125,6 @@ Options
      - string
      - false
      - Mobile number to which alert notifications are sent.
-   * - --notificationOrgName
-     - string
-     - false
-     - Flowdock organization's name in lower-case letters.
    * - --notificationRegion
      - string
      - false
@@ -151,11 +144,11 @@ Options
    * - --notificationToken
      - string
      - false
-     - Slack API token, Bot token, or Flowdock personal API token.
+     - Slack API token, or Bot token.
    * - --notificationType
      - string
      - false
-     - Type of alert notification. Valid values are DATADOG, EMAIL, FLOWDOCK, GROUP (Project), ORG, OPS_GENIE, PAGER_DUTY, SLACK, SMS, USER, or VICTOR_OPS.
+     - Type of alert notification. Valid values are DATADOG, EMAIL, GROUP (Project), ORG, OPS_GENIE, PAGER_DUTY, SLACK, SMS, USER, or VICTOR_OPS.
    * - --notificationUsername
      - string
      - false
@@ -187,7 +180,17 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+
+Output
+------
+
+If the command succeeds, the CLI returns output similar to the following sample. Values in brackets represent your values.
+
+.. code-block::
+
+   Alert configuration '<ID>' updated.
+   
 
 Examples
 --------

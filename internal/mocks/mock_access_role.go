@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -35,10 +36,10 @@ func (m *MockCloudProviderAccessRoleCreator) EXPECT() *MockCloudProviderAccessRo
 }
 
 // CreateCloudProviderAccessRole mocks base method.
-func (m *MockCloudProviderAccessRoleCreator) CreateCloudProviderAccessRole(arg0, arg1 string) (*mongodbatlas.AWSIAMRole, error) {
+func (m *MockCloudProviderAccessRoleCreator) CreateCloudProviderAccessRole(arg0, arg1 string) (*admin.CloudProviderAccessRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateCloudProviderAccessRole", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.AWSIAMRole)
+	ret0, _ := ret[0].(*admin.CloudProviderAccessRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +74,10 @@ func (m *MockCloudProviderAccessRoleAuthorizer) EXPECT() *MockCloudProviderAcces
 }
 
 // AuthorizeCloudProviderAccessRole mocks base method.
-func (m *MockCloudProviderAccessRoleAuthorizer) AuthorizeCloudProviderAccessRole(arg0, arg1 string, arg2 *mongodbatlas.CloudProviderAuthorizationRequest) (*mongodbatlas.AWSIAMRole, error) {
+func (m *MockCloudProviderAccessRoleAuthorizer) AuthorizeCloudProviderAccessRole(arg0, arg1 string, arg2 *mongodbatlas.CloudProviderAuthorizationRequest) (*admin.CloudProviderAccessRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AuthorizeCloudProviderAccessRole", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.AWSIAMRole)
+	ret0, _ := ret[0].(*admin.CloudProviderAccessRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +112,10 @@ func (m *MockCloudProviderAccessRoleLister) EXPECT() *MockCloudProviderAccessRol
 }
 
 // CloudProviderAccessRoles mocks base method.
-func (m *MockCloudProviderAccessRoleLister) CloudProviderAccessRoles(arg0 string) (*mongodbatlas.CloudProviderAccessRoles, error) {
+func (m *MockCloudProviderAccessRoleLister) CloudProviderAccessRoles(arg0 string) (*admin.CloudProviderAccessRoles, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CloudProviderAccessRoles", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderAccessRoles)
+	ret0, _ := ret[0].(*admin.CloudProviderAccessRoles)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

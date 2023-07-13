@@ -18,6 +18,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli cloud-manager metrics databases describe <hostId> <name> [options]
 
@@ -37,7 +38,7 @@ Arguments
    * - hostId
      - string
      - true
-     - Process identifier.
+     - Process identifier. You can use mongocli ops-manager processes list to get the ID.
    * - name
      - string
      - true
@@ -58,6 +59,8 @@ Options
      - string
      - false
      - ISO 8601-formatted date and time that specifies when to stop retrieving measurements. You can't set this parameter and period in the same request.
+
+       Mutually exclusive with --period.
    * - --granularity
      - string
      - true
@@ -69,7 +72,7 @@ Options
    * - --limit
      - int
      - false
-     - Number of items per results page.
+     - Number of items per results page, up to a maximum of 500. If you have more than 500 results, specify the --page option to change the results page.
    * - -o, --output
      - string
      - false
@@ -82,6 +85,8 @@ Options
      - string
      - false
      - ISO 8601-formatted time period that specifies the length of time in the past to query. You can't set this parameter and start/end in the same request
+
+       Mutually exclusive with --start, --end.
    * - --projectId
      - string
      - false
@@ -90,6 +95,8 @@ Options
      - string
      - false
      - ISO 8601-formatted date and time that specifies when to start retrieving measurements. You can't set this parameter and period in the same request.
+
+       Mutually exclusive with --period.
    * - --type
      - strings
      - false
@@ -109,5 +116,12 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
+Examples
+--------
+
+.. code-block::
+
+   # List metrics for the database test of the process e4ac1e57c58cc9c8aaa5a1163a851993
+   mongocli ops-manager metrics database describe e4ac1e57c58cc9c8aaa5a1163a851993 test --period P1DT12H --granularity PT5

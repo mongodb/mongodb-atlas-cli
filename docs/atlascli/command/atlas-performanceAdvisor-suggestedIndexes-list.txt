@@ -22,6 +22,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas performanceAdvisor suggestedIndexes list [options]
 
@@ -46,10 +47,6 @@ Options
      - 
      - false
      - help for list
-   * - --hostId
-     - string
-     - false
-     - Unique identifier for the host of a MongoDB process.
    * - --nExamples
      - int
      - false
@@ -59,7 +56,7 @@ Options
      - false
      - Maximum number of indexes to suggest.
    * - --namespaces
-     - string
+     - strings
      - false
      - Namespaces from which to retrieve suggested indexes.
    * - -o, --output
@@ -68,8 +65,8 @@ Options
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --processName
      - string
-     - false
-     - Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}.
+     - true
+     - Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}. You can obtain a list of possible values from the 'id' field when you run the 'atlas processes list' command.
    * - --projectId
      - string
      - false
@@ -93,7 +90,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
 --------

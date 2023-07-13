@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type UpdateOpts struct {
@@ -54,10 +54,10 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(nil)
 }
 
-func (opts *UpdateOpts) newMaintenanceWindow() *atlas.MaintenanceWindow {
-	return &atlas.MaintenanceWindow{
+func (opts *UpdateOpts) newMaintenanceWindow() *atlasv2.GroupMaintenanceWindow {
+	return &atlasv2.GroupMaintenanceWindow{
 		DayOfWeek: opts.dayOfWeek,
-		HourOfDay: &opts.hourOfDay,
+		HourOfDay: opts.hourOfDay,
 		StartASAP: &opts.startASAP,
 	}
 }
@@ -71,6 +71,9 @@ func UpdateBuilder() *cobra.Command {
 		Long: `To learn more about maintenance windows, see https://www.mongodb.com/docs/atlas/tutorial/cluster-maintenance-window/.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": updateTemplate,
+		},
 		Example: fmt.Sprintf(`  # Update the maintenance window to midnight on Saturdays for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s maintenanceWindows update --dayOfWeek 7 --hourOfDay 0 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -18,6 +18,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli ops-manager admin backups fileSystems update <ID> [options]
 
@@ -65,7 +66,7 @@ Options
    * - --label
      - strings
      - false
-     - Array of tags to manage which backup jobs Ops Manager can assign to which blockstores.
+     - Array of tags to manage which backup jobs Ops Manager can assign to which blockstores. Passing this flag replaces preexisting data.
    * - --loadFactor
      - int
      - false
@@ -101,5 +102,5 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 

@@ -25,10 +25,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
-const datadogType = "DATADOG"
+var datadogType = "DATADOG"
 
 type DatadogOpts struct {
 	cli.GlobalOpts
@@ -56,11 +56,13 @@ func (opts *DatadogOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *DatadogOpts) newDatadogIntegration() *atlas.ThirdPartyIntegration {
-	return &atlas.ThirdPartyIntegration{
-		Type:   datadogType,
-		APIKey: opts.apiKey,
-		Region: opts.region,
+func (opts *DatadogOpts) newDatadogIntegration() *atlasv2.ThridPartyIntegration {
+	return &atlasv2.ThridPartyIntegration{
+		Datadog: &atlasv2.Datadog{
+			Type:   &datadogType,
+			ApiKey: opts.apiKey,
+			Region: &opts.region,
+		},
 	}
 }
 
@@ -78,6 +80,9 @@ After you integrate with Datadog, you can send metric data about your project to
 Datadog integration is available only for M10+ clusters.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplateDatadog,
+		},
 		Args: require.NoArgs,
 		Example: fmt.Sprintf(`  # Integrate Datadog with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create DATADOG --apiKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),

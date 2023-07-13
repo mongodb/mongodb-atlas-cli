@@ -35,9 +35,11 @@
 	"github.com/tangzero/inflector": "mongocli",
 	"github.com/withfig/autocomplete-tools/packages/cobra": "mongocli",
 	"go.mongodb.org/atlas": "mongocli",
+	"go.mongodb.org/atlas-sdk": "mongocli",
 	"go.mongodb.org/mongo-driver": "mongocli",
 	"go.mongodb.org/ops-manager": "mongocli",
 	"golang.org/x/crypto": "mongocli",
+	"golang.org/x/tools": "mongocli",
 	"google.golang.org/api": "mongocli",
 	"google.golang.org/protobuf": "mongocli",
 	"golang.org/x/mod": "mongocli",
@@ -47,5 +49,8 @@
 	"k8s.io/apimachinery": "atlas_kubernetes_team",
 	"k8s.io/client-go": "atlas_kubernetes_team",
 	"k8s.io/apiextensions-apiserver": "atlas_kubernetes_team",
-	"sigs.k8s.io/yaml": "atlas_kubernetes_team"
+	"sigs.k8s.io/yaml": "atlas_kubernetes_team",
+	"sigs.k8s.io/controller-runtime": "atlas_kubernetes_team",
+	"sigs.k8s.io/kind": "atlas_kubernetes_team",
+	"golang.org/x/exp": "atlas_kubernetes_team"
 }

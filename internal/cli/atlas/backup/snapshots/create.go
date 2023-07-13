@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type CreateOpts struct {
@@ -46,7 +46,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Snapshot '{{.ID}}' created.\n"
+var createTemplate = "Snapshot '{{.Id}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newCloudProviderSnapshot()
@@ -55,14 +55,13 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return commonerrors.Check(err)
 	}
-
-	return opts.Print(r)
+	return opts.Print(r.GetActualInstance())
 }
 
-func (opts *CreateOpts) newCloudProviderSnapshot() *mongodbatlas.CloudProviderSnapshot {
-	createRequest := &mongodbatlas.CloudProviderSnapshot{
-		RetentionInDays: opts.retentionInDays,
-		Description:     opts.desc,
+func (opts *CreateOpts) newCloudProviderSnapshot() *atlasv2.DiskBackupOnDemandSnapshotRequest {
+	createRequest := &atlasv2.DiskBackupOnDemandSnapshotRequest{
+		RetentionInDays: &opts.retentionInDays,
+		Description:     &opts.desc,
 	}
 	return createRequest
 }
@@ -76,12 +75,13 @@ func CreateBuilder() *cobra.Command {
 		Short:   "Create a backup snapshot for your project and cluster.",
 		Long: `You can create on-demand backup snapshots for Atlas cluster tiers M10 and larger.
 
-` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Owner"), "Atlas supports this command only for M10+ clusters."),
 		Args: require.ExactArgs(1),
 		Example: fmt.Sprintf(`  # Create a backup snapshot for the cluster named myDemo that Atlas retains for 30 days:
   %s backups snapshots create myDemo --desc "test" --retention 30`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas cluster whose snapshot you want to restore.",
+			"output":          createTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

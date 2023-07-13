@@ -20,10 +20,11 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestDatabasesDescribeOpts_Run(t *testing.T) {
@@ -35,16 +36,17 @@ func TestDatabasesDescribeOpts_Run(t *testing.T) {
 		port:  27017,
 		name:  "test",
 		store: mockStore,
-	}
-
-	opts := listOpts.NewProcessMetricsListOptions()
-	expected := &mongodbatlas.ProcessDatabaseMeasurements{
-		ProcessMeasurements: &mongodbatlas.ProcessMeasurements{
-			Measurements: []*mongodbatlas.Measurements{},
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "groupID",
 		},
 	}
+
+	params := listOpts.NewDatabaseMeasurementsAPIParams("groupID", "hard-00-00.mongodb.net:27017", listOpts.name)
+	expected := &atlasv2.ApiMeasurementsGeneralViewAtlas{
+		Measurements: []atlasv2.MetricsMeasurementAtlas{},
+	}
 	mockStore.
-		EXPECT().ProcessDatabaseMeasurements(listOpts.ProjectID, listOpts.host, listOpts.port, listOpts.name, opts).
+		EXPECT().ProcessDatabaseMeasurements(params).
 		Return(expected, nil).
 		Times(1)
 

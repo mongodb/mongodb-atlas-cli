@@ -25,7 +25,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var cutoverTemplate = "Cutover process '{{.ID}}' successfully started.\n"
+var cutoverTemplate = "Cutover process successfully started.\n"
 
 type CutoverOpts struct {
 	cli.GlobalOpts
@@ -43,12 +43,12 @@ func (opts *CutoverOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CutoverOpts) Run() error {
-	r, err := opts.store.CreateLiveMigrationCutover(opts.ConfigProjectID(), opts.liveMigrationID)
+	err := opts.store.CreateLiveMigrationCutover(opts.ConfigProjectID(), opts.liveMigrationID)
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	return opts.Print(nil)
 }
 
 // mongocli atlas liveMigrations|lm cutover [--liveMigrationID liveMigrationId] [--projectId projectId].
@@ -58,6 +58,9 @@ func CutoverBuilder() *cobra.Command {
 		Use:   "cutover",
 		Short: "Start the cutover for a push live migration and confirm when the cutover completes. When the cutover completes, the application completes the live migration process and stops synchronizing with the source cluster.",
 		Long:  `To migrate using scripts, use mongomirror instead of the Atlas CLI. To learn more about mongomirror, see https://www.mongodb.com/docs/atlas/reference/mongomirror/.`,
+		Annotations: map[string]string{
+			"output": cutoverTemplate,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

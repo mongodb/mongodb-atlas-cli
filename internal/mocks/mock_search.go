@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockSearchIndexLister is a mock of SearchIndexLister interface.
@@ -35,18 +35,18 @@ func (m *MockSearchIndexLister) EXPECT() *MockSearchIndexListerMockRecorder {
 }
 
 // SearchIndexes mocks base method.
-func (m *MockSearchIndexLister) SearchIndexes(arg0, arg1, arg2, arg3 string, arg4 *mongodbatlas.ListOptions) ([]*mongodbatlas.SearchIndex, error) {
+func (m *MockSearchIndexLister) SearchIndexes(arg0, arg1, arg2, arg3 string) ([]admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchIndexes", arg0, arg1, arg2, arg3, arg4)
-	ret0, _ := ret[0].([]*mongodbatlas.SearchIndex)
+	ret := m.ctrl.Call(m, "SearchIndexes", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].([]admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SearchIndexes indicates an expected call of SearchIndexes.
-func (mr *MockSearchIndexListerMockRecorder) SearchIndexes(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+func (mr *MockSearchIndexListerMockRecorder) SearchIndexes(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndexes", reflect.TypeOf((*MockSearchIndexLister)(nil).SearchIndexes), arg0, arg1, arg2, arg3, arg4)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndexes", reflect.TypeOf((*MockSearchIndexLister)(nil).SearchIndexes), arg0, arg1, arg2, arg3)
 }
 
 // MockSearchIndexCreator is a mock of SearchIndexCreator interface.
@@ -73,10 +73,10 @@ func (m *MockSearchIndexCreator) EXPECT() *MockSearchIndexCreatorMockRecorder {
 }
 
 // CreateSearchIndexes mocks base method.
-func (m *MockSearchIndexCreator) CreateSearchIndexes(arg0, arg1 string, arg2 *mongodbatlas.SearchIndex) (*mongodbatlas.SearchIndex, error) {
+func (m *MockSearchIndexCreator) CreateSearchIndexes(arg0, arg1 string, arg2 *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateSearchIndexes", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.SearchIndex)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockSearchIndexDescriber) EXPECT() *MockSearchIndexDescriberMockRecorde
 }
 
 // SearchIndex mocks base method.
-func (m *MockSearchIndexDescriber) SearchIndex(arg0, arg1, arg2 string) (*mongodbatlas.SearchIndex, error) {
+func (m *MockSearchIndexDescriber) SearchIndex(arg0, arg1, arg2 string) (*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchIndex", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.SearchIndex)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -149,10 +149,10 @@ func (m *MockSearchIndexUpdater) EXPECT() *MockSearchIndexUpdaterMockRecorder {
 }
 
 // UpdateSearchIndexes mocks base method.
-func (m *MockSearchIndexUpdater) UpdateSearchIndexes(arg0, arg1, arg2 string, arg3 *mongodbatlas.SearchIndex) (*mongodbatlas.SearchIndex, error) {
+func (m *MockSearchIndexUpdater) UpdateSearchIndexes(arg0, arg1, arg2 string, arg3 *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateSearchIndexes", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(*mongodbatlas.SearchIndex)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

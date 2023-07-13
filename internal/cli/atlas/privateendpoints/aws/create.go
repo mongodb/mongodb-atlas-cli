@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type CreateOpts struct {
@@ -43,7 +43,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Private endpoint '{{.ID}}' created.\n"
+var createTemplate = "Private endpoint '{{.Id}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newPrivateEndpointConnection()
@@ -56,8 +56,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newPrivateEndpointConnection() *mongodbatlas.PrivateEndpointConnection {
-	createRequest := &mongodbatlas.PrivateEndpointConnection{
+func (opts *CreateOpts) newPrivateEndpointConnection() *atlasv2.CloudProviderEndpointServiceRequest {
+	createRequest := &atlasv2.CloudProviderEndpointServiceRequest{
 		Region:       opts.region,
 		ProviderName: provider,
 	}
@@ -74,6 +74,9 @@ func CreateBuilder() *cobra.Command {
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args: require.NoArgs,
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		Example: fmt.Sprintf(`  # Create a private endpoint connection for AWS in the us-east-1 region for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s privateEndpoints aws create --region us-east-1 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

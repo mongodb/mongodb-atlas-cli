@@ -22,8 +22,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestPauseBuilder(t *testing.T) {
@@ -48,10 +49,9 @@ func TestPause_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	paused := true
-	expected := &mongodbatlas.OnlineArchive{
-		ID:     updateOpts.id,
-		Paused: &paused,
+	expected := &atlasv2.BackupOnlineArchive{
+		Id:    &updateOpts.id,
+		State: pointer.Get("PAUSING"),
 	}
 
 	mockStore.

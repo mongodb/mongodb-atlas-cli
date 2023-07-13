@@ -21,7 +21,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestBuilder(t *testing.T) {
@@ -35,8 +35,8 @@ func TestBuilder(t *testing.T) {
 
 func Test_appendActions(t *testing.T) {
 	type args struct {
-		existingActions []mongodbatlas.Action
-		newActions      []mongodbatlas.Action
+		existingActions []atlasv2.DatabasePrivilegeAction
+		newActions      []atlasv2.DatabasePrivilegeAction
 	}
 
 	test1 := "test1"
@@ -45,39 +45,39 @@ func Test_appendActions(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []mongodbatlas.Action
+		want []atlasv2.DatabasePrivilegeAction
 	}{
 		{
 			name: "empty",
 			args: args{
-				existingActions: []mongodbatlas.Action{},
-				newActions:      []mongodbatlas.Action{},
+				existingActions: []atlasv2.DatabasePrivilegeAction{},
+				newActions:      []atlasv2.DatabasePrivilegeAction{},
 			},
-			want: []mongodbatlas.Action{},
+			want: []atlasv2.DatabasePrivilegeAction{},
 		},
 		{
 			name: "no new actions",
 			args: args{
-				existingActions: []mongodbatlas.Action{
+				existingActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TEST",
-						Resources: []mongodbatlas.Resource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
-								Collection: &test1,
-								DB:         &test1,
+								Collection: test1,
+								Db:         test1,
 							},
 						},
 					},
 				},
-				newActions: []mongodbatlas.Action{},
+				newActions: []atlasv2.DatabasePrivilegeAction{},
 			},
-			want: []mongodbatlas.Action{
+			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "TEST",
-					Resources: []mongodbatlas.Resource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Collection: &test1,
-							DB:         &test1,
+							Collection: test1,
+							Db:         test1,
 						},
 					},
 				},
@@ -86,45 +86,45 @@ func Test_appendActions(t *testing.T) {
 		{
 			name: "different actions",
 			args: args{
-				existingActions: []mongodbatlas.Action{
+				existingActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TEST",
-						Resources: []mongodbatlas.Resource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
-								Collection: &test1,
-								DB:         &test1,
+								Collection: test1,
+								Db:         test1,
 							},
 						},
 					},
 				},
-				newActions: []mongodbatlas.Action{
+				newActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "NEW",
-						Resources: []mongodbatlas.Resource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
-								Collection: &test1,
-								DB:         &test1,
+								Collection: test1,
+								Db:         test1,
 							},
 						},
 					},
 				},
 			},
-			want: []mongodbatlas.Action{
+			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "TEST",
-					Resources: []mongodbatlas.Resource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Collection: &test1,
-							DB:         &test1,
+							Collection: test1,
+							Db:         test1,
 						},
 					},
 				},
 				{
 					Action: "NEW",
-					Resources: []mongodbatlas.Resource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Collection: &test1,
-							DB:         &test1,
+							Collection: test1,
+							Db:         test1,
 						},
 					},
 				},
@@ -133,40 +133,40 @@ func Test_appendActions(t *testing.T) {
 		{
 			name: "merge",
 			args: args{
-				existingActions: []mongodbatlas.Action{
+				existingActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TEST",
-						Resources: []mongodbatlas.Resource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
-								Collection: &test1,
-								DB:         &test2,
+								Collection: test1,
+								Db:         test2,
 							},
 						},
 					},
 				},
-				newActions: []mongodbatlas.Action{
+				newActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TEST",
-						Resources: []mongodbatlas.Resource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
-								Collection: &test1,
-								DB:         &test1,
+								Collection: test1,
+								Db:         test1,
 							},
 						},
 					},
 				},
 			},
-			want: []mongodbatlas.Action{
+			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "TEST",
-					Resources: []mongodbatlas.Resource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Collection: &test1,
-							DB:         &test1,
+							Collection: test1,
+							Db:         test1,
 						},
 						{
-							Collection: &test1,
-							DB:         &test2,
+							Collection: test1,
+							Db:         test2,
 						},
 					},
 				},
@@ -185,7 +185,7 @@ func Test_appendActions(t *testing.T) {
 
 func Test_joinActions(t *testing.T) {
 	type args struct {
-		newActions []mongodbatlas.Action
+		newActions []atlasv2.DatabasePrivilegeAction
 	}
 
 	test3 := "test3"
@@ -194,55 +194,55 @@ func Test_joinActions(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []mongodbatlas.Action
+		want []atlasv2.DatabasePrivilegeAction
 	}{
 		{
 			name: "empty",
 			args: args{
-				newActions: []mongodbatlas.Action{},
+				newActions: []atlasv2.DatabasePrivilegeAction{},
 			},
-			want: []mongodbatlas.Action{},
+			want: []atlasv2.DatabasePrivilegeAction{},
 		},
 		{
 			name: "no duplicate",
 			args: args{
-				newActions: []mongodbatlas.Action{
+				newActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TEST",
-						Resources: []mongodbatlas.Resource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
-								Collection: &test3,
-								DB:         &test3,
+								Collection: test3,
+								Db:         test3,
 							},
 						},
 					},
 					{
 						Action: "TEST2",
-						Resources: []mongodbatlas.Resource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
-								Collection: &test3,
-								DB:         &test3,
+								Collection: test3,
+								Db:         test3,
 							},
 						},
 					},
 				},
 			},
-			want: []mongodbatlas.Action{
+			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "TEST",
-					Resources: []mongodbatlas.Resource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Collection: &test3,
-							DB:         &test3,
+							Collection: test3,
+							Db:         test3,
 						},
 					},
 				},
 				{
 					Action: "TEST2",
-					Resources: []mongodbatlas.Resource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Collection: &test3,
-							DB:         &test3,
+							Collection: test3,
+							Db:         test3,
 						},
 					},
 				},
@@ -251,38 +251,38 @@ func Test_joinActions(t *testing.T) {
 		{
 			name: "duplicates",
 			args: args{
-				newActions: []mongodbatlas.Action{
+				newActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TEST",
-						Resources: []mongodbatlas.Resource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
-								Collection: &test3,
-								DB:         &test3,
+								Collection: test3,
+								Db:         test3,
 							},
 						},
 					},
 					{
 						Action: "TEST",
-						Resources: []mongodbatlas.Resource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
-								Collection: &test3,
-								DB:         &test4,
+								Collection: test3,
+								Db:         test4,
 							},
 						},
 					},
 				},
 			},
-			want: []mongodbatlas.Action{
+			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "TEST",
-					Resources: []mongodbatlas.Resource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Collection: &test3,
-							DB:         &test4,
+							Collection: test3,
+							Db:         test4,
 						},
 						{
-							Collection: &test3,
-							DB:         &test3,
+							Collection: test3,
+							Db:         test3,
 						},
 					},
 				},

@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 var updateTemplate = "Snapshot backup policy for cluster '{{.ClusterName}}' updated.\n"
@@ -51,9 +51,9 @@ type UpdateOpts struct {
 	exportBucketID                      string
 	exportFrequencyType                 string
 	backupPolicy                        []string
-	referenceHourOfDay                  int64
-	referenceMinuteOfHour               int64
-	restoreWindowDays                   int64
+	referenceHourOfDay                  int
+	referenceMinuteOfHour               int
+	restoreWindowDays                   int
 	autoExport                          bool
 	noAutoExport                        bool
 	updateSnapshots                     bool
@@ -87,27 +87,27 @@ func (opts *UpdateOpts) Run(cmd *cobra.Command) error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) (*atlas.CloudProviderSnapshotBackupPolicy, error) {
-	out := new(atlas.CloudProviderSnapshotBackupPolicy)
+func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) (*atlasv2.DiskBackupSnapshotSchedule, error) {
+	out := new(atlasv2.DiskBackupSnapshotSchedule)
 
 	if opts.filename != "" {
 		if err := file.Load(opts.fs, opts.filename, out); err != nil {
 			return nil, err
 		}
-		out.ClusterName = clusterName
+		out.ClusterName = &clusterName
 		return out, nil
 	}
 
-	out.ClusterName = clusterName
+	out.ClusterName = &clusterName
 
 	if opts.exportBucketID != "" {
 		checkForExport(out)
-		out.Export.ExportBucketID = opts.exportBucketID
+		out.Export.ExportBucketId = &opts.exportBucketID
 	}
 
 	if cmd.Flags().Changed(flag.ExportFrequencyType) {
 		checkForExport(out)
-		out.Export.FrequencyType = opts.exportFrequencyType
+		out.Export.FrequencyType = &opts.exportFrequencyType
 	}
 	if cmd.Flags().Changed(flag.ReferenceHourOfDay) {
 		out.ReferenceHourOfDay = &opts.referenceHourOfDay
@@ -132,11 +132,11 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 
 		for _, backupPolicy := range opts.backupPolicy {
 			policyItems := strings.Split(backupPolicy, ",")
-			frequencyInterval, err := strconv.Atoi(policyItems[3])
+			frequencyInterval, err := strconv.ParseInt(policyItems[3], 10, 32)
 			if err != nil {
 				return nil, err
 			}
-			retentionValue, err := strconv.Atoi(policyItems[5])
+			retentionValue, err := strconv.ParseInt(policyItems[5], 10, 32)
 			if err != nil {
 				return nil, err
 			}
@@ -147,12 +147,12 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 				return nil, errors.New("incorrect value for parameter policyID. Policy with such ID does not exist")
 			}
 
-			policyItem := atlas.PolicyItem{
-				ID:                policyItems[1],
+			policyItem := atlasv2.DiskBackupApiPolicyItem{
+				Id:                &policyItems[1],
 				FrequencyType:     policyItems[2],
-				FrequencyInterval: frequencyInterval,
+				FrequencyInterval: int(frequencyInterval),
 				RetentionUnit:     policyItems[4],
-				RetentionValue:    retentionValue,
+				RetentionValue:    int(retentionValue),
 			}
 			policyItemIndex := findPolicyItemsIndex(policyItems[1], policies[policyIndex].PolicyItems)
 			if policyItemIndex == -1 {
@@ -168,9 +168,9 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 	return out, nil
 }
 
-func findPolicyIndex(policyID string, policies []atlas.Policy) int {
+func findPolicyIndex(policyID string, policies []atlasv2.AdvancedDiskBackupSnapshotSchedulePolicy) int {
 	for index, policy := range policies {
-		if policy.ID == policyID {
+		if policy.GetId() == policyID {
 			return index
 		}
 	}
@@ -178,9 +178,9 @@ func findPolicyIndex(policyID string, policies []atlas.Policy) int {
 	return -1
 }
 
-func findPolicyItemsIndex(policyItemID string, policyItems []atlas.PolicyItem) int {
+func findPolicyItemsIndex(policyItemID string, policyItems []atlasv2.DiskBackupApiPolicyItem) int {
 	for index, policyItem := range policyItems {
-		if policyItemID == policyItem.ID {
+		if policyItemID == policyItem.GetId() {
 			return index
 		}
 	}
@@ -320,9 +320,9 @@ func (opts *UpdateOpts) verifyRestoreWindowDays(cmd *cobra.Command) func() error
 	}
 }
 
-func checkForExport(out *atlas.CloudProviderSnapshotBackupPolicy) {
+func checkForExport(out *atlasv2.DiskBackupSnapshotSchedule) {
 	if out.Export == nil {
-		out.Export = new(atlas.Export)
+		out.Export = new(atlasv2.AutoExportPolicy)
 	}
 }
 
@@ -338,6 +338,9 @@ func UpdateBuilder() *cobra.Command {
 		Long: `The backup schedule defines when MongoDB takes scheduled snapshots and how long it stores those snapshots.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": updateTemplate,
+		},
 		Example: fmt.Sprintf(`  # Update a snapshot backup policy for a cluster named Cluster0 to back up snapshots every 6 hours and, retain for 7 days, and update retention of previously-taken snapshots:
   %[1]s backup schedule update --clusterName Cluster0 --updateSnapshots --policy 62da8faac84a2721e448d767,62da8faac84a2721e448d768,hourly,6,days,7
   
@@ -363,9 +366,9 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.exportBucketID, flag.ExportBucketID, "", usage.BucketID)
 	cmd.Flags().StringVar(&opts.exportFrequencyType, flag.ExportFrequencyType, "", usage.ExportFrequencyType)
-	cmd.Flags().Int64Var(&opts.referenceHourOfDay, flag.ReferenceHourOfDay, 0, usage.ReferenceHourOfDay)
-	cmd.Flags().Int64Var(&opts.referenceMinuteOfHour, flag.ReferenceMinuteOfHour, 0, usage.ReferenceMinuteOfHour)
-	cmd.Flags().Int64Var(&opts.restoreWindowDays, flag.RestoreWindowDays, 0, usage.RestoreWindowDays)
+	cmd.Flags().IntVar(&opts.referenceHourOfDay, flag.ReferenceHourOfDay, 0, usage.ReferenceHourOfDay)
+	cmd.Flags().IntVar(&opts.referenceMinuteOfHour, flag.ReferenceMinuteOfHour, 0, usage.ReferenceMinuteOfHour)
+	cmd.Flags().IntVar(&opts.restoreWindowDays, flag.RestoreWindowDays, 0, usage.RestoreWindowDays)
 
 	cmd.Flags().BoolVar(&opts.autoExport, flag.AutoExport, false, usage.AutoExport)
 	cmd.Flags().BoolVar(&opts.noAutoExport, flag.NoAutoExport, false, usage.NoAutoExport)

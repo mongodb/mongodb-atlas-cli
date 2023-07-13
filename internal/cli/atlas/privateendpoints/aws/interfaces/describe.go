@@ -44,7 +44,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var describeTemplate = `ID	STATUS	ERROR
-{{.InterfaceEndpointID}}	{{.AWSConnectionStatus}}	{{.ErrorMessage}}
+{{.InterfaceEndpointId}}	{{.AwsConnectionStatus}}	{{.ErrorMessage}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -68,6 +68,7 @@ func DescribeBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"interfaceEndpointIdDesc": "Unique string that identifies the AWS private endpoint interface in AWS.",
+			"output":                  describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details of the AWS private endpoint interface with the ID 	
 		vpce-00713b5e644e830a3 in AWS for an AWS private endpoint with the ID 5f4fc14da2b47835a58c63a2 in Atlas:

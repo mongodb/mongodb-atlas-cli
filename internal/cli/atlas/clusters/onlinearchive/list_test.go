@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestListBuilder(t *testing.T) {
@@ -49,7 +49,7 @@ func TestList_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	var expected *mongodbatlas.OnlineArchives
+	var expected *atlasv2.PaginatedOnlineArchive
 
 	mockStore.
 		EXPECT().

@@ -43,7 +43,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	BUCKET NAME	CLOUD PROVIDER	IAM ROLE ID{{range .Results}}
-{{.ID}}	{{.BucketName}}	{{.CloudProvider}}	{{.IAMRoleID}}{{end}}
+{{.Id}}	{{.BucketName}}	{{.CloudProvider}}	{{.IamRoleId}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
@@ -65,6 +65,9 @@ func ListBuilder() *cobra.Command {
 		Short:   "List cloud backup restore buckets for your project and cluster.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
 		Example: fmt.Sprintf(`  # Return all continuous backup export buckets for your project:
   %s backup exports buckets list`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

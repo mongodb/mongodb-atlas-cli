@@ -21,7 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestDescribe_Run(t *testing.T) {
@@ -32,7 +32,7 @@ func TestDescribe_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.CustomerX509{}
+	expected := &atlasv2.UserSecurity{}
 
 	mockStore.
 		EXPECT().

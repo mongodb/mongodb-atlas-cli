@@ -34,6 +34,8 @@ type WatchOpts struct {
 	store store.LDAPConfigurationDescriber
 }
 
+var watchTemplate = "\nLDAP Configuration request completed.\n"
+
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -47,7 +49,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	status := result.Status
+	status := *result.Status
 	return status == "FAILED" || status == "SUCCESS", nil
 }
 
@@ -75,12 +77,13 @@ You can interrupt the command's polling at any time with CTRL-C.
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"requestIdDesc": "ID of the request to verify an LDAP configuration.",
+			"output":        watchTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nLDAP Configuration request completed.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

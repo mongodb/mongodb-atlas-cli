@@ -18,25 +18,26 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_online_archives.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OnlineArchiveLister,OnlineArchiveDescriber,OnlineArchiveCreator,OnlineArchiveUpdater,OnlineArchiveDeleter
 
 type OnlineArchiveLister interface {
-	OnlineArchives(string, string, *atlas.ListOptions) (*atlas.OnlineArchives, error)
+	OnlineArchives(string, string, *atlas.ListOptions) (*atlasv2.PaginatedOnlineArchive, error)
 }
 
 type OnlineArchiveDescriber interface {
-	OnlineArchive(string, string, string) (*atlas.OnlineArchive, error)
+	OnlineArchive(string, string, string) (*atlasv2.BackupOnlineArchive, error)
 }
 
 type OnlineArchiveCreator interface {
-	CreateOnlineArchive(string, string, *atlas.OnlineArchive) (*atlas.OnlineArchive, error)
+	CreateOnlineArchive(string, string, *atlasv2.BackupOnlineArchive) (*atlasv2.BackupOnlineArchive, error)
 }
 
 type OnlineArchiveUpdater interface {
-	UpdateOnlineArchive(string, string, *atlas.OnlineArchive) (*atlas.OnlineArchive, error)
+	UpdateOnlineArchive(string, string, *atlasv2.BackupOnlineArchive) (*atlasv2.BackupOnlineArchive, error)
 }
 
 type OnlineArchiveDeleter interface {
@@ -44,10 +45,11 @@ type OnlineArchiveDeleter interface {
 }
 
 // OnlineArchives encapsulate the logic to manage different cloud providers.
-func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.ListOptions) (*atlas.OnlineArchives, error) {
+func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.ListOptions) (*atlasv2.PaginatedOnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).OnlineArchives.List(s.ctx, projectID, clusterName, lstOpt)
+		result, _, err := s.clientv2.OnlineArchiveApi.ListOnlineArchives(s.ctx, projectID, clusterName).
+			PageNum(lstOpt.PageNum).ItemsPerPage(lstOpt.ItemsPerPage).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -55,10 +57,10 @@ func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.List
 }
 
 // OnlineArchive encapsulate the logic to manage different cloud providers.
-func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlas.OnlineArchive, error) {
+func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlasv2.BackupOnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).OnlineArchives.Get(s.ctx, projectID, clusterName, archiveID)
+		result, _, err := s.clientv2.OnlineArchiveApi.GetOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -66,10 +68,10 @@ func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlas.
 }
 
 // CreateOnlineArchive encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlas.OnlineArchive) (*atlas.OnlineArchive, error) {
+func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlasv2.BackupOnlineArchive) (*atlasv2.BackupOnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).OnlineArchives.Create(s.ctx, projectID, clusterName, archive)
+		result, _, err := s.clientv2.OnlineArchiveApi.CreateOnlineArchive(s.ctx, projectID, clusterName, archive).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -77,10 +79,10 @@ func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atla
 }
 
 // UpdateOnlineArchive encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atlas.OnlineArchive) (*atlas.OnlineArchive, error) {
+func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atlasv2.BackupOnlineArchive) (*atlasv2.BackupOnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).OnlineArchives.Update(s.ctx, projectID, clusterName, archive.ID, archive)
+		result, _, err := s.clientv2.OnlineArchiveApi.UpdateOnlineArchive(s.ctx, projectID, archive.GetId(), clusterName, archive).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -91,7 +93,7 @@ func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atla
 func (s *Store) DeleteOnlineArchive(projectID, clusterName, archiveID string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).OnlineArchives.Delete(s.ctx, projectID, clusterName, archiveID)
+		_, _, err := s.clientv2.OnlineArchiveApi.DeleteOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

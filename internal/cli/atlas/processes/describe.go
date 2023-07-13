@@ -17,6 +17,7 @@ package processes
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -25,10 +26,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 const describeTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION
-{{.ID}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}
+{{.Id}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}
 `
 
 type DescribeOpts struct {
@@ -48,12 +50,21 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.Process(opts.ConfigProjectID(), opts.host, opts.port)
+	processID := opts.host + ":" + strconv.Itoa(opts.port)
+	listParams := newProcessParams(opts.ConfigProjectID(), processID)
+	r, err := opts.store.Process(listParams)
 	if err != nil {
 		return err
 	}
 
 	return opts.Print(r)
+}
+
+func newProcessParams(projectID string, processID string) *atlasv2.GetAtlasProcessApiParams {
+	return &atlasv2.GetAtlasProcessApiParams{
+		GroupId:   projectID,
+		ProcessId: processID,
+	}
 }
 
 // DescribeBuilder atlas process(es) describe <hostname:port> --projectId projectId.
@@ -67,6 +78,7 @@ func DescribeBuilder() *cobra.Command {
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
+			"output":            describeTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

@@ -16,22 +16,26 @@ package store
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_process_disks.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessDisksLister
 
 type ProcessDisksLister interface {
-	ProcessDisks(string, string, int, *atlas.ListOptions) (*atlas.ProcessDisksResponse, error)
+	ProcessDisks(string, string, int, *atlas.ListOptions) (*atlasv2.PaginatedDiskPartition, error)
 }
 
 // ProcessDisks encapsulates the logic to manage different cloud providers.
-func (s *Store) ProcessDisks(groupID, host string, port int, opts *atlas.ListOptions) (*atlas.ProcessDisksResponse, error) {
+func (s *Store) ProcessDisks(groupID, host string, port int, opts *atlas.ListOptions) (*atlasv2.PaginatedDiskPartition, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProcessDisks.List(s.ctx, groupID, host, port, opts)
+		processID := host + ":" + strconv.Itoa(port)
+		result, _, err := s.clientv2.MonitoringAndLogsApi.ListDiskPartitions(s.ctx, groupID, processID).
+			ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

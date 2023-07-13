@@ -24,9 +24,12 @@ import (
 	"os"
 	"os/exec"
 	"testing"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -38,11 +41,14 @@ const (
 	searchEntity                 = "search"
 	indexEntity                  = "index"
 	datalakeEntity               = "datalake"
+	datafederationEntity         = "datafederation"
+	datalakePipelineEntity       = "datalakepipeline"
 	alertsEntity                 = "alerts"
 	configEntity                 = "settings"
 	dbusersEntity                = "dbusers"
 	certsEntity                  = "certs"
 	privateEndpointsEntity       = "privateendpoints"
+	queryLimitsEntity            = "querylimits"
 	onlineArchiveEntity          = "onlineArchives"
 	projectEntity                = "project"
 	orgEntity                    = "org"
@@ -61,6 +67,7 @@ const (
 	regionalModeEntity           = "regionalModes"
 	serverlessEntity             = "serverless"
 	liveMigrationsEntity         = "liveMigrations"
+	auditingEntity               = "auditing"
 	accessLogsEntity             = "accessLogs"
 	accessListEntity             = "accessList"
 	performanceAdvisorEntity     = "performanceAdvisor"
@@ -79,7 +86,11 @@ const (
 	backupsEntity                = "backups"
 	exportsEntity                = "exports"
 	bucketsEntity                = "buckets"
+	jobsEntity                   = "jobs"
+	snapshotsEntity              = "snapshots"
+	restoresEntity               = "restores"
 	teamsEntity                  = "teams"
+	setupEntity                  = "setup"
 )
 
 // AlertConfig constants.
@@ -93,11 +104,15 @@ const (
 // Integration constants.
 
 const (
-	datadogEntity   = "DATADOG"
-	opsGenieEntity  = "OPS_GENIE"
-	pagerDutyEntity = "PAGER_DUTY"
-	victorOpsEntity = "VICTOR_OPS"
-	webhookEntity   = "WEBHOOK"
+	datadogEntity        = "DATADOG"
+	opsGenieEntity       = "OPS_GENIE"
+	pagerDutyEntity      = "PAGER_DUTY"
+	victorOpsEntity      = "VICTOR_OPS"
+	webhookEntity        = "WEBHOOK"
+	microsoftTeamsEntity = "MICROSOFT_TEAMS"
+	slackEntity          = "SLACK"
+	prometheusEntity     = "PROMETHEUS"
+	newRelicEntity       = "NEW_RELIC"
 )
 
 // Cluster settings.
@@ -107,7 +122,7 @@ const (
 	e2eSharedClusterTier = "M2"
 	e2eClusterProvider   = "AWS" // e2eClusterProvider preferred provider for e2e testing.
 	e2eMDBVer            = "4.4"
-	e2eSharedMDBVer      = "5.0"
+	e2eSharedMDBVer      = "6.0"
 )
 
 func deployServerlessInstanceForProject(projectID string) (string, error) {
@@ -408,14 +423,40 @@ func MongoDBMajorVersion() (string, error) {
 	return version, nil
 }
 
-func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations) bool {
+func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedIntegration) bool {
 	services := thirdPartyIntegrations.Results
 	for i := range services {
-		if services[i].Type == name {
+		iType := getIntegrationType(services[i])
+		if iType == name {
 			return true
 		}
 	}
 	return false
+}
+
+func getIntegrationType(val atlasv2.ThridPartyIntegration) string {
+	switch {
+	case val.Datadog != nil:
+		return datadogEntity
+	case val.MicrosoftTeams != nil:
+		return microsoftTeamsEntity
+	case val.NewRelic != nil:
+		return newRelicEntity
+	case val.OpsGenie != nil:
+		return opsGenieEntity
+	case val.PagerDuty != nil:
+		return pagerDutyEntity
+	case val.Prometheus != nil:
+		return prometheusEntity
+	case val.Slack != nil:
+		return slackEntity
+	case val.VictorOps != nil:
+		return victorOpsEntity
+	case val.Webhook != nil:
+		return webhookEntity
+	default:
+		return ""
+	}
 }
 
 func IsGov() bool {
@@ -538,11 +579,29 @@ func createProjectWithoutAlertSettings(projectName string) (string, error) {
 	return project.ID, nil
 }
 
-func deleteAllNetworkPeers(projectID, provider string) error {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return err
+func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		clustersEntity,
+		"list",
+		"--projectId", projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	t.Log(string(resp))
+	require.NoError(t, err)
+	var clusters mongodbatlas.AdvancedClustersResponse
+	require.NoError(t, json.Unmarshal(resp, &clusters))
+	for _, cluster := range clusters.Results {
+		if cluster.StateName == "DELETING" {
+			continue
+		}
+		assert.NoError(t, deleteClusterForProject(projectID, cluster.Name))
 	}
+}
+
+func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
+	t.Helper()
 	cmd := exec.Command(cliPath,
 		networkingEntity,
 		networkPeeringEntity,
@@ -555,38 +614,64 @@ func deleteAllNetworkPeers(projectID, provider string) error {
 	)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("%s (%w)", string(resp), err)
-	}
+	t.Log("available network peers", string(resp))
+	require.NoError(t, err)
 	var networkPeers []mongodbatlas.Peer
 	err = json.Unmarshal(resp, &networkPeers)
-	if err != nil {
-		return fmt.Errorf("invalid response: %s (%w). can't unmarshal", string(resp), err)
-	}
+	require.NoError(t, err)
 	for _, peer := range networkPeers {
+		peerID := peer.ID
 		cmd = exec.Command(cliPath,
 			networkingEntity,
 			networkPeeringEntity,
 			"delete",
-			peer.ID,
+			peerID,
 			"--projectId",
 			projectID,
 			"--force",
 		)
 		cmd.Env = os.Environ()
 		resp, err = cmd.CombinedOutput()
-		if err != nil {
-			return fmt.Errorf("%s (%w)", string(resp), err)
-		}
+		assert.NoError(t, err, string(resp))
 	}
-	return nil
 }
 
-func deleteAllPrivateEndpoints(projectID, provider string) error {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return err
+func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string) {
+	t.Helper()
+
+	privateEndpoints := listPrivateEndpointsByProject(t, cliPath, projectID, provider)
+	for _, endpoint := range privateEndpoints {
+		var endpointID string
+
+		switch endpoint.CloudProvider {
+		case "AWS":
+			endpointID = endpoint.GetId()
+		case "AZURE":
+			endpointID = endpoint.GetId()
+		case "GCP":
+			endpointID = endpoint.GetId()
+		}
+		require.NotEmpty(t, endpointID)
+		deletePrivateEndpoint(t, cliPath, projectID, provider, endpointID)
 	}
+
+	clear := false
+	for attempt := 0; attempt < 10; attempt++ {
+		privateEndpoints = listPrivateEndpointsByProject(t, cliPath, projectID, provider)
+		if len(privateEndpoints) == 0 {
+			t.Logf("all %s private endpoints successfully deleted", provider)
+			clear = true
+			break
+		}
+
+		time.Sleep(10 * time.Second)
+	}
+
+	require.True(t, clear)
+}
+
+func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider string) []atlasv2.EndpointService {
+	t.Helper()
 	cmd := exec.Command(cliPath,
 		privateEndpointsEntity,
 		provider,
@@ -597,31 +682,30 @@ func deleteAllPrivateEndpoints(projectID, provider string) error {
 	)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("%s (%w)", string(resp), err)
-	}
-	var privateEndpoints []mongodbatlas.PrivateEndpointConnection
+	t.Log(string(resp))
+	require.NoError(t, err)
+	var privateEndpoints []atlasv2.EndpointService
 	err = json.Unmarshal(resp, &privateEndpoints)
-	if err != nil {
-		return fmt.Errorf("invalid response: %s (%w). can't unmarshal", string(resp), err)
-	}
-	for _, endpoint := range privateEndpoints {
-		cmd = exec.Command(cliPath,
-			privateEndpointsEntity,
-			provider,
-			"delete",
-			endpoint.ID,
-			"--projectId",
-			projectID,
-			"--force",
-		)
-		cmd.Env = os.Environ()
-		resp, err = cmd.CombinedOutput()
-		if err != nil {
-			return fmt.Errorf("%s (%w)", string(resp), err)
-		}
-	}
-	return nil
+	require.NoError(t, err)
+
+	return privateEndpoints
+}
+
+func deletePrivateEndpoint(t *testing.T, cliPath, projectID, provider, endpointID string) {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		privateEndpointsEntity,
+		provider,
+		"delete",
+		endpointID,
+		"--projectId",
+		projectID,
+		"--force",
+	)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	assert.NoError(t, err, string(resp))
 }
 
 func deleteTeam(teamID string) error {
@@ -660,20 +744,42 @@ func deleteProject(projectID string) error {
 	return nil
 }
 
-func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
-	t.Helper()
-	a := assert.New(t)
-	a.Equal(clusterName, cluster.Name)
-	a.Equal(version, cluster.MongoDBMajorVersion)
-	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
-	a.Equal(terminationProtection, *cluster.TerminationProtectionEnabled)
+func createDBUserWithCert(projectID, username string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+
+	cmd := exec.Command(cliPath,
+		dbusersEntity,
+		"create",
+		"readAnyDatabase",
+		"--username", username,
+		"--x509Type", "MANAGED",
+		"--projectId", projectID)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return nil
 }
 
-func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, version, tier string, diskSizeGB float64, terminationProtection bool) {
+func ensureCluster(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
+	t.Helper()
+	a := assert.New(t)
+	a.Equal(clusterName, cluster.GetName())
+	a.Equal(version, cluster.GetMongoDBMajorVersion())
+	a.Equal(diskSizeGB, cluster.GetDiskSizeGB())
+	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
+}
+
+func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, tier string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.Name)
-	a.Equal(version, cluster.MongoDBMajorVersion)
+	a.Equal(e2eSharedMDBVer, cluster.MongoDBMajorVersion)
 	if cluster.ProviderSettings != nil {
 		a.Equal(tier, cluster.ProviderSettings.InstanceSizeName)
 	}

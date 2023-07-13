@@ -65,6 +65,7 @@ func DescribeBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Name of the federated database instance to retrieve.",
+			"output":   describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the details for the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s dataLakes describe myFDI --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
@@ -79,6 +80,10 @@ func DescribeBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+	}
+
+	if config.ToolName == config.AtlasCLI {
+		cmd.Deprecated = "Please use 'atlas datafederation describe'"
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

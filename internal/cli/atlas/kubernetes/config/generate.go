@@ -53,10 +53,8 @@ func (opts *GenerateOpts) ValidateTargetNamespace() error {
 }
 
 func (opts *GenerateOpts) ValidateOperatorVersion() error {
-	for k := range features.VersionsToResourcesMap {
-		if opts.operatorVersion == k {
-			return nil
-		}
+	if _, versionFound := features.GetResourcesForVersion(opts.operatorVersion); versionFound {
+		return nil
 	}
 	return fmt.Errorf(ErrUnsupportedOperatorVersionFmt, opts.operatorVersion, features.SupportedVersions())
 }
@@ -106,8 +104,8 @@ func GenerateBuilder() *cobra.Command {
 		Use:     use,
 		Args:    require.NoArgs,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Generate Kubernetes configuration resources.",
-		Long:    `This command provides your Kubernetes configuration access to Atlas. You can generate Atlas Operator resources for Atlas objects, including Projects, Deployments, and Users.`,
+		Short:   "Generate Kubernetes configuration resources for use with Atlas Kubernetes Operator.",
+		Long:    `This command exports configurations for Atlas objects including projects, deployments, and users in a Kubernetes-compatible format, allowing you to manage these resources using the Atlas Kubernetes Operator. For more information, see https://www.mongodb.com/docs/atlas/atlas-operator/`,
 		Example: `# Export Project, DatabaseUsers resources for a specific project without connection and integration secrets:
   atlas kubernetes config generate --projectId=<projectId>
 
@@ -141,7 +139,7 @@ func GenerateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.clusterName, flag.ClusterName, []string{}, usage.ExporterClusterName)
 	cmd.Flags().BoolVar(&opts.includeSecrets, flag.OperatorIncludeSecrets, false, usage.OperatorIncludeSecrets)
 	cmd.Flags().StringVar(&opts.targetNamespace, flag.OperatorTargetNamespace, "", usage.OperatorTargetNamespace)
-	cmd.Flags().StringVar(&opts.operatorVersion, flag.OperatorVersion, features.LatestOperatorVersion, usage.OperatorVersion)
+	cmd.Flags().StringVar(&opts.operatorVersion, flag.OperatorVersion, features.LatestOperatorMajorVersion, usage.OperatorVersion)
 
 	return cmd
 }

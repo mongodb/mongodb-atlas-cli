@@ -22,6 +22,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas users describe [options]
 
@@ -46,6 +47,8 @@ Options
      - string
      - false
      - Unique 24-digit identifier of the user.
+
+       Mutually exclusive with --username.
    * - -o, --output
      - string
      - false
@@ -54,6 +57,8 @@ Options
      - string
      - false
      - Username that identifies the user. This value must be a valid email address.
+
+       Mutually exclusive with --id.
 
 Inherited Options
 -----------------
@@ -69,7 +74,18 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Output
+------
+
+If the command succeeds, the CLI returns output similar to the following sample. Values in brackets represent your values.
+
+.. code-block::
+
+   ID     FIRST NAME    LAST NAME    USERNAME     EMAIL
+   <Id>   <FirstName>   <LastName>   <Username>   <EmailAddress>
+   
 
 Examples
 --------

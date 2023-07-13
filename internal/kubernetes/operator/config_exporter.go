@@ -18,15 +18,15 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
+	"reflect"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/deployment"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/project"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
@@ -215,17 +215,17 @@ func fetchClusterNames(clustersProvider store.AtlasAllClustersLister, projectID 
 		return nil, err
 	}
 
-	if clusters, ok := response.(*mongodbatlas.AdvancedClustersResponse); ok {
+	if clusters, ok := response.(*atlasv2.PaginatedAdvancedClusterDescription); ok {
 		if clusters == nil {
 			return nil, ErrNoCloudManagerClusters
 		}
 
 		for i := range clusters.Results {
 			cluster := clusters.Results[i]
-			if cluster == nil {
+			if reflect.ValueOf(cluster).IsZero() {
 				continue
 			}
-			result = append(result, cluster.Name)
+			result = append(result, cluster.GetName())
 		}
 	}
 
@@ -240,10 +240,7 @@ func fetchClusterNames(clustersProvider store.AtlasAllClustersLister, projectID 
 
 	for i := range serverlessInstances.Results {
 		cluster := serverlessInstances.Results[i]
-		if cluster == nil {
-			continue
-		}
-		result = append(result, serverlessInstances.Results[i].Name)
+		result = append(result, *cluster.Name)
 	}
 
 	return result, nil

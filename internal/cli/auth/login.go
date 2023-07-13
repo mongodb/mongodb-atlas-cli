@@ -26,35 +26,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/oauth"
+	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth Authenticator,LoginConfig,LoginFlow
-
-type Authenticator interface {
-	RequestCode(context.Context) (*auth.DeviceCode, *atlas.Response, error)
-	PollToken(context.Context, *auth.DeviceCode) (*auth.Token, *atlas.Response, error)
-}
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth LoginConfig,LoginFlow
 
 type LoginConfig interface {
 	config.SetSaver
 	AccessTokenSubject() (string, error)
 }
-
-const (
-	alreadyAuthenticatedError      = "you are already authenticated with an API key (Public key: %s)"
-	AlreadyAuthenticatedMsg        = "You are already authenticated with an API key (Public key: %s)."
-	alreadyAuthenticatedEmailError = "you are already authenticated with an account (%s)"
-	AlreadyAuthenticatedEmailMsg   = "You are already authenticated with an account (%s)."
-	loginWithProfileMsg            = `run "atlas auth login --profile <profile_name>"  to authenticate using your Atlas username and password on a new profile`
-	logoutToLoginAccountMsg        = `run "atlas auth logout" first if you want to login with another Atlas account on the same Atlas CLI profile`
-)
 
 var (
 	ErrProjectIDNotFound = errors.New("you don't have access to this or it doesn't exist")
@@ -63,91 +48,76 @@ var (
 
 type LoginOpts struct {
 	cli.DefaultSetterOpts
-	AccessToken          string
-	RefreshToken         string
-	IsGov                bool
-	isCloudManager       bool
-	NoBrowser            bool
-	SkipConfig           bool
-	config               LoginConfig
-	flow                 Authenticator
-	regenerateCodePrompt userSurvey
-}
-
-func NewLoginOpts() *LoginOpts {
-	return &LoginOpts{
-		regenerateCodePrompt: &confirmPrompt{
-			message:         "Your one-time verification code is expired. Would you like to generate a new one?",
-			defaultResponse: true,
-		},
-	}
-}
-
-type userSurvey interface {
-	confirm() (response bool, err error)
-}
-
-type confirmPrompt struct {
-	message         string
-	defaultResponse bool
-}
-
-func (c *confirmPrompt) confirm() (response bool, err error) {
-	p := &survey.Confirm{
-		Message: c.message,
-		Default: c.defaultResponse,
-	}
-	err = telemetry.TrackAskOne(p, &response)
-	return response, err
+	cli.RefresherOpts
+	AccessToken    string
+	RefreshToken   string
+	IsGov          bool
+	isCloudManager bool
+	NoBrowser      bool
+	SkipConfig     bool
+	config         LoginConfig
 }
 
 type LoginFlow interface {
-	Run(ctx context.Context) error
-	PreRun() error
+	LoginRun(ctx context.Context) error
+	LoginPreRun() error
 }
 
-func (opts *LoginOpts) initFlow() error {
-	var err error
-	opts.flow, err = oauth.FlowWithConfig(config.Default())
-	return err
+// SyncWithOAuthAccessProfile returns a function that is synchronizing the oauth settings
+// from a login config profile with the provided command opts.
+func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
+	return func() error {
+		opts.config = c
+
+		switch {
+		case opts.IsGov:
+			opts.Service = config.CloudGovService
+		case opts.isCloudManager:
+			opts.Service = config.CloudManagerService
+		default:
+			opts.Service = config.CloudService
+		}
+		opts.config.Set("service", opts.Service)
+
+		if opts.AccessToken != "" {
+			opts.config.Set(config.AccessTokenField, opts.AccessToken)
+		}
+		if opts.RefreshToken != "" {
+			opts.config.Set(config.RefreshTokenField, opts.RefreshToken)
+		}
+		if config.ClientID() != "" {
+			opts.config.Set(config.ClientIDField, config.ClientID())
+		}
+
+		// sync OpsManagerURL from command opts (higher priority)
+		// and OpsManagerURL from default profile
+		if opts.OpsManagerURL != "" {
+			opts.config.Set(config.OpsManagerURLField, opts.OpsManagerURL)
+		}
+		if config.OpsManagerURL() != "" {
+			opts.OpsManagerURL = config.OpsManagerURL()
+		}
+
+		return nil
+	}
 }
 
-func (opts *LoginOpts) SetUpOAuthAccess() {
-	switch {
-	case opts.IsGov:
-		opts.Service = config.CloudGovService
-	case opts.isCloudManager:
-		opts.Service = config.CloudManagerService
-	default:
-		opts.Service = config.CloudService
-	}
-	opts.config.Set("service", opts.Service)
-
-	if opts.AccessToken != "" {
-		opts.config.Set(config.AccessTokenField, opts.AccessToken)
-	}
-	if opts.RefreshToken != "" {
-		opts.config.Set(config.RefreshTokenField, opts.RefreshToken)
-	}
-	if opts.OpsManagerURL != "" {
-		opts.config.Set(config.OpsManagerURLField, opts.OpsManagerURL)
-	}
-	if config.ClientID() != "" {
-		opts.config.Set(config.ClientIDField, config.ClientID())
-	}
-}
-
-func (opts *LoginOpts) Run(ctx context.Context) error {
+func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 	if err := opts.oauthFlow(ctx); err != nil {
 		return err
 	}
-	opts.SetUpOAuthAccess()
+	// oauth config might have changed,
+	// re-sync config profile with login opts
+	if err := opts.SyncWithOAuthAccessProfile(opts.config)(); err != nil {
+		return err
+	}
+
 	s, err := opts.config.AccessTokenSubject()
 	if err != nil {
 		return err
 	}
 
-	if err := opts.CheckProfile(ctx); err != nil {
+	if err := opts.checkProfile(ctx); err != nil {
 		return err
 	}
 
@@ -171,16 +141,16 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 	return nil
 }
 
-func (opts *LoginOpts) CheckProfile(ctx context.Context) error {
+func (opts *LoginOpts) checkProfile(ctx context.Context) error {
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
 	if config.OrgID() != "" && !opts.OrgExists(config.OrgID()) {
-		config.SetOrgID("")
+		opts.config.Set("org_id", "")
 	}
 
 	if config.ProjectID() != "" && !opts.ProjectExists(config.ProjectID()) {
-		config.SetProjectID("")
+		opts.config.Set("project_id", "")
 	}
 	return nil
 }
@@ -263,7 +233,7 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 	askedToOpenBrowser := false
 	for {
-		code, _, err := opts.flow.RequestCode(ctx)
+		code, _, err := opts.RequestCode(ctx)
 		if err != nil {
 			return err
 		}
@@ -274,13 +244,12 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 			askedToOpenBrowser = true
 		}
 
-		accessToken, _, err := opts.flow.PollToken(ctx, code)
-		if retry, errRetry := opts.shouldRetryAuthenticate(err); errRetry != nil {
+		accessToken, _, err := opts.PollToken(ctx, code)
+		if retry, errRetry := shouldRetryAuthenticate(err, newRegenerationPrompt()); errRetry != nil {
 			return errRetry
 		} else if retry {
 			continue
 		}
-
 		if err != nil {
 			return err
 		}
@@ -291,43 +260,35 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 	}
 }
 
-func (opts *LoginOpts) shouldRetryAuthenticate(err error) (retry bool, errSurvey error) {
+func shouldRetryAuthenticate(err error, p survey.Prompt) (retry bool, errSurvey error) {
 	if err == nil || !auth.IsTimeoutErr(err) {
 		return false, nil
 	}
-
-	return opts.regenerateCodePrompt.confirm()
+	err = telemetry.TrackAskOne(p, &retry)
+	return retry, err
 }
 
-func hasUserProgrammaticKeys() bool {
-	return config.PublicAPIKey() != "" && config.PrivateAPIKey() != ""
-}
-
-func loginPreRun(ctx context.Context) error {
-	if hasUserProgrammaticKeys() {
-		msg := fmt.Sprintf(alreadyAuthenticatedError, config.PublicAPIKey())
-		return fmt.Errorf(`%s
-
-%s`, msg, loginWithProfileMsg)
+func newRegenerationPrompt() survey.Prompt {
+	return &survey.Confirm{
+		Message: "Your one-time verification code is expired. Would you like to generate a new one?",
+		Default: true,
 	}
+}
 
-	if account, err := AccountWithAccessToken(); err == nil {
-		if err := cli.RefreshToken(ctx); err == nil && validate.Token() == nil {
-			msg := fmt.Sprintf(alreadyAuthenticatedEmailError, account)
-			return fmt.Errorf(`%s
+func (opts *LoginOpts) LoginPreRun(ctx context.Context) func() error {
+	return func() error {
+		// ignore expired tokens since logging in
+		if err := opts.RefreshAccessToken(ctx); err != nil {
+			// clean up any expired or invalid tokens
+			opts.config.Set(config.AccessTokenField, "")
 
-%s`, msg, logoutToLoginAccountMsg)
+			if !errors.Is(err, cli.ErrInvalidRefreshToken) {
+				return err
+			}
 		}
-	}
-	return nil
-}
 
-func (opts *LoginOpts) PreRun() error {
-	opts.config = config.Default()
-	if config.OpsManagerURL() != "" {
-		opts.OpsManagerURL = config.OpsManagerURL()
+		return nil
 	}
-	return opts.initFlow()
 }
 
 func tool() string {
@@ -338,7 +299,7 @@ func tool() string {
 }
 
 func LoginBuilder() *cobra.Command {
-	opts := NewLoginOpts()
+	opts := &LoginOpts{}
 
 	cmd := &cobra.Command{
 		Use:   "login",
@@ -348,13 +309,17 @@ func LoginBuilder() *cobra.Command {
 `, tool(), config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			if err := loginPreRun(cmd.Context()); err != nil {
-				return err
-			}
-			return opts.PreRun()
+			defaultProfile := config.Default()
+			return prerun.ExecuteE(
+				opts.SyncWithOAuthAccessProfile(defaultProfile),
+				opts.InitFlow(defaultProfile),
+				opts.LoginPreRun(cmd.Context()),
+				validate.NoAPIKeys,
+				validate.NoAccessToken,
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.LoginRun(cmd.Context())
 		},
 		Args: require.NoArgs,
 	}

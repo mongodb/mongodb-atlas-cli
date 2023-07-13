@@ -27,7 +27,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const authorizeTemplate = "AWS IAM role '{{.RoleID}} successfully authorized.\n"
+const authorizeTemplate = "AWS IAM role '{{.CloudProviderAccessAWSIAMRole.RoleId}} successfully authorized.\n"
 
 type AuthorizeOpts struct {
 	cli.GlobalOpts
@@ -70,6 +70,7 @@ func AuthorizeBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"roleIdDesc": "Unique ID of the role to authorize.",
+			"output":     authorizeTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

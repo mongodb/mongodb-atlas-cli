@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type WatchOpts struct {
@@ -33,6 +34,8 @@ type WatchOpts struct {
 	id    string
 	store store.PeeringConnectionDescriber
 }
+
+var watchTemplate = "\nNetwork peering changes completed.\n"
 
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -54,10 +57,28 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if result.Status != "" {
-		return result.Status == waitingForUser || result.Status == failed || result.Status == available, nil
+
+	switch v := result.(type) {
+	case *atlasv2.AwsNetworkPeeringConnectionSettings:
+		return watcherAWS(v), nil
+	case *atlasv2.AzureNetworkPeeringConnectionSettings:
+		return watcherAzure(v), nil
+	case *atlasv2.GCPNetworkPeeringConnectionSettings:
+		return watcherGCP(v), nil
 	}
-	return result.StatusName == pendingAcceptance || result.StatusName == failed || result.StatusName == available, nil
+	return false, nil
+}
+
+func watcherGCP(peer *atlasv2.GCPNetworkPeeringConnectionSettings) bool {
+	return *peer.Status == waitingForUser || *peer.Status == failed || *peer.Status == available
+}
+
+func watcherAzure(peer *atlasv2.AzureNetworkPeeringConnectionSettings) bool {
+	return *peer.Status == waitingForUser || *peer.Status == failed || *peer.Status == available
+}
+
+func watcherAWS(peer *atlasv2.AwsNetworkPeeringConnectionSettings) bool {
+	return *peer.StatusName == pendingAcceptance || *peer.StatusName == failed || *peer.StatusName == available
 }
 
 func (opts *WatchOpts) Run() error {
@@ -85,12 +106,13 @@ You can interrupt the command's polling at any time with CTRL-C.
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"peerIdDesc": "Unique ID of the network peering connection that you want to watch.",
+			"output":     watchTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nNetwork peering changes completed.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

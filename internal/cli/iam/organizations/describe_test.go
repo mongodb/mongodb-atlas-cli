@@ -17,28 +17,47 @@
 package organizations
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/stretchr/testify/assert"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationDescriber(ctrl)
+	stringVal := "test"
+	expected := &atlas.Organization{
+		Links: nil,
+		ID:    stringVal,
+		Name:  stringVal,
+	}
+	buf := new(bytes.Buffer)
 
 	mockStore.
 		EXPECT().
 		Organization(gomock.Eq("5a0a1e7e0f2912c554080adc")).
-		Return(&mongodbatlas.Organization{}, nil).
+		Return(expected, nil).
 		Times(1)
 
 	opts := &DescribeOpts{
 		store: mockStore,
 		id:    "5a0a1e7e0f2912c554080adc",
+		OutputOpts: cli.OutputOpts{
+			Template:  describeTemplate,
+			OutWriter: buf,
+		},
 	}
+
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	assert.Equal(t, `ID     NAME
+test   test
+`, buf.String())
+	t.Log(buf.String())
 }

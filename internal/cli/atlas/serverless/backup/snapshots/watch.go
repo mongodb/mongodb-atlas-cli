@@ -35,6 +35,8 @@ type WatchOpts struct {
 	store       store.ServerlessSnapshotsDescriber
 }
 
+var watchTemplate = "\nSnapshot changes completed.\n"
+
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -48,7 +50,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return result.Status == "completed" || result.Status == "failed", nil
+	return result.GetStatus() == "completed" || result.GetStatus() == "failed", nil
 }
 
 func (opts *WatchOpts) Run() error {
@@ -70,6 +72,9 @@ Command finishes once one of the expected statuses are reached.
 If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
 You can interrupt the command's polling at any time with CTRL-C.
 ` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+		Annotations: map[string]string{
+			"output": watchTemplate,
+		},
 		Example: fmt.Sprintf(`  # Watch the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 in the cluster named myDemo until it becomes available:
   %s backups snapshots watch 5f4007f327a3bd7b6f4103c5 --clusterName myDemo`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
@@ -77,7 +82,7 @@ You can interrupt the command's polling at any time with CTRL-C.
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), "\nSnapshot changes completed.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

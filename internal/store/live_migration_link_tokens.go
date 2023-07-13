@@ -18,14 +18,14 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_live_migration_link_tokens.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LinkTokenCreator,LinkTokenDeleter
 
 type LinkTokenCreator interface {
-	CreateLinkToken(string, *atlas.TokenCreateRequest) (*atlas.LinkToken, error)
+	CreateLinkToken(string, *atlasv2.TargetOrgRequest) (*atlasv2.TargetOrg, error)
 }
 
 type LinkTokenDeleter interface {
@@ -38,10 +38,10 @@ type LinkTokenStore interface {
 }
 
 // CreateLinkToken encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateLinkToken(orgID string, linkToken *atlas.TokenCreateRequest) (*atlas.LinkToken, error) {
+func (s *Store) CreateLinkToken(orgID string, linkToken *atlasv2.TargetOrgRequest) (*atlasv2.TargetOrg, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).LiveMigration.CreateLinkToken(s.ctx, orgID, linkToken)
+		result, _, err := s.clientv2.CloudMigrationServiceApi.CreateLinkToken(s.ctx, orgID, linkToken).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -52,7 +52,7 @@ func (s *Store) CreateLinkToken(orgID string, linkToken *atlas.TokenCreateReques
 func (s *Store) DeleteLinkToken(orgID string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).LiveMigration.DeleteLinkToken(s.ctx, orgID)
+		_, _, err := s.clientv2.CloudMigrationServiceApi.DeleteLinkToken(s.ctx, orgID).Execute()
 		return err
 	case config.OpsManagerService, config.CloudManagerService:
 		_, err := s.client.(*opsmngr.Client).LiveMigration.DeleteConnection(s.ctx, orgID)

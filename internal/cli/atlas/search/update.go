@@ -94,6 +94,7 @@ func UpdateBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",
+			"output":      updateTemplate,
 		},
 		Args: require.ExactArgs(1),
 		Example: fmt.Sprintf(`  # Modify the search index with the ID 5f2099cd683fc55fbb30bef6 for the cluster named myCluster:
@@ -125,7 +126,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.analyzer, flag.Analyzer, defaultAnalyzer, usage.Analyzer)
 	cmd.Flags().StringVar(&opts.searchAnalyzer, flag.SearchAnalyzer, defaultAnalyzer, usage.SearchAnalyzer)
 	cmd.Flags().BoolVar(&opts.dynamic, flag.Dynamic, false, usage.Dynamic)
-	cmd.Flags().StringSliceVar(&opts.fields, flag.Field, nil, usage.SearchFields)
+	cmd.Flags().StringSliceVar(&opts.fields, flag.Field, nil, usage.SearchFields+usage.UpdateWarning)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.SearchFilename)
 
 	_ = cmd.MarkFlagFilename(flag.File)

@@ -25,10 +25,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
-const pagerDutyIntegrationType = "PAGER_DUTY"
+var pagerDutyIntegrationType = "PAGER_DUTY"
 
 type PagerDutyOpts struct {
 	cli.GlobalOpts
@@ -55,10 +55,12 @@ func (opts *PagerDutyOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *PagerDutyOpts) newPagerDutyIntegration() *atlas.ThirdPartyIntegration {
-	return &atlas.ThirdPartyIntegration{
-		Type:       pagerDutyIntegrationType,
-		ServiceKey: opts.serviceKey,
+func (opts *PagerDutyOpts) newPagerDutyIntegration() *atlasv2.ThridPartyIntegration {
+	return &atlasv2.ThridPartyIntegration{
+		PagerDuty: &atlasv2.PagerDuty{
+			Type:       &pagerDutyIntegrationType,
+			ServiceKey: opts.serviceKey,
+		},
 	}
 }
 
@@ -72,6 +74,9 @@ func PagerDutyBuilder() *cobra.Command {
 		Long: `The requesting API key must have the Organization Owner or Project Owner role to configure an integration with PagerDuty.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplatePagerDuty,
+		},
 		Example: fmt.Sprintf(`  # Integrate PagerDuty with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s integrations create PAGER_DUTY --serviceKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,

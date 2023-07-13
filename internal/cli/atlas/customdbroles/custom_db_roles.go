@@ -17,7 +17,7 @@ package customdbroles
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func Builder() *cobra.Command {
@@ -39,9 +39,9 @@ func Builder() *cobra.Command {
 }
 
 // appendActions adds existing actions to the request, ti will also take care in.
-func appendActions(existingActions, newActions []atlas.Action) []atlas.Action {
-	out := make([]atlas.Action, 0)
-	actionMap := make(map[string]atlas.Action)
+func appendActions(existingActions, newActions []atlasv2.DatabasePrivilegeAction) []atlasv2.DatabasePrivilegeAction {
+	out := make([]atlasv2.DatabasePrivilegeAction, 0)
+	actionMap := make(map[string]atlasv2.DatabasePrivilegeAction)
 	for _, action := range existingActions {
 		actionMap[action.Action] = action
 	}
@@ -61,9 +61,9 @@ func appendActions(existingActions, newActions []atlas.Action) []atlas.Action {
 }
 
 // joinActions will merge the resources for a same action given actions must be unique.
-func joinActions(newActions []atlas.Action) []atlas.Action {
-	out := make([]atlas.Action, 0)
-	actionMap := make(map[string]atlas.Action)
+func joinActions(newActions []atlasv2.DatabasePrivilegeAction) []atlasv2.DatabasePrivilegeAction {
+	out := make([]atlasv2.DatabasePrivilegeAction, 0)
+	actionMap := make(map[string]atlasv2.DatabasePrivilegeAction)
 	for _, action := range newActions {
 		if a, ok := actionMap[action.Action]; ok {
 			action.Resources = append(action.Resources, a.Resources...)

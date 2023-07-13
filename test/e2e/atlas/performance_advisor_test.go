@@ -22,6 +22,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestPerformanceAdvisor(t *testing.T) {
@@ -29,14 +30,10 @@ func TestPerformanceAdvisor(t *testing.T) {
 	g.generateProjectAndCluster("performanceAdvisor")
 
 	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	hostname, err := g.getHostnameAndPort()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	t.Run("List namespaces", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -50,8 +47,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		assert.NoError(t, err, string(resp))
 	})
 
 	t.Run("List slow query logs", func(t *testing.T) {
@@ -66,8 +62,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		assert.NoError(t, err, string(resp))
 	})
 
 	t.Run("List suggested indexes", func(t *testing.T) {
@@ -96,8 +91,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		assert.NoError(t, err, string(resp))
 	})
 
 	t.Run("Disable Managed Slow Operation Threshold", func(t *testing.T) {
@@ -110,7 +104,6 @@ func TestPerformanceAdvisor(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		assert.NoError(t, err, string(resp))
 	})
 }

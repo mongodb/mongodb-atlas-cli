@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type CreateOpts struct {
@@ -46,7 +47,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Export job created in a bucket with ID '{{.ExportBucketID}}'.\n"
+var createTemplate = "Export job '{{.Id}}' created in a bucket with ID '{{.ExportBucketId}}'.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newExportJob()
@@ -59,16 +60,16 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newExportJob() *mongodbatlas.CloudProviderSnapshotExportJob {
-	var customData []*mongodbatlas.CloudProviderSnapshotExportJobCustomData
+func (opts *CreateOpts) newExportJob() *atlasv2.DiskBackupExportJobRequest {
+	customData := make([]atlasv2.BackupLabel, 0, len(opts.customData))
 	for key, value := range opts.customData {
-		pair := &mongodbatlas.CloudProviderSnapshotExportJobCustomData{}
-		pair.Key, pair.Value = key, value
+		pair := atlasv2.BackupLabel{}
+		pair.Key, pair.Value = pointer.Get(key), pointer.Get(value)
 		customData = append(customData, pair)
 	}
-	createRequest := &mongodbatlas.CloudProviderSnapshotExportJob{
-		SnapshotID:     opts.snapshotID,
-		ExportBucketID: opts.exportBucketID,
+	createRequest := &atlasv2.DiskBackupExportJobRequest{
+		SnapshotId:     opts.snapshotID,
+		ExportBucketId: opts.exportBucketID,
 		CustomData:     customData,
 	}
 	return createRequest
@@ -83,6 +84,9 @@ func CreateBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  # The following command exports one backup snapshot of the ExampleCluster cluster to an existing AWS S3 bucket:
   %s backup export jobs create --clusterName ExampleCluster --bucketId 62c569f85b7a381c093cc539 --snapshotId 62c808ceeb4e021d850dfe1b --customData name=test,info=test`, config.BinName()),
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

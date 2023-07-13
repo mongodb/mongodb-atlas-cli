@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type CreateOpts struct {
@@ -44,7 +44,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Interface endpoint '{{.InterfaceEndpointID}}' created.\n"
+var createTemplate = "Interface endpoint '{{.InterfaceEndpointId}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	r, err := opts.store.CreateInterfaceEndpoint(opts.ConfigProjectID(), provider, opts.interfaceEndpointID, opts.newInterfaceEndpointConnection())
@@ -55,10 +55,12 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newInterfaceEndpointConnection() *atlas.InterfaceEndpointConnection {
-	return &atlas.InterfaceEndpointConnection{
-		ID: opts.privateEndpointID,
-	}
+func (opts *CreateOpts) newInterfaceEndpointConnection() *atlasv2.CreateEndpointRequest {
+	r := atlasv2.CreateAWSEndpointRequestAsCreateEndpointRequest(&atlasv2.CreateAWSEndpointRequest{
+		Id: opts.privateEndpointID,
+	})
+
+	return &r
 }
 
 // mongocli atlas privateEndpoint(s)|privateendpoint(s) aws interface(s) create <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId].
@@ -74,6 +76,7 @@ func CreateBuilder() *cobra.Command {
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"endpointServiceIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.",
+			"output":                createTemplate,
 		},
 		Example: fmt.Sprintf(`  # Create a new interface for an AWS private endpoint with the ID 5f4fc14da2b47835a58c63a2 in Atlas and the ID vpce-00713b5e644e830a3 in AWS for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s privateEndpoints aws interfaces create 5f4fc14da2b47835a58c63a2 --privateEndpointId vpce-00713b5e644e830a3 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),

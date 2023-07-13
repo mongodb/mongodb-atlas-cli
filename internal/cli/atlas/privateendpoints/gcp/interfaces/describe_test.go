@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
@@ -37,7 +37,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		privateEndpointServiceID: "id",
 	}
 
-	expected := &mongodbatlas.InterfaceEndpointConnection{}
+	expected := &atlasv2.PrivateGCPEndpointGroup{}
 
 	mockStore.
 		EXPECT().

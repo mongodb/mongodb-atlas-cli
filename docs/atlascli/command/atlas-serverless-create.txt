@@ -20,6 +20,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas serverless create <instanceName> [options]
 
@@ -72,6 +73,10 @@ Options
      - string
      - true
      - Human-readable label that identifies the physical location of your MongoDB serverless instance. The region you choose can affect network latency for clients accessing your databases.
+   * - --tag
+     - stringToString
+     - false
+     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the serverless instance. This value defaults to [].
 
 Inherited Options
 -----------------
@@ -87,5 +92,22 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Output
+------
+
+If the command succeeds, the CLI returns output similar to the following sample. Values in brackets represent your values.
+
+.. code-block::
+
+   Serverless instance <Name> created.
+   
+
+Examples
+--------
+
+.. code-block::
+
+   # Deploy a serverlessIntance named myInstance for the project with the ID 5e2211c17a3e5a48f5497de3:
+   atlas serverless create serverless myInstance --provider AWS --region US_EAST_1 --projectId 5e2211c17a3e5a48f5497de3

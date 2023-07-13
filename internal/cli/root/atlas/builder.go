@@ -25,17 +25,21 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslogs"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/alerts"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/auditing"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/cloudproviders"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters"
 	atlasConfig "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdbroles"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdns"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datafederation"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalake"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalakepipelines"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/dbusers"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/events"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/integrations"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/livemigrations"
@@ -43,25 +47,24 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/maintenance"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/metrics"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/networking"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/organizations"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/performanceadvisor"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/processes"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/teams"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/users"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/events"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/figautocomplete"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/users"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
@@ -107,13 +110,14 @@ func Builder() *cobra.Command {
 		profile    string
 		debugLevel bool
 	)
-
+	opts := &cli.RefresherOpts{}
 	rootCmd := &cobra.Command{
 		Version: version.Version,
 		Use:     atlas,
-		Aliases: []string{config.ToolName},
-		Short:   "CLI tool to manage MongoDB Atlas",
-		Long:    fmt.Sprintf("Use %s command help for information on a specific command", atlas),
+		Short:   "CLI tool to manage MongoDB Atlas.",
+		Long: `The Atlas CLI is a command line interface built specifically for MongoDB Atlas. You can manage your Atlas database deployments and Atlas Search from the terminal with short, intuitive commands.
+		
+Use the --help flag with any command for more info on that command.`,
 		Example: `  # Display the help menu for the config command:
   atlas config --help
 `,
@@ -136,13 +140,14 @@ func Builder() *cobra.Command {
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
 			}
-
 			if shouldCheckCredentials(cmd) {
-				err := cli.RefreshToken(cmd.Context())
-				if err != nil {
-					return err
-				}
-				return validate.Credentials()
+				return prerun.ExecuteE(
+					opts.InitFlow(config.Default()),
+					func() error {
+						return opts.RefreshAccessToken(cmd.Context())
+					},
+					validate.Credentials,
+				)
 			}
 
 			return nil
@@ -185,10 +190,9 @@ func Builder() *cobra.Command {
 	rootCmd.AddCommand(
 		atlasConfig.Builder(),
 		auth.Builder(),
-		quickstart.Builder(),
 		setup.Builder(),
-		projects.AtlasCLIBuilder(),
-		organizations.AtlasCLIBuilder(),
+		projects.Builder(),
+		organizations.Builder(),
 		users.Builder(),
 		teams.Builder(),
 		clusters.Builder(),
@@ -196,8 +200,9 @@ func Builder() *cobra.Command {
 		customdbroles.Builder(),
 		accesslists.Builder(),
 		datalake.Builder(),
+		datalakepipelines.Builder(),
 		alerts.Builder(),
-		backup.AtlasCLIBuilder(),
+		backup.Builder(),
 		events.Builder(),
 		metrics.Builder(),
 		performanceadvisor.Builder(),
@@ -210,7 +215,7 @@ func Builder() *cobra.Command {
 		maintenance.Builder(),
 		customdns.Builder(),
 		cloudproviders.Builder(),
-		serverless.AtlasCLIBuilder(),
+		serverless.Builder(),
 		livemigrations.Builder(),
 		accesslogs.Builder(),
 		loginCmd,
@@ -219,9 +224,11 @@ func Builder() *cobra.Command {
 		registerCmd,
 		figautocomplete.Builder(),
 		kubernetes.Builder(),
+		datafederation.Builder(),
+		auditing.Builder(),
 	)
 
-	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
+	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
 	_ = rootCmd.PersistentFlags().MarkHidden(flag.Debug)
 
@@ -266,7 +273,7 @@ func shouldCheckCredentials(cmd *cobra.Command) bool {
 			return false
 		}
 	}
-	searchByPath := []string{
+	skipFor := []string{
 		fmt.Sprintf("%s %s", atlas, "completion"), // completion commands do not require credentials
 		fmt.Sprintf("%s %s", atlas, "config"),     // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "auth"),       // user wants to set credentials
@@ -275,7 +282,7 @@ func shouldCheckCredentials(cmd *cobra.Command) bool {
 		fmt.Sprintf("%s %s", atlas, "register"),   // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "quickstart"), // command supports login
 	}
-	for _, p := range searchByPath {
+	for _, p := range skipFor {
 		if strings.HasPrefix(cmd.CommandPath(), p) {
 			return false
 		}

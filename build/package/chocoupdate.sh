@@ -15,6 +15,11 @@
 
 set -Eeou pipefail
 
+if [[ "${TOOL_NAME:?}" != "atlascli" ]]; then
+    echo "Skipping chocopudate.sh"
+    exit 0
+fi
+
 GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")"
 CGO_ENABLED=0
 export GOCACHE
@@ -24,4 +29,4 @@ go-msi check-env
 
 VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
-go run ./tools/chocolateyupdate/main.go --path "build/package/chocolatey/temp/mongodb-atlas.${VERSION}.nupkg"
+go run ./tools/chocolateyupdate/main.go --path "dist/mongodb-atlas.${VERSION}.nupkg"

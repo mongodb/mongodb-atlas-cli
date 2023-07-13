@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -35,10 +36,10 @@ func (m *MockAtlasOperatorClusterStore) EXPECT() *MockAtlasOperatorClusterStoreM
 }
 
 // AtlasCluster mocks base method.
-func (m *MockAtlasOperatorClusterStore) AtlasCluster(arg0, arg1 string) (*mongodbatlas.AdvancedCluster, error) {
+func (m *MockAtlasOperatorClusterStore) AtlasCluster(arg0, arg1 string) (*admin.AdvancedClusterDescription, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AtlasCluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret0, _ := ret[0].(*admin.AdvancedClusterDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -50,10 +51,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) AtlasCluster(arg0, arg1 int
 }
 
 // AtlasClusterConfigurationOptions mocks base method.
-func (m *MockAtlasOperatorClusterStore) AtlasClusterConfigurationOptions(arg0, arg1 string) (*mongodbatlas.ProcessArgs, error) {
+func (m *MockAtlasOperatorClusterStore) AtlasClusterConfigurationOptions(arg0, arg1 string) (*admin.ClusterDescriptionProcessArgs, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AtlasClusterConfigurationOptions", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessArgs)
+	ret0, _ := ret[0].(*admin.ClusterDescriptionProcessArgs)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -65,10 +66,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) AtlasClusterConfigurationOp
 }
 
 // DescribeSchedule mocks base method.
-func (m *MockAtlasOperatorClusterStore) DescribeSchedule(arg0, arg1 string) (*mongodbatlas.CloudProviderSnapshotBackupPolicy, error) {
+func (m *MockAtlasOperatorClusterStore) DescribeSchedule(arg0, arg1 string) (*admin.DiskBackupSnapshotSchedule, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeSchedule", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.CloudProviderSnapshotBackupPolicy)
+	ret0, _ := ret[0].(*admin.DiskBackupSnapshotSchedule)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -79,11 +80,26 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) DescribeSchedule(arg0, arg1
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeSchedule", reflect.TypeOf((*MockAtlasOperatorClusterStore)(nil).DescribeSchedule), arg0, arg1)
 }
 
+// GetServerlessInstance mocks base method.
+func (m *MockAtlasOperatorClusterStore) GetServerlessInstance(arg0, arg1 string) (*admin.ServerlessInstanceDescription, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetServerlessInstance", arg0, arg1)
+	ret0, _ := ret[0].(*admin.ServerlessInstanceDescription)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetServerlessInstance indicates an expected call of GetServerlessInstance.
+func (mr *MockAtlasOperatorClusterStoreMockRecorder) GetServerlessInstance(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServerlessInstance", reflect.TypeOf((*MockAtlasOperatorClusterStore)(nil).GetServerlessInstance), arg0, arg1)
+}
+
 // GlobalCluster mocks base method.
-func (m *MockAtlasOperatorClusterStore) GlobalCluster(arg0, arg1 string) (*mongodbatlas.GlobalCluster, error) {
+func (m *MockAtlasOperatorClusterStore) GlobalCluster(arg0, arg1 string) (*admin.GeoSharding, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GlobalCluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.GlobalCluster)
+	ret0, _ := ret[0].(*admin.GeoSharding)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -125,10 +141,10 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) ServerlessInstance(arg0, ar
 }
 
 // ServerlessInstances mocks base method.
-func (m *MockAtlasOperatorClusterStore) ServerlessInstances(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlas.ClustersResponse, error) {
+func (m *MockAtlasOperatorClusterStore) ServerlessInstances(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedServerlessInstanceDescription, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessInstances", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.ClustersResponse)
+	ret0, _ := ret[0].(*admin.PaginatedServerlessInstanceDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -140,16 +156,16 @@ func (mr *MockAtlasOperatorClusterStoreMockRecorder) ServerlessInstances(arg0, a
 }
 
 // ServerlessPrivateEndpoints mocks base method.
-func (m *MockAtlasOperatorClusterStore) ServerlessPrivateEndpoints(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) ([]mongodbatlas.ServerlessPrivateEndpointConnection, error) {
+func (m *MockAtlasOperatorClusterStore) ServerlessPrivateEndpoints(arg0, arg1 string) ([]admin.ServerlessTenantEndpoint, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ServerlessPrivateEndpoints", arg0, arg1, arg2)
-	ret0, _ := ret[0].([]mongodbatlas.ServerlessPrivateEndpointConnection)
+	ret := m.ctrl.Call(m, "ServerlessPrivateEndpoints", arg0, arg1)
+	ret0, _ := ret[0].([]admin.ServerlessTenantEndpoint)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ServerlessPrivateEndpoints indicates an expected call of ServerlessPrivateEndpoints.
-func (mr *MockAtlasOperatorClusterStoreMockRecorder) ServerlessPrivateEndpoints(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockAtlasOperatorClusterStoreMockRecorder) ServerlessPrivateEndpoints(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServerlessPrivateEndpoints", reflect.TypeOf((*MockAtlasOperatorClusterStore)(nil).ServerlessPrivateEndpoints), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServerlessPrivateEndpoints", reflect.TypeOf((*MockAtlasOperatorClusterStore)(nil).ServerlessPrivateEndpoints), arg0, arg1)
 }

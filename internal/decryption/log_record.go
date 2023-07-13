@@ -70,7 +70,7 @@ func (logLine *AuditLogLine) decodeLogRecord() (*DecodedLogRecord, error) {
 func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, lineNb int) (bsonData interface{}, keyInvocationCount uint64, err error) {
 	encryptedLogRecord, decodeErr := logLine.decodeLogRecord()
 	if decodeErr != nil {
-		return nil, 0, fmt.Errorf("at line %v: %w: %v", lineNb, ErrLogCorrupted, decodeErr)
+		return nil, 0, fmt.Errorf("at line %v: %w: %w", lineNb, ErrLogCorrupted, decodeErr)
 	}
 
 	gcm := &aes.GCMInput{
@@ -82,17 +82,17 @@ func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, line
 	decryptedLog, decryptErr := gcm.Decrypt(encryptedLogRecord.CipherText)
 
 	if decryptErr != nil {
-		return nil, 0, fmt.Errorf("%w at line %v: %v", ErrDecryptionFailure, lineNb, decryptErr)
+		return nil, 0, fmt.Errorf("%w at line %v: %w", ErrDecryptionFailure, lineNb, decryptErr)
 	}
 
 	decompressedLogRecord, decompressErr := decompress(decryptConfig.compressionMode, decryptedLog)
 	if decompressErr != nil {
-		return nil, 0, fmt.Errorf("%w at line %v: %v", ErrDecompressionFailure, lineNb, decompressErr)
+		return nil, 0, fmt.Errorf("%w at line %v: %w", ErrDecompressionFailure, lineNb, decompressErr)
 	}
 
 	var bsonParsedLogRecord map[string]interface{}
 	if bsonErr := bson.Unmarshal(decompressedLogRecord, &bsonParsedLogRecord); bsonErr != nil {
-		return nil, 0, fmt.Errorf("%w at line %v: %v", ErrParse, lineNb, bsonErr)
+		return nil, 0, fmt.Errorf("%w at line %v: %w", ErrParse, lineNb, bsonErr)
 	}
 
 	if _, ok := bsonParsedLogRecord["ts"]; !ok {

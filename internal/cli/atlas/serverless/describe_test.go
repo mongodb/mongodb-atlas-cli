@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockServerlessInstanceDescriber(ctrl)
 
-	var expected mongodbatlas.Cluster
+	var expected atlasv2.ServerlessInstanceDescription
 
 	describeOpts := &DescribeOpts{
 		store: mockStore,
@@ -38,7 +38,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ServerlessInstance(describeOpts.ConfigProjectID(), describeOpts.instanceName).
+		GetServerlessInstance(describeOpts.ConfigProjectID(), describeOpts.instanceName).
 		Return(&expected, nil).
 		Times(1)
 

@@ -23,10 +23,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/time"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 const (
@@ -56,7 +58,12 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	entry := opts.newProjectIPAccessList()
+	entry, err := opts.newProjectIPAccessList()
+
+	if err != nil {
+		return err
+	}
+
 	r, err := opts.store.CreateProjectIPAccessList(entry)
 
 	if err != nil {
@@ -66,21 +73,27 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
-	entry := &atlas.ProjectIPAccessList{
-		GroupID:         opts.ConfigProjectID(),
-		Comment:         opts.comment,
-		DeleteAfterDate: opts.deleteAfter,
+func (opts *CreateOpts) newProjectIPAccessList() ([]*atlasv2.NetworkPermissionEntry, error) {
+	entry := &atlasv2.NetworkPermissionEntry{
+		GroupId: pointer.Get(opts.ConfigProjectID()),
+		Comment: &opts.comment,
+	}
+	if opts.deleteAfter != "" {
+		deleteAfterDate, err := time.ParseTimestamp(opts.deleteAfter)
+		if err != nil {
+			return nil, err
+		}
+		entry.DeleteAfterDate = &deleteAfterDate
 	}
 	switch opts.entryType {
 	case cidrBlock:
-		entry.CIDRBlock = opts.entry
+		entry.CidrBlock = &opts.entry
 	case ipAddress:
-		entry.IPAddress = opts.entry
+		entry.IpAddress = &opts.entry
 	case awsSecurityGroup:
-		entry.AwsSecurityGroup = opts.entry
+		entry.AwsSecurityGroup = &opts.entry
 	}
-	return []*atlas.ProjectIPAccessList{entry}
+	return []*atlasv2.NetworkPermissionEntry{entry}, nil
 }
 
 func IPAddress() (string, error) {
@@ -142,6 +155,7 @@ The command doesn't overwrite existing entries in the access list. Instead, it a
 		Args: require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"entryDesc": "IP address, CIDR address, or AWS security group ID that you want to add to the access list.",
+			"output":    createTemplate,
 		},
 		Example: fmt.Sprintf(`  # Create an IP access list entry using the current IP address:
   %[1]s accessList create --currentIp

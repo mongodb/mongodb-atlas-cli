@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	admin "go.mongodb.org/atlas-sdk/admin"
 )
 
 // MockGlobalClusterDescriber is a mock of GlobalClusterDescriber interface.
@@ -35,10 +35,10 @@ func (m *MockGlobalClusterDescriber) EXPECT() *MockGlobalClusterDescriberMockRec
 }
 
 // GlobalCluster mocks base method.
-func (m *MockGlobalClusterDescriber) GlobalCluster(arg0, arg1 string) (*mongodbatlas.GlobalCluster, error) {
+func (m *MockGlobalClusterDescriber) GlobalCluster(arg0, arg1 string) (*admin.GeoSharding, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GlobalCluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.GlobalCluster)
+	ret0, _ := ret[0].(*admin.GeoSharding)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

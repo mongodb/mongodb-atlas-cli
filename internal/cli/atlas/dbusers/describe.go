@@ -68,6 +68,7 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Annotations: map[string]string{
 			"usernameDesc": "Username to retrieve from the MongoDB database. The format of the username depends on the user's method of authentication.",
+			"output":       describeTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the details for the SCRAM SHA-authenticating database user named myDbUser:
   %[1]s dbuser describe myDbUser --authDB admin --output json

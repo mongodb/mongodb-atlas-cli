@@ -40,7 +40,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -51,7 +51,7 @@ import (
 const targetNamespace = "importer-namespace"
 
 var expectedLabels = map[string]string{
-	features.ResourceVersion: features.LatestOperatorVersion,
+	features.ResourceVersion: features.LatestOperatorMajorVersion,
 }
 
 func getK8SEntities(data []byte) ([]runtime.Object, error) {
@@ -95,19 +95,19 @@ func InitialSetupWithTeam(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	s := KubernetesConfigGenerateProjectSuite{
 		t: t,
 	}
-	s.generator = newAtlasE2ETestGenerator(s.t)
+	s.generator = newAtlasE2ETestGenerator(t)
 	s.generator.generateTeam("Kubernetes")
 	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
 	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
-	require.NoError(s.t, err)
+	require.NoError(t, err)
 	s.cliPath = cliPath
 
 	s.assertions = assert.New(t)
 
 	// always register atlas entities
-	require.NoError(s.t, atlasV1.AddToScheme(scheme.Scheme))
+	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
 	return s
 }
 
@@ -116,18 +116,18 @@ func InitialSetup(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	s := KubernetesConfigGenerateProjectSuite{
 		t: t,
 	}
-	s.generator = newAtlasE2ETestGenerator(s.t)
+	s.generator = newAtlasE2ETestGenerator(t)
 	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
 	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
-	require.NoError(s.t, err)
+	require.NoError(t, err)
 	s.cliPath = cliPath
 
 	s.assertions = assert.New(t)
 
 	// always register atlas entities
-	require.NoError(s.t, atlasV1.AddToScheme(scheme.Scheme))
+	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
 	return s
 }
 
@@ -428,7 +428,9 @@ func TestProjectWithCustomRole(t *testing.T) {
 				Name: "FIND",
 				Resources: []atlasV1.Resource{
 					{
-						Database: pointer.Get("test-db"),
+						Database:   pointer.Get("test-db	"),
+						Collection: pointer.Get(""),
+						Cluster:    pointer.Get(false),
 					},
 				},
 			},
@@ -605,7 +607,7 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 	expectedProject := s.expectedProject
 	assertions := s.assertions
 
-	atlasCidrBlock := "10.8.0.0/18" //
+	atlasCidrBlock := "10.8.0.0/18"
 	networkPeer := atlasV1.NetworkPeer{
 		ProviderName: provider.ProviderGCP,
 		NetworkName:  "test-network",
@@ -632,14 +634,14 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		require.NoError(t, err, string(resp))
 		t.Cleanup(func() {
-			deleteNetworkPeering(t, generator.projectID, gcpEntity)
+			deleteAllNetworkPeers(t, cliPath, generator.projectID, gcpEntity)
 		})
-		var createdNetworkPeer mongodbatlas.Peer
+		var createdNetworkPeer atlasv2.GCPNetworkPeeringConnectionSettings
 		err = json.Unmarshal(resp, &createdNetworkPeer)
 		require.NoError(t, err)
-		expectedProject.Spec.NetworkPeers[0].ContainerID = createdNetworkPeer.ContainerID
+		expectedProject.Spec.NetworkPeers[0].ContainerID = createdNetworkPeer.ContainerId
 
 		cmd = exec.Command(cliPath,
 			"kubernetes",
@@ -674,9 +676,10 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 	expectedProject := s.expectedProject
 	assertions := s.assertions
 
-	region := "northeurope"
+	const region = "northeurope"
 	newPrivateEndpoint := atlasV1.PrivateEndpoint{
 		Provider: provider.ProviderAzure,
+		Region:   "EUROPE_NORTH",
 	}
 	expectedProject.Spec.PrivateEndpoints = []atlasV1.PrivateEndpoint{
 		newPrivateEndpoint,
@@ -695,12 +698,22 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err)
 		t.Cleanup(func() {
-			deletePrivateEndpoints(t, generator.projectID, azureEntity)
+			deleteAllPrivateEndpoints(t, cliPath, generator.projectID, azureEntity)
 		})
-		var createdNetworkPeer mongodbatlas.PrivateEndpointConnection
+		var createdNetworkPeer *atlasv2.EndpointService
 		err = json.Unmarshal(resp, &createdNetworkPeer)
 		require.NoError(t, err)
-		expectedProject.Spec.PrivateEndpoints[0].ID = createdNetworkPeer.ID
+		expectedProject.Spec.PrivateEndpoints[0].ID = createdNetworkPeer.GetId()
+
+		cmd = exec.Command(cliPath,
+			privateEndpointsEntity,
+			azureEntity,
+			"watch",
+			createdNetworkPeer.GetId(),
+			"--projectId", generator.projectID)
+		cmd.Env = os.Environ()
+		_, err = cmd.CombinedOutput()
+		require.NoError(t, err)
 
 		cmd = exec.Command(cliPath,
 			"kubernetes",
@@ -903,7 +916,7 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(name, dictionary),
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, name), dictionary),
 			Namespace: namespace,
 			Labels:    labels,
 		},
@@ -914,7 +927,7 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 			},
 			BackupScheduleRef: common.ResourceRefNamespaced{
 				Namespace: targetNamespace,
-				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backupschedule", name), dictionary),
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backupschedule", projectName, name), dictionary),
 			},
 			AdvancedDeploymentSpec: &atlasV1.AdvancedDeploymentSpec{
 				BackupEnabled: pointer.Get(true),
@@ -999,7 +1012,7 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(name, dictionary),
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, name), dictionary),
 			Namespace: namespace,
 			Labels:    labels,
 		},
@@ -1028,6 +1041,7 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 func referenceSharedCluster(name, region, namespace, projectName string, labels map[string]string) *atlasV1.AtlasDeployment {
 	cluster := referenceAdvancedCluster(name, region, namespace, projectName, labels)
 	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs = &atlasV1.Specs{
+		DiskIOPS:     pointer.Get(int64(0)),
 		InstanceSize: e2eSharedClusterTier,
 	}
 	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs = nil
@@ -1084,7 +1098,7 @@ func defaultMaintenanceWindowAlertConfigs() []atlasV1.AlertConfiguration {
 	}
 }
 
-func referenceBackupSchedule(namespace, clusterName string, labels map[string]string) *atlasV1.AtlasBackupSchedule {
+func referenceBackupSchedule(namespace, projectName, clusterName string, labels map[string]string) *atlasV1.AtlasBackupSchedule {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &atlasV1.AtlasBackupSchedule{
 		TypeMeta: v1.TypeMeta{
@@ -1092,13 +1106,13 @@ func referenceBackupSchedule(namespace, clusterName string, labels map[string]st
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backupschedule", clusterName), dictionary),
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName), dictionary),
 			Namespace: namespace,
 			Labels:    labels,
 		},
 		Spec: atlasV1.AtlasBackupScheduleSpec{
 			PolicyRef: common.ResourceRefNamespaced{
-				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backuppolicy", clusterName), dictionary),
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName), dictionary),
 				Namespace: namespace,
 			},
 			ReferenceHourOfDay:    1,
@@ -1108,7 +1122,7 @@ func referenceBackupSchedule(namespace, clusterName string, labels map[string]st
 	}
 }
 
-func referenceBackupPolicy(namespace, clusterName string, labels map[string]string) *atlasV1.AtlasBackupPolicy {
+func referenceBackupPolicy(namespace, projectName, clusterName string, labels map[string]string) *atlasV1.AtlasBackupPolicy {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &atlasV1.AtlasBackupPolicy{
 		TypeMeta: v1.TypeMeta{
@@ -1116,7 +1130,7 @@ func referenceBackupPolicy(namespace, clusterName string, labels map[string]stri
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backuppolicy", clusterName), dictionary),
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName), dictionary),
 			Namespace: namespace,
 			Labels:    labels,
 		},
@@ -1188,8 +1202,8 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 	g.generateServerlessCluster()
 
 	expectedDeployment := referenceAdvancedCluster(g.clusterName, g.clusterRegion, targetNamespace, g.projectName, expectedLabels)
-	expectedBackupSchedule := referenceBackupSchedule(targetNamespace, g.clusterName, expectedLabels)
-	expectedBackupPolicy := referenceBackupPolicy(targetNamespace, g.clusterName, expectedLabels)
+	expectedBackupSchedule := referenceBackupSchedule(targetNamespace, g.projectName, g.clusterName, expectedLabels)
+	expectedBackupPolicy := referenceBackupPolicy(targetNamespace, g.projectName, g.clusterName, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)

@@ -44,7 +44,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	EXPORT BUCKET ID	STATE	SNAPSHOT ID{{range .Results}}
-{{.ID}}	{{.ExportBucketID}}	{{.State}}	{{.SnapshotID}}{{end}}
+{{.Id}}	{{.ExportBucketId}}	{{.State}}	{{.SnapshotId}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
@@ -68,6 +68,7 @@ func ListBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve restore jobs.",
+			"output":          listTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return all continuous backup export jobs for the cluster named Cluster0:
   %s backup exports jobs list Cluster0`, cli.ExampleAtlasEntryPoint()),

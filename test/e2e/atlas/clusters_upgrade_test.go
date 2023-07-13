@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -62,7 +63,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureSharedCluster(t, cluster, clusterName, e2eSharedMDBVer, tierM2, 2, true)
+		ensureSharedCluster(t, cluster, clusterName, tierM2, 2, true)
 	})
 
 	t.Run("Watch create", func(t *testing.T) {
@@ -100,6 +101,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 			"--mdbVersion=6.0",
 			"--disableTerminationProtection",
 			"--projectId", g.projectID,
+			"--tag", "env=e2e",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -121,18 +123,19 @@ func TestSharedClusterUpgrade(t *testing.T) {
 	t.Run("Ensure upgrade", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
-			"ls",
+			"get",
+			clusterName,
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var clusterResponse mongodbatlas.ClustersResponse
+		var clusterResponse *atlasv2.AdvancedClusterDescription
 		err = json.Unmarshal(resp, &clusterResponse)
 		req.NoError(err)
 
-		ensureSharedCluster(t, clusterResponse.Results[0], clusterName, "6.0", tierM10, 40, false)
+		ensureCluster(t, clusterResponse, clusterName, "6.0", 40, false)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -147,7 +150,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})

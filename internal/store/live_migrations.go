@@ -19,24 +19,24 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_live_migrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LiveMigrationCreator,LiveMigrationDescriber
 
 type LiveMigrationCreator interface {
-	LiveMigrationCreate(string, *atlas.LiveMigration) (*atlas.LiveMigration, error)
+	LiveMigrationCreate(string, *atlasv2.LiveMigrationRequest) (*atlasv2.LiveMigrationResponse, error)
 }
 
 type LiveMigrationDescriber interface {
-	LiveMigrationDescribe(string, string) (*atlas.LiveMigration, error)
+	LiveMigrationDescribe(string, string) (*atlasv2.LiveMigrationResponse, error)
 }
 
 // LiveMigrationCreate encapsulates the logic to manage different cloud providers.
-func (s *Store) LiveMigrationCreate(groupID string, liveMigration *atlas.LiveMigration) (*atlas.LiveMigration, error) {
+func (s *Store) LiveMigrationCreate(groupID string, liveMigrationRequest *atlasv2.LiveMigrationRequest) (*atlasv2.LiveMigrationResponse, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).LiveMigration.Create(s.ctx, groupID, liveMigration)
+		result, _, err := s.clientv2.CloudMigrationServiceApi.CreatePushMigration(context.Background(), groupID, liveMigrationRequest).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -44,10 +44,10 @@ func (s *Store) LiveMigrationCreate(groupID string, liveMigration *atlas.LiveMig
 }
 
 // LiveMigrationDescribe encapsulates the logic to manage different cloud providers.
-func (s *Store) LiveMigrationDescribe(groupID, migrationID string) (*atlas.LiveMigration, error) {
+func (s *Store) LiveMigrationDescribe(groupID, migrationID string) (*atlasv2.LiveMigrationResponse, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).LiveMigration.Get(context.Background(), groupID, migrationID)
+		result, _, err := s.clientv2.CloudMigrationServiceApi.GetPushMigration(context.Background(), groupID, migrationID).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -94,6 +94,7 @@ func UpdateBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Name of the federated database instance to update.",
+			"output":   updateTemplate,
 		},
 		Example: fmt.Sprintf(`  # Modify the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3 to route client connections to OREGON_USA:
   %s dataLakes update myFDI --region OREGON_USA --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
@@ -113,6 +114,10 @@ func UpdateBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+	}
+
+	if config.ToolName == config.AtlasCLI {
+		cmd.Deprecated = "Please use 'atlas datafederation update'"
 	}
 
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.DataLakeRegion)

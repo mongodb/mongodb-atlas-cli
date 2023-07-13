@@ -46,7 +46,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Related Commands
 ----------------
@@ -56,6 +56,7 @@ Related Commands
 * :ref:`atlas-serverless-delete` - Remove a serverless instance from your project.
 * :ref:`atlas-serverless-describe` - Return one serverless instance in the specified project.
 * :ref:`atlas-serverless-list` - Return all serverless instances in the specified project.
+* :ref:`atlas-serverless-update` - Updates one serverless instance in the specified project.
 * :ref:`atlas-serverless-watch` - Monitor the status of serverless instance.
 
 
@@ -67,5 +68,6 @@ Related Commands
    delete </command/atlas-serverless-delete>
    describe </command/atlas-serverless-describe>
    list </command/atlas-serverless-list>
+   update </command/atlas-serverless-update>
    watch </command/atlas-serverless-watch>
 

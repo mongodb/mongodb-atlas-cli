@@ -20,20 +20,21 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestBuildAtlasRoles(t *testing.T) {
 	type test struct {
 		input []string
-		want  []mongodbatlas.Role
+		want  []atlasv2.DatabaseUserRole
 	}
 
 	tests := []test{
 		{
 			input: []string{"admin"},
-			want: []mongodbatlas.Role{
+			want: []atlasv2.DatabaseUserRole{
 				{
 					RoleName:     "admin",
 					DatabaseName: "admin",
@@ -42,7 +43,7 @@ func TestBuildAtlasRoles(t *testing.T) {
 		},
 		{
 			input: []string{"admin@test"},
-			want: []mongodbatlas.Role{
+			want: []atlasv2.DatabaseUserRole{
 				{
 					RoleName:     "admin",
 					DatabaseName: "test",
@@ -51,7 +52,7 @@ func TestBuildAtlasRoles(t *testing.T) {
 		},
 		{
 			input: []string{"admin@test", "something"},
-			want: []mongodbatlas.Role{
+			want: []atlasv2.DatabaseUserRole{
 				{
 					RoleName:     "admin",
 					DatabaseName: "test",
@@ -64,21 +65,21 @@ func TestBuildAtlasRoles(t *testing.T) {
 		},
 		{
 			input: []string{"admin@db.collection"},
-			want: []mongodbatlas.Role{
+			want: []atlasv2.DatabaseUserRole{
 				{
 					RoleName:       "admin",
 					DatabaseName:   "db",
-					CollectionName: "collection",
+					CollectionName: pointer.Get("collection"),
 				},
 			},
 		},
 		{
 			input: []string{"admin@db.collection.name"},
-			want: []mongodbatlas.Role{
+			want: []atlasv2.DatabaseUserRole{
 				{
 					RoleName:       "admin",
 					DatabaseName:   "db",
-					CollectionName: "collection.name",
+					CollectionName: pointer.Get("collection.name"),
 				},
 			},
 		},
@@ -154,14 +155,14 @@ func TestBuildAtlasScopes(t *testing.T) {
 	type test struct {
 		name  string
 		input []string
-		want  []mongodbatlas.Scope
+		want  []atlasv2.UserScope
 	}
 
 	tests := []test{
 		{
 			name:  "default to cluster",
 			input: []string{"clusterName"},
-			want: []mongodbatlas.Scope{
+			want: []atlasv2.UserScope{
 				{
 					Name: "clusterName",
 					Type: "CLUSTER",
@@ -171,7 +172,7 @@ func TestBuildAtlasScopes(t *testing.T) {
 		{
 			name:  "with cluster type",
 			input: []string{"clusterName:CLUSTER"},
-			want: []mongodbatlas.Scope{
+			want: []atlasv2.UserScope{
 				{
 					Name: "clusterName",
 					Type: "CLUSTER",
@@ -181,7 +182,7 @@ func TestBuildAtlasScopes(t *testing.T) {
 		{
 			name:  "default to cluster and a DATA_LAKE",
 			input: []string{"clusterName", "name:DATA_LAKE"},
-			want: []mongodbatlas.Scope{
+			want: []atlasv2.UserScope{
 				{
 					Name: "clusterName",
 					Type: "CLUSTER",
@@ -195,7 +196,7 @@ func TestBuildAtlasScopes(t *testing.T) {
 		{
 			name:  "data lake",
 			input: []string{"name:DATA_LAKE"},
-			want: []mongodbatlas.Scope{
+			want: []atlasv2.UserScope{
 				{
 					Name: "name",
 					Type: "DATA_LAKE",

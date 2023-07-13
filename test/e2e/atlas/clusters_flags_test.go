@@ -17,7 +17,6 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -25,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 const writeConcern = "majority"
@@ -58,37 +57,24 @@ func TestClustersFlags(t *testing.T) {
 			"--diskSizeGB", diskSizeGB30,
 			"--enableTerminationProtection",
 			"--projectId", g.projectID,
+			"--tag", "env=test", "-w",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster *mongodbatlas.AdvancedCluster
+		var cluster *atlasv2.AdvancedClusterDescription
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
 		ensureCluster(t, cluster, clusterName, e2eMDBVer, 30, true)
 	})
 
-	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		a := assert.New(t)
-		a.Contains(string(resp), "Cluster available")
-	})
-
 	t.Run("Load Sample Data", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
-			"loadSampleData",
+			"sampleData",
+			"load",
 			clusterName,
 			"--projectId", g.projectID,
 			"-o=json")
@@ -96,12 +82,12 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var job *mongodbatlas.SampleDatasetJob
+		var job *atlasv2.SampleDatasetStatus
 		err = json.Unmarshal(resp, &job)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.Equal(clusterName, job.ClusterName)
+		a.Equal(clusterName, job.GetClusterName())
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -114,7 +100,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var clusters mongodbatlas.AdvancedClustersResponse
+		var clusters atlasv2.PaginatedAdvancedClusterDescription
 		err = json.Unmarshal(resp, &clusters)
 		req.NoError(err)
 
@@ -133,12 +119,12 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster mongodbatlas.AdvancedCluster
+		var cluster atlasv2.AdvancedClusterDescription
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.Equal(clusterName, cluster.Name)
+		a.Equal(clusterName, cluster.GetName())
 	})
 
 	t.Run("Describe Connection String", func(t *testing.T) {
@@ -153,13 +139,13 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var connectionString mongodbatlas.ConnectionStrings
+		var connectionString atlasv2.ClusterConnectionStrings
 		err = json.Unmarshal(resp, &connectionString)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.NotEmpty(connectionString.Standard)
-		a.NotEmpty(connectionString.StandardSrv)
+		a.NotEmpty(connectionString.GetStandard())
+		a.NotEmpty(connectionString.GetStandardSrv())
 	})
 
 	t.Run("Update Advanced Configuration Settings", func(t *testing.T) {
@@ -189,13 +175,13 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var config mongodbatlas.ProcessArgs
+		var config atlasv2.ClusterDescriptionProcessArgs
 		err = json.Unmarshal(resp, &config)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.NotEmpty(config.MinimumEnabledTLSProtocol)
-		a.Equal(writeConcern, config.DefaultWriteConcern)
+		a.NotEmpty(config.GetMinimumEnabledTlsProtocol())
+		a.Equal(writeConcern, config.GetDefaultWriteConcern())
 	})
 
 	t.Run("Create Rolling Index", func(t *testing.T) {
@@ -241,7 +227,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster mongodbatlas.AdvancedCluster
+		var cluster atlasv2.AdvancedClusterDescription
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -249,27 +235,13 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force")
+		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force", "-w")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
+		expected := "Cluster deleted"
 		a := assert.New(t)
-		a.Equal(expected, string(resp))
-	})
-
-	t.Run("Watch deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		// this command will fail with 404 once the cluster is deleted
-		// we just need to wait for this to close the project
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
+		a.Contains(string(resp), expected)
 	})
 }

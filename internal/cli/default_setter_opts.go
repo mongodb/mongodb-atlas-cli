@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -36,8 +37,8 @@ import (
 type ProjectOrgsLister interface {
 	Project(id string) (interface{}, error)
 	Projects(*atlas.ListOptions) (interface{}, error)
-	Organization(id string) (*atlas.Organization, error)
-	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
+	Organization(id string) (interface{}, error)
+	Organizations(*atlas.OrganizationsListOptions) (interface{}, error)
 	GetOrgProjects(string, *atlas.ProjectsListOptions) (interface{}, error)
 }
 
@@ -128,11 +129,10 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 }
 
 // Orgs fetches organizations, filtering by name.
-func (opts *DefaultSetterOpts) orgs(filter string) ([]*atlas.Organization, error) {
+func (opts *DefaultSetterOpts) orgs(filter string) (results interface{}, err error) {
 	spin := newSpinner()
 	spin.Start()
 	defer spin.Stop()
-
 	includeDeleted := false
 	pagination := &atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted, Name: filter}
 	pagination.ItemsPerPage = resultsLimit
@@ -144,13 +144,25 @@ func (opts *DefaultSetterOpts) orgs(filter string) ([]*atlas.Organization, error
 		}
 		return nil, err
 	}
-	if orgs.TotalCount == 0 {
-		return nil, errNoResults
+	switch r := orgs.(type) {
+	case *atlasv2.PaginatedOrganization:
+		if *r.TotalCount == 0 {
+			return nil, errNoResults
+		}
+		if *r.TotalCount > resultsLimit {
+			return nil, errTooManyResults
+		}
+		results = r.Results
+	case *atlas.Organizations:
+		if r.TotalCount == 0 {
+			return nil, errNoResults
+		}
+		if r.TotalCount > resultsLimit {
+			return nil, errTooManyResults
+		}
+		results = r.Results
 	}
-	if orgs.TotalCount > resultsLimit {
-		return nil, errTooManyResults
-	}
-	return orgs.Results, nil
+	return results, nil
 }
 
 // ProjectExists checks if the project exists and the current user has access to it.
@@ -270,7 +282,13 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 		return opts.manualOrgID()
 	}
 
-	return opts.selectOrg(orgs)
+	switch o := orgs.(type) {
+	case []atlasv2.AtlasOrganization:
+		return opts.selectOrg(o)
+	case []*atlas.Organization:
+		return opts.selectOnPremOrg(o)
+	}
+	return nil
 }
 
 func (opts *DefaultSetterOpts) manualOrgID() error {
@@ -290,7 +308,24 @@ func (opts *DefaultSetterOpts) manualOrgID() error {
 	return nil
 }
 
-func (opts *DefaultSetterOpts) selectOrg(orgs []*atlas.Organization) error {
+func (opts *DefaultSetterOpts) selectOrg(orgs []atlasv2.AtlasOrganization) error {
+	if len(orgs) == 1 {
+		opts.OrgID = *orgs[0].Id
+		return nil
+	}
+
+	opts.runOnMultipleOrgsOrProjects()
+
+	p := prompt.NewOrgSelect(orgs)
+	if err := telemetry.TrackAskOne(p, &opts.OrgID); err != nil {
+		return err
+	}
+	opts.AskedOrgsOrProjects = true
+
+	return nil
+}
+
+func (opts *DefaultSetterOpts) selectOnPremOrg(orgs []*atlas.Organization) error {
 	if len(orgs) == 1 {
 		opts.OrgID = orgs[0].ID
 		return nil
@@ -298,7 +333,7 @@ func (opts *DefaultSetterOpts) selectOrg(orgs []*atlas.Organization) error {
 
 	opts.runOnMultipleOrgsOrProjects()
 
-	p := prompt.NewOrgSelect(orgs)
+	p := prompt.NewOnPremOrgSelect(orgs)
 	if err := telemetry.TrackAskOne(p, &opts.OrgID); err != nil {
 		return err
 	}
@@ -348,13 +383,17 @@ func omProjects(projects []*opsmngr.Project) (ids, names []string) {
 }
 
 func (*DefaultSetterOpts) DefaultQuestions() []*survey.Question {
+	defaultOutput := config.Output()
+	if defaultOutput == "" {
+		defaultOutput = plaintextFormat
+	}
 	q := []*survey.Question{
 		{
 			Name: "output",
 			Prompt: &survey.Select{
 				Message: "Default Output Format:",
 				Options: []string{plaintextFormat, jsonFormat},
-				Default: config.Output(),
+				Default: defaultOutput,
 			},
 		},
 	}

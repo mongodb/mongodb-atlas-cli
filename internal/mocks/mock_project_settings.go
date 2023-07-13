@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -35,10 +36,10 @@ func (m *MockProjectSettingsDescriber) EXPECT() *MockProjectSettingsDescriberMoc
 }
 
 // ProjectSettings mocks base method.
-func (m *MockProjectSettingsDescriber) ProjectSettings(arg0 string) (*mongodbatlas.ProjectSettings, error) {
+func (m *MockProjectSettingsDescriber) ProjectSettings(arg0 string) (*admin.GroupSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectSettings", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.ProjectSettings)
+	ret0, _ := ret[0].(*admin.GroupSettings)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +74,10 @@ func (m *MockProjectSettingsUpdater) EXPECT() *MockProjectSettingsUpdaterMockRec
 }
 
 // UpdateProjectSettings mocks base method.
-func (m *MockProjectSettingsUpdater) UpdateProjectSettings(arg0 string, arg1 *mongodbatlas.ProjectSettings) (*mongodbatlas.ProjectSettings, error) {
+func (m *MockProjectSettingsUpdater) UpdateProjectSettings(arg0 string, arg1 *mongodbatlas.ProjectSettings) (*admin.GroupSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateProjectSettings", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.ProjectSettings)
+	ret0, _ := ret[0].(*admin.GroupSettings)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

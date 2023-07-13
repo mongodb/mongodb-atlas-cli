@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -35,10 +36,10 @@ func (m *MockOnlineArchiveLister) EXPECT() *MockOnlineArchiveListerMockRecorder 
 }
 
 // OnlineArchives mocks base method.
-func (m *MockOnlineArchiveLister) OnlineArchives(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.OnlineArchives, error) {
+func (m *MockOnlineArchiveLister) OnlineArchives(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*admin.PaginatedOnlineArchive, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OnlineArchives", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.OnlineArchives)
+	ret0, _ := ret[0].(*admin.PaginatedOnlineArchive)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +74,10 @@ func (m *MockOnlineArchiveDescriber) EXPECT() *MockOnlineArchiveDescriberMockRec
 }
 
 // OnlineArchive mocks base method.
-func (m *MockOnlineArchiveDescriber) OnlineArchive(arg0, arg1, arg2 string) (*mongodbatlas.OnlineArchive, error) {
+func (m *MockOnlineArchiveDescriber) OnlineArchive(arg0, arg1, arg2 string) (*admin.BackupOnlineArchive, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OnlineArchive", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.OnlineArchive)
+	ret0, _ := ret[0].(*admin.BackupOnlineArchive)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +112,10 @@ func (m *MockOnlineArchiveCreator) EXPECT() *MockOnlineArchiveCreatorMockRecorde
 }
 
 // CreateOnlineArchive mocks base method.
-func (m *MockOnlineArchiveCreator) CreateOnlineArchive(arg0, arg1 string, arg2 *mongodbatlas.OnlineArchive) (*mongodbatlas.OnlineArchive, error) {
+func (m *MockOnlineArchiveCreator) CreateOnlineArchive(arg0, arg1 string, arg2 *admin.BackupOnlineArchive) (*admin.BackupOnlineArchive, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOnlineArchive", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.OnlineArchive)
+	ret0, _ := ret[0].(*admin.BackupOnlineArchive)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -149,10 +150,10 @@ func (m *MockOnlineArchiveUpdater) EXPECT() *MockOnlineArchiveUpdaterMockRecorde
 }
 
 // UpdateOnlineArchive mocks base method.
-func (m *MockOnlineArchiveUpdater) UpdateOnlineArchive(arg0, arg1 string, arg2 *mongodbatlas.OnlineArchive) (*mongodbatlas.OnlineArchive, error) {
+func (m *MockOnlineArchiveUpdater) UpdateOnlineArchive(arg0, arg1 string, arg2 *admin.BackupOnlineArchive) (*admin.BackupOnlineArchive, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOnlineArchive", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.OnlineArchive)
+	ret0, _ := ret[0].(*admin.BackupOnlineArchive)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

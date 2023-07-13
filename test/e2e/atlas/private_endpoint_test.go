@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 var regionsAWS = []string{
@@ -64,9 +64,9 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 
 		a := assert.New(t)
 		if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
-			var r atlas.PrivateEndpointConnection
+			var r atlasv2.EndpointService
 			if err = json.Unmarshal(resp, &r); a.NoError(err) {
-				id = r.ID
+				id = r.GetId()
 			}
 		}
 	})
@@ -99,9 +99,9 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		var r atlas.PrivateEndpointConnection
+		var r atlasv2.EndpointService
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.Equal(id, r.ID)
+			a.Equal(id, r.GetId())
 		}
 	})
 
@@ -118,7 +118,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r []atlas.PrivateEndpointConnection
+		var r []atlasv2.EndpointService
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
 		}
@@ -193,9 +193,9 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 
 		a := assert.New(t)
 		if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
-			var r atlas.PrivateEndpointConnection
+			var r atlasv2.EndpointService
 			if err = json.Unmarshal(resp, &r); a.NoError(err) {
-				id = r.ID
+				id = r.GetId()
 			}
 		}
 	})
@@ -231,9 +231,9 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r atlas.PrivateEndpointConnection
+		var r atlasv2.EndpointService
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.Equal(id, r.ID)
+			a.Equal(id, r.GetId())
 		}
 	})
 
@@ -250,7 +250,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r []atlas.PrivateEndpointConnection
+		var r []atlasv2.EndpointService
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
 		}
@@ -333,9 +333,9 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 
 		a := assert.New(t)
 		if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
-			var r atlas.PrivateEndpointConnection
+			var r atlasv2.EndpointService
 			if err = json.Unmarshal(resp, &r); a.NoError(err) {
-				id = r.ID
+				id = r.GetId()
 				a.NotEmpty(id)
 			}
 		}
@@ -369,9 +369,9 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r atlas.PrivateEndpointConnection
+		var r atlasv2.EndpointService
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.Equal(id, r.ID)
+			a.Equal(id, r.GetId())
 		}
 	})
 
@@ -388,7 +388,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r []atlas.PrivateEndpointConnection
+		var r []atlasv2.EndpointService
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
 		}
@@ -480,9 +480,9 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r atlas.RegionalizedPrivateEndpointSetting
+		var r atlasv2.ProjectSettingItem
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.False(r.Enabled)
+			a.False(r.GetEnabled())
 		}
 	})
 }

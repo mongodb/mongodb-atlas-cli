@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
@@ -34,7 +34,7 @@ func TestCreateOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.Cluster{}
+	expected := &atlasv2.ServerlessInstanceDescription{}
 	mockStore.
 		EXPECT().
 		CreateServerlessInstance(opts.ProjectID, opts.newServerlessCreateRequestParams()).
@@ -51,6 +51,6 @@ func TestCreateBuilder(t *testing.T) {
 		t,
 		CreateBuilder(),
 		0,
-		[]string{flag.Provider, flag.Region},
+		[]string{flag.Provider, flag.Region, flag.Tag},
 	)
 }

@@ -20,6 +20,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas setup [options]
 
@@ -40,6 +41,8 @@ Options
      - strings
      - false
      - IP address to be allowed to access the deployment.
+
+       Mutually exclusive with --currentIp.
    * - --clusterName
      - string
      - false
@@ -48,6 +51,8 @@ Options
      - 
      - false
      - Flag that adds the IP address from the host that is currently executing the command to the access list.
+
+       Mutually exclusive with --accessListIp.
    * - --enableTerminationProtection
      - 
      - false
@@ -72,6 +77,10 @@ Options
      - string
      - false
      - Password for the user.
+   * - --projectId
+     - string
+     - false
+     - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
    * - --provider
      - string
      - false
@@ -88,6 +97,10 @@ Options
      - 
      - false
      - Indicates whether to skip loading sample data into your Atlas cluster.
+   * - --tag
+     - stringToString
+     - false
+     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the cluster. This value defaults to [].
    * - --tier
      - string
      - false
@@ -111,7 +124,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
 --------

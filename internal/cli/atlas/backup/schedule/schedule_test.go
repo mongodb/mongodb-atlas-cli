@@ -20,7 +20,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
-func TestAtlasCLIBuilder(t *testing.T) {
+func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),

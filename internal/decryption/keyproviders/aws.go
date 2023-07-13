@@ -115,7 +115,7 @@ func (ki *AWSKeyIdentifier) DecryptKey(encryptedKey []byte) ([]byte, error) {
 	}
 	output, err := service.Decrypt(ctx, input)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrAWSDecrypt, err)
+		return nil, fmt.Errorf("%w: %w", ErrAWSDecrypt, err)
 	}
 
 	return output.Plaintext, nil

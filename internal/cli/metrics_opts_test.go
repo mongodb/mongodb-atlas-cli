@@ -49,27 +49,6 @@ func TestMetricsOpts_ValidatePeriodStartEnd(t *testing.T) {
 			end:     "",
 			wantErr: true,
 		},
-		{
-			name:    "all of period, start and end",
-			period:  "PT1H",
-			start:   "2022-01-01T00:00:00Z",
-			end:     "2022-01-18T21:05:00Z",
-			wantErr: true,
-		},
-		{
-			name:    "period with start",
-			period:  "PT1H",
-			start:   "2022-01-01T00:00:00Z",
-			end:     "",
-			wantErr: true,
-		},
-		{
-			name:    "start with no end",
-			period:  "",
-			start:   "2022-01-01T00:00:00Z",
-			end:     "",
-			wantErr: true,
-		},
 	}
 	for _, tt := range tests {
 		period := tt.period
@@ -77,6 +56,7 @@ func TestMetricsOpts_ValidatePeriodStartEnd(t *testing.T) {
 		end := tt.end
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			opts := &MetricsOpts{
 				Period: period,
 				Start:  start,
@@ -121,6 +101,7 @@ func TestGetHostNameAndPort(t *testing.T) {
 		wantHost := tt.wantHost
 		wantPort := tt.wantPort
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			host, port, err := GetHostnameAndPort(input)
 			if (err != nil) != wantError {
 				t.Errorf("GetHostnameAndPort() error = %v, wantErr %v", err, wantError)

@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (decrypt && (cloudmanager || om50 || om60))
 
 package cloud_manager_test
@@ -18,7 +19,6 @@ package cloud_manager_test
 import (
 	"embed"
 	"encoding/base64"
-	"errors"
 	"fmt"
 	"io/fs"
 	"os"
@@ -36,12 +36,8 @@ var filesKmip embed.FS
 
 const kmipTestsInputDir = "decryption/kmip"
 
-var errEmptyText = errors.New("unexpected empty value")
-
-func decodeAndWriteToPath(encodedText, filepath string) error {
-	if encodedText == "" {
-		return errEmptyText
-	}
+func decodeAndWriteToPath(t *testing.T, encodedText, filepath string) error {
+	t.Helper()
 
 	decoded, err := base64.StdEncoding.DecodeString(encodedText)
 	if err != nil {
@@ -51,19 +47,19 @@ func decodeAndWriteToPath(encodedText, filepath string) error {
 	return os.WriteFile(filepath, decoded, fs.ModePerm)
 }
 
-func dumpCertsToTemp(tmpDir string) (caFile, certFile string, err error) {
+func dumpCertsToTemp(t *testing.T, tmpDir string) (caFile, certFile string) {
+	t.Helper()
+	kmipCA := os.Getenv("KMIP_CA")
+	require.NotEmpty(t, kmipCA)
 	caFile = path.Join(tmpDir, "tls-rootCA.pem")
+	require.NoError(t, decodeAndWriteToPath(t, kmipCA, caFile))
+
+	kmipCert := os.Getenv("KMIP_CERT")
+	require.NotEmpty(t, kmipCert)
 	certFile = path.Join(tmpDir, "tls-localhost.pem")
+	require.NoError(t, decodeAndWriteToPath(t, kmipCert, certFile))
 
-	if err := decodeAndWriteToPath(os.Getenv("KMIP_CA"), caFile); err != nil {
-		return "", "", err
-	}
-
-	if err := decodeAndWriteToPath(os.Getenv("KMIP_CERT"), certFile); err != nil {
-		return "", "", err
-	}
-
-	return caFile, certFile, nil
+	return caFile, certFile
 }
 
 func TestDecryptWithKMIP(t *testing.T) {
@@ -72,23 +68,15 @@ func TestDecryptWithKMIP(t *testing.T) {
 	req.NoError(err)
 
 	tmpDir := t.TempDir()
-
-	t.Cleanup(func() {
-		err = os.RemoveAll(tmpDir)
-		req.NoError(err)
-	})
-
-	caFile, certFile, err := dumpCertsToTemp(tmpDir)
-	req.NoError(err)
-
+	caFile, certFile := dumpCertsToTemp(t, tmpDir)
 	for i := 1; i <= 2; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
 			inputFile := decryption.GenerateFileNameCase(tmpDir, i, "input")
-			err := decryption.DumpToTemp(filesKmip, decryption.GenerateFileNameCase(kmipTestsInputDir, i, "input"), inputFile)
+			err = decryption.DumpToTemp(filesKmip, decryption.GenerateFileNameCase(kmipTestsInputDir, i, "input"), inputFile)
 			req.NoError(err)
 
-			expectedContents, err := filesKmip.ReadFile(decryption.GenerateFileNameCase(kmipTestsInputDir, i, "output"))
-			req.NoError(err)
+			expectedContents, err2 := filesKmip.ReadFile(decryption.GenerateFileNameCase(kmipTestsInputDir, i, "output"))
+			req.NoError(err2, string(expectedContents))
 
 			cmd := exec.Command(cliPath,
 				entity,
@@ -105,10 +93,7 @@ func TestDecryptWithKMIP(t *testing.T) {
 
 			gotContents, err := cmd.CombinedOutput()
 			req.NoError(err, string(gotContents))
-
-			equal, err := decryption.LogsAreEqual(expectedContents, gotContents)
-			req.NoError(err)
-			req.True(equal, "expected %v, got %v", string(expectedContents), string(gotContents))
+			decryption.LogsAreEqual(t, expectedContents, gotContents)
 		})
 	}
 }

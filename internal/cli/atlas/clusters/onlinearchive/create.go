@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type CreateOpts struct {
@@ -36,7 +37,7 @@ type CreateOpts struct {
 	collection   string
 	dateField    string
 	dateFormat   string
-	archiveAfter float64
+	archiveAfter int
 	partitions   []string
 	store        store.OnlineArchiveCreator
 }
@@ -49,7 +50,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Online archive '{{.ID}}' created.\n"
+var createTemplate = "Online archive '{{.Id}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	archive := opts.newOnlineArchive()
@@ -62,16 +63,18 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newOnlineArchive() *atlas.OnlineArchive {
+func (opts *CreateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchive {
 	partitions := opts.partitionFields()
-	a := &atlas.OnlineArchive{
-		CollName: opts.collection,
-		Criteria: &atlas.OnlineArchiveCriteria{
-			DateField:       opts.dateField,
-			DateFormat:      opts.dateFormat,
-			ExpireAfterDays: &opts.archiveAfter,
+	a := &atlasv2.BackupOnlineArchive{
+		CollName: &opts.collection,
+		Criteria: &atlasv2.Criteria{
+			DateCriteria: &atlasv2.DateCriteria{
+				DateField:       &opts.dateField,
+				DateFormat:      &opts.dateFormat,
+				ExpireAfterDays: pointer.Get(opts.archiveAfter),
+			},
 		},
-		DBName:          opts.dbName,
+		DbName:          &opts.dbName,
 		PartitionFields: partitions,
 	}
 	return a
@@ -81,13 +84,12 @@ const (
 	maxPartitions = 2
 )
 
-func (opts *CreateOpts) partitionFields() []*atlas.PartitionFields {
-	fields := make([]*atlas.PartitionFields, len(opts.partitions))
+func (opts *CreateOpts) partitionFields() []atlasv2.PartitionField {
+	fields := make([]atlasv2.PartitionField, len(opts.partitions))
 	for i, p := range opts.partitions {
-		order := float64(i)
-		fields[i] = &atlas.PartitionFields{
+		fields[i] = atlasv2.PartitionField{
 			FieldName: p,
-			Order:     &order,
+			Order:     i,
 		}
 	}
 	return fields
@@ -109,7 +111,7 @@ To learn more about online archives, see https://www.mongodb.com/docs/atlas/onli
   %[1]s clusters onlineArchive create --clusterName myTestCluster --db sample_mflix --collection movies --dateField released --archiveAfter 2 --output json
   
   # Create an online archive for the sample_mflix.movies collection in a cluster named myTestCluster using a profile named egAtlasProfile when the current date is greater than the value of the released date plus 2 days. Data is partitioned based on the title field, year field, and released field from the documents in the collection:
-  %[1]s clusters onlineArchive create --clusterName myTestCluster --db sample_mflix --collection movies --dateField released --archiveAfter 2 --partition title:string,year:int --output json -P egAtlasProfile `, cli.ExampleAtlasEntryPoint()),
+  %[1]s clusters onlineArchive create --clusterName myTestCluster --db sample_mflix --collection movies --dateField released --archiveAfter 2 --partition title,year --output json -P egAtlasProfile `, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(opts.partitions) > maxPartitions {
 				return fmt.Errorf("can only define up to 2 partition fields, got: %d", len(opts.partitions))
@@ -130,7 +132,7 @@ To learn more about online archives, see https://www.mongodb.com/docs/atlas/onli
 	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVar(&opts.dateField, flag.DateField, "", usage.DateField)
 	cmd.Flags().StringVar(&opts.dateFormat, flag.DateFormat, "ISODATE", usage.DateFormat)
-	cmd.Flags().Float64Var(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
+	cmd.Flags().IntVar(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
 	cmd.Flags().StringSliceVar(&opts.partitions, flag.Partition, nil, usage.PartitionFields)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

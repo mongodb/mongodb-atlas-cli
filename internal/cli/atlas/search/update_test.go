@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {
@@ -37,7 +37,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 		updateOpts.name = testName
 		updateOpts.id = "1"
 
-		expected := &mongodbatlas.SearchIndex{}
+		expected := &atlasv2.ClusterSearchIndex{}
 
 		request, err := updateOpts.newSearchIndex()
 		if err != nil {
@@ -65,7 +65,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 		updateOpts.filename = fileName
 		updateOpts.fs = appFS
 
-		expected := &mongodbatlas.SearchIndex{}
+		expected := &atlasv2.ClusterSearchIndex{}
 
 		request, err := updateOpts.newSearchIndex()
 		if err != nil {

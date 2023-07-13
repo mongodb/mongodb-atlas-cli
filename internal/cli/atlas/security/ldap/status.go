@@ -43,7 +43,7 @@ func (opts *StatusOpts) initStore(ctx context.Context) func() error {
 }
 
 var verifyStatusTemplate = `REQUEST ID	PROJECT ID	STATUS
-{{.RequestID}}	{{.GroupID}}	{{.Status}}
+{{.RequestId}}	{{.GroupId}}	{{.Status}}
 `
 
 func (opts *StatusOpts) Run() error {
@@ -65,6 +65,7 @@ func StatusBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"requestIdDesc": "ID of the request to verify an LDAP configuration.",
+			"output":        verifyStatusTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

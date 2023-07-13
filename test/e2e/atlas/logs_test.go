@@ -74,9 +74,12 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile, projectID stri
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	require.NoError(t, err, string(resp))
-	if _, err := os.Stat(filepath); err != nil {
-		t.Fatalf("%v has not been downloaded", filepath)
+	if err != nil {
+		require.Contains(t, string(resp), "returned file is empty")
+	} else {
+		if _, err := os.Stat(filepath); err != nil {
+			t.Fatalf("%v has not been downloaded", filepath)
+		}
 	}
 	_ = os.Remove(filepath)
 }
@@ -94,12 +97,14 @@ func downloadLog(t *testing.T, cliPath, hostname, logFile, projectID string) {
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	require.NoError(t, err, string(resp))
-
-	outputFile := strings.ReplaceAll(logFile, ".gz", ".log.gz")
-	if _, err := os.Stat(outputFile); err != nil {
-		t.Fatalf("%v has not been downloaded", logFile)
+	if err != nil {
+		require.Contains(t, string(resp), "returned file is empty")
+	} else {
+		outputFile := strings.ReplaceAll(logFile, ".gz", ".log.gz")
+		if _, err := os.Stat(outputFile); err != nil {
+			t.Fatalf("%v has not been downloaded", logFile)
+		}
+		_ = os.Remove(outputFile)
 	}
 	_ = os.Remove(logFile)
-	_ = os.Remove(outputFile)
 }

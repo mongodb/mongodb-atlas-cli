@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (atlas && interactive)
 
 package atlas_test
@@ -20,19 +21,18 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestSetup(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("setup")
-
 	cliPath, err := e2e.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
@@ -43,28 +43,46 @@ func TestSetup(t *testing.T) {
 	dbUserUsername, err := RandUsername()
 	req.NoError(err)
 
+	tagKey := "env"
+	tagValue := "e2etest"
+	arbitraryAccessListIP := "21.150.105.221"
+
 	t.Run("Run", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			"setup",
+			setupEntity,
 			"--clusterName", clusterName,
 			"--username", dbUserUsername,
 			"--skipMongosh",
 			"--skipSampleData",
 			"--projectId", g.projectID,
+			"--tag", tagKey+"="+tagValue,
+			"--accessListIp", arbitraryAccessListIP,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if !strings.Contains(string(resp), "Cluster created.") {
-			fmt.Println("Cluster was not created see response:")
-			fmt.Println(string(resp))
-			assert.FailNow(t, "Failed to create M0 cluster.")
-		}
-
 		req.NoError(err, string(resp))
+		assert.Contains(t, string(resp), "Cluster created.", string(resp))
 	})
 
-	t.Run("WatchCluster", func(t *testing.T) {
+	t.Run("Check accessListIp was correctly added", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			accessListEntity,
+			"ls",
+			"--projectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err)
+
+		var entries *atlasv2.PaginatedNetworkAccess
+		err = json.Unmarshal(resp, &entries)
+		req.NoError(err)
+		req.Len(entries.Results, 1, "Expected 1 IP in list of IP's")
+		req.Contains(entries.Results[0].GetIpAddress(), arbitraryAccessListIP, "IP from list does not match added IP")
+	})
+
+	t.Run("Watch Cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"watch",
@@ -74,12 +92,10 @@ func TestSetup(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
-
-		a := assert.New(t)
-		a.Contains(string(resp), "Cluster available")
+		assert.Contains(t, string(resp), "Cluster available")
 	})
 
-	t.Run("DescribeDbUser", func(t *testing.T) {
+	t.Run("Describe DB User", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"describe",
@@ -93,12 +109,31 @@ func TestSetup(t *testing.T) {
 
 		var user mongodbatlas.DatabaseUser
 		require.NoError(t, json.Unmarshal(resp, &user), string(resp))
-		if user.Username != dbUserUsername {
-			t.Fatalf("expected username to match %v, got %v", dbUserUsername, user.Username)
-		}
+		assert.Equal(t, dbUserUsername, user.Username)
 	})
 
-	t.Run("DeleteCluster", func(t *testing.T) {
+	t.Run("Describe Cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"describe",
+			clusterName,
+			"-o=json",
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+
+		var cluster atlasv2.AdvancedClusterDescription
+		require.NoError(t, json.Unmarshal(resp, &cluster), string(resp))
+		assert.Equal(t, clusterName, *cluster.Name)
+
+		assert.Len(t, cluster.Tags, 1)
+		assert.Equal(t, tagKey, *cluster.Tags[0].Key)
+		assert.Equal(t, tagValue, *cluster.Tags[0].Value)
+	})
+
+	t.Run("Delete Cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"delete",
@@ -110,8 +145,21 @@ func TestSetup(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
-		a := assert.New(t)
-		a.Equal(expected, string(resp))
+		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
+		assert.Equal(t, expected, string(resp))
+	})
+
+	t.Run("Watch cluster deletion", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			clusterName,
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		// this command will fail with 404 once the cluster is deleted
+		// we just need to wait for this to close the project
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
 	})
 }

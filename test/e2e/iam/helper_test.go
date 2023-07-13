@@ -38,6 +38,12 @@ const (
 	invitationsEntity      = "invitations"
 )
 
+const (
+	roleName1   = "GROUP_READ_ONLY"
+	roleName2   = "GROUP_DATA_ACCESS_READ_ONLY"
+	roleNameOrg = "ORG_READ_ONLY"
+)
+
 var errNoAPIKey = errors.New("the apiKey ID is empty")
 
 func createOrgAPIKey() (string, error) {

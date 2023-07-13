@@ -11,13 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (atlas && cleanup)
 
 package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -38,21 +38,23 @@ func TestCleanup(t *testing.T) {
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	req.NoError(err, resp)
+	req.NoError(err, string(resp))
 
 	var projects mongodbatlas.Projects
 	err = json.Unmarshal(resp, &projects)
 	req.NoError(err)
-
+	t.Log(projects)
 	for _, project := range projects.Results {
 		if project.ID == os.Getenv("MCLI_PROJECT_ID") {
-			fmt.Println("skipping project", project.ID)
-			continue
+			t.Skip("skipping project", project.ID)
 		}
-		t.Run("Project "+project.ID, func(t *testing.T) {
-			deleteProjectWithRetry(t, project.ID)
-		})
+		deleteAllNetworkPeers(t, cliPath, project.ID, "aws")
+		deleteAllNetworkPeers(t, cliPath, project.ID, "gcp")
+		deleteAllNetworkPeers(t, cliPath, project.ID, "azure")
+		deleteAllPrivateEndpoints(t, cliPath, project.ID, "aws")
+		deleteAllPrivateEndpoints(t, cliPath, project.ID, "gcp")
+		deleteAllPrivateEndpoints(t, cliPath, project.ID, "azure")
+		deleteClustersForProject(t, cliPath, project.ID)
+		deleteProjectWithRetry(t, project.ID)
 	}
-
-	fmt.Println(projects)
 }

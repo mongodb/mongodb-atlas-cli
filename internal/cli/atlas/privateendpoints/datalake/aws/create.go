@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type CreateOpts struct {
@@ -44,7 +45,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Data Lake private endpoint '{{ (index .Results 0).EndpointID }}' created.\n"
+var createTemplate = "Data Lake private endpoint '{{ (index .Results 0).EndpointId }}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	r, err := opts.store.DataLakeCreatePrivateEndpoint(opts.ConfigProjectID(), opts.newPrivateLinkEndpointDataLake())
@@ -55,12 +56,12 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newPrivateLinkEndpointDataLake() *mongodbatlas.PrivateLinkEndpointDataLake {
-	createRequest := &mongodbatlas.PrivateLinkEndpointDataLake{
-		Comment:    opts.comment,
-		EndpointID: opts.privateEndpointID,
-		Provider:   provider,
-		Type:       privateEndpointType,
+func (opts *CreateOpts) newPrivateLinkEndpointDataLake() *atlasv2.PrivateNetworkEndpointIdEntry {
+	createRequest := &atlasv2.PrivateNetworkEndpointIdEntry{
+		Comment:    &opts.comment,
+		EndpointId: opts.privateEndpointID,
+		Provider:   pointer.Get(provider),
+		Type:       pointer.Get(privateEndpointType),
 	}
 	return createRequest
 }
@@ -78,6 +79,9 @@ func CreateBuilder() *cobra.Command {
 Your API key must have the GROUP_ATLAS_ADMIN (Project Owner) role to create a private endpoint.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -89,6 +93,10 @@ Your API key must have the GROUP_ATLAS_ADMIN (Project Owner) role to create a pr
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+	}
+
+	if config.ToolName == config.AtlasCLI {
+		cmd.Deprecated = "Please use 'atlas datafederation privateendpoints create'"
 	}
 
 	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)

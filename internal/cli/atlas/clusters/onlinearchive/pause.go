@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type PauseOpts struct {
@@ -44,13 +45,12 @@ func (opts *PauseOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var pauseTemplate = "Online archive '{{.ID}}' paused.\n"
+var pauseTemplate = "Online archive '{{.Id}}' paused.\n"
 
 func (opts *PauseOpts) Run() error {
-	paused := true
-	cluster := &atlas.OnlineArchive{
-		ID:     opts.id,
-		Paused: &paused,
+	cluster := &atlasv2.BackupOnlineArchive{
+		Id:    &opts.id,
+		State: pointer.Get("PAUSING"),
 	}
 	r, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, cluster)
 	if err != nil {
@@ -70,6 +70,7 @@ func PauseBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to pause.",
+			"output":        pauseTemplate,
 		},
 		Example: fmt.Sprintf(`  # Pause the online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
   %s clusters onlineArchives pause 5f189832e26ec075e10c32d3 --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),

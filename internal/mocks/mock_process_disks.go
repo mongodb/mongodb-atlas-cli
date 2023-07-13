@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	admin "go.mongodb.org/atlas-sdk/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -35,10 +36,10 @@ func (m *MockProcessDisksLister) EXPECT() *MockProcessDisksListerMockRecorder {
 }
 
 // ProcessDisks mocks base method.
-func (m *MockProcessDisksLister) ProcessDisks(arg0, arg1 string, arg2 int, arg3 *mongodbatlas.ListOptions) (*mongodbatlas.ProcessDisksResponse, error) {
+func (m *MockProcessDisksLister) ProcessDisks(arg0, arg1 string, arg2 int, arg3 *mongodbatlas.ListOptions) (*admin.PaginatedDiskPartition, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessDisks", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessDisksResponse)
+	ret0, _ := ret[0].(*admin.PaginatedDiskPartition)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

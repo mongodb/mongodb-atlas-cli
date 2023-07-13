@@ -19,10 +19,11 @@ package auth
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
-	"io"
 	"testing"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
@@ -33,43 +34,30 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type confirmPromptMock struct {
-	message   string
-	nbOfCalls int
-	responses []bool
-	outWriter io.Writer
-}
-
-func (c *confirmPromptMock) confirm() (bool, error) {
-	c.nbOfCalls++
-	_, _ = fmt.Fprintf(c.outWriter, "? "+c.message+" (Y/n)\n")
-	return c.responses[c.nbOfCalls-1], nil
-}
-
 func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		3,
-		[]string{},
-	)
-}
-
-func TestBuilderForAtlas(t *testing.T) {
-	// Test for AtlasCLI
-	prevTool := config.ToolName
-	config.ToolName = config.AtlasCLI
-
-	t.Cleanup(func() {
-		config.ToolName = prevTool
-	})
-
-	test.CmdValidator(
-		t,
-		Builder(),
-		4,
-		[]string{},
-	)
+	type testCase struct {
+		name string
+		want int
+	}
+	tests := []testCase{
+		{name: config.MongoCLI, want: 3},
+		{name: config.AtlasCLI, want: 4},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			prevTool := config.ToolName
+			t.Cleanup(func() {
+				config.ToolName = prevTool
+			})
+			config.ToolName = tc.name
+			test.CmdValidator(
+				t,
+				Builder(),
+				tc.want,
+				[]string{},
+			)
+		})
+	}
 }
 
 func TestLoginBuilder(t *testing.T) {
@@ -81,19 +69,53 @@ func TestLoginBuilder(t *testing.T) {
 	)
 }
 
+func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
+	ctrl := gomock.NewController(t)
+
+	tests := []struct {
+		name            string
+		isGov           bool
+		expectedService string
+	}{
+		{name: "cloud service run", isGov: false, expectedService: "cloud"},
+		{name: "cloudgov service run", isGov: true, expectedService: "cloudgov"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockConfig := mocks.NewMockLoginConfig(ctrl)
+			opts := &LoginOpts{
+				NoBrowser:    true,
+				AccessToken:  "at",
+				RefreshToken: "rt",
+				IsGov:        tt.isGov,
+			}
+			opts.OutWriter = new(bytes.Buffer)
+
+			mockConfig.EXPECT().Set("service", tt.expectedService).Times(1)
+			mockConfig.EXPECT().Set("access_token", opts.AccessToken).Times(1)
+			mockConfig.EXPECT().Set("refresh_token", opts.RefreshToken).Times(1)
+			mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
+
+			require.NoError(t, opts.SyncWithOAuthAccessProfile(mockConfig)())
+		})
+	}
+}
+
 func Test_loginOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockFlow := mocks.NewMockAuthenticator(ctrl)
+	mockFlow := mocks.NewMockRefresher(ctrl)
 	mockConfig := mocks.NewMockLoginConfig(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 
 	buf := new(bytes.Buffer)
 
 	opts := &LoginOpts{
-		flow:      mockFlow,
 		config:    mockConfig,
 		NoBrowser: true,
 	}
+	opts.WithFlow(mockFlow)
+
 	opts.OutWriter = buf
 	opts.Store = mockStore
 	expectedCode := &auth.DeviceCode{
@@ -143,7 +165,7 @@ func Test_loginOpts_Run(t *testing.T) {
 		},
 	}
 	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
-	require.NoError(t, opts.Run(ctx))
+	require.NoError(t, opts.LoginRun(ctx))
 	assert.Equal(t, `
 To verify your account, copy your one-time verification code:
 1234-5678
@@ -155,135 +177,57 @@ Successfully logged in as test@10gen.com.
 `, buf.String())
 }
 
-func TestLoginPreRun(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
-	ctx := context.TODO()
-	config.SetPublicAPIKey("public")
-	config.SetPrivateAPIKey("private")
-	require.ErrorContains(t, loginPreRun(ctx), fmt.Sprintf(alreadyAuthenticatedError, "public"), loginWithProfileMsg)
+type confirmMock struct{}
+
+func (confirmMock) Prompt(_ *survey.PromptConfig) (interface{}, error) {
+	return true, nil
 }
 
-func Test_loginOpts_oauthFlow(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
-	t.Run("updates accessToken and refreshToken after code is verified", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		mockFlow := mocks.NewMockAuthenticator(ctrl)
-		mockConfig := mocks.NewMockLoginConfig(ctrl)
+func (confirmMock) Cleanup(_ *survey.PromptConfig, _ interface{}) error {
+	return nil
+}
 
-		buf := new(bytes.Buffer)
-		ctx := context.TODO()
+func (confirmMock) Error(_ *survey.PromptConfig, err error) error {
+	return err
+}
 
-		opts := &LoginOpts{
-			flow:                 mockFlow,
-			config:               mockConfig,
-			NoBrowser:            true,
-			regenerateCodePrompt: nil,
-		}
-
-		opts.OutWriter = buf
-
-		expectedCode := &auth.DeviceCode{
-			UserCode:        "12345678",
-			VerificationURI: "http://localhost",
-			DeviceCode:      "123",
-			ExpiresIn:       300,
-			Interval:        10,
-		}
-
-		mockFlow.
-			EXPECT().
-			RequestCode(ctx).
-			Return(expectedCode, nil, nil).
-			Times(1)
-
-		expectedToken := &auth.Token{
-			AccessToken:  "asdf",
-			RefreshToken: "querty",
-			Scope:        "openid",
-			IDToken:      "1",
-			TokenType:    "Bearer",
-			ExpiresIn:    3600,
-		}
-		mockFlow.
-			EXPECT().
-			PollToken(ctx, expectedCode).
-			Return(expectedToken, nil, nil).
-			Times(1)
-
-		require.NoError(t, opts.oauthFlow(ctx))
-		assert.Equal(t, opts.AccessToken, expectedToken.AccessToken)
-		assert.Equal(t, opts.RefreshToken, expectedToken.RefreshToken)
-		assert.Equal(t, `
-To verify your account, copy your one-time verification code:
-1234-5678
-
-Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
-
-To continue, go to http://localhost
-`, buf.String())
-	})
-
-	t.Run("returns ErrTimeout is user choses not to regenerate device code", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		mockFlow := mocks.NewMockAuthenticator(ctrl)
-		mockConfig := mocks.NewMockLoginConfig(ctrl)
-
-		buf := new(bytes.Buffer)
-		ctx := context.TODO()
-		regenerateCodePromptMock := &confirmPromptMock{
-			message:   "Your one-time verification code is expired. Would you like to generate a new one?",
-			nbOfCalls: 0,
-			responses: []bool{true, false},
-			outWriter: buf,
-		}
-
-		opts := &LoginOpts{
-			flow:                 mockFlow,
-			config:               mockConfig,
-			NoBrowser:            true,
-			regenerateCodePrompt: regenerateCodePromptMock,
-		}
-
-		opts.OutWriter = buf
-
-		expectedCode := &auth.DeviceCode{
-			UserCode:        "12345678",
-			VerificationURI: "http://localhost",
-			DeviceCode:      "123",
-			ExpiresIn:       300,
-			Interval:        10,
-		}
-
-		mockFlow.
-			EXPECT().
-			RequestCode(ctx).
-			Return(expectedCode, nil, nil).
-			Times(2)
-
-		mockFlow.
-			EXPECT().
-			PollToken(ctx, expectedCode).
-			Return(nil, nil, auth.ErrTimeout).
-			Times(2)
-
-		err := opts.oauthFlow(ctx)
-		assert.Equal(t, err, auth.ErrTimeout)
-		assert.Equal(t, `
-To verify your account, copy your one-time verification code:
-1234-5678
-
-Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
-
-To continue, go to http://localhost
-? Your one-time verification code is expired. Would you like to generate a new one? (Y/n)
-
-To verify your account, copy your one-time verification code:
-1234-5678
-
-Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
-
-To continue, go to http://localhost
-? Your one-time verification code is expired. Would you like to generate a new one? (Y/n)
-`, buf.String())
-	})
+func Test_shouldRetryAuthenticate(t *testing.T) {
+	type args struct {
+		err error
+		p   survey.Prompt
+	}
+	tests := []struct {
+		name      string
+		args      args
+		wantRetry bool
+		wantErr   assert.ErrorAssertionFunc
+	}{
+		{
+			name: "timed out error",
+			args: args{
+				err: auth.ErrTimeout,
+				p:   &confirmMock{},
+			},
+			wantRetry: true,
+			wantErr:   assert.NoError,
+		},
+		{
+			name: "random error",
+			args: args{
+				err: errors.New("random"),
+				p:   &confirmMock{},
+			},
+			wantRetry: false,
+			wantErr:   assert.NoError,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotRetry, err := shouldRetryAuthenticate(tt.args.err, tt.args.p)
+			if !tt.wantErr(t, err, fmt.Sprintf("shouldRetryAuthenticate(%v, %v)", tt.args.err, tt.args.p)) {
+				return
+			}
+			assert.Equalf(t, tt.wantRetry, gotRetry, "shouldRetryAuthenticate(%v, %v)", tt.args.err, tt.args.p)
+		})
+	}
 }

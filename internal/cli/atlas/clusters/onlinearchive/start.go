@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type StartOpts struct {
@@ -44,13 +45,12 @@ func (opts *StartOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var startTemplate = "Online archive '{{.ID}}' started.\n"
+var startTemplate = "Online archive '{{.Id}}' started.\n"
 
 func (opts *StartOpts) Run() error {
-	paused := false
-	archive := &atlas.OnlineArchive{
-		ID:     opts.id,
-		Paused: &paused,
+	archive := &atlasv2.BackupOnlineArchive{
+		Id:    &opts.id,
+		State: pointer.Get("ACTIVE"),
 	}
 	r, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
 	if err != nil {
@@ -70,6 +70,7 @@ func StartBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to start.",
+			"output":        startTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type CreateOpts struct {
@@ -56,8 +56,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newPrivateEndpointConnection() *mongodbatlas.PrivateEndpointConnection {
-	createRequest := &mongodbatlas.PrivateEndpointConnection{
+func (opts *CreateOpts) newPrivateEndpointConnection() *atlasv2.CloudProviderEndpointServiceRequest {
+	createRequest := &atlasv2.CloudProviderEndpointServiceRequest{
 		Region:       opts.region,
 		ProviderName: provider,
 	}
@@ -68,10 +68,13 @@ func (opts *CreateOpts) newPrivateEndpointConnection() *mongodbatlas.PrivateEndp
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "create",
-		Short:   "Create a new GCP private endpoint for your project.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Args:    require.NoArgs,
+		Use:   "create",
+		Short: "Create a new GCP private endpoint for your project.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Args:  require.NoArgs,
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		Example: fmt.Sprintf(`  %s privateEndpoints gcp create --region CENTRAL_US`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

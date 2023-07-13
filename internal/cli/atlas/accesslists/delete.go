@@ -60,6 +60,7 @@ func DeleteBuilder() *cobra.Command {
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID that you want to remove from the access list.",
+			"output":    opts.SuccessMessage(),
 		},
 		Example: fmt.Sprintf(`  # Remove the IP address 192.0.2.0 from the access list for the project with the ID 5e2211c17a3e5a48f5497de3 after prompting for a confirmation:
   %[1]s accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3

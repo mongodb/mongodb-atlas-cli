@@ -94,6 +94,7 @@ func CreateBuilder() *cobra.Command {
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"indexNameDesc": "Name of the index.",
+			"output":        createTemplate,
 		},
 		Example: fmt.Sprintf(`  # Create a search index for the cluster named myCluster using a JSON index configuration file named search-config.json:
   %s clusters search indexes create --clusterName myCluster --file search-config.json --output json`, cli.ExampleAtlasEntryPoint()),

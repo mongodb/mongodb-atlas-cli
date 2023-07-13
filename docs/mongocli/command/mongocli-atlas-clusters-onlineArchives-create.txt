@@ -24,6 +24,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    mongocli atlas clusters onlineArchives create [options]
 
@@ -41,7 +42,7 @@ Options
      - Required
      - Description
    * - --archiveAfter
-     - float
+     - int
      - true
      - Number of days after which to archive cluster data.
    * - --clusterName
@@ -75,7 +76,7 @@ Options
    * - --partition
      - strings
      - false
-     - Fields to use to partition data. You can specify up to two frequently queried fields, separated by a comma, in the following format: <fieldname>:<datatype>. The data type must match the data type of the field in the document.
+     - Fields to use to partition data. You can specify up to two frequently queried fields separated by a comma.
    * - --projectId
      - string
      - false
@@ -95,7 +96,7 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
 Examples
 --------
@@ -109,4 +110,4 @@ Examples
 .. code-block::
 
    # Create an online archive for the sample_mflix.movies collection in a cluster named myTestCluster using a profile named egAtlasProfile when the current date is greater than the value of the released date plus 2 days. Data is partitioned based on the title field, year field, and released field from the documents in the collection:
-   mongocli atlas clusters onlineArchive create --clusterName myTestCluster --db sample_mflix --collection movies --dateField released --archiveAfter 2 --partition title:string,year:int --output json -P egAtlasProfile 
+   mongocli atlas clusters onlineArchive create --clusterName myTestCluster --db sample_mflix --collection movies --dateField released --archiveAfter 2 --partition title,year --output json -P egAtlasProfile 

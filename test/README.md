@@ -25,7 +25,7 @@
 
 #### Inventory
 
- Command                                     | E2E Atlas | E2E OM    | E2E CM    | Atlas     | OM    | CM    |
+| Command                                     | E2E Atlas | E2E OM    | E2E CM    | Atlas     | OM    | CM    |
 |:--------------------------------------------| :---:     | :---:     | :---:     | :---:     | :---: | :---: |
 | `alerts config create`                      | Y         | N         | N         | Y         | Y     | Y     |
 | `alerts config delete`                      | Y         | N         | N         | Y         | Y     | Y     |
@@ -39,12 +39,27 @@
 | `accessList create`                         | Y         |           |           | Y         |       |       |
 | `accessList delete`                         | Y         |           |           | Y         |       |       |
 | `accessList list`                           | Y         |           |           | Y         |       |       |
-| `backup snapshots create`                   | N         |           |           | Y         |       |       |
-| `backup snapshots delete`                   | N         |           |           | Y         |       |       |
-| `backup snapshots describe`                 | N         |           |           | Y         |       |       |
-| `backup snapshots watch`                    | N         |           |           | Y         |       |       |
-| `backup restore list`                       | N         |           |           | Y         |       |       |
-| `backup restore start`                      | N         |           |           | Y         |       |       |
+| `backup snapshots create`                   | Y         |           |           | Y         |       |       |
+| `backup snapshots delete`                   | Y         |           |           | Y         |       |       |
+| `backup snapshots describe`                 | Y         |           |           | Y         |       |       |
+| `backup snapshots list`                     | Y         |           |           | Y         |       |       |
+| `backup snapshots watch`                    | Y         |           |           | Y         |       |       |
+| `backup exports buckets create`             | Y         |           |           | Y         |       |       |
+| `backup exports buckets list`               | Y         |           |           | Y         |       |       |
+| `backup exports buckets describe`           | Y         |           |           | Y         |       |       |
+| `backup exports buckets delete`             | Y         |           |           | Y         |       |       |
+| `backup exports jobs create`                | Y         |           |           | Y         |       |       |
+| `backup exports jobs list`                  | Y         |           |           | Y         |       |       |
+| `backup exports jobs describe`              | Y         |           |           | Y         |       |       |
+| `backup exports jobs delete`                | Y         |           |           | Y         |       |       |
+| `backup exports jobs watch`                 | Y         |           |           | Y         |       |       |
+| `backup restores list`                      | Y         |           |           | Y         |       |       |
+| `backup restores describe`                  | Y         |           |           | Y         |       |       |
+| `backup restores start`                     | Y         |           |           | Y         |       |       |
+| `backup restores watch`                     | Y         |           |           | Y         |       |       |
+| `backup schedule describe`                  | Y         |           |           | Y         |       |       |
+| `backup schedule delete`                    | Y         |           |           | Y         |       |       |
+| `backup schedule update`                    | Y         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles authorize`   | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles deauthorize` | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles create`      | Y         |           |           | Y         |       |       |
@@ -265,17 +280,6 @@
 | `automation status`                         |           | N         | N         |           | Y     | Y     |
 | `automation update`                         |           | N         | N         |           | Y     | Y     |
 | `automation watch`                          |           | N         | N         |           | Y     | Y     |
-| `backup config describe`                    |           | N         | N         |           | Y     | Y     |
-| `backup config list`                        |           | N         | N         |           | Y     | Y     |
-| `backup config update`                      |           | N         | N         |           | Y     | Y     |
-| `backup snapshots schedule describe`        |           | N         | N         |           | Y     | Y     |
-| `backup snapshots schedule update`          |           | N         | N         |           | Y     | Y     |
-| `backup snapshots list`                     |           | N         | N         |           | Y     | Y     |
-| `backup checkpoint list`                    |           | N         | N         |           | Y     | Y     |
-| `backup restore start`                      | N         | N         | N         | Y         | Y     | Y     |
-| `backup restore list`                       | N         | N         | N         | Y         | Y     | Y     |
-| `backup  enable`                            |           | N         | N         |           | Y     | Y     |
-| `backup  disable`                           |           | N         | Y         |           | Y     | Y     |
 | `cluster  apply`                            |           | Y         | Y         |           | Y     | Y     |
 | `cluster  create`                           |           | Y         | Y         |           | Y     | Y     |
 | `cluster  delete`                           |           | Y         | Y         |           | Y     | Y     |
@@ -337,6 +341,10 @@
 | `serverless describe`                       | Y         |           |           | Y         |       |       |
 | `serverless list`                           | Y         |           |           | Y         |       |       |
 | `serverless watch`                          | Y         |           |           | Y         |       |       |
+| `serverless update`                         | Y         |           |           | Y         |       |       |
+| `serverless backup snapshots list`          | Y         |           |           | Y         |       |       |
+| `serverless backup snapshots describe`      | Y         |           |           | Y         |       |       |
+| `serverless backup snapshots watch`         | Y         |           |           | Y         |       |       |
 | `livemigrations link create`                | Y         |           |           | Y         | N     | N     |
 | `livemigrations link delete`                | Y         |           |           | Y         | Y     | Y     |
 | `livemigrations validation create`          |           |           |           | Y         |       |       |
@@ -349,3 +357,5 @@
 | `setup`                                     | Y         |           |           | Y         |       |       |
 | `register`                                  | N         |           |           | Y         |       |       |
 | `kubernetes config generate`                | Y         |           |           | Y         | N     |       |
+| `kubernetes config apply`                   | Y         |           |           | Y         | N     |       |
+| `kubernetes operator install`               | Y         |           |           | Y         | N     |       |

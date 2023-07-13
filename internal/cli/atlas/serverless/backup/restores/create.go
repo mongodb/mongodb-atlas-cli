@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 const (
@@ -42,10 +42,10 @@ type CreateOpts struct {
 	clusterName          string
 	targetProjectID      string
 	targetClusterName    string
-	oplogTS              int64
-	oplogInc             int64
+	oplogTS              int
+	oplogInc             int
 	snapshotID           string
-	pointInTimeUTCMillis int64
+	pointInTimeUTCMillis int
 	store                store.ServerlessRestoreJobsCreator
 }
 
@@ -57,7 +57,9 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Restore job '{{.ID}}' successfully started\n"
+var createTemplate = "Restore job '{{.Id}}' successfully started\n"
+
+var ErrInvalidDeliveryType = fmt.Errorf("delivery type invalid, choose 'automated', 'download' or 'pointInTime'")
 
 func (opts *CreateOpts) Run() error {
 	request := opts.newCloudProviderSnapshotRestoreJob()
@@ -70,12 +72,12 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCloudProviderSnapshotRestoreJob() *atlas.CloudProviderSnapshotRestoreJob {
-	request := new(atlas.CloudProviderSnapshotRestoreJob)
+func (opts *CreateOpts) newCloudProviderSnapshotRestoreJob() *atlasv2.ServerlessBackupRestoreJob {
+	request := new(atlasv2.ServerlessBackupRestoreJob)
 	request.DeliveryType = opts.deliveryType
 
 	if opts.targetProjectID != "" {
-		request.TargetGroupID = opts.targetProjectID
+		request.TargetGroupId = opts.targetProjectID
 	}
 
 	if opts.targetClusterName != "" {
@@ -83,16 +85,16 @@ func (opts *CreateOpts) newCloudProviderSnapshotRestoreJob() *atlas.CloudProvide
 	}
 
 	if opts.snapshotID != "" {
-		request.SnapshotID = opts.snapshotID
+		request.SnapshotId = &opts.snapshotID
 	}
 
 	// Set only in pointInTimeRestore
 	if opts.oplogTS != 0 && opts.oplogInc != 0 {
-		request.OplogTs = opts.oplogTS
-		request.OplogInc = opts.oplogInc
+		request.OplogTs = &opts.oplogTS
+		request.OplogInc = &opts.oplogInc
 	} else if opts.pointInTimeUTCMillis != 0 {
 		// Set only when oplogTS and oplogInc are not set
-		request.PointInTimeUTCSeconds = opts.pointInTimeUTCMillis
+		request.PointInTimeUTCSeconds = &opts.pointInTimeUTCMillis
 	}
 
 	return request
@@ -142,7 +144,7 @@ func CreateBuilder() *cobra.Command {
 		Short: "Start a restore job for your serverless instance.",
 		Long: `If you create an automated or pointInTime restore job, Atlas removes all existing data on the target cluster prior to the restore.
 
-` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Owner"), "Atlas supports this command only for M10+ clusters."),
 		Args: require.NoArgs,
 		Example: fmt.Sprintf(`  # Create an automated restore:
   %[1]s serverless backup restore create \
@@ -166,22 +168,31 @@ func CreateBuilder() *cobra.Command {
          --clusterName myDemo \
          --snapshotId 5e7e00128f8ce03996a47179`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			set := false
+
 			if opts.isAutomatedRestore() {
+				set = true
 				if err := markRequiredAutomatedRestoreFlags(cmd); err != nil {
 					return err
 				}
 			}
 
 			if opts.isPointInTimeRestore() {
+				set = true
 				if err := markRequiredPointInTimeRestoreFlags(cmd); err != nil {
 					return err
 				}
 			}
 
 			if opts.isDownloadRestore() {
+				set = true
 				if err := cmd.MarkFlagRequired(flag.SnapshotID); err != nil {
 					return err
 				}
+			}
+
+			if !set {
+				return ErrInvalidDeliveryType
 			}
 
 			return opts.PreRunE(
@@ -200,9 +211,9 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.deliveryType, flag.DeliveryType, "", usage.DeliveryType)
 	cmd.Flags().StringVar(&opts.targetProjectID, flag.TargetProjectID, "", usage.TargetProjectID)
 	cmd.Flags().StringVar(&opts.targetClusterName, flag.TargetClusterName, "", usage.TargetClusterName)
-	cmd.Flags().Int64Var(&opts.oplogTS, flag.OplogTS, 0, usage.OplogTS)
-	cmd.Flags().Int64Var(&opts.oplogInc, flag.OplogInc, 0, usage.OplogInc)
-	cmd.Flags().Int64Var(&opts.pointInTimeUTCMillis, flag.PointInTimeUTCMillis, 0, usage.PointInTimeUTCMillis)
+	cmd.Flags().IntVar(&opts.oplogTS, flag.OplogTS, 0, usage.OplogTS)
+	cmd.Flags().IntVar(&opts.oplogInc, flag.OplogInc, 0, usage.OplogInc)
+	cmd.Flags().IntVar(&opts.pointInTimeUTCMillis, flag.PointInTimeUTCMillis, 0, usage.PointInTimeUTCMillis)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

@@ -22,18 +22,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 var listTemplate = `ID	ENDPOINT PROVIDER	TYPE	COMMENT{{range .Results}}
-{{.EndpointID}}	{{.Provider}}	{{.Type}}	{{.Comment}}{{end}}
+{{.EndpointId}}	{{.Provider}}	{{.Type}}	{{.Comment}}{{end}}
 `
 
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
+	cli.ListOpts
 	store store.DataLakePrivateEndpointLister
 }
 
@@ -46,13 +49,21 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.DataLakePrivateEndpoints(opts.ConfigProjectID())
+	r, err := opts.store.DataLakePrivateEndpoints(opts.newDatalakePrivateEndpointsListOpts())
 
 	if err != nil {
 		return err
 	}
 
 	return opts.Print(r)
+}
+
+func (opts *ListOpts) newDatalakePrivateEndpointsListOpts() *atlasv2.ListDataFederationPrivateEndpointsApiParams {
+	return &atlasv2.ListDataFederationPrivateEndpointsApiParams{
+		GroupId:      opts.ConfigProjectID(),
+		PageNum:      pointer.Get(opts.PageNum),
+		ItemsPerPage: pointer.Get(opts.ItemsPerPage),
+	}
 }
 
 // mongocli atlas privateEndpoint(s)|privateendpoint(s) dataLakes aws list|ls [--projectId projectId].
@@ -64,6 +75,9 @@ func ListBuilder() *cobra.Command {
 		Short:   "List Data Lake private endpoints for your project.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:    require.NoArgs,
+		Annotations: map[string]string{
+			"output": listTemplate,
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -75,6 +89,13 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	if config.ToolName == config.AtlasCLI {
+		cmd.Deprecated = "Please use 'atlas datafederation privateendpoints list'"
+	}
+
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

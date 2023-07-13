@@ -20,6 +20,7 @@ Syntax
 ------
 
 .. code-block::
+   :caption: Command Syntax
 
    atlas dbusers update <username> [options]
 
@@ -71,11 +72,11 @@ Options
    * - --role
      - strings
      - false
-     - User's roles and the databases or collections on which the roles apply.
+     - User's roles and the databases or collections on which the roles apply. Passing this flag replaces preexisting data.
    * - --scope
      - strings
      - false
-     - Array of clusters and Atlas Data Lakes that this user has access to.
+     - Array of clusters and Atlas Data Lakes that this user has access to. Passing this flag replaces preexisting data.
    * - -u, --username
      - string
      - false
@@ -95,7 +96,17 @@ Inherited Options
    * - -P, --profile
      - string
      - false
-     - Human-readable label that identifies the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Output
+------
+
+If the command succeeds, the CLI returns output similar to the following sample. Values in brackets represent your values.
+
+.. code-block::
+
+   Successfully updated database user '<Username>'.
+   
 
 Examples
 --------

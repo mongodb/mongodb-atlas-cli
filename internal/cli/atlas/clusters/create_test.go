@@ -17,21 +17,25 @@
 package clusters
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/spf13/afero"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/stretchr/testify/assert"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterCreator(ctrl)
 
-	expected := &mongodbatlas.AdvancedCluster{}
+	expected := &atlasv2.AdvancedClusterDescription{}
 
 	t.Run("flags run", func(t *testing.T) {
 		createOpts := &CreateOpts{
@@ -41,7 +45,7 @@ func TestCreateOpts_Run(t *testing.T) {
 			members:    3,
 			diskSizeGB: 10,
 			backup:     false,
-			mdbVersion: "4.2",
+			mdbVersion: "4.4",
 			store:      mockStore,
 		}
 
@@ -106,12 +110,51 @@ func TestCreateOpts_Run(t *testing.T) {
 	})
 }
 
+func TestCreateOpts_PostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterCreator(ctrl)
+
+	expected := &atlasv2.AdvancedClusterDescription{
+		Name: pointer.Get("ProjectBar"),
+	}
+
+	buf := new(bytes.Buffer)
+
+	createOpts := &CreateOpts{
+		WatchOpts: cli.WatchOpts{
+			OutputOpts: cli.OutputOpts{
+				Template:  createWatchTmpl,
+				OutWriter: buf,
+			},
+		},
+		name:  "ProjectBar",
+		store: mockStore,
+	}
+
+	cluster, _ := createOpts.newCluster()
+	mockStore.
+		EXPECT().
+		CreateCluster(cluster).Return(expected, nil).
+		Times(1)
+
+	if err := createOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+
+	if err := createOpts.PostRun(); err != nil {
+		t.Fatalf("PostRun() unexpected error: %v", err)
+	}
+	assert.Contains(t, `Cluster 'ProjectBar' created successfully.
+`, buf.String())
+	t.Log(buf.String())
+}
+
 func TestCreateBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		CreateBuilder(),
 		0,
 		[]string{flag.Provider, flag.Region, flag.Members, flag.Tier, flag.DiskSizeGB, flag.MDBVersion, flag.Backup,
-			flag.File, flag.TypeFlag, flag.Shards, flag.ProjectID, flag.Output, flag.EnableTerminationProtection},
+			flag.File, flag.TypeFlag, flag.Shards, flag.ProjectID, flag.Output, flag.EnableTerminationProtection, flag.Tag},
 	)
 }

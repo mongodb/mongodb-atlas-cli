@@ -23,10 +23,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/admin"
 )
 
 type AWSOpts struct {
@@ -57,38 +58,44 @@ func (opts *AWSOpts) Run() error {
 
 	if container == nil {
 		var err2 error
-		container, err2 = opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		r, err2 := opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
+		container = r.(*atlasv2.AWSCloudProviderContainer)
 		if err2 != nil {
 			return err2
 		}
 	}
-	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(container.ID))
+	r, err := opts.store.CreatePeeringConnection(opts.ConfigProjectID(), opts.newPeer(*container.Id))
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *AWSOpts) containerExists() (*atlas.Container, error) {
+func (opts *AWSOpts) containerExists() (*atlasv2.AWSCloudProviderContainer, error) {
 	r, err := opts.store.AWSContainers(opts.ConfigProjectID())
 	if err != nil {
 		return nil, err
 	}
 	for i := range r {
 		if r[i].RegionName == opts.region {
-			return &r[i], nil
+			return r[i], nil
 		}
 	}
 	return nil, nil
 }
 
-func (opts *AWSOpts) newContainer() *atlas.Container {
-	c := &atlas.Container{
-		AtlasCIDRBlock: opts.atlasCIDRBlock,
+func (opts *AWSOpts) newAWSContainer() *atlasv2.AWSCloudProviderContainer {
+	c := &atlasv2.AWSCloudProviderContainer{
+		AtlasCidrBlock: &opts.atlasCIDRBlock,
 		RegionName:     opts.region,
-		ProviderName:   "AWS",
+		ProviderName:   pointer.Get("AWS"),
 	}
 	return c
+}
+
+func (opts *AWSOpts) newContainer() *atlasv2.CloudProviderContainer {
+	w := atlasv2.AWSCloudProviderContainerAsCloudProviderContainer(opts.newAWSContainer())
+	return &w
 }
 
 func normalizeAtlasRegion(region string) string {
@@ -96,17 +103,23 @@ func normalizeAtlasRegion(region string) string {
 	return strings.ReplaceAll(region, "-", "_")
 }
 
-func (opts *AWSOpts) newPeer(containerID string) *atlas.Peer {
+func (opts *AWSOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringConnectionSettings {
+	a := atlasv2.AwsNetworkPeeringConnectionSettingsAsBaseNetworkPeeringConnectionSettings(opts.newAWSPeer(containerID))
+	return &a
+}
+
+func (opts *AWSOpts) newAWSPeer(containerID string) *atlasv2.AwsNetworkPeeringConnectionSettings {
+	provider := "AWS"
 	region := strings.ToLower(opts.region)
 	region = strings.ReplaceAll(region, "_", "-")
-	a := &atlas.Peer{
+	return &atlasv2.AwsNetworkPeeringConnectionSettings{
+		ProviderName:        &provider,
 		AccepterRegionName:  region,
-		AWSAccountID:        opts.accountID,
-		ContainerID:         containerID,
-		RouteTableCIDRBlock: opts.routeTableCidrBlock,
-		VpcID:               opts.vpcID,
+		AwsAccountId:        opts.accountID,
+		ContainerId:         containerID,
+		RouteTableCidrBlock: opts.routeTableCidrBlock,
+		VpcId:               opts.vpcID,
 	}
-	return a
 }
 
 // mongocli atlas networking peering create aws
@@ -129,6 +142,9 @@ func AwsBuilder() *cobra.Command {
 To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Annotations: map[string]string{
+			"output": createTemplate,
+		},
 		Args: require.NoArgs,
 		Example: fmt.Sprintf(`  # Create a network peering connection between the Atlas VPC in CIDR block 192.168.0.0/24 and your AWS VPC in CIDR block 10.0.0.0/24 for AWS account number 854333054055:
   %s networking peering create aws --accountId 854333054055 --atlasCidrBlock 192.168.0.0/24 --region us-east-1 --routeTableCidrBlock 10.0.0.0/24 --vpcId vpc-078ac381aa90e1e63`, cli.ExampleAtlasEntryPoint()),

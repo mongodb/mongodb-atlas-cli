@@ -383,12 +383,17 @@ func omProjects(projects []*opsmngr.Project) (ids, names []string) {
 }
 
 func (*DefaultSetterOpts) DefaultQuestions() []*survey.Question {
+	defaultOutput := config.Output()
+	if defaultOutput == "" {
+		defaultOutput = plaintextFormat
+	}
 	q := []*survey.Question{
 		{
 			Name: "output",
 			Prompt: &survey.Select{
 				Message: "Default Output Format:",
 				Options: []string{plaintextFormat, jsonFormat},
+				Default: defaultOutput,
 			},
 		},
 	}

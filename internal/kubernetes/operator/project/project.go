@@ -353,7 +353,7 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	var intSecrets []*corev1.Secret
 
 	for _, list := range integrations.Results {
-		iType := getIntegrationType(list)
+		iType := list.GetType()
 		secret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s", projectID, strings.ToLower(iType)),
 			targetNamespace, map[string][]byte{secrets.PasswordField: []byte("")}, dictionary)
 
@@ -443,10 +443,6 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	}
 
 	return result, intSecrets, nil
-}
-
-func getIntegrationType(val atlasv2.ThridPartyIntegration) string {
-	return val.GetType()
 }
 
 func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID string) ([]atlasV1.PrivateEndpoint, error) {

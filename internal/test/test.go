@@ -50,14 +50,14 @@ func CleanupConfig() {
 	config.SetProjectID("")
 }
 
-// VerifyTemplate validates that the given template string is valid.
-func VerifyOutputTemplate(t *testing.T, templateString string, expected interface{}) {
+// VerifyOutputTemplate validates that the given template string is valid.
+func VerifyOutputTemplate(t *testing.T, tmpl string, typeValue interface{}) {
 	t.Helper()
-	parsedTemplate, err := template.New("output").Parse(templateString)
+	parsedTemplate, err := template.New("output").Parse(tmpl)
 	if err != nil {
 		t.Fatalf("Failed to validate table format template: %v", err)
 	}
-	err = templatecheck.CheckText(parsedTemplate, expected)
+	err = templatecheck.CheckText(parsedTemplate, typeValue)
 	if err != nil {
 		t.Fatalf("Failed to validate table format template: %v", err)
 	}

@@ -29,6 +29,17 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
 
+// Create Array of templates.
+var describeTemplates = []string{
+	describeTemplateDatadogOpsGenie,
+	describeTemplateMicrosoftTeams,
+	describeTemplateNewRelic,
+	describeTemplatePagerDuty,
+	describeTemplateSlack,
+	describeTemplateVictorOps,
+	describeTemplateWebhook,
+}
+
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIntegrationDescriber(ctrl)
@@ -59,13 +70,9 @@ func TestDescribe_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	t.Log(buf.String())
-	test.VerifyOutputTemplate(t, describeTemplateDatadogOpsGenie, expected)
-	test.VerifyOutputTemplate(t, describeTemplateMicrosoftTeams, expected)
-	test.VerifyOutputTemplate(t, describeTemplateNewRelic, expected)
-	test.VerifyOutputTemplate(t, describeTemplatePagerDuty, expected)
-	test.VerifyOutputTemplate(t, describeTemplateSlack, expected)
-	test.VerifyOutputTemplate(t, describeTemplateVictorOps, expected)
-	test.VerifyOutputTemplate(t, describeTemplateWebhook, expected)
+	for _, template := range describeTemplates {
+		test.VerifyOutputTemplate(t, template, *expected)
+	}
 }
 
 func TestDescribeBuilder(t *testing.T) {

@@ -25,6 +25,7 @@ require (
 	github.com/google/go-github/v50 v50.2.0
 	github.com/google/uuid v1.3.0
 	github.com/hinshun/vt10x v0.0.0-20220119200601-820417d04eec
+	github.com/jba/templatecheck v0.6.0
 	github.com/klauspost/compress v1.16.5
 	github.com/mattn/go-isatty v0.0.18
 	github.com/mongodb-forks/digest v1.0.4
@@ -40,6 +41,7 @@ require (
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
 	go.mongodb.org/atlas v0.30.0
+	go.mongodb.org/atlas-sdk/v20230201002 v20230201002.0.0
 	go.mongodb.org/mongo-driver v1.11.7
 	go.mongodb.org/ops-manager v0.53.0
 	golang.org/x/crypto v0.10.0
@@ -56,11 +58,6 @@ require (
 	sigs.k8s.io/controller-runtime v0.14.6
 	sigs.k8s.io/kind v0.20.0
 	sigs.k8s.io/yaml v1.3.0
-)
-
-require (
-	github.com/jba/templatecheck v0.6.0
-	go.mongodb.org/atlas-sdk/v20230201002 v20230201002.0.0
 )
 
 require (

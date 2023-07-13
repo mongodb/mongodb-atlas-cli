@@ -66,18 +66,17 @@ func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 	buf := new(bytes.Buffer)
 
 	opts := &Opts{}
+
+	opts.OutWriter = buf
 	opts.register.WithFlow(mockFlow)
 
 	config.SetPublicAPIKey("publicKey")
 	config.SetPrivateAPIKey("privateKey")
-	opts.OutWriter = buf
 
 	require.NoError(t, opts.PreRun(ctx))
-	assert.Equal(t, `
-You are already authenticated with an API key (Public key: publicKey).
 
-Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.
-`, buf.String())
+	assert.True(t, opts.skipRegister)
+	assert.True(t, opts.skipLogin)
 }
 
 func Test_setupOpts_RunSkipRegister(t *testing.T) {

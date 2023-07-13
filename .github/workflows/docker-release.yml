@@ -45,6 +45,6 @@ jobs:
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
-          tags: ${{ env.IMAGE_REPOSITORY }}:$EXTRACTED_VERSION
+          tags: ${{ env.IMAGE_REPOSITORY }}:${{ EXTRACTED_VERSION }}
           file: Dockerfile
           push: true

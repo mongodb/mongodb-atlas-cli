@@ -67,6 +67,7 @@ const (
 	regionalModeEntity           = "regionalModes"
 	serverlessEntity             = "serverless"
 	liveMigrationsEntity         = "liveMigrations"
+	auditingEntity               = "auditing"
 	accessLogsEntity             = "accessLogs"
 	accessListEntity             = "accessList"
 	performanceAdvisorEntity     = "performanceAdvisor"

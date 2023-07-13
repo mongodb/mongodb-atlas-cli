@@ -58,7 +58,7 @@ const (
 	defaultRegionGov    = "US_GOV_EAST_1"
 )
 
-var errNeedsOrgAndProject = errors.New("please make sure to select or add an organization and project to the profile")
+var errNeedsProject = errors.New("please make sure to select or add a project to the profile")
 
 const setupTemplateMongoshDetected = `
 MongoDB Shell detected. Connecting to your Atlas cluster:
@@ -406,8 +406,8 @@ This command will help you
 		return err
 	}
 
-	if opts.config.ProjectID() == "" || opts.config.OrgID() == "" {
-		return fmt.Errorf("%w: %s", errNeedsOrgAndProject, config.Default().Name())
+	if opts.config.ProjectID() == "" {
+		return fmt.Errorf("%w: %s", errNeedsProject, config.Default().Name())
 	}
 	return opts.setupCluster()
 }
@@ -505,22 +505,17 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 	opts.skipLogin = true
 
 	if err := validate.NoAPIKeys(); err != nil {
-		_, _ = fmt.Fprintf(opts.OutWriter, `
-You are already authenticated with an API key (Public key: %s).
-
-Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.
-`, config.PublicAPIKey())
+		// Why are we ignoring the error?
+		// Because if the user has API keys, we just want to proceed with the flow
+		// Then why not remove the error?
+		// The error is useful in other components that call `validate.NoAPIKeys()`
 		return nil
 	}
 	if err := opts.register.RefreshAccessToken(ctx); err != nil && errors.Is(err, cli.ErrInvalidRefreshToken) {
 		opts.skipLogin = false
 		return nil
 	}
-	if account, err := auth.AccountWithAccessToken(); err == nil {
-		_, _ = fmt.Fprintf(opts.OutWriter, `You are already authenticated with an account (%s).
-	
-Run "atlas auth setup --profile <profile_name>" to create a new Atlas account on a new Atlas CLI profile.
-`, account)
+	if _, err := auth.AccountWithAccessToken(); err == nil {
 		return nil
 	}
 	opts.skipRegister = false

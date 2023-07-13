@@ -1,7 +1,7 @@
-.. _atlas-serverless-create:
+.. _atlas-auditing-describe:
 
 =======================
-atlas serverless create
+atlas auditing describe
 =======================
 
 .. default-domain:: mongodb
@@ -12,7 +12,7 @@ atlas serverless create
    :depth: 1
    :class: singlecol
 
-Creates one serverless instance in the specified project.
+Returns the auditing configuration for the specified project.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
@@ -22,25 +22,9 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas serverless create <instanceName> [options]
+   atlas auditing describe [options]
 
 .. Code end marker, please don't delete this comment
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - instanceName
-     - string
-     - true
-     - Human-readable label that identifies your serverless instance.
 
 Options
 -------
@@ -56,7 +40,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for create
+     - help for describe
    * - -o, --output
      - string
      - false
@@ -65,18 +49,6 @@ Options
      - string
      - false
      - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
-   * - --provider
-     - string
-     - true
-     - Cloud service provider that applies to the provisioned serverless instance.
-   * - --region
-     - string
-     - true
-     - Human-readable label that identifies the physical location of your MongoDB serverless instance. The region you choose can affect network latency for clients accessing your databases.
-   * - --tag
-     - stringToString
-     - false
-     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the serverless instance. This value defaults to [].
 
 Inherited Options
 -----------------
@@ -101,7 +73,8 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   Serverless instance <Name> created.
+   AUDIT AUTHORIZATION SUCCESS   AUDIT FILTER    CONFIGURATION TYPE    ENABLED
+   <AuditAuthorizationSuccess>   <AuditFilter>   <ConfigurationType>   <Enabled>
    
 
 Examples
@@ -109,5 +82,5 @@ Examples
 
 .. code-block::
 
-   # Deploy a serverlessIntance named myInstance for the project with the ID 5e2211c17a3e5a48f5497de3:
-   atlas serverless create serverless myInstance --provider AWS --region US_EAST_1 --projectId 5e2211c17a3e5a48f5497de3
+   # Return the JSON-formatted details for the default project:
+   atlas auditing describe --output json

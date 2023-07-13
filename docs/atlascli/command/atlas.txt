@@ -52,6 +52,7 @@ Related Commands
 * :ref:`atlas-accessLists` - Manage the list of IP addresses that can access your Atlas project.
 * :ref:`atlas-accessLogs` - Return the access logs for a cluster.
 * :ref:`atlas-alerts` - Manage alerts for your project.
+* :ref:`atlas-auditing` - Returns and edits database auditing settings for MongoDB Cloud projects.
 * :ref:`atlas-auth` - Manage the CLI's authentication state.
 * :ref:`atlas-backups` - Manage cloud backups for your project.
 * :ref:`atlas-cloudProviders` - Manage cloud provider access in Atlas using AWS IAM roles.
@@ -90,6 +91,7 @@ Related Commands
    accessLists </command/atlas-accessLists>
    accessLogs </command/atlas-accessLogs>
    alerts </command/atlas-alerts>
+   auditing </command/atlas-auditing>
    auth </command/atlas-auth>
    backups </command/atlas-backups>
    cloudProviders </command/atlas-cloudProviders>

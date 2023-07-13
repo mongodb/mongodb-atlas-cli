@@ -44,7 +44,7 @@ func (s *Store) Alerts(params *admin.ListAlertsApiParams) (*admin.PaginatedAlert
 	return result, err
 }
 
-// Acknowledge encapsulate the logic to manage different cloud providers.
+// AcknowledgeAlert encapsulate the logic to manage different cloud providers.
 func (s *Store) AcknowledgeAlert(params *admin.AcknowledgeAlertApiParams) (*admin.AlertViewForNdsGroup, error) {
 	result, _, err := s.clientv2.AlertsApi.AcknowledgeAlertWithParams(s.ctx, params).Execute()
 	return result, err

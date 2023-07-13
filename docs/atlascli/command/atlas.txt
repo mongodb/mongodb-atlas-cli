@@ -77,7 +77,6 @@ Related Commands
 * :ref:`atlas-privateEndpoints` - Manage Atlas private endpoints.
 * :ref:`atlas-processes` - Manage MongoDB processes for your project.
 * :ref:`atlas-projects` - Manage your Atlas projects.
-* :ref:`atlas-quickstart` - Create, configure, and connect to an Atlas cluster for your project.
 * :ref:`atlas-security` - Manage security configuration for your project.
 * :ref:`atlas-serverless` - Manage serverless instances for your project.
 * :ref:`atlas-setup` - Register, authenticate, create, and access an Atlas cluster.
@@ -116,7 +115,6 @@ Related Commands
    privateEndpoints </command/atlas-privateEndpoints>
    processes </command/atlas-processes>
    projects </command/atlas-projects>
-   quickstart </command/atlas-quickstart>
    security </command/atlas-security>
    serverless </command/atlas-serverless>
    setup </command/atlas-setup>

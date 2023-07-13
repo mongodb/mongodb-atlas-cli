@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package quickstart
+package setup
 
 import (
 	"errors"
@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 )
 
-func (opts *Opts) askConfirmDefaultQuestion(values *quickstart) error {
+func (opts *Opts) askConfirmDefaultQuestion(values *clusterSettings) error {
 	if opts.Confirm {
 		return nil
 	}

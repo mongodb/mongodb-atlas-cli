@@ -14,107 +14,82 @@
 
 //go:build unit
 
-package file_test
+package file
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/spf13/afero"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 )
 
 const (
-	noExtFileName  = "test"
-	txtFileName    = "test.txt"
-	jsonFileName   = "test.json"
-	yamlFileName   = "test.yaml"
-	unsupportedMsg = "unsupported file type: txt"
+	noExtFileName = "test"
+	txtFileName   = "test.txt"
+	jsonFileName  = "test.json"
+	yamlFileName  = "test.yaml"
+	xmlFileName   = "test.xml"
 )
 
-func TestFile(t *testing.T) {
+func TestLoad(t *testing.T) {
 	t.Run("load file does not exists", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		filename := "test.xml"
-		err := file.Load(appFS, filename, nil)
-		if err == nil || err.Error() != fmt.Sprintf("file not found: %s", filename) {
-			t.Errorf("Load() unexpected error: %v", err)
-		}
+		err := Load(appFS, xmlFileName, nil)
+		assert.ErrorIs(t, err, ErrFileNotFound)
 	})
 	t.Run("load file with no ext", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		filename := noExtFileName
-		_ = afero.WriteFile(appFS, filename, []byte(""), 0600)
-		err := file.Load(appFS, filename, nil)
-		if err == nil || err.Error() != fmt.Sprintf("filename: %s requires valid extension", filename) {
-			t.Errorf("Load() unexpected error: %v", err)
-		}
+		_ = afero.WriteFile(appFS, noExtFileName, []byte(""), 0600)
+		err := Load(appFS, noExtFileName, nil)
+		assert.ErrorIs(t, err, ErrMissingFileType)
 	})
 	t.Run("load file with invalid ext", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		filename := txtFileName
-		_ = afero.WriteFile(appFS, filename, []byte(""), 0600)
-		err := file.Load(appFS, filename, nil)
-		if err == nil || err.Error() != unsupportedMsg {
-			t.Errorf("Load() unexpected error: %v", err)
-		}
+		require.NoError(t, afero.WriteFile(appFS, txtFileName, []byte(""), 0600))
+		err := Load(appFS, txtFileName, nil)
+		assert.ErrorIs(t, err, ErrUnsupportedFileType)
 	})
 	t.Run("load valid json file", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		filename := jsonFileName
-		_ = afero.WriteFile(appFS, filename, []byte("{}"), 0600)
+		_ = afero.WriteFile(appFS, jsonFileName, []byte("{}"), 0600)
 		out := new(map[string]interface{})
-		err := file.Load(appFS, filename, out)
-		if err != nil {
-			t.Fatalf("Load() unexpected error: %v", err)
-		}
+		assert.NoError(t, Load(appFS, jsonFileName, out))
 	})
 	t.Run("load valid yaml file", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		filename := yamlFileName
-		_ = afero.WriteFile(appFS, filename, []byte(""), 0600)
+		_ = afero.WriteFile(appFS, yamlFileName, []byte(""), 0600)
 		out := new(map[string]interface{})
-		err := file.Load(appFS, filename, out)
-		if err != nil {
-			t.Fatalf("Load() unexpected error: %v", err)
-		}
+		err := Load(appFS, yamlFileName, out)
+		assert.NoError(t, err, ErrMissingFileType)
 	})
+}
+
+func TestSave(t *testing.T) {
 	t.Run("save file with no ext", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		filename := "test"
-		err := file.Save(appFS, filename, nil)
-		if err == nil || err.Error() != "filename: test requires valid extension" {
-			t.Errorf("Save() unexpected error: %v", err)
-		}
+		err := Save(appFS, filename, nil)
+		assert.ErrorIs(t, err, ErrMissingFileType)
 	})
 	t.Run("save file with wrong ext", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		filename := txtFileName
-		err := file.Save(appFS, filename, nil)
-		if err == nil || err.Error() != unsupportedMsg {
-			t.Errorf("Save() unexpected error: %v", err)
-		}
+		err := Save(appFS, txtFileName, nil)
+		assert.ErrorIs(t, err, ErrUnsupportedFileType)
 	})
 	t.Run("save valid yaml file", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		filename := yamlFileName
-
 		type Test struct {
 			name string
 			age  int
 		}
-
 		tYaml := Test{
 			name: "MongoDB",
 			age:  100,
 		}
 
 		yamlData, _ := yaml.Marshal(&tYaml)
-
-		err := file.Save(appFS, filename, yamlData)
-		if err != nil {
-			t.Fatalf("Save() unexpected error: %v", err)
-		}
+		assert.NoError(t, Save(appFS, yamlFileName, yamlData))
 	})
 }

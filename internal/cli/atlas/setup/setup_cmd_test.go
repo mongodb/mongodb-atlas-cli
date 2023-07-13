@@ -76,6 +76,7 @@ func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 	require.NoError(t, opts.PreRun(ctx))
 
 	assert.True(t, opts.skipRegister)
+	assert.Equal(t, 0, buf.Len())
 	assert.True(t, opts.skipLogin)
 }
 

@@ -49,9 +49,9 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-customDns-aws-describe` - Describe the custom DNS configuration of an Atlas project’s cluster deployed to AWS.
-* :ref:`mongocli-atlas-customDns-aws-disable` - Disable the custom DNS configuration of an Atlas project’s cluster deployed to AWS.
-* :ref:`mongocli-atlas-customDns-aws-enable` - Enable the custom DNS configuration of an Atlas project’s cluster deployed to AWS.
+* :ref:`mongocli-atlas-customDns-aws-describe` - Describe the custom DNS configuration of an Atlas cluster deployed to AWS in the specified project.
+* :ref:`mongocli-atlas-customDns-aws-disable` - Disable the custom DNS configuration of an Atlas cluster deployed to AWS in the specified project.
+* :ref:`mongocli-atlas-customDns-aws-enable` - Enable the custom DNS configuration of an Atlas cluster deployed to AWS in the specified project.
 
 
 .. toctree::

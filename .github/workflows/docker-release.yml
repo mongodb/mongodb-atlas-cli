@@ -24,7 +24,7 @@ jobs:
         uses: actions-ecosystem/action-get-latest-tag@v1
       - name: Get the version
         id: get-version
-        run: echo ::set-output name=VERSION::$(echo $steps.get-latest-tag.outputs.tag | cut -d / -f 3)
+        run: echo ::set-output name=VERSION::$(echo ${{steps.get-latest-tag.outputs.tag}} | cut -d / -f 3)
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:

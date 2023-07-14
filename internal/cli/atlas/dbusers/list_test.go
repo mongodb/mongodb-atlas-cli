@@ -21,6 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
 
@@ -28,7 +29,13 @@ func TestDBUserList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseUserLister(ctrl)
 
-	var expected *atlasv2.PaginatedApiAtlasDatabaseUser
+	expected := atlasv2.PaginatedApiAtlasDatabaseUser{
+		Results: []atlasv2.CloudDatabaseUser {
+			{
+				Username: "test",
+			},
+		},
+	}
 
 	listOpts := &ListOpts{
 		store: mockStore,
@@ -37,10 +44,11 @@ func TestDBUserList_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		DatabaseUsers(listOpts.ProjectID, listOpts.NewListOptions()).
-		Return(expected, nil).
+		Return(&expected, nil).
 		Times(1)
 
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+test.VerifyOutputTemplate(t, listTemplate, expected)
 }

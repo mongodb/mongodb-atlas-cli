@@ -69,11 +69,14 @@ const (
 	TelemetryEnabledProperty     = "telemetry_enabled"
 	MongoCLI                     = "mongocli"
 	AtlasCLI                     = "atlascli"
+	NativeHostName               = "native"
+	ContainerHostName            = "container"
 )
 
 var (
 	ToolName       = MongoCLI
-	UserAgent      = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
+	HostName       = NativeHostName
+	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
 	defaultProfile = newProfile()
 )
 

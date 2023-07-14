@@ -34,14 +34,16 @@ func TestLiveMigrationDescribeOpts_Run(t *testing.T) {
 		liveMigrationID: "1",
 		store:           mockStore,
 	}
+	expected := atlasv2.LiveMigrationResponse{}
 
 	mockStore.
-		EXPECT().LiveMigrationDescribe(opts.ProjectID, opts.liveMigrationID).Return(&atlasv2.LiveMigrationResponse{}, nil).
+		EXPECT().LiveMigrationDescribe(opts.ProjectID, opts.liveMigrationID).Return(&expected, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

@@ -44,6 +44,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

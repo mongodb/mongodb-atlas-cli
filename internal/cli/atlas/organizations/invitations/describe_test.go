@@ -22,6 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
@@ -34,16 +35,19 @@ func TestDescribe_Run(t *testing.T) {
 		store: mockStore,
 		id:    "5a0a1e7e0f2912c554080adc",
 	}
-
+	expected := admin.OrganizationInvitation{
+		Id: pointer.Get("5a0a1e7e0f2912c554080adc"),
+	}
 	mockStore.
 		EXPECT().
 		OrganizationInvitation(opts.ConfigOrgID(), opts.id).
-		Return(&admin.OrganizationInvitation{}, nil).
+		Return(&expected, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

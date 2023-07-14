@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
 
@@ -75,12 +74,8 @@ func TestListOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-
-	assert.Equal(t, `NAME   ACTION   INHERITED ROLES   DB       COLLECTION   CLUSTER 
-Test   test     N/A               test     test         true
-Test   N/A      dbAdmin           pandas   N/A          N/A
-`, buf.String())
 	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

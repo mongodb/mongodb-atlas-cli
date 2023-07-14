@@ -30,6 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
 
@@ -57,8 +58,8 @@ func TestListOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 
-	assert.Equal(t, ``, buf.String()) // TODO change here
 	t.Log(buf.String())
 }
 

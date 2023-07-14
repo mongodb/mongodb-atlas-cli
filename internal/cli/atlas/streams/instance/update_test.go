@@ -40,7 +40,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		UpdateStream(updateOpts.ProjectID, updateOpts.name, expected).
+		UpdateStream(updateOpts.ProjectID, updateOpts.name, expected.DataProcessRegion).
 		Return(expected, nil).
 		Times(1)
 

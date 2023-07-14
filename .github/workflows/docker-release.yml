@@ -1,11 +1,7 @@
 name: Daily build
 on:
-  push
-    # schedule:
-    #   - cron: "0 1 * * *"
-    # TODO: cron job deactivated for now
-    # branches:
-    #  - 'CLOUDP-188862-personal'
+  schedule:
+    - cron: "0 1 * * *"
 
 jobs:
   release_image:

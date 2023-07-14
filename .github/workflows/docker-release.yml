@@ -1,5 +1,8 @@
 name: Daily build
 on:
+  push:
+    branches:
+      - '**'
   schedule:
     - cron: "0 1 * * *"
 
@@ -8,7 +11,7 @@ jobs:
     name: Build and publish docker image
     runs-on: ubuntu-latest
     env:
-      IMAGE_REPOSITORY: nicohrubec266/atlascli
+      IMAGE_REPOSITORY: mongodb/apix_test
       PLATFORMS: linux/amd64,linux/arm64
     steps:
       - name: Check out code

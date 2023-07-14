@@ -21,6 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
@@ -34,14 +35,14 @@ func TestDescribeOpts_Run(t *testing.T) {
 		id:    "1",
 	}
 	expected:= atlasv2.ApiKeyUserDetails{
-		Id: "1",
-		Desc: "Test",
+		Id: pointer.Get("1"),
+		Desc: pointer.Get("1"),
 	};
 
 	mockStore.
 		EXPECT().
 		OrganizationAPIKey(opts.OrgID, opts.id).
-		Return(&, nil).
+		Return(&expected, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {

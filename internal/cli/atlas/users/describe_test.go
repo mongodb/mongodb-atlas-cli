@@ -67,5 +67,5 @@ func TestDescribe_Run_ByName(t *testing.T) {
 	if err := descOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-test.VerifyOutputTemplate(t, listTemplate, expected)
+test.VerifyOutputTemplate(t, describeTemplate, expected)
 }

@@ -22,6 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
@@ -35,9 +36,7 @@ func TestDescribe_Run(t *testing.T) {
 		id:    "5a0a1e7e0f2912c554080adc",
 	}
 	expected:= atlasv2.GroupInvitation{
-		Id: "5a0a1e7e0f2912c554080adc",
-		Email: "test@test.net",
-		Username: "test",
+		Id: pointer.Get("5a0a1e7e0f2912c554080adc"),
 	}
 
 	mockStore.

@@ -34,16 +34,22 @@ func TestDescribe_Run(t *testing.T) {
 		store: mockStore,
 		id:    "5a0a1e7e0f2912c554080adc",
 	}
+	expected:= atlasv2.GroupInvitation{
+		Id: "5a0a1e7e0f2912c554080adc",
+		Email: "test@test.net",
+		Username: "test",
+	}
 
 	mockStore.
 		EXPECT().
 		ProjectInvitation(opts.ConfigProjectID(), opts.id).
-		Return(&atlasv2.GroupInvitation{}, nil).
+		Return(&expected, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

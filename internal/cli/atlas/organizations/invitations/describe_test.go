@@ -34,16 +34,20 @@ func TestDescribe_Run(t *testing.T) {
 		store: mockStore,
 		id:    "5a0a1e7e0f2912c554080adc",
 	}
-
+	expected := admin.OrganizationInvitation{
+		Id: "5a0a1e7e0f2912c554080adc",
+		Email: "test@test.net",
+	}
 	mockStore.
 		EXPECT().
 		OrganizationInvitation(opts.ConfigOrgID(), opts.id).
-		Return(&admin.OrganizationInvitation{}, nil).
+		Return(&, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

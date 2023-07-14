@@ -21,17 +21,21 @@ import (
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectDescriber(ctrl)
-
+	expected:= opsmngr.Project{
+		Name: "test",
+		ID: "5a0a1e7e0f2912c554080adc",
+	}
 	mockStore.
 		EXPECT().
 		Project(gomock.Eq("5a0a1e7e0f2912c554080adc")).
-		Return(&opsmngr.Project{}, nil).
+		Return(&, nil).
 		Times(1)
 
 	opts := &DescribeOpts{
@@ -41,4 +45,5 @@ func TestDescribe_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+test.VerifyOutputTemplate(t, describeTemplate,expected )
 }

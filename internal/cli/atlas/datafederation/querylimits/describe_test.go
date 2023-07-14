@@ -28,7 +28,6 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
 
@@ -62,10 +61,9 @@ func TestDescribe_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	assert.Equal(t, `TENANT NAME       NAME                   VALUE
-DataFederation1   bytesProcessed.query   1000
-`, buf.String())
 	t.Log(buf.String())
+test.VerifyOutputTemplate(t, describeTemplate, expected)
+
 }
 
 func TestDescribeBuilder(t *testing.T) {

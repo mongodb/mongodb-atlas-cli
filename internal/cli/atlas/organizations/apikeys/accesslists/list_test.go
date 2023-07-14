@@ -42,9 +42,9 @@ func TestListOpts_Run(t *testing.T) {
 		PageNum:      pointer.Get(listOpts.PageNum),
 		ItemsPerPage: pointer.Get(listOpts.ItemsPerPage),
 	}
-expected:= admin.PaginatedApiUserAccessList{
-	Results: []admin.UserAccessList{},
-};
+	expected := admin.PaginatedApiUserAccessList{
+		Results: []admin.UserAccessList{},
+	}
 	mockStore.
 		EXPECT().
 		OrganizationAPIKeyAccessLists(params).
@@ -54,7 +54,7 @@ expected:= admin.PaginatedApiUserAccessList{
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-test.VerifyOutputTemplate(t, listTemplate, expected)
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

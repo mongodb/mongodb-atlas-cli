@@ -34,9 +34,9 @@ func TestListOpts_Run(t *testing.T) {
 
 	expected := &atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob{
 		Results: []atlasv2.ServerlessBackupRestoreJob{
-		{
-			Id: pointer.Get("1"),
-		},
+			{
+				Id: pointer.Get("1"),
+			},
 		},
 	}
 

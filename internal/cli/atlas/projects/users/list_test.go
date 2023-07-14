@@ -29,11 +29,11 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectUsersLister(ctrl)
 
-	 expected := atlasv2.PaginatedApiAppUser{
+	expected := atlasv2.PaginatedApiAppUser{
 		Results: []atlasv2.CloudAppUser{
-		{
-			Username: "Test",
-		},
+			{
+				Username: "Test",
+			},
 		},
 	}
 
@@ -44,11 +44,11 @@ func TestList_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		ProjectUsers(listOpts.ProjectID, listOpts.NewListOptions()).
-		Return(expected, nil).
+		Return(&expected, nil).
 		Times(1)
 
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-test.VerifyOutputTemplate(t, listTemplate, expected)
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }

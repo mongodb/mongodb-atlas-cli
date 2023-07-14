@@ -27,7 +27,7 @@ import (
 )
 
 const describeTemplate = `ID	SNAPSHOT TYPE	EXPIRES AT
-{{.ID}}	{{.SnapshotType}}	{{.ExpiresAt}}
+{{.Id}}	{{.SnapshotType}}	{{.ExpiresAt}}
 `
 
 type DescribeOpts struct {

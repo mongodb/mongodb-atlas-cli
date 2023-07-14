@@ -30,7 +30,7 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockTeamLister(ctrl)
 
-	 expected := atlasv2.PaginatedTeam{
+	expected := atlasv2.PaginatedTeam{
 		Results: []atlasv2.TeamResponse{
 			{
 				Id: pointer.Get("1"),
@@ -51,5 +51,5 @@ func TestList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-test.VerifyOutputTemplate(t, listTemplate, expected)
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }

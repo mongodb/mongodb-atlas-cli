@@ -29,7 +29,9 @@ func TestListBuilder(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDBUserCertificateLister(ctrl)
 
-	var expected *atlasv2.PaginatedUserCert
+	expected := atlasv2.PaginatedUserCert{
+		Results: []atlasv2.UserCert{},
+	}
 
 	username := "user"
 
@@ -41,11 +43,11 @@ func TestListBuilder(t *testing.T) {
 	mockStore.
 		EXPECT().
 		DBUserCertificates(listOpts.ProjectID, username, nil).
-		Return(expected, nil).
+		Return(&expected, nil).
 		Times(1)
 
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-test.VerifyOutputTemplate(t, listTemplate, expected)
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }

@@ -31,7 +31,7 @@ func TestNamespacesList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPerformanceAdvisorNamespacesLister(ctrl)
 
-	expected :=atlasv2.Namespaces{
+	expected := atlasv2.Namespaces{
 		Namespaces: []atlasv2.NamespaceObj{
 			{
 				Namespace: pointer.Get("test"),
@@ -52,7 +52,7 @@ func TestNamespacesList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-test.VerifyOutputTemplate(t, listTemplate, expected)
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

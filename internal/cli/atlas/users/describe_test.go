@@ -44,7 +44,7 @@ func TestDescribe_Run_ByID(t *testing.T) {
 	if err := descOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-test.VerifyOutputTemplate(t, describeTemplate, expected)
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }
 
 func TestDescribe_Run_ByName(t *testing.T) {
@@ -67,5 +67,5 @@ func TestDescribe_Run_ByName(t *testing.T) {
 	if err := descOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-test.VerifyOutputTemplate(t, describeTemplate, expected)
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }

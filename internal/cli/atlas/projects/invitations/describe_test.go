@@ -35,7 +35,7 @@ func TestDescribe_Run(t *testing.T) {
 		store: mockStore,
 		id:    "5a0a1e7e0f2912c554080adc",
 	}
-	expected:= atlasv2.GroupInvitation{
+	expected := atlasv2.GroupInvitation{
 		Id: pointer.Get("5a0a1e7e0f2912c554080adc"),
 	}
 
@@ -48,7 +48,7 @@ func TestDescribe_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-test.VerifyOutputTemplate(t, listTemplate, expected)
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

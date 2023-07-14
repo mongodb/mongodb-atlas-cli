@@ -49,7 +49,7 @@ func TestDisksDescribeOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-test.VerifyOutputTemplate(t, listTemplate, expected)
+	test.VerifyOutputTemplate(t, diskMetricTemplate, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

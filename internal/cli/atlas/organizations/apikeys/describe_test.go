@@ -34,10 +34,10 @@ func TestDescribeOpts_Run(t *testing.T) {
 		store: mockStore,
 		id:    "1",
 	}
-	expected:= atlasv2.ApiKeyUserDetails{
-		Id: pointer.Get("1"),
+	expected := atlasv2.ApiKeyUserDetails{
+		Id:   pointer.Get("1"),
 		Desc: pointer.Get("1"),
-	};
+	}
 
 	mockStore.
 		EXPECT().
@@ -48,5 +48,5 @@ func TestDescribeOpts_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-test.VerifyOutputTemplate(t, describeTemplate, expected)
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }

@@ -65,10 +65,7 @@ func TestListOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	t.Log(buf.String())
-test.VerifyOutputTemplate(t, listTemplate, expected)
-
- 
-
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

@@ -43,5 +43,5 @@ func TestFieldsType_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-test.VerifyOutputTemplate(t, matcherFieldsTemplate, expected)
+	test.VerifyOutputTemplate(t, matcherFieldsTemplate, expected)
 }

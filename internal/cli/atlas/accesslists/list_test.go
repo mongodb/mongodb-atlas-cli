@@ -72,7 +72,7 @@ func TestWhitelistList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-		
+
 	t.Log(buf.String())
 	test.VerifyOutputTemplate(t, listTemplate, expected)
 }

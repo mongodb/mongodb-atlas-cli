@@ -54,7 +54,7 @@ func TestDatabasesListsOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-test.VerifyOutputTemplate(t, databasesListTemplate, expected)
+	test.VerifyOutputTemplate(t, databasesListTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

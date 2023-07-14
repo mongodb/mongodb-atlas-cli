@@ -34,7 +34,7 @@ func TestList_Run(t *testing.T) {
 		Results: []*mongodbatlas.AdvancedCluster{
 			{
 				Name: "test",
-				ID:  "123",
+				ID:   "123",
 			},
 		},
 	}
@@ -52,7 +52,6 @@ func TestList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

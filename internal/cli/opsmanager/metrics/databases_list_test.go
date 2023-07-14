@@ -21,6 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -44,4 +45,5 @@ func TestDatabasesListsOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+test.VerifyOutputTemplate(t, listTemplate, expected)
 }

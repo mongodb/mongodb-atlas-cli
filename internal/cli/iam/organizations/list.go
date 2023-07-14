@@ -29,7 +29,7 @@ import (
 )
 
 const listTemplate = `ID	NAME{{range .Results}}
-{{.ID}}	{{.Name}}{{end}}
+{{.Id}}	{{.Name}}{{end}}
 `
 
 type ListOpts struct {

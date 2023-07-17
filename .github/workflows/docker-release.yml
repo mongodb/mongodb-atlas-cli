@@ -4,7 +4,7 @@ on:
     branches:
       - '**'
   schedule:
-    - cron: "0 1 * * *"
+    - cron: "0 1 * * *" # Every day at 1:00 AM
 
 jobs:
   release_image:

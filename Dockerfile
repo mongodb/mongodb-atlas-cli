@@ -27,4 +27,4 @@ RUN microdnf -y install jq yum &&\
     microdnf clean all &&\
     rm -rf /var/cache
 
-ENTRYPOINT ["/bin/bash"]
+CMD ["tail", "-f", "/dev/null"]

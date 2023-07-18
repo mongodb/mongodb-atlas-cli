@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 	"github.com/spf13/cobra"
 )
 
@@ -35,7 +36,7 @@ type WatchOpts struct {
 	store       store.RestoreJobsDescriber
 }
 
-var watchTemplate = "\nRestore completed.\n"
+var watcherSuccess = &watchers.WatchResult{Message: "Restore completed."}
 
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -59,7 +60,7 @@ func (opts *WatchOpts) Run() error {
 		return err
 	}
 
-	return opts.Print(nil)
+	return opts.Print(watcherSuccess)
 }
 
 // WatchBuilder atlas backup(s) restore(s) job(s) watch <restoreJobId>.
@@ -75,7 +76,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"restoreJobIdDesc": "ID of the restore job.",
-			"output":           watchTemplate,
+			"output":           watcherSuccess.Message,
 		},
 		Example: fmt.Sprintf(`  # Watch the continuous backup restore job with the ID 507f1f77bcf86cd799439011 for the restore source cluster named Cluster0 until it becomes available:
   %s backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),
@@ -83,7 +84,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), watchers.WatchTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

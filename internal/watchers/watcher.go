@@ -30,6 +30,15 @@ type InvalidStateError struct {
 	ExpectedErrorCode *string
 }
 
+type WatchResult struct {
+	Message string `yaml:"message,omitempty" json:"message,omitempty"`
+}
+
+var WatchTemplate = `
+{{.Message}}
+
+`
+
 func (err *InvalidStateError) Error() string {
 	const (
 		stateTemplate     = "Invalid state reached: %s."

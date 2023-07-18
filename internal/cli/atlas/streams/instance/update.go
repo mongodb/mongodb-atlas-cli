@@ -93,7 +93,7 @@ func (opts *UpdateOpts) validate() error {
 // CreateBuilder
 // atlas streams instance update [name]
 // --provider AWS
-// --region VIRGINA_USA
+// --region VIRGINIA_USA
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
@@ -107,7 +107,7 @@ func UpdateBuilder() *cobra.Command {
 			"output":   updateTemplate,
 		},
 		Example: fmt.Sprintf(`  # Modify the Atlas Streams processor instance configuration with the ID 5d1113b25a115342cca2d1aa:
-  %s streams instances update 5d1113b25a115342cca2d1aa --provider AWS --provider VIRGINA_USA`, cli.ExampleAtlasEntryPoint()),
+  %s streams instances update 5d1113b25a115342cca2d1aa --provider AWS --provider VIRGINIA_USA`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 

@@ -42,7 +42,7 @@ require (
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
 	go.mongodb.org/atlas v0.31.0
 	go.mongodb.org/atlas-sdk/v20230201002 v20230201002.0.0
-	go.mongodb.org/mongo-driver v1.11.7
+	go.mongodb.org/mongo-driver v1.12.0
 	go.mongodb.org/ops-manager v0.53.0
 	golang.org/x/crypto v0.11.0
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
@@ -126,7 +126,6 @@ require (
 	github.com/spf13/cast v1.5.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
-	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect

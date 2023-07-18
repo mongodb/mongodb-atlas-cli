@@ -96,7 +96,7 @@ type bsonScanner struct {
 }
 
 func (s *bsonScanner) Scan() bool {
-	raw, err := bson.NewFromIOReader(s.r)
+	raw, err := bson.ReadDocument(s.r)
 	if err != nil {
 		if err != io.EOF {
 			s.err = err

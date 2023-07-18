@@ -51,8 +51,6 @@ func (opts *WatchOpts) watcher() (bool, error) {
 		return false, err
 	}
 
-	fmt.Println(result.GetFinishedAt().IsZero())
-
 	return result.GetExpired() || result.GetCancelled() || result.GetFailed() || result.HasFinishedAt(), nil
 }
 

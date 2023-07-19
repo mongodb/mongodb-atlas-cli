@@ -24,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 	"github.com/spf13/cobra"
 )
 
@@ -35,8 +34,6 @@ type WatchOpts struct {
 	clusterName string
 	store       store.ServerlessRestoreJobsDescriber
 }
-
-var watcherSuccess = &watchers.WatchResult{Message: "Restore completed."}
 
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -59,7 +56,7 @@ func (opts *WatchOpts) Run() error {
 		return err
 	}
 
-	return opts.Print(watcherSuccess)
+	return opts.Print(nil)
 }
 
 // WatchBuilder atlas serverless backup(s) restore(s) watch.
@@ -80,7 +77,7 @@ You can interrupt the command's polling at any time with CTRL-C.
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), watchers.WatchTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), "\nRestore completed.\n"),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

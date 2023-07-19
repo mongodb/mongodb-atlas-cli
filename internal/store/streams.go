@@ -15,12 +15,10 @@
 package store
 
 import (
-	"fmt"
-
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_streams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store StreamsLister,StreamsDescriber,StreamsCreator,StreamsDeleter,StreamsUpdater
+//go:generate mockgen -destination=../mocks/mock_streams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store StreamsLister,StreamsDescriber,StreamsCreator,StreamsDeleter,StreamsUpdater,ConnectionCreator,ConnectionDeleter,ConnectionUpdater,StreamsConnectionDescriber,StreamsConnectionLister
 
 type StreamsLister interface {
 	ProjectStreams(string, *atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error)
@@ -43,23 +41,23 @@ type StreamsUpdater interface {
 }
 
 type StreamsConnectionLister interface {
-	StreamsConnections(string) (*atlasv2.PaginatedApiStreamsConnection, error)
+	StreamsConnections(string, string) ([]StreamsConnection, error)
 }
 
 type ConnectionCreator interface {
-	CreateConnection(string, *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error)
+	CreateConnection(string, string, *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error)
 }
 
 type ConnectionDeleter interface {
-	DeleteConnection(string, string) error
+	DeleteConnection(string, string, string) error
 }
 
 type StreamsConnectionDescriber interface {
-	StreamConnection(string, string) (*atlasv2.StreamsConnection, error)
+	StreamConnection(string, string, string) (StreamsConnection, error)
 }
 
 type ConnectionUpdater interface {
-	UpdateConnection(string, string, *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error)
+	UpdateConnection(string, string, string, *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error)
 }
 
 func (s *Store) ProjectStreams(projectID string, opts *atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error) {
@@ -73,7 +71,6 @@ func (s *Store) AtlasStream(projectId, name string) (*atlasv2.StreamsTenant, err
 }
 
 func (s *Store) CreateStream(projectId string, processor *atlasv2.StreamsTenant) (*atlasv2.StreamsTenant, error) {
-	fmt.Printf("%s  %+v %+v", projectId, processor, *processor.DataProcessRegion)
 	result, _, err := s.clientv2.StreamsApi.CreateStreamInstance(s.ctx, projectId, processor).Execute()
 	return result, err
 }
@@ -88,16 +85,51 @@ func (s *Store) UpdateStream(projectId, name string, streamsDataProcessRegion *a
 	return result, err
 }
 
+type StreamsConnection struct {
+	Name     string
+	Type     string
+	Instance string
+	Servers  string
+}
+
+func AtlasConnToDisplayConn(tenantName string, connection *atlasv2.StreamsConnection) StreamsConnection {
+	servers := ""
+
+	if connection.BootstrapServers != nil {
+		servers = *connection.BootstrapServers
+	} else {
+		servers = *connection.ClusterName
+	}
+	result := struct {
+		Name     string
+		Type     string
+		Instance string
+		Servers  string
+	}{
+		Name:     *connection.Name,
+		Type:     *connection.Type,
+		Instance: tenantName,
+		Servers:  servers,
+	}
+
+	return result
+}
+
 // StreamsConnections encapsulates the logic to manage different cloud providers.
-func (s *Store) StreamsConnections(projectID, tenantName string) (*atlasv2.PaginatedApiStreamsConnection, error) {
-	result, _, err := s.clientv2.StreamsApi.ListStreamConnections(s.ctx, projectID, tenantName).Execute()
+func (s *Store) StreamsConnections(projectID, tenantName string) ([]StreamsConnection, error) {
+	connections, _, err := s.clientv2.StreamsApi.ListStreamConnections(s.ctx, projectID, tenantName).Execute()
+	result := []StreamsConnection{}
+	for _, conn := range connections.Results {
+		result = append(result, AtlasConnToDisplayConn(tenantName, &conn))
+	}
+
 	return result, err
 }
 
 // StreamConnection encapsulates the logic to manage different cloud providers.
-func (s *Store) StreamConnection(projectID, tenantName, connectionName string) (*atlasv2.StreamsConnection, error) {
+func (s *Store) StreamConnection(projectID, tenantName, connectionName string) (StreamsConnection, error) {
 	result, _, err := s.clientv2.StreamsApi.GetStreamConnection(s.ctx, projectID, tenantName, connectionName).Execute()
-	return result, err
+	return AtlasConnToDisplayConn(tenantName, result), err
 }
 
 // CreateConnection encapsulates the logic to manage different cloud providers.

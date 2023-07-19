@@ -30,7 +30,8 @@ import (
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CloudManagerClustersLister
+	outputSet bool
+	store     store.CloudManagerClustersLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -71,7 +72,7 @@ func (opts *ListOpts) clusters() (interface{}, error) {
 	if opts.ConfigProjectID() == "" {
 		return opts.store.ListAllProjectClusters()
 	}
-	if opts.ConfigOutput() == "" {
+	if opts.IsPlainOutput() {
 		return opts.store.ProjectClusters(opts.ConfigProjectID(), nil)
 	}
 	c, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
@@ -94,10 +95,13 @@ func ListBuilder() *cobra.Command {
 When using an output format the information will be provided by automation.`,
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			_ = opts.InitOutput(cmd.OutOrStdout(), opts.template())()
-			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
+			return opts.PreRunE(
+				opts.InitOutput(cmd.OutOrStdout(), opts.template()),
+				opts.initStore(cmd.Context()),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.outputSet = cmd.Flags().Changed(flag.Output)
 			return opts.Run()
 		},
 	}

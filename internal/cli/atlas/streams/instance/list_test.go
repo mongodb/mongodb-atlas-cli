@@ -15,12 +15,15 @@
 package instance
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -28,8 +31,13 @@ func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockStreamsLister(ctrl)
 
+	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{
 		store: mockStore,
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
 	}
 	listOpts.ProjectID = "project-id"
 
@@ -38,7 +46,15 @@ func TestListOpts_Run(t *testing.T) {
 	listParams.GroupId = listOpts.ProjectID
 	listParams.PageNum = &listOpts.PageNum
 
-	expected := &atlasv2.PaginatedApiStreamsTenant{}
+	id := "1"
+	name := "Test Tenant"
+
+	tenant := atlasv2.NewStreamsTenant()
+	tenant.Id = &id
+	tenant.Name = &name
+	tenant.DataProcessRegion = atlasv2.NewStreamsDataProcessRegion("AWS", "US-EAST-1")
+	expected := atlasv2.NewPaginatedApiStreamsTenant()
+	expected.Results = []atlasv2.StreamsTenant{*tenant}
 
 	mockStore.
 		EXPECT().
@@ -49,6 +65,11 @@ func TestListOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+
+	assert.Equal(t, `ID    NAME          CLOUD   REGION
+1     Test Tenant   AWS     US-EAST-1
+`, buf.String())
+	t.Log(buf.String())
 }
 
 func TestListBuilder(t *testing.T) {

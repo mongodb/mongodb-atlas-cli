@@ -30,8 +30,7 @@ import (
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	outputSet bool
-	store     store.CloudManagerClustersLister
+	store store.CloudManagerClustersLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -101,7 +100,6 @@ When using an output format the information will be provided by automation.`,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.outputSet = cmd.Flags().Changed(flag.Output)
 			return opts.Run()
 		},
 	}

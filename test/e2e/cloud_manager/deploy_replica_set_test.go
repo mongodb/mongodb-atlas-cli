@@ -101,6 +101,7 @@ func TestDeployReplicaSet(t *testing.T) {
 			"--projectId=",
 			"-o=json",
 		)
+		t.Setenv("MCLI_PROJECT_ID", "")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

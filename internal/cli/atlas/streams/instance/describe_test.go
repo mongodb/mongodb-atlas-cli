@@ -15,12 +15,15 @@
 package instance
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -28,12 +31,20 @@ func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockStreamsDescriber(ctrl)
 
+	buf := new(bytes.Buffer)
 	describeOpts := &DescribeOpts{
 		store: mockStore,
 		name:  "Example Name",
+		OutputOpts: cli.OutputOpts{
+			Template:  describeTemplate,
+			OutWriter: buf,
+		},
 	}
 
-	expected := &atlasv2.StreamsTenant{}
+	id := "1"
+	name := "ExampleInstance"
+	expected := &atlasv2.StreamsTenant{Id: &id, Name: &name}
+	expected.DataProcessRegion = atlasv2.NewStreamsDataProcessRegion("AWS", "US_EAST_1")
 
 	mockStore.
 		EXPECT().
@@ -44,6 +55,10 @@ func TestDescribeOpts_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	assert.Equal(t, `ID    NAME              CLOUD   REGION
+1     ExampleInstance   AWS     US_EAST_1
+`, buf.String())
+	t.Log(buf.String())
 }
 
 func TestDescribeBuilder(t *testing.T) {

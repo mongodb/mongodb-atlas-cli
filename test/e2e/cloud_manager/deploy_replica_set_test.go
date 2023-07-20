@@ -27,7 +27,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDeployReplicaSet(t *testing.T) {
@@ -91,24 +90,6 @@ func TestDeployReplicaSet(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-	})
-
-	t.Run("List No Project", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			entity,
-			clustersEntity,
-			"ls",
-			"--projectId=",
-			"-o=json",
-		)
-		t.Setenv("MCLI_PROJECT_ID", "")
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
-		var clusters opsmngr.AllClustersProjects
-		require.NoError(t, json.Unmarshal(resp, &clusters), string(resp))
-		assert.NotEmpty(t, clusters.Results)
 	})
 
 	t.Run("Describe", func(t *testing.T) {

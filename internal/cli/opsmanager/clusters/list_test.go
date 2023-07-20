@@ -17,12 +17,16 @@
 package clusters
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -36,7 +40,8 @@ func TestList_Run(t *testing.T) {
 		listOpts := &ListOpts{
 			store: mockStore,
 		}
-
+		buf := new(bytes.Buffer)
+		listOpts.OutWriter = buf
 		listOpts.ProjectID = "1"
 		mockStore.
 			EXPECT().
@@ -44,47 +49,34 @@ func TestList_Run(t *testing.T) {
 			Return(expected, nil).
 			Times(1)
 
-		if err := listOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
+		require.NoError(t, listOpts.Run())
+		test.VerifyOutputTemplate(t, listTemplate, expected)
 	})
 
 	t.Run("clusters for project json view", func(t *testing.T) {
 		expected := fixture.AutomationConfig()
-		config.SetOutput(config.JSON)
-
 		listOpts := &ListOpts{
 			store: mockStore,
 		}
-
+		buf := new(bytes.Buffer)
+		listOpts.OutWriter = buf
 		listOpts.ProjectID = "1"
+		listOpts.Output = config.JSON
 		mockStore.
 			EXPECT().
 			GetAutomationConfig(listOpts.ProjectID).
 			Return(expected, nil).
 			Times(1)
-
-		if err := listOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-		config.SetOutput("")
+		require.NoError(t, listOpts.Run())
 	})
+}
 
-	t.Run("list all clusters the (no project id)", func(t *testing.T) {
-		expected := fixture.AllClusters()
-		config.SetService(config.OpsManagerService)
-		mockStore.
-			EXPECT().
-			ListAllProjectClusters().
-			Return(expected, nil).
-			Times(1)
-
-		listOpts := &ListOpts{
-			store: mockStore,
-		}
-
-		if err := listOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
+func TestListBuilder(t *testing.T) {
+	test.CmdValidator(t,
+		ListBuilder(),
+		0,
+		[]string{
+			flag.Output,
+			flag.ProjectID,
+		})
 }

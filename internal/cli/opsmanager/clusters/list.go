@@ -46,11 +46,6 @@ var listTemplate = `ID	NAME	TYPE	REPLICASET NAME{{range .Results}}
 {{.ID}}	{{.ClusterName}}	{{.TypeName}}	{{.ReplicaSetName}}{{end}}
 `
 
-// listAllTemplate used fetching all clusters for all projects.
-var listAllTemplate = `ID	NAME	TYPE{{range .Results}}{{range .Clusters}}
-{{.ClusterID}}	{{.Name}}	{{.Type}}{{end}}{{end}}
-`
-
 func (opts *ListOpts) Run() error {
 	r, err := opts.clusters()
 	if err != nil {
@@ -60,17 +55,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) template() string {
-	if opts.ConfigProjectID() == "" {
-		return listAllTemplate
-	}
-	return listTemplate
-}
-
 func (opts *ListOpts) clusters() (interface{}, error) {
-	if opts.ConfigProjectID() == "" {
-		return opts.store.ListAllProjectClusters()
-	}
 	if opts.IsPlainOutput() {
 		return opts.store.ProjectClusters(opts.ConfigProjectID(), nil)
 	}
@@ -83,7 +68,7 @@ func (opts *ListOpts) clusters() (interface{}, error) {
 	return r, nil
 }
 
-// mongocli cloud-manager cluster(s) list --projectId projectId.
+// ListBuilder mongocli cloud-manager cluster(s) list --projectId projectId.
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -95,7 +80,8 @@ When using an output format the information will be provided by automation.`,
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.InitOutput(cmd.OutOrStdout(), opts.template()),
+				opts.ValidateProjectID,
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 				opts.initStore(cmd.Context()),
 			)
 		},

@@ -43,10 +43,11 @@ func TestCleanup(t *testing.T) {
 	var projects mongodbatlas.Projects
 	err = json.Unmarshal(resp, &projects)
 	req.NoError(err)
-	t.Log(projects)
+	t.Logf("%#v\n", projects)
 	for _, project := range projects.Results {
 		if project.ID == os.Getenv("MCLI_PROJECT_ID") {
-			t.Skip("skipping project", project.ID)
+			t.Log("skipping project", project.ID)
+			continue
 		}
 		deleteAllNetworkPeers(t, cliPath, project.ID, "aws")
 		deleteAllNetworkPeers(t, cliPath, project.ID, "gcp")
@@ -57,4 +58,5 @@ func TestCleanup(t *testing.T) {
 		deleteClustersForProject(t, cliPath, project.ID)
 		deleteProjectWithRetry(t, project.ID)
 	}
+	deleteOrgInvitations(t)
 }

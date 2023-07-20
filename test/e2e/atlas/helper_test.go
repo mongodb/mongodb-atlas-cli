@@ -52,6 +52,7 @@ const (
 	onlineArchiveEntity          = "onlineArchives"
 	projectEntity                = "project"
 	orgEntity                    = "org"
+	invitationsEntity            = "invitations"
 	maintenanceEntity            = "maintenanceWindows"
 	integrationsEntity           = "integrations"
 	securityEntity               = "security"

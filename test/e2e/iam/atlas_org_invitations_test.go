@@ -30,9 +30,7 @@ import (
 
 func TestAtlasOrgInvitations(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	n, err := e2e.RandInt(1000)
 	require.NoError(t, err)

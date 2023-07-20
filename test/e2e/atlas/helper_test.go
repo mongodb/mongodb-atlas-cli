@@ -52,6 +52,7 @@ const (
 	onlineArchiveEntity          = "onlineArchives"
 	projectEntity                = "project"
 	orgEntity                    = "org"
+	invitationsEntity            = "invitations"
 	maintenanceEntity            = "maintenanceWindows"
 	integrationsEntity           = "integrations"
 	securityEntity               = "security"
@@ -615,23 +616,14 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 	}
 }
 
+const sleep = 10 * time.Second
+
 func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string) {
 	t.Helper()
 
 	privateEndpoints := listPrivateEndpointsByProject(t, cliPath, projectID, provider)
 	for _, endpoint := range privateEndpoints {
-		var endpointID string
-
-		switch endpoint.CloudProvider {
-		case "AWS":
-			endpointID = endpoint.GetId()
-		case "AZURE":
-			endpointID = endpoint.GetId()
-		case "GCP":
-			endpointID = endpoint.GetId()
-		}
-		require.NotEmpty(t, endpointID)
-		deletePrivateEndpoint(t, cliPath, projectID, provider, endpointID)
+		deletePrivateEndpoint(t, cliPath, projectID, provider, endpoint.GetId())
 	}
 
 	clear := false
@@ -642,11 +634,10 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 			clear = true
 			break
 		}
-
-		time.Sleep(10 * time.Second)
+		time.Sleep(sleep)
 	}
 
-	require.True(t, clear)
+	require.True(t, clear, "failed to clean all private endpoints")
 }
 
 func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider string) []atlasv2.EndpointService {

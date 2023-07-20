@@ -73,7 +73,10 @@ func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListO
 			ItemsPerPage(opts.ItemsPerPage).
 			PageNum(opts.PageNum).
 			ProviderName(opts.ProviderName).Execute()
-		return result.Results, err
+		if err != nil {
+			return nil, err
+		}
+		return result.Results, nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -121,7 +124,10 @@ func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersLis
 			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).ProviderName(opts.ProviderName)
 		}
 		result, _, err := res.Execute()
-		return result.Results, err
+		if err != nil {
+			return nil, err
+		}
+		return result.Results, nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -138,8 +144,10 @@ func (s *Store) AzureContainers(projectID string) ([]atlasv2.CloudProviderContai
 			ItemsPerPage(maxPerPage).
 			ProviderName("Azure").
 			Execute()
-
-		return result.Results, err
+		if err != nil {
+			return nil, err
+		}
+		return result.Results, nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -155,7 +163,10 @@ func (s *Store) AWSContainers(projectID string) ([]atlasv2.CloudProviderContaine
 			ProviderName("AWS").
 			Execute()
 
-		return result.Results, err
+		if err != nil {
+			return nil, err
+		}
+		return result.Results, nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -170,8 +181,10 @@ func (s *Store) GCPContainers(projectID string) ([]atlasv2.CloudProviderContaine
 			ItemsPerPage(maxPerPage).
 			ProviderName("GCP").
 			Execute()
-
-		return result.Results, err
+		if err != nil {
+			return nil, err
+		}
+		return result.Results, nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -186,7 +199,10 @@ func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atla
 			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
 		result, _, err := res.Execute()
-		return result.Results, err
+		if err != nil {
+			return nil, err
+		}
+		return result.Results, nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

@@ -29,12 +29,10 @@ UNIT_TAGS?=unit
 INTEGRATION_TAGS?=integration
 E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
+E2E_PARALLEL?=1
 
 export PATH := $(shell go env GOPATH)/bin:$(PATH)
 export PATH := ./bin:$(PATH)
-ifneq ($(OS),Windows_NT)
-	export SHELL := env PATH=$(PATH) /bin/bash
-endif
 export TERM := linux-m
 export GO111MODULE := on
 export MCLI_E2E_BINARY
@@ -151,7 +149,7 @@ build-atlascli-debug: ## Generate a binary in ./bin for debugging atlascli
 e2e-test: build-all ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI_* environment variables are exported
-	$(TEST_CMD) -v -p 1 -parallel 1 -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e...
+	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e...
 
 .PHONY: integration-test
 integration-test: ## Run integration tests

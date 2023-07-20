@@ -18,6 +18,7 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -47,17 +48,21 @@ func TestCleanup(t *testing.T) {
 	t.Logf("%s\n", resp)
 	deleteOrgInvitations(t)
 	for _, project := range projects.Results {
-		if project.ID == os.Getenv("MCLI_PROJECT_ID") {
-			t.Log("skipping project", project.ID)
+		projectID := project.ID
+		if projectID == os.Getenv("MCLI_PROJECT_ID") {
+			t.Log("skipping project", projectID)
 			continue
 		}
-		deleteAllNetworkPeers(t, cliPath, project.ID, "aws")
-		deleteAllNetworkPeers(t, cliPath, project.ID, "gcp")
-		deleteAllNetworkPeers(t, cliPath, project.ID, "azure")
-		deleteAllPrivateEndpoints(t, cliPath, project.ID, "aws")
-		deleteAllPrivateEndpoints(t, cliPath, project.ID, "gcp")
-		deleteAllPrivateEndpoints(t, cliPath, project.ID, "azure")
-		deleteClustersForProject(t, cliPath, project.ID)
-		deleteProjectWithRetry(t, project.ID)
+		t.Run(fmt.Sprintf("trying to delete project %s\n", project.ID), func(t *testing.T) {
+			t.Parallel()
+			deleteAllNetworkPeers(t, cliPath, projectID, "aws")
+			deleteAllNetworkPeers(t, cliPath, projectID, "gcp")
+			deleteAllNetworkPeers(t, cliPath, projectID, "azure")
+			deleteAllPrivateEndpoints(t, cliPath, projectID, "aws")
+			deleteAllPrivateEndpoints(t, cliPath, projectID, "gcp")
+			deleteAllPrivateEndpoints(t, cliPath, projectID, "azure")
+			deleteClustersForProject(t, cliPath, projectID)
+			deleteProjectWithRetry(t, projectID)
+		})
 	}
 }

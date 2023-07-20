@@ -95,6 +95,7 @@ functions:
           - AZURE_CLIENT_SECRET
           - E2E_TIMEOUT
           - E2E_SERVERLESS_INSTANCE_NAME
+          - E2E_PARALLEL
           - revision
         env:
           <<: *go_env
@@ -1365,6 +1366,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,cleanup
+          E2E_PARALLEL: 16
   - name: atlas_gov_cleanup_e2e
     tags: [ "e2e","cleanup", "foliage_check_task_only" ]
     must_have_test_results: true
@@ -1384,6 +1386,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
           E2E_TAGS: atlas,cleanup
+          E2E_PARALLEL: 16
 buildvariants:
   - name: code_health
     display_name: "Code Health"

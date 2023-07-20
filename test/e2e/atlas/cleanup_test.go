@@ -42,8 +42,8 @@ func TestCleanup(t *testing.T) {
 
 	var projects mongodbatlas.Projects
 	err = json.Unmarshal(resp, &projects)
-	req.NoError(err)
-	t.Logf("%#v\n", projects)
+	req.NoError(err, string(resp))
+	t.Logf("%s\n", resp)
 	for _, project := range projects.Results {
 		if project.ID == os.Getenv("MCLI_PROJECT_ID") {
 			t.Log("skipping project", project.ID)

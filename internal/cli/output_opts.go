@@ -72,6 +72,22 @@ func (opts *OutputOpts) ConfigOutput() string {
 	return opts.Output
 }
 
+func (opts *OutputOpts) IsJSONOutput() bool {
+	return opts.ConfigOutput() == jsonFormat
+}
+
+func (opts *OutputOpts) IsGoTemplate() bool {
+	return opts.ConfigOutput() == goTemplate || opts.ConfigOutput() == goTemplateFile
+}
+
+func (opts *OutputOpts) IsJSONPathOutput() bool {
+	return opts.ConfigOutput() == jsonPath
+}
+
+func (opts *OutputOpts) IsPlainOutput() bool {
+	return !(opts.IsJSONOutput() || opts.IsGoTemplate() || opts.IsJSONPathOutput())
+}
+
 // ConfigWriter returns the io.Writer.
 // If the writer is nil, it defaults to os.Stdout and caches it.
 func (opts *OutputOpts) ConfigWriter() io.Writer {

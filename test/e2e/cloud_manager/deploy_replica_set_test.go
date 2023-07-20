@@ -25,29 +25,26 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDeployReplicaSet(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	const testFile = "om-new-cluster.json"
 
 	n, err := e2e.RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	clusterName := fmt.Sprintf("e2e-cluster-%v", n)
 
 	hostname, err := automationServerHostname(cliPath)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if err := generateRSConfig(testFile, hostname, clusterName, testedMDBVersion, testedMDBFCV); err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
+	require.NoError(
+		t,
+		generateRSConfig(testFile, hostname, clusterName, testedMDBVersion, testedMDBFCV),
+	)
 
 	t.Run("Apply", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -59,9 +56,8 @@ func TestDeployReplicaSet(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch", watchAutomation(cliPath))
@@ -76,18 +72,24 @@ func TestDeployReplicaSet(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 		var clusters []*convert.ClusterConfig
-		if err := json.Unmarshal(resp, &clusters); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, json.Unmarshal(resp, &clusters), string(resp))
+		assert.NotEmpty(t, clusters)
+	})
 
-		if len(clusters) == 0 {
-			t.Errorf("expected len(clusters) > 0, got 0\n")
-		}
+	t.Run("List No Output", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			clustersEntity,
+			"ls",
+			"-o=",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -101,25 +103,15 @@ func TestDeployReplicaSet(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
 		var cluster convert.ClusterConfig
-		if err := json.Unmarshal(resp, &cluster); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if cluster.Name != clusterName {
-			t.Errorf("expected %s, got %s\n", clusterName, cluster.Name)
-		}
+		require.NoError(t, json.Unmarshal(resp, &cluster), string(resp))
+		assert.Equal(t, cluster.Name, clusterName)
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		if err := generateRSConfigUpdate(testFile); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
+		require.NoError(t, generateRSConfigUpdate(testFile))
 		cmd := exec.Command(cliPath,
 			entity,
 			clustersEntity,
@@ -131,10 +123,7 @@ func TestDeployReplicaSet(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch", watchAutomation(cliPath))
@@ -149,9 +138,8 @@ func TestDeployReplicaSet(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch", watchAutomation(cliPath))
@@ -166,9 +154,8 @@ func TestDeployReplicaSet(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch", watchAutomation(cliPath))
@@ -183,9 +170,8 @@ func TestDeployReplicaSet(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch", watchAutomation(cliPath))
@@ -200,19 +186,16 @@ func TestDeployReplicaSet(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Stop Monitoring", func(t *testing.T) {
-		hostIDs, err := hostIDs(cliPath)
-		if err != nil {
-			t.Fatalf("unexpected error: %v\n", err)
-		}
-		for _, h := range hostIDs {
+		ids, err := hostIDs(cliPath)
+		require.NoError(t, err)
+		for _, h := range ids {
 			cmd := exec.Command(cliPath,
 				entity,
 				monitoringEntity,
@@ -223,36 +206,26 @@ func TestDeployReplicaSet(t *testing.T) {
 
 			cmd.Env = os.Environ()
 			resp, err := cmd.CombinedOutput()
-
-			if err != nil {
-				t.Errorf("unexpected error: %v, resp: %v\n", err, string(resp))
-			}
+			require.NoError(t, err, string(resp))
 		}
 	})
 }
 
 func TestDeployAndDeleteReplicaSet(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	const testFile = "om-new-cluster.json"
 
 	n, err := e2e.RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	clusterName := fmt.Sprintf("e2e-cluster-%v", n)
-
 	hostname, err := automationServerHostname(cliPath)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if err := generateRSConfig(testFile, hostname, clusterName, testedMDBVersion, testedMDBFCV); err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
+	require.NoError(t, err)
+	require.NoError(
+		t,
+		generateRSConfig(testFile, hostname, clusterName, testedMDBVersion, testedMDBFCV),
+	)
 	t.Run("Apply", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
@@ -263,9 +236,8 @@ func TestDeployAndDeleteReplicaSet(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch", watchAutomation(cliPath))
@@ -280,8 +252,7 @@ func TestDeployAndDeleteReplicaSet(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 }

@@ -634,11 +634,10 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 			clear = true
 			break
 		}
-
 		time.Sleep(sleep)
 	}
 
-	require.True(t, clear)
+	require.True(t, clear, "failed to clean all private endpoints")
 }
 
 func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider string) []atlasv2.EndpointService {

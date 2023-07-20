@@ -267,6 +267,7 @@ func deleteOrgInvitations(t *testing.T) {
 	require.NoError(t, err, string(resp))
 	var invitations []atlasv2.OrganizationInvitation
 	require.NoError(t, json.Unmarshal(resp, &invitations), string(resp))
+	t.Logf("%s\n", resp)
 	for _, i := range invitations {
 		deleteOrgInvitation(t, cliPath, *i.Id)
 	}

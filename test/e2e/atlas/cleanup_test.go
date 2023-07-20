@@ -35,6 +35,7 @@ func TestCleanup(t *testing.T) {
 	cmd := exec.Command(cliPath,
 		projectEntity,
 		"list",
+		"--limit=500",
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
@@ -44,6 +45,7 @@ func TestCleanup(t *testing.T) {
 	err = json.Unmarshal(resp, &projects)
 	req.NoError(err, string(resp))
 	t.Logf("%s\n", resp)
+	deleteOrgInvitations(t)
 	for _, project := range projects.Results {
 		if project.ID == os.Getenv("MCLI_PROJECT_ID") {
 			t.Log("skipping project", project.ID)
@@ -58,5 +60,4 @@ func TestCleanup(t *testing.T) {
 		deleteClustersForProject(t, cliPath, project.ID)
 		deleteProjectWithRetry(t, project.ID)
 	}
-	deleteOrgInvitations(t)
 }

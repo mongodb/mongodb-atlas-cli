@@ -136,10 +136,8 @@ const (
 	NotificationDelayMin                      = "notificationDelayMin"                      // NotificationDelayMin flag
 	NotificationEmailAddress                  = "notificationEmailAddress"                  // NotificationEmailAddress flag
 	NotificationEmailEnabled                  = "notificationEmailEnabled"                  // NotificationEmailEnabled flag
-	NotificationFlowName                      = "notificationFlowName"                      // NotificationFlowName flag
 	NotificationIntervalMin                   = "notificationIntervalMin"                   // NotificationIntervalMin flag
 	NotificationMobileNumber                  = "notificationMobileNumber"                  // NotificationMobileNumber flag
-	NotificationOrgName                       = "notificationOrgName"                       // NotificationsOrgName flag
 	NotificationServiceKey                    = "notificationServiceKey"                    // NotificationsServiceKey flag
 	NotificationSmsEnabled                    = "notificationSmsEnabled"                    // NotificationsSmsEnabled flag
 	NotificationTeamID                        = "notificationTeamId"                        // NotificationTeamID flag

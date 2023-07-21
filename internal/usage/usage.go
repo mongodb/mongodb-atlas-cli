@@ -101,7 +101,6 @@ dbName and collection are required only for built-in roles.`
 	Email                                     = "Email address for the user."
 	LogOut                                    = "Output file name. Uses the log name if the output file's name is not specified."
 	DiagnoseOut                               = "Optional output file name. Uses diagnose-archive.tar.gz if the output file's name is not specified."
-	DataFederationLogOut                      = "Output file name."
 	LogStart                                  = "UNIX Epoch-formatted starting date and time for the range of log messages to retrieve. This value defaults to 24 hours prior to the current timestamp."
 	LogEnd                                    = "UNIX Epoch-formatted ending date and time for the range of log messages to retrieve. This value defaults to the current timestamp."
 	ArchiveLimit                              = "Max number of entries for the diagnose archive."
@@ -159,11 +158,8 @@ dbName and collection are required only for built-in roles.`
 	OpsgenieAPIKey                            = "Opsgenie API key that allows Atlas to access your Opsgenie account."                                                                           //nolint:gosec // This is just a message not a credential
 	VictorOpsAPIKey                           = "Splunk On-Call API key that allows Atlas to access your Splunk On-Call account."                                                               //nolint:gosec // This is just a message not a credential
 	RoutingKey                                = "Routing key associated with your Splunk On-Call account."
-	IntegrationAPIToken                       = "Your API Token." //nolint:gosec // This is just a message not a credential
-	OrgName                                   = "Your Flowdock organization's name."
 	OrgNameFilter                             = "Performs a case-insensitive search for organizations that exactly match the specified organization name."
 	OrgIncludeDeleted                         = "If specified, includes deleted organizations in the list. This option applies only to Ops Manager organizations. You can't return deleted Atlas or Cloud Manager organizations."
-	FlowName                                  = "Flowdock Flow name."
 	BlockstoreAssignment                      = "Flag indicating whether this blockstore can be assigned backup jobs."
 	OplogAssignment                           = "Flag indicating whether this oplog can be assigned backup jobs."
 	FileSystemAssignment                      = "Flag indicating whether this file system store can be assigned backup jobs."
@@ -201,10 +197,8 @@ dbName and collection are required only for built-in roles.`
 	NotificationDelayMin                      = "Number of minutes to wait after an alert condition is detected before sending out the first notification."
 	NotificationEmailAddress                  = "Email address to which alert notifications are sent."
 	NotificationEmailEnabled                  = "Flag that enables email notifications. Configurable for GROUP and USER notification types."
-	NotificationFlowName                      = "Flowdock Flow name in lower-case letters for sending alert notifications."
 	NotificationIntervalMin                   = "Number of minutes to wait between successive notifications for unacknowledged alerts that are not resolved."
 	NotificationMobileNumber                  = "Mobile number to which alert notifications are sent."
-	NotificationOrgName                       = "Flowdock organization's name in lower-case letters."
 	NotificationServiceKey                    = "PagerDuty service key."
 	NotificationSmsEnabled                    = "Flag that enables text message notifications."
 	NotificationTeamID                        = "Unique identifier of a team."

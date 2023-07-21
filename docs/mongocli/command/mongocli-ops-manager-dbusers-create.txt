@@ -50,7 +50,7 @@ Options
    * - -p, --password
      - string
      - false
-     - Password for the user.
+     - Password for the database user.
    * - --projectId
      - string
      - false

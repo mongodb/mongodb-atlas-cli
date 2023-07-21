@@ -42,7 +42,7 @@ Options
    * - --apiKey
      - string
      - true
-     - Unique 24-digit string that identifies your API key.
+     - Unique 24-digit ID that identifies your API key.
    * - --cidr
      - strings
      - false

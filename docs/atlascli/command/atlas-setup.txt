@@ -60,7 +60,7 @@ Options
    * - --force
      - 
      - false
-     - Flag that indicates whether to skip the confirmation prompt before proceeding with the requested action.
+     - If specified, skips asking for input and creates a cluster with default settings for any options you don't specify.
    * - --gov
      - 
      - false

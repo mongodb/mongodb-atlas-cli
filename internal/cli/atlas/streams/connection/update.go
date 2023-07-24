@@ -23,9 +23,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
@@ -33,10 +35,11 @@ import (
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.ConnectionUpdater
-	id    string
-
-	// TODO add flag parameters
+	store           store.ConnectionUpdater
+	name            string
+	filename        string
+	streamsInstance string
+	fs              afero.Fs
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -47,12 +50,15 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var updateTemplate = `Connection {{.Name}} updated.`
+var updateTemplate = "Connection {{.Name}} updated.\n"
 
 func (opts *UpdateOpts) Run() error {
-	updateRequest := opts.newUpdateRequest()
+	updateRequest, err := opts.newUpdateRequest()
+	if err != nil {
+		return err
+	}
 
-	r, err := opts.store.UpdateConnection(opts.ConfigProjectID(), opts.id, "", updateRequest)
+	r, err := opts.store.UpdateConnection(opts.ConfigProjectID(), opts.streamsInstance, opts.name, updateRequest)
 	if err != nil {
 		return err
 	}
@@ -60,14 +66,21 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newUpdateRequest() *atlasv2.StreamsConnection {
-	// TODO change code to generate entity
-	return nil
+func (opts *UpdateOpts) newUpdateRequest() (*atlasv2.StreamsConnection, error) {
+	out := atlasv2.NewStreamsConnectionWithDefaults()
+	if err := file.Load(opts.fs, opts.filename, out); err != nil {
+		return nil, err
+	}
+	out.Name = &opts.name
+
+	return out, nil
 }
 
 // atlas streams connection update <connectionName> [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
-	opts := &UpdateOpts{}
+	opts := &UpdateOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "update <connectionName>",
 		Short: "Modify the details of the specified connection within your Atlas Streams instance.",
@@ -81,7 +94,7 @@ func UpdateBuilder() *cobra.Command {
   atlas streams connection update kafkaprod -i test01 -f kafkaConfig.json
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.id = args[0]
+			opts.name = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -93,11 +106,16 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	// TODO add more flags here
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().StringVar(&opts.streamsInstance, flag.Instance, "", usage.StreamsInstance)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.StreamsConnectionFilename)
+	_ = cmd.MarkFlagFilename(flag.File)
+
+	cmd.MarkFlagRequired(flag.Instance)
+	cmd.MarkFlagRequired(flag.File)
 
 	return cmd
 }

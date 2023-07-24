@@ -82,6 +82,6 @@ func TestCreateBuilder(t *testing.T) {
 		t,
 		CreateBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output},
+		[]string{flag.ProjectID, flag.Output, flag.File, flag.Instance},
 	)
 }

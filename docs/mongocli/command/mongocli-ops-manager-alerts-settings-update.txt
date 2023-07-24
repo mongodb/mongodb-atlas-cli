@@ -64,7 +64,7 @@ Options
    * - --event
      - string
      - false
-     - Type of event that triggered the alert. To learn which values the CLI accepts, see the Enum for eventTypeName in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Alert-Configurations/operation/createAlertConfiguration.
+     - Type of event that triggered the alert. To learn which values the CLI accepts, see the request body parameters for eventTypeName in the API documentation for Ops Manager (https://dochub.mongodb.org/core/om-event-names) or Cloud Manager (https://dochub.mongodb.org/core/cm-event-names).
    * - -h, --help
      - 
      - false

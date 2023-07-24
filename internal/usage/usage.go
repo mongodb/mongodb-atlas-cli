@@ -140,7 +140,7 @@ dbName and collection are required only for built-in roles.`
 	AlertType                                 = "Alert types to silence during maintenance window. Valid values are HOST, REPLICA_SET, CLUSTER, AGENT, or BACKUP."
 	MaintenanceDescription                    = "Description of the maintenance window."
 	Event                                     = "Type of event that triggered the alert. To learn which values the CLI accepts, see the Enum for eventTypeName in the Atlas API spec: https://dochub.mongodb.org/core/atlas-event-names."
-	EventCMOM                                 = "Type of event that triggered the alert. To learn which values the CLI accepts, see the request body parameters for eventTypeName in the API documentation for Ops Manager (https://dochub.mongodb.org/core/om-event-names) or Cloud Manager (https://dochub.mongodb.org/core/cm-event-names)."
+	EventCMOM                                 = "Type of event that triggered the alert. To learn which values the CLI accepts, see the possible eventTypeName values in the API documentation for Atlas (https://dochub.mongodb.org/core/atlas-event-names), Ops Manager (https://dochub.mongodb.org/core/om-event-names), or Cloud Manager (https://dochub.mongodb.org/core/cm-event-names)."
 	Enabled                                   = "Enables the alert configuration."
 	MCLIMatcherFieldName                      = "Name of the field in the target object to match on. To learn the valid values, run mongocli atlas alerts settings fields type."
 	MatcherFieldName                          = "Name of the field in the target object to match on. To learn the valid values, run atlas alerts settings fields type."

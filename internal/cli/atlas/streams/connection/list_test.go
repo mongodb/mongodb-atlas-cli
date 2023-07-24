@@ -55,7 +55,7 @@ func TestListOpts_Run(t *testing.T) {
 	assert.Equal(t, `NAME          TYPE    INSTANCE   SERVERS
 ExampleConn   Kafka   Floop      example.com:8080
 
-`, buf.String()) // TODO change here
+`, buf.String())
 	t.Log(buf.String())
 }
 

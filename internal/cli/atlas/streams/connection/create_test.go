@@ -21,21 +21,55 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/spf13/afero"
+	"github.com/stretchr/testify/assert"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockConnectionCreator(ctrl)
 
-	var expected interface{} // TODO change here
+	fs := afero.NewMemMapFs()
+
+	fileContents := `
+{
+  "type": "Kafka",
+  "bootstrapServers": "example.com:8080,fraud.example.com:8000",
+  "security": {
+    "protocol": "PLAINTEXT"
+  },
+  "authentication": {
+    "mechanism": "SCRAM-256",
+    "username": "admin",
+    "password": "hunter2"
+  },
+  "configuration": {
+    "auto.offset.reset": "earliest"
+  }
+}
+`
+
+	fileName := "connection.json"
+	assert.NoError(t, afero.WriteFile(fs, fileName, []byte(fileContents), 0600))
 
 	createOpts := &CreateOpts{
-		store: mockStore,
+		store:           mockStore,
+		fs:              fs,
+		filename:        fileName,
+		streamsInstance: "Example Instance",
 	}
+
+	name := "Example Name"
+	con := atlasv2.NewStreamsConnectionWithDefaults()
+	con.Name = &name
+
+	expected := atlasv2.NewStreamsConnection()
+	expected.Name = &name
 
 	mockStore.
 		EXPECT().
-		CreateConnection(createOpts.ConfigProjectID(), "", *createOpts.newCreateRequest()).Return(expected, nil).
+		CreateConnection(createOpts.ConfigProjectID(), "Example Instance", gomock.Any()).Return(expected, nil).
 		Times(1)
 
 	if err := createOpts.Run(); err != nil {

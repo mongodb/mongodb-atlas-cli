@@ -311,6 +311,7 @@ dbName and collection are required only for built-in roles.`
 	StreamsRegion                             = "Human-readable label that identifies the physical location of your Atlas Streams Processor instance. The region can affect network latency and performance if it is far from your source or sink."
 	StreamsProvider                           = "Cloud service provider that applies to the provisioned Atlas Streams instance."
 	StreamsInstance                           = "The name of your MongoDB Atlas streams instance."
+	StreamsConnectionFilename                 = "Path to a JSON configuration file that defines an Atlas Streams connection."
 	WithoutDefaultAlertSettings               = "Flag that creates the new project without the default alert settings enabled. This flag defaults to false. This is useful if you create projects programmatically and want to create your own alerts instead of using the default alert settings."
 	FormatOut                                 = "Output format. Valid values are json, json-path, go-template, or go-template-file. To see full output, use the -o json option."
 	TargetClusterID                           = "Unique identifier of the target cluster. For use only with automated restore jobs."

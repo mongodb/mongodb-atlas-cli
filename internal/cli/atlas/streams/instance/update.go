@@ -62,6 +62,8 @@ func (opts *UpdateOpts) streams() (*atlasv2.StreamsTenant, error) {
 	processor.GroupId = &opts.ProjectID
 
 	processor.DataProcessRegion = atlasv2.NewStreamsDataProcessRegionWithDefaults()
+	processor.DataProcessRegion.CloudProvider = "AWS"
+
 	if opts.provider != "" {
 		processor.DataProcessRegion.CloudProvider = opts.provider
 	}

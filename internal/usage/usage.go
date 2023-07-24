@@ -376,7 +376,7 @@ dbName and collection are required only for built-in roles.`
 	EnableRealtimePerformancePanel            = "Flag that enables the Real Time Performance Panel project setting."
 	DisableRealtimePerformancePanel           = "Flag that disables the Real Time Performance Panel project setting."
 	CloudProvider                             = "Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS."
-	ExportBucketIAMRoleID                     = "Unique identifier that Atlas assigns to the the cloud provider access role for the bucket."
+	ExportBucketIAMRoleID                     = "Unique identifier that Atlas assigns to the cloud provider access role for the bucket."
 	BucketID                                  = "Unique identifier that Atlas assigns to the bucket."
 	CustomData                                = "Custom data to include in the metadata file named .complete that Atlas uploads to the bucket when the export job finishes. Custom data can be specified as key and value pairs."
 	ExportFrequencyType                       = "Frequency associated with the export policy. Value can be daily, weekly, or monthly."

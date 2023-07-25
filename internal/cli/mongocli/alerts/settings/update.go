@@ -89,7 +89,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.event, flag.Event, "", usage.Event)
+	cmd.Flags().StringVar(&opts.event, flag.Event, "", usage.EventCMOM)
 	cmd.Flags().BoolVar(&opts.enabled, flag.Enabled, false, usage.Enabled)
 	cmd.Flags().StringVar(&opts.matcherFieldName, flag.MatcherFieldName, "", usage.MCLIMatcherFieldName)
 	cmd.Flags().StringVar(&opts.matcherOperator, flag.MatcherOperator, "", usage.MatcherOperator)

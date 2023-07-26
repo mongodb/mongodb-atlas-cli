@@ -63,19 +63,17 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchive {
-	partitions := opts.partitionFields()
-	a := &atlasv2.BackupOnlineArchive{
-		CollName: &opts.collection,
-		Criteria: &atlasv2.Criteria{
+func (opts *CreateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchiveCreate {
+	return &atlasv2.BackupOnlineArchiveCreate{
+		CollName: opts.collection,
+		Criteria: atlasv2.Criteria{
 			DateField:       &opts.dateField,
 			DateFormat:      &opts.dateFormat,
 			ExpireAfterDays: pointer.Get(opts.archiveAfter),
 		},
-		DbName:          &opts.dbName,
-		PartitionFields: partitions,
+		DbName:          opts.dbName,
+		PartitionFields: opts.partitionFields(),
 	}
-	return a
 }
 
 const (

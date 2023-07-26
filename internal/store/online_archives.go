@@ -33,7 +33,7 @@ type OnlineArchiveDescriber interface {
 }
 
 type OnlineArchiveCreator interface {
-	CreateOnlineArchive(string, string, *atlasv2.BackupOnlineArchive) (*atlasv2.BackupOnlineArchive, error)
+	CreateOnlineArchive(string, string, *atlasv2.BackupOnlineArchiveCreate) (*atlasv2.BackupOnlineArchive, error)
 }
 
 type OnlineArchiveUpdater interface {
@@ -68,7 +68,7 @@ func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlasv
 }
 
 // CreateOnlineArchive encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlasv2.BackupOnlineArchive) (*atlasv2.BackupOnlineArchive, error) {
+func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlasv2.BackupOnlineArchiveCreate) (*atlasv2.BackupOnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.OnlineArchiveApi.CreateOnlineArchive(s.ctx, projectID, clusterName, archive).Execute()

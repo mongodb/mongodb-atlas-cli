@@ -112,7 +112,7 @@ func (m *MockOnlineArchiveCreator) EXPECT() *MockOnlineArchiveCreatorMockRecorde
 }
 
 // CreateOnlineArchive mocks base method.
-func (m *MockOnlineArchiveCreator) CreateOnlineArchive(arg0, arg1 string, arg2 *admin.BackupOnlineArchive) (*admin.BackupOnlineArchive, error) {
+func (m *MockOnlineArchiveCreator) CreateOnlineArchive(arg0, arg1 string, arg2 *admin.BackupOnlineArchiveCreate) (*admin.BackupOnlineArchive, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOnlineArchive", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.BackupOnlineArchive)

@@ -441,8 +441,8 @@ github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 go.mongodb.org/atlas v0.31.0 h1:NgLqsNYm6wDYeDUO90etw1sl8T1U2DUKu36eUdnrFSI=
 go.mongodb.org/atlas v0.31.0/go.mod h1:L4BKwVx/OeEhOVjCSdgo90KJm4469iv7ZLzQms/EPTg=
-go.mongodb.org/atlas-sdk/v20230201002 v20230201002.0.1-0.20230726091506-1e37e42fb3b9 h1:x9/PsxTBs8+AZ2Fa8fYCHqc6VMhrQ4GWtg9CFAUMNMA=
-go.mongodb.org/atlas-sdk/v20230201002 v20230201002.0.1-0.20230726091506-1e37e42fb3b9/go.mod h1:SG7r2T7R595Z/+x/miXGR89ZsinqXG/P6k0p+CSNBPY=
+go.mongodb.org/atlas-sdk/v20230201003 v20230201003.0.0 h1:9GiRi7YUlc1V4cMyCVLO0tzMdBNZ0cm9t0Ygs6iaLhY=
+go.mongodb.org/atlas-sdk/v20230201003 v20230201003.0.0/go.mod h1:iU4rtR4rJCHiERkL/lz310cicN4zwX80xFn0ElK4wic=
 go.mongodb.org/mongo-driver v1.12.0 h1:aPx33jmn/rQuJXPQLZQ8NtfPQG8CaqgLThFtqRb0PiE=
 go.mongodb.org/mongo-driver v1.12.0/go.mod h1:AZkxhPnFJUoH7kZlFkVKucV20K387miPfm7oimrSmK0=
 go.mongodb.org/ops-manager v0.53.0 h1:e5MZsqTH+Pr/QQKWr0FHkCnkIjhKxdlES6zdlfN/JLs=

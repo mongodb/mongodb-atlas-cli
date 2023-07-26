@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20230201002/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201003/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -112,7 +112,7 @@ func (m *MockOnlineArchiveCreator) EXPECT() *MockOnlineArchiveCreatorMockRecorde
 }
 
 // CreateOnlineArchive mocks base method.
-func (m *MockOnlineArchiveCreator) CreateOnlineArchive(arg0, arg1 string, arg2 *admin.BackupOnlineArchive) (*admin.BackupOnlineArchive, error) {
+func (m *MockOnlineArchiveCreator) CreateOnlineArchive(arg0, arg1 string, arg2 *admin.BackupOnlineArchiveCreate) (*admin.BackupOnlineArchive, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOnlineArchive", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.BackupOnlineArchive)

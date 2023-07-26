@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201003/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -33,7 +33,7 @@ type OnlineArchiveDescriber interface {
 }
 
 type OnlineArchiveCreator interface {
-	CreateOnlineArchive(string, string, *atlasv2.BackupOnlineArchive) (*atlasv2.BackupOnlineArchive, error)
+	CreateOnlineArchive(string, string, *atlasv2.BackupOnlineArchiveCreate) (*atlasv2.BackupOnlineArchive, error)
 }
 
 type OnlineArchiveUpdater interface {
@@ -68,7 +68,7 @@ func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlasv
 }
 
 // CreateOnlineArchive encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlasv2.BackupOnlineArchive) (*atlasv2.BackupOnlineArchive, error) {
+func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlasv2.BackupOnlineArchiveCreate) (*atlasv2.BackupOnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.OnlineArchiveApi.CreateOnlineArchive(s.ctx, projectID, clusterName, archive).Execute()

@@ -1,8 +1,5 @@
 name: Daily build
 on:
-  push:
-    branches:
-      - '**'
   schedule:
     - cron: "0 1 * * *" # Every day at 1:00 AM
   workflow_dispatch: {}

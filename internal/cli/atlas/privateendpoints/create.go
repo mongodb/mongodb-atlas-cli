@@ -84,7 +84,7 @@ func CreateBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
-		Deprecated: "Please use mongocli atlas privateEndpoints aws create [--region region] [--projectId projectId]",
+		Deprecated: "Please use atlas privateEndpoints aws create [--region region] [--projectId projectId]",
 	}
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.PrivateEndpointRegion)

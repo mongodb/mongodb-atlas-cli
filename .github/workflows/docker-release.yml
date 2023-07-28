@@ -3,7 +3,6 @@ on:
   schedule:
     - cron: "0 1 * * *" # Every day at 1:00 AM
   workflow_dispatch:
-  push:
 jobs:
   release_image:
     name: Build and publish docker image
@@ -50,4 +49,4 @@ jobs:
             ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
             ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
           file: Dockerfile
-          push: false
+          push: true

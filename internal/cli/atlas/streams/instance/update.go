@@ -83,15 +83,6 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *UpdateOpts) validate() error {
-	if opts.provider == "" && opts.region == "" {
-		return fmt.Errorf("Either a provider or region must be provided")
-	}
-	//TODO: Check if the providers are correct
-	//TODO: Check if I can restrict the region as well
-	return nil
-}
-
 // CreateBuilder
 // atlas streams instance update [name]
 // --provider AWS
@@ -117,7 +108,6 @@ func UpdateBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
-				opts.validate,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -125,7 +115,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.provider, flag.Provider, flag.ProviderShort, "", usage.StreamsProvider)
+	cmd.Flags().StringVarP(&opts.provider, flag.Provider, flag.ProviderShort, "AWS", usage.StreamsProvider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.StreamsRegion)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

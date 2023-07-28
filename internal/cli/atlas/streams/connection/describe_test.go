@@ -55,7 +55,7 @@ func TestDescribe_Run(t *testing.T) {
 	}
 	assert.Equal(t, `NAME   TYPE    INSTANCE   SERVERS
 id     Kafka   Foo        example.com:8080
-`, buf.String()) // TODO change here
+`, buf.String())
 	t.Log(buf.String())
 }
 

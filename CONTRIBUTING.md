@@ -207,7 +207,6 @@ go get go.mongodb.org/atlas-sdk/v20230501001
 
 Atlas CLI can work with multiple versions of the GO SDK supporting various Resource Versions. 
 
-
 For more info please refer to the [SDK documentation](https://github.com/mongodb/atlas-sdk-go/blob/main/docs/doc_1_concepts.md#release-strategy-semantic-versioning) and 
 [golang documentation](https://go.dev/doc/modules/version-numbers#major)
 
@@ -218,11 +217,8 @@ Atlas CLI developers should update all imports to new major versions and remove 
 
 In situations when a new major version introduces breaking changes that:
 
-- will affect end users (change JSON payload)
-- are completely different methods and payloads of the feature which require wider changes in the CLI
+- will affect end users (for example change in JSON payload)
+- are completely different methods of the feature which require wider changes in the CLI
 
-developers should leave the old version in place for all affected commands and create relevant ticket to update them separately.
-
+developers should leave the old version imports in place for all affected commands and create relevant tickets to update them separately.
 Please refer to the individual SDK version release notes for more details. 
-
-

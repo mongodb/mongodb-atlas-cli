@@ -47,16 +47,20 @@ jobs:
           registry: "${{ env.QUAY }}"
           username: "${{ secrets.QUAY_USER }}"
           password: "${{ secrets.QUAY_TOKEN }}"
-      - name: Build and push container to Dockerhub and Quay
+      - name: Build and push container to Dockerhub
         uses: docker/build-push-action@v4
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
           tags: ${{ env.IMAGE_REPOSITORY }}:latest ,
             ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
-            ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }} ,
-            ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:latest ,
-            ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
-            ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
+            ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
           file: Dockerfile
           push: true
+      - name: Push container to quay
+        run: |
+          docker buildx imagetools create \
+            --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:latest \
+            --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} \
+            --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
+            ${{ env.IMAGE_REPOSITORY }}:latest

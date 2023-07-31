@@ -47,7 +47,7 @@ jobs:
           registry: "${{ env.QUAY }}"
           username: "${{ secrets.QUAY_USER }}"
           password: "${{ secrets.QUAY_TOKEN }}"
-      - name: Build and push container to Dockerhub
+      - name: Build and push container to Dockerhub and Quay
         uses: docker/build-push-action@v4
         with:
           context: .

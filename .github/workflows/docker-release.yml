@@ -43,8 +43,8 @@ jobs:
       - name: Update repository overview
         uses: peter-evans/dockerhub-description@v3
         with:
-          username: "${{ secrets.CONTAINER_USER }}"
-          password: "${{ secrets.CONTAINER_SECRET }}"
+          username: "${{ secrets.DOCKERHUB_USER }}"
+          password: "${{ secrets.DOCKERHUB_SECRET }}"
           repository: ${{ env.IMAGE_REPOSITORY }}
           readme-filepath: DOCKERHUB_README.md
       - name: Build and push container to Dockerhub

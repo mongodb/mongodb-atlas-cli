@@ -199,11 +199,30 @@ For changes that involve user facing copy please include `docs-cloud-team` as a 
 
 Atlas CLI uses [atlas-sdk-go](https://github.com/mongodb/atlas-sdk-go) for API integration.
 Go SDK will be automatically updated for the new versions using dependabot.
-In situations when SDK does new major release developers need to specify version explicitly in the go update command. For example:
+In situations when SDK does new major releases developers need to specify the version explicitly in the go update command. For example:
 
 ```
 go get go.mongodb.org/atlas-sdk/v20230501001
 ```
 
-Atlas CLI should be able to work with multiple versions of the SDK supporting various Resource Versions. 
-For more info please refer to the [SDK documentation](https://github.com/mongodb/atlas-sdk-go/blob/main/docs/doc_1_concepts.md#release-strategy-semantic-versioning)
+Atlas CLI can work with multiple versions of the GO SDK supporting various Resource Versions. 
+
+
+For more info please refer to the [SDK documentation](https://github.com/mongodb/atlas-sdk-go/blob/main/docs/doc_1_concepts.md#release-strategy-semantic-versioning) and 
+[golang documentation](https://go.dev/doc/modules/version-numbers#major)
+
+### Major Version Updates   
+
+When adding a new major version of the go sdk, the old sdk version dependency will be still present in the go mod files.
+Atlas CLI developers should update all imports to new major versions and remove old dependencies.
+
+In situations when a new major version introduces breaking changes that:
+
+- will affect end users (change JSON payload)
+- are completely different methods and payloads of the feature which require wider changes in the CLI
+
+developers should leave the old version in place for all affected commands and create relevant ticket to update them separately.
+
+Please refer to the individual SDK version release notes for more details. 
+
+

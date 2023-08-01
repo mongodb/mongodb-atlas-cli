@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package compliancepolicy
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/exports"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/restores"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/schedule"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/snapshots"
 	"github.com/spf13/cobra"
 )
 
 func baseCommand() *cobra.Command {
-	const use = "backups"
+	const use = "compliancepolicy"
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage cloud backups for your project.",
+		Aliases: []string{"compliance-policy", "bcp"},
+		Short:   "Manage cloud backup compliance policy for your project.",
 	}
 
 	return cmd
@@ -39,11 +33,7 @@ func Builder() *cobra.Command {
 	cmd := baseCommand()
 
 	cmd.AddCommand(
-		snapshots.Builder(),
-		restores.Builder(),
-		exports.Builder(),
-		schedule.Builder(),
-		compliancepolicy.Builder(),
+		DescribeBuilder(),
 	)
 
 	return cmd

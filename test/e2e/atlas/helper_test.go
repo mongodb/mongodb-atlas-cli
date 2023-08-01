@@ -90,6 +90,7 @@ const (
 	jobsEntity                   = "jobs"
 	snapshotsEntity              = "snapshots"
 	restoresEntity               = "restores"
+	compliancepolicyEntity       = "compliancepolicy"
 	teamsEntity                  = "teams"
 	setupEntity                  = "setup"
 )

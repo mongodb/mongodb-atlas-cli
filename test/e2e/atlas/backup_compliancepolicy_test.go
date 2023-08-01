@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && backup && compliancepolicy)
+//go:build e2e || (atlas && vinc)
 
 package atlas_test
 
@@ -51,9 +51,9 @@ func TestCompliancePolicy(t *testing.T) {
 
 		a := assert.New(t)
 		var result atlasv2.DataProtectionSettings
-		if err = json.Unmarshal(resp, &result); a.NoError(err, string(resp)) {
-			// Will be changed after implementing enable/setup.
-			// a.NotEmpty(result)
-		}
+		err = json.Unmarshal(resp, &result)
+		a.NoError(err, string(resp))
+		// Will be changed after implementing enable/setup.
+		// a.NotEmpty(result)
 	})
 }

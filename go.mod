@@ -41,7 +41,7 @@ require (
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
 	go.mongodb.org/atlas v0.31.0
-	go.mongodb.org/atlas-sdk/v20230201004 v20230201004.0.0
+	go.mongodb.org/atlas-sdk/v20230201004 v20230201004.1.0
 	go.mongodb.org/mongo-driver v1.12.0
 	go.mongodb.org/ops-manager v0.53.0
 	golang.org/x/crypto v0.11.0
@@ -127,7 +127,6 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
-	go.mongodb.org/atlas-sdk/v20230201004 v20230201004.1.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect

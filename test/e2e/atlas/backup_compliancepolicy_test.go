@@ -53,7 +53,7 @@ func TestCompliancePolicy(t *testing.T) {
 		var result atlasv2.DataProtectionSettings
 		err = json.Unmarshal(resp, &result)
 		a.NoError(err, string(resp))
-		// Will be changed after implementing enable/setup.
+		// Will be changed after implementing enable/setup. Ticket to enforce this: CLOUDP-193023
 		// a.NotEmpty(result)
 	})
 }

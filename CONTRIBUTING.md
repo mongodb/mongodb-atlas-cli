@@ -214,3 +214,7 @@ For more info please refer to the [SDK documentation](https://github.com/mongodb
 
 When adding a new major version of the go sdk, the old sdk version dependency will be still present in the go mod files.
 Atlas CLI developers should update all imports to new major versions and remove old dependencies.
+
+To update simply rename all instances of major version across the repository imports and go.mod files.
+
+e.g `v20230201001` => `v20230201002` 

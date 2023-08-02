@@ -86,7 +86,6 @@ func CopyProtectionBuilder() *cobra.Command {
 	opts := new(CopyProtectionOpts)
 	cmd := &cobra.Command{
 		Use:       "copyprotection",
-		Hidden:    true,
 		Args:      cobra.MatchAll(cobra.OnlyValidArgs, cobra.ExactArgs(1)),
 		ValidArgs: []string{enable, disable},
 		Short:     "Enable or disable copyprotection of the backup compliance policy for your project.",

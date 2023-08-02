@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20230201003/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 

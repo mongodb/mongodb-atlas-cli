@@ -5,6 +5,7 @@ updates:
     schedule:
       interval: weekly
       day: tuesday
+    open-pull-requests-limit: 10
     reviewers:
       - "mongodb/mongocli"
   - package-ecosystem: github-actions

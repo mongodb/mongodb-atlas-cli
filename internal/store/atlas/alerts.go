@@ -15,7 +15,7 @@
 package atlas
 
 import (
-	"go.mongodb.org/atlas-sdk/v20230201003/admin"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_alerts.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas AlertDescriber,AlertLister,AlertAcknowledger

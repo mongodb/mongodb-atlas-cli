@@ -45,9 +45,9 @@ func TestCompliancePolicy(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, outputErr := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
+		r.NoError(outputErr, string(resp))
 
 		a := assert.New(t)
 		var result atlasv2.DataProtectionSettings

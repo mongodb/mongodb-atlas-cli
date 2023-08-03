@@ -38,6 +38,7 @@ type CopyProtectionOpts struct {
 const (
 	enable  string = "enable"
 	disable string = "disable"
+	active  string = "ACTIVE"
 )
 
 func (opts *CopyProtectionOpts) initStore(ctx context.Context) func() error {
@@ -65,7 +66,7 @@ func (opts *CopyProtectionOpts) copyProtectionWatcher() (bool, error) {
 	if res.GetState() == "" {
 		return false, fmt.Errorf("could not access State field")
 	}
-	return (res.GetState() == "ACTIVE"), nil
+	return (res.GetState() == active), nil
 }
 
 func (opts *CopyProtectionOpts) Run() error {

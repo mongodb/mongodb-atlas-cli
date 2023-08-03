@@ -92,17 +92,17 @@ func TestCopyProtectionOpts_Watcher(t *testing.T) {
 func TestCopyProtectionOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCompliancePolicy(ctrl)
-	state := "ACTIVE"
-	copyprotection_before := false
-	copyprotection_after := true
+	state := active
+	copyprotectionBefore := false
+	copyprotectionAfter := true
 
 	initial := &atlasv2.DataProtectionSettings{
-		CopyProtectionEnabled: &copyprotection_before,
+		CopyProtectionEnabled: &copyprotectionBefore,
 	}
 
 	expected := &atlasv2.DataProtectionSettings{
 		State:                 &state,
-		CopyProtectionEnabled: &copyprotection_after,
+		CopyProtectionEnabled: &copyprotectionAfter,
 	}
 
 	opts := &CopyProtectionOpts{

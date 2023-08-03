@@ -85,8 +85,10 @@ func (opts *CopyProtectionOpts) Run() error {
 
 func CopyProtectionBuilder() *cobra.Command {
 	opts := new(CopyProtectionOpts)
+	use := "copyProtection"
 	cmd := &cobra.Command{
-		Use:       "copyprotection",
+		Use:       use,
+		Aliases:   cli.GenerateAliases(use),
 		Args:      cobra.MatchAll(cobra.OnlyValidArgs, cobra.ExactArgs(1)),
 		ValidArgs: []string{enable, disable},
 		Short:     "Enable or disable copyprotection of the backup compliance policy for your project.",

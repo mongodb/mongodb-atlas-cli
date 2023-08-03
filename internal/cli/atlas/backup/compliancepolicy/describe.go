@@ -70,7 +70,6 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Aliases: []string{"get"},
-		Hidden:  true,
 		Short:   "Return the backup compliance policy for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

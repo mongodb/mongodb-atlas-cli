@@ -21,10 +21,9 @@ import (
 func baseCommand() *cobra.Command {
 	const use = "compliancepolicy"
 	cmd := &cobra.Command{
-		Use:     use,
-		Hidden:  true,
-		Aliases: []string{"compliance-policy", "bcp"},
-		Short:   "Manage cloud backup compliance policy for your project.",
+		Use:    use,
+		Hidden: true,
+		Short:  "Manage cloud backup compliance policy for your project.",
 	}
 
 	return cmd

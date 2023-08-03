@@ -16,6 +16,7 @@ package compliancepolicy
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -37,7 +38,7 @@ type CopyProtectionOpts struct {
 }
 
 const (
-	enable  string = "enable"
+	enable         = "enable"
 	disable string = "disable"
 	active  string = "ACTIVE"
 )
@@ -65,7 +66,7 @@ func (opts *CopyProtectionOpts) copyProtectionWatcher() (bool, error) {
 		return false, err
 	}
 	if res.GetState() == "" {
-		return false, fmt.Errorf("could not access State field")
+		return false, errors.New("could not access State field")
 	}
 	return (res.GetState() == active), nil
 }
@@ -80,7 +81,7 @@ func (opts *CopyProtectionOpts) Run() error {
 		return err
 	}
 
-	fmt.Printf("Your copy protection has been set to: %v\n", opts.enable)
+	opts.Print(fmt.Sprintf("Your copy protection has been set to: %v\n", opts.enable))
 	return nil
 }
 

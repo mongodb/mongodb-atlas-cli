@@ -91,7 +91,7 @@ func CopyProtectionBuilder() *cobra.Command {
 		ValidArgs: []string{enable, disable},
 		Short:     "Enable or disable copyprotection of the backup compliance policy for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			// we throw an error iff 1 argument is not present,
+			// we throw an error if 1 argument is not present,
 			// so we can safely access args[0].
 			if args[0] == enable {
 				opts.enable = true

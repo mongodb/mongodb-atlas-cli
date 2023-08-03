@@ -36,7 +36,7 @@ func TestCompliancePolicy(t *testing.T) {
 	g := newAtlasE2ETestGeneratorWithBackup(t)
 	g.generateProject("compliancePolicy")
 
-	t.Run("Compliance Policy Describe", func(t *testing.T) {
+	t.Run("describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			compliancepolicyEntity,
@@ -55,5 +55,29 @@ func TestCompliancePolicy(t *testing.T) {
 		a.NoError(err, string(resp))
 		// Will be changed after implementing enable/setup.
 		// a.NotEmpty(result)
+	})
+
+	t.Run("copyprotection invalid argument", func(t *testing.T) {
+		invalidArgument := "invalid"
+		cmd := exec.Command(
+			cliPath,
+			backupsEntity,
+			compliancepolicyEntity,
+			"copyprotection",
+			invalidArgument)
+		cmd.Env = os.Environ()
+		_, err = cmd.CombinedOutput()
+		r.Error(err)
+	})
+
+	t.Run("copyprotection invalid nr of arguments", func(t *testing.T) {
+		cmd := exec.Command(
+			cliPath,
+			backupsEntity,
+			compliancepolicyEntity,
+			"copyprotection")
+		cmd.Env = os.Environ()
+		_, err = cmd.CombinedOutput()
+		r.Error(err)
 	})
 }

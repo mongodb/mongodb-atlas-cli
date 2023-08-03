@@ -63,7 +63,7 @@ func (opts *CopyProtectionOpts) copyProtectionWatcher() (bool, error) {
 		return false, err
 	}
 	if res.GetState() == "" {
-		return false, fmt.Errorf("could not access State field.")
+		return false, fmt.Errorf("could not access State field")
 	}
 	return (res.GetState() == "ACTIVE"), nil
 }

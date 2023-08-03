@@ -71,7 +71,7 @@ func TestCopyProtectionOpts_Watcher(t *testing.T) {
 	opts := &CopyProtectionOpts{
 		store: mockStore,
 	}
-	state := "ACTIVE"
+	state := active
 	expected := &atlasv2.DataProtectionSettings{
 		State: &state,
 	}

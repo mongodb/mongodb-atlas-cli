@@ -8,9 +8,6 @@ updates:
     reviewers:
       - "mongodb/mongocli"
     groups:
-      internal-dependencies:
-          patterns:
-            - "go.mongodb.org*" # A single dependency name
       golang:
           patterns:
             - "golang.org*" 

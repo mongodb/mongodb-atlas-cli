@@ -79,7 +79,7 @@ func (opts *CopyProtectionOpts) Run() error {
 		return err
 	}
 
-	fmt.Printf("Your copy protection has been set to: %v ", opts.enable)
+	fmt.Printf("Your copy protection has been set to: %v\n", opts.enable)
 	return nil
 }
 

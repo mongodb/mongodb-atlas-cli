@@ -309,7 +309,7 @@ dbName and collection are required only for built-in roles.`
 	ServerlessProvider                        = "Cloud service provider that applies to the provisioned serverless instance."
 	ServerlessRegion                          = "Human-readable label that identifies the physical location of your MongoDB serverless instance. The region you choose can affect network latency for clients accessing your databases."
 	WithoutDefaultAlertSettings               = "Flag that creates the new project without the default alert settings enabled. This flag defaults to false. This is useful if you create projects programmatically and want to create your own alerts instead of using the default alert settings."
-	FormatOut                                 = "Output format. Valid values are json, json-path, go-template, or go-template-file."
+	FormatOut                                 = "Output format. Valid values are json, json-path, go-template, or go-template-file. To see full output, use the -o json option."
 	TargetClusterID                           = "Unique identifier of the target cluster. For use only with automated restore jobs."
 	TargetClusterName                         = "Name of the target cluster. For use only with automated restore jobs. You must specify a targetClusterName for automated restores."
 	CheckpointID                              = "Unique identifier for the sharded cluster checkpoint that represents the point in time to which your data will be restored. If you set checkpointId, you cannot set oplogInc, oplogTs, snapshotId, or pointInTimeUTCMillis."

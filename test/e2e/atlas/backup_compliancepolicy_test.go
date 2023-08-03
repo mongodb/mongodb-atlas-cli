@@ -54,7 +54,7 @@ func TestCompliancePolicy(t *testing.T) {
 		err = json.Unmarshal(resp, &result)
 		a.NoError(err, string(resp))
 		// Will be changed after implementing enable/setup.
-		// a.NotEmpty(result)
+		// a.NotEmpty(result) Ticket to enforce this: CLOUDP-193023
 	})
 
 	t.Run("copyprotection invalid argument", func(t *testing.T) {

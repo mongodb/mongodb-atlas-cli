@@ -17,7 +17,6 @@ package compliancepolicy
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -38,10 +37,12 @@ type CopyProtectionOpts struct {
 }
 
 const (
-	enable  string = "enable"
-	disable string = "disable"
-	active  string = "ACTIVE"
+	enable  = "enable"
+	disable = "disable"
+	active  = "ACTIVE"
 )
+
+var copyProtectionTemplate = `Copy protection has been set to: {{.CopyProtectionEnabled}}`
 
 func (opts *CopyProtectionOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -62,6 +63,7 @@ func (opts *CopyProtectionOpts) PreRun() error {
 
 func (opts *CopyProtectionOpts) copyProtectionWatcher() (bool, error) {
 	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
+	opts.policy = res
 	if err != nil {
 		return false, err
 	}
@@ -81,8 +83,7 @@ func (opts *CopyProtectionOpts) Run() error {
 		return err
 	}
 
-	opts.Print(fmt.Sprintf("Your copy protection has been set to: %v\n", opts.enable))
-	return nil
+	return opts.Print(opts.policy)
 }
 
 func CopyProtectionBuilder() *cobra.Command {
@@ -103,7 +104,7 @@ func CopyProtectionBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ""),
+				opts.InitOutput(cmd.OutOrStdout(), copyProtectionTemplate),
 				opts.PreRun,
 			)
 		},
@@ -113,5 +114,8 @@ func CopyProtectionBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
 	return cmd
 }

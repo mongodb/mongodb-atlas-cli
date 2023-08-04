@@ -359,4 +359,5 @@ const (
 	DataFederation                            = "dataFederation"                            // DataFederation flag
 	Value                                     = "value"                                     // Value flag
 	OverrunPolicy                             = "overrunPolicy"                             // OverrunPolicy flag
+	AuthorizedEmail                           = "authorizedEmail"                           // authorizedEmail flag
 )

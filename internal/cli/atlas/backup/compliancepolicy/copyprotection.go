@@ -16,15 +16,16 @@ package compliancepolicy
 
 import (
 	"context"
-	"fmt"
+	"errors"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201003/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type CopyProtectionOpts struct {
@@ -36,9 +37,11 @@ type CopyProtectionOpts struct {
 }
 
 const (
-	enable  string = "enable"
-	disable string = "disable"
+	enable  = "enable"
+	disable = "disable"
 )
+
+var copyProtectionTemplate = `Copy protection has been set to: {{.CopyProtectionEnabled}}`
 
 func (opts *CopyProtectionOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -59,11 +62,12 @@ func (opts *CopyProtectionOpts) PreRun() error {
 
 func (opts *CopyProtectionOpts) copyProtectionWatcher() (bool, error) {
 	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
+	opts.policy = res
 	if err != nil {
 		return false, err
 	}
 	if res.GetState() == "" {
-		return false, fmt.Errorf("could not access State field")
+		return false, errors.New("could not access State field")
 	}
 	return (res.GetState() == active), nil
 }
@@ -78,20 +82,19 @@ func (opts *CopyProtectionOpts) Run() error {
 		return err
 	}
 
-	fmt.Printf("Your copy protection has been set to: %v\n", opts.enable)
-	return nil
+	return opts.Print(opts.policy)
 }
 
 func CopyProtectionBuilder() *cobra.Command {
 	opts := new(CopyProtectionOpts)
+	use := "copyProtection"
 	cmd := &cobra.Command{
-		Use:       "copyprotection",
-		Args:      cobra.MatchAll(cobra.OnlyValidArgs, cobra.ExactArgs(1)),
+		Use:       use,
+		Aliases:   cli.GenerateAliases(use),
+		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{enable, disable},
 		Short:     "Enable or disable copyprotection of the backup compliance policy for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			// we throw an error if 1 argument is not present,
-			// so we can safely access args[0].
 			if args[0] == enable {
 				opts.enable = true
 			} else {
@@ -100,7 +103,7 @@ func CopyProtectionBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ""),
+				opts.InitOutput(cmd.OutOrStdout(), copyProtectionTemplate),
 				opts.PreRun,
 			)
 		},
@@ -110,5 +113,8 @@ func CopyProtectionBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
 	return cmd
 }

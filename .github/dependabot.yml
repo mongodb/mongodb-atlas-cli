@@ -5,8 +5,25 @@ updates:
     schedule:
       interval: weekly
       day: tuesday
+    open-pull-requests-limit: 20
     reviewers:
       - "mongodb/mongocli"
+    groups:
+      golang:
+          patterns:
+            - "golang.org*" 
+      kubernetes:
+          patterns:
+            - "*k8s.io*"
+      google:
+          patterns:
+            - "*google.golang.org*"
+      aws:
+          patterns:
+            - "github.com/aws*"
+      azure:
+          patterns:
+            - "github.com/Azure*"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:

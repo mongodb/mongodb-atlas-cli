@@ -94,6 +94,15 @@ func TestEnableOpts_Run(t *testing.T) {
 	}
 	test.VerifyOutputTemplate(t, enableTemplate, expected)
 }
+func TestEnableOpts_Run_Fail(t *testing.T) {
+	invalidEmail := "invalidEmail"
+
+	opts := &EnableOpts{
+		authorizedEmail: invalidEmail,
+	}
+
+	assert.Error(t, opts.Run())
+}
 
 func TestEnableOpts_getEmptyCompliancePolicy(t *testing.T) {
 	authorizedEmail := "firstname.lastname@mongodb.com"

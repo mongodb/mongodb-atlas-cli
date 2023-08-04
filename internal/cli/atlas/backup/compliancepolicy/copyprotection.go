@@ -38,7 +38,6 @@ type CopyProtectionOpts struct {
 const (
 	enable  string = "enable"
 	disable string = "disable"
-	active  string = "ACTIVE"
 )
 
 func (opts *CopyProtectionOpts) initStore(ctx context.Context) func() error {

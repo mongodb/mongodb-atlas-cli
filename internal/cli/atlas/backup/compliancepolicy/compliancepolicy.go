@@ -15,15 +15,17 @@
 package compliancepolicy
 
 import (
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func baseCommand() *cobra.Command {
-	const use = "compliancepolicy"
+	const use = "compliancePolicy"
 	cmd := &cobra.Command{
-		Use:    use,
-		Hidden: true,
-		Short:  "Manage cloud backup compliance policy for your project.",
+		Use:     use,
+		Hidden:  true,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage cloud backup compliance policy for your project.",
 	}
 
 	return cmd
@@ -34,6 +36,7 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		DescribeBuilder(),
+		CopyProtectionBuilder(),
 	)
 
 	return cmd

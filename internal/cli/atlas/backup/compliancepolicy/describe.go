@@ -40,8 +40,8 @@ Encryption at rest enabled:	{{.EncryptionAtRestEnabled}}
 Point-in-Time restores enabled:	{{.PitEnabled}}
 Restore window days:	{{.RestoreWindowDays}}
 
-Policies
-ID	Frequency Interval	Frequency Type	Retention
+POLICIES
+ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
 {{- range .ScheduledPolicyItems}}
 {{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
 {{- end}}

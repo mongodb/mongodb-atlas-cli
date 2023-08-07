@@ -43,10 +43,7 @@ const (
 )
 
 func (opts *UpdateOpts) Run() error {
-	stream, err := opts.streams()
-	if err != nil {
-		return err
-	}
+	stream := opts.streams()
 	r, err := opts.store.UpdateStream(opts.ProjectID, opts.name, stream.DataProcessRegion)
 
 	if err != nil {
@@ -56,7 +53,7 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) streams() (*atlasv2.StreamsTenant, error) {
+func (opts *UpdateOpts) streams() *atlasv2.StreamsTenant {
 	processor := atlasv2.NewStreamsTenant()
 	processor.Name = &opts.name
 	processor.GroupId = &opts.ProjectID
@@ -72,7 +69,7 @@ func (opts *UpdateOpts) streams() (*atlasv2.StreamsTenant, error) {
 		processor.DataProcessRegion.Region = opts.region
 	}
 
-	return processor, nil
+	return processor
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -86,7 +83,7 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 // CreateBuilder
 // atlas streams instance update [name]
 // --provider AWS
-// --region VIRGINIA_USA
+// --region VIRGINIA_USA.
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
@@ -121,7 +118,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

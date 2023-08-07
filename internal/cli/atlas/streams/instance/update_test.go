@@ -36,7 +36,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 	}
 
 	expected := &atlasv2.StreamsTenant{Name: &updateOpts.name, GroupId: &updateOpts.ProjectID, DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"}}
-	updateOpts.ProjectID = "project-id"
+	updateOpts.ProjectID = "update-project-id"
 
 	mockStore.
 		EXPECT().

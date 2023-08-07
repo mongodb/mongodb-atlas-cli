@@ -32,7 +32,6 @@ import (
 type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
-	name            string
 	streamsInstance string
 	store           store.ConnectionDeleter
 }
@@ -84,7 +83,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.streamsInstance, flag.Instance, "", usage.StreamsInstance)
-	cmd.MarkFlagRequired(flag.Instance)
+	_ = cmd.MarkFlagRequired(flag.Instance)
 
 	return cmd
 }

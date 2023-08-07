@@ -35,7 +35,7 @@ func TestCreate_Run(t *testing.T) {
 	fileContents := `
 {
   "type": "Kafka",
-  "bootstrapServers": "example.com:8080,fraud.example.com:8000",
+  "bootstrapServers": "example2.com:8080,fraud.example.com:8000",
   "security": {
     "protocol": "PLAINTEXT"
   },
@@ -50,7 +50,7 @@ func TestCreate_Run(t *testing.T) {
 }
 `
 
-	fileName := "connection.json"
+	fileName := "test-connection.json"
 	assert.NoError(t, afero.WriteFile(fs, fileName, []byte(fileContents), 0600))
 
 	createOpts := &CreateOpts{
@@ -60,7 +60,7 @@ func TestCreate_Run(t *testing.T) {
 		streamsInstance: "Example Instance",
 	}
 
-	name := "Example Name"
+	name := "Example Conn Name"
 	con := atlasv2.NewStreamsConnectionWithDefaults()
 	con.Name = &name
 

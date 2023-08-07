@@ -90,7 +90,7 @@ atlas streams connection describe ExampleConnection --instance ExampleInstance
 	cmd.Flags().StringVar(&opts.streamsInstance, flag.Instance, "", usage.StreamsInstance)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
-	cmd.MarkFlagRequired(flag.Instance)
+	_ = cmd.MarkFlagRequired(flag.Instance)
 
 	return cmd
 }

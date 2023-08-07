@@ -36,18 +36,18 @@ func (m *MockStreamsLister) EXPECT() *MockStreamsListerMockRecorder {
 }
 
 // ProjectStreams mocks base method.
-func (m *MockStreamsLister) ProjectStreams(arg0 string, arg1 *admin.ListStreamInstancesApiParams) (*admin.PaginatedApiStreamsTenant, error) {
+func (m *MockStreamsLister) ProjectStreams(arg0 *admin.ListStreamInstancesApiParams) (*admin.PaginatedApiStreamsTenant, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProjectStreams", arg0, arg1)
+	ret := m.ctrl.Call(m, "ProjectStreams", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedApiStreamsTenant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ProjectStreams indicates an expected call of ProjectStreams.
-func (mr *MockStreamsListerMockRecorder) ProjectStreams(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockStreamsListerMockRecorder) ProjectStreams(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectStreams", reflect.TypeOf((*MockStreamsLister)(nil).ProjectStreams), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectStreams", reflect.TypeOf((*MockStreamsLister)(nil).ProjectStreams), arg0)
 }
 
 // MockStreamsDescriber is a mock of StreamsDescriber interface.

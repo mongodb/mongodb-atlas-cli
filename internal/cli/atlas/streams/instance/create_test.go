@@ -34,7 +34,7 @@ func TestCreateOpts_Run(t *testing.T) {
 		provider: "AWS",
 		region:   "VIRGINIA_USA",
 	}
-	opts.ProjectID = "project-id"
+	opts.ProjectID = "create-project-id"
 
 	expected := &atlasv2.StreamsTenant{Name: &opts.name, GroupId: &opts.ProjectID, DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"}}
 

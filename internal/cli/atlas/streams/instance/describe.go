@@ -59,7 +59,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 // DescribeBuilder
-// atlas streams instance describe [name]
+// atlas streams instance describe [name].
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
@@ -77,7 +77,7 @@ func DescribeBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
-				return errors.New("Atlas Streams Processor instance name missing")
+				return errors.New("the Atlas Streams Processor instance name is missing")
 			}
 
 			if len(args) != 0 {

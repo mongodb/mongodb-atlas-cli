@@ -47,7 +47,7 @@ func (opts *ListOpts) Run() error {
 	listParams.GroupId = opts.ProjectID
 	listParams.PageNum = &opts.PageNum
 
-	r, err := opts.store.ProjectStreams(opts.ConfigProjectID(), listParams)
+	r, err := opts.store.ProjectStreams(listParams)
 	if err != nil {
 		return err
 	}
@@ -64,7 +64,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 // ListBuilder
-// atlas streams instance list
+// atlas streams instance list.
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

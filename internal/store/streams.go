@@ -21,7 +21,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_streams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store StreamsLister,StreamsDescriber,StreamsCreator,StreamsDeleter,StreamsUpdater,ConnectionCreator,ConnectionDeleter,ConnectionUpdater,StreamsConnectionDescriber,StreamsConnectionLister
 
 type StreamsLister interface {
-	ProjectStreams(string, *atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error)
+	ProjectStreams(*atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error)
 }
 
 type StreamsDescriber interface {
@@ -60,28 +60,28 @@ type ConnectionUpdater interface {
 	UpdateConnection(string, string, string, *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error)
 }
 
-func (s *Store) ProjectStreams(projectID string, opts *atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error) {
+func (s *Store) ProjectStreams(opts *atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error) {
 	result, _, err := s.clientv2.StreamsApi.ListStreamInstancesWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
-func (s *Store) AtlasStream(projectId, name string) (*atlasv2.StreamsTenant, error) {
-	result, _, err := s.clientv2.StreamsApi.GetStreamInstance(s.ctx, projectId, name).Execute()
+func (s *Store) AtlasStream(projectID, name string) (*atlasv2.StreamsTenant, error) {
+	result, _, err := s.clientv2.StreamsApi.GetStreamInstance(s.ctx, projectID, name).Execute()
 	return result, err
 }
 
-func (s *Store) CreateStream(projectId string, processor *atlasv2.StreamsTenant) (*atlasv2.StreamsTenant, error) {
-	result, _, err := s.clientv2.StreamsApi.CreateStreamInstance(s.ctx, projectId, processor).Execute()
+func (s *Store) CreateStream(projectID string, processor *atlasv2.StreamsTenant) (*atlasv2.StreamsTenant, error) {
+	result, _, err := s.clientv2.StreamsApi.CreateStreamInstance(s.ctx, projectID, processor).Execute()
 	return result, err
 }
 
-func (s *Store) DeleteStream(projectId, name string) error {
-	_, _, err := s.clientv2.StreamsApi.DeleteStreamInstance(s.ctx, projectId, name).Execute()
+func (s *Store) DeleteStream(projectID, name string) error {
+	_, _, err := s.clientv2.StreamsApi.DeleteStreamInstance(s.ctx, projectID, name).Execute()
 	return err
 }
 
-func (s *Store) UpdateStream(projectId, name string, streamsDataProcessRegion *atlasv2.StreamsDataProcessRegion) (*atlasv2.StreamsTenant, error) {
-	result, _, err := s.clientv2.StreamsApi.UpdateStreamInstance(s.ctx, projectId, name, streamsDataProcessRegion).Execute()
+func (s *Store) UpdateStream(projectID, name string, streamsDataProcessRegion *atlasv2.StreamsDataProcessRegion) (*atlasv2.StreamsTenant, error) {
+	result, _, err := s.clientv2.StreamsApi.UpdateStreamInstance(s.ctx, projectID, name, streamsDataProcessRegion).Execute()
 	return result, err
 }
 
@@ -93,7 +93,7 @@ type StreamsConnection struct {
 }
 
 func AtlasConnToDisplayConn(tenantName string, connection *atlasv2.StreamsConnection) StreamsConnection {
-	servers := ""
+	var servers string
 
 	if connection.BootstrapServers != nil {
 		servers = *connection.BootstrapServers
@@ -119,8 +119,8 @@ func AtlasConnToDisplayConn(tenantName string, connection *atlasv2.StreamsConnec
 func (s *Store) StreamsConnections(projectID, tenantName string) ([]StreamsConnection, error) {
 	connections, _, err := s.clientv2.StreamsApi.ListStreamConnections(s.ctx, projectID, tenantName).Execute()
 	result := []StreamsConnection{}
-	for _, conn := range connections.Results {
-		result = append(result, AtlasConnToDisplayConn(tenantName, &conn))
+	for i := range connections.Results {
+		result = append(result, AtlasConnToDisplayConn(tenantName, &connections.Results[i]))
 	}
 
 	return result, err

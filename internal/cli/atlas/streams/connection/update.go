@@ -114,8 +114,8 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.StreamsConnectionFilename)
 	_ = cmd.MarkFlagFilename(flag.File)
 
-	cmd.MarkFlagRequired(flag.Instance)
-	cmd.MarkFlagRequired(flag.File)
+	_ = cmd.MarkFlagRequired(flag.Instance)
+	_ = cmd.MarkFlagRequired(flag.File)
 
 	return cmd
 }

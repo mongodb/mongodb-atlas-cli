@@ -69,7 +69,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 // CreateBuilder
 // atlas streams instance create [name]
 // --provider AWS
-// --region VIRGINIA_USA
+// --region VIRGINIA_USA.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -86,7 +86,7 @@ func CreateBuilder() *cobra.Command {
 		ValidArgs: []string{"name"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
-				return errors.New("Atlas Streams Processor instance name missing")
+				return errors.New("the Atlas Streams Processor instance name is missing")
 			}
 
 			if len(args) != 0 {
@@ -110,9 +110,9 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
-	cmd.MarkFlagRequired(flag.Provider)
-	cmd.MarkFlagRequired(flag.Region)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	_ = cmd.MarkFlagRequired(flag.Provider)
+	_ = cmd.MarkFlagRequired(flag.Region)
 
 	return cmd
 }

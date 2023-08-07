@@ -46,12 +46,8 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DeleteOpts) validate() error {
-	return nil
-}
-
 // DeleteBuilder
-// atlas streams instance delete [name]
+// atlas streams instance delete [name].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Atlas Streams processor instance '%s' deleted\n", "Atlas Streams processor instance not deleted"),
@@ -77,7 +73,7 @@ An Atlas Streams processor instance with running processors cannot be deleted wi
 		ValidArgs: []string{"name"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
-				return errors.New("Atlas Streams Processor instance name missing")
+				return errors.New("the Atlas Streams Processor instance name is missing")
 			}
 
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {

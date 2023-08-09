@@ -1,11 +1,11 @@
 {
-    "address": "0.0.0.0:31313",
-    "id": {
-        "groupId": "012345678901234567890123",
-        "clusterName": "local-mms"
-    },
-    "connectionString": "mongodb://mongoUser:hunter1@mongod.internal:27017/?authSource=admin&tls=true",
-    "hostnameRegex": "docker\\_mongot([0-9]+)\\_1.docker\\_default",
-    "indexes": [],
-    "analyzers": []
+  "address": "0.0.0.0:31313",
+  "id": {
+    "groupId": "012345678901234567890123",
+    "clusterName": "local-mms"
+  },
+  "connectionString": "mongodb://mongoUser:hunter1@mongod.internal:27017/?authSource=admin&tls=true",
+  "hostnameRegex": "(1)",
+  "indexes": [],
+  "analyzers": []
 }

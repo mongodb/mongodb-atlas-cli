@@ -26,7 +26,7 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-// Generating list of used GO SDK operation IDs
+// Generating list of used GO SDK operation IDs.
 func main() {
 	argsNumber := 3
 	// Check if the folder path is provided as a command-line argument

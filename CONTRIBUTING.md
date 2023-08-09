@@ -222,9 +222,10 @@ e.g `v20230201001` => `v20230201002`
 ### Stable Methods
 
 Each Go SDK method used in the Atlas CLI should be marked as stable.
-Stable methods are listed in the [operations.stable.json](https://github.com/mongodb/atlas-sdk-go/blob/main/tools/transformer/src/operations.stable.json) file.
+Stable methods are listed in the SDK GO [operations.stable.json](https://github.com/mongodb/atlas-sdk-go/blob/main/tools/transformer/src/operations.stable.json) file.
 
-We have developed automation that lists stable methods:
+We have developed automation that lists stable methods.
+Generate list from Atlas CLI run:
 
 ```
 go run ./tools/sdk-usage/main.go ./internal/store ./operations.stable.json

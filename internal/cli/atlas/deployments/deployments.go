@@ -17,7 +17,7 @@ package local
 import (
 	"errors"
 
-	searchindexes "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/local/searchindexes"
+	searchindexes "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/searchindexes"
 	"github.com/spf13/cobra"
 )
 
@@ -35,8 +35,8 @@ var (
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "local",
-		Short: "Manage local instances.",
+		Use:   "deployments",
+		Short: "Manage Atlas and local instances.",
 	}
 
 	cmd.AddCommand(

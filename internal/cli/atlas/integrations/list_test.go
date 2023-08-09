@@ -26,8 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestDBUserList_Run(t *testing.T) {
@@ -45,18 +44,15 @@ func TestDBUserList_Run(t *testing.T) {
 	}
 
 	expected := &atlasv2.PaginatedIntegration{
-		Results: []atlasv2.Integration{
+		Results: []atlasv2.ThridPartyIntegration{
 			{
-				Datadog: &atlasv2.Datadog{
-					Type:   pointer.Get("DATADOG"),
-					ApiKey: "testsApiKey",
-				},
+				Type:   pointer.Get("DATADOG"),
+				ApiKey: pointer.Get("testsApiKey"),
 			},
 			{
-				MicrosoftTeams: &atlasv2.MicrosoftTeams{
-					Type:                     pointer.Get("MICROSOFT_TEAMS"),
-					MicrosoftTeamsWebhookUrl: "urlHook",
-				},
+
+				Type:                     pointer.Get("MICROSOFT_TEAMS"),
+				MicrosoftTeamsWebhookUrl: pointer.Get("urlHook"),
 			},
 		},
 	}
@@ -71,11 +67,8 @@ func TestDBUserList_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `TYPE
-DATADOG
-MICROSOFT_TEAMS
-`, buf.String())
 	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store X509CertificateConfDescriber,X509CertificateConfSaver,X509CertificateConfDisabler
@@ -57,7 +57,7 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlasv2.U
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		userCertificate := atlasv2.UserSecurity{
-			CustomerX509: &atlasv2.CustomerX509{
+			CustomerX509: &atlasv2.DBUserTLSX509Settings{
 				Cas: &certificate,
 			},
 		}

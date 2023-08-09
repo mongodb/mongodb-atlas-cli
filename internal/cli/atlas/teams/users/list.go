@@ -34,8 +34,9 @@ const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME	EMAIL{{range .Results}}
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store  store.TeamUserLister
-	teamID string
+	CompactResponse bool
+	store           store.TeamUserLister
+	teamID          string
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -50,6 +51,10 @@ func (opts *ListOpts) Run() error {
 	r, err := opts.store.TeamUsers(opts.ConfigOrgID(), opts.teamID)
 	if err != nil {
 		return err
+	}
+
+	if opts.CompactResponse {
+		return opts.PrintForCompactResultsResponse(r)
 	}
 
 	return opts.Print(r)
@@ -82,6 +87,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().BoolVarP(&opts.CompactResponse, flag.CompactResponse, flag.CompactResponseShort, false, usage.CompactResponse)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.TeamID)

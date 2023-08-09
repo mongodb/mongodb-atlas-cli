@@ -16,6 +16,7 @@ package backup
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/exports"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/restores"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/schedule"
@@ -42,6 +43,7 @@ func Builder() *cobra.Command {
 		restores.Builder(),
 		exports.Builder(),
 		schedule.Builder(),
+		compliancepolicy.Builder(),
 	)
 
 	return cmd

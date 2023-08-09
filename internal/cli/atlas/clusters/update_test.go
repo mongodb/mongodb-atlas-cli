@@ -24,21 +24,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/spf13/afero"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterGetterUpdater(ctrl)
 
-	expected := &atlasv2.ClusterDescriptionV15{}
+	expected := &atlasv2.AdvancedClusterDescription{}
 
 	t.Run("flags run", func(t *testing.T) {
 		updateOpts := &UpdateOpts{
 			name:       "ProjectBar",
 			tier:       atlasM2,
 			diskSizeGB: 10,
-			mdbVersion: "4.2",
+			mdbVersion: "4.4",
 			store:      mockStore,
 		}
 

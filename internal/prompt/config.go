@@ -21,7 +21,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -110,7 +110,7 @@ func NewProfileReplaceConfirm(entry string) survey.Prompt {
 }
 
 // NewOrgSelect create a prompt to choice the organization.
-func NewOrgSelect(options []atlasv2.Organization) survey.Prompt {
+func NewOrgSelect(options []atlasv2.AtlasOrganization) survey.Prompt {
 	opt := make([]string, len(options))
 	for i, o := range options {
 		opt[i] = *o.Id

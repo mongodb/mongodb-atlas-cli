@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 // MockSearchIndexLister is a mock of SearchIndexLister interface.
@@ -35,10 +35,10 @@ func (m *MockSearchIndexLister) EXPECT() *MockSearchIndexListerMockRecorder {
 }
 
 // SearchIndexes mocks base method.
-func (m *MockSearchIndexLister) SearchIndexes(arg0, arg1, arg2, arg3 string) ([]admin.FTSIndex, error) {
+func (m *MockSearchIndexLister) SearchIndexes(arg0, arg1, arg2, arg3 string) ([]admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchIndexes", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].([]admin.FTSIndex)
+	ret0, _ := ret[0].([]admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockSearchIndexCreator) EXPECT() *MockSearchIndexCreatorMockRecorder {
 }
 
 // CreateSearchIndexes mocks base method.
-func (m *MockSearchIndexCreator) CreateSearchIndexes(arg0, arg1 string, arg2 *admin.FTSIndex) (*admin.FTSIndex, error) {
+func (m *MockSearchIndexCreator) CreateSearchIndexes(arg0, arg1 string, arg2 *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateSearchIndexes", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*admin.FTSIndex)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockSearchIndexDescriber) EXPECT() *MockSearchIndexDescriberMockRecorde
 }
 
 // SearchIndex mocks base method.
-func (m *MockSearchIndexDescriber) SearchIndex(arg0, arg1, arg2 string) (*admin.FTSIndex, error) {
+func (m *MockSearchIndexDescriber) SearchIndex(arg0, arg1, arg2 string) (*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchIndex", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*admin.FTSIndex)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -149,10 +149,10 @@ func (m *MockSearchIndexUpdater) EXPECT() *MockSearchIndexUpdaterMockRecorder {
 }
 
 // UpdateSearchIndexes mocks base method.
-func (m *MockSearchIndexUpdater) UpdateSearchIndexes(arg0, arg1, arg2 string, arg3 *admin.FTSIndex) (*admin.FTSIndex, error) {
+func (m *MockSearchIndexUpdater) UpdateSearchIndexes(arg0, arg1, arg2 string, arg3 *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateSearchIndexes", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(*admin.FTSIndex)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

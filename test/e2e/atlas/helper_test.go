@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -41,15 +41,18 @@ const (
 	searchEntity                 = "search"
 	indexEntity                  = "index"
 	datalakeEntity               = "datalake"
+	datafederationEntity         = "datafederation"
 	datalakePipelineEntity       = "datalakepipeline"
 	alertsEntity                 = "alerts"
 	configEntity                 = "settings"
 	dbusersEntity                = "dbusers"
 	certsEntity                  = "certs"
 	privateEndpointsEntity       = "privateendpoints"
+	queryLimitsEntity            = "querylimits"
 	onlineArchiveEntity          = "onlineArchives"
 	projectEntity                = "project"
 	orgEntity                    = "org"
+	invitationsEntity            = "invitations"
 	maintenanceEntity            = "maintenanceWindows"
 	integrationsEntity           = "integrations"
 	securityEntity               = "security"
@@ -65,6 +68,7 @@ const (
 	regionalModeEntity           = "regionalModes"
 	serverlessEntity             = "serverless"
 	liveMigrationsEntity         = "liveMigrations"
+	auditingEntity               = "auditing"
 	accessLogsEntity             = "accessLogs"
 	accessListEntity             = "accessList"
 	performanceAdvisorEntity     = "performanceAdvisor"
@@ -86,7 +90,9 @@ const (
 	jobsEntity                   = "jobs"
 	snapshotsEntity              = "snapshots"
 	restoresEntity               = "restores"
+	compliancepolicyEntity       = "compliancepolicy"
 	teamsEntity                  = "teams"
+	setupEntity                  = "setup"
 )
 
 // AlertConfig constants.
@@ -430,29 +436,8 @@ func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedInte
 	return false
 }
 
-func getIntegrationType(val atlasv2.Integration) string {
-	switch {
-	case val.Datadog != nil:
-		return datadogEntity
-	case val.MicrosoftTeams != nil:
-		return microsoftTeamsEntity
-	case val.NewRelic != nil:
-		return newRelicEntity
-	case val.OpsGenie != nil:
-		return opsGenieEntity
-	case val.PagerDuty != nil:
-		return pagerDutyEntity
-	case val.Prometheus != nil:
-		return prometheusEntity
-	case val.Slack != nil:
-		return slackEntity
-	case val.VictorOps != nil:
-		return victorOpsEntity
-	case val.Webhook != nil:
-		return webhookEntity
-	default:
-		return ""
-	}
+func getIntegrationType(val atlasv2.ThridPartyIntegration) string {
+	return val.GetType()
 }
 
 func IsGov() bool {
@@ -632,23 +617,14 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 	}
 }
 
+const sleep = 10 * time.Second
+
 func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string) {
 	t.Helper()
 
 	privateEndpoints := listPrivateEndpointsByProject(t, cliPath, projectID, provider)
 	for _, endpoint := range privateEndpoints {
-		var endpointID string
-
-		switch endpoint.CloudProvider {
-		case "AWS":
-			endpointID = endpoint.GetId()
-		case "AZURE":
-			endpointID = endpoint.GetId()
-		case "GCP":
-			endpointID = endpoint.GetId()
-		}
-		require.NotEmpty(t, endpointID)
-		deletePrivateEndpoint(t, cliPath, projectID, provider, endpointID)
+		deletePrivateEndpoint(t, cliPath, projectID, provider, endpoint.GetId())
 	}
 
 	clear := false
@@ -659,11 +635,10 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 			clear = true
 			break
 		}
-
-		time.Sleep(10 * time.Second)
+		time.Sleep(sleep)
 	}
 
-	require.True(t, clear)
+	require.True(t, clear, "failed to clean all private endpoints")
 }
 
 func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider string) []atlasv2.EndpointService {
@@ -762,7 +737,7 @@ func createDBUserWithCert(projectID, username string) error {
 	return nil
 }
 
-func ensureCluster(t *testing.T, cluster *atlasv2.ClusterDescriptionV15, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
+func ensureCluster(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.GetName())

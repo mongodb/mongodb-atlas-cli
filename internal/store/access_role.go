@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -29,7 +29,7 @@ type CloudProviderAccessRoleCreator interface {
 }
 
 type CloudProviderAccessRoleLister interface {
-	CloudProviderAccessRoles(string) (*atlasv2.CloudProviderAccess, error)
+	CloudProviderAccessRoles(string) (*atlasv2.CloudProviderAccessRoles, error)
 }
 
 type CloudProviderAccessRoleDeauthorizer interface {
@@ -46,9 +46,7 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlasv
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		req := atlasv2.CloudProviderAccessRole{
-			CloudProviderAccessAWSIAMRole: &atlasv2.CloudProviderAccessAWSIAMRole{
-				ProviderName: provider,
-			},
+			ProviderName: provider,
 		}
 		result, _, err := s.clientv2.CloudProviderAccessApi.CreateCloudProviderAccessRole(s.ctx, groupID, &req).Execute()
 		return result, err
@@ -58,7 +56,7 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlasv
 }
 
 // CloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
-func (s *Store) CloudProviderAccessRoles(groupID string) (*atlasv2.CloudProviderAccess, error) {
+func (s *Store) CloudProviderAccessRoles(groupID string) (*atlasv2.CloudProviderAccessRoles, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.CloudProviderAccessApi.ListCloudProviderAccessRoles(s.ctx, groupID).Execute()
@@ -84,10 +82,8 @@ func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *at
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		role := atlasv2.CloudProviderAccessRole{
-			CloudProviderAccessAWSIAMRole: &atlasv2.CloudProviderAccessAWSIAMRole{
-				ProviderName:      req.ProviderName,
-				IamAssumedRoleArn: &req.IAMAssumedRoleARN,
-			},
+			ProviderName:      req.ProviderName,
+			IamAssumedRoleArn: &req.IAMAssumedRoleARN,
 		}
 		result, _, err := s.clientv2.CloudProviderAccessApi.AuthorizeCloudProviderAccessRole(s.ctx, groupID, roleID, &role).Execute()
 		return result, err

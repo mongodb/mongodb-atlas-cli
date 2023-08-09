@@ -27,11 +27,14 @@ import (
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectDescriber(ctrl)
-
+	expected := opsmngr.Project{
+		Name: "test",
+		ID:   "5a0a1e7e0f2912c554080adc",
+	}
 	mockStore.
 		EXPECT().
 		Project(gomock.Eq("5a0a1e7e0f2912c554080adc")).
-		Return(&opsmngr.Project{}, nil).
+		Return(&expected, nil).
 		Times(1)
 
 	opts := &DescribeOpts{

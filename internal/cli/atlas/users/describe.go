@@ -71,15 +71,10 @@ func (opts *DescribeOpts) validate() error {
 	if opts.id == "" && opts.username == "" {
 		return errors.New("must supply one of 'id' or 'username'")
 	}
-
-	if opts.id != "" && opts.username != "" {
-		return errors.New("cannot supply both 'id' and 'username'")
-	}
-
 	return nil
 }
 
-// mongocli iam user(s) describe --id id --username USERNAME.
+// DescribeBuilder atlas user(s) describe [--id id|--username USERNAME].
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
@@ -110,6 +105,7 @@ User accounts and API keys with any role can run this command.`,
 
 	cmd.Flags().StringVar(&opts.username, flag.Username, "", usage.Username)
 	cmd.Flags().StringVar(&opts.id, flag.ID, "", usage.UserID)
+	cmd.MarkFlagsMutuallyExclusive(flag.Username, flag.ID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())

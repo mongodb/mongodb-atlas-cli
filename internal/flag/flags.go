@@ -136,16 +136,18 @@ const (
 	NotificationDelayMin                      = "notificationDelayMin"                      // NotificationDelayMin flag
 	NotificationEmailAddress                  = "notificationEmailAddress"                  // NotificationEmailAddress flag
 	NotificationEmailEnabled                  = "notificationEmailEnabled"                  // NotificationEmailEnabled flag
-	NotificationFlowName                      = "notificationFlowName"                      // NotificationFlowName flag
 	NotificationIntervalMin                   = "notificationIntervalMin"                   // NotificationIntervalMin flag
 	NotificationMobileNumber                  = "notificationMobileNumber"                  // NotificationMobileNumber flag
-	NotificationOrgName                       = "notificationOrgName"                       // NotificationsOrgName flag
 	NotificationServiceKey                    = "notificationServiceKey"                    // NotificationsServiceKey flag
 	NotificationSmsEnabled                    = "notificationSmsEnabled"                    // NotificationsSmsEnabled flag
 	NotificationTeamID                        = "notificationTeamId"                        // NotificationTeamID flag
 	NotificationType                          = "notificationType"                          // NotificationType flag
 	NotificationUsername                      = "notificationUsername"                      // NotificationUsername flag
 	NotificationVictorOpsRoutingKey           = "notificationVictorOpsRoutingKey"           // NotificationVictorOpsRoutingKey flag
+	NotificationWebhookURL                    = "notificationWebhookUrl"                    // NotificationWebhookURL flag
+	NotificationWebhookSecret                 = "notificationWebhookSecret"                 // NotificationWebhookSecret flag
+	NotifierID                                = "notifierId"                                // NotifierID flag
+	NotificationRole                          = "notificationRole"                          // NotificationRoles flag
 	SnapshotID                                = "snapshotId"                                // SnapshotID flag
 	IndexName                                 = "indexName"                                 // IndexName flag
 	ClusterName                               = "clusterName"                               // ClusterName flag
@@ -347,4 +349,14 @@ const (
 	Pipeline                                  = "pipeline"                                  // Pipeline flag
 	CompletedAfter                            = "completedAfter"                            // CompletedAfter flag
 	Tag                                       = "tag"                                       // Tag flag
+	EnableWatch                               = "watch"                                     // EnableWatch flag
+	EnableWatchShort                          = "w"                                         // EnableWatchShort flag
+	WatchTimeout                              = "watchTimeout"                              // WatchTimeout flag
+	CompactResponse                           = "compact"                                   // CompactResponse flag to return compacted list response
+	CompactResponseShort                      = "c"                                         // CompactResponseShort flag
+	AWSRoleID                                 = "awsRoleId"                                 // AWSRoleID flag
+	AWSTestS3Bucket                           = "awsTestS3Bucket"                           // AWSTestS3Bucket flag
+	DataFederation                            = "dataFederation"                            // DataFederation flag
+	Value                                     = "value"                                     // Value flag
+	OverrunPolicy                             = "overrunPolicy"                             // OverrunPolicy flag
 )

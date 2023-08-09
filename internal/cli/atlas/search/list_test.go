@@ -21,7 +21,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -32,7 +33,11 @@ func TestList_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	var expected []atlasv2.FTSIndex
+	expected := []atlasv2.ClusterSearchIndex{
+		{
+			Name: "test",
+		},
+	}
 
 	mockStore.
 		EXPECT().
@@ -43,4 +48,5 @@ func TestList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }

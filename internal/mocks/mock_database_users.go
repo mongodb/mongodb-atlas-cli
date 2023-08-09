@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -74,10 +74,10 @@ func (m *MockDatabaseUserCreator) EXPECT() *MockDatabaseUserCreatorMockRecorder 
 }
 
 // CreateDatabaseUser mocks base method.
-func (m *MockDatabaseUserCreator) CreateDatabaseUser(arg0 *admin.DatabaseUser) (*admin.DatabaseUser, error) {
+func (m *MockDatabaseUserCreator) CreateDatabaseUser(arg0 *admin.CloudDatabaseUser) (*admin.CloudDatabaseUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDatabaseUser", arg0)
-	ret0, _ := ret[0].(*admin.DatabaseUser)
+	ret0, _ := ret[0].(*admin.CloudDatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -149,10 +149,10 @@ func (m *MockDatabaseUserUpdater) EXPECT() *MockDatabaseUserUpdaterMockRecorder 
 }
 
 // UpdateDatabaseUser mocks base method.
-func (m *MockDatabaseUserUpdater) UpdateDatabaseUser(arg0 *admin.UpdateDatabaseUserApiParams) (*admin.DatabaseUser, error) {
+func (m *MockDatabaseUserUpdater) UpdateDatabaseUser(arg0 *admin.UpdateDatabaseUserApiParams) (*admin.CloudDatabaseUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateDatabaseUser", arg0)
-	ret0, _ := ret[0].(*admin.DatabaseUser)
+	ret0, _ := ret[0].(*admin.CloudDatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -187,10 +187,10 @@ func (m *MockDatabaseUserDescriber) EXPECT() *MockDatabaseUserDescriberMockRecor
 }
 
 // DatabaseUser mocks base method.
-func (m *MockDatabaseUserDescriber) DatabaseUser(arg0, arg1, arg2 string) (*admin.DatabaseUser, error) {
+func (m *MockDatabaseUserDescriber) DatabaseUser(arg0, arg1, arg2 string) (*admin.CloudDatabaseUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseUser", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*admin.DatabaseUser)
+	ret0, _ := ret[0].(*admin.CloudDatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

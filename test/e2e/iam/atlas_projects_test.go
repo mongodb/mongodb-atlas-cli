@@ -25,7 +25,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestAtlasProjects(t *testing.T) {
@@ -53,15 +53,15 @@ func TestAtlasProjects(t *testing.T) {
 
 		assert.NoError(t, err, string(resp))
 
-		var project mongodbatlas.Project
+		var project admin.Group
 		if err = json.Unmarshal(resp, &project); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if project.Name != projectName {
+		if project.GetName() != projectName {
 			t.Errorf("got=%#v\nwant=%#v\n", project.Name, projectName)
 		}
-		projectID = project.ID
+		projectID = project.GetId()
 	})
 
 	t.Run("List", func(t *testing.T) {

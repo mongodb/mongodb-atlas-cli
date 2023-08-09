@@ -64,11 +64,11 @@ Options
    * - --iamRoleId
      - string
      - true
-     - Unique identifier that Atlas assigns to the the cloud provider access role for the bucket.
+     - Unique identifier that Atlas assigns to the cloud provider access role for the bucket.
    * - -o, --output
      - string
      - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see full output, use the -o json option.
    * - --projectId
      - string
      - false

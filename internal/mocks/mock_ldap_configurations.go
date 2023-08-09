@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 // MockLDAPConfigurationVerifier is a mock of LDAPConfigurationVerifier interface.
@@ -35,10 +35,10 @@ func (m *MockLDAPConfigurationVerifier) EXPECT() *MockLDAPConfigurationVerifierM
 }
 
 // VerifyLDAPConfiguration mocks base method.
-func (m *MockLDAPConfigurationVerifier) VerifyLDAPConfiguration(arg0 string, arg1 *admin.NDSLDAPVerifyConnectivityJobRequestParams) (*admin.NDSLDAPVerifyConnectivityJobRequest, error) {
+func (m *MockLDAPConfigurationVerifier) VerifyLDAPConfiguration(arg0 string, arg1 *admin.LDAPVerifyConnectivityJobRequestParams) (*admin.LDAPVerifyConnectivityJobRequest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VerifyLDAPConfiguration", arg0, arg1)
-	ret0, _ := ret[0].(*admin.NDSLDAPVerifyConnectivityJobRequest)
+	ret0, _ := ret[0].(*admin.LDAPVerifyConnectivityJobRequest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockLDAPConfigurationDescriber) EXPECT() *MockLDAPConfigurationDescribe
 }
 
 // GetStatusLDAPConfiguration mocks base method.
-func (m *MockLDAPConfigurationDescriber) GetStatusLDAPConfiguration(arg0, arg1 string) (*admin.NDSLDAPVerifyConnectivityJobRequest, error) {
+func (m *MockLDAPConfigurationDescriber) GetStatusLDAPConfiguration(arg0, arg1 string) (*admin.LDAPVerifyConnectivityJobRequest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetStatusLDAPConfiguration", arg0, arg1)
-	ret0, _ := ret[0].(*admin.NDSLDAPVerifyConnectivityJobRequest)
+	ret0, _ := ret[0].(*admin.LDAPVerifyConnectivityJobRequest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

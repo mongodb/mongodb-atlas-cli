@@ -23,29 +23,25 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDeployCluster(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	const testFile = "om-new-cluster.json"
 
 	n, err := e2e.RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	clusterName := fmt.Sprintf("e2e-cluster-%v", n)
 
 	hostname, err := automationServerHostname(cliPath)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if err := generateShardedConfig(testFile, hostname, clusterName, testedMDBVersion, testedMDBFCV); err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
+	require.NoError(
+		t,
+		generateShardedConfig(testFile, hostname, clusterName, testedMDBVersion, testedMDBFCV),
+	)
 
 	t.Run("Apply", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -57,9 +53,8 @@ func TestDeployCluster(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch", watchAutomation(cliPath))
@@ -74,9 +69,8 @@ func TestDeployCluster(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch", watchAutomation(cliPath))
@@ -91,9 +85,8 @@ func TestDeployCluster(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch", watchAutomation(cliPath))
@@ -108,14 +101,13 @@ func TestDeployCluster(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch", watchAutomation(cliPath))
 
-	t.Run("Unmanage", func(t *testing.T) {
+	t.Run("Un-manage", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
 			clustersEntity,
@@ -125,19 +117,16 @@ func TestDeployCluster(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Stop Monitoring", func(t *testing.T) {
-		hostIDs, err := hostIDs(cliPath)
-		if err != nil {
-			t.Fatalf("unexpected error: %v\n", err)
-		}
-		for _, h := range hostIDs {
+		ids, err := hostIDs(cliPath)
+		require.NoError(t, err)
+		for _, h := range ids {
 			cmd := exec.Command(cliPath,
 				entity,
 				monitoringEntity,
@@ -148,35 +137,28 @@ func TestDeployCluster(t *testing.T) {
 
 			cmd.Env = os.Environ()
 			resp, err := cmd.CombinedOutput()
-
-			if err != nil {
-				t.Errorf("unexpected error: %v, resp: %v\n", err, string(resp))
-			}
+			require.NoError(t, err, string(resp))
 		}
 	})
 }
 
 func TestDeployDeleteCluster(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	const testFile = "om-new-cluster.json"
 
 	n, err := e2e.RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	clusterName := fmt.Sprintf("e2e-cluster-%v", n)
 
 	hostname, err := automationServerHostname(cliPath)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if err := generateShardedConfig(testFile, hostname, clusterName, testedMDBVersion, testedMDBFCV); err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
+
+	require.NoError(
+		t,
+		generateShardedConfig(testFile, hostname, clusterName, testedMDBVersion, testedMDBFCV),
+	)
 
 	t.Run("Apply", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -188,9 +170,8 @@ func TestDeployDeleteCluster(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch", watchAutomation(cliPath))
@@ -205,8 +186,7 @@ func TestDeployDeleteCluster(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 }

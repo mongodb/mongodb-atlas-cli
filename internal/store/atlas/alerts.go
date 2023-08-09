@@ -15,7 +15,7 @@
 package atlas
 
 import (
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_alerts.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas AlertDescriber,AlertLister,AlertAcknowledger
@@ -44,7 +44,7 @@ func (s *Store) Alerts(params *admin.ListAlertsApiParams) (*admin.PaginatedAlert
 	return result, err
 }
 
-// Acknowledge encapsulate the logic to manage different cloud providers.
+// AcknowledgeAlert encapsulate the logic to manage different cloud providers.
 func (s *Store) AcknowledgeAlert(params *admin.AcknowledgeAlertApiParams) (*admin.AlertViewForNdsGroup, error) {
 	result, _, err := s.clientv2.AlertsApi.AcknowledgeAlertWithParams(s.ctx, params).Execute()
 	return result, err

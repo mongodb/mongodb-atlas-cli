@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 // MockIntegrationCreator is a mock of IntegrationCreator interface.
@@ -35,7 +35,7 @@ func (m *MockIntegrationCreator) EXPECT() *MockIntegrationCreatorMockRecorder {
 }
 
 // CreateIntegration mocks base method.
-func (m *MockIntegrationCreator) CreateIntegration(arg0, arg1 string, arg2 *admin.Integration) (*admin.PaginatedIntegration, error) {
+func (m *MockIntegrationCreator) CreateIntegration(arg0, arg1 string, arg2 *admin.ThridPartyIntegration) (*admin.PaginatedIntegration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateIntegration", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.PaginatedIntegration)
@@ -148,10 +148,10 @@ func (m *MockIntegrationDescriber) EXPECT() *MockIntegrationDescriberMockRecorde
 }
 
 // Integration mocks base method.
-func (m *MockIntegrationDescriber) Integration(arg0, arg1 string) (*admin.Integration, error) {
+func (m *MockIntegrationDescriber) Integration(arg0, arg1 string) (*admin.ThridPartyIntegration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Integration", arg0, arg1)
-	ret0, _ := ret[0].(*admin.Integration)
+	ret0, _ := ret[0].(*admin.ThridPartyIntegration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 var updateTemplate = "Snapshot backup policy for cluster '{{.ClusterName}}' updated.\n"
@@ -147,7 +147,7 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 				return nil, errors.New("incorrect value for parameter policyID. Policy with such ID does not exist")
 			}
 
-			policyItem := atlasv2.PolicyItem{
+			policyItem := atlasv2.DiskBackupApiPolicyItem{
 				Id:                &policyItems[1],
 				FrequencyType:     policyItems[2],
 				FrequencyInterval: int(frequencyInterval),
@@ -168,7 +168,7 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 	return out, nil
 }
 
-func findPolicyIndex(policyID string, policies []atlasv2.Policy) int {
+func findPolicyIndex(policyID string, policies []atlasv2.AdvancedDiskBackupSnapshotSchedulePolicy) int {
 	for index, policy := range policies {
 		if policy.GetId() == policyID {
 			return index
@@ -178,7 +178,7 @@ func findPolicyIndex(policyID string, policies []atlasv2.Policy) int {
 	return -1
 }
 
-func findPolicyItemsIndex(policyItemID string, policyItems []atlasv2.PolicyItem) int {
+func findPolicyItemsIndex(policyItemID string, policyItems []atlasv2.DiskBackupApiPolicyItem) int {
 	for index, policyItem := range policyItems {
 		if policyItemID == policyItem.GetId() {
 			return index

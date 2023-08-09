@@ -22,15 +22,22 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessLister(ctrl)
 
-	var expected *atlasv2.PaginatedHostViewAtlas
+	expected := atlasv2.PaginatedHostViewAtlas{
+		Results: []atlasv2.ApiHostViewAtlas{
+			{
+				Id: pointer.Get("1"),
+			},
+		},
+	}
 
 	listOpts := &ListOpts{
 		store: mockStore,
@@ -40,12 +47,13 @@ func TestList_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		Processes(&params).
-		Return(expected, nil).
+		Return(&expected, nil).
 		Times(1)
 
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

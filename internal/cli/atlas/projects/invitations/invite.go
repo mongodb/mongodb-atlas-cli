@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 const createTemplate = "User '{{.Username}}' invited.\n"
@@ -57,11 +57,10 @@ func (opts *InviteOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *InviteOpts) newInvitation() *atlas.Invitation {
-	return &atlas.Invitation{
-		Username: opts.username,
+func (opts *InviteOpts) newInvitation() *atlasv2.GroupInvitationRequest {
+	return &atlasv2.GroupInvitationRequest{
+		Username: &opts.username,
 		Roles:    opts.roles,
-		TeamIDs:  opts.teamIds,
 	}
 }
 

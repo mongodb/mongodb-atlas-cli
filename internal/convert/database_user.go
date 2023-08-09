@@ -19,7 +19,8 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	customTime "github.com/mongodb/mongodb-atlas-cli/internal/time"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -34,15 +35,15 @@ const (
 	defaultResourceType = "CLUSTER"
 )
 
-// BuildAtlasRoles converts the roles inside the array of string in an array of mongodbatlas.Role structs.
+// BuildAtlasRoles converts the roles inside the array of string in an array of mongodbatlas.DatabaseUserRole structs.
 // r contains roles in the format roleName@dbName.
-func BuildAtlasRoles(r []string) []atlasv2.Role {
-	roles := make([]atlasv2.Role, len(r))
+func BuildAtlasRoles(r []string) []atlasv2.DatabaseUserRole {
+	roles := make([]atlasv2.DatabaseUserRole, len(r))
 	for i, roleP := range r {
 		roleName, databaseName := splitRoleAndDBName(roleP)
 		dbCollection := strings.Split(databaseName, collectionSep)
 		databaseName = dbCollection[0]
-		roles[i] = atlasv2.Role{
+		roles[i] = atlasv2.DatabaseUserRole{
 			RoleName:       roleName,
 			DatabaseName:   databaseName,
 			CollectionName: buildCollectionName(dbCollection),
@@ -60,7 +61,7 @@ func buildCollectionName(dbCollection []string) *string {
 }
 
 func ParseDeleteAfter(deleteAfter string) *time.Time {
-	deleteAfterDate, err := time.Parse(time.RFC3339, deleteAfter)
+	deleteAfterDate, err := customTime.ParseTimestamp(deleteAfter)
 
 	if err == nil {
 		return &deleteAfterDate
@@ -78,7 +79,7 @@ func splitRoleAndDBName(roleAndDBNAme string) (role, dbName string) {
 	return
 }
 
-// BuildOMRoles converts the roles inside the array of string in an array of opsmngr.Role structs.
+// BuildOMRoles converts the roles inside the array of string in an array of opsmngr.DatabaseUserRole structs.
 // r contains roles in the format roleName@dbName.
 func BuildOMRoles(r []string) []*opsmngr.Role {
 	roles := make([]*opsmngr.Role, len(r))
@@ -115,7 +116,7 @@ func BuildAtlasScopes(r []string) []atlasv2.UserScope {
 // GetAuthDB determines the authentication database based on the type of user.
 // LDAP, X509 and AWSIAM should all use $external.
 // SCRAM-SHA should use admin.
-func GetAuthDB(user *atlasv2.DatabaseUser) string {
+func GetAuthDB(user *atlasv2.CloudDatabaseUser) string {
 	// base documentation https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/database_user
 	_, isX509 := adminX509Type[pointer.GetOrDefault(user.X509Type, "")]
 	_, isIAM := awsIAMType[pointer.GetOrDefault(user.AwsIAMType, "")]

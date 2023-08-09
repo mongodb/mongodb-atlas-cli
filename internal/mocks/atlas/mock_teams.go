@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -127,7 +127,7 @@ func (m *MockTeamCreator) EXPECT() *MockTeamCreatorMockRecorder {
 }
 
 // CreateTeam mocks base method.
-func (m *MockTeamCreator) CreateTeam(arg0 string, arg1 *mongodbatlas.Team) (*admin.Team, error) {
+func (m *MockTeamCreator) CreateTeam(arg0 string, arg1 *admin.Team) (*admin.Team, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateTeam", arg0, arg1)
 	ret0, _ := ret[0].(*admin.Team)

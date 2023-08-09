@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
@@ -41,9 +41,8 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 	})
 
 	n, err := e2e.RandInt(255)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
+
 	entry := fmt.Sprintf("192.168.0.%d", n)
 
 	t.Run("Create", func(t *testing.T) {
@@ -92,7 +91,6 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 	})
 
 	t.Run("Create Current IP", func(t *testing.T) {
-		t.Skip("400 (request \"CANNOT_REMOVE_CALLER_FROM_ACCESS_LIST\") Cannot remove caller's IP address from access list")
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -115,7 +113,6 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		t.Skip("400 (request \"CANNOT_REMOVE_CALLER_FROM_ACCESS_LIST\") Cannot remove caller's IP address from access list")
 		deleteAtlasAccessListEntry(t, cliPath, entry, apiKeyID)
 	})
 }

@@ -26,7 +26,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestWatch_Run(t *testing.T) {
@@ -38,7 +38,7 @@ func TestWatch_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.IngestionPipeline{Name: pointer.Get("Pipeline1"), State: pointer.Get("ACTIVE")}
+	expected := &atlasv2.DataLakeIngestionPipeline{Name: pointer.Get("Pipeline1"), State: pointer.Get("ACTIVE")}
 
 	mockStore.
 		EXPECT().

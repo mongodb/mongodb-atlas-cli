@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestRestores(t *testing.T) {
@@ -62,9 +62,9 @@ func TestRestores(t *testing.T) {
 		a := assert.New(t)
 		var snapshot atlasv2.DiskBackupSnapshot
 		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
-			a.Equal("test-snapshot", snapshot.DiskBackupReplicaSet.GetDescription())
+			a.Equal("test-snapshot", snapshot.GetDescription())
 		}
-		snapshotID = snapshot.DiskBackupReplicaSet.GetId()
+		snapshotID = snapshot.GetId()
 	})
 
 	t.Run("Watch snapshot creation", func(t *testing.T) {
@@ -104,7 +104,7 @@ func TestRestores(t *testing.T) {
 
 		r.NoError(err, string(resp))
 		a := assert.New(t)
-		var result atlasv2.DiskBackupRestoreJob
+		var result atlasv2.DiskBackupSnapshotRestoreJob
 		if err = json.Unmarshal(resp, &result); a.NoError(err) {
 			restoreJobID = result.GetId()
 		}
@@ -165,7 +165,7 @@ func TestRestores(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var result atlasv2.DiskBackupRestoreJob
+		var result atlasv2.DiskBackupSnapshotRestoreJob
 		if err = json.Unmarshal(resp, &result); a.NoError(err, string(resp)) {
 			a.NotEmpty(result)
 		}

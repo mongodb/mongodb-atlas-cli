@@ -17,23 +17,24 @@ package settings
 import (
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 const (
-	datadog = "DATADOG"
-	slack   = "SLACK"
-	victor  = "VICTOR_OPS"
-	email   = "EMAIL"
-	ops     = "OPS_GENIE"
-	pager   = "PAGER_DUTY"
-	sms     = "SMS"
-	group   = "GROUP"
-	user    = "USER"
-	org     = "ORG"
-	team    = "TEAM"
+	datadog        = "DATADOG"
+	slack          = "SLACK"
+	victor         = "VICTOR_OPS"
+	email          = "EMAIL"
+	opsGenie       = "OPS_GENIE"
+	pagerDuty      = "PAGER_DUTY"
+	sms            = "SMS"
+	group          = "GROUP"
+	user           = "USER"
+	org            = "ORG"
+	team           = "TEAM"
+	webhook        = "WEBHOOK"
+	microsoftTeams = "MICROSOFT_TEAMS"
 )
 
 // ConfigOpts contains all the information and functions to manage an alert configuration.
@@ -46,6 +47,7 @@ type ConfigOpts struct {
 	metricThresholdOperator         string
 	metricThresholdUnits            string
 	metricThresholdMode             string
+	notifierID                      string
 	notificationToken               string // notificationsApiToken, notificationsFlowdockApiToken
 	notificationChannelName         string
 	apiKey                          string // notificationsDatadogApiKey, notificationsOpsGenieApiKey, notificationsVictorOpsApiKey
@@ -57,6 +59,9 @@ type ConfigOpts struct {
 	notificationType                string
 	notificationUsername            string
 	notificationVictorOpsRoutingKey string
+	notificationWebhookURL          string
+	notificationWebhookSecret       string
+	notificationRoles               []string
 	notificationDelayMin            int
 	notificationIntervalMin         int
 	notificationSmsEnabled          bool
@@ -65,11 +70,12 @@ type ConfigOpts struct {
 	metricThresholdThreshold        float64
 }
 
-func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.AlertConfigViewForNdsGroup {
-	out := new(admin.AlertConfigViewForNdsGroup)
+func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.GroupAlertsConfig {
+	out := new(admin.GroupAlertsConfig)
 
 	out.GroupId = &projectID
-	out.EventTypeName = pointer.Get(strings.ToUpper(opts.event))
+	eventType := strings.ToUpper(opts.event)
+	out.EventTypeName = &eventType
 	out.Enabled = &opts.enabled
 
 	if opts.matcherFieldName != "" {
@@ -80,43 +86,61 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.AlertConf
 		out.MetricThreshold = opts.newMetricThreshold()
 	}
 
-	out.Notifications = []admin.NotificationViewForNdsGroup{*opts.newNotification()}
+	out.Notifications = []admin.AlertsNotificationRootForGroup{*opts.newNotification()}
 
 	return out
 }
 
-func (opts *ConfigOpts) newNotification() *admin.NotificationViewForNdsGroup {
-	out := new(admin.NotificationViewForNdsGroup)
-	out.TypeName = pointer.Get(strings.ToUpper(opts.notificationType))
+func (opts *ConfigOpts) newNotification() *admin.AlertsNotificationRootForGroup {
+	out := new(admin.AlertsNotificationRootForGroup)
+	notificationType := strings.ToUpper(opts.notificationType)
+	out.TypeName = &notificationType
 	out.DelayMin = &opts.notificationDelayMin
 	out.IntervalMin = &opts.notificationIntervalMin
-	out.TeamId = &opts.notificationTeamID
-	out.Username = &opts.notificationUsername
-	out.ChannelName = &opts.notificationChannelName
+	if opts.notifierID != "" {
+		out.NotifierId = &opts.notifierID
+	}
 
 	switch out.GetTypeName() {
+	case datadog:
+		out.DatadogApiKey = &opts.apiKey
+		region := strings.ToUpper(opts.notificationRegion)
+		out.DatadogRegion = &region
+	case email:
+		out.EmailAddress = &opts.notificationEmailAddress
+	case group, org:
+		out.EmailEnabled = &opts.notificationEmailEnabled
+		out.SmsEnabled = &opts.notificationSmsEnabled
+		out.Roles = opts.notificationRoles
+	case microsoftTeams:
+		out.MicrosoftTeamsWebhookUrl = &opts.notificationWebhookURL
+	case opsGenie:
+		out.OpsGenieApiKey = &opts.apiKey
+		region := strings.ToUpper(opts.notificationRegion)
+		out.OpsGenieRegion = &region
+	case pagerDuty:
+		region := strings.ToUpper(opts.notificationRegion)
+		out.Region = &region
+		out.ServiceKey = &opts.notificationServiceKey
+	case slack:
+		out.ApiToken = &opts.notificationToken
+		out.ChannelName = &opts.notificationChannelName
+	case sms:
+		out.MobileNumber = &opts.notificationMobileNumber
+	case team:
+		out.EmailEnabled = &opts.notificationEmailEnabled
+		out.SmsEnabled = &opts.notificationSmsEnabled
+		out.TeamId = &opts.notificationTeamID
+	case user:
+		out.EmailEnabled = &opts.notificationEmailEnabled
+		out.SmsEnabled = &opts.notificationSmsEnabled
+		out.Username = &opts.notificationUsername
 	case victor:
 		out.VictorOpsApiKey = &opts.apiKey
 		out.VictorOpsRoutingKey = &opts.notificationVictorOpsRoutingKey
-	case slack:
-		out.VictorOpsApiKey = &opts.apiKey
-		out.VictorOpsRoutingKey = &opts.notificationVictorOpsRoutingKey
-		out.ApiToken = &opts.notificationToken
-	case datadog:
-		out.DatadogApiKey = &opts.apiKey
-		out.DatadogRegion = pointer.Get(strings.ToUpper(opts.notificationRegion))
-	case email:
-		out.EmailAddress = &opts.notificationEmailAddress
-	case sms:
-		out.MobileNumber = &opts.notificationMobileNumber
-	case group, user, org:
-		out.SmsEnabled = &opts.notificationSmsEnabled
-		out.EmailEnabled = &opts.notificationEmailEnabled
-	case ops:
-		out.OpsGenieApiKey = &opts.apiKey
-		out.OpsGenieRegion = &opts.notificationRegion
-	case pager:
-		out.ServiceKey = &opts.notificationServiceKey
+	case webhook:
+		out.WebhookUrl = &opts.notificationWebhookURL
+		out.WebhookSecret = &opts.notificationWebhookSecret
 	}
 
 	return out
@@ -127,41 +151,14 @@ func (opts *ConfigOpts) newMetricThreshold() *admin.ServerlessMetricThreshold {
 	operator := strings.ToUpper(opts.metricThresholdOperator)
 	mode := strings.ToUpper(opts.metricThresholdMode)
 	units := strings.ToUpper(opts.metricThresholdUnits)
-	result := &admin.ServerlessMetricThreshold{}
-	switch metricName {
-	case "DATA":
-		result.DataMetricThreshold = &admin.DataMetricThreshold{
-			MetricName: &metricName,
-			Operator:   &operator,
-			Threshold:  &opts.metricThresholdThreshold,
-			Units:      &units,
-			Mode:       &mode,
-		}
-	case "RPU":
-		result.RPUMetricThreshold = &admin.RPUMetricThreshold{
-			MetricName: &metricName,
-			Operator:   &operator,
-			Threshold:  &opts.metricThresholdThreshold,
-			Units:      &units,
-			Mode:       &mode,
-		}
-	case "RAW":
-		result.RawMetricThreshold = &admin.RawMetricThreshold{
-			MetricName: &metricName,
-			Operator:   &operator,
-			Threshold:  &opts.metricThresholdThreshold,
-			Units:      &units,
-			Mode:       &mode,
-		}
-	case "TIME":
-		result.TimeMetricThreshold = &admin.TimeMetricThreshold{
-			MetricName: &metricName,
-			Operator:   &operator,
-			Threshold:  &opts.metricThresholdThreshold,
-			Units:      &units,
-			Mode:       &mode,
-		}
+	result := &admin.ServerlessMetricThreshold{
+		MetricName: &metricName,
+		Operator:   &operator,
+		Threshold:  &opts.metricThresholdThreshold,
+		Units:      &units,
+		Mode:       &mode,
 	}
+
 	return result
 }
 

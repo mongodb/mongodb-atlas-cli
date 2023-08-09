@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestDBUserCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseUserCreator(ctrl)
 
-	expected := &atlasv2.DatabaseUser{}
+	expected := &atlasv2.CloudDatabaseUser{}
 
 	createOpts := &CreateOpts{
 		username: "ProjectBar",

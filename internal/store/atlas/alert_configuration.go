@@ -16,7 +16,7 @@ package atlas
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_alert_configuration.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler
@@ -26,7 +26,7 @@ type AlertConfigurationLister interface {
 }
 
 type AlertConfigurationCreator interface {
-	CreateAlertConfiguration(*admin.AlertConfigViewForNdsGroup) (*admin.AlertConfigViewForNdsGroup, error)
+	CreateAlertConfiguration(*admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error)
 }
 
 type AlertConfigurationDeleter interface {
@@ -34,7 +34,7 @@ type AlertConfigurationDeleter interface {
 }
 
 type AlertConfigurationUpdater interface {
-	UpdateAlertConfiguration(*admin.AlertConfigViewForNdsGroup) (*admin.AlertConfigViewForNdsGroup, error)
+	UpdateAlertConfiguration(*admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error)
 }
 
 type MatcherFieldsLister interface {
@@ -42,11 +42,11 @@ type MatcherFieldsLister interface {
 }
 
 type AlertConfigurationEnabler interface {
-	EnableAlertConfiguration(string, string) (*admin.AlertConfigViewForNdsGroup, error)
+	EnableAlertConfiguration(string, string) (*admin.GroupAlertsConfig, error)
 }
 
 type AlertConfigurationDisabler interface {
-	DisableAlertConfiguration(string, string) (*admin.AlertConfigViewForNdsGroup, error)
+	DisableAlertConfiguration(string, string) (*admin.GroupAlertsConfig, error)
 }
 
 // AlertConfigurations encapsulate the logic to manage different cloud providers.
@@ -56,7 +56,7 @@ func (s *Store) AlertConfigurations(params *admin.ListAlertConfigurationsApiPara
 }
 
 // CreateAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateAlertConfiguration(alertConfig *admin.AlertConfigViewForNdsGroup) (*admin.AlertConfigViewForNdsGroup, error) {
+func (s *Store) CreateAlertConfiguration(alertConfig *admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error) {
 	result, _, err := s.clientv2.AlertConfigurationsApi.CreateAlertConfiguration(s.ctx, alertConfig.GetGroupId(), alertConfig).Execute()
 	return result, err
 }
@@ -73,14 +73,14 @@ func (s *Store) MatcherFields() ([]string, error) {
 	return result, err
 }
 
-func (s *Store) UpdateAlertConfiguration(alertConfig *admin.AlertConfigViewForNdsGroup) (*admin.AlertConfigViewForNdsGroup, error) {
+func (s *Store) UpdateAlertConfiguration(alertConfig *admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error) {
 	result, _, err := s.clientv2.AlertConfigurationsApi.UpdateAlertConfiguration(s.ctx, alertConfig.GetGroupId(), alertConfig.GetId(), alertConfig).Execute()
 	return result, err
 }
 
 // EnableAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) EnableAlertConfiguration(projectID, id string) (*admin.AlertConfigViewForNdsGroup, error) {
-	toggle := admin.Toggle{
+func (s *Store) EnableAlertConfiguration(projectID, id string) (*admin.GroupAlertsConfig, error) {
+	toggle := admin.AlertsToggle{
 		Enabled: pointer.Get(true),
 	}
 	result, _, err := s.clientv2.AlertConfigurationsApi.ToggleAlertConfiguration(s.ctx, projectID, id, &toggle).Execute()
@@ -88,8 +88,8 @@ func (s *Store) EnableAlertConfiguration(projectID, id string) (*admin.AlertConf
 }
 
 // DisableAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) DisableAlertConfiguration(projectID, id string) (*admin.AlertConfigViewForNdsGroup, error) {
-	toggle := admin.Toggle{
+func (s *Store) DisableAlertConfiguration(projectID, id string) (*admin.GroupAlertsConfig, error) {
+	toggle := admin.AlertsToggle{
 		Enabled: pointer.Get(false),
 	}
 	result, _, err := s.clientv2.AlertConfigurationsApi.ToggleAlertConfiguration(s.ctx, projectID, id, &toggle).Execute()

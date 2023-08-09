@@ -40,7 +40,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -638,7 +638,7 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 		t.Cleanup(func() {
 			deleteAllNetworkPeers(t, cliPath, generator.projectID, gcpEntity)
 		})
-		var createdNetworkPeer atlasv2.GCPPeerVpc
+		var createdNetworkPeer atlasv2.BaseNetworkPeeringConnectionSettings
 		err = json.Unmarshal(resp, &createdNetworkPeer)
 		require.NoError(t, err)
 		expectedProject.Spec.NetworkPeers[0].ContainerID = createdNetworkPeer.ContainerId

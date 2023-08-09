@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 const (
@@ -97,7 +97,7 @@ func TestLDAPWithFlags(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		var configuration atlasv2.NDSLDAPVerifyConnectivityJobRequest
+		var configuration atlasv2.LDAPVerifyConnectivityJobRequest
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 			a.Equal(requestID, *configuration.RequestId)
 		}
@@ -238,7 +238,7 @@ func testLDAPVerifyCmd(t *testing.T, cmd *exec.Cmd) string {
 	require.NoError(t, err, string(resp))
 
 	a := assert.New(t)
-	var configuration atlasv2.NDSLDAPVerifyConnectivityJobRequest
+	var configuration atlasv2.LDAPVerifyConnectivityJobRequest
 	if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 		a.Equal(pending, *configuration.Status)
 		return *configuration.RequestId

@@ -25,8 +25,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestConfigList_Run(t *testing.T) {
@@ -34,7 +34,7 @@ func TestConfigList_Run(t *testing.T) {
 	mockStore := mocks.NewMockAlertConfigurationLister(ctrl)
 
 	expected := &admin.PaginatedAlertConfig{
-		Results: []admin.AlertConfigViewForNdsGroup{
+		Results: []admin.GroupAlertsConfig{
 			{
 				Id:              pointer.Get("test"),
 				GroupId:         pointer.Get("test"),
@@ -61,9 +61,8 @@ func TestConfigList_Run(t *testing.T) {
 	}
 
 	params := &admin.ListAlertConfigurationsApiParams{
-		GroupId:      listOpts.ProjectID,
-		ItemsPerPage: &listOpts.ItemsPerPage,
-		PageNum:      &listOpts.PageNum,
+		GroupId: listOpts.ProjectID,
+		PageNum: &listOpts.PageNum,
 	}
 
 	mockStore.
@@ -76,8 +75,6 @@ func TestConfigList_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `ID     TYPE   ENABLED
-test   test   true
-`, buf.String())
 	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, settingsListTemplate, expected)
 }

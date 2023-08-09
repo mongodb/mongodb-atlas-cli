@@ -23,7 +23,7 @@ import (
 	"github.com/go-test/deep"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestBuilder(t *testing.T) {
@@ -46,8 +46,8 @@ func TestMongoCLIBuilder(t *testing.T) {
 
 func TestAddLabel(t *testing.T) {
 	type args struct {
-		out   *atlasv2.ClusterDescriptionV15
-		label atlasv2.NDSLabel
+		out   *atlasv2.AdvancedClusterDescription
+		label atlasv2.ComponentLabel
 	}
 	tests := []struct {
 		name     string
@@ -57,20 +57,20 @@ func TestAddLabel(t *testing.T) {
 		{
 			name: "adds",
 			args: args{
-				out: &atlasv2.ClusterDescriptionV15{
-					Labels: []atlasv2.NDSLabel{},
+				out: &atlasv2.AdvancedClusterDescription{
+					Labels: []atlasv2.ComponentLabel{},
 				},
-				label: atlasv2.NDSLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
+				label: atlasv2.ComponentLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
 			},
 			wantsAdd: true,
 		},
 		{
 			name: "doesn't adds",
 			args: args{
-				out: &atlasv2.ClusterDescriptionV15{
-					Labels: []atlasv2.NDSLabel{{Key: pointer.Get("test"), Value: pointer.Get("test")}},
+				out: &atlasv2.AdvancedClusterDescription{
+					Labels: []atlasv2.ComponentLabel{{Key: pointer.Get("test"), Value: pointer.Get("test")}},
 				},
-				label: atlasv2.NDSLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
+				label: atlasv2.ComponentLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
 			},
 			wantsAdd: true,
 		},
@@ -90,8 +90,8 @@ func TestAddLabel(t *testing.T) {
 
 func TestLabelExists(t *testing.T) {
 	type args struct {
-		labels []atlasv2.NDSLabel
-		l      atlasv2.NDSLabel
+		labels []atlasv2.ComponentLabel
+		l      atlasv2.ComponentLabel
 	}
 	tests := []struct {
 		name string
@@ -101,8 +101,8 @@ func TestLabelExists(t *testing.T) {
 		{
 			name: "label doesn't exist",
 			args: args{
-				labels: []atlasv2.NDSLabel{},
-				l: atlasv2.NDSLabel{
+				labels: []atlasv2.ComponentLabel{},
+				l: atlasv2.ComponentLabel{
 					Key:   pointer.Get("test"),
 					Value: pointer.Get("test"),
 				},
@@ -112,13 +112,13 @@ func TestLabelExists(t *testing.T) {
 		{
 			name: "label exist",
 			args: args{
-				labels: []atlasv2.NDSLabel{
+				labels: []atlasv2.ComponentLabel{
 					{
 						Key:   pointer.Get("test"),
 						Value: pointer.Get("test"),
 					},
 				},
-				l: atlasv2.NDSLabel{
+				l: atlasv2.ComponentLabel{
 					Key:   pointer.Get("test"),
 					Value: pointer.Get("test"),
 				},
@@ -149,12 +149,12 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 	)
 	tests := []struct {
 		name string
-		args *atlasv2.ClusterDescriptionV15
-		want *atlasv2.ClusterDescriptionV15
+		args *atlasv2.AdvancedClusterDescription
+		want *atlasv2.AdvancedClusterDescription
 	}{
 		{
 			name: "One AdvancedReplicationSpec",
-			args: &atlasv2.ClusterDescriptionV15{
+			args: &atlasv2.AdvancedClusterDescription{
 				Id:             &id,
 				MongoDBVersion: &testVar,
 				StateName:      &testVar,
@@ -167,7 +167,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 				},
 				CreateDate: &timeStamp,
 			},
-			want: &atlasv2.ClusterDescriptionV15{
+			want: &atlasv2.AdvancedClusterDescription{
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
 						NumShards: &shards,
@@ -178,7 +178,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 		},
 		{
 			name: "More AdvancedReplicationSpecs",
-			args: &atlasv2.ClusterDescriptionV15{
+			args: &atlasv2.AdvancedClusterDescription{
 				Id:             &id,
 				MongoDBVersion: &testVar,
 				StateName:      &testVar,
@@ -201,7 +201,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 				},
 				CreateDate: &timeStamp,
 			},
-			want: &atlasv2.ClusterDescriptionV15{
+			want: &atlasv2.AdvancedClusterDescription{
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
 						NumShards: &shards,
@@ -220,7 +220,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 		},
 		{
 			name: "Nothing to remove",
-			args: &atlasv2.ClusterDescriptionV15{
+			args: &atlasv2.AdvancedClusterDescription{
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
 						NumShards: &shards,
@@ -236,7 +236,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 					},
 				},
 			},
-			want: &atlasv2.ClusterDescriptionV15{
+			want: &atlasv2.AdvancedClusterDescription{
 				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
 						NumShards: &shards,

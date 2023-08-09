@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type GCPOpts struct {
@@ -56,7 +56,7 @@ func (opts *GCPOpts) Run() error {
 	if container == nil {
 		var err2 error
 		r, err2 := opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
-		container = r.(*atlasv2.GCPCloudProviderContainer)
+		container = r
 		if err2 != nil {
 			return err2
 		}
@@ -68,42 +68,31 @@ func (opts *GCPOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *GCPOpts) containerExists() (*atlasv2.GCPCloudProviderContainer, error) {
+func (opts *GCPOpts) containerExists() (*atlasv2.CloudProviderContainer, error) {
 	r, err := opts.store.GCPContainers(opts.ConfigProjectID())
 	if err != nil {
 		return nil, err
 	}
 	if len(r) > 0 {
-		return r[0], nil
+		return &r[0], nil
 	}
 	return nil, nil
 }
 
-func (opts *GCPOpts) newGCPContainer() *atlasv2.GCPCloudProviderContainer {
-	c := &atlasv2.GCPCloudProviderContainer{
-		AtlasCidrBlock: opts.atlasCIDRBlock,
+func (opts *GCPOpts) newContainer() *atlasv2.CloudProviderContainer {
+	return &atlasv2.CloudProviderContainer{
+		AtlasCidrBlock: &opts.atlasCIDRBlock,
 		Regions:        opts.regions,
 		ProviderName:   pointer.Get("GCP"),
 	}
-	return c
 }
 
-func (opts *GCPOpts) newContainer() *atlasv2.CloudProviderContainer {
-	w := atlasv2.GCPCloudProviderContainerAsCloudProviderContainer(opts.newGCPContainer())
-	return &w
-}
-
-func (opts *GCPOpts) newPeer(containerID string) *atlasv2.ContainerPeer {
-	a := atlasv2.GCPPeerVpcAsContainerPeer(opts.newGCPPeer(containerID))
-	return &a
-}
-
-func (opts *GCPOpts) newGCPPeer(containerID string) *atlasv2.GCPPeerVpc {
+func (opts *GCPOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringConnectionSettings {
 	provider := "GCP"
-	return &atlasv2.GCPPeerVpc{
+	return &atlasv2.BaseNetworkPeeringConnectionSettings{
 		ContainerId:  containerID,
-		GcpProjectId: opts.gcpProjectID,
-		NetworkName:  opts.network,
+		GcpProjectId: &opts.gcpProjectID,
+		NetworkName:  &opts.network,
 		ProviderName: &provider,
 	}
 }

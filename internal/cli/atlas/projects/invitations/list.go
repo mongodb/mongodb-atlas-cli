@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range .}}
@@ -48,16 +48,17 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.ProjectInvitations(opts.ConfigProjectID(), opts.newInvitationOptions())
+	r, err := opts.store.ProjectInvitations(opts.newInvitationOptions())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newInvitationOptions() *atlas.InvitationOptions {
-	return &atlas.InvitationOptions{
-		Username: opts.username,
+func (opts *ListOpts) newInvitationOptions() *atlasv2.ListProjectInvitationsApiParams {
+	return &atlasv2.ListProjectInvitationsApiParams{
+		GroupId:  opts.ConfigProjectID(),
+		Username: &opts.username,
 	}
 }
 

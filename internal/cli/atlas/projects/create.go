@@ -18,21 +18,18 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 const atlasCreateTemplate = "Project '{{.Id}}' created.\n"
-
-var govRegionOnly = "GOV_REGIONS_ONLY"
 
 type CreateOpts struct {
 	cli.GlobalOpts
@@ -41,7 +38,6 @@ type CreateOpts struct {
 	projectOwnerID              string
 	regionUsageRestrictions     bool
 	withoutDefaultAlertSettings bool
-	serviceVersion              *semver.Version
 	store                       store.ProjectCreator
 }
 
@@ -58,7 +54,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateProject(opts.newCreateProjectGroup(), opts.newCreateProjectOptions())
+	r, err := opts.store.CreateProject(opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err
@@ -84,66 +80,14 @@ func (opts *CreateOpts) newCreateProjectGroup() atlasv2.Group {
 
 func (opts *CreateOpts) newRegionUsageRestrictions() *string {
 	if opts.regionUsageRestrictions {
+		govRegionOnly := "GOV_REGIONS_ONLY"
 		return &govRegionOnly
 	}
-
 	return nil
 }
 
-func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {
-	return &atlas.CreateProjectOptions{ProjectOwnerID: opts.projectOwnerID}
-}
-
-func (opts *CreateOpts) validateOwnerID() error {
-	if opts.projectOwnerID == "" || opts.serviceVersion == nil {
-		return nil
-	}
-
-	constrain, err := semver.NewConstraint(">= 6.0")
-	if err != nil {
-		return err
-	}
-
-	if !constrain.Check(opts.serviceVersion) {
-		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.OwnerID)
-	}
-
-	return nil
-}
-
-func (opts *CreateOpts) validateWithoutDefaultAlertSettings() error {
-	if !opts.withoutDefaultAlertSettings || opts.serviceVersion == nil {
-		return nil
-	}
-
-	constrain, err := semver.NewConstraint(">= 6.0")
-	if err != nil {
-		return err
-	}
-
-	if !constrain.Check(opts.serviceVersion) {
-		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.WithoutDefaultAlertSettings)
-	}
-
-	return nil
-}
-
-func (opts *CreateOpts) initServiceVersion() error {
-	if config.Service() != config.OpsManagerService {
-		return nil
-	}
-	v, err := opts.store.ServiceVersion()
-	if err != nil {
-		return err
-	}
-
-	sv, err := cli.ParseServiceVersion(v)
-	if err != nil {
-		return err
-	}
-
-	opts.serviceVersion = sv
-	return nil
+func (opts *CreateOpts) newCreateProjectOptions() *atlasv2.CreateProjectApiParams {
+	return &atlasv2.CreateProjectApiParams{ProjectOwnerId: &opts.projectOwnerID, Group: pointer.Get(opts.newCreateProjectGroup())}
 }
 
 // atlas project(s) create <name> [--orgId orgId] [--ownerID ownerID] [--withoutDefaultAlertSettings].
@@ -165,10 +109,7 @@ func CreateBuilder() *cobra.Command {
   %s projects create --orgId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			if !config.IsCloud() {
-				opts.Template += "Agent API Key: '{{.AgentAPIKey}}'\n"
-			}
-			return opts.PreRunE(opts.initStore(cmd.Context()), opts.initServiceVersion, opts.validateOwnerID, opts.validateWithoutDefaultAlertSettings)
+			return opts.PreRunE(opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	admin "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -37,17 +37,17 @@ func (m *MockLogsDownloader) EXPECT() *MockLogsDownloaderMockRecorder {
 }
 
 // DownloadLog mocks base method.
-func (m *MockLogsDownloader) DownloadLog(arg0, arg1, arg2 string, arg3 io.Writer, arg4 *mongodbatlas.DateRangetOptions) error {
+func (m *MockLogsDownloader) DownloadLog(arg0 io.Writer, arg1 *admin.GetHostLogsApiParams) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DownloadLog", arg0, arg1, arg2, arg3, arg4)
+	ret := m.ctrl.Call(m, "DownloadLog", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DownloadLog indicates an expected call of DownloadLog.
-func (mr *MockLogsDownloaderMockRecorder) DownloadLog(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+func (mr *MockLogsDownloaderMockRecorder) DownloadLog(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadLog", reflect.TypeOf((*MockLogsDownloader)(nil).DownloadLog), arg0, arg1, arg2, arg3, arg4)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadLog", reflect.TypeOf((*MockLogsDownloader)(nil).DownloadLog), arg0, arg1)
 }
 
 // MockLogJobsDownloader is a mock of LogJobsDownloader interface.

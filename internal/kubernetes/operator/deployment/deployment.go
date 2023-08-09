@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -68,7 +68,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 		}
 	}
 
-	convertLabels := func(labels []atlasv2.NDSLabel) []common.LabelSpec {
+	convertLabels := func(labels []atlasv2.ComponentLabel) []common.LabelSpec {
 		result := make([]common.LabelSpec, 0, len(labels))
 
 		for _, atlasLabel := range labels {
@@ -225,7 +225,7 @@ func buildProcessArgs(configOptsProvider store.AtlasClusterConfigurationOptionsD
 	}, nil
 }
 
-func isAdvancedDeploymentExportable(deployments *atlasv2.ClusterDescriptionV15) bool {
+func isAdvancedDeploymentExportable(deployments *atlasv2.AdvancedClusterDescription) bool {
 	if deployments.GetStateName() == DeletingState || deployments.GetStateName() == DeletedState {
 		return false
 	}

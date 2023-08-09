@@ -41,6 +41,8 @@ Options
      - strings
      - false
      - IP address to be allowed to access the deployment.
+
+       Mutually exclusive with --currentIp.
    * - --clusterName
      - string
      - false
@@ -49,6 +51,8 @@ Options
      - 
      - false
      - Flag that adds the IP address from the host that is currently executing the command to the access list.
+
+       Mutually exclusive with --accessListIp.
    * - --enableTerminationProtection
      - 
      - false
@@ -56,7 +60,7 @@ Options
    * - --force
      - 
      - false
-     - Flag that indicates whether to skip the confirmation prompt before proceeding with the requested action.
+     - If specified, skips asking for input and creates a cluster with default settings for any options you don't specify.
    * - --gov
      - 
      - false
@@ -73,6 +77,10 @@ Options
      - string
      - false
      - Password for the user.
+   * - --projectId
+     - string
+     - false
+     - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
    * - --provider
      - string
      - false
@@ -89,6 +97,10 @@ Options
      - 
      - false
      - Indicates whether to skip loading sample data into your Atlas cluster.
+   * - --tag
+     - stringToString
+     - false
+     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the cluster. This value defaults to [].
    * - --tier
      - string
      - false

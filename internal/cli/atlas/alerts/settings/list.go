@@ -25,14 +25,15 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.AlertConfigurationLister
+	CompactResponse bool
+	store           store.AlertConfigurationLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -49,13 +50,19 @@ var settingsListTemplate = `ID	TYPE	ENABLED{{range .Results}}
 
 func (opts *ListOpts) Run() error {
 	params := &admin.ListAlertConfigurationsApiParams{
-		GroupId:      opts.ConfigProjectID(),
-		ItemsPerPage: &opts.ItemsPerPage,
-		PageNum:      &opts.PageNum,
+		GroupId: opts.ConfigProjectID(),
+		PageNum: &opts.PageNum,
+	}
+	if opts.ItemsPerPage > 0 {
+		params.ItemsPerPage = &opts.ItemsPerPage
 	}
 	r, err := opts.store.AlertConfigurations(params)
 	if err != nil {
 		return err
+	}
+
+	if opts.CompactResponse {
+		return opts.PrintForCompactResultsResponse(r)
 	}
 
 	return opts.Print(r)
@@ -90,6 +97,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().BoolVarP(&opts.CompactResponse, flag.CompactResponse, flag.CompactResponseShort, false, usage.CompactResponse)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd

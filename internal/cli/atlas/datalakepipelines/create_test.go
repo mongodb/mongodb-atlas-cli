@@ -26,14 +26,14 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPipelinesCreator(ctrl)
 
-	var expected *atlasv2.IngestionPipeline
+	var expected *atlasv2.DataLakeIngestionPipeline
 
 	createOpts := &CreateOpts{
 		store: mockStore,

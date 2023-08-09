@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 // MockPrivateEndpointLister is a mock of PrivateEndpointLister interface.
@@ -73,10 +73,10 @@ func (m *MockPrivateEndpointDescriber) EXPECT() *MockPrivateEndpointDescriberMoc
 }
 
 // PrivateEndpoint mocks base method.
-func (m *MockPrivateEndpointDescriber) PrivateEndpoint(arg0, arg1, arg2 string) (interface{}, error) {
+func (m *MockPrivateEndpointDescriber) PrivateEndpoint(arg0, arg1, arg2 string) (*admin.EndpointService, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PrivateEndpoint", arg0, arg1, arg2)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*admin.EndpointService)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,7 +111,7 @@ func (m *MockPrivateEndpointCreator) EXPECT() *MockPrivateEndpointCreatorMockRec
 }
 
 // CreatePrivateEndpoint mocks base method.
-func (m *MockPrivateEndpointCreator) CreatePrivateEndpoint(arg0 string, arg1 *admin.CreateEndpointServiceRequest) (interface{}, error) {
+func (m *MockPrivateEndpointCreator) CreatePrivateEndpoint(arg0 string, arg1 *admin.CloudProviderEndpointServiceRequest) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePrivateEndpoint", arg0, arg1)
 	ret0, _ := ret[0].(interface{})
@@ -186,10 +186,10 @@ func (m *MockInterfaceEndpointDescriber) EXPECT() *MockInterfaceEndpointDescribe
 }
 
 // InterfaceEndpoint mocks base method.
-func (m *MockInterfaceEndpointDescriber) InterfaceEndpoint(arg0, arg1, arg2, arg3 string) (interface{}, error) {
+func (m *MockInterfaceEndpointDescriber) InterfaceEndpoint(arg0, arg1, arg2, arg3 string) (*admin.PrivateLinkEndpoint, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InterfaceEndpoint", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*admin.PrivateLinkEndpoint)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -224,10 +224,10 @@ func (m *MockInterfaceEndpointCreator) EXPECT() *MockInterfaceEndpointCreatorMoc
 }
 
 // CreateInterfaceEndpoint mocks base method.
-func (m *MockInterfaceEndpointCreator) CreateInterfaceEndpoint(arg0, arg1, arg2 string, arg3 *admin.CreateEndpointRequest) (interface{}, error) {
+func (m *MockInterfaceEndpointCreator) CreateInterfaceEndpoint(arg0, arg1, arg2 string, arg3 *admin.CreateEndpointRequest) (*admin.PrivateLinkEndpoint, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateInterfaceEndpoint", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*admin.PrivateLinkEndpoint)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

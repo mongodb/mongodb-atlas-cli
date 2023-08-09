@@ -49,7 +49,7 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			DownloadLog(opts.ProjectID, opts.host, opts.name, gomock.Any(), opts.newDateRangeOpts()).
+			DownloadLog(gomock.Any(), opts.newHostLogsParams()).
 			Return(nil).
 			Times(1)
 

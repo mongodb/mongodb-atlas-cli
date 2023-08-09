@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestWhitelistCreate_Run(t *testing.T) {
@@ -38,9 +38,11 @@ func TestWhitelistCreate_Run(t *testing.T) {
 		store:     mockStore,
 	}
 
+	projectIPAccessList, _ := createOpts.newProjectIPAccessList()
+
 	mockStore.
 		EXPECT().
-		CreateProjectIPAccessList(createOpts.newProjectIPAccessList()).Return(expected, nil).
+		CreateProjectIPAccessList(projectIPAccessList).Return(expected, nil).
 		Times(1)
 
 	if err := createOpts.Run(); err != nil {

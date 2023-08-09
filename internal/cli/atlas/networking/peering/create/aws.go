@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type AWSOpts struct {
@@ -59,7 +59,7 @@ func (opts *AWSOpts) Run() error {
 	if container == nil {
 		var err2 error
 		r, err2 := opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
-		container = r.(*atlasv2.AWSCloudProviderContainer)
+		container = r
 		if err2 != nil {
 			return err2
 		}
@@ -71,31 +71,25 @@ func (opts *AWSOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *AWSOpts) containerExists() (*atlasv2.AWSCloudProviderContainer, error) {
+func (opts *AWSOpts) containerExists() (*atlasv2.CloudProviderContainer, error) {
 	r, err := opts.store.AWSContainers(opts.ConfigProjectID())
 	if err != nil {
 		return nil, err
 	}
 	for i := range r {
-		if r[i].RegionName == opts.region {
-			return r[i], nil
+		if r[i].GetRegionName() == opts.region {
+			return &r[i], nil
 		}
 	}
 	return nil, nil
 }
 
-func (opts *AWSOpts) newAWSContainer() *atlasv2.AWSCloudProviderContainer {
-	c := &atlasv2.AWSCloudProviderContainer{
+func (opts *AWSOpts) newContainer() *atlasv2.CloudProviderContainer {
+	return &atlasv2.CloudProviderContainer{
 		AtlasCidrBlock: &opts.atlasCIDRBlock,
-		RegionName:     opts.region,
+		RegionName:     &opts.region,
 		ProviderName:   pointer.Get("AWS"),
 	}
-	return c
-}
-
-func (opts *AWSOpts) newContainer() *atlasv2.CloudProviderContainer {
-	w := atlasv2.AWSCloudProviderContainerAsCloudProviderContainer(opts.newAWSContainer())
-	return &w
 }
 
 func normalizeAtlasRegion(region string) string {
@@ -103,22 +97,17 @@ func normalizeAtlasRegion(region string) string {
 	return strings.ReplaceAll(region, "-", "_")
 }
 
-func (opts *AWSOpts) newPeer(containerID string) *atlasv2.ContainerPeer {
-	a := atlasv2.AWSPeerVpcAsContainerPeer(opts.newAWSPeer(containerID))
-	return &a
-}
-
-func (opts *AWSOpts) newAWSPeer(containerID string) *atlasv2.AWSPeerVpc {
+func (opts *AWSOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringConnectionSettings {
 	provider := "AWS"
 	region := strings.ToLower(opts.region)
 	region = strings.ReplaceAll(region, "_", "-")
-	return &atlasv2.AWSPeerVpc{
+	return &atlasv2.BaseNetworkPeeringConnectionSettings{
 		ProviderName:        &provider,
-		AccepterRegionName:  region,
-		AwsAccountId:        opts.accountID,
+		AccepterRegionName:  &region,
+		AwsAccountId:        &opts.accountID,
 		ContainerId:         containerID,
-		RouteTableCidrBlock: opts.routeTableCidrBlock,
-		VpcId:               opts.vpcID,
+		RouteTableCidrBlock: &opts.routeTableCidrBlock,
+		VpcId:               &opts.vpcID,
 	}
 }
 

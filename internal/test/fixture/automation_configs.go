@@ -435,3 +435,482 @@ func EmptyAutomationConfig() *opsmngr.AutomationConfig {
 		Sharding:    make([]*opsmngr.ShardingConfig, 0),
 	}
 }
+
+func MultiMongosAutomationConfig() *opsmngr.AutomationConfig {
+	engineConfig := make(map[string]interface{})
+	engineConfig["cacheSizeGB"] = 0.5
+
+	return &opsmngr.AutomationConfig{
+		Auth: opsmngr.Auth{
+			AutoAuthMechanism: "MONGODB-CR",
+			AuthoritativeSet:  false,
+			Disabled:          true,
+		},
+		UIBaseURL: pointer.Get("http://ec2-34-247-187-24.eu-west-1.compute.amazonaws.com:8080"),
+		Version:   2,
+		Processes: []*opsmngr.Process{
+			{
+				FeatureCompatibilityVersion: "6.0",
+				Hostname:                    "ip-172-31-33-34.eu-west-1.compute.internal",
+				ManualMode:                  false,
+				Name:                        "myCluster_myShard_0_1",
+				Args26: opsmngr.Args26{
+					Replication: &opsmngr.Replication{ReplSetName: "myShard_0"},
+					SystemLog: opsmngr.SystemLog{
+						Path:        "/data/mongodb.log",
+						Destination: "file",
+					},
+					Storage: &opsmngr.Storage{
+						WiredTiger: &engineConfig,
+						DBPath:     "/data",
+					},
+					NET: opsmngr.Net{Port: 27017},
+				},
+				Disabled:    false,
+				ProcessType: "mongod",
+				AuditLogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				LogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				Version:           "6.0.6-ent",
+				AuthSchemaVersion: 5,
+			},
+			{
+				FeatureCompatibilityVersion: "6.0",
+				Hostname:                    "ip-172-31-35-62.eu-west-1.compute.internal",
+				ManualMode:                  false,
+				Name:                        "myCluster_myShard_1_2",
+				Args26: opsmngr.Args26{
+					Replication: &opsmngr.Replication{ReplSetName: "myShard_1"},
+					SystemLog: opsmngr.SystemLog{
+						Path:        "/data/mongodb.log",
+						Destination: "file",
+					},
+					Storage: &opsmngr.Storage{
+						WiredTiger: &engineConfig,
+						DBPath:     "/data",
+					},
+					NET: opsmngr.Net{Port: 27017},
+				},
+				Disabled:    false,
+				ProcessType: "mongod",
+				AuditLogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				LogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				Version:           "6.0.6-ent",
+				AuthSchemaVersion: 5,
+			},
+			{
+				FeatureCompatibilityVersion: "6.0",
+				ManualMode:                  false,
+				Hostname:                    "ip-172-31-37-180.eu-west-1.compute.internal",
+				Name:                        "myCluster_myShard_2_3",
+				Args26: opsmngr.Args26{
+					Replication: &opsmngr.Replication{ReplSetName: "myShard_2"},
+					SystemLog: opsmngr.SystemLog{
+						Path:        "/data/mongodb.log",
+						Destination: "file",
+					},
+					Storage: &opsmngr.Storage{
+						WiredTiger: &engineConfig,
+						DBPath:     "/data",
+					},
+					NET: opsmngr.Net{Port: 27017},
+				},
+				Disabled:    false,
+				ProcessType: "mongod",
+				AuditLogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				LogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				Version:           "6.0.6-ent",
+				AuthSchemaVersion: 5,
+			},
+			{
+				FeatureCompatibilityVersion: "6.0",
+				ManualMode:                  false,
+				Hostname:                    "ip-172-31-39-241.eu-west-1.compute.internal",
+				Name:                        "myCluster_myShard_3_4",
+				Args26: opsmngr.Args26{
+					Replication: &opsmngr.Replication{ReplSetName: "myShard_3"},
+					SystemLog: opsmngr.SystemLog{
+						Path:        "/data/mongodb.log",
+						Destination: "file",
+					},
+					Storage: &opsmngr.Storage{
+						WiredTiger: &engineConfig,
+						DBPath:     "/data",
+					},
+					NET: opsmngr.Net{Port: 27017},
+				},
+				Disabled:    false,
+				ProcessType: "mongod",
+				AuditLogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				LogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				Version:           "6.0.6-ent",
+				AuthSchemaVersion: 5,
+			},
+			{
+				FeatureCompatibilityVersion: "6.0",
+				ManualMode:                  false,
+				Hostname:                    "ip-172-31-43-144.eu-west-1.compute.internal",
+				Name:                        "myCluster_myShard_4_5",
+				Args26: opsmngr.Args26{
+					Replication: &opsmngr.Replication{ReplSetName: "myShard_4"},
+					SystemLog: opsmngr.SystemLog{
+						Path:        "/data/mongodb.log",
+						Destination: "file",
+					},
+					Storage: &opsmngr.Storage{
+						WiredTiger: &engineConfig,
+						DBPath:     "/data",
+					},
+					NET: opsmngr.Net{Port: 27017},
+				},
+				Disabled:    false,
+				ProcessType: "mongod",
+				AuditLogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				LogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				Version:           "6.0.6-ent",
+				AuthSchemaVersion: 5,
+			},
+			{
+				FeatureCompatibilityVersion: "6.0",
+				ManualMode:                  false,
+				Hostname:                    "ip-172-31-43-246.eu-west-1.compute.internal",
+				Name:                        "myCluster_myShard_5_6",
+				Args26: opsmngr.Args26{
+					Replication: &opsmngr.Replication{ReplSetName: "myShard_5"},
+					SystemLog: opsmngr.SystemLog{
+						Path:        "/data/mongodb.log",
+						Destination: "file",
+					},
+					Storage: &opsmngr.Storage{
+						WiredTiger: &engineConfig,
+						DBPath:     "/data",
+					},
+					NET: opsmngr.Net{Port: 27017},
+				},
+				Disabled:    false,
+				ProcessType: "mongod",
+				AuditLogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				LogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				Version:           "6.0.6-ent",
+				AuthSchemaVersion: 5,
+			},
+			{
+				FeatureCompatibilityVersion: "6.0",
+				ManualMode:                  false,
+				Hostname:                    "ip-172-31-33-34.eu-west-1.compute.internal",
+				Name:                        "myCluster_configRS_7",
+				Args26: opsmngr.Args26{
+					Replication: &opsmngr.Replication{ReplSetName: "configRS"},
+					SystemLog: opsmngr.SystemLog{
+						Path:        "/data/n12/mongodb.log",
+						Destination: "file",
+					},
+					Storage: &opsmngr.Storage{
+						WiredTiger: &engineConfig,
+						DBPath:     "/data/n12",
+					},
+					NET:      opsmngr.Net{Port: 27020},
+					Sharding: &opsmngr.Sharding{ClusterRole: "configsvr"},
+				},
+				Disabled:    false,
+				ProcessType: "mongod",
+				AuditLogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				LogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				Version:           "6.0.6-ent",
+				AuthSchemaVersion: 5,
+			},
+			{
+				FeatureCompatibilityVersion: "6.0",
+				Cluster:                     "myCluster",
+				Hostname:                    "ip-172-31-35-62.eu-west-1.compute.internal",
+				ManualMode:                  false,
+				Name:                        "myCluster_mongos_8",
+				Args26: opsmngr.Args26{
+					SystemLog: opsmngr.SystemLog{
+						Path:        "/data/n1/mongodb.log",
+						Destination: "file",
+					},
+					NET: opsmngr.Net{Port: 27021},
+				},
+				Disabled:    false,
+				ProcessType: "mongos",
+				AuditLogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				LogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				Version:           "6.0.6-ent",
+				AuthSchemaVersion: 5,
+			},
+			{
+				FeatureCompatibilityVersion: "6.0",
+				Cluster:                     "myCluster",
+				Hostname:                    "ip-172-31-37-180.eu-west-1.compute.internal",
+				ManualMode:                  false,
+				Name:                        "myCluster_mongos_9",
+				Args26: opsmngr.Args26{
+					SystemLog: opsmngr.SystemLog{
+						Path:        "/data/n1/mongodb.log",
+						Destination: "file",
+					},
+					NET: opsmngr.Net{Port: 27021},
+				},
+				Disabled:    false,
+				ProcessType: "mongos",
+				AuditLogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				LogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				Version:           "6.0.6-ent",
+				AuthSchemaVersion: 5,
+			},
+			{
+				FeatureCompatibilityVersion: "6.0",
+				Cluster:                     "myCluster",
+				Hostname:                    "ip-172-31-39-241.eu-west-1.compute.internal",
+				ManualMode:                  false,
+				Name:                        "myCluster_mongos_10",
+				Args26: opsmngr.Args26{
+					SystemLog: opsmngr.SystemLog{
+						Path:        "/data/n1/mongodb.log",
+						Destination: "file",
+					},
+					NET: opsmngr.Net{Port: 27021},
+				},
+				Disabled:    false,
+				ProcessType: "mongos",
+				AuditLogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				LogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				Version:           "6.0.6-ent",
+				AuthSchemaVersion: 5,
+			},
+			{
+				FeatureCompatibilityVersion: "6.0",
+				Cluster:                     "myCluster",
+				Hostname:                    "ip-172-31-43-144.eu-west-1.compute.internal",
+				ManualMode:                  false,
+				Name:                        "myCluster_mongos_11",
+				Args26: opsmngr.Args26{
+					SystemLog: opsmngr.SystemLog{
+						Path:        "/data/n1/mongodb.log",
+						Destination: "file",
+					},
+					NET: opsmngr.Net{Port: 27021},
+				},
+				Disabled:    false,
+				ProcessType: "mongos",
+				AuditLogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				LogRotate: &opsmngr.LogRotate{
+					TimeThresholdHrs: 24,
+					SizeThresholdMB:  1000,
+				},
+				Version:           "6.0.6-ent",
+				AuthSchemaVersion: 5,
+			},
+		},
+		ReplicaSets: []*opsmngr.ReplicaSet{
+			{
+				Members: []opsmngr.Member{
+					{
+						Hidden:             false,
+						BuildIndexes:       true,
+						ArbiterOnly:        false,
+						Host:               "myCluster_myShard_0_1",
+						Votes:              1,
+						ID:                 0,
+						Priority:           1,
+						SecondaryDelaySecs: pointer.Get(float64(0)),
+					},
+				},
+				ProtocolVersion: "1",
+				ID:              "myShard_0",
+			},
+			{
+				Members: []opsmngr.Member{
+					{
+						Hidden:             false,
+						BuildIndexes:       true,
+						ArbiterOnly:        false,
+						Host:               "myCluster_myShard_1_2",
+						Votes:              1,
+						ID:                 0,
+						Priority:           1,
+						SecondaryDelaySecs: pointer.Get(float64(0)),
+					},
+				},
+				ProtocolVersion: "1",
+				ID:              "myShard_1",
+			},
+			{
+				Members: []opsmngr.Member{
+					{
+						Hidden:             false,
+						BuildIndexes:       true,
+						ArbiterOnly:        false,
+						Host:               "myCluster_myShard_2_3",
+						Votes:              1,
+						ID:                 0,
+						Priority:           1,
+						SecondaryDelaySecs: pointer.Get(float64(0)),
+					},
+				},
+				ProtocolVersion: "1",
+				ID:              "myShard_2",
+			},
+			{
+				Members: []opsmngr.Member{
+					{
+						Hidden:             false,
+						BuildIndexes:       true,
+						ArbiterOnly:        false,
+						Host:               "myCluster_myShard_3_4",
+						Votes:              1,
+						ID:                 0,
+						Priority:           1,
+						SecondaryDelaySecs: pointer.Get(float64(0)),
+					},
+				},
+				ProtocolVersion: "1",
+				ID:              "myShard_3",
+			},
+			{
+				Members: []opsmngr.Member{
+					{
+						Hidden:             false,
+						BuildIndexes:       true,
+						ArbiterOnly:        false,
+						Host:               "myCluster_myShard_4_5",
+						Votes:              1,
+						ID:                 0,
+						Priority:           1,
+						SecondaryDelaySecs: pointer.Get(float64(0)),
+					},
+				},
+				ProtocolVersion: "1",
+				ID:              "myShard_4",
+			},
+			{
+				Members: []opsmngr.Member{
+					{
+						Hidden:             false,
+						BuildIndexes:       true,
+						ArbiterOnly:        false,
+						Host:               "myCluster_myShard_5_6",
+						Votes:              1,
+						ID:                 0,
+						Priority:           1,
+						SecondaryDelaySecs: pointer.Get(float64(0)),
+					},
+				},
+				ProtocolVersion: "1",
+				ID:              "myShard_5",
+			},
+			{
+				Members: []opsmngr.Member{
+					{
+						Hidden:             false,
+						BuildIndexes:       true,
+						ArbiterOnly:        false,
+						Host:               "myCluster_configRS_7",
+						Votes:              1,
+						ID:                 0,
+						Priority:           1,
+						SecondaryDelaySecs: pointer.Get(float64(0)),
+					},
+				},
+				ProtocolVersion: "1",
+				ID:              "configRS",
+			},
+		},
+		Sharding: []*opsmngr.ShardingConfig{
+			{
+				Shards: []*opsmngr.Shard{
+					{
+						RS: "myShard_0",
+						ID: "myShard_0",
+					},
+					{
+						RS: "myShard_1",
+						ID: "myShard_1",
+					},
+					{
+						RS: "myShard_2",
+						ID: "myShard_2",
+					},
+					{
+						RS: "myShard_3",
+						ID: "myShard_3",
+					},
+					{
+						RS: "myShard_4",
+						ID: "myShard_4",
+					},
+					{
+						RS: "myShard_5",
+						ID: "myShard_5",
+					},
+				},
+				ManagedSharding:     false,
+				Name:                "myCluster",
+				ConfigServerReplica: "configRS",
+			},
+		},
+	}
+}

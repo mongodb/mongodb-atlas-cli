@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type CreateOpts struct {
@@ -57,12 +57,10 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newInterfaceEndpointConnection() *atlasv2.CreateEndpointRequest {
-	r := atlasv2.CreateAzureEndpointRequestAsCreateEndpointRequest(
-		&atlasv2.CreateAzureEndpointRequest{
-			Id:                       opts.privateEndpointID,
-			PrivateEndpointIPAddress: opts.privateEndpointIPAddress,
-		},
-	)
+	r := atlasv2.CreateEndpointRequest{
+		Id:                       &opts.privateEndpointID,
+		PrivateEndpointIPAddress: &opts.privateEndpointIPAddress,
+	}
 	return &r
 }
 
@@ -81,8 +79,9 @@ func CreateBuilder() *cobra.Command {
 			"endpointServiceIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.",
 			"output":                createTemplate,
 		},
-		Example: fmt.Sprintf(`  # Create a new interface for an Azure private endpoint with the ID 5f4fc14da2b47835a58c63a2 in Atlas and the ID /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/ resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/ providers/Microsoft.Network/privateEndpoints/ test-endpoint in Azure for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s privateEndpoints azure interfaces create 5f4fc14da2b47835a58c63a2 --privateEndpointId /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/ resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/ providers/Microsoft.Network/privateEndpoints/ test-endpoint --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # Create a new interface for an Azure private endpoint with the ID 5f4fc14da2b47835a58c63a2 in Atlas and the ID /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/providers/Microsoft.Network/privateEndpoints/test-endpoint in Azure for the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s privateEndpoints azure interfaces create 5f4fc14da2b47835a58c63a2 --privateEndpointId /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/providers/Microsoft.Network/privateEndpoints/test-endpoint --projectId 5e2211c17a3e5a48f5497de3 --privateEndpointIpAddress 192.0.2.5
+  --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

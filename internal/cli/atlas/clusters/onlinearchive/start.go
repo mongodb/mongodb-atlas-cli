@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type StartOpts struct {
@@ -48,7 +48,7 @@ func (opts *StartOpts) initStore(ctx context.Context) func() error {
 var startTemplate = "Online archive '{{.Id}}' started.\n"
 
 func (opts *StartOpts) Run() error {
-	archive := &atlasv2.OnlineArchive{
+	archive := &atlasv2.BackupOnlineArchive{
 		Id:    &opts.id,
 		State: pointer.Get("ACTIVE"),
 	}

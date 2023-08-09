@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
@@ -52,14 +52,14 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	current := new(admin.DatabaseUser)
+	current := new(admin.CloudDatabaseUser)
 	opts.update(current)
 
 	params := &admin.UpdateDatabaseUserApiParams{
-		GroupId:      current.GroupId,
-		DatabaseName: current.DatabaseName,
-		Username:     opts.currentUsername,
-		DatabaseUser: current,
+		GroupId:           current.GroupId,
+		DatabaseName:      current.DatabaseName,
+		Username:          opts.currentUsername,
+		CloudDatabaseUser: current,
 	}
 	r, err := opts.store.UpdateDatabaseUser(params)
 
@@ -70,7 +70,7 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) update(out *admin.DatabaseUser) {
+func (opts *UpdateOpts) update(out *admin.CloudDatabaseUser) {
 	out.GroupId = opts.ConfigProjectID()
 	out.Username = opts.username
 	if opts.username == "" {
@@ -117,7 +117,7 @@ func UpdateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.DBUsername)
-	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
+	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.DBUserPassword)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles+usage.UpdateWarning)
 	cmd.Flags().StringSliceVar(&opts.scopes, flag.Scope, []string{}, usage.Scopes+usage.UpdateWarning)
 

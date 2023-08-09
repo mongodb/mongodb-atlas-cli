@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type CreateOpts struct {
@@ -93,6 +93,10 @@ Your API key must have the GROUP_ATLAS_ADMIN (Project Owner) role to create a pr
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+	}
+
+	if config.ToolName == config.AtlasCLI {
+		cmd.Deprecated = "Please use 'atlas datafederation privateendpoints create'"
 	}
 
 	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)

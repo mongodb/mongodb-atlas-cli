@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -39,18 +39,14 @@ func TestListOpts_Run(t *testing.T) {
 	expected := &atlasv2.PaginatedBackupSnapshot{
 		Results: []atlasv2.DiskBackupSnapshot{
 			{
-				DiskBackupReplicaSet: &atlasv2.DiskBackupReplicaSet{
-					Id:          pointer.Get("5e4e593f70dfbf1010295836"),
-					Description: pointer.Get("test rs"),
-					Status:      pointer.Get("IDLE"),
-				},
+				Id:          pointer.Get("5e4e593f70dfbf1010295836"),
+				Description: pointer.Get("test rs"),
+				Status:      pointer.Get("IDLE"),
 			},
 			{
-				DiskBackupShardedClusterSnapshot: &atlasv2.DiskBackupShardedClusterSnapshot{
-					Id:          pointer.Get("5e4e593f70dfbf1010295638"),
-					Description: pointer.Get("test cluster"),
-					Status:      pointer.Get("IDLE"),
-				},
+				Id:          pointer.Get("5e4e593f70dfbf1010295638"),
+				Description: pointer.Get("test cluster"),
+				Status:      pointer.Get("IDLE"),
 			},
 		},
 		TotalCount: pointer.Get(2),

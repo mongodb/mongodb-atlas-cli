@@ -25,7 +25,7 @@ import (
 )
 
 const (
-	LatestOperatorMajorVersion  = "1.7.0"
+	LatestOperatorMajorVersion  = "1.8.0"
 	maxDepth                    = 100
 	ResourceVersion             = "app.kubernetes.io/version"
 	ResourceAtlasProject        = "atlasprojects"
@@ -34,6 +34,7 @@ const (
 	ResourceAtlasBackupSchedule = "atlasbackupschedules"
 	ResourceAtlasBackupPolicy   = "atlasbackuppolicies"
 	ResourceAtlasTeam           = "atlasteams"
+	ResourceAtlasDataFederation = "atlasdatafederations"
 )
 
 var (
@@ -45,14 +46,6 @@ var (
 	ErrDocumentHasNoSpec         = errors.New("document contains no Spec")
 
 	versionsToResourcesMap = map[string][]string{
-		"1.5.0": {
-			ResourceAtlasDatabaseUser,
-			ResourceAtlasProject,
-			ResourceAtlasDeployment,
-			ResourceAtlasBackupSchedule,
-			ResourceAtlasBackupPolicy,
-			ResourceAtlasTeam,
-		},
 		"1.6.0": {
 			ResourceAtlasDatabaseUser,
 			ResourceAtlasProject,
@@ -68,6 +61,15 @@ var (
 			ResourceAtlasBackupSchedule,
 			ResourceAtlasBackupPolicy,
 			ResourceAtlasTeam,
+		},
+		"1.8.0": {
+			ResourceAtlasDatabaseUser,
+			ResourceAtlasProject,
+			ResourceAtlasDeployment,
+			ResourceAtlasBackupSchedule,
+			ResourceAtlasBackupPolicy,
+			ResourceAtlasTeam,
+			ResourceAtlasDataFederation,
 		},
 	}
 )

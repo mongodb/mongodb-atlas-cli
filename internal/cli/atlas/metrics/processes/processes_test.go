@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 const oneMinute = "PT1M"
@@ -32,7 +32,7 @@ func TestProcess_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessMeasurementLister(ctrl)
 
-	expected := &atlasv2.MeasurementsGeneralViewAtlas{}
+	expected := &atlasv2.ApiMeasurementsGeneralViewAtlas{}
 
 	listOpts := &Opts{
 		host:  "hard-00-00.mongodb.net",

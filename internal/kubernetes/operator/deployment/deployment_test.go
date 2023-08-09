@@ -33,7 +33,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -56,7 +56,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			firstLocation = "CA"
 		)
 
-		cluster := &atlasv2.ClusterDescriptionV15{
+		cluster := &atlasv2.AdvancedClusterDescription{
 			BackupEnabled: pointer.Get(true),
 			BiConnector: &atlasv2.BiConnector{
 				Enabled:        pointer.Get(true),
@@ -68,7 +68,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			EncryptionAtRestProvider: pointer.Get("TestProvider"),
 			GroupId:                  pointer.Get("TestGroupID"),
 			Id:                       pointer.Get("TestID"),
-			Labels: []atlasv2.NDSLabel{
+			Labels: []atlasv2.ComponentLabel{
 				{
 					Key:   pointer.Get("TestKey"),
 					Value: pointer.Get("TestValue"),
@@ -85,7 +85,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					NumShards: pointer.Get(3),
 					Id:        pointer.Get(zoneID1),
 					ZoneName:  pointer.Get(zoneName1),
-					RegionConfigs: []atlasv2.RegionConfig{
+					RegionConfigs: []atlasv2.CloudRegionConfig{
 						{
 							AnalyticsSpecs: &atlasv2.DedicatedHardwareSpec{
 								DiskIOPS:      pointer.Get(10),
@@ -105,9 +105,9 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 								InstanceSize:  pointer.Get("M20"),
 								NodeCount:     pointer.Get(3),
 							},
-							AutoScaling: &atlasv2.AutoScalingV15{
+							AutoScaling: &atlasv2.AdvancedAutoScalingSettings{
 								DiskGB: &atlasv2.DiskGBAutoScaling{Enabled: pointer.Get(true)},
-								Compute: &atlasv2.ComputeAutoScalingV15{
+								Compute: &atlasv2.AdvancedComputeAutoScaling{
 									Enabled:          pointer.Get(true),
 									ScaleDownEnabled: pointer.Get(true),
 									MinInstanceSize:  pointer.Get("M20"),
@@ -135,8 +135,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			SampleSizeBIConnector:            pointer.Get[int](10),
 			SampleRefreshIntervalBIConnector: pointer.Get[int](10),
 		}
-		processArgs.OplogSizeMB.Set(pointer.Get(10))
-		processArgs.OplogMinRetentionHours.Set(pointer.Get(float64(10.1)))
+		processArgs.OplogSizeMB = pointer.Get(10)
+		processArgs.OplogMinRetentionHours = pointer.Get(float64(10.1))
 		backupSchedule := &atlasv2.DiskBackupSnapshotSchedule{
 			ClusterId:             pointer.Get("testClusterID"),
 			ClusterName:           pointer.Get(clusterName),
@@ -145,10 +145,10 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			RestoreWindowDays:     pointer.Get[int](5),
 			UpdateSnapshots:       pointer.Get(true),
 			NextSnapshot:          pointer.Get(time.Now()),
-			Policies: []atlasv2.Policy{
+			Policies: []atlasv2.AdvancedDiskBackupSnapshotSchedulePolicy{
 				{
 					Id: pointer.Get("1"),
-					PolicyItems: []atlasv2.PolicyItem{
+					PolicyItems: []atlasv2.DiskBackupApiPolicyItem{
 						{
 							Id:                pointer.Get("1"),
 							FrequencyInterval: 10,

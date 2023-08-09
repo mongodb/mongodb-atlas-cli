@@ -22,8 +22,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -31,7 +32,13 @@ func TestListOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockServerlessRestoreJobsLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob{}
+	expected := &atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob{
+		Results: []atlasv2.ServerlessBackupRestoreJob{
+			{
+				Id: pointer.Get("1"),
+			},
+		},
+	}
 
 	listOpts := &ListOpts{
 		store:       mockStore,
@@ -47,6 +54,7 @@ func TestListOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, restoreListTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

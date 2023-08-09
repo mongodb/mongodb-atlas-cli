@@ -25,7 +25,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestEnableBuilder(t *testing.T) {
@@ -51,7 +51,7 @@ func TestEnableOpts_Run(t *testing.T) {
 		},
 		store: mockStore,
 	}
-	expected := &admin.AlertConfigViewForNdsGroup{}
+	expected := &admin.GroupAlertsConfig{}
 	mockStore.
 		EXPECT().
 		EnableAlertConfiguration(opts.ProjectID, opts.alertID).

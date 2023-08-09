@@ -22,8 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -41,25 +40,6 @@ func TestList_Run(t *testing.T) {
 			Projects(listOpts.NewListOptions()).
 			Return(expected, nil).
 			Times(1)
-
-		if err := listOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
-
-	t.Run("An ConfigOrgID is given for OM", func(t *testing.T) {
-		listOpts := &ListOpts{
-			store: mockStore,
-		}
-		listOpts.OrgID = "1"
-		filter := &mongodbatlas.ProjectsListOptions{ListOptions: *listOpts.NewListOptions()}
-		mockStore.
-			EXPECT().
-			GetOrgProjects("1", filter).
-			Return(expected, nil).
-			Times(1)
-
-		config.SetService(config.OpsManagerService)
 
 		if err := listOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)

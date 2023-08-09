@@ -57,6 +57,8 @@ Options
      - string
      - false
      - Name of the JSON data lake pipeline configuration file to use.
+
+       Mutually exclusive with --sinkType, --sinkMetadataProvider, --sinkMetadataRegion, --sinkPartitionField, --sourceType, --sourceClusterName, --sourceCollectionName, --sourceDatabaseName, --sourcePolicyItemId, --transform.
    * - -h, --help
      - 
      - false
@@ -64,7 +66,7 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see full output, use the -o json option.
    * - --projectId
      - string
      - false
@@ -73,42 +75,62 @@ Options
      - string
      - false
      - Target cloud provider for this data lake pipeline.
+
+       Mutually exclusive with --file.
    * - --sinkMetadataRegion
      - string
      - false
      - Target cloud provider region for this data lake pipeline.
+
+       Mutually exclusive with --file.
    * - --sinkPartitionField
      - strings
      - false
      - Ordered fields used to physically organize data in the destination.
+
+       Mutually exclusive with --file.
    * - --sinkType
      - string
      - false
      - Type of ingestion destination for this data lake pipeline.
+
+       Mutually exclusive with --file.
    * - --sourceClusterName
      - string
      - false
      - Human-readable label that identifies the source cluster.
+
+       Mutually exclusive with --file.
    * - --sourceCollectionName
      - string
      - false
      - Human-readable label that identifies the source collection.
+
+       Mutually exclusive with --file.
    * - --sourceDatabaseName
      - string
      - false
      - Human-readable label that identifies the source database.
+
+       Mutually exclusive with --file.
    * - --sourcePolicyItemId
      - string
      - false
      - Human-readable label that identifies the policy item.
+
+       Mutually exclusive with --file.
    * - --sourceType
      - string
      - false
      - Type of ingestion source for this data lake pipeline.
+
+       Mutually exclusive with --file.
    * - --transform
      - strings
      - false
      - Fields to be excluded for this data lake pipeline.
+
+       Mutually exclusive with --file.
 
 Inherited Options
 -----------------

@@ -26,7 +26,7 @@ import (
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -106,7 +106,7 @@ func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectNa
 	return result, relatedSecrets, nil
 }
 
-func getDeleteAfterDate(user *atlasv2.DatabaseUser) string {
+func getDeleteAfterDate(user *atlasv2.CloudDatabaseUser) string {
 	if user.DeleteAfterDate != nil {
 		return user.DeleteAfterDate.String()
 	}
@@ -120,7 +120,7 @@ func buildUserSecret(resourceName string, targetNamespace string, dictionary map
 	return secret
 }
 
-func convertUserScopes(user *atlasv2.DatabaseUser) []atlasV1.ScopeSpec {
+func convertUserScopes(user *atlasv2.CloudDatabaseUser) []atlasV1.ScopeSpec {
 	result := make([]atlasV1.ScopeSpec, 0, len(user.Scopes))
 	for _, scope := range user.Scopes {
 		result = append(result, atlasV1.ScopeSpec{
@@ -131,7 +131,7 @@ func convertUserScopes(user *atlasv2.DatabaseUser) []atlasV1.ScopeSpec {
 	return result
 }
 
-func convertUserRoles(user *atlasv2.DatabaseUser) []atlasV1.RoleSpec {
+func convertUserRoles(user *atlasv2.CloudDatabaseUser) []atlasV1.RoleSpec {
 	if len(user.Roles) == 0 {
 		return nil
 	}
@@ -146,7 +146,7 @@ func convertUserRoles(user *atlasv2.DatabaseUser) []atlasV1.RoleSpec {
 	return result
 }
 
-func convertUserLabels(user *atlasv2.DatabaseUser) []common.LabelSpec {
+func convertUserLabels(user *atlasv2.CloudDatabaseUser) []common.LabelSpec {
 	result := make([]common.LabelSpec, 0, len(user.Labels))
 	for _, label := range user.Labels {
 		result = append(result, common.LabelSpec{

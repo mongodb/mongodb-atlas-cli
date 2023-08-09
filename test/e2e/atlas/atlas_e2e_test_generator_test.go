@@ -25,7 +25,8 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 const (
@@ -45,7 +46,7 @@ type atlasE2ETestGenerator struct {
 	dbUser         string
 	tier           string
 	enableBackup   bool
-	firstProcess   *atlasv2.HostViewAtlas
+	firstProcess   *atlasv2.ApiHostViewAtlas
 	t              *testing.T
 }
 
@@ -241,9 +242,7 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, backoff, projectID, e)
 		if strings.Contains(e.Error(), "CANNOT_CLOSE_GROUP_ACTIVE_ATLAS_CLUSTERS") {
 			cliPath, err := e2e.AtlasCLIBin()
-			if err != nil {
-				t.Errorf("%s: invalid bin", err)
-			}
+			require.NoError(t, err)
 			deleteClustersForProject(t, cliPath, projectID)
 		}
 		time.Sleep(time.Duration(backoff) * time.Second)
@@ -252,6 +251,39 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	if !deleted {
 		t.Errorf("we could not delete the project %q", projectID)
 	}
+}
+
+func deleteOrgInvitations(t *testing.T) {
+	t.Helper()
+	cliPath, err := e2e.AtlasCLIBin()
+	require.NoError(t, err)
+	cmd := exec.Command(cliPath,
+		orgEntity,
+		invitationsEntity,
+		"ls",
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err, string(resp))
+	var invitations []atlasv2.OrganizationInvitation
+	require.NoError(t, json.Unmarshal(resp, &invitations), string(resp))
+	t.Logf("%s\n", resp)
+	for _, i := range invitations {
+		deleteOrgInvitation(t, cliPath, *i.Id)
+	}
+}
+
+func deleteOrgInvitation(t *testing.T, cliPath string, id string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		orgEntity,
+		invitationsEntity,
+		"delete",
+		id,
+		"--force")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err, string(resp))
 }
 
 func (g *atlasE2ETestGenerator) generateServerlessCluster() {
@@ -349,7 +381,7 @@ func (g *atlasE2ETestGenerator) getHostname() (string, error) {
 }
 
 // getFirstProcess returns the first process of the project.
-func (g *atlasE2ETestGenerator) getFirstProcess() (*atlasv2.HostViewAtlas, error) {
+func (g *atlasE2ETestGenerator) getFirstProcess() (*atlasv2.ApiHostViewAtlas, error) {
 	g.t.Helper()
 
 	if g.firstProcess != nil {
@@ -366,7 +398,7 @@ func (g *atlasE2ETestGenerator) getFirstProcess() (*atlasv2.HostViewAtlas, error
 }
 
 // getHostname returns the list of processes.
-func (g *atlasE2ETestGenerator) getProcesses() ([]atlasv2.HostViewAtlas, error) {
+func (g *atlasE2ETestGenerator) getProcesses() ([]atlasv2.ApiHostViewAtlas, error) {
 	g.t.Helper()
 
 	if g.projectID == "" {

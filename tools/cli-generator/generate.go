@@ -161,7 +161,7 @@ func fileExists(f string) bool {
 }
 
 func (cli *CLI) generateStore(store *Store) error {
-	storeFile := filepath.Join(cli.basePath, "internal", "store", store.BaseFileName+".go")
+	storeFile := filepath.Join(cli.basePath, "internal", "store", "atlas", store.BaseFileName+".go")
 
 	fileCreated, err := cli.generateFile(storeFile, store.TemplateFile(), store)
 	if err != nil {

@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 // MockAlertConfigurationLister is a mock of AlertConfigurationLister interface.
@@ -73,10 +73,10 @@ func (m *MockAlertConfigurationCreator) EXPECT() *MockAlertConfigurationCreatorM
 }
 
 // CreateAlertConfiguration mocks base method.
-func (m *MockAlertConfigurationCreator) CreateAlertConfiguration(arg0 *admin.AlertConfigViewForNdsGroup) (*admin.AlertConfigViewForNdsGroup, error) {
+func (m *MockAlertConfigurationCreator) CreateAlertConfiguration(arg0 *admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAlertConfiguration", arg0)
-	ret0, _ := ret[0].(*admin.AlertConfigViewForNdsGroup)
+	ret0, _ := ret[0].(*admin.GroupAlertsConfig)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -148,10 +148,10 @@ func (m *MockAlertConfigurationUpdater) EXPECT() *MockAlertConfigurationUpdaterM
 }
 
 // UpdateAlertConfiguration mocks base method.
-func (m *MockAlertConfigurationUpdater) UpdateAlertConfiguration(arg0 *admin.AlertConfigViewForNdsGroup) (*admin.AlertConfigViewForNdsGroup, error) {
+func (m *MockAlertConfigurationUpdater) UpdateAlertConfiguration(arg0 *admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAlertConfiguration", arg0)
-	ret0, _ := ret[0].(*admin.AlertConfigViewForNdsGroup)
+	ret0, _ := ret[0].(*admin.GroupAlertsConfig)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -224,10 +224,10 @@ func (m *MockAlertConfigurationEnabler) EXPECT() *MockAlertConfigurationEnablerM
 }
 
 // EnableAlertConfiguration mocks base method.
-func (m *MockAlertConfigurationEnabler) EnableAlertConfiguration(arg0, arg1 string) (*admin.AlertConfigViewForNdsGroup, error) {
+func (m *MockAlertConfigurationEnabler) EnableAlertConfiguration(arg0, arg1 string) (*admin.GroupAlertsConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "EnableAlertConfiguration", arg0, arg1)
-	ret0, _ := ret[0].(*admin.AlertConfigViewForNdsGroup)
+	ret0, _ := ret[0].(*admin.GroupAlertsConfig)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -262,10 +262,10 @@ func (m *MockAlertConfigurationDisabler) EXPECT() *MockAlertConfigurationDisable
 }
 
 // DisableAlertConfiguration mocks base method.
-func (m *MockAlertConfigurationDisabler) DisableAlertConfiguration(arg0, arg1 string) (*admin.AlertConfigViewForNdsGroup, error) {
+func (m *MockAlertConfigurationDisabler) DisableAlertConfiguration(arg0, arg1 string) (*admin.GroupAlertsConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DisableAlertConfiguration", arg0, arg1)
-	ret0, _ := ret[0].(*admin.AlertConfigViewForNdsGroup)
+	ret0, _ := ret[0].(*admin.GroupAlertsConfig)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/project"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
@@ -215,7 +215,7 @@ func fetchClusterNames(clustersProvider store.AtlasAllClustersLister, projectID 
 		return nil, err
 	}
 
-	if clusters, ok := response.(*atlasv2.PaginatedClusterDescriptionV15); ok {
+	if clusters, ok := response.(*atlasv2.PaginatedAdvancedClusterDescription); ok {
 		if clusters == nil {
 			return nil, ErrNoCloudManagerClusters
 		}

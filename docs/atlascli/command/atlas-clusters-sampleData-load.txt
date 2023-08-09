@@ -60,7 +60,7 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see full output, use the -o json option.
    * - --projectId
      - string
      - false
@@ -92,3 +92,10 @@ If the command succeeds, the CLI returns output similar to the following sample.
    Sample Data Job <Id> created.
    
 
+Examples
+--------
+
+.. code-block::
+
+   # Load sample data into the cluster named myCluster:
+   atlas clusters sampleData load myCluster --output json

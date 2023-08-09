@@ -21,7 +21,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/spf13/afero"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 const defaultAnalyzer = "lucene.standard"
@@ -73,9 +73,9 @@ func (opts *IndexOpts) validateOpts() error {
 	return nil
 }
 
-func (opts *IndexOpts) newSearchIndex() (*atlasv2.FTSIndex, error) {
+func (opts *IndexOpts) newSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 	if len(opts.filename) > 0 {
-		index := &atlasv2.FTSIndex{}
+		index := &atlasv2.ClusterSearchIndex{}
 		if err := file.Load(opts.fs, opts.filename, index); err != nil {
 			return nil, err
 		}
@@ -86,11 +86,11 @@ func (opts *IndexOpts) newSearchIndex() (*atlasv2.FTSIndex, error) {
 	if err != nil {
 		return nil, err
 	}
-	i := &atlasv2.FTSIndex{
+	i := &atlasv2.ClusterSearchIndex{
 		Analyzer:       &opts.analyzer,
 		CollectionName: opts.collection,
 		Database:       opts.dbName,
-		Mappings: &atlasv2.FTSMappings{
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
 			Dynamic: &opts.dynamic,
 			Fields:  f,
 		},

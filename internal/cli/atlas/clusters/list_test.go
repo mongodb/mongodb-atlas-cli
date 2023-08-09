@@ -30,7 +30,14 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterLister(ctrl)
 
-	var expected mongodbatlas.AdvancedClustersResponse
+	expected := mongodbatlas.AdvancedClustersResponse{
+		Results: []*mongodbatlas.AdvancedCluster{
+			{
+				Name: "test",
+				ID:   "123",
+			},
+		},
+	}
 
 	listOpts := &ListOpts{
 		store: mockStore,

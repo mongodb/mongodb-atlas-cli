@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type UpdateOpts struct {
@@ -58,13 +58,11 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newOnlineArchive() *atlasv2.OnlineArchive {
-	archive := &atlasv2.OnlineArchive{
+func (opts *UpdateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchive {
+	archive := &atlasv2.BackupOnlineArchive{
 		Id: &opts.id,
 		Criteria: &atlasv2.Criteria{
-			DateCriteria: &atlasv2.DateCriteria{
-				ExpireAfterDays: pointer.Get(opts.archiveAfter),
-			},
+			ExpireAfterDays: pointer.Get(opts.archiveAfter),
 		},
 	}
 	return archive

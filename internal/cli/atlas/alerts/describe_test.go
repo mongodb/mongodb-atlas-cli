@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestDescribeBuilder(t *testing.T) {
@@ -86,6 +86,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 			wantErr: true,
 		},
 	}
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 	for _, tt := range tests {
 		cmd := tt.cmd
 		params := &admin.GetAlertApiParams{

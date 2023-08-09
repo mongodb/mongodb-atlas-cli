@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -30,7 +30,7 @@ type ClusterLister interface {
 }
 
 type AtlasClusterDescriber interface {
-	AtlasCluster(string, string) (*admin.ClusterDescriptionV15, error)
+	AtlasCluster(string, string) (*admin.AdvancedClusterDescription, error)
 }
 
 type AtlasClusterConfigurationOptionsDescriber interface {
@@ -50,7 +50,7 @@ type AtlasSharedClusterDescriber interface {
 }
 
 type ClusterCreator interface {
-	CreateCluster(v15 *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error)
+	CreateCluster(v15 *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error)
 }
 
 type ClusterDeleter interface {
@@ -58,15 +58,15 @@ type ClusterDeleter interface {
 }
 
 type ClusterUpdater interface {
-	UpdateCluster(string, string, *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error)
+	UpdateCluster(string, string, *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error)
 }
 
 type ClusterPauser interface {
-	PauseCluster(string, string) (*admin.ClusterDescriptionV15, error)
+	PauseCluster(string, string) (*admin.AdvancedClusterDescription, error)
 }
 
 type ClusterStarter interface {
-	StartCluster(string, string) (*admin.ClusterDescriptionV15, error)
+	StartCluster(string, string) (*admin.AdvancedClusterDescription, error)
 }
 
 type ClusterUpgrader interface {
@@ -130,10 +130,10 @@ func (s *Store) SampleDataStatus(groupID, id string) (*admin.SampleDatasetStatus
 }
 
 // CreateCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateCluster(cluster *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error) {
+func (s *Store) CreateCluster(cluster *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.MultiCloudClustersApi.CreateCluster(s.ctx, cluster.GetGroupId(), cluster).Execute()
+		result, _, err := s.clientv2.ClustersApi.CreateCluster(s.ctx, cluster.GetGroupId(), cluster).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -141,10 +141,10 @@ func (s *Store) CreateCluster(cluster *admin.ClusterDescriptionV15) (*admin.Clus
 }
 
 // UpdateCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateCluster(projectID, name string, cluster *admin.ClusterDescriptionV15) (*admin.ClusterDescriptionV15, error) {
+func (s *Store) UpdateCluster(projectID, name string, cluster *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.MultiCloudClustersApi.UpdateCluster(s.ctx, projectID, name, cluster).Execute()
+		result, _, err := s.clientv2.ClustersApi.UpdateCluster(s.ctx, projectID, name, cluster).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -152,18 +152,18 @@ func (s *Store) UpdateCluster(projectID, name string, cluster *admin.ClusterDesc
 }
 
 // PauseCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) PauseCluster(projectID, name string) (*admin.ClusterDescriptionV15, error) {
+func (s *Store) PauseCluster(projectID, name string) (*admin.AdvancedClusterDescription, error) {
 	paused := true
-	cluster := &admin.ClusterDescriptionV15{
+	cluster := &admin.AdvancedClusterDescription{
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
 }
 
 // StartCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) StartCluster(projectID, name string) (*admin.ClusterDescriptionV15, error) {
+func (s *Store) StartCluster(projectID, name string) (*admin.AdvancedClusterDescription, error) {
 	paused := false
-	cluster := &admin.ClusterDescriptionV15{
+	cluster := &admin.AdvancedClusterDescription{
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
@@ -173,7 +173,7 @@ func (s *Store) StartCluster(projectID, name string) (*admin.ClusterDescriptionV
 func (s *Store) DeleteCluster(projectID, name string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.MultiCloudClustersApi.DeleteCluster(s.ctx, projectID, name).Execute()
+		_, err := s.clientv2.ClustersApi.DeleteCluster(s.ctx, projectID, name).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -206,7 +206,7 @@ func (s *Store) UpgradeCluster(projectID string, cluster *atlas.Cluster) (*atlas
 func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.MultiCloudClustersApi.ListClusters(s.ctx, projectID)
+		res := s.clientv2.ClustersApi.ListClusters(s.ctx, projectID)
 		if opts != nil {
 			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
@@ -221,10 +221,10 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (inte
 }
 
 // AtlasCluster encapsulates the logic to manage different cloud providers.
-func (s *Store) AtlasCluster(projectID, name string) (*admin.ClusterDescriptionV15, error) {
+func (s *Store) AtlasCluster(projectID, name string) (*admin.AdvancedClusterDescription, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.MultiCloudClustersApi.GetCluster(s.ctx, projectID, name).Execute()
+		result, _, err := s.clientv2.ClustersApi.GetCluster(s.ctx, projectID, name).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -278,7 +278,7 @@ func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName st
 func (s *Store) TestClusterFailover(projectID, clusterName string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.MultiCloudClustersApi.TestFailover(s.ctx, projectID, clusterName).Execute()
+		_, err := s.clientv2.ClustersApi.TestFailover(s.ctx, projectID, clusterName).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

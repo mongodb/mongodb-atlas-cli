@@ -26,8 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestAtlasProjectTeams(t *testing.T) {
@@ -68,11 +67,11 @@ func TestAtlasProjectTeams(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var teams mongodbatlas.TeamsAssigned
+		var teams atlasv2.PaginatedTeamRole
 		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
 			found := false
-			for _, team := range teams.Results {
-				if team.TeamID == teamID {
+			for _, team := range teams.GetResults() {
+				if team.GetTeamId() == teamID {
 					found = true
 					break
 				}
@@ -104,7 +103,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 			a.Len(roles.Results, 1)
 
 			role := roles.Results[0]
-			a.Equal(teamID, *role.TeamId)
+			a.Equal(teamID, role.GetTeamId())
 			a.Len(role.RoleNames, 2)
 			a.ElementsMatch([]string{roleName1, roleName2}, role.RoleNames)
 		}
@@ -123,9 +122,9 @@ func TestAtlasProjectTeams(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		var teams mongodbatlas.TeamsAssigned
+		var teams atlasv2.PaginatedTeamRole
 		if err = json.Unmarshal(resp, &teams); a.NoError(err) {
-			a.NotEmpty(teams.Results)
+			a.NotEmpty(teams.GetResults())
 		}
 	})
 

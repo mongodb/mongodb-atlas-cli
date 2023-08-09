@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 const createTemplate = "Custom database role '{{.RoleName}}' successfully created.\n"
@@ -60,8 +60,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCustomDBRole() *atlasv2.CustomDBRole {
-	return &atlasv2.CustomDBRole{
+func (opts *CreateOpts) newCustomDBRole() *atlasv2.UserCustomDBRole {
+	return &atlasv2.UserCustomDBRole{
 		RoleName:       opts.roleName,
 		Actions:        joinActions(convert.BuildAtlasActions(opts.action)),
 		InheritedRoles: convert.BuildAtlasInheritedRoles(opts.inheritedRoles),
@@ -84,10 +84,13 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create a custom database role for your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`# Create a custom database role
-  %[1]s customDbRoles create customRole --privilege FIND@database,UPDATE@database
+  %[1]s customDbRoles create customRole --privilege FIND@databaseName,UPDATE@databaseName.collectionName
+
+  # Create a customer database role with granted action on the cluster resource
+  %[1]s customDbRoles create customRole --privilege GET_CMD_LINE_OPTS
 
   # Use an inherited role
-  %[1]s customDbRoles create customRole --inheritedRole read@database`, cli.ExampleAtlasEntryPoint()),
+  %[1]s customDbRoles create customRole --inheritedRole read@databaseName`, cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"roleNameDesc": "Name of the custom role to create.",

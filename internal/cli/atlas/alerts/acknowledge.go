@@ -24,9 +24,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
+	customTime "github.com/mongodb/mongodb-atlas-cli/internal/time"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type AcknowledgeOpts struct {
@@ -75,7 +76,7 @@ func (opts *AcknowledgeOpts) newAcknowledgeRequest() (*admin.AlertViewForNdsGrou
 		const years = 100
 		opts.until = time.Now().AddDate(years, 1, 1).Format(time.RFC3339)
 	}
-	time, err := time.Parse(time.RFC3339, opts.until)
+	time, err := customTime.ParseTimestamp(opts.until)
 	if err != nil {
 		return nil, err
 	}

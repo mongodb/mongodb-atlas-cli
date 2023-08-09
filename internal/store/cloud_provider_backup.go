@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,22 +18,22 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportJobsDescriber,ExportJobsCreator,ExportBucketsLister,ExportBucketsCreator,ExportBucketsDeleter,ExportBucketsDescriber,ScheduleDescriber,ScheduleDescriberUpdater,ScheduleDeleter
+//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportJobsDescriber,ExportJobsCreator,ExportBucketsLister,ExportBucketsCreator,ExportBucketsDeleter,ExportBucketsDescriber,ScheduleDescriber,ScheduleDescriberUpdater,ScheduleDeleter,CompliancePolicyDescriber,CompliancePolicy
 
 type RestoreJobsLister interface {
 	RestoreJobs(string, string, *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error)
 }
 
 type RestoreJobsDescriber interface {
-	RestoreJob(string, string, string) (*atlasv2.DiskBackupRestoreJob, error)
+	RestoreJob(string, string, string) (*atlasv2.DiskBackupSnapshotRestoreJob, error)
 }
 
 type RestoreJobsCreator interface {
-	CreateRestoreJobs(string, string, *atlasv2.DiskBackupRestoreJob) (*atlasv2.DiskBackupRestoreJob, error)
+	CreateRestoreJobs(string, string, *atlasv2.DiskBackupSnapshotRestoreJob) (*atlasv2.DiskBackupSnapshotRestoreJob, error)
 }
 
 type SnapshotsLister interface {
@@ -93,6 +93,15 @@ type ScheduleDeleter interface {
 	DeleteSchedule(string, string) error
 }
 
+type CompliancePolicyDescriber interface {
+	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error)
+}
+
+type CompliancePolicy interface {
+	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error)
+	UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error)
+}
+
 // RestoreJobs encapsulates the logic to manage different cloud providers.
 func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error) {
 	switch s.service {
@@ -109,7 +118,7 @@ func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptio
 }
 
 // RestoreJob encapsulates the logic to manage different cloud providers.
-func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlasv2.DiskBackupRestoreJob, error) {
+func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlasv2.DiskBackupSnapshotRestoreJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.CloudBackupsApi.GetBackupRestoreJob(s.ctx, projectID, clusterName, jobID).Execute()
@@ -120,7 +129,7 @@ func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlasv2.DiskB
 }
 
 // CreateRestoreJobs encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlasv2.DiskBackupRestoreJob) (*atlasv2.DiskBackupRestoreJob, error) {
+func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlasv2.DiskBackupSnapshotRestoreJob) (*atlasv2.DiskBackupSnapshotRestoreJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.CloudBackupsApi.CreateBackupRestoreJob(s.ctx, projectID, clusterName, request).Execute()
@@ -293,5 +302,27 @@ func (s *Store) DeleteSchedule(projectID, clusterName string) error {
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// DescribeCompliancePolicy encapsulates the logic to manage different cloud providers.
+func (s *Store) DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// UpdateCompliancePolicy encapsulates the logic to manage different cloud providers.
+func (s *Store) UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, opts).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

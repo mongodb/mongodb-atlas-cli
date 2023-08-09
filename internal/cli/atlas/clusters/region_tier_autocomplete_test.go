@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func Test_autoCompleteOpts_tierSuggestions(t *testing.T) {
@@ -34,11 +34,11 @@ func Test_autoCompleteOpts_tierSuggestions(t *testing.T) {
 
 		store: mockStore,
 	}
-	expected := &admin.PaginatedApiAtlasProviderRegions{
-		Results: []admin.ProviderRegions{
+	expected := &atlasv2.PaginatedApiAtlasProviderRegions{
+		Results: []atlasv2.CloudProviderRegions{
 			{
 				Provider: pointer.Get("AWS"),
-				InstanceSizes: []admin.ProviderInstanceSize{
+				InstanceSizes: []atlasv2.ClusterCloudProviderInstanceSize{
 					{
 						Name:             pointer.Get("M0"),
 						AvailableRegions: nil,
@@ -66,14 +66,14 @@ func Test_autoCompleteOpts_regionSuggestions(t *testing.T) {
 
 		store: mockStore,
 	}
-	expected := &admin.PaginatedApiAtlasProviderRegions{
-		Results: []admin.ProviderRegions{
+	expected := &atlasv2.PaginatedApiAtlasProviderRegions{
+		Results: []atlasv2.CloudProviderRegions{
 			{
 				Provider: pointer.Get("AWS"),
-				InstanceSizes: []admin.ProviderInstanceSize{
+				InstanceSizes: []atlasv2.ClusterCloudProviderInstanceSize{
 					{
 						Name: pointer.Get("M0"),
-						AvailableRegions: []admin.AvailableRegion{
+						AvailableRegions: []atlasv2.AvailableCloudProviderRegion{
 							{
 								Name:    pointer.Get("EU_EAST"),
 								Default: pointer.Get(false),

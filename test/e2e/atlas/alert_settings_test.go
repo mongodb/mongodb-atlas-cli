@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestAlertConfig(t *testing.T) {
@@ -56,7 +56,7 @@ func TestAlertConfig(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert admin.AlertConfigViewForNdsGroup
+			var alert admin.GroupAlertsConfig
 			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
 				a.Equal(eventTypeName, alert.GetEventTypeName())
 				a.NotEmpty(alert.Notifications)
@@ -81,6 +81,28 @@ func TestAlertConfig(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		var config admin.PaginatedAlertConfig
+		if err := json.Unmarshal(resp, &config); a.NoError(err) {
+			a.NotEmpty(config.Results)
+		}
+	})
+
+	t.Run("List Compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			alertsEntity,
+			configEntity,
+			"ls",
+			"-c",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		var config []admin.GroupAlertsConfig
+		if err := json.Unmarshal(resp, &config); a.NoError(err) {
+			a.NotEmpty(config)
+		}
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -105,7 +127,7 @@ func TestAlertConfig(t *testing.T) {
 
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert admin.AlertConfigViewForNdsGroup
+			var alert admin.GroupAlertsConfig
 			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
 				a.False(alert.GetEnabled())
 				a.NotEmpty(alert.Notifications)
@@ -131,7 +153,7 @@ func TestAlertConfig(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		require.NoError(t, err, string(resp))
 
 		var fields []string
 		if err := json.Unmarshal(resp, &fields); err != nil {

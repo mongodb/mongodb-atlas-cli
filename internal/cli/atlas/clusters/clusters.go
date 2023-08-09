@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -99,19 +99,19 @@ func Builder() *cobra.Command {
 	return cmd
 }
 
-func NewCLILabel() atlasv2.NDSLabel {
+func NewCLILabel() atlasv2.ComponentLabel {
 	labelValue := atlasCLILabelValue
 	if config.ToolName == config.MongoCLI {
 		labelValue = mongoCLILabelValue
 	}
 
-	return atlasv2.NDSLabel{
+	return atlasv2.ComponentLabel{
 		Key:   pointer.Get(labelKey),
 		Value: pointer.Get(labelValue),
 	}
 }
 
-func AddLabel(out *atlasv2.ClusterDescriptionV15, l atlasv2.NDSLabel) {
+func AddLabel(out *atlasv2.AdvancedClusterDescription, l atlasv2.ComponentLabel) {
 	if LabelExists(out.Labels, l) {
 		return
 	}
@@ -119,7 +119,7 @@ func AddLabel(out *atlasv2.ClusterDescriptionV15, l atlasv2.NDSLabel) {
 	out.Labels = append(out.Labels, l)
 }
 
-func LabelExists(labels []atlasv2.NDSLabel, l atlasv2.NDSLabel) bool {
+func LabelExists(labels []atlasv2.ComponentLabel, l atlasv2.ComponentLabel) bool {
 	for _, v := range labels {
 		if v.GetKey() == l.GetKey() && v.GetValue() == l.GetValue() {
 			return true
@@ -128,7 +128,7 @@ func LabelExists(labels []atlasv2.NDSLabel, l atlasv2.NDSLabel) bool {
 	return false
 }
 
-func RemoveReadOnlyAttributes(out *atlasv2.ClusterDescriptionV15) {
+func RemoveReadOnlyAttributes(out *atlasv2.AdvancedClusterDescription) {
 	out.Id = nil
 	out.CreateDate = nil
 	out.StateName = nil
@@ -176,7 +176,7 @@ func RemoveReadOnlyAttributesSharedCluster(out *atlas.Cluster) {
 	}
 }
 
-func SharedLabelExists(labels []atlas.Label, l atlasv2.NDSLabel) bool {
+func SharedLabelExists(labels []atlas.Label, l atlasv2.ComponentLabel) bool {
 	for _, v := range labels {
 		if v.Key == l.GetKey() && v.Value == l.GetValue() {
 			return true
@@ -185,7 +185,7 @@ func SharedLabelExists(labels []atlas.Label, l atlasv2.NDSLabel) bool {
 	return false
 }
 
-func AddLabelSharedCluster(out *atlas.Cluster, l atlasv2.NDSLabel) {
+func AddLabelSharedCluster(out *atlas.Cluster, l atlasv2.ComponentLabel) {
 	if SharedLabelExists(out.Labels, l) {
 		return
 	}

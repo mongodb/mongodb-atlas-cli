@@ -26,7 +26,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestOnlineArchives(t *testing.T) {
@@ -169,11 +169,11 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
-	var archive atlasv2.OnlineArchive
+	var archive atlasv2.BackupOnlineArchive
 	if err = json.Unmarshal(resp, &archive); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	assert.Equal(t, expireAfterDays, archive.Criteria.DateCriteria.GetExpireAfterDays())
+	assert.Equal(t, expireAfterDays, archive.Criteria.GetExpireAfterDays())
 }
 
 func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
@@ -193,7 +193,7 @@ func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiv
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
 
-	var archive atlasv2.OnlineArchive
+	var archive atlasv2.BackupOnlineArchive
 	if err = json.Unmarshal(resp, &archive); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -244,7 +244,7 @@ func createOnlineArchive(t *testing.T, cliPath, projectID, clusterName string) s
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
 
-	var archive atlasv2.OnlineArchive
+	var archive atlasv2.BackupOnlineArchive
 	if err = json.Unmarshal(resp, &archive); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

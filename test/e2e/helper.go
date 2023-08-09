@@ -79,14 +79,14 @@ func DeleteProjectWithRetry(t *testing.T, projectID string) {
 	t.Helper()
 	deleted := false
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
-		if e := deleteProject(projectID); e != nil {
-			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, projectID, e)
-			time.Sleep(sleepTimeInSeconds * time.Second)
-		} else {
+		e := deleteProject(projectID)
+		if e == nil {
 			t.Logf("project %q successfully deleted", projectID)
 			deleted = true
 			break
 		}
+		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, projectID, e)
+		time.Sleep(sleepTimeInSeconds * time.Second)
 	}
 
 	if !deleted {

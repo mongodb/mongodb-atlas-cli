@@ -60,6 +60,8 @@
 | `backup schedule describe`                  | Y         |           |           | Y         |       |       |
 | `backup schedule delete`                    | Y         |           |           | Y         |       |       |
 | `backup schedule update`                    | Y         |           |           | Y         |       |       |
+| `backup compliancepolicy describe`          | Y         |           |           | Y         |       |       |
+| `backup compliancepolicy copyprotection`    | Y         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles authorize`   | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles deauthorize` | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles create`      | Y         |           |           | Y         |       |       |

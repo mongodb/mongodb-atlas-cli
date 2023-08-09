@@ -22,15 +22,18 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockRestoreJobsDescriber(ctrl)
 
-	expected := &atlasv2.DiskBackupRestoreJob{}
+	expected := &atlasv2.DiskBackupSnapshotRestoreJob{
+		Id: pointer.Get("1"),
+	}
 
 	describeOpts := &DescribeOpts{
 		store:       mockStore,
@@ -47,6 +50,8 @@ func TestDescribeOpts_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+
+	test.VerifyOutputTemplate(t, restoreDescribeTemplate, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

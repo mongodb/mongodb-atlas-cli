@@ -27,14 +27,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestStart_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPipelinesResumer(ctrl)
 
-	expected := &atlasv2.IngestionPipeline{
+	expected := &atlasv2.DataLakeIngestionPipeline{
 		Id:    pointer.Get("1a5cbd92c036a0eb288"),
 		Name:  pointer.Get("pipeline 1"),
 		State: pointer.Get("PENDING"),

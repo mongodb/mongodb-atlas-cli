@@ -16,7 +16,6 @@ package clusters
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -26,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type WatchOpts struct {
@@ -47,8 +46,8 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 }
 
 func isRetryable(err error) bool {
-	var atlasErr *atlas.ErrorResponse
-	return errors.As(err, &atlasErr) && atlasErr.ErrorCode == "CLUSTER_NOT_FOUND"
+	atlasErr, ok := admin.AsError(err)
+	return ok && atlasErr.GetErrorCode() == "CLUSTER_NOT_FOUND"
 }
 
 func (opts *WatchOpts) watcher() (bool, error) {

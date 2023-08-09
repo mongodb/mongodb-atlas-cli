@@ -28,12 +28,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslogs"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/alerts"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/auditing"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/cloudproviders"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters"
 	atlasConfig "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdbroles"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdns"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datafederation"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalake"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalakepipelines"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/dbusers"
@@ -51,7 +53,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/processes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
@@ -190,7 +191,6 @@ Use the --help flag with any command for more info on that command.`,
 	rootCmd.AddCommand(
 		atlasConfig.Builder(),
 		auth.Builder(),
-		quickstart.Builder(),
 		setup.Builder(),
 		projects.Builder(),
 		organizations.Builder(),
@@ -226,6 +226,8 @@ Use the --help flag with any command for more info on that command.`,
 		figautocomplete.Builder(),
 		kubernetes.Builder(),
 		local.Builder(),
+		datafederation.Builder(),
+		auditing.Builder(),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)

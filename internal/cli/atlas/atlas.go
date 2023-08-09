@@ -34,7 +34,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/networking"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/processes"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/backup"
@@ -77,7 +76,6 @@ func Builder() *cobra.Command {
 		},
 	}
 	cmd.AddCommand(
-		quickstart.Builder(),
 		clusters.MongoCLIBuilder(),
 		dbusers.Builder(),
 		customdbroles.Builder(),

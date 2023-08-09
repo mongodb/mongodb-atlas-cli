@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 const (
@@ -61,7 +61,7 @@ func TestClustersM0Flags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster *atlasv2.ClusterDescriptionV15
+		var cluster *atlasv2.AdvancedClusterDescription
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -95,7 +95,7 @@ func TestClustersM0Flags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster atlasv2.ClusterDescriptionV15
+		var cluster atlasv2.AdvancedClusterDescription
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -115,7 +115,7 @@ func TestClustersM0Flags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})

@@ -16,6 +16,7 @@ package settings
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -66,6 +67,8 @@ func EnableBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), enableTemplate),
 			)
 		},
+		Example: fmt.Sprintf(`  # Enable the alert configuration with the ID 5d1113b25a115342acc2d1aa in the project with the ID 5e2211c17a3e5a48f5497de3:
+  %s alerts settings enable 5d1113b25a115342acc2d1aa --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"alertConfigIdDesc": "ID of the alert you want to enable.",
 			"output":            enableTemplate,

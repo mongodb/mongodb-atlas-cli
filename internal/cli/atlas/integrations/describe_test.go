@@ -26,9 +26,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
+
+// Create Array of templates.
+var describeTemplates = []string{
+	describeTemplateDatadogOpsGenie,
+	describeTemplateMicrosoftTeams,
+	describeTemplateNewRelic,
+	describeTemplatePagerDuty,
+	describeTemplateSlack,
+	describeTemplateVictorOps,
+	describeTemplateWebhook,
+}
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -44,14 +54,12 @@ func TestDescribe_Run(t *testing.T) {
 		},
 	}
 
-	expected := &atlasv2.Integration{
-		Slack: &atlasv2.Slack{
-			ApiToken: "testToken",
-			TeamName: pointer.Get("testTeam"),
-			Type:     pointer.Get("SLACK"),
-		},
+	expected := &atlasv2.ThridPartyIntegration{
+		ApiToken: pointer.Get("testToken"),
+		TeamName: pointer.Get("testTeam"),
+		Type:     pointer.Get("SLACK"),
 	}
-	expected.Slack.ChannelName.Set(pointer.Get("testChannel"))
+	expected.ChannelName = pointer.Get("testChannel")
 	mockStore.
 		EXPECT().
 		Integration(describeOpts.ProjectID, describeOpts.integrationType).
@@ -61,10 +69,10 @@ func TestDescribe_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	assert.Equal(t, `TYPE    API TOKEN   TEAM       CHANNEL
-SLACK   testToken   testTeam    testChannel 
-`, buf.String())
 	t.Log(buf.String())
+	for _, template := range describeTemplates {
+		test.VerifyOutputTemplate(t, template, *expected)
+	}
 }
 
 func TestDescribeBuilder(t *testing.T) {

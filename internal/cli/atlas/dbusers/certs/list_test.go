@@ -21,14 +21,17 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestListBuilder(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDBUserCertificateLister(ctrl)
 
-	var expected *atlasv2.PaginatedUserCert
+	expected := atlasv2.PaginatedUserCert{
+		Results: []atlasv2.UserCert{},
+	}
 
 	username := "user"
 
@@ -40,10 +43,11 @@ func TestListBuilder(t *testing.T) {
 	mockStore.
 		EXPECT().
 		DBUserCertificates(listOpts.ProjectID, username, nil).
-		Return(expected, nil).
+		Return(&expected, nil).
 		Times(1)
 
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }

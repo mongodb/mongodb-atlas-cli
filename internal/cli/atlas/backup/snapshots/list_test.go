@@ -17,22 +17,39 @@
 package snapshots
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSnapshotsLister(ctrl)
-
-	expected := &atlasv2.PaginatedCloudBackupReplicaSet{}
+	buf := new(bytes.Buffer)
+	expected := &atlasv2.PaginatedCloudBackupReplicaSet{
+		Results: []atlasv2.DiskBackupReplicaSet{
+			{
+				CloudProvider: pointer.Get("AWS"),
+				Id:            pointer.Get("5f9b0b5e0b5e9d6b6e0b5e9d"),
+				SnapshotType:  pointer.Get("cloud"),
+			},
+			*atlasv2.NewDiskBackupReplicaSet(),
+		},
+	}
 
 	listOpts := &ListOpts{
 		store:       mockStore,
 		clusterName: "Cluster0",
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
 	}
 
 	mockStore.
@@ -44,4 +61,5 @@ func TestList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }

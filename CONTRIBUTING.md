@@ -62,7 +62,7 @@ To make the contribution process as seamless as possible, we ask for the followi
 #### Prerequisite Tools
 
 - [Git](https://git-scm.com/)
-- [Go (at least Go 1.19)](https://golang.org/dl/)
+- [Go (at least Go 1.20)](https://golang.org/dl/)
 
 #### Environment
 
@@ -90,6 +90,16 @@ We provide a git pre-commit hook to format and check the code, to install it run
 
 We use [mockgen](https://github.com/golang/mock) to handle mocking in our unit tests.
 If you need a new mock please update or add the `//go:generate` instruction to the appropriate file.
+
+#### Compilation in VSCode
+
+Please add following line to your settings.json file :
+```
+    "go.buildTags": "unit,e2e",
+    "go.testTags": "unit,e2e"
+```
+
+This will enable compilation for unit test and end to end tests.
 
 #### Debugging in VSCode
 
@@ -121,6 +131,7 @@ Review and replace command name and arguments depending on the command you are u
 } 
 
 ```
+
 
 ### API Interactions
 
@@ -184,3 +195,42 @@ Reviewers, please ensure that the CLA has been signed by referring to [the contr
 
 For changes that involve user facing copy please include `docs-cloud-team` as a reviewer.
 
+## SDK integration
+
+Atlas CLI uses [atlas-sdk-go](https://github.com/mongodb/atlas-sdk-go) for API integration.
+Go SDK will be automatically updated for the new versions using dependabot.
+In situations when SDK does new major releases developers need to specify the version explicitly in the go update command. For example:
+
+```
+go get go.mongodb.org/atlas-sdk/v20230501001
+```
+
+Atlas CLI can work with multiple versions of the GO SDK supporting various Resource Versions. 
+
+For more info please refer to the [SDK documentation](https://github.com/mongodb/atlas-sdk-go/blob/main/docs/doc_1_concepts.md#release-strategy-semantic-versioning) and 
+[golang documentation](https://go.dev/doc/modules/version-numbers#major)
+
+### Major Version Updates   
+
+When adding a new major version of the go sdk, the old sdk version dependency will be still present in the go mod files.
+Atlas CLI developers should update all imports to new major versions and remove old dependencies.
+
+To update simply rename all instances of major version across the repository imports and go.mod files.
+
+e.g `v20230201001` => `v20230201002` 
+
+### Stable Methods
+
+Each Go SDK method used in the Atlas CLI should be marked as stable.
+Stable methods are listed in the SDK GO [operations.stable.json](https://github.com/mongodb/atlas-sdk-go/blob/main/tools/transformer/src/operations.stable.json) file.
+
+We have developed automation that lists stable methods.
+Generate list from Atlas CLI run:
+
+```
+go run ./tools/sdk-usage/main.go ./internal/store ./operations.stable.json
+```
+
+After file is create please create PR directly in the GO SDK containing updated file.
+
+in order to update `operations.stable.json` file in the Go SDK.

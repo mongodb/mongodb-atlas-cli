@@ -17,7 +17,7 @@ package commonerrors
 import (
 	"errors"
 
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 var (
@@ -29,9 +29,9 @@ func Check(err error) error {
 		return nil
 	}
 
-	var atlasErr *atlas.ErrorResponse
-	if errors.As(err, &atlasErr) {
-		if atlasErr.ErrorCode == "TENANT_CLUSTER_UPDATE_UNSUPPORTED" {
+	apiError, ok := admin.AsError(err)
+	if ok {
+		if apiError.GetErrorCode() == "TENANT_CLUSTER_UPDATE_UNSUPPORTED" {
 			return errClusterUnsupported
 		}
 	}

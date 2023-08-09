@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -30,7 +30,7 @@ type DatabaseUserLister interface {
 }
 
 type DatabaseUserCreator interface {
-	CreateDatabaseUser(*atlasv2.DatabaseUser) (*atlasv2.DatabaseUser, error)
+	CreateDatabaseUser(*atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error)
 }
 
 type DatabaseUserDeleter interface {
@@ -38,11 +38,11 @@ type DatabaseUserDeleter interface {
 }
 
 type DatabaseUserUpdater interface {
-	UpdateDatabaseUser(*atlasv2.UpdateDatabaseUserApiParams) (*atlasv2.DatabaseUser, error)
+	UpdateDatabaseUser(*atlasv2.UpdateDatabaseUserApiParams) (*atlasv2.CloudDatabaseUser, error)
 }
 
 type DatabaseUserDescriber interface {
-	DatabaseUser(string, string, string) (*atlasv2.DatabaseUser, error)
+	DatabaseUser(string, string, string) (*atlasv2.CloudDatabaseUser, error)
 }
 
 type DBUserCertificateLister interface {
@@ -54,7 +54,7 @@ type DBUserCertificateCreator interface {
 }
 
 // CreateDatabaseUser encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateDatabaseUser(user *atlasv2.DatabaseUser) (*atlasv2.DatabaseUser, error) {
+func (s *Store) CreateDatabaseUser(user *atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.DatabaseUsersApi.CreateDatabaseUser(s.ctx, user.GroupId, user).Execute()
@@ -88,7 +88,7 @@ func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) (*atlas
 	}
 }
 
-func (s *Store) UpdateDatabaseUser(params *atlasv2.UpdateDatabaseUserApiParams) (*atlasv2.DatabaseUser, error) {
+func (s *Store) UpdateDatabaseUser(params *atlasv2.UpdateDatabaseUserApiParams) (*atlasv2.CloudDatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.DatabaseUsersApi.UpdateDatabaseUserWithParams(s.ctx, params).Execute()
@@ -98,7 +98,7 @@ func (s *Store) UpdateDatabaseUser(params *atlasv2.UpdateDatabaseUserApiParams) 
 	}
 }
 
-func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlasv2.DatabaseUser, error) {
+func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlasv2.CloudDatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.DatabaseUsersApi.GetDatabaseUser(s.ctx, groupID, authDB, username).Execute()

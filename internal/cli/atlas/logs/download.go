@@ -17,6 +17,7 @@ package logs
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -28,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type DownloadOpts struct {
@@ -36,8 +37,8 @@ type DownloadOpts struct {
 	cli.DownloaderOpts
 	host  string
 	name  string
-	start string
-	end   string
+	start int64
+	end   int64
 	store store.LogsDownloader
 }
 
@@ -57,8 +58,8 @@ func (opts *DownloadOpts) Run() error {
 		return err
 	}
 
-	r := opts.newDateRangeOpts()
-	if err := opts.store.DownloadLog(opts.ConfigProjectID(), opts.host, opts.name, f, r); err != nil {
+	r := opts.newHostLogsParams()
+	if err := opts.store.DownloadLog(f, r); err != nil {
 		_ = opts.OnError(f)
 		return err
 	}
@@ -75,11 +76,20 @@ func (opts *DownloadOpts) initDefaultOut() error {
 	return nil
 }
 
-func (opts *DownloadOpts) newDateRangeOpts() *atlas.DateRangetOptions {
-	return &atlas.DateRangetOptions{
-		StartDate: opts.start,
-		EndDate:   opts.end,
+func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
+	fileBaseName := strings.TrimSuffix(opts.name, filepath.Ext(opts.name))
+	params := &admin.GetHostLogsApiParams{
+		GroupId:  opts.ConfigProjectID(),
+		HostName: opts.host,
+		LogName:  fileBaseName,
 	}
+	if opts.start > 0 {
+		params.StartDate = &opts.start
+	}
+	if opts.end > 0 {
+		params.StartDate = &opts.end
+	}
+	return params
 }
 
 // mongocli atlas logs download <hostname> <mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz> [--force] [--output destination] [--projectId projectId].
@@ -124,8 +134,8 @@ To find the hostnames for an Atlas project, use the process list command.
 	}
 
 	cmd.Flags().StringVar(&opts.Out, flag.Out, "", usage.LogOut)
-	cmd.Flags().StringVar(&opts.start, flag.Start, "", usage.LogStart)
-	cmd.Flags().StringVar(&opts.end, flag.End, "", usage.LogEnd)
+	cmd.Flags().Int64Var(&opts.start, flag.Start, 0, usage.LogStart)
+	cmd.Flags().Int64Var(&opts.end, flag.End, 0, usage.LogEnd)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

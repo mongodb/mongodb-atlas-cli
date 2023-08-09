@@ -87,7 +87,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 			opts.id = args[0]
 			return opts.Run()
 		},
-		Deprecated: "Please use mongocli atlas privateEndpoints aws watch [--projectId projectId]",
+		Deprecated: "Please use atlas privateEndpoints aws watch [--projectId projectId]",
 	}
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)

@@ -22,15 +22,20 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestVerify_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLDAPConfigurationVerifier(ctrl)
 
-	var expected *atlasv2.NDSLDAPVerifyConnectivityJobRequest
+	expected := &atlasv2.LDAPVerifyConnectivityJobRequest{
+		RequestId: pointer.Get("5f9b0b4e1f6f7d4e6f7d4e6f"),
+		GroupId:   pointer.Get("5f9b0b4e1f6f7d4e6f7d4e6f"),
+		Status:    pointer.Get("SUCCESS"),
+	}
 
 	opts := &VerifyOpts{
 		store: mockStore,
@@ -45,6 +50,7 @@ func TestVerify_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, verifyTemplate, *expected)
 }
 
 func TestVerifyBuilder(t *testing.T) {

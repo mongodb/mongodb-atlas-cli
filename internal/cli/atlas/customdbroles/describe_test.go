@@ -25,19 +25,18 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseRoleDescriber(ctrl)
 
-	expected := atlasv2.CustomDBRole{
-		Actions: []atlasv2.DBAction{
+	expected := atlasv2.UserCustomDBRole{
+		Actions: []atlasv2.DatabasePrivilegeAction{
 			{
 				Action: "test",
-				Resources: []atlasv2.DBResource{
+				Resources: []atlasv2.DatabasePermittedNamespaceResource{
 					{
 						Collection: "test",
 						Db:         "test",
@@ -45,7 +44,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 				},
 			},
 		},
-		InheritedRoles: []atlasv2.InheritedRole{
+		InheritedRoles: []atlasv2.DatabaseInheritedRole{
 			{
 				Db:   "test",
 				Role: "test",
@@ -73,10 +72,8 @@ func TestDescribeOpts_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 
-	assert.Equal(t, `NAME   ACTION   DB     COLLECTION   CLUSTER 
-Test   test     test   test         true
-`, buf.String())
 	t.Log(buf.String())
 }
 

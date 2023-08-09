@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 const updateTmpl = "Updating advanced configuration settings of your cluster'.\n"
@@ -109,11 +109,11 @@ func (opts *UpdateOpts) newProcessArgs() *atlasv2.ClusterDescriptionProcessArgs 
 	}
 
 	if opts.oplogSizeMB != 0 {
-		args.OplogSizeMB.Set(&opts.oplogSizeMB)
+		args.OplogSizeMB = &opts.oplogSizeMB
 	}
 
 	if opts.oplogMinRetentionHours != 0 {
-		args.OplogMinRetentionHours.Set(&opts.oplogMinRetentionHours)
+		args.OplogMinRetentionHours = &opts.oplogMinRetentionHours
 	}
 
 	return args

@@ -19,13 +19,13 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_live_migration_validations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LiveMigrationValidationsCreator,LiveMigrationCutoverCreator,LiveMigrationValidationsDescriber
 
 type LiveMigrationValidationsCreator interface {
-	CreateValidation(string, *atlasv2.LiveMigrationRequest) (*atlasv2.Validation, error)
+	CreateValidation(string, *atlasv2.LiveMigrationRequest) (*atlasv2.LiveImportValidation, error)
 }
 
 type LiveMigrationCutoverCreator interface {
@@ -33,11 +33,11 @@ type LiveMigrationCutoverCreator interface {
 }
 
 type LiveMigrationValidationsDescriber interface {
-	GetValidationStatus(string, string) (*atlasv2.Validation, error)
+	GetValidationStatus(string, string) (*atlasv2.LiveImportValidation, error)
 }
 
 // CreateValidation encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateValidation(groupID string, liveMigration *atlasv2.LiveMigrationRequest) (*atlasv2.Validation, error) {
+func (s *Store) CreateValidation(groupID string, liveMigration *atlasv2.LiveMigrationRequest) (*atlasv2.LiveImportValidation, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.CloudMigrationServiceApi.ValidateMigration(s.ctx, groupID, liveMigration).Execute()
@@ -59,7 +59,7 @@ func (s *Store) CreateLiveMigrationCutover(groupID, liveMigrationID string) erro
 }
 
 // GetValidationStatus encapsulate the logic to manage different cloud providers.
-func (s *Store) GetValidationStatus(groupID, liveMigrationID string) (*atlasv2.Validation, error) {
+func (s *Store) GetValidationStatus(groupID, liveMigrationID string) (*atlasv2.LiveImportValidation, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.CloudMigrationServiceApi.GetValidationStatus(context.Background(), groupID, liveMigrationID).Execute()

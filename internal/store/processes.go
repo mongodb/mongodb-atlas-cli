@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_processes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessLister,ProcessDescriber
@@ -28,11 +28,11 @@ type ProcessLister interface {
 }
 
 type ProcessDescriber interface {
-	Process(*atlasv2.GetAtlasProcessApiParams) (*atlasv2.HostViewAtlas, error)
+	Process(*atlasv2.GetAtlasProcessApiParams) (*atlasv2.ApiHostViewAtlas, error)
 }
 
 // Process encapsulate the logic to manage different cloud providers.
-func (s *Store) Process(params *atlasv2.GetAtlasProcessApiParams) (*atlasv2.HostViewAtlas, error) {
+func (s *Store) Process(params *atlasv2.GetAtlasProcessApiParams) (*atlasv2.ApiHostViewAtlas, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.MonitoringAndLogsApi.GetAtlasProcessWithParams(s.ctx, params).Execute()

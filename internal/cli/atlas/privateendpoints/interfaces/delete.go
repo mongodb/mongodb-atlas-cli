@@ -68,7 +68,7 @@ func DeleteBuilder() *cobra.Command {
 			}
 			return opts.Run()
 		},
-		Deprecated: "Please use mongocli atlas privateEndpoints aws interfaces delete <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]",
+		Deprecated: "Please use atlas privateEndpoints aws interfaces delete <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]",
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)

@@ -21,8 +21,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
+	"github.com/spf13/cobra"
 	"github.com/tangzero/inflector"
 )
+
+type AutoFunc func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective)
 
 type GlobalOpts struct {
 	OrgID     string

@@ -40,8 +40,8 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var describeTemplate = `ID	PROJECT ID	SOURCE PROJECT ID	STATUS
-{{.Id}}	{{.Destination.GroupId}}	{{.Source.GroupId}}	{{.Status}}`
+var describeTemplate = `ID	LAGTIME	READY FOR CUTOVER	STATUS
+{{.Id}}	{{.LagTimeSeconds}}	{{.ReadyForCutover}}	{{.Status}}`
 
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.LiveMigrationDescribe(opts.ConfigProjectID(), opts.liveMigrationID)

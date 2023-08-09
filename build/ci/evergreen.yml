@@ -18,6 +18,10 @@ command_type: system
 pre_error_fails_task: true
 
 variables:
+  - &go_linux_version
+      go_root: "/opt/golang/go1.20"
+      go_bin: "/opt/golang/go1.20/bin"
+      go_base_path: ""
   - &go_env
       XDG_CONFIG_HOME: ${go_base_path}${workdir}
       GO111MODULE: "on"
@@ -91,6 +95,7 @@ functions:
           - AZURE_CLIENT_SECRET
           - E2E_TIMEOUT
           - E2E_SERVERLESS_INSTANCE_NAME
+          - E2E_PARALLEL
           - revision
         env:
           <<: *go_env
@@ -192,12 +197,6 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-  "install dev tools":
-    - command: subprocess.exec
-      type: setup
-      params:
-        <<: *go_options
-        command: make devtools
   "install snyk":
     - command: shell.exec
       type: setup
@@ -278,11 +277,6 @@ tasks:
     commands:
       - func: "install snyk"
       - func: "snyk scan"
-  - name: license_check
-    tags: ["code_health"]
-    commands:
-      - func: "install dev tools"
-      - func: "check license header"
   - name: config_e2e
     tags: ["e2e","generic"]
     must_have_test_results: true
@@ -805,9 +799,9 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,networking
-  # datalake requires cloud provider role authentication and an s3 bucket created
-  - name: atlas_datalake_e2e
-    tags: ["e2e","datalake","atlas"]
+  # datafederation requires cloud provider role authentication and an s3 bucket created
+  - name: atlas_datafederation_db_e2e
+    tags: ["e2e","datafederation","atlas"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -823,7 +817,49 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,datalake
+          E2E_TAGS: atlas,datafederation,db
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+  # datafederation requires cloud provider role authentication and an s3 bucket created
+  - name: atlas_datafederation_privatenetwork_e2e
+    tags: ["e2e","datafederation","atlas"]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,datafederation,privatenetwork
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+  # datafederation requires cloud provider role authentication and an s3 bucket created
+  - name: atlas_datafederation_querylimits_e2e
+    tags: ["e2e","datafederation","atlas"]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,datafederation,querylimits
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # datalakepipeline requires cloud provider role authentication and an s3 bucket created
@@ -965,9 +1001,6 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-        patch_optional: true
-      - name: cloud_manager_deploy_replica_set_e2e
-        variant: "e2e_cloud_manager_remote"
         patch_optional: true
     commands:
       - func: "install gotestsum"
@@ -1314,6 +1347,29 @@ tasks:
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_TIMEOUT: 3h
+  - name: atlas_backups_compliancepolicy_e2e
+    tags: [ "e2e","backup","atlas" ]
+    must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        timeout_secs: 11400 # 3 hours 10 minutes
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,backup,compliancepolicy
+          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_TIMEOUT: 3h
   - name: atlas_cleanup_e2e
     tags: [ "e2e","cleanup", "foliage_check_task_only" ]
     must_have_test_results: true
@@ -1333,6 +1389,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,cleanup
+          E2E_PARALLEL: 16
   - name: atlas_gov_cleanup_e2e
     tags: [ "e2e","cleanup", "foliage_check_task_only" ]
     must_have_test_results: true
@@ -1352,15 +1409,14 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
           E2E_TAGS: atlas,cleanup
+          E2E_PARALLEL: 16
 buildvariants:
   - name: code_health
     display_name: "Code Health"
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: .code_health
   - name: e2e_generic
@@ -1368,9 +1424,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .generic"
   - name: e2e_required
@@ -1378,9 +1432,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .required"
   - name: e2e_interactive
@@ -1388,9 +1440,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .interactive"
   - name: e2e_atlas_clusters
@@ -1398,9 +1448,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .clusters .atlas"
   - name: e2e_atlas_kubernetes
@@ -1408,9 +1456,7 @@ buildvariants:
     run_on:
       - ubuntu2204-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .atlas .kubernetes"
   - name: e2e_decryption
@@ -1418,9 +1464,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .decrypt"
   - name: e2e_atlas_gov_clusters
@@ -1428,9 +1472,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .clusters .atlasgov"
   - name: e2e_atlas_networking
@@ -1438,9 +1480,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .networking .atlas"
   - name: e2e_atlas_live_migrations
@@ -1448,29 +1488,23 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .livemigrations .atlas"
-  - name: e2e_atlas_datalake
-    display_name: "E2E Atlas Datalake Tests"
+  - name: e2e_atlas_datafederation
+    display_name: "E2E Atlas Data Federation Tests"
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
-      - name: ".e2e .datalake .atlas"
+      - name: ".e2e .datafederation .atlas"
   - name: e2e_atlas_datalakepipeline
     display_name: "E2E Atlas Datalake Pipeline Tests"
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .datalakepipeline .atlas"
   - name: e2e_atlas_backups
@@ -1478,9 +1512,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .backup .atlas"
   - name: e2e_cloud_manager_remote
@@ -1488,9 +1520,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .clusters .cloudmanager"
   - name: e2e_cleanup
@@ -1498,9 +1528,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .cleanup"
         cron: "0 2 * * *" # 2am daily
@@ -1509,9 +1537,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".ops-manager-60"
   - name: e2e_ops_manager_50
@@ -1519,9 +1545,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: ".ops-manager-50"
   - name: snyk
@@ -1529,9 +1553,7 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.19"
-      go_bin: "/opt/golang/go1.19/bin"
-      go_base_path: ""
+      <<: *go_linux_version
     tasks:
       - name: .snyk
 include:

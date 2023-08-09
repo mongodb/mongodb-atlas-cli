@@ -17,10 +17,15 @@
 package peering
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -28,11 +33,23 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockPeeringConnectionLister(ctrl)
 
 	t.Run("no provider", func(t *testing.T) {
+		buf := new(bytes.Buffer)
 		listOpts := &ListOpts{
 			store: mockStore,
+			OutputOpts: cli.OutputOpts{
+				Template:  listTemplate,
+				OutWriter: buf,
+			},
 		}
 
-		var expected []interface{}
+		expected := []atlasv2.BaseNetworkPeeringConnectionSettings{
+			{
+				ContainerId:  "1234567890",
+				Id:           pointer.Get("1234567890"),
+				ProviderName: pointer.Get("AWS"),
+				Status:       pointer.Get("ACTIVE"),
+			},
+		}
 		mockStore.
 			EXPECT().
 			PeeringConnections(listOpts.ProjectID, listOpts.newPeeringConnectionsListOptions()).
@@ -42,5 +59,7 @@ func TestList_Run(t *testing.T) {
 		if err := listOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
+		t.Log(buf.String())
+		test.VerifyOutputTemplate(t, listTemplate, expected)
 	})
 }

@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type CreateOpts struct {
@@ -55,7 +55,7 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return commonerrors.Check(err)
 	}
-	return opts.Print(r.GetActualInstance())
+	return opts.Print(r)
 }
 
 func (opts *CreateOpts) newCloudProviderSnapshot() *atlasv2.DiskBackupOnDemandSnapshotRequest {

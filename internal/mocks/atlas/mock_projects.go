@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201004/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -33,21 +33,6 @@ func NewMockProjectLister(ctrl *gomock.Controller) *MockProjectLister {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockProjectLister) EXPECT() *MockProjectListerMockRecorder {
 	return m.recorder
-}
-
-// GetOrgProjects mocks base method.
-func (m *MockProjectLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ProjectsListOptions) (*admin.PaginatedAtlasGroup, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOrgProjects", arg0, arg1)
-	ret0, _ := ret[0].(*admin.PaginatedAtlasGroup)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetOrgProjects indicates an expected call of GetOrgProjects.
-func (mr *MockProjectListerMockRecorder) GetOrgProjects(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrgProjects", reflect.TypeOf((*MockProjectLister)(nil).GetOrgProjects), arg0, arg1)
 }
 
 // Projects mocks base method.
@@ -127,18 +112,18 @@ func (m *MockProjectCreator) EXPECT() *MockProjectCreatorMockRecorder {
 }
 
 // CreateProject mocks base method.
-func (m *MockProjectCreator) CreateProject(arg0 admin.Group, arg1 *mongodbatlas.CreateProjectOptions) (*admin.Group, error) {
+func (m *MockProjectCreator) CreateProject(arg0 *admin.CreateProjectApiParams) (*admin.Group, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateProject", arg0, arg1)
+	ret := m.ctrl.Call(m, "CreateProject", arg0)
 	ret0, _ := ret[0].(*admin.Group)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateProject indicates an expected call of CreateProject.
-func (mr *MockProjectCreatorMockRecorder) CreateProject(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockProjectCreatorMockRecorder) CreateProject(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockProjectCreator)(nil).CreateProject), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockProjectCreator)(nil).CreateProject), arg0)
 }
 
 // ServiceVersion mocks base method.

@@ -14,22 +14,21 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_organization_invitations.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationInvitationLister,OrganizationInvitationDeleter,OrganizationInvitationDescriber,OrganizationInvitationUpdater,OrganizationInviter
 
 type OrganizationInvitationLister interface {
-	OrganizationInvitations(string, *atlas.InvitationOptions) (interface{}, error)
+	OrganizationInvitations(*atlasv2.ListOrganizationInvitationsApiParams) ([]atlasv2.OrganizationInvitation, error)
 }
 
 type OrganizationInvitationDescriber interface {
-	OrganizationInvitation(string, string) (interface{}, error)
+	OrganizationInvitation(string, string) (*atlasv2.OrganizationInvitation, error)
 }
 
 type OrganizationInviter interface {
-	InviteUser(string, *atlas.Invitation) (interface{}, error)
+	InviteUser(string, *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error)
 }
 
 type OrganizationInvitationDeleter interface {
@@ -37,21 +36,17 @@ type OrganizationInvitationDeleter interface {
 }
 
 type OrganizationInvitationUpdater interface {
-	UpdateOrganizationInvitation(string, string, *atlas.Invitation) (interface{}, error)
+	UpdateOrganizationInvitation(string, string, *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error)
 }
 
 // OrganizationInvitations encapsulate the logic to manage different cloud providers.
-func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOptions) (interface{}, error) {
-	res := s.clientv2.OrganizationsApi.ListOrganizationInvitations(s.ctx, orgID)
-	if opts != nil {
-		res = res.Username(opts.Username)
-	}
-	result, _, err := res.Execute()
+func (s *Store) OrganizationInvitations(params *atlasv2.ListOrganizationInvitationsApiParams) ([]atlasv2.OrganizationInvitation, error) {
+	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationInvitationsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // OrganizationInvitation encapsulate the logic to manage different cloud providers.
-func (s *Store) OrganizationInvitation(orgID, invitationID string) (interface{}, error) {
+func (s *Store) OrganizationInvitation(orgID, invitationID string) (*atlasv2.OrganizationInvitation, error) {
 	result, _, err := s.clientv2.OrganizationsApi.GetOrganizationInvitation(s.ctx, orgID, invitationID).Execute()
 	return result, err
 }
@@ -63,35 +58,25 @@ func (s *Store) DeleteInvitation(orgID, invitationID string) error {
 }
 
 // UpdateOrganizationInvitation encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitation *atlas.Invitation) (interface{}, error) {
+func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitation *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error) {
 	if invitationID != "" {
 		invitationRequest := atlasv2.OrganizationInvitationUpdateRequest{
-			Roles:   invitation.Roles,
-			TeamIds: invitation.TeamIDs,
+			Roles:   invitation.GetRoles(),
+			TeamIds: invitation.GetTeamIds(),
 		}
 
 		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID,
 			invitationID, &invitationRequest).Execute()
 		return result, err
 	}
-	invitationRequest := mapInvitation(invitation)
-	result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitation(s.ctx, orgID, &invitationRequest).Execute()
+	result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitation(s.ctx, orgID, invitation).Execute()
 
 	return result, err
 }
 
 // InviteUser encapsulates the logic to manage different cloud providers.
-func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (interface{}, error) {
-	invitationRequest := mapInvitation(invitation)
-	result, _, err := s.clientv2.OrganizationsApi.CreateOrganizationInvitation(s.ctx, orgID, &invitationRequest).Execute()
+func (s *Store) InviteUser(orgID string, invitation *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error) {
+	result, _, err := s.clientv2.OrganizationsApi.CreateOrganizationInvitation(s.ctx, orgID, invitation).Execute()
 
 	return result, err
-}
-
-func mapInvitation(invitation *atlas.Invitation) atlasv2.OrganizationInvitationRequest {
-	return atlasv2.OrganizationInvitationRequest{
-		Roles:    invitation.Roles,
-		TeamIds:  invitation.TeamIDs,
-		Username: &invitation.Username,
-	}
 }

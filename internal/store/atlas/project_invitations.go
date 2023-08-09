@@ -15,14 +15,13 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_project_invitations.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ProjectInvitationLister,ProjectInvitationDescriber,ProjectInvitationDeleter,ProjectInviter,ProjectInvitationUpdater
 
 type ProjectInvitationLister interface {
-	ProjectInvitations(string, *atlas.InvitationOptions) ([]atlasv2.GroupInvitation, error)
+	ProjectInvitations(*atlasv2.ListProjectInvitationsApiParams) ([]atlasv2.GroupInvitation, error)
 }
 
 type ProjectInvitationDescriber interface {
@@ -30,7 +29,7 @@ type ProjectInvitationDescriber interface {
 }
 
 type ProjectInviter interface {
-	InviteUserToProject(string, *atlas.Invitation) (*atlasv2.GroupInvitation, error)
+	InviteUserToProject(string, *atlasv2.GroupInvitationRequest) (*atlasv2.GroupInvitation, error)
 }
 
 type ProjectInvitationDeleter interface {
@@ -38,16 +37,12 @@ type ProjectInvitationDeleter interface {
 }
 
 type ProjectInvitationUpdater interface {
-	UpdateProjectInvitation(string, string, *atlas.Invitation) (*atlasv2.GroupInvitation, error)
+	UpdateProjectInvitation(string, string, *atlasv2.GroupInvitationRequest) (*atlasv2.GroupInvitation, error)
 }
 
 // ProjectInvitations encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectInvitations(groupID string, opts *atlas.InvitationOptions) ([]atlasv2.GroupInvitation, error) {
-	res := s.clientv2.ProjectsApi.ListProjectInvitations(s.ctx, groupID)
-	if opts != nil {
-		res = res.Username(opts.Username)
-	}
-	result, _, err := res.Execute()
+func (s *Store) ProjectInvitations(params *atlasv2.ListProjectInvitationsApiParams) ([]atlasv2.GroupInvitation, error) {
+	result, _, err := s.clientv2.ProjectsApi.ListProjectInvitationsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
@@ -64,17 +59,13 @@ func (s *Store) DeleteProjectInvitation(groupID, invitationID string) error {
 }
 
 // InviteUserToProject encapsulate the logic to manage different cloud providers.
-func (s *Store) InviteUserToProject(groupID string, invitation *atlas.Invitation) (*atlasv2.GroupInvitation, error) {
-	groupInvitationRequest := atlasv2.GroupInvitationRequest{
-		Username: &invitation.Username,
-		Roles:    invitation.Roles,
-	}
-	result, _, err := s.clientv2.ProjectsApi.CreateProjectInvitation(s.ctx, groupID, &groupInvitationRequest).Execute()
+func (s *Store) InviteUserToProject(groupID string, invitation *atlasv2.GroupInvitationRequest) (*atlasv2.GroupInvitation, error) {
+	result, _, err := s.clientv2.ProjectsApi.CreateProjectInvitation(s.ctx, groupID, invitation).Execute()
 	return result, err
 }
 
 // UpdateProjectInvitation encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateProjectInvitation(groupID, invitationID string, invitation *atlas.Invitation) (*atlasv2.GroupInvitation, error) {
+func (s *Store) UpdateProjectInvitation(groupID, invitationID string, invitation *atlasv2.GroupInvitationRequest) (*atlasv2.GroupInvitation, error) {
 	if invitationID != "" {
 		groupInvitationRequest := atlasv2.GroupInvitationUpdateRequest{
 			Roles: invitation.Roles,
@@ -82,10 +73,7 @@ func (s *Store) UpdateProjectInvitation(groupID, invitationID string, invitation
 		result, _, err := s.clientv2.ProjectsApi.UpdateProjectInvitationById(s.ctx, groupID, invitationID, &groupInvitationRequest).Execute()
 		return result, err
 	}
-	groupInvitationRequest := atlasv2.GroupInvitationRequest{
-		Username: &invitation.Username,
-		Roles:    invitation.Roles,
-	}
-	result, _, err := s.clientv2.ProjectsApi.UpdateProjectInvitation(s.ctx, groupID, &groupInvitationRequest).Execute()
+
+	result, _, err := s.clientv2.ProjectsApi.UpdateProjectInvitation(s.ctx, groupID, invitation).Execute()
 	return result, err
 }

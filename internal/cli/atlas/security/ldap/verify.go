@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type VerifyOpts struct {
@@ -89,8 +89,8 @@ func (opts *VerifyOpts) Prompt() error {
 	return nil
 }
 
-func (opts *VerifyOpts) newLDAP() *atlasv2.NDSLDAPVerifyConnectivityJobRequestParams {
-	return &atlasv2.NDSLDAPVerifyConnectivityJobRequestParams{
+func (opts *VerifyOpts) newLDAP() *atlasv2.LDAPVerifyConnectivityJobRequestParams {
+	return &atlasv2.LDAPVerifyConnectivityJobRequestParams{
 		Hostname:           opts.hostname,
 		Port:               opts.port,
 		BindUsername:       opts.bindUsername,

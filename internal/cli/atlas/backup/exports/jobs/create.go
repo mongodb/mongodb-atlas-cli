@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type CreateOpts struct {
@@ -61,9 +61,9 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newExportJob() *atlasv2.DiskBackupExportJobRequest {
-	customData := make([]atlasv2.Label, 0, len(opts.customData))
+	customData := make([]atlasv2.BackupLabel, 0, len(opts.customData))
 	for key, value := range opts.customData {
-		pair := atlasv2.Label{}
+		pair := atlasv2.BackupLabel{}
 		pair.Key, pair.Value = pointer.Get(key), pointer.Get(value)
 		customData = append(customData, pair)
 	}

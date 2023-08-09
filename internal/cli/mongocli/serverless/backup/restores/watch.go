@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type WatchOpts struct {
@@ -35,6 +36,8 @@ type WatchOpts struct {
 	store       store.ServerlessRestoreJobsDescriber
 }
 
+var result *atlasv2.ServerlessBackupRestoreJob
+
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -44,11 +47,12 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *WatchOpts) watcher() (bool, error) {
-	result, err := opts.store.ServerlessRestoreJob(opts.ConfigProjectID(), opts.clusterName, opts.id)
+	var err error
+	result, err = opts.store.ServerlessRestoreJob(opts.ConfigProjectID(), opts.clusterName, opts.id)
 	if err != nil {
 		return false, err
 	}
-	return result.GetExpired() || result.GetCancelled() || result.GetFailed() || result.GetFinishedAt().String() != "", nil
+	return result.GetExpired() || result.GetCancelled() || result.GetFailed() || result.HasFinishedAt(), nil
 }
 
 func (opts *WatchOpts) Run() error {
@@ -56,7 +60,7 @@ func (opts *WatchOpts) Run() error {
 		return err
 	}
 
-	return opts.Print(nil)
+	return opts.Print(result)
 }
 
 // WatchBuilder atlas serverless backup(s) restore(s) watch.

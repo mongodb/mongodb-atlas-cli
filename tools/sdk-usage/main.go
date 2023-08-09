@@ -13,8 +13,9 @@ import (
 )
 
 func main() {
+	argsNumber := 3
 	// Check if the folder path is provided as a command-line argument
-	if len(os.Args) != 3 {
+	if len(os.Args) != argsNumber {
 		fmt.Println("Usage: go run main.go <folder_path> <output_file>")
 		os.Exit(1)
 	}
@@ -63,7 +64,7 @@ func main() {
 				if len(match) > 1 {
 					value := match[1]
 					value = strings.TrimSuffix(value, "WithParams")
-					if !slices.Contains(stableIds.StableIds, value){
+					if !slices.Contains(stableIds.StableIds, value) {
 						stableIds.StableIds = append(stableIds.StableIds, value)
 					}
 				}
@@ -78,7 +79,11 @@ func main() {
 	}
 	sort.Strings(stableIds.StableIds)
 
-	writeStringsToJSONFile(stableIds, outputFile)
+	err = writeStringsToJSONFile(stableIds, outputFile)
+	if err != nil {
+		fmt.Println("Error saving operations file:", err)
+		os.Exit(1)
+	}
 }
 
 func writeStringsToJSONFile(values StableIds, filename string) error {

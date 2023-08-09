@@ -125,7 +125,7 @@ dbName and collection are required only for built-in roles.`
 	ClusterFilename                           = "Path to an optional JSON configuration file that defines cluster settings. To learn more about configuration files for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/cluster-config-file/. To learn more about configuration files for MongoCLI, see https://www.mongodb.com/docs/mongocli/stable/reference/mms-cluster-settings-file/."
 	BackupFilename                            = "Path to an optional JSON configuration file that defines backup schedule settings."
 	PoliciesFilename                          = "File name to use, optional file with a json policy configuration."
-	SearchFilename                            = "Name of the JSON index configuration file to use. To learn about the Atlas Search index syntax and options that you can define in your configuration file, see https://www.mongodb.com/docs/atlas/atlas-search/index-definitions/."
+	SearchFilename                            = "Name of the JSON index configuration file to use. To learn about the Atlas Search index configuration file, see https://www.mongodb.com/docs/atlas/cli/stable/reference/json/search-index-config-file/. To learn about the Atlas Search index syntax and options that you can define in your configuration file, see https://www.mongodb.com/docs/atlas/atlas-search/index-definitions/."
 	AccessListIps                             = "IP addresses to add to the new user's access list."
 	StartDate                                 = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window starts."
 	EndDate                                   = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window ends."

@@ -78,9 +78,6 @@ func (opts *SetupOpts) setupWatcher() (bool, error) {
 }
 
 func (opts *SetupOpts) Run() error {
-	if !opts.confirm {
-		return errors.New("this feature is not production ready: to continue, use '--force'")
-	}
 	opts.policy.SetProjectId(opts.ConfigProjectID())
 
 	_, err := opts.store.UpdateCompliancePolicy(opts.ConfigProjectID(), opts.policy)
@@ -124,6 +121,7 @@ func SetupBuilder() *cobra.Command {
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 	cmd.Flags().StringVarP(&opts.path, flag.File, flag.FileShort, "", usage.BackupCompliancePolicyFile)
 	cmd.Flags().BoolVar(&opts.confirm, flag.Force, false, usage.Force)
+	_ = cmd.Flags().MarkHidden(flag.Force)
 	_ = cmd.MarkFlagRequired(flag.File)
 	return cmd
 }

@@ -218,3 +218,18 @@ Atlas CLI developers should update all imports to new major versions and remove 
 To update simply rename all instances of major version across the repository imports and go.mod files.
 
 e.g `v20230201001` => `v20230201002` 
+
+### Stable Methods
+
+Each Go SDK method used in the Atlas CLI should be marked as stable.
+Stable methods are listed in the [operations.stable.json](https://github.com/mongodb/atlas-sdk-go/blob/main/tools/transformer/src/operations.stable.json) file.
+
+We have developed automation that lists stable methods:
+
+```
+go run ./tools/sdk-usage/main.go ./internal/store ./operations.stable.json
+```
+
+After file is create please create PR directly in the GO SDK containing updated file.
+
+in order to update `operations.stable.json` file in the Go SDK.

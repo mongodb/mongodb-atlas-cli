@@ -36,6 +36,42 @@ func TestCompliancePolicy(t *testing.T) {
 	g := newAtlasE2ETestGeneratorWithBackup(t)
 	g.generateProject("compliancePolicy")
 
+	scheduledPolicyItem := atlasv2.DiskBackupApiPolicyItem{
+		FrequencyInterval: 1,
+		FrequencyType:     "daily",
+		RetentionUnit:     "days",
+		RetentionValue:    1,
+	}
+
+	authorizedEmail := "firstname.lastname@example.com"
+
+	policy := &atlasv2.DataProtectionSettings{
+		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem},
+		ProjectId:            &g.projectID,
+		AuthorizedEmail:      &authorizedEmail,
+	}
+	path := "./compliancepolicy.json"
+
+	createCompliancePolicyJSONFile(t, policy, path)
+
+	t.Run("setup", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			compliancepolicyEntity,
+			"setup",
+			"--projectId",
+			g.projectID,
+			"-o=json",
+			"--force",
+			"--file",
+			path,
+		)
+		cmd.Env = os.Environ()
+		resp, outputErr := cmd.CombinedOutput()
+
+		r.NoError(outputErr, string(resp))
+	})
+
 	t.Run("describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
@@ -80,4 +116,30 @@ func TestCompliancePolicy(t *testing.T) {
 		_, err = cmd.CombinedOutput()
 		r.Error(err)
 	})
+}
+
+// createCompliancePolicyJSONFile creates a new JSON file at the specified path with the specified policy
+// and also registers its deletion on test cleanup.
+func createCompliancePolicyJSONFile(t *testing.T, policy *atlasv2.DataProtectionSettings, path string) {
+	t.Helper()
+
+	jsonData, err := json.Marshal(policy)
+	if err != nil {
+		t.Fatalf("Error marshalling to JSON: %v", err)
+	}
+
+	err = os.WriteFile(path, jsonData, 0777)
+	if err != nil {
+		t.Fatalf("Error writing JSON to file: %v", err)
+	}
+
+	t.Cleanup(func() {
+		deleteFile(t, path)
+	})
+}
+
+func deleteFile(t *testing.T, path string) {
+	if err := os.Remove(path); err != nil {
+		t.Errorf("Error deleting file: %v", err)
+	}
 }

@@ -124,6 +124,6 @@ func SetupBuilder() *cobra.Command {
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 	cmd.Flags().StringVarP(&opts.path, flag.File, flag.FileShort, "", usage.BackupCompliancePolicyFile)
 	cmd.Flags().BoolVar(&opts.confirm, flag.Force, false, usage.Force)
-	cmd.MarkFlagRequired(flag.File)
+	_ = cmd.MarkFlagRequired(flag.File)
 	return cmd
 }

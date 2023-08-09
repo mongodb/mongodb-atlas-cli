@@ -125,10 +125,10 @@ func createCompliancePolicyJSONFile(t *testing.T, policy *atlasv2.DataProtection
 
 	jsonData, err := json.Marshal(policy)
 	if err != nil {
-		t.Fatalf("Error marshalling to JSON: %v", err)
+		t.Fatalf("Error marshaling to JSON: %v", err)
 	}
 
-	err = os.WriteFile(path, jsonData, 0777)
+	err = os.WriteFile(path, jsonData, 0600)
 	if err != nil {
 		t.Fatalf("Error writing JSON to file: %v", err)
 	}
@@ -139,6 +139,7 @@ func createCompliancePolicyJSONFile(t *testing.T, policy *atlasv2.DataProtection
 }
 
 func deleteFile(t *testing.T, path string) {
+	t.Helper()
 	if err := os.Remove(path); err != nil {
 		t.Errorf("Error deleting file: %v", err)
 	}

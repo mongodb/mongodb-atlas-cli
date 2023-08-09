@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package compliancepolicy
+package policies
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -32,6 +32,10 @@ func baseCommand() *cobra.Command {
 
 func Builder() *cobra.Command {
 	cmd := baseCommand()
+
+	cmd.AddCommand(
+		DescribeBuilder(),
+	)
 
 	return cmd
 }

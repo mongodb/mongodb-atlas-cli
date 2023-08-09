@@ -54,7 +54,7 @@ func TestCompliancePolicy(t *testing.T) {
 
 	createCompliancePolicyJSONFile(t, policy, path)
 
-	t.Run("setup", func(t *testing.T) {
+	t.Run("setup happy flow", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			compliancepolicyEntity,

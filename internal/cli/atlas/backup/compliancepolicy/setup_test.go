@@ -39,6 +39,7 @@ func TestSetupBuilder(t *testing.T) {
 	)
 }
 
+// Tests that setupWatcher() returns true when status == "ACTIVE"
 func TestSetupOpts_Watcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCompliancePolicy(ctrl)
@@ -65,6 +66,7 @@ func TestSetupOpts_Watcher(t *testing.T) {
 	assert.True(t, res)
 }
 
+// Verifies the output template
 func TestSetupOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCompliancePolicy(ctrl)

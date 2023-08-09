@@ -93,6 +93,27 @@ func TestCompliancePolicy(t *testing.T) {
 		// a.NotEmpty(result) Ticket to enforce this: CLOUDP-193023
 	})
 
+	t.Run("policies describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			compliancepolicyEntity,
+			policiesEntity,
+			"describe",
+			"--projectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, outputErr := cmd.CombinedOutput()
+
+		r.NoError(outputErr, string(resp))
+
+		a := assert.New(t)
+		var result atlasv2.DataProtectionSettings
+		err = json.Unmarshal(resp, &result)
+		a.NoError(err, string(resp))
+		a.NotEmpty(result)
+	})
+
 	t.Run("copyprotection invalid argument", func(t *testing.T) {
 		invalidArgument := "invalid"
 		cmd := exec.Command(

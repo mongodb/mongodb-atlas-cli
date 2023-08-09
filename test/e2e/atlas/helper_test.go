@@ -91,6 +91,7 @@ const (
 	snapshotsEntity              = "snapshots"
 	restoresEntity               = "restores"
 	compliancepolicyEntity       = "compliancepolicy"
+	policiesEntity               = "policies"
 	teamsEntity                  = "teams"
 	setupEntity                  = "setup"
 )

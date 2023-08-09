@@ -64,6 +64,7 @@ func main() {
 				if len(match) > 1 {
 					value := match[1]
 					value = strings.TrimSuffix(value, "WithParams")
+					value = strings.ToLower(value[:1]) + value[1:]
 					if !slices.Contains(stableIds.StableIds, value) {
 						stableIds.StableIds = append(stableIds.StableIds, value)
 					}

@@ -103,7 +103,7 @@ func SetupBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Setup the backup compliance policy for your project.",
+		Short:   "Setup the backup compliance policy for your project with a configuration file.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
@@ -89,8 +90,36 @@ func TestCompliancePolicy(t *testing.T) {
 		var result atlasv2.DataProtectionSettings
 		err = json.Unmarshal(resp, &result)
 		a.NoError(err, string(resp))
-		// Will be changed after implementing enable/setup.
-		// a.NotEmpty(result) Ticket to enforce this: CLOUDP-193023
+		a.NotEmpty(result)
+	})
+
+	t.Run("copyprotection happy flow", func(t *testing.T) {
+		cmd := exec.Command(
+			cliPath,
+			backupsEntity,
+			compliancepolicyEntity,
+			"copyprotection",
+			"enable",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		r.NoError(err, string(resp))
+
+		a := assert.New(t)
+
+		// Because we watch the command and this is a testing environment,
+		// the resp output has some dots in the beginning (depending on how long it took to activate copyprotection).
+		// It looks something like this:
+		//
+		// ...{"projectId": ...}
+		//
+		// because of that, we have to convert the response to a string, remove the dots and then proceed.
+		trimmed := strings.TrimLeft(string(resp), ".")
+
+		var compliancepolicy atlasv2.DataProtectionSettings
+		require.NoError(t, json.Unmarshal([]byte(trimmed), &compliancepolicy), string(resp))
+		a.NoError(err, string(resp))
+		a.True(*compliancepolicy.CopyProtectionEnabled)
 	})
 
 	t.Run("copyprotection invalid argument", func(t *testing.T) {

@@ -18,8 +18,22 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 )
+
+type RunContainerOpts struct {
+	Detach   bool
+	Image    string
+	Name     string
+	Hostname string
+	// map[hostVolume, pathInContainer]
+	Volumes map[string]string
+	// map[hostPort, containerPort]
+	Ports   map[int]int
+	Network string
+	EnvVars map[string]string
+}
 
 func runPodman(debug bool, arg ...string) error {
 	cmd := exec.Command("podman", arg...)
@@ -41,8 +55,32 @@ func CreateVolume(debug bool, name string) error {
 	return runPodman(debug, "volume", "create", name)
 }
 
-func RunContainer(debug bool, arg ...string) error {
-	return runPodman(debug, append([]string{"run"}, arg...)...)
+func RunContainer(debug bool, opts RunContainerOpts) error {
+	arg := []string{"run",
+		"--name", opts.Name,
+		"--hostname", opts.Hostname,
+		"--network", opts.Network,
+	}
+
+	for hostVolume, pathInContainer := range opts.Volumes {
+		arg = append(arg, "-v", hostVolume+":"+pathInContainer)
+	}
+
+	for hostPort, containerPort := range opts.Ports {
+		arg = append(arg, "-p", strconv.Itoa(hostPort)+":"+strconv.Itoa(containerPort))
+	}
+
+	for envVar, value := range opts.EnvVars {
+		arg = append(arg, "-e", envVar+"="+value)
+	}
+
+	if opts.Detach {
+		arg = append(arg, "-d")
+	}
+
+	arg = append(arg, opts.Image)
+
+	return runPodman(debug, arg...)
 }
 
 func CopyFileToContainer(debug bool, localFile string, containerName string, filePathInContainer string) error {

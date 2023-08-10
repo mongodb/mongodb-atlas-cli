@@ -93,13 +93,19 @@ func (opts *StartOpts) startWithPodman() error {
 	fmt.Println("volumes created")
 
 	if err := podman.RunContainer(opts.debug,
-		"-d",
-		"--hostname", "mongod1.internal",
-		"--name", "mongod1",
-		"-v", "mongo-data-1:/data/db",
-		"-p", "37017:27017",
-		"--network", "mdb-local-1",
-		"mongodb/apix_test:mongod"); err != nil {
+		podman.RunContainerOpts{
+			Detach:   true,
+			Image:    "mongodb/apix_test:mongod",
+			Name:     "mongod1",
+			Hostname: "mongod1.internal",
+			Volumes: map[string]string{
+				"mongo-data-1": "/data/db",
+			},
+			Ports: map[int]int{
+				37017: 27017,
+			},
+			Network: "mdb-local-1",
+		}); err != nil {
 		return err
 	}
 	fmt.Println("mongod container started")
@@ -113,13 +119,19 @@ func (opts *StartOpts) startWithPodman() error {
 	fmt.Println("seed RS completed")
 
 	if err := podman.RunContainer(opts.debug,
-		"-d",
-		"--hostname", "mms",
-		"--name", "mms",
-		"-v", "mms-data-1:/etc/mms",
-		"-e", "MONGOT_HOSTS={\"rs0\": [\"mongot1\"]}",
-		"--network", "mdb-local-1",
-		"mongodb/apix_test:mms"); err != nil {
+		podman.RunContainerOpts{
+			Detach:   true,
+			Image:    "mongodb/apix_test:mms",
+			Name:     "mms",
+			Hostname: "mms",
+			Volumes: map[string]string{
+				"mms-data-1": "/etc/mms",
+			},
+			EnvVars: map[string]string{
+				"MONGOT_HOSTS": "{\"rs0\": [\"mongot1\"]}",
+			},
+			Network: "mdb-local-1",
+		}); err != nil {
 		return err
 	}
 	fmt.Println("mms container started")
@@ -128,14 +140,17 @@ func (opts *StartOpts) startWithPodman() error {
 	podman.CopyFileToContainer(opts.debug, mmsConfigFile, "mms", "/etc/mms/mms-config.json")
 	fmt.Println("mms-config.json copied to container")
 
-	if err := podman.RunContainer(opts.debug,
-		"-d",
-		"--hostname", "mongot1",
-		"--name", "mongot1",
-		"-v", "mongot-data-1:/var/lib/mongot",
-		"-v", "mongot-metrics-1:/var/lib/mongot/metrics",
-		"--network", "mdb-local-1",
-		"mongodb/apix_test:mongot"); err != nil {
+	if err := podman.RunContainer(opts.debug, podman.RunContainerOpts{
+		Detach:   true,
+		Image:    "mongodb/apix_test:mongot",
+		Name:     "mongot1",
+		Hostname: "mongot1",
+		Volumes: map[string]string{
+			"mongot-data-1":    "/var/lib/mongot",
+			"mongot-metrics-1": "/var/lib/mongot/metrics",
+		},
+		Network: "mdb-local-1",
+	}); err != nil {
 		return err
 	}
 	fmt.Println("mongot container started")

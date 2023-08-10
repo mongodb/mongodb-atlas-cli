@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package local
+package podman
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 func runPodman(debug bool, arg ...string) error {
 	cmd := exec.Command("podman", arg...)
+
 	if debug {
+		fmt.Println("\n>>>  podman", strings.Join(arg, " "), "\n")
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
@@ -29,18 +33,18 @@ func runPodman(debug bool, arg ...string) error {
 	return cmd.Run()
 }
 
-func createNetwork(debug bool, name string) error {
+func CreateNetwork(debug bool, name string) error {
 	return runPodman(debug, "network", "create", name)
 }
 
-func createVolume(debug bool, name string) error {
+func CreateVolume(debug bool, name string) error {
 	return runPodman(debug, "volume", "create", name)
 }
 
-func runContainer(debug bool, arg ...string) error {
+func RunContainer(debug bool, arg ...string) error {
 	return runPodman(debug, append([]string{"run"}, arg...)...)
 }
 
-func copyFileToContainer(debug bool, localFile string, containerName string, filePathInContainer string) error {
-	return runPodman(debug, "cp", "create", localFile, containerName+":"+filePathInContainer)
+func CopyFileToContainer(debug bool, localFile string, containerName string, filePathInContainer string) error {
+	return runPodman(debug, "cp", localFile, containerName+":"+filePathInContainer)
 }

@@ -21,6 +21,7 @@ import (
 	"path"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -94,7 +95,12 @@ func (*CreateOpts) dumpConfig(config *SeachConfig) error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(configPath, data, os.ModePerm)
+	if err = os.WriteFile(configPath, data, os.ModePerm); err != nil {
+		return err
+	}
+
+	podman.CopyFileToContainer(true, configPath, "mms", "/etc/mms/mms-config.json")
+	return nil
 }
 
 var letterRunes = []rune("0123456789abcdef")

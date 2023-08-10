@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package local
+package deployments
 
 import (
 	"context"
@@ -24,6 +24,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -91,30 +92,30 @@ func runDockerCompose(debug bool, args ...string) error {
 }
 
 func (opts *StartOpts) startWithPodman() error {
-	if err := createNetwork(opts.debug, "mdb-local-1"); err != nil {
+	if err := podman.CreateNetwork(opts.debug, "mdb-local-1"); err != nil {
 		return err
 	}
 	fmt.Println("network created")
 
-	if err := createVolume(opts.debug, "mms-data-1"); err != nil {
+	if err := podman.CreateVolume(opts.debug, "mms-data-1"); err != nil {
 		return err
 	}
 
-	if err := createVolume(opts.debug, "mongo-data-1"); err != nil {
+	if err := podman.CreateVolume(opts.debug, "mongo-data-1"); err != nil {
 		return err
 	}
 
-	if err := createVolume(opts.debug, "mongot-data-1"); err != nil {
+	if err := podman.CreateVolume(opts.debug, "mongot-data-1"); err != nil {
 		return err
 	}
 
-	if err := createVolume(opts.debug, "mongot-metrics-1"); err != nil {
+	if err := podman.CreateVolume(opts.debug, "mongot-metrics-1"); err != nil {
 		return err
 	}
 
 	fmt.Println("volumes created")
 
-	if err := runContainer(opts.debug,
+	if err := podman.RunContainer(opts.debug,
 		"-d",
 		"--hostname", "mongod1.internal",
 		"--name", "mongod1",
@@ -134,7 +135,7 @@ func (opts *StartOpts) startWithPodman() error {
 	}
 	fmt.Println("seed RS completed")
 
-	if err := runContainer(opts.debug,
+	if err := podman.RunContainer(opts.debug,
 		"-d",
 		"--hostname", "mms",
 		"--name", "mms",
@@ -147,10 +148,10 @@ func (opts *StartOpts) startWithPodman() error {
 	fmt.Println("mms container started")
 
 	mmsConfigFile, _ := mmsConfigPath()
-	copyFileToContainer(opts.debug, mmsConfigFile, "mms", "/etc/mms/mms-config.json")
+	podman.CopyFileToContainer(opts.debug, mmsConfigFile, "mms", "/etc/mms/mms-config.json")
 	fmt.Println("mms-config.json copied to container")
 
-	if err := runContainer(opts.debug,
+	if err := podman.RunContainer(opts.debug,
 		"-d",
 		"--hostname", "mongot1",
 		"--name", "mongot1",

@@ -4,7 +4,7 @@
     "groupId": "012345678901234567890123",
     "clusterName": "local-mms"
   },
-  "connectionString": "mongodb://mongoUser:hunter1@mongod.internal:27017/?authSource=admin&tls=true",
+  "connectionString": "mongodb://mongoUser:hunter1@mongod1.internal:27017/?authSource=admin&tls=true",
   "hostnameRegex": "(1)",
   "indexes": [],
   "analyzers": []

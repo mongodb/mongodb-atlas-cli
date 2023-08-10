@@ -21,7 +21,7 @@
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_ASSIGNEE: ${{ secrets.ASSIGNEE_JIRA_TICKET }}
+          JIRA_ASSIGNEE: "Cloud AtlasCLI Escalation"
         run: |
 
           # Use the tr command to remove the special characters from ISSUE_TITLE

@@ -19,6 +19,7 @@ import (
 	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -35,7 +36,19 @@ var clearTemplate = `local environment stopped and cleared
 `
 
 func (opts *ClearOpts) Run(_ context.Context) error {
-	if err := runDockerCompose(opts.debug, "down", "-v"); err != nil {
+	if err := podman.StopContainers(opts.debug, "mongot1", "mongod1", "mms"); err != nil {
+		return err
+	}
+
+	if err := podman.RemoveContainers(opts.debug, "mongot1", "mongod1", "mms"); err != nil {
+		return err
+	}
+
+	if err := podman.RemoveNetworks(opts.debug, "mdb-local-1"); err != nil {
+		return err
+	}
+
+	if err := podman.RemoveVolumes(opts.debug, "mms-data-1", "mongo-data-1", "mongot-data-1", "mongot-metrics-1"); err != nil {
 		return err
 	}
 

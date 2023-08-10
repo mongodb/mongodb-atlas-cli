@@ -18,6 +18,7 @@ import (
 	"context"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -34,11 +35,11 @@ var stopTemplate = `local environment stopped
 `
 
 func (opts *StopOpts) Run(_ context.Context) error {
-	if err := runDockerCompose(opts.debug, "down"); err != nil {
+	if err := podman.StopContainers(opts.debug, "mongot1", "mongod1", "mms"); err != nil {
 		return err
 	}
 
-	return opts.Print(localData)
+	return nil
 }
 
 // atlas local delete.

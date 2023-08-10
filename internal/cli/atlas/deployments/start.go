@@ -19,7 +19,6 @@ import (
 	_ "embed"
 	"fmt"
 	"os"
-	"os/exec"
 	"path"
 	"time"
 
@@ -34,9 +33,6 @@ import (
 )
 
 var (
-	//go:embed files/docker-compose.yml
-	dockerComposeContents []byte
-
 	//go:embed files/mms-config.json
 	mmsConfigContents []byte
 
@@ -70,25 +66,6 @@ func dumpTempFile(pattern string, contents []byte) (string, error) {
 		return f.Name(), err
 	}
 	return f.Name(), nil
-}
-
-func runDockerCompose(debug bool, args ...string) error {
-	dockerComposeFilename, err := dumpTempFile("docker-compose", dockerComposeContents)
-	if dockerComposeFilename != "" {
-		defer os.Remove(dockerComposeFilename)
-	}
-	if err != nil {
-		return err
-	}
-	cmdArgs := append([]string{"compose", "--compatibility", "-p", "docker", "-f", dockerComposeFilename}, args...)
-	cmd := exec.Command("docker", cmdArgs...)
-	cmd.Env = append(os.Environ(), "DOCKER_BUILDKIT=0")
-	if debug {
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
-	}
-	return cmd.Run()
 }
 
 func (opts *StartOpts) startWithPodman() error {
@@ -228,22 +205,11 @@ func (opts *StartOpts) Run(_ context.Context) error {
 		return err
 	}
 
-	return opts.startWithPodman()
-	// if err := runDockerCompose(opts.debug, "up", "-d"); err != nil {
-	// 	return err
-	// }
+	if err := opts.startWithPodman(); err != nil {
+		return err
+	}
 
-	// if err := opts.waitConnection(); err != nil {
-	// 	return err
-	// }
-
-	// for _, seedScriptContents := range []string{string(SeedRsContents), string(SeedUserContents)} {
-	// 	if err := opts.seed(seedScriptContents); err != nil {
-	// 		return err
-	// 	}
-	// }
-
-	// return opts.Print(localData)
+	return opts.Print(localData)
 }
 
 // atlas local start.

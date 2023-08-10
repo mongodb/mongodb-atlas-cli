@@ -48,3 +48,19 @@ func RunContainer(debug bool, arg ...string) error {
 func CopyFileToContainer(debug bool, localFile string, containerName string, filePathInContainer string) error {
 	return runPodman(debug, "cp", localFile, containerName+":"+filePathInContainer)
 }
+
+func StopContainers(debug bool, names ...string) error {
+	return runPodman(debug, append([]string{"stop"}, names...)...)
+}
+
+func RemoveContainers(debug bool, names ...string) error {
+	return runPodman(debug, append([]string{"rm", "-f"}, names...)...)
+}
+
+func RemoveVolumes(debug bool, names ...string) error {
+	return runPodman(debug, append([]string{"volume", "rm"}, names...)...)
+}
+
+func RemoveNetworks(debug bool, names ...string) error {
+	return runPodman(debug, append([]string{"network", "rm"}, names...)...)
+}

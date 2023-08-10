@@ -17,6 +17,7 @@ package local
 import (
 	"context"
 	_ "embed"
+	"fmt"
 	"os"
 	"os/exec"
 	"path"
@@ -89,6 +90,81 @@ func runDockerCompose(debug bool, args ...string) error {
 	return cmd.Run()
 }
 
+func (opts *StartOpts) startWithPodman() error {
+	if err := createNetwork(opts.debug, "mdb-local-1"); err != nil {
+		return err
+	}
+	fmt.Println("network created")
+
+	if err := createVolume(opts.debug, "mms-data-1"); err != nil {
+		return err
+	}
+
+	if err := createVolume(opts.debug, "mongo-data-1"); err != nil {
+		return err
+	}
+
+	if err := createVolume(opts.debug, "mongot-data-1"); err != nil {
+		return err
+	}
+
+	if err := createVolume(opts.debug, "mongot-metrics-1"); err != nil {
+		return err
+	}
+
+	fmt.Println("volumes created")
+
+	if err := runContainer(opts.debug,
+		"-d",
+		"--hostname", "mongod1.internal",
+		"--name", "mongod1",
+		"-v", "mongo-data-1:/data/db",
+		"-p", "37017:27017",
+		"--network", "mdb-local-1",
+		"mongodb/apix_test:mongod"); err != nil {
+		return err
+	}
+	fmt.Println("mongod container started")
+
+	for _, seedScriptContents := range []string{string(SeedRsContents), string(SeedUserContents)} {
+		if err := opts.seed(seedScriptContents); err != nil {
+			fmt.Println(err)
+			return err
+		}
+	}
+	fmt.Println("seed RS completed")
+
+	if err := runContainer(opts.debug,
+		"-d",
+		"--hostname", "mms",
+		"--name", "mms",
+		"-v", "mms-data-1:/etc/mms",
+		"-e", "MONGOT_HOSTS={\"rs0\": [\"mongot1\"]}",
+		"--network", "mdb-local-1",
+		"mongodb/apix_test:mms"); err != nil {
+		return err
+	}
+	fmt.Println("mms container started")
+
+	mmsConfigFile, _ := mmsConfigPath()
+	copyFileToContainer(opts.debug, mmsConfigFile, "mms", "/etc/mms/mms-config.json")
+	fmt.Println("mms-config.json copied to container")
+
+	if err := runContainer(opts.debug,
+		"-d",
+		"--hostname", "mongot1",
+		"--name", "mongot1",
+		"-v", "mongot-data-1:/var/lib/mongot",
+		"-v", "mongot-metrics-1:/var/lib/mongot/metrics",
+		"--network", "mdb-local-1",
+		"mongodb/apix_test:mongot"); err != nil {
+		return err
+	}
+	fmt.Println("mongot container started")
+
+	return nil
+}
+
 func mmsConfigPath() (string, error) {
 	configHome, err := config.AtlasCLIConfigHome()
 	if err != nil {
@@ -151,21 +227,22 @@ func (opts *StartOpts) Run(_ context.Context) error {
 		return err
 	}
 
-	if err := runDockerCompose(opts.debug, "up", "-d"); err != nil {
-		return err
-	}
+	return opts.startWithPodman()
+	// if err := runDockerCompose(opts.debug, "up", "-d"); err != nil {
+	// 	return err
+	// }
 
-	if err := opts.waitConnection(); err != nil {
-		return err
-	}
+	// if err := opts.waitConnection(); err != nil {
+	// 	return err
+	// }
 
-	for _, seedScriptContents := range []string{string(SeedRsContents), string(SeedUserContents)} {
-		if err := opts.seed(seedScriptContents); err != nil {
-			return err
-		}
-	}
+	// for _, seedScriptContents := range []string{string(SeedRsContents), string(SeedUserContents)} {
+	// 	if err := opts.seed(seedScriptContents); err != nil {
+	// 		return err
+	// 	}
+	// }
 
-	return opts.Print(localData)
+	// return opts.Print(localData)
 }
 
 // atlas local start.

@@ -32,6 +32,7 @@ var (
 		"4.4",
 		"5.0",
 		"6.0",
+		"7.0",
 	}
 	oses = []string{
 		"amazonlinux2",

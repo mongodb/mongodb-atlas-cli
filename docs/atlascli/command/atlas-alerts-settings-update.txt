@@ -94,7 +94,7 @@ Options
      - false
      - Comparison operator to apply when checking the current metric value. Valid values are LESS_THAN and GREATER_THAN.
    * - --metricThreshold
-     - int
+     - float
      - false
      - Threshold value outside of which an alert will be triggered.
    * - --metricUnits

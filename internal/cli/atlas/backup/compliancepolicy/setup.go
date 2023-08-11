@@ -39,8 +39,7 @@ type SetupOpts struct {
 	confirm bool
 }
 
-var setupTemplate = `
-Your backup compliance policy has been set up with the following configuration:
+var setupTemplate = `Your backup compliance policy has been set up with the following configuration:
 
 Project:	{{.ProjectId}}
 Authorized e-mail:	{{.AuthorizedEmail}}

@@ -75,7 +75,9 @@ func (opts *EnableOpts) Run() error {
 	}
 	emptyPolicy := opts.getEmptyCompliancePolicy()
 
-	if _, err := opts.store.UpdateCompliancePolicy(opts.ConfigProjectID(), emptyPolicy); err != nil {
+	compliancePolicy, err := opts.store.UpdateCompliancePolicy(opts.ConfigProjectID(), emptyPolicy)
+	opts.policy = compliancePolicy
+	if err != nil {
 		return err
 	}
 	if opts.EnableWatch {
@@ -109,5 +111,7 @@ func EnableBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.authorizedEmail, flag.AuthorizedEmail, "", usage.AuthorizedEmail)
 	cmd.MarkFlagRequired(flag.AuthorizedEmail)
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 	return cmd
 }

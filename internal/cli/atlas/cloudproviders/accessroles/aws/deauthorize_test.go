@@ -24,7 +24,18 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
+
+func TestDeauthorizeTemplate(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		test.VerifyOutputTemplate(t, deauthorizeSuccess, atlasv2.CloudProviderAccessRole{})
+	})
+	t.Run("fail", func(t *testing.T) {
+		test.VerifyOutputTemplate(t, deauthorizeFail, atlasv2.CloudProviderAccessRole{})
+	})
+}
 
 func TestDeauthorizeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -44,9 +55,7 @@ func TestDeauthorizeOpts_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, opts.Run())
 }
 
 func TestDeauthorizeBuilder(t *testing.T) {

@@ -26,8 +26,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
+
+func TestListTemplate_Run(t *testing.T) {
+	test.VerifyOutputTemplate(t, listTemplate, atlasv2.CloudProviderAccessRoles{})
+}
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -58,12 +63,8 @@ func TestList_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := listOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
+	require.NoError(t, listOpts.Run())
 	t.Log(buf.String())
-	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

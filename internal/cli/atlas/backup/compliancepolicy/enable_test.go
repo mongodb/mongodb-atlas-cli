@@ -25,6 +25,10 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
+const (
+	authorizedEmail = "firstname.lastname@example.com"
+)
+
 func TestEnableBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
@@ -67,7 +71,7 @@ func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCompliancePolicy(ctrl)
 	state := active
-	authorizedEmail := "firstname.lastname@mongodb.com"
+	email := authorizedEmail
 
 	expected := &atlasv2.DataProtectionSettings{
 		State: &state,
@@ -75,7 +79,7 @@ func TestEnableOpts_Run(t *testing.T) {
 
 	opts := &EnableOpts{
 		store:           mockStore,
-		authorizedEmail: authorizedEmail,
+		authorizedEmail: email,
 	}
 
 	mockStore.
@@ -83,18 +87,13 @@ func TestEnableOpts_Run(t *testing.T) {
 		UpdateCompliancePolicy(opts.ProjectID, opts.getEmptyCompliancePolicy()).
 		Return(expected, nil).
 		Times(1)
-	mockStore.
-		EXPECT().
-		DescribeCompliancePolicy(opts.ProjectID).
-		Return(expected, nil).
-		Times(1)
 
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	test.VerifyOutputTemplate(t, enableWatchTemplate, expected)
+	test.VerifyOutputTemplate(t, enableTemplate, expected)
 }
-func TestEnableOpts_Run_Fail(t *testing.T) {
+func TestEnableOpts_Run_invalidEmail(t *testing.T) {
 	invalidEmail := "invalidEmail"
 
 	opts := &EnableOpts{
@@ -105,16 +104,15 @@ func TestEnableOpts_Run_Fail(t *testing.T) {
 }
 
 func TestEnableOpts_getEmptyCompliancePolicy(t *testing.T) {
-	authorizedEmail := "firstname.lastname@mongodb.com"
+	email := authorizedEmail
 
 	opts := &EnableOpts{
-		authorizedEmail: authorizedEmail,
+		authorizedEmail: email,
 	}
 	opts.ProjectID = "someProjectId"
 
 	expected := &atlasv2.DataProtectionSettings{
-		AuthorizedEmail:         &authorizedEmail,
-		ScheduledPolicyItems:    make([]atlasv2.DiskBackupApiPolicyItem, 0),
+		AuthorizedEmail:         &email,
 		ProjectId:               &opts.ProjectID,
 		CopyProtectionEnabled:   new(bool),
 		EncryptionAtRestEnabled: new(bool),

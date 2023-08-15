@@ -28,6 +28,10 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
+const (
+	authorizedEmail = "firstname.lastname@example.com"
+)
+
 func TestCompliancePolicy_enable(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
@@ -35,8 +39,6 @@ func TestCompliancePolicy_enable(t *testing.T) {
 
 	g := newAtlasE2ETestGeneratorWithBackup(t)
 	g.generateProject("compliancePolicy")
-
-	authorizedEmail := "firstname.lastname@example.com"
 
 	t.Run("enable happy flow", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -74,12 +76,12 @@ func TestCompliancePolicy(t *testing.T) {
 		RetentionValue:    1,
 	}
 
-	authorizedEmail := "firstname.lastname@example.com"
+	email := authorizedEmail
 
 	policy := &atlasv2.DataProtectionSettings{
 		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem},
 		ProjectId:            &g.projectID,
-		AuthorizedEmail:      &authorizedEmail,
+		AuthorizedEmail:      &email,
 	}
 	path := "./compliancepolicy.json"
 

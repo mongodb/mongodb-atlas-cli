@@ -41,7 +41,8 @@ const (
 	disable = "disable"
 )
 
-var copyProtectionTemplate = `Copy protection has been set to: {{.CopyProtectionEnabled}}`
+var copyProtectionTemplate = `Copy protection has been set to: {{.CopyProtectionEnabled}}
+`
 
 func (opts *CopyProtectionOpts) initStore(ctx context.Context) func() error {
 	return func() error {

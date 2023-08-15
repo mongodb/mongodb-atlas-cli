@@ -40,10 +40,10 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
-	go.mongodb.org/atlas v0.31.0
+	go.mongodb.org/atlas v0.32.0
 	go.mongodb.org/atlas-sdk/v20230201004 v20230201004.1.0
 	go.mongodb.org/mongo-driver v1.12.1
-	go.mongodb.org/ops-manager v0.53.0
+	go.mongodb.org/ops-manager v0.54.0
 	golang.org/x/crypto v0.12.0
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
 	golang.org/x/mod v0.12.0

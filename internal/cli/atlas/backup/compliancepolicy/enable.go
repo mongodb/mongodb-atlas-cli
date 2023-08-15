@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
@@ -34,9 +34,13 @@ type EnableOpts struct {
 	policy          *atlasv2.DataProtectionSettings
 	store           store.CompliancePolicy
 	authorizedEmail string
+	EnableWatch     bool
 }
 
-var enableTemplate = `Backup Compliance Policy enabled without any configuration. Run "atlas backups compliancepolicy --help" for configuration options.`
+var enableWatchTemplate = `Backup Compliance Policy enabled without any configuration. Run "atlas backups compliancepolicy --help" for configuration options.
+`
+var enableTemplate = `Backup Compliance Policy is being enabled without any configuration. Run "atlas backups compliancepolicy --help" for configuration options.
+`
 
 func (opts *EnableOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -61,7 +65,6 @@ func (opts *EnableOpts) enableWatcher() (bool, error) {
 func (opts *EnableOpts) getEmptyCompliancePolicy() *atlasv2.DataProtectionSettings {
 	policy := atlasv2.NewDataProtectionSettings()
 	policy.SetAuthorizedEmail(opts.authorizedEmail)
-	policy.SetScheduledPolicyItems(make([]atlasv2.DiskBackupApiPolicyItem, 0))
 	policy.SetProjectId(opts.ConfigProjectID())
 	return policy
 }
@@ -75,8 +78,11 @@ func (opts *EnableOpts) Run() error {
 	if _, err := opts.store.UpdateCompliancePolicy(opts.ConfigProjectID(), emptyPolicy); err != nil {
 		return err
 	}
-	if err := opts.Watch(opts.enableWatcher); err != nil {
-		return err
+	if opts.EnableWatch {
+		if err := opts.Watch(opts.enableWatcher); err != nil {
+			return err
+		}
+		opts.Template = enableWatchTemplate
 	}
 
 	return opts.Print(opts.policy)
@@ -102,5 +108,6 @@ func EnableBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.authorizedEmail, flag.AuthorizedEmail, "", usage.AuthorizedEmail)
 	cmd.MarkFlagRequired(flag.AuthorizedEmail)
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
 	return cmd
 }

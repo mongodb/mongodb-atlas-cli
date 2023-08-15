@@ -436,6 +436,7 @@ dbName and collection are required only for built-in roles.`
 	ServerlessTag                             = "List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the serverless instance."
 	UpdateWarning                             = " Passing this flag replaces preexisting data."
 	EnableWatch                               = "Watch the command until it completes its execution or the watch times out. To set the time that the watch times out, use the --watchTimeout option."
+	EnableWatchDefault                        = "Watch the command until it completes its execution or the watch times out."
 	WatchTimeout                              = "Time in seconds until a watch times out. After a watch times out, the CLI no longer watches the command."
 	CompactResponse                           = "Flag that enables the compact array response structure for a json output. The --compact option returns array objects as top-level responses and allows backward compatibility for scripts based on previous CLI versions. Omitting the --compact option for a json output returns array objects within a 'results' sub-array. You must specify --output json to use this option."
 	DataFederationFile                        = "Path to an optional JSON configuration file that defines data federation settings."

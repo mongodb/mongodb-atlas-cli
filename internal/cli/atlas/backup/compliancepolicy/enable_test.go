@@ -92,7 +92,7 @@ func TestEnableOpts_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	test.VerifyOutputTemplate(t, enableTemplate, expected)
+	test.VerifyOutputTemplate(t, enableWatchTemplate, expected)
 }
 func TestEnableOpts_Run_Fail(t *testing.T) {
 	invalidEmail := "invalidEmail"

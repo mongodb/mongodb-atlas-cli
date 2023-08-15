@@ -32,8 +32,7 @@ type DescribeOpts struct {
 	store store.CompliancePolicyDescriber
 }
 
-var dataProtectionSettingsTemplate = `
-Project:	{{.ProjectId}}
+var dataProtectionSettingsTemplate = `Project:	{{.ProjectId}}
 Authorized e-mail:	{{.AuthorizedEmail}}
 Copy protection enabled:	{{.CopyProtectionEnabled}}
 Encryption at rest enabled:	{{.EncryptionAtRestEnabled}}

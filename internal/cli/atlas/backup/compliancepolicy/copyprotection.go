@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
@@ -31,15 +31,19 @@ import (
 type CopyProtectionOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	policy *atlasv2.DataProtectionSettings
-	store  store.CompliancePolicy
-	enable bool
+	policy      *atlasv2.DataProtectionSettings
+	store       store.CompliancePolicy
+	enable      bool
+	EnableWatch bool
 }
 
 const (
 	enable  = "enable"
 	disable = "disable"
 )
+
+var copyProtectionWatchTemplate = `Copy protection has been set to: {{.CopyProtectionEnabled}}
+`
 
 var copyProtectionTemplate = `Copy protection has been set to: {{.CopyProtectionEnabled}}
 `
@@ -79,8 +83,12 @@ func (opts *CopyProtectionOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	if err := opts.Watch(opts.copyProtectionWatcher); err != nil {
-		return err
+
+	if opts.EnableWatch {
+		opts.Template = copyProtectionWatchTemplate
+		if err := opts.Watch(opts.copyProtectionWatcher); err != nil {
+			return err
+		}
 	}
 
 	return opts.Print(opts.policy)
@@ -115,6 +123,7 @@ func CopyProtectionBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd

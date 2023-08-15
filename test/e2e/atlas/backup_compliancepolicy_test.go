@@ -28,6 +28,39 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
+const (
+	authorizedEmail = "firstname.lastname@example.com"
+)
+
+func TestCompliancePolicy_enable(t *testing.T) {
+	cliPath, err := e2e.AtlasCLIBin()
+	r := require.New(t)
+	r.NoError(err)
+
+	g := newAtlasE2ETestGeneratorWithBackup(t)
+	g.generateProject("compliancePolicy")
+
+	t.Run("enable happy flow", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			compliancepolicyEntity,
+			"enable",
+			"--projectId",
+			g.projectID,
+			"--authorizedEmail",
+			authorizedEmail,
+			"-o=json",
+		)
+		cmd.Env = os.Environ()
+		resp, outputErr := cmd.CombinedOutput()
+		r.NoError(outputErr, string(resp))
+		var result atlasv2.DataProtectionSettings
+		err = json.Unmarshal(resp, &result)
+		a := assert.New(t)
+
+		a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
+	})
+}
 func TestCompliancePolicy(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
@@ -43,12 +76,12 @@ func TestCompliancePolicy(t *testing.T) {
 		RetentionValue:    1,
 	}
 
-	authorizedEmail := "firstname.lastname@example.com"
+	email := authorizedEmail
 
 	policy := &atlasv2.DataProtectionSettings{
 		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem},
 		ProjectId:            &g.projectID,
-		AuthorizedEmail:      &authorizedEmail,
+		AuthorizedEmail:      &email,
 	}
 	path := "./compliancepolicy.json"
 

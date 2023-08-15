@@ -39,7 +39,6 @@ type CopyProtectionOpts struct {
 const (
 	enable  = "enable"
 	disable = "disable"
-	active  = "ACTIVE"
 )
 
 var copyProtectionTemplate = `Copy protection has been set to: {{.CopyProtectionEnabled}}

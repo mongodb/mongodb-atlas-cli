@@ -445,4 +445,5 @@ dbName and collection are required only for built-in roles.`
 	DataFederation                            = "Identifier of the Federated Database Instance."
 	DataFederationQueryLimitValue             = "Value given to the query limit."
 	OverrunPolicy                             = "Action to take when the usage limit is exceeded."
+	AuthorizedEmail                           = "Email address of a security or legal representative."
 )

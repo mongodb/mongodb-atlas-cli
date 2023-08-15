@@ -35,6 +35,7 @@ func TestSetupBuilder(t *testing.T) {
 			flag.Output,
 			flag.File,
 			flag.Force,
+			flag.EnableWatch,
 		},
 	)
 }
@@ -87,6 +88,36 @@ func TestSetupOpts_Run(t *testing.T) {
 		UpdateCompliancePolicy(opts.ProjectID, opts.policy).
 		Return(expected, nil).
 		Times(1)
+
+	if err := opts.Run(); err != nil {
+		t.Fatalf("run() unexpected error: %v", err)
+	}
+
+	test.VerifyOutputTemplate(t, setupTemplate, expected)
+}
+
+// Verifies the output template when using --watch.
+func TestSetupOpts_WatchRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockCompliancePolicy(ctrl)
+	state := active
+
+	opts := &SetupOpts{
+		store:       mockStore,
+		confirm:     true,
+		policy:      new(atlasv2.DataProtectionSettings),
+		EnableWatch: true,
+	}
+
+	expected := &atlasv2.DataProtectionSettings{
+		State: &state,
+	}
+
+	mockStore.
+		EXPECT().
+		UpdateCompliancePolicy(opts.ProjectID, opts.policy).
+		Return(expected, nil).
+		Times(1)
 	mockStore.
 		EXPECT().
 		DescribeCompliancePolicy(opts.ProjectID).
@@ -97,5 +128,5 @@ func TestSetupOpts_Run(t *testing.T) {
 		t.Fatalf("run() unexpected error: %v", err)
 	}
 
-	test.VerifyOutputTemplate(t, setupTemplate, expected)
+	test.VerifyOutputTemplate(t, setupWatchTemplate, expected)
 }

@@ -32,15 +32,32 @@ import (
 type SetupOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	policy  *atlasv2.DataProtectionSettings
-	store   store.CompliancePolicy
-	fs      afero.Fs
-	path    string
-	confirm bool
+	policy      *atlasv2.DataProtectionSettings
+	store       store.CompliancePolicy
+	fs          afero.Fs
+	path        string
+	confirm     bool
+	EnableWatch bool
 }
 
-var setupTemplate = `
-Your backup compliance policy has been set up with the following configuration:
+var setupWatchTemplate = `Your backup compliance policy has been set up with the following configuration:
+
+Project:	{{.ProjectId}}
+Authorized e-mail:	{{.AuthorizedEmail}}
+Copy protection enabled:	{{.CopyProtectionEnabled}}
+Encryption at rest enabled:	{{.EncryptionAtRestEnabled}}
+Point-in-Time restores enabled:	{{.PitEnabled}}
+Restore window days:	{{.RestoreWindowDays}}
+
+POLICIES
+ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
+{{- range .ScheduledPolicyItems}}
+{{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
+{{- end}}
+{{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
+`
+
+var setupTemplate = `Your backup compliance policy is being set up with the following configuration:
 
 Project:	{{.ProjectId}}
 Authorized e-mail:	{{.AuthorizedEmail}}
@@ -78,17 +95,15 @@ func (opts *SetupOpts) setupWatcher() (bool, error) {
 }
 
 func (opts *SetupOpts) Run() error {
-	if !opts.confirm {
-		return errors.New("this feature is not production ready: to continue, use '--force'")
-	}
-	opts.policy.SetProjectId(opts.ConfigProjectID())
-
 	_, err := opts.store.UpdateCompliancePolicy(opts.ConfigProjectID(), opts.policy)
 	if err != nil {
 		return err
 	}
-	if err := opts.Watch(opts.setupWatcher); err != nil {
-		return err
+	if opts.EnableWatch {
+		if err := opts.Watch(opts.setupWatcher); err != nil {
+			return err
+		}
+		opts.Template = setupWatchTemplate
 	}
 
 	return opts.Print(opts.policy)
@@ -124,6 +139,8 @@ func SetupBuilder() *cobra.Command {
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 	cmd.Flags().StringVarP(&opts.path, flag.File, flag.FileShort, "", usage.BackupCompliancePolicyFile)
 	cmd.Flags().BoolVar(&opts.confirm, flag.Force, false, usage.Force)
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
+	_ = cmd.Flags().MarkHidden(flag.Force)
 	_ = cmd.MarkFlagRequired(flag.File)
 	return cmd
 }

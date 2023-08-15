@@ -55,7 +55,8 @@ func TestCompliancePolicy_enable(t *testing.T) {
 		resp, outputErr := cmd.CombinedOutput()
 		r.NoError(outputErr, string(resp))
 		var result atlasv2.DataProtectionSettings
-		err = json.Unmarshal(resp, &result)
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+
 		a := assert.New(t)
 
 		a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
@@ -106,7 +107,7 @@ func TestCompliancePolicy(t *testing.T) {
 		a := assert.New(t)
 
 		var result atlasv2.DataProtectionSettings
-		require.NoError(t, json.Unmarshal([]byte(resp), &result), string(resp))
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
 		a.Equal(result.GetScheduledPolicyItems(), []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem})
 		a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
 	})
@@ -126,8 +127,7 @@ func TestCompliancePolicy(t *testing.T) {
 
 		a := assert.New(t)
 		var result atlasv2.DataProtectionSettings
-		err = json.Unmarshal(resp, &result)
-		a.NoError(err, string(resp))
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
 		a.NotEmpty(result)
 	})
 
@@ -140,14 +140,13 @@ func TestCompliancePolicy(t *testing.T) {
 			"enable",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		r.NoError(err, string(resp))
+		resp, outputErr := cmd.CombinedOutput()
+		r.NoError(outputErr, string(resp))
 
 		a := assert.New(t)
 
 		var compliancepolicy atlasv2.DataProtectionSettings
-		require.NoError(t, json.Unmarshal([]byte(resp), &compliancepolicy), string(resp))
-		a.NoError(err, string(resp))
+		require.NoError(t, json.Unmarshal(resp, &compliancepolicy), string(resp))
 		a.True(*compliancepolicy.CopyProtectionEnabled)
 	})
 

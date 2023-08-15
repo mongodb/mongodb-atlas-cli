@@ -52,10 +52,10 @@ func (opts *EnableOpts) initStore(ctx context.Context) func() error {
 
 func (opts *EnableOpts) enableWatcher() (bool, error) {
 	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
-	opts.policy = res
 	if err != nil {
 		return false, err
 	}
+	opts.policy = res
 	if res.GetState() == "" {
 		return false, fmt.Errorf("could not access State field")
 	}

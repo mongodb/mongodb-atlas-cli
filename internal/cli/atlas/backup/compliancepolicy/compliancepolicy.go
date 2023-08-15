@@ -19,6 +19,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	active = "ACTIVE"
+)
+
 func baseCommand() *cobra.Command {
 	const use = "compliancePolicy"
 	cmd := &cobra.Command{

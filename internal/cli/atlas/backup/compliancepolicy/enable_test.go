@@ -38,6 +38,7 @@ func TestEnableBuilder(t *testing.T) {
 			flag.ProjectID,
 			flag.AuthorizedEmail,
 			flag.Output,
+			flag.EnableWatch,
 		},
 	)
 }

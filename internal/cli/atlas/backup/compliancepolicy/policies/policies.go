@@ -12,21 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
-package compliancepolicy
+package policies
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		5,
-		[]string{},
+func baseCommand() *cobra.Command {
+	const use = "policies"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage the individual policy items of the backup compliance policy for your project.",
+	}
+
+	return cmd
+}
+
+func Builder() *cobra.Command {
+	cmd := baseCommand()
+
+	cmd.AddCommand(
+		DescribeBuilder(),
 	)
+
+	return cmd
 }

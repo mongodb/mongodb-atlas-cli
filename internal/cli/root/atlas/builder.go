@@ -59,6 +59,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/users"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/figautocomplete"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/ts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
@@ -226,6 +227,7 @@ Use the --help flag with any command for more info on that command.`,
 		kubernetes.Builder(),
 		datafederation.Builder(),
 		auditing.Builder(),
+		ts.Builder(),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)

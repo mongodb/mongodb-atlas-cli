@@ -32,8 +32,7 @@ type DescribeOpts struct {
 	store store.CompliancePolicyDescriber
 }
 
-var describePoliciesTemplate = `POLICIES
-ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
+var describePoliciesTemplate = `ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
 {{- range .ScheduledPolicyItems}}
 {{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
 {{- end}}

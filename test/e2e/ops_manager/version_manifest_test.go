@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (generic && (om50 || om60))
+//go:build e2e || (generic && om60)
 
 package ops_manager_test
 

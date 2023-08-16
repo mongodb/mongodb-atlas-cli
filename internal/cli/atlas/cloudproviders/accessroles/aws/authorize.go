@@ -27,7 +27,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const authorizeTemplate = "AWS IAM role '{{.CloudProviderAccessAWSIAMRole.RoleId}} successfully authorized.\n"
+const authorizeTemplate = "AWS IAM role '{{.RoleId}} successfully authorized.\n"
 
 type AuthorizeOpts struct {
 	cli.GlobalOpts

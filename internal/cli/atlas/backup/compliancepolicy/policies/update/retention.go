@@ -32,7 +32,8 @@ Use the format: number hour(s)/day(s)/month(s)
 `
 
 const (
-	invalidFormat = "INVALID_FORMAT"
+	invalidFormatError      = "Could not parse input, please try again."
+	retentionValueZeroError = "Retention value can not be 0. Please try again."
 )
 
 func (opts *UpdateOpts) askForRetention(item *atlasv2.DiskBackupApiPolicyItem) (string, int, error) {
@@ -48,8 +49,8 @@ func (opts *UpdateOpts) askForRetention(item *atlasv2.DiskBackupApiPolicyItem) (
 		}
 		retentionValue, retentionUnit, err = convertRetentionString(retention)
 		if err != nil {
-			if err.Error() == invalidFormat {
-				fmt.Println("Could not parse format. Please try again.")
+			if err.Error() == invalidFormatError || err.Error() == retentionValueZeroError {
+				fmt.Println(err.Error())
 				continue
 			} else {
 				return "", -1, fmt.Errorf("encountered an error while converting input to data: %w", err)
@@ -66,7 +67,7 @@ func convertRetentionString(timeStr string) (int, string, error) {
 	matches := re.FindStringSubmatch(strings.ToLower(timeStr))
 
 	if matches == nil || len(matches) < 3 {
-		return -1, "", errors.New(invalidFormat)
+		return -1, "", errors.New(invalidFormatError)
 	}
 
 	number, err := strconv.Atoi(matches[1])
@@ -74,7 +75,7 @@ func convertRetentionString(timeStr string) (int, string, error) {
 		return -1, "", err
 	}
 	if number == 0 {
-		return -1, "", errors.New("retention value can not be 0")
+		return -1, "", errors.New(retentionValueZeroError)
 	}
 
 	unit := matches[2]

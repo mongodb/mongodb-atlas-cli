@@ -256,6 +256,3 @@ go run ./tools/sdk-usage/main.go ./internal/store ./operations.stable.json
 After the file is created please create PR directly in the GO SDK containing the updated file.
 
 in order to update `operations.stable.json` file in the Go SDK.
-
-
-

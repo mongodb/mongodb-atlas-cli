@@ -27,18 +27,16 @@ type SampleOpts struct {
 	cli.OutputOpts
 }
 
-
 func (opts *SampleOpts) Run() error {
-	// TODO make example call to API
+	// make example call to API
 	return opts.Print(opts.ConfigProjectID())
 }
 
-// mongocli atlas accessList(s) list --projectId projectId [--page N] [--limit N].
 func SampleBuilder() *cobra.Command {
 	opts := &SampleOpts{}
 	cmd := &cobra.Command{
 		Use:     "sample",
-		Short:   "",
+		Short:   "sample",
 		Long:    "",
 		Args:    require.NoArgs,
 		Example: ``,

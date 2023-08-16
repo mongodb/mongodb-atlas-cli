@@ -21,9 +21,9 @@ import (
 func Builder() *cobra.Command {
 	const use = "ts"
 	cmd := &cobra.Command{
-		Use:     use,
+		Use:    use,
 		Hidden: true,
-		Short:   "Internal Support Commands",
+		Short:  "Internal Support Commands",
 	}
 	cmd.AddCommand(
 		SampleBuilder(),

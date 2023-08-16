@@ -42,11 +42,10 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		SetupBuilder(),
-		DescribeBuilder(),
-		CopyProtectionBuilder(),
-		SetupBuilder(),
-		policies.Builder(),
 		EnableBuilder(),
+		DescribeBuilder(),
+		policies.Builder(),
+		CopyProtectionBuilder(),
 	)
 
 	return cmd

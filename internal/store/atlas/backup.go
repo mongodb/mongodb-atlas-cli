@@ -16,6 +16,7 @@ package atlas
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
@@ -30,6 +31,7 @@ type CompliancePolicyDescriber interface {
 type CompliancePolicy interface {
 	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error)
 	UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error)
+	UpdateCompliancePolicyAndGetResponse(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, *http.Response, error)
 }
 
 // DescribeCompliancePolicy encapsulates the logic to manage different cloud providers.
@@ -51,5 +53,15 @@ func (s *Store) UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProte
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+func (s *Store) UpdateCompliancePolicyAndGetResponse(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, *http.Response, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, httpResp, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, opts).Execute()
+		return result, httpResp, err
+	default:
+		return nil, nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

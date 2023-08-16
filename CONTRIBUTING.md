@@ -132,9 +132,9 @@ Review and replace command name and arguments depending on the command you are u
 
 ```
 
-###  Contributing New Feature
+### Contributing New Feature
 
-Atlas CLI and MongoDB CLI base on [Cobra Framework](https://umarcor.github.io/cobra/).
+`Atlas CLI` and `MongoDB CLI` using[Cobra Framework](https://umarcor.github.io/cobra/) framework.
 
 Each new feature can be introduced by creating new cobra root command. 
 This command aggregates a number of subcommands that can perform network requests and return results
@@ -153,9 +153,7 @@ It is normal to duplicate existing command and edit it for your own needs.
 Before adding a command please make sure that your api exists in the GO SDK. 
 
 Additionally, after adding new command we need to add it to the root command. 
-To do that please edit `./root/atlas/builder.go` to add your command builder.
-
-For more info please refer to the official Cobra documentation: https://umarcor.github.io/cobra
+To do that please edit `./root/atlas/builder.go` to add your command builder method
 
 ### Adding a New Command
 

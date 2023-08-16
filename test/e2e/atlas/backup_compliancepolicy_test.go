@@ -55,7 +55,8 @@ func TestCompliancePolicy_enable(t *testing.T) {
 		resp, outputErr := cmd.CombinedOutput()
 		r.NoError(outputErr, string(resp))
 		var result atlasv2.DataProtectionSettings
-		err = json.Unmarshal(resp, &result)
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+
 		a := assert.New(t)
 
 		a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
@@ -103,6 +104,12 @@ func TestCompliancePolicy(t *testing.T) {
 		resp, outputErr := cmd.CombinedOutput()
 
 		r.NoError(outputErr, string(resp))
+		a := assert.New(t)
+
+		var result atlasv2.DataProtectionSettings
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+		a.Equal(result.GetScheduledPolicyItems(), []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem})
+		a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
 	})
 
 	t.Run("describe", func(t *testing.T) {
@@ -120,10 +127,27 @@ func TestCompliancePolicy(t *testing.T) {
 
 		a := assert.New(t)
 		var result atlasv2.DataProtectionSettings
-		err = json.Unmarshal(resp, &result)
-		a.NoError(err, string(resp))
-		// Will be changed after implementing enable/setup.
-		// a.NotEmpty(result) Ticket to enforce this: CLOUDP-193023
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+		a.NotEmpty(result)
+	})
+
+	t.Run("copyprotection happy flow", func(t *testing.T) {
+		cmd := exec.Command(
+			cliPath,
+			backupsEntity,
+			compliancepolicyEntity,
+			"copyprotection",
+			"enable",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, outputErr := cmd.CombinedOutput()
+		r.NoError(outputErr, string(resp))
+
+		a := assert.New(t)
+
+		var compliancepolicy atlasv2.DataProtectionSettings
+		require.NoError(t, json.Unmarshal(resp, &compliancepolicy), string(resp))
+		a.True(*compliancepolicy.CopyProtectionEnabled)
 	})
 
 	t.Run("copyprotection invalid argument", func(t *testing.T) {

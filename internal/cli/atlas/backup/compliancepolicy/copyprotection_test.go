@@ -19,7 +19,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
@@ -114,11 +114,6 @@ func TestCopyProtectionOpts_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		UpdateCompliancePolicy(opts.ProjectID, opts.policy).
-		Return(expected, nil).
-		Times(1)
-	mockStore.
-		EXPECT().
-		DescribeCompliancePolicy(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 

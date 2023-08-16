@@ -251,6 +251,7 @@ For example [list command](https://github.com/mongodb/mongodb-atlas-cli/blob/220
 It is normal to duplicate existing command and edit it for your own needs.
 
 > NOTE: During the development of the commands we recommend setting `Hidden: true` property to make commands invisible to the end users and documentation.
+
 > NOTE: Commands are executing network requests by using `./internal/store` interface that wraps [Atlas Go SDK](https://github.com/mongodb/atlas-sdk-go). 
 Before adding a command please make sure that your api exists in the GO SDK. 
 

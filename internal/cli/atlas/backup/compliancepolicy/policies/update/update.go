@@ -16,11 +16,12 @@ package update
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/watcher"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -29,27 +30,30 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-var (
-	active = "ACTIVE"
-)
-
-type combinedStore interface {
-	store.CompliancePolicy
+type updateStore interface {
+	store.CompliancePolicyPolicyItemUpdater
 	store.ProjectLister
+	store.CompliancePolicyDescriber
 }
 
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-
-	store combinedStore
-	fs    afero.Fs
-	path  string
+	projectID string
+	store     updateStore
+	fs        afero.Fs
+	path      string
+	confirm   bool
 }
 
-var updateTemplate = `Your backup compliance policy has been updated with the following policies:
-
-POLICIES
+var updateTemplate = `Your backup compliance policy is being updated with the following policies:
+ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
+{{- range .ScheduledPolicyItems}}
+{{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
+{{- end}}
+{{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
+`
+var updateWatchTemplate = `Your backup compliance policy has been updated with the following policies:
 ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
 {{- range .ScheduledPolicyItems}}
 {{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
@@ -71,24 +75,13 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *UpdateOpts) setupWatcher() (bool, error) {
-	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
-	// opts.policy = res
-	if err != nil {
-		return false, err
-	}
-	if res.GetState() == "" {
-		return false, errors.New("could not access State field")
-	}
-	return (res.GetState() == active), nil
-}
-
 func (opts *UpdateOpts) interactiveRun() error {
 
 	projectID, err := opts.askProjectOptions()
 	if err != nil {
-		return fmt.Errorf("couldn't get the projectID: %w", err)
+		return fmt.Errorf("asking for projectID failed: %w", err)
 	}
+	opts.projectID = projectID
 
 	compliancePolicy, err := opts.store.DescribeCompliancePolicy(projectID)
 	if err != nil {
@@ -97,55 +90,43 @@ func (opts *UpdateOpts) interactiveRun() error {
 
 	item, err := opts.askPolicyOptions(compliancePolicy)
 	if err != nil {
-		return fmt.Errorf("couldn't get the policy item: %w", err)
+		return fmt.Errorf("asking for policy item failed: %w", err)
 	}
 
 	snapshotInterval, err := opts.askForSnapshotInterval(item)
 	if err != nil {
-		return fmt.Errorf("couldn't get the snapshot interval: %w", err)
+		return fmt.Errorf("asking for the snapshot interval failed: %w", err)
 	}
 	item.SetFrequencyInterval(snapshotInterval)
 
 	retentionUnit, retentionValue, err := opts.askForRetention(item)
 	if err != nil {
-		return fmt.Errorf("couldn't get the retention data: %w", err)
+		return fmt.Errorf("asking for retention data failed: %w", err)
 	}
 	item.SetRetentionValue(retentionValue)
 	item.SetRetentionUnit(retentionUnit)
 
-	return opts.update(projectID, compliancePolicy, item)
+	return opts.Run(item)
 }
 
-func (opts *UpdateOpts) update(projectID string, compliancePolicy *atlasv2.DataProtectionSettings, item *atlasv2.DiskBackupApiPolicyItem) error {
-	err := replaceItem(compliancePolicy, item)
-	if err != nil {
-		return err
-	}
-
-	res, httpResponse, err := opts.store.UpdateCompliancePolicyAndGetResponse(projectID, compliancePolicy)
+func (opts *UpdateOpts) Run(policyItem *atlasv2.DiskBackupApiPolicyItem) error {
+	result, httpResponse, err := opts.store.UpdatePolicyItem(opts.projectID, policyItem)
 	if err != nil {
 		if httpResponse.StatusCode == 500 {
 			return fmt.Errorf("%v: %w", errorCode500Template, err)
 		}
 		return err
 	}
-	return opts.Print(res)
-}
 
-func replaceItem(compliancePolicy *atlasv2.DataProtectionSettings, item *atlasv2.DiskBackupApiPolicyItem) error {
-	items := compliancePolicy.GetScheduledPolicyItems()
-	for i, existingItem := range items {
-		if existingItem.GetId() == item.GetId() {
-			items[i] = *item
-			return nil
+	if opts.EnableWatch {
+		watcher := watcher.CompliancePolicyWatcherFactory(opts.projectID, opts.store, result)
+		err := opts.Watch(watcher)
+		if err != nil {
+			return fmt.Errorf("received an error while watching for completion: %w", err)
 		}
+		opts.Template = updateWatchTemplate
 	}
-	onDemandItem := compliancePolicy.GetOnDemandPolicyItem()
-	if onDemandItem.GetId() == item.GetId() {
-		compliancePolicy.SetOnDemandPolicyItem(*item)
-		return nil
-	}
-	return errors.New("could not replace policy item")
+	return opts.Print(result)
 }
 
 func UpdateBuilder() *cobra.Command {
@@ -165,11 +146,13 @@ func UpdateBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// if err := file.Load(opts.fs, opts.path, opts.policy); err != nil {
-			// 	return err
-			// }
 			if opts.path != "" {
-				return nil
+				opts.projectID = opts.ConfigProjectID()
+				var policyItem *atlasv2.DiskBackupApiPolicyItem
+				if err := file.Load(opts.fs, opts.path, policyItem); err != nil {
+					return err
+				}
+				return opts.Run(policyItem)
 			}
 			return opts.interactiveRun()
 		},
@@ -179,5 +162,6 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 	cmd.Flags().StringVarP(&opts.path, flag.File, flag.FileShort, "", usage.BackupCompliancePolicyFile)
+
 	return cmd
 }

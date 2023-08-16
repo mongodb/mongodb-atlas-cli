@@ -87,7 +87,7 @@ func (opts *UpdateOpts) interactiveRun() error {
 
 	projectID, err := opts.askProjectOptions()
 	if err != nil {
-		return fmt.Errorf("couldn't retrieve the projectID from input: %w", err)
+		return fmt.Errorf("couldn't get the projectID: %w", err)
 	}
 
 	compliancePolicy, err := opts.store.DescribeCompliancePolicy(projectID)
@@ -97,18 +97,18 @@ func (opts *UpdateOpts) interactiveRun() error {
 
 	item, err := opts.askPolicyOptions(compliancePolicy)
 	if err != nil {
-		return fmt.Errorf("couldn't retrieve the policy item from input: %w", err)
+		return fmt.Errorf("couldn't get the policy item: %w", err)
 	}
 
 	snapshotInterval, err := opts.askForSnapshotInterval(item)
 	if err != nil {
-		return fmt.Errorf("couldn't retrieve the snapshot interval from input: %w", err)
+		return fmt.Errorf("couldn't get the snapshot interval: %w", err)
 	}
 	item.SetFrequencyInterval(snapshotInterval)
 
 	retentionUnit, retentionValue, err := opts.askForRetention(item)
 	if err != nil {
-		return fmt.Errorf("couldn't retrieve retention data from input: %w", err)
+		return fmt.Errorf("couldn't get the retention data: %w", err)
 	}
 	item.SetRetentionValue(retentionValue)
 	item.SetRetentionUnit(retentionUnit)

@@ -34,9 +34,11 @@ ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
 
 func (opts *UpdateOpts) askPolicyOptions(compliancePolicy *atlasv2.DataProtectionSettings) (*atlasv2.DiskBackupApiPolicyItem, error) {
 
-	opts.printExistingPolicies(compliancePolicy)
-
 	policyItems := existingPolicyItems(compliancePolicy)
+	if len(policyItems) == 0 {
+		return nil, errors.New("no policy items found")
+	}
+	opts.printExistingPolicies(compliancePolicy)
 
 	q := newPolicyItemSelectionQuestion(policyItems)
 	var policyID string
@@ -57,10 +59,17 @@ func (opts *UpdateOpts) printExistingPolicies(compliancePolicy *atlasv2.DataProt
 }
 
 func existingPolicyItems(compliancePolicy *atlasv2.DataProtectionSettings) []atlasv2.DiskBackupApiPolicyItem {
-	scheduledItems := compliancePolicy.GetScheduledPolicyItems()
-	onDemandItem := compliancePolicy.GetOnDemandPolicyItem()
-	scheduledItems = append(scheduledItems, onDemandItem)
-	return scheduledItems
+	var items []atlasv2.DiskBackupApiPolicyItem
+	scheduledPolicyItems, ok := compliancePolicy.GetScheduledPolicyItemsOk()
+	if ok {
+		items = append(items, scheduledPolicyItems...)
+	}
+
+	onDemandItem, ok := compliancePolicy.GetOnDemandPolicyItemOk()
+	if ok {
+		items = append(items, *onDemandItem)
+	}
+	return items
 }
 
 func extractIDs(items []atlasv2.DiskBackupApiPolicyItem) []string {

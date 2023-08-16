@@ -16,16 +16,12 @@ package searchindexes
 
 import (
 	"encoding/json"
-	"math/rand"
-	"os"
-	"path"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -35,15 +31,16 @@ type CreateOpts struct {
 	cli.OutputOpts
 	filename string
 	fs       afero.Fs
+	debug    bool
 }
 
 const createTemplate = `index created
 `
 
 type Index struct {
-	CollectionName             string  `json:"collectionName"`
-	LastObservedCollectionName string  `json:"lastObservedCollectionName"`
-	Database                   string  `json:"database"`
+	CollectionName             string  `json:"collectionName,omitempty"`
+	LastObservedCollectionName string  `json:"lastObservedCollectionName,omitempty"`
+	Database                   string  `json:"database,omitempty"`
 	IndexID                    *string `json:"indexID,omitempty"`
 	Mappings                   *struct {
 		Dynamic *bool                             `json:"dynamic,omitempty"`
@@ -54,65 +51,8 @@ type Index struct {
 	Status         *string `json:"status,omitempty"`
 }
 
-type SeachConfig struct {
-	Address string `json:"address"`
-	ID      struct {
-		GroupID     string `json:"groupId"`
-		ClusterName string `json:"clusterName"`
-	} `json:"id"`
-	ConnectionString string   `json:"connectionString"`
-	HostnameRegex    string   `json:"hostnameRegex"`
-	Indexes          []*Index `json:"indexes"`
-	Analyzers        []any    `json:"analyzers"`
-}
-
-func mongotConfigPath() (string, error) {
-	configHome, err := config.AtlasCLIConfigHome()
-	if err != nil {
-		return "", err
-	}
-	return path.Join(configHome, "mms-config.json"), nil
-}
-
-func (opts *CreateOpts) loadConfig() (*SeachConfig, error) {
-	configPath, err := mongotConfigPath()
-	if err != nil {
-		return nil, err
-	}
-	var config SeachConfig
-	if err := file.Load(opts.fs, configPath, &config); err != nil {
-		return nil, err
-	}
-	return &config, nil
-}
-
-func (*CreateOpts) dumpConfig(config *SeachConfig) error {
-	configPath, err := mongotConfigPath()
-	if err != nil {
-		return err
-	}
-	data, err := json.MarshalIndent(config, "", "  ")
-	if err != nil {
-		return err
-	}
-	if err = os.WriteFile(configPath, data, os.ModePerm); err != nil {
-		return err
-	}
-
-	podman.CopyFileToContainer(true, configPath, "mms", "/etc/mms/mms-config.json")
-	return nil
-}
-
-var letterRunes = []rune("0123456789abcdef")
-
-const objectIDLen = 24
-
-func randObjectID() string {
-	b := make([]rune, objectIDLen)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))] //nolint:gosec // ignore pseudo random is good enough
-	}
-	return string(b)
+func connString(db string, port int) string {
+	return fmt.Sprintf("mongodb://localhost:%d/%s", port, db)
 }
 
 func (opts *CreateOpts) Run() error {
@@ -120,17 +60,27 @@ func (opts *CreateOpts) Run() error {
 	if err := file.Load(opts.fs, opts.filename, &index); err != nil {
 		return err
 	}
-	index.IndexID = pointer.Get(randObjectID())
 
-	config, err := opts.loadConfig()
+	collectionName := index.CollectionName
+	database := index.Database
+	indexName := index.Name
+
+	// todo: instead of cleaning fields not part of the index definition, create a separate struct
+	// ref: https://www.mongodb.com/docs/manual/reference/method/db.collection.createSearchIndex/
+	index.CollectionName = ""
+	index.Database = ""
+
+	serializedIndex, err := json.Marshal(index)
 	if err != nil {
 		return err
 	}
 
-	config.Indexes = append(config.Indexes, &index)
+	if opts.debug {
+		fmt.Println("creating index: ", string(serializedIndex))
+	}
 
-	err = opts.dumpConfig(config)
-	if err != nil {
+	idxCommand := fmt.Sprintf("db.%s.createSearchIndex('%s', %s)", collectionName, indexName, string(serializedIndex))
+	if err = mongosh.Exec(opts.debug, connString(database, 37017), "--eval", idxCommand); err != nil {
 		return err
 	}
 
@@ -148,6 +98,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.SearchFilename)
 	_ = cmd.MarkFlagFilename(flag.File)
 	_ = cmd.MarkFlagRequired(flag.File)

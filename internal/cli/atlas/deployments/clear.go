@@ -16,7 +16,6 @@ package deployments
 
 import (
 	"context"
-	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
@@ -51,12 +50,6 @@ func (opts *ClearOpts) Run(_ context.Context) error {
 	if err := podman.RemoveVolumes(opts.debug, "mms-data-1", "mongo-data-1", "mongot-data-1", "mongot-metrics-1"); err != nil {
 		return err
 	}
-
-	mmsConfigFilename, err := mmsConfigPath()
-	if err != nil {
-		return err
-	}
-	_ = os.Remove(mmsConfigFilename)
 
 	return opts.Print(localData)
 }

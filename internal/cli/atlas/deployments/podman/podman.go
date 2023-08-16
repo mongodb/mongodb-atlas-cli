@@ -33,6 +33,7 @@ type RunContainerOpts struct {
 	Ports   map[int]int
 	Network string
 	EnvVars map[string]string
+	Args    []string
 }
 
 func runPodman(debug bool, arg ...string) error {
@@ -79,6 +80,8 @@ func RunContainer(debug bool, opts RunContainerOpts) error {
 	}
 
 	arg = append(arg, opts.Image)
+
+	arg = append(arg, opts.Args...)
 
 	return runPodman(debug, arg...)
 }

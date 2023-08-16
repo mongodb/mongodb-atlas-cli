@@ -17,15 +17,13 @@ package deployments
 import (
 	"context"
 	_ "embed"
+	"errors"
 	"fmt"
-	"os"
-	"path"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -33,9 +31,6 @@ import (
 )
 
 var (
-	//go:embed files/mms-config.json
-	mmsConfigContents []byte
-
 	//go:embed files/ca.pem
 	CaContents []byte
 
@@ -54,19 +49,6 @@ type StartOpts struct {
 
 var startTemplate = `local environment started at {{.ConnectionString}}
 `
-
-func dumpTempFile(pattern string, contents []byte) (string, error) {
-	f, err := os.CreateTemp("", pattern)
-	if err != nil {
-		return "", err
-	}
-	_, err = f.Write(contents)
-	_ = f.Close()
-	if err != nil {
-		return f.Name(), err
-	}
-	return f.Name(), nil
-}
 
 func (opts *StartOpts) startWithPodman() error {
 	if err := podman.CreateNetwork(opts.debug, "mdb-local-1"); err != nil {
@@ -92,57 +74,45 @@ func (opts *StartOpts) startWithPodman() error {
 
 	fmt.Println("volumes created")
 
+	hostPort := 37017
 	if err := podman.RunContainer(opts.debug,
 		podman.RunContainerOpts{
 			Detach:   true,
-			Image:    "mongodb/apix_test:mongod",
+			Image:    "mongodb/mongodb-enterprise-server:6.0.9-ubi8",
 			Name:     "mongod1",
-			Hostname: "mongod1.internal",
+			Hostname: "mongod1",
 			Volumes: map[string]string{
 				"mongo-data-1": "/data/db",
 			},
 			Ports: map[int]int{
-				37017: 27017,
+				hostPort: 27017,
 			},
 			Network: "mdb-local-1",
+			Args: []string{
+				"--noauth",
+				"--dbpath", "/data/db",
+				"--replSet", "rs0",
+				"--setParameter", "mongotHost=mongot1:27027",
+				"--setParameter", "searchIndexManagementHostAndPort=mongot1:27027",
+				"--setParameter", "skipAuthenticationToMongot=true",
+			},
 		}); err != nil {
 		return err
 	}
 	fmt.Println("mongod container started")
+	opts.waitConnection(hostPort)
 
 	for _, seedScriptContents := range []string{string(SeedRsContents), string(SeedUserContents)} {
-		if err := opts.seed(seedScriptContents); err != nil {
+		if err := opts.seed(hostPort, seedScriptContents); err != nil {
 			fmt.Println(err)
 			return err
 		}
 	}
 	fmt.Println("seed RS completed")
 
-	if err := podman.RunContainer(opts.debug,
-		podman.RunContainerOpts{
-			Detach:   true,
-			Image:    "mongodb/apix_test:mms",
-			Name:     "mms",
-			Hostname: "mms",
-			Volumes: map[string]string{
-				"mms-data-1": "/etc/mms",
-			},
-			EnvVars: map[string]string{
-				"MONGOT_HOSTS": "{\"rs0\": [\"mongot1\"]}",
-			},
-			Network: "mdb-local-1",
-		}); err != nil {
-		return err
-	}
-	fmt.Println("mms container started")
-
-	mmsConfigFile, _ := mmsConfigPath()
-	podman.CopyFileToContainer(opts.debug, mmsConfigFile, "mms", "/etc/mms/mms-config.json")
-	fmt.Println("mms-config.json copied to container")
-
 	if err := podman.RunContainer(opts.debug, podman.RunContainerOpts{
 		Detach:   true,
-		Image:    "mongodb/apix_test:mongot",
+		Image:    "mongodb/apix_test:mongot-noauth",
 		Name:     "mongot1",
 		Hostname: "mongot1",
 		Volumes: map[string]string{
@@ -158,68 +128,25 @@ func (opts *StartOpts) startWithPodman() error {
 	return nil
 }
 
-func mmsConfigPath() (string, error) {
-	configHome, err := config.AtlasCLIConfigHome()
-	if err != nil {
-		return "", err
-	}
-	return path.Join(configHome, "mms-config.json"), nil
+func connString(port int) string {
+	return fmt.Sprintf("mongodb://localhost:%d/admin", port)
 }
 
-func dumpMmsConfig() error {
-	mmsConfigfile, err := mmsConfigPath()
-	if err != nil {
-		return err
-	}
-	if _, err := os.Stat(mmsConfigfile); os.IsNotExist(err) {
-		err = os.WriteFile(mmsConfigfile, mmsConfigContents, os.ModePerm)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
+func (opts *StartOpts) seed(port int, script string) error {
+	return mongosh.Exec(opts.debug, connString(port), "--eval", script)
 }
 
-func connString(caFilename string) string {
-	return "mongodb://__system:keyfile@localhost:37017/admin?authSource=local&tls=true&tlsCAFile=" + caFilename
-}
-
-func (opts *StartOpts) waitConnection() error {
-	caFilename, err := dumpTempFile("ca", CaContents)
-	if caFilename != "" {
-		defer os.Remove(caFilename)
-	}
-	if err != nil {
-		return err
-	}
-
+func (opts *StartOpts) waitConnection(port int) error {
 	for i := 0; i < 60; i++ { // 60 seconds
-		err = mongosh.Exec(opts.debug, connString(caFilename), "--eval", "db.runCommand('ping').ok")
-		if err == nil {
+		if err := mongosh.Exec(opts.debug, connString(port), "--eval", "db.runCommand('ping').ok"); err == nil {
 			return nil
 		}
 		time.Sleep(1 * time.Second)
 	}
-	return err
-}
-
-func (opts *StartOpts) seed(script string) error {
-	caFilename, err := dumpTempFile("ca", CaContents)
-	if caFilename != "" {
-		defer os.Remove(caFilename)
-	}
-	if err != nil {
-		return err
-	}
-
-	return mongosh.Exec(opts.debug, connString(caFilename), "--eval", script)
+	return errors.New("waitConnection failed")
 }
 
 func (opts *StartOpts) Run(_ context.Context) error {
-	if err := dumpMmsConfig(); err != nil {
-		return err
-	}
-
 	if err := opts.startWithPodman(); err != nil {
 		return err
 	}

@@ -234,3 +234,28 @@ go run ./tools/sdk-usage/main.go ./internal/store ./operations.stable.json
 After file is create please create PR directly in the GO SDK containing updated file.
 
 in order to update `operations.stable.json` file in the Go SDK.
+
+## Contributing Workflow
+
+Atlas CLI and MongoDB CLI base on Cobra Framework.
+
+Each new feature can be introduced by creating new cobra root command. 
+This command aggregates number of subcommands that can perform network requests and return results
+
+For example [teams](https://github.com/mongodb/mongodb-atlas-cli/tree/220c6c73f346f5c711a1c772b17f93a6811efc69/internal/cli/atlas/teams) 
+command root provides main execution point for for `atlas teams`. 
+
+Root command links to number of child commands. Atlas CLI provides number of patterns for child commands depending on the operation performed.
+Feature covers typical commands like list, describe along with dedicated actions.
+For example [list command](https://github.com/mongodb/mongodb-atlas-cli/blob/220c6c73f346f5c711a1c772b17f93a6811efc69/internal/cli/atlas/teams/list.go).
+It is normal to duplicate existing command and edit it for your own needs.
+
+> NOTE: During development of the commands we recomend to set `Hidden: true` property to make commands invisible to the end users.
+> NOTE: Commands are executing network requests thru `./internal/store` interface that wraps [Atlas Go SDK](https://github.com/mongodb/atlas-sdk-go). 
+Before adding command please make sure that your api exist in the GO SDK. 
+
+Additionally after adding new command we need to add it to the root command. 
+To do that please edit `./root/atlas/builder.go` to add your command builder.
+
+For more info please refer to official cobra documentation: https://umarcor.github.io/cobra/
+

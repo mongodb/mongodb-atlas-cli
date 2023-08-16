@@ -17,6 +17,7 @@ package update
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -46,8 +47,7 @@ type UpdateOpts struct {
 	path  string
 }
 
-var updateTemplate = `
-Your backup compliance policy has been updated with the following policies:
+var updateTemplate = `Your backup compliance policy has been updated with the following policies:
 
 POLICIES
 ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
@@ -56,6 +56,9 @@ ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
 {{- end}}
 {{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
 `
+
+var errorCode500Template = `received an internal error on the server side, but we would encourage you to double check your inputs.
+For this command, invalid inputs are known to cause internal errors in some situations`
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -84,28 +87,28 @@ func (opts *UpdateOpts) interactiveRun() error {
 
 	projectID, err := opts.askProjectOptions()
 	if err != nil {
-		return err
+		return fmt.Errorf("couldn't retrieve the projectID from input: %w", err)
 	}
 
 	compliancePolicy, err := opts.store.DescribeCompliancePolicy(projectID)
 	if err != nil {
-		return err
+		return fmt.Errorf("couldn't fetch the backup compliance policy: %w", err)
 	}
 
 	item, err := opts.askPolicyOptions(compliancePolicy)
 	if err != nil {
-		return err
+		return fmt.Errorf("couldn't retrieve the policy item from input: %w", err)
 	}
 
 	snapshotInterval, err := opts.askForSnapshotInterval(item)
 	if err != nil {
-		return err
+		return fmt.Errorf("couldn't retrieve the snapshot interval from input: %w", err)
 	}
 	item.SetFrequencyInterval(snapshotInterval)
 
 	retentionUnit, retentionValue, err := opts.askForRetention(item)
 	if err != nil {
-		return err
+		return fmt.Errorf("couldn't retrieve retention data from input: %w", err)
 	}
 	item.SetRetentionValue(retentionValue)
 	item.SetRetentionUnit(retentionUnit)
@@ -119,8 +122,11 @@ func (opts *UpdateOpts) update(projectID string, compliancePolicy *atlasv2.DataP
 		return err
 	}
 
-	res, err := opts.store.UpdateCompliancePolicy(projectID, compliancePolicy)
+	res, httpResponse, err := opts.store.UpdateCompliancePolicyAndGetResponse(projectID, compliancePolicy)
 	if err != nil {
+		if httpResponse.StatusCode == 500 {
+			return fmt.Errorf("%v: %w", errorCode500Template, err)
+		}
 		return err
 	}
 	return opts.Print(res)
@@ -139,7 +145,7 @@ func replaceItem(compliancePolicy *atlasv2.DataProtectionSettings, item *atlasv2
 		compliancePolicy.SetOnDemandPolicyItem(*item)
 		return nil
 	}
-	return errors.New("error: could not replace policy item")
+	return errors.New("could not replace policy item")
 }
 
 func UpdateBuilder() *cobra.Command {

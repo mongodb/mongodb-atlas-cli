@@ -31,6 +31,10 @@ For example: “15 days”, “1 month”, “12 hours”.
 Use the format: number hour(s)/day(s)/month(s)
 `
 
+const (
+	invalidFormat = "INVALID_FORMAT"
+)
+
 func (opts *UpdateOpts) askForRetention(item *atlasv2.DiskBackupApiPolicyItem) (string, int, error) {
 	var retention string
 	var retentionValue int
@@ -44,11 +48,11 @@ func (opts *UpdateOpts) askForRetention(item *atlasv2.DiskBackupApiPolicyItem) (
 		}
 		retentionValue, retentionUnit, err = convertRetentionString(retention)
 		if err != nil {
-			if err.Error() == "invalid format" {
+			if err.Error() == invalidFormat {
 				fmt.Println("Could not parse format. Please try again.")
 				continue
 			} else {
-				return "", -1, err
+				return "", -1, fmt.Errorf("encountered an error while converting input to data: %w", err)
 			}
 		}
 		break
@@ -62,12 +66,15 @@ func convertRetentionString(timeStr string) (int, string, error) {
 	matches := re.FindStringSubmatch(strings.ToLower(timeStr))
 
 	if matches == nil || len(matches) < 3 {
-		return 0, "", errors.New("invalid format")
+		return -1, "", errors.New(invalidFormat)
 	}
 
 	number, err := strconv.Atoi(matches[1])
 	if err != nil {
-		return 0, "", err
+		return -1, "", err
+	}
+	if number == 0 {
+		return -1, "", errors.New("retention value can not be 0")
 	}
 
 	unit := matches[2]

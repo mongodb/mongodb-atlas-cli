@@ -16,6 +16,7 @@ package update
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -26,7 +27,7 @@ import (
 func (opts *UpdateOpts) askProjectOptions() (string, error) {
 	res, err := opts.store.Projects(nil)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("unable to fetch projects: %w", err)
 	}
 	projects := res.GetResults()
 	if len(projects) == 0 {

@@ -43,7 +43,6 @@ type UpdateOpts struct {
 	store     updateStore
 	fs        afero.Fs
 	path      string
-	confirm   bool
 }
 
 var updateTemplate = `Your backup compliance policy is being updated with the following policies:
@@ -59,6 +58,21 @@ ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
 {{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
 {{- end}}
 {{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
+`
+var example = `How to run atlas backups compliancepolicy policies update with --file.
+As an example, the file should be in the following format:
+
+{
+	"frequencyInterval": 1,
+	"frequencyType": "daily",
+	"id": "stringstringstringstring",
+	"retentionUnit": "days",
+	"retentionValue": 0
+}
+
+To get the ID of a policy item, run "atlas backups compliancepolicy policies describe".
+
+Finally, run the command as such: "atlas backups compliancepolicy policies update --file /path/to/file"
 `
 
 var errorCode500Template = `received an internal error on the server side, but we would encourage you to double check your inputs.
@@ -112,7 +126,7 @@ func (opts *UpdateOpts) interactiveRun() error {
 func (opts *UpdateOpts) Run(policyItem *atlasv2.DiskBackupApiPolicyItem) error {
 	result, httpResponse, err := opts.store.UpdatePolicyItem(opts.projectID, policyItem)
 	if err != nil {
-		if httpResponse.StatusCode == 500 {
+		if httpResponse != nil && httpResponse.StatusCode == 500 {
 			return fmt.Errorf("%v: %w", errorCode500Template, err)
 		}
 		return err
@@ -138,6 +152,7 @@ func UpdateBuilder() *cobra.Command {
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Update the backup compliance policy for your project with a configuration file.",
+		Example: example,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -148,7 +163,7 @@ func UpdateBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if opts.path != "" {
 				opts.projectID = opts.ConfigProjectID()
-				var policyItem *atlasv2.DiskBackupApiPolicyItem
+				policyItem := &atlasv2.DiskBackupApiPolicyItem{}
 				if err := file.Load(opts.fs, opts.path, policyItem); err != nil {
 					return err
 				}
@@ -161,7 +176,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
-	cmd.Flags().StringVarP(&opts.path, flag.File, flag.FileShort, "", usage.BackupCompliancePolicyFile)
+	cmd.Flags().StringVarP(&opts.path, flag.File, flag.FileShort, "", usage.BackupCompliancePolicyItemFile)
 
 	return cmd
 }

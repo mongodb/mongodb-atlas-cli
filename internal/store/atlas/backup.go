@@ -22,7 +22,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store CompliancePolicyDescriber,CompliancePolicy
+//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,CompliancePolicyItemUpdater
 
 type CompliancePolicyDescriber interface {
 	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error)
@@ -30,7 +30,7 @@ type CompliancePolicyDescriber interface {
 type CompliancePolicyUpdater interface {
 	UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error)
 }
-type CompliancePolicyPolicyItemUpdater interface {
+type CompliancePolicyItemUpdater interface {
 	UpdatePolicyItem(projectID string, policyItem *atlasv2.DiskBackupApiPolicyItem) (*atlasv2.DataProtectionSettings, *http.Response, error)
 }
 type CompliancePolicy interface {

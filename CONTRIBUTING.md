@@ -13,6 +13,7 @@ this document describes some guidelines necessary to participate in the communit
   - [Code Contribution Guidelines](#code-contribution-guidelines)
   - [Development Setup](#development-setup)
   - [Building and Testing](#building-and-testing)
+  - [Contributing New Command Group](#contributing-new-command-group)
   - [Adding a New Command](#adding-a-new-command)
   - [Third Party Dependencies](#third-party-dependencies)
 - [Maintainer's Guide](#maintainers-guide)
@@ -132,28 +133,28 @@ Review and replace command name and arguments depending on the command you are u
 
 ```
 
-### Contributing New Feature
+### Contributing New Command Group
 
 `Atlas CLI` and `MongoDB CLI` are using the [Cobra Framework](https://umarcor.github.io/cobra/).
 
-Each new feature can be introduced by creating new cobra root command. 
+Depending on the feature you are building you might choose to:
+
+- Add individual commands to existing groups of commands
+- Add a new command group that provides ability to run nested commands under certain prefix
+
+For a command group, we need to create new cobra root command. 
 This command aggregates a number of subcommands that can perform network requests and return results
 
 For example [teams](https://github.com/mongodb/mongodb-atlas-cli/tree/220c6c73f346f5c711a1c772b17f93a6811efc69/internal/cli/atlas/teams) 
-command root provides the main execution point for `atlas teams`. 
+command root provides the main execution point for `atlas teams` with subcommands like `atlas teams list`
 
 Root command links to a number of child commands. Atlas CLI provides a number of patterns for child commands depending on the type of operation performed.
 Each new feature might cover typical commands like `list` and `describe` along with dedicated actions.
 For example [list command](https://github.com/mongodb/mongodb-atlas-cli/blob/220c6c73f346f5c711a1c772b17f93a6811efc69/internal/cli/atlas/teams/list.go).
-It is normal to duplicate existing command and edit it for your own needs.
+It is normal to duplicate existing commands and edit descriptions and methods for your own needs.
 
-> NOTE: During the development of the commands we recommend setting `Hidden: true` property to make commands invisible to the end users and documentation.
-
-> NOTE: Commands are executing network requests by using `./internal/store` interface that wraps [Atlas Go SDK](https://github.com/mongodb/atlas-sdk-go). 
-Before adding a command please make sure that your api exists in the GO SDK. 
-
-Additionally, after adding new command we need to add it to the root command. 
-To do that please edit `./root/atlas/builder.go` to add your command builder method
+Additionally, after adding new command we need to add it to the main CLI root command. 
+For example please edit `./root/atlas/builder.go` to add your command builder method for Atlas CLI
 
 ### Adding a New Command
 
@@ -170,13 +171,22 @@ For that reason, command arguments tend to match the path and query params of th
 with the last param being a required argument and the rest handled via flag options.
 For commands that create or modify complex data structures, the use of configuration files is preferred over flag options.
 
-Note: we are experimenting with a generator, make sure to try it out in [tools/cli-generator](./tools/cli-generator/)
+
+> NOTE: During the development of the commands we recommend setting `Hidden: true` property to make commands invisible to the end users and documentation.
+
+> NOTE: Commands are executing network requests by using `./internal/store` interface that wraps [Atlas Go SDK](https://github.com/mongodb/atlas-sdk-go). 
+Before adding a command please make sure that your api exists in the GO SDK. 
+
+> NOTE: Atlas CLI provides an experimental generator, make sure to try it out in [tools/cli-generator](./tools/cli-generator/)
 
 ### API Interactions
 
-Atlas CLI and MongoDB CLI use [go-client-mongodb-atlas](https://github.com/mongodb/go-client-mongodb-atlas/) 
+Atlas CLI use [atlas-sdk-go](https://github.com/mongodb/atlas-sdk-go) for all backend integration.
+This SDK is updated automatically based on Atlas OpenAPI file.
+
+MongoDB CLI use [go-client-mongodb-atlas](https://github.com/mongodb/go-client-mongodb-atlas/) 
 and [go-client-mongodb-ops-manager](https://github.com/mongodb/go-client-mongodb-ops-manager/) to interact with Atlas or Ops Manager/Cloud Manager.
-Any new feature should first update the respective client.
+Any new feature requires a manual update from the respective client.
 
 #### How to define flags:
 

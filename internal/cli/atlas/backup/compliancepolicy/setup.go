@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -39,8 +39,24 @@ type SetupOpts struct {
 	confirm bool
 }
 
-var setupTemplate = `
-Your backup compliance policy has been set up with the following configuration:
+var setupWatchTemplate = `Your backup compliance policy has been set up with the following configuration:
+
+Project:	{{.ProjectId}}
+Authorized e-mail:	{{.AuthorizedEmail}}
+Copy protection enabled:	{{.CopyProtectionEnabled}}
+Encryption at rest enabled:	{{.EncryptionAtRestEnabled}}
+Point-in-Time restores enabled:	{{.PitEnabled}}
+Restore window days:	{{.RestoreWindowDays}}
+
+POLICIES
+ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
+{{- range .ScheduledPolicyItems}}
+{{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
+{{- end}}
+{{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
+`
+
+var setupTemplate = `Your backup compliance policy is being set up with the following configuration:
 
 Project:	{{.ProjectId}}
 Authorized e-mail:	{{.AuthorizedEmail}}
@@ -67,10 +83,10 @@ func (opts *SetupOpts) initStore(ctx context.Context) func() error {
 
 func (opts *SetupOpts) setupWatcher() (bool, error) {
 	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
-	opts.policy = res
 	if err != nil {
 		return false, err
 	}
+	opts.policy = res
 	if res.GetState() == "" {
 		return false, errors.New("could not access State field")
 	}
@@ -78,17 +94,15 @@ func (opts *SetupOpts) setupWatcher() (bool, error) {
 }
 
 func (opts *SetupOpts) Run() error {
-	if !opts.confirm {
-		return errors.New("this feature is not production ready: to continue, use '--force'")
-	}
-	opts.policy.SetProjectId(opts.ConfigProjectID())
-
 	_, err := opts.store.UpdateCompliancePolicy(opts.ConfigProjectID(), opts.policy)
 	if err != nil {
 		return err
 	}
-	if err := opts.Watch(opts.setupWatcher); err != nil {
-		return err
+	if opts.EnableWatch {
+		if err := opts.Watch(opts.setupWatcher); err != nil {
+			return err
+		}
+		opts.Template = setupWatchTemplate
 	}
 
 	return opts.Print(opts.policy)
@@ -124,6 +138,8 @@ func SetupBuilder() *cobra.Command {
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 	cmd.Flags().StringVarP(&opts.path, flag.File, flag.FileShort, "", usage.BackupCompliancePolicyFile)
 	cmd.Flags().BoolVar(&opts.confirm, flag.Force, false, usage.Force)
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
+	_ = cmd.Flags().MarkHidden(flag.Force)
 	_ = cmd.MarkFlagRequired(flag.File)
 	return cmd
 }

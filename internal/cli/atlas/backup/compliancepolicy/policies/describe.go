@@ -20,7 +20,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -32,9 +32,7 @@ type DescribeOpts struct {
 	store store.CompliancePolicyDescriber
 }
 
-var describePoliciesTemplate = `
-POLICIES
-ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
+var describePoliciesTemplate = `ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
 {{- range .ScheduledPolicyItems}}
 {{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
 {{- end}}

@@ -28,6 +28,40 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
+const (
+	authorizedEmail = "firstname.lastname@example.com"
+)
+
+func TestCompliancePolicy_enable(t *testing.T) {
+	cliPath, err := e2e.AtlasCLIBin()
+	r := require.New(t)
+	r.NoError(err)
+
+	g := newAtlasE2ETestGeneratorWithBackup(t)
+	g.generateProject("compliancePolicy")
+
+	t.Run("enable happy flow", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			compliancepolicyEntity,
+			"enable",
+			"--projectId",
+			g.projectID,
+			"--authorizedEmail",
+			authorizedEmail,
+			"-o=json",
+		)
+		cmd.Env = os.Environ()
+		resp, outputErr := cmd.CombinedOutput()
+		r.NoError(outputErr, string(resp))
+		var result atlasv2.DataProtectionSettings
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+
+		a := assert.New(t)
+
+		a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
+	})
+}
 func TestCompliancePolicy(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
@@ -43,12 +77,12 @@ func TestCompliancePolicy(t *testing.T) {
 		RetentionValue:    1,
 	}
 
-	authorizedEmail := "firstname.lastname@example.com"
+	email := authorizedEmail
 
 	policy := &atlasv2.DataProtectionSettings{
 		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem},
 		ProjectId:            &g.projectID,
-		AuthorizedEmail:      &authorizedEmail,
+		AuthorizedEmail:      &email,
 	}
 	path := "./compliancepolicy.json"
 
@@ -70,6 +104,12 @@ func TestCompliancePolicy(t *testing.T) {
 		resp, outputErr := cmd.CombinedOutput()
 
 		r.NoError(outputErr, string(resp))
+		a := assert.New(t)
+
+		var result atlasv2.DataProtectionSettings
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+		a.Equal(result.GetScheduledPolicyItems(), []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem})
+		a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
 	})
 
 	t.Run("describe", func(t *testing.T) {
@@ -87,10 +127,48 @@ func TestCompliancePolicy(t *testing.T) {
 
 		a := assert.New(t)
 		var result atlasv2.DataProtectionSettings
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+		a.NotEmpty(result)
+	})
+
+	t.Run("copyprotection happy flow", func(t *testing.T) {
+		cmd := exec.Command(
+			cliPath,
+			backupsEntity,
+			compliancepolicyEntity,
+			"copyprotection",
+			"enable",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, outputErr := cmd.CombinedOutput()
+		r.NoError(outputErr, string(resp))
+
+		a := assert.New(t)
+
+		var compliancepolicy atlasv2.DataProtectionSettings
+		require.NoError(t, json.Unmarshal(resp, &compliancepolicy), string(resp))
+		a.True(*compliancepolicy.CopyProtectionEnabled)
+	})
+
+	t.Run("policies describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			compliancepolicyEntity,
+			policiesEntity,
+			"describe",
+			"--projectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, outputErr := cmd.CombinedOutput()
+
+		r.NoError(outputErr, string(resp))
+
+		a := assert.New(t)
+		var result atlasv2.DataProtectionSettings
 		err = json.Unmarshal(resp, &result)
 		a.NoError(err, string(resp))
-		// Will be changed after implementing enable/setup.
-		// a.NotEmpty(result) Ticket to enforce this: CLOUDP-193023
+		a.NotEmpty(result)
 	})
 
 	t.Run("policies describe", func(t *testing.T) {

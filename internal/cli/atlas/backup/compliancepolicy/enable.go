@@ -16,10 +16,10 @@ package compliancepolicy
 
 import (
 	"context"
-	"errors"
+	"fmt"
+	"net/mail"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
@@ -28,27 +28,21 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-type CopyProtectionOpts struct {
+type EnableOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	policy      *atlasv2.DataProtectionSettings
-	store       store.CompliancePolicy
-	enable      bool
-	EnableWatch bool
+	policy          *atlasv2.DataProtectionSettings
+	store           store.CompliancePolicy
+	authorizedEmail string
+	EnableWatch     bool
 }
 
-const (
-	enable  = "enable"
-	disable = "disable"
-)
-
-var copyProtectionWatchTemplate = `Copy protection has been set to: {{.CopyProtectionEnabled}}
+var enableWatchTemplate = `Backup Compliance Policy enabled without any configuration. Run "atlas backups compliancepolicy --help" for configuration options.
+`
+var enableTemplate = `Backup Compliance Policy is being enabled without any configuration. Run "atlas backups compliancepolicy --help" for configuration options.
 `
 
-var copyProtectionTemplate = `Copy protection has been set to: {{.CopyProtectionEnabled}}
-`
-
-func (opts *CopyProtectionOpts) initStore(ctx context.Context) func() error {
+func (opts *EnableOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -56,64 +50,56 @@ func (opts *CopyProtectionOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *CopyProtectionOpts) PreRun() error {
-	currentPolicy, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
-	if err != nil {
-		return err
-	}
-	opts.policy = currentPolicy
-	return nil
-}
-
-func (opts *CopyProtectionOpts) copyProtectionWatcher() (bool, error) {
+func (opts *EnableOpts) enableWatcher() (bool, error) {
 	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
-	opts.policy = res
 	if err != nil {
 		return false, err
 	}
+	opts.policy = res
 	if res.GetState() == "" {
-		return false, errors.New("could not access State field")
+		return false, fmt.Errorf("could not access State field")
 	}
 	return (res.GetState() == active), nil
 }
 
-func (opts *CopyProtectionOpts) Run() error {
-	opts.policy.SetCopyProtectionEnabled(opts.enable)
-	_, err := opts.store.UpdateCompliancePolicy(opts.ConfigProjectID(), opts.policy)
+func (opts *EnableOpts) getEmptyCompliancePolicy() *atlasv2.DataProtectionSettings {
+	policy := atlasv2.NewDataProtectionSettings()
+	policy.SetAuthorizedEmail(opts.authorizedEmail)
+	policy.SetProjectId(opts.ConfigProjectID())
+	return policy
+}
+
+func (opts *EnableOpts) Run() error {
+	if _, err := mail.ParseAddress(opts.authorizedEmail); err != nil {
+		return err
+	}
+	emptyPolicy := opts.getEmptyCompliancePolicy()
+
+	compliancePolicy, err := opts.store.UpdateCompliancePolicy(opts.ConfigProjectID(), emptyPolicy)
+	opts.policy = compliancePolicy
 	if err != nil {
 		return err
 	}
-
 	if opts.EnableWatch {
-		opts.Template = copyProtectionWatchTemplate
-		if err := opts.Watch(opts.copyProtectionWatcher); err != nil {
+		if err := opts.Watch(opts.enableWatcher); err != nil {
 			return err
 		}
+		opts.Template = enableWatchTemplate
 	}
 
 	return opts.Print(opts.policy)
 }
 
-func CopyProtectionBuilder() *cobra.Command {
-	opts := new(CopyProtectionOpts)
-	use := "copyProtection"
+func EnableBuilder() *cobra.Command {
+	opts := new(EnableOpts)
 	cmd := &cobra.Command{
-		Use:       use,
-		Aliases:   cli.GenerateAliases(use),
-		Args:      require.ExactValidArgs(1),
-		ValidArgs: []string{enable, disable},
-		Short:     "Enable or disable copyprotection of the backup compliance policy for your project.",
+		Use:   "enable",
+		Short: "Enable Backup Compliance Policy without any configuration.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if args[0] == enable {
-				opts.enable = true
-			} else {
-				opts.enable = false
-			}
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), copyProtectionTemplate),
-				opts.PreRun,
+				opts.InitOutput(cmd.OutOrStdout(), enableTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -122,9 +108,10 @@ func CopyProtectionBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().StringVar(&opts.authorizedEmail, flag.AuthorizedEmail, "", usage.AuthorizedEmail)
+	_ = cmd.MarkFlagRequired(flag.AuthorizedEmail)
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
-
 	return cmd
 }

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (iam && !om50 && !om60 && !atlas)
+//go:build e2e || (iam && !om60 && !atlas)
 
 package iam_test
 

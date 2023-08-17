@@ -61,6 +61,7 @@
 | `backup schedule delete`                    | Y         |           |           | Y         |       |       |
 | `backup schedule update`                    | Y         |           |           | Y         |       |       |
 | `backup compliancepolicy describe`          | Y         |           |           | Y         |       |       |
+| `backup compliancepolicy enable`            | Y         |           |           | Y         |       |       |
 | `backup compliancepolicy copyprotection`    | Y         |           |           | Y         |       |       |
 | `backup compliancepolicy setup`             | Y         |           |           | Y         |       |       |
 | `backup compliancepolicy policies describe` | Y         |           |           | Y         |       |       |

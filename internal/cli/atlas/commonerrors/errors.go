@@ -22,6 +22,7 @@ import (
 
 var (
 	errClusterUnsupported = errors.New("atlas supports this command only for M10+ clusters. You can upgrade your cluster by running the 'atlas cluster upgrade' command")
+	errOutsideVPN         = errors.New("forbidden action outside access allow list, if you are a MongoDB employee double check your VPN connection")
 )
 
 func Check(err error) error {
@@ -33,6 +34,9 @@ func Check(err error) error {
 	if ok {
 		if apiError.GetErrorCode() == "TENANT_CLUSTER_UPDATE_UNSUPPORTED" {
 			return errClusterUnsupported
+		}
+		if apiError.GetErrorCode() == "GLOBAL_USER_OUTSIDE_SUBNET" {
+			return errOutsideVPN
 		}
 	}
 	return err

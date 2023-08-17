@@ -23,8 +23,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
+
+func TestCreateTemplate(t *testing.T) {
+	test.VerifyOutputTemplate(t, createTemplate, atlasv2.CloudProviderAccessRole{})
+}
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -42,9 +47,7 @@ func TestCreateOpts_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := createOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, createOpts.Run())
 }
 
 func TestCreateBuilder(t *testing.T) {

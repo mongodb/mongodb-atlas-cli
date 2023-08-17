@@ -3,7 +3,7 @@ package watcher
 import (
 	"errors"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 

@@ -46,6 +46,7 @@ type UpdateOpts struct {
 }
 
 var updateTemplate = `Your backup compliance policy is being updated with the following policies:
+
 ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
 {{- range .ScheduledPolicyItems}}
 {{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
@@ -53,13 +54,14 @@ ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
 {{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
 `
 var updateWatchTemplate = `Your backup compliance policy has been updated with the following policies:
+
 ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
 {{- range .ScheduledPolicyItems}}
 {{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
 {{- end}}
 {{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
 `
-var example = `How to run atlas backups compliancepolicy policies update with --file.
+var example = `How to run "atlas backups compliancepolicy policies update" with --file.
 As an example, the file should be in the following format:
 
 {
@@ -87,40 +89,6 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 		}
 		return nil
 	}
-}
-
-func (opts *UpdateOpts) interactiveRun() error {
-
-	projectID, err := opts.askProjectOptions()
-	if err != nil {
-		return fmt.Errorf("asking for projectID failed: %w", err)
-	}
-	opts.projectID = projectID
-
-	compliancePolicy, err := opts.store.DescribeCompliancePolicy(projectID)
-	if err != nil {
-		return fmt.Errorf("couldn't fetch the backup compliance policy: %w", err)
-	}
-
-	item, err := opts.askPolicyOptions(compliancePolicy)
-	if err != nil {
-		return fmt.Errorf("asking for policy item failed: %w", err)
-	}
-
-	snapshotInterval, err := opts.askForSnapshotInterval(item)
-	if err != nil {
-		return fmt.Errorf("asking for the snapshot interval failed: %w", err)
-	}
-	item.SetFrequencyInterval(snapshotInterval)
-
-	retentionUnit, retentionValue, err := opts.askForRetention(item)
-	if err != nil {
-		return fmt.Errorf("asking for retention data failed: %w", err)
-	}
-	item.SetRetentionValue(retentionValue)
-	item.SetRetentionUnit(retentionUnit)
-
-	return opts.Run(item)
 }
 
 func (opts *UpdateOpts) Run(policyItem *atlasv2.DiskBackupApiPolicyItem) error {
@@ -161,15 +129,14 @@ func UpdateBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if opts.path != "" {
-				opts.projectID = opts.ConfigProjectID()
-				policyItem := &atlasv2.DiskBackupApiPolicyItem{}
-				if err := file.Load(opts.fs, opts.path, policyItem); err != nil {
-					return err
-				}
-				return opts.Run(policyItem)
+
+			opts.projectID = opts.ConfigProjectID()
+			policyItem := &atlasv2.DiskBackupApiPolicyItem{}
+			if err := file.Load(opts.fs, opts.path, policyItem); err != nil {
+				return err
 			}
-			return opts.interactiveRun()
+
+			return opts.Run(policyItem)
 		},
 	}
 
@@ -177,6 +144,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 	cmd.Flags().StringVarP(&opts.path, flag.File, flag.FileShort, "", usage.BackupCompliancePolicyItemFile)
-
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
+	_ = cmd.MarkFlagRequired(flag.File)
 	return cmd
 }

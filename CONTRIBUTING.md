@@ -134,7 +134,7 @@ Review and replace command name and arguments depending on the command you are u
 
 ### Contributing New Feature
 
-`Atlas CLI` and `MongoDB CLI` using[Cobra Framework](https://umarcor.github.io/cobra/) framework.
+`Atlas CLI` and `MongoDB CLI` are using the [Cobra Framework](https://umarcor.github.io/cobra/).
 
 Each new feature can be introduced by creating new cobra root command. 
 This command aggregates a number of subcommands that can perform network requests and return results

@@ -78,7 +78,7 @@ The following is a short list of commands that can be run in the root of the pro
 - Run `make` see a list of available targets.
 - Run `make test` to run all unit tests.
 - Run `make lint` to validate against our linting rules.
-- Run `E2E_TAGS=e2e,atlas make e2e-test` will run end to end tests against an Atlas instance,
+- Run `E2E_TAGS=e2e,atlas make e2e-test` will run end-to-end tests against an Atlas instance,
   please make sure to have set `MCLI_*` variables pointing to that instance.
 - Run `E2E_TAGS=cloudmanager,remote,generic make e2e-test` will run end-to-end tests against a Cloud Manager instance.<br />
   Please remember to: (a) have a running automation agent, and (b) set MCLI\_\* variables to point to your Cloud Manager instance.
@@ -93,23 +93,23 @@ If you need a new mock please update or add the `//go:generate` instruction to t
 
 #### Compilation in VSCode
 
-Please add following line to your settings.json file :
+Please add the following line to your settings.json file :
 ```
     "go.buildTags": "unit,e2e",
     "go.testTags": "unit,e2e"
 ```
 
-This will enable compilation for unit test and end to end tests.
+This will enable compilation for unit test and end-to-end tests.
 
 #### Debugging in VSCode
 
-To debut in VSCode you need to create an debug configuration for the command with required arguments.
-Run following commands to 
+To debut in VSCode you need to create a debug configuration for the command with required arguments.
+Run the following commands to 
 
 ```
 touch .vscode/launch.json
 ```
-Then put following configuration into the file.
+Then put the following configuration into the file.
 Review and replace command name and arguments depending on the command you are using.
 
 ```json
@@ -157,8 +157,7 @@ To do that please edit `./root/atlas/builder.go` to add your command builder met
 
 ### Adding a New Command
 
-`atlascli` and `mongocli` use [Cobra](https://github.com/spf13/cobra) as a framework for defining commands,
-in addition to this we have defined a basic structure that should be followed.
+`atlascli` and `mongocli` have defined a basic structure for individual commands that should be followed.
 For a `mongocli scope newCommand` command, a file `internal/cli/scope/new_command.go` should implement:
 
 - A `ScopeNewCommandOpts` struct which handles the different options for the command.

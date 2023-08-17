@@ -30,8 +30,8 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-type updateStore interface {
-	store.CompliancePolicyPolicyItemUpdater
+type UpdateStore interface {
+	store.CompliancePolicyItemUpdater
 	store.ProjectLister
 	store.CompliancePolicyDescriber
 }
@@ -40,7 +40,7 @@ type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	projectID string
-	store     updateStore
+	store     UpdateStore
 	fs        afero.Fs
 	path      string
 }

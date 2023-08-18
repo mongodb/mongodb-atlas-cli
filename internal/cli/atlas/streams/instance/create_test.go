@@ -15,6 +15,7 @@
 package instance
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -28,6 +29,7 @@ func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockStreamsCreator(ctrl)
 
+	buf := new(bytes.Buffer)
 	opts := &CreateOpts{
 		store:    mockStore,
 		name:     "ExampleStream",
@@ -47,6 +49,8 @@ func TestCreateOpts_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, createTemplate, expected)
 }
 
 func TestCreateBuilder(t *testing.T) {

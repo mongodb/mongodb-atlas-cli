@@ -15,6 +15,7 @@
 package connection
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -53,6 +54,7 @@ func TestCreate_Run(t *testing.T) {
 	fileName := "test-connection.json"
 	assert.NoError(t, afero.WriteFile(fs, fileName, []byte(fileContents), 0600))
 
+	buf := new(bytes.Buffer)
 	createOpts := &CreateOpts{
 		store:           mockStore,
 		fs:              fs,
@@ -75,6 +77,8 @@ func TestCreate_Run(t *testing.T) {
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, createTemplate, expected)
 }
 
 func TestCreateBuilder(t *testing.T) {

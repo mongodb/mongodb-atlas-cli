@@ -16,6 +16,7 @@ package instance
 
 import (
 	"bytes"
+
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -55,10 +56,11 @@ func TestDescribeOpts_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 	assert.Equal(t, `ID    NAME              CLOUD   REGION
 1     ExampleInstance   AWS     US_EAST_1
 `, buf.String())
-	t.Log(buf.String())
 }
 
 func TestDescribeBuilder(t *testing.T) {

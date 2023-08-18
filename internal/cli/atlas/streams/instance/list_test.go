@@ -16,6 +16,7 @@ package instance
 
 import (
 	"bytes"
+
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -66,10 +67,11 @@ func TestListOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
+	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 	assert.Equal(t, `ID    NAME          CLOUD   REGION
 1     Test Tenant   AWS     US-EAST-1
 `, buf.String())
-	t.Log(buf.String())
 }
 
 func TestListBuilder(t *testing.T) {

@@ -53,10 +53,11 @@ func TestDescribe_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 	assert.Equal(t, `NAME   TYPE    INSTANCE   SERVERS
 id     Kafka   Foo        example.com:8080
 `, buf.String())
-	t.Log(buf.String())
 }
 
 func TestDescribeBuilder(t *testing.T) {

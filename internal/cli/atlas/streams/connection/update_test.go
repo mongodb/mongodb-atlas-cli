@@ -15,6 +15,7 @@
 package connection
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -53,6 +54,7 @@ func TestUpdate_Run(t *testing.T) {
 	fileName := "connection.json"
 	assert.NoError(t, afero.WriteFile(fs, fileName, []byte(fileContents), 0600))
 
+	buf := new(bytes.Buffer)
 	updateOpts := &UpdateOpts{
 		name:            "id",
 		store:           mockStore,
@@ -76,6 +78,8 @@ func TestUpdate_Run(t *testing.T) {
 	if err := updateOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, updateTemplate, expected)
 }
 
 func TestUpdateBuilder(t *testing.T) {

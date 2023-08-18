@@ -28,10 +28,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-const (
-	authorizedEmail = "firstname.lastname@example.com"
-)
-
 type MockUpdateStore struct {
 	*mocks.MockCompliancePolicyDescriber
 	*mocks.MockCompliancePolicyItemUpdater
@@ -49,7 +45,7 @@ func NewMockUpdateStore(ctrl *gomock.Controller) *MockUpdateStore {
 func TestEnableBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		UpdateBuilder(),
+		Builder(),
 		0,
 		[]string{
 			flag.ProjectID,
@@ -61,7 +57,7 @@ func TestEnableBuilder(t *testing.T) {
 }
 
 func TestInitStore(t *testing.T) {
-	opts := &UpdateOpts{}
+	opts := &Opts{}
 	ctx := context.Background()
 
 	if err := opts.initStore(ctx)(); err != nil {
@@ -74,7 +70,7 @@ func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := NewMockUpdateStore(ctrl)
 
-	opts := &UpdateOpts{
+	opts := &Opts{
 		store: mockStore,
 	}
 
@@ -99,14 +95,14 @@ func TestEnableOpts_Run_Fail_code_500(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := NewMockUpdateStore(ctrl)
 
-	opts := &UpdateOpts{
+	opts := &Opts{
 		store: mockStore,
 	}
 
 	policyItem := atlasv2.NewDiskBackupApiPolicyItem(1, "daily", "days", 1)
 
 	httpResponse := &http.Response{
-		StatusCode: 500,
+		StatusCode: http.StatusInternalServerError,
 	}
 
 	mockError := errors.New("network error")

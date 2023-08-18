@@ -92,7 +92,7 @@ func TestCompliancePolicy(t *testing.T) {
 // the resp output has some dots in the beginning (depending on how long it took to finish) that need to be removed.
 // It looks something like this:
 //
-// "...{"projectId": "string", ...}"
+// "...{"projectId": "string", ...}".
 func removeDotsFromWatching(consoleOutput []byte) []byte {
 	return []byte(strings.TrimLeft(string(consoleOutput), "."))
 }

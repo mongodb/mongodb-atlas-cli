@@ -30,17 +30,17 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-type UpdateStore interface {
+type combinedStore interface {
 	store.CompliancePolicyItemUpdater
 	store.ProjectLister
 	store.CompliancePolicyDescriber
 }
 
-type UpdateOpts struct {
+type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	projectID string
-	store     UpdateStore
+	store     combinedStore
 	fs        afero.Fs
 	path      string
 }
@@ -80,7 +80,7 @@ Finally, run the command as such: "atlas backups compliancepolicy policies updat
 var errorCode500Template = `received an internal error on the server side, but we would encourage you to double check your inputs.
 For this command, invalid inputs are known to cause internal errors in some situations`
 
-func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
+func (opts *Opts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -91,7 +91,7 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *UpdateOpts) Run(policyItem *atlasv2.DiskBackupApiPolicyItem) error {
+func (opts *Opts) Run(policyItem *atlasv2.DiskBackupApiPolicyItem) error {
 	result, httpResponse, err := opts.store.UpdatePolicyItem(opts.projectID, policyItem)
 	if err != nil {
 		if httpResponse != nil && httpResponse.StatusCode == 500 {
@@ -111,8 +111,8 @@ func (opts *UpdateOpts) Run(policyItem *atlasv2.DiskBackupApiPolicyItem) error {
 	return opts.Print(result)
 }
 
-func UpdateBuilder() *cobra.Command {
-	opts := &UpdateOpts{
+func Builder() *cobra.Command {
+	opts := &Opts{
 		fs: afero.NewOsFs(),
 	}
 	use := "update"
@@ -129,7 +129,6 @@ func UpdateBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-
 			opts.projectID = opts.ConfigProjectID()
 			policyItem := &atlasv2.DiskBackupApiPolicyItem{}
 			if err := file.Load(opts.fs, opts.path, policyItem); err != nil {

@@ -770,3 +770,31 @@ func compareStingsWithHiddenPart(expectedSting, actualString string, specialChar
 	}
 	return true
 }
+
+// createJSONFile creates a new JSON file at the specified path with the specified data
+// and also registers its deletion on test cleanup.
+func createJSONFile(t *testing.T, data interface{}, path string) {
+	t.Helper()
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		t.Errorf("Error marshaling to JSON: %v", err)
+		return
+	}
+
+	err = os.WriteFile(path, jsonData, 0600)
+	if err != nil {
+		t.Errorf("Error writing JSON to file: %v", err)
+		return
+	}
+
+	t.Cleanup(func() {
+		deleteFile(t, path)
+	})
+}
+
+func deleteFile(t *testing.T, path string) {
+	t.Helper()
+	if err := os.Remove(path); err != nil {
+		t.Errorf("Error deleting file: %v", err)
+	}
+}

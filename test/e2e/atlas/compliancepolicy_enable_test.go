@@ -33,7 +33,7 @@ func TestCompliancePolicy_enable(t *testing.T) {
 	r := require.New(t)
 	r.NoError(err)
 
-	g := newAtlasE2ETestGeneratorWithBackup(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("compliancePolicy")
 
 	t.Run("enable happy flow", func(t *testing.T) {

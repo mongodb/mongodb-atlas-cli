@@ -26,7 +26,7 @@ const (
 )
 
 func TestCompliancePolicy(t *testing.T) {
-	g := newAtlasE2ETestGeneratorWithBackup(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("compliancePolicy")
 
 	testCompliancePolicySetup(t, g)

@@ -26,7 +26,8 @@ type ProjectLister interface {
 }
 
 type OrgProjectLister interface {
-	GetOrgProjects(string) (*atlasv2.PaginatedAtlasGroup, error)
+	GetOrgProjects(string, *atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
+	Projects(*atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
 }
 
 type ProjectCreator interface {
@@ -74,8 +75,12 @@ func (s *Store) Projects(opts *atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup,
 }
 
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
-func (s *Store) GetOrgProjects(orgID string) (*atlasv2.PaginatedAtlasGroup, error) {
-	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationProjects(s.ctx, orgID).Execute()
+func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
+	res := s.clientv2.OrganizationsApi.ListOrganizationProjects(s.ctx, orgID)
+	if opts != nil {
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+	}
+	result, _, err := res.Execute()
 	return result, err
 }
 

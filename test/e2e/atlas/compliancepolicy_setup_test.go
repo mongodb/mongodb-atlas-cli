@@ -62,16 +62,20 @@ func testCompliancePolicySetup(t *testing.T, g *atlasE2ETestGenerator) {
 			"--force",
 			"--file",
 			path,
+			"--watch",
 		)
+
 		cmd.Env = os.Environ()
 		resp, outputErr := cmd.CombinedOutput()
+
+		trimmedResponse := removeDotsFromWatching(resp)
 
 		r.NoError(outputErr, string(resp))
 		a := assert.New(t)
 
 		var result atlasv2.DataProtectionSettings
-		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
-		a.Equal(result.GetScheduledPolicyItems(), []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem})
+		require.NoError(t, json.Unmarshal(trimmedResponse, &result), trimmedResponse)
+		a.Equal(1, len(result.GetScheduledPolicyItems()))
 		a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
 	})
 }

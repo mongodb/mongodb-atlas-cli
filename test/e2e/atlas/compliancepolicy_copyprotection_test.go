@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-func testCopyProtection(t *testing.T) {
+func testCopyProtection(t *testing.T, g *atlasE2ETestGenerator) {
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
@@ -40,15 +40,21 @@ func testCopyProtection(t *testing.T) {
 			compliancepolicyEntity,
 			"copyprotection",
 			"enable",
-			"-o=json")
+			"-o=json",
+			"--projectId",
+			g.projectID,
+			"--watch",
+		)
 		cmd.Env = os.Environ()
 		resp, outputErr := cmd.CombinedOutput()
 		r.NoError(outputErr, string(resp))
 
+		trimmedResponse := removeDotsFromWatching(resp)
+
 		a := assert.New(t)
 
 		var compliancepolicy atlasv2.DataProtectionSettings
-		require.NoError(t, json.Unmarshal(resp, &compliancepolicy), string(resp))
+		require.NoError(t, json.Unmarshal(trimmedResponse, &compliancepolicy), string(trimmedResponse))
 		a.True(*compliancepolicy.CopyProtectionEnabled)
 	})
 

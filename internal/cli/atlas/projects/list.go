@@ -35,7 +35,7 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.ProjectLister
+	store store.OrgProjectLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -48,7 +48,13 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 
 func (opts *ListOpts) Run() error {
 	listOptions := opts.NewListOptions()
-	r, err := opts.store.Projects(listOptions)
+	var r interface{}
+	var err error
+	if opts.OrgID != "" {
+		r, err = opts.store.GetOrgProjects(opts.OrgID, listOptions)
+	} else {
+		r, err = opts.store.Projects(listOptions)
+	}
 	if err != nil {
 		return err
 	}

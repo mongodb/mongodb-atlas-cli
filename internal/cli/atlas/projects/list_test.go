@@ -27,7 +27,7 @@ import (
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectLister(ctrl)
+	mockStore := mocks.NewMockOrgProjectLister(ctrl)
 
 	expected := &atlasv2.PaginatedAtlasGroup{}
 
@@ -54,7 +54,7 @@ func TestList_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			Projects(listOpts.NewListOptions()).
+			GetOrgProjects(listOpts.OrgID, listOpts.NewListOptions()).
 			Return(expected, nil).
 			Times(1)
 

@@ -28,6 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
+//nolint:thelper
 func testPoliciesDescribe(t *testing.T, g *atlasE2ETestGenerator) {
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)

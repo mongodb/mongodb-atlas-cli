@@ -18,10 +18,10 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
@@ -38,33 +38,6 @@ func TestSetupBuilder(t *testing.T) {
 			flag.EnableWatch,
 		},
 	)
-}
-
-// Tests that setupWatcher() returns true when status == "ACTIVE".
-func TestSetupOpts_Watcher(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicy(ctrl)
-	state := active
-
-	opts := &SetupOpts{
-		store: mockStore,
-	}
-
-	expected := &atlasv2.DataProtectionSettings{
-		State: &state,
-	}
-
-	mockStore.
-		EXPECT().
-		DescribeCompliancePolicy(opts.ProjectID).
-		Return(expected, nil).
-		Times(1)
-
-	res, err := opts.setupWatcher()
-	if err != nil {
-		t.Fatalf("setupWatcher() unexpected error: %v", err)
-	}
-	assert.True(t, res)
 }
 
 // Verifies the output template.
@@ -103,10 +76,12 @@ func TestSetupOpts_WatchRun(t *testing.T) {
 	state := active
 
 	opts := &SetupOpts{
-		store:       mockStore,
-		confirm:     true,
-		policy:      new(atlasv2.DataProtectionSettings),
-		EnableWatch: true,
+		store:   mockStore,
+		confirm: true,
+		policy:  new(atlasv2.DataProtectionSettings),
+		WatchOpts: cli.WatchOpts{
+			EnableWatch: true,
+		},
 	}
 
 	expected := &atlasv2.DataProtectionSettings{

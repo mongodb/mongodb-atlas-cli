@@ -16,9 +16,9 @@ package compliancepolicy
 
 import (
 	"context"
-	"errors"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/watcher"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -32,12 +32,11 @@ import (
 type SetupOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	policy      *atlasv2.DataProtectionSettings
-	store       store.CompliancePolicy
-	fs          afero.Fs
-	path        string
-	confirm     bool
-	EnableWatch bool
+	policy  *atlasv2.DataProtectionSettings
+	store   store.CompliancePolicy
+	fs      afero.Fs
+	path    string
+	confirm bool
 }
 
 var setupWatchTemplate = `Your backup compliance policy has been set up with the following configuration:
@@ -82,25 +81,14 @@ func (opts *SetupOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *SetupOpts) setupWatcher() (bool, error) {
-	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
-	if err != nil {
-		return false, err
-	}
-	opts.policy = res
-	if res.GetState() == "" {
-		return false, errors.New("could not access State field")
-	}
-	return (res.GetState() == active), nil
-}
-
 func (opts *SetupOpts) Run() error {
 	_, err := opts.store.UpdateCompliancePolicy(opts.ConfigProjectID(), opts.policy)
 	if err != nil {
 		return err
 	}
 	if opts.EnableWatch {
-		if err := opts.Watch(opts.setupWatcher); err != nil {
+		watcher := watcher.CompliancePolicyWatcherFactory(opts.ConfigProjectID(), opts.store, opts.policy)
+		if err := opts.Watch(watcher); err != nil {
 			return err
 		}
 		opts.Template = setupWatchTemplate

@@ -36,7 +36,8 @@ func TestCopyProtection(t *testing.T) {
 
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("copyprotection-compliance-policy")
-	if _, err := enableCompliancePolicy(g.projectID); err != nil {
+	err = enableCompliancePolicy(g.projectID)
+	if err != nil {
 		t.Fatal(fmt.Errorf("unable to enable compliance policy: %w", err))
 	}
 

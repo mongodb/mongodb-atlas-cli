@@ -788,13 +788,8 @@ func createJSONFile(t *testing.T, data interface{}, path string) {
 	}
 
 	t.Cleanup(func() {
-		deleteFile(t, path)
+		if err := os.Remove(path); err != nil {
+			t.Errorf("Error deleting file: %v", err)
+		}
 	})
-}
-
-func deleteFile(t *testing.T, path string) {
-	t.Helper()
-	if err := os.Remove(path); err != nil {
-		t.Errorf("Error deleting file: %v", err)
-	}
 }

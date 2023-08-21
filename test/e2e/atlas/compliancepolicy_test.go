@@ -29,18 +29,14 @@ func TestCompliancePolicy(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("compliancePolicy")
 
-	testCompliancePolicySetup(t, g)
+	testCompliancePolicySetup(t, g.projectID)
 	testDescribe(t, g)
-	testPoliciesDescribe(t, g)
-	testCopyProtection(t, g)
+	testPoliciesDescribe(t, g.projectID)
+	testCopyProtection(t, g.projectID)
 }
 
-// For tests that update BCP, we must --watch to avoid HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
-// Because we watch the command and this is a testing environment,
-// the resp output has some dots in the beginning (depending on how long it took to finish) that need to be removed.
-// It looks something like this:
-//
-// "...{"projectId": "string", ...}".
+// If we watch a command in a testing environment,
+// the output has some dots in the beginning (depending on how long it took to finish) that need to be removed.
 func removeDotsFromWatching(consoleOutput []byte) []byte {
 	return []byte(strings.TrimLeft(string(consoleOutput), "."))
 }

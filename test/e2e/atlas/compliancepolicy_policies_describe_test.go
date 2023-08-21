@@ -29,7 +29,7 @@ import (
 )
 
 //nolint:thelper
-func testPoliciesDescribe(t *testing.T, g *atlasE2ETestGenerator) {
+func testPoliciesDescribe(t *testing.T, projectID string) {
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
@@ -41,7 +41,7 @@ func testPoliciesDescribe(t *testing.T, g *atlasE2ETestGenerator) {
 			policiesEntity,
 			"describe",
 			"--projectId",
-			g.projectID,
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, outputErr := cmd.CombinedOutput()

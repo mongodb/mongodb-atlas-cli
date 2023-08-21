@@ -29,7 +29,7 @@ import (
 )
 
 //nolint:thelper
-func testCopyProtection(t *testing.T, g *atlasE2ETestGenerator) {
+func testCopyProtection(t *testing.T, projectID string) {
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
@@ -43,8 +43,8 @@ func testCopyProtection(t *testing.T, g *atlasE2ETestGenerator) {
 			"enable",
 			"-o=json",
 			"--projectId",
-			g.projectID,
-			"--watch",
+			projectID,
+			"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 		)
 		cmd.Env = os.Environ()
 		resp, outputErr := cmd.CombinedOutput()

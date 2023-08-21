@@ -29,7 +29,7 @@ import (
 )
 
 //nolint:thelper
-func testCompliancePolicySetup(t *testing.T, g *atlasE2ETestGenerator) {
+func testCompliancePolicySetup(t *testing.T, projectID string) {
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
@@ -45,7 +45,7 @@ func testCompliancePolicySetup(t *testing.T, g *atlasE2ETestGenerator) {
 
 	policy := &atlasv2.DataProtectionSettings{
 		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem},
-		ProjectId:            &g.projectID,
+		ProjectId:            &projectID,
 		AuthorizedEmail:      &email,
 	}
 	path := "./compliancepolicy.json"
@@ -58,12 +58,12 @@ func testCompliancePolicySetup(t *testing.T, g *atlasE2ETestGenerator) {
 			compliancepolicyEntity,
 			"setup",
 			"--projectId",
-			g.projectID,
+			projectID,
 			"-o=json",
 			"--force",
 			"--file",
 			path,
-			"--watch",
+			"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 		)
 
 		cmd.Env = os.Environ()
@@ -76,7 +76,7 @@ func testCompliancePolicySetup(t *testing.T, g *atlasE2ETestGenerator) {
 
 		var result atlasv2.DataProtectionSettings
 		require.NoError(t, json.Unmarshal(trimmedResponse, &result), trimmedResponse)
-		a.Equal(1, len(result.GetScheduledPolicyItems()))
+		a.Len(result.GetScheduledPolicyItems(), 1)
 		a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
 	})
 }

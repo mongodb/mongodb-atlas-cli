@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-func TestCompliancePolicy_enable(t *testing.T) {
+func TestEnableCompliancePolicy(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)

@@ -17,14 +17,12 @@
 package atlas_test
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 const (
@@ -37,10 +35,10 @@ func removeDotsFromWatching(consoleOutput []byte) []byte {
 	return []byte(strings.TrimLeft(string(consoleOutput), "."))
 }
 
-func enableCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error) {
+func enableCompliancePolicy(projectID string) error {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
-		return nil, fmt.Errorf("%w: invalid bin", err)
+		return fmt.Errorf("%w: invalid bin", err)
 	}
 	cmd := exec.Command(cliPath,
 		backupsEntity,
@@ -54,16 +52,6 @@ func enableCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, 
 		"--watch",
 	)
 	cmd.Env = os.Environ()
-	resp, outputErr := cmd.CombinedOutput()
-	if outputErr != nil {
-		return nil, outputErr
-	}
-	trimmedResponse := removeDotsFromWatching(resp)
-
-	var result atlasv2.DataProtectionSettings
-	if err := json.Unmarshal(trimmedResponse, &result); err != nil {
-		fmt.Printf("%+v", trimmedResponse)
-		return nil, err
-	}
-	return &result, nil
+	_, outputErr := cmd.CombinedOutput()
+	return outputErr
 }

@@ -18,6 +18,7 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -28,13 +29,18 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-//nolint:thelper
-func testCopyProtection(t *testing.T, projectID string) {
+func TestCopyProtection(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	t.Run("copyprotection happy flow", func(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("copyprotection-compliance-policy")
+	if _, err := enableCompliancePolicy(g.projectID); err != nil {
+		t.Fatal(fmt.Errorf("unable to enable compliance policy: %w", err))
+	}
+
+	t.Run("happy flow", func(t *testing.T) {
 		cmd := exec.Command(
 			cliPath,
 			backupsEntity,
@@ -43,7 +49,7 @@ func testCopyProtection(t *testing.T, projectID string) {
 			"enable",
 			"-o=json",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 		)
 		cmd.Env = os.Environ()

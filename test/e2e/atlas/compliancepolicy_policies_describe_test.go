@@ -18,6 +18,7 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -28,20 +29,25 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-//nolint:thelper
-func testPoliciesDescribe(t *testing.T, projectID string) {
+func TestPoliciesDescribe(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	t.Run("policies describe", func(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("describe-compliance-policy-policies")
+	if _, err := enableCompliancePolicy(g.projectID); err != nil {
+		t.Fatal(fmt.Errorf("unable to enable compliance policy: %w", err))
+	}
+
+	t.Run("happy flow", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			compliancepolicyEntity,
 			policiesEntity,
 			"describe",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, outputErr := cmd.CombinedOutput()

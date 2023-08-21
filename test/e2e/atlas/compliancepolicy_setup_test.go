@@ -28,11 +28,13 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-//nolint:thelper
-func testCompliancePolicySetup(t *testing.T, projectID string) {
+func TestSetupCompliancePolicy(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
+
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("setup-compliance-policy")
 
 	scheduledPolicyItem := atlasv2.DiskBackupApiPolicyItem{
 		FrequencyInterval: 1,
@@ -45,20 +47,20 @@ func testCompliancePolicySetup(t *testing.T, projectID string) {
 
 	policy := &atlasv2.DataProtectionSettings{
 		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem},
-		ProjectId:            &projectID,
+		ProjectId:            &g.projectID,
 		AuthorizedEmail:      &email,
 	}
 	path := "./compliancepolicy.json"
 
 	createJSONFile(t, policy, path)
 
-	t.Run("setup happy flow", func(t *testing.T) {
+	t.Run("happy flow", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			compliancepolicyEntity,
 			"setup",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json",
 			"--force",
 			"--file",

@@ -34,9 +34,9 @@ func TestEnableCompliancePolicy(t *testing.T) {
 	r.NoError(err)
 
 	g := newAtlasE2ETestGenerator(t)
-	g.generateProject("compliancePolicy")
+	g.generateProject("enable-compliance-policy")
 
-	t.Run("enable happy flow", func(t *testing.T) {
+	t.Run("happy flow", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			compliancepolicyEntity,

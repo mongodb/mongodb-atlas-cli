@@ -31,12 +31,20 @@ import (
 
 const (
 	defaultInstanceName = "DefaultInstance"
-	instanceName        = "E2EInstance"
-	connectionName      = "E2EConnection"
 )
 
 func TestStreams(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	instanceName, err := RandEntityWithRevision("instance")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	connectionName, err := RandEntityWithRevision("connection")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -67,7 +75,7 @@ func TestStreams(t *testing.T) {
 			"streams",
 			"instance",
 			"create",
-			"-p",
+			"--provider",
 			"AWS",
 			"-r",
 			"VIRGINIA_USA",
@@ -114,7 +122,7 @@ func TestStreams(t *testing.T) {
 			"instance",
 			"update",
 			"-r",
-			"SYDNEY_AUS",
+			"VIRGINIA_USA",
 			instanceName,
 			"-o=json",
 		)
@@ -128,7 +136,7 @@ func TestStreams(t *testing.T) {
 			a.NoError(err)
 			a.Equal(*instance.Name, instanceName)
 			a.Equal(instance.DataProcessRegion.CloudProvider, "AWS")
-			a.Equal(instance.DataProcessRegion.Region, "SYDNEY_AUS")
+			a.Equal(instance.DataProcessRegion.Region, "VIRGINIA_USA")
 		}
 	})
 

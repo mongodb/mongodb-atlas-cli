@@ -44,7 +44,6 @@ func TestSetupBuilder(t *testing.T) {
 func TestSetupOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCompliancePolicy(ctrl)
-	state := active
 
 	opts := &SetupOpts{
 		store:   mockStore,
@@ -52,9 +51,7 @@ func TestSetupOpts_Run(t *testing.T) {
 		policy:  new(atlasv2.DataProtectionSettings),
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
-		State: &state,
-	}
+	expected := &atlasv2.DataProtectionSettings{}
 
 	mockStore.
 		EXPECT().

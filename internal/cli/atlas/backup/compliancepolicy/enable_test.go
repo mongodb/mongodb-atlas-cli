@@ -18,6 +18,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
@@ -43,40 +44,12 @@ func TestEnableBuilder(t *testing.T) {
 	)
 }
 
-func TestEnableOpts_Watcher(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicy(ctrl)
-
-	opts := &EnableOpts{
-		store: mockStore,
-	}
-	state := active
-	expected := &atlasv2.DataProtectionSettings{
-		State: &state,
-	}
-
-	mockStore.
-		EXPECT().
-		DescribeCompliancePolicy(opts.ProjectID).
-		Return(expected, nil).
-		Times(1)
-
-	res, err := opts.enableWatcher()
-	if err != nil {
-		t.Fatalf("enableWatcher() unexpected error: %v", err)
-	}
-	assert.True(t, res)
-}
-
 func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCompliancePolicy(ctrl)
-	state := active
 	email := authorizedEmail
 
-	expected := &atlasv2.DataProtectionSettings{
-		State: &state,
-	}
+	expected := &atlasv2.DataProtectionSettings{}
 
 	opts := &EnableOpts{
 		store:           mockStore,
@@ -94,6 +67,46 @@ func TestEnableOpts_Run(t *testing.T) {
 	}
 	test.VerifyOutputTemplate(t, enableTemplate, expected)
 }
+
+// Verifies the output template when using --watch.
+func TestEnableOpts_WatchRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockCompliancePolicy(ctrl)
+	state := active
+	email := authorizedEmail
+
+	opts := &EnableOpts{
+		store:  mockStore,
+		policy: new(atlasv2.DataProtectionSettings),
+		WatchOpts: cli.WatchOpts{
+			EnableWatch: true,
+		},
+		authorizedEmail: email,
+	}
+
+	expected := &atlasv2.DataProtectionSettings{
+		State: &state,
+	}
+
+	mockStore.
+		EXPECT().
+		UpdateCompliancePolicy(opts.ConfigProjectID(), opts.getEmptyCompliancePolicy()).
+		Return(expected, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		DescribeCompliancePolicy(opts.ConfigProjectID()).
+		Return(expected, nil).
+		Times(1)
+
+	if err := opts.Run(); err != nil {
+		t.Fatalf("run() unexpected error: %v", err)
+	}
+
+	test.VerifyOutputTemplate(t, enableWatchTemplate, expected)
+}
+
 func TestEnableOpts_Run_invalidEmail(t *testing.T) {
 	invalidEmail := "invalidEmail"
 

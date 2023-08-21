@@ -101,7 +101,7 @@ func TestEnableOpts_WatchRun(t *testing.T) {
 		Times(1)
 
 	if err := opts.Run(); err != nil {
-		t.Fatalf("run() unexpected error: %v", err)
+		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
 	test.VerifyOutputTemplate(t, enableWatchTemplate, expected)

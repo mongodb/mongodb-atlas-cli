@@ -74,18 +74,33 @@ func (m *MockOrgProjectLister) EXPECT() *MockOrgProjectListerMockRecorder {
 }
 
 // GetOrgProjects mocks base method.
-func (m *MockOrgProjectLister) GetOrgProjects(arg0 string) (*admin.PaginatedAtlasGroup, error) {
+func (m *MockOrgProjectLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedAtlasGroup, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOrgProjects", arg0)
+	ret := m.ctrl.Call(m, "GetOrgProjects", arg0, arg1)
 	ret0, _ := ret[0].(*admin.PaginatedAtlasGroup)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetOrgProjects indicates an expected call of GetOrgProjects.
-func (mr *MockOrgProjectListerMockRecorder) GetOrgProjects(arg0 interface{}) *gomock.Call {
+func (mr *MockOrgProjectListerMockRecorder) GetOrgProjects(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrgProjects", reflect.TypeOf((*MockOrgProjectLister)(nil).GetOrgProjects), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrgProjects", reflect.TypeOf((*MockOrgProjectLister)(nil).GetOrgProjects), arg0, arg1)
+}
+
+// Projects mocks base method.
+func (m *MockOrgProjectLister) Projects(arg0 *mongodbatlas.ListOptions) (*admin.PaginatedAtlasGroup, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Projects", arg0)
+	ret0, _ := ret[0].(*admin.PaginatedAtlasGroup)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Projects indicates an expected call of Projects.
+func (mr *MockOrgProjectListerMockRecorder) Projects(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Projects", reflect.TypeOf((*MockOrgProjectLister)(nil).Projects), arg0)
 }
 
 // MockProjectCreator is a mock of ProjectCreator interface.

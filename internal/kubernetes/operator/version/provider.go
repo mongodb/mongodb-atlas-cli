@@ -43,7 +43,7 @@ type OperatorVersion struct {
 func (v *OperatorVersion) GetLatest() (string, error) {
 	latest, _, err := v.ghClient.Repositories.GetLatestRelease(context.Background(), operatorRepositoryOrg, operatorRepository)
 	if err != nil {
-		return "", fmt.Errorf("unable to retrieve latest vesrion: %w", err)
+		return "", fmt.Errorf("unable to retrieve latest version: %w", err)
 	}
 
 	return strings.Trim(*latest.Name, "v"), nil

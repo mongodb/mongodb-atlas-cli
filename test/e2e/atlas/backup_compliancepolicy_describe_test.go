@@ -52,6 +52,5 @@ func TestBackupCompliancePolicyDescribe(t *testing.T) {
 	var result atlasv2.DataProtectionSettings
 	r.NoError(json.Unmarshal(resp, &result), string(resp))
 
-	a := assert.New(t)
-	a.NotEmpty(result)
+	assert.NotEmpty(t, result)
 }

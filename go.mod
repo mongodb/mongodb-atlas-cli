@@ -23,7 +23,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang/mock v1.6.0
 	github.com/google/go-github/v50 v50.2.0
-	github.com/google/uuid v1.3.0
+	github.com/google/uuid v1.3.1
 	github.com/hinshun/vt10x v0.0.0-20220119200601-820417d04eec
 	github.com/jba/templatecheck v0.6.0
 	github.com/klauspost/compress v1.16.7

@@ -65,6 +65,8 @@ func (opts *SetupOpts) createLocalDeployment() error {
 	}
 
 	mongodContainerName := fmt.Sprintf("%s-%s", InternalMongodHostname, opts.deploymentName)
+	mongotContainerName := fmt.Sprintf("%s-%s", InternalMongotHostname, opts.deploymentName)
+
 	for _, c := range containers {
 		for _, n := range c.Names {
 			if n == mongodContainerName {
@@ -93,7 +95,7 @@ func (opts *SetupOpts) createLocalDeployment() error {
 			Detach:   true,
 			Image:    fmt.Sprintf("mongodb/mongodb-enterprise-server:%s-ubi8", opts.mdbVersion),
 			Name:     mongodContainerName,
-			Hostname: InternalMongodHostname,
+			Hostname: mongodContainerName,
 			Volumes: map[string]string{
 				mongodDataVolume: "/data/db",
 			},
@@ -105,8 +107,8 @@ func (opts *SetupOpts) createLocalDeployment() error {
 				"--noauth",
 				"--dbpath", "/data/db",
 				"--replSet", ReplicaSetName,
-				"--setParameter", fmt.Sprintf("mongotHost=%s:%d", InternalMongotHostname, internalMongotPort),
-				"--setParameter", fmt.Sprintf("searchIndexManagementHostAndPort=%s:%d", InternalMongotHostname, internalMongotPort),
+				"--setParameter", fmt.Sprintf("mongotHost=%s:%d", mongotContainerName, internalMongotPort),
+				"--setParameter", fmt.Sprintf("searchIndexManagementHostAndPort=%s:%d", mongotContainerName, internalMongotPort),
 				"--setParameter", "skipAuthenticationToMongot=true",
 			},
 		}); err != nil {
@@ -129,7 +131,7 @@ func (opts *SetupOpts) createLocalDeployment() error {
 		});
 	  }`,
 		ReplicaSetName,
-		InternalMongodHostname,
+		mongodContainerName,
 		internalMongodPort,
 		opts.port)
 	if err := opts.seed(opts.port, seedRs); err != nil {
@@ -150,8 +152,9 @@ func (opts *SetupOpts) createLocalDeployment() error {
 	_, err := podmanOpts.RunContainer(podman.RunContainerOpts{
 		Detach:   true,
 		Image:    "mongodb/apix_test:mongot-noauth",
-		Name:     fmt.Sprintf("%s-%s", InternalMongotHostname, opts.deploymentName),
-		Hostname: InternalMongotHostname,
+		Name:     mongotContainerName,
+		Hostname: mongotContainerName,
+		Args:     []string{"--mongodHostAndPort", fmt.Sprintf("%s:%d", mongodContainerName, internalMongodPort)},
 		Volumes: map[string]string{
 			mongotDataVolume:    "/var/lib/mongot",
 			mongotMetricsVolume: "/var/lib/mongot/metrics",

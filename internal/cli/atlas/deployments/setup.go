@@ -201,8 +201,8 @@ func (opts *SetupOpts) Run(_ context.Context) error {
 	return opts.Print(map[string]string{"ConnectionString": fmt.Sprintf("mongodb://localhost:%d", opts.port)})
 }
 
-// atlas local start.
-func StartBuilder() *cobra.Command {
+// atlas deployments setup.
+func SetupBuilder() *cobra.Command {
 	opts := &SetupOpts{}
 	cmd := &cobra.Command{
 		Use:   "setup <clusterName>",

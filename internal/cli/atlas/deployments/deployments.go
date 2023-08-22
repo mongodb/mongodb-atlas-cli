@@ -15,18 +15,21 @@
 package deployments
 
 import (
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "deployments"
 	cmd := &cobra.Command{
-		Hidden: true,
-		Use:    "deployments",
-		Short:  "Manage Atlas and local deployments.",
+		Hidden:  true,
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage Atlas and local deployments.",
 	}
 
 	cmd.AddCommand(
-		StartBuilder(),
+		SetupBuilder(),
 	)
 
 	return cmd

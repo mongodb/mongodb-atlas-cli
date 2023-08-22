@@ -39,11 +39,10 @@ type combinedStore interface {
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	projectID string
-	store     combinedStore
-	fs        afero.Fs
-	path      string
-	policy    *atlasv2.DataProtectionSettings
+	store  combinedStore
+	fs     afero.Fs
+	path   string
+	policy *atlasv2.DataProtectionSettings
 }
 
 const (
@@ -109,7 +108,7 @@ func (opts *Opts) watcher() (bool, error) {
 }
 
 func (opts *Opts) Run(policyItem *atlasv2.DiskBackupApiPolicyItem) error {
-	result, httpResponse, err := opts.store.UpdatePolicyItem(opts.projectID, policyItem)
+	result, httpResponse, err := opts.store.UpdatePolicyItem(opts.ProjectID, policyItem)
 	if err != nil {
 		if httpResponse != nil && httpResponse.StatusCode == 500 {
 			return fmt.Errorf("%v: %w", errorCode500Template, err)
@@ -145,7 +144,6 @@ func Builder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.projectID = opts.ConfigProjectID()
 			policyItem := &atlasv2.DiskBackupApiPolicyItem{}
 			if err := file.Load(opts.fs, opts.path, policyItem); err != nil {
 				return err

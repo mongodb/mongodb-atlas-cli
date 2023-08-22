@@ -44,6 +44,6 @@ func CompliancePolicyWatcherFactory(projectID string, store store.CompliancePoli
 		if res.GetState() == "" {
 			return false, errInvalidStateField
 		}
-		return (res.GetState() == active), nil
+		return res.GetState() == active, nil
 	}
 }

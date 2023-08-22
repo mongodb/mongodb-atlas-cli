@@ -18,7 +18,6 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -36,10 +35,7 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("copyprotection-compliance-policy")
-	err = enableCompliancePolicy(g.projectID)
-	if err != nil {
-		t.Fatal(fmt.Errorf("unable to enable compliance policy: %w", err))
-	}
+	r.NoError(enableCompliancePolicy(g.projectID))
 
 	cmd := exec.Command(
 		cliPath,

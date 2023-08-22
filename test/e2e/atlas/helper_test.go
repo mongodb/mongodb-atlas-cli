@@ -825,5 +825,5 @@ func enableCompliancePolicy(projectID string) error {
 	)
 	cmd.Env = os.Environ()
 	_, outputErr := cmd.CombinedOutput()
-	return outputErr
+	return fmt.Errorf("executing command unsuccessful: %w", outputErr)
 }

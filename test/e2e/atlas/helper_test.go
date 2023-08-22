@@ -128,6 +128,12 @@ const (
 	e2eSharedMDBVer      = "6.0"
 )
 
+// Backup compliance policy constants.
+
+const (
+	authorizedEmail = "firstname.lastname@example.com"
+)
+
 func deployServerlessInstanceForProject(projectID string) (string, error) {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
@@ -769,4 +775,51 @@ func compareStingsWithHiddenPart(expectedSting, actualString string, specialChar
 		}
 	}
 	return true
+}
+
+// createJSONFile creates a new JSON file at the specified path with the specified data
+// and also registers its deletion on test cleanup.
+func createJSONFile(t *testing.T, data interface{}, path string) {
+	t.Helper()
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		t.Errorf("Error marshaling to JSON: %v", err)
+		return
+	}
+
+	err = os.WriteFile(path, jsonData, 0600)
+	if err != nil {
+		t.Errorf("Error writing JSON to file: %v", err)
+		return
+	}
+
+	t.Cleanup(func() {
+		if err := os.Remove(path); err != nil {
+			t.Errorf("Error deleting file: %v", err)
+		}
+	})
+}
+
+func enableCompliancePolicy(projectID string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return fmt.Errorf("%w: invalid bin", err)
+	}
+	cmd := exec.Command(cliPath,
+		backupsEntity,
+		compliancepolicyEntity,
+		"enable",
+		"--projectId",
+		projectID,
+		"--authorizedEmail",
+		authorizedEmail,
+		"-o=json",
+		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
+	)
+	cmd.Env = os.Environ()
+	output, outputErr := cmd.CombinedOutput()
+	if outputErr != nil {
+		return fmt.Errorf("%w\n %s", outputErr, string(output))
+	}
+	return nil
 }

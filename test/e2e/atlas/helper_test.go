@@ -814,7 +814,7 @@ func enableCompliancePolicy(projectID string) error {
 		"--authorizedEmail",
 		authorizedEmail,
 		"-o=json",
-		"--watch",
+		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 	)
 	cmd.Env = os.Environ()
 	_, outputErr := cmd.CombinedOutput()

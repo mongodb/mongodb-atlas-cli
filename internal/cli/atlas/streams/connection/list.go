@@ -59,7 +59,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas streams connection list <instance> [--projectId projectId].
+// atlas streams connection list --instance <instanceName> [--projectId projectId].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -67,9 +67,9 @@ func ListBuilder() *cobra.Command {
 		Short:   "Returns all Atlas Streams connections from your Atlas streams instance.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
-		Args:    require.ExactArgs(1),
+		Args:    require.ExactArgs(0),
 		Example: `# list all connections within ExampleInstance:
-atlas streams connection list ExampleInstance
+atlas streams connection list --instance ExampleInstance
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -79,13 +79,13 @@ atlas streams connection list ExampleInstance
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.streamsInstance = args[0]
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().StringVarP(&opts.streamsInstance, flag.Instance, flag.InstanceShort, "", usage.StreamsInstance)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd

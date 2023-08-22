@@ -64,6 +64,6 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output},
+		[]string{flag.ProjectID, flag.Output, flag.Instance},
 	)
 }

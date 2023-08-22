@@ -21,11 +21,6 @@ import (
 	"strconv"
 )
 
-type Opts struct {
-	Debug     bool
-	OutWriter io.Writer
-}
-
 type RunContainerOpts struct {
 	Detach   bool
 	Image    string
@@ -50,27 +45,44 @@ type Container struct {
 	} `json:"Ports,omitempty"`
 }
 
-func (o *Opts) runPodman(arg ...string) ([]byte, error) {
+type Client interface {
+	CreateNetwork(name string) ([]byte, error)
+	CreateVolume(name string) ([]byte, error)
+	RunContainer(opts RunContainerOpts) ([]byte, error)
+	CopyFileToContainer(localFile string, containerName string, filePathInContainer string) ([]byte, error)
+	StopContainers(names ...string) ([]byte, error)
+	RemoveContainers(names ...string) ([]byte, error)
+	RemoveVolumes(names ...string) ([]byte, error)
+	RemoveNetworks(names ...string) ([]byte, error)
+	ListContainers(nameFilter string) ([]Container, error)
+}
+
+type client struct {
+	debug     bool
+	outWriter io.Writer
+}
+
+func (o *client) runPodman(arg ...string) ([]byte, error) {
 	cmd := exec.Command("podman", arg...)
 
 	output, err := cmd.CombinedOutput()
 
-	if o.Debug {
-		_, _ = o.OutWriter.Write(output)
+	if o.debug {
+		_, _ = o.outWriter.Write(output)
 	}
 
 	return output, err
 }
 
-func (o *Opts) CreateNetwork(name string) ([]byte, error) {
+func (o *client) CreateNetwork(name string) ([]byte, error) {
 	return o.runPodman("network", "create", name)
 }
 
-func (o *Opts) CreateVolume(name string) ([]byte, error) {
+func (o *client) CreateVolume(name string) ([]byte, error) {
 	return o.runPodman("volume", "create", name)
 }
 
-func (o *Opts) RunContainer(opts RunContainerOpts) ([]byte, error) {
+func (o *client) RunContainer(opts RunContainerOpts) ([]byte, error) {
 	arg := []string{"run",
 		"--name", opts.Name,
 		"--hostname", opts.Hostname,
@@ -100,27 +112,27 @@ func (o *Opts) RunContainer(opts RunContainerOpts) ([]byte, error) {
 	return o.runPodman(arg...)
 }
 
-func (o *Opts) CopyFileToContainer(localFile string, containerName string, filePathInContainer string) ([]byte, error) {
+func (o *client) CopyFileToContainer(localFile string, containerName string, filePathInContainer string) ([]byte, error) {
 	return o.runPodman("cp", localFile, containerName+":"+filePathInContainer)
 }
 
-func (o *Opts) StopContainers(names ...string) ([]byte, error) {
+func (o *client) StopContainers(names ...string) ([]byte, error) {
 	return o.runPodman(append([]string{"stop"}, names...)...)
 }
 
-func (o *Opts) RemoveContainers(names ...string) ([]byte, error) {
+func (o *client) RemoveContainers(names ...string) ([]byte, error) {
 	return o.runPodman(append([]string{"rm", "-f"}, names...)...)
 }
 
-func (o *Opts) RemoveVolumes(names ...string) ([]byte, error) {
+func (o *client) RemoveVolumes(names ...string) ([]byte, error) {
 	return o.runPodman(append([]string{"volume", "rm"}, names...)...)
 }
 
-func (o *Opts) RemoveNetworks(names ...string) ([]byte, error) {
+func (o *client) RemoveNetworks(names ...string) ([]byte, error) {
 	return o.runPodman(append([]string{"network", "rm"}, names...)...)
 }
 
-func (o *Opts) ListContainers(nameFilter string) ([]Container, error) {
+func (o *client) ListContainers(nameFilter string) ([]Container, error) {
 	response, err := o.runPodman("ps", "--all", "--format", "json", "--filter", "name="+nameFilter)
 	if err != nil {
 		return nil, err
@@ -129,4 +141,11 @@ func (o *Opts) ListContainers(nameFilter string) ([]Container, error) {
 	var containers []Container
 	err = json.Unmarshal(response, &containers)
 	return containers, err
+}
+
+func NewClient(debug bool, outWriter io.Writer) Client {
+	return &client{
+		debug:     debug,
+		outWriter: outWriter,
+	}
 }

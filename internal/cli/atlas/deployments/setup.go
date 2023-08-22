@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"regexp"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -30,14 +31,16 @@ import (
 )
 
 const (
-	startHostPort          = 37017
-	internalMongodPort     = 27017
-	internalMongotPort     = 27027
-	localCluster           = "LOCAL"
-	mdb6                   = "6.0"
-	InternalMongodHostname = "mongod"
-	InternalMongotHostname = "mongot"
-	ReplicaSetName         = "rs-localdev"
+	startHostPort        = 37017
+	internalMongodPort   = 27017
+	internalMongotPort   = 27027
+	localCluster         = "LOCAL"
+	mdb6                 = "6.0"
+	mongodHostnamePrefix = "mongod"
+	mongotHostnamePrefix = "mongot"
+	replicaSetName       = "rs-localdev"
+	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
+	clusterNamePattern = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 )
 
 type SetupOpts struct {
@@ -54,37 +57,33 @@ const startTemplate = `local environment started at {{.ConnectionString}}
 `
 
 func (opts *SetupOpts) createLocalDeployment() error {
-	podmanOpts := &podman.Opts{
-		Debug:     opts.debug,
-		OutWriter: opts.OutWriter,
-	}
+	podmanOpts := podman.NewClient(opts.debug, opts.OutWriter)
 
-	containers, errList := podmanOpts.ListContainers(InternalMongodHostname)
+	containers, errList := podmanOpts.ListContainers(mongodHostnamePrefix)
 	if errList != nil {
 		return errList
-	}
-
-	mongodContainerName := fmt.Sprintf("%s-%s", InternalMongodHostname, opts.deploymentName)
-	mongotContainerName := fmt.Sprintf("%s-%s", InternalMongotHostname, opts.deploymentName)
-
-	for _, c := range containers {
-		for _, n := range c.Names {
-			if n == mongodContainerName {
-				return fmt.Errorf("\"%s\" deployment was already created and is currently in \"%s\" state", opts.deploymentName, c.State)
-			}
-		}
 	}
 
 	if opts.port == 0 {
 		opts.port = getPortForNewLocalCluster(containers)
 	}
 
-	networkName := fmt.Sprintf("mdb-local-%s", opts.deploymentName)
-	if _, err := podmanOpts.CreateNetwork(networkName); err != nil {
+	if err := opts.validateLocalDeploymentsSettings(containers); err != nil {
 		return err
 	}
 
-	// setup mongod
+	if _, err := podmanOpts.CreateNetwork(opts.networkName()); err != nil {
+		return err
+	}
+
+	if err := opts.configureMongod(podmanOpts); err != nil {
+		return nil
+	}
+
+	return opts.configureMongot(podmanOpts)
+}
+
+func (opts *SetupOpts) configureMongod(podmanOpts podman.Client) error {
 	mongodDataVolume := fmt.Sprintf("mongod-local-data-%s", opts.deploymentName)
 	if _, err := podmanOpts.CreateVolume(mongodDataVolume); err != nil {
 		return err
@@ -94,21 +93,21 @@ func (opts *SetupOpts) createLocalDeployment() error {
 		podman.RunContainerOpts{
 			Detach:   true,
 			Image:    fmt.Sprintf("mongodb/mongodb-enterprise-server:%s-ubi8", opts.mdbVersion),
-			Name:     mongodContainerName,
-			Hostname: mongodContainerName,
+			Name:     opts.mongodHostname(),
+			Hostname: opts.mongodHostname(),
 			Volumes: map[string]string{
 				mongodDataVolume: "/data/db",
 			},
 			Ports: map[int]int{
 				opts.port: internalMongodPort,
 			},
-			Network: networkName,
+			Network: opts.networkName(),
 			Args: []string{
 				"--noauth",
 				"--dbpath", "/data/db",
-				"--replSet", ReplicaSetName,
-				"--setParameter", fmt.Sprintf("mongotHost=%s:%d", mongotContainerName, internalMongotPort),
-				"--setParameter", fmt.Sprintf("searchIndexManagementHostAndPort=%s:%d", mongotContainerName, internalMongotPort),
+				"--replSet", replicaSetName,
+				"--setParameter", fmt.Sprintf("mongotHost=%s:%d", opts.mongotHostname(), internalMongotPort),
+				"--setParameter", fmt.Sprintf("searchIndexManagementHostAndPort=%s:%d", opts.mongotHostname(), internalMongotPort),
 				"--setParameter", "skipAuthenticationToMongot=true",
 			},
 		}); err != nil {
@@ -130,15 +129,14 @@ func (opts *SetupOpts) createLocalDeployment() error {
 		  members: [{ _id: 0, host: "%s:%d", horizons: { external: "localhost:%d" } }],
 		});
 	  }`,
-		ReplicaSetName,
-		mongodContainerName,
+		replicaSetName,
+		opts.mongodHostname(),
 		internalMongodPort,
 		opts.port)
-	if err := opts.seed(opts.port, seedRs); err != nil {
-		return err
-	}
+	return opts.seed(opts.port, seedRs)
+}
 
-	// setup mongot
+func (opts *SetupOpts) configureMongot(podmanOpts podman.Client) error {
 	mongotDataVolume := fmt.Sprintf("mongot-local-data-%s", opts.deploymentName)
 	if _, err := podmanOpts.CreateVolume(mongotDataVolume); err != nil {
 		return err
@@ -152,14 +150,14 @@ func (opts *SetupOpts) createLocalDeployment() error {
 	_, err := podmanOpts.RunContainer(podman.RunContainerOpts{
 		Detach:   true,
 		Image:    "mongodb/apix_test:mongot-noauth",
-		Name:     mongotContainerName,
-		Hostname: mongotContainerName,
-		Args:     []string{"--mongodHostAndPort", fmt.Sprintf("%s:%d", mongodContainerName, internalMongodPort)},
+		Name:     opts.mongotHostname(),
+		Hostname: opts.mongotHostname(),
+		Args:     []string{"--mongodHostAndPort", fmt.Sprintf("%s:%d", opts.mongodHostname(), internalMongodPort)},
 		Volumes: map[string]string{
 			mongotDataVolume:    "/var/lib/mongot",
 			mongotMetricsVolume: "/var/lib/mongot/metrics",
 		},
-		Network: networkName,
+		Network: opts.networkName(),
 	})
 
 	return err
@@ -171,6 +169,41 @@ func connString(port int) string {
 
 func (opts *SetupOpts) seed(port int, script string) error {
 	return mongosh.Exec(opts.debug, connString(port), "--eval", script)
+}
+
+func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []podman.Container) error {
+	if matched, _ := regexp.MatchString(clusterNamePattern, opts.deploymentName); !matched {
+		return fmt.Errorf("%s is not a valid clusterName", opts.deploymentName)
+	}
+
+	mongodContainerName := opts.mongodHostname()
+	for _, c := range containers {
+		for _, n := range c.Names {
+			if n == mongodContainerName {
+				return fmt.Errorf("\"%s\" deployment was already created and is currently in \"%s\" state", opts.deploymentName, c.State)
+			}
+		}
+
+		for _, p := range c.Ports {
+			if p.HostPort == opts.port {
+				return fmt.Errorf("port %d is already used by \"%s\" local deployment", opts.port, c.Names[0])
+			}
+		}
+	}
+
+	return nil
+}
+
+func (opts *SetupOpts) mongodHostname() string {
+	return fmt.Sprintf("%s-%s", mongodHostnamePrefix, opts.deploymentName)
+}
+
+func (opts *SetupOpts) mongotHostname() string {
+	return fmt.Sprintf("%s-%s", mongotHostnamePrefix, opts.deploymentName)
+}
+
+func (opts *SetupOpts) networkName() string {
+	return fmt.Sprintf("mdb-local-%s", opts.deploymentName)
 }
 
 func (opts *SetupOpts) waitConnection(port int) error {
@@ -224,7 +257,7 @@ func SetupBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.deploymentType, flag.TypeFlag, "LOCAL", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.deploymentType, flag.TypeFlag, localCluster, usage.DeploymentType)
 	cmd.Flags().IntVar(&opts.port, flag.Port, 0, usage.MongodPort)
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, mdb6, usage.MDBVersion)
 

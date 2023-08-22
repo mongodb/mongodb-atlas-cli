@@ -32,11 +32,12 @@ import (
 type SetupOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	policy  *atlasv2.DataProtectionSettings
-	store   store.CompliancePolicy
-	fs      afero.Fs
-	path    string
-	confirm bool
+	policy      *atlasv2.DataProtectionSettings
+	store       store.CompliancePolicy
+	fs          afero.Fs
+	path        string
+	confirm     bool
+	EnableWatch bool
 }
 
 var setupWatchTemplate = `Your backup compliance policy has been set up with the following configuration:

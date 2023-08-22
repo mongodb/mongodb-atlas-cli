@@ -54,31 +54,30 @@ func TestSetupCompliancePolicy(t *testing.T) {
 
 	createJSONFile(t, policy, path)
 
-	t.Run("happy flow", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			backupsEntity,
-			compliancepolicyEntity,
-			"setup",
-			"--projectId",
-			g.projectID,
-			"-o=json",
-			"--force",
-			"--file",
-			path,
-			"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
-		)
+	cmd := exec.Command(cliPath,
+		backupsEntity,
+		compliancepolicyEntity,
+		"setup",
+		"--projectId",
+		g.projectID,
+		"-o=json",
+		"--force",
+		"--file",
+		path,
+		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
+	)
 
-		cmd.Env = os.Environ()
-		resp, outputErr := cmd.CombinedOutput()
+	cmd.Env = os.Environ()
+	resp, outputErr := cmd.CombinedOutput()
 
-		trimmedResponse := removeDotsFromWatching(resp)
+	trimmedResponse := removeDotsFromWatching(resp)
 
-		r.NoError(outputErr, string(resp))
-		a := assert.New(t)
+	r.NoError(outputErr, string(resp))
+	a := assert.New(t)
 
-		var result atlasv2.DataProtectionSettings
-		require.NoError(t, json.Unmarshal(trimmedResponse, &result), trimmedResponse)
-		a.Len(result.GetScheduledPolicyItems(), 1)
-		a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
-	})
+	var result atlasv2.DataProtectionSettings
+	require.NoError(t, json.Unmarshal(trimmedResponse, &result), trimmedResponse)
+	a.Len(result.GetScheduledPolicyItems(), 1)
+	a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
+
 }

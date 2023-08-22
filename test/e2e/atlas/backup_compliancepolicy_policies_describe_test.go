@@ -41,24 +41,23 @@ func TestPoliciesDescribe(t *testing.T) {
 		t.Fatal(fmt.Errorf("unable to enable compliance policy: %w", err))
 	}
 
-	t.Run("happy flow", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			backupsEntity,
-			compliancepolicyEntity,
-			policiesEntity,
-			"describe",
-			"--projectId",
-			g.projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, outputErr := cmd.CombinedOutput()
+	cmd := exec.Command(cliPath,
+		backupsEntity,
+		compliancepolicyEntity,
+		policiesEntity,
+		"describe",
+		"--projectId",
+		g.projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, outputErr := cmd.CombinedOutput()
 
-		r.NoError(outputErr, string(resp))
+	r.NoError(outputErr, string(resp))
 
-		a := assert.New(t)
-		var result atlasv2.DataProtectionSettings
-		err = json.Unmarshal(resp, &result)
-		a.NoError(err, string(resp))
-		a.NotEmpty(result)
-	})
+	a := assert.New(t)
+	var result atlasv2.DataProtectionSettings
+	err = json.Unmarshal(resp, &result)
+	a.NoError(err, string(resp))
+	a.NotEmpty(result)
+
 }

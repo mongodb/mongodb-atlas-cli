@@ -221,7 +221,7 @@ func StartBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.deploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.deploymentType, flag.TypeFlag, "LOCAL", usage.DeploymentType)
 	cmd.Flags().IntVar(&opts.port, flag.Port, 0, usage.MongodPort)
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, mdb6, usage.MDBVersion)
 

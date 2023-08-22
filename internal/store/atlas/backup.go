@@ -48,11 +48,6 @@ func (s *Store) UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProte
 	return result, err
 }
 
-func (s *Store) UpdateCompliancePolicyAndGetResponse(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, *http.Response, error) {
-	result, httpResp, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, opts).Execute()
-	return result, httpResp, err
-}
-
 func (s *Store) UpdatePolicyItem(projectID string, policyItem *atlasv2.DiskBackupApiPolicyItem) (*atlasv2.DataProtectionSettings, *http.Response, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {

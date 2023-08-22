@@ -16,10 +16,10 @@ package update
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/watcher"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -43,7 +43,12 @@ type Opts struct {
 	store     combinedStore
 	fs        afero.Fs
 	path      string
+	policy    *atlasv2.DataProtectionSettings
 }
+
+const (
+	active = "ACTIVE"
+)
 
 var updateTemplate = `Your backup compliance policy is being updated with the following policies:
 
@@ -91,6 +96,18 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 	}
 }
 
+func (opts *Opts) watcher() (bool, error) {
+	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
+	opts.policy = res
+	if err != nil {
+		return false, err
+	}
+	if res.GetState() == "" {
+		return false, errors.New("could not access State field")
+	}
+	return res.GetState() == active, nil
+}
+
 func (opts *Opts) Run(policyItem *atlasv2.DiskBackupApiPolicyItem) error {
 	result, httpResponse, err := opts.store.UpdatePolicyItem(opts.projectID, policyItem)
 	if err != nil {
@@ -101,8 +118,7 @@ func (opts *Opts) Run(policyItem *atlasv2.DiskBackupApiPolicyItem) error {
 	}
 
 	if opts.EnableWatch {
-		watcher := watcher.CompliancePolicyWatcherFactory(opts.projectID, opts.store, result)
-		err := opts.Watch(watcher)
+		err := opts.Watch(opts.watcher)
 		if err != nil {
 			return fmt.Errorf("received an error while watching for completion: %w", err)
 		}

@@ -14,19 +14,33 @@
 
 //go:build unit
 
-package compliancepolicy
+package encryptionatrest
 
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
+
+type mockCombinedStore struct {
+	*mocks.MockCompliancePolicyDescriber
+	*mocks.MockCompliancePolicyEncryptionAtRestUpdater
+}
+
+func newMockCombinedStore(ctrl *gomock.Controller) *mockCombinedStore {
+	return &mockCombinedStore{
+		MockCompliancePolicyDescriber:               mocks.NewMockCompliancePolicyDescriber(ctrl),
+		MockCompliancePolicyEncryptionAtRestUpdater: mocks.NewMockCompliancePolicyEncryptionAtRestUpdater(ctrl),
+	}
+}
 
 func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
-		6,
+		1,
 		[]string{},
 	)
 }

@@ -46,18 +46,15 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 		"-o=json",
 		"--projectId",
 		g.projectID,
-		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 	)
 	cmd.Env = os.Environ()
 	resp, outputErr := cmd.CombinedOutput()
 	r.NoError(outputErr, string(resp))
 
-	trimmedResponse := removeDotsFromWatching(resp)
-
 	a := assert.New(t)
 
 	var compliancepolicy atlasv2.DataProtectionSettings
-	r.NoError(json.Unmarshal(trimmedResponse, &compliancepolicy), string(trimmedResponse))
+	r.NoError(json.Unmarshal(resp, &compliancepolicy), string(resp))
 	a.True(*compliancepolicy.CopyProtectionEnabled)
 
 }

@@ -83,15 +83,14 @@ func TestBackupCompliancePolicyPoliciesUpdate(t *testing.T) {
 		resp, outputErr := cmd.CombinedOutput()
 
 		r.NoError(outputErr, string(resp))
-		a := assert.New(t)
 
 		trimmedResponse := removeDotsFromWatching(resp)
 
 		var result atlasv2.DataProtectionSettings
-		require.NoError(t, json.Unmarshal(trimmedResponse, &result), string(trimmedResponse))
+		r.NoError(json.Unmarshal(trimmedResponse, &result), string(trimmedResponse))
 
 		actual := result.GetOnDemandPolicyItem()
 
-		a.Equal(expected, actual)
+		assert.Equal(t, expected, actual)
 	})
 }

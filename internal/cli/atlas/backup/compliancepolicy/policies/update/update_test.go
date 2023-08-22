@@ -21,6 +21,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
@@ -28,21 +29,21 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-type MockUpdateStore struct {
+type mockUpdateStore struct {
 	*mocks.MockCompliancePolicyDescriber
 	*mocks.MockCompliancePolicyItemUpdater
 	*mocks.MockProjectLister
 }
 
-func NewMockUpdateStore(ctrl *gomock.Controller) *MockUpdateStore {
-	return &MockUpdateStore{
+func newMockUpdateStore(ctrl *gomock.Controller) *mockUpdateStore {
+	return &mockUpdateStore{
 		MockCompliancePolicyDescriber:   mocks.NewMockCompliancePolicyDescriber(ctrl),
 		MockCompliancePolicyItemUpdater: mocks.NewMockCompliancePolicyItemUpdater(ctrl),
 		MockProjectLister:               mocks.NewMockProjectLister(ctrl),
 	}
 }
 
-func TestEnableBuilder(t *testing.T) {
+func TestUpdateBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
@@ -66,22 +67,52 @@ func TestInitStore(t *testing.T) {
 	assert.NotNil(t, opts.store)
 }
 
-func TestEnableOpts_Run(t *testing.T) {
+func TestOpts_Watcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := NewMockUpdateStore(ctrl)
+	mockStore := newMockUpdateStore(ctrl)
 
 	opts := &Opts{
 		store: mockStore,
 	}
 
-	policyItem := atlasv2.NewDiskBackupApiPolicyItem(1, "daily", "days", 1)
+	expected := &atlasv2.DataProtectionSettings{
+		State: atlasv2.PtrString(active),
+	}
+
+	mockStore.MockCompliancePolicyDescriber.
+		EXPECT().
+		DescribeCompliancePolicy(opts.ProjectID).
+		Return(expected, nil).
+		Times(1)
+
+	res, err := opts.watcher()
+	if err != nil {
+		t.Fatalf("Watcher() unexpected error: %v", err)
+	}
+	assert.True(t, res)
+}
+
+func TestOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := newMockUpdateStore(ctrl)
+
+	opts := &Opts{
+		store: mockStore,
+	}
+
+	policyItem := &atlasv2.DiskBackupApiPolicyItem{
+		FrequencyInterval: 1,
+		FrequencyType:     "hourly",
+		RetentionUnit:     "days",
+		RetentionValue:    1,
+	}
 
 	expected := atlasv2.NewDataProtectionSettings()
 
 	mockStore.
 		MockCompliancePolicyItemUpdater.
 		EXPECT().
-		UpdatePolicyItem(opts.projectID, policyItem).
+		UpdatePolicyItem(opts.ProjectID, policyItem).
 		Return(expected, nil, nil).
 		Times(1)
 
@@ -90,10 +121,50 @@ func TestEnableOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
-
-func TestEnableOpts_Run_Fail_code_500(t *testing.T) {
+func TestOpts_WatchRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := NewMockUpdateStore(ctrl)
+	mockStore := newMockUpdateStore(ctrl)
+
+	opts := &Opts{
+		store: mockStore,
+		WatchOpts: cli.WatchOpts{
+			EnableWatch: true,
+		},
+	}
+
+	expected := &atlasv2.DataProtectionSettings{
+		State: atlasv2.PtrString(active),
+	}
+
+	policyItem := &atlasv2.DiskBackupApiPolicyItem{
+		FrequencyInterval: 1,
+		FrequencyType:     "hourly",
+		RetentionUnit:     "days",
+		RetentionValue:    1,
+	}
+
+	mockStore.
+		MockCompliancePolicyItemUpdater.
+		EXPECT().
+		UpdatePolicyItem(opts.ProjectID, policyItem).
+		Return(expected, nil, nil).
+		Times(1)
+	mockStore.MockCompliancePolicyDescriber.
+		EXPECT().
+		DescribeCompliancePolicy(opts.ProjectID).
+		Return(expected, nil).
+		Times(1)
+
+	if err := opts.Run(policyItem); err != nil {
+		t.Fatalf("run() unexpected error: %v", err)
+	}
+
+	test.VerifyOutputTemplate(t, updateWatchTemplate, expected)
+}
+
+func TestOpts_Run_Fail_code_500(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := newMockUpdateStore(ctrl)
 
 	opts := &Opts{
 		store: mockStore,
@@ -110,7 +181,7 @@ func TestEnableOpts_Run_Fail_code_500(t *testing.T) {
 	mockStore.
 		MockCompliancePolicyItemUpdater.
 		EXPECT().
-		UpdatePolicyItem(opts.projectID, policyItem).
+		UpdatePolicyItem(opts.ProjectID, policyItem).
 		Return(nil, httpResponse, mockError).
 		Times(1)
 

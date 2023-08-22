@@ -97,10 +97,10 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 
 func (opts *Opts) watcher() (bool, error) {
 	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
-	opts.policy = res
 	if err != nil {
 		return false, err
 	}
+	opts.policy = res
 	if res.GetState() == "" {
 		return false, errors.New("could not access State field")
 	}
@@ -115,7 +115,7 @@ func (opts *Opts) Run(policyItem *atlasv2.DiskBackupApiPolicyItem) error {
 		}
 		return err
 	}
-
+	opts.policy = result
 	if opts.EnableWatch {
 		err := opts.Watch(opts.watcher)
 		if err != nil {
@@ -123,7 +123,7 @@ func (opts *Opts) Run(policyItem *atlasv2.DiskBackupApiPolicyItem) error {
 		}
 		opts.Template = updateWatchTemplate
 	}
-	return opts.Print(result)
+	return opts.Print(opts.policy)
 }
 
 func Builder() *cobra.Command {

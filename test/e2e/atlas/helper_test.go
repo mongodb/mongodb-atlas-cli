@@ -128,6 +128,12 @@ const (
 	e2eSharedMDBVer      = "6.0"
 )
 
+// Backup compliance policy constants.
+
+const (
+	authorizedEmail = "firstname.lastname@example.com"
+)
+
 func deployServerlessInstanceForProject(projectID string) (string, error) {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
@@ -788,13 +794,29 @@ func createJSONFile(t *testing.T, data interface{}, path string) {
 	}
 
 	t.Cleanup(func() {
-		deleteFile(t, path)
+		if err := os.Remove(path); err != nil {
+			t.Errorf("Error deleting file: %v", err)
+		}
 	})
 }
 
-func deleteFile(t *testing.T, path string) {
-	t.Helper()
-	if err := os.Remove(path); err != nil {
-		t.Errorf("Error deleting file: %v", err)
+func enableCompliancePolicy(projectID string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return fmt.Errorf("%w: invalid bin", err)
 	}
+	cmd := exec.Command(cliPath,
+		backupsEntity,
+		compliancepolicyEntity,
+		"enable",
+		"--projectId",
+		projectID,
+		"--authorizedEmail",
+		authorizedEmail,
+		"-o=json",
+		"--watch",
+	)
+	cmd.Env = os.Environ()
+	_, outputErr := cmd.CombinedOutput()
+	return fmt.Errorf("executing command unsuccessful: %w", outputErr)
 }

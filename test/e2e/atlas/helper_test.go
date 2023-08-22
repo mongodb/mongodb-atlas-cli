@@ -817,6 +817,9 @@ func enableCompliancePolicy(projectID string) error {
 		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 	)
 	cmd.Env = os.Environ()
-	_, outputErr := cmd.CombinedOutput()
-	return fmt.Errorf("executing command unsuccessful: %w", outputErr)
+	output, outputErr := cmd.CombinedOutput()
+	if outputErr != nil {
+		return fmt.Errorf("%w\n %s", outputErr, string(output))
+	}
+	return nil
 }

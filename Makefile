@@ -190,8 +190,13 @@ check-library-owners: ## Check that all the dependencies in go.mod has a owner i
 	@echo "==> Check library_owners.json"
 	go run ./tools/libraryowners/main.go
 
+.PHONY: update-atlas-sdk
+update-atlas-sdk: ## Update the atlas-sdk dependency
+	go install github.com/icholy/gomajor@latest
+	gomajor get go.mongodb.org/atlas-sdk/v20230201001@latest
 
 .PHONY: help
 .DEFAULT_GOAL := help
 help:
 	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+

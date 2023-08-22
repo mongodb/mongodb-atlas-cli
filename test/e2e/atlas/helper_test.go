@@ -23,6 +23,7 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 	"time"
 
@@ -126,6 +127,12 @@ const (
 	e2eClusterProvider   = "AWS" // e2eClusterProvider preferred provider for e2e testing.
 	e2eMDBVer            = "4.4"
 	e2eSharedMDBVer      = "6.0"
+)
+
+// Backup compliance policy constants.
+
+const (
+	authorizedEmail = "firstname.lastname@example.com"
 )
 
 func deployServerlessInstanceForProject(projectID string) (string, error) {
@@ -792,4 +799,31 @@ func createJSONFile(t *testing.T, data interface{}, path string) {
 			t.Errorf("Error deleting file: %v", err)
 		}
 	})
+}
+
+// If we watch a command in a testing environment,
+// the output has some dots in the beginning (depending on how long it took to finish) that need to be removed.
+func removeDotsFromWatching(consoleOutput []byte) []byte {
+	return []byte(strings.TrimLeft(string(consoleOutput), "."))
+}
+
+func enableCompliancePolicy(projectID string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return fmt.Errorf("%w: invalid bin", err)
+	}
+	cmd := exec.Command(cliPath,
+		backupsEntity,
+		compliancepolicyEntity,
+		"enable",
+		"--projectId",
+		projectID,
+		"--authorizedEmail",
+		authorizedEmail,
+		"-o=json",
+		"--watch",
+	)
+	cmd.Env = os.Environ()
+	_, outputErr := cmd.CombinedOutput()
+	return outputErr
 }

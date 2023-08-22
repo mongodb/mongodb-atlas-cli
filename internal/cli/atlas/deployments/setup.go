@@ -208,6 +208,9 @@ func StartBuilder() *cobra.Command {
 		Use:   "setup <clusterName>",
 		Short: "Create a local deployment.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"clusterNameDesc": "Name of the cluster you want to setup.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.deploymentName = args[0]
 

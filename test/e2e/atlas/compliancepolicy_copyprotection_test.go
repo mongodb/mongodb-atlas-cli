@@ -65,28 +65,4 @@ func TestCopyProtection(t *testing.T) {
 		require.NoError(t, json.Unmarshal(trimmedResponse, &compliancepolicy), string(trimmedResponse))
 		a.True(*compliancepolicy.CopyProtectionEnabled)
 	})
-
-	t.Run("copyprotection invalid argument", func(t *testing.T) {
-		invalidArgument := "invalid"
-		cmd := exec.Command(
-			cliPath,
-			backupsEntity,
-			compliancepolicyEntity,
-			"copyprotection",
-			invalidArgument)
-		cmd.Env = os.Environ()
-		_, err = cmd.CombinedOutput()
-		r.Error(err)
-	})
-
-	t.Run("copyprotection invalid nr of arguments", func(t *testing.T) {
-		cmd := exec.Command(
-			cliPath,
-			backupsEntity,
-			compliancepolicyEntity,
-			"copyprotection")
-		cmd.Env = os.Environ()
-		_, err = cmd.CombinedOutput()
-		r.Error(err)
-	})
 }

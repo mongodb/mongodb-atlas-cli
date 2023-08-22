@@ -55,7 +55,7 @@ func TestBackupCompliancePolicyDescribe(t *testing.T) {
 
 	a := assert.New(t)
 	var result atlasv2.DataProtectionSettings
-	require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+	r.NoError(json.Unmarshal(resp, &result), string(resp))
 	a.NotEmpty(result)
 
 }

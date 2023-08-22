@@ -61,7 +61,7 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 	a := assert.New(t)
 
 	var compliancepolicy atlasv2.DataProtectionSettings
-	require.NoError(t, json.Unmarshal(trimmedResponse, &compliancepolicy), string(trimmedResponse))
+	r.NoError(json.Unmarshal(trimmedResponse, &compliancepolicy), string(trimmedResponse))
 	a.True(*compliancepolicy.CopyProtectionEnabled)
 
 }

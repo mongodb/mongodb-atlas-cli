@@ -76,7 +76,7 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 	a := assert.New(t)
 
 	var result atlasv2.DataProtectionSettings
-	require.NoError(t, json.Unmarshal(trimmedResponse, &result), trimmedResponse)
+	r.NoError(json.Unmarshal(trimmedResponse, &result), trimmedResponse)
 	a.Len(result.GetScheduledPolicyItems(), 1)
 	a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
 

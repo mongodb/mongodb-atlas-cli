@@ -23,7 +23,6 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
-	"strings"
 	"testing"
 	"time"
 
@@ -799,12 +798,6 @@ func createJSONFile(t *testing.T, data interface{}, path string) {
 			t.Errorf("Error deleting file: %v", err)
 		}
 	})
-}
-
-// If we watch a command in a testing environment,
-// the output has some dots in the beginning (depending on how long it took to finish) that need to be removed.
-func removeDotsFromWatching(consoleOutput []byte) []byte {
-	return []byte(strings.TrimLeft(string(consoleOutput), "."))
 }
 
 func enableCompliancePolicy(projectID string) error {

@@ -70,11 +70,11 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 	resp, outputErr := cmd.CombinedOutput()
 
 	r.NoError(outputErr, string(resp))
-	a := assert.New(t)
 
 	var result atlasv2.DataProtectionSettings
 	r.NoError(json.Unmarshal(resp, &result), resp)
+
+	a := assert.New(t)
 	a.Len(result.GetScheduledPolicyItems(), 1)
 	a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
-
 }

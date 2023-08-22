@@ -35,7 +35,6 @@ func TestBackupCompliancePolicyDescribe(t *testing.T) {
 
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("describe-compliance-policy")
-	err = enableCompliancePolicy(g.projectID)
 	r.NoError(enableCompliancePolicy(g.projectID))
 
 	cmd := exec.Command(cliPath,
@@ -50,9 +49,9 @@ func TestBackupCompliancePolicyDescribe(t *testing.T) {
 
 	r.NoError(outputErr, string(resp))
 
-	a := assert.New(t)
 	var result atlasv2.DataProtectionSettings
 	r.NoError(json.Unmarshal(resp, &result), string(resp))
-	a.NotEmpty(result)
 
+	a := assert.New(t)
+	a.NotEmpty(result)
 }

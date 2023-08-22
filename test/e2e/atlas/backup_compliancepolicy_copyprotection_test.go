@@ -51,10 +51,9 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 	resp, outputErr := cmd.CombinedOutput()
 	r.NoError(outputErr, string(resp))
 
-	a := assert.New(t)
-
 	var compliancepolicy atlasv2.DataProtectionSettings
 	r.NoError(json.Unmarshal(resp, &compliancepolicy), string(resp))
-	a.True(*compliancepolicy.CopyProtectionEnabled)
 
+	a := assert.New(t)
+	a.True(*compliancepolicy.CopyProtectionEnabled)
 }

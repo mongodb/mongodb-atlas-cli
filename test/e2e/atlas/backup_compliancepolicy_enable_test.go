@@ -53,7 +53,5 @@ func TestBackupCompliancePolicyEnable(t *testing.T) {
 	r.NoError(json.Unmarshal(resp, &result), string(resp))
 
 	a := assert.New(t)
-
 	a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
-
 }

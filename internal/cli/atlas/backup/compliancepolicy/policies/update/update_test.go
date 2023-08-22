@@ -120,6 +120,7 @@ func TestOpts_Run(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, updateTemplate, expected)
 }
 func TestOpts_WatchRun(t *testing.T) {
 	ctrl := gomock.NewController(t)

@@ -19,6 +19,7 @@ import (
 	"errors"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
@@ -31,7 +32,7 @@ type DisableOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	policy *atlasv2.DataProtectionSettings
-	store  combinedStore
+	store  store.CompliancePolicyEncryptionAtRestDisabler
 }
 
 var disableWatchTemplate = `Encryption at rest has been disabled.
@@ -61,7 +62,7 @@ func (opts *DisableOpts) watcher() (bool, error) {
 }
 
 func (opts *DisableOpts) Run() error {
-	res, err := opts.store.UpdateEncryptionAtRest(opts.ConfigProjectID(), false)
+	res, err := opts.store.DisableEncryptionAtRest(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}
@@ -79,9 +80,9 @@ func DisableBuilder() *cobra.Command {
 	opts := new(DisableOpts)
 	use := "disable"
 	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Disable encryption at rest of the backup compliance policy for your project.",
+		Use:   use,
+		Short: "Disable encryption at rest of the backup compliance policy for your project.",
+		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

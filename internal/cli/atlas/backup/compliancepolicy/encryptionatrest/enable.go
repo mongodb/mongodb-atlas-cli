@@ -34,10 +34,10 @@ type EnableOpts struct {
 	store  combinedStore
 }
 
-var outputWatchTemplate = `Encryption at rest has been enabled.
+var enableWatchTemplate = `Encryption at rest has been enabled.
 `
 
-var outputTemplate = `Encryption at rest is being enabled.
+var enableTemplate = `Encryption at rest is being enabled.
 `
 
 func (opts *EnableOpts) initStore(ctx context.Context) func() error {
@@ -70,7 +70,7 @@ func (opts *EnableOpts) Run() error {
 		if err := opts.Watch(opts.watcher); err != nil {
 			return err
 		}
-		opts.Template = outputWatchTemplate
+		opts.Template = enableWatchTemplate
 	}
 	return opts.Print(opts.policy)
 }
@@ -86,7 +86,7 @@ func EnableBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), outputTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), enableTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

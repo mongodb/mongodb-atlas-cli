@@ -108,7 +108,7 @@ func TestEnableOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	assert.True(t, *opts.policy.EncryptionAtRestEnabled)
-	test.VerifyOutputTemplate(t, outputTemplate, expected)
+	test.VerifyOutputTemplate(t, enableTemplate, expected)
 }
 
 func TestEnableOpts_WatchRun(t *testing.T) {
@@ -141,5 +141,5 @@ func TestEnableOpts_WatchRun(t *testing.T) {
 		t.Fatalf("run() unexpected error: %v", err)
 	}
 
-	test.VerifyOutputTemplate(t, outputWatchTemplate, expected)
+	test.VerifyOutputTemplate(t, enableWatchTemplate, expected)
 }

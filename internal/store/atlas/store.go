@@ -18,7 +18,6 @@ package atlas
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -32,8 +31,6 @@ import (
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
-
-var errUnsupportedService = errors.New("unsupported service")
 
 const (
 	yes                   = "yes"

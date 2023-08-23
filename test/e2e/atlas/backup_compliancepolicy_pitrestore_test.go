@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && blabla)
+//go:build e2e || (atlas && backup && compliancepolicy)
 
 package atlas_test
 
@@ -54,7 +54,6 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 	assert.Equal(t, 0, res.GetRestoreWindowDays())
 
 	t.Run("enable", func(t *testing.T) {
-
 		cmd := exec.Command(
 			cliPath,
 			backupsEntity,
@@ -77,5 +76,4 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 		assert.True(t, compliancepolicy.GetPitEnabled())
 		assert.Equal(t, 1, compliancepolicy.GetRestoreWindowDays())
 	})
-
 }

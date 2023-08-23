@@ -20,7 +20,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,EnableEncryptionAtRestStore
+//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,CompliancePolicyEncryptionAtRestEnabler,CompliancePolicyEncryptionAtRestDisabler
 type CompliancePolicyDescriber interface {
 	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error)
 }
@@ -36,8 +36,13 @@ type CompliancePolicy interface {
 	CompliancePolicyUpdater
 }
 
-type EnableEncryptionAtRestStore interface {
+type CompliancePolicyEncryptionAtRestEnabler interface {
 	EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error)
+	CompliancePolicyDescriber
+}
+
+type CompliancePolicyEncryptionAtRestDisabler interface {
+	DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error)
 	CompliancePolicyDescriber
 }
 
@@ -54,13 +59,27 @@ func (s *Store) UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProte
 func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
-		return nil, fmt.Errorf("couldn't update encryption at rest: %w", err)
+		return nil, fmt.Errorf("couldn't enable encryption at rest: %w", err)
 	}
 	compliancePolicy.SetEncryptionAtRestEnabled(true)
 
 	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
 	if err != nil {
-		return nil, fmt.Errorf("couldn't update encryption at rest: %w", err)
+		return nil, fmt.Errorf("couldn't enable encryption at rest: %w", err)
+	}
+	return result, nil
+}
+
+func (s *Store) DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error) {
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	if err != nil {
+		return nil, fmt.Errorf("couldn't disable encryption at rest: %w", err)
+	}
+	compliancePolicy.SetEncryptionAtRestEnabled(false)
+
+	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
+	if err != nil {
+		return nil, fmt.Errorf("couldn't disable encryption at rest: %w", err)
 	}
 	return result, nil
 }

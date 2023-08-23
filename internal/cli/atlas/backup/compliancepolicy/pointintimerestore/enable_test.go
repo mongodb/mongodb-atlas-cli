@@ -77,16 +77,16 @@ func TestEnableOpts_Watcher(t *testing.T) {
 func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCompliancePolicyPointInTimeRestoresEnabler(ctrl)
-	encryptionAtRestBefore := false
-	encryptionAtRestAfter := true
+	pointInTimeRestoreBefore := false
+	pointInTimeRestoreAfter := true
 
 	initial := &atlasv2.DataProtectionSettings{
-		EncryptionAtRestEnabled: &encryptionAtRestBefore,
+		EncryptionAtRestEnabled: &pointInTimeRestoreBefore,
 	}
 
 	expected := &atlasv2.DataProtectionSettings{
 		State:                   atlasv2.PtrString(active),
-		EncryptionAtRestEnabled: &encryptionAtRestAfter,
+		EncryptionAtRestEnabled: &pointInTimeRestoreAfter,
 	}
 
 	opts := &EnableOpts{

@@ -81,12 +81,12 @@ func TestEnableOpts_Run(t *testing.T) {
 	pointInTimeRestoreAfter := true
 
 	initial := &atlasv2.DataProtectionSettings{
-		EncryptionAtRestEnabled: &pointInTimeRestoreBefore,
+		PitEnabled: &pointInTimeRestoreBefore,
 	}
 
 	expected := &atlasv2.DataProtectionSettings{
-		State:                   atlasv2.PtrString(active),
-		EncryptionAtRestEnabled: &pointInTimeRestoreAfter,
+		State:      atlasv2.PtrString(active),
+		PitEnabled: &pointInTimeRestoreAfter,
 	}
 
 	opts := &EnableOpts{
@@ -101,12 +101,12 @@ func TestEnableOpts_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	assert.False(t, *opts.policy.EncryptionAtRestEnabled)
+	assert.False(t, *opts.policy.PitEnabled)
 
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	assert.True(t, *opts.policy.EncryptionAtRestEnabled)
+	assert.True(t, *opts.policy.PitEnabled)
 	test.VerifyOutputTemplate(t, enableTemplate, expected)
 }
 

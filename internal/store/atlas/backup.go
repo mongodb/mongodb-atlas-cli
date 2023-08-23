@@ -51,13 +51,13 @@ func (s *Store) UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProte
 func (s *Store) EnablePointInTimeRestore(projectID string, restoreWindowDays int) (*atlasv2.DataProtectionSettings, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
-		return nil, fmt.Errorf("couldn't update point in time restore: %w", err)
+		return nil, fmt.Errorf("couldn't enable point in time restore: %w", err)
 	}
 	compliancePolicy.SetRestoreWindowDays(restoreWindowDays)
 	compliancePolicy.SetPitEnabled(true)
 	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
 	if err != nil {
-		return nil, fmt.Errorf("couldn't update point in time restore: %w", err)
+		return nil, fmt.Errorf("couldn't enable point in time restore: %w", err)
 	}
 	return result, nil
 }

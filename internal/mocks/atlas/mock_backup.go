@@ -5,7 +5,6 @@
 package atlas
 
 import (
-	http "net/http"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -158,13 +157,12 @@ func (mr *MockCompliancePolicyPoliciesUpdaterMockRecorder) Projects(arg0 interfa
 }
 
 // UpdatePolicyItem mocks base method.
-func (m *MockCompliancePolicyPoliciesUpdater) UpdatePolicyItem(arg0 string, arg1 *admin.DiskBackupApiPolicyItem) (*admin.DataProtectionSettings, *http.Response, error) {
+func (m *MockCompliancePolicyPoliciesUpdater) UpdatePolicyItem(arg0 string, arg1 *admin.DiskBackupApiPolicyItem) (*admin.DataProtectionSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdatePolicyItem", arg0, arg1)
 	ret0, _ := ret[0].(*admin.DataProtectionSettings)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // UpdatePolicyItem indicates an expected call of UpdatePolicyItem.

@@ -34,10 +34,10 @@ type DisableOpts struct {
 	store  combinedStore
 }
 
-var disableWatchTemplate = `Encryption at rest has been enabled.
+var disableWatchTemplate = `Encryption at rest has been disabled.
 `
 
-var disableTemplate = `Encryption at rest is being enabled.
+var disableTemplate = `Encryption at rest is being disabled.
 `
 
 func (opts *DisableOpts) initStore(ctx context.Context) func() error {

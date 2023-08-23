@@ -12,21 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
-package compliancepolicy
+package encryptionatrest
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		6,
-		[]string{},
+const (
+	active = "ACTIVE"
+)
+
+func Builder() *cobra.Command {
+	use := "encryptionAtRest"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage Encryption at Rest of the backup compliance policy for your project. Encryption at rest enforces all clusters with a Backup Compliance Policy to use Customer Key Management.",
+	}
+
+	cmd.AddCommand(
+		EnableBuilder(),
 	)
+
+	return cmd
 }

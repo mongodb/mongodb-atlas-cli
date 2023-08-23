@@ -16,7 +16,6 @@ package encryptionatrest
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/spf13/cobra"
 )
 
@@ -24,24 +23,13 @@ const (
 	active = "ACTIVE"
 )
 
-type combinedStore interface {
-	store.CompliancePolicyEncryptionAtRestUpdater
-	store.CompliancePolicyDescriber
-}
-
-func baseCommand() *cobra.Command {
-	const use = "encryptionAtRest"
+func Builder() *cobra.Command {
+	use := "encryptionAtRest"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage Encryption at Rest of the backup compliance policy for your project. Encryption at rest enforces all clusters with a Backup Compliance Policy to use Customer Key Management.",
 	}
-
-	return cmd
-}
-
-func Builder() *cobra.Command {
-	cmd := baseCommand()
 
 	cmd.AddCommand(
 		EnableBuilder(),

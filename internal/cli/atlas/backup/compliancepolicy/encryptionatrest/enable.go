@@ -19,6 +19,7 @@ import (
 	"errors"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
@@ -31,13 +32,13 @@ type EnableOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	policy *atlasv2.DataProtectionSettings
-	store  combinedStore
+	store  store.EnableEncryptionAtRestStore
 }
 
-var outputWatchTemplate = `Encryption at rest has been enabled.
+var enableWatchTemplate = `Encryption at rest has been enabled.
 `
 
-var outputTemplate = `Encryption at rest is being enabled.
+var enableTemplate = `Encryption at rest is being enabled.
 `
 
 func (opts *EnableOpts) initStore(ctx context.Context) func() error {
@@ -61,7 +62,7 @@ func (opts *EnableOpts) watcher() (bool, error) {
 }
 
 func (opts *EnableOpts) Run() error {
-	res, err := opts.store.UpdateEncryptionAtRest(opts.ConfigProjectID(), true)
+	res, err := opts.store.EnableEncryptionAtRest(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}
@@ -70,7 +71,7 @@ func (opts *EnableOpts) Run() error {
 		if err := opts.Watch(opts.watcher); err != nil {
 			return err
 		}
-		opts.Template = outputWatchTemplate
+		opts.Template = enableWatchTemplate
 	}
 	return opts.Print(opts.policy)
 }
@@ -79,14 +80,14 @@ func EnableBuilder() *cobra.Command {
 	opts := new(EnableOpts)
 	use := "enable"
 	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Enable encryption at rest of the backup compliance policy for your project.",
+		Use:   use,
+		Args:  require.NoArgs,
+		Short: "Enable encryption at rest of the backup compliance policy for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), outputTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), enableTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

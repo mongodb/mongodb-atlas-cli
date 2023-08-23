@@ -12,21 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
-package encryptionatrest
+package deployments
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		2,
-		[]string{},
+func Builder() *cobra.Command {
+	const use = "deployments"
+	cmd := &cobra.Command{
+		Hidden:  true,
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage Atlas and local deployments.",
+	}
+
+	cmd.AddCommand(
+		SetupBuilder(),
 	)
+
+	return cmd
 }

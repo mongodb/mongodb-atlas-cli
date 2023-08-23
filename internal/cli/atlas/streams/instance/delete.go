@@ -70,7 +70,6 @@ An Atlas Streams processor instance with running processors cannot be deleted wi
 			"nameDesc": "Name of the Atlas Streams instance.",
 			"output":   opts.SuccessMessage(),
 		},
-		ValidArgs: []string{"name"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				return errors.New("the Atlas Streams Processor instance name is missing")

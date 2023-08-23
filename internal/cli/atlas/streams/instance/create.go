@@ -16,7 +16,6 @@ package instance
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -73,26 +72,18 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create [name]...",
+		Use:   "create <name>",
 		Short: "Create an Atlas Stream Processor Instance for your project",
 		Long:  `To get started quickly, specify a name, a cloud provider, and a region to configure an Atlas Streams processor instance.` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  # Deploy an Atlas Streams provider instance called myProcessor for the project with the ID 5e2211c17a3e5a48f5497de3:
   %[1]s streams create myProcessor --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region VIRGINIA_USA`, cli.ExampleAtlasEntryPoint()),
-		Args: require.MaximumNArgs(1),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Name of the Atlas Streams processor instance. The instance name cannot be changed after the processor is created. The name can contain ASCII letters, numbers, and hyphens.",
 			"output":   createTemplate,
 		},
-		ValidArgs: []string{"name"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) == 0 {
-				return errors.New("the Atlas Streams Processor instance name is missing")
-			}
-
-			if len(args) != 0 {
-				opts.name = args[0]
-			}
-
+			opts.name = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),

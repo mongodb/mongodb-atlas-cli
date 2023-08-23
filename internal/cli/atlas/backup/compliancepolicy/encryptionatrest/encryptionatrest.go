@@ -30,7 +30,7 @@ type combinedStore interface {
 }
 
 func baseCommand() *cobra.Command {
-	const use = "encryptionatrest"
+	const use = "encryptionAtRest"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),

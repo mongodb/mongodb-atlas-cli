@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package compliancepolicy
+package pointintimerestore
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/pointintimerestore"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/policies"
 	"github.com/spf13/cobra"
 )
 
@@ -25,29 +23,16 @@ const (
 	active = "ACTIVE"
 )
 
-func baseCommand() *cobra.Command {
-	const use = "compliancePolicy"
+func Builder() *cobra.Command {
+	const use = "pointInTimeRestores"
 	cmd := &cobra.Command{
 		Use:     use,
-		Hidden:  true,
 		Aliases: cli.GenerateAliases(use),
-		Short: `Manage cloud backup compliance policy for your project. Use "atlas backups compliancepolicy setup" to enable backup compliance policy
-		with a full configuration. Use "atlas backups compliancepolicy enable" to enable backup compliance policy without any configuration.`,
+		Short:   "Manage whether the project uses Continuous Cloud Backups with a Backup Compliance Policy. Read more in the documentation: https://www.mongodb.com/docs/atlas/backup/cloud-backup/configure-backup-policy/#configure-the-restore-window.",
 	}
 
-	return cmd
-}
-
-func Builder() *cobra.Command {
-	cmd := baseCommand()
-
 	cmd.AddCommand(
-		SetupBuilder(),
 		EnableBuilder(),
-		DescribeBuilder(),
-		policies.Builder(),
-		CopyProtectionBuilder(),
-		pointintimerestore.Builder(),
 	)
 
 	return cmd

@@ -30,16 +30,10 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-type combinedStore interface {
-	store.CompliancePolicyItemUpdater
-	store.ProjectLister
-	store.CompliancePolicyDescriber
-}
-
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	store  combinedStore
+	store  store.CompliancePolicyPoliciesUpdater
 	fs     afero.Fs
 	path   string
 	policy *atlasv2.DataProtectionSettings
@@ -108,9 +102,9 @@ func (opts *Opts) watcher() (bool, error) {
 }
 
 func (opts *Opts) Run(policyItem *atlasv2.DiskBackupApiPolicyItem) error {
-	result, httpResponse, err := opts.store.UpdatePolicyItem(opts.ProjectID, policyItem)
+	result, err := opts.store.UpdatePolicyItem(opts.ProjectID, policyItem)
 	if err != nil {
-		if httpResponse != nil && httpResponse.StatusCode == 500 {
+		if atlasv2.IsErrorCode(err, "500") {
 			return fmt.Errorf("%v: %w", errorCode500Template, err)
 		}
 		return err
@@ -133,7 +127,6 @@ func Builder() *cobra.Command {
 	use := "update"
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: cli.GenerateAliases(use),
 		Short:   "Update the backup compliance policy for your project with a configuration file.",
 		Example: example,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

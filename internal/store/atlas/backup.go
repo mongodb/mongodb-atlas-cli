@@ -17,12 +17,11 @@ package atlas
 import (
 	"errors"
 	"fmt"
-	"net/http"
 
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,CompliancePolicyItemUpdater
+//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,CompliancePolicyPoliciesUpdater
 
 type CompliancePolicyDescriber interface {
 	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error)
@@ -30,9 +29,12 @@ type CompliancePolicyDescriber interface {
 type CompliancePolicyUpdater interface {
 	UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error)
 }
-type CompliancePolicyItemUpdater interface {
-	UpdatePolicyItem(projectID string, policyItem *atlasv2.DiskBackupApiPolicyItem) (*atlasv2.DataProtectionSettings, *http.Response, error)
+type CompliancePolicyPoliciesUpdater interface {
+	UpdatePolicyItem(projectID string, policyItem *atlasv2.DiskBackupApiPolicyItem) (*atlasv2.DataProtectionSettings, error)
+	ProjectLister
+	CompliancePolicyDescriber
 }
+
 type CompliancePolicy interface {
 	CompliancePolicyDescriber
 	CompliancePolicyUpdater
@@ -48,22 +50,22 @@ func (s *Store) UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProte
 	return result, err
 }
 
-func (s *Store) UpdatePolicyItem(projectID string, policyItem *atlasv2.DiskBackupApiPolicyItem) (*atlasv2.DataProtectionSettings, *http.Response, error) {
+func (s *Store) UpdatePolicyItem(projectID string, policyItem *atlasv2.DiskBackupApiPolicyItem) (*atlasv2.DataProtectionSettings, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
-		return nil, nil, fmt.Errorf("couldn't update compliance policy: %w", err)
+		return nil, fmt.Errorf("couldn't update compliance policy: %w", err)
 	}
 
 	err = replaceItem(compliancePolicy, policyItem)
 	if err != nil {
-		return nil, nil, fmt.Errorf("couldn't update compliance policy: %w", err)
+		return nil, fmt.Errorf("couldn't update compliance policy: %w", err)
 	}
 
-	result, httpResp, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
+	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
 	if err != nil {
-		return nil, nil, fmt.Errorf("couldn't update compliance policy: %w", err)
+		return nil, fmt.Errorf("couldn't update compliance policy: %w", err)
 	}
-	return result, httpResp, err
+	return result, err
 }
 
 // replaceItem searches for a DiskBackupApiPolicyItem within the provided DataProtectionSettings by its ID.

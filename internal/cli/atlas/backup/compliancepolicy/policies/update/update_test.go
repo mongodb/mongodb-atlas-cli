@@ -29,20 +29,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-type mockUpdateStore struct {
-	*mocks.MockCompliancePolicyDescriber
-	*mocks.MockCompliancePolicyItemUpdater
-	*mocks.MockProjectLister
-}
-
-func newMockUpdateStore(ctrl *gomock.Controller) *mockUpdateStore {
-	return &mockUpdateStore{
-		MockCompliancePolicyDescriber:   mocks.NewMockCompliancePolicyDescriber(ctrl),
-		MockCompliancePolicyItemUpdater: mocks.NewMockCompliancePolicyItemUpdater(ctrl),
-		MockProjectLister:               mocks.NewMockProjectLister(ctrl),
-	}
-}
-
 func TestUpdateBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
@@ -69,7 +55,7 @@ func TestInitStore(t *testing.T) {
 
 func TestOpts_Watcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := newMockUpdateStore(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyPoliciesUpdater(ctrl)
 
 	opts := &Opts{
 		store: mockStore,
@@ -79,7 +65,7 @@ func TestOpts_Watcher(t *testing.T) {
 		State: atlasv2.PtrString(active),
 	}
 
-	mockStore.MockCompliancePolicyDescriber.
+	mockStore.
 		EXPECT().
 		DescribeCompliancePolicy(opts.ProjectID).
 		Return(expected, nil).
@@ -94,7 +80,7 @@ func TestOpts_Watcher(t *testing.T) {
 
 func TestOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := newMockUpdateStore(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyPoliciesUpdater(ctrl)
 
 	opts := &Opts{
 		store: mockStore,
@@ -110,7 +96,6 @@ func TestOpts_Run(t *testing.T) {
 	expected := atlasv2.NewDataProtectionSettings()
 
 	mockStore.
-		MockCompliancePolicyItemUpdater.
 		EXPECT().
 		UpdatePolicyItem(opts.ProjectID, policyItem).
 		Return(expected, nil, nil).
@@ -124,7 +109,7 @@ func TestOpts_Run(t *testing.T) {
 }
 func TestOpts_WatchRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := newMockUpdateStore(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyPoliciesUpdater(ctrl)
 
 	opts := &Opts{
 		store: mockStore,
@@ -145,12 +130,11 @@ func TestOpts_WatchRun(t *testing.T) {
 	}
 
 	mockStore.
-		MockCompliancePolicyItemUpdater.
 		EXPECT().
 		UpdatePolicyItem(opts.ProjectID, policyItem).
 		Return(expected, nil, nil).
 		Times(1)
-	mockStore.MockCompliancePolicyDescriber.
+	mockStore.
 		EXPECT().
 		DescribeCompliancePolicy(opts.ProjectID).
 		Return(expected, nil).
@@ -165,7 +149,7 @@ func TestOpts_WatchRun(t *testing.T) {
 
 func TestOpts_Run_Fail_code_500(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := newMockUpdateStore(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyPoliciesUpdater(ctrl)
 
 	opts := &Opts{
 		store: mockStore,
@@ -180,7 +164,6 @@ func TestOpts_Run_Fail_code_500(t *testing.T) {
 	mockError := errors.New("network error")
 
 	mockStore.
-		MockCompliancePolicyItemUpdater.
 		EXPECT().
 		UpdatePolicyItem(opts.ProjectID, policyItem).
 		Return(nil, httpResponse, mockError).

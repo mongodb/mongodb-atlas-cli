@@ -23,8 +23,10 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
@@ -43,17 +45,14 @@ func TestEnableBuilder(t *testing.T) {
 
 func TestEnableOpts_InitStore(t *testing.T) {
 	opts := &EnableOpts{}
-	ctx := context.Background()
 
-	if err := opts.initStore(ctx)(); err != nil {
-		t.Fatalf("initStore()() unexpected error: %v", err)
-	}
+	require.NoError(t, opts.initStore(context.TODO())())
 	assert.NotNil(t, opts.store)
 }
 
 func TestEnableOpts_Watcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := newMockCombinedStore(ctrl)
+	mockStore := mocks.NewMockEnableEncryptionAtRestStore(ctrl)
 
 	opts := &EnableOpts{
 		store: mockStore,
@@ -63,22 +62,20 @@ func TestEnableOpts_Watcher(t *testing.T) {
 		State: atlasv2.PtrString(active),
 	}
 
-	mockStore.MockCompliancePolicyDescriber.
+	mockStore.
 		EXPECT().
 		DescribeCompliancePolicy(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 
 	res, err := opts.watcher()
-	if err != nil {
-		t.Fatalf("Watcher() unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	assert.True(t, res)
 }
 
 func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := newMockCombinedStore(ctrl)
+	mockStore := mocks.NewMockEnableEncryptionAtRestStore(ctrl)
 	encryptionAtRestBefore := false
 	encryptionAtRestAfter := true
 
@@ -96,9 +93,9 @@ func TestEnableOpts_Run(t *testing.T) {
 		policy: initial,
 	}
 
-	mockStore.MockCompliancePolicyEncryptionAtRestUpdater.
+	mockStore.
 		EXPECT().
-		UpdateEncryptionAtRest(opts.ProjectID, true).
+		EnableEncryptionAtRest(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 
@@ -113,7 +110,7 @@ func TestEnableOpts_Run(t *testing.T) {
 
 func TestEnableOpts_WatchRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := newMockCombinedStore(ctrl)
+	mockStore := mocks.NewMockEnableEncryptionAtRestStore(ctrl)
 
 	opts := &EnableOpts{
 		store: mockStore,
@@ -126,12 +123,12 @@ func TestEnableOpts_WatchRun(t *testing.T) {
 		State: atlasv2.PtrString(active),
 	}
 
-	mockStore.MockCompliancePolicyEncryptionAtRestUpdater.
+	mockStore.
 		EXPECT().
-		UpdateEncryptionAtRest(opts.ProjectID, true).
+		EnableEncryptionAtRest(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
-	mockStore.MockCompliancePolicyDescriber.
+	mockStore.
 		EXPECT().
 		DescribeCompliancePolicy(opts.ProjectID).
 		Return(expected, nil).

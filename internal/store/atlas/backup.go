@@ -20,17 +20,20 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,CompliancePolicyEncryptionAtRestUpdater
+//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,EnableEncryptionAtRestStore
 type CompliancePolicyDescriber interface {
 	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error)
 }
 type CompliancePolicyUpdater interface {
 	UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error)
 }
-type CompliancePolicyEncryptionAtRestUpdater interface {
-	UpdateEncryptionAtRest(projectID string, enable bool) (*atlasv2.DataProtectionSettings, error)
+type CompliancePolicyEncryptionAtRestEnabler interface {
+	EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error)
 }
-
+type EnableEncryptionAtRestStore interface {
+	CompliancePolicyEncryptionAtRestEnabler
+	CompliancePolicyDescriber
+}
 type CompliancePolicy interface {
 	CompliancePolicyDescriber
 	CompliancePolicyUpdater
@@ -46,12 +49,12 @@ func (s *Store) UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProte
 	return result, err
 }
 
-func (s *Store) UpdateEncryptionAtRest(projectID string, enable bool) (*atlasv2.DataProtectionSettings, error) {
+func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, fmt.Errorf("couldn't update encryption at rest: %w", err)
 	}
-	compliancePolicy.SetEncryptionAtRestEnabled(enable)
+	compliancePolicy.SetEncryptionAtRestEnabled(true)
 
 	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
 	if err != nil {

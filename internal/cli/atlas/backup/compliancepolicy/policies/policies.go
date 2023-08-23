@@ -16,6 +16,7 @@ package policies
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/policies/create"
 	"github.com/spf13/cobra"
 )
 
@@ -35,6 +36,7 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		DescribeBuilder(),
+		create.Builder(),
 	)
 
 	return cmd

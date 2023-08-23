@@ -16,8 +16,6 @@ package update
 
 import (
 	"context"
-	"errors"
-	"net/http"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -98,7 +96,7 @@ func TestOpts_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		UpdatePolicyItem(opts.ProjectID, policyItem).
-		Return(expected, nil, nil).
+		Return(expected, nil).
 		Times(1)
 
 	err := opts.Run(policyItem)
@@ -132,7 +130,7 @@ func TestOpts_WatchRun(t *testing.T) {
 	mockStore.
 		EXPECT().
 		UpdatePolicyItem(opts.ProjectID, policyItem).
-		Return(expected, nil, nil).
+		Return(expected, nil).
 		Times(1)
 	mockStore.
 		EXPECT().
@@ -145,30 +143,4 @@ func TestOpts_WatchRun(t *testing.T) {
 	}
 
 	test.VerifyOutputTemplate(t, updateWatchTemplate, expected)
-}
-
-func TestOpts_Run_Fail_code_500(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyPoliciesUpdater(ctrl)
-
-	opts := &Opts{
-		store: mockStore,
-	}
-
-	policyItem := atlasv2.NewDiskBackupApiPolicyItem(1, "daily", "days", 1)
-
-	httpResponse := &http.Response{
-		StatusCode: http.StatusInternalServerError,
-	}
-
-	mockError := errors.New("network error")
-
-	mockStore.
-		EXPECT().
-		UpdatePolicyItem(opts.ProjectID, policyItem).
-		Return(nil, httpResponse, mockError).
-		Times(1)
-
-	err := opts.Run(policyItem)
-	assert.ErrorContains(t, err, errorCode500Template)
 }

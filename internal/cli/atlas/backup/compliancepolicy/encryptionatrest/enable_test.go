@@ -41,7 +41,7 @@ func TestEnableBuilder(t *testing.T) {
 	)
 }
 
-func TestInitStore(t *testing.T) {
+func TestEnableOpts_InitStore(t *testing.T) {
 	opts := &EnableOpts{}
 	ctx := context.Background()
 

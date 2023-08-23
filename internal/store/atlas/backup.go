@@ -27,11 +27,9 @@ type CompliancePolicyDescriber interface {
 type CompliancePolicyUpdater interface {
 	UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error)
 }
-type CompliancePolicyEncryptionAtRestEnabler interface {
-	EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error)
-}
+
 type EnableEncryptionAtRestStore interface {
-	CompliancePolicyEncryptionAtRestEnabler
+	EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error)
 	CompliancePolicyDescriber
 }
 type CompliancePolicy interface {

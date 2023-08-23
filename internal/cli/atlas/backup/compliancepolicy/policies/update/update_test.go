@@ -24,6 +24,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
@@ -43,11 +44,8 @@ func TestUpdateBuilder(t *testing.T) {
 
 func TestInitStore(t *testing.T) {
 	opts := &Opts{}
-	ctx := context.Background()
 
-	if err := opts.initStore(ctx)(); err != nil {
-		t.Fatalf("initStore()() unexpected error: %v", err)
-	}
+	require.NoError(t, opts.initStore(context.TODO())())
 	assert.NotNil(t, opts.store)
 }
 
@@ -70,9 +68,7 @@ func TestOpts_Watcher(t *testing.T) {
 		Times(1)
 
 	res, err := opts.watcher()
-	if err != nil {
-		t.Fatalf("Watcher() unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	assert.True(t, res)
 }
 

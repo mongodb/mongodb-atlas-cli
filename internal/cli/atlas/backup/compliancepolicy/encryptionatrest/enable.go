@@ -32,7 +32,7 @@ type EnableOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	policy *atlasv2.DataProtectionSettings
-	store  store.EnableEncryptionAtRestStore
+	store  store.CompliancePolicyEncryptionAtRestEnabler
 }
 
 var enableWatchTemplate = `Encryption at rest has been enabled.

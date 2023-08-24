@@ -106,19 +106,19 @@ func GenerateBuilder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Generate Kubernetes configuration resources for use with Atlas Kubernetes Operator.",
 		Long:    `This command exports configurations for Atlas objects including projects, deployments, and users in a Kubernetes-compatible format, allowing you to manage these resources using the Atlas Kubernetes Operator. For more information, see https://www.mongodb.com/docs/atlas/atlas-operator/`,
-		Example: `# Export Project, DatabaseUsers resources for a specific project without connection and integration secrets:
+		Example: `	# Export all resources for a specific project without connection and integration secrets:
   atlas kubernetes config generate --projectId=<projectId>
 
-  # Export Project, DatabaseUsers resources for a specific project including connection and integration secrets:
+  # Export all resources for a specific project including connection and integration secrets:
   atlas kubernetes config generate --projectId=<projectId> --includeSecrets
 
-  # Export Project, DatabaseUsers resources for a specific project including connection and integration secrets to a specific namespace:
+  # Export all resources for a specific project including connection and integration secrets to a specific namespace:
   atlas kubernetes config generate --projectId=<projectId> --includeSecrets --targetNamespace=<namespace>
   
-  # Export Project, DatabaseUsers, and Deployment resources for a specific project including connection and integration secrets to a specific namespace:
+  # Export all non-deployment resources and specific Deployment resources for a specific project including connection and integration secrets to a specific namespace:
   atlas kubernetes config generate --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>
 
-  # Export resources for a specific version of the Atlas Kubernetes Operator:
+  # Export all resources for a specific version of the Atlas Kubernetes Operator:
   atlas kubernetes config generate --projectId=<projectId> --targetNamespace=<namespace> --operatorVersion=1.5.1`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

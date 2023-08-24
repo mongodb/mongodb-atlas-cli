@@ -70,19 +70,19 @@ func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectio
 func (s *Store) CreatePolicyItem(projectID string, policyItem *atlasv2.DiskBackupApiPolicyItem) (*atlasv2.DataProtectionSettings, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
-		return nil, fmt.Errorf("couldn't create policy item: %w", err)
+		return nil, err
 	}
 
 	err = addItem(compliancePolicy, policyItem)
 	if err != nil {
-		return nil, fmt.Errorf("couldn't create policy item: %w", err)
+		return nil, err
 	}
 
 	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
 	if err != nil {
-		return nil, fmt.Errorf("couldn't create policy item: %w", err)
+		return nil, err
 	}
-	return result, err
+	return result, nil
 }
 
 func addItem(compliancePolicy *atlasv2.DataProtectionSettings, item *atlasv2.DiskBackupApiPolicyItem) error {

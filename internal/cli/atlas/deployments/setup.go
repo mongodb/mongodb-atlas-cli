@@ -22,6 +22,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -49,6 +50,7 @@ type SetupOpts struct {
 	cli.GlobalOpts
 	deploymentName string
 	deploymentType string
+	deploymentID   string
 	mdbVersion     string
 	port           int
 	debug          bool
@@ -94,7 +96,7 @@ func (opts *SetupOpts) configureMongod(podmanOpts podman.Client) error {
 	keyfile := "/data/configdb/keyfile"
 	keyfilePerm := 400
 
-	createKeyfile := fmt.Sprintf("echo '%s' > %s", opts.deploymentName, keyfile)
+	createKeyfile := fmt.Sprintf("echo '%s' > %s", opts.deploymentID, keyfile)
 	setKeyfilePermissions := fmt.Sprintf("chmod %d %s", keyfilePerm, keyfile)
 	mongodArgs := []string{
 		"--transitionToAuth",
@@ -171,7 +173,7 @@ func (opts *SetupOpts) configureMongot(podmanOpts podman.Client) error {
 		Hostname: opts.mongotHostname(),
 		Args: []string{
 			"--mongodHostAndPort", fmt.Sprintf("%s:%d", opts.mongodHostname(), internalMongodPort),
-			"--keyFileContent", opts.deploymentName,
+			"--keyFileContent", opts.deploymentID,
 		},
 		Volumes: map[string]string{
 			mongotDataVolume:    "/var/lib/mongot",
@@ -269,6 +271,7 @@ func SetupBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.deploymentName = args[0]
+			opts.deploymentID = uuid.NewString()
 
 			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), startTemplate))
 		},

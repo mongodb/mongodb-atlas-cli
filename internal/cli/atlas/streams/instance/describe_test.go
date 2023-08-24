@@ -16,7 +16,6 @@ package instance
 
 import (
 	"bytes"
-
 	"testing"
 
 	"github.com/golang/mock/gomock"

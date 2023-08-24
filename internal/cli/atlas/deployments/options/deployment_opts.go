@@ -13,7 +13,13 @@
 // limitations under the License.
 package options
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+)
 
 const (
 	MongodHostnamePrefix = "mongod"
@@ -50,4 +56,16 @@ func (opts *DeploymentOpts) LocalMongodDataVolume() string {
 
 func (opts *DeploymentOpts) LocalMongoMetricsVolume() string {
 	return fmt.Sprintf("mongot-local-metrics-%s", opts.DeploymentName)
+}
+
+func LocalDeploymentName(hostname string) string {
+	return strings.TrimPrefix(hostname, fmt.Sprintf("%s-", MongodHostnamePrefix))
+}
+
+func DeploymentSelect(names []string) survey.Prompt {
+	return &survey.Select{
+		Message: "Select a deployment",
+		Options: names,
+		Help:    usage.ClusterName,
+	}
 }

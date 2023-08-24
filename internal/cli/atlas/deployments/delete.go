@@ -19,11 +19,13 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -39,13 +41,7 @@ type DeleteOpts struct {
 	debug        bool
 }
 
-func (opts *DeleteOpts) checkIfDeploymentExists(podman.Client) error {
-	// search locally
-	containers, errList := opts.podmanClient.ListContainers(options.MongodHostnamePrefix)
-	if errList != nil {
-		return errList
-	}
-
+func (opts *DeleteOpts) checkIfDeploymentExists(containers []podman.Container) error {
 	found := false
 	for _, c := range containers {
 		for _, n := range c.Names {
@@ -62,16 +58,21 @@ func (opts *DeleteOpts) checkIfDeploymentExists(podman.Client) error {
 	return nil
 }
 
-func (opts *DeleteOpts) Run(_ context.Context) error {
-	if !opts.Confirm {
-		fmt.Println(opts.FailMessage())
+func (opts *DeleteOpts) askDeployment(containers []podman.Container) error {
+	if opts.DeploymentName != "" {
 		return nil
 	}
 
-	if err := opts.checkIfDeploymentExists(opts.podmanClient); err != nil {
-		return err
+	ids := make([]string, 0, len(containers))
+	for _, c := range containers {
+		name := options.LocalDeploymentName(c.Names[0])
+		ids = append(ids, name)
 	}
 
+	return telemetry.TrackAskOne(options.DeploymentSelect(ids), &opts.DeploymentName, survey.WithValidator(survey.Required))
+}
+
+func (opts *DeleteOpts) removeDeployment() error {
 	// remove mongod
 	if _, err := opts.podmanClient.RemoveContainers(opts.LocalMongodHostname()); err != nil {
 		return err
@@ -104,15 +105,45 @@ func (opts *DeleteOpts) Run(_ context.Context) error {
 	return nil
 }
 
+func (opts *DeleteOpts) Run(_ context.Context) error {
+	// if deployment name was set but not confirmed, return
+	if opts.DeploymentName != "" && !opts.Confirm {
+		fmt.Println(opts.FailMessage())
+		return nil
+	}
+
+	// get list of all containers
+	containers, errList := opts.podmanClient.ListContainers(options.MongodHostnamePrefix)
+	if errList != nil {
+		return errList
+	}
+
+	// ask deployment if not set
+	if err := opts.askDeployment(containers); err != nil {
+		return err
+	}
+
+	// check if deployment exists
+	if err := opts.checkIfDeploymentExists(containers); err != nil {
+		return err
+	}
+
+	// delete deployment
+	return opts.removeDeployment()
+}
+
 // atlas deployments delete <clusterName>.
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Deployment '%s' deleted", "Deployment not deleted"),
+		DeploymentOpts: options.DeploymentOpts{
+			DeploymentName: "",
+		},
 	}
 	cmd := &cobra.Command{
 		Use:   "delete <clusterName>",
 		Short: "Delete a local deployment.",
-		Args:  require.ExactArgs(1),
+		Args:  require.NoArgs,
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster you want to setup.",
 			"output":          opts.SuccessMessage(),
@@ -127,9 +158,13 @@ func DeleteBuilder() *cobra.Command {
 				return err
 			}
 
-			opts.DeploymentName = args[0]
-			opts.Entry = opts.DeploymentName
-			return opts.Prompt()
+			if len(args) > 0 {
+				opts.DeploymentName = args[0]
+				opts.Entry = opts.DeploymentName
+				return opts.Prompt()
+			}
+
+			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

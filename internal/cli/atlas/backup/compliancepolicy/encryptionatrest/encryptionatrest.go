@@ -33,6 +33,7 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		EnableBuilder(),
+		DisableBuilder(),
 	)
 
 	return cmd

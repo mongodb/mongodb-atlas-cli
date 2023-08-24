@@ -14,8 +14,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Set date
         id: set-date
         run: |
@@ -23,7 +21,11 @@ jobs:
           echo DATE=${DATE} >> $GITHUB_ENV
       - name: 'Get latest tag'
         id: get-latest-tag
-        run: echo "::set-output name=tag::$(git tag --list --sort=-version:refname "atlascli*" | head -n 1)"
+        uses: oprypin/find-latest-tag@v1
+        with:
+          repository: mongodb/mongodb-atlas-cli
+          releases-only: true
+          regex: 'atlascli*'
       - name: Extract version
         run: |
           release_tag=${{ steps.get-latest-tag.outputs.tag }}

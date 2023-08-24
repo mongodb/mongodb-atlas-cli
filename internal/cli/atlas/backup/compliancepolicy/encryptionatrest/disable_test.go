@@ -30,10 +30,10 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-func TestEnableBuilder(t *testing.T) {
+func TestDisableBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		EnableBuilder(),
+		DisableBuilder(),
 		0,
 		[]string{
 			flag.ProjectID,
@@ -43,18 +43,18 @@ func TestEnableBuilder(t *testing.T) {
 	)
 }
 
-func TestEnableOpts_InitStore(t *testing.T) {
-	opts := &EnableOpts{}
+func TestDisableOpts_InitStore(t *testing.T) {
+	opts := &DisableOpts{}
 
 	require.NoError(t, opts.initStore(context.TODO())())
 	assert.NotNil(t, opts.store)
 }
 
-func TestEnableOpts_Watcher(t *testing.T) {
+func TestDisableOpts_Watcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestEnabler(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestDisabler(ctrl)
 
-	opts := &EnableOpts{
+	opts := &DisableOpts{
 		store: mockStore,
 	}
 
@@ -73,46 +73,37 @@ func TestEnableOpts_Watcher(t *testing.T) {
 	assert.True(t, res)
 }
 
-func TestEnableOpts_Run(t *testing.T) {
+func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestEnabler(ctrl)
-	encryptionAtRestBefore := false
-	encryptionAtRestAfter := true
-
-	initial := &atlasv2.DataProtectionSettings{
-		EncryptionAtRestEnabled: &encryptionAtRestBefore,
-	}
+	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestDisabler(ctrl)
+	encryptionAtRestAfter := false
 
 	expected := &atlasv2.DataProtectionSettings{
-		State:                   atlasv2.PtrString(active),
 		EncryptionAtRestEnabled: &encryptionAtRestAfter,
 	}
 
-	opts := &EnableOpts{
-		store:  mockStore,
-		policy: initial,
+	opts := &DisableOpts{
+		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		EnableEncryptionAtRest(opts.ProjectID).
+		DisableEncryptionAtRest(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
-
-	assert.False(t, *opts.policy.EncryptionAtRestEnabled)
 
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	assert.True(t, *opts.policy.EncryptionAtRestEnabled)
-	test.VerifyOutputTemplate(t, enableTemplate, expected)
+	assert.False(t, *opts.policy.EncryptionAtRestEnabled)
+	test.VerifyOutputTemplate(t, disableTemplate, expected)
 }
 
-func TestEnableOpts_WatchRun(t *testing.T) {
+func TestDisableOpts_WatchRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestEnabler(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestDisabler(ctrl)
 
-	opts := &EnableOpts{
+	opts := &DisableOpts{
 		store: mockStore,
 		WatchOpts: cli.WatchOpts{
 			EnableWatch: true,
@@ -125,7 +116,7 @@ func TestEnableOpts_WatchRun(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		EnableEncryptionAtRest(opts.ProjectID).
+		DisableEncryptionAtRest(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 	mockStore.
@@ -138,5 +129,5 @@ func TestEnableOpts_WatchRun(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	test.VerifyOutputTemplate(t, enableWatchTemplate, expected)
+	test.VerifyOutputTemplate(t, disableWatchTemplate, expected)
 }

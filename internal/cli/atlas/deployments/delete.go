@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var errDeploymentNotFound = errors.New("Deployment '%s' not found")
+var errDeploymentNotFound = errors.New("deployment '%s' not found")
 
 type DeleteOpts struct {
 	cli.OutputOpts
@@ -104,7 +104,7 @@ func (opts *DeleteOpts) Run(_ context.Context) error {
 	return nil
 }
 
-// atlas deployments delete <clusterName>
+// atlas deployments delete <clusterName>.
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Deployment '%s' deleted", "Deployment not deleted"),

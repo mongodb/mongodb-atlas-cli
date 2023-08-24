@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -77,7 +78,7 @@ func (opts *SetupOpts) createLocalDeployment() error {
 	}
 
 	if err := opts.configureMongod(podmanOpts); err != nil {
-		return nil
+		return err
 	}
 
 	return opts.configureMongot(podmanOpts)
@@ -88,6 +89,25 @@ func (opts *SetupOpts) configureMongod(podmanOpts podman.Client) error {
 	if _, err := podmanOpts.CreateVolume(mongodDataVolume); err != nil {
 		return err
 	}
+
+	entrypoint := "python3 /usr/local/bin/docker-entrypoint.py"
+	keyfile := "/data/configdb/keyfile"
+	keyfilePerm := 400
+
+	createKeyfile := fmt.Sprintf("echo '%s' > %s", opts.deploymentName, keyfile)
+	setKeyfilePermissions := fmt.Sprintf("chmod %d %s", keyfilePerm, keyfile)
+	mongodArgs := []string{
+		"--transitionToAuth",
+		"--keyFile", keyfile,
+		"--dbpath", "/data/db",
+		"--replSet", replicaSetName,
+		"--setParameter", fmt.Sprintf("mongotHost=%s:%d", opts.mongotHostname(), internalMongotPort),
+		"--setParameter", fmt.Sprintf("searchIndexManagementHostAndPort=%s:%d", opts.mongotHostname(), internalMongotPort),
+	}
+	// wrap the entrypoint with a chain of commands that
+	// creates the keyfile in the container and sets the 400 permissions for it,
+	// then starts the entrypoint with the local dev config
+	cmd := fmt.Sprintf("%s && %s && %s %s", createKeyfile, setKeyfilePermissions, entrypoint, strings.Join(mongodArgs, " "))
 
 	if _, err := podmanOpts.RunContainer(
 		podman.RunContainerOpts{
@@ -102,14 +122,7 @@ func (opts *SetupOpts) configureMongod(podmanOpts podman.Client) error {
 				opts.port: internalMongodPort,
 			},
 			Network: opts.networkName(),
-			Args: []string{
-				"--noauth",
-				"--dbpath", "/data/db",
-				"--replSet", replicaSetName,
-				"--setParameter", fmt.Sprintf("mongotHost=%s:%d", opts.mongotHostname(), internalMongotPort),
-				"--setParameter", fmt.Sprintf("searchIndexManagementHostAndPort=%s:%d", opts.mongotHostname(), internalMongotPort),
-				"--setParameter", "skipAuthenticationToMongot=true",
-			},
+			Args:    []string{"sh", "-c", cmd},
 		}); err != nil {
 		return err
 	}
@@ -133,7 +146,11 @@ func (opts *SetupOpts) configureMongod(podmanOpts podman.Client) error {
 		opts.mongodHostname(),
 		internalMongodPort,
 		opts.port)
-	return opts.seed(opts.port, seedRs)
+	if err := opts.seed(opts.port, seedRs); err != nil {
+		return err
+	}
+
+	return opts.seed(opts.port, "db.getSiblingDB('admin').atlascli.insertOne({ managedClusterType: 'atlasCliLocalDevCluster' })")
 }
 
 func (opts *SetupOpts) configureMongot(podmanOpts podman.Client) error {
@@ -149,10 +166,13 @@ func (opts *SetupOpts) configureMongot(podmanOpts podman.Client) error {
 
 	_, err := podmanOpts.RunContainer(podman.RunContainerOpts{
 		Detach:   true,
-		Image:    "mongodb/apix_test:mongot-noauth",
+		Image:    "mongodb/apix_test:mongot",
 		Name:     opts.mongotHostname(),
 		Hostname: opts.mongotHostname(),
-		Args:     []string{"--mongodHostAndPort", fmt.Sprintf("%s:%d", opts.mongodHostname(), internalMongodPort)},
+		Args: []string{
+			"--mongodHostAndPort", fmt.Sprintf("%s:%d", opts.mongodHostname(), internalMongodPort),
+			"--keyFileContent", opts.deploymentName,
+		},
 		Volumes: map[string]string{
 			mongotDataVolume:    "/var/lib/mongot",
 			mongotMetricsVolume: "/var/lib/mongot/metrics",

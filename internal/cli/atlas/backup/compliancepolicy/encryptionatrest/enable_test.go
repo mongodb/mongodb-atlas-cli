@@ -52,7 +52,7 @@ func TestEnableOpts_InitStore(t *testing.T) {
 
 func TestEnableOpts_Watcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockEnableEncryptionAtRestStore(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestEnabler(ctrl)
 
 	opts := &EnableOpts{
 		store: mockStore,
@@ -75,7 +75,7 @@ func TestEnableOpts_Watcher(t *testing.T) {
 
 func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockEnableEncryptionAtRestStore(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestEnabler(ctrl)
 	encryptionAtRestBefore := false
 	encryptionAtRestAfter := true
 
@@ -110,7 +110,7 @@ func TestEnableOpts_Run(t *testing.T) {
 
 func TestEnableOpts_WatchRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockEnableEncryptionAtRestStore(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestEnabler(ctrl)
 
 	opts := &EnableOpts{
 		store: mockStore,

@@ -16,16 +16,22 @@ package atlas
 
 import (
 	"fmt"
+	"net/mail"
 
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,EnableEncryptionAtRestStore
+//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,EnableEncryptionAtRestStore,CompliancePolicyEnabler
 type CompliancePolicyDescriber interface {
 	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error)
 }
 type CompliancePolicyUpdater interface {
 	UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error)
+}
+
+type CompliancePolicyEnabler interface {
+	EnableCompliancePolicy(projectID string, authorizedEmail string) (*atlasv2.DataProtectionSettings, error)
+	CompliancePolicyDescriber
 }
 
 type EnableEncryptionAtRestStore interface {
@@ -59,4 +65,24 @@ func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectio
 		return nil, fmt.Errorf("couldn't update encryption at rest: %w", err)
 	}
 	return result, nil
+}
+
+func (s *Store) EnableCompliancePolicy(projectID string, authorizedEmail string) (*atlasv2.DataProtectionSettings, error) {
+	if _, err := mail.ParseAddress(authorizedEmail); err != nil {
+		return nil, fmt.Errorf("unable to enable compliance policy due to invalid email: %w", err)
+	}
+	compliancePolicy := newEmptyCompliancePolicy(projectID, authorizedEmail)
+
+	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
+	if err != nil {
+		return nil, fmt.Errorf("couldn't enable compliance policy: %w", err)
+	}
+	return result, nil
+}
+
+func newEmptyCompliancePolicy(projectID string, authorizedEmail string) *atlasv2.DataProtectionSettings {
+	policy := atlasv2.NewDataProtectionSettings()
+	policy.SetAuthorizedEmail(authorizedEmail)
+	policy.SetProjectId(projectID)
+	return policy
 }

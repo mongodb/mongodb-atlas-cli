@@ -18,7 +18,10 @@ import (
 	"encoding/json"
 	"io"
 	"os/exec"
+	"runtime"
 	"strconv"
+
+	"github.com/containers/podman/v4/pkg/machine"
 )
 
 type RunContainerOpts struct {
@@ -46,6 +49,8 @@ type Container struct {
 }
 
 type Client interface {
+	Ready() bool
+	Setup() error
 	CreateNetwork(name string) ([]byte, error)
 	CreateVolume(name string) ([]byte, error)
 	RunContainer(opts RunContainerOpts) ([]byte, error)
@@ -60,6 +65,61 @@ type Client interface {
 type client struct {
 	debug     bool
 	outWriter io.Writer
+}
+
+func (*client) Ready() bool {
+	_, err := exec.LookPath("podman")
+	return err == nil
+}
+
+func (o *client) machineInit() error {
+	_, err := o.machineInspect()
+	if err == nil { // machine is already present
+		return nil
+	}
+
+	_, err = o.runPodman("machine", "init")
+	return err
+}
+
+func (o *client) machineInspect() (*machine.InspectInfo, error) {
+	var info []machine.InspectInfo
+	b, err := o.runPodman("machine", "inspect", machine.DefaultMachineName)
+	if err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(b, &info); err != nil {
+		return nil, err
+	}
+	return &info[0], nil
+}
+
+func (o *client) machineStart() error {
+	info, err := o.machineInspect()
+	if err != nil {
+		return err
+	}
+	if info.State != machine.Running {
+		_, err := o.runPodman("machine", "start", machine.DefaultMachineName)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *client) Setup() error {
+	if runtime.GOOS != "windows" && runtime.GOOS != "darwin" {
+		// macOs and Windows require VMs
+		return nil
+	}
+
+	if err := o.machineInit(); err != nil {
+		return err
+	}
+
+	return o.machineStart()
 }
 
 func (o *client) runPodman(arg ...string) ([]byte, error) {

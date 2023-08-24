@@ -76,12 +76,7 @@ func TestDisableOpts_Watcher(t *testing.T) {
 func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCompliancePolicyCopyProtectionDisabler(ctrl)
-	copyProtectionBefore := true
 	copyProtectionAfter := false
-
-	initial := &atlasv2.DataProtectionSettings{
-		CopyProtectionEnabled: &copyProtectionBefore,
-	}
 
 	expected := &atlasv2.DataProtectionSettings{
 		State:                 atlasv2.PtrString(active),
@@ -89,8 +84,7 @@ func TestDisableOpts_Run(t *testing.T) {
 	}
 
 	opts := &DisableOpts{
-		store:  mockStore,
-		policy: initial,
+		store: mockStore,
 	}
 
 	mockStore.
@@ -98,8 +92,6 @@ func TestDisableOpts_Run(t *testing.T) {
 		DisableCopyProtection(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
-
-	assert.True(t, *opts.policy.CopyProtectionEnabled)
 
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

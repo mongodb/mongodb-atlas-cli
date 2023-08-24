@@ -66,6 +66,8 @@
 | `backup compliancepolicy setup`             | Y         |           |           | Y         |       |       |
 | `backup compliancepolicy pointintimerestore enable`     | Y         |           |           | Y         |       |       |
 | `backup compliancepolicy policies describe` | Y         |           |           | Y         |       |       |
+| `backup compliancepolicy encryptionAtRest enable` | N         |           |           | N         |       |       |
+| `backup compliancepolicy encryptionAtRest disable` | N         |           |           | N         |       |       |
 | `cloudProvider aws accessRoles authorize`   | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles deauthorize` | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles create`      | Y         |           |           | Y         |       |       |

@@ -43,7 +43,7 @@ func TestDisableBuilder(t *testing.T) {
 	)
 }
 
-func TestDIsableOpts_InitStore(t *testing.T) {
+func TestDisableOpts_InitStore(t *testing.T) {
 	opts := &DisableOpts{}
 
 	require.NoError(t, opts.initStore(context.TODO())())
@@ -76,20 +76,14 @@ func TestDisableOpts_Watcher(t *testing.T) {
 func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestDisabler(ctrl)
-	encryptionAtRestBefore := true
 	encryptionAtRestAfter := false
-
-	initial := &atlasv2.DataProtectionSettings{
-		EncryptionAtRestEnabled: &encryptionAtRestBefore,
-	}
 
 	expected := &atlasv2.DataProtectionSettings{
 		EncryptionAtRestEnabled: &encryptionAtRestAfter,
 	}
 
 	opts := &DisableOpts{
-		store:  mockStore,
-		policy: initial,
+		store: mockStore,
 	}
 
 	mockStore.
@@ -97,8 +91,6 @@ func TestDisableOpts_Run(t *testing.T) {
 		DisableEncryptionAtRest(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
-
-	assert.True(t, *opts.policy.EncryptionAtRestEnabled)
 
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

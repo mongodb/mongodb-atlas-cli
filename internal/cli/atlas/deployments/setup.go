@@ -16,6 +16,7 @@ package deployments
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"regexp"
@@ -92,12 +93,8 @@ func (opts *SetupOpts) configureMongod(podmanOpts podman.Client) error {
 		return err
 	}
 
-	entrypoint := "python3 /usr/local/bin/docker-entrypoint.py"
 	keyfile := "/data/configdb/keyfile"
 	keyfilePerm := 400
-
-	createKeyfile := fmt.Sprintf("echo '%s' > %s", opts.deploymentID, keyfile)
-	setKeyfilePermissions := fmt.Sprintf("chmod %d %s", keyfilePerm, keyfile)
 	mongodArgs := []string{
 		"--transitionToAuth",
 		"--keyFile", keyfile,
@@ -106,10 +103,16 @@ func (opts *SetupOpts) configureMongod(podmanOpts podman.Client) error {
 		"--setParameter", fmt.Sprintf("mongotHost=%s:%d", opts.mongotHostname(), internalMongotPort),
 		"--setParameter", fmt.Sprintf("searchIndexManagementHostAndPort=%s:%d", opts.mongotHostname(), internalMongotPort),
 	}
+
 	// wrap the entrypoint with a chain of commands that
 	// creates the keyfile in the container and sets the 400 permissions for it,
 	// then starts the entrypoint with the local dev config
-	cmd := fmt.Sprintf("%s && %s && %s %s", createKeyfile, setKeyfilePermissions, entrypoint, strings.Join(mongodArgs, " "))
+	cmdTemplate := "echo '%[1]s' > %[2]s && chmod %[3]d %[2]s && python3 /usr/local/bin/docker-entrypoint.py %[4]s"
+	cmd := fmt.Sprintf(cmdTemplate,
+		base64.URLEncoding.EncodeToString([]byte(opts.deploymentID)),
+		keyfile,
+		keyfilePerm,
+		strings.Join(mongodArgs, " "))
 
 	if _, err := podmanOpts.RunContainer(
 		podman.RunContainerOpts{
@@ -173,7 +176,7 @@ func (opts *SetupOpts) configureMongot(podmanOpts podman.Client) error {
 		Hostname: opts.mongotHostname(),
 		Args: []string{
 			"--mongodHostAndPort", fmt.Sprintf("%s:%d", opts.mongodHostname(), internalMongodPort),
-			"--keyFileContent", opts.deploymentID,
+			"--keyFileContent", base64.URLEncoding.EncodeToString([]byte(opts.deploymentID)),
 		},
 		Volumes: map[string]string{
 			mongotDataVolume:    "/var/lib/mongot",

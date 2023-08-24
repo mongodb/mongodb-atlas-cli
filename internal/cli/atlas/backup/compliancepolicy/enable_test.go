@@ -45,7 +45,7 @@ func TestEnableBuilder(t *testing.T) {
 
 func TestEnableOpts_Watcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicy(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyEnabler(ctrl)
 
 	opts := &EnableOpts{
 		store: mockStore,
@@ -70,7 +70,7 @@ func TestEnableOpts_Watcher(t *testing.T) {
 
 func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicy(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyEnabler(ctrl)
 	state := active
 	email := authorizedEmail
 
@@ -85,7 +85,7 @@ func TestEnableOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		UpdateCompliancePolicy(opts.ProjectID, opts.getEmptyCompliancePolicy()).
+		EnableCompliancePolicy(opts.ProjectID, email).
 		Return(expected, nil).
 		Times(1)
 
@@ -93,33 +93,4 @@ func TestEnableOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	test.VerifyOutputTemplate(t, enableTemplate, expected)
-}
-func TestEnableOpts_Run_invalidEmail(t *testing.T) {
-	invalidEmail := "invalidEmail"
-
-	opts := &EnableOpts{
-		authorizedEmail: invalidEmail,
-	}
-
-	assert.Error(t, opts.Run())
-}
-
-func TestEnableOpts_getEmptyCompliancePolicy(t *testing.T) {
-	email := authorizedEmail
-
-	opts := &EnableOpts{
-		authorizedEmail: email,
-	}
-	opts.ProjectID = "someProjectId"
-
-	expected := &atlasv2.DataProtectionSettings{
-		AuthorizedEmail:         &email,
-		ProjectId:               &opts.ProjectID,
-		CopyProtectionEnabled:   new(bool),
-		EncryptionAtRestEnabled: new(bool),
-		PitEnabled:              new(bool),
-	}
-
-	emptyPolicy := opts.getEmptyCompliancePolicy()
-	assert.Equal(t, expected, emptyPolicy)
 }

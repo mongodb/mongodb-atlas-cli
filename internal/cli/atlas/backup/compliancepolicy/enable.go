@@ -17,7 +17,6 @@ package compliancepolicy
 import (
 	"context"
 	"fmt"
-	"net/mail"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -32,9 +31,8 @@ type EnableOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	policy          *atlasv2.DataProtectionSettings
-	store           store.CompliancePolicy
+	store           store.CompliancePolicyEnabler
 	authorizedEmail string
-	EnableWatch     bool
 }
 
 var enableWatchTemplate = `Backup Compliance Policy enabled without any configuration. Run "atlas backups compliancepolicy --help" for configuration options.
@@ -62,20 +60,8 @@ func (opts *EnableOpts) enableWatcher() (bool, error) {
 	return (res.GetState() == active), nil
 }
 
-func (opts *EnableOpts) getEmptyCompliancePolicy() *atlasv2.DataProtectionSettings {
-	policy := atlasv2.NewDataProtectionSettings()
-	policy.SetAuthorizedEmail(opts.authorizedEmail)
-	policy.SetProjectId(opts.ConfigProjectID())
-	return policy
-}
-
 func (opts *EnableOpts) Run() error {
-	if _, err := mail.ParseAddress(opts.authorizedEmail); err != nil {
-		return err
-	}
-	emptyPolicy := opts.getEmptyCompliancePolicy()
-
-	compliancePolicy, err := opts.store.UpdateCompliancePolicy(opts.ConfigProjectID(), emptyPolicy)
+	compliancePolicy, err := opts.store.EnableCompliancePolicy(opts.ConfigProjectID(), opts.authorizedEmail)
 	opts.policy = compliancePolicy
 	if err != nil {
 		return err

@@ -43,19 +43,9 @@ const (
 	active = "ACTIVE"
 )
 
-var updateTemplate = `Your backup compliance policy is being updated with the following policies:
-ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
-{{- range .ScheduledPolicyItems}}
-{{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
-{{- end}}
-{{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
+var updateTemplate = `Your backup compliance policy is being updated
 `
-var updateWatchTemplate = `Your backup compliance policy has been updated with the following policies:
-ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
-{{- range .ScheduledPolicyItems}}
-{{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
-{{- end}}
-{{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
+var updateWatchTemplate = `Your backup compliance policy has been updated
 `
 var example = `How to run atlas backups compliancepolicy policies create with --file.
 As an example, the file should be in the following format:

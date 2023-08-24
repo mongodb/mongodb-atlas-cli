@@ -47,20 +47,8 @@ var updateTemplate = `Your backup compliance policy is being updated
 `
 var updateWatchTemplate = `Your backup compliance policy has been updated
 `
-var example = `How to run atlas backups compliancepolicy policies create with --file.
-As an example, the file should be in the following format:
-
-{
-	"frequencyInterval": 1,
-	"frequencyType": "daily",
-	"id": "stringstringstringstring",
-	"retentionUnit": "days",
-	"retentionValue": 0
-}
-
-To get the ID of a policy item, run "atlas backups compliancepolicy policies describe".
-
-Finally, run the command as such: "atlas backups compliancepolicy policies update --file /path/to/file"
+var example = `  # How to run atlas backups compliancepolicy policies create with a JSON file:
+  atlas backups compliancepolicy policies create --file /path/to/file"
 `
 var errorCode500Template = `received an internal error on the server side, but we would encourage you to double check your inputs.
 For this command, invalid inputs are known to cause internal errors in some situations`

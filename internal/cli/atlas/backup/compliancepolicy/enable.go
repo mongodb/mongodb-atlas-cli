@@ -16,12 +16,15 @@ package compliancepolicy
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
@@ -33,7 +36,12 @@ type EnableOpts struct {
 	policy          *atlasv2.DataProtectionSettings
 	store           store.CompliancePolicyEnabler
 	authorizedEmail string
+	confirm         bool
 }
+
+var enableConfirmationMessage = `Backup compliance policy can not be disabled without MongoDB Support. Please confirm that you want to continue.
+Learn more: https://www.mongodb.com/docs/atlas/backup/cloud-backup/backup-compliance-policy/
+`
 
 var enableWatchTemplate = `Backup Compliance Policy enabled without any configuration. Run "atlas backups compliancepolicy --help" for configuration options.
 `
@@ -60,7 +68,24 @@ func (opts *EnableOpts) enableWatcher() (bool, error) {
 	return (res.GetState() == active), nil
 }
 
+func newConfirmationQuestion() survey.Prompt {
+	return &survey.Confirm{
+		Message: enableConfirmationMessage,
+		Default: false,
+	}
+}
+
 func (opts *EnableOpts) Run() error {
+	if !opts.confirm {
+		question := newConfirmationQuestion()
+		var confirmation bool
+		if err := telemetry.TrackAskOne(question, &confirmation); err != nil {
+			return fmt.Errorf("couldn't confirm action: %w", err)
+		}
+		if !confirmation {
+			return errors.New("did not receive confirmation to enable backup compliance policy")
+		}
+	}
 	compliancePolicy, err := opts.store.EnableCompliancePolicy(opts.ConfigProjectID(), opts.authorizedEmail)
 	opts.policy = compliancePolicy
 	if err != nil {
@@ -98,6 +123,7 @@ func EnableBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.AuthorizedEmail)
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().BoolVar(&opts.confirm, flag.Force, false, usage.Force)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 	return cmd
 }

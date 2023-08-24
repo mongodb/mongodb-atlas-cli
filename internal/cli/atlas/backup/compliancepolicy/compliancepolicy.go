@@ -16,6 +16,7 @@ package compliancepolicy
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/copyprotection"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/encryptionatrest"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/policies"
 	"github.com/spf13/cobra"
@@ -46,7 +47,7 @@ func Builder() *cobra.Command {
 		EnableBuilder(),
 		DescribeBuilder(),
 		policies.Builder(),
-		CopyProtectionBuilder(),
+		copyprotection.Builder(),
 		encryptionatrest.Builder(),
 	)
 

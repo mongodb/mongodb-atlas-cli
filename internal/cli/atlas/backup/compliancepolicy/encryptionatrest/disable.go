@@ -17,6 +17,7 @@ package encryptionatrest
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -64,7 +65,7 @@ func (opts *DisableOpts) watcher() (bool, error) {
 func (opts *DisableOpts) Run() error {
 	res, err := opts.store.DisableEncryptionAtRest(opts.ConfigProjectID())
 	if err != nil {
-		return err
+		return fmt.Errorf("couldn't disable encryption at rest: %w", err)
 	}
 	opts.policy = res
 	if opts.EnableWatch {

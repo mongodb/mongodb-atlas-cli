@@ -16,7 +16,6 @@ package atlas
 
 import (
 	"fmt"
-	"net/mail"
 
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
@@ -68,9 +67,6 @@ func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectio
 }
 
 func (s *Store) EnableCompliancePolicy(projectID string, authorizedEmail string) (*atlasv2.DataProtectionSettings, error) {
-	if _, err := mail.ParseAddress(authorizedEmail); err != nil {
-		return nil, fmt.Errorf("unable to enable compliance policy due to invalid email: %w", err)
-	}
 	compliancePolicy := newEmptyCompliancePolicy(projectID, authorizedEmail)
 
 	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()

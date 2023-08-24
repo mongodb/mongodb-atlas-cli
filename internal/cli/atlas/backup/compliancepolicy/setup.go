@@ -163,7 +163,6 @@ func SetupBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.path, flag.File, flag.FileShort, "", usage.BackupCompliancePolicyFile)
 	cmd.Flags().BoolVar(&opts.confirm, flag.Force, false, usage.Force)
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
-	_ = cmd.Flags().MarkHidden(flag.Force)
 	_ = cmd.MarkFlagRequired(flag.File)
 	return cmd
 }

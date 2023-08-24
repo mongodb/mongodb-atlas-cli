@@ -69,7 +69,7 @@ func (opts *EnableOpts) enableWatcher() (bool, error) {
 	return (res.GetState() == active), nil
 }
 
-func newConfirmationQuestion() survey.Prompt {
+func newEnableConfirmationQuestion() survey.Prompt {
 	return &survey.Confirm{
 		Message: enableConfirmationMessage,
 		Default: false,
@@ -81,7 +81,7 @@ func (opts *EnableOpts) Run() error {
 		return fmt.Errorf("unable to enable compliance policy due to invalid email: %w", err)
 	}
 	if !opts.confirm {
-		question := newConfirmationQuestion()
+		question := newEnableConfirmationQuestion()
 		var confirmation bool
 		if err := telemetry.TrackAskOne(question, &confirmation); err != nil {
 			return fmt.Errorf("couldn't confirm action: %w", err)

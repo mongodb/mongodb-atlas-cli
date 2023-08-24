@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && blabla)
+//go:build e2e || (atlas && backup && compliancepolicy)
 
 package atlas_test
 

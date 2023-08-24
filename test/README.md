@@ -65,6 +65,7 @@
 | `backup compliancepolicy copyprotection`    | Y         |           |           | Y         |       |       |
 | `backup compliancepolicy setup`             | Y         |           |           | Y         |       |       |
 | `backup compliancepolicy policies describe` | Y         |           |           | Y         |       |       |
+| `backup compliancepolicy policies create`   | Y         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles authorize`   | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles deauthorize` | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles create`      | Y         |           |           | Y         |       |       |

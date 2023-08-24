@@ -67,7 +67,7 @@ type client struct {
 	outWriter io.Writer
 }
 
-func (o *client) Ready() bool {
+func (*client) Ready() bool {
 	_, err := exec.LookPath("podman")
 	return err == nil
 }

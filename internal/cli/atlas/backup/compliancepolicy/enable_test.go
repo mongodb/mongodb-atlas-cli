@@ -96,3 +96,13 @@ func TestEnableOpts_Run(t *testing.T) {
 	}
 	test.VerifyOutputTemplate(t, enableTemplate, expected)
 }
+
+func TestEnableOpts_Run_invalidEmail(t *testing.T) {
+	invalidEmail := "invalidEmail"
+
+	opts := &EnableOpts{
+		authorizedEmail: invalidEmail,
+	}
+
+	assert.Error(t, opts.Run())
+}

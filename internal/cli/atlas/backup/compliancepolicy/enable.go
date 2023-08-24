@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/mail"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -76,6 +77,9 @@ func newConfirmationQuestion() survey.Prompt {
 }
 
 func (opts *EnableOpts) Run() error {
+	if _, err := mail.ParseAddress(opts.authorizedEmail); err != nil {
+		return fmt.Errorf("unable to enable compliance policy due to invalid email: %w", err)
+	}
 	if !opts.confirm {
 		question := newConfirmationQuestion()
 		var confirmation bool

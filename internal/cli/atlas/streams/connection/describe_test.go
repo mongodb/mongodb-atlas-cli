@@ -25,13 +25,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockStreamsConnectionDescriber(ctrl)
-
-	expected := store.StreamsConnection{Name: "id", Type: "Kafka", Instance: "Foo", Servers: "example.com:8080"}
+	expected := store.StreamsConnection{StreamsConnection: admin.StreamsConnection{Name: admin.PtrString("id"), Type: admin.PtrString("Kafka")}, Instance: "Foo", Servers: "example.com:8080"}
 
 	buf := new(bytes.Buffer)
 	describeOpts := &DescribeOpts{
@@ -57,6 +57,63 @@ func TestDescribe_Run(t *testing.T) {
 	test.VerifyOutputTemplate(t, describeTemplate, expected)
 	assert.Equal(t, `NAME   TYPE    INSTANCE   SERVERS
 id     Kafka   Foo        example.com:8080
+`, buf.String())
+}
+
+func TestDescribe_Run_json(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockStreamsConnectionDescriber(ctrl)
+
+	expected := store.StreamsConnection{StreamsConnection: admin.StreamsConnection{
+		Name:  admin.PtrString("JsonConn"),
+		Type:  admin.PtrString("Kafka"),
+		Links: []admin.Link{},
+		Authentication: &admin.StreamsKafkaAuthentication{
+			Mechanism: admin.PtrString("SCRAM-512"),
+			Username:  admin.PtrString("root"),
+		},
+		BootstrapServers: admin.PtrString("kafka.example.com:8080"),
+		Security: &admin.StreamsKafkaSecurity{
+			Protocol: admin.PtrString("PLAINTEXT"),
+		}},
+		Instance: "Foo",
+		Servers:  "kafka.example.com:8080"}
+
+	buf := new(bytes.Buffer)
+	describeOpts := &DescribeOpts{
+		id:              "id",
+		streamsInstance: "Foo",
+		store:           mockStore,
+		OutputOpts: cli.OutputOpts{
+			Template:  describeTemplate,
+			OutWriter: buf,
+			Output:    "json",
+		},
+	}
+
+	mockStore.
+		EXPECT().
+		StreamConnection(describeOpts.ConfigProjectID(), describeOpts.streamsInstance, describeOpts.id).
+		Return(expected, nil).
+		Times(1)
+
+	if err := describeOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
+	assert.Equal(t, `{
+  "name": "JsonConn",
+  "type": "Kafka",
+  "authentication": {
+    "mechanism": "SCRAM-512",
+    "username": "root"
+  },
+  "bootstrapServers": "kafka.example.com:8080",
+  "security": {
+    "protocol": "PLAINTEXT"
+  }
+}
 `, buf.String())
 }
 

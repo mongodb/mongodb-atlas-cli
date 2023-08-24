@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `NAME	TYPE	INSTANCE	SERVERS{{range .}}
+var listTemplate = `NAME	TYPE	INSTANCE	SERVERS{{range .Connections}}
 {{.Name}}	{{.Type}}	{{.Instance}}	{{.Servers}}
 {{end}}
 `
@@ -54,6 +54,10 @@ func (opts *ListOpts) Run() error {
 
 	if err != nil {
 		return err
+	}
+
+	if opts.IsJSONOutput() || opts.IsJSONPathOutput() {
+		return opts.Print(r.Results)
 	}
 
 	return opts.Print(r)

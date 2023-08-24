@@ -55,6 +55,10 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
+	if opts.IsJSONOutput() || opts.IsJSONPathOutput() {
+		return opts.Print(r.StreamsConnection)
+	}
+
 	return opts.Print(r)
 }
 

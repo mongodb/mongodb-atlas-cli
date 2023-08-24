@@ -376,10 +376,10 @@ func (m *MockStreamsConnectionLister) EXPECT() *MockStreamsConnectionListerMockR
 }
 
 // StreamsConnections mocks base method.
-func (m *MockStreamsConnectionLister) StreamsConnections(arg0, arg1 string) ([]store.StreamsConnection, error) {
+func (m *MockStreamsConnectionLister) StreamsConnections(arg0, arg1 string) (store.StreamsConnectionList, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StreamsConnections", arg0, arg1)
-	ret0, _ := ret[0].([]store.StreamsConnection)
+	ret0, _ := ret[0].(store.StreamsConnectionList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

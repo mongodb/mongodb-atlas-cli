@@ -41,7 +41,7 @@ type StreamsUpdater interface {
 }
 
 type StreamsConnectionLister interface {
-	StreamsConnections(string, string) ([]StreamsConnection, error)
+	StreamsConnections(string, string) (StreamsConnectionList, error)
 }
 
 type ConnectionCreator interface {
@@ -86,10 +86,14 @@ func (s *Store) UpdateStream(projectID, name string, streamsDataProcessRegion *a
 }
 
 type StreamsConnection struct {
-	Name     string
-	Type     string
+	atlasv2.StreamsConnection
 	Instance string
 	Servers  string
+}
+
+type StreamsConnectionList struct {
+	atlasv2.PaginatedApiStreamsConnection
+	Connections []StreamsConnection
 }
 
 func AtlasConnToDisplayConn(tenantName string, connection *atlasv2.StreamsConnection) StreamsConnection {
@@ -100,27 +104,22 @@ func AtlasConnToDisplayConn(tenantName string, connection *atlasv2.StreamsConnec
 	} else {
 		servers = *connection.ClusterName
 	}
-	result := struct {
-		Name     string
-		Type     string
-		Instance string
-		Servers  string
-	}{
-		Name:     *connection.Name,
-		Type:     *connection.Type,
-		Instance: tenantName,
-		Servers:  servers,
+	result := StreamsConnection{
+		*connection,
+		tenantName,
+		servers,
 	}
 
 	return result
 }
 
 // StreamsConnections encapsulates the logic to manage different cloud providers.
-func (s *Store) StreamsConnections(projectID, tenantName string) ([]StreamsConnection, error) {
+func (s *Store) StreamsConnections(projectID, tenantName string) (StreamsConnectionList, error) {
 	connections, _, err := s.clientv2.StreamsApi.ListStreamConnections(s.ctx, projectID, tenantName).Execute()
-	result := []StreamsConnection{}
+	connectionsList := make([]StreamsConnection, len(connections.Results))
+	result := StreamsConnectionList{*connections, connectionsList}
 	for i := range connections.Results {
-		result = append(result, AtlasConnToDisplayConn(tenantName, &connections.Results[i]))
+		connectionsList[i] = AtlasConnToDisplayConn(tenantName, &connections.Results[i])
 	}
 
 	return result, err

@@ -46,9 +46,12 @@ const (
 	clusterNamePattern = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 )
 
+var ErrPodmanNotReady = errors.New("podman not found in your system, check requirements at http://docpage")
+
 type SetupOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
+	podmanClient   podman.Client
 	deploymentName string
 	deploymentType string
 	deploymentID   string
@@ -60,10 +63,21 @@ type SetupOpts struct {
 const startTemplate = `local environment started at {{.ConnectionString}}
 `
 
-func (opts *SetupOpts) createLocalDeployment() error {
-	podmanOpts := podman.NewClient(opts.debug, opts.OutWriter)
+func (opts *SetupOpts) initPodmanClient() error {
+	opts.podmanClient = podman.NewClient(opts.debug, opts.OutWriter)
+	return nil
+}
 
-	containers, errList := podmanOpts.ListContainers(mongodHostnamePrefix)
+func (opts *SetupOpts) createLocalDeployment() error {
+	if !opts.podmanClient.Ready() {
+		return ErrPodmanNotReady
+	}
+
+	if err := opts.podmanClient.Setup(); err != nil {
+		return err
+	}
+
+	containers, errList := opts.podmanClient.ListContainers(mongodHostnamePrefix)
 	if errList != nil {
 		return errList
 	}
@@ -76,20 +90,20 @@ func (opts *SetupOpts) createLocalDeployment() error {
 		return err
 	}
 
-	if _, err := podmanOpts.CreateNetwork(opts.networkName()); err != nil {
+	if _, err := opts.podmanClient.CreateNetwork(opts.networkName()); err != nil {
 		return err
 	}
 
-	if err := opts.configureMongod(podmanOpts); err != nil {
+	if err := opts.configureMongod(); err != nil {
 		return err
 	}
 
-	return opts.configureMongot(podmanOpts)
+	return opts.configureMongot()
 }
 
-func (opts *SetupOpts) configureMongod(podmanOpts podman.Client) error {
+func (opts *SetupOpts) configureMongod() error {
 	mongodDataVolume := fmt.Sprintf("mongod-local-data-%s", opts.deploymentName)
-	if _, err := podmanOpts.CreateVolume(mongodDataVolume); err != nil {
+	if _, err := opts.podmanClient.CreateVolume(mongodDataVolume); err != nil {
 		return err
 	}
 
@@ -114,7 +128,7 @@ func (opts *SetupOpts) configureMongod(podmanOpts podman.Client) error {
 		keyfilePerm,
 		strings.Join(mongodArgs, " "))
 
-	if _, err := podmanOpts.RunContainer(
+	if _, err := opts.podmanClient.RunContainer(
 		podman.RunContainerOpts{
 			Detach:   true,
 			Image:    fmt.Sprintf("mongodb/mongodb-enterprise-server:%s-ubi8", opts.mdbVersion),
@@ -158,18 +172,18 @@ func (opts *SetupOpts) configureMongod(podmanOpts podman.Client) error {
 	return opts.seed(opts.port, "db.getSiblingDB('admin').atlascli.insertOne({ managedClusterType: 'atlasCliLocalDevCluster' })")
 }
 
-func (opts *SetupOpts) configureMongot(podmanOpts podman.Client) error {
+func (opts *SetupOpts) configureMongot() error {
 	mongotDataVolume := fmt.Sprintf("mongot-local-data-%s", opts.deploymentName)
-	if _, err := podmanOpts.CreateVolume(mongotDataVolume); err != nil {
+	if _, err := opts.podmanClient.CreateVolume(mongotDataVolume); err != nil {
 		return err
 	}
 
 	mongotMetricsVolume := fmt.Sprintf("mongot-local-metrics-%s", opts.deploymentName)
-	if _, err := podmanOpts.CreateVolume(mongotMetricsVolume); err != nil {
+	if _, err := opts.podmanClient.CreateVolume(mongotMetricsVolume); err != nil {
 		return err
 	}
 
-	_, err := podmanOpts.RunContainer(podman.RunContainerOpts{
+	_, err := opts.podmanClient.RunContainer(podman.RunContainerOpts{
 		Detach:   true,
 		Image:    "mongodb/apix_test:mongot",
 		Name:     opts.mongotHostname(),
@@ -276,7 +290,7 @@ func SetupBuilder() *cobra.Command {
 			opts.deploymentName = args[0]
 			opts.deploymentID = uuid.NewString()
 
-			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), startTemplate))
+			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), startTemplate), opts.initPodmanClient)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

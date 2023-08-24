@@ -17,6 +17,7 @@ package copyprotection
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -64,7 +65,7 @@ func (opts *EnableOpts) watcher() (bool, error) {
 func (opts *EnableOpts) Run() error {
 	res, err := opts.store.EnableCopyProtection(opts.ConfigProjectID())
 	if err != nil {
-		return err
+		return fmt.Errorf("couldn't enable copy protection: %w", err)
 	}
 	opts.policy = res
 	if opts.EnableWatch {

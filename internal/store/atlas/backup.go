@@ -74,13 +74,13 @@ func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectio
 func (s *Store) EnableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
-		return nil, fmt.Errorf("couldn't enable copy protection: %w", err)
+		return nil, err
 	}
 	compliancePolicy.SetCopyProtectionEnabled(true)
 
 	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
 	if err != nil {
-		return nil, fmt.Errorf("couldn't enable copy protectino: %w", err)
+		return nil, err
 	}
 	return result, nil
 }
@@ -88,13 +88,13 @@ func (s *Store) EnableCopyProtection(projectID string) (*atlasv2.DataProtectionS
 func (s *Store) DisableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
-		return nil, fmt.Errorf("couldn't enable copy protection: %w", err)
+		return nil, err
 	}
 	compliancePolicy.SetCopyProtectionEnabled(false)
 
 	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
 	if err != nil {
-		return nil, fmt.Errorf("couldn't enable copy protectino: %w", err)
+		return nil, err
 	}
 	return result, nil
 }

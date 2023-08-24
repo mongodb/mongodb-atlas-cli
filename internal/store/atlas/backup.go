@@ -20,7 +20,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,EnableEncryptionAtRestStore,CompliancePolicyCopyProtectionEnabler
+//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,EnableEncryptionAtRestStore,CompliancePolicyCopyProtectionEnabler,CompliancePolicyCopyProtectionDisabler
 type CompliancePolicyDescriber interface {
 	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error)
 }
@@ -35,6 +35,10 @@ type EnableEncryptionAtRestStore interface {
 
 type CompliancePolicyCopyProtectionEnabler interface {
 	EnableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings, error)
+	CompliancePolicyDescriber
+}
+type CompliancePolicyCopyProtectionDisabler interface {
+	DisableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings, error)
 	CompliancePolicyDescriber
 }
 
@@ -73,6 +77,20 @@ func (s *Store) EnableCopyProtection(projectID string) (*atlasv2.DataProtectionS
 		return nil, fmt.Errorf("couldn't enable copy protection: %w", err)
 	}
 	compliancePolicy.SetCopyProtectionEnabled(true)
+
+	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
+	if err != nil {
+		return nil, fmt.Errorf("couldn't enable copy protectino: %w", err)
+	}
+	return result, nil
+}
+
+func (s *Store) DisableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings, error) {
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	if err != nil {
+		return nil, fmt.Errorf("couldn't enable copy protection: %w", err)
+	}
+	compliancePolicy.SetCopyProtectionEnabled(false)
 
 	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
 	if err != nil {

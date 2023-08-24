@@ -48,7 +48,8 @@ func TestEnableOpts_Watcher(t *testing.T) {
 	mockStore := mocks.NewMockCompliancePolicyEnabler(ctrl)
 
 	opts := &EnableOpts{
-		store: mockStore,
+		store:   mockStore,
+		confirm: true,
 	}
 	state := active
 	expected := &atlasv2.DataProtectionSettings{
@@ -81,6 +82,7 @@ func TestEnableOpts_Run(t *testing.T) {
 	opts := &EnableOpts{
 		store:           mockStore,
 		authorizedEmail: email,
+		confirm:         true,
 	}
 
 	mockStore.

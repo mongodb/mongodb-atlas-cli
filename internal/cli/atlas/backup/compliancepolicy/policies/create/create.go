@@ -79,7 +79,7 @@ func (opts *Opts) watcher() (bool, error) {
 func (opts *Opts) Run(policyItem *atlasv2.DiskBackupApiPolicyItem) error {
 	result, err := opts.store.CreatePolicyItem(opts.ProjectID, policyItem)
 	if err != nil {
-		if atlasv2.IsErrorCode(err, "500") {
+		if atlasv2.IsErrorCode(err, "UNEXPECTED_ERROR") {
 			return fmt.Errorf("%v: %w", errorCode500Template, err)
 		}
 		return err

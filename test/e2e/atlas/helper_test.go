@@ -23,6 +23,7 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 	"time"
 
@@ -822,4 +823,10 @@ func enableCompliancePolicy(projectID string) error {
 		return fmt.Errorf("%w\n %s", outputErr, string(output))
 	}
 	return nil
+}
+
+// If we watch a command in a testing environment,
+// the output has some dots in the beginning (depending on how long it took to finish) that need to be removed.
+func removeDotsFromWatching(consoleOutput []byte) []byte {
+	return []byte(strings.TrimLeft(string(consoleOutput), "."))
 }

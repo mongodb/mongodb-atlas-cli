@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package compliancepolicy
+package copyprotection
 
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -28,27 +29,20 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-type CopyProtectionOpts struct {
+type EnableOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	policy      *atlasv2.DataProtectionSettings
-	store       store.CompliancePolicy
-	enable      bool
-	EnableWatch bool
+	policy *atlasv2.DataProtectionSettings
+	store  store.CompliancePolicyCopyProtectionEnabler
 }
 
-const (
-	enable  = "enable"
-	disable = "disable"
-)
-
-var copyProtectionWatchTemplate = `Copy protection has been set to: {{.CopyProtectionEnabled}}
+var enableWatchTemplate = `Copy protection has been enabled.
 `
 
-var copyProtectionTemplate = `Copy protection has been set to: {{.CopyProtectionEnabled}}
+var enableTemplate = `Copy protection is being enabled.
 `
 
-func (opts *CopyProtectionOpts) initStore(ctx context.Context) func() error {
+func (opts *EnableOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -56,64 +50,45 @@ func (opts *CopyProtectionOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *CopyProtectionOpts) PreRun() error {
-	currentPolicy, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
-	if err != nil {
-		return err
-	}
-	opts.policy = currentPolicy
-	return nil
-}
-
-func (opts *CopyProtectionOpts) copyProtectionWatcher() (bool, error) {
+func (opts *EnableOpts) watcher() (bool, error) {
 	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
-	opts.policy = res
 	if err != nil {
 		return false, err
 	}
+	opts.policy = res
 	if res.GetState() == "" {
 		return false, errors.New("could not access State field")
 	}
-	return (res.GetState() == active), nil
+	return res.GetState() == active, nil
 }
 
-func (opts *CopyProtectionOpts) Run() error {
-	opts.policy.SetCopyProtectionEnabled(opts.enable)
-	_, err := opts.store.UpdateCompliancePolicy(opts.ConfigProjectID(), opts.policy)
+func (opts *EnableOpts) Run() error {
+	res, err := opts.store.EnableCopyProtection(opts.ConfigProjectID())
 	if err != nil {
-		return err
+		return fmt.Errorf("couldn't enable copy protection: %w", err)
 	}
-
+	opts.policy = res
 	if opts.EnableWatch {
-		opts.Template = copyProtectionWatchTemplate
-		if err := opts.Watch(opts.copyProtectionWatcher); err != nil {
+		if err := opts.Watch(opts.watcher); err != nil {
 			return err
 		}
+		opts.Template = enableWatchTemplate
 	}
-
 	return opts.Print(opts.policy)
 }
 
-func CopyProtectionBuilder() *cobra.Command {
-	opts := new(CopyProtectionOpts)
-	use := "copyProtection"
+func EnableBuilder() *cobra.Command {
+	opts := new(EnableOpts)
+	use := "enable"
 	cmd := &cobra.Command{
-		Use:       use,
-		Aliases:   cli.GenerateAliases(use),
-		Args:      require.ExactValidArgs(1),
-		ValidArgs: []string{enable, disable},
-		Short:     "Enable or disable copyprotection of the backup compliance policy for your project.",
+		Use:   use,
+		Args:  require.NoArgs,
+		Short: "Enable copy protection of the backup compliance policy for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if args[0] == enable {
-				opts.enable = true
-			} else {
-				opts.enable = false
-			}
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), copyProtectionTemplate),
-				opts.PreRun,
+				opts.InitOutput(cmd.OutOrStdout(), enableTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

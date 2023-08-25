@@ -37,22 +37,48 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 	g.generateProject("copyprotection-compliance-policy")
 	r.NoError(enableCompliancePolicy(g.projectID))
 
-	cmd := exec.Command(
-		cliPath,
-		backupsEntity,
-		compliancepolicyEntity,
-		"copyprotection",
-		"enable",
-		"-o=json",
-		"--projectId",
-		g.projectID,
-	)
-	cmd.Env = os.Environ()
-	resp, outputErr := cmd.CombinedOutput()
-	r.NoError(outputErr, string(resp))
+	t.Run("enable", func(t *testing.T) {
+		cmd := exec.Command(
+			cliPath,
+			backupsEntity,
+			compliancepolicyEntity,
+			"copyprotection",
+			"enable",
+			"-o=json",
+			"--projectId",
+			g.projectID,
+			"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
+		)
+		cmd.Env = os.Environ()
+		resp, outputErr := cmd.CombinedOutput()
+		r.NoError(outputErr, string(resp))
 
-	var compliancepolicy atlasv2.DataProtectionSettings
-	r.NoError(json.Unmarshal(resp, &compliancepolicy), string(resp))
+		trimmedResponse := removeDotsFromWatching(resp)
 
-	assert.True(t, *compliancepolicy.CopyProtectionEnabled)
+		var compliancepolicy atlasv2.DataProtectionSettings
+		r.NoError(json.Unmarshal(trimmedResponse, &compliancepolicy), string(trimmedResponse))
+
+		assert.True(t, *compliancepolicy.CopyProtectionEnabled)
+	})
+
+	t.Run("disable", func(t *testing.T) {
+		cmd := exec.Command(
+			cliPath,
+			backupsEntity,
+			compliancepolicyEntity,
+			"copyprotection",
+			"disable",
+			"-o=json",
+			"--projectId",
+			g.projectID,
+		)
+		cmd.Env = os.Environ()
+		resp, outputErr := cmd.CombinedOutput()
+		r.NoError(outputErr, string(resp))
+
+		var compliancepolicy atlasv2.DataProtectionSettings
+		r.NoError(json.Unmarshal(resp, &compliancepolicy), string(resp))
+
+		assert.False(t, *compliancepolicy.CopyProtectionEnabled)
+	})
 }

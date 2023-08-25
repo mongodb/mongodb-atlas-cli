@@ -93,7 +93,7 @@ func (opts *EnableOpts) Run() error {
 	compliancePolicy, err := opts.store.EnableCompliancePolicy(opts.ConfigProjectID(), opts.authorizedEmail)
 	opts.policy = compliancePolicy
 	if err != nil {
-		return err
+		return fmt.Errorf("couldn't enable compliance policy: %w", err)
 	}
 	if opts.EnableWatch {
 		if err := opts.Watch(opts.enableWatcher); err != nil {

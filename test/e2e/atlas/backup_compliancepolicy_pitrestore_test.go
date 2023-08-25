@@ -51,7 +51,7 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 	res, err := setupCompliancePolicy(g.projectID, path)
 	r.NoError(err)
 	assert.False(t, res.GetPitEnabled())
-	assert.Equal(t, 0, res.GetRestoreWindowDays())
+	assert.Zero(t, res.GetRestoreWindowDays())
 
 	t.Run("enable", func(t *testing.T) {
 		cmd := exec.Command(

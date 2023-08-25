@@ -835,7 +835,7 @@ func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 	if err != nil {
 		return nil, fmt.Errorf("could not generate random int for setting up a compliance policy: %w", err)
 	}
-	randomPath := fmt.Sprintf("setup_compliance_policy_%d", n)
+	randomPath := fmt.Sprintf("setup_compliance_policy_%d.json", n)
 	createJSONFile(t, compliancePolicy, randomPath)
 
 	cliPath, err := e2e.AtlasCLIBin()

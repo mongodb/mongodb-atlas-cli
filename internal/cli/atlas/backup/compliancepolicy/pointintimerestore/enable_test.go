@@ -145,7 +145,6 @@ func TestEnableOpts_WatchRun(t *testing.T) {
 }
 
 func TestRestoreWindowDaysValidator(t *testing.T) {
-
 	tests := []struct {
 		name              string
 		restoreWindowDays int

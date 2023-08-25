@@ -12,42 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package compliancepolicy
+package deployments
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/encryptionatrest"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/policies"
 	"github.com/spf13/cobra"
 )
 
-const (
-	active = "ACTIVE"
-)
-
-func baseCommand() *cobra.Command {
-	const use = "compliancePolicy"
-	cmd := &cobra.Command{
-		Use:     use,
-		Hidden:  true,
-		Aliases: cli.GenerateAliases(use),
-		Short: `Manage cloud backup compliance policy for your project. Use "atlas backups compliancepolicy setup" to enable backup compliance policy
-		with a full configuration. Use "atlas backups compliancepolicy enable" to enable backup compliance policy without any configuration.`,
-	}
-
-	return cmd
-}
-
 func Builder() *cobra.Command {
-	cmd := baseCommand()
+	const use = "deployments"
+	cmd := &cobra.Command{
+		Hidden:  true,
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage Atlas and local deployments.",
+	}
 
 	cmd.AddCommand(
 		SetupBuilder(),
-		EnableBuilder(),
-		DescribeBuilder(),
-		policies.Builder(),
-		CopyProtectionBuilder(),
-		encryptionatrest.Builder(),
 	)
 
 	return cmd

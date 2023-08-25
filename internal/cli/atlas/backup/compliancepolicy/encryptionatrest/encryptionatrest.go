@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package compliancepolicy
+package encryptionatrest
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/encryptionatrest"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/policies"
 	"github.com/spf13/cobra"
 )
 
@@ -25,29 +23,17 @@ const (
 	active = "ACTIVE"
 )
 
-func baseCommand() *cobra.Command {
-	const use = "compliancePolicy"
+func Builder() *cobra.Command {
+	use := "encryptionAtRest"
 	cmd := &cobra.Command{
 		Use:     use,
-		Hidden:  true,
 		Aliases: cli.GenerateAliases(use),
-		Short: `Manage cloud backup compliance policy for your project. Use "atlas backups compliancepolicy setup" to enable backup compliance policy
-		with a full configuration. Use "atlas backups compliancepolicy enable" to enable backup compliance policy without any configuration.`,
+		Short:   "Manage Encryption at Rest of the backup compliance policy for your project. Encryption at rest enforces all clusters with a Backup Compliance Policy to use Customer Key Management.",
 	}
 
-	return cmd
-}
-
-func Builder() *cobra.Command {
-	cmd := baseCommand()
-
 	cmd.AddCommand(
-		SetupBuilder(),
 		EnableBuilder(),
-		DescribeBuilder(),
-		policies.Builder(),
-		CopyProtectionBuilder(),
-		encryptionatrest.Builder(),
+		DisableBuilder(),
 	)
 
 	return cmd

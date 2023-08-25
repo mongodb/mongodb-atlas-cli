@@ -14,7 +14,7 @@
 
 //go:build unit
 
-package compliancepolicy
+package encryptionatrest
 
 import (
 	"testing"
@@ -26,7 +26,7 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
-		6,
+		2,
 		[]string{},
 	)
 }

@@ -18,17 +18,30 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,CompliancePolicyItemUpdater
-
+//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,CompliancePolicyEncryptionAtRestEnabler,CompliancePolicyEncryptionAtRestDisabler
 type CompliancePolicyDescriber interface {
 	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error)
 }
 type CompliancePolicyUpdater interface {
 	UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error)
 }
+type CompliancePolicyEncryptionAtRestUpdater interface {
+	UpdateEncryptionAtRest(projectID string, enable bool) (*atlasv2.DataProtectionSettings, error)
+}
+
 type CompliancePolicy interface {
 	CompliancePolicyDescriber
 	CompliancePolicyUpdater
+}
+
+type CompliancePolicyEncryptionAtRestEnabler interface {
+	EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error)
+	CompliancePolicyDescriber
+}
+
+type CompliancePolicyEncryptionAtRestDisabler interface {
+	DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error)
+	CompliancePolicyDescriber
 }
 
 func (s *Store) DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error) {
@@ -39,4 +52,32 @@ func (s *Store) DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtect
 func (s *Store) UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error) {
 	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, opts).Execute()
 	return result, err
+}
+
+func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error) {
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	if err != nil {
+		return nil, err
+	}
+	compliancePolicy.SetEncryptionAtRestEnabled(true)
+
+	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (s *Store) DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error) {
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	if err != nil {
+		return nil, err
+	}
+	compliancePolicy.SetEncryptionAtRestEnabled(false)
+
+	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }

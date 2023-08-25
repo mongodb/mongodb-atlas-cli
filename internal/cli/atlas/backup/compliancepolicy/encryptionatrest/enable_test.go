@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package compliancepolicy
+//go:build unit
+
+package encryptionatrest
 
 import (
+	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -23,36 +26,40 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-func TestSetupBuilder(t *testing.T) {
+func TestEnableBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		SetupBuilder(),
+		EnableBuilder(),
 		0,
 		[]string{
 			flag.ProjectID,
 			flag.Output,
-			flag.File,
-			flag.Force,
 			flag.EnableWatch,
 		},
 	)
 }
 
-// Tests that setupWatcher() returns true when status == "ACTIVE".
-func TestSetupOpts_Watcher(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicy(ctrl)
-	state := active
+func TestEnableOpts_InitStore(t *testing.T) {
+	opts := &EnableOpts{}
 
-	opts := &SetupOpts{
+	require.NoError(t, opts.initStore(context.TODO())())
+	assert.NotNil(t, opts.store)
+}
+
+func TestEnableOpts_Watcher(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestEnabler(ctrl)
+
+	opts := &EnableOpts{
 		store: mockStore,
 	}
 
 	expected := &atlasv2.DataProtectionSettings{
-		State: &state,
+		State: atlasv2.PtrString(active),
 	}
 
 	mockStore.
@@ -61,64 +68,64 @@ func TestSetupOpts_Watcher(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	res, err := opts.setupWatcher()
-	if err != nil {
-		t.Fatalf("setupWatcher() unexpected error: %v", err)
-	}
+	res, err := opts.watcher()
+	require.NoError(t, err)
 	assert.True(t, res)
 }
 
-// Verifies the output template.
-func TestSetupOpts_Run(t *testing.T) {
+func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicy(ctrl)
-	state := active
+	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestEnabler(ctrl)
+	encryptionAtRestBefore := false
+	encryptionAtRestAfter := true
 
-	opts := &SetupOpts{
-		store:   mockStore,
-		confirm: true,
-		policy:  new(atlasv2.DataProtectionSettings),
+	initial := &atlasv2.DataProtectionSettings{
+		EncryptionAtRestEnabled: &encryptionAtRestBefore,
 	}
 
 	expected := &atlasv2.DataProtectionSettings{
-		State: &state,
+		State:                   atlasv2.PtrString(active),
+		EncryptionAtRestEnabled: &encryptionAtRestAfter,
+	}
+
+	opts := &EnableOpts{
+		store:  mockStore,
+		policy: initial,
 	}
 
 	mockStore.
 		EXPECT().
-		UpdateCompliancePolicy(opts.ProjectID, opts.policy).
+		EnableEncryptionAtRest(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("run() unexpected error: %v", err)
-	}
+	assert.False(t, *opts.policy.EncryptionAtRestEnabled)
 
-	test.VerifyOutputTemplate(t, setupTemplate, expected)
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+	assert.True(t, *opts.policy.EncryptionAtRestEnabled)
+	test.VerifyOutputTemplate(t, enableTemplate, expected)
 }
 
-// Verifies the output template when using --watch.
-func TestSetupOpts_WatchRun(t *testing.T) {
+func TestEnableOpts_WatchRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicy(ctrl)
-	state := active
+	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestEnabler(ctrl)
 
-	opts := &SetupOpts{
-		store:   mockStore,
-		confirm: true,
-		policy:  new(atlasv2.DataProtectionSettings),
+	opts := &EnableOpts{
+		store: mockStore,
 		WatchOpts: cli.WatchOpts{
 			EnableWatch: true,
 		},
 	}
 
 	expected := &atlasv2.DataProtectionSettings{
-		State: &state,
+		State: atlasv2.PtrString(active),
 	}
 
 	mockStore.
 		EXPECT().
-		UpdateCompliancePolicy(opts.ProjectID, opts.policy).
+		EnableEncryptionAtRest(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 	mockStore.
@@ -128,8 +135,8 @@ func TestSetupOpts_WatchRun(t *testing.T) {
 		Times(1)
 
 	if err := opts.Run(); err != nil {
-		t.Fatalf("run() unexpected error: %v", err)
+		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	test.VerifyOutputTemplate(t, setupWatchTemplate, expected)
+	test.VerifyOutputTemplate(t, enableWatchTemplate, expected)
 }

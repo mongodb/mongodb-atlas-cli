@@ -18,6 +18,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
@@ -103,10 +104,12 @@ func TestSetupOpts_WatchRun(t *testing.T) {
 	state := active
 
 	opts := &SetupOpts{
-		store:       mockStore,
-		confirm:     true,
-		policy:      new(atlasv2.DataProtectionSettings),
-		EnableWatch: true,
+		store:   mockStore,
+		confirm: true,
+		policy:  new(atlasv2.DataProtectionSettings),
+		WatchOpts: cli.WatchOpts{
+			EnableWatch: true,
+		},
 	}
 
 	expected := &atlasv2.DataProtectionSettings{

@@ -15,10 +15,12 @@
 package atlas
 
 import (
+	"fmt"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,CompliancePolicyEncryptionAtRestEnabler,CompliancePolicyEncryptionAtRestDisabler,CompliancePolicyPointInTimeRestoresEnabler
+//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicy,CompliancePolicyEncryptionAtRestEnabler,CompliancePolicyEncryptionAtRestDisabler,CompliancePolicyPointInTimeRestoresEnabler,CompliancePolicyEnabler
 type CompliancePolicyDescriber interface {
 	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error)
 }
@@ -31,6 +33,10 @@ type CompliancePolicyPointInTimeRestoresEnabler interface {
 	CompliancePolicyDescriber
 }
 
+type CompliancePolicyEnabler interface {
+	EnableCompliancePolicy(projectID string, authorizedEmail string) (*atlasv2.DataProtectionSettings, error)
+	CompliancePolicyDescriber
+}
 type CompliancePolicyEncryptionAtRestUpdater interface {
 	UpdateEncryptionAtRest(projectID string, enable bool) (*atlasv2.DataProtectionSettings, error)
 }
@@ -99,4 +105,21 @@ func (s *Store) DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtecti
 		return nil, err
 	}
 	return result, nil
+}
+
+func (s *Store) EnableCompliancePolicy(projectID string, authorizedEmail string) (*atlasv2.DataProtectionSettings, error) {
+	compliancePolicy := newEmptyCompliancePolicy(projectID, authorizedEmail)
+
+	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
+	if err != nil {
+		return nil, fmt.Errorf("couldn't enable compliance policy: %w", err)
+	}
+	return result, nil
+}
+
+func newEmptyCompliancePolicy(projectID string, authorizedEmail string) *atlasv2.DataProtectionSettings {
+	policy := atlasv2.NewDataProtectionSettings()
+	policy.SetAuthorizedEmail(authorizedEmail)
+	policy.SetProjectId(projectID)
+	return policy
 }

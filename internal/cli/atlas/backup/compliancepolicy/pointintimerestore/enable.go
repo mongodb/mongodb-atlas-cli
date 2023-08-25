@@ -17,6 +17,7 @@ package pointintimerestore
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -65,7 +66,7 @@ func (opts *EnableOpts) watcher() (bool, error) {
 func (opts *EnableOpts) Run() error {
 	res, err := opts.store.EnablePointInTimeRestore(opts.ConfigProjectID(), opts.restoreWindowDays)
 	if err != nil {
-		return err
+		return fmt.Errorf("couldn't enable point in time restore: %w", err)
 	}
 	opts.policy = res
 	if opts.EnableWatch {

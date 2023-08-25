@@ -23,6 +23,7 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 	"time"
 
@@ -814,6 +815,7 @@ func enableCompliancePolicy(projectID string) error {
 		"--authorizedEmail",
 		authorizedEmail,
 		"-o=json",
+		"--force",
 		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 	)
 	cmd.Env = os.Environ()
@@ -822,4 +824,53 @@ func enableCompliancePolicy(projectID string) error {
 		return fmt.Errorf("%w\n %s", outputErr, string(output))
 	}
 	return nil
+}
+
+func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error) {
+	t.Helper()
+	compliancePolicy.SetAuthorizedEmail(authorizedEmail)
+	compliancePolicy.SetProjectId(projectID)
+
+	n, err := e2e.RandInt(255)
+	if err != nil {
+		return nil, fmt.Errorf("could not generate random int for setting up a compliance policy: %w", err)
+	}
+	randomPath := fmt.Sprintf("setup_compliance_policy_%d.json", n)
+	createJSONFile(t, compliancePolicy, randomPath)
+
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return nil, fmt.Errorf("%w: invalid bin", err)
+	}
+	cmd := exec.Command(cliPath,
+		backupsEntity,
+		compliancepolicyEntity,
+		"setup",
+		"--projectId",
+		projectID,
+		"-o=json",
+		"--force",
+		"--file",
+		randomPath,
+		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
+	)
+
+	cmd.Env = os.Environ()
+	resp, outputErr := cmd.CombinedOutput()
+	if outputErr != nil {
+		return nil, fmt.Errorf("%w\n %s", outputErr, string(resp))
+	}
+	trimmedResponse := removeDotsFromWatching(resp)
+
+	var result atlasv2.DataProtectionSettings
+	if err := json.Unmarshal(trimmedResponse, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+// If we watch a command in a testing environment,
+// the output has some dots in the beginning (depending on how long it took to finish) that need to be removed.
+func removeDotsFromWatching(consoleOutput []byte) []byte {
+	return []byte(strings.TrimLeft(string(consoleOutput), "."))
 }

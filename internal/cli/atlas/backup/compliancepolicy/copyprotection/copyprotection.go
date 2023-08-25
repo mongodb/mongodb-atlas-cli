@@ -12,21 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
-package compliancepolicy
+package copyprotection
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		7,
-		[]string{},
+const (
+	active = "ACTIVE"
+)
+
+func Builder() *cobra.Command {
+	use := "copyProtection"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage copy protection of the backup compliance policy for your project. Learn more: https://www.mongodb.com/docs/atlas/backup/cloud-backup/backup-compliance-policy/#-optional--keep-all-snapshots-when-removing-additional-snapshot-regions.",
+	}
+
+	cmd.AddCommand(
+		EnableBuilder(),
+		DisableBuilder(),
 	)
+
+	return cmd
 }

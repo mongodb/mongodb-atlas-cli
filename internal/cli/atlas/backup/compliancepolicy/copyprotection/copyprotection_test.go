@@ -14,7 +14,7 @@
 
 //go:build unit
 
-package compliancepolicy
+package copyprotection
 
 import (
 	"testing"
@@ -26,7 +26,7 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
-		7,
+		2,
 		[]string{},
 	)
 }

@@ -100,7 +100,7 @@ func (opts *SetupOpts) setupWatcher() (bool, error) {
 	return (res.GetState() == active), nil
 }
 
-func newConfirmationQuestion() survey.Prompt {
+func newSetupConfirmationQuestion() survey.Prompt {
 	return &survey.Confirm{
 		Message: confirmationMessage,
 		Default: false,
@@ -109,7 +109,7 @@ func newConfirmationQuestion() survey.Prompt {
 
 func (opts *SetupOpts) Run() error {
 	if !opts.confirm {
-		question := newConfirmationQuestion()
+		question := newSetupConfirmationQuestion()
 		var confirmation bool
 		if err := telemetry.TrackAskOne(question, &confirmation); err != nil {
 			return fmt.Errorf("couldn't confirm action: %w", err)

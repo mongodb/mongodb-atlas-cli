@@ -250,6 +250,19 @@ To update simply rename all instances of major version across the repository imp
 
 e.g `v20230201001` => `v20230201002` 
 
+### Update Automation
+
+To update Atlas SDK run:
+
+```bash
+make update-atlas-sdk
+```
+
+> NOTE: Update mechanism is only needed for major releases. Any other releases will be supported by dependabot.
+
+> NOTE: Command can make import changes to +500 files. Please make sure that you perform update on main branch without any uncommited changes.
+
+
 ### Stable Methods
 
 Each Go SDK method used in the Atlas CLI should be marked as stable.

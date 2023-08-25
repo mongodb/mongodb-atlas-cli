@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package compliancepolicy
+//go:build unit
+
+package copyprotection
 
 import (
+	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
-)
-
-const (
-	authorizedEmail = "firstname.lastname@example.com"
 )
 
 func TestEnableBuilder(t *testing.T) {
@@ -36,24 +37,29 @@ func TestEnableBuilder(t *testing.T) {
 		0,
 		[]string{
 			flag.ProjectID,
-			flag.AuthorizedEmail,
 			flag.Output,
 			flag.EnableWatch,
 		},
 	)
 }
 
+func TestEnableOpts_InitStore(t *testing.T) {
+	opts := &EnableOpts{}
+
+	require.NoError(t, opts.initStore(context.TODO())())
+	assert.NotNil(t, opts.store)
+}
+
 func TestEnableOpts_Watcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyEnabler(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyCopyProtectionEnabler(ctrl)
 
 	opts := &EnableOpts{
-		store:   mockStore,
-		confirm: true,
+		store: mockStore,
 	}
-	state := active
+
 	expected := &atlasv2.DataProtectionSettings{
-		State: &state,
+		State: atlasv2.PtrString(active),
 	}
 
 	mockStore.
@@ -62,47 +68,67 @@ func TestEnableOpts_Watcher(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	res, err := opts.enableWatcher()
-	if err != nil {
-		t.Fatalf("enableWatcher() unexpected error: %v", err)
-	}
+	res, err := opts.watcher()
+	require.NoError(t, err)
 	assert.True(t, res)
 }
 
 func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyEnabler(ctrl)
-	state := active
-	email := authorizedEmail
+	mockStore := mocks.NewMockCompliancePolicyCopyProtectionEnabler(ctrl)
+	copyProtectionAfter := true
 
 	expected := &atlasv2.DataProtectionSettings{
-		State: &state,
+		State:                 atlasv2.PtrString(active),
+		CopyProtectionEnabled: &copyProtectionAfter,
 	}
 
 	opts := &EnableOpts{
-		store:           mockStore,
-		authorizedEmail: email,
-		confirm:         true,
+		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		EnableCompliancePolicy(opts.ProjectID, email).
+		EnableCopyProtection(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	assert.True(t, *opts.policy.CopyProtectionEnabled)
 	test.VerifyOutputTemplate(t, enableTemplate, expected)
 }
 
-func TestEnableOpts_Run_invalidEmail(t *testing.T) {
-	invalidEmail := "invalidEmail"
+func TestEnableOpts_WatchRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockCompliancePolicyCopyProtectionEnabler(ctrl)
 
 	opts := &EnableOpts{
-		authorizedEmail: invalidEmail,
+		store: mockStore,
+		WatchOpts: cli.WatchOpts{
+			EnableWatch: true,
+		},
 	}
 
-	assert.Error(t, opts.Run())
+	expected := &atlasv2.DataProtectionSettings{
+		State: atlasv2.PtrString(active),
+	}
+
+	mockStore.
+		EXPECT().
+		EnableCopyProtection(opts.ProjectID).
+		Return(expected, nil).
+		Times(1)
+	mockStore.
+		EXPECT().
+		DescribeCompliancePolicy(opts.ProjectID).
+		Return(expected, nil).
+		Times(1)
+
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+
+	test.VerifyOutputTemplate(t, enableWatchTemplate, expected)
 }

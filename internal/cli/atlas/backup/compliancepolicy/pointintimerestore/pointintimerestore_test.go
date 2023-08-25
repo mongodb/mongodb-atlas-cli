@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
-package compliancepolicy
+package pointintimerestore
 
 import (
 	"testing"
@@ -26,7 +24,7 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
-		7,
+		1,
 		[]string{},
 	)
 }

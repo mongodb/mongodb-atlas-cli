@@ -28,49 +28,39 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
+func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
 	g := newAtlasE2ETestGenerator(t)
-	g.generateProject("copyprotection-compliance-policy")
-	r.NoError(enableCompliancePolicy(g.projectID))
+	g.generateProject("compliance-policy-pointintimerestore")
+	initialItem := atlasv2.DiskBackupApiPolicyItem{
+		FrequencyInterval: 1,
+		FrequencyType:     "hourly",
+		RetentionUnit:     "days",
+		RetentionValue:    1,
+	}
+	compliancePolicy := atlasv2.DataProtectionSettings{
+		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{initialItem},
+	}
+	res, err := setupCompliancePolicy(t, g.projectID, &compliancePolicy)
+	r.NoError(err)
+	assert.False(t, res.GetPitEnabled())
+	assert.Zero(t, res.GetRestoreWindowDays())
 
 	t.Run("enable", func(t *testing.T) {
 		cmd := exec.Command(
 			cliPath,
 			backupsEntity,
 			compliancepolicyEntity,
-			"copyprotection",
+			"pointintimerestore",
 			"enable",
 			"-o=json",
 			"--projectId",
 			g.projectID,
-			"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
-		)
-		cmd.Env = os.Environ()
-		resp, outputErr := cmd.CombinedOutput()
-		r.NoError(outputErr, string(resp))
-
-		trimmedResponse := removeDotsFromWatching(resp)
-
-		var compliancepolicy atlasv2.DataProtectionSettings
-		r.NoError(json.Unmarshal(trimmedResponse, &compliancepolicy), string(trimmedResponse))
-
-		assert.True(t, *compliancepolicy.CopyProtectionEnabled)
-	})
-
-	t.Run("disable", func(t *testing.T) {
-		cmd := exec.Command(
-			cliPath,
-			backupsEntity,
-			compliancepolicyEntity,
-			"copyprotection",
-			"disable",
-			"-o=json",
-			"--projectId",
-			g.projectID,
+			"--restoreWindowDays",
+			"1",
 		)
 		cmd.Env = os.Environ()
 		resp, outputErr := cmd.CombinedOutput()
@@ -79,6 +69,7 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 		var compliancepolicy atlasv2.DataProtectionSettings
 		r.NoError(json.Unmarshal(resp, &compliancepolicy), string(resp))
 
-		assert.False(t, *compliancepolicy.CopyProtectionEnabled)
+		assert.True(t, compliancepolicy.GetPitEnabled())
+		assert.Equal(t, 1, compliancepolicy.GetRestoreWindowDays())
 	})
 }

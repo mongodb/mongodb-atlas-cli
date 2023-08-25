@@ -36,7 +36,7 @@ type SetupOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	policy  *atlasv2.DataProtectionSettings
-	store   store.CompliancePolicy
+	store   store.CompliancePolicyUpdater
 	fs      afero.Fs
 	path    string
 	confirm bool

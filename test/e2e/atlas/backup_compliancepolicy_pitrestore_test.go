@@ -42,13 +42,9 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 		RetentionValue:    1,
 	}
 	compliancePolicy := atlasv2.DataProtectionSettings{
-		AuthorizedEmail:      atlasv2.PtrString(authorizedEmail),
 		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{initialItem},
-		ProjectId:            atlasv2.PtrString(g.projectID),
 	}
-	path := "./pit_restore.json"
-	createJSONFile(t, compliancePolicy, path)
-	res, err := setupCompliancePolicy(g.projectID, path)
+	res, err := setupCompliancePolicy(t, g.projectID, &compliancePolicy)
 	r.NoError(err)
 	assert.False(t, res.GetPitEnabled())
 	assert.Zero(t, res.GetRestoreWindowDays())

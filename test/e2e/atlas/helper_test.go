@@ -825,7 +825,18 @@ func enableCompliancePolicy(projectID string) error {
 	return nil
 }
 
-func setupCompliancePolicy(projectID string, path string) (*atlasv2.DataProtectionSettings, error) {
+func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error) {
+	t.Helper()
+	compliancePolicy.SetAuthorizedEmail(authorizedEmail)
+	compliancePolicy.SetProjectId(projectID)
+
+	n, err := e2e.RandInt(255)
+	if err != nil {
+		return nil, fmt.Errorf("could not generate random int for setting up a compliance policy: %w", err)
+	}
+	randomPath := fmt.Sprintf("setup_compliance_policy_%d", n)
+	createJSONFile(t, compliancePolicy, randomPath)
+
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return nil, fmt.Errorf("%w: invalid bin", err)
@@ -839,7 +850,7 @@ func setupCompliancePolicy(projectID string, path string) (*atlasv2.DataProtecti
 		"-o=json",
 		"--force",
 		"--file",
-		path,
+		randomPath,
 		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 	)
 

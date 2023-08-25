@@ -22,7 +22,7 @@ import (
 )
 
 func Builder() *cobra.Command {
-	const use = "connection"
+	const use = "connections"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),

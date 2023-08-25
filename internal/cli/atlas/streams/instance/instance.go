@@ -20,7 +20,7 @@ import (
 )
 
 func Builder() *cobra.Command {
-	const use = "instance"
+	const use = "instances"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),

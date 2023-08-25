@@ -145,7 +145,7 @@ func DeleteBuilder() *cobra.Command {
 		Short: "Delete a local deployment.",
 		Args:  require.NoArgs,
 		Annotations: map[string]string{
-			"clusterNameDesc": "Name of the cluster you want to setup.",
+			"clusterNameDesc": "Name of the cluster you want to delete.",
 			"output":          opts.SuccessMessage(),
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

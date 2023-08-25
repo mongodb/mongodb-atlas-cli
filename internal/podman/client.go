@@ -16,6 +16,7 @@ package podman
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"os/exec"
 	"runtime"
@@ -23,6 +24,8 @@ import (
 
 	"github.com/containers/podman/v4/pkg/machine"
 )
+
+var ErrPodmanNotReady = errors.New("podman not found in your system, check requirements at http://docpage")
 
 type RunContainerOpts struct {
 	Detach   bool
@@ -39,6 +42,7 @@ type RunContainerOpts struct {
 }
 
 type Container struct {
+	ID    string   `json:"ID"`
 	Names []string `json:"Names"`
 	State string   `json:"State"`
 	Image string   `json:"Image"`
@@ -49,7 +53,7 @@ type Container struct {
 }
 
 type Client interface {
-	Ready() bool
+	Ready() error
 	Setup() error
 	CreateNetwork(name string) ([]byte, error)
 	CreateVolume(name string) ([]byte, error)
@@ -67,9 +71,11 @@ type client struct {
 	outWriter io.Writer
 }
 
-func (*client) Ready() bool {
-	_, err := exec.LookPath("podman")
-	return err == nil
+func (*client) Ready() error {
+	if _, err := exec.LookPath("podman"); err != nil {
+		return ErrPodmanNotReady
+	}
+	return nil
 }
 
 func (o *client) machineInit() error {
@@ -185,11 +191,11 @@ func (o *client) RemoveContainers(names ...string) ([]byte, error) {
 }
 
 func (o *client) RemoveVolumes(names ...string) ([]byte, error) {
-	return o.runPodman(append([]string{"volume", "rm"}, names...)...)
+	return o.runPodman(append([]string{"volume", "rm", "-f"}, names...)...)
 }
 
 func (o *client) RemoveNetworks(names ...string) ([]byte, error) {
-	return o.runPodman(append([]string{"network", "rm"}, names...)...)
+	return o.runPodman(append([]string{"network", "rm", "-f"}, names...)...)
 }
 
 func (o *client) ListContainers(nameFilter string) ([]Container, error) {

@@ -136,6 +136,14 @@ func TestWithOS(t *testing.T) {
 	a.Equal(e.Properties["arch"], runtime.GOARCH)
 }
 
+func TestWithUserAgent(t *testing.T) {
+	e := newEvent(withUserAgent())
+
+	a := assert.New(t)
+	a.Equal(e.Properties["UserAgent"], config.UserAgent)
+	a.Equal(e.Properties["HostName"], config.HostName)
+}
+
 func TestWithAuthMethod(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 	t.Run("api key", func(t *testing.T) {

@@ -281,6 +281,13 @@ func withSignal(s string) eventOpt {
 	}
 }
 
+func withUserAgent() eventOpt {
+	return func(event Event) {
+		event.Properties["UserAgent"] = config.UserAgent
+		event.Properties["HostName"] = config.HostName
+	}
+}
+
 func newEvent(opts ...eventOpt) Event {
 	var event = Event{
 		Timestamp: time.Now(),

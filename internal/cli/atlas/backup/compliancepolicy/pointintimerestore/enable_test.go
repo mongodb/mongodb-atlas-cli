@@ -145,14 +145,38 @@ func TestEnableOpts_WatchRun(t *testing.T) {
 }
 
 func TestRestoreWindowDaysValidator(t *testing.T) {
-	opts := &EnableOpts{
-		restoreWindowDays: 1,
+
+	tests := []struct {
+		name              string
+		restoreWindowDays int
+		wantErr           bool
+	}{
+		{
+			"valid test",
+			1,
+			false,
+		},
+		{
+			"invalid, negative number",
+			-1,
+			true,
+		},
+		{
+			"invalid, zero",
+			0,
+			true,
+		},
 	}
-	assert.Nil(t, opts.validateRestoreWindowDays())
-}
-func TestRestoreWindowDaysValidatorReturnsError(t *testing.T) {
-	opts := &EnableOpts{
-		restoreWindowDays: -1,
+
+	for _, testOptions := range tests {
+		opts := &EnableOpts{
+			restoreWindowDays: testOptions.restoreWindowDays,
+		}
+
+		if testOptions.wantErr {
+			assert.Error(t, opts.validateRestoreWindowDays())
+		} else {
+			assert.NoError(t, opts.validateRestoreWindowDays())
+		}
 	}
-	assert.Error(t, opts.validateRestoreWindowDays())
 }

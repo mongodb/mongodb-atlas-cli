@@ -29,20 +29,20 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
-type EnableOpts struct {
+type DisableOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	policy *atlasv2.DataProtectionSettings
-	store  store.CompliancePolicyEncryptionAtRestEnabler
+	store  store.CompliancePolicyEncryptionAtRestDisabler
 }
 
-var enableWatchTemplate = `Encryption at rest has been enabled.
+var disableWatchTemplate = `Encryption at rest has been disabled.
 `
 
-var enableTemplate = `Encryption at rest is being enabled.
+var disableTemplate = `Encryption at rest is being disabled.
 `
 
-func (opts *EnableOpts) initStore(ctx context.Context) func() error {
+func (opts *DisableOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -50,7 +50,7 @@ func (opts *EnableOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *EnableOpts) watcher() (bool, error) {
+func (opts *DisableOpts) watcher() (bool, error) {
 	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
 	if err != nil {
 		return false, err
@@ -62,33 +62,33 @@ func (opts *EnableOpts) watcher() (bool, error) {
 	return res.GetState() == active, nil
 }
 
-func (opts *EnableOpts) Run() error {
-	res, err := opts.store.EnableEncryptionAtRest(opts.ConfigProjectID())
+func (opts *DisableOpts) Run() error {
+	res, err := opts.store.DisableEncryptionAtRest(opts.ConfigProjectID())
 	if err != nil {
-		return fmt.Errorf("couldn't enable encryption at rest: %w", err)
+		return fmt.Errorf("couldn't disable encryption at rest: %w", err)
 	}
 	opts.policy = res
 	if opts.EnableWatch {
 		if err := opts.Watch(opts.watcher); err != nil {
 			return err
 		}
-		opts.Template = enableWatchTemplate
+		opts.Template = disableWatchTemplate
 	}
 	return opts.Print(opts.policy)
 }
 
-func EnableBuilder() *cobra.Command {
-	opts := new(EnableOpts)
-	use := "enable"
+func DisableBuilder() *cobra.Command {
+	opts := new(DisableOpts)
+	use := "disable"
 	cmd := &cobra.Command{
 		Use:   use,
+		Short: "Disable encryption at rest of the backup compliance policy for your project.",
 		Args:  require.NoArgs,
-		Short: "Enable encryption at rest of the backup compliance policy for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), enableTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), disableTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

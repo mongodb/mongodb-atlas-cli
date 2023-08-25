@@ -17,12 +17,15 @@ package compliancepolicy
 import (
 	"context"
 	"errors"
+	"fmt"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -32,12 +35,11 @@ import (
 type SetupOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	policy      *atlasv2.DataProtectionSettings
-	store       store.CompliancePolicy
-	fs          afero.Fs
-	path        string
-	confirm     bool
-	EnableWatch bool
+	policy  *atlasv2.DataProtectionSettings
+	store   store.CompliancePolicy
+	fs      afero.Fs
+	path    string
+	confirm bool
 }
 
 var setupWatchTemplate = `Your backup compliance policy has been set up with the following configuration:
@@ -74,6 +76,10 @@ ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
 {{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
 `
 
+var confirmationMessage = `Backup compliance policy can not be disabled without MongoDB Support. Please confirm that you want to continue.
+Learn more: https://www.mongodb.com/docs/atlas/backup/cloud-backup/backup-compliance-policy/
+`
+
 func (opts *SetupOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -94,7 +100,24 @@ func (opts *SetupOpts) setupWatcher() (bool, error) {
 	return (res.GetState() == active), nil
 }
 
+func newSetupConfirmationQuestion() survey.Prompt {
+	return &survey.Confirm{
+		Message: confirmationMessage,
+		Default: false,
+	}
+}
+
 func (opts *SetupOpts) Run() error {
+	if !opts.confirm {
+		question := newSetupConfirmationQuestion()
+		var confirmation bool
+		if err := telemetry.TrackAskOne(question, &confirmation); err != nil {
+			return fmt.Errorf("couldn't confirm action: %w", err)
+		}
+		if !confirmation {
+			return errors.New("did not receive confirmation to enable backup compliance policy")
+		}
+	}
 	_, err := opts.store.UpdateCompliancePolicy(opts.ConfigProjectID(), opts.policy)
 	if err != nil {
 		return err
@@ -140,7 +163,6 @@ func SetupBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.path, flag.File, flag.FileShort, "", usage.BackupCompliancePolicyFile)
 	cmd.Flags().BoolVar(&opts.confirm, flag.Force, false, usage.Force)
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
-	_ = cmd.Flags().MarkHidden(flag.Force)
 	_ = cmd.MarkFlagRequired(flag.File)
 	return cmd
 }

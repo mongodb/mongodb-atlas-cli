@@ -16,11 +16,14 @@ package deployments
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"regexp"
+	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -43,11 +46,15 @@ const (
 	clusterNamePattern = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 )
 
+var ErrPodmanNotReady = errors.New("podman not found in your system, check requirements at http://docpage")
+
 type SetupOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
+	podmanClient   podman.Client
 	deploymentName string
 	deploymentType string
+	deploymentID   string
 	mdbVersion     string
 	port           int
 	debug          bool
@@ -56,10 +63,21 @@ type SetupOpts struct {
 const startTemplate = `local environment started at {{.ConnectionString}}
 `
 
-func (opts *SetupOpts) createLocalDeployment() error {
-	podmanOpts := podman.NewClient(opts.debug, opts.OutWriter)
+func (opts *SetupOpts) initPodmanClient() error {
+	opts.podmanClient = podman.NewClient(opts.debug, opts.OutWriter)
+	return nil
+}
 
-	containers, errList := podmanOpts.ListContainers(mongodHostnamePrefix)
+func (opts *SetupOpts) createLocalDeployment() error {
+	if !opts.podmanClient.Ready() {
+		return ErrPodmanNotReady
+	}
+
+	if err := opts.podmanClient.Setup(); err != nil {
+		return err
+	}
+
+	containers, errList := opts.podmanClient.ListContainers(mongodHostnamePrefix)
 	if errList != nil {
 		return errList
 	}
@@ -72,24 +90,45 @@ func (opts *SetupOpts) createLocalDeployment() error {
 		return err
 	}
 
-	if _, err := podmanOpts.CreateNetwork(opts.networkName()); err != nil {
+	if _, err := opts.podmanClient.CreateNetwork(opts.networkName()); err != nil {
 		return err
 	}
 
-	if err := opts.configureMongod(podmanOpts); err != nil {
-		return nil
+	if err := opts.configureMongod(); err != nil {
+		return err
 	}
 
-	return opts.configureMongot(podmanOpts)
+	return opts.configureMongot()
 }
 
-func (opts *SetupOpts) configureMongod(podmanOpts podman.Client) error {
+func (opts *SetupOpts) configureMongod() error {
 	mongodDataVolume := fmt.Sprintf("mongod-local-data-%s", opts.deploymentName)
-	if _, err := podmanOpts.CreateVolume(mongodDataVolume); err != nil {
+	if _, err := opts.podmanClient.CreateVolume(mongodDataVolume); err != nil {
 		return err
 	}
 
-	if _, err := podmanOpts.RunContainer(
+	keyfile := "/data/configdb/keyfile"
+	keyfilePerm := 400
+	mongodArgs := []string{
+		"--transitionToAuth",
+		"--keyFile", keyfile,
+		"--dbpath", "/data/db",
+		"--replSet", replicaSetName,
+		"--setParameter", fmt.Sprintf("mongotHost=%s:%d", opts.mongotHostname(), internalMongotPort),
+		"--setParameter", fmt.Sprintf("searchIndexManagementHostAndPort=%s:%d", opts.mongotHostname(), internalMongotPort),
+	}
+
+	// wrap the entrypoint with a chain of commands that
+	// creates the keyfile in the container and sets the 400 permissions for it,
+	// then starts the entrypoint with the local dev config
+	cmdTemplate := "echo '%[1]s' > %[2]s && chmod %[3]d %[2]s && python3 /usr/local/bin/docker-entrypoint.py %[4]s"
+	cmd := fmt.Sprintf(cmdTemplate,
+		base64.URLEncoding.EncodeToString([]byte(opts.deploymentID)),
+		keyfile,
+		keyfilePerm,
+		strings.Join(mongodArgs, " "))
+
+	if _, err := opts.podmanClient.RunContainer(
 		podman.RunContainerOpts{
 			Detach:   true,
 			Image:    fmt.Sprintf("mongodb/mongodb-enterprise-server:%s-ubi8", opts.mdbVersion),
@@ -102,14 +141,7 @@ func (opts *SetupOpts) configureMongod(podmanOpts podman.Client) error {
 				opts.port: internalMongodPort,
 			},
 			Network: opts.networkName(),
-			Args: []string{
-				"--noauth",
-				"--dbpath", "/data/db",
-				"--replSet", replicaSetName,
-				"--setParameter", fmt.Sprintf("mongotHost=%s:%d", opts.mongotHostname(), internalMongotPort),
-				"--setParameter", fmt.Sprintf("searchIndexManagementHostAndPort=%s:%d", opts.mongotHostname(), internalMongotPort),
-				"--setParameter", "skipAuthenticationToMongot=true",
-			},
+			Args:    []string{"sh", "-c", cmd},
 		}); err != nil {
 		return err
 	}
@@ -133,26 +165,33 @@ func (opts *SetupOpts) configureMongod(podmanOpts podman.Client) error {
 		opts.mongodHostname(),
 		internalMongodPort,
 		opts.port)
-	return opts.seed(opts.port, seedRs)
+	if err := opts.seed(opts.port, seedRs); err != nil {
+		return err
+	}
+
+	return opts.seed(opts.port, "db.getSiblingDB('admin').atlascli.insertOne({ managedClusterType: 'atlasCliLocalDevCluster' })")
 }
 
-func (opts *SetupOpts) configureMongot(podmanOpts podman.Client) error {
+func (opts *SetupOpts) configureMongot() error {
 	mongotDataVolume := fmt.Sprintf("mongot-local-data-%s", opts.deploymentName)
-	if _, err := podmanOpts.CreateVolume(mongotDataVolume); err != nil {
+	if _, err := opts.podmanClient.CreateVolume(mongotDataVolume); err != nil {
 		return err
 	}
 
 	mongotMetricsVolume := fmt.Sprintf("mongot-local-metrics-%s", opts.deploymentName)
-	if _, err := podmanOpts.CreateVolume(mongotMetricsVolume); err != nil {
+	if _, err := opts.podmanClient.CreateVolume(mongotMetricsVolume); err != nil {
 		return err
 	}
 
-	_, err := podmanOpts.RunContainer(podman.RunContainerOpts{
+	_, err := opts.podmanClient.RunContainer(podman.RunContainerOpts{
 		Detach:   true,
-		Image:    "mongodb/apix_test:mongot-noauth",
+		Image:    "mongodb/apix_test:mongot",
 		Name:     opts.mongotHostname(),
 		Hostname: opts.mongotHostname(),
-		Args:     []string{"--mongodHostAndPort", fmt.Sprintf("%s:%d", opts.mongodHostname(), internalMongodPort)},
+		Args: []string{
+			"--mongodHostAndPort", fmt.Sprintf("%s:%d", opts.mongodHostname(), internalMongodPort),
+			"--keyFileContent", base64.URLEncoding.EncodeToString([]byte(opts.deploymentID)),
+		},
 		Volumes: map[string]string{
 			mongotDataVolume:    "/var/lib/mongot",
 			mongotMetricsVolume: "/var/lib/mongot/metrics",
@@ -249,8 +288,9 @@ func SetupBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.deploymentName = args[0]
+			opts.deploymentID = uuid.NewString()
 
-			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), startTemplate))
+			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), startTemplate), opts.initPodmanClient)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

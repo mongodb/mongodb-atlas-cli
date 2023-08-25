@@ -140,4 +140,4 @@ Examples
 .. code-block::
 
    # This example uses the profile named "myprofile" for accessing Atlas.
-   atlas projects settings update --disableCollectDatabaseSpecificsStatistics -P myprofile
+   atlas projects settings update --disableCollectDatabaseSpecificsStatistics -P myprofile --projectId 5e2211c17a3e5a48f5497de3

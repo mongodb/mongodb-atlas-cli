@@ -90,29 +90,29 @@ Examples
    # 	
 .. code-block::
 
-   # Export all resources for a specific project without connection and integration secrets:
-   atlas kubernetes config generate --projectId=<projectId>
-
-   
+   # Export Project, DatabaseUsers, Deployments resources for a specific project without connection and integration secrets:
+ 		atlas kubernetes config generate --projectId=<projectId>
+ 	  
+ 		
 .. code-block::
 
-   # Export all resources for a specific project including connection and integration secrets:
-   atlas kubernetes config generate --projectId=<projectId> --includeSecrets
-
-   
+   # Export Project, DatabaseUsers, Deployments resources for a specific project including connection and integration secrets:
+ 		atlas kubernetes config generate --projectId=<projectId> --includeSecrets
+ 	  
+ 		
 .. code-block::
 
-   # Export all resources for a specific project including connection and integration secrets to a specific namespace:
-   atlas kubernetes config generate --projectId=<projectId> --includeSecrets --targetNamespace=<namespace>
-   
-   
+   # Export Project, DatabaseUsers, Deployments resources for a specific project including connection and integration secrets to a specific namespace:
+ 		atlas kubernetes config generate --projectId=<projectId> --includeSecrets --targetNamespace=<namespace>
+ 		
+ 		
 .. code-block::
 
-   # Export all non-deployment resources and specific Deployment resources for a specific project including connection and integration secrets to a specific namespace:
-   atlas kubernetes config generate --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>
-
-   
+   # Export Project, DatabaseUsers, and specific Deployment resources for a specific project including connection and integration secrets to a specific namespace:
+ 		atlas kubernetes config generate --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>
+ 	  
+ 		
 .. code-block::
 
-   # Export all resources for a specific version of the Atlas Kubernetes Operator:
-   atlas kubernetes config generate --projectId=<projectId> --targetNamespace=<namespace> --operatorVersion=1.5.1
+   # Export resources for a specific version of the Atlas Kubernetes Operator:
+ 		atlas kubernetes config generate --projectId=<projectId> --targetNamespace=<namespace> --operatorVersion=1.5.1

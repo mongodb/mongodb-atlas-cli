@@ -88,6 +88,7 @@ func (t *tracker) defaultCommandOptions() []eventOpt {
 		withOrgID(t.cmd, config.Default()),
 		withTerminal(t.cmd),
 		withInstaller(t.installer),
+		withUserAgent(),
 	}
 }
 

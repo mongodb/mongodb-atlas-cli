@@ -307,11 +307,7 @@ func deleteClusterForProject(projectID, clusterName string) error {
 	return nil
 }
 
-func deleteDatalakeForProject(projectID, id string) error {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return err
-	}
+func deleteDatalakeForProject(cliPath, projectID, id string) error {
 	args := []string{
 		datalakePipelineEntity,
 		"delete",
@@ -617,10 +613,10 @@ func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
 	t.Log(string(resp))
 	require.NoError(t, err)
 	var pipelines []atlasv2.DataLakeIngestionPipeline
-	for _, p := range pipelines {
-		assert.NoError(t, deleteDatalakeForProject(projectID, p.GetId()))
-	}
 	require.NoError(t, json.Unmarshal(resp, &pipelines))
+	for _, p := range pipelines {
+		assert.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetId()))
+	}
 }
 
 func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {

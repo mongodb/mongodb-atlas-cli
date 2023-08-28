@@ -253,10 +253,8 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	}
 }
 
-func deleteOrgInvitations(t *testing.T) {
+func deleteOrgInvitations(t *testing.T, cliPath string) {
 	t.Helper()
-	cliPath, err := e2e.AtlasCLIBin()
-	require.NoError(t, err)
 	cmd := exec.Command(cliPath,
 		orgEntity,
 		invitationsEntity,
@@ -270,6 +268,25 @@ func deleteOrgInvitations(t *testing.T) {
 	t.Logf("%s\n", resp)
 	for _, i := range invitations {
 		deleteOrgInvitation(t, cliPath, *i.Id)
+	}
+}
+
+func deleteOrgTeams(t *testing.T, cliPath string) {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		orgEntity,
+		teamsEntity,
+		"ls",
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err, string(resp))
+	var teams atlasv2.PaginatedTeam
+	require.NoError(t, json.Unmarshal(resp, &teams), string(resp))
+	t.Logf("%s\n", resp)
+	for _, team := range teams.Results {
+		require.NoError(t, deleteTeam(team.GetId()))
 	}
 }
 

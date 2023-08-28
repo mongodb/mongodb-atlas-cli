@@ -46,7 +46,8 @@ func TestCleanup(t *testing.T) {
 	err = json.Unmarshal(resp, &projects)
 	req.NoError(err, string(resp))
 	t.Logf("%s\n", resp)
-	deleteOrgInvitations(t)
+	deleteOrgInvitations(t, cliPath)
+	deleteOrgTeams(t, cliPath)
 	for _, project := range projects.Results {
 		projectID := project.ID
 		if projectID == os.Getenv("MCLI_PROJECT_ID") {

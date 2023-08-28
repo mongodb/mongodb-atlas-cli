@@ -19,10 +19,14 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"math/rand"
+	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/google/uuid"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -30,6 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -39,10 +44,31 @@ const (
 	internalMongodPort = 27017
 	internalMongotPort = 27027
 	localCluster       = "LOCAL"
+	atlasCluster       = "ATLAS"
 	mdb6               = "6.0"
+	mdb7               = "7.0"
 	replicaSetName     = "rs-localdev"
 	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
 	clusterNamePattern = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
+	defaultSettings    = "default"
+	customSettings     = "custom"
+	skipSettings       = "skip"
+)
+
+var (
+	errSkip                   = errors.New("setup skipped")
+	deploymentTypes           = []string{localCluster, atlasCluster}
+	deploymentTypeDescription = map[string]string{
+		localCluster: "Local Database",
+		atlasCluster: "Atlas Database",
+	}
+	settings            = []string{defaultSettings, customSettings, skipSettings}
+	settingsDescription = map[string]string{
+		defaultSettings: "With default settings",
+		customSettings:  "With custom settings",
+		skipSettings:    "Skip set up",
+	}
+	mdbVersions = []string{mdb7, mdb6}
 )
 
 type SetupOpts struct {
@@ -51,6 +77,7 @@ type SetupOpts struct {
 	cli.GlobalOpts
 	podmanClient podman.Client
 	debug        bool
+	settings     string
 }
 
 const startTemplate = `local environment started at {{.ConnectionString}}
@@ -62,6 +89,8 @@ func (opts *SetupOpts) initPodmanClient() error {
 }
 
 func (opts *SetupOpts) createLocalDeployment() error {
+	fmt.Fprintf(os.Stderr, "Creating your cluster %s [this might take several minutes]\n", opts.DeploymentName)
+
 	if err := opts.podmanClient.Ready(); err != nil {
 		return err
 	}
@@ -204,10 +233,6 @@ func (opts *SetupOpts) seed(port int, script string) error {
 }
 
 func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []podman.Container) error {
-	if matched, _ := regexp.MatchString(clusterNamePattern, opts.DeploymentName); !matched {
-		return fmt.Errorf("%s is not a valid clusterName", opts.DeploymentName)
-	}
-
 	mongodContainerName := opts.LocalMongodHostname()
 	for _, c := range containers {
 		for _, n := range c.Names {
@@ -249,26 +274,180 @@ func getPortForNewLocalCluster(existingContainers []podman.Container) int {
 	return maxPort + 1
 }
 
+func (opts *SetupOpts) selectDeploymentType() error {
+	p := &survey.Select{
+		Message: "What would you like to deploy?",
+		Options: deploymentTypes,
+		Help:    usage.DeploymentType,
+		Description: func(value string, index int) string {
+			return deploymentTypeDescription[value]
+		},
+	}
+
+	return telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
+}
+
+func (opts *SetupOpts) selectSettings() error {
+	p := &survey.Select{
+		Message: "How do you want to setup your local MongoDB database?",
+		Options: settings,
+		Default: opts.settings,
+		Description: func(value string, index int) string {
+			return settingsDescription[value]
+		},
+	}
+
+	return telemetry.TrackAskOne(p, &opts.settings, nil)
+}
+
+func (opts *SetupOpts) generateDeploymentName() {
+	opts.DeploymentName = fmt.Sprintf("local%v", rand.Intn(10000))
+}
+
+func (opts *SetupOpts) promptDeploymentName() error {
+	p := &survey.Input{
+		Message: "Cluster Name [This can't be changed later]",
+		Default: opts.DeploymentName,
+	}
+
+	return telemetry.TrackAskOne(p, &opts.DeploymentName, nil)
+}
+
+func (opts *SetupOpts) selectMdbVersion() error {
+	p := &survey.Select{
+		Message: "MongoDB Version",
+		Options: mdbVersions,
+		Default: opts.MdbVersion,
+	}
+
+	return telemetry.TrackAskOne(p, &opts.MdbVersion, nil)
+}
+
+func validatePort(p int) error {
+	if p <= 0 || p > 65535 {
+		return errors.New("port must within the range 1..65535")
+	}
+	return nil
+}
+
+func (opts *SetupOpts) promptPort() error {
+	exportPort := strconv.Itoa(opts.Port)
+
+	p := &survey.Input{
+		Message: "Specify a port",
+		Default: exportPort,
+	}
+
+	err := telemetry.TrackAskOne(p, &exportPort, survey.WithValidator(func(ans interface{}) error {
+		input, _ := ans.(string)
+		value, err := strconv.Atoi(input)
+		if err != nil {
+			return errors.New("input must be an integer")
+		}
+
+		return validatePort(value)
+	}))
+
+	if err != nil {
+		return err
+	}
+
+	opts.Port, err = strconv.Atoi(exportPort)
+	return err
+}
+
+func (opts *SetupOpts) validateAndPrompt() error {
+	if opts.DeploymentType == "" {
+		if err := opts.selectDeploymentType(); err != nil {
+			return err
+		}
+	} else if !strings.EqualFold(opts.DeploymentType, atlasCluster) && !strings.EqualFold(opts.DeploymentType, localCluster) {
+		return fmt.Errorf("invalid deployment type: %s", opts.DeploymentType)
+	}
+
+	if strings.EqualFold(opts.DeploymentType, atlasCluster) {
+		return fmt.Errorf("deployment type unsupported: %s", deploymentTypeDescription[opts.DeploymentType])
+	}
+
+	if opts.DeploymentName == "" || opts.MdbVersion == "" || opts.Port == 0 {
+		if err := opts.selectSettings(); err != nil {
+			return err
+		}
+
+		if opts.settings == skipSettings {
+			return errSkip
+		}
+	}
+
+	if opts.DeploymentName == "" {
+		opts.generateDeploymentName()
+		if opts.settings == customSettings {
+			if err := opts.promptDeploymentName(); err != nil {
+				return err
+			}
+		}
+	} else if matched, _ := regexp.MatchString(clusterNamePattern, opts.DeploymentName); !matched {
+		return fmt.Errorf("invalid cluster name: %s", opts.DeploymentName)
+	}
+
+	if opts.MdbVersion == "" {
+		opts.MdbVersion = mdb7
+		if opts.settings == customSettings {
+			if err := opts.selectMdbVersion(); err != nil {
+				return err
+			}
+		}
+	} else if opts.MdbVersion != mdb6 && opts.MdbVersion != mdb7 {
+		return fmt.Errorf("invalid mongodb version: %s", opts.MdbVersion)
+	}
+
+	if opts.Port == 0 {
+		opts.Port = 27017
+		if opts.settings == customSettings {
+			if err := opts.promptPort(); err != nil {
+				return err
+			}
+		}
+	} else if err := validatePort(opts.Port); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (opts *SetupOpts) Run(_ context.Context) error {
+	if err := opts.validateAndPrompt(); err != nil {
+		if errors.Is(err, errSkip) {
+			_, _ = fmt.Fprintf(opts.OutWriter, "%s\n", err)
+			return nil
+		}
+
+		return err
+	}
+
 	if err := opts.createLocalDeployment(); err != nil {
 		return err
 	}
 
-	return opts.Print(map[string]string{"ConnectionString": fmt.Sprintf("mongodb://localhost:%d", opts.Port)})
+	return nil
 }
 
 // atlas deployments setup.
 func SetupBuilder() *cobra.Command {
-	opts := &SetupOpts{}
+	opts := &SetupOpts{
+		settings: defaultSettings,
+	}
 	cmd := &cobra.Command{
 		Use:   "setup <clusterName>",
 		Short: "Create a local deployment.",
-		Args:  require.ExactArgs(1),
+		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster you want to setup.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.DeploymentName = args[0]
+			if len(args) == 1 {
+				opts.DeploymentName = args[0]
+			}
 			opts.DeploymentID = uuid.NewString()
 
 			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), startTemplate), opts.initPodmanClient)
@@ -278,17 +457,17 @@ func SetupBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, localCluster, usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 	cmd.Flags().IntVar(&opts.Port, flag.Port, 0, usage.MongodPort)
-	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, mdb6, usage.MDBVersion)
+	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, "", usage.MDBVersion)
 
 	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.MDBVersion, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return []string{mdb6}, cobra.ShellCompDirectiveDefault
+		return []string{mdb6, mdb7}, cobra.ShellCompDirectiveDefault
 	})
 	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return []string{localCluster}, cobra.ShellCompDirectiveDefault
+		return []string{localCluster, atlasCluster}, cobra.ShellCompDirectiveDefault
 	})
 
 	return cmd

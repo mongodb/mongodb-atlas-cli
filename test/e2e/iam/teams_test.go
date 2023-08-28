@@ -25,28 +25,23 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestTeams(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	n, err := e2e.RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	teamName := fmt.Sprintf("teams%v", n)
 	var teamID string
 
 	t.Run("Create", func(t *testing.T) {
 		username, _, err := OrgNUser(0)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, err)
 
 		cmd := exec.Command(cliPath,
 			iamEntity,
@@ -68,6 +63,7 @@ func TestTeams(t *testing.T) {
 			teamID = team.ID
 		}
 	})
+	require.NotEmpty(t, teamID)
 
 	t.Run("Describe By ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

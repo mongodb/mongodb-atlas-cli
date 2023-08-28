@@ -589,6 +589,21 @@ func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
 	}
 }
 
+func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		datalakePipelineEntity,
+		"list",
+		"--projectId", projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	t.Log(string(resp))
+	require.NoError(t, err)
+	var pipelines []atlasv2.DataLakeIngestionPipeline
+	require.NoError(t, json.Unmarshal(resp, &pipelines))
+}
+
 func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,

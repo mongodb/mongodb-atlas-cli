@@ -106,17 +106,12 @@ const (
 )
 
 // Integration constants.
-
 const (
-	datadogEntity        = "DATADOG"
-	opsGenieEntity       = "OPS_GENIE"
-	pagerDutyEntity      = "PAGER_DUTY"
-	victorOpsEntity      = "VICTOR_OPS"
-	webhookEntity        = "WEBHOOK"
-	microsoftTeamsEntity = "MICROSOFT_TEAMS"
-	slackEntity          = "SLACK"
-	prometheusEntity     = "PROMETHEUS"
-	newRelicEntity       = "NEW_RELIC"
+	datadogEntity   = "DATADOG"
+	opsGenieEntity  = "OPS_GENIE"
+	pagerDutyEntity = "PAGER_DUTY"
+	victorOpsEntity = "VICTOR_OPS"
+	webhookEntity   = "WEBHOOK"
 )
 
 // Cluster settings.
@@ -130,7 +125,6 @@ const (
 )
 
 // Backup compliance policy constants.
-
 const (
 	authorizedEmail = "firstname.lastname@example.com"
 )
@@ -310,6 +304,24 @@ func deleteClusterForProject(projectID, clusterName string) error {
 	// this command will fail with 404 once the cluster is deleted
 	// we just need to wait for this to close the project
 	_ = watchCmd.Run()
+	return nil
+}
+
+func deleteDatalakeForProject(cliPath, projectID, id string) error {
+	args := []string{
+		datalakePipelineEntity,
+		"delete",
+		id,
+		"--force",
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	deleteCmd := exec.Command(cliPath, args...)
+	deleteCmd.Env = os.Environ()
+	if resp, err := deleteCmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("error deleting datalake %w: %s", err, string(resp))
+	}
 	return nil
 }
 
@@ -586,6 +598,24 @@ func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
 			continue
 		}
 		assert.NoError(t, deleteClusterForProject(projectID, cluster.Name))
+	}
+}
+
+func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		datalakePipelineEntity,
+		"list",
+		"--projectId", projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	t.Log(string(resp))
+	require.NoError(t, err)
+	var pipelines []atlasv2.DataLakeIngestionPipeline
+	require.NoError(t, json.Unmarshal(resp, &pipelines))
+	for _, p := range pipelines {
+		assert.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetName()))
 	}
 }
 

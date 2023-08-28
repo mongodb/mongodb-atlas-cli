@@ -25,6 +25,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
@@ -253,10 +254,8 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	}
 }
 
-func deleteOrgInvitations(t *testing.T) {
+func deleteOrgInvitations(t *testing.T, cliPath string) {
 	t.Helper()
-	cliPath, err := e2e.AtlasCLIBin()
-	require.NoError(t, err)
 	cmd := exec.Command(cliPath,
 		orgEntity,
 		invitationsEntity,
@@ -264,12 +263,30 @@ func deleteOrgInvitations(t *testing.T) {
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
+	t.Logf("%s\n", resp)
 	require.NoError(t, err, string(resp))
 	var invitations []atlasv2.OrganizationInvitation
 	require.NoError(t, json.Unmarshal(resp, &invitations), string(resp))
-	t.Logf("%s\n", resp)
 	for _, i := range invitations {
 		deleteOrgInvitation(t, cliPath, *i.Id)
+	}
+}
+
+func deleteOrgTeams(t *testing.T, cliPath string) {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		teamsEntity,
+		"ls",
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	t.Logf("%s\n", resp)
+	require.NoError(t, err, string(resp))
+	var teams atlasv2.PaginatedTeam
+	require.NoError(t, json.Unmarshal(resp, &teams), string(resp))
+	for _, team := range teams.Results {
+		assert.NoError(t, deleteTeam(team.GetId()))
 	}
 }
 

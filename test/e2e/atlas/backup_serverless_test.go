@@ -29,13 +29,12 @@ import (
 
 func TestServerlessBackup(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
-	r := require.New(t)
-	r.NoError(err)
+	require.NoError(t, err)
 
 	clusterName := os.Getenv("E2E_SERVERLESS_INSTANCE_NAME")
-	r.NotEmpty(clusterName)
+	require.NotEmpty(t, clusterName)
 
-	var snapshotID, restoreJobID string
+	var snapshotID string
 
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("serverlessBackup")
@@ -51,16 +50,14 @@ func TestServerlessBackup(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var r atlasv2.PaginatedApiAtlasServerlessBackupSnapshot
-		a := assert.New(t)
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
-
-			snapshotID = r.Results[0].GetId()
-		}
+		require.NoError(t, json.Unmarshal(resp, &r), string(resp))
+		assert.NotEmpty(t, r)
+		snapshotID = r.Results[0].GetId()
+		t.Log("snapshotID", snapshotID)
+		require.NotEmpty(t, snapshotID)
 	})
 
 	t.Run("Snapshot Describe", func(t *testing.T) {
@@ -77,14 +74,13 @@ func TestServerlessBackup(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
-
-		a := assert.New(t)
+		require.NoError(t, err, string(resp))
 		var result atlasv2.ServerlessBackupSnapshot
-		if err = json.Unmarshal(resp, &result); a.NoError(err) {
-			a.Equal(snapshotID, result.GetId())
-		}
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+		assert.Equal(t, snapshotID, result.GetId())
 	})
+
+	var restoreJobID string
 
 	t.Run("Restores Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -106,12 +102,12 @@ func TestServerlessBackup(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
-		a := assert.New(t)
+		require.NoError(t, err, string(resp))
 		var result atlasv2.ServerlessBackupRestoreJob
-		if err = json.Unmarshal(resp, &result); a.NoError(err) {
-			restoreJobID = result.GetId()
-		}
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+		restoreJobID = result.GetId()
+		t.Log("snapshotID", restoreJobID)
+		require.NotEmpty(t, restoreJobID)
 	})
 
 	t.Run("Restores Watch", func(t *testing.T) {
@@ -128,7 +124,7 @@ func TestServerlessBackup(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Restores List", func(t *testing.T) {
@@ -141,14 +137,11 @@ func TestServerlessBackup(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
-		r.NoError(err, string(resp))
-
-		a := assert.New(t)
 		var result atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob
-		if err = json.Unmarshal(resp, &result); a.NoError(err) {
-			a.NotEmpty(result)
-		}
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+		assert.NotEmpty(t, result)
 	})
 
 	t.Run("Restores Describe", func(t *testing.T) {
@@ -164,13 +157,9 @@ func TestServerlessBackup(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		r.NoError(err, string(resp))
-
-		a := assert.New(t)
+		require.NoError(t, err, string(resp))
 		var result atlasv2.ServerlessBackupRestoreJob
-		if err = json.Unmarshal(resp, &result); a.NoError(err) {
-			a.NotEmpty(result)
-		}
+		require.NoError(t, json.Unmarshal(resp, &result))
+		assert.NotEmpty(t, result)
 	})
 }

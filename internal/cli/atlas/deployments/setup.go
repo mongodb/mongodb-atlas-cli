@@ -301,7 +301,7 @@ func (opts *SetupOpts) selectSettings() error {
 }
 
 func (opts *SetupOpts) generateDeploymentName() {
-	opts.DeploymentName = fmt.Sprintf("local%v", rand.Intn(10000))
+	opts.DeploymentName = fmt.Sprintf("local%v", rand.Intn(10000)) //nolint // no need for crypto here
 }
 
 func (opts *SetupOpts) promptDeploymentName() error {
@@ -356,7 +356,7 @@ func (opts *SetupOpts) promptPort() error {
 	return err
 }
 
-func (opts *SetupOpts) validateAndPrompt() error {
+func (opts *SetupOpts) validateAndPromptDeploymentType() error {
 	if opts.DeploymentType == "" {
 		if err := opts.selectDeploymentType(); err != nil {
 			return err
@@ -368,7 +368,10 @@ func (opts *SetupOpts) validateAndPrompt() error {
 	if strings.EqualFold(opts.DeploymentType, atlasCluster) {
 		return fmt.Errorf("deployment type unsupported: %s", deploymentTypeDescription[opts.DeploymentType])
 	}
+	return nil
+}
 
+func (opts *SetupOpts) validateAndPromptSettings() error {
 	if opts.DeploymentName == "" || opts.MdbVersion == "" || opts.Port == 0 {
 		if err := opts.selectSettings(); err != nil {
 			return err
@@ -378,7 +381,10 @@ func (opts *SetupOpts) validateAndPrompt() error {
 			return errSkip
 		}
 	}
+	return nil
+}
 
+func (opts *SetupOpts) validateAndPromptDeploymentName() error {
 	if opts.DeploymentName == "" {
 		opts.generateDeploymentName()
 		if opts.settings == customSettings {
@@ -389,7 +395,10 @@ func (opts *SetupOpts) validateAndPrompt() error {
 	} else if matched, _ := regexp.MatchString(clusterNamePattern, opts.DeploymentName); !matched {
 		return fmt.Errorf("invalid cluster name: %s", opts.DeploymentName)
 	}
+	return nil
+}
 
+func (opts *SetupOpts) validateAndPromptMdbVersion() error {
 	if opts.MdbVersion == "" {
 		opts.MdbVersion = mdb7
 		if opts.settings == customSettings {
@@ -400,7 +409,10 @@ func (opts *SetupOpts) validateAndPrompt() error {
 	} else if opts.MdbVersion != mdb6 && opts.MdbVersion != mdb7 {
 		return fmt.Errorf("invalid mongodb version: %s", opts.MdbVersion)
 	}
+	return nil
+}
 
+func (opts *SetupOpts) validateAndPromptPort() error {
 	if opts.Port == 0 {
 		opts.Port = 27017
 		if opts.settings == customSettings {
@@ -411,8 +423,27 @@ func (opts *SetupOpts) validateAndPrompt() error {
 	} else if err := validatePort(opts.Port); err != nil {
 		return err
 	}
-
 	return nil
+}
+
+func (opts *SetupOpts) validateAndPrompt() error {
+	if err := opts.validateAndPromptDeploymentType(); err != nil {
+		return err
+	}
+
+	if err := opts.validateAndPromptSettings(); err != nil {
+		return err
+	}
+
+	if err := opts.validateAndPromptDeploymentName(); err != nil {
+		return err
+	}
+
+	if err := opts.validateAndPromptMdbVersion(); err != nil {
+		return err
+	}
+
+	return opts.validateAndPromptPort()
 }
 
 func (opts *SetupOpts) Run(_ context.Context) error {
@@ -425,11 +456,7 @@ func (opts *SetupOpts) Run(_ context.Context) error {
 		return err
 	}
 
-	if err := opts.createLocalDeployment(); err != nil {
-		return err
-	}
-
-	return nil
+	return opts.createLocalDeployment()
 }
 
 // atlas deployments setup.

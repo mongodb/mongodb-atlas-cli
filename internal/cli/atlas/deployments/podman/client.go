@@ -54,8 +54,7 @@ type Container struct {
 }
 
 type Client interface {
-	Ready() error
-	Setup(ctx context.Context) error
+	Ready(ctx context.Context) error
 	CreateNetwork(ctx context.Context, name string) ([]byte, error)
 	CreateVolume(ctx context.Context, name string) ([]byte, error)
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
@@ -70,13 +69,6 @@ type Client interface {
 type client struct {
 	debug     bool
 	outWriter io.Writer
-}
-
-func (*client) Ready() error {
-	if _, err := exec.LookPath("podman"); err != nil {
-		return ErrPodmanNotReady
-	}
-	return nil
 }
 
 func (o *client) machineInit(ctx context.Context) error {
@@ -116,7 +108,11 @@ func (o *client) machineStart(ctx context.Context) error {
 	return nil
 }
 
-func (o *client) Setup(ctx context.Context) error {
+func (o *client) Ready(ctx context.Context) error {
+	if _, err := exec.LookPath("podman"); err != nil {
+		return ErrPodmanNotReady
+	}
+
 	if runtime.GOOS != "windows" && runtime.GOOS != "darwin" {
 		// macOs and Windows require VMs
 		return nil

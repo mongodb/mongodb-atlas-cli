@@ -154,7 +154,7 @@ func DeleteBuilder() *cobra.Command {
 			}
 
 			opts.podmanClient = podman.NewClient(opts.debug, opts.OutWriter)
-			if err := opts.podmanClient.Ready(); err != nil {
+			if err := opts.podmanClient.Ready(cmd.Context()); err != nil {
 				return err
 			}
 

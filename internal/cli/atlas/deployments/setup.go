@@ -120,11 +120,7 @@ Creating your cluster %s [this might take several minutes]
 
 	defer opts.stop()
 
-	if err := opts.podmanClient.Ready(); err != nil {
-		return err
-	}
-
-	if err := opts.podmanClient.Setup(ctx); err != nil {
+	if err := opts.podmanClient.Ready(ctx); err != nil {
 		return err
 	}
 

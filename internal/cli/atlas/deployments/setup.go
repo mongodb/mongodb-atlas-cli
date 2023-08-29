@@ -54,6 +54,8 @@ const (
 	defaultSettings    = "default"
 	customSettings     = "custom"
 	skipSettings       = "skip"
+	mongoshConnect     = "mongosh"
+	skipConnect        = "skip"
 )
 
 var (
@@ -69,6 +71,11 @@ var (
 		customSettings:  "With custom settings",
 		skipSettings:    "Skip set up",
 	}
+	connectWithOptions     = []string{mongoshConnect, skipConnect}
+	connectWithDescription = map[string]string{
+		mongoshConnect: "MongoDB Shell",
+		skipConnect:    "Skip Connection",
+	}
 	mdbVersions = []string{mdb7, mdb6}
 )
 
@@ -79,6 +86,7 @@ type SetupOpts struct {
 	podmanClient podman.Client
 	debug        bool
 	settings     string
+	connectWith  string
 }
 
 const startTemplate = `local environment started at {{.ConnectionString}}
@@ -427,6 +435,18 @@ func (opts *SetupOpts) validateAndPromptPort() error {
 	return nil
 }
 
+func (opts *SetupOpts) promptConnect() error {
+	p := &survey.Select{
+		Message: fmt.Sprintf("How would you like to connect to %s?", opts.DeploymentName),
+		Options: connectWithOptions,
+		Description: func(value string, index int) string {
+			return connectWithDescription[value]
+		},
+	}
+
+	return telemetry.TrackAskOne(p, &opts.connectWith, nil)
+}
+
 func (opts *SetupOpts) validateAndPrompt() error {
 	if err := opts.validateAndPromptDeploymentType(); err != nil {
 		return err
@@ -469,7 +489,31 @@ func (opts *SetupOpts) Run(_ context.Context) error {
 		return err
 	}
 
-	return opts.createLocalDeployment()
+	if err := opts.createLocalDeployment(); err != nil {
+		return err
+	}
+
+	cs := fmt.Sprintf("mongodb://localhost:%d", opts.Port)
+
+	fmt.Fprintf(opts.OutWriter, `Cluster created!
+Connection string: %s
+`, cs)
+
+	if err := opts.promptConnect(); err != nil {
+		return err
+	}
+
+	switch opts.connectWith {
+	case skipConnect:
+		fmt.Fprintln(os.Stderr, "connection skipped")
+	case mongoshConnect:
+		if !mongosh.Detect() {
+			return errors.New("mongosh not found in your system")
+		}
+		return mongosh.Run("", "", cs)
+	}
+
+	return nil
 }
 
 // atlas deployments setup.

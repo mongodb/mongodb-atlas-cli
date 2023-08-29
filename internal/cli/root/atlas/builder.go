@@ -276,13 +276,14 @@ func shouldCheckCredentials(cmd *cobra.Command) bool {
 		}
 	}
 	skipFor := []string{
-		fmt.Sprintf("%s %s", atlas, "completion"), // completion commands do not require credentials
-		fmt.Sprintf("%s %s", atlas, "config"),     // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "auth"),       // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "login"),      // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "setup"),      // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "register"),   // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "quickstart"), // command supports login
+		fmt.Sprintf("%s %s", atlas, "completion"),  // completion commands do not require credentials
+		fmt.Sprintf("%s %s", atlas, "config"),      // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "auth"),        // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "login"),       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "setup"),       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "register"),    // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "quickstart"),  // command supports login
+		fmt.Sprintf("%s %s", atlas, "deployments"), // command supports local
 	}
 	for _, p := range skipFor {
 		if strings.HasPrefix(cmd.CommandPath(), p) {

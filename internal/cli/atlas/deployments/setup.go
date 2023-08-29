@@ -564,11 +564,13 @@ func SetupBuilder() *cobra.Command {
 	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.MDBVersion, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return []string{mdb6, mdb7}, cobra.ShellCompDirectiveDefault
+		return mdbVersions, cobra.ShellCompDirectiveDefault
 	})
 	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return []string{localCluster, atlasCluster}, cobra.ShellCompDirectiveDefault
+		return deploymentTypes, cobra.ShellCompDirectiveDefault
 	})
-
+	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return connectWithOptions, cobra.ShellCompDirectiveDefault
+	})
 	return cmd
 }

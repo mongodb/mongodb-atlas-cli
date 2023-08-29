@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/briandowns/spinner"
 	"github.com/google/uuid"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -56,6 +57,7 @@ const (
 	skipSettings       = "skip"
 	mongoshConnect     = "mongosh"
 	skipConnect        = "skip"
+	spinnerSpeed       = 100 * time.Millisecond
 )
 
 var (
@@ -87,6 +89,7 @@ type SetupOpts struct {
 	debug        bool
 	settings     string
 	connectWith  string
+	s            *spinner.Spinner
 }
 
 const startTemplate = `local environment started at {{.ConnectionString}}
@@ -99,6 +102,9 @@ func (opts *SetupOpts) initPodmanClient() error {
 
 func (opts *SetupOpts) createLocalDeployment() error {
 	fmt.Fprintf(os.Stderr, "Creating your cluster %s [this might take several minutes]\n", opts.DeploymentName)
+	opts.start()
+
+	defer opts.stop()
 
 	if err := opts.podmanClient.Ready(); err != nil {
 		return err
@@ -573,4 +579,17 @@ func SetupBuilder() *cobra.Command {
 		return connectWithOptions, cobra.ShellCompDirectiveDefault
 	})
 	return cmd
+}
+
+func (opts *SetupOpts) start() {
+	if opts.IsTerminal() {
+		opts.s = spinner.New(spinner.CharSets[9], spinnerSpeed)
+		opts.s.Start()
+	}
+}
+
+func (opts *SetupOpts) stop() {
+	if opts.IsTerminal() {
+		opts.s.Stop()
+	}
 }

@@ -15,6 +15,7 @@
 package podman
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"io"
@@ -54,16 +55,16 @@ type Container struct {
 
 type Client interface {
 	Ready() error
-	Setup() error
-	CreateNetwork(name string) ([]byte, error)
-	CreateVolume(name string) ([]byte, error)
-	RunContainer(opts RunContainerOpts) ([]byte, error)
-	CopyFileToContainer(localFile string, containerName string, filePathInContainer string) ([]byte, error)
-	StopContainers(names ...string) ([]byte, error)
-	RemoveContainers(names ...string) ([]byte, error)
-	RemoveVolumes(names ...string) ([]byte, error)
-	RemoveNetworks(names ...string) ([]byte, error)
-	ListContainers(nameFilter string) ([]Container, error)
+	Setup(ctx context.Context) error
+	CreateNetwork(ctx context.Context, name string) ([]byte, error)
+	CreateVolume(ctx context.Context, name string) ([]byte, error)
+	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
+	CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error)
+	StopContainers(ctx context.Context, names ...string) ([]byte, error)
+	RemoveContainers(ctx context.Context, names ...string) ([]byte, error)
+	RemoveVolumes(ctx context.Context, names ...string) ([]byte, error)
+	RemoveNetworks(ctx context.Context, names ...string) ([]byte, error)
+	ListContainers(ctx context.Context, nameFilter string) ([]Container, error)
 }
 
 type client struct {
@@ -78,19 +79,19 @@ func (*client) Ready() error {
 	return nil
 }
 
-func (o *client) machineInit() error {
-	_, err := o.machineInspect()
+func (o *client) machineInit(ctx context.Context) error {
+	_, err := o.machineInspect(ctx)
 	if err == nil { // machine is already present
 		return nil
 	}
 
-	_, err = o.runPodman("machine", "init")
+	_, err = o.runPodman(ctx, "machine", "init")
 	return err
 }
 
-func (o *client) machineInspect() (*machine.InspectInfo, error) {
+func (o *client) machineInspect(ctx context.Context) (*machine.InspectInfo, error) {
 	var info []machine.InspectInfo
-	b, err := o.runPodman("machine", "inspect", machine.DefaultMachineName)
+	b, err := o.runPodman(ctx, "machine", "inspect", machine.DefaultMachineName)
 	if err != nil {
 		return nil, err
 	}
@@ -100,13 +101,13 @@ func (o *client) machineInspect() (*machine.InspectInfo, error) {
 	return &info[0], nil
 }
 
-func (o *client) machineStart() error {
-	info, err := o.machineInspect()
+func (o *client) machineStart(ctx context.Context) error {
+	info, err := o.machineInspect(ctx)
 	if err != nil {
 		return err
 	}
 	if info.State != machine.Running {
-		_, err := o.runPodman("machine", "start", machine.DefaultMachineName)
+		_, err := o.runPodman(ctx, "machine", "start", machine.DefaultMachineName)
 		if err != nil {
 			return err
 		}
@@ -115,21 +116,21 @@ func (o *client) machineStart() error {
 	return nil
 }
 
-func (o *client) Setup() error {
+func (o *client) Setup(ctx context.Context) error {
 	if runtime.GOOS != "windows" && runtime.GOOS != "darwin" {
 		// macOs and Windows require VMs
 		return nil
 	}
 
-	if err := o.machineInit(); err != nil {
+	if err := o.machineInit(ctx); err != nil {
 		return err
 	}
 
-	return o.machineStart()
+	return o.machineStart(ctx)
 }
 
-func (o *client) runPodman(arg ...string) ([]byte, error) {
-	cmd := exec.Command("podman", arg...)
+func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
+	cmd := exec.CommandContext(ctx, "podman", arg...)
 
 	output, err := cmd.CombinedOutput()
 
@@ -140,15 +141,15 @@ func (o *client) runPodman(arg ...string) ([]byte, error) {
 	return output, err
 }
 
-func (o *client) CreateNetwork(name string) ([]byte, error) {
-	return o.runPodman("network", "create", name)
+func (o *client) CreateNetwork(ctx context.Context, name string) ([]byte, error) {
+	return o.runPodman(ctx, "network", "create", name)
 }
 
-func (o *client) CreateVolume(name string) ([]byte, error) {
-	return o.runPodman("volume", "create", name)
+func (o *client) CreateVolume(ctx context.Context, name string) ([]byte, error) {
+	return o.runPodman(ctx, "volume", "create", name)
 }
 
-func (o *client) RunContainer(opts RunContainerOpts) ([]byte, error) {
+func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error) {
 	arg := []string{"run",
 		"--name", opts.Name,
 		"--hostname", opts.Hostname,
@@ -175,31 +176,31 @@ func (o *client) RunContainer(opts RunContainerOpts) ([]byte, error) {
 
 	arg = append(arg, opts.Args...)
 
-	return o.runPodman(arg...)
+	return o.runPodman(ctx, arg...)
 }
 
-func (o *client) CopyFileToContainer(localFile string, containerName string, filePathInContainer string) ([]byte, error) {
-	return o.runPodman("cp", localFile, containerName+":"+filePathInContainer)
+func (o *client) CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error) {
+	return o.runPodman(ctx, "cp", localFile, containerName+":"+filePathInContainer)
 }
 
-func (o *client) StopContainers(names ...string) ([]byte, error) {
-	return o.runPodman(append([]string{"stop"}, names...)...)
+func (o *client) StopContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"stop"}, names...)...)
 }
 
-func (o *client) RemoveContainers(names ...string) ([]byte, error) {
-	return o.runPodman(append([]string{"rm", "-f"}, names...)...)
+func (o *client) RemoveContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"rm", "-f"}, names...)...)
 }
 
-func (o *client) RemoveVolumes(names ...string) ([]byte, error) {
-	return o.runPodman(append([]string{"volume", "rm", "-f"}, names...)...)
+func (o *client) RemoveVolumes(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"volume", "rm", "-f"}, names...)...)
 }
 
-func (o *client) RemoveNetworks(names ...string) ([]byte, error) {
-	return o.runPodman(append([]string{"network", "rm", "-f"}, names...)...)
+func (o *client) RemoveNetworks(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"network", "rm", "-f"}, names...)...)
 }
 
-func (o *client) ListContainers(nameFilter string) ([]Container, error) {
-	response, err := o.runPodman("ps", "--all", "--format", "json", "--filter", "name="+nameFilter)
+func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]Container, error) {
+	response, err := o.runPodman(ctx, "ps", "--all", "--format", "json", "--filter", "name="+nameFilter)
 	if err != nil {
 		return nil, err
 	}

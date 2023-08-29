@@ -365,6 +365,13 @@ func (opts *SetupOpts) promptPort() error {
 	return err
 }
 
+func (opts *SetupOpts) validateConnectWith() error {
+	if opts.connectWith != "" && opts.connectWith != mongoshConnect && opts.connectWith != skipConnect {
+		return fmt.Errorf("connectWith flag unsupported: %s", opts.connectWith)
+	}
+	return nil
+}
+
 func (opts *SetupOpts) validateAndPromptDeploymentType() error {
 	if opts.DeploymentType == "" {
 		if err := opts.selectDeploymentType(); err != nil {
@@ -436,6 +443,10 @@ func (opts *SetupOpts) validateAndPromptPort() error {
 }
 
 func (opts *SetupOpts) promptConnect() error {
+	if opts.connectWith != "" {
+		return nil
+	}
+
 	p := &survey.Select{
 		Message: fmt.Sprintf("How would you like to connect to %s?", opts.DeploymentName),
 		Options: connectWithOptions,
@@ -448,6 +459,10 @@ func (opts *SetupOpts) promptConnect() error {
 }
 
 func (opts *SetupOpts) validateAndPrompt() error {
+	if err := opts.validateConnectWith(); err != nil {
+		return err
+	}
+
 	if err := opts.validateAndPromptDeploymentType(); err != nil {
 		return err
 	}
@@ -544,6 +559,7 @@ func SetupBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 	cmd.Flags().IntVar(&opts.Port, flag.Port, 0, usage.MongodPort)
 	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, "", usage.MDBVersion)
+	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
 
 	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 

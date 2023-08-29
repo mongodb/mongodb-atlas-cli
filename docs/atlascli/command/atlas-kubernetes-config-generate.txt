@@ -87,9 +87,6 @@ Examples
 
 .. code-block::
 
-   # 	
-.. code-block::
-
    # Export Project, DatabaseUsers, Deployments resources for a specific project without connection and integration secrets:
  		atlas kubernetes config generate --projectId=<projectId>
  	  

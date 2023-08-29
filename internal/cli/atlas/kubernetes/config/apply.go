@@ -134,7 +134,7 @@ func ApplyBuilder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Generate and apply Kubernetes configuration resources for use with Atlas Kubernetes Operator.",
 		Long:    `This command exports configurations for Atlas objects including projects, deployments, and users directly into Kubernetes, allowing you to manage these resources using the Atlas Kubernetes Operator. For more information, see https://www.mongodb.com/docs/atlas/atlas-operator/.`,
-		Example: `	# Export and apply all supported resources of a specific project:
+		Example: `# Export and apply all supported resources of a specific project:
   atlas kubernetes config apply --projectId=<projectId>
 
   # Export and apply all supported resources of a specific project and to a specific namespace:

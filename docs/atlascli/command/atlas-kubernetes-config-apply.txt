@@ -91,9 +91,6 @@ Examples
 
 .. code-block::
 
-   # 	
-.. code-block::
-
    # Export and apply all supported resources of a specific project:
    atlas kubernetes config apply --projectId=<projectId>
 

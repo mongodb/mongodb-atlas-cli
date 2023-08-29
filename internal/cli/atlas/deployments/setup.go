@@ -35,6 +35,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/internal/templatewriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -443,7 +444,19 @@ func (opts *SetupOpts) validateAndPrompt() error {
 		return err
 	}
 
-	return opts.validateAndPromptPort()
+	if err := opts.validateAndPromptPort(); err != nil {
+		return err
+	}
+
+	if opts.settings == defaultSettings {
+		templatewriter.Print(os.Stderr, `[Default Settings]
+Cluster Name	{{.DeploymentName}}
+MongoDB Version	{{.MdbVersion}}
+Port	{{.Port}}
+`, opts)
+	}
+
+	return nil
 }
 
 func (opts *SetupOpts) Run(_ context.Context) error {

@@ -89,6 +89,7 @@ type SetupOpts struct {
 	debug        bool
 	settings     string
 	connectWith  string
+	force        bool
 	s            *spinner.Spinner
 }
 
@@ -369,6 +370,10 @@ func (opts *SetupOpts) promptPort() error {
 }
 
 func (opts *SetupOpts) validateFlags() error {
+	if opts.DeploymentType == "" && opts.force {
+		return errors.New("flag --type is required when --force is set")
+	}
+
 	if opts.DeploymentType != "" && !strings.EqualFold(opts.DeploymentType, atlasCluster) && !strings.EqualFold(opts.DeploymentType, localCluster) {
 		return fmt.Errorf("invalid deployment type: %s", opts.DeploymentType)
 	}
@@ -487,8 +492,10 @@ MongoDB Version	{{.MdbVersion}}
 Port	{{.Port}}
 `, opts)
 
-		if err := opts.promptSettings(); err != nil {
-			return err
+		if !opts.force {
+			if err := opts.promptSettings(); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -566,6 +573,7 @@ func SetupBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
 
 	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
+	cmd.Flags().BoolVar(&opts.force, flag.Force, false, usage.Force)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.MDBVersion, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return mdbVersions, cobra.ShellCompDirectiveDefault

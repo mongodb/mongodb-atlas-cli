@@ -369,13 +369,20 @@ func (opts *SetupOpts) promptPort() error {
 	return err
 }
 
-func (opts *SetupOpts) validateFlags() error {
+func (opts *SetupOpts) validateDeploymentTypeFlag() error {
 	if opts.DeploymentType == "" && opts.force {
 		return errors.New("flag --type is required when --force is set")
 	}
 
 	if opts.DeploymentType != "" && !strings.EqualFold(opts.DeploymentType, atlasCluster) && !strings.EqualFold(opts.DeploymentType, localCluster) {
 		return fmt.Errorf("invalid deployment type: %s", opts.DeploymentType)
+	}
+
+	return nil
+}
+func (opts *SetupOpts) validateFlags() error {
+	if err := opts.validateDeploymentTypeFlag(); err != nil {
+		return err
 	}
 
 	if opts.DeploymentName != "" {

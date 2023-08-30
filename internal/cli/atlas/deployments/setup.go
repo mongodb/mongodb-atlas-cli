@@ -45,8 +45,8 @@ const (
 	startHostPort      = 37017
 	internalMongodPort = 27017
 	internalMongotPort = 27027
-	localCluster       = "LOCAL"
-	atlasCluster       = "ATLAS"
+	localCluster       = "local"
+	atlasCluster       = "atlas"
 	mdb6               = "6.0"
 	mdb7               = "7.0"
 	replicaSetName     = "rs-localdev"
@@ -102,7 +102,9 @@ func (opts *SetupOpts) initPodmanClient() error {
 }
 
 func (opts *SetupOpts) createLocalDeployment() error {
-	fmt.Fprintf(os.Stderr, "Creating your cluster %s [this might take several minutes]\n", opts.DeploymentName)
+	fmt.Fprintf(os.Stderr, `
+Creating your cluster %s [this might take several minutes]
+`, opts.DeploymentName)
 	opts.start()
 
 	defer opts.stop()
@@ -493,10 +495,12 @@ func (opts *SetupOpts) validateAndPrompt() error {
 	}
 
 	if opts.setDefaultSettings() {
-		templatewriter.Print(os.Stderr, `[Default Settings]
+		templatewriter.Print(os.Stderr, `
+[Default Settings]
 Cluster Name	{{.DeploymentName}}
 MongoDB Version	{{.MdbVersion}}
 Port	{{.Port}}
+
 `, opts)
 
 		if !opts.force {

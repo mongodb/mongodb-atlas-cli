@@ -83,7 +83,7 @@ func UpdateBuilder() *cobra.Command {
 			"output": updateTemplate,
 		},
 		Example: fmt.Sprintf(`  # This example uses the profile named "myprofile" for accessing Atlas.
-  %s projects settings update --disableCollectDatabaseSpecificsStatistics -P myprofile`, cli.ExampleAtlasEntryPoint()),
+  %s projects settings update --disableCollectDatabaseSpecificsStatistics -P myprofile --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			preRun := opts.PreRunE(
 				opts.ValidateProjectID,

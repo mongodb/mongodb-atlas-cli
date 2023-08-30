@@ -62,7 +62,7 @@ func DescribeBuilder() *cobra.Command {
 		Short:       "Retrieve details for settings to the specified project.",
 		Annotations: map[string]string{"output": describeTemplate},
 		Example: fmt.Sprintf(`  # This example uses the profile named "myprofile" for accessing Atlas.
-  %s projects settings describe -P myprofile`, cli.ExampleAtlasEntryPoint()),
+  %s projects settings describe -P myprofile --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

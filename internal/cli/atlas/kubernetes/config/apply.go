@@ -138,12 +138,12 @@ func ApplyBuilder() *cobra.Command {
   atlas kubernetes config apply --projectId=<projectId>
 
   # Export and apply all supported resources of a specific project and to a specific namespace:
-  atlas kubernetes config apply --projectId=<projectId> --includeSecrets --targetNamespace=<namespace>
+  atlas kubernetes config apply --projectId=<projectId> --targetNamespace=<namespace>
   
   # Export and apply all supported Project resource, and only the described Deployment resources of a specific project to a specific namespace:
-  atlas kubernetes config apply --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>
+  atlas kubernetes config apply --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --targetNamespace=<namespace>
 
-  #Export and apply all supported resources of a specific project to a specific namespace restricting the version of the Atlas Kubernetes Operator:
+  # Export and apply all supported resources of a specific project to a specific namespace restricting the version of the Atlas Kubernetes Operator:
   atlas kubernetes config apply --projectId=<projectId> --targetNamespace=<namespace> --operatorVersion=1.5.1`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

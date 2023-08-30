@@ -109,7 +109,7 @@ func GenerateBuilder() *cobra.Command {
 		Example: `# Export Project, DatabaseUsers, Deployments resources for a specific project without connection and integration secrets:
   atlas kubernetes config generate --projectId=<projectId>
 
-    # Export Project, DatabaseUsers, Deployments resources for a specific project including connection and integration secrets:
+  # Export Project, DatabaseUsers, Deployments resources for a specific project including connection and integration secrets:
     atlas kubernetes config generate --projectId=<projectId> --includeSecrets
 
     # Export Project, DatabaseUsers, Deployments resources for a specific project including connection and integration secrets to a specific namespace:

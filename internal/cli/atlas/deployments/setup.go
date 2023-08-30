@@ -331,7 +331,7 @@ func checkPort(p int) error {
 	if err != nil {
 		return fmt.Errorf("%w: %d", errPortNotAvailable, p)
 	}
-	defer server.Close()
+	_ = server.Close()
 	return nil
 }
 

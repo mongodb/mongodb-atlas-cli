@@ -62,12 +62,12 @@ const (
 
 var (
 	errSkip                   = errors.New("setup skipped")
-	deploymentTypes           = []string{localCluster, atlasCluster}
+	deploymentTypeOptions     = []string{localCluster, atlasCluster}
 	deploymentTypeDescription = map[string]string{
 		localCluster: "Local Database",
 		atlasCluster: "Atlas Database",
 	}
-	settings            = []string{defaultSettings, customSettings, skipSettings}
+	settingOptions      = []string{defaultSettings, customSettings, skipSettings}
 	settingsDescription = map[string]string{
 		defaultSettings: "With default settings",
 		customSettings:  "With custom settings",
@@ -289,23 +289,10 @@ func getPortForNewLocalCluster(existingContainers []podman.Container) int {
 	return maxPort + 1
 }
 
-func (opts *SetupOpts) selectDeploymentType() error {
-	p := &survey.Select{
-		Message: "What would you like to deploy?",
-		Options: deploymentTypes,
-		Help:    usage.DeploymentType,
-		Description: func(value string, index int) string {
-			return deploymentTypeDescription[value]
-		},
-	}
-
-	return telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
-}
-
-func (opts *SetupOpts) selectSettings() error {
+func (opts *SetupOpts) promptSettings() error {
 	p := &survey.Select{
 		Message: "How do you want to setup your local MongoDB database?",
-		Options: settings,
+		Options: settingOptions,
 		Default: opts.settings,
 		Description: func(value string, index int) string {
 			return settingsDescription[value]
@@ -325,7 +312,10 @@ func (opts *SetupOpts) promptDeploymentName() error {
 		Default: opts.DeploymentName,
 	}
 
-	return telemetry.TrackAskOne(p, &opts.DeploymentName, nil)
+	return telemetry.TrackAskOne(p, &opts.DeploymentName, survey.WithValidator(func(ans interface{}) error {
+		name, _ := ans.(string)
+		return validateDeploymentName(name)
+	}))
 }
 
 func (opts *SetupOpts) selectMdbVersion() error {
@@ -341,6 +331,13 @@ func (opts *SetupOpts) selectMdbVersion() error {
 func validatePort(p int) error {
 	if p <= 0 || p > 65535 {
 		return errors.New("port must within the range 1..65535")
+	}
+	return nil
+}
+
+func validateDeploymentName(n string) error {
+	if matched, _ := regexp.MatchString(clusterNamePattern, n); !matched {
+		return fmt.Errorf("invalid cluster name: %s", n)
 	}
 	return nil
 }
@@ -371,81 +368,67 @@ func (opts *SetupOpts) promptPort() error {
 	return err
 }
 
-func (opts *SetupOpts) validateConnectWith() error {
-	if opts.connectWith != "" && opts.connectWith != mongoshConnect && opts.connectWith != skipConnect {
-		return fmt.Errorf("connectWith flag unsupported: %s", opts.connectWith)
-	}
-	return nil
-}
-
-func (opts *SetupOpts) validateAndPromptDeploymentType() error {
-	if opts.DeploymentType == "" {
-		if err := opts.selectDeploymentType(); err != nil {
-			return err
-		}
-	} else if !strings.EqualFold(opts.DeploymentType, atlasCluster) && !strings.EqualFold(opts.DeploymentType, localCluster) {
+func (opts *SetupOpts) validateFlags() error {
+	if opts.DeploymentType != "" && !strings.EqualFold(opts.DeploymentType, atlasCluster) && !strings.EqualFold(opts.DeploymentType, localCluster) {
 		return fmt.Errorf("invalid deployment type: %s", opts.DeploymentType)
 	}
 
-	if strings.EqualFold(opts.DeploymentType, atlasCluster) {
-		return fmt.Errorf("deployment type unsupported: %s", deploymentTypeDescription[opts.DeploymentType])
-	}
-	return nil
-}
-
-func (opts *SetupOpts) validateAndPromptSettings() error {
-	if opts.DeploymentName == "" || opts.MdbVersion == "" || opts.Port == 0 {
-		if err := opts.selectSettings(); err != nil {
+	if opts.DeploymentName != "" {
+		if err := validateDeploymentName(opts.DeploymentName); err != nil {
 			return err
 		}
-
-		if opts.settings == skipSettings {
-			return errSkip
-		}
 	}
-	return nil
-}
 
-func (opts *SetupOpts) validateAndPromptDeploymentName() error {
-	if opts.DeploymentName == "" {
-		opts.generateDeploymentName()
-		if opts.settings == customSettings {
-			if err := opts.promptDeploymentName(); err != nil {
-				return err
-			}
-		}
-	} else if matched, _ := regexp.MatchString(clusterNamePattern, opts.DeploymentName); !matched {
-		return fmt.Errorf("invalid cluster name: %s", opts.DeploymentName)
-	}
-	return nil
-}
-
-func (opts *SetupOpts) validateAndPromptMdbVersion() error {
-	if opts.MdbVersion == "" {
-		opts.MdbVersion = mdb7
-		if opts.settings == customSettings {
-			if err := opts.selectMdbVersion(); err != nil {
-				return err
-			}
-		}
-	} else if opts.MdbVersion != mdb6 && opts.MdbVersion != mdb7 {
+	if opts.MdbVersion != "" && opts.MdbVersion != mdb6 && opts.MdbVersion != mdb7 {
 		return fmt.Errorf("invalid mongodb version: %s", opts.MdbVersion)
 	}
+
+	if opts.Port != 0 {
+		if err := validatePort(opts.Port); err != nil {
+			return err
+		}
+	}
+
+	if opts.connectWith != "" && !strings.EqualFold(opts.connectWith, mongoshConnect) && !strings.EqualFold(opts.connectWith, skipConnect) {
+		return fmt.Errorf("connectWith flag unsupported: %s", opts.connectWith)
+	}
+
 	return nil
 }
 
-func (opts *SetupOpts) validateAndPromptPort() error {
+func (opts *SetupOpts) promptDeploymentType() error {
+	p := &survey.Select{
+		Message: "What would you like to deploy?",
+		Options: deploymentTypeOptions,
+		Help:    usage.DeploymentType,
+		Description: func(value string, index int) string {
+			return deploymentTypeDescription[value]
+		},
+	}
+
+	return telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
+}
+
+func (opts *SetupOpts) setDefaultSettings() bool {
+	set := false
+	opts.settings = defaultSettings
+
+	if opts.DeploymentName == "" {
+		opts.generateDeploymentName()
+		set = true
+	}
+
+	if opts.MdbVersion == "" {
+		opts.MdbVersion = mdb7
+		set = true
+	}
+
 	if opts.Port == 0 {
 		opts.Port = 27017
-		if opts.settings == customSettings {
-			if err := opts.promptPort(); err != nil {
-				return err
-			}
-		}
-	} else if err := validatePort(opts.Port); err != nil {
-		return err
+		set = true
 	}
-	return nil
+
+	return set
 }
 
 func (opts *SetupOpts) promptConnect() error {
@@ -464,37 +447,66 @@ func (opts *SetupOpts) promptConnect() error {
 	return telemetry.TrackAskOne(p, &opts.connectWith, nil)
 }
 
+func (opts *SetupOpts) runConnectWith(cs string) error {
+	if err := opts.promptConnect(); err != nil {
+		return err
+	}
+
+	switch opts.connectWith {
+	case skipConnect:
+		fmt.Fprintln(os.Stderr, "connection skipped")
+	case mongoshConnect:
+		if !mongosh.Detect() {
+			return errors.New("mongosh not found in your system")
+		}
+		return mongosh.Run("", "", cs)
+	}
+
+	return nil
+}
+
 func (opts *SetupOpts) validateAndPrompt() error {
-	if err := opts.validateConnectWith(); err != nil {
+	if err := opts.validateFlags(); err != nil {
 		return err
 	}
 
-	if err := opts.validateAndPromptDeploymentType(); err != nil {
-		return err
+	if opts.DeploymentType == "" {
+		if err := opts.promptDeploymentType(); err != nil {
+			return err
+		}
 	}
 
-	if err := opts.validateAndPromptSettings(); err != nil {
-		return err
+	if strings.EqualFold(opts.DeploymentType, atlasCluster) {
+		return fmt.Errorf("deployment type unsupported: %s", deploymentTypeDescription[opts.DeploymentType])
 	}
 
-	if err := opts.validateAndPromptDeploymentName(); err != nil {
-		return err
-	}
-
-	if err := opts.validateAndPromptMdbVersion(); err != nil {
-		return err
-	}
-
-	if err := opts.validateAndPromptPort(); err != nil {
-		return err
-	}
-
-	if opts.settings == defaultSettings {
+	if opts.setDefaultSettings() {
 		templatewriter.Print(os.Stderr, `[Default Settings]
 Cluster Name	{{.DeploymentName}}
 MongoDB Version	{{.MdbVersion}}
 Port	{{.Port}}
 `, opts)
+
+		if err := opts.promptSettings(); err != nil {
+			return err
+		}
+	}
+
+	switch opts.settings {
+	case skipSettings:
+		return errSkip
+	case customSettings:
+		if err := opts.promptDeploymentName(); err != nil {
+			return err
+		}
+
+		if err := opts.selectMdbVersion(); err != nil {
+			return err
+		}
+
+		if err := opts.promptPort(); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -520,21 +532,7 @@ func (opts *SetupOpts) Run(_ context.Context) error {
 Connection string: %s
 `, cs)
 
-	if err := opts.promptConnect(); err != nil {
-		return err
-	}
-
-	switch opts.connectWith {
-	case skipConnect:
-		fmt.Fprintln(os.Stderr, "connection skipped")
-	case mongoshConnect:
-		if !mongosh.Detect() {
-			return errors.New("mongosh not found in your system")
-		}
-		return mongosh.Run("", "", cs)
-	}
-
-	return nil
+	return opts.runConnectWith(cs)
 }
 
 // atlas deployments setup.
@@ -573,7 +571,7 @@ func SetupBuilder() *cobra.Command {
 		return mdbVersions, cobra.ShellCompDirectiveDefault
 	})
 	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return deploymentTypes, cobra.ShellCompDirectiveDefault
+		return deploymentTypeOptions, cobra.ShellCompDirectiveDefault
 	})
 	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return connectWithOptions, cobra.ShellCompDirectiveDefault

@@ -122,10 +122,6 @@ Creating your cluster %s [this might take several minutes]
 		return errList
 	}
 
-	if opts.Port == 0 {
-		opts.Port = getPortForNewLocalCluster(containers)
-	}
-
 	if err := opts.validateLocalDeploymentsSettings(containers); err != nil {
 		return err
 	}
@@ -278,18 +274,6 @@ func (opts *SetupOpts) waitConnection(port int) error {
 		time.Sleep(1 * time.Second)
 	}
 	return errors.New("waitConnection failed")
-}
-
-func getPortForNewLocalCluster(existingContainers []podman.Container) int {
-	maxPort := startHostPort - 1
-	for _, c := range existingContainers {
-		for _, p := range c.Ports {
-			if maxPort < p.HostPort {
-				maxPort = p.HostPort
-			}
-		}
-	}
-	return maxPort + 1
 }
 
 func (opts *SetupOpts) promptSettings() error {

@@ -321,7 +321,7 @@ func (opts *SetupOpts) promptDeploymentName() error {
 	}))
 }
 
-func (opts *SetupOpts) selectMdbVersion() error {
+func (opts *SetupOpts) promptMdbVersion() error {
 	p := &survey.Select{
 		Message: "MongoDB Version",
 		Options: mdbVersions,
@@ -518,7 +518,7 @@ Port	{{.Port}}
 			return err
 		}
 
-		if err := opts.selectMdbVersion(); err != nil {
+		if err := opts.promptMdbVersion(); err != nil {
 			return err
 		}
 

@@ -548,6 +548,7 @@ func (opts *SetupOpts) Run(_ context.Context) error {
 
 	fmt.Fprintf(opts.OutWriter, `Cluster created!
 Connection string: %s
+
 `, cs)
 
 	return opts.runConnectWith(cs)

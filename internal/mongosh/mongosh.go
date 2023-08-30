@@ -47,7 +47,10 @@ func SetTelemetry(enable bool) error {
 }
 
 func Run(username, password, mongoURI string) error {
-	return execCommand("-u", username, "-p", password, mongoURI)
+	if username != "" && password != "" {
+		return execCommand("-u", username, "-p", password, mongoURI)
+	}
+	return execCommand(mongoURI)
 }
 
 func Exec(debug bool, args ...string) error {

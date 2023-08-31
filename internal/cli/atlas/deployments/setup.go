@@ -321,12 +321,9 @@ func availablePort() (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	_, port, err := net.SplitHostPort(server.Addr().String())
-	if err != nil {
-		return 0, err
-	}
+	defer server.Close()
 
-	err = server.Close()
+	_, port, err := net.SplitHostPort(server.Addr().String())
 	if err != nil {
 		return 0, err
 	}

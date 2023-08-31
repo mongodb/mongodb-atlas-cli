@@ -43,7 +43,6 @@ import (
 )
 
 const (
-	startHostPort      = 37017
 	internalMongodPort = 27017
 	internalMongotPort = 27027
 	localCluster       = "local"
@@ -103,9 +102,6 @@ type SetupOpts struct {
 	force        bool
 	s            *spinner.Spinner
 }
-
-const startTemplate = `local environment started at {{.ConnectionString}}
-`
 
 func (opts *SetupOpts) initPodmanClient() error {
 	opts.podmanClient = podman.NewClient(opts.debug, opts.OutWriter)
@@ -261,12 +257,6 @@ func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []podman.Cont
 				return fmt.Errorf("\"%s\" deployment was already created and is currently in \"%s\" state", opts.DeploymentName, c.State)
 			}
 		}
-
-		for _, p := range c.Ports {
-			if p.HostPort == opts.Port {
-				return fmt.Errorf("port %d is already used by \"%s\" local deployment", opts.Port, c.Names[0])
-			}
-		}
 	}
 
 	return nil
@@ -320,6 +310,21 @@ func (opts *SetupOpts) promptMdbVersion() error {
 	}
 
 	return telemetry.TrackAskOne(p, &opts.MdbVersion, nil)
+}
+
+func availablePort() (int, error) {
+	server, err := net.Listen("tcp", "localhost:0")
+	if err != nil {
+		return 0, err
+	}
+	defer server.Close()
+
+	_, port, err := net.SplitHostPort(server.Addr().String())
+	if err != nil {
+		return 0, err
+	}
+
+	return strconv.Atoi(port)
 }
 
 func checkPort(p int) error {
@@ -423,26 +428,25 @@ func (opts *SetupOpts) promptDeploymentType() error {
 	return telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
 }
 
-func (opts *SetupOpts) setDefaultSettings() bool {
-	set := false
+func (opts *SetupOpts) setDefaultSettings() (ok bool, err error) {
 	opts.settings = defaultSettings
 
 	if opts.DeploymentName == "" {
 		opts.generateDeploymentName()
-		set = true
+		ok = true
 	}
 
 	if opts.MdbVersion == "" {
 		opts.MdbVersion = mdb7
-		set = true
+		ok = true
 	}
 
 	if opts.Port == 0 {
-		opts.Port = 27017
-		set = true
+		opts.Port, err = availablePort()
+		ok = true
 	}
 
-	return set
+	return
 }
 
 func (opts *SetupOpts) promptConnect() error {
@@ -494,7 +498,11 @@ func (opts *SetupOpts) validateAndPrompt() error {
 		return fmt.Errorf("%w: %s", errDeploymentTypeNotImplemented, deploymentTypeDescription[opts.DeploymentType])
 	}
 
-	if opts.setDefaultSettings() {
+	ok, err := opts.setDefaultSettings()
+	if err != nil {
+		return err
+	}
+	if ok {
 		templatewriter.Print(os.Stderr, `
 [Default Settings]
 Cluster Name	{{.DeploymentName}}
@@ -572,7 +580,7 @@ func SetupBuilder() *cobra.Command {
 			}
 			opts.DeploymentID = uuid.NewString()
 
-			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), startTemplate), opts.initPodmanClient)
+			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), ""), opts.initPodmanClient)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

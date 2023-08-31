@@ -43,7 +43,6 @@ import (
 )
 
 const (
-	startHostPort      = 37017
 	internalMongodPort = 27017
 	internalMongotPort = 27027
 	localCluster       = "local"
@@ -326,6 +325,24 @@ func (opts *SetupOpts) promptMdbVersion() error {
 	return telemetry.TrackAskOne(p, &opts.MdbVersion, nil)
 }
 
+func availablePort() (int, error) {
+	server, err := net.Listen("tcp", ":0")
+	if err != nil {
+		return 0, err
+	}
+	_, port, err := net.SplitHostPort(server.Addr().String())
+	if err != nil {
+		return 0, err
+	}
+
+	err = server.Close()
+	if err != nil {
+		return 0, err
+	}
+
+	return strconv.Atoi(port)
+}
+
 func checkPort(p int) error {
 	server, err := net.Listen("tcp", fmt.Sprintf(":%d", p))
 	if err != nil {
@@ -427,26 +444,25 @@ func (opts *SetupOpts) promptDeploymentType() error {
 	return telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
 }
 
-func (opts *SetupOpts) setDefaultSettings() bool {
-	set := false
+func (opts *SetupOpts) setDefaultSettings() (ok bool, err error) {
 	opts.settings = defaultSettings
 
 	if opts.DeploymentName == "" {
 		opts.generateDeploymentName()
-		set = true
+		ok = true
 	}
 
 	if opts.MdbVersion == "" {
 		opts.MdbVersion = mdb7
-		set = true
+		ok = true
 	}
 
 	if opts.Port == 0 {
-		opts.Port = 27017
-		set = true
+		opts.Port, err = availablePort()
+		ok = true
 	}
 
-	return set
+	return
 }
 
 func (opts *SetupOpts) promptConnect() error {
@@ -498,7 +514,11 @@ func (opts *SetupOpts) validateAndPrompt() error {
 		return fmt.Errorf("%w: %s", errDeploymentTypeNotImplemented, deploymentTypeDescription[opts.DeploymentType])
 	}
 
-	if opts.setDefaultSettings() {
+	ok, err := opts.setDefaultSettings()
+	if err != nil {
+		return err
+	}
+	if ok {
 		templatewriter.Print(os.Stderr, `
 [Default Settings]
 Cluster Name	{{.DeploymentName}}

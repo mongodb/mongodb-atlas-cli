@@ -20,6 +20,7 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"net"
 	"os"
 	"regexp"
 	"strconv"
@@ -61,9 +62,19 @@ const (
 )
 
 var (
-	errSkip                   = errors.New("setup skipped")
-	deploymentTypeOptions     = []string{localCluster, atlasCluster}
-	deploymentTypeDescription = map[string]string{
+	errSkip                         = errors.New("setup skipped")
+	errMustBeInt                    = errors.New("input must be an integer")
+	errWaitFailed                   = errors.New("waitConnection failed")
+	errPortOutOfRange               = errors.New("port must within the range 1..65535")
+	errPortNotAvailable             = errors.New("port not available")
+	errInvalidClusterName           = errors.New("invalid cluster name")
+	errFlagTypeRequired             = errors.New("flag --type is required when --force is set")
+	errInvalidDeploymentType        = errors.New("invalid deployment type")
+	errInvalidMongoDBVersion        = errors.New("invalid mongodb version")
+	errUnsupportedConnectWith       = errors.New("flag --connectWith unsupported")
+	errDeploymentTypeNotImplemented = errors.New("deployment type not implemented")
+	deploymentTypeOptions           = []string{localCluster, atlasCluster}
+	deploymentTypeDescription       = map[string]string{
 		localCluster: "Local Database",
 		atlasCluster: "Atlas Database",
 	}
@@ -273,7 +284,7 @@ func (opts *SetupOpts) waitConnection(port int) error {
 		}
 		time.Sleep(1 * time.Second)
 	}
-	return errors.New("waitConnection failed")
+	return errWaitFailed
 }
 
 func (opts *SetupOpts) promptSettings() error {
@@ -315,16 +326,25 @@ func (opts *SetupOpts) promptMdbVersion() error {
 	return telemetry.TrackAskOne(p, &opts.MdbVersion, nil)
 }
 
+func checkPort(p int) error {
+	server, err := net.Listen("tcp", fmt.Sprintf(":%d", p))
+	if err != nil {
+		return fmt.Errorf("%w: %d", errPortNotAvailable, p)
+	}
+	_ = server.Close()
+	return nil
+}
+
 func validatePort(p int) error {
 	if p <= 0 || p > 65535 {
-		return errors.New("port must within the range 1..65535")
+		return errPortOutOfRange
 	}
-	return nil
+	return checkPort(p)
 }
 
 func validateDeploymentName(n string) error {
 	if matched, _ := regexp.MatchString(clusterNamePattern, n); !matched {
-		return fmt.Errorf("invalid cluster name: %s", n)
+		return fmt.Errorf("%w: %s", errInvalidClusterName, n)
 	}
 	return nil
 }
@@ -341,7 +361,7 @@ func (opts *SetupOpts) promptPort() error {
 		input, _ := ans.(string)
 		value, err := strconv.Atoi(input)
 		if err != nil {
-			return errors.New("input must be an integer")
+			return errMustBeInt
 		}
 
 		return validatePort(value)
@@ -357,11 +377,11 @@ func (opts *SetupOpts) promptPort() error {
 
 func (opts *SetupOpts) validateDeploymentTypeFlag() error {
 	if opts.DeploymentType == "" && opts.force {
-		return errors.New("flag --type is required when --force is set")
+		return errFlagTypeRequired
 	}
 
 	if opts.DeploymentType != "" && !strings.EqualFold(opts.DeploymentType, atlasCluster) && !strings.EqualFold(opts.DeploymentType, localCluster) {
-		return fmt.Errorf("invalid deployment type: %s", opts.DeploymentType)
+		return fmt.Errorf("%w: %s", errInvalidDeploymentType, opts.DeploymentType)
 	}
 
 	return nil
@@ -378,7 +398,7 @@ func (opts *SetupOpts) validateFlags() error {
 	}
 
 	if opts.MdbVersion != "" && opts.MdbVersion != mdb6 && opts.MdbVersion != mdb7 {
-		return fmt.Errorf("invalid mongodb version: %s", opts.MdbVersion)
+		return fmt.Errorf("%w: %s", errInvalidMongoDBVersion, opts.MdbVersion)
 	}
 
 	if opts.Port != 0 {
@@ -388,7 +408,7 @@ func (opts *SetupOpts) validateFlags() error {
 	}
 
 	if opts.connectWith != "" && !strings.EqualFold(opts.connectWith, mongoshConnect) && !strings.EqualFold(opts.connectWith, skipConnect) {
-		return fmt.Errorf("connectWith flag unsupported: %s", opts.connectWith)
+		return fmt.Errorf("%w: %s", errUnsupportedConnectWith, opts.connectWith)
 	}
 
 	return nil
@@ -475,7 +495,7 @@ func (opts *SetupOpts) validateAndPrompt() error {
 	}
 
 	if strings.EqualFold(opts.DeploymentType, atlasCluster) {
-		return fmt.Errorf("deployment type unsupported: %s", deploymentTypeDescription[opts.DeploymentType])
+		return fmt.Errorf("%w: %s", errDeploymentTypeNotImplemented, deploymentTypeDescription[opts.DeploymentType])
 	}
 
 	if opts.setDefaultSettings() {

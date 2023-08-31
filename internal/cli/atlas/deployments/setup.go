@@ -151,6 +151,12 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	opts.logStepStarted("1/4: Downloading and completing configuration...")
 	defer opts.stop()
 
+	fmt.Fprintf(os.Stderr, "%v\n", opts.podmanClient.Diagnostics(ctx))
+
+	if err := opts.podmanClient.Installed(); err != nil {
+		return err
+	}
+
 	if err := opts.podmanClient.Ready(ctx); err != nil {
 		return err
 	}

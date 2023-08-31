@@ -23,11 +23,20 @@ import (
 	"os/exec"
 	"runtime"
 	"strconv"
+	"strings"
 
-	"github.com/containers/podman/v4/pkg/machine"
+	"github.com/containers/podman/v4/pkg/domain/entities"
 )
 
-var ErrPodmanNotReady = errors.New("podman not found in your system, check requirements at http://docpage")
+var ErrPodmanNotFound = errors.New("podman not found in your system, check requirements at http://docpage")
+
+type Diagnostic struct {
+	Installed    bool
+	MachineFound bool
+	MachineState string
+	Images       []string
+	Containers   []Container
+}
 
 type RunContainerOpts struct {
 	Detach   bool
@@ -79,7 +88,9 @@ type Image struct {
 //go:generate mockgen -destination=../../../../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman Client
 
 type Client interface {
+	Installed() error
 	Ready(ctx context.Context) error
+	Diagnostics(ctx context.Context) *Diagnostic
 	CreateNetwork(ctx context.Context, name string) ([]byte, error)
 	CreateVolume(ctx context.Context, name string) ([]byte, error)
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
@@ -98,6 +109,37 @@ type client struct {
 	outWriter io.Writer
 }
 
+func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
+	d := &Diagnostic{}
+
+	err := o.Installed()
+	if err != nil {
+		d.Installed = false
+		return d
+	}
+
+	info, err := o.machineInspect(ctx)
+	if err != nil { // machine is already present
+		d.MachineFound = false
+		return d
+	}
+
+	d.MachineFound = true
+	d.MachineState = info.Host.MachineState
+
+	images, err := o.listImages(ctx)
+	if err == nil {
+		d.Images = make([]string, 0, len(images))
+		for _, img := range images {
+			d.Images = append(d.Images, img.Names...)
+		}
+	}
+
+	d.Containers, _ = o.ListContainers(ctx, "")
+
+	return d
+}
+
 func (o *client) machineInit(ctx context.Context) error {
 	_, err := o.machineInspect(ctx)
 	if err == nil { // machine is already present
@@ -108,16 +150,16 @@ func (o *client) machineInit(ctx context.Context) error {
 	return err
 }
 
-func (o *client) machineInspect(ctx context.Context) (*machine.InspectInfo, error) {
-	var info []machine.InspectInfo
-	b, err := o.runPodman(ctx, "machine", "inspect", machine.DefaultMachineName)
+func (o *client) machineInspect(ctx context.Context) (*entities.MachineInfo, error) {
+	b, err := o.runPodman(ctx, "machine", "info", "--format", "json")
 	if err != nil {
 		return nil, err
 	}
-	if err := json.Unmarshal(b, &info); err != nil {
+	var ret *entities.MachineInfo
+	if err := json.Unmarshal(b, &ret); err != nil {
 		return nil, err
 	}
-	return &info[0], nil
+	return ret, nil
 }
 
 func (o *client) machineStart(ctx context.Context) error {
@@ -125,8 +167,8 @@ func (o *client) machineStart(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	if info.State != machine.Running {
-		_, err := o.runPodman(ctx, "machine", "start", machine.DefaultMachineName)
+	if !strings.EqualFold(info.Host.MachineState, "Running") {
+		_, err := o.runPodman(ctx, "machine", "start")
 		if err != nil {
 			return err
 		}
@@ -135,11 +177,26 @@ func (o *client) machineStart(ctx context.Context) error {
 	return nil
 }
 
-func (o *client) Ready(ctx context.Context) error {
-	if _, err := exec.LookPath("podman"); err != nil {
-		return ErrPodmanNotReady
+func (o *client) listImages(ctx context.Context) ([]*entities.ImageSummary, error) {
+	b, err := o.runPodman(ctx, "images", "--all", "--format", "json")
+	if err != nil {
+		return nil, err
 	}
+	var ret []*entities.ImageSummary
+	if err := json.Unmarshal(b, &ret); err != nil {
+		return nil, err
+	}
+	return ret, nil
+}
 
+func (o *client) Installed() error {
+	if _, err := exec.LookPath("podman"); err != nil {
+		return ErrPodmanNotFound
+	}
+	return nil
+}
+
+func (o *client) Ready(ctx context.Context) error {
 	if runtime.GOOS != "windows" && runtime.GOOS != "darwin" {
 		// macOs and Windows require VMs
 		return nil
@@ -240,7 +297,12 @@ func (o *client) RemoveNetworks(ctx context.Context, names ...string) ([]byte, e
 }
 
 func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]*Container, error) {
-	response, err := o.runPodman(ctx, "ps", "--all", "--format", "json", "--filter", "name="+nameFilter)
+	args := []string{"ps", "--all", "--format", "json"}
+	if nameFilter != "" {
+		args = append(args, "--filter", "name="+nameFilter)
+	}
+
+	response, err := o.runPodman(ctx, args...)
 	if err != nil {
 		return nil, err
 	}

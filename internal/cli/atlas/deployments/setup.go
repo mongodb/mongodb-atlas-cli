@@ -32,10 +32,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/templatewriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -108,7 +108,7 @@ func (opts *SetupOpts) initPodmanClient() error {
 	return nil
 }
 
-func (opts *SetupOpts) createLocalDeployment() error {
+func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	fmt.Fprintf(os.Stderr, `
 Creating your cluster %s [this might take several minutes]
 `, opts.DeploymentName)
@@ -116,15 +116,11 @@ Creating your cluster %s [this might take several minutes]
 
 	defer opts.stop()
 
-	if err := opts.podmanClient.Ready(); err != nil {
+	if err := opts.podmanClient.Ready(ctx); err != nil {
 		return err
 	}
 
-	if err := opts.podmanClient.Setup(); err != nil {
-		return err
-	}
-
-	containers, errList := opts.podmanClient.ListContainers(options.MongodHostnamePrefix)
+	containers, errList := opts.podmanClient.ListContainers(ctx, options.MongodHostnamePrefix)
 	if errList != nil {
 		return errList
 	}
@@ -133,20 +129,20 @@ Creating your cluster %s [this might take several minutes]
 		return err
 	}
 
-	if _, err := opts.podmanClient.CreateNetwork(opts.LocalNetworkName()); err != nil {
+	if _, err := opts.podmanClient.CreateNetwork(ctx, opts.LocalNetworkName()); err != nil {
 		return err
 	}
 
-	if err := opts.configureMongod(); err != nil {
+	if err := opts.configureMongod(ctx); err != nil {
 		return err
 	}
 
-	return opts.configureMongot()
+	return opts.configureMongot(ctx)
 }
 
-func (opts *SetupOpts) configureMongod() error {
+func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 	mongodDataVolume := opts.LocalMongodDataVolume()
-	if _, err := opts.podmanClient.CreateVolume(mongodDataVolume); err != nil {
+	if _, err := opts.podmanClient.CreateVolume(ctx, mongodDataVolume); err != nil {
 		return err
 	}
 
@@ -171,7 +167,7 @@ func (opts *SetupOpts) configureMongod() error {
 		keyfilePerm,
 		strings.Join(mongodArgs, " "))
 
-	if _, err := opts.podmanClient.RunContainer(
+	if _, err := opts.podmanClient.RunContainer(ctx,
 		podman.RunContainerOpts{
 			Detach:   true,
 			Image:    fmt.Sprintf("mongodb/mongodb-enterprise-server:%s-ubi8", opts.MdbVersion),
@@ -215,18 +211,18 @@ func (opts *SetupOpts) configureMongod() error {
 	return opts.seed(opts.Port, "db.getSiblingDB('admin').atlascli.insertOne({ managedClusterType: 'atlasCliLocalDevCluster' })")
 }
 
-func (opts *SetupOpts) configureMongot() error {
+func (opts *SetupOpts) configureMongot(ctx context.Context) error {
 	mongotDataVolume := opts.LocalMongotDataVolume()
-	if _, err := opts.podmanClient.CreateVolume(mongotDataVolume); err != nil {
+	if _, err := opts.podmanClient.CreateVolume(ctx, mongotDataVolume); err != nil {
 		return err
 	}
 
 	mongotMetricsVolume := opts.LocalMongoMetricsVolume()
-	if _, err := opts.podmanClient.CreateVolume(mongotMetricsVolume); err != nil {
+	if _, err := opts.podmanClient.CreateVolume(ctx, mongotMetricsVolume); err != nil {
 		return err
 	}
 
-	_, err := opts.podmanClient.RunContainer(podman.RunContainerOpts{
+	_, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
 		Detach:   true,
 		Image:    "mongodb/apix_test:mongot",
 		Name:     opts.LocalMongotHostname(),
@@ -542,7 +538,7 @@ Port	{{.Port}}
 	return nil
 }
 
-func (opts *SetupOpts) Run(_ context.Context) error {
+func (opts *SetupOpts) Run(ctx context.Context) error {
 	if err := opts.validateAndPrompt(); err != nil {
 		if errors.Is(err, errSkip) {
 			_, _ = fmt.Fprintf(opts.OutWriter, "%s\n", err)
@@ -552,7 +548,7 @@ func (opts *SetupOpts) Run(_ context.Context) error {
 		return err
 	}
 
-	if err := opts.createLocalDeployment(); err != nil {
+	if err := opts.createLocalDeployment(ctx); err != nil {
 		return err
 	}
 

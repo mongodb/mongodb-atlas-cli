@@ -103,9 +103,6 @@ type SetupOpts struct {
 	s            *spinner.Spinner
 }
 
-const startTemplate = `local environment started at {{.ConnectionString}}
-`
-
 func (opts *SetupOpts) initPodmanClient() error {
 	opts.podmanClient = podman.NewClient(opts.debug, opts.OutWriter)
 	return nil
@@ -326,7 +323,7 @@ func (opts *SetupOpts) promptMdbVersion() error {
 }
 
 func availablePort() (int, error) {
-	server, err := net.Listen("tcp", ":0")
+	server, err := net.Listen("tcp", "localhost:0")
 	if err != nil {
 		return 0, err
 	}
@@ -596,7 +593,7 @@ func SetupBuilder() *cobra.Command {
 			}
 			opts.DeploymentID = uuid.NewString()
 
-			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), startTemplate), opts.initPodmanClient)
+			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), ""), opts.initPodmanClient)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

@@ -261,12 +261,6 @@ func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []podman.Cont
 				return fmt.Errorf("\"%s\" deployment was already created and is currently in \"%s\" state", opts.DeploymentName, c.State)
 			}
 		}
-
-		for _, p := range c.Ports {
-			if p.HostPort == opts.Port {
-				return fmt.Errorf("port %d is already used by \"%s\" local deployment", opts.Port, c.Names[0])
-			}
-		}
 	}
 
 	return nil

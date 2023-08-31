@@ -254,7 +254,7 @@ type AuthenticatedConfig interface {
 
 type ServiceGetter interface {
 	Service() string
-	// Name of the config value for custom service URL. Named opsmannager for legacy reasons.
+	// Name of the config value for custom service URL. Named opsmanager for legacy reasons.
 	OpsManagerURL() string
 }
 

@@ -46,6 +46,7 @@ type atlasE2ETestGenerator struct {
 	teamUser       string
 	dbUser         string
 	tier           string
+	dataFedName    string
 	enableBackup   bool
 	firstProcess   *atlasv2.ApiHostViewAtlas
 	t              *testing.T
@@ -358,6 +359,33 @@ func (g *atlasE2ETestGenerator) generateProjectAndCluster(prefix string) {
 
 	g.generateProject(prefix)
 	g.generateCluster()
+}
+
+func (g *atlasE2ETestGenerator) generateDataFederation() {
+	var err error
+	g.t.Helper()
+
+	if g.projectID == "" {
+		g.t.Fatal("unexpected error: project must be generated")
+	}
+
+	g.dataFedName, err = createDataFederationForProject(g.projectID)
+	storeName := g.dataFedName
+	if err != nil {
+		g.Logf("projectID=%q, dataFedName=%q", g.projectID, g.dataFedName)
+		g.t.Errorf("unexpected error deploying data federation: %v", err)
+	} else {
+		g.Logf("dataFedName=%q", g.dataFedName)
+	}
+
+	g.t.Cleanup(func() {
+		g.Logf("Data Federation cleanup %q\n", storeName)
+		if e := deleteDataFederationForProject(g.projectID, storeName); e != nil {
+			g.t.Errorf("unexpected error deleting data federation: %v", e)
+		} else {
+			g.Logf("data federation %q successfully deleted", storeName)
+		}
+	})
 }
 
 // newAvailableRegion returns the first region for the provider/tier.

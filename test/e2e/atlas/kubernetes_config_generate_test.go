@@ -1513,3 +1513,210 @@ func atlasBackupSchedule(objects []runtime.Object) (*atlasV1.AtlasBackupSchedule
 	}
 	return nil, false
 }
+
+func referenceDataFederation(name, namespace, projectName string, labels map[string]string) *atlasV1.AtlasDataFederation {
+	dictionary := resources.AtlasNameToKubernetesName()
+	return &atlasV1.AtlasDataFederation{
+		TypeMeta: v1.TypeMeta{
+			Kind:       "AtlasDataFederation",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: v1.ObjectMeta{
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, name), dictionary),
+			Namespace: namespace,
+			Labels:    labels,
+		},
+		Spec: atlasV1.DataFederationSpec{
+			Project: common.ResourceRefNamespaced{
+				Name:      resources.NormalizeAtlasName(projectName, dictionary),
+				Namespace: namespace,
+			},
+			Name:                name,
+			CloudProviderConfig: &atlasV1.CloudProviderConfig{},
+			DataProcessRegion: &atlasV1.DataProcessRegion{
+				CloudProvider: "AWS",
+				Region:        "DUBLIN_IRL",
+			},
+			Storage: &atlasV1.Storage{
+				Databases: nil,
+				Stores:    nil,
+			},
+		},
+		Status: status.DataFederationStatus{
+			Common: status.Common{
+				Conditions: []status.Condition{},
+			},
+		},
+	}
+}
+
+func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
+	n, err := e2e.RandInt(255)
+	require.NoError(t, err)
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject(fmt.Sprintf("kubernetes-%s", n))
+	g.generateDataFederation()
+	var storeNames []string
+	storeNames = append(storeNames, g.dataFedName)
+	g.generateDataFederation()
+	storeNames = append(storeNames, g.dataFedName)
+	expectedDataFederation := referenceDataFederation(storeNames[0], targetNamespace, g.projectName, expectedLabels)
+
+	cliPath, err := e2e.AtlasCLIBin()
+	require.NoError(t, err)
+
+	// always register atlas entities
+	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
+
+	t.Run("Generate valid resources of ONE project and ONE data federation", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			"kubernetes",
+			"config",
+			"generate",
+			"--projectId",
+			g.projectID,
+			"--dataFederationName",
+			storeNames[0],
+			"--targetNamespace",
+			targetNamespace)
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		t.Log(string(resp))
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var objects []runtime.Object
+		t.Run("Output can be decoded", func(t *testing.T) {
+			objects, err = getK8SEntities(resp)
+			require.NoError(t, err, "should not fail on decode")
+			require.NotEmpty(t, objects, "result should not be empty")
+		})
+		t.Run("Project present with valid name", func(t *testing.T) {
+			p, found := findAtlasProject(objects)
+			if !found {
+				t.Fatal("AtlasProject is not found in results")
+			}
+			assert.Equal(t, targetNamespace, p.Namespace)
+		})
+		t.Run("Deployment present with valid data", func(t *testing.T) {
+			found := false
+			var datafederation *atlasV1.AtlasDataFederation
+			var ok bool
+			for i := range objects {
+				datafederation, ok = objects[i].(*atlasV1.AtlasDataFederation)
+				if ok {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Fatal("AtlasDataFederation is not found in results")
+			}
+			a.Equal(expectedDataFederation, datafederation)
+		})
+	})
+
+	t.Run("Generate valid resources of ONE project and TWO data federation", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			"kubernetes",
+			"config",
+			"generate",
+			"--projectId",
+			g.projectID,
+			"--dataFederationName",
+			fmt.Sprintf("%s,%s", storeNames[0], storeNames[1]),
+			"--targetNamespace",
+			targetNamespace)
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		t.Log(string(resp))
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var objects []runtime.Object
+		t.Run("Output can be decoded", func(t *testing.T) {
+			objects, err = getK8SEntities(resp)
+			require.NoError(t, err, "should not fail on decode")
+			require.NotEmpty(t, objects, "result should not be empty")
+		})
+		t.Run("Project present with valid name", func(t *testing.T) {
+			p, found := findAtlasProject(objects)
+			if !found {
+				t.Fatal("AtlasProject is not found in results")
+			}
+			assert.Equal(t, targetNamespace, p.Namespace)
+		})
+		t.Run("Deployments present with valid data", func(t *testing.T) {
+			dataFeds := atlasDataFederations(objects)
+			require.Len(t, dataFeds, len(storeNames))
+			checkDataFederationData(t, dataFeds, storeNames, targetNamespace, g.projectName)
+		})
+	})
+
+	t.Run("Generate valid resources of ONE project and TWO data federation without listing data federation instances", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			"kubernetes",
+			"config",
+			"generate",
+			"--projectId",
+			g.projectID,
+			"--targetNamespace",
+			targetNamespace)
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		t.Log(string(resp))
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var objects []runtime.Object
+		t.Run("Output can be decoded", func(t *testing.T) {
+			objects, err = getK8SEntities(resp)
+			require.NoError(t, err, "should not fail on decode")
+			require.NotEmpty(t, objects, "result should not be empty")
+		})
+		t.Run("Project present with valid name", func(t *testing.T) {
+			p, found := findAtlasProject(objects)
+			if !found {
+				t.Fatal("AtlasProject is not found in results")
+			}
+			assert.Equal(t, targetNamespace, p.Namespace)
+		})
+		t.Run("Deployments present with valid data", func(t *testing.T) {
+			dataFeds := atlasDataFederations(objects)
+			checkDataFederationData(t, dataFeds, storeNames, targetNamespace, g.projectName)
+		})
+	})
+}
+
+func atlasDataFederations(objects []runtime.Object) []*atlasV1.AtlasDataFederation {
+	var df []*atlasV1.AtlasDataFederation
+	for i := range objects {
+		d, ok := objects[i].(*atlasV1.AtlasDataFederation)
+		if ok {
+			df = append(df, d)
+		}
+	}
+	return df
+}
+
+func checkDataFederationData(t *testing.T, dataFederations []*atlasV1.AtlasDataFederation, dataFedNames []string, namespace, projectName string) {
+	t.Helper()
+	assert.Len(t, dataFederations, len(dataFedNames))
+	var entries []string
+	for _, instance := range dataFederations {
+		if ok := search.StringInSlice(dataFedNames, instance.Spec.Name); ok {
+			name := instance.Spec.Name
+			expectedDeployment := referenceDataFederation(name, namespace, projectName, expectedLabels)
+			assert.Equal(t, expectedDeployment, instance)
+			entries = append(entries, name)
+		}
+	}
+	assert.Len(t, entries, len(dataFedNames))
+	assert.ElementsMatch(t, dataFedNames, entries)
+}

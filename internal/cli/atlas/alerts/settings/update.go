@@ -74,7 +74,7 @@ func (opts *UpdateOpts) Run() error {
 // [--notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region]
 // [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
-	opts := new(UpdateOpts)
+	opts := UpdateOpts{fs: afero.NewOsFs()}
 	cmd := &cobra.Command{
 		Use:   "update <alertConfigId>",
 		Short: "Modify the details of the specified alert configuration for your project.",
@@ -94,6 +94,12 @@ func UpdateBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
+				func () error {
+					if opts.filename == "" && opts.event == "" {
+						return fmt.Errorf("--event flag is required")
+					}
+					return nil
+				},
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)

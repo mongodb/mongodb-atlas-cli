@@ -94,6 +94,12 @@ func CreateBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
+				func () error {
+					if opts.filename == "" && opts.event == "" {
+						return fmt.Errorf("--event flag is required")
+					}
+					return nil
+				},
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)

@@ -169,8 +169,6 @@ func TestAlertConfig(t *testing.T) {
 			configEntity,
 			"update",
 			alertID,
-			"--event",
-			eventTypeName,
 			"--file", fileName)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

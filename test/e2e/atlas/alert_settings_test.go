@@ -18,6 +18,8 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"strconv"
@@ -122,6 +124,49 @@ func TestAlertConfig(t *testing.T) {
 			"--notificationSmsEnabled=true",
 			"--notificationEmailEnabled=true",
 			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			var alert admin.GroupAlertsConfig
+			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
+				a.False(alert.GetEnabled())
+				a.NotEmpty(alert.Notifications)
+				a.True(alert.Notifications[0].GetSmsEnabled())
+				a.True(alert.Notifications[0].GetEmailEnabled())
+			}
+		}
+	})
+
+
+	t.Run("Update Setting using file input", func(t *testing.T) {
+		fileName := fmt.Sprintf("%d_alerts.json", rand.Int63())
+		fileContent:= fmt.Sprintf(`{
+			"eventTypeName": "%s",
+			"id": "%s",
+			"notifications": [
+			  {
+				"typeName": "%s",
+				"intervalMin": %s,
+				"delayMin": %s
+				"emailEnabled": true,
+				"smsEnabled": true,
+			  }
+			]
+		}`,eventTypeName ,alertID, 
+		group, strconv.Itoa(intervalMin), strconv.Itoa(delayMin))
+
+		os.WriteFile(fileName, []byte(fileContent), 0644)
+
+		cmd := exec.Command(cliPath,
+			alertsEntity,
+			configEntity,
+			"update",
+			alertID,
+			"--event",
+			eventTypeName,
+			"--file", fileName)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

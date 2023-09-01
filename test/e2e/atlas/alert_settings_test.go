@@ -141,7 +141,7 @@ func TestAlertConfig(t *testing.T) {
 	})
 
 	t.Run("Update Setting using file input", func(t *testing.T) {
-		randInit, _:= rand.Int(rand.Reader, big.NewInt(1000))
+		randInit, _ := rand.Int(rand.Reader, big.NewInt(1000))
 		fileName := fmt.Sprintf("%d_alerts.json", randInit.Int64())
 		fileContent := fmt.Sprintf(`{
 			"eventTypeName": "%s",

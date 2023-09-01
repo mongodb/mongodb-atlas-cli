@@ -20,10 +20,13 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type CreateOpts struct {
@@ -31,6 +34,8 @@ type CreateOpts struct {
 	cli.OutputOpts
 	ConfigOpts
 	store store.AlertConfigurationCreator
+	filename             string
+	fs                   afero.Fs
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -44,7 +49,15 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 var createTemplate = "Alert configuration {{.Id}} created.\n"
 
 func (opts *CreateOpts) Run() error {
-	alert := opts.NewAlertConfiguration(opts.ConfigProjectID())
+	alert := &atlasv2.GroupAlertsConfig{}
+	// File flag has priority over other flags
+	if opts.filename != "" {
+		if err := file.Load(opts.fs, opts.filename, alert); err != nil {
+			return err
+		}
+	} else {
+		alert = opts.NewAlertConfiguration(opts.ConfigProjectID())
+	}
 	r, err := opts.store.CreateAlertConfiguration(alert)
 	if err != nil {
 		return err
@@ -62,7 +75,7 @@ func (opts *CreateOpts) Run() error {
 //	[--notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region]
 //	[--projectId projectId].
 func CreateBuilder() *cobra.Command {
-	opts := new(CreateOpts)
+	opts := CreateOpts{fs: afero.NewOsFs()}
 	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create",
@@ -75,7 +88,9 @@ func CreateBuilder() *cobra.Command {
   %s alerts settings create --event JOINED_GROUP --enabled \
   --notificationType USER --notificationEmailEnabled \
   --notificationUsername john@example.com \
-  --output json --projectId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
+  --output json --projectId 5df90590f10fab5e33de2305
+  # Create alert using json file containing alert configuration
+  %s alerts settings create 5d1113b25a115342acc2d1aa --file alerts.json`, cli.ExampleAtlasEntryPoint(), cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -116,11 +131,13 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.notificationWebhookURL, flag.NotificationWebhookURL, "", usage.NotificationWebhookURL)
 	cmd.Flags().StringVar(&opts.notificationWebhookSecret, flag.NotificationWebhookSecret, "", usage.NotificationWebhookSecret)
 	cmd.Flags().StringSliceVar(&opts.notificationRoles, flag.NotificationRole, []string{}, usage.NotificationRole)
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.AlertConfigFilename)
+
+	_ = cmd.MarkFlagFilename(flag.File)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
-	_ = cmd.MarkFlagRequired(flag.Event)
 
 	return cmd
 }

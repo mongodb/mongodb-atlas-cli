@@ -449,4 +449,5 @@ dbName and collection are required only for built-in roles.`
 	DeploymentType                            = "Type of the deployment that you want to create. Valid values are ATLAS or LOCAL."
 	MongodPort                                = "Port to which the MongoDB server listens to for client connections."
 	ConnectWith                               = "Method of connection. Valid values are mongosh, compass and skip."
+	AlertConfigFilename 		       		  = "Path to the JSON configuration file that defines alert configuration settings."
 )

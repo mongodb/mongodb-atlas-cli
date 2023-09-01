@@ -33,9 +33,9 @@ type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	ConfigOpts
-	store store.AlertConfigurationCreator
-	filename             string
-	fs                   afero.Fs
+	store    store.AlertConfigurationCreator
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -94,7 +94,7 @@ func CreateBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				func () error {
+				func() error {
 					if opts.filename == "" && opts.event == "" {
 						return fmt.Errorf("--event flag is required")
 					}

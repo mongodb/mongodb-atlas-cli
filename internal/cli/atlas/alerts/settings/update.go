@@ -34,10 +34,10 @@ type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	ConfigOpts
-	store   store.AlertConfigurationUpdater
-	alertID string
-	filename             string
-	fs  		         afero.Fs
+	store    store.AlertConfigurationUpdater
+	alertID  string
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -90,11 +90,11 @@ func UpdateBuilder() *cobra.Command {
 		--notificationUsername john@example.com \
 		--output json --projectId 5df90590f10fab5e33de2305
   # Update alert using json file input containing alert configuration
-  %s alerts settings update 5d1113b25a115342acc2d1aa --file alerts.json`, cli.ExampleAtlasEntryPoint(),  cli.ExampleAtlasEntryPoint()),
+  %s alerts settings update 5d1113b25a115342acc2d1aa --file alerts.json`, cli.ExampleAtlasEntryPoint(), cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				func () error {
+				func() error {
 					if opts.filename == "" && opts.event == "" {
 						return fmt.Errorf("--event flag is required")
 					}
@@ -142,7 +142,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.AlertConfigFilename)
 
 	_ = cmd.MarkFlagFilename(flag.File)
-	
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())

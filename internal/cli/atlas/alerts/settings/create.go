@@ -51,12 +51,14 @@ var createTemplate = "Alert configuration {{.Id}} created.\n"
 func (opts *CreateOpts) Run() error {
 	alert := &atlasv2.GroupAlertsConfig{}
 	// File flag has priority over other flags
+	projectID := opts.ConfigProjectID();
 	if opts.filename != "" {
 		if err := file.Load(opts.fs, opts.filename, alert); err != nil {
 			return err
 		}
+		alert.GroupId = &projectID;
 	} else {
-		alert = opts.NewAlertConfiguration(opts.ConfigProjectID())
+		alert = opts.NewAlertConfiguration(projectID)
 	}
 	r, err := opts.store.CreateAlertConfiguration(alert)
 	if err != nil {

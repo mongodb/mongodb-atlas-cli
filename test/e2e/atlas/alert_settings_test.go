@@ -170,7 +170,7 @@ func TestAlertConfig(t *testing.T) {
 			"update",
 			alertID,
 			"--file", fileName,
-			"-o=json")	    
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

@@ -18,6 +18,7 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"strconv"
@@ -121,6 +122,50 @@ func TestAlertConfig(t *testing.T) {
 			strconv.Itoa(delayMin),
 			"--notificationSmsEnabled=true",
 			"--notificationEmailEnabled=true",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			var alert admin.GroupAlertsConfig
+			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
+				a.False(alert.GetEnabled())
+				a.NotEmpty(alert.Notifications)
+				a.True(alert.Notifications[0].GetSmsEnabled())
+				a.True(alert.Notifications[0].GetEmailEnabled())
+			}
+		}
+	})
+
+	t.Run("Update Setting using file input", func(t *testing.T) {
+		n, err := e2e.RandInt(1000)
+		require.NoError(t, err)
+		fileName := fmt.Sprintf("%d_alerts.json", n.Int64())
+		fileContent := fmt.Sprintf(`{
+			"eventTypeName": %q,
+			"id": "%s",
+			"enabled": false,
+			"notifications": [
+			  {
+				"typeName": "%s",
+				"intervalMin": %d,
+				"delayMin": %d,
+				"emailEnabled": true,
+				"smsEnabled": true
+			  }
+			]
+		}`, eventTypeName, alertID,
+			group, intervalMin, delayMin)
+
+		require.NoError(t, os.WriteFile(fileName, []byte(fileContent), 0600))
+
+		cmd := exec.Command(cliPath,
+			alertsEntity,
+			configEntity,
+			"update",
+			alertID,
+			"--file", fileName,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

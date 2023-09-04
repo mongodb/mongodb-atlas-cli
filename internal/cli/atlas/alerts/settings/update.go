@@ -21,18 +21,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
 
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	ConfigOpts
-	store   store.AlertConfigurationUpdater
-	alertID string
+	store    store.AlertConfigurationUpdater
+	alertID  string
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -46,7 +51,17 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 var updateTemplate = "Alert configuration '{{.Id}}' updated.\n"
 
 func (opts *UpdateOpts) Run() error {
-	alert := opts.NewAlertConfiguration(opts.ConfigProjectID())
+	alert := &atlasv2.GroupAlertsConfig{}
+	// File flag has priority over other flags
+	projectID := opts.ConfigProjectID()
+	if opts.filename != "" {
+		if err := file.Load(opts.fs, opts.filename, alert); err != nil {
+			return err
+		}
+		alert.GroupId = &projectID
+	} else {
+		alert = opts.NewAlertConfiguration(projectID)
+	}
 	alert.Id = &opts.alertID
 	r, err := opts.store.UpdateAlertConfiguration(alert)
 	if err != nil {
@@ -61,7 +76,7 @@ func (opts *UpdateOpts) Run() error {
 // [--notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region]
 // [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
-	opts := new(UpdateOpts)
+	opts := UpdateOpts{fs: afero.NewOsFs()}
 	cmd := &cobra.Command{
 		Use:   "update <alertConfigId>",
 		Short: "Modify the details of the specified alert configuration for your project.",
@@ -75,10 +90,18 @@ func UpdateBuilder() *cobra.Command {
   %s alerts settings update 5d1113b25a115342acc2d1aa --event JOINED_GROUP --enabled \
 		--notificationType USER --notificationEmailEnabled \
 		--notificationUsername john@example.com \
-		--output json --projectId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
+		--output json --projectId 5df90590f10fab5e33de2305
+  # Update alert using json file input containing alert configuration
+  %s alerts settings update 5d1113b25a115342acc2d1aa --file alerts.json`, cli.ExampleAtlasEntryPoint(), cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
+				func() error {
+					if opts.filename == "" && opts.event == "" {
+						return fmt.Errorf("--event flag is required")
+					}
+					return nil
+				},
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
@@ -118,11 +141,13 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.notificationWebhookSecret, flag.NotificationWebhookSecret, "", usage.NotificationWebhookSecret)
 	cmd.Flags().StringVar(&opts.notifierID, flag.NotifierID, "", usage.NotifierID)
 	cmd.Flags().StringSliceVar(&opts.notificationRoles, flag.NotificationRole, []string{}, usage.NotificationRole)
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.AlertConfigFilename)
+
+	_ = cmd.MarkFlagFilename(flag.File)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
-	_ = cmd.MarkFlagRequired(flag.Event)
 
 	return cmd
 }

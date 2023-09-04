@@ -133,39 +133,20 @@ Creating your cluster %s [this might take several minutes]
 		return err
 	}
 
-	if err := opts.configureMongod(ctx); err != nil {
+	keyFileContents := base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
+
+	if err := opts.configureMongod(ctx, keyFileContents); err != nil {
 		return err
 	}
 
-	return opts.configureMongot(ctx)
+	return opts.configureMongot(ctx, keyFileContents)
 }
 
-func (opts *SetupOpts) configureMongod(ctx context.Context) error {
+func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents string) error {
 	mongodDataVolume := opts.LocalMongodDataVolume()
 	if _, err := opts.podmanClient.CreateVolume(ctx, mongodDataVolume); err != nil {
 		return err
 	}
-
-	keyfile := "/data/configdb/keyfile"
-	keyfilePerm := 400
-	mongodArgs := []string{
-		"--transitionToAuth",
-		"--keyFile", keyfile,
-		"--dbpath", "/data/db",
-		"--replSet", replicaSetName,
-		"--setParameter", fmt.Sprintf("mongotHost=%s:%d", opts.LocalMongotHostname(), internalMongotPort),
-		"--setParameter", fmt.Sprintf("searchIndexManagementHostAndPort=%s:%d", opts.LocalMongotHostname(), internalMongotPort),
-	}
-
-	// wrap the entrypoint with a chain of commands that
-	// creates the keyfile in the container and sets the 400 permissions for it,
-	// then starts the entrypoint with the local dev config
-	cmdTemplate := "echo '%[1]s' > %[2]s && chmod %[3]d %[2]s && python3 /usr/local/bin/docker-entrypoint.py %[4]s"
-	cmd := fmt.Sprintf(cmdTemplate,
-		base64.URLEncoding.EncodeToString([]byte(opts.DeploymentID)),
-		keyfile,
-		keyfilePerm,
-		strings.Join(mongodArgs, " "))
 
 	if _, err := opts.podmanClient.RunContainer(ctx,
 		podman.RunContainerOpts{
@@ -173,6 +154,13 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 			Image:    fmt.Sprintf("mongodb/mongodb-enterprise-server:%s-ubi8", opts.MdbVersion),
 			Name:     opts.LocalMongodHostname(),
 			Hostname: opts.LocalMongodHostname(),
+			EnvVars: map[string]string{
+				"KEYFILECONTENTS": keyFileContents,
+				"DBPATH":          "/data/db",
+				"KEYFILE":         "/data/configdb/keyfile",
+				"REPLSETNAME":     replicaSetName,
+				"MONGOTHOST":      fmt.Sprintf("%s:%d", opts.LocalMongotHostname(), internalMongotPort),
+			},
 			Volumes: map[string]string{
 				mongodDataVolume: "/data/db",
 			},
@@ -180,7 +168,22 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 				opts.Port: internalMongodPort,
 			},
 			Network: opts.LocalNetworkName(),
-			Args:    []string{"sh", "-c", cmd},
+			// wrap the entrypoint with a chain of commands that
+			// creates the keyfile in the container and sets the 400 permissions for it,
+			// then starts the entrypoint with the local dev config
+			Cmd: "/bin/sh",
+			Args: []string{
+				"-c",
+				`echo $KEYFILECONTENTS > $KEYFILE && \
+                   chmod 400 $KEYFILE && \
+                   python3 /usr/local/bin/docker-entrypoint.py \
+                                          --transitionToAuth \
+                                          --dbpath $DBPATH \
+                                          --keyFile $KEYFILE \
+                                          --replSet $REPLSETNAME \
+                                          --setParameter "mongotHost=$MONGOTHOST" \
+                                          --setParameter "searchIndexManagementHostAndPort=$MONGOTHOST"`,
+			},
 		}); err != nil {
 		return err
 	}
@@ -211,7 +214,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 	return opts.seed(opts.Port, "db.getSiblingDB('admin').atlascli.insertOne({ managedClusterType: 'atlasCliLocalDevCluster' })")
 }
 
-func (opts *SetupOpts) configureMongot(ctx context.Context) error {
+func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents string) error {
 	mongotDataVolume := opts.LocalMongotDataVolume()
 	if _, err := opts.podmanClient.CreateVolume(ctx, mongotDataVolume); err != nil {
 		return err
@@ -223,13 +226,23 @@ func (opts *SetupOpts) configureMongot(ctx context.Context) error {
 	}
 
 	_, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
-		Detach:   true,
-		Image:    "mongodb/apix_test:mongot",
-		Name:     opts.LocalMongotHostname(),
-		Hostname: opts.LocalMongotHostname(),
+		Detach:     true,
+		Image:      "mongodb/apix_test:mongot-preview",
+		Name:       opts.LocalMongotHostname(),
+		Hostname:   opts.LocalMongotHostname(),
+		Entrypoint: "/bin/sh",
+		EnvVars: map[string]string{
+			"MONGODHOST":      fmt.Sprintf("%s:%d", opts.LocalMongodHostname(), internalMongodPort),
+			"DATADIR":         "/var/lib/mongot",
+			"KEYFILEPATH":     "/var/lib/mongot/keyfile",
+			"KEYFILECONTENTS": keyFileContents,
+		},
 		Args: []string{
-			"--mongodHostAndPort", fmt.Sprintf("%s:%d", opts.LocalMongodHostname(), internalMongodPort),
-			"--keyFileContent", base64.URLEncoding.EncodeToString([]byte(opts.DeploymentID)),
+			"-c",
+			`echo $KEYFILECONTENTS > $KEYFILEPATH && chmod 400 $KEYFILEPATH && /etc/mongot-localdev/mongot \
+                             --data-dir $DATADIR \
+                             --mongodHostAndPort $MONGODHOST \
+                             --keyFile $KEYFILEPATH`,
 		},
 		Volumes: map[string]string{
 			mongotDataVolume:    "/var/lib/mongot",
@@ -446,14 +459,14 @@ func (opts *SetupOpts) setDefaultSettings() (ok bool, err error) {
 		ok = true
 	}
 
+	if opts.connectWith != "" {
+		opts.connectWith = skipConnect
+	}
+
 	return
 }
 
 func (opts *SetupOpts) promptConnect() error {
-	if opts.connectWith != "" {
-		return nil
-	}
-
 	p := &survey.Select{
 		Message: fmt.Sprintf("How would you like to connect to %s?", opts.DeploymentName),
 		Options: connectWithOptions,
@@ -466,8 +479,10 @@ func (opts *SetupOpts) promptConnect() error {
 }
 
 func (opts *SetupOpts) runConnectWith(cs string) error {
-	if err := opts.promptConnect(); err != nil {
-		return err
+	if opts.settings == customSettings {
+		if err := opts.promptConnect(); err != nil {
+			return err
+		}
 	}
 
 	switch opts.connectWith {
@@ -578,8 +593,6 @@ func SetupBuilder() *cobra.Command {
 			if len(args) == 1 {
 				opts.DeploymentName = args[0]
 			}
-			opts.DeploymentID = uuid.NewString()
-
 			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), ""), opts.initPodmanClient)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

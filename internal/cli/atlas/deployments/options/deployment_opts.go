@@ -29,7 +29,6 @@ const (
 type DeploymentOpts struct {
 	DeploymentName string
 	DeploymentType string
-	DeploymentID   string
 	MdbVersion     string
 	Port           int
 }

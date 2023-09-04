@@ -51,7 +51,10 @@ func TestUpdates_Run(t *testing.T) {
 		alertID: "1",
 	}
 
-	alert := updateOpts.NewAlertConfiguration(updateOpts.ConfigProjectID())
+	alert, err := updateOpts.NewAlertConfiguration(updateOpts.ConfigProjectID())
+	if err != nil {
+		t.Fatalf("NewAlertConfiguration() unexpected error: %v", err)
+	}
 	alert.Id = &updateOpts.alertID
 	mockStore.
 		EXPECT().

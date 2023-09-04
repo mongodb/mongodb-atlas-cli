@@ -51,7 +51,10 @@ func TestCreate_Run(t *testing.T) {
 		},
 		store: mockStore}
 
-	alert := createOpts.NewAlertConfiguration(createOpts.ConfigProjectID())
+	alert, err := createOpts.NewAlertConfiguration(createOpts.ConfigProjectID())
+	if err != nil {
+		t.Fatalf("NewAlertConfiguration() unexpected error: %v", err)
+	}
 	mockStore.
 		EXPECT().
 		CreateAlertConfiguration(alert).

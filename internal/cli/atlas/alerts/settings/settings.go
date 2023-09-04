@@ -15,6 +15,7 @@
 package settings
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -70,7 +71,7 @@ type ConfigOpts struct {
 	metricThresholdThreshold        float64
 }
 
-func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.GroupAlertsConfig {
+func (opts *ConfigOpts) NewAlertConfiguration(projectID string) (*admin.GroupAlertsConfig, error) {
 	out := new(admin.GroupAlertsConfig)
 
 	out.GroupId = &projectID
@@ -79,19 +80,33 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.GroupAler
 	out.Enabled = &opts.enabled
 
 	if opts.matcherFieldName != "" {
+		if opts.matcherOperator == "" || opts.matcherValue == "" {
+			return nil, errors.New("--matcherOperator and --matcherValue are required when --matcherFieldName is provided")
+		}
 		out.Matchers = []map[string]interface{}{opts.newMatcher()}
 	}
 
 	if opts.metricThresholdMetricName != "" {
+		if opts.metricThresholdOperator == "" || opts.metricThresholdMode == "" || opts.metricThresholdUnits == "" || opts.metricThresholdThreshold == 0 {
+			return nil, errors.New("--metricOperator, --metricMode, --metricUnits and --metricThreshold are required when --metricName is provided")
+		}
 		out.MetricThreshold = opts.newMetricThreshold()
 	}
 
-	out.Notifications = []admin.AlertsNotificationRootForGroup{*opts.newNotification()}
+	if opts.notificationType == "" {
+		return nil, errors.New("--notificationType is required")
+	}
+	notification, err := opts.newNotification()
+	if err != nil {
+		return nil, err
+	}
+	out.Notifications = []admin.AlertsNotificationRootForGroup{*notification}
 
-	return out
+	return out, nil
 }
 
-func (opts *ConfigOpts) newNotification() *admin.AlertsNotificationRootForGroup {
+//gocyclo:ignore
+func (opts *ConfigOpts) newNotification() (*admin.AlertsNotificationRootForGroup, error) {
 	out := new(admin.AlertsNotificationRootForGroup)
 	notificationType := strings.ToUpper(opts.notificationType)
 	out.TypeName = &notificationType
@@ -101,49 +116,83 @@ func (opts *ConfigOpts) newNotification() *admin.AlertsNotificationRootForGroup 
 		out.NotifierId = &opts.notifierID
 	}
 
+	// write set of functions that contain code from switch cases and return error if required fields are not provided
 	switch out.GetTypeName() {
 	case datadog:
+		if opts.apiKey == "" || opts.notificationRegion == "" {
+			return nil, errors.New("--apiKey and --notificationRegion are required when --notificationType is DATADOG")
+		}
 		out.DatadogApiKey = &opts.apiKey
 		region := strings.ToUpper(opts.notificationRegion)
 		out.DatadogRegion = &region
 	case email:
+		if opts.notificationEmailAddress == "" {
+			return nil, errors.New("--notificationEmailAddress is required when --notificationType is EMAIL")
+		}
 		out.EmailAddress = &opts.notificationEmailAddress
 	case group, org:
 		out.EmailEnabled = &opts.notificationEmailEnabled
 		out.SmsEnabled = &opts.notificationSmsEnabled
 		out.Roles = opts.notificationRoles
 	case microsoftTeams:
+		if opts.notificationWebhookURL == "" {
+			return nil, errors.New("--notificationWebhookURL is required when --notificationType is MICROSOFT_TEAMS")
+		}
 		out.MicrosoftTeamsWebhookUrl = &opts.notificationWebhookURL
 	case opsGenie:
+		if opts.apiKey == "" || opts.notificationRegion == "" {
+			return nil, errors.New("--apiKey and --notificationRegion are required when --notificationType is OPS_GENIE")
+		}
 		out.OpsGenieApiKey = &opts.apiKey
 		region := strings.ToUpper(opts.notificationRegion)
 		out.OpsGenieRegion = &region
 	case pagerDuty:
+		if opts.apiKey == "" {
+			return nil, errors.New("--apiKey is required when --notificationType is PAGER_DUTY")
+		}
 		region := strings.ToUpper(opts.notificationRegion)
 		out.Region = &region
 		out.ServiceKey = &opts.notificationServiceKey
 	case slack:
+		if opts.notificationToken == "" || opts.notificationChannelName == "" {
+			return nil, errors.New("--notificationToken and --notificationChannelName are required when --notificationType is SLACK")
+		}
 		out.ApiToken = &opts.notificationToken
 		out.ChannelName = &opts.notificationChannelName
 	case sms:
+		if opts.notificationMobileNumber == "" {
+			return nil, errors.New("--notificationMobileNumber is required when --notificationType is SMS")
+		}
 		out.MobileNumber = &opts.notificationMobileNumber
 	case team:
+		if opts.notificationTeamID == "" {
+			return nil, errors.New("--notificationTeamID is required when --notificationType is TEAM")
+		}
 		out.EmailEnabled = &opts.notificationEmailEnabled
 		out.SmsEnabled = &opts.notificationSmsEnabled
 		out.TeamId = &opts.notificationTeamID
 	case user:
+		if opts.notificationUsername == "" {
+			return nil, errors.New("--notificationUsername is required when --notificationType is USER")
+		}
 		out.EmailEnabled = &opts.notificationEmailEnabled
 		out.SmsEnabled = &opts.notificationSmsEnabled
 		out.Username = &opts.notificationUsername
 	case victor:
+		if opts.apiKey == "" || opts.notificationVictorOpsRoutingKey == "" {
+			return nil, errors.New("--apiKey and --notificationVictorOpsRoutingKey are required when --notificationType is VICTOR_OPS")
+		}
 		out.VictorOpsApiKey = &opts.apiKey
 		out.VictorOpsRoutingKey = &opts.notificationVictorOpsRoutingKey
 	case webhook:
+		if opts.notificationWebhookURL == "" {
+			return nil, errors.New("--notificationWebhookURL is required when --notificationType is WEBHOOK")
+		}
 		out.WebhookUrl = &opts.notificationWebhookURL
 		out.WebhookSecret = &opts.notificationWebhookSecret
 	}
 
-	return out
+	return out, nil
 }
 
 func (opts *ConfigOpts) newMetricThreshold() *admin.ServerlessMetricThreshold {

@@ -52,6 +52,7 @@ func TestCreate_Run(t *testing.T) {
 		store: mockStore}
 
 	alert := createOpts.NewAlertConfiguration(createOpts.ConfigProjectID())
+
 	mockStore.
 		EXPECT().
 		CreateAlertConfiguration(alert).

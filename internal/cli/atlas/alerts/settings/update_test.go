@@ -52,6 +52,7 @@ func TestUpdates_Run(t *testing.T) {
 	}
 
 	alert := updateOpts.NewAlertConfiguration(updateOpts.ConfigProjectID())
+
 	alert.Id = &updateOpts.alertID
 	mockStore.
 		EXPECT().

@@ -86,7 +86,8 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.GroupAler
 		out.MetricThreshold = opts.newMetricThreshold()
 	}
 
-	out.Notifications = []admin.AlertsNotificationRootForGroup{*opts.newNotification()}
+	notification := opts.newNotification()
+	out.Notifications = []admin.AlertsNotificationRootForGroup{*notification}
 
 	return out
 }
@@ -97,10 +98,12 @@ func (opts *ConfigOpts) newNotification() *admin.AlertsNotificationRootForGroup 
 	out.TypeName = &notificationType
 	out.DelayMin = &opts.notificationDelayMin
 	out.IntervalMin = &opts.notificationIntervalMin
+
 	if opts.notifierID != "" {
 		out.NotifierId = &opts.notifierID
 	}
 
+	// write set of functions that contain code from switch cases and return error if required fields are not provided
 	switch out.GetTypeName() {
 	case datadog:
 		out.DatadogApiKey = &opts.apiKey

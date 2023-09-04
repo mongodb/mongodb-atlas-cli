@@ -17,10 +17,8 @@
 package atlas_test
 
 import (
-	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"math/big"
 	"os"
 	"os/exec"
 	"strconv"
@@ -141,28 +139,26 @@ func TestAlertConfig(t *testing.T) {
 	})
 
 	t.Run("Update Setting using file input", func(t *testing.T) {
-		randInit, _ := rand.Int(rand.Reader, big.NewInt(1000))
-		fileName := fmt.Sprintf("%d_alerts.json", randInit.Int64())
+		n, err := e2e.RandInt(1000)
+		require.NoError(t, err)
+		fileName := fmt.Sprintf("%d_alerts.json", n.Int64())
 		fileContent := fmt.Sprintf(`{
-			"eventTypeName": "%s",
+			"eventTypeName": %q,
 			"id": "%s",
 			"enabled": false,
 			"notifications": [
 			  {
 				"typeName": "%s",
-				"intervalMin": %s,
-				"delayMin": %s,
+				"intervalMin": %d,
+				"delayMin": %d,
 				"emailEnabled": true,
 				"smsEnabled": true
 			  }
 			]
 		}`, eventTypeName, alertID,
-			group, strconv.Itoa(intervalMin), strconv.Itoa(delayMin))
+			group, intervalMin, delayMin)
 
-		err := os.WriteFile(fileName, []byte(fileContent), 0600)
-		if err != nil {
-			assert.FailNow(t, "Failed to create alert setting file")
-		}
+		require.NoError(t, os.WriteFile(fileName, []byte(fileContent), 0600))
 
 		cmd := exec.Command(cliPath,
 			alertsEntity,

@@ -50,20 +50,15 @@ var createTemplate = "Alert configuration {{.Id}} created.\n"
 
 func (opts *CreateOpts) Run() error {
 	alert := &atlasv2.GroupAlertsConfig{}
-	var err error
-
 	// File flag has priority over other flags
 	projectID := opts.ConfigProjectID()
 	if opts.filename != "" {
-		if err = file.Load(opts.fs, opts.filename, alert); err != nil {
+		if err := file.Load(opts.fs, opts.filename, alert); err != nil {
 			return err
 		}
 		alert.GroupId = &projectID
 	} else {
-		alert, err = opts.NewAlertConfiguration(projectID)
-		if err != nil {
-			return err
-		}
+		alert = opts.NewAlertConfiguration(projectID)
 	}
 	r, err := opts.store.CreateAlertConfiguration(alert)
 	if err != nil {
@@ -102,10 +97,9 @@ func CreateBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				func() error {
-					if opts.filename == "" && opts.event == "" {
-						return fmt.Errorf("--event flag is required")
+					if opts.filename == "" {
+						return validateConfigOpts(&opts.ConfigOpts)
 					}
-
 					return nil
 				},
 				opts.initStore(cmd.Context()),

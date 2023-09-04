@@ -459,10 +459,6 @@ func (opts *SetupOpts) setDefaultSettings() (ok bool, err error) {
 		ok = true
 	}
 
-	if opts.connectWith != "" {
-		opts.connectWith = skipConnect
-	}
-
 	return
 }
 
@@ -479,9 +475,13 @@ func (opts *SetupOpts) promptConnect() error {
 }
 
 func (opts *SetupOpts) runConnectWith(cs string) error {
-	if opts.settings == customSettings {
-		if err := opts.promptConnect(); err != nil {
-			return err
+	if opts.connectWith == "" {
+		if opts.force {
+			opts.connectWith = skipConnect
+		} else {
+			if err := opts.promptConnect(); err != nil {
+				return err
+			}
 		}
 	}
 

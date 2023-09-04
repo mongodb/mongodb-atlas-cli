@@ -80,16 +80,10 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) (*admin.GroupAle
 	out.Enabled = &opts.enabled
 
 	if opts.matcherFieldName != "" {
-		if opts.matcherOperator == "" || opts.matcherValue == "" {
-			return nil, errors.New("--matcherOperator and --matcherValue are required when --matcherFieldName is provided")
-		}
 		out.Matchers = []map[string]interface{}{opts.newMatcher()}
 	}
 
 	if opts.metricThresholdMetricName != "" {
-		if opts.metricThresholdOperator == "" || opts.metricThresholdMode == "" || opts.metricThresholdUnits == "" || opts.metricThresholdThreshold == 0 {
-			return nil, errors.New("--metricOperator, --metricMode, --metricUnits and --metricThreshold are required when --metricName is provided")
-		}
 		out.MetricThreshold = opts.newMetricThreshold()
 	}
 
@@ -112,6 +106,9 @@ func (opts *ConfigOpts) newNotification() (*admin.AlertsNotificationRootForGroup
 	out.TypeName = &notificationType
 	out.DelayMin = &opts.notificationDelayMin
 	out.IntervalMin = &opts.notificationIntervalMin
+	if opts.notificationIntervalMin == 0 {
+		return nil, errors.New("--notificationIntervalMin is required")
+	}
 	if opts.notifierID != "" {
 		out.NotifierId = &opts.notifierID
 	}

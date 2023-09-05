@@ -13,7 +13,7 @@ jobs:
       QUAY: quay.io
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set date
         id: set-date
         run: |

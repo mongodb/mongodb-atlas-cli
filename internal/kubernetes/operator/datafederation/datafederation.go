@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package datafederation
 import (
 	"fmt"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
@@ -53,7 +52,7 @@ func BuildAtlasDataFederation(dataFederationStore store.DataFederationStore, dat
 				features.ResourceVersion: operatorVersion,
 			},
 		},
-		Spec: GetDataFederationSpec(dataFederation, targetNamespace, projectName),
+		Spec: getDataFederationSpec(dataFederation, targetNamespace, projectName),
 		Status: status.DataFederationStatus{
 			Common: status.Common{
 				Conditions: []status.Condition{},
@@ -65,23 +64,20 @@ func BuildAtlasDataFederation(dataFederationStore store.DataFederationStore, dat
 
 func isDataFederationExportable(dataFederation *admin.DataLakeTenant) bool {
 	state := dataFederation.GetState()
-	if state == DeletingState || state == DeletedState {
-		return false
-	}
-	return true
+	return state != DeletingState && state != DeletedState
 }
 
-func GetDataFederationSpec(dataFederationSpec *admin.DataLakeTenant, targetNamespace, projectName string) atlasV1.DataFederationSpec {
+func getDataFederationSpec(dataFederationSpec *admin.DataLakeTenant, targetNamespace, projectName string) atlasV1.DataFederationSpec {
 	return atlasV1.DataFederationSpec{
 		Project:             common.ResourceRefNamespaced{Name: projectName, Namespace: targetNamespace},
 		Name:                dataFederationSpec.GetName(),
-		CloudProviderConfig: GetCloudProviderConfig(dataFederationSpec.CloudProviderConfig),
-		DataProcessRegion:   GetDataProcessRegion(dataFederationSpec.DataProcessRegion),
-		Storage:             GetStorage(dataFederationSpec.Storage),
+		CloudProviderConfig: getCloudProviderConfig(dataFederationSpec.CloudProviderConfig),
+		DataProcessRegion:   getDataProcessRegion(dataFederationSpec.DataProcessRegion),
+		Storage:             getStorage(dataFederationSpec.Storage),
 	}
 }
 
-func GetCloudProviderConfig(cloudProviderConfig *admin.DataLakeCloudProviderConfig) *atlasV1.CloudProviderConfig {
+func getCloudProviderConfig(cloudProviderConfig *admin.DataLakeCloudProviderConfig) *atlasV1.CloudProviderConfig {
 	if cloudProviderConfig == nil {
 		return &atlasV1.CloudProviderConfig{}
 	}
@@ -93,7 +89,7 @@ func GetCloudProviderConfig(cloudProviderConfig *admin.DataLakeCloudProviderConf
 	}
 }
 
-func GetDataProcessRegion(dataProcessRegion *admin.DataLakeDataProcessRegion) *atlasV1.DataProcessRegion {
+func getDataProcessRegion(dataProcessRegion *admin.DataLakeDataProcessRegion) *atlasV1.DataProcessRegion {
 	if dataProcessRegion == nil {
 		return &atlasV1.DataProcessRegion{}
 	}
@@ -103,53 +99,57 @@ func GetDataProcessRegion(dataProcessRegion *admin.DataLakeDataProcessRegion) *a
 	}
 }
 
-func GetStorage(storage *admin.DataLakeStorage) *atlasV1.Storage {
+func getStorage(storage *admin.DataLakeStorage) *atlasV1.Storage {
 	if storage == nil {
 		return &atlasV1.Storage{}
 	}
 	return &atlasV1.Storage{
-		Databases: GetDatabases(storage.Databases),
-		Stores:    GetStores(storage.Stores),
+		Databases: getDatabases(storage.Databases),
+		Stores:    getStores(storage.Stores),
 	}
 }
-func GetDatabases(database []admin.DataLakeDatabaseInstance) []atlasV1.Database {
+
+func getDatabases(database []admin.DataLakeDatabaseInstance) []atlasV1.Database {
 	if database == nil {
 		return []atlasV1.Database{}
 	}
-	var result []atlasV1.Database
+	result := make([]atlasV1.Database, 0, len(database))
+
 	for _, obj := range database {
 		result = append(result, atlasV1.Database{
-			Collections:            GetCollection(obj.GetCollections()),
+			Collections:            getCollection(obj.GetCollections()),
 			MaxWildcardCollections: obj.GetMaxWildcardCollections(),
 			Name:                   obj.GetName(),
-			Views:                  GetViews(obj.GetViews()),
+			Views:                  getViews(obj.GetViews()),
 		})
 	}
 	return result
 }
 
-func GetCollection(collections []admin.DataLakeDatabaseCollection) []atlasV1.Collection {
+func getCollection(collections []admin.DataLakeDatabaseCollection) []atlasV1.Collection {
 	if collections == nil {
 		return []atlasV1.Collection{}
 	}
-	var result []atlasV1.Collection
+	result := make([]atlasV1.Collection, 0, len(collections))
+
 	for _, obj := range collections {
 		result = append(result, atlasV1.Collection{
-			DataSources: GetDataSources(obj.GetDataSources()),
+			DataSources: getDataSources(obj.GetDataSources()),
 			Name:        obj.GetName(),
 		})
 	}
 	return result
 }
 
-func GetDataSources(dataSources []admin.DataLakeDatabaseDataSourceSettings) []atlasV1.DataSource {
+func getDataSources(dataSources []admin.DataLakeDatabaseDataSourceSettings) []atlasV1.DataSource {
 	if dataSources == nil {
 		return []atlasV1.DataSource{}
 	}
-	var result []atlasV1.DataSource
+	result := make([]atlasV1.DataSource, 0, len(dataSources))
+
 	for _, obj := range dataSources {
 		result = append(result, atlasV1.DataSource{
-			AllowInsecure:       aws.ToBool(obj.AllowInsecure),
+			AllowInsecure:       obj.GetAllowInsecure(),
 			Collection:          obj.GetCollection(),
 			CollectionRegex:     obj.GetCollectionRegex(),
 			Database:            obj.GetDatabase(),
@@ -164,11 +164,12 @@ func GetDataSources(dataSources []admin.DataLakeDatabaseDataSourceSettings) []at
 	return result
 }
 
-func GetViews(views []admin.DataLakeApiBase) []atlasV1.View {
+func getViews(views []admin.DataLakeApiBase) []atlasV1.View {
 	if views == nil {
 		return []atlasV1.View{}
 	}
-	var result []atlasV1.View
+	result := make([]atlasV1.View, 0, len(views))
+
 	for _, obj := range views {
 		result = append(result, atlasV1.View{
 			Name:     obj.GetName(),
@@ -179,11 +180,12 @@ func GetViews(views []admin.DataLakeApiBase) []atlasV1.View {
 	return result
 }
 
-func GetStores(stores []admin.DataLakeStoreSettings) []atlasV1.Store {
+func getStores(stores []admin.DataLakeStoreSettings) []atlasV1.Store {
 	if stores == nil {
 		return []atlasV1.Store{}
 	}
-	var result []atlasV1.Store
+	result := make([]atlasV1.Store, 0, len(stores))
+
 	for _, obj := range stores {
 		result = append(result, atlasV1.Store{
 			Name:                     obj.GetName(),
@@ -191,9 +193,9 @@ func GetStores(stores []admin.DataLakeStoreSettings) []atlasV1.Store {
 			AdditionalStorageClasses: obj.GetAdditionalStorageClasses(),
 			Bucket:                   obj.GetBucket(),
 			Delimiter:                obj.GetDelimiter(),
-			IncludeTags:              aws.ToBool(obj.IncludeTags),
+			IncludeTags:              obj.GetIncludeTags(),
 			Prefix:                   obj.GetPrefix(),
-			Public:                   aws.ToBool(obj.Public),
+			Public:                   obj.GetPublic(),
 			Region:                   obj.GetRegion(),
 		})
 	}

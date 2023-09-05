@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,11 +17,9 @@
 package operator
 
 import (
-	"encoding/json"
-	"fmt"
-	"reflect"
 	"testing"
 
+	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
@@ -78,18 +76,16 @@ func Test_fetchDataFederationNames(t *testing.T) {
 		expected := []string{"DataFederationInstance0", "DataFederationInstance1", "DataFederationInstance2"}
 		ce := NewConfigExporter(
 			atlasOperatorGenericStore,
-			nil, /* credsProvider (not used) */
-			projectID, "" /* orgID (not used) */)
+			nil,           // credsProvider (not used)
+			projectID, "", // orgID (not used)
+		)
 		got, err := ce.fetchDataFederationNames()
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
 
-		if !reflect.DeepEqual(expected, got) {
-			expJs, _ := json.MarshalIndent(expected, "", " ")
-			gotJs, _ := json.MarshalIndent(got, "", " ")
-			fmt.Printf("E:%s\r\n; G:%s\r\n", expJs, gotJs)
-			t.Fatalf("Data federation names mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expected, got)
+		if diff := deep.Equal(got, expected); diff != nil {
+			t.Error(diff)
 		}
 	})
 }

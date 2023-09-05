@@ -17,11 +17,10 @@
 package datafederation
 
 import (
-	"encoding/json"
 	"fmt"
-	"reflect"
 	"testing"
 
+	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
@@ -201,11 +200,8 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 			t.Fatalf("%v", err)
 		}
 
-		if !reflect.DeepEqual(expected, got) {
-			expJs, _ := json.MarshalIndent(expected, "", " ")
-			gotJs, _ := json.MarshalIndent(got, "", " ")
-			t.Logf("E:%s\r\n; G:%s\r\n", expJs, gotJs)
-			t.Fatalf("Data federation mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expected, got)
+		if diff := deep.Equal(got, expected); diff != nil {
+			t.Error(diff)
 		}
 	})
 }

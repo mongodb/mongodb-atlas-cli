@@ -443,6 +443,7 @@ dbName and collection are required only for built-in roles.`
 	BackupCompliancePolicyFile                = "Path to a JSON configuration file that defines backup compliance policy settings."
 	DataFederationType                        = "Type of Federated Database Instances to return."
 	DataFederation                            = "Identifier of the Federated Database Instance."
+	ExporterDataFederationName                = "One or more comma separated data federation names to import"
 	DataFederationQueryLimitValue             = "Value given to the query limit."
 	OverrunPolicy                             = "Action to take when the usage limit is exceeded."
 	AuthorizedEmail                           = "Email address of a security or legal representative."

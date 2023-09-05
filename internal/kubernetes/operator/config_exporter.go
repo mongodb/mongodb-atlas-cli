@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/datafederation"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/deployment"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
@@ -44,12 +45,13 @@ type ConfigExporter struct {
 	dataProvider            store.AtlasOperatorGenericStore
 	credsProvider           store.CredentialsGetter
 	projectID               string
-	clusters                []string
+	clusterNames            []string
 	targetNamespace         string
 	operatorVersion         string
 	includeSecretsData      bool
 	orgID                   string
 	dictionaryForAtlasNames map[string]string
+	dataFederationNames     []string
 }
 
 var (
@@ -62,7 +64,8 @@ func NewConfigExporter(dataProvider store.AtlasOperatorGenericStore, credsProvid
 		dataProvider:            dataProvider,
 		credsProvider:           credsProvider,
 		projectID:               projectID,
-		clusters:                []string{},
+		clusterNames:            []string{},
+		dataFederationNames:     []string{},
 		targetNamespace:         "",
 		includeSecretsData:      false,
 		orgID:                   orgID,
@@ -71,7 +74,7 @@ func NewConfigExporter(dataProvider store.AtlasOperatorGenericStore, credsProvid
 }
 
 func (e *ConfigExporter) WithClustersNames(clusters []string) *ConfigExporter {
-	e.clusters = clusters
+	e.clusterNames = clusters
 	return e
 }
 
@@ -95,6 +98,11 @@ func (e *ConfigExporter) WithFeatureValidator(validator features.FeatureValidato
 	return e
 }
 
+func (e *ConfigExporter) WithDataFederationNames(dataFederations []string) *ConfigExporter {
+	e.dataFederationNames = dataFederations
+	return e
+}
+
 func (e *ConfigExporter) Run() (string, error) {
 	// TODO: Add REST to OPERATOR entities matcher
 
@@ -115,6 +123,12 @@ func (e *ConfigExporter) Run() (string, error) {
 		return "", err
 	}
 	resources = append(resources, deploymentsResources...)
+
+	dataFederationResource, err := e.exportDataFederation(projectName)
+	if err != nil {
+		return "", err
+	}
+	resources = append(resources, dataFederationResource...)
 
 	for _, res := range resources {
 		err = serializer.Encode(res, output)
@@ -168,15 +182,15 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object, error) {
 	var result []runtime.Object
 
-	if len(e.clusters) == 0 {
+	if len(e.clusterNames) == 0 {
 		clusters, err := fetchClusterNames(e.dataProvider, e.projectID)
 		if err != nil {
 			return nil, err
 		}
-		e.clusters = clusters
+		e.clusterNames = clusters
 	}
 
-	for _, deploymentName := range e.clusters {
+	for _, deploymentName := range e.clusterNames {
 		// Try advanced cluster first
 		if advancedCluster, err := deployment.BuildAtlasAdvancedDeployment(e.dataProvider, e.featureValidator, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames, e.operatorVersion); err == nil {
 			if advancedCluster != nil {
@@ -243,5 +257,41 @@ func fetchClusterNames(clustersProvider store.AtlasAllClustersLister, projectID 
 		result = append(result, *cluster.Name)
 	}
 
+	return result, nil
+}
+
+func (e *ConfigExporter) exportDataFederation(projectName string) ([]runtime.Object, error) {
+	var result []runtime.Object
+	nameList := e.dataFederationNames
+	if len(nameList) == 0 {
+		dataFederations, err := e.fetchDataFederationNames()
+		if err != nil {
+			return nil, err
+		}
+		nameList = dataFederations
+	}
+	for _, name := range nameList {
+		atlasDataFederations, err := datafederation.BuildAtlasDataFederation(e.dataProvider, name, e.projectID, projectName, e.operatorVersion, e.targetNamespace, e.dictionaryForAtlasNames)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, atlasDataFederations)
+	}
+	return result, nil
+}
+
+func (e *ConfigExporter) fetchDataFederationNames() ([]string, error) {
+	var result []string
+	dataFederations, err := e.dataProvider.DataFederationList(e.projectID)
+	if err != nil {
+		return nil, err
+	}
+	for _, obj := range dataFederations {
+		name := obj.GetName()
+		if reflect.ValueOf(name).IsZero() {
+			continue
+		}
+		result = append(result, name)
+	}
 	return result, nil
 }

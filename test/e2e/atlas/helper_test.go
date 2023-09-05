@@ -354,7 +354,7 @@ func newAvailableRegion(projectID, tier, provider string) (string, error) {
 	var cloudProviders mongodbatlas.CloudProviders
 	err = json.Unmarshal(resp, &cloudProviders)
 	if err != nil {
-		return "", fmt.Errorf("error unmashaling response %w: %s", err, string(resp))
+		return "", fmt.Errorf("error unmarshaling response %w: %s", err, string(resp))
 	}
 
 	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
@@ -766,6 +766,54 @@ func createDBUserWithCert(projectID, username string) error {
 		"--username", username,
 		"--x509Type", "MANAGED",
 		"--projectId", projectID)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return nil
+}
+
+func createDataFederationForProject(projectID string) (string, error) {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return "", err
+	}
+
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	dataFederationName := fmt.Sprintf("e2e-data-federation-%v", n)
+
+	cmd := exec.Command(cliPath,
+		datafederationEntity,
+		"create",
+		dataFederationName,
+		"--projectId", projectID,
+		"--region", "DUBLIN_IRL")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return dataFederationName, nil
+}
+
+func deleteDataFederationForProject(projectID, dataFedName string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+
+	cmd := exec.Command(cliPath,
+		datafederationEntity,
+		"delete",
+		dataFedName,
+		"--projectId", projectID,
+		"--force")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	if err != nil {

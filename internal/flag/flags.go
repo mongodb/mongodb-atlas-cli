@@ -357,6 +357,7 @@ const (
 	AWSRoleID                                 = "awsRoleId"                                 // AWSRoleID flag
 	AWSTestS3Bucket                           = "awsTestS3Bucket"                           // AWSTestS3Bucket flag
 	DataFederation                            = "dataFederation"                            // DataFederation flag
+	DataFederationName                        = "dataFederationName"                        // DataFederationName flag
 	Value                                     = "value"                                     // Value flag
 	OverrunPolicy                             = "overrunPolicy"                             // OverrunPolicy flag
 	AuthorizedEmail                           = "authorizedEmail"                           // authorizedEmail flag

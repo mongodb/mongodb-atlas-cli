@@ -41,6 +41,10 @@ Options
      - strings
      - false
      - One or more comma separated cluster names to import
+   * - --dataFederationName
+     - strings
+     - false
+     - One or more comma separated data federation names to import
    * - -h, --help
      - 
      - false
@@ -105,7 +109,7 @@ Examples
    
 .. code-block::
 
-   # Export Project, DatabaseUsers, and specific Deployment resources for a specific project including connection and integration secrets to a specific namespace:
+   # Export Project, DatabaseUsers, DataFederations and specific Deployment resources for a specific project including connection and integration secrets to a specific namespace:
    atlas kubernetes config generate --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>
 
    
@@ -113,3 +117,9 @@ Examples
 
    # Export resources for a specific version of the Atlas Kubernetes Operator:
    atlas kubernetes config generate --projectId=<projectId> --targetNamespace=<namespace> --operatorVersion=1.5.1
+
+   
+.. code-block::
+
+   # Export Project, DatabaseUsers, Clusters and specific DataFederation resources for a specific project to a specific namespace:
+   atlas kubernetes config generate --projectId=<projectId> --dataFederationName=<data-federation-name-1, data-federation-name-2> --targetNamespace=<namespace>

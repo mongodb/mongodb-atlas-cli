@@ -18,6 +18,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"os/exec"
 	"runtime"
@@ -36,10 +37,12 @@ type RunContainerOpts struct {
 	// map[hostVolume, pathInContainer]
 	Volumes map[string]string
 	// map[hostPort, containerPort]
-	Ports   map[int]int
-	Network string
-	EnvVars map[string]string
-	Args    []string
+	Ports      map[int]int
+	Network    string
+	EnvVars    map[string]string
+	Args       []string
+	Entrypoint string
+	Cmd        string
 }
 
 type Container struct {
@@ -126,6 +129,10 @@ func (o *client) Ready(ctx context.Context) error {
 }
 
 func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
+	if o.debug {
+		_, _ = o.outWriter.Write([]byte(fmt.Sprintln(append([]string{"podman"}, arg...))))
+	}
+
 	cmd := exec.CommandContext(ctx, "podman", arg...)
 
 	output, err := cmd.CombinedOutput()
@@ -168,7 +175,15 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 		arg = append(arg, "-d")
 	}
 
+	if opts.Entrypoint != "" {
+		arg = append(arg, "--entrypoint", opts.Entrypoint)
+	}
+
 	arg = append(arg, opts.Image)
+
+	if opts.Cmd != "" {
+		arg = append(arg, opts.Cmd)
+	}
 
 	arg = append(arg, opts.Args...)
 

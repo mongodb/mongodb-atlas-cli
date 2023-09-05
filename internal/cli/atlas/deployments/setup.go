@@ -326,6 +326,11 @@ func (opts *SetupOpts) promptMdbVersion() error {
 }
 
 func availablePort() (int, error) {
+	// prefer mongodb default's port
+	if err := checkPort(internalMongodPort); err == nil {
+		return internalMongodPort, nil
+	}
+
 	server, err := net.Listen("tcp", "localhost:0")
 	if err != nil {
 		return 0, err
@@ -341,7 +346,7 @@ func availablePort() (int, error) {
 }
 
 func checkPort(p int) error {
-	server, err := net.Listen("tcp", fmt.Sprintf(":%d", p))
+	server, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", p))
 	if err != nil {
 		return fmt.Errorf("%w: %d", errPortNotAvailable, p)
 	}

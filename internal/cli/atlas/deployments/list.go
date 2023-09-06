@@ -16,6 +16,7 @@ package deployments
 
 import (
 	"context"
+	"fmt"
 	"sort"
 	"strings"
 
@@ -76,13 +77,16 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
+func isCliAuthenticated() bool {
+	return validate.Credentials() == nil
+}
+
 func (opts *ListOpts) getAtlasDeployments() ([]Deployment, error) {
-	if validate.Credentials() != nil {
-		// not authenticated to Atlas
+	if !isCliAuthenticated() {
 		return nil, nil
 	}
 
-	if config.ProjectID() == "" {
+	if opts.ProjectID == "" {
 		if err := opts.defaultSetter.AskProject(); err != nil {
 			return nil, err
 		}
@@ -151,7 +155,20 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(append(atlasClusters, mdbContainers...))
+	err = opts.Print(append(atlasClusters, mdbContainers...))
+	if err != nil {
+		return err
+	}
+
+	if !isCliAuthenticated() {
+		_, err = fmt.Fprint(
+			opts.OutWriter,
+			"To get output for both local and Atlas clusters, run \"atlas login\" command to authenticate your Atlas account.\n",
+		)
+		return err
+	}
+
+	return nil
 }
 
 // atlas deployments list.
@@ -188,7 +205,7 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, config.ProjectID(), usage.ProjectID)
 	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 
 	return cmd

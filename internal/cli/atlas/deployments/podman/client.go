@@ -167,7 +167,7 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 	}
 
 	for hostPort, containerPort := range opts.Ports {
-		arg = append(arg, "-p", strconv.Itoa(hostPort)+":"+strconv.Itoa(containerPort))
+		arg = append(arg, "-p", "127.0.0.1:"+strconv.Itoa(hostPort)+":"+strconv.Itoa(containerPort))
 	}
 
 	for envVar, value := range opts.EnvVars {

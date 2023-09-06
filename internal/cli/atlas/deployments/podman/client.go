@@ -54,7 +54,10 @@ type Container struct {
 		HostPort      int `json:"host_port"`
 		ContainerPort int `json:"container_port"`
 	} `json:"Ports,omitempty"`
+	Labels map[string]string `json:"Labels"`
 }
+
+//go:generate mockgen -destination=../../../../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman Client
 
 type Client interface {
 	Ready(ctx context.Context) error

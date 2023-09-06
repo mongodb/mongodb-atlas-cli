@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	config "github.com/mongodb/mongodb-atlas-cli/internal/config"
 	auth "go.mongodb.org/atlas/auth"
 )
 
@@ -32,6 +33,20 @@ func NewMockCredentialsGetter(ctrl *gomock.Controller) *MockCredentialsGetter {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockCredentialsGetter) EXPECT() *MockCredentialsGetterMockRecorder {
 	return m.recorder
+}
+
+// AuthType mocks base method.
+func (m *MockCredentialsGetter) AuthType() config.AuthMechanism {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AuthType")
+	ret0, _ := ret[0].(config.AuthMechanism)
+	return ret0
+}
+
+// AuthType indicates an expected call of AuthType.
+func (mr *MockCredentialsGetterMockRecorder) AuthType() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthType", reflect.TypeOf((*MockCredentialsGetter)(nil).AuthType))
 }
 
 // PrivateAPIKey mocks base method.

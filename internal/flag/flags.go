@@ -159,6 +159,7 @@ const (
 	OplogTS                                   = "oplogTs"                                   // OplogTS flag
 	OplogInc                                  = "oplogInc"                                  // OplogInc flag
 	PointInTimeUTCMillis                      = "pointInTimeUTCMillis"                      // PointInTimeUTCMillis flag
+	PointInTimeUTCSeconds                     = "pointInTimeUTCSeconds"                     // PointInTimeUTCSeconds flag
 	Expires                                   = "expires"                                   // Expires flag
 	MaxDownloads                              = "maxDownloads"                              // MaxDownloads flag
 	ExpirationHours                           = "expirationHours"                           // ExpirationHours flag

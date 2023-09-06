@@ -54,6 +54,7 @@ type Container struct {
 		HostPort      int `json:"host_port"`
 		ContainerPort int `json:"container_port"`
 	} `json:"Ports,omitempty"`
+	Labels map[string]string `json:"Labels"`
 }
 
 type Client interface {

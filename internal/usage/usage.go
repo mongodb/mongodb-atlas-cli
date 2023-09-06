@@ -316,6 +316,7 @@ dbName and collection are required only for built-in roles.`
 	OplogTS                                   = "Oplog timestamp given as a timestamp in the number of seconds that have elapsed since the UNIX Epoch. When paired with oplogInc, they represent the point in time to which your data will be restored."
 	OplogInc                                  = "32-bit incrementing ordinal that represents operations within a given second. When paired with oplogTs, they represent the point in time to which your data will be restored."
 	PointInTimeUTCMillis                      = "Timestamp in the number of milliseconds that have elapsed since the UNIX epoch that represents the point in time to which your data will be restored. This timestamp must be within the last 24 hours of the current time."
+	PointInTimeUTCSeconds                     = "Timestamp in the number of seconds that have elapsed since the UNIX epoch that represents the point in time to which your data will be restored. This timestamp must be within the last 24 hours of the current time."
 	Expires                                   = "Timestamp in ISO 8601 date and time format after which the URL is no longer available. For use only with download restore jobs."
 	ExpirationHours                           = "Number of hours the download URL is valid once the restore job is complete. For use only with download restore jobs."
 	MaxDownloads                              = "Number of times the download URL can be used. This value must be 1 or greater. For use only with download restore jobs."

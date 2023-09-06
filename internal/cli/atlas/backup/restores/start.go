@@ -38,15 +38,15 @@ const (
 type StartOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	method               string
-	clusterName          string
-	targetProjectID      string
-	targetClusterName    string
-	oplogTS              int
-	oplogInc             int
-	snapshotID           string
-	pointInTimeUTCMillis int
-	store                store.RestoreJobsCreator
+	method                string
+	clusterName           string
+	targetProjectID       string
+	targetClusterName     string
+	oplogTS               int
+	oplogInc              int
+	snapshotID            string
+	pointInTimeUTCSeconds int
+	store                 store.RestoreJobsCreator
 }
 
 func (opts *StartOpts) initStore(ctx context.Context) func() error {
@@ -90,9 +90,9 @@ func (opts *StartOpts) newCloudProviderSnapshotRestoreJob() *admin.DiskBackupSna
 	if opts.oplogTS != 0 && opts.oplogInc != 0 {
 		request.OplogTs = &opts.oplogTS
 		request.OplogInc = &opts.oplogInc
-	} else if opts.pointInTimeUTCMillis != 0 {
+	} else if opts.pointInTimeUTCSeconds != 0 {
 		// Set only when oplogTS and oplogInc are not set
-		request.PointInTimeUTCSeconds = &opts.pointInTimeUTCMillis
+		request.PointInTimeUTCSeconds = &opts.pointInTimeUTCSeconds
 	}
 
 	return request
@@ -159,7 +159,7 @@ func StartBuilder() *cobra.Command {
   # Create a point-in-time restore:
   %[1]s backup restore start pointInTime \
          --clusterName myDemo \
-         --pointInTimeUTCMillis 1588523147 \
+         --pointInTimeUTCSeconds 1588523147 \
          --targetClusterName myDemo2 \
          --targetProjectId 1a2345b67c8e9a12f3456de7
   
@@ -208,7 +208,9 @@ func StartBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.targetClusterName, flag.TargetClusterName, "", usage.TargetClusterName)
 	cmd.Flags().IntVar(&opts.oplogTS, flag.OplogTS, 0, usage.OplogTS)
 	cmd.Flags().IntVar(&opts.oplogInc, flag.OplogInc, 0, usage.OplogInc)
-	cmd.Flags().IntVar(&opts.pointInTimeUTCMillis, flag.PointInTimeUTCMillis, 0, usage.PointInTimeUTCMillis)
+	cmd.Flags().IntVar(&opts.pointInTimeUTCSeconds, flag.PointInTimeUTCMillis, 0, usage.PointInTimeUTCMillis)
+	_ = cmd.Flags().MarkDeprecated(flag.PointInTimeUTCMillis, fmt.Sprintf("please use --%s instead", flag.PointInTimeUTCSeconds))
+	cmd.Flags().IntVar(&opts.pointInTimeUTCSeconds, flag.PointInTimeUTCSeconds, 0, usage.PointInTimeUTCSeconds)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

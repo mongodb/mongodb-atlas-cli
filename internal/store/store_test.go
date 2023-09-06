@@ -46,6 +46,16 @@ func (a auth) PrivateAPIKey() string {
 	return a.password
 }
 
+func (a auth) AuthType() config.AuthMechanism {
+	if a.username != "" {
+		return config.APIKeys
+	}
+	if a.token != "" {
+		return config.OAuth
+	}
+	return config.NotLoggedIn
+}
+
 var _ CredentialsGetter = &auth{}
 
 func TestService(t *testing.T) {

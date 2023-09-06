@@ -57,6 +57,8 @@ type Container struct {
 	Labels map[string]string `json:"Labels"`
 }
 
+//go:generate mockgen -destination=../../../../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman Client
+
 type Client interface {
 	Ready(ctx context.Context) error
 	CreateNetwork(ctx context.Context, name string) ([]byte, error)

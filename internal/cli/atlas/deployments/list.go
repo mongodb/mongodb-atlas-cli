@@ -23,12 +23,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -38,10 +38,11 @@ type ListOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
 	defaultSetter cli.DefaultSetterOpts
-	options.DeploymentOpts
-	podmanClient podman.Client
-	store        store.ClusterLister
-	debug        bool
+	podmanClient  podman.Client
+	store         store.ClusterLister
+	credStore     store.CredentialsGetter
+	config        setup.ProfileReader
+	debug         bool
 }
 
 type Deployment struct {
@@ -77,13 +78,17 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func isCliAuthenticated() bool {
-	return validate.Credentials() == nil
+func (opts *ListOpts) isCliAuthenticated() bool {
+	return opts.credStore.AuthType() != config.NotLoggedIn
 }
 
 func (opts *ListOpts) getAtlasDeployments() ([]Deployment, error) {
-	if !isCliAuthenticated() {
+	if !opts.isCliAuthenticated() {
 		return nil, nil
+	}
+
+	if opts.ProjectID == "" {
+		opts.ProjectID = opts.config.ProjectID()
 	}
 
 	if opts.ProjectID == "" {
@@ -160,7 +165,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	if !isCliAuthenticated() {
+	if !opts.isCliAuthenticated() {
 		_, err = fmt.Fprint(
 			opts.OutWriter,
 			"To get output for both local and Atlas clusters, run \"atlas login\" command to authenticate your Atlas account.\n",
@@ -173,11 +178,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 
 // atlas deployments list.
 func ListBuilder() *cobra.Command {
-	opts := &ListOpts{
-		DeploymentOpts: options.DeploymentOpts{
-			DeploymentName: "",
-		},
-	}
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   "Return all deployments.",
@@ -187,8 +188,10 @@ func ListBuilder() *cobra.Command {
 			"output": listTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.config = config.Default()
+			opts.credStore = config.Default()
+
 			if err := opts.PreRunE(
-				// opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				func() error { return opts.defaultSetter.InitStore(cmd.Context()) },
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate)); err != nil {
@@ -205,7 +208,7 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, config.ProjectID(), usage.ProjectID)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 
 	return cmd

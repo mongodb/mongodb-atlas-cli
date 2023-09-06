@@ -151,7 +151,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 	if _, err := opts.podmanClient.RunContainer(ctx,
 		podman.RunContainerOpts{
 			Detach:   true,
-			Image:    fmt.Sprintf("mongodb/mongodb-enterprise-server:%s-ubi8", opts.MdbVersion),
+			Image:    fmt.Sprintf("docker.io/mongodb/mongodb-enterprise-server:%s-ubi8", opts.MdbVersion),
 			Name:     opts.LocalMongodHostname(),
 			Hostname: opts.LocalMongodHostname(),
 			EnvVars: map[string]string{
@@ -227,7 +227,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 
 	_, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
 		Detach:     true,
-		Image:      "mongodb/apix_test:mongot-preview",
+		Image:      "docker.io/mongodb/apix_test:mongot-preview",
 		Name:       opts.LocalMongotHostname(),
 		Hostname:   opts.LocalMongotHostname(),
 		Entrypoint: "/bin/sh",

@@ -43,7 +43,6 @@ func (opts *DeploymentOpts) CheckIfDeploymentExists(ctx context.Context) error {
 
 	if !found {
 		return fmt.Errorf("%w: %s", errDeploymentNotFound, opts.DeploymentName)
-
 	}
 
 	return nil

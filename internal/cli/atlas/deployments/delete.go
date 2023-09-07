@@ -35,7 +35,7 @@ type DeleteOpts struct {
 	podmanClient podman.Client
 }
 
-func (opts *DeleteOpts) Run(ctx context.Context) (err error) {
+func (opts *DeleteOpts) Run(ctx context.Context) error {
 	if err := opts.podmanClient.Ready(ctx); err != nil {
 		return err
 	}
@@ -45,7 +45,7 @@ func (opts *DeleteOpts) Run(ctx context.Context) (err error) {
 			return err
 		}
 	} else {
-		if err = opts.DeploymentOpts.Select(ctx); err != nil {
+		if err := opts.DeploymentOpts.Select(ctx); err != nil {
 			return err
 		}
 	}
@@ -56,7 +56,7 @@ func (opts *DeleteOpts) Run(ctx context.Context) (err error) {
 	}
 
 	return opts.Delete(func() error {
-		log.Warningln("deleting deployment...")
+		_, _ = log.Warningln("deleting deployment...")
 		opts.StartSpinner()
 		defer opts.StopSpinner()
 		return opts.DeploymentOpts.Remove(ctx)

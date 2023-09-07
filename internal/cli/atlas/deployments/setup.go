@@ -588,7 +588,7 @@ func SetupBuilder() *cobra.Command {
 		settings: defaultSettings,
 	}
 	cmd := &cobra.Command{
-		Use:   "setup <deploymentName>",
+		Use:   "setup [deploymentName]",
 		Short: "Create a local deployment.",
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{

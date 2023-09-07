@@ -20,6 +20,8 @@ import (
 	"time"
 )
 
+const waitForRunningStateSeconds = 10
+
 func binPath() string {
 	if p, err := exec.LookPath(compassBin); err == nil {
 		return p
@@ -39,7 +41,7 @@ func Run(username, password, mongoURI string) error {
 
 	path := binPath()
 	if path != compassBin {
-		path = path + compassBin
+		path += compassBin
 	}
 
 	cmd := exec.Command(path, args...)
@@ -47,7 +49,7 @@ func Run(username, password, mongoURI string) error {
 		return err
 	}
 
-	timer := time.NewTimer(10 * time.Second)
+	timer := time.NewTimer(waitForRunningStateSeconds * time.Second)
 	timerExpired := make(chan bool)
 	processExited := make(chan error)
 

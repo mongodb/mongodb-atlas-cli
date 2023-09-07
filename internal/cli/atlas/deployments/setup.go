@@ -503,15 +503,15 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 		if !compass.Detect() {
 			return errors.New("MongoDB Compass not found in your system")
 		}
-		if err := compass.Run("", "", cs); err != nil {
+		if _, err := fmt.Fprintln(opts.OutWriter, "Launching MongoDB Compass..."); err != nil {
 			return err
 		}
-		_, err := fmt.Fprintln(opts.OutWriter, "Launching MongoDB Compass...")
-		return err
+		return compass.Run("", "", cs)
 	case mongoshConnect:
 		if !mongosh.Detect() {
 			return errors.New("mongosh not found in your system")
 		}
+
 		return mongosh.Run("", "", cs)
 	}
 

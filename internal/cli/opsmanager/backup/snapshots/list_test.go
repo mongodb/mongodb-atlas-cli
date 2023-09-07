@@ -31,7 +31,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockContinuousSnapshotsLister(ctrl)
 
 	expected := &mongodbatlas.ContinuousSnapshots{}
-	clusterID := "5ec2ac941271767f21cbaefe"
+	clusterID := "5ec2ac941271767f21cbaefe" //nolint:gosec
 
 	listOpts := &ListOpts{
 		store:     mockStore,

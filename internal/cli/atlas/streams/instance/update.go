@@ -59,7 +59,6 @@ func (opts *UpdateOpts) streams() *atlasv2.StreamsTenant {
 	processor.GroupId = &opts.ProjectID
 
 	processor.DataProcessRegion = atlasv2.NewStreamsDataProcessRegionWithDefaults()
-	processor.DataProcessRegion.CloudProvider = "AWS"
 
 	if opts.provider != "" {
 		processor.DataProcessRegion.CloudProvider = opts.provider
@@ -119,6 +118,8 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	_ = cmd.MarkFlagRequired(flag.Provider)
+	_ = cmd.MarkFlagRequired(flag.Region)
 
 	return cmd
 }

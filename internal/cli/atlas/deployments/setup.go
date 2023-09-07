@@ -74,6 +74,8 @@ var (
 	errInvalidMongoDBVersion        = errors.New("invalid mongodb version")
 	errUnsupportedConnectWith       = errors.New("flag --connectWith unsupported")
 	errDeploymentTypeNotImplemented = errors.New("deployment type not implemented")
+	errCompassNotInstalled          = errors.New("MongoDB Compass not found in your system")
+	errMongoshNotInstalled          = errors.New("mongosh not found in your system")
 	deploymentTypeOptions           = []string{localCluster, atlasCluster}
 	deploymentTypeDescription       = map[string]string{
 		localCluster: "Local Database",
@@ -501,7 +503,7 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 		fmt.Fprintln(os.Stderr, "connection skipped")
 	case compassConnect:
 		if !compass.Detect() {
-			return errors.New("MongoDB Compass not found in your system")
+			return errCompassNotInstalled
 		}
 		if _, err := fmt.Fprintln(opts.OutWriter, "Launching MongoDB Compass..."); err != nil {
 			return err
@@ -509,7 +511,7 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 		return compass.Run("", "", cs)
 	case mongoshConnect:
 		if !mongosh.Detect() {
-			return errors.New("mongosh not found in your system")
+			return errMongoshNotInstalled
 		}
 		return mongosh.Run("", "", cs)
 	}

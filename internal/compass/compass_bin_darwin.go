@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build darwin
-
 package compass
 
 const compassBin = "/Applications/MongoDB Compass.app/Contents/MacOS/MongoDB Compass"

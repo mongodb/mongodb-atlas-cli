@@ -17,11 +17,14 @@ package compass
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os/exec"
 	"time"
 )
 
 const waitForRunningStateDuration = 10 * time.Second
+
+var errCompassExited = errors.New("MongoDB Compass process has exited")
 
 func binPath() string {
 	if p, err := exec.LookPath(compassBin); err == nil {
@@ -58,9 +61,9 @@ func Run(username, password, mongoURI string) error {
 	// Check if the process is still running
 	go func() {
 		if err := cmd.Wait(); err != nil {
-			processExited <- err
+			processExited <- fmt.Errorf("MongoDB Compass failed to start: %w", err)
 		} else {
-			processExited <- errors.New("MongoDB Compass process has exited")
+			processExited <- errCompassExited
 		}
 	}()
 

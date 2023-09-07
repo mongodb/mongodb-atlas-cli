@@ -346,11 +346,11 @@ func availablePort() (int, error) {
 }
 
 func checkPort(p int) error {
-	// server, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", p))
-	// if err != nil {
-	// 	return fmt.Errorf("%w: %d", errPortNotAvailable, p)
-	// }
-	// _ = server.Close()
+	server, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", p))
+	if err != nil {
+		return fmt.Errorf("%w: %d", errPortNotAvailable, p)
+	}
+	_ = server.Close()
 	return nil
 }
 

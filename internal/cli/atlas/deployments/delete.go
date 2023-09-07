@@ -69,12 +69,12 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Deployment '%s' deleted\n", "Deployment not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:   "delete <clusterName>",
-		Short: "Delete a local deployment.",
+		Use:   "delete <deploymentName>",
+		Short: "Delete a deployment.",
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
-			"clusterNameDesc": "Name of the cluster you want to delete.",
-			"output":          opts.SuccessMessage(),
+			"deploymentNameDesc": "Name of the deployment you want to delete.",
+			"output":             opts.SuccessMessage(),
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

@@ -15,15 +15,19 @@ package options
 
 import (
 	"fmt"
+	"log"
 	"strings"
+	"time"
 
-	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/briandowns/spinner"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 )
 
 const (
 	MongodHostnamePrefix = "mongod"
 	MongotHostnamePrefix = "mongot"
+	spinnerSpeed         = 100 * time.Millisecond
 )
 
 type DeploymentOpts struct {
@@ -31,6 +35,15 @@ type DeploymentOpts struct {
 	DeploymentType string
 	MdbVersion     string
 	Port           int
+	podmanClient   podman.Client
+	s              *spinner.Spinner
+}
+
+func (opts *DeploymentOpts) InitStore(podmanClient podman.Client) func() error {
+	return func() error {
+		opts.podmanClient = podmanClient
+		return nil
+	}
 }
 
 func (opts *DeploymentOpts) LocalMongodHostname() string {
@@ -61,10 +74,15 @@ func LocalDeploymentName(hostname string) string {
 	return strings.TrimPrefix(hostname, fmt.Sprintf("%s-", MongodHostnamePrefix))
 }
 
-func DeploymentSelect(names []string) survey.Prompt {
-	return &survey.Select{
-		Message: "Select a deployment",
-		Options: names,
-		Help:    usage.ClusterName,
+func (opts *DeploymentOpts) StartSpinner() {
+	if terminal.IsTerminal(log.Writer()) {
+		opts.s = spinner.New(spinner.CharSets[9], spinnerSpeed)
+		opts.s.Start()
+	}
+}
+
+func (opts *DeploymentOpts) StopSpinner() {
+	if terminal.IsTerminal(log.Writer()) {
+		opts.s.Stop()
 	}
 }

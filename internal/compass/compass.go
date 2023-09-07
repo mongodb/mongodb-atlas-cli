@@ -15,12 +15,13 @@
 package compass
 
 import (
+	"context"
 	"errors"
 	"os/exec"
 	"time"
 )
 
-const waitForRunningStateSeconds = 10
+const waitForRunningStateDuration = 10 * time.Second
 
 func binPath() string {
 	if p, err := exec.LookPath(compassBin); err == nil {
@@ -49,15 +50,10 @@ func Run(username, password, mongoURI string) error {
 		return err
 	}
 
-	timer := time.NewTimer(waitForRunningStateSeconds * time.Second)
-	timerExpired := make(chan bool)
-	processExited := make(chan error)
+	ctx, cancel := context.WithTimeout(context.Background(), waitForRunningStateDuration)
+	defer cancel()
 
-	go func() {
-		<-timer.C
-		// the timer has expired
-		timerExpired <- true
-	}()
+	processExited := make(chan error)
 
 	// Check if the process is still running
 	go func() {
@@ -69,7 +65,7 @@ func Run(username, password, mongoURI string) error {
 	}()
 
 	select {
-	case <-timerExpired:
+	case <-ctx.Done():
 		// compass still running
 		return nil
 	case err := <-processExited:

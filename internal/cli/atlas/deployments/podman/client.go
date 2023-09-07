@@ -138,7 +138,7 @@ func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 
 	cmd := exec.CommandContext(ctx, "podman", arg...)
 
-	output, err := cmd.CombinedOutput()
+	output, err := cmd.Output() // ignore stderr
 
 	if o.debug {
 		_, _ = o.outWriter.Write(output)

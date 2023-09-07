@@ -66,7 +66,7 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 // atlas deployments delete <clusterName>.
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Deployment '%s' deleted", "Deployment not deleted"),
+		DeleteOpts: cli.NewDeleteOpts("Deployment '%s' deleted\n", "Deployment not deleted"),
 	}
 	cmd := &cobra.Command{
 		Use:   "delete <clusterName>",

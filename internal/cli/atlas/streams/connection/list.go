@@ -29,8 +29,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `NAME	TYPE	INSTANCE	SERVERS{{range .Connections}}
-{{.Name}}	{{.Type}}	{{.Instance}}	{{.Servers}}
+var listTemplate = `NAME	TYPE	SERVERS{{range .Results}}
+{{.Name}}	{{.Type}}	{{if .ClusterName}}{{.ClusterName}}{{else if .BootstrapServers}}{{.BootstrapServers}}{{else}}nil{{end}}
 {{end}}
 `
 
@@ -51,13 +51,8 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 
 func (opts *ListOpts) Run() error {
 	r, err := opts.store.StreamsConnections(opts.ConfigProjectID(), opts.streamsInstance)
-
 	if err != nil {
 		return err
-	}
-
-	if opts.IsJSONOutput() || opts.IsJSONPathOutput() {
-		return opts.Print(r.Results)
 	}
 
 	return opts.Print(r)

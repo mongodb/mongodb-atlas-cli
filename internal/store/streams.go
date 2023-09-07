@@ -41,7 +41,7 @@ type StreamsUpdater interface {
 }
 
 type StreamsConnectionLister interface {
-	StreamsConnections(string, string) (StreamsConnectionList, error)
+	StreamsConnections(string, string) (*atlasv2.PaginatedApiStreamsConnection, error)
 }
 
 type ConnectionCreator interface {
@@ -53,7 +53,7 @@ type ConnectionDeleter interface {
 }
 
 type StreamsConnectionDescriber interface {
-	StreamConnection(string, string, string) (StreamsConnection, error)
+	StreamConnection(string, string, string) (*atlasv2.StreamsConnection, error)
 }
 
 type ConnectionUpdater interface {
@@ -85,50 +85,16 @@ func (s *Store) UpdateStream(projectID, name string, streamsDataProcessRegion *a
 	return result, err
 }
 
-type StreamsConnection struct {
-	atlasv2.StreamsConnection
-	Instance string
-	Servers  string
-}
-
-type StreamsConnectionList struct {
-	atlasv2.PaginatedApiStreamsConnection
-	Connections []StreamsConnection
-}
-
-func AtlasConnToDisplayConn(tenantName string, connection *atlasv2.StreamsConnection) StreamsConnection {
-	var servers string
-
-	if connection.BootstrapServers != nil {
-		servers = *connection.BootstrapServers
-	} else {
-		servers = *connection.ClusterName
-	}
-	result := StreamsConnection{
-		*connection,
-		tenantName,
-		servers,
-	}
-
-	return result
-}
-
 // StreamsConnections encapsulates the logic to manage different cloud providers.
-func (s *Store) StreamsConnections(projectID, tenantName string) (StreamsConnectionList, error) {
+func (s *Store) StreamsConnections(projectID, tenantName string) (*atlasv2.PaginatedApiStreamsConnection, error) {
 	connections, _, err := s.clientv2.StreamsApi.ListStreamConnections(s.ctx, projectID, tenantName).Execute()
-	connectionsList := make([]StreamsConnection, len(connections.Results))
-	result := StreamsConnectionList{*connections, connectionsList}
-	for i := range connections.Results {
-		connectionsList[i] = AtlasConnToDisplayConn(tenantName, &connections.Results[i])
-	}
-
-	return result, err
+	return connections, err
 }
 
 // StreamConnection encapsulates the logic to manage different cloud providers.
-func (s *Store) StreamConnection(projectID, tenantName, connectionName string) (StreamsConnection, error) {
+func (s *Store) StreamConnection(projectID, tenantName, connectionName string) (*atlasv2.StreamsConnection, error) {
 	result, _, err := s.clientv2.StreamsApi.GetStreamConnection(s.ctx, projectID, tenantName, connectionName).Execute()
-	return AtlasConnToDisplayConn(tenantName, result), err
+	return result, err
 }
 
 // CreateConnection encapsulates the logic to manage different cloud providers.

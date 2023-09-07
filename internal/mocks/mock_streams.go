@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -338,10 +337,10 @@ func (m *MockStreamsConnectionDescriber) EXPECT() *MockStreamsConnectionDescribe
 }
 
 // StreamConnection mocks base method.
-func (m *MockStreamsConnectionDescriber) StreamConnection(arg0, arg1, arg2 string) (store.StreamsConnection, error) {
+func (m *MockStreamsConnectionDescriber) StreamConnection(arg0, arg1, arg2 string) (*admin.StreamsConnection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StreamConnection", arg0, arg1, arg2)
-	ret0, _ := ret[0].(store.StreamsConnection)
+	ret0, _ := ret[0].(*admin.StreamsConnection)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -376,10 +375,10 @@ func (m *MockStreamsConnectionLister) EXPECT() *MockStreamsConnectionListerMockR
 }
 
 // StreamsConnections mocks base method.
-func (m *MockStreamsConnectionLister) StreamsConnections(arg0, arg1 string) (store.StreamsConnectionList, error) {
+func (m *MockStreamsConnectionLister) StreamsConnections(arg0, arg1 string) (*admin.PaginatedApiStreamsConnection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StreamsConnections", arg0, arg1)
-	ret0, _ := ret[0].(store.StreamsConnectionList)
+	ret0, _ := ret[0].(*admin.PaginatedApiStreamsConnection)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

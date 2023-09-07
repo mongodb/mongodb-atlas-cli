@@ -45,18 +45,14 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var describeTemplate = `NAME	TYPE	INSTANCE	SERVERS
-{{.Name}}	{{.Type}}	{{.Instance}}	{{.Servers}}
+var describeTemplate = `NAME	TYPE	SERVERS
+{{.Name}}	{{.Type}}	{{if .ClusterName}}{{.ClusterName}}{{else if .BootstrapServers}}{{.BootstrapServers}}{{else}}nil{{end}}
 `
 
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.StreamConnection(opts.ConfigProjectID(), opts.streamsInstance, opts.id)
 	if err != nil {
 		return err
-	}
-
-	if opts.IsJSONOutput() || opts.IsJSONPathOutput() {
-		return opts.Print(r.StreamsConnection)
 	}
 
 	return opts.Print(r)

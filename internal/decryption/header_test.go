@@ -226,7 +226,7 @@ func Test_validateHeaderFields(t *testing.T) {
 		},
 	}
 	for _, testCase := range testCases {
-		err := validateHeaderFields(&testCase.input)
+		err := validateHeaderFields(pointer.Get(testCase.input))
 		if testCase.expectErr && err == nil {
 			t.Errorf("expected: not nil got: %v", err)
 		} else if !testCase.expectErr && err != nil {

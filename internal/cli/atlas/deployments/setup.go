@@ -34,6 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/compass"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
@@ -55,6 +56,7 @@ const (
 	defaultSettings    = "default"
 	customSettings     = "custom"
 	skipSettings       = "skip"
+	compassConnect     = "compass"
 	mongoshConnect     = "mongosh"
 	skipConnect        = "skip"
 	spinnerSpeed       = 100 * time.Millisecond
@@ -72,6 +74,8 @@ var (
 	errInvalidMongoDBVersion        = errors.New("invalid mongodb version")
 	errUnsupportedConnectWith       = errors.New("flag --connectWith unsupported")
 	errDeploymentTypeNotImplemented = errors.New("deployment type not implemented")
+	errCompassNotInstalled          = errors.New("MongoDB Compass not found in your system")
+	errMongoshNotInstalled          = errors.New("mongosh not found in your system")
 	deploymentTypeOptions           = []string{localCluster, atlasCluster}
 	deploymentTypeDescription       = map[string]string{
 		localCluster: "Local Database",
@@ -83,9 +87,10 @@ var (
 		customSettings:  "With custom settings",
 		skipSettings:    "Skip set up",
 	}
-	connectWithOptions     = []string{mongoshConnect, skipConnect}
+	connectWithOptions     = []string{mongoshConnect, compassConnect, skipConnect}
 	connectWithDescription = map[string]string{
 		mongoshConnect: "MongoDB Shell",
+		compassConnect: "MongoDB Compass",
 		skipConnect:    "Skip Connection",
 	}
 	mdbVersions = []string{mdb7, mdb6}
@@ -426,7 +431,10 @@ func (opts *SetupOpts) validateFlags() error {
 		}
 	}
 
-	if opts.connectWith != "" && !strings.EqualFold(opts.connectWith, mongoshConnect) && !strings.EqualFold(opts.connectWith, skipConnect) {
+	if opts.connectWith != "" &&
+		!strings.EqualFold(opts.connectWith, compassConnect) &&
+		!strings.EqualFold(opts.connectWith, mongoshConnect) &&
+		!strings.EqualFold(opts.connectWith, skipConnect) {
 		return fmt.Errorf("%w: %s", errUnsupportedConnectWith, opts.connectWith)
 	}
 
@@ -493,9 +501,17 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 	switch opts.connectWith {
 	case skipConnect:
 		fmt.Fprintln(os.Stderr, "connection skipped")
+	case compassConnect:
+		if !compass.Detect() {
+			return errCompassNotInstalled
+		}
+		if _, err := fmt.Fprintln(opts.OutWriter, "Launching MongoDB Compass..."); err != nil {
+			return err
+		}
+		return compass.Run("", "", cs)
 	case mongoshConnect:
 		if !mongosh.Detect() {
-			return errors.New("mongosh not found in your system")
+			return errMongoshNotInstalled
 		}
 		return mongosh.Run("", "", cs)
 	}
@@ -572,7 +588,7 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	cs := fmt.Sprintf("mongodb://localhost:%d", opts.Port)
+	cs := fmt.Sprintf("mongodb://localhost:%d/?directConnection=true", opts.Port)
 
 	fmt.Fprintf(opts.OutWriter, `Cluster created!
 Connection string: %s

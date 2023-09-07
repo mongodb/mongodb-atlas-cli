@@ -142,7 +142,9 @@ func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 
 	if o.debug {
 		_, _ = o.outWriter.Write(output)
-		if exitErr, ok := err.(*exec.ExitError); ok {
+
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
 			_, _ = o.outWriter.Write(exitErr.Stderr)
 		}
 	}

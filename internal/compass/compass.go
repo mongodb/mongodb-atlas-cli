@@ -66,8 +66,11 @@ func Run(username, password, mongoURI string) error {
 		}
 	}()
 
-	<-timerExpired
-	<-processExited
-
-	return nil
+	select {
+	case <-timerExpired:
+		// compass still running
+		return nil
+	case err := <-processExited:
+		return err
+	}
 }

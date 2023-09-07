@@ -15,7 +15,9 @@
 package compass
 
 import (
+	"errors"
 	"os/exec"
+	"time"
 )
 
 func binPath() string {
@@ -40,5 +42,32 @@ func Run(username, password, mongoURI string) error {
 		path = path + compassBin
 	}
 
-	return exec.Command(path, args...).Start()
+	cmd := exec.Command(path, args...)
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+
+	timer := time.NewTimer(10 * time.Second)
+	timerExpired := make(chan bool)
+	processExited := make(chan error)
+
+	go func() {
+		<-timer.C
+		// the timer has expired.
+		timerExpired <- true
+	}()
+
+	// Check if the process is still running.
+	go func() {
+		if err := cmd.Wait(); err != nil {
+			processExited <- err
+		} else {
+			processExited <- errors.New("MongoDB Compass process has exited")
+		}
+	}()
+
+	<-timerExpired
+	<-processExited
+
+	return nil
 }

@@ -14,4 +14,4 @@
 
 package compass
 
-const compassBin = "/usr/bin/mongodb-compass"
+const compassBin = "/usr/bin/mongodb-compass" //nolint:gosec

@@ -59,7 +59,7 @@ func Run(username, password, mongoURI string) error {
 		timerExpired <- true
 	}()
 
-	// Check if the process is still running.
+	// Check if the process is still running
 	go func() {
 		if err := cmd.Wait(); err != nil {
 			processExited <- err

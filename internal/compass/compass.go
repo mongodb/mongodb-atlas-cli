@@ -55,7 +55,7 @@ func Run(username, password, mongoURI string) error {
 
 	go func() {
 		<-timer.C
-		// the timer has expired.
+		// the timer has expired
 		timerExpired <- true
 	}()
 

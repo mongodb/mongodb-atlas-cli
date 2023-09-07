@@ -511,7 +511,6 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 		if !mongosh.Detect() {
 			return errors.New("mongosh not found in your system")
 		}
-
 		return mongosh.Run("", "", cs)
 	}
 

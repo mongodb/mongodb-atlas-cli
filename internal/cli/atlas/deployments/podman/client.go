@@ -35,7 +35,6 @@ type Diagnostic struct {
 	MachineFound bool
 	MachineState string
 	Images       []string
-	Containers   []*Container
 }
 
 type RunContainerOpts struct {
@@ -116,9 +115,6 @@ func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 			d.Images = append(d.Images, img.Names...)
 		}
 	}
-
-	d.Containers, _ = o.ListContainers(ctx, "")
-
 	return d
 }
 

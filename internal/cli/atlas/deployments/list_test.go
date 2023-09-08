@@ -60,7 +60,7 @@ func TestList_Run(t *testing.T) {
 		},
 	}
 
-	expectedLocalDeployments := []podman.Container{
+	expectedLocalDeployments := []*podman.Container{
 		{
 			Names:  []string{"localTest2"},
 			State:  "running",

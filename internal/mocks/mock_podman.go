@@ -81,10 +81,10 @@ func (mr *MockClientMockRecorder) CreateVolume(arg0, arg1 interface{}) *gomock.C
 }
 
 // ListContainers mocks base method.
-func (m *MockClient) ListContainers(arg0 context.Context, arg1 string) ([]podman.Container, error) {
+func (m *MockClient) ListContainers(arg0 context.Context, arg1 string) ([]*podman.Container, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListContainers", arg0, arg1)
-	ret0, _ := ret[0].([]podman.Container)
+	ret0, _ := ret[0].([]*podman.Container)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

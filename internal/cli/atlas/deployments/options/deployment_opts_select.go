@@ -71,7 +71,7 @@ func (opts *DeploymentOpts) Select(ctx context.Context) error {
 		Options: names,
 		Help:    usage.ClusterName,
 		Description: func(value string, index int) string {
-			return "local"
+			return deploymentTypeLocal
 		},
 	}, &opts.DeploymentName, survey.WithValidator(survey.Required))
 }

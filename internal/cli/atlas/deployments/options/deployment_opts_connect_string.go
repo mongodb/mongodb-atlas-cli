@@ -21,8 +21,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
 )
 
+const deploymentTypeLocal = "local"
+
 func (opts *DeploymentOpts) updateFields(c *podman.Container) {
-	opts.DeploymentType = "local"
+	opts.DeploymentType = deploymentTypeLocal
 	opts.MdbVersion = strings.ReplaceAll(strings.ReplaceAll(c.Image, "docker.io/mongodb/mongodb-enterprise-server:", ""), "-ubi", "")
 	if len(c.Ports) > 0 {
 		opts.Port = c.Ports[0].HostPort

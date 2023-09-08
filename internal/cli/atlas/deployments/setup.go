@@ -604,11 +604,11 @@ func SetupBuilder() *cobra.Command {
 		settings: defaultSettings,
 	}
 	cmd := &cobra.Command{
-		Use:   "setup <clusterName>",
+		Use:   "setup [deploymentName]",
 		Short: "Create a local deployment.",
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
-			"clusterNameDesc": "Name of the cluster you want to setup.",
+			"deploymentNameDesc": "Name of the deployment you want to setup.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

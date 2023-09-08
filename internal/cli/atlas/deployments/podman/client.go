@@ -138,10 +138,15 @@ func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 
 	cmd := exec.CommandContext(ctx, "podman", arg...)
 
-	output, err := cmd.CombinedOutput()
+	output, err := cmd.Output() // ignore stderr
 
 	if o.debug {
 		_, _ = o.outWriter.Write(output)
+
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
+			_, _ = o.outWriter.Write(exitErr.Stderr)
+		}
 	}
 
 	return output, err

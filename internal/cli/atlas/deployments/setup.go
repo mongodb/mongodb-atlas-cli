@@ -28,6 +28,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/briandowns/spinner"
+	"github.com/containers/podman/v4/pkg/domain/entities"
 	"github.com/google/uuid"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -108,18 +109,18 @@ func (opts *SetupOpts) initPodmanClient() error {
 	return nil
 }
 
-func (opts *SetupOpts) logStepStarted(msg string) {
-	log.Warningln(fmt.Sprint(msg))
+func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps int) {
+	fullMessage := fmt.Sprintf("%d/%d: %s", currentStep, totalSteps, msg)
+	log.Warningln(fullMessage)
 	opts.start()
 }
 
-func (opts *SetupOpts) logStepComplete() {
-	opts.stop()
-}
+func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, currentStep int, steps int) error {
+	opts.logStepStarted("Downloading MongoDB binaries to your local environment...", currentStep, steps)
+	defer opts.stop()
 
-func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context) error {
-	var mongodImages []*podman.Image
-	var mongotImages []*podman.Image
+	var mongodImages []*entities.ImageSummary
+	var mongotImages []*entities.ImageSummary
 	var err error
 
 	if mongodImages, err = opts.podmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {
@@ -145,24 +146,16 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context) error {
 	return nil
 }
 
-func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
-	log.Warningln(fmt.Sprintf("Creating your cluster %s [this might take several minutes]", opts.DeploymentName))
-
-	opts.logStepStarted("1/4: Downloading and completing configuration...")
+func (opts *SetupOpts) setupPodman(ctx context.Context, currentStep int, steps int) error {
+	opts.logStepStarted("Downloading and completing configuration...", currentStep, steps)
 	defer opts.stop()
 
-	fmt.Fprintf(os.Stderr, "%v\n", opts.podmanClient.Diagnostics(ctx))
+	return opts.podmanClient.Ready(ctx)
+}
 
-	if err := opts.podmanClient.Installed(); err != nil {
-		return err
-	}
-
-	if err := opts.podmanClient.Ready(ctx); err != nil {
-		return err
-	}
-
-	opts.logStepComplete()
-	opts.logStepStarted("2/4: Starting your local environment...")
+func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, steps int) error {
+	opts.logStepStarted("Starting your local environment...", currentStep, steps)
+	defer opts.stop()
 
 	containers, errList := opts.podmanClient.ListContainers(ctx, options.MongodHostnamePrefix)
 	if errList != nil {
@@ -176,16 +169,74 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	if _, err := opts.podmanClient.CreateNetwork(ctx, opts.LocalNetworkName()); err != nil {
 		return err
 	}
+	return nil
+}
 
-	opts.logStepComplete()
-	opts.logStepStarted("3/4: Downloading MongoDB binaries to your local environment...")
+func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetup bool, needToPullImages bool) {
+	steps = 2
+	needPodmanSetup = false
+	needToPullImages = false
 
-	if err := opts.downloadImagesIfNotAvailable(ctx); err != nil {
+	setupState := opts.podmanClient.Diagnostics(ctx)
+
+	if !setupState.MachineFound || setupState.MachineState != "Running" {
+		steps++
+		needPodmanSetup = true
+	}
+
+	foundMongod := false
+	foundMongot := false
+	for _, image := range setupState.Images {
+		foundMongod = foundMongod || image == opts.MongodDockerImageName()
+		foundMongot = foundMongot || image == opts.MongotDockerImageName()
+	}
+
+	if !foundMongod || !foundMongot {
+		steps++
+		needToPullImages = true
+	}
+	return steps, needPodmanSetup, needToPullImages
+}
+
+func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
+	if err := opts.podmanClient.Installed(); err != nil {
 		return err
 	}
-	opts.logStepComplete()
-	opts.logStepStarted(fmt.Sprintf("4/4: Creating your cluster %s...", opts.DeploymentName))
 
+	steps, needPodmanSetup, needToPullImages := opts.planSteps(ctx)
+	currentStep := 1
+	longWaitWarning := ""
+	if steps > 2 {
+		longWaitWarning = " [this might take several minutes]"
+	}
+
+	log.Warningln(fmt.Sprintf("Creating your cluster %s%s", opts.DeploymentName, longWaitWarning))
+
+	// podman config
+	if needPodmanSetup {
+		if err := opts.setupPodman(ctx, currentStep, steps); err != nil {
+			return err
+		}
+		currentStep++
+	}
+
+	// containers check and network init
+	if err := opts.startEnvironment(ctx, currentStep, steps); err != nil {
+		return err
+	}
+	currentStep++
+
+	// pull images if not available
+	if needToPullImages {
+		if err := opts.downloadImagesIfNotAvailable(ctx, currentStep, steps); err != nil {
+			return err
+		}
+		currentStep++
+	}
+
+	// create local deployment
+	opts.logStepStarted(fmt.Sprintf("Creating your cluster %s...", opts.DeploymentName), currentStep, steps)
+	defer opts.stop()
 	keyFileContents := base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
 
 	if err := opts.configureMongod(ctx, keyFileContents); err != nil {

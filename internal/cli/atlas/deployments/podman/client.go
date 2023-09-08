@@ -35,7 +35,7 @@ type Diagnostic struct {
 	MachineFound bool
 	MachineState string
 	Images       []string
-	Containers   []Container
+	Containers   []*Container
 }
 
 type RunContainerOpts struct {
@@ -66,25 +66,6 @@ type Container struct {
 	Labels map[string]string `json:"Labels"`
 }
 
-type Image struct {
-	ID          string   `json:"ID"`
-	RepoTags    string   `json:"RepoTags"`
-	RepoDigests []string `json:"RepoDigests"`
-	Created     int      `json:"Created"`
-	CreatedAt   string   `json:"CreatedAt"`
-	Size        int      `json:"Size"`
-	SharedSize  int      `json:"SharedSize"`
-	VirtualSize int      `json:"VirtualSize"`
-	Labels      struct {
-		Architecture string `json:"architecture"`
-		BuildDate    string `json:"build-date"`
-		Description  string `json:"description"`
-		Name         string `json:"name"`
-		Version      string `json:"version"`
-	} `json:"Labels"`
-	Containers int `json:"Containers"`
-}
-
 //go:generate mockgen -destination=../../../../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman Client
 
 type Client interface {
@@ -100,7 +81,7 @@ type Client interface {
 	RemoveVolumes(ctx context.Context, names ...string) ([]byte, error)
 	RemoveNetworks(ctx context.Context, names ...string) ([]byte, error)
 	ListContainers(ctx context.Context, nameFilter string) ([]*Container, error)
-	ListImages(ctx context.Context, nameFilter string) ([]*Image, error)
+	ListImages(ctx context.Context, nameFilter string) ([]*entities.ImageSummary, error)
 	PullImage(ctx context.Context, name string) ([]byte, error)
 }
 
@@ -110,7 +91,9 @@ type client struct {
 }
 
 func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
-	d := &Diagnostic{}
+	d := &Diagnostic{
+		Installed: true,
+	}
 
 	err := o.Installed()
 	if err != nil {
@@ -127,7 +110,7 @@ func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	d.MachineFound = true
 	d.MachineState = info.Host.MachineState
 
-	images, err := o.listImages(ctx)
+	images, err := o.ListImages(ctx, "")
 	if err == nil {
 		d.Images = make([]string, 0, len(images))
 		for _, img := range images {
@@ -175,18 +158,6 @@ func (o *client) machineStart(ctx context.Context) error {
 	}
 
 	return nil
-}
-
-func (o *client) listImages(ctx context.Context) ([]*entities.ImageSummary, error) {
-	b, err := o.runPodman(ctx, "images", "--all", "--format", "json")
-	if err != nil {
-		return nil, err
-	}
-	var ret []*entities.ImageSummary
-	if err := json.Unmarshal(b, &ret); err != nil {
-		return nil, err
-	}
-	return ret, nil
 }
 
 func (o *client) Installed() error {
@@ -312,14 +283,20 @@ func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]*Cont
 	return containers, err
 }
 
-func (o *client) ListImages(ctx context.Context, nameFilter string) ([]*Image, error) {
-	b, err := o.runPodman(ctx, "image", "list", "--format", "json", "--filter", "reference="+nameFilter)
+func (o *client) ListImages(ctx context.Context, nameFilter string) ([]*entities.ImageSummary, error) {
+	args := []string{"image", "list", "--format", "json"}
+
+	if nameFilter != "" {
+		args = append(args, "--filter", "name="+nameFilter)
+	}
+
+	response, err := o.runPodman(ctx, args...)
 	if err != nil {
 		return nil, err
 	}
 
-	var images []*Image
-	if err := json.Unmarshal(b, &images); err != nil {
+	var images []*entities.ImageSummary
+	if err := json.Unmarshal(response, &images); err != nil {
 		return nil, err
 	}
 	return images, err

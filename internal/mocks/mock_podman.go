@@ -8,7 +8,6 @@ import (
 	context "context"
 	reflect "reflect"
 
-	entities "github.com/containers/podman/v4/pkg/domain/entities"
 	gomock "github.com/golang/mock/gomock"
 	podman "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
 )
@@ -111,10 +110,10 @@ func (mr *MockClientMockRecorder) ListContainers(arg0, arg1 interface{}) *gomock
 }
 
 // ListImages mocks base method.
-func (m *MockClient) ListImages(arg0 context.Context, arg1 string) ([]*entities.ImageSummary, error) {
+func (m *MockClient) ListImages(arg0 context.Context, arg1 string) ([]*podman.Image, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListImages", arg0, arg1)
-	ret0, _ := ret[0].([]*entities.ImageSummary)
+	ret0, _ := ret[0].([]*podman.Image)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

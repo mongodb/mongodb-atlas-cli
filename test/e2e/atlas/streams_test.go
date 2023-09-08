@@ -22,7 +22,6 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -180,14 +179,13 @@ func TestStreams(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var connection store.StreamsConnection
+			var connection atlasv2.StreamsConnection
 			err := json.Unmarshal(resp, &connection)
 			a.NoError(err)
 
 			a.Equal(connection.Name, connectionName)
-			a.Equal(connection.Instance, instanceName)
 			a.Equal(connection.Type, "Kafka")
-			a.Equal(connection.Servers, "example.com:8080,fraud.example.com:8000")
+			a.Equal(connection.BootstrapServers, "example.com:8080,fraud.example.com:8000")
 		}
 	})
 
@@ -204,15 +202,14 @@ func TestStreams(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var connections []store.StreamsConnection
+			var connections []atlasv2.StreamsConnection
 			err := json.Unmarshal(resp, &connections)
 			a.NoError(err)
 
 			a.Len(connections, 1)
 			a.Equal(connections[0].Name, connectionName)
-			a.Equal(connections[0].Instance, instanceName)
 			a.Equal(connections[0].Type, "Kafka")
-			a.Equal(connections[0].Servers, "example.com:8080,fraud.example.com:8000")
+			a.Equal(connections[0].BootstrapServers, "example.com:8080,fraud.example.com:8000")
 		}
 	})
 

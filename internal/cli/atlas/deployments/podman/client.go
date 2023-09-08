@@ -282,7 +282,7 @@ func (o *client) ListImages(ctx context.Context, nameFilter string) ([]*entities
 	args := []string{"image", "list", "--format", "json"}
 
 	if nameFilter != "" {
-		args = append(args, "--filter", "name="+nameFilter)
+		args = append(args, "--filter", "reference="+nameFilter)
 	}
 
 	response, err := o.runPodman(ctx, args...)

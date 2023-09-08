@@ -19,6 +19,7 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 )
@@ -26,26 +27,27 @@ import (
 var errEmptyDeployments = errors.New("currently there are no deployment in your local system")
 var errDeploymentNotFound = errors.New("deployment not found")
 
-func (opts *DeploymentOpts) CheckIfDeploymentExists(ctx context.Context) error {
+func (opts *DeploymentOpts) findContainer(ctx context.Context) (*podman.Container, error) {
 	containers, err := opts.podmanClient.ListContainers(ctx, MongodHostnamePrefix)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	found := false
 	for _, c := range containers {
 		for _, n := range c.Names {
 			if n == opts.LocalMongodHostname() {
-				found = true
+				return c, nil
 			}
 		}
 	}
 
-	if !found {
-		return fmt.Errorf("%w: %s", errDeploymentNotFound, opts.DeploymentName)
-	}
+	return nil, fmt.Errorf("%w: %s", errDeploymentNotFound, opts.DeploymentName)
+}
 
-	return nil
+func (opts *DeploymentOpts) CheckIfDeploymentExists(ctx context.Context) error {
+	c, err := opts.findContainer(ctx)
+	opts.updateFields(c)
+	return err
 }
 
 func (opts *DeploymentOpts) Select(ctx context.Context) error {

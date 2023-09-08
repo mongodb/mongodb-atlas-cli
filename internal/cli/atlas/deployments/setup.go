@@ -118,8 +118,8 @@ func (opts *SetupOpts) logStepComplete() {
 }
 
 func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context) error {
-	var mongodImages []podman.Image
-	var mongotImages []podman.Image
+	var mongodImages []*podman.Image
+	var mongotImages []*podman.Image
 	var err error
 
 	if mongodImages, err = opts.podmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {

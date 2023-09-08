@@ -16,7 +16,6 @@ package options
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
 )

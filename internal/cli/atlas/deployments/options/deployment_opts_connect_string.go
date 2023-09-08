@@ -38,5 +38,5 @@ func (opts *DeploymentOpts) ConnectionString(ctx context.Context) (string, error
 		}
 		opts.updateFields(c)
 	}
-	return fmt.Sprintf("mongodb://localhost:%d?directConnection=true", opts.Port), nil
+	return fmt.Sprintf("mongodb://localhost:%d/?directConnection=true", opts.Port), nil
 }

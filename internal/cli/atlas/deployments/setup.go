@@ -196,11 +196,16 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 
 func (opts *SetupOpts) initReplicaSet(ctx context.Context) error {
 	// connect to local deployment
+	connectionString, e := opts.ConnectionString(ctx)
+	if e != nil {
+		return e
+	}
+
 	const waitDuration = 60 * time.Second
 	ctxConnect, cancel := context.WithTimeout(ctx, waitDuration)
 	defer cancel()
 
-	client, errConnect := mongo.Connect(ctxConnect, mongoOpts.Client().ApplyURI(fmt.Sprintf("mongodb://localhost:%d/?directConnection=true", opts.Port)))
+	client, errConnect := mongo.Connect(ctxConnect, mongoOpts.Client().ApplyURI(connectionString))
 	if errConnect != nil {
 		return fmt.Errorf("%w: %w", errConnectFailed, errConnect)
 	}

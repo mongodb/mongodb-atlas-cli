@@ -78,6 +78,14 @@ func (opts *DeploymentOpts) LocalMongoMetricsVolume() string {
 	return fmt.Sprintf("mongot-local-metrics-%s", opts.DeploymentName)
 }
 
+func (opts *DeploymentOpts) MongodDockerImageName() string {
+	return fmt.Sprintf("docker.io/mongodb/mongodb-enterprise-server:%s-ubi8", opts.MdbVersion)
+}
+
+func (opts *DeploymentOpts) MongotDockerImageName() string {
+	return "docker.io/mongodb/apix_test:mongot-preview"
+}
+
 func LocalDeploymentName(hostname string) string {
 	return strings.TrimPrefix(hostname, fmt.Sprintf("%s-", MongodHostnamePrefix))
 }

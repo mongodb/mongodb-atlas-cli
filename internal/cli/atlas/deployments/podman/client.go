@@ -57,6 +57,25 @@ type Container struct {
 	Labels map[string]string `json:"Labels"`
 }
 
+type Image struct {
+	ID          string   `json:"ID"`
+	RepoTags    string   `json:"RepoTags"`
+	RepoDigests []string `json:"RepoDigests"`
+	Created     int      `json:"Created"`
+	CreatedAt   string   `json:"CreatedAt"`
+	Size        int      `json:"Size"`
+	SharedSize  int      `json:"SharedSize"`
+	VirtualSize int      `json:"VirtualSize"`
+	Labels      struct {
+		Architecture string `json:"architecture"`
+		BuildDate    string `json:"build-date"`
+		Description  string `json:"description"`
+		Name         string `json:"name"`
+		Version      string `json:"version"`
+	} `json:"Labels"`
+	Containers int `json:"Containers"`
+}
+
 //go:generate mockgen -destination=../../../../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman Client
 
 type Client interface {
@@ -70,6 +89,8 @@ type Client interface {
 	RemoveVolumes(ctx context.Context, names ...string) ([]byte, error)
 	RemoveNetworks(ctx context.Context, names ...string) ([]byte, error)
 	ListContainers(ctx context.Context, nameFilter string) ([]*Container, error)
+	ListImages(ctx context.Context, nameFilter string) ([]*Image, error)
+	PullImage(ctx context.Context, name string) ([]byte, error)
 }
 
 type client struct {
@@ -227,6 +248,23 @@ func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]*Cont
 	var containers []*Container
 	err = json.Unmarshal(response, &containers)
 	return containers, err
+}
+
+func (o *client) ListImages(ctx context.Context, nameFilter string) ([]*Image, error) {
+	b, err := o.runPodman(ctx, "image", "list", "--format", "json", "--filter", "reference="+nameFilter)
+	if err != nil {
+		return nil, err
+	}
+
+	var images []*Image
+	if err := json.Unmarshal(b, &images); err != nil {
+		return nil, err
+	}
+	return images, err
+}
+
+func (o *client) PullImage(ctx context.Context, name string) ([]byte, error) {
+	return o.runPodman(ctx, "pull", name)
 }
 
 func NewClient(debug bool, outWriter io.Writer) Client {

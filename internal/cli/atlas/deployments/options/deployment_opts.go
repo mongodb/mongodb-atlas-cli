@@ -14,8 +14,10 @@
 package options
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"regexp"
 	"strings"
 	"time"
 
@@ -28,6 +30,12 @@ const (
 	MongodHostnamePrefix = "mongod"
 	MongotHostnamePrefix = "mongot"
 	spinnerSpeed         = 100 * time.Millisecond
+	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
+	clusterNamePattern = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
+)
+
+var (
+	errInvalidDeploymentName = errors.New("invalid cluster name")
 )
 
 type DeploymentOpts struct {
@@ -85,4 +93,11 @@ func (opts *DeploymentOpts) StopSpinner() {
 	if terminal.IsTerminal(log.Writer()) {
 		opts.s.Stop()
 	}
+}
+
+func ValidateDeploymentName(n string) error {
+	if matched, _ := regexp.MatchString(clusterNamePattern, n); !matched {
+		return fmt.Errorf("%w: %s", errInvalidDeploymentName, n)
+	}
+	return nil
 }

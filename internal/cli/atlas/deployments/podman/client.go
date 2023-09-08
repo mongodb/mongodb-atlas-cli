@@ -69,7 +69,7 @@ type Client interface {
 	RemoveContainers(ctx context.Context, names ...string) ([]byte, error)
 	RemoveVolumes(ctx context.Context, names ...string) ([]byte, error)
 	RemoveNetworks(ctx context.Context, names ...string) ([]byte, error)
-	ListContainers(ctx context.Context, nameFilter string) ([]Container, error)
+	ListContainers(ctx context.Context, nameFilter string) ([]*Container, error)
 }
 
 type client struct {
@@ -218,13 +218,13 @@ func (o *client) RemoveNetworks(ctx context.Context, names ...string) ([]byte, e
 	return o.runPodman(ctx, append([]string{"network", "rm", "-f"}, names...)...)
 }
 
-func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]Container, error) {
+func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]*Container, error) {
 	response, err := o.runPodman(ctx, "ps", "--all", "--format", "json", "--filter", "name="+nameFilter)
 	if err != nil {
 		return nil, err
 	}
 
-	var containers []Container
+	var containers []*Container
 	err = json.Unmarshal(response, &containers)
 	return containers, err
 }

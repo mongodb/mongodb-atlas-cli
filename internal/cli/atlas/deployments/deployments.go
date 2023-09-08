@@ -15,8 +15,15 @@
 package deployments
 
 import (
+	"errors"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
+)
+
+var (
+	errCompassNotInstalled = errors.New("MongoDB Compass not found in your system")
+	errMongoshNotInstalled = errors.New("mongosh not found in your system")
 )
 
 func Builder() *cobra.Command {
@@ -32,6 +39,7 @@ func Builder() *cobra.Command {
 		SetupBuilder(),
 		DeleteBuilder(),
 		ListBuilder(),
+		ConnectBuilder(),
 	)
 
 	return cmd

@@ -22,7 +22,6 @@ import (
 	"math/rand"
 	"net"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -51,8 +50,6 @@ const (
 	mdb6               = "6.0"
 	mdb7               = "7.0"
 	replicaSetName     = "rs-localdev"
-	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
-	clusterNamePattern = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	defaultSettings    = "default"
 	customSettings     = "custom"
 	skipSettings       = "skip"
@@ -68,14 +65,11 @@ var (
 	errWaitFailed                   = errors.New("waitConnection failed")
 	errPortOutOfRange               = errors.New("port must within the range 1..65535")
 	errPortNotAvailable             = errors.New("port not available")
-	errInvalidClusterName           = errors.New("invalid cluster name")
 	errFlagTypeRequired             = errors.New("flag --type is required when --force is set")
 	errInvalidDeploymentType        = errors.New("invalid deployment type")
 	errInvalidMongoDBVersion        = errors.New("invalid mongodb version")
 	errUnsupportedConnectWith       = errors.New("flag --connectWith unsupported")
 	errDeploymentTypeNotImplemented = errors.New("deployment type not implemented")
-	errCompassNotInstalled          = errors.New("MongoDB Compass not found in your system")
-	errMongoshNotInstalled          = errors.New("mongosh not found in your system")
 	deploymentTypeOptions           = []string{localCluster, atlasCluster}
 	deploymentTypeDescription       = map[string]string{
 		localCluster: "Local Database",
@@ -267,7 +261,7 @@ func (opts *SetupOpts) seed(port int, script string) error {
 	return mongosh.Exec(opts.debug, connString(port), "--eval", script)
 }
 
-func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []podman.Container) error {
+func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Container) error {
 	mongodContainerName := opts.LocalMongodHostname()
 	for _, c := range containers {
 		for _, n := range c.Names {
@@ -316,7 +310,7 @@ func (opts *SetupOpts) promptDeploymentName() error {
 
 	return telemetry.TrackAskOne(p, &opts.DeploymentName, survey.WithValidator(func(ans interface{}) error {
 		name, _ := ans.(string)
-		return validateDeploymentName(name)
+		return options.ValidateDeploymentName(name)
 	}))
 }
 
@@ -366,13 +360,6 @@ func validatePort(p int) error {
 	return checkPort(p)
 }
 
-func validateDeploymentName(n string) error {
-	if matched, _ := regexp.MatchString(clusterNamePattern, n); !matched {
-		return fmt.Errorf("%w: %s", errInvalidClusterName, n)
-	}
-	return nil
-}
-
 func (opts *SetupOpts) promptPort() error {
 	exportPort := strconv.Itoa(opts.Port)
 
@@ -416,7 +403,7 @@ func (opts *SetupOpts) validateFlags() error {
 	}
 
 	if opts.DeploymentName != "" {
-		if err := validateDeploymentName(opts.DeploymentName); err != nil {
+		if err := options.ValidateDeploymentName(opts.DeploymentName); err != nil {
 			return err
 		}
 	}

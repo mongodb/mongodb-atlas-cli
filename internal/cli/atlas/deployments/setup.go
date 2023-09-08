@@ -28,7 +28,6 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/briandowns/spinner"
-	"github.com/containers/podman/v4/pkg/domain/entities"
 	"github.com/google/uuid"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -120,8 +119,8 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, current
 	opts.logStepStarted("Downloading MongoDB binaries to your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	var mongodImages []*entities.ImageSummary
-	var mongotImages []*entities.ImageSummary
+	var mongodImages []*podman.Image
+	var mongotImages []*podman.Image
 	var err error
 
 	if mongodImages, err = opts.podmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {
@@ -180,7 +179,7 @@ func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetu
 
 	setupState := opts.podmanClient.Diagnostics(ctx)
 
-	if !setupState.MachineFound || setupState.MachineState != "Running" {
+	if !setupState.MachineFound || setupState.MachineState != "running" {
 		steps++
 		needPodmanSetup = true
 	}

@@ -105,6 +105,7 @@ require (
 	github.com/containers/psgo v1.8.0 // indirect
 	github.com/containers/storage v1.48.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
+	github.com/coreos/stream-metadata-go v0.4.2 // indirect
 	github.com/cyberphone/json-canonicalization v0.0.0-20230514072755-504adb8a8af1 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

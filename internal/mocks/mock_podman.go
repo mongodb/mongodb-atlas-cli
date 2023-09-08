@@ -8,6 +8,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	entities "github.com/containers/podman/v4/pkg/domain/entities"
 	gomock "github.com/golang/mock/gomock"
 	podman "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
 )
@@ -80,6 +81,20 @@ func (mr *MockClientMockRecorder) CreateVolume(arg0, arg1 interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateVolume", reflect.TypeOf((*MockClient)(nil).CreateVolume), arg0, arg1)
 }
 
+// Diagnostics mocks base method.
+func (m *MockClient) Diagnostics(arg0 context.Context) *podman.Diagnostic {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Diagnostics", arg0)
+	ret0, _ := ret[0].(*podman.Diagnostic)
+	return ret0
+}
+
+// Diagnostics indicates an expected call of Diagnostics.
+func (mr *MockClientMockRecorder) Diagnostics(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Diagnostics", reflect.TypeOf((*MockClient)(nil).Diagnostics), arg0)
+}
+
 // ListContainers mocks base method.
 func (m *MockClient) ListContainers(arg0 context.Context, arg1 string) ([]*podman.Container, error) {
 	m.ctrl.T.Helper()
@@ -93,6 +108,36 @@ func (m *MockClient) ListContainers(arg0 context.Context, arg1 string) ([]*podma
 func (mr *MockClientMockRecorder) ListContainers(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListContainers", reflect.TypeOf((*MockClient)(nil).ListContainers), arg0, arg1)
+}
+
+// ListImages mocks base method.
+func (m *MockClient) ListImages(arg0 context.Context, arg1 string) ([]*entities.ImageSummary, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListImages", arg0, arg1)
+	ret0, _ := ret[0].([]*entities.ImageSummary)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListImages indicates an expected call of ListImages.
+func (mr *MockClientMockRecorder) ListImages(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListImages", reflect.TypeOf((*MockClient)(nil).ListImages), arg0, arg1)
+}
+
+// PullImage mocks base method.
+func (m *MockClient) PullImage(arg0 context.Context, arg1 string) ([]byte, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PullImage", arg0, arg1)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PullImage indicates an expected call of PullImage.
+func (mr *MockClientMockRecorder) PullImage(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PullImage", reflect.TypeOf((*MockClient)(nil).PullImage), arg0, arg1)
 }
 
 // Ready mocks base method.

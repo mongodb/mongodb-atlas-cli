@@ -59,6 +59,7 @@ const (
 	mongoshConnect     = "mongosh"
 	skipConnect        = "skip"
 	spinnerSpeed       = 100 * time.Millisecond
+	shortStepCount     = 2
 )
 
 var (
@@ -111,7 +112,7 @@ func (opts *SetupOpts) initPodmanClient() error {
 
 func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps int) {
 	fullMessage := fmt.Sprintf("%d/%d: %s", currentStep, totalSteps, msg)
-	log.Warningln(fullMessage)
+	_, _ = log.Warningln(fullMessage)
 	opts.start()
 }
 
@@ -128,7 +129,7 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, current
 	}
 
 	if len(mongodImages) == 0 {
-		if _, err := opts.podmanClient.PullImage(ctx, opts.MongodDockerImageName()); err != nil {
+		if _, err = opts.podmanClient.PullImage(ctx, opts.MongodDockerImageName()); err != nil {
 			return err
 		}
 	}
@@ -138,7 +139,7 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, current
 	}
 
 	if len(mongotImages) == 0 {
-		if _, err := opts.podmanClient.PullImage(ctx, opts.MongotDockerImageName()); err != nil {
+		if _, err := opts.podmanClient.PullImage(ctx, options.MongotDockerImageName()); err != nil {
 			return err
 		}
 	}
@@ -188,7 +189,7 @@ func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetu
 	foundMongot := false
 	for _, image := range setupState.Images {
 		foundMongod = foundMongod || image == opts.MongodDockerImageName()
-		foundMongot = foundMongot || image == opts.MongotDockerImageName()
+		foundMongot = foundMongot || image == options.MongotDockerImageName()
 	}
 
 	if !foundMongod || !foundMongot {
@@ -199,18 +200,18 @@ func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetu
 }
 
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
-	if err := opts.podmanClient.Installed(); err != nil {
+	if err := podman.Installed(); err != nil {
 		return err
 	}
 
 	steps, needPodmanSetup, needToPullImages := opts.planSteps(ctx)
 	currentStep := 1
 	longWaitWarning := ""
-	if steps > 2 {
+	if steps > shortStepCount {
 		longWaitWarning = " [this might take several minutes]"
 	}
 
-	log.Warningln(fmt.Sprintf("Creating your cluster %s%s", opts.DeploymentName, longWaitWarning))
+	_, _ = log.Warningln(fmt.Sprintf("Creating your cluster %s%s", opts.DeploymentName, longWaitWarning))
 
 	// podman config
 	if needPodmanSetup {
@@ -331,7 +332,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 
 	_, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
 		Detach:     true,
-		Image:      opts.MongotDockerImageName(),
+		Image:      options.MongotDockerImageName(),
 		Name:       opts.LocalMongotHostname(),
 		Hostname:   opts.LocalMongotHostname(),
 		Entrypoint: "/bin/sh",
@@ -735,9 +736,8 @@ func SetupBuilder() *cobra.Command {
 
 func (opts *SetupOpts) start() {
 	if opts.IsTerminal() {
-
 		opts.s = spinner.New(spinner.CharSets[9], spinnerSpeed)
-		opts.s.Color("cyan", "bold")
+		_ = opts.s.Color("cyan", "bold")
 		opts.s.Start()
 	}
 }

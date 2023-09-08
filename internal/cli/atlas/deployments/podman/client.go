@@ -69,7 +69,6 @@ type Container struct {
 //go:generate mockgen -destination=../../../../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman Client
 
 type Client interface {
-	Installed() error
 	Ready(ctx context.Context) error
 	Diagnostics(ctx context.Context) *Diagnostic
 	CreateNetwork(ctx context.Context, name string) ([]byte, error)
@@ -95,7 +94,7 @@ func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 		Installed: true,
 	}
 
-	err := o.Installed()
+	err := Installed()
 	if err != nil {
 		d.Installed = false
 		return d
@@ -160,7 +159,7 @@ func (o *client) machineStart(ctx context.Context) error {
 	return nil
 }
 
-func (o *client) Installed() error {
+func Installed() error {
 	if _, err := exec.LookPath("podman"); err != nil {
 		return ErrPodmanNotFound
 	}
@@ -296,7 +295,7 @@ func (o *client) ListImages(ctx context.Context, nameFilter string) ([]*entities
 	}
 
 	var images []*entities.ImageSummary
-	if err := json.Unmarshal(response, &images); err != nil {
+	if err = json.Unmarshal(response, &images); err != nil {
 		return nil, err
 	}
 	return images, err

@@ -82,7 +82,7 @@ func (opts *DeploymentOpts) MongodDockerImageName() string {
 	return fmt.Sprintf("docker.io/mongodb/mongodb-enterprise-server:%s-ubi8", opts.MdbVersion)
 }
 
-func (opts *DeploymentOpts) MongotDockerImageName() string {
+func MongotDockerImageName() string {
 	return "docker.io/mongodb/apix_test:mongot-preview"
 }
 

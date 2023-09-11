@@ -16,6 +16,7 @@ package deployments
 
 import (
 	"context"
+	_ "embed"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -90,6 +91,10 @@ var (
 		skipConnect:    "Skip Connection",
 	}
 	mdbVersions = []string{mdb7, mdb6}
+	//go:embed scripts/start_mongod.sh
+	mongodStartScript []byte
+	//go:embed scripts/start_mongot.sh
+	mongotStartScript []byte
 )
 
 type SetupOpts struct {
@@ -178,23 +183,8 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 			// wrap the entrypoint with a chain of commands that
 			// creates the keyfile in the container and sets the 400 permissions for it,
 			// then starts the entrypoint with the local dev config
-			Cmd: "/bin/sh",
-			Args: []string{
-				"-c",
-				`if [ ! -f $KEYFILE ]
-                 then
-                     echo $KEYFILECONTENTS > $KEYFILE
-                     chmod 400 $KEYFILE
-                 fi
-                 python3 /usr/local/bin/docker-entrypoint.py \
-                                        --transitionToAuth \
-                                        --dbpath $DBPATH \
-                                        --keyFile $KEYFILE \
-                                        --replSet $REPLSETNAME \
-                                        --setParameter "mongotHost=$MONGOTHOST" \
-                                        --setParameter "searchIndexManagementHostAndPort=$MONGOTHOST"`,
-			},
-		}); err != nil {
+			Cmd:  "/bin/sh",
+			Args: []string{"-c", string(mongodStartScript)}}); err != nil {
 		return err
 	}
 
@@ -262,18 +252,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 			"KEYFILEPATH":     "/var/lib/mongot/keyfile",
 			"KEYFILECONTENTS": keyFileContents,
 		},
-		Args: []string{
-			"-c",
-			`if [ ! -f $KEYFILEPATH ]
-             then
-                 echo $KEYFILECONTENTS > $KEYFILEPATH
-                 chmod 400 $KEYFILEPATH
-             fi
-             /etc/mongot-localdev/mongot \
-                                  --data-dir $DATADIR \
-                                  --mongodHostAndPort $MONGODHOST \
-                                  --keyFile $KEYFILEPATH`,
-		},
+		Args: []string{"-c", string(mongotStartScript)},
 		Volumes: map[string]string{
 			mongotDataVolume:    "/var/lib/mongot",
 			mongotMetricsVolume: "/var/lib/mongot/metrics",

@@ -84,7 +84,7 @@ type Image struct {
 	Names      []string
 }
 
-//go:generate mockgen -destination=../../../../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman Client
+//go:generate mockgen -destination=../../../../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/podman Client
 
 type Client interface {
 	Ready(ctx context.Context) error

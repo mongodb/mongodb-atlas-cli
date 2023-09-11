@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -127,11 +127,11 @@ func (s *Store) DBUserCertificates(projectID, username string, opts *atlas.ListO
 func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilExpiration int) (*atlasv2.UserCert, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		userCert := atlasv2.UserCert{
+		userCert := &atlasv2.UserCert{
 			MonthsUntilExpiration: pointer.Get(monthsUntilExpiration),
 		}
-		_, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCertificate(s.ctx, projectID, username, &userCert).Execute()
-		return &userCert, err
+		_, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCertificate(s.ctx, projectID, username, userCert).Execute()
+		return userCert, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

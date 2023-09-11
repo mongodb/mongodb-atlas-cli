@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
 )
 
 type VerifyOpts struct {

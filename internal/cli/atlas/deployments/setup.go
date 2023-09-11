@@ -35,6 +35,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/compass"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
@@ -42,8 +43,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	mongoOpts "go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const (
@@ -68,7 +67,6 @@ const (
 var (
 	errSkip                         = errors.New("setup skipped")
 	errMustBeInt                    = errors.New("input must be an integer")
-	errConnectFailed                = errors.New("failed to connect to local deployment")
 	errPortOutOfRange               = errors.New("port must within the range 1..65535")
 	errPortNotAvailable             = errors.New("port not available")
 	errFlagTypeRequired             = errors.New("flag --type is required when --force is set")
@@ -100,12 +98,13 @@ type SetupOpts struct {
 	options.DeploymentOpts
 	cli.OutputOpts
 	cli.GlobalOpts
-	podmanClient podman.Client
-	debug        bool
-	settings     string
-	connectWith  string
-	force        bool
-	s            *spinner.Spinner
+	podmanClient  podman.Client
+	mongodbClient mongodbclient.MongoDBClient
+	debug         bool
+	settings      string
+	connectWith   string
+	force         bool
+	s             *spinner.Spinner
 }
 
 func (opts *SetupOpts) initPodmanClient() error {
@@ -113,10 +112,14 @@ func (opts *SetupOpts) initPodmanClient() error {
 	return nil
 }
 
+func (opts *SetupOpts) initMongoDBClient() error {
+	opts.mongodbClient = mongodbclient.NewClient()
+	return nil
+}
+
 func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps int) {
 	fullMessage := fmt.Sprintf("%d/%d: %s", currentStep, totalSteps, msg)
 	_, _ = log.Warningln(fullMessage)
-	opts.start()
 }
 
 func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, currentStep int, steps int) error {
@@ -306,47 +309,25 @@ func (opts *SetupOpts) initReplicaSet(ctx context.Context) error {
 		return e
 	}
 
-	const waitDuration = 60 * time.Second
-	ctxConnect, cancel := context.WithTimeout(ctx, waitDuration)
-	defer cancel()
-
-	client, errConnect := mongo.Connect(ctxConnect, mongoOpts.Client().ApplyURI(connectionString))
-	if errConnect != nil {
-		return fmt.Errorf("%w: %w", errConnectFailed, errConnect)
+	const waitSeconds = 60
+	if err := opts.mongodbClient.Connect(ctx, connectionString, waitSeconds); err != nil {
+		return err
 	}
-	if err := client.Ping(ctx, nil); err != nil {
-		return fmt.Errorf("%w: %w", errConnectFailed, err)
-	}
-	defer client.Disconnect(ctx) //nolint:errcheck
+	defer opts.mongodbClient.Disconnect(ctx)
+	db := opts.mongodbClient.Database("admin")
 
 	// initiate ReplicaSet
-	adminDB := client.Database("admin")
-
-	rsConfig := bson.M{
-		"_id":       replicaSetName,
-		"version":   1,
-		"configsvr": false,
-		"members": []bson.M{
-			{
-				"_id":  0,
-				"host": fmt.Sprintf("%s:%d", opts.LocalMongodHostname(), internalMongodPort),
-				"horizons": bson.M{
-					"external": fmt.Sprintf("localhost:%d", opts.Port),
-				},
-			},
-		},
-	}
-	initiateRsCmd := bson.D{{Key: "replSetInitiate", Value: rsConfig}}
-	if err := adminDB.RunCommand(ctx, initiateRsCmd).Err(); err != nil {
+	if err := db.InitiateReplicaSet(ctx, replicaSetName, opts.LocalMongodHostname(), internalMongodPort, opts.Port); err != nil {
 		return err
 	}
 
 	const waitForPrimarySeconds = 60
 	for i := 0; i < waitForPrimarySeconds; i++ {
-		var result bson.M
-		if err := adminDB.RunCommand(ctx, bson.D{{Key: "replSetGetStatus", Value: 1}}).Decode(&result); err != nil {
+		r, err := db.RunCommand(ctx, bson.D{{Key: "replSetGetStatus", Value: 1}})
+		if err != nil {
 			continue
 		}
+		result := r.(bson.M)
 
 		if state, ok := result["myState"].(int32); ok && state == replicaSetPrimaryState {
 			break
@@ -355,7 +336,7 @@ func (opts *SetupOpts) initReplicaSet(ctx context.Context) error {
 	}
 
 	// insert local dev cluster marker
-	_, err := adminDB.Collection("atlascli").InsertOne(ctx, bson.M{"managedClusterType": "atlasCliLocalDevCluster"})
+	_, err := db.InsertOne(ctx, "atlascli", bson.M{"managedClusterType": "atlasCliLocalDevCluster"})
 	return err
 }
 
@@ -728,7 +709,11 @@ func SetupBuilder() *cobra.Command {
 			if len(args) == 1 {
 				opts.DeploymentName = args[0]
 			}
-			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), ""), opts.initPodmanClient)
+			return opts.PreRunE(
+				opts.InitOutput(cmd.OutOrStdout(), ""),
+				opts.initPodmanClient,
+				opts.initMongoDBClient,
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

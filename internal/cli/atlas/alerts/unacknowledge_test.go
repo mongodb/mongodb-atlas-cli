@@ -21,7 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	"go.mongodb.org/atlas-sdk/v20230201004/admin"
+	"go.mongodb.org/atlas-sdk/v20230201006/admin"
 )
 
 func TestUnacknowledge_Run(t *testing.T) {

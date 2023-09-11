@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -186,13 +186,13 @@ func buildGlobalDeployment(atlasRepSpec []atlasv2.ReplicationSpec, globalDeploym
 		}
 	}
 
-	var managedNamespace []atlasV1.ManagedNamespace
 	if globalCluster.ManagedNamespaces == nil {
 		return customZoneMapping, nil, nil
 	}
 
-	for _, ns := range globalCluster.ManagedNamespaces {
-		managedNamespace = append(managedNamespace, atlasV1.ManagedNamespace{
+	managedNamespace := make([]atlasV1.ManagedNamespace, len(globalCluster.ManagedNamespaces))
+	for i, ns := range globalCluster.ManagedNamespaces {
+		managedNamespace[i] = atlasV1.ManagedNamespace{
 			Db:                     ns.Db,
 			Collection:             ns.Collection,
 			CustomShardKey:         ns.CustomShardKey,
@@ -200,7 +200,7 @@ func buildGlobalDeployment(atlasRepSpec []atlasv2.ReplicationSpec, globalDeploym
 			PresplitHashedZones:    ns.PresplitHashedZones,
 			IsCustomShardKeyHashed: ns.IsCustomShardKeyHashed,
 			IsShardKeyUnique:       ns.IsShardKeyUnique,
-		})
+		}
 	}
 
 	return customZoneMapping, managedNamespace, nil

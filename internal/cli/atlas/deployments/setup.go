@@ -99,7 +99,6 @@ type SetupOpts struct {
 	cli.GlobalOpts
 	podmanClient  podman.Client
 	mongodbClient mongodbclient.MongoDBClient
-	debug         bool
 	settings      string
 	connectWith   string
 	force         bool
@@ -107,7 +106,7 @@ type SetupOpts struct {
 }
 
 func (opts *SetupOpts) initPodmanClient() error {
-	opts.podmanClient = podman.NewClient(opts.debug, opts.OutWriter)
+	opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
 	return nil
 }
 
@@ -621,7 +620,6 @@ func SetupBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, "", usage.MDBVersion)
 	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
 
-	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 	cmd.Flags().BoolVar(&opts.force, flag.Force, false, usage.Force)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.MDBVersion, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {

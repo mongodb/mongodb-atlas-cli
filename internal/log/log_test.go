@@ -17,7 +17,6 @@ package log
 import (
 	"bytes"
 	"fmt"
-	"os"
 	"testing"
 )
 
@@ -122,10 +121,11 @@ func TestPackage(t *testing.T) {
 		{input: []any{"test%v", 1}, level: DebugLevel, f: warningfF, expected: "test1"},
 	}
 
+	oldWriter := Writer()
 	for i, testCase := range testCases {
 		t.Run(fmt.Sprintf("%v %v", i, testCase.f), func(t *testing.T) {
 			buf := new(bytes.Buffer)
-			SetOutput(buf)
+			SetWriter(buf)
 			SetLevel(testCase.level)
 			var err error
 			switch testCase.f {
@@ -152,5 +152,5 @@ func TestPackage(t *testing.T) {
 		})
 	}
 	SetLevel(WarningLevel)
-	SetOutput(os.Stderr)
+	SetWriter(oldWriter)
 }

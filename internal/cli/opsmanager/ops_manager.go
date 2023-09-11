@@ -53,7 +53,7 @@ func Builder() *cobra.Command {
 		Aliases: []string{"om"},
 		Short:   "MongoDB Ops Manager operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			log.SetOutput(cmd.ErrOrStderr())
+			log.SetWriter(cmd.ErrOrStderr())
 			if debugLevel {
 				log.SetLevel(log.DebugLevel)
 			}

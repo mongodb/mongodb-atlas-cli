@@ -36,7 +36,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "iam",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			log.SetOutput(cmd.ErrOrStderr())
+			log.SetWriter(cmd.ErrOrStderr())
 			if debugLevel {
 				log.SetLevel(log.DebugLevel)
 			}

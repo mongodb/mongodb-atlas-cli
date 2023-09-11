@@ -184,8 +184,8 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 			// creates the keyfile in the container and sets the 400 permissions for it,
 			// then starts the entrypoint with the local dev config
 			Cmd:  "/bin/sh",
-			Args: []string{"-c", string(mongodStartScript)}},
-	); err != nil {
+			Args: []string{"-c", string(mongodStartScript)},
+		}); err != nil {
 		return err
 	}
 

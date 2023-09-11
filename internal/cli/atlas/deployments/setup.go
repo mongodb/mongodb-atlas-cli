@@ -16,6 +16,7 @@ package deployments
 
 import (
 	"context"
+	_ "embed"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -31,13 +32,13 @@ import (
 	"github.com/google/uuid"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/compass"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
+	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/templatewriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -61,6 +62,7 @@ const (
 	mongoshConnect         = "mongosh"
 	skipConnect            = "skip"
 	spinnerSpeed           = 100 * time.Millisecond
+	shortStepCount         = 2
 )
 
 var (
@@ -91,6 +93,10 @@ var (
 		skipConnect:    "Skip Connection",
 	}
 	mdbVersions = []string{mdb7, mdb6}
+	//go:embed scripts/start_mongod.sh
+	mongodStartScript []byte
+	//go:embed scripts/start_mongot.sh
+	mongotStartScript []byte
 )
 
 type SetupOpts struct {
@@ -115,17 +121,53 @@ func (opts *SetupOpts) initMongoDBClient() error {
 	return nil
 }
 
-func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
-	fmt.Fprintf(os.Stderr, `
-Creating your cluster %s [this might take several minutes]
-`, opts.DeploymentName)
+func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps int) {
+	fullMessage := fmt.Sprintf("%d/%d: %s", currentStep, totalSteps, msg)
+	_, _ = log.Warningln(fullMessage)
 	opts.start()
+}
 
+func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, currentStep int, steps int) error {
+	opts.logStepStarted("Downloading MongoDB binaries to your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	if err := opts.podmanClient.Ready(ctx); err != nil {
+	var mongodImages []*podman.Image
+	var mongotImages []*podman.Image
+	var err error
+
+	if mongodImages, err = opts.podmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {
 		return err
 	}
+
+	if len(mongodImages) == 0 {
+		if _, err = opts.podmanClient.PullImage(ctx, opts.MongodDockerImageName()); err != nil {
+			return err
+		}
+	}
+
+	if mongotImages, err = opts.podmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {
+		return err
+	}
+
+	if len(mongotImages) == 0 {
+		if _, err := opts.podmanClient.PullImage(ctx, options.MongotDockerImageName); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (opts *SetupOpts) setupPodman(ctx context.Context, currentStep int, steps int) error {
+	opts.logStepStarted("Downloading and completing configuration...", currentStep, steps)
+	defer opts.stop()
+
+	return opts.podmanClient.Ready(ctx)
+}
+
+func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, steps int) error {
+	opts.logStepStarted("Starting your local environment...", currentStep, steps)
+	defer opts.stop()
 
 	containers, errList := opts.podmanClient.ListContainers(ctx, options.MongodHostnamePrefix)
 	if errList != nil {
@@ -139,7 +181,74 @@ Creating your cluster %s [this might take several minutes]
 	if _, err := opts.podmanClient.CreateNetwork(ctx, opts.LocalNetworkName()); err != nil {
 		return err
 	}
+	return nil
+}
 
+func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetup bool, needToPullImages bool) {
+	steps = 2
+	needPodmanSetup = false
+	needToPullImages = false
+
+	setupState := opts.podmanClient.Diagnostics(ctx)
+
+	if !setupState.MachineFound || setupState.MachineState != "running" {
+		steps++
+		needPodmanSetup = true
+	}
+
+	foundMongod := false
+	foundMongot := false
+	for _, image := range setupState.Images {
+		foundMongod = foundMongod || image == opts.MongodDockerImageName()
+		foundMongot = foundMongot || image == options.MongotDockerImageName
+	}
+
+	if !foundMongod || !foundMongot {
+		steps++
+		needToPullImages = true
+	}
+	return steps, needPodmanSetup, needToPullImages
+}
+
+func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
+	if err := podman.Installed(); err != nil {
+		return err
+	}
+
+	steps, needPodmanSetup, needToPullImages := opts.planSteps(ctx)
+	currentStep := 1
+	longWaitWarning := ""
+	if steps > shortStepCount {
+		longWaitWarning = " [this might take several minutes]"
+	}
+
+	_, _ = log.Warningf("Creating your cluster %s%s\n", opts.DeploymentName, longWaitWarning)
+
+	// podman config
+	if needPodmanSetup {
+		if err := opts.setupPodman(ctx, currentStep, steps); err != nil {
+			return err
+		}
+		currentStep++
+	}
+
+	// containers check and network init
+	if err := opts.startEnvironment(ctx, currentStep, steps); err != nil {
+		return err
+	}
+	currentStep++
+
+	// pull images if not available
+	if needToPullImages {
+		if err := opts.downloadImagesIfNotAvailable(ctx, currentStep, steps); err != nil {
+			return err
+		}
+		currentStep++
+	}
+
+	// create local deployment
+	opts.logStepStarted(fmt.Sprintf("Creating your cluster %s...", opts.DeploymentName), currentStep, steps)
+	defer opts.stop()
 	keyFileContents := base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
 
 	if err := opts.configureMongod(ctx, keyFileContents); err != nil {
@@ -158,7 +267,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 	if _, err := opts.podmanClient.RunContainer(ctx,
 		podman.RunContainerOpts{
 			Detach:   true,
-			Image:    fmt.Sprintf("docker.io/mongodb/mongodb-enterprise-server:%s-ubi8", opts.MdbVersion),
+			Image:    opts.MongodDockerImageName(),
 			Name:     opts.LocalMongodHostname(),
 			Hostname: opts.LocalMongodHostname(),
 			EnvVars: map[string]string{
@@ -178,19 +287,8 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 			// wrap the entrypoint with a chain of commands that
 			// creates the keyfile in the container and sets the 400 permissions for it,
 			// then starts the entrypoint with the local dev config
-			Cmd: "/bin/sh",
-			Args: []string{
-				"-c",
-				`echo $KEYFILECONTENTS > $KEYFILE && \
-                   chmod 400 $KEYFILE && \
-                   python3 /usr/local/bin/docker-entrypoint.py \
-                                          --transitionToAuth \
-                                          --dbpath $DBPATH \
-                                          --keyFile $KEYFILE \
-                                          --replSet $REPLSETNAME \
-                                          --setParameter "mongotHost=$MONGOTHOST" \
-                                          --setParameter "searchIndexManagementHostAndPort=$MONGOTHOST"`,
-			},
+			Cmd:  "/bin/sh",
+			Args: []string{"-c", string(mongodStartScript)},
 		}); err != nil {
 		return err
 	}
@@ -249,7 +347,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 
 	_, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
 		Detach:     true,
-		Image:      "docker.io/mongodb/apix_test:mongot-preview",
+		Image:      options.MongotDockerImageName,
 		Name:       opts.LocalMongotHostname(),
 		Hostname:   opts.LocalMongotHostname(),
 		Entrypoint: "/bin/sh",
@@ -259,13 +357,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 			"KEYFILEPATH":     "/var/lib/mongot/keyfile",
 			"KEYFILECONTENTS": keyFileContents,
 		},
-		Args: []string{
-			"-c",
-			`echo $KEYFILECONTENTS > $KEYFILEPATH && chmod 400 $KEYFILEPATH && /etc/mongot-localdev/mongot \
-                             --data-dir $DATADIR \
-                             --mongodHostAndPort $MONGODHOST \
-                             --keyFile $KEYFILEPATH`,
-		},
+		Args: []string{"-c", string(mongotStartScript)},
 		Volumes: map[string]string{
 			mongotDataVolume:    "/var/lib/mongot",
 			mongotMetricsVolume: "/var/lib/mongot/metrics",
@@ -637,6 +729,7 @@ func SetupBuilder() *cobra.Command {
 func (opts *SetupOpts) start() {
 	if opts.IsTerminal() {
 		opts.s = spinner.New(spinner.CharSets[9], spinnerSpeed)
+		_ = opts.s.Color("cyan", "bold")
 		opts.s.Start()
 	}
 }

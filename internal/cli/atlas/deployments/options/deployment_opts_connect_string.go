@@ -17,7 +17,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 )
 
 const deploymentTypeLocal = "local"

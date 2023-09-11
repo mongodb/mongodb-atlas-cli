@@ -569,7 +569,7 @@ Port	{{.Port}}
 func (opts *SetupOpts) Run(ctx context.Context) error {
 	if err := opts.validateAndPrompt(); err != nil {
 		if errors.Is(err, errSkip) {
-			log.Warningln(err)
+			_, _ = log.Warningln(err)
 			return nil
 		}
 
@@ -582,9 +582,9 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 
 	cs := fmt.Sprintf("mongodb://localhost:%d/?directConnection=true", opts.Port)
 
-	log.Warningln("Cluster created!")
+	_, _ = log.Warningln("Cluster created!")
 	_, _ = fmt.Fprintf(opts.OutWriter, "Connection string: %s\n", cs)
-	log.Warningln("")
+	_, _ = log.Warningln("")
 
 	return opts.runConnectWith(cs)
 }

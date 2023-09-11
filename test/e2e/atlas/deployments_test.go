@@ -55,10 +55,10 @@ func TestDeployments(t *testing.T) {
 		var o, e bytes.Buffer
 		cmd.Stdout = &o
 		cmd.Stderr = &e
-		err := cmd.Run()
-		req.NoError(err, string(e.Bytes()))
+		err = cmd.Run()
+		req.NoError(err, e.String())
 
-		connectionString = strings.TrimSpace(string(o.Bytes()))
+		connectionString = strings.TrimSpace(o.String())
 		connectionString = strings.Replace(connectionString, "Connection string: ", "", 1)
 
 		time.Sleep(40 * time.Second) // takes 30 seconds for mongot to be available
@@ -74,8 +74,8 @@ func TestDeployments(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, err := cmd.CombinedOutput()
-		req.NoError(err, string(r))
+		r, delErr := cmd.CombinedOutput()
+		req.NoError(delErr, string(r))
 	})
 
 	ctx := context.Background()
@@ -91,7 +91,7 @@ func TestDeployments(t *testing.T) {
 	})
 
 	t.Cleanup(func() {
-		client.Disconnect(ctx)
+		_ = client.Disconnect(ctx)
 	})
 
 	t.Run("Seed database", func(t *testing.T) {

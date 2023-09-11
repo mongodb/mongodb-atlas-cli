@@ -120,6 +120,7 @@ func (opts *SetupOpts) initMongoDBClient() error {
 func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps int) {
 	fullMessage := fmt.Sprintf("%d/%d: %s", currentStep, totalSteps, msg)
 	_, _ = log.Warningln(fullMessage)
+	opts.start()
 }
 
 func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, currentStep int, steps int) error {

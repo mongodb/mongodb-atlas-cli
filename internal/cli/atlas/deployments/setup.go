@@ -138,7 +138,7 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, current
 	}
 
 	if len(mongotImages) == 0 {
-		if _, err := opts.podmanClient.PullImage(ctx, options.MongotDockerImageName()); err != nil {
+		if _, err := opts.podmanClient.PullImage(ctx, options.MongotDockerImageName); err != nil {
 			return err
 		}
 	}
@@ -188,7 +188,7 @@ func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetu
 	foundMongot := false
 	for _, image := range setupState.Images {
 		foundMongod = foundMongod || image == opts.MongodDockerImageName()
-		foundMongot = foundMongot || image == options.MongotDockerImageName()
+		foundMongot = foundMongot || image == options.MongotDockerImageName
 	}
 
 	if !foundMongod || !foundMongot {
@@ -210,7 +210,7 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 		longWaitWarning = " [this might take several minutes]"
 	}
 
-	_, _ = log.Warningln(fmt.Sprintf("Creating your cluster %s%s", opts.DeploymentName, longWaitWarning))
+	_, _ = log.Warningf("Creating your cluster %s%s\n", opts.DeploymentName, longWaitWarning)
 
 	// podman config
 	if needPodmanSetup {
@@ -331,7 +331,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 
 	_, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
 		Detach:     true,
-		Image:      options.MongotDockerImageName(),
+		Image:      options.MongotDockerImageName,
 		Name:       opts.LocalMongotHostname(),
 		Hostname:   opts.LocalMongotHostname(),
 		Entrypoint: "/bin/sh",

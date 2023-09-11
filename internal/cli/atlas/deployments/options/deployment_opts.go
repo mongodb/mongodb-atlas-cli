@@ -31,7 +31,8 @@ const (
 	MongotHostnamePrefix = "mongot"
 	spinnerSpeed         = 100 * time.Millisecond
 	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
-	clusterNamePattern = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
+	clusterNamePattern    = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
+	MongotDockerImageName = "docker.io/mongodb/apix_test:mongot-preview"
 )
 
 var (
@@ -80,10 +81,6 @@ func (opts *DeploymentOpts) LocalMongoMetricsVolume() string {
 
 func (opts *DeploymentOpts) MongodDockerImageName() string {
 	return fmt.Sprintf("docker.io/mongodb/mongodb-enterprise-server:%s-ubi8", opts.MdbVersion)
-}
-
-func MongotDockerImageName() string {
-	return "docker.io/mongodb/apix_test:mongot-preview"
 }
 
 func LocalDeploymentName(hostname string) string {

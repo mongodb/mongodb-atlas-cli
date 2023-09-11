@@ -119,7 +119,7 @@ func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	}
 
 	info, err := o.machineInspect(ctx)
-	if err != nil { // machine is already present
+	if err != nil {
 		d.MachineFound = false
 		return d
 	}

@@ -1468,6 +1468,6 @@ buildvariants:
     expansions:
       <<: *go_linux_version
     tasks:
-      - name: ".e2e .atlas deployments"
+      - name: ".e2e .deployments .atlas"
 include:
   - filename: build/ci/release.yml

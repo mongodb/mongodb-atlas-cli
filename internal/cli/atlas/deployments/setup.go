@@ -177,15 +177,18 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 			Cmd: "/bin/sh",
 			Args: []string{
 				"-c",
-				`echo $KEYFILECONTENTS > $KEYFILE && \
-                   chmod 400 $KEYFILE && \
-                   python3 /usr/local/bin/docker-entrypoint.py \
-                                          --transitionToAuth \
-                                          --dbpath $DBPATH \
-                                          --keyFile $KEYFILE \
-                                          --replSet $REPLSETNAME \
-                                          --setParameter "mongotHost=$MONGOTHOST" \
-                                          --setParameter "searchIndexManagementHostAndPort=$MONGOTHOST"`,
+				`if [ ! -f $KEYFILE ]
+                 then
+                     echo $KEYFILECONTENTS > $KEYFILE
+                     chmod 400 $KEYFILE
+                 fi
+                 python3 /usr/local/bin/docker-entrypoint.py \
+                                        --transitionToAuth \
+                                        --dbpath $DBPATH \
+                                        --keyFile $KEYFILE \
+                                        --replSet $REPLSETNAME \
+                                        --setParameter "mongotHost=$MONGOTHOST" \
+                                        --setParameter "searchIndexManagementHostAndPort=$MONGOTHOST"`,
 			},
 		}); err != nil {
 		return err
@@ -279,10 +282,15 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		},
 		Args: []string{
 			"-c",
-			`echo $KEYFILECONTENTS > $KEYFILEPATH && chmod 400 $KEYFILEPATH && /etc/mongot-localdev/mongot \
-                             --data-dir $DATADIR \
-                             --mongodHostAndPort $MONGODHOST \
-                             --keyFile $KEYFILEPATH`,
+			`if [ ! -f $KEYFILEPATH ]
+             then
+                 echo $KEYFILECONTENTS > $KEYFILEPATH
+                 chmod 400 $KEYFILEPATH
+             fi
+             /etc/mongot-localdev/mongot \
+                                  --data-dir $DATADIR \
+                                  --mongodHostAndPort $MONGODHOST \
+                                  --keyFile $KEYFILEPATH`,
 		},
 		Volumes: map[string]string{
 			mongotDataVolume:    "/var/lib/mongot",

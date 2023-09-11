@@ -14,7 +14,7 @@
 
 if [ ! -f "$KEYFILE" ]
 then
-    echo $KEYFILECONTENTS > "$KEYFILE"
+    echo "$KEYFILECONTENTS" > "$KEYFILE"
     chmod 400 "$KEYFILE"
 fi
 

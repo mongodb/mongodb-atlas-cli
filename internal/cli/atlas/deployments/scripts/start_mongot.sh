@@ -14,7 +14,7 @@
 
 if [ ! -f "$KEYFILEPATH" ]
 then
-    echo $KEYFILECONTENTS > "$KEYFILEPATH"
+    echo "$KEYFILECONTENTS" > "$KEYFILEPATH"
     chmod 400 "$KEYFILEPATH"
 fi
 

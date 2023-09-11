@@ -46,8 +46,12 @@ func (opts *DeploymentOpts) findContainer(ctx context.Context) (*podman.Containe
 
 func (opts *DeploymentOpts) CheckIfDeploymentExists(ctx context.Context) error {
 	c, err := opts.findContainer(ctx)
+	if err != nil {
+		return err
+	}
+
 	opts.updateFields(c)
-	return err
+	return nil
 }
 
 func (opts *DeploymentOpts) Select(ctx context.Context) error {

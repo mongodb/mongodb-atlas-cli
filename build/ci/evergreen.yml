@@ -1305,6 +1305,24 @@ tasks:
           MCLI_SERVICE: cloudgov
           E2E_TAGS: atlas,cleanup
           E2E_PARALLEL: 16
+  - name: atlas_deployments_e2e
+    tags: ["e2e","deployments","atlas"]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,deployments
 buildvariants:
   - name: code_health
     display_name: "Code Health"
@@ -1443,5 +1461,13 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: .snyk
+  - name: e2e_atlas_deployments
+    display_name: "E2E Atlas Deployments Tests"
+    run_on:
+      - rhel80-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .atlas deployments"
 include:
   - filename: build/ci/release.yml

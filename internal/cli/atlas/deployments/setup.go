@@ -35,6 +35,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/compass"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
@@ -568,7 +569,7 @@ Port	{{.Port}}
 func (opts *SetupOpts) Run(ctx context.Context) error {
 	if err := opts.validateAndPrompt(); err != nil {
 		if errors.Is(err, errSkip) {
-			_, _ = fmt.Fprintf(opts.OutWriter, "%s\n", err)
+			log.Warningln(err)
 			return nil
 		}
 
@@ -581,10 +582,9 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 
 	cs := fmt.Sprintf("mongodb://localhost:%d/?directConnection=true", opts.Port)
 
-	fmt.Fprintf(opts.OutWriter, `Cluster created!
-Connection string: %s
-
-`, cs)
+	log.Warningln("Cluster created!")
+	_, _ = fmt.Fprintf(opts.OutWriter, "Connection string: %s\n", cs)
+	log.Warningln("")
 
 	return opts.runConnectWith(cs)
 }

@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/project"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
@@ -142,13 +142,12 @@ func (e *ConfigExporter) Run() (string, error) {
 }
 
 func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
-	var resources []runtime.Object
-
 	// Project
 	projectData, err := project.BuildAtlasProject(e.dataProvider, e.featureValidator, e.orgID, e.projectID, e.targetNamespace, e.includeSecretsData, e.dictionaryForAtlasNames, e.operatorVersion)
 	if err != nil {
 		return nil, "", err
 	}
+	var resources []runtime.Object //nolint:prealloc
 	resources = append(resources, projectData.Project)
 	for _, secret := range projectData.Secrets {
 		resources = append(resources, secret)
@@ -160,9 +159,14 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 	}
 
 	// Project secret with credentials
-	resources = append(resources, project.BuildProjectConnectionSecret(e.credsProvider,
+	resources = append(resources, project.BuildProjectConnectionSecret(
+		e.credsProvider,
 		projectData.Project.Name,
-		projectData.Project.Namespace, e.orgID, e.includeSecretsData, e.dictionaryForAtlasNames))
+		projectData.Project.Namespace,
+		e.orgID,
+		e.includeSecretsData,
+		e.dictionaryForAtlasNames,
+	))
 
 	// DB users
 	usersData, relatedSecrets, err := dbusers.BuildDBUsers(e.dataProvider, e.projectID, projectData.Project.Name, e.targetNamespace, e.dictionaryForAtlasNames, e.operatorVersion)

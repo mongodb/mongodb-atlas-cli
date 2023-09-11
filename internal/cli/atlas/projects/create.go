@@ -26,7 +26,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
 )
 
 const atlasCreateTemplate = "Project '{{.Id}}' created.\n"
@@ -43,10 +43,6 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
-		if opts.ConfigOrgID() == "" {
-			return cli.ErrMissingOrgID
-		}
-
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return err
@@ -55,7 +51,6 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 
 func (opts *CreateOpts) Run() error {
 	r, err := opts.store.CreateProject(opts.newCreateProjectOptions())
-
 	if err != nil {
 		return err
 	}
@@ -64,18 +59,21 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newCreateProjectGroup() atlasv2.Group {
+	return atlasv2.Group{
+		Name:                      opts.name,
+		OrgId:                     opts.ConfigOrgID(),
+		WithDefaultAlertsSettings: opts.defaultAlertSettings(),
+		RegionUsageRestrictions:   opts.newRegionUsageRestrictions(),
+	}
+}
+
+func (opts *CreateOpts) defaultAlertSettings() *bool {
 	var defaultAlertSettings *bool
 	if opts.withoutDefaultAlertSettings {
 		f := false
 		defaultAlertSettings = &f
 	}
-	restrictions := opts.newRegionUsageRestrictions()
-	return atlasv2.Group{
-		Name:                      opts.name,
-		OrgId:                     opts.ConfigOrgID(),
-		WithDefaultAlertsSettings: defaultAlertSettings,
-		RegionUsageRestrictions:   restrictions,
-	}
+	return defaultAlertSettings
 }
 
 func (opts *CreateOpts) newRegionUsageRestrictions() *string {
@@ -109,7 +107,10 @@ func CreateBuilder() *cobra.Command {
   %s projects create my-project --orgId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.PreRunE(opts.initStore(cmd.Context()))
+			return opts.PreRunE(
+				opts.ValidateOrgID,
+				opts.initStore(cmd.Context()),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

@@ -15,7 +15,7 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
 )
 
 type CompliancePolicyDescriber interface {
@@ -148,8 +148,7 @@ func (s *Store) EnableCompliancePolicy(projectID string, authorizedEmail string)
 }
 
 func newEmptyCompliancePolicy(projectID string, authorizedEmail string) *atlasv2.DataProtectionSettings {
-	policy := atlasv2.NewDataProtectionSettings()
-	policy.SetAuthorizedEmail(authorizedEmail)
+	policy := atlasv2.NewDataProtectionSettings(authorizedEmail)
 	policy.SetProjectId(projectID)
 	return policy
 }

@@ -15,7 +15,7 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -32,7 +32,6 @@ type OrgProjectLister interface {
 
 type ProjectCreator interface {
 	CreateProject(*atlasv2.CreateProjectApiParams) (*atlasv2.Group, error)
-	ServiceVersionDescriber
 }
 
 type ProjectDeleter interface {

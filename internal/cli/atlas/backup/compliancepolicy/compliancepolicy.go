@@ -27,21 +27,15 @@ const (
 	active = "ACTIVE"
 )
 
-func baseCommand() *cobra.Command {
+func Builder() *cobra.Command {
 	const use = "compliancePolicy"
 	cmd := &cobra.Command{
 		Use:     use,
 		Hidden:  true,
 		Aliases: cli.GenerateAliases(use),
 		Short: `Manage cloud backup compliance policy for your project. Use "atlas backups compliancepolicy setup" to enable backup compliance policy
-		with a full configuration. Use "atlas backups compliancepolicy enable" to enable backup compliance policy without any configuration.`,
+with a full configuration. Use "atlas backups compliancepolicy enable" to enable backup compliance policy without any configuration.`,
 	}
-
-	return cmd
-}
-
-func Builder() *cobra.Command {
-	cmd := baseCommand()
 
 	cmd.AddCommand(
 		SetupBuilder(),

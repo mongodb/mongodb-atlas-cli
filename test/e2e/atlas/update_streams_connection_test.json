@@ -10,7 +10,7 @@
     "username": "admin",
     "password": "hunter3"
   },
-  "configuration": {
+  "config": {
     "auto.offset.reset": "earliest"
   }
 }

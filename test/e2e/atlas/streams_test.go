@@ -63,9 +63,8 @@ func TestStreams(t *testing.T) {
 			var instances atlasv2.PaginatedApiStreamsTenant
 			err := json.Unmarshal(resp, &instances)
 			a.NoError(err)
-			// We expect a default instance always
-			a.Len(instances.Results, 1)
-			a.Equal(*instances.Results[0].Name, defaultInstanceName)
+			// These instances don't have a default instance, since the projects are instantiated automatically
+			a.Len(instances.Results, 0)
 		}
 	})
 
@@ -93,6 +92,28 @@ func TestStreams(t *testing.T) {
 		}
 	})
 
+	t.Run("List all streams in the e2e project after creating", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			"streams",
+			"instance",
+			"list",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			var instances atlasv2.PaginatedApiStreamsTenant
+			err := json.Unmarshal(resp, &instances)
+			a.NoError(err)
+			a.Len(instances.Results, 1)
+			a.Equal(*instances.Results[0].Name, instanceName)
+			a.Equal(instances.Results[0].DataProcessRegion.CloudProvider, "AWS")
+			a.Equal(instances.Results[0].DataProcessRegion.Region, "VIRGINIA_USA")
+		}
+	})
+
 	t.Run("Describing a streams instance", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			"streams",
@@ -116,10 +137,13 @@ func TestStreams(t *testing.T) {
 	})
 
 	t.Run("Updating a streams instance", func(t *testing.T) {
+		// Have to set the same values as with create, as streams currently only supports one region
 		cmd := exec.Command(cliPath,
 			"streams",
 			"instance",
 			"update",
+			"--provider",
+			"AWS",
 			"-r",
 			"VIRGINIA_USA",
 			instanceName,
@@ -183,9 +207,9 @@ func TestStreams(t *testing.T) {
 			err := json.Unmarshal(resp, &connection)
 			a.NoError(err)
 
-			a.Equal(connection.Name, connectionName)
-			a.Equal(connection.Type, "Kafka")
-			a.Equal(connection.BootstrapServers, "example.com:8080,fraud.example.com:8000")
+			a.Equal(*connection.Name, connectionName)
+			a.Equal(*connection.Type, "Kafka")
+			a.Equal(*connection.BootstrapServers, "example.com:8080,fraud.example.com:8000")
 		}
 	})
 
@@ -194,6 +218,7 @@ func TestStreams(t *testing.T) {
 			"streams",
 			"connection",
 			"list",
+			"--instance",
 			instanceName,
 			"-o=json",
 		)
@@ -202,14 +227,15 @@ func TestStreams(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var connections []atlasv2.StreamsConnection
-			err := json.Unmarshal(resp, &connections)
+			var response atlasv2.PaginatedApiStreamsConnection
+			err := json.Unmarshal(resp, &response)
 			a.NoError(err)
 
+			connections := response.Results
 			a.Len(connections, 1)
-			a.Equal(connections[0].Name, connectionName)
-			a.Equal(connections[0].Type, "Kafka")
-			a.Equal(connections[0].BootstrapServers, "example.com:8080,fraud.example.com:8000")
+			a.Equal(*connections[0].Name, connectionName)
+			a.Equal(*connections[0].Type, "Kafka")
+			a.Equal(*connections[0].BootstrapServers, "example.com:8080,fraud.example.com:8000")
 		}
 	})
 
@@ -262,6 +288,7 @@ func TestStreams(t *testing.T) {
 	})
 
 	// Runs last after the connection work
+
 	t.Run("Deleting a streams instance", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			"streams",
@@ -281,4 +308,5 @@ func TestStreams(t *testing.T) {
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})
+
 }

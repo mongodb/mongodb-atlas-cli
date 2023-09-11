@@ -1278,7 +1278,6 @@ tasks:
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_TIMEOUT: 3h
-  # Atlas streams requires a specific projectid as it's behind a feature flag
   - name: atlas_streams_e2e
     tags: [ "e2e","streams","file" ]
     must_have_test_results: true

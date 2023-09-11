@@ -29,7 +29,7 @@ import (
 	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"

@@ -40,7 +40,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"go.mongodb.org/atlas-sdk/v20230201004/admin"
+	"go.mongodb.org/atlas-sdk/v20230201006/admin"
 )
 
 const (

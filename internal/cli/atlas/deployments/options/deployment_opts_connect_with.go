@@ -30,7 +30,7 @@ const (
 
 var (
 	ErrInvalidConnectWith  = errors.New("invalid --connectWith option")
-	ConnectWithOptions     = []string{ConnectWithConnectionString, ConnectWithMongosh, ConnectWithCompass}
+	ConnectWithOptions     = []string{ConnectWithMongosh, ConnectWithCompass, ConnectWithConnectionString}
 	connectWithDescription = map[string]string{
 		ConnectWithConnectionString: "Connection String",
 		ConnectWithMongosh:          "MongoDB Shell",

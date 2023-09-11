@@ -41,30 +41,34 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/templatewriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	mongoOpts "go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const (
-	internalMongodPort = 27017
-	internalMongotPort = 27027
-	localCluster       = "local"
-	atlasCluster       = "atlas"
-	mdb6               = "6.0"
-	mdb7               = "7.0"
-	replicaSetName     = "rs-localdev"
-	defaultSettings    = "default"
-	customSettings     = "custom"
-	skipSettings       = "skip"
-	compassConnect     = "compass"
-	mongoshConnect     = "mongosh"
-	skipConnect        = "skip"
-	spinnerSpeed       = 100 * time.Millisecond
-	shortStepCount     = 2
+	internalMongodPort     = 27017
+	internalMongotPort     = 27027
+	localCluster           = "local"
+	atlasCluster           = "atlas"
+	mdb6                   = "6.0"
+	mdb7                   = "7.0"
+	replicaSetName         = "rs-localdev"
+	replicaSetPrimaryState = 1
+	defaultSettings        = "default"
+	customSettings         = "custom"
+	skipSettings           = "skip"
+	compassConnect         = "compass"
+	mongoshConnect         = "mongosh"
+	skipConnect            = "skip"
+	spinnerSpeed           = 100 * time.Millisecond
+	shortStepCount         = 2
 )
 
 var (
 	errSkip                         = errors.New("setup skipped")
 	errMustBeInt                    = errors.New("input must be an integer")
-	errWaitFailed                   = errors.New("waitConnection failed")
+	errConnectFailed                = errors.New("failed to connect to local deployment")
 	errPortOutOfRange               = errors.New("port must within the range 1..65535")
 	errPortNotAvailable             = errors.New("port not available")
 	errFlagTypeRequired             = errors.New("flag --type is required when --force is set")
@@ -292,30 +296,67 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 		return err
 	}
 
-	// init ReplicaSet
-	if err := opts.waitConnection(opts.Port); err != nil {
+	return opts.initReplicaSet(ctx)
+}
+
+func (opts *SetupOpts) initReplicaSet(ctx context.Context) error {
+	// connect to local deployment
+	connectionString, e := opts.ConnectionString(ctx)
+	if e != nil {
+		return e
+	}
+
+	const waitDuration = 60 * time.Second
+	ctxConnect, cancel := context.WithTimeout(ctx, waitDuration)
+	defer cancel()
+
+	client, errConnect := mongo.Connect(ctxConnect, mongoOpts.Client().ApplyURI(connectionString))
+	if errConnect != nil {
+		return fmt.Errorf("%w: %w", errConnectFailed, errConnect)
+	}
+	if err := client.Ping(ctx, nil); err != nil {
+		return fmt.Errorf("%w: %w", errConnectFailed, err)
+	}
+	defer client.Disconnect(ctx) //nolint:errcheck
+
+	// initiate ReplicaSet
+	adminDB := client.Database("admin")
+
+	rsConfig := bson.M{
+		"_id":       replicaSetName,
+		"version":   1,
+		"configsvr": false,
+		"members": []bson.M{
+			{
+				"_id":  0,
+				"host": fmt.Sprintf("%s:%d", opts.LocalMongodHostname(), internalMongodPort),
+				"horizons": bson.M{
+					"external": fmt.Sprintf("localhost:%d", opts.Port),
+				},
+			},
+		},
+	}
+	initiateRsCmd := bson.D{{Key: "replSetInitiate", Value: rsConfig}}
+	if err := adminDB.RunCommand(ctx, initiateRsCmd).Err(); err != nil {
 		return err
 	}
 
-	seedRs := fmt.Sprintf(`try {
-		rs.status();
-	  } catch {
-		rs.initiate({
-		  _id: "%s",
-		  version: 1,
-		  configsvr: false,
-		  members: [{ _id: 0, host: "%s:%d", horizons: { external: "localhost:%d" } }],
-		});
-	  }`,
-		replicaSetName,
-		opts.LocalMongodHostname(),
-		internalMongodPort,
-		opts.Port)
-	if err := opts.seed(opts.Port, seedRs); err != nil {
-		return err
+	const waitForPrimarySeconds = 60
+	for i := 0; i < waitForPrimarySeconds; i++ {
+		var result bson.M
+		if err := adminDB.RunCommand(ctx, bson.D{{Key: "replSetGetStatus", Value: 1}}).Decode(&result); err != nil {
+			continue
+		}
+
+		if state, ok := result["myState"].(int32); ok && state == replicaSetPrimaryState {
+			break
+		}
+		time.Sleep(1 * time.Second)
 	}
 
-	return opts.seed(opts.Port, "db.getSiblingDB('admin').atlascli.insertOne({ managedClusterType: 'atlasCliLocalDevCluster' })")
+	// insert local dev cluster marker
+	_, err := adminDB.Collection("atlascli").InsertOne(ctx, bson.M{"managedClusterType": "atlasCliLocalDevCluster"})
+	return err
 }
 
 func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents string) error {
@@ -358,14 +399,6 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 	return err
 }
 
-func connString(port int) string {
-	return fmt.Sprintf("mongodb://localhost:%d/admin", port)
-}
-
-func (opts *SetupOpts) seed(port int, script string) error {
-	return mongosh.Exec(opts.debug, connString(port), "--eval", script)
-}
-
 func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Container) error {
 	mongodContainerName := opts.LocalMongodHostname()
 	for _, c := range containers {
@@ -377,17 +410,6 @@ func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Con
 	}
 
 	return nil
-}
-
-func (opts *SetupOpts) waitConnection(port int) error {
-	const waitSeconds = 60
-	for i := 0; i < waitSeconds; i++ {
-		if err := mongosh.Exec(opts.debug, connString(port), "--eval", "db.runCommand('ping').ok"); err == nil {
-			return nil
-		}
-		time.Sleep(1 * time.Second)
-	}
-	return errWaitFailed
 }
 
 func (opts *SetupOpts) promptSettings() error {

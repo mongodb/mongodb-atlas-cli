@@ -344,7 +344,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		return err
 	}
 
-	_, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
+	if _, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
 		Detach:     true,
 		Image:      options.MongotDockerImageName,
 		Name:       opts.LocalMongotHostname(),
@@ -362,7 +362,9 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 			mongotMetricsVolume: "/var/lib/mongot/metrics",
 		},
 		Network: opts.LocalNetworkName(),
-	})
+	}); err != nil {
+		return err
+	}
 
 	for { // wait for mongot
 		select {

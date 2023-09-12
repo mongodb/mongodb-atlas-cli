@@ -38,6 +38,7 @@ type Diagnostic struct {
 
 type RunContainerOpts struct {
 	Detach   bool
+	Remove   bool
 	Image    string
 	Name     string
 	Hostname string
@@ -244,6 +245,10 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 
 	if opts.Detach {
 		arg = append(arg, "-d")
+	}
+
+	if opts.Remove {
+		arg = append(arg, "--rm")
 	}
 
 	if opts.Entrypoint != "" {

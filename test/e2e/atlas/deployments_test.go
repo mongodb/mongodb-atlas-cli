@@ -22,7 +22,6 @@ import (
 	"os/exec"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
@@ -60,8 +59,6 @@ func TestDeployments(t *testing.T) {
 
 		connectionString = strings.TrimSpace(o.String())
 		connectionString = strings.Replace(connectionString, "Connection string: ", "", 1)
-
-		time.Sleep(40 * time.Second) // takes 30 seconds for mongot to be available
 	})
 
 	t.Cleanup(func() {

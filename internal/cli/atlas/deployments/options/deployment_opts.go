@@ -29,6 +29,7 @@ import (
 const (
 	MongodHostnamePrefix = "mongod"
 	MongotHostnamePrefix = "mongot"
+	CheckHostnamePrefix  = "check"
 	spinnerSpeed         = 100 * time.Millisecond
 	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
 	clusterNamePattern    = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
@@ -61,6 +62,10 @@ func (opts *DeploymentOpts) LocalMongodHostname() string {
 
 func (opts *DeploymentOpts) LocalMongotHostname() string {
 	return fmt.Sprintf("%s-%s", MongotHostnamePrefix, opts.DeploymentName)
+}
+
+func (opts *DeploymentOpts) LocalCheckHostname() string {
+	return fmt.Sprintf("%s-%s", CheckHostnamePrefix, opts.DeploymentName)
 }
 
 func (opts *DeploymentOpts) LocalNetworkName() string {

@@ -364,7 +364,30 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		Network: opts.LocalNetworkName(),
 	})
 
-	return err
+	for { // wait for mongot
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		default:
+			_, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
+				Remove:   true,
+				Detach:   false,
+				Image:    opts.MongodDockerImageName(),
+				Name:     opts.LocalCheckHostname(),
+				Hostname: opts.LocalCheckHostname(),
+				EnvVars: map[string]string{
+					"MONGOTHOST": fmt.Sprintf("%s:%d", opts.LocalMongotHostname(), internalMongotPort),
+				},
+				Entrypoint: "/bin/sh",
+				Args:       []string{"-c", `mongosh $MONGOTHOST --eval "db.adminCommand('ping')"`},
+				Network:    opts.LocalNetworkName(),
+			})
+
+			if err == nil { // ping was successful
+				return nil
+			}
+		}
+	}
 }
 
 func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Container) error {

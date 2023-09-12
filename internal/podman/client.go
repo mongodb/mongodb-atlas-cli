@@ -152,7 +152,7 @@ func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman installed: %w", err).Error())
 	}
 
-	d.Version, _ = o.Version(ctx)
+	d.Version, err = o.Version(ctx)
 	if err != nil {
 		d.Errors = append(d.Errors, fmt.Errorf("failed to collect podman version: %w", err).Error())
 	}

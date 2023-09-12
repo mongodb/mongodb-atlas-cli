@@ -35,10 +35,12 @@ type Diagnostic struct {
 	MachineFound bool
 	MachineState string
 	MachineInfo  *machine.InspectInfo
-	VersionFound bool
 	Version      *Version
 	Images       []string
+	Errors       []string
 }
+
+const PodmanRunningState = machine.Running
 
 type RunContainerOpts struct {
 	Detach   bool
@@ -140,35 +142,34 @@ type client struct {
 
 func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	d := &Diagnostic{
-		Installed: true,
+		Installed:    true,
+		MachineFound: true,
 	}
 
 	err := Installed()
 	if err != nil {
 		d.Installed = false
-		return d
+		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman installed: %w", err).Error())
 	}
 
-	d.Version, err = o.Version(ctx)
+	d.Version, _ = o.Version(ctx)
 	if err != nil {
-		d.VersionFound = false
-		return d
+		d.Errors = append(d.Errors, fmt.Errorf("failed to collect podman version: %w", err).Error())
 	}
-
-	d.VersionFound = true
 
 	info, err := o.machineInspect(ctx)
 	if err != nil {
 		d.MachineFound = false
-		return d
+		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman machine: %w", err).Error())
 	}
 
-	d.MachineFound = true
 	d.MachineInfo = info
 	d.MachineState = info.State
 
 	images, err := o.ListImages(ctx, "")
-	if err == nil {
+	if err != nil {
+		d.Errors = append(d.Errors, fmt.Errorf("failed to list podman images: %w", err).Error())
+	} else {
 		d.Images = make([]string, 0, len(images))
 		for _, img := range images {
 			d.Images = append(d.Images, img.Names...)
@@ -204,7 +205,7 @@ func (o *client) machineStart(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	if info.State != machine.Running {
+	if info.State != PodmanRunningState {
 		_, err := o.runPodman(ctx, "machine", "start")
 		if err != nil {
 			return err

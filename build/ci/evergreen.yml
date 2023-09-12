@@ -207,7 +207,7 @@ functions:
         script: |
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
-          yum update -y podman
+          sudo yum update -y podman
   "install snyk":
     - command: shell.exec
       type: setup

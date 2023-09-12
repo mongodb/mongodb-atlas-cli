@@ -46,12 +46,14 @@ type Install struct {
 	featureValidator features.FeatureValidator
 	kubectl          *kubernetes.KubeCtl
 
-	version         string
-	namespace       string
-	watch           []string
-	projectName     string
-	importResources bool
-	atlasGov        bool
+	featureDeletionProtection    bool
+	featureSubDeletionProtection bool
+	version                      string
+	namespace                    string
+	watch                        []string
+	projectName                  string
+	importResources              bool
+	atlasGov                     bool
 }
 
 func (i *Install) WithNamespace(namespace string) *Install {
@@ -78,6 +80,18 @@ func (i *Install) WithImportResources(flag bool) *Install {
 	return i
 }
 
+func (i *Install) WithResourceDeletionProtection(flag bool) *Install {
+	i.featureDeletionProtection = flag
+
+	return i
+}
+
+func (i *Install) WithSubResourceDeletionProtection(flag bool) *Install {
+	i.featureSubDeletionProtection = flag
+
+	return i
+}
+
 func (i *Install) WithAtlasGov(flag bool) *Install {
 	i.atlasGov = flag
 
@@ -94,7 +108,14 @@ func (i *Install) Run(ctx context.Context, orgID string) error {
 		return err
 	}
 
-	if err = i.installResources.InstallConfiguration(ctx, i.version, i.namespace, i.watch, i.atlasGov); err != nil {
+	if err = i.installResources.InstallConfiguration(ctx, &InstallConfig{
+		Version:                              i.version,
+		Namespace:                            i.namespace,
+		Watch:                                i.watch,
+		ResourceDeletionProtectionEnabled:    i.featureDeletionProtection,
+		SubResourceDeletionProtectionEnabled: i.featureSubDeletionProtection,
+		AtlasGov:                             i.atlasGov,
+	}); err != nil {
 		return err
 	}
 

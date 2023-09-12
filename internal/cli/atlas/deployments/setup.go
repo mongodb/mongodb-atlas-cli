@@ -47,22 +47,21 @@ import (
 )
 
 const (
-	internalMongodPort     = 27017
-	internalMongotPort     = 27027
-	localCluster           = "local"
-	atlasCluster           = "atlas"
-	mdb6                   = "6.0"
-	mdb7                   = "7.0"
-	replicaSetName         = "rs-localdev"
-	replicaSetPrimaryState = 1
-	defaultSettings        = "default"
-	customSettings         = "custom"
-	skipSettings           = "skip"
-	compassConnect         = "compass"
-	mongoshConnect         = "mongosh"
-	skipConnect            = "skip"
-	spinnerSpeed           = 100 * time.Millisecond
-	shortStepCount         = 2
+	internalMongodPort = 27017
+	internalMongotPort = 27027
+	localCluster       = "local"
+	atlasCluster       = "atlas"
+	mdb6               = "6.0"
+	mdb7               = "7.0"
+	replicaSetName     = "rs-localdev"
+	defaultSettings    = "default"
+	customSettings     = "custom"
+	skipSettings       = "skip"
+	compassConnect     = "compass"
+	mongoshConnect     = "mongosh"
+	skipConnect        = "skip"
+	spinnerSpeed       = 100 * time.Millisecond
+	shortStepCount     = 2
 )
 
 var (

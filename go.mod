@@ -26,7 +26,7 @@ require (
 	github.com/google/go-github/v50 v50.2.0
 	github.com/google/uuid v1.3.1
 	github.com/hinshun/vt10x v0.0.0-20220119200601-820417d04eec
-	github.com/jba/templatecheck v0.6.0
+	github.com/jba/templatecheck v0.7.0
 	github.com/klauspost/compress v1.16.7
 	github.com/mattn/go-isatty v0.0.19
 	github.com/mongodb-forks/digest v1.0.5

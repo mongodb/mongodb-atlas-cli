@@ -47,22 +47,21 @@ import (
 )
 
 const (
-	internalMongodPort     = 27017
-	internalMongotPort     = 27027
-	localCluster           = "local"
-	atlasCluster           = "atlas"
-	mdb6                   = "6.0"
-	mdb7                   = "7.0"
-	replicaSetName         = "rs-localdev"
-	replicaSetPrimaryState = 1
-	defaultSettings        = "default"
-	customSettings         = "custom"
-	skipSettings           = "skip"
-	compassConnect         = "compass"
-	mongoshConnect         = "mongosh"
-	skipConnect            = "skip"
-	spinnerSpeed           = 100 * time.Millisecond
-	shortStepCount         = 2
+	internalMongodPort = 27017
+	internalMongotPort = 27027
+	localCluster       = "local"
+	atlasCluster       = "atlas"
+	mdb6               = "6.0"
+	mdb7               = "7.0"
+	replicaSetName     = "rs-localdev"
+	defaultSettings    = "default"
+	customSettings     = "custom"
+	skipSettings       = "skip"
+	compassConnect     = "compass"
+	mongoshConnect     = "mongosh"
+	skipConnect        = "skip"
+	spinnerSpeed       = 100 * time.Millisecond
+	shortStepCount     = 2
 )
 
 var (
@@ -317,13 +316,13 @@ func (opts *SetupOpts) initReplicaSet(ctx context.Context) error {
 
 	const waitForPrimarySeconds = 60
 	for i := 0; i < waitForPrimarySeconds; i++ {
-		r, err := db.RunCommand(ctx, bson.D{{Key: "replSetGetStatus", Value: 1}})
+		r, err := db.RunCommand(ctx, bson.D{{Key: "hello", Value: 1}})
 		if err != nil {
 			continue
 		}
 		result := r.(bson.M)
 
-		if state, ok := result["myState"].(int32); ok && state == replicaSetPrimaryState {
+		if state, ok := result["isWritablePrimary"].(bool); ok && state {
 			break
 		}
 		time.Sleep(1 * time.Second)

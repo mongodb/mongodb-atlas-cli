@@ -62,12 +62,13 @@ const MaxItemsPerPage = 500
 var localStateMap = map[string]string{
 	"running":  "IDLE",
 	"removing": "DELETING",
-	"created":  "CREATING",
-	// additional values not mapped to Atlas Cluster statuses:
-	//  restarting
-	//  paused
-	//  exited
-	//  dead
+	// a "created" container is ready to be started but is currently stopped,
+	// which for a local deployment is equivalent to being paused.
+	"created":    "PAUSED",
+	"paused":     "PAUSED",
+	"restarting": "RESTARTING",
+	"exited":     "STOPPED",
+	"dead":       "STOPPED",
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

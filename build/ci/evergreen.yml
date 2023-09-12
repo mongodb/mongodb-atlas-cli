@@ -208,6 +208,25 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           sudo yum update -y podman
+  "install mongosh":
+    - command: shell.exec
+      type: setup
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        shell: bash
+        script: |
+          set -Eeou pipefail
+          export PATH="$ADD_PATH:$PATH"
+          sudo cat << EOF > /etc/yum.repos.d/mongodb-org-7.0.repo 
+          [mongodb-org-7.0]
+          name=MongoDB Repository
+          baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/7.0/$basearch/
+          gpgcheck=1
+          enabled=1
+          gpgkey=https://www.mongodb.org/static/pgp/server-7.0.asc
+          EOF
+          sudo yum install -y mongodb-mongosh
   "install snyk":
     - command: shell.exec
       type: setup
@@ -1326,6 +1345,7 @@ tasks:
     commands:
       - func: "install gotestsum"
       - func: "update podman"
+      - func: "install mongosh"
       - func: "e2e test"
         vars:
           MCLI_ORG_ID: ${atlas_org_id}

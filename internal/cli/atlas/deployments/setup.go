@@ -318,13 +318,13 @@ func (opts *SetupOpts) initReplicaSet(ctx context.Context) error {
 
 	const waitForPrimarySeconds = 60
 	for i := 0; i < waitForPrimarySeconds; i++ {
-		r, err := db.RunCommand(ctx, bson.D{{Key: "replSetGetStatus", Value: 1}})
+		r, err := db.RunCommand(ctx, bson.D{{Key: "hello", Value: 1}})
 		if err != nil {
 			continue
 		}
 		result := r.(bson.M)
 
-		if state, ok := result["myState"].(int32); ok && state == replicaSetPrimaryState {
+		if state, ok := result["isWritablePrimary"].(bool); ok && state {
 			break
 		}
 		time.Sleep(1 * time.Second)

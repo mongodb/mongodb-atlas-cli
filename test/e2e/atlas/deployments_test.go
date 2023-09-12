@@ -103,7 +103,7 @@ func TestDeployments(t *testing.T) {
 	})
 
 	t.Run("Create Search Index", func(t *testing.T) {
-		err = mongosh.Exec(false, connectionString, "--eval", "use 'myDB'; db.myCol.createSearchIndex('default', {'mappings': {'dynamic': true}});")
+		err = mongosh.Exec(false, connectionString, "--eval", "use 'myDB'; db.myCol.createSearchIndex('test', {'mappings': {'dynamic': true}});")
 		req.NoError(err)
 	})
 
@@ -111,6 +111,7 @@ func TestDeployments(t *testing.T) {
 		c, err := myCol.Aggregate(ctx, bson.A{
 			bson.M{
 				"$search": bson.M{
+					"index": "test",
 					"text": bson.M{
 						"query": "test1",
 						"path":  "name",

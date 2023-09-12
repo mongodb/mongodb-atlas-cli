@@ -33,20 +33,20 @@ const (
 )
 
 func TestStreams(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("atlasStreams")
+
+	a := assert.New(t)
+	req := require.New(t)
+
 	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	req.NoError(err)
 
 	instanceName, err := RandEntityWithRevision("instance")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	req.NoError(err)
 
 	connectionName, err := RandEntityWithRevision("connection")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	req.NoError(err)
 
 	t.Run("List all streams in the e2e project", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -54,18 +54,19 @@ func TestStreams(t *testing.T) {
 			"instance",
 			"list",
 			"-o=json",
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var instances atlasv2.PaginatedApiStreamsTenant
-			err := json.Unmarshal(resp, &instances)
-			a.NoError(err)
-			// These instances don't have a default instance, since the projects are instantiated automatically
-			a.Len(instances.Results, 0)
-		}
+		req.NoError(err)
+
+		var instances atlasv2.PaginatedApiStreamsTenant
+		err = json.Unmarshal(resp, &instances)
+		a.NoError(err)
+		// These instances don't have a default instance, since the projects are instantiated automatically
+		a.Len(instances.Results, 0)
 	})
 
 	t.Run("Creating a streams instance", func(t *testing.T) {
@@ -79,17 +80,18 @@ func TestStreams(t *testing.T) {
 			"VIRGINIA_USA",
 			instanceName,
 			"-o=json",
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var instance atlasv2.StreamsTenant
-			err := json.Unmarshal(resp, &instance)
-			a.NoError(err)
-			a.Equal(*instance.Name, instanceName)
-		}
+		req.NoError(err)
+
+		var instance atlasv2.StreamsTenant
+		err = json.Unmarshal(resp, &instance)
+		a.NoError(err)
+		a.Equal(*instance.Name, instanceName)
 	})
 
 	t.Run("List all streams in the e2e project after creating", func(t *testing.T) {
@@ -98,20 +100,21 @@ func TestStreams(t *testing.T) {
 			"instance",
 			"list",
 			"-o=json",
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var instances atlasv2.PaginatedApiStreamsTenant
-			err := json.Unmarshal(resp, &instances)
-			a.NoError(err)
-			a.Len(instances.Results, 1)
-			a.Equal(*instances.Results[0].Name, instanceName)
-			a.Equal(instances.Results[0].DataProcessRegion.CloudProvider, "AWS")
-			a.Equal(instances.Results[0].DataProcessRegion.Region, "VIRGINIA_USA")
-		}
+		req.NoError(err)
+
+		var instances atlasv2.PaginatedApiStreamsTenant
+		err = json.Unmarshal(resp, &instances)
+		a.NoError(err)
+		a.Len(instances.Results, 1)
+		a.Equal(*instances.Results[0].Name, instanceName)
+		a.Equal(instances.Results[0].DataProcessRegion.CloudProvider, "AWS")
+		a.Equal(instances.Results[0].DataProcessRegion.Region, "VIRGINIA_USA")
 	})
 
 	t.Run("Describing a streams instance", func(t *testing.T) {
@@ -121,19 +124,20 @@ func TestStreams(t *testing.T) {
 			"describe",
 			instanceName,
 			"-o=json",
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var instance atlasv2.StreamsTenant
-			err := json.Unmarshal(resp, &instance)
-			a.NoError(err)
-			a.Equal(*instance.Name, instanceName)
-			a.Equal(instance.DataProcessRegion.CloudProvider, "AWS")
-			a.Equal(instance.DataProcessRegion.Region, "VIRGINIA_USA")
-		}
+		req.NoError(err)
+
+		var instance atlasv2.StreamsTenant
+		err = json.Unmarshal(resp, &instance)
+		a.NoError(err)
+		a.Equal(*instance.Name, instanceName)
+		a.Equal(instance.DataProcessRegion.CloudProvider, "AWS")
+		a.Equal(instance.DataProcessRegion.Region, "VIRGINIA_USA")
 	})
 
 	t.Run("Updating a streams instance", func(t *testing.T) {
@@ -148,19 +152,20 @@ func TestStreams(t *testing.T) {
 			"VIRGINIA_USA",
 			instanceName,
 			"-o=json",
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var instance atlasv2.StreamsTenant
-			err := json.Unmarshal(resp, &instance)
-			a.NoError(err)
-			a.Equal(*instance.Name, instanceName)
-			a.Equal(instance.DataProcessRegion.CloudProvider, "AWS")
-			a.Equal(instance.DataProcessRegion.Region, "VIRGINIA_USA")
-		}
+		req.NoError(err)
+
+		var instance atlasv2.StreamsTenant
+		err = json.Unmarshal(resp, &instance)
+		a.NoError(err)
+		a.Equal(*instance.Name, instanceName)
+		a.Equal(instance.DataProcessRegion.CloudProvider, "AWS")
+		a.Equal(instance.DataProcessRegion.Region, "VIRGINIA_USA")
 	})
 
 	// Connections
@@ -175,17 +180,18 @@ func TestStreams(t *testing.T) {
 			"-i",
 			instanceName,
 			"-o=json",
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var connection atlasv2.StreamsConnection
-			err := json.Unmarshal(resp, &connection)
-			a.NoError(err)
-			a.Equal(*connection.Name, connectionName)
-		}
+		req.NoError(err)
+
+		var connection atlasv2.StreamsConnection
+		err = json.Unmarshal(resp, &connection)
+		a.NoError(err)
+		a.Equal(*connection.Name, connectionName)
 	})
 
 	t.Run("Describing a streams connection", func(t *testing.T) {
@@ -197,20 +203,21 @@ func TestStreams(t *testing.T) {
 			"-i",
 			instanceName,
 			"-o=json",
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var connection atlasv2.StreamsConnection
-			err := json.Unmarshal(resp, &connection)
-			a.NoError(err)
+		req.NoError(err)
 
-			a.Equal(*connection.Name, connectionName)
-			a.Equal(*connection.Type, "Kafka")
-			a.Equal(*connection.BootstrapServers, "example.com:8080,fraud.example.com:8000")
-		}
+		var connection atlasv2.StreamsConnection
+		err = json.Unmarshal(resp, &connection)
+		a.NoError(err)
+
+		a.Equal(*connection.Name, connectionName)
+		a.Equal(*connection.Type, "Kafka")
+		a.Equal(*connection.BootstrapServers, "example.com:8080,fraud.example.com:8000")
 	})
 
 	t.Run("Listing streams connections", func(t *testing.T) {
@@ -221,22 +228,23 @@ func TestStreams(t *testing.T) {
 			"--instance",
 			instanceName,
 			"-o=json",
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var response atlasv2.PaginatedApiStreamsConnection
-			err := json.Unmarshal(resp, &response)
-			a.NoError(err)
+		req.NoError(err)
 
-			connections := response.Results
-			a.Len(connections, 1)
-			a.Equal(*connections[0].Name, connectionName)
-			a.Equal(*connections[0].Type, "Kafka")
-			a.Equal(*connections[0].BootstrapServers, "example.com:8080,fraud.example.com:8000")
-		}
+		var response atlasv2.PaginatedApiStreamsConnection
+		err = json.Unmarshal(resp, &response)
+		a.NoError(err)
+
+		connections := response.Results
+		a.Len(connections, 1)
+		a.Equal(*connections[0].Name, connectionName)
+		a.Equal(*connections[0].Type, "Kafka")
+		a.Equal(*connections[0].BootstrapServers, "example.com:8080,fraud.example.com:8000")
 	})
 
 	t.Run("Updating a streams connection", func(t *testing.T) {
@@ -250,19 +258,19 @@ func TestStreams(t *testing.T) {
 			"-i",
 			instanceName,
 			"-o=json",
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var connection atlasv2.StreamsConnection
-			err := json.Unmarshal(resp, &connection)
-			a.NoError(err)
-			a.Equal(*connection.Name, connectionName)
+		req.NoError(err)
 
-			a.Equal(*connection.Security.Protocol, "SSL")
-		}
+		var connection atlasv2.StreamsConnection
+		err = json.Unmarshal(resp, &connection)
+		a.NoError(err)
+		a.Equal(*connection.Name, connectionName)
+		a.Equal(*connection.Security.Protocol, "SSL")
 	})
 
 	t.Run("Deleting a streams connection", func(t *testing.T) {
@@ -274,16 +282,15 @@ func TestStreams(t *testing.T) {
 			instanceName,
 			"--force",
 			connectionName,
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		req := require.New(t)
-		req.NoError(err, string(resp))
+		req.NoError(err)
 
 		expected := fmt.Sprintf("'%s' deleted\n", connectionName)
-		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})
 
@@ -296,16 +303,15 @@ func TestStreams(t *testing.T) {
 			"delete",
 			"--force",
 			instanceName,
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		req := require.New(t)
-		req.NoError(err, string(resp))
+		req.NoError(err)
 
 		expected := fmt.Sprintf("Atlas Streams processor instance '%s' deleted\n", instanceName)
-		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})
 

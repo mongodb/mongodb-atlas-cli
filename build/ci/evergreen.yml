@@ -218,14 +218,14 @@ functions:
         script: |
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
-          sudo cat << EOF > /etc/yum.repos.d/mongodb-org-7.0.repo 
+          sudo bash -c 'cat << EOF > /etc/yum.repos.d/mongodb-org-7.0.repo
           [mongodb-org-7.0]
           name=MongoDB Repository
           baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/7.0/\$basearch/
           gpgcheck=1
           enabled=1
           gpgkey=https://www.mongodb.org/static/pgp/server-7.0.asc
-          EOF
+          EOF'
           sudo yum install -y mongodb-mongosh
   "install snyk":
     - command: shell.exec

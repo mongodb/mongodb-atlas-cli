@@ -16,6 +16,7 @@ package deployments
 
 import (
 	"context"
+	"fmt"
 	"runtime"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -59,10 +60,10 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 
 	// Podman logs
 	if opts.podmanLogs, err = opts.podmanClient.Logs(ctx); err != nil {
-		return err
+		opts.podmanDiag.Errors = append(opts.podmanDiag.Errors, fmt.Errorf("failed to get podman logs: %w", err).Error())
 	}
 
-	if opts.DeploymentName != "" {
+	if opts.DeploymentName != "" && opts.podmanDiag.MachineInfo.State == podman.PodmanRunningState {
 		_, _ = log.Warningf("Fetching logs for deployment %s\n", opts.DeploymentName)
 		// ignore error if container does not exist just capture log for that command
 		opts.mongotLogs, _ = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongotHostname())

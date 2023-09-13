@@ -366,12 +366,14 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		return err
 	}
 
-	for { // wait for mongot
+	tmCtx, cancel := context.WithTimeout(ctx, 5*time.Minute) // wait for mongot up to 5 minutes
+	defer cancel()
+	for {
 		select {
-		case <-ctx.Done():
-			return ctx.Err()
+		case <-tmCtx.Done():
+			return tmCtx.Err()
 		default:
-			_, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
+			_, err := opts.podmanClient.RunContainer(tmCtx, podman.RunContainerOpts{
 				Remove:   true,
 				Detach:   false,
 				Image:    opts.MongodDockerImageName(),

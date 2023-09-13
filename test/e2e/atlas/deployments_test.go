@@ -23,7 +23,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
@@ -92,7 +91,7 @@ func TestDeployments(t *testing.T) {
 	})
 
 	t.Run("Seed database", func(t *testing.T) {
-		_, err = myCol.InsertMany(ctx, []interface{}{
+		ids, err := myCol.InsertMany(ctx, []interface{}{
 			bson.M{
 				"name": "test1",
 			}, bson.M{
@@ -100,11 +99,67 @@ func TestDeployments(t *testing.T) {
 			},
 		})
 		req.NoError(err)
+		t.Log(ids)
 	})
 
 	t.Run("Create Search Index", func(t *testing.T) {
-		err = mongosh.Exec(false, connectionString, "--eval", "use 'myDB'; db.myCol.createSearchIndex('test', {'mappings': {'dynamic': true}});")
-		req.NoError(err)
+		result := myDB.RunCommand(ctx, bson.D{
+			{
+				Key:   "createSearchIndexes",
+				Value: "myCol",
+			},
+			{
+				Key: "indexes",
+				Value: []bson.D{
+					{
+						{
+							Key:   "name",
+							Value: "test",
+						},
+						{
+							Key: "definition",
+							Value: bson.D{
+								{
+									Key:   "name",
+									Value: "test",
+								},
+								{
+									Key: "mappings",
+									Value: bson.D{
+										{
+											Key:   "dynamic",
+											Value: true,
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		})
+		req.NoError(result.Err())
+		for {
+			t.Log("Waiting for index...")
+			cursor, err := myCol.Aggregate(ctx, mongo.Pipeline{
+				{
+					{Key: "$listSearchIndexes", Value: bson.D{}},
+				},
+			})
+			req.NoError(err)
+			var results []bson.M
+			req.NoError(cursor.All(ctx, &results))
+			if len(results) == 0 {
+				continue // no index found
+			}
+			status, ok := results[0]["status"].(string)
+			if !ok {
+				continue // no status found
+			}
+			if status == "STEADY" {
+				break
+			}
+		}
 	})
 
 	t.Run("Test search index", func(t *testing.T) {
@@ -120,8 +175,7 @@ func TestDeployments(t *testing.T) {
 			},
 		})
 		req.NoError(err)
-		defer c.Close(ctx)
-		var results []bson.D
+		var results []bson.M
 		err = c.All(ctx, &results)
 		req.NoError(err)
 		req.Equal(1, len(results))

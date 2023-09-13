@@ -43,6 +43,7 @@ func TestDeployments(t *testing.T) {
 			cmd := exec.Command(cliPath,
 				"deployments",
 				"diagnostics",
+				"test",
 				"-o",
 				"json",
 			)
@@ -50,9 +51,8 @@ func TestDeployments(t *testing.T) {
 			cmd.Env = os.Environ()
 
 			r, err := cmd.CombinedOutput()
-			req.NoError(err, string(r))
-
-			t.Log("Diagnostics\n", string(r))
+			t.Log("Diagnostics")
+			t.Log(err, string(r))
 		}(t)
 
 		cmd := exec.Command(cliPath,

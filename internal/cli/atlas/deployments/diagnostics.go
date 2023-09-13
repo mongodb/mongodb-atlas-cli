@@ -89,7 +89,7 @@ func DiagnosticsBuilder() *cobra.Command {
 		machineDiag: &machineDiagnostic{},
 	}
 	cmd := &cobra.Command{
-		Use:    "diagnostics",
+		Use:    "diagnostics [deploymentName]",
 		Short:  "Fetch detailed information about all your deployments and system processes.",
 		Hidden: true, // always hidden
 		Args:   require.MaximumNArgs(1),

@@ -39,6 +39,22 @@ func TestDeployments(t *testing.T) {
 	var connectionString string
 
 	t.Run("Setup", func(t *testing.T) {
+		defer func(t *testing.T) {
+			cmd := exec.Command(cliPath,
+				"deployments",
+				"diagnostics",
+				"-o",
+				"json",
+			)
+
+			cmd.Env = os.Environ()
+
+			r, err := cmd.CombinedOutput()
+			req.NoError(err, string(r))
+
+			t.Log("Diagnostics\n", string(r))
+		}(t)
+
 		cmd := exec.Command(cliPath,
 			"deployments",
 			"setup",

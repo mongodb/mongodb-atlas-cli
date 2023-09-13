@@ -34,17 +34,17 @@ type IndexOpts struct {
 	Analyzer       string
 	SearchAnalyzer string
 	Dynamic        bool
-	Fields         []string
+	fields         []string
 	Filename       string
 	Fs             afero.Fs
 }
 
 func (opts *IndexOpts) validateOpts() error {
 	if opts.Filename == "" {
-		if !opts.Dynamic && len(opts.Fields) == 0 {
+		if !opts.Dynamic && len(opts.fields) == 0 {
 			return errors.New("specify the fields to index for a static index or specify a dynamic index")
 		}
-		if opts.Dynamic && len(opts.Fields) > 0 {
+		if opts.Dynamic && len(opts.fields) > 0 {
 			return errors.New("do not specify --fields and --dynamic at the same time")
 		}
 	} else {
@@ -66,7 +66,7 @@ func (opts *IndexOpts) validateOpts() error {
 		if opts.Dynamic {
 			return errors.New("do not specify --dynamic and --file at the same time")
 		}
-		if len(opts.Fields) > 0 {
+		if len(opts.fields) > 0 {
 			return errors.New("do not specify --fields and --file at the same time")
 		}
 	}
@@ -104,11 +104,11 @@ func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 const indexFieldParts = 2
 
 func (opts *IndexOpts) indexFields() (map[string]interface{}, error) {
-	if len(opts.Fields) == 0 {
+	if len(opts.fields) == 0 {
 		return nil, nil
 	}
 	fields := make(map[string]interface{})
-	for _, p := range opts.Fields {
+	for _, p := range opts.fields {
 		f := strings.Split(p, ":")
 		if len(f) != indexFieldParts {
 			return nil, fmt.Errorf("partition should be fieldName:fieldType, got: %s", p)

@@ -46,6 +46,7 @@ func TestDeployments(t *testing.T) {
 			"--type",
 			"local",
 			"--force",
+			"--debug",
 		)
 
 		cmd.Env = os.Environ()

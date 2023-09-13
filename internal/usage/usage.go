@@ -452,4 +452,5 @@ dbName and collection are required only for built-in roles.`
 	MongodPort                                = "Port to which the MongoDB server listens to for client connections."
 	ConnectWith                               = "Method of connection. Valid values are mongosh, compass and skip."
 	AlertConfigFilename                       = "Path to the JSON configuration file that defines alert configuration settings."
+	DeploymentName                            = "Name of the deployment."
 )

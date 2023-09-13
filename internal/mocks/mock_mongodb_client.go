@@ -10,6 +10,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbclient "github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
+	admin "go.mongodb.org/atlas-sdk/v20230201007/admin"
 )
 
 // MockMongoDBClient is a mock of MongoDBClient interface.
@@ -96,6 +97,20 @@ func NewMockDatabase(ctrl *gomock.Controller) *MockDatabase {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDatabase) EXPECT() *MockDatabaseMockRecorder {
 	return m.recorder
+}
+
+// CreateSearchIndex mocks base method.
+func (m *MockDatabase) CreateSearchIndex(arg0 context.Context, arg1 string, arg2 *admin.ClusterSearchIndex) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateSearchIndex", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateSearchIndex indicates an expected call of CreateSearchIndex.
+func (mr *MockDatabaseMockRecorder) CreateSearchIndex(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSearchIndex", reflect.TypeOf((*MockDatabase)(nil).CreateSearchIndex), arg0, arg1, arg2)
 }
 
 // InitiateReplicaSet mocks base method.

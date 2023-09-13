@@ -28,7 +28,7 @@ var errEmptyDeployments = errors.New("currently there are no deployment in your 
 var errDeploymentNotFound = errors.New("deployment not found")
 
 func (opts *DeploymentOpts) findContainer(ctx context.Context) (*podman.Container, error) {
-	containers, err := opts.podmanClient.ListContainers(ctx, MongodHostnamePrefix)
+	containers, err := opts.PodmanClient.ListContainers(ctx, MongodHostnamePrefix)
 	if err != nil {
 		return nil, err
 	}
@@ -49,13 +49,12 @@ func (opts *DeploymentOpts) CheckIfDeploymentExists(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-
 	opts.updateFields(c)
 	return nil
 }
 
 func (opts *DeploymentOpts) Select(ctx context.Context) error {
-	containers, err := opts.podmanClient.ListContainers(ctx, MongodHostnamePrefix)
+	containers, err := opts.PodmanClient.ListContainers(ctx, MongodHostnamePrefix)
 	if err != nil {
 		return err
 	}

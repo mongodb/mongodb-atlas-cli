@@ -369,26 +369,22 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 
 	tmCtx, cancel := context.WithTimeout(ctx, waitMongotTimeout)
 	defer cancel()
+
+	ping := fmt.Sprintf(
+		"mongosh %s:%d --eval \"db.adminCommand('ping')\"",
+		opts.LocalMongotHostname(),
+		internalMongotPort,
+	)
+
 	for {
 		select {
 		case <-tmCtx.Done():
 			return tmCtx.Err()
 		default:
-			_, err := opts.podmanClient.RunContainer(tmCtx, podman.RunContainerOpts{
-				Remove:   true,
-				Detach:   false,
-				Image:    opts.MongodDockerImageName(),
-				Name:     opts.LocalCheckHostname(),
-				Hostname: opts.LocalCheckHostname(),
-				EnvVars: map[string]string{
-					"MONGOTHOST": fmt.Sprintf("%s:%d", opts.LocalMongotHostname(), internalMongotPort),
-				},
-				Entrypoint: "/bin/sh",
-				Args:       []string{"-c", `mongosh $MONGOTHOST --eval "db.adminCommand('ping')"`},
-				Network:    opts.LocalNetworkName(),
-			})
+			r, err := opts.podmanClient.Exec(ctx, opts.LocalMongodHostname(), ping)
+			fmt.Println(string(r))
 
-			if err == nil { // ping was successful
+			if err == nil && strings.Contains(string(r), "1 }") {
 				return nil
 			}
 		}

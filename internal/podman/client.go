@@ -134,6 +134,7 @@ type Client interface {
 	Version(ctx context.Context) (*Version, error)
 	Logs(ctx context.Context) ([]interface{}, error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
+	Exec(ctx context.Context, containerName string, command string) ([]byte, error)
 }
 
 type client struct {
@@ -403,6 +404,10 @@ func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, erro
 
 	logs := strings.Split(string(output), "\n")
 	return logs, nil
+}
+
+func (o *client) Exec(ctx context.Context, containerName string, command string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"exec", "-it", containerName}, strings.Split(command, " ")...)...)
 }
 
 func NewClient(debug bool, outWriter io.Writer) Client {

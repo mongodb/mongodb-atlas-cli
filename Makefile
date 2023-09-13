@@ -52,6 +52,7 @@ devtools:  ## Install dev tools
 	go install golang.org/x/tools/cmd/goimports@latest
 	go install github.com/google/go-licenses@latest
 	go install mvdan.cc/sh/v3/cmd/shfmt@latest
+	go install github.com/icholy/gomajor@latest
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin $(GOLANGCI_VERSION)
 
 .PHONY: setup
@@ -192,11 +193,12 @@ check-library-owners: ## Check that all the dependencies in go.mod has a owner i
 
 .PHONY: update-atlas-sdk
 update-atlas-sdk: ## Update the atlas-sdk dependency
-	go install github.com/icholy/gomajor@latest
+	@echo "==> Updating SDK to latest major version"
 	gomajor get go.mongodb.org/atlas-sdk/v20230201001@latest
+	go mod tidy
+	@echo "==> Done, remember to update build/ci/library_owners.json"
 
 .PHONY: help
 .DEFAULT_GOAL := help
 help:
 	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-

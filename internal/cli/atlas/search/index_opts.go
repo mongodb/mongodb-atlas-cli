@@ -21,7 +21,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/spf13/afero"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201007/admin"
 )
 
 const DefaultAnalyzer = "lucene.standard"

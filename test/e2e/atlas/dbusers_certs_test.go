@@ -25,20 +25,17 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
+	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201007/admin"
 )
 
 func TestDBUserCerts(t *testing.T) {
 	n, err := e2e.RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	username := fmt.Sprintf("user%v", n)
 
 	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	t.Run("Create DBUser", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
@@ -51,15 +48,9 @@ func TestDBUserCerts(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
+		require.NoError(t, err, string(resp))
 		var user atlasv2.CloudDatabaseUser
-		if err := json.Unmarshal(resp, &user); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, json.Unmarshal(resp, &user), string(resp))
 		assert.Equal(t, username, user.Username)
 	})
 
@@ -72,16 +63,7 @@ func TestDBUserCerts(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Errorf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		var user atlasv2.UserCert
-		if err := json.Unmarshal(resp, &user); err != nil {
-			t.Errorf("unexpected error: %v", err)
-		}
-		// assert.Equal(t, username, user.Username)
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -93,18 +75,11 @@ func TestDBUserCerts(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 
 		var users atlasv2.PaginatedUserCert
-		if err := json.Unmarshal(resp, &users); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if len(users.Results) == 0 {
-			t.Fatalf("expected len(users) > 0, got 0")
-		}
+		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
+		assert.NotEmpty(t, users.Results)
 	})
 
 	t.Run("Delete User", func(t *testing.T) {
@@ -117,10 +92,7 @@ func TestDBUserCerts(t *testing.T) {
 			"$external")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("DB user '%s' deleted\n", username)
 		assert.Equal(t, expected, string(resp))

@@ -66,8 +66,10 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 	if opts.DeploymentName != "" {
 		_, _ = log.Warningf("Fetching logs for deployment %s\n", opts.DeploymentName)
 		// ignore error if container does not exist just capture log for that command
-		opts.mongotLogs, _ = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongotHostname())
-		opts.mongodLogs, _ = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongodHostname())
+		opts.mongotLogs, err = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongotHostname())
+		opts.podmanDiag.Errors = append(opts.podmanDiag.Errors, fmt.Errorf("failed to get mongot logs: %w", err).Error())
+		opts.mongodLogs, err = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongodHostname())
+		opts.podmanDiag.Errors = append(opts.podmanDiag.Errors, fmt.Errorf("failed to get mongod logs: %w", err).Error())
 	}
 
 	diagnosis := map[string]interface{}{

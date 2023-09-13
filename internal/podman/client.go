@@ -244,20 +244,17 @@ func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 	cmd := exec.CommandContext(ctx, "podman", arg...)
 
 	output, err := cmd.Output() // ignore stderr
-	var exitErr *exec.ExitError
+
 	if o.debug {
 		_, _ = o.outWriter.Write(output)
+
+		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
 			_, _ = o.outWriter.Write(exitErr.Stderr)
 		}
 	}
 
-	if errors.As(err, &exitErr) {
-		errorMessage := string(exitErr.Stderr)
-		return nil, errors.New(errorMessage)
-	}
-
-	return output, nil
+	return output, err
 }
 
 func (o *client) CreateNetwork(ctx context.Context, name string) ([]byte, error) {

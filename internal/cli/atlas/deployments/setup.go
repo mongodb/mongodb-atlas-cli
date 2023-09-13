@@ -62,6 +62,7 @@ const (
 	skipConnect        = "skip"
 	spinnerSpeed       = 100 * time.Millisecond
 	shortStepCount     = 2
+	waitMongotTimeout  = 5 * time.Minute
 )
 
 var (
@@ -366,7 +367,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		return err
 	}
 
-	tmCtx, cancel := context.WithTimeout(ctx, 5*time.Minute) // wait for mongot up to 5 minutes
+	tmCtx, cancel := context.WithTimeout(ctx, waitMongotTimeout)
 	defer cancel()
 	for {
 		select {

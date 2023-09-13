@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201007/admin"
 )
 
 func TestAtlasUsers(t *testing.T) {
@@ -95,7 +95,7 @@ func TestAtlasUsers(t *testing.T) {
 	})
 
 	t.Run("Invite", func(t *testing.T) {
-		n, err := e2e.RandInt(1000)
+		n, err := e2e.RandInt(10000)
 		require.NoError(t, err)
 		emailUser := fmt.Sprintf("test-%v@moongodb.com", n)
 		t.Log("emailUser", emailUser, "orgID", orgID)

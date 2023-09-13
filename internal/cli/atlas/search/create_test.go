@@ -36,9 +36,9 @@ func TestCreateOpts_Run(t *testing.T) {
 		opts := &CreateOpts{
 			store: mockStore,
 		}
-		opts.name = testName
+		opts.Name = testName
 
-		request, err := opts.newSearchIndex()
+		request, err := opts.NewSearchIndex()
 		if err != nil {
 			t.Fatalf("newSearchIndex() unexpected error: %v", err)
 		}
@@ -63,11 +63,11 @@ func TestCreateOpts_Run(t *testing.T) {
 		opts := &CreateOpts{
 			store: mockStore,
 		}
-		opts.filename = fileName
-		opts.fs = appFS
+		opts.Filename = fileName
+		opts.Fs = appFS
 
 		expected := &atlasv2.ClusterSearchIndex{}
-		request, err := opts.newSearchIndex()
+		request, err := opts.NewSearchIndex()
 		if err != nil {
 			t.Fatalf("newSearchIndex() unexpected error: %v", err)
 		}

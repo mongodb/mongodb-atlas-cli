@@ -14,7 +14,7 @@
 
 //go:build unit
 
-package deployments
+package indexes
 
 import (
 	"testing"
@@ -26,7 +26,7 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
-		5,
+		1,
 		[]string{},
 	)
 }

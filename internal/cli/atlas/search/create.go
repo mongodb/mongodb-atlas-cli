@@ -48,7 +48,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 var createTemplate = "Index {{.Name}} created.\n"
 
 func (opts *CreateOpts) Run() error {
-	index, err := opts.newSearchIndex()
+	index, err := opts.NewSearchIndex()
 	if err != nil {
 		return err
 	}
@@ -85,7 +85,7 @@ func (opts *CreateOpts) Run() error {
 //	-P, --profile string   Profile to use from your configuration file.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
-	opts.fs = afero.NewOsFs()
+	opts.Fs = afero.NewOsFs()
 
 	cmd := &cobra.Command{
 		Use:   "create [indexName]",
@@ -99,7 +99,7 @@ func CreateBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # Create a search index for the cluster named myCluster using a JSON index configuration file named search-config.json:
   %s clusters search indexes create --clusterName myCluster --file search-config.json --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if opts.filename == "" {
+			if opts.Filename == "" {
 				_ = cmd.MarkFlagRequired(flag.Database)
 				_ = cmd.MarkFlagRequired(flag.Collection)
 
@@ -119,20 +119,20 @@ func CreateBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
-				opts.name = args[0]
+				opts.Name = args[0]
 			}
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.dbName, flag.Database, "", usage.Database)
-	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
-	cmd.Flags().StringVar(&opts.analyzer, flag.Analyzer, defaultAnalyzer, usage.Analyzer)
-	cmd.Flags().StringVar(&opts.searchAnalyzer, flag.SearchAnalyzer, defaultAnalyzer, usage.SearchAnalyzer)
-	cmd.Flags().BoolVar(&opts.dynamic, flag.Dynamic, false, usage.Dynamic)
-	cmd.Flags().StringSliceVar(&opts.fields, flag.Field, nil, usage.SearchFields)
-	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.SearchFilename)
+	cmd.Flags().StringVar(&opts.DbName, flag.Database, "", usage.Database)
+	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
+	cmd.Flags().StringVar(&opts.Analyzer, flag.Analyzer, DefaultAnalyzer, usage.Analyzer)
+	cmd.Flags().StringVar(&opts.SearchAnalyzer, flag.SearchAnalyzer, DefaultAnalyzer, usage.SearchAnalyzer)
+	cmd.Flags().BoolVar(&opts.Dynamic, flag.Dynamic, false, usage.Dynamic)
+	cmd.Flags().StringSliceVar(&opts.Fields, flag.Field, nil, usage.SearchFields)
+	cmd.Flags().StringVarP(&opts.Filename, flag.File, flag.FileShort, "", usage.SearchFilename)
 
 	_ = cmd.MarkFlagFilename(flag.File)
 

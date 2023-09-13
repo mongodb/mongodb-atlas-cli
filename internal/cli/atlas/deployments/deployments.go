@@ -18,6 +18,7 @@ import (
 	"errors"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/search"
 	"github.com/spf13/cobra"
 )
 
@@ -40,6 +41,7 @@ func Builder() *cobra.Command {
 		DeleteBuilder(),
 		ListBuilder(),
 		ConnectBuilder(),
+		search.Builder(),
 	)
 
 	return cmd

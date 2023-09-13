@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20230201006/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201007/admin"
 )
 
 // MockSearchIndexLister is a mock of SearchIndexLister interface.

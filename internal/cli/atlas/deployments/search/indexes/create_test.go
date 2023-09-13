@@ -37,13 +37,13 @@ func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockPodman := mocks.NewMockClient(ctrl)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
-	mockDb := mocks.NewMockDatabase(ctrl)
+	mockDB := mocks.NewMockDatabase(ctrl)
 	ctx := context.Background()
 
 	const (
 		expectedIndexName       = "idx1"
 		expectedLocalDeployment = "localDeployment1"
-		expectedDb              = "db1"
+		expectedDB              = "db1"
 		expectedCollection      = "col1"
 	)
 
@@ -55,7 +55,7 @@ func TestCreate_Run(t *testing.T) {
 		},
 		IndexOpts: search.IndexOpts{
 			Name:       expectedIndexName,
-			DbName:     expectedDb,
+			DBName:     expectedDB,
 			Collection: expectedCollection,
 		},
 		OutputOpts: cli.OutputOpts{
@@ -87,16 +87,16 @@ func TestCreate_Run(t *testing.T) {
 		Times(1)
 	mockMongodbClient.
 		EXPECT().
-		Database(expectedDb).
-		Return(mockDb).
+		Database(expectedDB).
+		Return(mockDB).
 		Times(1)
 
-	mockDb.
+	mockDB.
 		EXPECT().
 		CreateSearchIndex(ctx, expectedCollection, &atlasv2.ClusterSearchIndex{
 			Analyzer:       &opts.Analyzer,
 			CollectionName: opts.Collection,
-			Database:       opts.DbName,
+			Database:       opts.DBName,
 			Mappings: &atlasv2.ApiAtlasFTSMappings{
 				Dynamic: &opts.Dynamic,
 				Fields:  nil,

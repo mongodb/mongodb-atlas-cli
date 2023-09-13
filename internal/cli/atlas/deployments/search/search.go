@@ -19,8 +19,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var ()
-
 func Builder() *cobra.Command {
 	const use = "search"
 	cmd := &cobra.Command{

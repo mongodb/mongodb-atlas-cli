@@ -36,7 +36,8 @@ import (
 )
 
 const (
-	namePattern = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
+	namePattern        = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
+	connectWaitSeconds = 10
 )
 
 var (
@@ -63,7 +64,7 @@ func (opts *CreateOpts) Run(ctx context.Context) error {
 		return e
 	}
 
-	if err := opts.mongodbClient.Connect(ctx, connectionString, 10); err != nil {
+	if err := opts.mongodbClient.Connect(ctx, connectionString, connectWaitSeconds); err != nil {
 		return err
 	}
 	defer opts.mongodbClient.Disconnect(ctx)
@@ -102,23 +103,23 @@ func (opts *CreateOpts) validateAndPrompt(ctx context.Context) error {
 	}
 
 	if opts.Name == "" {
-		if err := opts.promptName("Search Index Name", &opts.Name, errInvalidSearchIndexName); err != nil {
+		if err := promptName("Search Index Name", &opts.Name, errInvalidSearchIndexName); err != nil {
 			return err
 		}
 	} else if err := validateName(opts.Name, errInvalidSearchIndexName); err != nil {
 		return err
 	}
 
-	if opts.DbName == "" {
-		if err := opts.promptName("Database", &opts.DbName, errInvalidDatabaseName); err != nil {
+	if opts.DBName == "" {
+		if err := promptName("Database", &opts.DBName, errInvalidDatabaseName); err != nil {
 			return err
 		}
-	} else if err := validateName(opts.DbName, errInvalidDatabaseName); err != nil {
+	} else if err := validateName(opts.DBName, errInvalidDatabaseName); err != nil {
 		return err
 	}
 
 	if opts.Collection == "" {
-		if err := opts.promptName("Collection", &opts.Collection, errInvalidCollectionName); err != nil {
+		if err := promptName("Collection", &opts.Collection, errInvalidCollectionName); err != nil {
 			return err
 		}
 	} else if err := validateName(opts.Collection, errInvalidCollectionName); err != nil {
@@ -128,7 +129,7 @@ func (opts *CreateOpts) validateAndPrompt(ctx context.Context) error {
 	return nil
 }
 
-func (opts *CreateOpts) promptName(message string, response *string, validationErr error) error {
+func promptName(message string, response *string, validationErr error) error {
 	p := &survey.Input{
 		Message: message,
 	}
@@ -180,7 +181,7 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
-	cmd.Flags().StringVar(&opts.DbName, flag.Database, "", usage.Database)
+	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVarP(&opts.Filename, flag.File, flag.FileShort, "", usage.SearchFilename)
 

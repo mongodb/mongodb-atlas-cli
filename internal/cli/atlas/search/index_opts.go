@@ -29,7 +29,7 @@ const deprecatedFlagMessage = "please use --file instead"
 
 type IndexOpts struct {
 	Name           string
-	DbName         string
+	DBName         string
 	Collection     string
 	Analyzer       string
 	SearchAnalyzer string
@@ -51,7 +51,7 @@ func (opts *IndexOpts) validateOpts() error {
 		if opts.Name != "" {
 			return errors.New("do not specify --indexName and --file at the same time")
 		}
-		if opts.DbName != "" {
+		if opts.DBName != "" {
 			return errors.New("do not specify --db and --file at the same time")
 		}
 		if opts.Collection != "" {
@@ -89,7 +89,7 @@ func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 	i := &atlasv2.ClusterSearchIndex{
 		Analyzer:       &opts.Analyzer,
 		CollectionName: opts.Collection,
-		Database:       opts.DbName,
+		Database:       opts.DBName,
 		Mappings: &atlasv2.ApiAtlasFTSMappings{
 			Dynamic: &opts.Dynamic,
 			Fields:  f,

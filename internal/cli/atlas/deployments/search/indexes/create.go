@@ -16,9 +16,7 @@ package indexes
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"regexp"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -38,12 +36,6 @@ import (
 const (
 	namePattern        = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	connectWaitSeconds = 10
-)
-
-var (
-	errInvalidSearchIndexName = errors.New("invalid search index name")
-	errInvalidDatabaseName    = errors.New("invalid database name")
-	errInvalidCollectionName  = errors.New("invalid collection name")
 )
 
 type CreateOpts struct {
@@ -103,48 +95,32 @@ func (opts *CreateOpts) validateAndPrompt(ctx context.Context) error {
 	}
 
 	if opts.Name == "" {
-		if err := promptName("Search Index Name", &opts.Name, errInvalidSearchIndexName); err != nil {
+		if err := promptRequiredName("Search Index Name", &opts.Name); err != nil {
 			return err
 		}
-	} else if err := validateName(opts.Name, errInvalidSearchIndexName); err != nil {
-		return err
 	}
 
 	if opts.DBName == "" {
-		if err := promptName("Database", &opts.DBName, errInvalidDatabaseName); err != nil {
+		if err := promptRequiredName("Database", &opts.DBName); err != nil {
 			return err
 		}
-	} else if err := validateName(opts.DBName, errInvalidDatabaseName); err != nil {
-		return err
 	}
 
 	if opts.Collection == "" {
-		if err := promptName("Collection", &opts.Collection, errInvalidCollectionName); err != nil {
+		if err := promptRequiredName("Collection", &opts.Collection); err != nil {
 			return err
 		}
-	} else if err := validateName(opts.Collection, errInvalidCollectionName); err != nil {
-		return err
 	}
 
 	return nil
 }
 
-func promptName(message string, response *string, validationErr error) error {
-	p := &survey.Input{
-		Message: message,
-	}
-
-	return telemetry.TrackAskOne(p, response, survey.WithValidator(func(ans interface{}) error {
-		name, _ := ans.(string)
-		return validateName(name, validationErr)
-	}))
-}
-
-func validateName(n string, validationErr error) error {
-	if matched, _ := regexp.MatchString(namePattern, n); !matched {
-		return fmt.Errorf("%w: %s", validationErr, n)
-	}
-	return nil
+func promptRequiredName(message string, response *string) error {
+	return telemetry.TrackAskOne(
+		&survey.Input{Message: message},
+		response,
+		survey.WithValidator(survey.Required),
+	)
 }
 
 func CreateBuilder() *cobra.Command {

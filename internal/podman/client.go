@@ -162,10 +162,10 @@ func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	if err != nil {
 		d.MachineFound = false
 		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman machine: %w", err).Error())
+	} else {
+		d.MachineInfo = info
+		d.MachineState = info.State
 	}
-
-	d.MachineInfo = info
-	d.MachineState = info.State
 
 	images, err := o.ListImages(ctx, "")
 	if err != nil {

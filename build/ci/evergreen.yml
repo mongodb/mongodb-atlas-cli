@@ -1338,6 +1338,7 @@ tasks:
   - name: atlas_deployments_e2e
     tags: ["e2e","deployments","atlas"]
     must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
       - name: compile
         variant: "code_health"
@@ -1347,6 +1348,7 @@ tasks:
       - func: "update podman"
       - func: "install mongosh"
       - func: "e2e test"
+        timeout_secs: 11400 # 3 hours 10 minutes
         vars:
           MCLI_ORG_ID: ${atlas_org_id}
           MCLI_PROJECT_ID: ${atlas_project_id}

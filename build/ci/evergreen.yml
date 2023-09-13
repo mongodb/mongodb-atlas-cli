@@ -1357,6 +1357,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,deployments
+          E2E_TIMEOUT: 3h
 buildvariants:
   - name: code_health
     display_name: "Code Health"

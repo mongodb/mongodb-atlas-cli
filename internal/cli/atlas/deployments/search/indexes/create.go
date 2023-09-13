@@ -147,10 +147,13 @@ func validateName(n string, validationErr error) error {
 }
 
 func CreateBuilder() *cobra.Command {
-	opts := &CreateOpts{}
-	opts.Analyzer = search.DefaultAnalyzer
-	opts.Dynamic = false
-	opts.Fs = afero.NewOsFs()
+	opts := &CreateOpts{
+		IndexOpts: search.IndexOpts{
+			Analyzer: search.DefaultAnalyzer,
+			Dynamic:  false,
+			Fs:       afero.NewOsFs(),
+		},
+	}
 
 	cmd := &cobra.Command{
 		Use:   "create [indexName]",

@@ -95,7 +95,7 @@ func TestAtlasUsers(t *testing.T) {
 	})
 
 	t.Run("Invite", func(t *testing.T) {
-		n, err := e2e.RandInt(1000)
+		n, err := e2e.RandInt(10000)
 		require.NoError(t, err)
 		emailUser := fmt.Sprintf("test-%v@moongodb.com", n)
 		t.Log("emailUser", emailUser, "orgID", orgID)

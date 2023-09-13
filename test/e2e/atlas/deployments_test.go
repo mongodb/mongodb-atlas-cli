@@ -40,6 +40,7 @@ func TestDeployments(t *testing.T) {
 
 	t.Run("Setup", func(t *testing.T) {
 		defer func(t *testing.T) {
+			t.Helper()
 			cmd := exec.Command(cliPath,
 				"deployments",
 				"diagnostics",
@@ -50,9 +51,9 @@ func TestDeployments(t *testing.T) {
 
 			cmd.Env = os.Environ()
 
-			r, err := cmd.CombinedOutput()
+			r, errDiag := cmd.CombinedOutput()
 			t.Log("Diagnostics")
-			t.Log(err, string(r))
+			t.Log(errDiag, string(r))
 		}(t)
 
 		cmd := exec.Command(cliPath,

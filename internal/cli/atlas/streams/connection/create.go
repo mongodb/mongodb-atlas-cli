@@ -18,6 +18,7 @@ package connection
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -67,13 +68,20 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newCreateRequest() (*atlasv2.StreamsConnection, error) {
-	out := atlasv2.NewStreamsConnectionWithDefaults()
-	if err := file.Load(opts.fs, opts.filename, out); err != nil {
+	connection := atlasv2.NewStreamsConnectionWithDefaults()
+	if err := file.Load(opts.fs, opts.filename, connection); err != nil {
 		return nil, err
 	}
-	out.Name = &opts.name
 
-	return out, nil
+	if opts.name != "" {
+		connection.Name = &opts.name
+	}
+
+	if opts.name == "" && connection.Name == nil {
+		return nil, errors.New("streams connection name missing")
+	}
+
+	return connection, nil
 }
 
 // atlas streams connection create <connectionName> [--projectId projectId].
@@ -82,19 +90,24 @@ func CreateBuilder() *cobra.Command {
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "create <connectionName>",
+		Use:   "create [connectionName]",
 		Short: "Creates a connection for an Atlas streams instance.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Args:  require.ExactArgs(1),
+		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"connectionNameDesc": "Name of the connection",
 			"output":             createTemplate,
 		},
 		Example: `# create a new connection for Atlas Streams:
   atlas streams connection create kafkaprod -i test01 -f kafkaConfig.json
+
+# create a new connection using the name from the file
+  atlas streams connection create -i test01 -f clusterConfig.json
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
+			if len(args) != 0 {
+				opts.name = args[0]
+			}
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),

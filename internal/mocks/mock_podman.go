@@ -109,6 +109,21 @@ func (mr *MockClientMockRecorder) Diagnostics(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Diagnostics", reflect.TypeOf((*MockClient)(nil).Diagnostics), arg0)
 }
 
+// Exec mocks base method.
+func (m *MockClient) Exec(arg0 context.Context, arg1, arg2 string) ([]byte, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Exec", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Exec indicates an expected call of Exec.
+func (mr *MockClientMockRecorder) Exec(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Exec", reflect.TypeOf((*MockClient)(nil).Exec), arg0, arg1, arg2)
+}
+
 // ListContainers mocks base method.
 func (m *MockClient) ListContainers(arg0 context.Context, arg1 string) ([]*podman.Container, error) {
 	m.ctrl.T.Helper()

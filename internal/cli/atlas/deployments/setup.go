@@ -381,10 +381,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		case <-tmCtx.Done():
 			return tmCtx.Err()
 		default:
-			r, err := opts.podmanClient.Exec(ctx, opts.LocalMongodHostname(), ping)
-			fmt.Println(string(r))
-
-			if err == nil && strings.Contains(string(r), "1 }") {
+			if _, err := opts.podmanClient.Exec(ctx, opts.LocalMongodHostname(), ping); err == nil {
 				return nil
 			}
 		}

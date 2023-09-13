@@ -23,6 +23,7 @@ import (
 	"os/exec"
 	"runtime"
 	"strconv"
+	"strings"
 
 	"github.com/containers/podman/v4/pkg/machine"
 )
@@ -33,8 +34,13 @@ type Diagnostic struct {
 	Installed    bool
 	MachineFound bool
 	MachineState string
+	MachineInfo  *machine.InspectInfo
+	Version      *Version
 	Images       []string
+	Errors       []string
 }
+
+const PodmanRunningState = machine.Running
 
 type RunContainerOpts struct {
 	Detach   bool
@@ -84,7 +90,31 @@ type Image struct {
 	Names      []string
 }
 
-//go:generate mockgen -destination=../../../../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/podman Client
+type Version struct {
+	Client struct {
+		APIVersion string `json:"APIVersion"`
+		Version    string `json:"Version"`
+		GoVersion  string `json:"GoVersion"`
+		GitCommit  string `json:"GitCommit"`
+		BuiltTime  string `json:"BuiltTime"`
+		Built      int    `json:"Built"`
+		OsArch     string `json:"OsArch"`
+		Os         string `json:"Os"`
+	} `json:"Client"`
+
+	Server struct {
+		APIVersion string `json:"APIVersion"`
+		Version    string `json:"Version"`
+		GoVersion  string `json:"GoVersion"`
+		GitCommit  string `json:"GitCommit"`
+		BuiltTime  string `json:"BuiltTime"`
+		Built      int    `json:"Built"`
+		OsArch     string `json:"OsArch"`
+		Os         string `json:"Os"`
+	} `json:"Server"`
+}
+
+//go:generate mockgen -destination=../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/podman Client
 
 type Client interface {
 	Ready(ctx context.Context) error
@@ -100,6 +130,9 @@ type Client interface {
 	ListContainers(ctx context.Context, nameFilter string) ([]*Container, error)
 	ListImages(ctx context.Context, nameFilter string) ([]*Image, error)
 	PullImage(ctx context.Context, name string) ([]byte, error)
+	Version(ctx context.Context) (*Version, error)
+	Logs(ctx context.Context) ([]interface{}, error)
+	ContainerLogs(ctx context.Context, name string) ([]string, error)
 }
 
 type client struct {
@@ -109,26 +142,34 @@ type client struct {
 
 func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	d := &Diagnostic{
-		Installed: true,
+		Installed:    true,
+		MachineFound: true,
 	}
 
 	err := Installed()
 	if err != nil {
 		d.Installed = false
-		return d
+		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman installed: %w", err).Error())
+	}
+
+	d.Version, err = o.Version(ctx)
+	if err != nil {
+		d.Errors = append(d.Errors, fmt.Errorf("failed to collect podman version: %w", err).Error())
 	}
 
 	info, err := o.machineInspect(ctx)
 	if err != nil {
 		d.MachineFound = false
-		return d
+		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman machine: %w", err).Error())
 	}
 
-	d.MachineFound = true
+	d.MachineInfo = info
 	d.MachineState = info.State
 
 	images, err := o.ListImages(ctx, "")
-	if err == nil {
+	if err != nil {
+		d.Errors = append(d.Errors, fmt.Errorf("failed to list podman images: %w", err).Error())
+	} else {
 		d.Images = make([]string, 0, len(images))
 		for _, img := range images {
 			d.Images = append(d.Images, img.Names...)
@@ -164,7 +205,7 @@ func (o *client) machineStart(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	if info.State != machine.Running {
+	if info.State != PodmanRunningState {
 		_, err := o.runPodman(ctx, "machine", "start")
 		if err != nil {
 			return err
@@ -318,6 +359,45 @@ func (o *client) ListImages(ctx context.Context, nameFilter string) ([]*Image, e
 
 func (o *client) PullImage(ctx context.Context, name string) ([]byte, error) {
 	return o.runPodman(ctx, "pull", name)
+}
+
+func (o *client) Version(ctx context.Context) (version *Version, err error) {
+	output, err := o.runPodman(ctx, "version", "--format", "json")
+	if err != nil {
+		return nil, err
+	}
+
+	var v *Version
+	if err = json.Unmarshal(output, &v); err != nil {
+		return nil, err
+	}
+	return v, err
+}
+
+func (o *client) Logs(ctx context.Context) ([]interface{}, error) {
+	output, err := o.runPodman(ctx, "ps", "--format", "json")
+	if err != nil {
+		return nil, err
+	}
+
+	var podmanLogs []interface{}
+
+	err = json.Unmarshal(output, &podmanLogs)
+	if err != nil {
+		return podmanLogs, err
+	}
+
+	return podmanLogs, nil
+}
+
+func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, error) {
+	output, err := o.runPodman(ctx, "container", "logs", name)
+	if err != nil {
+		return []string{""}, err
+	}
+
+	logs := strings.Split(string(output), "\n")
+	return logs, nil
 }
 
 func NewClient(debug bool, outWriter io.Writer) Client {

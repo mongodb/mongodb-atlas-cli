@@ -161,6 +161,7 @@ func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	if err != nil {
 		d.MachineFound = false
 		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman machine: %w", err).Error())
+		return d
 	}
 
 	d.MachineInfo = info
@@ -243,17 +244,20 @@ func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 	cmd := exec.CommandContext(ctx, "podman", arg...)
 
 	output, err := cmd.Output() // ignore stderr
-
+	var exitErr *exec.ExitError
 	if o.debug {
 		_, _ = o.outWriter.Write(output)
-
-		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
 			_, _ = o.outWriter.Write(exitErr.Stderr)
 		}
 	}
 
-	return output, err
+	if errors.As(err, &exitErr) {
+		errorMessage := string(exitErr.Stderr)
+		return nil, errors.New(errorMessage)
+	}
+
+	return output, nil
 }
 
 func (o *client) CreateNetwork(ctx context.Context, name string) ([]byte, error) {

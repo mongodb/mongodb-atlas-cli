@@ -63,7 +63,7 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 		opts.podmanDiag.Errors = append(opts.podmanDiag.Errors, fmt.Errorf("failed to get podman logs: %w", err).Error())
 	}
 
-	if opts.DeploymentName != "" && opts.podmanDiag.MachineInfo.State == podman.PodmanRunningState {
+	if opts.DeploymentName != "" {
 		_, _ = log.Warningf("Fetching logs for deployment %s\n", opts.DeploymentName)
 		// ignore error if container does not exist just capture log for that command
 		opts.mongotLogs, _ = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongotHostname())

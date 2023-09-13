@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"time"
 
+	"go.mongodb.org/atlas-sdk/v20230201007/admin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -47,6 +48,7 @@ type Database interface {
 	RunCommand(ctx context.Context, runCommand interface{}) (interface{}, error)
 	InsertOne(ctx context.Context, collection string, doc interface{}) (interface{}, error)
 	InitiateReplicaSet(ctx context.Context, rsName string, hostname string, internalPort int, externalPort int) error
+	CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) error
 }
 
 type database struct {
@@ -110,4 +112,43 @@ func (o *database) InitiateReplicaSet(ctx context.Context, rsName string, hostna
 			},
 		},
 	}}}).Err()
+}
+
+func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) error {
+	// todo: CLOUDP-199915 Use go-driver search index management helpers instead of createSearchIndex command
+	return o.db.RunCommand(ctx, bson.D{
+		{
+			Key:   "createSearchIndexes",
+			Value: collection,
+		},
+		{
+			Key: "indexes",
+			Value: []bson.D{
+				{
+					{
+						Key:   "name",
+						Value: idx.Name,
+					},
+					{
+						Key: "definition",
+						Value: &searchIndexDefinition{
+							Name:      idx.Name,
+							Analyzer:  idx.Analyzer,
+							Analyzers: idx.Analyzers,
+							Mappings:  idx.Mappings,
+							Synonyms:  idx.Synonyms,
+						},
+					},
+				},
+			},
+		},
+	}).Err()
+}
+
+type searchIndexDefinition struct {
+	Name      string                                 `json:"name"`
+	Analyzer  *string                                `json:"analyzer,omitempty"`
+	Analyzers []admin.ApiAtlasFTSAnalyzers           `json:"analyzers,omitempty"`
+	Mappings  *admin.ApiAtlasFTSMappings             `json:"mappings,omitempty"`
+	Synonyms  []admin.SearchSynonymMappingDefinition `json:"synonyms,omitempty"`
 }

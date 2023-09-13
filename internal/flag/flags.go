@@ -363,4 +363,5 @@ const (
 	OverrunPolicy                             = "overrunPolicy"                             // OverrunPolicy flag
 	AuthorizedEmail                           = "authorizedEmail"                           // authorizedEmail flag
 	ConnectWith                               = "connectWith"                               // connectWith flag
+	DeploymentName                            = "deploymentName"                            // deploymentName flag
 )

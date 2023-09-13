@@ -16,15 +16,15 @@ package options
 import "context"
 
 func (opts *DeploymentOpts) Remove(ctx context.Context) error {
-	if _, err := opts.podmanClient.RemoveContainers(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname()); err != nil {
+	if _, err := opts.PodmanClient.RemoveContainers(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname()); err != nil {
 		return err
 	}
 
-	if _, err := opts.podmanClient.RemoveNetworks(ctx, opts.LocalNetworkName()); err != nil {
+	if _, err := opts.PodmanClient.RemoveNetworks(ctx, opts.LocalNetworkName()); err != nil {
 		return err
 	}
 
-	if _, err := opts.podmanClient.RemoveVolumes(ctx, opts.LocalMongodDataVolume(), opts.LocalMongotDataVolume(), opts.LocalMongoMetricsVolume()); err != nil {
+	if _, err := opts.PodmanClient.RemoveVolumes(ctx, opts.LocalMongodDataVolume(), opts.LocalMongotDataVolume(), opts.LocalMongoMetricsVolume()); err != nil {
 		return err
 	}
 

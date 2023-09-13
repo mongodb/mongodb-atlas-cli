@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
-package deployments
+package indexes
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		6,
-		[]string{},
-	)
+func Builder() *cobra.Command {
+	const use = "indexes"
+	cmd := &cobra.Command{
+		Use:     use,
+		Short:   "Manage Atlas and local search indexes.",
+		Aliases: cli.GenerateAliases(use),
+	}
+
+	cmd.AddCommand(CreateBuilder())
+
+	return cmd
 }

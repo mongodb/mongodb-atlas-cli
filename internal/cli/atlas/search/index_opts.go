@@ -24,46 +24,46 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201007/admin"
 )
 
-const defaultAnalyzer = "lucene.standard"
+const DefaultAnalyzer = "lucene.standard"
 const deprecatedFlagMessage = "please use --file instead"
 
 type IndexOpts struct {
-	name           string
-	dbName         string
-	collection     string
-	analyzer       string
-	searchAnalyzer string
-	dynamic        bool
+	Name           string
+	DBName         string
+	Collection     string
+	Analyzer       string
+	SearchAnalyzer string
+	Dynamic        bool
 	fields         []string
-	filename       string
-	fs             afero.Fs
+	Filename       string
+	Fs             afero.Fs
 }
 
 func (opts *IndexOpts) validateOpts() error {
-	if opts.filename == "" {
-		if !opts.dynamic && len(opts.fields) == 0 {
+	if opts.Filename == "" {
+		if !opts.Dynamic && len(opts.fields) == 0 {
 			return errors.New("specify the fields to index for a static index or specify a dynamic index")
 		}
-		if opts.dynamic && len(opts.fields) > 0 {
+		if opts.Dynamic && len(opts.fields) > 0 {
 			return errors.New("do not specify --fields and --dynamic at the same time")
 		}
 	} else {
-		if opts.name != "" {
+		if opts.Name != "" {
 			return errors.New("do not specify --indexName and --file at the same time")
 		}
-		if opts.dbName != "" {
+		if opts.DBName != "" {
 			return errors.New("do not specify --db and --file at the same time")
 		}
-		if opts.collection != "" {
+		if opts.Collection != "" {
 			return errors.New("do not specify --collection and --file at the same time")
 		}
-		if opts.analyzer != defaultAnalyzer {
+		if opts.Analyzer != DefaultAnalyzer {
 			return errors.New("do not specify --analyzer and --file at the same time")
 		}
-		if opts.searchAnalyzer != defaultAnalyzer {
+		if opts.SearchAnalyzer != DefaultAnalyzer {
 			return errors.New("do not specify --searchAnalyzer and --file at the same time")
 		}
-		if opts.dynamic {
+		if opts.Dynamic {
 			return errors.New("do not specify --dynamic and --file at the same time")
 		}
 		if len(opts.fields) > 0 {
@@ -73,10 +73,10 @@ func (opts *IndexOpts) validateOpts() error {
 	return nil
 }
 
-func (opts *IndexOpts) newSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
-	if len(opts.filename) > 0 {
+func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
+	if len(opts.Filename) > 0 {
 		index := &atlasv2.ClusterSearchIndex{}
-		if err := file.Load(opts.fs, opts.filename, index); err != nil {
+		if err := file.Load(opts.Fs, opts.Filename, index); err != nil {
 			return nil, err
 		}
 		return index, nil
@@ -87,15 +87,15 @@ func (opts *IndexOpts) newSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 		return nil, err
 	}
 	i := &atlasv2.ClusterSearchIndex{
-		Analyzer:       &opts.analyzer,
-		CollectionName: opts.collection,
-		Database:       opts.dbName,
+		Analyzer:       &opts.Analyzer,
+		CollectionName: opts.Collection,
+		Database:       opts.DBName,
 		Mappings: &atlasv2.ApiAtlasFTSMappings{
-			Dynamic: &opts.dynamic,
+			Dynamic: &opts.Dynamic,
 			Fields:  f,
 		},
-		Name:           opts.name,
-		SearchAnalyzer: &opts.searchAnalyzer,
+		Name:           opts.Name,
+		SearchAnalyzer: &opts.SearchAnalyzer,
 	}
 	return i, nil
 }

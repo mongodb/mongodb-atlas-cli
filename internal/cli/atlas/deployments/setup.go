@@ -39,6 +39,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/templatewriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -237,6 +238,10 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 		return err
 	}
 	currentStep++
+	mongodIP, mongotIP, err := opts.internalIPs(ctx)
+	if err != nil {
+		return err
+	}
 
 	// pull images if not available
 	if needToPullImages {
@@ -251,14 +256,33 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	defer opts.stop()
 	keyFileContents := base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
 
-	if err := opts.configureMongod(ctx, keyFileContents); err != nil {
+	if err := opts.configureMongod(ctx, keyFileContents, *mongodIP, *mongotIP); err != nil {
 		return err
 	}
 
-	return opts.configureMongot(ctx, keyFileContents)
+	return opts.configureMongot(ctx, keyFileContents, *mongodIP, *mongotIP)
 }
 
-func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents string) error {
+func (opts *SetupOpts) internalIPs(ctx context.Context) (*string, *string, error) {
+	n, err := opts.podmanClient.Network(ctx, opts.LocalNetworkName())
+	if err != nil {
+		return nil, nil, err
+	}
+
+	_, ipNet, err := net.ParseCIDR(n.Subnets[0].Subnet)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	ipNet.IP[3] = 10
+	firstIp := ipNet.IP.String()
+	ipNet.IP[3] = 11
+	secondIp := ipNet.IP.String()
+
+	return &firstIp, &secondIp, nil
+}
+
+func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents, mongodIP, mongotIP string) error {
 	mongodDataVolume := opts.LocalMongodDataVolume()
 	if _, err := opts.podmanClient.CreateVolume(ctx, mongodDataVolume); err != nil {
 		return err
@@ -275,7 +299,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 				"DBPATH":          "/data/db",
 				"KEYFILE":         "/data/configdb/keyfile",
 				"REPLSETNAME":     replicaSetName,
-				"MONGOTHOST":      fmt.Sprintf("%s:%d", opts.LocalMongotHostname(), internalMongotPort),
+				"MONGOTHOST":      fmt.Sprintf("%s:%d", mongotIP, internalMongotPort),
 			},
 			Volumes: map[string]string{
 				mongodDataVolume: "/data/db",
@@ -284,6 +308,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 				opts.Port: internalMongodPort,
 			},
 			Network: opts.LocalNetworkName(),
+			IP:      pointer.Get(mongodIP),
 			// wrap the entrypoint with a chain of commands that
 			// creates the keyfile in the container and sets the 400 permissions for it,
 			// then starts the entrypoint with the local dev config
@@ -334,7 +359,7 @@ func (opts *SetupOpts) initReplicaSet(ctx context.Context) error {
 	return err
 }
 
-func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents string) error {
+func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents, mongodIP, mongotIP string) error {
 	mongotDataVolume := opts.LocalMongotDataVolume()
 	if _, err := opts.podmanClient.CreateVolume(ctx, mongotDataVolume); err != nil {
 		return err
@@ -352,7 +377,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		Hostname:   opts.LocalMongotHostname(),
 		Entrypoint: "/bin/sh",
 		EnvVars: map[string]string{
-			"MONGODHOST":      fmt.Sprintf("%s:%d", opts.LocalMongodHostname(), internalMongodPort),
+			"MONGODHOST":      fmt.Sprintf("%s:%d", mongodIP, internalMongodPort),
 			"DATADIR":         "/var/lib/mongot",
 			"KEYFILEPATH":     "/var/lib/mongot/keyfile",
 			"KEYFILECONTENTS": keyFileContents,
@@ -363,6 +388,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 			mongotMetricsVolume: "/var/lib/mongot/metrics",
 		},
 		Network: opts.LocalNetworkName(),
+		IP:      pointer.Get(mongotIP),
 	}); err != nil {
 		return err
 	}
@@ -372,7 +398,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 
 	ping := fmt.Sprintf(
 		"mongosh %s:%d --eval \"db.adminCommand('ping')\"",
-		opts.LocalMongotHostname(),
+		mongotIP,
 		internalMongotPort,
 	)
 

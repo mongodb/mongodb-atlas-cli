@@ -57,6 +57,7 @@ type RunContainerOpts struct {
 	Args       []string
 	Entrypoint string
 	Cmd        string
+	IP         *string
 }
 
 type Container struct {
@@ -115,6 +116,16 @@ type Version struct {
 	} `json:"Server"`
 }
 
+type Network struct {
+	ID         string `json:"ID"`
+	Name       string `json:"Name"`
+	DNSEnabled string `json:"DNSEnabled"`
+	Subnets    []struct {
+		Subnet  string `json:"Subnet"`
+		Gateway string `json:"gateway"`
+	} `json:"Subnets"`
+}
+
 //go:generate mockgen -destination=../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/podman Client
 
 type Client interface {
@@ -135,6 +146,7 @@ type Client interface {
 	Logs(ctx context.Context) ([]interface{}, error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
 	Exec(ctx context.Context, containerName string, command string) ([]byte, error)
+	Network(ctx context.Context, name string) (*Network, error)
 }
 
 type client struct {
@@ -293,6 +305,10 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 		arg = append(arg, "--rm")
 	}
 
+	if opts.IP != nil {
+		arg = append(arg, "--ip", *opts.IP)
+	}
+
 	if opts.Entrypoint != "" {
 		arg = append(arg, "--entrypoint", opts.Entrypoint)
 	}
@@ -378,6 +394,19 @@ func (o *client) Version(ctx context.Context) (version *Version, err error) {
 		return nil, err
 	}
 	return v, err
+}
+
+func (o *client) Network(ctx context.Context, name string) (version *Network, err error) {
+	output, err := o.runPodman(ctx, "network", "inspect", name, "--format", "json")
+	if err != nil {
+		return nil, err
+	}
+
+	var n []*Network
+	if err = json.Unmarshal(output, &n); err != nil {
+		return nil, err
+	}
+	return n[0], err
 }
 
 func (o *client) Logs(ctx context.Context) ([]interface{}, error) {

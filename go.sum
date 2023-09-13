@@ -148,10 +148,10 @@ github.com/containers/common v0.55.3 h1:mhNQRU4OgW1wpmmKMFSYRn42+hr8SEVSPFdKML3W
 github.com/containers/common v0.55.3/go.mod h1:ZKPllYOZ2xj2rgWRdnHHVvWg6ru4BT28En8mO8DMMPk=
 github.com/containers/image/v5 v5.26.1 h1:8y3xq8GO/6y8FR+nAedHPsAFiAtOrab9qHTBpbqaX8g=
 github.com/containers/image/v5 v5.26.1/go.mod h1:IwlOGzTkGnmfirXxt0hZeJlzv1zVukE03WZQ203Z9GA=
-github.com/containers/podman/v4 v4.6.1 h1:DWE/00+c1YV9jkygtEQ6xdSXyn6W/S+PZLMtDZ83+Dk=
-github.com/containers/podman/v4 v4.6.1/go.mod h1:6Ika738rAtI1wJPofiIjbASU/9Bb64XvRvhRS/5UKjk=
-github.com/containers/storage v1.48.0 h1:wiPs8J2xiFoOEAhxHDRtP6A90Jzj57VqzLRXOqeizns=
-github.com/containers/storage v1.48.0/go.mod h1:pRp3lkRo2qodb/ltpnudoXggrviRmaCmU5a5GhTBae0=
+github.com/containers/podman/v4 v4.6.2 h1:tUHH6RfavqH0QZJHA9JoiMtMatjUSe4LjkvQYD8AhMs=
+github.com/containers/podman/v4 v4.6.2/go.mod h1:RszjaonNv/hLayX58T06xci2ixrcCoR5hfdfN6PQWmc=
+github.com/containers/storage v1.48.1 h1:mMdr6whnMu8jJ1dO+tKaeSNbu6XJYSufWQF20uLr9Og=
+github.com/containers/storage v1.48.1/go.mod h1:pRp3lkRo2qodb/ltpnudoXggrviRmaCmU5a5GhTBae0=
 github.com/coreos/stream-metadata-go v0.4.2 h1:A0Ug0Ecb6mlJ5X/tXpBZgZJsA/Ulhj1BR0rEZJMzN4I=
 github.com/coreos/stream-metadata-go v0.4.2/go.mod h1:fMObQqQm8Ku91G04btKzEH3AsdP1mrAb986z9aaK0tE=
 github.com/cpuguy83/go-md2man/v2 v2.0.1/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=

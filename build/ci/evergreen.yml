@@ -208,25 +208,8 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           sudo yum update -y podman
-  "install mongosh":
-    - command: shell.exec
-      type: setup
-      params:
-        <<: *go_options
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
-        shell: bash
-        script: |
-          set -Eeou pipefail
-          export PATH="$ADD_PATH:$PATH"
-          sudo bash -c 'cat << EOF > /etc/yum.repos.d/mongodb-org-7.0.repo
-          [mongodb-org-7.0]
-          name=MongoDB Repository
-          baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/7.0/\$basearch/
-          gpgcheck=1
-          enabled=1
-          gpgkey=https://www.mongodb.org/static/pgp/server-7.0.asc
-          EOF'
-          sudo yum install -y mongodb-mongosh
+          sudo yum install -y netavark
+          sudo /bin/sh -c "cat /usr/share/containers/containers.conf | sed 's|network_backend = \"cni\"|network_backend = \"netavark\"|' > /usr/share/containers/containers2.conf && mv /usr/share/containers/containers2.conf /usr/share/containers/containers.conf"
   "install snyk":
     - command: shell.exec
       type: setup
@@ -1346,7 +1329,6 @@ tasks:
     commands:
       - func: "install gotestsum"
       - func: "update podman"
-      - func: "install mongosh"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:

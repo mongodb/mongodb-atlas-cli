@@ -44,13 +44,13 @@ type DeploymentOpts struct {
 	DeploymentType string
 	MdbVersion     string
 	Port           int
-	podmanClient   podman.Client
+	PodmanClient   podman.Client
 	s              *spinner.Spinner
 }
 
 func (opts *DeploymentOpts) InitStore(podmanClient podman.Client) func() error {
 	return func() error {
-		opts.podmanClient = podmanClient
+		opts.PodmanClient = podmanClient
 		return nil
 	}
 }

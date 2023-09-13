@@ -115,6 +115,7 @@ func (o *database) InitiateReplicaSet(ctx context.Context, rsName string, hostna
 }
 
 func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) error {
+	// todo: CLOUDP-199915 Use go-driver search index management helpers instead of createSearchIndex command
 	return o.db.RunCommand(ctx, bson.D{
 		{
 			Key:   "createSearchIndexes",

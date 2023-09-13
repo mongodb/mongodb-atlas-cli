@@ -51,7 +51,6 @@ type CreateOpts struct {
 	options.DeploymentOpts
 	search.IndexOpts
 	mongodbClient mongodbclient.MongoDBClient
-	podmanClient  podman.Client
 }
 
 func (opts *CreateOpts) Run(ctx context.Context) error {
@@ -150,23 +149,22 @@ func validateName(n string, validationErr error) error {
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Analyzer = search.DefaultAnalyzer
-	opts.SearchAnalyzer = search.DefaultAnalyzer
 	opts.Dynamic = false
 	opts.Fs = afero.NewOsFs()
 
 	cmd := &cobra.Command{
 		Use:   "create [indexName]",
-		Short: "Create a search index for the specified deployments.",
+		Short: "Create a search index for the specified deployment.",
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"indexNameDesc": "Name of the index.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()
-			opts.podmanClient = podman.NewClient(log.IsDebugLevel(), w)
+			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
 			return opts.PreRunE(
 				opts.InitOutput(w, ""),
-				opts.InitStore(opts.podmanClient),
+				opts.InitStore(opts.PodmanClient),
 				opts.initMongoDBClient,
 			)
 		},
